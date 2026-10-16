@@ -21,12 +21,12 @@ export default function ArrayFieldTitleTemplate<
   if (!title || !displayLabel) {
     return null;
   }
-  let heading = title ? (
+  let heading = (
     <Title order={4} fw='normal'>
       <span id={titleId(id)}>{title}</span>
       {required && <RequiredMarker />}
     </Title>
-  ) : null;
+  );
   if (optionalDataControl) {
     heading = (
       <Grid>
