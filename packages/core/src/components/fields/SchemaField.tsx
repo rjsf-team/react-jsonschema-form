@@ -4,6 +4,7 @@ import type {
   ErrorSchema,
   Field,
   FieldPath,
+  GlobalFormOptions,
   FieldProps,
   FieldTemplateProps,
   FormContextType,
@@ -191,12 +192,10 @@ interface NamedFieldResolution<
 > {
   /** The field `getFieldComponent()` renders in place of the one for the schema's type, if one is named */
   namedField?: Field<T, S, F>;
-  /** What the field's own `ui:field` was, when it was given but names no field, for the warning that it was ignored */
-  ignoredOwnField?: string;
-  /** What `ui:globalOptions.field` was, when it applied to the field but names no field, for the same warning */
-  ignoredGlobalField?: string;
-  /** What the schema's `$id` was, when something other than a component is registered under it, for the same warning */
-  ignoredIdField?: string;
+  /** Each `ui:field`, `ui:globalOptions.field` or `$id` that was given but names no field: the entry, what it holds,
+   * and what renders in its place, for the warning that it was ignored
+   */
+  ignored: [entry: string, description: string, renders: string][];
 }
 
 /** Resolves the one field a schema's field is named by: its own `ui:field`, else `ui:globalOptions.field`, else the
@@ -217,7 +216,9 @@ interface NamedFieldResolution<
  * @param globalField - The `field` from `ui:globalOptions`
  * @param schemaId - The schema's `$id`
  * @param fields - The registered fields
- * @returns - The field to render, if any, and a description of each `ui:field` or `$id` that was ignored
+ * @param fieldPath - The field's path, which names its own `ui:field` entry in the warning
+ * @param globalFormOptions - The form's options, which name the entry the same way
+ * @returns - The field to render, if any, and each `ui:field` or `$id` that was ignored
  */
 function resolveNamedField<
   T = unknown,
@@ -228,33 +229,43 @@ function resolveNamedField<
   globalField: UIOptionsType<T, S, F>['field'],
   schemaId: string | undefined,
   fields: Registry<T, S, F>['fields'],
+  fieldPath: FieldPath,
+  globalFormOptions: GlobalFormOptions,
 ): NamedFieldResolution<T, S, F> {
   const ownField = ownUiOptions.field;
-  const ownResolved = lookUpUiField<T, S, F>(ownField, fields);
-  if (isComponentType<FieldProps<T, S, F>>(ownResolved)) {
-    return { namedField: ownResolved };
+  // Each spelling, its value, what renders in place of what it names, and whether naming nothing at all is warned
+  // about, which a `$id`, an identifier first, is not
+  const spellings: [() => string, UIOptionsType<T, S, F>['field'], string, boolean][] = [
+    [
+      () => `ui:field for ${entryLabelForLog(fieldPath, globalFormOptions)}`,
+      ownField,
+      'field is rendered as though no ui:field were given',
+      true,
+    ],
+    [
+      () => 'ui:globalOptions.field',
+      ownField || !Object.hasOwn(ownUiOptions, 'field') ? globalField : undefined,
+      'fields it applies to are rendered as though no ui:field were given',
+      true,
+    ],
+    [
+      () => '$id',
+      schemaId,
+      'fields of the schema carrying it are rendered as though no field were registered under it',
+      false,
+    ],
+  ];
+  const ignored: NamedFieldResolution<T, S, F>['ignored'] = [];
+  for (const [spelling, value, tail, warnsUnregistered] of spellings) {
+    const resolved = lookUpUiField<T, S, F>(value, fields);
+    if (isComponentType<FieldProps<T, S, F>>(resolved)) {
+      return { namedField: resolved, ignored };
+    }
+    if (value && (warnsUnregistered || resolved != null)) {
+      ignored.push([spelling(), describeUnresolvedComponent(value, resolved, 'registered field', 'MyField'), tail]);
+    }
   }
-  const ignoredOwnField = ownField
-    ? describeUnresolvedComponent(ownField, ownResolved, 'registered field', 'MyField')
-    : undefined;
-  const appliedGlobalField = ownField || !Object.hasOwn(ownUiOptions, 'field') ? globalField : undefined;
-  const globalResolved = lookUpUiField<T, S, F>(appliedGlobalField, fields);
-  if (isComponentType<FieldProps<T, S, F>>(globalResolved)) {
-    return { namedField: globalResolved, ignoredOwnField };
-  }
-  const idResolved = lookUpUiField<T, S, F>(schemaId, fields);
-  const idNamesField = isComponentType<FieldProps<T, S, F>>(idResolved);
-  return {
-    namedField: idNamesField ? idResolved : undefined,
-    ignoredOwnField,
-    ignoredIdField:
-      !idNamesField && idResolved != null
-        ? describeUnresolvedComponent(schemaId, idResolved, 'registered field', 'MyField')
-        : undefined,
-    ignoredGlobalField: appliedGlobalField
-      ? describeUnresolvedComponent(appliedGlobalField, globalResolved, 'registered field', 'MyField')
-      : undefined,
-  };
+  return { ignored };
 }
 
 /** Returns `uiSchema` with the field it names shadowed in each spelling, for what renders at the same data path as the
@@ -538,7 +549,14 @@ function SchemaFieldRender<
   // Below a field named for this same path, the `uiSchema` names none, and neither does the `$id`
   const uiField = isRefCycle
     ? undefined
-    : resolveNamedField<T, S, F>(ownUiOptions, globalUiOptions?.field, namedAbove ? undefined : schema.$id, fields);
+    : resolveNamedField<T, S, F>(
+        ownUiOptions,
+        globalUiOptions?.field,
+        namedAbove ? undefined : schema.$id,
+        fields,
+        fieldPath,
+        globalFormOptions,
+      );
   const namesField = uiField?.namedField !== undefined;
   const fieldToRender =
     uiField &&
@@ -626,7 +644,6 @@ function SchemaFieldRender<
       </RawFormDataContext>,
     );
   }
-  const { ignoredOwnField, ignoredGlobalField, ignoredIdField } = uiField;
   const { FieldComponent, rendersOptionSelector } = fieldToRender;
 
   const { FieldTemplate, DescriptionFieldTemplate, FieldHelpTemplate, FieldErrorTemplate } = getTemplates<T, S, F>(
@@ -677,24 +694,12 @@ function SchemaFieldRender<
   // about once for the form rather than once per field. An `items` entry reaches every item of its array the same way,
   // so a field's own `ui:field` is named with the item's index left out, and every item the entry reaches shares one
   // warning. A tuple's per-position entries and its `additionalItems` share it too, since nothing here tells them apart
-  if (ignoredOwnField) {
-    logOnce(
-      `ui:field for ${entryLabelForLog(fieldPath, globalFormOptions)} ${ignoredOwnField}, so it is ignored and the ` +
-        'field is rendered as though no ui:field were given.',
-    );
-  }
-  if (ignoredGlobalField) {
-    logOnce(
-      `ui:globalOptions.field ${ignoredGlobalField}, so it is ignored and the fields it applies to are rendered as ` +
-        'though no ui:field were given.',
-    );
-  }
-  // A field is registered under a `$id` once for the form, however many fields the schema carrying it renders
-  if (ignoredIdField) {
-    logOnce(
-      `$id ${ignoredIdField}, so it is ignored and the fields of the schema carrying it are rendered as though no ` +
-        'field were registered under it.',
-    );
+  const { ignored } = uiField;
+  // Indexed, since React Compiler takes iterating the resolution as a possible mutation of it, and the options memo
+  // above depends on it
+  for (let index = 0; index < ignored.length; index++) {
+    const [entry, description, renders] = ignored[index];
+    logOnce(`${entry} ${description}, so it is ignored and the ${renders}.`);
   }
 
   const isLabelled = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
