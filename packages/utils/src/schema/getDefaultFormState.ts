@@ -177,7 +177,8 @@ export function computeDefaultBasedOnSchemaTypeAndDefaults<T = unknown, S extend
  * @param emptyObjectFields - How to treat an empty object field, stated by the caller rather than read off the
  *        context, since the `additionalProperties` pass deliberately does not apply the form's setting
  * @param isConst - Optional flag, if true, indicates that the schema has a const property defined, thus we should always return the computedDefault since it's coming from the const.
- * @param isNullType - The type of the schema is null
+ * @param holdsNull - Whether `computedDefault` holds the `null` a `null` schema's missing value is filled in as, see
+ *        `holdsNullFill()`, which is added like a const: that is the value the field holds, whatever the defaults are
  */
 function maybeAddDefaultToObject<T = unknown>(
   acc: GenericObjectType,
@@ -188,20 +189,16 @@ function maybeAddDefaultToObject<T = unknown>(
   requiredFields: string[] = [],
   emptyObjectFields: NonNullable<DefaultFormStateBehavior['emptyObjectFields']> = 'populateAllDefaults',
   isConst = false,
-  isNullType = false,
+  holdsNull = false,
 ) {
-  if (includeUndefinedValues === true || isConst) {
+  if (includeUndefinedValues === true || isConst || holdsNull) {
     // If includeUndefinedValues is explicitly true
     // Or if the schema has a const property defined, then we should always return the computedDefault since it's coming from the const.
     acc[key] = computedDefault;
   } else if (includeUndefinedValues === 'excludeObjectChildren') {
     // Fix for Issue #4709: When in 'excludeObjectChildren' mode, don't set primitive fields to empty objects
     // Only add the computed default if it's not an empty object placeholder for a primitive field
-    if (
-      (isNullType && computedDefault !== undefined) ||
-      !isObject(computedDefault) ||
-      Object.keys(computedDefault).length > 0
-    ) {
+    if (!isObject(computedDefault) || Object.keys(computedDefault).length > 0) {
       acc[key] = computedDefault;
     }
     // If computedDefault is an empty object {}, don't add it - let the field stay undefined
@@ -238,6 +235,30 @@ function maybeAddDefaultToObject<T = unknown>(
       acc[key] = computedDefault;
     }
   }
+}
+
+/** Whether `value`, the defaults computed for `schema`, holds the `null` a missing value of a `null` schema is filled in
+ * as, itself or under a property of the objects along the way. That value is the one the field rendered for the schema
+ * holds, so it is added with the objects that lead to it, whatever `emptyObjectFields` says of the other defaults: those
+ * the objects hold were already left out by the same rule.
+ *
+ * @param schema - The schema the defaults were computed for, which may name another through `$ref`
+ * @param value - The computed defaults
+ * @param [rootSchema] - The root schema, against which a `$ref` is resolved
+ * @returns - Whether `value` holds such a `null`
+ */
+function holdsNullFill<S extends StrictRJSFSchema = RJSFSchema>(schema: S, value: unknown, rootSchema?: S): boolean {
+  if (value !== null && !isObject(value)) {
+    return false;
+  }
+  // `findSchemaDefinition()` follows a chain of `$ref`s to the schema at its end
+  const resolved = typeof schema[REF_KEY] === 'string' ? findSchemaDefinition<S>(schema[REF_KEY], rootSchema) : schema;
+  if (value === null) {
+    return getSchemaType<S>(resolved) === 'null';
+  }
+  return Object.keys(resolved.properties ?? {}).some((key) =>
+    holdsNullFill<S>(getPropertySchema<S>(resolved, key), getByPath(value, key), rootSchema),
+  );
 }
 
 // The forwarded props are inherited rather than restated, so the two shapes cannot drift apart as options are added.
@@ -734,7 +755,7 @@ export function getObjectDefaults<
           retrievedSchema.required,
           defaultFormStateBehavior?.emptyObjectFields,
           hasConst,
-          propertySchema?.type === 'null',
+          holdsNullFill<S>(propertySchema, computedDefault, rootSchema),
         );
 
         return acc;
