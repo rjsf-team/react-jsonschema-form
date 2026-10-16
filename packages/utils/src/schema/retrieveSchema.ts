@@ -293,10 +293,6 @@ export function dependencyOption<S extends StrictRJSFSchema, F extends FormConte
  */
 export function nodeOfSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: S, rootSchema: S): AdoptedSchema<S> {
   const graph = parseSchemaGraph<S>(rootSchema);
-  const known = graph.byObject(schema);
-  if (known !== undefined) {
-    return { graph, node: known };
-  }
   const stamped = readProvenance<S>(schema, graph);
   if (stamped !== undefined && handedOut.has(schema) && stamped.seeds.length === 1) {
     return { graph: stamped.graph, node: stamped.seeds[0].node };
