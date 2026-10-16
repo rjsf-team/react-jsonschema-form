@@ -1,4 +1,5 @@
 import type { Validator as EngineValidator } from '@cfworker/json-schema';
+import { dereference } from '@cfworker/json-schema';
 import type {
   CustomValidator,
   ErrorTransformer,
@@ -246,6 +247,20 @@ describe('createCfworkerInstance()', () => {
     expect(extenderFn).toHaveBeenCalledTimes(1);
   });
 
+  it('resolves a $ref to a schema the extender adds', () => {
+    const validator = createCfworkerInstance(
+      { $ref: 'https://example.com/added' },
+      {
+        extenderFn: (engine) => {
+          engine.addSchema({ $id: 'https://example.com/added', type: 'number' });
+          return engine;
+        },
+      },
+    );
+    expect(validator.validate(1).valid).toBe(true);
+    expect(validator.validate('one').valid).toBe(false);
+  });
+
   it('fails loudly if the engine format registry is unavailable', () => {
     expect(() => installFormats({}, null as never)).toThrow('did not expose its format registry');
   });
@@ -334,13 +349,12 @@ describe('CFWorkerValidator validating a subschema by its place in the root', ()
     expect(validator.isValid(pointer, 's', rootSchema)).toBe(true);
     expect(validator.isValid(pointer, 5, rootSchema)).toBe(false);
   });
-  it('finds the engine internals it indexes a dependencies entry named like a keyword through', () => {
-    // `createCfworkerInstance()` reads the engine's private `lookup` and the `__absolute_uri__` it stamps on each
-    // schema there, which an engine upgrade could rename; this names them, where the test below only stops resolving
-    const lookup: unknown = Reflect.get(createCfworkerInstance({ type: 'object' }), 'lookup');
-    const schemas = isObject(lookup) ? Object.values(lookup).filter(isObject) : [];
-    expect(schemas).not.toHaveLength(0);
-    expect(schemas.every((schema) => typeof Reflect.get(schema, '__absolute_uri__') === 'string')).toBe(true);
+  it('finds the absolute URI the engine stamps on each schema it indexes a dependencies entry named like a keyword through', () => {
+    // `createCfworkerInstance()` reads the `__absolute_uri__` `dereference()` stamps on each schema it indexes, which an
+    // engine upgrade could rename; this names it, where the test below only stops resolving
+    const schemas = Object.values(dereference({ properties: { a: { type: 'string' } } })).filter(isObject);
+    expect(schemas).toHaveLength(2);
+    expect(schemas.every(({ __absolute_uri__: uri }) => typeof uri === 'string')).toBe(true);
   });
   it('resolves a $ref with no fragment as it stands', () => {
     const validator = customizeValidator();
