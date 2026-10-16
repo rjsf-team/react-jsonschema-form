@@ -329,7 +329,7 @@ describe('antd specific tests', () => {
     ['ui:readonly', 'Clear'],
     ['ui:disabled', 'Now'],
     ['ui:disabled', 'Clear'],
-  ])('a %s alt-date ignores its %s button', async (flag, button) => {
+  ])('a %s alt-date disables and ignores its %s button', async (flag, button) => {
     const onChange = vi.fn();
     render(
       <Form
@@ -341,6 +341,7 @@ describe('antd specific tests', () => {
       />,
     );
 
+    expect(screen.getByRole('button', { name: button })).toBeDisabled();
     await user.click(screen.getByRole('button', { name: button }));
     expect(onChange).not.toHaveBeenCalled();
   });
@@ -633,6 +634,9 @@ describe('antd focusOnFirstError', () => {
       { 'ui:widget': 'checkboxes' },
       '#root_x-0',
     ],
+    // The date parts' group carries the field's id but isn't focusable, so its first part is focused
+    ['alt-date group', { type: 'string' }, { 'ui:widget': 'alt-date' }, '#root_x_year'],
+    ['alt-datetime group', { type: 'string' }, { 'ui:widget': 'alt-datetime' }, '#root_x_year'],
     // The slider's root carries the field's id but isn't focusable, so the handle inside it is focused
     ['slider', { type: 'number' }, { 'ui:widget': 'range' }, '#root_x [role="slider"]'],
   ])('moves focus to a %s with errors', async (_, x, ui, focused) => {
@@ -749,5 +753,109 @@ describe("antd widgets carry their field's plan on the element a user focuses", 
     );
 
     expect(screen.getByRole('slider')).toHaveAccessibleName('Volume');
+  });
+});
+
+describe('antd focuses and names its groups as core does', () => {
+  test.each<[string, RJSFSchema, string]>([
+    ['radio', { type: 'string', enum: ['red', 'green'] }, 'radio'],
+    ['checkboxes', { type: 'array', items: { type: 'string', enum: ['red', 'green'] }, uniqueItems: true }, 'checkbox'],
+  ])('focuses the first %s a user can choose under ui:autofocus', (widget, color, role) => {
+    render(
+      <Form
+        schema={{ type: 'object', properties: { color } }}
+        uiSchema={{ color: { 'ui:widget': widget, 'ui:autofocus': true, 'ui:enumDisabled': ['red'] } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getAllByRole(role)[1]).toHaveFocus();
+  });
+
+  test("focuses a radio group's checked radio under ui:autofocus, where Tab into the group lands", () => {
+    render(
+      <Form
+        schema={{ type: 'object', properties: { color: { type: 'string', enum: ['red', 'green', 'blue'] } } }}
+        uiSchema={{ color: { 'ui:widget': 'radio', 'ui:autofocus': true } }}
+        initialFormData={{ color: 'blue' }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getAllByRole('radio')[2]).toHaveFocus();
+  });
+
+  test.each(['alt-date', 'alt-datetime'])(
+    "names the %s parts' group by the template's label, which draws no for",
+    (widget) => {
+      const { container } = render(
+        <Form
+          schema={{ type: 'object', properties: { when: { type: 'string', title: 'When' } } }}
+          uiSchema={{ when: { 'ui:widget': widget } }}
+          validator={validator}
+        />,
+      );
+
+      expect(screen.getByRole('group', { name: 'When' })).toHaveAttribute('id', 'root_when');
+      expect(container.querySelector('label[for="root_when"]')).toBeNull();
+    },
+  );
+});
+
+describe('antd read-only fields under readonlyAsDisabled: false', () => {
+  test.each<[string, RJSFSchema, UiSchema]>([
+    ['text input', { type: 'string' }, {}],
+    ['number input', { type: 'number' }, {}],
+    ['password input', { type: 'string' }, { 'ui:widget': 'password' }],
+    ['textarea', { type: 'string' }, { 'ui:widget': 'textarea' }],
+    ['date picker', { type: 'string', format: 'date' }, {}],
+  ])("keep a required %s read-only, so leaving it empty doesn't block the submit", (_, x, uiSchema) => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', required: ['x'], properties: { x: { ...x, title: 'X' } } }}
+        uiSchema={{ x: { ...uiSchema, 'ui:readonly': true } }}
+        formContext={{ readonlyAsDisabled: false }}
+        validator={validator}
+      />,
+    );
+    const control = container.querySelector('#root_x')!;
+
+    expect(control).toHaveAttribute('readonly');
+    expect(control).not.toBeDisabled();
+    expect(container.querySelector('form')!.checkValidity()).toBe(true);
+  });
+
+  test("open no date picker's popup", async () => {
+    render(
+      <Form
+        schema={{ type: 'object', properties: { x: { type: 'string', format: 'date', title: 'X' } } }}
+        uiSchema={{ x: { 'ui:readonly': true } }}
+        formContext={{ readonlyAsDisabled: false }}
+        validator={validator}
+      />,
+    );
+
+    await user.click(screen.getByRole('textbox', { name: 'X' }));
+
+    expect(document.querySelector('.ant-picker-dropdown')).not.toBeInTheDocument();
+  });
+
+  test("keep an additionalProperties entry's key input read-only", async () => {
+    render(
+      <Form
+        schema={{ type: 'object', additionalProperties: { type: 'string' } }}
+        uiSchema={{ 'ui:readonly': true }}
+        formData={{ first: 'a' }}
+        formContext={{ readonlyAsDisabled: false }}
+        validator={validator}
+      />,
+    );
+    const keyInput = screen.getByRole('textbox', { name: 'first Key' });
+
+    await user.type(keyInput, 'x');
+
+    expect(keyInput).toHaveAttribute('readonly');
+    expect(keyInput).not.toBeDisabled();
+    expect(keyInput).toHaveValue('first');
   });
 });

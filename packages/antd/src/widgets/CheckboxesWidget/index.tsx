@@ -1,6 +1,7 @@
 import type { FormContextType, WidgetProps, RJSFSchema, StrictRJSFSchema, GenericObjectType } from '@rjsf/utils';
 import {
   enumOptionSelectedValue,
+  enumOptionsAutofocusIndex,
   enumOptionsIsDisabled,
   enumOptionValueDecoder,
   enumOptionsDomValues,
@@ -57,6 +58,7 @@ export default function CheckboxesWidget<
     'group',
   );
 
+  const autofocusIndex = enumOptionsAutofocusIndex<S>(enumOptions, enumDisabled, autofocus);
   return Array.isArray(enumOptions) && enumOptions.length > 0 ? (
     <Checkbox.Group
       name={htmlName || id}
@@ -72,7 +74,7 @@ export default function CheckboxesWidget<
             <Checkbox
               id={optionId(id, i)}
               name={htmlName || id}
-              autoFocus={i === 0 ? autofocus : false}
+              autoFocus={i === autofocusIndex}
               // `undefined` rather than `false` for an enabled option, since antd reads its `DisabledContext` only when
               // the checkbox leaves `disabled` unset
               disabled={fieldDisabled || enumOptionsIsDisabled(option.value, enumDisabled) || undefined}

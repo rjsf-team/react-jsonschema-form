@@ -8939,7 +8939,6 @@ exports[`single fields > optional data controls > does not show optional control
                             >
                               <label
                                 class=""
-                                for="root_optionalObjectWithOneofs"
                                 title="optionalObjectWithOneofs"
                               >
                                 optionalObjectWithOneofs
@@ -9122,7 +9121,6 @@ exports[`single fields > optional data controls > does not show optional control
                             >
                               <label
                                 class=""
-                                for="root_optionalArrayWithAnyofs"
                                 title="optionalArrayWithAnyofs"
                               >
                                 optionalArrayWithAnyofs
@@ -10400,7 +10398,6 @@ exports[`single fields > optional data controls > does not show optional control
                             >
                               <label
                                 class=""
-                                for="root_optionalObjectWithOneofs"
                                 title="optionalObjectWithOneofs"
                               >
                                 optionalObjectWithOneofs
@@ -10584,7 +10581,6 @@ exports[`single fields > optional data controls > does not show optional control
                             >
                               <label
                                 class=""
-                                for="root_optionalArrayWithAnyofs"
                                 title="optionalArrayWithAnyofs"
                               >
                                 optionalArrayWithAnyofs
