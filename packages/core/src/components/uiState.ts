@@ -7,6 +7,7 @@ import type {
   StrictRJSFSchema,
 } from '@rjsf/utils';
 import {
+  constrainsValue,
   deepEquals,
   fieldPathFromList,
   fieldPathToList,
@@ -134,26 +135,10 @@ export function retrievedOptionsOf<T, S extends StrictRJSFSchema, F extends Form
   );
 }
 
-/** The keywords of an option that cannot tell apart data that differs at one property: the annotations, which
- * validate nothing, and `type`, since an edit to a property leaves the data the object it was
- */
-const KEYWORDS_READING_NO_PROPERTY = new Set([
-  '$comment',
-  '$id',
-  '$schema',
-  'default',
-  'deprecated',
-  'description',
-  'examples',
-  'readOnly',
-  'title',
-  'type',
-  'writeOnly',
-]);
-
 /** Whether `keyword` of an option, with `value`, can tell data apart by what it holds at `property`. `properties` and
- * `required` can only where they name the property; any other keyword that validates, such as `minProperties` or
- * `not`, reads the object whole
+ * `required` can only where they name the property; any other keyword that constrains the value, such as
+ * `minProperties` or `not`, reads the object whole, and one that constrains nothing, `type` included since an edit to a
+ * property leaves the data the object it was, reads nothing
  */
 function keywordReads(keyword: string, value: unknown, property: string): boolean {
   if (keyword === PROPERTIES_KEY) {
@@ -162,7 +147,7 @@ function keywordReads(keyword: string, value: unknown, property: string): boolea
   if (keyword === REQUIRED_KEY) {
     return !Array.isArray(value) || value.includes(property);
   }
-  return !KEYWORDS_READING_NO_PROPERTY.has(keyword);
+  return constrainsValue(keyword);
 }
 
 /** Whether `options` can disagree about the object's `property`: whether one of them has a keyword that can tell data

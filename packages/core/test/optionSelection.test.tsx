@@ -526,6 +526,38 @@ describe('option selection as form state', () => {
       );
     });
 
+    it.each<[string, RJSFSchema]>([
+      ['$defs', { $defs: { unused: { type: 'string' } } }],
+      ['discriminator', { discriminator: { propertyName: 'b' } }],
+      ['an x- keyword', { 'x-group': 'b' }],
+    ])(
+      'keeps an option carrying %s, which constrains no value, held through an edit to a property no option declares',
+      async (_, keywords) => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { name: { type: 'string' } },
+          oneOf: [
+            { title: 'A', properties: { a: { type: 'string' } } },
+            {
+              title: 'B',
+              properties: { a: { type: 'string', maxLength: 2 }, b: { type: 'string' } },
+              required: ['b'],
+              ...keywords,
+            },
+          ],
+        };
+        const { node } = createFormComponent({ schema, initialFormData: {} });
+        await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
+        await user.type(elementOf(node, '#root_b'), 'z');
+        await user.type(elementOf(node, '#root_a'), 'abc');
+
+        await user.type(elementOf(node, '#root_name'), 'n');
+
+        expect(selectOf(node, 'root__oneof_select')).toHaveValue('1');
+        expect(ids(node, 'input, select')).toEqual(['root_name', 'root__oneof_select', 'root_a', 'root_b']);
+      },
+    );
+
     it("matches the option again after an edit to a property only an option's required names, as on 6.11.0", async () => {
       const schema: RJSFSchema = {
         type: 'object',
