@@ -83,21 +83,13 @@ const pointers = new KeyedMemo<object | null>();
  * @returns - The `$ref` wrapper
  */
 export function pointerTo<S extends StrictRJSFSchema = RJSFSchema>(graph: SchemaGraph<S>, id: NodeId): S | undefined {
-  const keys = [graph, id];
-  const memoized = pointers.peek(keys);
-  if (memoized === null) {
-    return undefined;
-  }
-  if (isSchemaObject<S>(memoized)) {
-    return memoized;
-  }
-  const node = graph.node(id);
-  const pointer =
-    node.kind === 'schema' && isRootPointer(node.pointer)
+  const pointer = pointers.get([graph, id], () => {
+    const node = graph.node(id);
+    return node.kind === 'schema' && isRootPointer(node.pointer)
       ? schemaFrom(graph.rawRoot, { [REF_KEY]: refTo(node.pointer) })
-      : undefined;
-  pointers.set(keys, pointer ?? null);
-  return pointer;
+      : null;
+  });
+  return isSchemaObject<S>(pointer) ? pointer : undefined;
 }
 
 /** Returns what a validator checks the subschema `id` with: `{ $ref }` naming it in the root, or the subschema itself
