@@ -1,5 +1,12 @@
 import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getTemplates, getUiOptions, hasTemplateErrors, templateDrawsLabel, templateLabelFor } from '@rjsf/utils';
+import {
+  getTemplates,
+  getUiOptions,
+  hasTemplateErrors,
+  templateDrawsLabel,
+  templateLabelFor,
+  templateMarksRequired,
+} from '@rjsf/utils';
 
 import { cn } from '../lib/utils.ts';
 
@@ -80,7 +87,7 @@ export default function FieldTemplate<
             id={presentation?.label.id}
           >
             {label}
-            {required ? '*' : null}
+            {templateMarksRequired<T, S, F>(props) ? '*' : null}
           </label>
         )}
         {children}

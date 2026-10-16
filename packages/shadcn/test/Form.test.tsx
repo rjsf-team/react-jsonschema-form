@@ -542,3 +542,42 @@ describe('shadcn focusOnFirstError', () => {
     expect(container.querySelector(focused)).toHaveFocus();
   });
 });
+
+describe('shadcn templates', () => {
+  test.each([
+    ['declares it holds false unchecked', { uncheckedIsFalse: true }, 'Foo'],
+    ['declares nothing', {}, 'Foo*'],
+  ])("marks the template's label for a switch that %s only where its plan says", (_, declaration, text) => {
+    const SwitchWidget = () => null;
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { foo: { type: 'boolean', title: 'Foo' } }, required: ['foo'] }}
+        uiSchema={{ foo: { 'ui:widget': 'SwitchWidget' } }}
+        widgets={{ SwitchWidget }}
+        presentation={{ widgets: { SwitchWidget: { ...declaration, label: 'template' } } }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('label[for="root_foo"]')?.textContent).toBe(text);
+  });
+
+  test("names a required object's option selector by its heading's text, without the marker beside it", () => {
+    const pet: RJSFSchema = {
+      type: 'object',
+      title: 'Pet',
+      properties: { name: { type: 'string' } },
+      anyOf: [
+        { title: 'Dog', properties: { bark: { type: 'string' } } },
+        { title: 'Cat', properties: { meow: { type: 'string' } } },
+      ],
+    };
+    const { container } = render(
+      <Form schema={{ type: 'object', properties: { pet }, required: ['pet'] }} validator={validator} />,
+    );
+
+    expect(container.querySelector('#root_pet_XxxOf__title')).toHaveTextContent(/^Pet$/);
+    expect(container.querySelector('#root_pet_XxxOf__title')?.parentElement).toHaveTextContent(/^Pet\*$/);
+    expect(container.querySelector('#root_pet__anyof_select')).toHaveAccessibleName('Pet');
+  });
+});

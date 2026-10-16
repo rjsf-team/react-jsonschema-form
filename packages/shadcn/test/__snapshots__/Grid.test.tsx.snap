@@ -28,10 +28,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <div
                     class="my-1 flex flex-col gap-0.5"
-                    id="root_person__title"
                   >
                     <h5>
-                      Person Info
+                      <span
+                        id="root_person__title"
+                      >
+                        Person Info
+                      </span>
                     </h5>
                     <div
                       class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
@@ -968,10 +971,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <div
                     class="my-1 flex flex-col gap-0.5"
-                    id="root_person__title"
                   >
                     <h5>
-                      Person Info
+                      <span
+                        id="root_person__title"
+                      >
+                        Person Info
+                      </span>
                     </h5>
                     <div
                       class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
@@ -1940,10 +1946,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <div
                     class="my-1 flex flex-col gap-0.5"
-                    id="root_person__title"
                   >
                     <h5>
-                      Person Info
+                      <span
+                        id="root_person__title"
+                      >
+                        Person Info
+                      </span>
                     </h5>
                     <div
                       class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
@@ -2744,10 +2753,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <div
                     class="my-1 flex flex-col gap-0.5"
-                    id="root_person__title"
                   >
                     <h5>
-                      Person Info
+                      <span
+                        id="root_person__title"
+                      >
+                        Person Info
+                      </span>
                     </h5>
                     <div
                       class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
@@ -3681,10 +3693,13 @@ exports[`Three even column grid > renders person and address in three columns, n
               >
                 <div
                   class="my-1 flex flex-col gap-0.5"
-                  id="root_person__title"
                 >
                   <h5>
-                    Person Info
+                    <span
+                      id="root_person__title"
+                    >
+                      Person Info
+                    </span>
                   </h5>
                   <div
                     class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
@@ -4228,10 +4243,13 @@ exports[`Two even column grid > renders person and address in two columns, no em
               >
                 <div
                   class="my-1 flex flex-col gap-0.5"
-                  id="root_person__title"
                 >
                   <h5>
-                    Person Info
+                    <span
+                      id="root_person__title"
+                    >
+                      Person Info
+                    </span>
                   </h5>
                   <div
                     class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
