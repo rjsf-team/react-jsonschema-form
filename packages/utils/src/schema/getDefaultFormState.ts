@@ -379,6 +379,7 @@ interface ViewProps<T, S extends StrictRJSFSchema, F extends FormContextType> ex
  */
 function policyFor<S extends StrictRJSFSchema, F extends FormContextType>(
   validator: ValidatorType<S, F>,
+  graph: SchemaGraph<S>,
   allOf: boolean | 'if',
   conditions: boolean,
   selections: ReadonlyMap<NodeId, number>,
@@ -388,7 +389,7 @@ function policyFor<S extends StrictRJSFSchema, F extends FormContextType>(
   for (const [provider, index] of selections) {
     key += `|${provider}:${index}`;
   }
-  return cachedPolicy<S>(validator, key, () => ({
+  return cachedPolicy<S>(validator, graph, key, () => ({
     allOf,
     conditions,
     cutRecursion,
@@ -521,7 +522,7 @@ function settle<S extends StrictRJSFSchema, F extends FormContextType>(
     conditions: boolean,
     cutRecursion: boolean,
   ): PlannedField<S> => {
-    const policy = policyFor(context.validator, allOf, conditions, options.selections, cutRecursion);
+    const policy = policyFor(context.validator, graph, allOf, conditions, options.selections, cutRecursion);
     return { plan: buildPlan<S, F>({ context, graph, seeds, data, depData, policy }), allOf, conditions };
   };
   const planFor = (seeds: readonly Seed[], cutRecursion = false): PlannedField<S> => {
@@ -928,7 +929,7 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
       .map(({ refPath }) => ({ node: optionNode, refPath })),
     data: view.data,
     depData: view.depData,
-    policy: policyFor(context.validator, view.allOf, view.conditions, NO_OPTIONS.selections, merged.collapsed),
+    policy: policyFor(context.validator, graph, view.allOf, view.conditions, NO_OPTIONS.selections, merged.collapsed),
   });
   const rendered = getRenderedOptionSchema<S>(remaining, optionAlone.schema);
   return foldView<T, S, F>(

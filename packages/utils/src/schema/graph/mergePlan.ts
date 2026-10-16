@@ -224,38 +224,36 @@ function withRequired<S extends StrictRJSFSchema>(schema: S, required: readonly 
   return { ...schema, required: Array.isArray(existing) ? [...new Set([...existing, ...required])] : [...required] };
 }
 
-/** The policies plans are built under, by validator and key */
-const policies = new WeakMap<object, Map<string, unknown>>();
+/** The policies plans are built under, by validator, graph and key */
+const policies = new KeyedMemo<object>();
 
 function isPolicy<S extends StrictRJSFSchema>(value: unknown): value is PlanPolicy<S> {
   return typeof value === 'object' && value !== null && 'allOf' in value;
 }
 
-/** Returns the policy `create` makes for `key`, made once per validator: a plan is memoized under its policy object, so
- * a view asking for the same policy again must be handed the same object. A policy reads nothing of the context but
- * its validator, which is what lets views called with a new context object each time share one.
+/** Returns the policy `create` makes for `key`, made once per validator and graph: a plan is memoized under its policy
+ * object, so a view asking for the same policy again must be handed the same object. A policy reads nothing of the
+ * context but its validator, which is what lets views called with a new context object each time share one.
  *
  * @param validator - The validator the policy's option choice validates with
+ * @param graph - The graph the policy plans in, whose node ids a key may name
  * @param key - Names the policy among the validator's
  * @param create - Makes the policy the first time it is asked for
  * @returns - The policy
  */
 export function cachedPolicy<S extends StrictRJSFSchema = RJSFSchema>(
   validator: object,
+  graph: SchemaGraph<S>,
   key: string,
   create: () => PlanPolicy<S>,
 ): PlanPolicy<S> {
-  let cache = policies.get(validator);
-  if (cache === undefined) {
-    cache = new Map();
-    policies.set(validator, cache);
-  }
-  const cached = cache.get(key);
+  const keys = [validator, graph, key];
+  const cached = policies.peek(keys);
   if (isPolicy<S>(cached)) {
     return cached;
   }
   const policy = create();
-  cache.set(key, policy);
+  policies.set(keys, policy);
   return policy;
 }
 

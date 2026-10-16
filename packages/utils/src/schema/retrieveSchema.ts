@@ -233,8 +233,9 @@ function fieldOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, schema: S): 
  */
 function renderPolicy<S extends StrictRJSFSchema, F extends FormContextType>(
   validator: ValidatorType<S, F>,
+  graph: SchemaGraph<S>,
 ): PlanPolicy<S> {
-  return cachedPolicy<S>(validator, 'render', () => ({
+  return cachedPolicy<S>(validator, graph, 'render', () => ({
     allOf: true,
     selectOption: (request) => dependencyOption(validator, request, request.data),
   }));
@@ -307,7 +308,7 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
   planned?: MergePlan<S>,
 ): S {
   const { graph, seeds } = field;
-  const policy = renderPolicy(context.validator);
+  const policy = renderPolicy(context.validator, root);
   const planOf = (seedsToPlan: readonly Seed[], dataToPlan: unknown) =>
     buildPlan({ context, graph, seeds: seedsToPlan, data: dataToPlan, policy });
   const plan = planned ?? planOf(seeds, data);
