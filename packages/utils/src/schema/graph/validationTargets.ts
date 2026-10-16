@@ -61,10 +61,12 @@ export function withVariantId<S extends StrictRJSFSchema = RJSFSchema>(schema: S
 
 /** Returns the `$ref` naming the subschema at the JSON `pointer` in the root, encoded as `encodeURI()` encodes it,
  * which leaves the characters a fragment may hold, such as the `$` of `$defs`, as they are. A `#` is escaped too:
- * `encodeURI()` keeps it, and Ajv drops one ending the `$ref` as an empty fragment.
+ * `encodeURI()` keeps it, and Ajv drops one ending the `$ref` as an empty fragment. A lone surrogate, which a property
+ * name may hold, has no UTF-8 encoding and is left as it is, which ata reads as written; Ajv and cfworker throw on
+ * compiling a root that holds one, whatever the `$ref`.
  */
 function refTo(pointer: string): string {
-  return `#${encodeURI(pointer).replaceAll('#', '%23')}`;
+  return `#${pointer.replace(/[^\uD800-\uDFFF]+/gu, (wellFormed) => encodeURI(wellFormed)).replaceAll('#', '%23')}`;
 }
 
 /** The `{ $ref }` `pointerTo()` names each node by, per graph and node, or `null` for a node it gives none, so a

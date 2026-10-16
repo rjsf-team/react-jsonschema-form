@@ -36,6 +36,13 @@ describe('pointerTo()', () => {
       $ref: '#/$defs/a$b:c@d+e%23f%20g%25h',
     });
   });
+  it('leaves a lone surrogate, which has no URI encoding, as it is beside the characters it encodes', () => {
+    const root: RJSFSchema = { properties: { 'a\uD800 \uD83D\uDE00\uDC00': {} } };
+    const graph = parseSchemaGraph(root);
+    expect(pointerTo(graph, nodeAt(graph, '/properties/a\uD800 \uD83D\uDE00\uDC00'))).toEqual({
+      $ref: '#/properties/a\uD800%20%F0%9F%98%80\uDC00',
+    });
+  });
   it('escapes a # that ends the pointer, which Ajv would drop as an empty fragment', () => {
     const root: RJSFSchema = { properties: { 'Phone #': {} } };
     const graph = parseSchemaGraph(root);
