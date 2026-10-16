@@ -1,5 +1,5 @@
 import type { RJSFSchema } from '../../src/index.ts';
-import { getValidationSchemas, ID_KEY, schemaKey } from '../../src/index.ts';
+import { getValidationSchemas, ID_KEY, schemaKey, schemaParser } from '../../src/index.ts';
 import {
   PROPERTY_DEPENDENCIES,
   RECURSIVE_REF,
@@ -20,6 +20,13 @@ import {
 function listed(rootSchema: RJSFSchema): RJSFSchema[] {
   return Object.values(getValidationSchemas(rootSchema)).map(({ [ID_KEY]: _id, ...schema }) => schema);
 }
+
+describe('schemaParser()', () => {
+  it('lists what getValidationSchemas() lists, under the name 6.x exported it as', () => {
+    // oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias
+    expect(schemaParser(SCHEMA_WITH_SINGLE_CONDITION)).toEqual(getValidationSchemas(SCHEMA_WITH_SINGLE_CONDITION));
+  });
+});
 
 describe('getValidationSchemas()', () => {
   it('parses property dependencies properly', () => {
