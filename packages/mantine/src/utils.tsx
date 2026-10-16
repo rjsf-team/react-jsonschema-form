@@ -24,7 +24,6 @@ import type {
 import {
   errorId,
   getControlAttributes,
-  getControlDescribedBy,
   getGroupAttributes,
   getTemplates,
   getWidgetDescription,
@@ -869,7 +868,7 @@ export function useGroupAriaProps<
   const hiddenLabel = useHiddenTitle(id, label, hideLabel, resolved.inputWrapperOrder);
   // The label the widget draws, shown or hidden, where the plan names the group by no other
   const role = component === 'RadioGroup' ? 'radiogroup' : 'group';
-  const { group } = getGroupAttributes<T, S, F>(widgetProps, role, label ? titleId(id) : undefined);
+  const { group, option } = getGroupAttributes<T, S, F>(widgetProps, role, label ? titleId(id) : undefined);
   const labelledBy = group['aria-labelledby'] ?? (hiddenLabel ? titleId(id) : undefined);
   const ownSuccessProps = asObject(resolved.successProps);
   const containerProps = useAriaContainerProps({
@@ -889,7 +888,7 @@ export function useGroupAriaProps<
   // Mantine's `Checkbox` and `Radio` only style an `error`. Each radio is required, as in `@rjsf/core`, since checking
   // any one of them satisfies it, where a required checkbox would have to be checked.
   const optionRequired = component === 'RadioGroup' && required;
-  const describedBy = getControlDescribedBy<T, S, F>(widgetProps);
+  const describedBy = option['aria-describedby'];
   const optionProps = useMemo(
     () => ({
       'aria-describedby': describedBy,

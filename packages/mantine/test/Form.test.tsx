@@ -201,6 +201,23 @@ describe('mantine FieldTemplate', () => {
     expect(document.getElementById('root_x__label')).not.toHaveAttribute('for');
     expect(document.getElementById('root_x_year')).toHaveAccessibleName('X, year');
   });
+
+  test("draws the label and description of @rjsf/core's RatingWidget, which draws neither itself", () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          properties: { r: { type: 'integer', title: 'Rate', description: 'How good', minimum: 0, maximum: 5 } },
+        }}
+        uiSchema={{ r: { 'ui:widget': 'RatingWidget' } }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('#root_r__label')).not.toHaveAttribute('for');
+    expect(screen.getByRole('radiogroup')).toHaveAccessibleName('Rate');
+    expect(screen.getAllByRole('radio')[0]).toHaveAccessibleDescription('How good');
+  });
 });
 
 describe('mantine title templates', () => {
