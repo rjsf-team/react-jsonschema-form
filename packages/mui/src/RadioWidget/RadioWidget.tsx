@@ -9,6 +9,7 @@ import RadioGroup from '@mui/material/RadioGroup';
 import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   enumOptionSelectedValue,
+  enumOptionsAutofocusIndex,
   enumOptionsIsDisabled,
   enumOptionValueDecoder,
   enumOptionsDomValues,
@@ -69,6 +70,7 @@ export default function RadioWidget<
   // `required` goes on the `<input>` rather than the `Radio`, whose `FormControlLabel` would mark each option's label `*`
   const radioSlotProps = withInputSlot({ ...optionAttributes, required }, muiSlotProps?.radio?.slotProps);
 
+  const autofocusIndex = enumOptionsAutofocusIndex<S>(enumOptions, enumDisabled, autofocus);
   return (
     <>
       {/* No `for`, which can't name the group's wrapper: the group points its `aria-labelledby` at the label instead */}
@@ -100,7 +102,7 @@ export default function RadioWidget<
                     {...muiSlotProps?.radio}
                     name={htmlName || id}
                     id={optionId(id, index)}
-                    autoFocus={autofocus && index === 0}
+                    autoFocus={index === autofocusIndex}
                     color='primary'
                     slotProps={radioSlotProps}
                   />

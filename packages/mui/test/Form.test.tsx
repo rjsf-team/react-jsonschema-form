@@ -698,3 +698,20 @@ describe("mui's error and help elements carry the ids their field's plan describ
     expect(screen.getByRole('textbox')).toHaveAccessibleDescription('pick one or another');
   });
 });
+
+describe('mui focuses its groups as core does', () => {
+  test.each<[string, RJSFSchema, string]>([
+    ['radio', { type: 'string', enum: ['red', 'green'] }, 'radio'],
+    ['checkboxes', { type: 'array', items: { type: 'string', enum: ['red', 'green'] }, uniqueItems: true }, 'checkbox'],
+  ])('focuses the first %s a user can choose under ui:autofocus', (widget, color, role) => {
+    render(
+      <Form
+        schema={{ type: 'object', properties: { color } }}
+        uiSchema={{ color: { 'ui:widget': widget, 'ui:autofocus': true, 'ui:enumDisabled': ['red'] } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getAllByRole(role)[1]).toHaveFocus();
+  });
+});
