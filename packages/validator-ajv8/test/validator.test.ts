@@ -27,6 +27,7 @@ import type { Mock } from 'vitest';
 
 import pointerValidationTests, {
   absoluteRefValidationTests,
+  sharedSubschemaValidationTests,
 } from '../../utils/test/testUtils/pointerValidationTests.ts';
 import customizeValidator from '../src/customizeValidator.ts';
 import type { Localizer } from '../src/index.ts';
@@ -3554,3 +3555,4 @@ describe('AJV8Validator validating a subschema by its place in the root', () => 
 
 pointerValidationTests(() => customizeValidator());
 absoluteRefValidationTests(() => customizeValidator());
+sharedSubschemaValidationTests(() => customizeValidator());

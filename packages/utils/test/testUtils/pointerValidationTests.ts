@@ -307,6 +307,41 @@ export default function pointerValidationTests(buildValidator: (rootSchema: RJSF
   });
 }
 
+/** Runs the cases where one subschema object sits in two resources, the root and a nested `$id`, so the form has to
+ * name the one the option it scores sits in. ata's and cfworker's engines resolve such an object against one of the
+ * resources whatever the pointer names, so only the validators whose engines resolve it run them.
+ *
+ * @param buildValidator - Returns the package's validator for the `rootSchema`
+ */
+export function sharedSubschemaValidationTests(buildValidator: (rootSchema: RJSFSchema) => ValidatorType) {
+  describe('scores an option in a nested $id against that resource where it shares a subschema object with the root', () => {
+    const property: RJSFSchema = { $ref: '#/definitions/K' };
+    const entry: RJSFSchema = { properties: { k: { $ref: '#/definitions/K' } }, required: ['k'] };
+    it.each<[string, RJSFSchema, RJSFSchema]>([
+      ['a property', property, { type: 'object', properties: { k: property }, required: ['k'] }],
+      ['an allOf entry', { type: 'object', allOf: [entry] }, { type: 'object', allOf: [entry] }],
+      ['a then', { if: true, then: entry }, { type: 'object', if: true, then: entry }],
+    ])('%s', (_name, rootUse, option) => {
+      const options: RJSFSchema[] = [{ type: 'object', properties: { z: { type: 'string' } } }, option];
+      const rootSchema: RJSFSchema = {
+        definitions: { K: { type: 'string', const: 'root' } },
+        type: 'object',
+        properties: {
+          a: { type: 'object', properties: { k: rootUse } },
+          n: {
+            $id: 'http://example.com/nested.json',
+            definitions: { K: { type: 'string', const: 'nested' } },
+            oneOf: options,
+          },
+        },
+      };
+      const schemaUtils = createSchemaUtils({ validator: buildValidator(rootSchema) }, rootSchema);
+      expect(schemaUtils.getFirstMatchingOption({ k: 'nested' }, options)).toBe(1);
+      expect(schemaUtils.getClosestMatchingOption({ k: 'nested' }, options)).toBe(1);
+    });
+  });
+}
+
 /** Runs the cases where a form hands a live validator a root whose `$ref`s it made absolute against the root's `$id`.
  * A precompiled validator is compiled from the root as written, and rejects that root as one it was not compiled from.
  *
