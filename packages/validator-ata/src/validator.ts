@@ -8,7 +8,7 @@ import type {
   ValidationData,
   ValidatorType,
 } from '@rjsf/utils';
-import { deepEquals, logOnce, ID_KEY, ROOT_SCHEMA_PREFIX, schemaKey, withIdRefPrefix } from '@rjsf/utils';
+import { deepEquals, logOnce, ID_KEY, rootSchemaIdOf, schemaKey, withIdRefPrefix } from '@rjsf/utils';
 import type { ValidationError, Validator } from 'ata-validator';
 
 import createAtaInstance from './createAtaInstance.ts';
@@ -200,9 +200,7 @@ export default class ATAValidator<
     if (this.lastSeenRootSchema === rootSchema && this.hasRegisteredRootSchema) {
       return;
     }
-    // An empty `$id` names nothing, so the root is registered under `ROOT_SCHEMA_PREFIX` instead: that is the
-    // base `withIdRefPrefix()` rewrites a local `$ref` against, and nothing would resolve it under an empty name
-    const rootSchemaId = rootSchema[ID_KEY] || ROOT_SCHEMA_PREFIX;
+    const rootSchemaId = rootSchemaIdOf(rootSchema);
     // Inject $id into a copy of the rootSchema so ata's schema registry can
     // resolve `<rootSchemaId>#/...` refs produced by `withIdRefPrefix`.
     // The original user-supplied schema is left untouched.
@@ -210,9 +208,12 @@ export default class ATAValidator<
       rootSchema[ID_KEY] === rootSchemaId
         ? (rootSchema as object)
         : { ...(rootSchema as object), [ID_KEY]: rootSchemaId };
-    this.cachedRootSchema = rootWithId;
     const cached = this.validators.get(rootSchemaId);
     if (!cached || !deepEquals(cached.schema, rootWithId)) {
+      // Every validator built so far resolves its `$ref`s against the root it was built beside, so a schema such as
+      // `{ $ref: '#/definitions/x' }`, which means something else under every root, is built again for this one
+      this.validators.clear();
+      this.cachedRootSchema = rootWithId;
       this.getOrBuild(rootSchemaId, rootWithId);
     }
     this.lastSeenRootSchema = rootSchema;
@@ -227,7 +228,7 @@ export default class ATAValidator<
     let id: string | undefined;
     try {
       this.handleSchemaUpdate(rootSchema);
-      const schemaWithIdRefPrefix = withIdRefPrefix<S>(schema);
+      const schemaWithIdRefPrefix = withIdRefPrefix<S>(schema, rootSchemaIdOf(rootSchema));
       id = schemaKey(schemaWithIdRefPrefix);
       const validator = this.getOrBuild(id, schemaWithIdRefPrefix);
       return validator.validate(ATAValidator.cloneForValidation(formData)).valid;

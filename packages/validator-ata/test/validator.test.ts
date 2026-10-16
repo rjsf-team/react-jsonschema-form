@@ -6,7 +6,7 @@ import type {
   RJSFValidationError,
   UiSchema,
 } from '@rjsf/utils';
-import { ErrorSchemaBuilder, ID_KEY, ROOT_SCHEMA_PREFIX, noop } from '@rjsf/utils';
+import { createSchemaUtils, ErrorSchemaBuilder, ID_KEY, ROOT_SCHEMA_PREFIX, noop } from '@rjsf/utils';
 import type { Validator } from 'ata-validator';
 
 import customizeValidator from '../src/customizeValidator.ts';
@@ -515,5 +515,51 @@ describe('validateFormData() with a transformErrors that clears every message', 
     const { errors } = validator.validateFormData({ a: 'short' }, schema, undefined, transformErrors);
     expect(errors).not.toEqual([]);
     expect(validator.validateFormData({ a: 'short' }, schema, customValidate, transformErrors).errors).toEqual(errors);
+  });
+});
+
+describe('ATAValidator resolving a $ref local to the root', () => {
+  const optionRoot = (extra: RJSFSchema): RJSFSchema => ({
+    ...extra,
+    type: 'object',
+    definitions: { a: { const: 'a' }, b: { const: 'b' } },
+    properties: {
+      v: {
+        type: 'object',
+        oneOf: [
+          {
+            properties: { kind: { $ref: '#/definitions/a' }, x: { type: 'string', default: 'X' } },
+            required: ['kind'],
+          },
+          {
+            properties: { kind: { $ref: '#/definitions/b' }, y: { type: 'string', default: 'Y' } },
+            required: ['kind'],
+          },
+        ],
+      },
+    },
+  });
+  it.each([
+    ['an absolute $id', { $id: 'https://example.com/root.json' }],
+    ['a relative $id', { $id: 'root.json' }],
+    ['no $id', {}],
+  ])('picks the option a nested $ref matches under a root with %s, the validator shared', (_name, extra) => {
+    const rootSchema = optionRoot(extra);
+    const schemaUtils = createSchemaUtils({ validator: pkg.default }, rootSchema);
+    expect(schemaUtils.getDefaultFormState(rootSchema, { v: { kind: 'b' } })).toEqual({ v: { kind: 'b', y: 'Y' } });
+  });
+  it('does not answer a $ref with what it built against an earlier root under the same id', () => {
+    const validator = customizeValidator();
+    const ref: RJSFSchema = { $ref: '#/definitions/x' };
+    expect(validator.isValid(ref, 's', { definitions: { x: { type: 'string' } } })).toBe(true);
+    const numberRoot: RJSFSchema = { definitions: { x: { type: 'number' } } };
+    expect(validator.isValid(ref, 's', numberRoot)).toBe(false);
+    expect(validator.isValid(ref, 5, numberRoot)).toBe(true);
+  });
+  it('resolves a $ref into a root that carries an $id', () => {
+    const validator = customizeValidator();
+    const rootSchema: RJSFSchema = { $id: 'https://example.com/root.json', definitions: { x: { type: 'string' } } };
+    expect(validator.isValid({ $ref: '#/definitions/x' }, 's', rootSchema)).toBe(true);
+    expect(validator.isValid({ $ref: '#/definitions/x' }, 5, rootSchema)).toBe(false);
   });
 });

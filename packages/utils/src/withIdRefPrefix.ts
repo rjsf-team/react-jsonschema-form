@@ -1,22 +1,23 @@
-import { REF_KEY, ROOT_SCHEMA_PREFIX } from './constants.ts';
+import { ID_KEY, REF_KEY, ROOT_SCHEMA_PREFIX } from './constants.ts';
 import isObject from './isObject.ts';
 import type { GenericObjectType, RJSFSchema, StrictRJSFSchema } from './types.ts';
 
 /** Takes a `node` object and transforms any contained `$ref` node variables with a prefix, recursively calling
- * `withIdRefPrefix` for any other elements.
+ * `prefixRefs` for any other elements.
  *
- * @param node - The object node to which a ROOT_SCHEMA_PREFIX is added when a REF_KEY is part of it
+ * @param node - The object node to which the `base` is added when a REF_KEY is part of it
+ * @param base - The id of the root schema the local `$ref`s name, without an empty trailing fragment
  */
-function withIdRefPrefixObject<S extends StrictRJSFSchema = RJSFSchema>(node: S): S {
+function withIdRefPrefixObject<S extends StrictRJSFSchema = RJSFSchema>(node: S, base: string): S {
   const realObj: GenericObjectType = node;
   for (const key in realObj) {
     /* v8 ignore next -- spread in caller guarantees only own properties reach this loop */
     if (Object.hasOwn(realObj, key)) {
       const value = realObj[key];
       if (key === REF_KEY && typeof value === 'string' && value.startsWith('#')) {
-        realObj[key] = ROOT_SCHEMA_PREFIX + value;
+        realObj[key] = base + value;
       } else {
-        realObj[key] = withIdRefPrefix<S>(value);
+        realObj[key] = prefixRefs<S>(value, base);
       }
     }
   }
@@ -24,34 +25,66 @@ function withIdRefPrefixObject<S extends StrictRJSFSchema = RJSFSchema>(node: S)
 }
 
 /** Takes a `node` object list and transforms any contained `$ref` node variables with a prefix, recursively calling
- * `withIdRefPrefix` for any other elements.
+ * `prefixRefs` for any other elements.
  *
- * @param node - The list of object nodes to which a ROOT_SCHEMA_PREFIX is added when a REF_KEY is part of it
+ * @param node - The list of object nodes to which the `base` is added when a REF_KEY is part of it
+ * @param base - The id of the root schema the local `$ref`s name, without an empty trailing fragment
  */
-function withIdRefPrefixArray<S extends StrictRJSFSchema = RJSFSchema>(node: S[]): S[] {
-  return node.map((item) => withIdRefPrefix<S>(item));
+function withIdRefPrefixArray<S extends StrictRJSFSchema = RJSFSchema>(node: S[], base: string): S[] {
+  return node.map((item) => prefixRefs<S>(item, base));
 }
 
-/** Recursively prefixes all `$ref`s in a schema with the value of the `ROOT_SCHEMA_PREFIX` constant.
- * This is used in isValid to make references to the rootSchema
+function prefixRefs<S extends StrictRJSFSchema = RJSFSchema>(schemaNode: S, base: string): S;
+function prefixRefs<S extends StrictRJSFSchema = RJSFSchema>(
+  schemaNode: S | S[] | S[keyof S],
+  base: string,
+): S | S[] | S[keyof S];
+function prefixRefs<S extends StrictRJSFSchema = RJSFSchema>(
+  schemaNode: S | S[] | S[keyof S],
+  base: string,
+): S | S[] | S[keyof S] {
+  if (Array.isArray(schemaNode)) {
+    return withIdRefPrefixArray<S>([...schemaNode], base);
+  }
+  if (isObject(schemaNode)) {
+    return withIdRefPrefixObject<S>({ ...schemaNode }, base);
+  }
+  return schemaNode;
+}
+
+/** Returns the id a validator registers `rootSchema` under, and so the prefix `withIdRefPrefix()` gives the local
+ * `$ref`s it rewrites: the root's own `$id`, or `ROOT_SCHEMA_PREFIX` where it has none, since an empty `$id` names
+ * nothing a `$ref` could resolve against
  *
- * @param schemaNode - The object node to which a ROOT_SCHEMA_PREFIX is added when a REF_KEY is part of it
+ * @param rootSchema - The root schema
+ * @returns - The id the root is registered under
+ */
+export function rootSchemaIdOf<S extends StrictRJSFSchema = RJSFSchema>(rootSchema: S): string {
+  return rootSchema[ID_KEY] || ROOT_SCHEMA_PREFIX;
+}
+
+/** Recursively prefixes every `$ref` local to the root document, one starting with `#`, with the id the root schema is
+ * registered under, `ROOT_SCHEMA_PREFIX` unless another is given. This is used in isValid to make references to the
+ * rootSchema. An id ending in an empty fragment, as `http://example.com/root.json#` does, names the same document as
+ * one without it, so that `#` is left out of the prefix rather than doubled.
+ *
+ * @param schemaNode - The object node to which the prefix is added when a REF_KEY is part of it
+ * @param [prefix=ROOT_SCHEMA_PREFIX] - The id of the root schema the local `$ref`s name, such as the root's own `$id`
  * @returns - A copy of the `schemaNode` with updated `$ref`s
  */
-export default function withIdRefPrefix<S extends StrictRJSFSchema = RJSFSchema>(schemaNode: S[]): S[];
-export default function withIdRefPrefix<S extends StrictRJSFSchema = RJSFSchema>(schemaNode: S): S;
-export default function withIdRefPrefix<S extends StrictRJSFSchema = RJSFSchema>(schemaNode: S[keyof S]): S[keyof S];
+export default function withIdRefPrefix<S extends StrictRJSFSchema = RJSFSchema>(schemaNode: S[], prefix?: string): S[];
+export default function withIdRefPrefix<S extends StrictRJSFSchema = RJSFSchema>(schemaNode: S, prefix?: string): S;
+export default function withIdRefPrefix<S extends StrictRJSFSchema = RJSFSchema>(
+  schemaNode: S[keyof S],
+  prefix?: string,
+): S[keyof S];
 export default function withIdRefPrefix<S extends StrictRJSFSchema = RJSFSchema>(
   schemaNode: S | S[] | S[keyof S],
+  prefix?: string,
 ): S | S[] | S[keyof S];
 export default function withIdRefPrefix<S extends StrictRJSFSchema = RJSFSchema>(
   schemaNode: S | S[] | S[keyof S],
+  prefix: string = ROOT_SCHEMA_PREFIX,
 ): S | S[] | S[keyof S] {
-  if (Array.isArray(schemaNode)) {
-    return withIdRefPrefixArray<S>([...schemaNode]);
-  }
-  if (isObject(schemaNode)) {
-    return withIdRefPrefixObject<S>({ ...schemaNode });
-  }
-  return schemaNode;
+  return prefixRefs<S>(schemaNode, prefix.replace(/#$/, ''));
 }

@@ -2176,6 +2176,18 @@ Recursively checks whether the given raw `schema` contains a `dependencies` or `
 
 - boolean: True if a `dependencies` or `if` keyword exists below the root of the schema
 
+### rootSchemaIdOf&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns the id a validator registers the root schema under, which is the prefix to pass `withIdRefPrefix()`: the root's own `$id`, or the value of the `ROOT_SCHEMA_PREFIX` constant where it has none, since an empty `$id` names nothing a `$ref` could resolve against.
+
+#### Parameters
+
+- rootSchema: S - The root schema
+
+#### Returns
+
+- string: The id the root is registered under
+
 ### schemaKey&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Returns the key a validator caches a schema's compiled validation function under, and the key [schemaParser()](#schemaparsersextendsstrictrjsfschemarjsfschemafextendsformcontexttypeformcontexttype) maps it into the compiled set under: its `$id` when it names something, and the hash of its content otherwise.
@@ -2636,12 +2648,14 @@ widgetAriaProps(partProps); // { 'aria-label': 'When, year', 'aria-describedby':
 
 ### withIdRefPrefix&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
-Recursively prefixes all `$ref`s in a schema with the value of the `ROOT_SCHEMA_PREFIX` constant.
+Recursively prefixes every `$ref` local to the root document, one starting with `#`, with the id the root schema is registered under: the value of the `ROOT_SCHEMA_PREFIX` constant unless another `prefix` is given, such as the root's own `$id`.
+An id ending in an empty fragment names the same document as one without it, so that `#` is left out: `withIdRefPrefix({ $ref: '#/if' }, 'http://example.com/root.json#')` gives `{ $ref: 'http://example.com/root.json#/if' }`.
 This is used in isValid to make references to the rootSchema
 
 #### Parameters
 
-- schemaNode: S - The object node to which a `ROOT_SCHEMA_PREFIX` is added when a `$ref` is part of it
+- schemaNode: S - The object node to which the prefix is added when a `$ref` is part of it
+- [prefix=ROOT_SCHEMA_PREFIX]: string - The id of the root schema the local `$ref`s name
 
 #### Returns
 
