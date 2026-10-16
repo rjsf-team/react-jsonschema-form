@@ -165,16 +165,19 @@ export function declaredProperty<S extends StrictRJSFSchema = RJSFSchema>(
  * the property holds
  *
  * @param graph - The graph of the root
+ * @param option - The node of the option
  * @param key - The name of the dependency
- * @param property - The node of the option's property `key`
- * @returns - The condition to hand the validator
+ * @returns - The condition to hand the validator, or undefined when the option declares no property `key`
  */
 export function dependencyCondition<S extends StrictRJSFSchema = RJSFSchema>(
   graph: SchemaGraph<S>,
+  option: NodeId,
   key: string,
-  property: NodeId,
-): S {
-  return schemaFrom(graph.rawRoot, { type: 'object', properties: { [key]: targetOf(graph, property) } });
+): S | undefined {
+  const property = declaredProperty(graph, option, key);
+  return property === undefined
+    ? undefined
+    : schemaFrom(graph.rawRoot, { type: 'object', properties: { [key]: targetOf(graph, property) } });
 }
 
 /** Which of the keywords in an option's scope scoring drops: the `required`s with the `dependencies` entries listing
@@ -438,9 +441,9 @@ function nodeTargets<S extends StrictRJSFSchema>(
   graph.subschemas(node.id, DEPENDENCIES_KEY).forEach(([key, dependency]) => {
     for (const provider of scopeOf(graph, dependency)) {
       for (const [, option] of graph.subschemas(provider.id, ONE_OF_KEY)) {
-        const property = declaredProperty(graph, option, key);
-        if (property !== undefined) {
-          targets.push(dependencyCondition(graph, key, property));
+        const dependent = dependencyCondition(graph, option, key);
+        if (dependent !== undefined) {
+          targets.push(dependent);
         }
       }
     }

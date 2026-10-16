@@ -57,7 +57,7 @@ import { childProvenance, extendChain, readProvenance, rootProvenance, stamp } f
 import type { GuardChain, Provenance } from './graph/provenance.ts';
 import { childField, collapses, ownRefTargets, restartSeeds } from './graph/recursionRule.ts';
 import type { ContainmentEdge, FieldPosition } from './graph/recursionRule.ts';
-import { declaredProperty, dependencyCondition, pointerTo, withVariantId } from './graph/validationTargets.ts';
+import { dependencyCondition, pointerTo, withVariantId } from './graph/validationTargets.ts';
 
 /** Retrieves the schema of one field: the `schema` with its own `$ref`, `allOf`, `if`/`then`/`else`, `dependencies`
  * and patterns merged in for the `rawFormData`, and the extra keys of that data stubbed among its `properties`. The
@@ -866,9 +866,9 @@ function stubSchemaForSubSchema<S extends StrictRJSFSchema = RJSFSchema>(
  * (`applyExactlyOne()` in `mergePlan.ts`), merging in the one branch whose own schema for the dependency key the data
  * matches, so the names that branch declares are rendered by whatever renders this schema. Read as options they would
  * be left to a selector that is never on screen, and a name only the matching branch declares would be stubbed beside
- * the field that branch renders it with. The branch is selected the way that function selects it, down to reading the
- * condition behind the `$ref` a branch is spelled as and to merging nothing where no single branch qualifies, which is
- * the case it drops the `oneOf` in rather than rendering any of it. The dependency itself is read behind the `$ref` it
+ * the field that branch renders it with. A branch is matched on the `dependencyCondition()` that function matches it
+ * on, and nothing is merged where no single branch qualifies, which is the case it drops the `oneOf` in rather than
+ * rendering any of it. The dependency itself is read behind the `$ref` it
  * may be spelled as for the same reason, since that is where its branches are then written. Without a `rootSchema` to
  * look a reference up in and match the branches against, none of them is read and the names they declare are left to be
  * stubbed, as the branches of an `if` are.
@@ -917,11 +917,8 @@ function dependencySubschemas<S extends StrictRJSFSchema = RJSFSchema, F extends
             return false;
           }
           const { graph, node } = nodeOfSchema<S>(branch, rootSchema);
-          const property = declaredProperty(graph, node, dependencyKey);
-          return (
-            property !== undefined &&
-            context.validator.isValid(dependencyCondition(graph, dependencyKey, property), formData, rootSchema)
-          );
+          const condition = dependencyCondition(graph, node, dependencyKey);
+          return condition !== undefined && context.validator.isValid(condition, formData, rootSchema);
         });
   return matching.length === 1 ? [withoutOneOf, matching[0]] : [withoutOneOf];
 }
