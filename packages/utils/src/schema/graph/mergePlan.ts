@@ -14,7 +14,7 @@ import {
   RJSF_REF_KEY,
   THEN_KEY,
 } from '../../constants.ts';
-import isObject from '../../isObject.ts';
+import isObject, { isSchemaObject } from '../../isObject.ts';
 import logOnce from '../../logOnce.ts';
 import mergeSchemas from '../../mergeSchemas.ts';
 import { getByPath } from '../../pathUtils.ts';
@@ -299,9 +299,13 @@ function flattenRef<S extends StrictRJSFSchema>(
   return keywords;
 }
 
+/** The definitions `refDefinition()` read, by graph and node */
+const definitions = new KeyedMemo<object>();
+
 /** Returns the definition the `$ref` of the node `from` names, read as the plan reads a `$ref` target, its chain of
  * references followed, so that the form and the scoring of options read a reference alike. A boolean definition reads
- * as the empty schema, and so does a node holding no `$ref`.
+ * as the empty schema, and so does a node holding no `$ref`. The definition is made once per node and shared, so a
+ * caller copies it rather than changing it.
  *
  * @param graph - The graph holding the node
  * @param from - The node holding the reference
@@ -309,6 +313,17 @@ function flattenRef<S extends StrictRJSFSchema>(
  * @throws - An error for a reference that resolves to nothing or a chain of references that loops
  */
 export function refDefinition<S extends StrictRJSFSchema = RJSFSchema>(graph: SchemaGraph<S>, from: NodeId): S {
+  const keys = [graph, from];
+  const known = definitions.peek(keys);
+  if (isSchemaObject<S>(known)) {
+    return known;
+  }
+  const definition = readRefDefinition(graph, from);
+  definitions.set(keys, definition);
+  return definition;
+}
+
+function readRefDefinition<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, from: NodeId): S {
   const node = graph.node(from);
   const target = node.kind === 'schema' && node.ref !== undefined ? graph.node(node.ref) : undefined;
   if (target?.kind === 'invalid') {
