@@ -620,6 +620,91 @@ describe('an anyOf/oneOf whose options all render a container', () => {
   });
 });
 
+describe('a ui:field wrapping SchemaField under its own id', () => {
+  function Wrapper(props: FieldProps) {
+    const { registry, uiSchema } = props;
+    const { SchemaField } = registry.fields;
+    const { 'ui:field': _field, ...ownUiSchema } = uiSchema ?? {};
+    return (
+      <div className='wrapper'>
+        <SchemaField {...props} uiSchema={ownUiSchema} />
+      </div>
+    );
+  }
+
+  it('leaves its label and description to the field it wraps, and its help and errors drawn once', () => {
+    const { node } = createFormComponent({
+      schema: { type: 'object', properties: { x: { type: 'string', title: 'X', description: 'About x' } } },
+      uiSchema: { x: { 'ui:field': Wrapper, 'ui:help': 'Help me' } },
+      extraErrors: { x: { __errors: ['is wrong'] } },
+    });
+    const input = node.querySelector('#root_x')!;
+    const describers = input.getAttribute('aria-describedby')!.split(' ');
+
+    expect(screen.getAllByText('About x')).toHaveLength(1);
+    expect(screen.getAllByText('Help me')).toHaveLength(1);
+    expect(node.querySelectorAll(`#${errorId('root_x')}`)).toHaveLength(1);
+    expect(screen.getByRole('textbox', { name: 'X' })).toBe(input);
+    describers.forEach((id) => expect(node.querySelector(`#${id}`)).not.toBeNull());
+    expect(describers).toEqual(expect.arrayContaining([errorId('root_x'), helpId('root_x'), 'root_x__description']));
+  });
+
+  it('keeps the heading of an ObjectField a ui:field names from repeating under an option titled as the field', () => {
+    createFormComponent({
+      schema: {
+        type: 'object',
+        title: 'Pet',
+        description: 'About pet',
+        properties: { name: { type: 'string' } },
+        oneOf: [
+          { title: 'Pet', description: 'About pet', properties: { a: { type: 'string' } } },
+          { title: 'B', properties: { b: { type: 'string' } } },
+        ],
+      },
+      uiSchema: { 'ui:field': 'ObjectField' },
+    });
+
+    expect(screen.getAllByText('About pet')).toHaveLength(1);
+    // Once as the object's heading and once as the selector's first option
+    expect(screen.getAllByText('Pet')).toHaveLength(2);
+  });
+});
+
+describe('a field a $id names that yields to its anyOf options', () => {
+  function Custom() {
+    return null;
+  }
+
+  it("hands the selected option its field's plan, with the parts the selector draws drawn above it", () => {
+    const { widgetPlans } = renderPlans(
+      {
+        type: 'object',
+        properties: {
+          foo: {
+            $id: 'Custom',
+            title: 'Foo',
+            description: 'About foo',
+            anyOf: [{ type: 'string' }, { type: 'number' }],
+          },
+        },
+      },
+      {
+        formData: { foo: 'a' },
+        fields: { Custom },
+        presentation: {
+          default: { label: 'self', description: 'self' },
+          fields: { AnyOfField: { label: 'self', description: 'self' } },
+        },
+      },
+    );
+    const plan = widgetPlans.get('root_foo');
+
+    expect(plan?.label.id).toBe('root_foo__optionLabel');
+    expect(plan?.description).toMatchObject({ by: 'above', id: 'root_foo__description' });
+    expect(plan?.describedBy).toContain('root_foo__description');
+  });
+});
+
 describe('a widget rendering a group of controls', () => {
   it('names its radiogroup by the label and marks the radiogroup invalid rather than its radios', () => {
     const { node } = createFormComponent({
