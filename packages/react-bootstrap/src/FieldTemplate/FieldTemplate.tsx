@@ -84,7 +84,9 @@ export default function FieldTemplate<
         )}
         {children}
         {rawDescription && !leavesPartsToCheckbox && (
-          <Form.Text className={hasError ? 'text-danger' : 'text-muted'}>{description}</Form.Text>
+          <Form.Text as='div' className={hasError ? 'text-danger' : 'text-muted'}>
+            {description}
+          </Form.Text>
         )}
         {errors}
         {help}
