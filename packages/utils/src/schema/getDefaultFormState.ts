@@ -401,8 +401,15 @@ function policyFor<S extends StrictRJSFSchema, F extends FormContextType>(
   }));
 }
 
+/** The keywords `ownKeywords()` read, by plan, which a plan never changes once made */
+const planKeywords = new WeakMap<object, ReadonlySet<string>>();
+
 /** The keywords the field's own nodes declare: its seeds and the targets of their `$ref`s */
-function ownKeywords<S extends StrictRJSFSchema>(plan: MergePlan<S>): Set<string> {
+function ownKeywords<S extends StrictRJSFSchema>(plan: MergePlan<S>): ReadonlySet<string> {
+  const known = planKeywords.get(plan);
+  if (known !== undefined) {
+    return known;
+  }
   const keywords = new Set<string>();
   for (const { node: id, edge } of plan.entries) {
     const node = plan.graph.node(id);
@@ -411,6 +418,7 @@ function ownKeywords<S extends StrictRJSFSchema>(plan: MergePlan<S>): Set<string
       Object.keys(own.raw).forEach((key) => keywords.add(key));
     }
   }
+  planKeywords.set(plan, keywords);
   return keywords;
 }
 
