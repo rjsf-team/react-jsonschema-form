@@ -5,6 +5,7 @@ import {
   DEFAULT_KEY,
   expandRefCycle,
   fieldPathFromList,
+  getByPath,
   getDiscriminatorFieldFromSchema,
   getRenderedOptionSchema,
   getXxxOfKey,
@@ -18,9 +19,9 @@ import {
   RJSF_REF_CYCLE_KEY,
 } from '@rjsf/utils';
 
-import type { KeyMove } from './formState.ts';
+import type { FieldEdit, KeyMove } from './formState.ts';
 import type { UiState } from './uiState.ts';
-import { asFieldValue, optionListKey, retrievedOptionsOf, shownOption } from './uiState.ts';
+import { asFieldValue, isPathPrefix, optionListKey, retrievedOptionsOf, shownOption } from './uiState.ts';
 
 /** What the tree diff needs that does not change as it descends */
 interface TreeContext<T, S extends StrictRJSFSchema, F extends FormContextType> {
@@ -40,7 +41,7 @@ interface TreeContext<T, S extends StrictRJSFSchema, F extends FormContextType> 
 /** A field tree's schema utilities, its data, and the root schema they retrieve for that data */
 export interface FieldTree<T, S extends StrictRJSFSchema, F extends FormContextType> {
   schemaUtils: SchemaUtilsType<T, S, F>;
-  formData: T | undefined;
+  formData?: T;
   retrievedSchema: S;
 }
 
@@ -49,7 +50,7 @@ function isEdited<T, S extends StrictRJSFSchema, F extends FormContextType>(
   { editedPath }: TreeContext<T, S, F>,
   path: FieldPathList,
 ): boolean {
-  return editedPath !== undefined && path.length <= editedPath.length && path.every((key, i) => editedPath[i] === key);
+  return editedPath !== undefined && isPathPrefix(path, editedPath);
 }
 
 /** Where the value of each key of the array or object at `path` was before the change: under the key the change moved
@@ -78,9 +79,7 @@ function previousKeys<T, S extends StrictRJSFSchema, F extends FormContextType>(
 
 /** The value `container` holds under `key`, if any */
 function valueAt(container: unknown, key: string | undefined): unknown {
-  return key !== undefined && (isObject(container) || Array.isArray(container)) && Object.hasOwn(container, key)
-    ? Reflect.get(container, key)
-    : undefined;
+  return key === undefined ? undefined : getByPath(container, key);
 }
 
 /** A value the diff removes from the data */
@@ -401,7 +400,7 @@ export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F exten
   previous: FieldTree<T, S, F>,
   next: FieldTree<T, S, F>,
   uiState: UiState,
-  edit?: { path: FieldPathList; newKeyOf?: KeyMove },
+  edit?: FieldEdit,
 ): T | undefined {
   const sanitized = walk(
     {
