@@ -689,6 +689,38 @@ describe('option selection as form state', () => {
     expect(node.querySelector('#root_a')).toHaveValue('x');
   });
 
+  describe('picking the selected option again while the data shows another', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { x: { type: 'string' } },
+      anyOf: [
+        { title: 'A', required: ['x'], properties: { x: { minLength: 3 } } },
+        { title: 'B', properties: { x: { maxLength: 2 } } },
+      ],
+    };
+
+    it('shows the option after an edit to a property of the object matched the other', async () => {
+      const { node } = createFormComponent({ schema, initialFormData: {} });
+      await user.selectOptions(selectOf(node, 'root__anyof_select'), 'B');
+      await user.selectOptions(selectOf(node, 'root__anyof_select'), 'A');
+      await user.type(elementOf(node, '#root_x'), 'h');
+      expect(selectOf(node, 'root__anyof_select')).toHaveValue('1');
+
+      await user.selectOptions(selectOf(node, 'root__anyof_select'), 'A');
+      expect(selectOf(node, 'root__anyof_select')).toHaveValue('0');
+    });
+
+    it('shows the option after data a parent pushes matched the other', async () => {
+      const { node, rerender } = createFormComponent({ schema, formData: {}, onChange: () => undefined });
+      await user.selectOptions(selectOf(node, 'root__anyof_select'), 'B');
+      rerender({ schema, formData: { x: 'abcd' }, onChange: () => undefined });
+      expect(selectOf(node, 'root__anyof_select')).toHaveValue('0');
+
+      await user.selectOptions(selectOf(node, 'root__anyof_select'), 'B');
+      expect(selectOf(node, 'root__anyof_select')).toHaveValue('1');
+    });
+  });
+
   it('keeps the selection through a reset', async () => {
     const schema: RJSFSchema = {
       oneOf: [

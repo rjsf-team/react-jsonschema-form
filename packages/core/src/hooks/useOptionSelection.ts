@@ -44,21 +44,17 @@ export function useShownOption<T, S extends StrictRJSFSchema, F extends FormCont
   const { schemaUtils } = registry;
   const rootSchema = schemaUtils.getRootSchema();
   const list = useMemo(() => options && optionListKey<S>(options, rootSchema), [options, rootSchema]);
-  // Only the index is subscribed to: the data a selection holds for changes as the form commits, without changing the
+  // Only the pick is subscribed to: the data a selection holds for changes as the form commits, without changing the
   // option shown for the data rendered, and a snapshot that changed in the commit would have the field render again
-  const readIndex = () => (list === undefined ? undefined : uiState.selection(fieldPath, list)?.index);
-  const storedIndex = useSyncExternalStore(
-    list === undefined ? noSubscription : uiState.subscribe,
-    readIndex,
-    readIndex,
-  );
+  const readPick = () => (list === undefined ? undefined : uiState.selection(fieldPath, list)?.pick);
+  const pick = useSyncExternalStore(list === undefined ? noSubscription : uiState.subscribe, readPick, readPick);
   const selectedOption = useMemo(() => {
     if (!options) {
       return -1;
     }
-    const selection = list === undefined || storedIndex === undefined ? undefined : uiState.selection(fieldPath, list);
+    const selection = list === undefined || pick === undefined ? undefined : uiState.selection(fieldPath, list);
     return shownOption<T, S, F>(schemaUtils, selection, options, formData, discriminatorField);
-  }, [options, list, storedIndex, uiState, fieldPath, formData, schemaUtils, discriminatorField]);
+  }, [options, list, pick, uiState, fieldPath, formData, schemaUtils, discriminatorField]);
   // What the last committed render showed, which the handlers record: they run after it, and read it rather than close
   // over it so that a field's children keep the handlers they were given while the data changes
   const shown = useRef({ index: selectedOption, data: formData, options });
