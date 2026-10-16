@@ -427,6 +427,7 @@ exports[`array fields > checkboxes 1`] = `
           >
             <button
               aria-expanded="false"
+              aria-label="Select ..."
               class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
               data-tabster="{"focusable":{"ignoreKeydown":{"Escape":false}}}"
               id="root"
@@ -1500,6 +1501,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
           >
             <button
               aria-expanded="false"
+              aria-label="Select ..."
               class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
               data-tabster="{"focusable":{"ignoreKeydown":{"Escape":false}}}"
               id="root"

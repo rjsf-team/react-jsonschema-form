@@ -6,10 +6,12 @@ import {
   enumOptionsDomValues,
   enumOptionsIndexForValue,
   enumOptionValueDecoder,
+  getControlFallbackName,
   getOptionValueFormat,
   groupEnumOptions,
   hasWidgetErrors,
   isEnumOptionsGroup,
+  isNamedByTemplateLabel,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
   useSelectFocusHandlers,
@@ -58,9 +60,12 @@ function SelectWidget<
     presentation,
   } = props;
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
-  // An empty label element would still name the dropdown, by nothing, over an `aria-label` it is given. A required
-  // field keeps it, since the label is where the required mark is shown
-  const drawsLabel = !hideLabel && (!!label || required);
+  // An empty label element would still name the dropdown, by nothing, over an `aria-label` it is given, and one holding
+  // only a required field's `*` would name it "star", so a label is drawn only with text. Where none names it, the
+  // dropdown, whose contents are its value, is named by the field's label, its placeholder or the translated prompt
+  const drawsLabel = !hideLabel && !!label;
+  const ariaProps = widgetAriaProps(props);
+  const namedElsewhere = drawsLabel || isNamedByTemplateLabel<T, S, F>(props);
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
@@ -109,7 +114,8 @@ function SelectWidget<
         onFocus={handleFocus}
         onOptionSelect={handleChange}
         selectedOptions={selectedOptions}
-        {...widgetAriaProps(props)}
+        {...ariaProps}
+        aria-label={ariaProps['aria-label'] ?? (namedElsewhere ? undefined : getControlFallbackName<T, S, F>(props))}
       >
         {showPlaceholderOption && <Option value=''>{placeholder || ''}</Option>}
         {groupEnumOptions<S>(enumOptions, optgroups, enumDisabled).map((item) =>

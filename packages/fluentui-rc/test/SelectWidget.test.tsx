@@ -1,5 +1,6 @@
 import { getTestRegistry } from '@rjsf/core/testing';
 import type { RJSFSchema, WidgetProps } from '@rjsf/utils';
+import { englishStringTranslator, TranslatableString } from '@rjsf/utils';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
@@ -189,11 +190,33 @@ describe('SelectWidget', () => {
     expect(await screen.findByRole('combobox')).toBeInTheDocument();
   });
 
-  test('shows the required mark of a required select whose label is empty', async () => {
-    render(<SelectWidget {...makeWidgetMockProps({ label: '', required: true, options: { enumOptions } })} />);
+  // A label holding only the `*` would name the dropdown "star", so none is drawn; the dropdown is still required
+  test('draws no label for a required select whose label is empty, and names it by the translated prompt', async () => {
+    const { container } = render(
+      <SelectWidget {...makeWidgetMockProps({ label: '', required: true, options: { enumOptions } })} />,
+    );
 
-    await screen.findByRole('combobox');
-    expect(screen.getByText('*')).toBeInTheDocument();
+    const dropdown = await screen.findByRole('combobox', {
+      name: englishStringTranslator(TranslatableString.SelectPlaceholder),
+    });
+    expect(container.querySelector('label')).not.toBeInTheDocument();
+    expect(dropdown).toHaveAttribute('aria-required', 'true');
+  });
+
+  test('names a select with an empty label by its placeholder before the translated prompt', async () => {
+    render(<SelectWidget {...makeWidgetMockProps({ label: '', placeholder: 'Pick one', options: { enumOptions } })} />);
+
+    expect(await screen.findByRole('combobox', { name: 'Pick one' })).toBeInTheDocument();
+  });
+
+  test('names a select whose label is hidden by that label, drawing none', async () => {
+    const { container } = render(
+      // oxlint-disable-next-line typescript/no-deprecated -- a widget rendered without a plan reads the deprecated prop
+      <SelectWidget {...makeWidgetMockProps({ hideLabel: true, options: { enumOptions } })} />,
+    );
+
+    expect(await screen.findByRole('combobox', { name: 'Sample Field Label' })).toBeInTheDocument();
+    expect(container.querySelector('label')).not.toBeInTheDocument();
   });
 
   test('renders no label for a select with an empty label that is not required', async () => {
