@@ -1264,7 +1264,6 @@ describe('Error state consistency when deriving from new props', () => {
   });
 
   it('lists a server error once when a field raises a custom error with live validation off', async () => {
-    // Seeded with initialFormData, so no prop replaces the data afterwards and the merge below is the last word
     const { container } = render(
       <Form
         schema={schema}

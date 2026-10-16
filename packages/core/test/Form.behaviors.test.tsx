@@ -2748,7 +2748,7 @@ describe('initialFormData feature to prevent form reset', () => {
     );
   };
   it('show that a Form keeps the edits when the parent passes formData and stores nothing back', async () => {
-    // The form owns the edit; `formData` is taken only when the parent passes a value the form has not seen
+    // The form owns the edit; `formData` only seeds it on mount, so the parent passing it again leaves the edit in place
     const { container } = render(<FormWrapper formData={data} />);
     let input = container.querySelector<HTMLInputElement>('input')!;
     expect(input).toHaveAttribute('value', data.name);

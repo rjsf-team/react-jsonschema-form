@@ -230,7 +230,7 @@ describe('form data ownership', () => {
       expect(input(container, 'root_a')).toHaveValue('recordx');
     });
 
-    it('keeps an edit under a parent that goes on passing a root NaN, which is the value it has seen', () => {
+    it('keeps an edit under a parent that goes on passing its root NaN seed', () => {
       const ref = createFormRef<number>();
       render(
         <Form<number>

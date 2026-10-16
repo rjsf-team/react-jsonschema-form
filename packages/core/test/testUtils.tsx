@@ -175,7 +175,7 @@ export function AcceptingParent<T>({ initialValue, log, ...formProps }: ParentPr
 }
 
 /** Keeps passing its initial value whatever the form reports, the shape of a parent that only listens: the form owns
- * the edits and shows them, and the value the parent passes is one the form has seen
+ * the edits and shows them, and since the value it passes never changes after mount, the form has nothing to warn about
  */
 export function ListeningParent<T>({ initialValue, log, ...formProps }: ParentProps<T>) {
   Object.assign(log ?? {}, { value: initialValue });

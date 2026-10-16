@@ -521,8 +521,8 @@ function moveErrorSchemaKeys<T>(errorSchema: ErrorSchema<T>, path: FieldPathList
  * follows its item to its new index, and an index the move maps no row onto pairs with the row's own starting
  * value
  *
- * The view only describes the data as it was before the write: an unannounced change, such as an adopted
- * `formData` prop or a reset, can leave an array's length apart from the data's, and rebuilding at the new length would
+ * The view only describes the data as it was before the write: an unannounced change, such as a whole-form
+ * `setFieldValue('', data)` or a reset, can leave an array's length apart from the data's, and rebuilding at the new length would
  * pair a row with a neighbour's previous value, the very thing the length check refuses. Only that array is
  * dropped then, so the next sanitize filters it with no previous value rather than a wrong one, and the rest
  * of the view keeps its recorded moves
@@ -804,8 +804,8 @@ interface DeriveDataOptions<T, S extends StrictRJSFSchema, F extends FormContext
 }
 
 /** The last settled form data and the root schema it settled under, for the `formDataSchema` marker pair: recorded
- * on construction and on every pass that sanitized, and otherwise carried untouched. A declined sanitize, an adopted
- * `formData` prop or a reset leaves the snapshot alone, so no path needs its own clearing rule; a schema swap drops it
+ * on construction and on every pass that sanitized, and otherwise carried untouched. A declined sanitize, a whole-form
+ * `setFieldValue('', data)` or a reset leaves the snapshot alone, so no path needs its own clearing rule; a schema swap drops it
  * at the sanitize call, where the marker root no longer matches. The caller shares the root against the marker
  * through `replaceEqualDeep()`, so a deep-equal rebuild of the schema keeps the reference and matches by identity
  *
@@ -955,8 +955,8 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
         : replaceEqualDeep(
             formData,
             // The previous-data side is the data as it last settled under the current root schema and the
-            // schema that settling resolved, so a change no sanitize checked (a declined pass, an adopted
-            // `formData` prop, a reset) still reads as a real difference where the enum filter runs (#5451)
+            // schema that settling resolved, so a change no sanitize checked (a declined pass, a whole-form
+            // `setFieldValue('', data)`, a reset) still reads as a real difference where the enum filter runs (#5451)
             schemaUtils.sanitizeDataForNewSchema(
               retrievedSchema,
               current?.retrievedSchema,
@@ -1323,11 +1323,11 @@ function detectContextChanges<T, S extends StrictRJSFSchema, F extends FormConte
   };
 }
 
-/** The state derived from data: on construction from the seed the props hand the form, from a `formData` prop that
- * replaces the data, and from the data the form holds whenever the schema, a `ui:emptyValue` or
- * `defaultFormStateBehavior` changed, since those are the props whose change transforms the data (a default it did not
- * have before, a branch that no longer applies). No other prop change runs this: an unrelated re-render must not rerun
- * value initialization, so `deriveState()` re-derives the render context alone for those.
+/** The state derived from data: on construction from the seed the props hand the form, and from the data the form
+ * holds whenever the schema, a `ui:emptyValue` or `defaultFormStateBehavior` changed, since those are the props whose
+ * change transforms the data (a default it did not have before, a branch that no longer applies). No other prop change
+ * runs this: an unrelated re-render must not rerun value initialization, so `deriveState()` re-derives the render
+ * context alone for those.
  *
  * @param current - The state the pass starts from; `undefined` on construction
  * @param inputFormData - The data to derive from
