@@ -265,7 +265,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </label>
                     </div>
                   </div>
-                  <small
+                  <div
                     class="text-muted form-text"
                   >
                     <div>
@@ -276,7 +276,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         (Check all that apply)
                       </div>
                     </div>
-                  </small>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1465,7 +1465,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </label>
                     </div>
                   </div>
-                  <small
+                  <div
                     class="text-muted form-text"
                   >
                     <div>
@@ -1476,7 +1476,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         (Check all that apply)
                       </div>
                     </div>
-                  </small>
+                  </div>
                 </div>
               </div>
             </div>
@@ -2690,7 +2690,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </label>
                     </div>
                   </div>
-                  <small
+                  <div
                     class="text-muted form-text"
                   >
                     <div>
@@ -2701,7 +2701,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         (Check all that apply)
                       </div>
                     </div>
-                  </small>
+                  </div>
                 </div>
               </div>
             </div>
@@ -3535,7 +3535,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </label>
                     </div>
                   </div>
-                  <small
+                  <div
                     class="text-muted form-text"
                   >
                     <div>
@@ -3546,7 +3546,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         (Check all that apply)
                       </div>
                     </div>
-                  </small>
+                  </div>
                 </div>
               </div>
             </div>
@@ -4724,7 +4724,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                     </label>
                   </div>
                 </div>
-                <small
+                <div
                   class="text-muted form-text"
                 >
                   <div>
@@ -4735,7 +4735,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       (Check all that apply)
                     </div>
                   </div>
-                </small>
+                </div>
               </div>
             </div>
           </div>
@@ -5395,7 +5395,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     </label>
                   </div>
                 </div>
-                <small
+                <div
                   class="text-muted form-text"
                 >
                   <div>
@@ -5406,7 +5406,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       (Check all that apply)
                     </div>
                   </div>
-                </small>
+                </div>
               </div>
             </div>
           </div>

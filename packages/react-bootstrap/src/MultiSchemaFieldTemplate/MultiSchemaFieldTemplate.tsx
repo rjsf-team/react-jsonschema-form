@@ -8,7 +8,8 @@ export default function MultiSchemaFieldTemplate<
 >({ selector, optionSchemaField }: MultiSchemaFieldTemplateProps<T, S, F>) {
   return (
     <Card style={{ marginBottom: '1rem' }}>
-      <Card.Body>{selector}</Card.Body>
+      {/* No row is laid out for a selector the field doesn't render, as while an optional field has no data (#5401) */}
+      {selector ? <Card.Body>{selector}</Card.Body> : null}
       <Card.Body>{optionSchemaField}</Card.Body>
     </Card>
   );
