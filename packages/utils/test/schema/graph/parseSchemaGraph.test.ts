@@ -539,5 +539,21 @@ describe('parseSchemaGraph()', () => {
       });
       expect(items).not.toBe(first.graph.child(first.node, 'items'));
     });
+    it('finds the boolean a schema of the graph it extends holds, under the pointer it reuses', () => {
+      const s1: RJSFSchema = { items: false };
+      const first = graph.adopt(s1);
+      const second = first.graph.adopt({ allOf: [s1], items: true });
+      const s1Node = second.graph.byObject(s1) ?? -1;
+      expect(s1Node).toBe(first.node);
+      expect(second.graph.node(second.graph.child(s1Node, 'items') ?? -1)).toMatchObject({
+        kind: 'boolean',
+        value: false,
+      });
+      expect(second.graph.subschemas(s1Node, 'items')).toEqual([]);
+      expect(second.graph.node(second.graph.child(second.node, 'items') ?? -1)).toMatchObject({
+        kind: 'boolean',
+        value: true,
+      });
+    });
   });
 });

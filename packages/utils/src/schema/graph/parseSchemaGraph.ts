@@ -339,11 +339,17 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
 
   /** The node of the subschema `sub` that `node` holds at the pointer `tokens` */
   private nodeAt(node: ObjectNode<S>, tokens: readonly string[], sub: unknown): NodeId | undefined {
-    // A boolean has no identity, so it is the node parsed where the keyword holds it
+    // A boolean has no identity, so it is the node parsed where the keyword holds it, by the graph that parsed the
+    // node holding it: a graph extending that one reuses its pointers for a schema adopted from outside the root
     if (typeof sub === 'boolean') {
-      return this.byPointer(childPointer(node.pointer, tokens));
+      return this.graphOf(node.id).byPointer(childPointer(node.pointer, tokens));
     }
     return isObject(sub) ? this.byObject(sub, node.baseUri) : undefined;
+  }
+
+  /** The graph that parsed the node `id`: this one or one it extends */
+  private graphOf(id: NodeId): Graph<S> {
+    return id < this.offset && this.base !== undefined ? this.base.graphOf(id) : this;
   }
 
   private parse(raw: S, pointer: string, base: string): ObjectNode<S> {
