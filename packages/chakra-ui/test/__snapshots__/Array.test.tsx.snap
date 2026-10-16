@@ -9986,9 +9986,12 @@ exports[`with title and description > array 1`] = `
             >
               <h5
                 class="chakra-heading emotion-3"
-                id="root__title"
               >
-                Test field
+                <span
+                  id="root__title"
+                >
+                  Test field
+                </span>
               </h5>
               <span
                 aria-orientation="horizontal"
@@ -10527,9 +10530,12 @@ exports[`with title and description > array icons 1`] = `
             >
               <h5
                 class="chakra-heading emotion-3"
-                id="root__title"
               >
-                Test field
+                <span
+                  id="root__title"
+                >
+                  Test field
+                </span>
               </h5>
               <span
                 aria-orientation="horizontal"
@@ -12079,9 +12085,12 @@ exports[`with title and description > fixed array 1`] = `
             >
               <h5
                 class="chakra-heading emotion-3"
-                id="root__title"
               >
-                Test field
+                <span
+                  id="root__title"
+                >
+                  Test field
+                </span>
               </h5>
               <span
                 aria-orientation="horizontal"
@@ -12455,9 +12464,12 @@ exports[`with title and description from both > array 1`] = `
             >
               <h5
                 class="chakra-heading emotion-3"
-                id="root__title"
               >
-                My Field
+                <span
+                  id="root__title"
+                >
+                  My Field
+                </span>
               </h5>
               <span
                 aria-orientation="horizontal"
@@ -12996,9 +13008,12 @@ exports[`with title and description from both > array icons 1`] = `
             >
               <h5
                 class="chakra-heading emotion-3"
-                id="root__title"
               >
-                My Field
+                <span
+                  id="root__title"
+                >
+                  My Field
+                </span>
               </h5>
               <span
                 aria-orientation="horizontal"
@@ -14548,9 +14563,12 @@ exports[`with title and description from both > fixed array 1`] = `
             >
               <h5
                 class="chakra-heading emotion-3"
-                id="root__title"
               >
-                My Field
+                <span
+                  id="root__title"
+                >
+                  My Field
+                </span>
               </h5>
               <span
                 aria-orientation="horizontal"
@@ -14924,9 +14942,12 @@ exports[`with title and description from uiSchema > array 1`] = `
             >
               <h5
                 class="chakra-heading emotion-3"
-                id="root__title"
               >
-                My Field
+                <span
+                  id="root__title"
+                >
+                  My Field
+                </span>
               </h5>
               <span
                 aria-orientation="horizontal"
@@ -15465,9 +15486,12 @@ exports[`with title and description from uiSchema > array icons 1`] = `
             >
               <h5
                 class="chakra-heading emotion-3"
-                id="root__title"
               >
-                My Field
+                <span
+                  id="root__title"
+                >
+                  My Field
+                </span>
               </h5>
               <span
                 aria-orientation="horizontal"
@@ -17017,9 +17041,12 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
             >
               <h5
                 class="chakra-heading emotion-3"
-                id="root__title"
               >
-                My Field
+                <span
+                  id="root__title"
+                >
+                  My Field
+                </span>
               </h5>
               <span
                 aria-orientation="horizontal"
@@ -17832,6 +17859,7 @@ exports[`with title and description with global label off > array icons 1`] = `
                             role="group"
                           >
                             <input
+                              aria-label="Test item"
                               class="chakra-input emotion-8"
                               data-part="input"
                               data-required=""
@@ -18002,6 +18030,7 @@ exports[`with title and description with global label off > array icons 1`] = `
                             role="group"
                           >
                             <input
+                              aria-label="Test item"
                               class="chakra-input emotion-8"
                               data-part="input"
                               data-required=""
@@ -18718,6 +18747,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
                   aria-expanded="false"
                   aria-haspopup="listbox"
                   aria-invalid="false"
+                  aria-label="Test field"
                   aria-labelledby=""
                   aria-required="false"
                   class="chakra-select__trigger emotion-5"
@@ -19155,6 +19185,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
                             role="group"
                           >
                             <input
+                              aria-label="Test item"
                               class="chakra-input emotion-8"
                               data-part="input"
                               data-required=""
@@ -19198,6 +19229,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
                             role="group"
                           >
                             <input
+                              aria-label="Test item"
                               class="chakra-input emotion-8"
                               data-part="input"
                               data-required=""
