@@ -706,8 +706,9 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
   if (isSanitized && current) {
     const seen: string[] = [];
     let previous: FieldTree<T, S, F> = current;
+    let roundEdit = edit;
     for (;;) {
-      const sanitized = replaceEqualDeep(formData, sanitizeFieldTree(previous, tree, current.uiState, edit));
+      const sanitized = replaceEqualDeep(formData, sanitizeFieldTree(previous, tree, current.uiState, roundEdit));
       // Wrapped in an object to deal with a scalar or `undefined` value. Data a round has already produced would only
       // produce it again, which ends a loop of conditions that flip each other
       if (sanitized === formData) {
@@ -720,6 +721,8 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
       }
       seen.push(hash);
       previous = tree;
+      // Only the first round diffs against the data before the move: every later one diffs against data already moved
+      roundEdit = edit && { path: edit.path };
       formData = fill(sanitized);
       tree = treeOf(formData);
     }

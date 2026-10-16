@@ -7,7 +7,7 @@ import { userEvent } from '@testing-library/user-event';
 
 import type { FormRef, IChangeEvent } from '../src/index.ts';
 import Form from '../src/index.ts';
-import { AcceptingParent, createParentLog, handleOf, input, TransformingParent } from './testUtils.tsx';
+import { AcceptingParent, createParentLog, elementOf, handleOf, input, TransformingParent } from './testUtils.tsx';
 
 interface ColorListData {
   color?: string;
@@ -325,6 +325,52 @@ describe('sanitize as a diff of the field trees before and after a change', () =
     await user.type(input(container, 'root_note'), 'n');
     const last = events[events.length - 1].formData;
     expect(last?.rows).toEqual([{ kind: 'y', tags: [null, null] }]);
+  });
+
+  it('pairs the surviving rows by the move only once when removing a row re-judges a sibling', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        mode: { type: 'string', enum: ['single', 'multi'] },
+        list: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: { kind: { type: 'string', enum: ['x', 'y'] }, v: {} },
+            if: { properties: { kind: { const: 'x' } } },
+            then: { properties: { v: { enum: [1, 2] } } },
+            else: { properties: { v: { type: 'string' } } },
+          },
+        },
+      },
+      if: { properties: { list: { maxItems: 2 } } },
+      then: { properties: { mode: { enum: ['single'] } } },
+    };
+    const events: IChangeEvent[] = [];
+    const { container } = render(
+      <Form
+        schema={schema}
+        validator={validator}
+        initialFormData={{
+          mode: 'multi',
+          list: [
+            { kind: 'x', v: 1 },
+            { kind: 'x', v: 2 },
+            { kind: 'y', v: 's' },
+          ],
+        }}
+        onChange={(event) => events.push(event)}
+      />,
+    );
+    // Re-judging `mode` takes the loop a second round, which judges the rows against the tree the first round built
+    await user.click(elementOf(container, `#${buttonId('root_list_0', 'remove')}`));
+    expect(events[events.length - 1].formData).toEqual({
+      mode: 'single',
+      list: [
+        { kind: 'x', v: 2 },
+        { kind: 'y', v: 's' },
+      ],
+    });
   });
 
   it('keeps the surviving row paired with its own previous value in a parent-owned form (#5451)', async () => {
