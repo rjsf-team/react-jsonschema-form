@@ -9278,6 +9278,7 @@ exports[`with title and description with global label off > array icons 1`] = `
                                         style="width: 100%;"
                                       >
                                         <input
+                                          aria-label="Test item"
                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                           id="root_0"
                                           name="root_0"
@@ -9464,6 +9465,7 @@ exports[`with title and description with global label off > array icons 1`] = `
                                         style="width: 100%;"
                                       >
                                         <input
+                                          aria-label="Test item"
                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                           id="root_1"
                                           name="root_1"
@@ -9855,6 +9857,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
                                         style="width: 100%;"
                                       >
                                         <input
+                                          aria-label="Test item"
                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                           id="root_0"
                                           name="root_0"
@@ -9906,6 +9909,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
                                         style="width: 100%;"
                                       >
                                         <input
+                                          aria-label="Test item"
                                           autocomplete="off"
                                           class="ant-input-number-input"
                                           id="root_1"

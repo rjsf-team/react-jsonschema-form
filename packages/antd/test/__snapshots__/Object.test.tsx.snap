@@ -8170,6 +8170,7 @@ exports[`object fields > with title and description with global label off > addi
                                         style="width: 100%;"
                                       >
                                         <input
+                                          aria-label="foo"
                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                           id="root_foo"
                                           name="root_foo"
@@ -8351,6 +8352,7 @@ exports[`object fields > with title and description with global label off > obje
                                     style="width: 100%;"
                                   >
                                     <input
+                                      aria-label="A"
                                       class="ant-input css-dev-only-do-not-override-oc1rc0"
                                       id="root_a"
                                       name="root_a"
@@ -8396,6 +8398,7 @@ exports[`object fields > with title and description with global label off > obje
                                     style="width: 100%;"
                                   >
                                     <input
+                                      aria-label="B"
                                       autocomplete="off"
                                       class="ant-input-number-input"
                                       id="root_b"
@@ -8603,6 +8606,7 @@ exports[`object fields > with title and description with global label off > show
                                         style="width: 100%;"
                                       >
                                         <input
+                                          aria-label="additionalProperty"
                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                           id="root_additionalProperty"
                                           name="root_additionalProperty"
