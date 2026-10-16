@@ -116,11 +116,20 @@ export default function SelectWidget<
     'aria-label': ariaLabel,
     'aria-labelledby': ariaLabelledby,
     'aria-describedby': ariaDescribedby,
+    'aria-invalid': ariaInvalid,
   } = widgetAriaProps(props);
 
   const cnClassName = cn({ 'border-destructive': hasWidgetErrors<T, S, F>(props) }, className);
 
-  const placeholderText = placeholder || registry.translateString(TranslatableString.SelectPlaceholder);
+  const placeholderPrompt = registry.translateString(TranslatableString.SelectPlaceholder);
+  const placeholderText = placeholder || placeholderPrompt;
+  // The template's label shows the property name for a field with no title, and `*` when required; under the plan, a
+  // label the template draws here or for a field above names the select. With none, the single select's combobox,
+  // which takes no name from the item it displays, is named by the field's label, or by the select prompt for a field
+  // with no title, such as an array item
+  const labelNamesSelect = presentation
+    ? isLabelledByTemplate(presentation)
+    : !hideLabel && (!!label || !!name || !!required);
 
   return (
     <div className='p-0.5'>
@@ -137,14 +146,9 @@ export default function SelectWidget<
           disabled={disabled || readonly}
           required={required}
           placeholder={placeholderText}
-          ariaLabel={ariaLabel}
+          ariaLabel={ariaLabel ?? (labelNamesSelect ? undefined : label || placeholderPrompt)}
           ariaLabelledby={ariaLabelledby}
-          // The template's label shows the property name for a field with no title, and `*` when required; under the
-          // plan, a label the template draws here or for a field above names the select
-          named={
-            !!ariaLabel ||
-            (presentation ? isLabelledByTemplate(presentation) : !hideLabel && (!!label || !!name || !!required))
-          }
+          ariaInvalid={ariaInvalid}
           className={cnClassName}
           onFocus={handleFancyFocus}
           onBlur={handleFancyBlur}
@@ -173,6 +177,7 @@ export default function SelectWidget<
           onFocus={handleFancyFocus}
           onBlur={handleFancyBlur}
           ariaDescribedby={ariaDescribedby}
+          ariaInvalid={ariaInvalid}
         />
       )}
       <SelectedOptionDescription

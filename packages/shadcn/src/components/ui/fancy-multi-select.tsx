@@ -32,6 +32,8 @@ interface FancyMultiSelectProps {
   autoFocus?: boolean;
   /** ID of the element that describes this select */
   ariaDescribedby?: string;
+  /** Whether the select is invalid, which the combobox input says through `aria-invalid` */
+  ariaInvalid?: boolean;
   /** Visible placeholder text for the search input */
   placeholder?: string;
   /** Whether a selection is required, exposed as `aria-required` on the combobox input */
@@ -65,6 +67,7 @@ export function FancyMultiSelect({
   autoFocus = false,
   disabled = false,
   ariaDescribedby,
+  ariaInvalid,
   placeholder,
   required,
   onFocus,
@@ -182,7 +185,6 @@ export function FancyMultiSelect({
       label={label}
       onKeyDown={handleKeyDown}
       className={cn('overflow-visible bg-transparent', className)}
-      autoFocus={autoFocus}
       aria-disabled={disabled}
       onBlur={onBlur}
       onFocus={handleFocus}
@@ -227,7 +229,9 @@ export function FancyMultiSelect({
             placeholder={placeholder}
             className='rtl:mr-2 ltr:ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1'
             disabled={disabled}
+            autoFocus={autoFocus}
             aria-describedby={ariaDescribedby}
+            aria-invalid={ariaInvalid || undefined}
             aria-required={required || undefined}
           />
         </div>

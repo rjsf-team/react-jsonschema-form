@@ -1,5 +1,5 @@
 import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getTemplates, getUiOptions, hasTemplateErrors, templateDrawsLabel } from '@rjsf/utils';
+import { getTemplates, getUiOptions, hasTemplateErrors, templateDrawsLabel, templateLabelFor } from '@rjsf/utils';
 
 import { cn } from '../lib/utils.ts';
 
@@ -76,7 +76,7 @@ export default function FieldTemplate<
               'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
               { ' text-destructive': hasError },
             )}
-            htmlFor={id}
+            htmlFor={templateLabelFor<T, S, F>(props)}
             id={presentation?.label.id}
           >
             {label}

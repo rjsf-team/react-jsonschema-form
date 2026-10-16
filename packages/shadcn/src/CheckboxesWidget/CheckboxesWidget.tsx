@@ -1,12 +1,13 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
   enumOptionsDeselectValue,
   enumOptionsDomValues,
   enumOptionsIsDisabled,
   enumOptionsIsSelected,
   enumOptionsSelectValue,
+  getGroupAttributes,
   getOptionValueFormat,
+  hasWidgetErrors,
   optionId,
   useOptionFocusHandlers,
 } from '@rjsf/utils';
@@ -24,29 +25,39 @@ export default function CheckboxesWidget<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({
-  id,
-  htmlName,
-  disabled,
-  options,
-  value,
-  autofocus,
-  readonly,
-  required,
-  onChange,
-  onBlur,
-  onFocus,
-  className,
-}: WidgetProps<T, S, F>) {
+>(props: WidgetProps<T, S, F>) {
+  const {
+    id,
+    htmlName,
+    disabled,
+    options,
+    value,
+    autofocus,
+    readonly,
+    onChange,
+    onBlur,
+    onFocus,
+    className,
+    presentation,
+  } = props;
   const { enumOptions, enumDisabled, inline } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
   const checkboxesValues = Array.isArray(value) ? value : [value];
 
   const { focusHandlers, blurHandlers } = useOptionFocusHandlers<T, S, F>({ id, options, onFocus, onBlur });
+  const checkboxClassName = cn({ 'border-destructive': hasWidgetErrors<T, S, F>(props) }, className);
+  const { group: groupAttributes, option: optionAttributes } = getGroupAttributes<T, S, F>(
+    { id, presentation },
+    'group',
+  );
 
   return (
-    <div className={cn({ 'flex flex-col gap-2': !inline, 'flex flex-row gap-4 flex-wrap': inline })}>
+    <div
+      id={id}
+      {...groupAttributes}
+      className={cn({ 'flex flex-col gap-2': !inline, 'flex flex-row gap-4 flex-wrap': inline })}
+    >
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, index: number) => {
           const checked = enumOptionsIsSelected<S>(option.value, checkboxesValues);
@@ -58,7 +69,6 @@ export default function CheckboxesWidget<
               <Checkbox
                 id={indexOptionId}
                 name={htmlName || id}
-                required={required}
                 disabled={disabled || itemDisabled || readonly}
                 onCheckedChange={(state) => {
                   if (state) {
@@ -67,13 +77,13 @@ export default function CheckboxesWidget<
                     onChange(enumOptionsDeselectValue<S>(index, checkboxesValues, enumOptions));
                   }
                 }}
-                className={className}
+                className={checkboxClassName}
                 checked={checked}
                 value={domValues[index]}
                 autoFocus={autofocus && index === 0}
                 onBlur={blurHandlers[index]}
                 onFocus={focusHandlers[index]}
-                aria-describedby={ariaDescribedByIds(id)}
+                {...optionAttributes}
               />
               <Label className='leading-tight' htmlFor={optionId(id, index)}>
                 {option.label}

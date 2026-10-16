@@ -1,8 +1,9 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
-  getControlDescribedBy,
+  getControlAttributes,
   getTemplates,
   getWidgetDescription,
+  hasWidgetErrors,
   labelValue,
   schemaRequiresTrueValue,
   widgetDrawsLabel,
@@ -10,6 +11,7 @@ import {
 
 import { Checkbox } from '../components/ui/checkbox.tsx';
 import { Label } from '../components/ui/label.tsx';
+import { cn } from '../lib/utils.ts';
 
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.
  *  It is typically used to represent a boolean.
@@ -53,10 +55,7 @@ export default function CheckboxWidget<
 
   const description = getWidgetDescription<T, S, F>(props);
   return (
-    <div
-      className={`relative ${disabled || readonly ? 'cursor-not-allowed opacity-50' : ''}`}
-      aria-describedby={getControlDescribedBy<T, S, F>({ id, presentation })}
-    >
+    <div className={`relative ${disabled || readonly ? 'cursor-not-allowed opacity-50' : ''}`}>
       {description && (
         <DescriptionFieldTemplate
           id={description.id}
@@ -77,7 +76,8 @@ export default function CheckboxWidget<
           onCheckedChange={handleChange}
           onBlur={handleBlur}
           onFocus={handleFocus}
-          className={className}
+          {...getControlAttributes<T, S, F>({ id, presentation })}
+          className={cn({ 'border-destructive': hasWidgetErrors<T, S, F>(props) }, className)}
         />
         <Label className='leading-tight' htmlFor={id}>
           {labelValue(label, hideLabel || !label)}
