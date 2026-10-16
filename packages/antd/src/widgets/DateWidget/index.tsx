@@ -29,6 +29,7 @@ export default function DateWidget<
   disabled,
   registry,
   id,
+  htmlName,
   onBlur,
   onChange,
   onFocus,
@@ -66,7 +67,7 @@ export default function DateWidget<
       disabled={disabled || (readonlyAsDisabled && readonly)}
       getPopupContainer={getPopupContainer}
       id={id}
-      name={id}
+      name={htmlName || id}
       onBlur={!readonly ? handleBlur : undefined}
       onChange={!readonly ? handleChange : undefined}
       onFocus={!readonly ? handleFocus : undefined}

@@ -12,8 +12,20 @@ export default function PasswordWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { disabled, registry, id, onBlur, onChange, onFocus, options, placeholder, readonly, value, presentation } =
-    props;
+  const {
+    disabled,
+    registry,
+    id,
+    htmlName,
+    onBlur,
+    onChange,
+    onFocus,
+    options,
+    placeholder,
+    readonly,
+    value,
+    presentation,
+  } = props;
   const { formContext } = registry;
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
@@ -30,7 +42,7 @@ export default function PasswordWidget<
     <Input.Password
       disabled={disabled || (readonlyAsDisabled && readonly)}
       id={id}
-      name={id}
+      name={htmlName || id}
       onBlur={!readonly ? handleBlur : undefined}
       onChange={!readonly ? handleChange : undefined}
       onFocus={!readonly ? handleFocus : undefined}
