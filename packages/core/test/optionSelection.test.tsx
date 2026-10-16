@@ -877,6 +877,30 @@ describe('option selection as form state', () => {
     expect(node.querySelector('#switch')).toHaveTextContent('0');
     expect(node.querySelector('#root_b-key')).toHaveValue('b');
   });
+
+  it('shares the selection with a custom AnyOfField that passes copies of the options', async () => {
+    function CopyingFirstOrSecond(props: FieldProps & { options: RJSFSchema[] }) {
+      return <FirstOrSecond {...props} options={props.options.map((option) => ({ ...option }))} />;
+    }
+    const schema: RJSFSchema = {
+      type: 'object',
+      additionalProperties: { type: 'string' },
+      anyOf: [
+        { title: 'A', properties: { a: { type: 'string' } } },
+        { title: 'B', properties: { b: { type: 'string' } } },
+      ],
+    };
+    const { node } = createFormComponent({
+      schema,
+      fields: { AnyOfField: CopyingFirstOrSecond },
+      initialFormData: { b: 'v' },
+    });
+
+    await user.click(elementOf(node, '#switch'));
+
+    expect(node.querySelector('#switch')).toHaveTextContent('0');
+    expect(node.querySelector('#root_b-key')).toHaveValue('b');
+  });
 });
 
 describe('omitting extra data', () => {

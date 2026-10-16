@@ -8,6 +8,8 @@ interface ShownOption {
   fieldPath: FieldPath;
   /** The options, each retrieved for the field's data */
   options: readonly unknown[];
+  /** The key the selection is stored under */
+  list: string | undefined;
   selectedOption: number;
   selectOption: (index: number) => void;
 }

@@ -16,6 +16,8 @@ export interface OptionSelectionState {
 
 /** `OptionSelectionState`, and what `SchemaField` calls before an edit inside the field */
 interface ShownOptionState extends OptionSelectionState {
+  /** The key the selection is stored under, undefined where there are no options */
+  list: string | undefined;
   /** Records the option shown before an edit inside the option, so the edit cannot change which option it is shown
    * under
    */
@@ -31,7 +33,8 @@ interface ShownOptionState extends OptionSelectionState {
 const noSubscription = () => () => undefined;
 
 /** `useOptionSelection()` with `keepSelection()` and `editOwnProperty()`, which `SchemaField` calls from the
- * `onChange` it hands the option and the field's own children
+ * `onChange` it hands the option and the field's own children. `listKey` is the key of the list `SchemaField` stores
+ * the selection under, for a custom field at its path that passes options of its own.
  */
 export function useShownOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   uiState: UiState,
@@ -40,10 +43,14 @@ export function useShownOption<T, S extends StrictRJSFSchema, F extends FormCont
   options: readonly S[] | undefined,
   formData: T | undefined,
   discriminatorField?: string,
+  listKey?: string,
 ): ShownOptionState {
   const { schemaUtils } = registry;
   const rootSchema = schemaUtils.getRootSchema();
-  const list = useMemo(() => options && optionListKey<S>(options, rootSchema), [options, rootSchema]);
+  const list = useMemo(
+    () => options && (listKey ?? optionListKey<S>(options, rootSchema)),
+    [options, listKey, rootSchema],
+  );
   // Only the pick is subscribed to: the data a selection holds for changes as the form commits, without changing the
   // option shown for the data rendered, and a snapshot that changed in the commit would have the field render again
   const readPick = () => (list === undefined ? undefined : uiState.selection(fieldPath, list)?.pick);
@@ -88,8 +95,8 @@ export function useShownOption<T, S extends StrictRJSFSchema, F extends FormCont
     [list, uiState, fieldPath, keepSelection],
   );
   return useMemo(
-    () => ({ selectedOption, selectOption, keepSelection, editOwnProperty }),
-    [selectedOption, selectOption, keepSelection, editOwnProperty],
+    () => ({ list, selectedOption, selectOption, keepSelection, editOwnProperty }),
+    [list, selectedOption, selectOption, keepSelection, editOwnProperty],
   );
 }
 
@@ -132,8 +139,11 @@ export default function useOptionSelection<
   discriminatorField?: string,
 ): OptionSelectionState {
   const shown = use(ShownOptionContext);
-  // `SchemaField` has already worked out the option it shows from these very options, so `AnyOfField` reads it there
-  const above = shown?.fieldPath === fieldPath && shown.options === options ? shown : undefined;
+  const beside = shown?.fieldPath === fieldPath ? shown : undefined;
+  // `SchemaField` has already worked out the option it shows from these very options, so `AnyOfField` reads it there.
+  // Options of a custom field's own are the field's options all the same, so their selection is the one `SchemaField`
+  // stubs the extra keys with
+  const above = beside?.options === options ? beside : undefined;
   const own = useShownOption<T, S, F>(
     useUiState().uiState,
     registry,
@@ -141,6 +151,7 @@ export default function useOptionSelection<
     above ? undefined : options,
     formData,
     discriminatorField,
+    beside?.list,
   );
   const { selectedOption, selectOption } = above ?? own;
   return useMemo(() => ({ selectedOption, selectOption }), [selectedOption, selectOption]);
