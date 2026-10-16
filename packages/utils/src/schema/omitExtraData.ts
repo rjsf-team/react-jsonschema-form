@@ -12,6 +12,7 @@ import getSchemaTypeForValue from '../getSchemaTypeForValue.ts';
 import isConstantOptionList from '../isConstantOptionList.ts';
 import isObject, { isSchemaObject } from '../isObject.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
+import setOwn from '../setOwn.ts';
 import type { FormContextType, GenericObjectType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
 import getClosestMatchingOption from './getClosestMatchingOption.ts';
 import { mergeAllOf, relaxOptionsForScoring, resolveAllReferences } from './retrieveSchema.ts';
@@ -59,6 +60,10 @@ export default function omitExtraData<
    * @param value - The value to check
    * @returns - True if `value` is a plain non-array object
    */
+  function ownValue(obj: GenericObjectType, key: string): unknown {
+    return Object.hasOwn(obj, key) ? obj[key] : undefined;
+  }
+
   function isObjectValue(value: unknown): value is GenericObjectType {
     return isObject(value);
   }
@@ -100,7 +105,7 @@ export default function omitExtraData<
      * @param [required=false] - When true the property is never pruned regardless of its filtered value
      */
     function setProperty(key: string, schemaDef: S | boolean, value: unknown, required = false) {
-      const v = omit(schemaDef, value, target[key]);
+      const v = omit(schemaDef, value, Object.hasOwn(target, key) ? target[key] : undefined);
       if (!required && isObject(v)) {
         // Resolve $ref so we can inspect the effective required list for the inner schema.
         let sd = isSchemaObject<S>(schemaDef) ? schemaDef : ({} as S);
@@ -122,14 +127,13 @@ export default function omitExtraData<
         }
       }
       if (v !== undefined) {
-        // oxlint-disable-next-line no-param-reassign
-        target[key] = v;
+        setOwn(target, key, v);
       }
     }
 
     if (properties !== undefined) {
       for (const [key, schemaDef] of Object.entries(properties)) {
-        setProperty(key, schemaDef as S | boolean, source[key], requiredSet.has(key));
+        setProperty(key, schemaDef as S | boolean, ownValue(source, key), requiredSet.has(key));
       }
     }
 
@@ -163,7 +167,7 @@ export default function omitExtraData<
       const addlSchema = additionalProperties as S | boolean;
       if (patternPropertiesRest !== undefined) {
         for (const key of patternPropertiesRest) {
-          setProperty(key, addlSchema, source[key], requiredSet.has(key));
+          setProperty(key, addlSchema, ownValue(source, key), requiredSet.has(key));
         }
       } else {
         const knownProperties = new Set(Object.keys(properties ?? {}));
