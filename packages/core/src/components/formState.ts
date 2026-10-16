@@ -138,6 +138,10 @@ export interface FieldChange<T> {
    * writes over an edit, says nothing of what any field raised
    */
   keepsOwnErrors?: boolean;
+  /** For a root write over an edit, such as `transformChange`'s, the path of a field the edit cleared: left without a
+   * value in the root write too, it stays cleared whatever defaults the root write merges in, as it did under the edit
+   */
+  clearedPath?: FieldPathList;
 }
 
 /** What became of a change that moved keys, see `FormDataAccess.sendMove()`: taken as sent; refused by
@@ -1809,6 +1813,15 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
       // `replaceEqualDeep()` may have handed back subtrees of the committed data, and `setByPath()` writes through
       // every container along the path, so the clear lands on copies of just those containers
       formData = setByPath(copyAlongPath(formData, path), path, undefined);
+    }
+    const { clearedPath } = change;
+    if (
+      isRootPath &&
+      clearedPath &&
+      getAt<unknown>(newValue, clearedPath) === undefined &&
+      getAt<unknown>(formData, clearedPath) !== undefined
+    ) {
+      formData = setByPath(copyAlongPath(formData, clearedPath), clearedPath, undefined);
     }
   }
 

@@ -103,6 +103,32 @@ describe('transformChange', () => {
     expect(reported.at(-1)?.errors.map(({ property }) => property)).toEqual(['.first']);
   });
 
+  it("keeps a cleared field cleared when the rewrite derives another one, under 'useDefaultIfFormDataUndefined' (#5125)", async () => {
+    interface Derived {
+      a?: string;
+      length?: number;
+    }
+    const derivedSchema: RJSFSchema = {
+      type: 'object',
+      properties: { a: { type: 'string', default: 'A' }, length: { type: 'number' } },
+    };
+    const transformChange: FormProps<Derived>['transformChange'] = (next) =>
+      next && { ...next, length: next.a?.length ?? 0 };
+    const ref = createFormRef<Derived>();
+    const { node } = renderForm<Derived>({
+      ref,
+      schema: derivedSchema,
+      initialFormData: { a: 'xy' },
+      transformChange,
+      defaultFormStateBehavior: { mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined' },
+    });
+
+    await user.clear(input(node, 'root_a'));
+
+    expect(input(node, 'root_a')).toHaveValue('');
+    expect(handleOf(ref).getFormData()).toEqual({ a: undefined, length: 0 });
+  });
+
   it('refuses an array reorder, and the rows keep their own previous values on the next edit (#5451)', async () => {
     interface Row {
       kind?: string;

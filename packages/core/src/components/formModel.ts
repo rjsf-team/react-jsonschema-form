@@ -285,7 +285,14 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     }
     // No field made the rewrite, so the errors the fields raised, the root's included, are carried through it as the
     // edit left them
-    const rewrite: FieldChange<T> = { newValue: transformed, fieldPath: ROOT_FIELD_PATH, keepsOwnErrors: true };
+    const path = fieldPathToList(change.fieldPath);
+    const rewrite: FieldChange<T> = {
+      newValue: transformed,
+      fieldPath: ROOT_FIELD_PATH,
+      keepsOwnErrors: true,
+      // The edit's clear of a field outlives the defaults the rewrite merges in, as it outlives those the edit does (#5125)
+      clearedPath: change.newValue === undefined && path.length > 0 ? path : undefined,
+    };
     // Unvalidated, the change still moves its errors with the keys it moved and settles the fields' own errors, which
     // the rewrite then carries through its one validation
     const withEditErrors = applyChangeToErrorsOf(edited, base.formData, change, props, false);
