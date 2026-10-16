@@ -1,13 +1,8 @@
+import { RJSF_PROVENANCE_KEY } from '../../constants.ts';
 import type { RJSFSchema, StrictRJSFSchema } from '../../types.ts';
 import { seedsKey } from './mergePlan.ts';
 import type { Seed } from './mergePlan.ts';
 import type { SchemaGraph } from './parseSchemaGraph.ts';
-
-/** Where a copy `retrieveSchema()` hands out came from. A `WeakMap` keyed by the copy would lose it on the spreads
- * consumers make of their schema, so it rides on the copy under a symbol a spread keeps. The symbol stays private:
- * only `stamp()` writes it and only `readProvenance()` reads it.
- */
-const PROVENANCE = Symbol('__rjsf_provenance');
 
 /** The plan sets of a field's ancestors since its chain last restarted, which the set-equality guard checks a field's
  * own plan set against. Interned per graph: one parent chain extended by one set is one chain.
@@ -167,14 +162,15 @@ export function childProvenance<S extends StrictRJSFSchema = RJSFSchema>(
   return intern(graph, fields, parent);
 }
 
-/** Returns a copy of `schema` carrying `provenance`, which a spread of the copy keeps
+/** Returns a copy of `schema` carrying `provenance` under `RJSF_PROVENANCE_KEY`, which a spread of the copy keeps: a
+ * `WeakMap` keyed by the copy would lose it on the spreads consumers make of their schema
  *
  * @param schema - The schema to copy
  * @param provenance - The provenance to stamp it with
  * @returns - The stamped copy
  */
 export function stamp<S extends StrictRJSFSchema = RJSFSchema>(schema: S, provenance: Provenance<S>): S {
-  return { ...schema, [PROVENANCE]: provenance };
+  return { ...schema, [RJSF_PROVENANCE_KEY]: provenance };
 }
 
 /** Returns the provenance `schema` was stamped with, when it was planned in `graph` or in a graph extending it. A
@@ -189,6 +185,6 @@ export function readProvenance<S extends StrictRJSFSchema = RJSFSchema>(
   graph: SchemaGraph<S>,
 ): Provenance<S> | undefined {
   const provenance: unknown =
-    typeof schema === 'object' && schema !== null ? Reflect.get(schema, PROVENANCE) : undefined;
+    typeof schema === 'object' && schema !== null ? Reflect.get(schema, RJSF_PROVENANCE_KEY) : undefined;
   return isProvenanceOf(provenance, graph) ? provenance : undefined;
 }
