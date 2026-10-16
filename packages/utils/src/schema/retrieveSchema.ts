@@ -60,7 +60,7 @@ import type { MergePlan, OptionRequest, PlanPolicy, Seed } from './graph/mergePl
 import parseSchemaGraph from './graph/parseSchemaGraph.ts';
 import type { NodeId, SchemaGraph } from './graph/parseSchemaGraph.ts';
 import { childProvenance, extendChain, readProvenance, rootProvenance, stamp } from './graph/provenance.ts';
-import type { Provenance } from './graph/provenance.ts';
+import type { GuardChain, Provenance } from './graph/provenance.ts';
 import { childField, collapses, ownRefTargets, restartSeeds } from './graph/recursionRule.ts';
 import type { ContainmentEdge, FieldPosition } from './graph/recursionRule.ts';
 import shallowAllOfMerge from './shallowAllOfMerge.ts';
@@ -350,8 +350,13 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
       Reflect.deleteProperty(merged, keyword);
     }
   }
+  let extended: GuardChain | undefined;
+  const extendedChain = () => {
+    extended ??= extendChain(graph, field.chain, plan.setKey);
+    return extended;
+  };
   const child = (seedsOfChild: readonly Seed[], edge: ContainmentEdge, inData: boolean) => {
-    const next = childField(graph, { plan, chain: field.chain }, { seeds: seedsOfChild, edge, inData });
+    const next = childField(extendedChain, { seeds: seedsOfChild, edge, inData });
     return {
       next,
       provenance: childProvenance(field, { seeds: next.seeds, chain: next.chain }),
@@ -430,7 +435,7 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
       // `MultiSchemaField` renders the option as a schema of its own, so its ref path restarts. Where the field has
       // data, the option restarts the guard chain too, as a row or key the data holds does: the data bounds how often
       // that happens, and an option the user picks for a recursive field renders its own options rather than collapsing
-      const optionChain = data === undefined ? extendChain(graph, field.chain, plan.setKey) : undefined;
+      const optionChain = data === undefined ? extendedChain() : undefined;
       Reflect.set(
         merged,
         keyword,

@@ -1,7 +1,6 @@
 import type { RJSFSchema, StrictRJSFSchema } from '../../types.ts';
 import type { MergePlan, Seed } from './mergePlan.ts';
 import type { NodeId, SchemaGraph } from './parseSchemaGraph.ts';
-import { extendChain } from './provenance.ts';
 import type { GuardChain } from './provenance.ts';
 
 /** How a field is reached from its parent */
@@ -132,24 +131,22 @@ export interface ChildField {
   readonly dataDriven: boolean;
 }
 
-/** Returns a child of the field `parent` plans in render: a child the data drives, an array row or a key the data
- * holds, restarts both the guard chain and its ref path. The data bounds those, and a row keeping its ref path would
- * collapse a property that re-enters a list or wrapper definition the row's own array came through, hiding the rows the
- * data has there. Every other child extends the chain with the parent's set.
+/** Returns a child of a field planned in render: a child the data drives, an array row or a key the data holds,
+ * restarts both the guard chain and its ref path. The data bounds those, and a row keeping its ref path would collapse
+ * a property that re-enters a list or wrapper definition the row's own array came through, hiding the rows the data
+ * has there. Every other child takes the parent's chain extended with the parent's set.
  *
- * @param graph - The graph the plans are of
- * @param parent - The parent's plan and chain
+ * @param extendedChain - Returns the parent's chain extended with the parent's set, made once for all its children
  * @param child - The child's seeds and edge, and whether the data holds it
  * @returns - The child's seeds and chain, and whether the data drives it
  */
-export function childField<S extends StrictRJSFSchema = RJSFSchema>(
-  graph: SchemaGraph<S>,
-  parent: { readonly plan: MergePlan<S>; readonly chain?: GuardChain },
+export function childField(
+  extendedChain: () => GuardChain,
   child: { readonly seeds: readonly Seed[]; readonly edge: ContainmentEdge; readonly inData: boolean },
 ): ChildField {
   const dataDriven = child.edge !== 'property' && child.inData;
   if (!dataDriven) {
-    return { seeds: child.seeds, chain: extendChain(graph, parent.chain, parent.plan.setKey), dataDriven };
+    return { seeds: child.seeds, chain: extendedChain(), dataDriven };
   }
   return { seeds: restartSeeds(child.seeds), dataDriven };
 }

@@ -116,26 +116,28 @@ describe('the recursion rule', () => {
       return plan([{ node: pl, refPath: [] }]);
     }
     const seeds = [{ node: child, refPath: [pl] }];
+    const extended = extendChain(graph, parent.chain, parent.plan.setKey);
+    const extendedChain = () => extended;
 
     it('extends the chain with the parent set for a property, and for a child the data does not hold', () => {
-      const field = childField(graph, parent, { seeds, edge: 'property', inData: true });
-      expect(field).toEqual({ seeds, chain: extendChain(graph, parent.chain, parent.plan.setKey), dataDriven: false });
-      expect(childField(graph, parent, { seeds, edge: 'additionalKey', inData: false })).toEqual({
+      const field = childField(extendedChain, { seeds, edge: 'property', inData: true });
+      expect(field).toEqual({ seeds, chain: extended, dataDriven: false });
+      expect(childField(extendedChain, { seeds, edge: 'additionalKey', inData: false })).toEqual({
         seeds,
-        chain: extendChain(graph, parent.chain, parent.plan.setKey),
+        chain: extended,
         dataDriven: false,
       });
     });
     it('restarts the chain and the ref path of a child the data drives', () => {
-      expect(childField(graph, parent, { seeds, edge: 'item', inData: true })).toEqual({
+      expect(childField(extendedChain, { seeds, edge: 'item', inData: true })).toEqual({
         seeds: [{ node: child, refPath: [] }],
         dataDriven: true,
       });
-      expect(childField(graph, parent, { seeds, edge: 'patternKey', inData: true })).toEqual({
+      expect(childField(extendedChain, { seeds, edge: 'patternKey', inData: true })).toEqual({
         seeds: [{ node: child, refPath: [] }],
         dataDriven: true,
       });
-      expect(childField(graph, parent, { seeds, edge: 'additionalKey', inData: true }).seeds).toEqual([
+      expect(childField(extendedChain, { seeds, edge: 'additionalKey', inData: true }).seeds).toEqual([
         { node: child, refPath: [] },
       ]);
     });
