@@ -101,7 +101,7 @@ describe('createSchemaUtils()', () => {
         };
         const schemaUtilsWithRefProperty = createSchemaUtils({ validator: testValidator }, schema);
         expect(schemaUtilsWithRefProperty.getRootSchema()).toEqual(schema);
-        expect(schemaUtilsWithRefProperty.retrieveSchema(schema)).toEqual(schema);
+        expect(schemaUtilsWithRefProperty.retrieveSchema(schemaUtilsWithRefProperty.getRootSchema())).toEqual(schema);
       });
 
       it('resolves a reference to a definition that has a property named $ref', () => {
@@ -117,7 +117,8 @@ describe('createSchemaUtils()', () => {
           $defs: { node },
         };
         const schemaUtilsWithRefProperty = createSchemaUtils({ validator: testValidator }, schema);
-        const link = schemaUtilsWithRefProperty.retrieveSchema(schema)[PROPERTIES_KEY]?.link;
+        const link = schemaUtilsWithRefProperty.getRootSchema()[PROPERTIES_KEY]?.link;
+        expect(link).toBeTypeOf('object');
         expect(typeof link === 'object' && schemaUtilsWithRefProperty.retrieveSchema(link)[PROPERTIES_KEY]).toEqual(
           node[PROPERTIES_KEY],
         );
