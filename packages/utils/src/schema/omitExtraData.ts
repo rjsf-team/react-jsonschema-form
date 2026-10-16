@@ -76,6 +76,9 @@ export default function omitExtraData<
   formData?: T,
   fieldState?: FormFieldState<S>,
 ): T | undefined {
+  /** The path of the child at `key`, which only `fieldState` is asked about, so without one no path is built */
+  const childPath = (path: FieldPathList, key: string | number): FieldPathList => (fieldState ? [...path, key] : path);
+
   /** Type predicate that narrows `value` to `GenericObjectType` — true when `value` is a plain,
    * non-array object (i.e. a JSON object). Used to distinguish JSON objects from arrays and primitives.
    *
@@ -129,7 +132,7 @@ export default function omitExtraData<
      * @param [required=false] - When true the property is never pruned regardless of its filtered value
      */
     function setProperty(key: string, schemaDef: S | boolean, value: unknown, required = false) {
-      const v = omit(schemaDef, value, [...path, key], target[key]);
+      const v = omit(schemaDef, value, childPath(path, key), target[key]);
       if (!required && isObject(v)) {
         // Resolve $ref so we can inspect the effective required list for the inner schema.
         let sd = isSchemaObject<S>(schemaDef) ? schemaDef : ({} as S);
@@ -226,7 +229,7 @@ export default function omitExtraData<
       let i = 0;
       for (; i < tupleLength; i += 1) {
         // oxlint-disable-next-line no-param-reassign
-        target[i] = omit(items[i], source[i], [...path, i]);
+        target[i] = omit(items[i], source[i], childPath(path, i));
       }
       // Without additionalItems, truncate at the tuple boundary to drop any pre-existing items.
       if (!additionalItems) {
@@ -236,12 +239,12 @@ export default function omitExtraData<
       }
       for (; i < source.length; i += 1) {
         // oxlint-disable-next-line no-param-reassign
-        target[i] = omit(additionalItems, source[i], [...path, i]);
+        target[i] = omit(additionalItems, source[i], childPath(path, i));
       }
     } else {
       for (let i = 0; i < source.length; i += 1) {
         // oxlint-disable-next-line no-param-reassign
-        target[i] = omit(items, source[i], [...path, i]);
+        target[i] = omit(items, source[i], childPath(path, i));
       }
     }
     // Truncate any pre-existing items beyond the source length.
@@ -297,19 +300,19 @@ export default function omitExtraData<
       return target;
     }
     const discriminator = getDiscriminatorFieldFromSchema<S>(childSchema);
-    const options = oneOf.map((option) =>
-      isSchemaObject<S>(option) ? option : schemaFrom(rootSchema, option ? {} : { not: {} }),
-    );
-    // `additionalProperties: false` is relaxed for matching only, so the data's extra keys don't rule out the option
-    // that is then applied with it, to omit them
-    const bestIndex = fieldState
-      ? fieldState.selectedOption(fieldPathFromList(path), options, source, discriminator)
-      : closestOption<unknown, S, F>(context, rootSchema, source, oneOf, 0, true, discriminator);
-    const winning: unknown = oneOf[bestIndex];
-    const resolved: S = isSchemaObject<S>(winning)
-      ? resolveOwnRef<S>(winning, rootSchema)
-      : schemaOfBoolean(Boolean(winning), rootSchema);
-    return omit(resolved, source, path, target, false);
+    const asOption = (option: unknown): S =>
+      isSchemaObject<S>(option) ? option : schemaFrom(rootSchema, option ? {} : { not: {} });
+    let winning: unknown;
+    if (fieldState) {
+      const options = oneOf.map(asOption);
+      winning = options[fieldState.selectedOption(fieldPathFromList(path), options, source, discriminator)];
+    } else {
+      // `additionalProperties: false` is relaxed for matching only, so the data's extra keys don't rule out the option
+      // that is then applied with it, to omit them
+      winning = oneOf[closestOption<unknown, S, F>(context, rootSchema, source, oneOf, 0, true, discriminator)];
+    }
+    // An index naming no option, as -1 does for none shown, keeps nothing the options describe, as a `false` option does
+    return omit(resolveOwnRef<S>(asOption(winning), rootSchema), source, path, target, false);
   }
 
   /** Applies `anyOf` branches from `schema` to `source`, merging results into `target`. When `anyOf`
