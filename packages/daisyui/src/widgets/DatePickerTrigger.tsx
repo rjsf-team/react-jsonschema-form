@@ -34,6 +34,8 @@ interface DatePickerTriggerProps<
   disabled?: boolean;
   /** Whether the field is read-only, which stops the popup opening while leaving the value it displays reachable */
   readonly?: boolean;
+  /** Whether `ui:autofocus` asks for this button to be focused as it mounts */
+  autofocus?: boolean;
   /** The ref the popup positions itself against and returns focus to */
   triggerRef: RefObject<HTMLButtonElement | null>;
   /** Opens the popup, or closes it where a press here is the way out */
@@ -72,6 +74,7 @@ export default function DatePickerTrigger<
   popupId,
   disabled,
   readonly,
+  autofocus,
   triggerRef,
   onClick,
   onFocus,
@@ -81,7 +84,7 @@ export default function DatePickerTrigger<
   const controlAttributes = getControlAttributes<T, S, F>({ id, presentation });
   const fallbackName = getDatePickerName<T, S, F>(label, registry);
   const text = formattedValue || placeholder || fallbackName;
-  const named = !!controlAttributes['aria-labelledby'] || hasLabelToReference({ label, name, hideLabel, presentation });
+  const named = hasLabelToReference({ label, name, hideLabel, presentation });
 
   return (
     <button
@@ -91,6 +94,7 @@ export default function DatePickerTrigger<
         isOpen ? 'ring-2 ring-primary/50' : ''
       }`}
       disabled={disabled}
+      autoFocus={autofocus}
       // Rather than the attribute, which would take the trigger out of the tab order along with the date it displays:
       // a field that cannot be edited is still one a keyboard user reads, and `SelectWidget` keeps its own reachable
       aria-disabled={readonly || undefined}

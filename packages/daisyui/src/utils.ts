@@ -1,11 +1,4 @@
-import type {
-  FieldPresentation,
-  FormContextType,
-  GroupRole,
-  RJSFSchema,
-  StrictRJSFSchema,
-  UiSchema,
-} from '@rjsf/utils';
+import type { FieldPresentation, FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
 import { fieldLabelId, getGroupAttributes, isLabelledByTemplate, isObject } from '@rjsf/utils';
 
 import type { DaisyProps } from './types/DaisyProps.ts';
@@ -39,12 +32,7 @@ export function getDaisy<
   return isObject(daisy) ? daisy : {};
 }
 
-interface GroupProps {
-  id: string;
-  role: GroupRole;
-  'aria-labelledby'?: string;
-  'aria-invalid'?: true;
-}
+type GroupProps = { id: string } & ReturnType<typeof getGroupAttributes>['group'];
 
 interface GetGroupProps {
   id: string;
@@ -123,7 +111,8 @@ export function hasLabelToReference({
  * @param presentation - The field's plan, whose `aria-labelledby` for the control the group takes when there is one
  * @param role - The group role for the controls, `radiogroup` for radios and `group` for anything else
  * @returns - The `id`, `role` and, when there is a label to point at, `aria-labelledby` props for the group's wrapper,
- *        and under a plan with errors a `radiogroup`'s `aria-invalid`
+ *        under a plan whose label `ui:label: false` hides the `aria-label` naming it, and under a plan with errors a
+ *        `radiogroup`'s `aria-invalid`
  */
 export function getGroupProps(props: GetGroupProps): GroupProps {
   return getGroupAndOptionProps(props).group;

@@ -33,8 +33,21 @@ export default function CheckboxesWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { id, htmlName, name, disabled, options, value, label, presentation, readonly, onChange, onFocus, onBlur } =
-    props;
+  const {
+    id,
+    htmlName,
+    name,
+    disabled,
+    options,
+    value,
+    label,
+    presentation,
+    readonly,
+    autofocus,
+    onChange,
+    onFocus,
+    onBlur,
+  } = props;
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const { enumOptions, enumDisabled } = options;
   const optionValueFormat = getOptionValueFormat(options);
@@ -92,6 +105,7 @@ export default function CheckboxesWidget<
                 value={domValues[index]}
                 checked={enumOptionsIsSelected<S>(option.value, selected)}
                 disabled={optionDisabled}
+                autoFocus={autofocus && index === 0}
                 data-index={index}
                 onChange={handleChange}
                 onFocus={focusHandlers[index]}

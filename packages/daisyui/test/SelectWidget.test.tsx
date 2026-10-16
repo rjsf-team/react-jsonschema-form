@@ -246,7 +246,7 @@ describe('SelectWidget', () => {
   test('is a combobox expanded while focus is inside its dropdown, which it controls', async () => {
     render(
       <>
-        <SelectWidget {...makeWidgetMockProps({ options: { enumOptions } })} />
+        <SelectWidget {...makeWidgetMockProps({ options: { enumOptions }, autofocus: false })} />
         <button type='button'>After select</button>
       </>,
     );
@@ -260,6 +260,15 @@ describe('SelectWidget', () => {
 
     await user.click(screen.getByRole('button', { name: 'After select' }));
     expect(combobox).toHaveAttribute('aria-expanded', 'false');
+  });
+
+  test.each([
+    [true, 'true'],
+    [false, null],
+  ])('marks its listbox multiselectable only for a multiple select (multiple: %s)', (multiple, attribute) => {
+    render(<SelectWidget {...makeWidgetMockProps({ options: { enumOptions }, multiple })} />);
+
+    expect(screen.getByRole('listbox').getAttribute('aria-multiselectable')).toBe(attribute);
   });
 
   // A combobox takes no name from the option it displays, so the field's label names it where no label is drawn
@@ -302,7 +311,9 @@ describe('SelectWidget', () => {
     const onBlur = vi.fn();
     render(
       <>
-        <SelectWidget {...makeWidgetMockProps({ value: 'bar', onFocus, onBlur, options: { enumOptions } })} />
+        <SelectWidget
+          {...makeWidgetMockProps({ value: 'bar', autofocus: false, onFocus, onBlur, options: { enumOptions } })}
+        />
         <button type='button'>After select</button>
       </>,
     );
@@ -324,7 +335,13 @@ describe('SelectWidget', () => {
     render(
       <>
         <SelectWidget
-          {...makeWidgetMockProps({ value: undefined, onFocus, onBlur, options: { enumOptions, emptyValue: null } })}
+          {...makeWidgetMockProps({
+            value: undefined,
+            autofocus: false,
+            onFocus,
+            onBlur,
+            options: { enumOptions, emptyValue: null },
+          })}
         />
         <button type='button'>After select</button>
       </>,
@@ -444,6 +461,7 @@ describe('SelectWidget', () => {
               ],
             },
             [state]: true,
+            autofocus: false,
             onChange,
           })}
         />,

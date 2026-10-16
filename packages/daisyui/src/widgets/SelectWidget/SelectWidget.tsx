@@ -70,6 +70,7 @@ export default function SelectWidget<
     disabled,
     placeholder,
     readonly,
+    autofocus,
     value,
     multiple,
     onChange,
@@ -155,10 +156,11 @@ export default function SelectWidget<
   const hasValue = selectedLabels.length > 0;
   const ariaProps = widgetAriaProps(props);
   const listboxId = `${id}__listbox`;
-  // A combobox takes no name from its contents, which are its value, so with no label, `aria-label` or plan naming it,
-  // it is named by the field's label, as the label drawn for it would, or, for a field with no title, such as an array
-  // item or an untitled option selector, by the translated prompt, as `DatePickerTrigger` is
-  const named = !!ariaProps['aria-labelledby'] || hasLabelToReference({ label, name, hideLabel, presentation });
+  // A combobox takes no name from its contents, which are its value, so with no label or `aria-label` naming it, it is
+  // named by the field's label, as the label drawn for it would, or, for a field with no title, such as an array item
+  // or an untitled option selector, by the translated prompt, as `DatePickerTrigger` is. The plan points it at a label
+  // through `aria-labelledby` only where `hasLabelToReference()` already reports one
+  const named = hasLabelToReference({ label, name, hideLabel, presentation });
   const fallbackName = label || registry.translateString(TranslatableString.SelectPlaceholder);
 
   function renderOption(option: IndexedEnumOptionType<S>) {
@@ -206,6 +208,7 @@ export default function SelectWidget<
           id={id}
           type='button'
           tabIndex={0}
+          autoFocus={autofocus}
           onMouseDown={(event) => {
             event.preventDefault();
             event.currentTarget.focus();
@@ -234,6 +237,7 @@ export default function SelectWidget<
           id={listboxId}
           // oxlint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
           role='listbox'
+          aria-multiselectable={isMultiple || undefined}
           className='dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg'
         >
           {groupEnumOptions<S>(optionsList, optgroups, enumDisabled).map((item) =>

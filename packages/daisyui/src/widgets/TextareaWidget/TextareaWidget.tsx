@@ -18,7 +18,20 @@ export default function TextareaWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { id, htmlName, value, required, disabled, readonly, onChange, onFocus, onBlur, options, presentation } = props;
+  const {
+    id,
+    htmlName,
+    value,
+    required,
+    disabled,
+    readonly,
+    autofocus,
+    onChange,
+    onFocus,
+    onBlur,
+    options,
+    presentation,
+  } = props;
 
   /** Handle focus events
    *
@@ -69,6 +82,7 @@ export default function TextareaWidget<
         required={required}
         disabled={disabled || readonly}
         readOnly={readonly}
+        autoFocus={autofocus}
         rows={rows}
         onChange={handleChange}
         onFocus={handleFocus}
