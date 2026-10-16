@@ -83,7 +83,8 @@ export default function CheckboxesWidget<
           {label}
         </FormLabel>
       )}
-      <FormGroup {...otherMuiProps} {...muiSlotProps?.formGroup} id={id} row={!!inline} {...groupAttributes}>
+      {/* The plan's group attributes go beneath the form author's, as the plan's control attributes do on each checkbox */}
+      <FormGroup {...groupAttributes} {...otherMuiProps} {...muiSlotProps?.formGroup} id={id} row={!!inline}>
         {Array.isArray(enumOptions) &&
           enumOptions.map((option, index: number) => {
             const checked = enumOptionsIsSelected<S>(option.value, checkboxesValues);
