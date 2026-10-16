@@ -1014,6 +1014,16 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
       : view.schema;
   const parentConst = schema[CONST_KEY];
   const computed: GenericObjectType = {};
+  const childProps = (key: string, uiSchemaKey: string) => ({
+    includeUndefinedValues: includeUndefinedValues === true,
+    parentDefaults: getByPath(defaults, key),
+    rawFormData: getByPath(formData, key),
+    required: schema.required?.includes(key),
+    shouldMergeDefaultsIntoFormData,
+    initialDefaultsGenerated,
+    uiSchema: getByPath<UiSchema<T, S, F> | undefined>(uiSchema, uiSchemaKey),
+    uiSchemaDefinitions,
+  });
   for (const key of Object.keys(schema.properties ?? {})) {
     const propertySchema = getPropertySchema<S>(schema, key);
     // Check if the parent schema has a const property defined AND we are supporting const as defaults, then we
@@ -1034,19 +1044,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
       context,
       `property:${key}`,
       defaultsChild(view, seeds, edge, propertySchema),
-      {
-        includeUndefinedValues: includeUndefinedValues === true,
-        parentDefaults: getByPath(defaults, key),
-        rawFormData: getByPath(formData, key),
-        required: schema.required?.includes(key),
-        shouldMergeDefaultsIntoFormData,
-        initialDefaultsGenerated,
-        uiSchema: getByPath<UiSchema<T, S, F> | undefined>(
-          uiSchema,
-          addedByAdditionalProperty ? ADDITIONAL_PROPERTIES_KEY : key,
-        ),
-        uiSchemaDefinitions,
-      },
+      childProps(key, addedByAdditionalProperty ? ADDITIONAL_PROPERTIES_KEY : key),
       memo,
     );
 
@@ -1090,18 +1088,9 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
         context,
         `additional:${key}`,
         defaultsChild(view, seedsAt(view, ADDITIONAL_PROPERTIES_KEY), 'additionalKey', additionalPropertiesSchema),
-        {
-          includeUndefinedValues: includeUndefinedValues === true,
-          parentDefaults: getByPath(defaults, key),
-          rawFormData: getByPath(formData, key),
-          required: schema.required?.includes(key),
-          shouldMergeDefaultsIntoFormData,
-          initialDefaultsGenerated,
-          // Matches ObjectField's convention for properties added by `additionalProperties`: they all share
-          // `uiSchema.additionalProperties` rather than each having its own dynamically-named entry in `uiSchema`.
-          uiSchema: getByPath<UiSchema<T, S, F> | undefined>(uiSchema, ADDITIONAL_PROPERTIES_KEY),
-          uiSchemaDefinitions,
-        },
+        // Matches ObjectField's convention for properties added by `additionalProperties`: they all share
+        // `uiSchema.additionalProperties` rather than each having its own dynamically-named entry in `uiSchema`.
+        childProps(key, ADDITIONAL_PROPERTIES_KEY),
         memo,
       );
       maybeAddDefaultToObject(
