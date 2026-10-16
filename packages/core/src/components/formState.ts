@@ -45,7 +45,7 @@ import type { FormProps, FormState } from './Form.tsx';
 import type { EventFormData, IChangeEvent } from './IChangeEvent.ts';
 import type { FieldTree } from './sanitizeFieldTree.ts';
 import sanitizeFieldTree from './sanitizeFieldTree.ts';
-import { asFieldValue, createUiState, fieldStateOf } from './uiState.ts';
+import { asFieldValue, createUiState, fieldStateOf, isPathPrefix } from './uiState.ts';
 
 /* The pure half of `Form`: what its state is derived from, and what each operation makes of it.
  *
@@ -126,6 +126,14 @@ export interface PendingChange<T> {
 
 /** Where a change put what an array or object held under `key`: the new key, or `undefined` when it is gone */
 export type KeyMove = (key: string) => string | undefined;
+
+/** A change being made to the data: its path, and where it moved the keys of the array or object there, if it moved
+ * any
+ */
+export interface FieldEdit {
+  path: FieldPathList;
+  newKeyOf?: KeyMove;
+}
 
 /** A `KeyMove` with the path of the array or object whose keys it moved */
 export interface AnnouncedMove {
@@ -361,17 +369,6 @@ function runLiveValidation<T, S extends StrictRJSFSchema, F extends FormContextT
   const { errors: schemaValidationErrors, errorSchema: schemaValidationErrorSchema } = schemaValidation;
   const mergedErrors = mergeErrors(schemaValidation, props.extraErrors, customErrors);
   return { ...mergedErrors, schemaValidationErrors, schemaValidationErrorSchema };
-}
-
-/** Whether `prefix` addresses `path` itself or a container holding it, comparing the segments the way `toPath()` spells
- * them, so a numeric array index and its string form are the same segment
- *
- * @param prefix - The path that may lead into `path`
- * @param path - The path being addressed
- * @returns - True when every segment of `prefix` opens `path`
- */
-function isPathPrefix(prefix: FieldPathList, path: FieldPathList): boolean {
-  return prefix.length <= path.length && prefix.every((segment, i) => String(segment) === String(path[i]));
 }
 
 /** Sets `value` under `key` as an own data property of the object `acc` being built. A JSON-sourced `__proto__` key is
@@ -659,7 +656,7 @@ interface DeriveDataOptions {
   /** Sanitize the data against the field tree of the state before this pass, see `sanitizeFieldTree()` */
   isSanitized?: boolean;
   /** The change this pass is for, if any: the value at its path is the user's */
-  edit?: { path: FieldPathList; newKeyOf?: KeyMove };
+  edit?: FieldEdit;
   /** This pass originated from `reset()`: it computes defaults the same way an initial render does even though the
    * instance has generated defaults before
    */
@@ -713,11 +710,7 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
   let tree = treeOf(formData);
   if (isSanitized && current) {
     const seen: string[] = [];
-    let previous: FieldTree<T, S, F> = {
-      schemaUtils: current.schemaUtils,
-      formData: current.formData,
-      retrievedSchema: current.retrievedSchema,
-    };
+    let previous: FieldTree<T, S, F> = current;
     for (;;) {
       const sanitized = replaceEqualDeep(formData, sanitizeFieldTree(previous, tree, current.uiState, edit));
       // Wrapped in an object to deal with a scalar or `undefined` value. Data a round has already produced would only

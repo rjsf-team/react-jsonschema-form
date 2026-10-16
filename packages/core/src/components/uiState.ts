@@ -211,7 +211,7 @@ export function fieldStateOf<T, S extends StrictRJSFSchema, F extends FormContex
         options,
         asFieldValue<T>(formData),
         discriminator,
-        editedPath !== undefined && isAtOrAbove(fieldPath, editedPath),
+        editedPath !== undefined && isPathPrefix(fieldPathToList(fieldPath), editedPath),
       ),
     isExpanded: (fieldPath) => uiState.isExpanded(fieldPath),
   };
@@ -222,8 +222,7 @@ export function fieldStateOf<T, S extends StrictRJSFSchema, F extends FormContex
  */
 function movedPath(path: FieldPath, container: FieldPathList, newKeyOf: KeyMove): FieldPath | undefined {
   const segments = fieldPathToList(path);
-  const isUnder = segments.length > container.length && container.every((segment, i) => segments[i] === segment);
-  if (!isUnder) {
+  if (segments.length === container.length || !isPathPrefix(container, segments)) {
     return path;
   }
   const key = segments[container.length];
@@ -236,10 +235,15 @@ function movedPath(path: FieldPath, container: FieldPathList, newKeyOf: KeyMove)
   return fieldPathFromList(moved);
 }
 
-/** Whether `path` is `edited` or one of its ancestors */
-function isAtOrAbove(path: FieldPath, edited: FieldPathList): boolean {
-  const segments = fieldPathToList(path);
-  return segments.length <= edited.length && segments.every((segment, i) => edited[i] === segment);
+/** Whether `prefix` addresses `path` itself or a container holding it, comparing the segments the way `toPath()` spells
+ * them, so a numeric array index and its string form are the same segment
+ *
+ * @param prefix - The path that may lead into `path`
+ * @param path - The path being addressed
+ * @returns - True when every segment of `prefix` opens `path`
+ */
+export function isPathPrefix(prefix: FieldPathList, path: FieldPathList): boolean {
+  return prefix.length <= path.length && prefix.every((segment, i) => String(segment) === String(path[i]));
 }
 
 /** The state of a form that is about what it shows rather than the data: the option selected for each option list, by
@@ -303,7 +307,7 @@ export function createUiState() {
     edited: (path: FieldPath, dataAt: (path: FieldPath) => unknown, isProposal: boolean) => {
       const segments = fieldPathToList(path);
       for (const [at, lists] of selections) {
-        if (isAtOrAbove(at, segments)) {
+        if (isPathPrefix(fieldPathToList(at), segments)) {
           const data = dataAt(at);
           for (const [list, selection] of lists) {
             lists.set(list, heldAfterEdit(selection, data, isProposal));
