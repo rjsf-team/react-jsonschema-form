@@ -254,17 +254,20 @@ function loosens(node: ObjectNode, loosening: Loosening): boolean {
   );
 }
 
-/** Returns `value` with each subschema the graph holds in it replaced by what `targetOf()` hands a validator for it */
-function pointed<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, value: unknown): unknown {
+/** Returns `value`, held by a subschema whose `$ref`s resolve against `base`, with each subschema the graph holds in it
+ * replaced by what `targetOf()` hands a validator for it. The node is looked up under `base`, since an object reached
+ * in two resources is a node in each.
+ */
+function pointed<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, value: unknown, base: string): unknown {
   if (Array.isArray(value)) {
-    return value.map((item) => pointed(graph, item));
+    return value.map((item) => pointed(graph, item, base));
   }
   if (!isObject(value)) {
     return value;
   }
-  const id = graph.byObject(value);
+  const id = graph.byObject(value, base);
   return id === undefined
-    ? Object.fromEntries(Object.entries(value).map(([key, child]) => [key, pointed(graph, child)]))
+    ? Object.fromEntries(Object.entries(value).map(([key, child]) => [key, pointed(graph, child, base)]))
     : targetOf(graph, id);
 }
 
@@ -282,8 +285,7 @@ function derive<S extends StrictRJSFSchema>(
 ): S {
   const { id } = node;
   const inner = new Set(path).add(id);
-  const sub = (value: unknown) => {
-    const child = isObject(value) ? graph.byObject(value) : undefined;
+  const sub = (value: unknown, child: NodeId | undefined) => {
     const childNode = child === undefined ? undefined : graph.node(child);
     if (childNode?.kind !== 'schema') {
       return value;
@@ -301,7 +303,7 @@ function derive<S extends StrictRJSFSchema>(
     ...rest
   }: GenericObjectType = node.raw;
   const copy: GenericObjectType = Object.fromEntries(
-    Object.entries(rest).map(([key, value]) => [key, pointed(graph, value)]),
+    Object.entries(rest).map(([key, value]) => [key, pointed(graph, value, node.baseUri)]),
   );
   if (!loosening.required && required !== undefined) {
     copy[REQUIRED_KEY] = required;
@@ -309,8 +311,12 @@ function derive<S extends StrictRJSFSchema>(
   const target = node.ref === undefined ? undefined : graph.node(node.ref);
   const resolved = target?.kind === 'invalid' ? undefined : target;
   const conjuncts = [
-    ...(Array.isArray(allOf) ? allOf.map(sub) : []),
-    ...(resolved === undefined ? [] : [resolved.kind === 'schema' ? sub(resolved.raw) : targetOf(graph, resolved.id)]),
+    ...(Array.isArray(allOf)
+      ? allOf.map((entry, index) => sub(entry, graph.child(id, ALL_OF_KEY, String(index))))
+      : []),
+    ...(resolved === undefined
+      ? []
+      : [resolved.kind === 'schema' ? sub(resolved.raw, resolved.id) : targetOf(graph, resolved.id)]),
   ];
   if (ref !== undefined && resolved === undefined) {
     copy[REF_KEY] = ref;
@@ -319,16 +325,18 @@ function derive<S extends StrictRJSFSchema>(
     copy[ALL_OF_KEY] = conjuncts;
   }
   if (then !== undefined) {
-    copy[THEN_KEY] = sub(then);
+    copy[THEN_KEY] = sub(then, graph.child(id, THEN_KEY));
   }
   if (otherwise !== undefined) {
-    copy[ELSE_KEY] = sub(otherwise);
+    copy[ELSE_KEY] = sub(otherwise, graph.child(id, ELSE_KEY));
   }
   const keptDependencies = Object.entries(isObject(dependencies) ? dependencies : {}).filter(
     ([, dependency]) => !loosening.required || !Array.isArray(dependency),
   );
   if (keptDependencies.length > 0) {
-    copy[DEPENDENCIES_KEY] = Object.fromEntries(keptDependencies.map(([key, dependency]) => [key, sub(dependency)]));
+    copy[DEPENDENCIES_KEY] = Object.fromEntries(
+      keptDependencies.map(([key, dependency]) => [key, sub(dependency, graph.child(id, DEPENDENCIES_KEY, key))]),
+    );
   }
   if (loosening.additionalProperties && copy[ADDITIONAL_PROPERTIES_KEY] === false) {
     copy[ADDITIONAL_PROPERTIES_KEY] = true;

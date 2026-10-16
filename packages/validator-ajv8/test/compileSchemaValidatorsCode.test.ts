@@ -2,7 +2,9 @@ import type { RJSFSchema } from '@rjsf/utils';
 import { schemaKey, getValidationSchemas } from '@rjsf/utils';
 import uri from 'ajv/dist/runtime/uri.js';
 
-import pointerValidationTests from '../../utils/test/testUtils/pointerValidationTests.ts';
+import pointerValidationTests, {
+  sharedSubschemaValidationTests,
+} from '../../utils/test/testUtils/pointerValidationTests.ts';
 import precompiledCoverageTests from '../../utils/test/testUtils/precompiledCoverageTests.ts';
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
 import { compiledSchemas as compiled } from '../src/compileSchemaValidatorsCode.ts';
@@ -99,6 +101,9 @@ describe('compileSchemaValidatorsCode()', () => {
     createPrecompiledValidator(evalValidatorCode(compileSchemaValidatorsCode(rootSchema)), rootSchema, options),
   );
   pointerValidationTests((rootSchema) =>
+    createPrecompiledValidator(evalValidatorCode(compileSchemaValidatorsCode(rootSchema)), rootSchema),
+  );
+  sharedSubschemaValidationTests((rootSchema) =>
     createPrecompiledValidator(evalValidatorCode(compileSchemaValidatorsCode(rootSchema)), rootSchema),
   );
 });

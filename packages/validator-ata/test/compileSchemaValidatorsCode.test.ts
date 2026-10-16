@@ -1,7 +1,9 @@
 import type { RJSFSchema } from '@rjsf/utils';
 import { createSchemaUtils } from '@rjsf/utils';
 
-import pointerValidationTests from '../../utils/test/testUtils/pointerValidationTests.ts';
+import pointerValidationTests, {
+  sharedSubschemaValidationTests,
+} from '../../utils/test/testUtils/pointerValidationTests.ts';
 import precompiledCoverageTests from '../../utils/test/testUtils/precompiledCoverageTests.ts';
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
 import { createPrecompiledValidator } from '../src/index.ts';
@@ -119,6 +121,9 @@ describe('compileSchemaValidatorsCode', () => {
     createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(rootSchema)), rootSchema, options),
   );
   pointerValidationTests((rootSchema) =>
+    createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(rootSchema)), rootSchema),
+  );
+  sharedSubschemaValidationTests((rootSchema) =>
     createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(rootSchema)), rootSchema),
   );
   test('compiles an option whose $ref leads to a boolean schema as what the boolean says', () => {
