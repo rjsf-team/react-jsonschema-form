@@ -46,13 +46,13 @@ describe('widgetAriaProps()', () => {
   it("follows the caller's ids with the description of the selected option", () => {
     expect(widgetAriaProps(colorProps)['aria-describedby']).toBe('ext root_color__description');
   });
-  it('describes the widget by nothing when its caller passes an empty string, rather than by ids no element has', () => {
+  it('describes the widget without a plan by nothing when its caller passes no ids, rather than by ids no element has', () => {
     expect(widgetAriaProps({ ...colorProps, 'aria-describedby': '', value: 'b' })).toEqual({
       'aria-label': undefined,
       'aria-describedby': undefined,
     });
   });
-  it('describes the widget by the selected option alone when its caller passes an empty string', () => {
+  it('describes the widget without a plan by the selected option alone when its caller passes no ids', () => {
     expect(widgetAriaProps({ ...colorProps, 'aria-describedby': '' })['aria-describedby']).toBe(
       'root_color__description',
     );
@@ -83,11 +83,15 @@ describe('widgetAriaProps()', () => {
         'aria-invalid': true,
       });
     });
-    it("leaves the control to the caller's ids when it passes some", () => {
+    it("adds the caller's ids to the plan's, keeping the rest of the plan's attributes", () => {
       expect(widgetAriaProps({ ...colorProps, presentation, value: 'b' })).toEqual({
         'aria-label': undefined,
-        'aria-describedby': 'ext',
+        'aria-describedby': 'root_color__error root_color__help ext',
+        'aria-invalid': true,
       });
+      expect(widgetAriaProps({ ...colorProps, presentation })['aria-describedby']).toBe(
+        'root_color__error root_color__help ext root_color__selectedOptionDescription',
+      );
     });
   });
   it.each([

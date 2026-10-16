@@ -74,8 +74,9 @@ that label where `hideLabel` leaves it to the select, or else names the select b
 ### DateElement&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Renders one of the six date element selectors an `AltDateWidget` is made of, using the `SelectWidget` from the registry.
-Each element is a control of its own, so the `SelectWidget` receives [dateElementId()](#dateelementid) as both its `id` and its `name`, the element's translated name, from [dateElementLabel()](#dateelementlabel), as its `placeholder`, its accessible name, from [dateElementAriaLabel()](#dateelementarialabel), as its `aria-label`, and the field's description, help and error ids as its `aria-describedby`.
-Every theme's `SelectWidget` gives those two to the control it renders through [widgetAriaProps()](#widgetariaprops).
+Each element is a control of its own, so the `SelectWidget` receives [dateElementId()](#dateelementid) as both its `id` and its `name`, the element's translated name, from [dateElementLabel()](#dateelementlabel), as its `placeholder`, and its accessible name, from [dateElementAriaLabel()](#dateelementarialabel), as its `aria-label`.
+Given its field's `presentation`, it hands the `SelectWidget` a plan of its own, which describes the element by the field's parts that render and marks it `aria-invalid` while the field's errors show, without the field's `aria-labelledby`, which would outrank the element's own name; without one, it hands it the field's description, help and error ids as its `aria-describedby`.
+Every theme's `SelectWidget` gives those to the control it renders through [widgetAriaProps()](#widgetariaprops).
 The `useAltDateWidgetProps()` hook returns the props for each of them, so a theme's `AltDateWidget` maps over those rather than assembling the selectors itself.
 
 #### Props
@@ -95,6 +96,7 @@ The `useAltDateWidgetProps()` hook returns the props for each of them, so a them
 - [readonly]: boolean - Optional flag, if true, the widget is read-only
 - [label]: string - Optional label of the field, which leads the element's accessible name, as built by [dateElementAriaLabel()](#dateelementarialabel)
 - [elementLabel]: string - Optional translated name of the element, for a caller that already translated it to display it; defaults to [dateElementLabel()](#dateelementlabel)
+- [presentation]: FieldPresentation - Optional plan of the field, whose parts that render describe the element, and whose errors mark it `aria-invalid` while they show
 
 ### SelectedOptionDescription&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#selectedoptiondescription}
 
@@ -3094,11 +3096,11 @@ If no `additionalErrorSchema` is passed, or one that holds nothing, then `valida
 
 ### widgetAriaProps()
 
-Return the `aria-label` and `aria-describedby` a `SelectWidget` gives the element a screen reader focuses.
-A select rendered inside another widget, such as each select of an `AltDateWidget`, has no label of its own and an id that no help or error element is rendered for, so only its caller can name it and link it to its field.
-While the select shows the description of its selected option, the ids the caller passed are followed by that description's id, [selectedOptionDescriptionId()](#selectedoptiondescriptionid) under its field's plan and `descriptionId(props.id)` without one, the one element the select renders itself, so that description is still announced.
-A select that shows none is described by the ids the caller passed alone: a date part, a `multiple` select, one whose label is hidden and one whose selected option has no description render no such element, and its id may be another field's description id.
-Without ids from the caller, a select its field's plan reaches takes the attributes [getControlAttributes()](#getcontrolattributes) gives its control, the selected option's description among its describers while it renders one and the caller's `aria-label` over the plan's, and a select rendered without a plan `ariaDescribedByIds(props.id)`.
+Return the `aria-label`, `aria-labelledby`, `aria-describedby` and `aria-invalid` a `SelectWidget` gives the element a screen reader focuses, all of which belong on that element.
+A select its field's plan reaches takes the attributes [getControlAttributes()](#getcontrolattributes) gives its control, with the ids its caller passed, then the selected option's description id, added to the plan's describers, each id once, and the caller's `aria-label` over the plan's.
+A select rendered inside another widget, such as each date part of an `AltDateWidget`, has an id of its own that no help or error element is rendered for, so `DateElement` gives it a plan of its own, through which it is described by its field's parts.
+Without a plan, the caller's ids, even an empty `aria-describedby`, replace the `ariaDescribedByIds(props.id)` a select rendered without one falls back to, whose ids no element may have.
+The selected option's description id, [selectedOptionDescriptionId()](#selectedoptiondescriptionid) under its field's plan and `descriptionId(props.id)` without one, is added only while the select shows that description, the one element it renders itself: a date part, a `multiple` select, one whose label is hidden and one whose selected option has no description render none, and its id may be another field's description id.
 Every theme's `SelectWidget` gives the result to its control, and a replacement `SelectWidget` should do the same; no other widget is required to.
 
 #### Parameters

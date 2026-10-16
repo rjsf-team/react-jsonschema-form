@@ -14,22 +14,13 @@ import {
   enumOptionsValueForIndex,
   getDateElementProps,
   parseDateString,
+  resolveFieldPresentation,
   useAltDateWidgetProps,
+  widgetAriaProps,
 } from '../src/index.ts';
 
-function SelectWidget({
-  id,
-  options,
-  value,
-  required,
-  disabled,
-  readonly,
-  placeholder,
-  onChange,
-  name,
-  'aria-label': ariaLabel,
-  'aria-describedby': ariaDescribedBy,
-}: WidgetProps) {
+function SelectWidget(props: WidgetProps) {
+  const { id, options, value, required, disabled, readonly, placeholder, onChange, name } = props;
   const { enumOptions } = options;
 
   const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
@@ -47,8 +38,7 @@ function SelectWidget({
       required={required}
       disabled={disabled || readonly}
       onChange={handleChange}
-      aria-label={ariaLabel}
-      aria-describedby={ariaDescribedBy}
+      {...widgetAriaProps(props)}
     >
       <option value=''>{placeholder}</option>
       {Array.isArray(enumOptions) &&
@@ -65,7 +55,8 @@ function SelectWidget({
 function DateElementsTester(
   props: WidgetProps & { elements: DateElementProp[]; handleChange: UseAltDateWidgetResult['handleChange'] },
 ) {
-  const { elements, handleChange, id, label, disabled, readonly, registry, onBlur, onFocus, autofocus } = props;
+  const { elements, handleChange, id, label, disabled, readonly, registry, onBlur, onFocus, autofocus, presentation } =
+    props;
   return (
     <>
       {elements.map((elemProps, i) => (
@@ -82,6 +73,7 @@ function DateElementsTester(
           onBlur={onBlur}
           onFocus={onFocus}
           autofocus={autofocus && i === 0}
+          presentation={presentation}
         />
       ))}
     </>
@@ -456,6 +448,27 @@ describe('useAltDateWidgetProps()', () => {
       expect(select).toHaveAttribute('id', `${TIME_PROPS.id}_year`);
       expect(select).toHaveAttribute('name', `${TIME_PROPS.id}_year`);
       expect(select).toHaveAttribute('aria-describedby', ariaDescribedByIds(TIME_PROPS.id));
+    });
+
+    test("describes each element by its field's parts that render, marked invalid while its errors show", () => {
+      const presentation = resolveFieldPresentation({
+        id: TIME_PROPS.id,
+        declaration: {
+          label: 'template',
+          description: 'template',
+          errors: 'template',
+          help: 'template',
+          labelledBy: 'aria-labelledby',
+        },
+        label: 'When',
+        description: 'The day',
+        errors: ['is required'],
+      });
+      renderElements({ label: 'When', presentation });
+      const select = screen.getByRole('combobox', { name: 'When, year' });
+      expect(select).toHaveAttribute('aria-describedby', `${TIME_PROPS.id}__error ${TIME_PROPS.id}__description`);
+      expect(select).toHaveAttribute('aria-invalid', 'true');
+      expect(select).not.toHaveAttribute('aria-labelledby');
     });
 
     test('names an element by the translated name its caller already has, without translating it again', () => {
