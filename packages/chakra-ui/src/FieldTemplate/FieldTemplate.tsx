@@ -5,6 +5,7 @@ import {
   getTemplates,
   getUiOptions,
   hasTemplateErrors,
+  templateDrawsDescription,
   templateDrawsLabel,
   templateDrawsPlannedLabel,
   templateLabelFor,
@@ -112,7 +113,9 @@ export default function FieldTemplate<
         invalid={hasError}
         aria-labelledby={labelledByOrNone(undefined, drawsLabel, presentation?.label.id)}
       >
-        {rawDescription ? <Fieldset.Legend mt={2}>{description}</Fieldset.Legend> : null}
+        {templateDrawsDescription<T, S, F>(props) && rawDescription ? (
+          <Fieldset.Legend mt={2}>{description}</Fieldset.Legend>
+        ) : null}
         {help}
         <Fieldset.Content>{children}</Fieldset.Content>
         {errors}
