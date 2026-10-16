@@ -496,14 +496,14 @@ function sanitizeDataForNewSchemaInternal<
       // filter comparison ask for it only when an enum check actually follows
       // `resolveOldSchemaPrev()` already memoizes, so this stays a plain read of it
       const resolveOldSchemaItemsPrevRaw = () => resolveOldSchemaPrev()?.[ITEMS_KEY] as S | undefined;
-      const oldItemsSchema = retrieveSchema<T, S, F>(context, oldSchemaItemsRaw, rootSchema, data);
+      const oldItemsSchema = retrieveSchema<unknown, S, F>(context, oldSchemaItemsRaw, rootSchema, data);
       oldSchemaItems = oldItemsSchema;
       // The old and new raw items schema are usually the same object, so skip resolving a second time in that common
       // case
       const sameRawItemsSchema = oldSchemaItemsRaw === newSchemaItemsRaw;
       const newItemsSchema = sameRawItemsSchema
         ? oldItemsSchema
-        : retrieveSchema<T, S, F>(context, newSchemaItemsRaw, rootSchema, data);
+        : retrieveSchema<unknown, S, F>(context, newSchemaItemsRaw, rootSchema, data);
       newSchemaItems = newItemsSchema;
       const newItemsSelect = resolveConstantOptions<S>(newItemsSchema, rootSchema);
       // Now get types and see if they are the same
