@@ -459,7 +459,8 @@ export function holdsDeclaredKey<S extends StrictRJSFSchema = RJSFSchema>(
 }
 
 /** Returns every schema the form hands a validator for the root of `graph`: the root itself; each `if`; each
- * `anyOf`/`oneOf` option, as a pointer and as scored, plain and relaxed, and `{}` where an option is a boolean; the
+ * `anyOf`/`oneOf` option, as a pointer and as scored, plain and relaxed, which for a boolean option is the schema it
+ * reads as, `{}` or `{ not: {} }`, and `{}` where an option is a boolean; the
  * property each option declares under any `discriminator.propertyName` in the root; and the condition each `oneOf`
  * option of a `dependencies` schema is matched on. Each is named by the graph, so the list depends on the root alone,
  * never on form data.
