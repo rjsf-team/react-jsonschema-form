@@ -34,13 +34,10 @@ export interface ProvenanceFields {
 /** A copy's provenance: the field it is the schema of, by the graph it was planned in and the seeds and chain the
  * recursion rule reads. Interned per graph, so an equal provenance is the same object.
  */
-export interface Provenance<S extends StrictRJSFSchema = RJSFSchema> {
+export interface Provenance<S extends StrictRJSFSchema = RJSFSchema> extends ProvenanceFields {
   readonly id: number;
   readonly graph: SchemaGraph<S>;
   readonly parent?: Provenance<S>;
-  readonly seeds: readonly Seed[];
-  readonly chain?: GuardChain;
-  readonly optionOf?: string;
 }
 
 /** The interned values of one graph: equal values are one object, which `replaceEqualDeep()` needs, since it compares
