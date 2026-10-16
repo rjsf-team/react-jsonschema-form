@@ -797,6 +797,20 @@ describe('SchemaField', () => {
       expect(node.querySelectorAll('input#root')).toHaveLength(1);
     });
 
+    it("renders an option's own ui:field below a ui:field naming FallbackField, which yields to the options", () => {
+      function OptionField() {
+        return <div className='option-field' />;
+      }
+      const { node } = createFormComponent({
+        schema: anyOfSchema,
+        uiSchema: { 'ui:field': 'FallbackField', anyOf: [{ 'ui:field': 'OptionField' }, {}] },
+        fields: { OptionField },
+      });
+
+      expect(node.querySelector('#root__anyof_select')).toBeInTheDocument();
+      expect(node.querySelectorAll('.option-field')).toHaveLength(1);
+    });
+
     it('does not render a ui:globalOptions.field again for an option with a uiSchema of its own', () => {
       const { node } = createFormComponent({
         schema: anyOfSchema,
