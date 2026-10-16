@@ -519,15 +519,18 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               >
                                 <label
                                   cmdk-label=""
-                                  for="radix-_r_h_"
-                                  id="radix-_r_g_"
+                                  for="radix-_r_m_"
+                                  id="radix-_r_l_"
                                   style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                                 />
                                 <button
+                                  aria-controls="_r_j_"
                                   aria-expanded="false"
                                   aria-haspopup="listbox"
+                                  aria-required="true"
                                   class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                                   id="root_person_address_state"
+                                  role="combobox"
                                   type="button"
                                 >
                                   <span
@@ -555,6 +558,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 </button>
                                 <div
                                   class="relative"
+                                  id="_r_j_"
                                 />
                               </div>
                             </div>
@@ -884,15 +888,18 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <label
                         cmdk-label=""
-                        for="radix-_r_n_"
-                        id="radix-_r_m_"
+                        for="radix-_r_t_"
+                        id="radix-_r_s_"
                         style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                       />
                       <button
+                        aria-controls="_r_q_"
                         aria-expanded="false"
                         aria-haspopup="listbox"
+                        aria-required="true"
                         class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                         id="root_employment_location_state"
+                        role="combobox"
                         type="button"
                       >
                         <span
@@ -920,6 +927,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </button>
                       <div
                         class="relative"
+                        id="_r_q_"
                       />
                     </div>
                   </div>
@@ -1462,15 +1470,18 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               >
                                 <label
                                   cmdk-label=""
-                                  for="radix-_r_q_"
-                                  id="radix-_r_p_"
+                                  for="radix-_r_11_"
+                                  id="radix-_r_10_"
                                   style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                                 />
                                 <button
+                                  aria-controls="_r_u_"
                                   aria-expanded="false"
                                   aria-haspopup="listbox"
+                                  aria-required="true"
                                   class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                                   id="root_person_address_state"
+                                  role="combobox"
                                   type="button"
                                 >
                                   <span
@@ -1498,6 +1509,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 </button>
                                 <div
                                   class="relative"
+                                  id="_r_u_"
                                 />
                               </div>
                             </div>
@@ -1859,15 +1871,18 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <label
                         cmdk-label=""
-                        for="radix-_r_10_"
-                        id="radix-_r_v_"
+                        for="radix-_r_18_"
+                        id="radix-_r_17_"
                         style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                       />
                       <button
+                        aria-controls="_r_15_"
                         aria-expanded="false"
                         aria-haspopup="listbox"
+                        aria-required="true"
                         class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                         id="root_employment_location_state"
+                        role="combobox"
                         type="button"
                       >
                         <span
@@ -1895,6 +1910,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </button>
                       <div
                         class="relative"
+                        id="_r_15_"
                       />
                     </div>
                   </div>
@@ -2437,15 +2453,18 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               >
                                 <label
                                   cmdk-label=""
-                                  for="radix-_r_13_"
-                                  id="radix-_r_12_"
+                                  for="radix-_r_1c_"
+                                  id="radix-_r_1b_"
                                   style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                                 />
                                 <button
+                                  aria-controls="_r_19_"
                                   aria-expanded="false"
                                   aria-haspopup="listbox"
+                                  aria-required="true"
                                   class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                                   id="root_person_address_state"
+                                  role="combobox"
                                   type="button"
                                 >
                                   <span
@@ -2473,6 +2492,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 </button>
                                 <div
                                   class="relative"
+                                  id="_r_19_"
                                 />
                               </div>
                             </div>
@@ -3244,15 +3264,18 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               >
                                 <label
                                   cmdk-label=""
-                                  for="radix-_r_8_"
-                                  id="radix-_r_7_"
+                                  for="radix-_r_b_"
+                                  id="radix-_r_a_"
                                   style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                                 />
                                 <button
+                                  aria-controls="_r_8_"
                                   aria-expanded="false"
                                   aria-haspopup="listbox"
+                                  aria-required="true"
                                   class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                                   id="root_person_address_state"
+                                  role="combobox"
                                   type="button"
                                 >
                                   <span
@@ -3280,6 +3303,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 </button>
                                 <div
                                   class="relative"
+                                  id="_r_8_"
                                 />
                               </div>
                             </div>
@@ -3609,15 +3633,18 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <label
                         cmdk-label=""
-                        for="radix-_r_e_"
-                        id="radix-_r_d_"
+                        for="radix-_r_i_"
+                        id="radix-_r_h_"
                         style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                       />
                       <button
+                        aria-controls="_r_f_"
                         aria-expanded="false"
                         aria-haspopup="listbox"
+                        aria-required="true"
                         class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                         id="root_employment_location_state"
+                        role="combobox"
                         type="button"
                       >
                         <span
@@ -3645,6 +3672,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </button>
                       <div
                         class="relative"
+                        id="_r_f_"
                       />
                     </div>
                   </div>
@@ -4157,15 +4185,18 @@ exports[`Three even column grid > renders person and address in three columns, n
                   >
                     <label
                       cmdk-label=""
-                      for="radix-_r_5_"
-                      id="radix-_r_4_"
+                      for="radix-_r_7_"
+                      id="radix-_r_6_"
                       style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                     />
                     <button
+                      aria-controls="_r_4_"
                       aria-expanded="false"
                       aria-haspopup="listbox"
+                      aria-required="true"
                       class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                       id="root_person_address_state"
+                      role="combobox"
                       type="button"
                     >
                       <span
@@ -4193,6 +4224,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                     </button>
                     <div
                       class="relative"
+                      id="_r_4_"
                     />
                   </div>
                 </div>
@@ -4707,15 +4739,18 @@ exports[`Two even column grid > renders person and address in two columns, no em
                   >
                     <label
                       cmdk-label=""
-                      for="radix-_r_2_"
-                      id="radix-_r_1_"
+                      for="radix-_r_3_"
+                      id="radix-_r_2_"
                       style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                     />
                     <button
+                      aria-controls="_r_0_"
                       aria-expanded="false"
                       aria-haspopup="listbox"
+                      aria-required="true"
                       class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                       id="root_person_address_state"
+                      role="combobox"
                       type="button"
                     >
                       <span
@@ -4743,6 +4778,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     </button>
                     <div
                       class="relative"
+                      id="_r_0_"
                     />
                   </div>
                 </div>

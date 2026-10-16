@@ -2215,21 +2215,21 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                         >
                           <label
                             cmdk-label=""
-                            for="radix-_r_5_"
-                            id="radix-_r_4_"
+                            for="radix-_r_7_"
+                            id="radix-_r_6_"
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
                           <button
-                            aria-describedby="root_foo-key__value"
+                            aria-controls="_r_4_"
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                             id="root_foo-key"
+                            role="combobox"
                             type="button"
                           >
                             <span
                               class="flex-1 line-clamp-1"
-                              id="root_foo-key__value"
                             >
                               foo
                             </span>
@@ -2253,6 +2253,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                           </button>
                           <div
                             class="relative"
+                            id="_r_4_"
                           />
                         </div>
                       </div>
@@ -3327,21 +3328,21 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                         >
                           <label
                             cmdk-label=""
-                            for="radix-_r_2_"
-                            id="radix-_r_1_"
+                            for="radix-_r_3_"
+                            id="radix-_r_2_"
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
                           <button
-                            aria-describedby="root_foo-key__value"
+                            aria-controls="_r_0_"
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                             id="root_foo-key"
+                            role="combobox"
                             type="button"
                           >
                             <span
                               class="flex-1 line-clamp-1"
-                              id="root_foo-key__value"
                             >
                               foo
                             </span>
@@ -3365,6 +3366,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                           </button>
                           <div
                             class="relative"
+                            id="_r_0_"
                           />
                         </div>
                       </div>
@@ -3558,21 +3560,21 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                         >
                           <label
                             cmdk-label=""
-                            for="radix-_r_8_"
-                            id="radix-_r_7_"
+                            for="radix-_r_b_"
+                            id="radix-_r_a_"
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
                           <button
-                            aria-describedby="root_foo-key__value"
+                            aria-controls="_r_8_"
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                             id="root_foo-key"
+                            role="combobox"
                             type="button"
                           >
                             <span
                               class="flex-1 line-clamp-1"
-                              id="root_foo-key__value"
                             >
                               foo
                             </span>
@@ -3596,6 +3598,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                           </button>
                           <div
                             class="relative"
+                            id="_r_8_"
                           />
                         </div>
                       </div>
@@ -5622,6 +5625,7 @@ exports[`object fields > with title and description with global label off > addi
                       class="p-0.5"
                     >
                       <input
+                        aria-label="foo"
                         class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                         data-slot="input"
                         id="root_foo"
@@ -5772,6 +5776,7 @@ exports[`object fields > with title and description with global label off > obje
                     class="p-0.5"
                   >
                     <input
+                      aria-label="A"
                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                       data-slot="input"
                       id="root_a"
@@ -5801,6 +5806,7 @@ exports[`object fields > with title and description with global label off > obje
                     class="p-0.5"
                   >
                     <input
+                      aria-label="B"
                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                       data-slot="input"
                       id="root_b"
@@ -5886,6 +5892,7 @@ exports[`object fields > with title and description with global label off > show
                       class="p-0.5"
                     >
                       <input
+                        aria-label="additionalProperty"
                         class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                         data-slot="input"
                         id="root_additionalProperty"

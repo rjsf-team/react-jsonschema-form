@@ -1639,15 +1639,17 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                     >
                       <label
                         cmdk-label=""
-                        for="radix-_r_1s_"
-                        id="radix-_r_1r_"
+                        for="radix-_r_29_"
+                        id="radix-_r_28_"
                         style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                       />
                       <button
+                        aria-controls="_r_26_"
                         aria-expanded="false"
                         aria-haspopup="listbox"
                         class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                         id="root_color"
+                        role="combobox"
                         type="button"
                       >
                         <span
@@ -1675,6 +1677,7 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                       </button>
                       <div
                         class="relative"
+                        id="_r_26_"
                       />
                     </div>
                   </div>
@@ -3198,15 +3201,17 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                     >
                       <label
                         cmdk-label=""
-                        for="radix-_r_21_"
-                        id="radix-_r_20_"
+                        for="radix-_r_2f_"
+                        id="radix-_r_2e_"
                         style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                       />
                       <button
+                        aria-controls="_r_2c_"
                         aria-expanded="false"
                         aria-haspopup="listbox"
                         class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                         id="root_color"
+                        role="combobox"
                         type="button"
                       >
                         <span
@@ -3234,6 +3239,7 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                       </button>
                       <div
                         class="relative"
+                        id="_r_2c_"
                       />
                     </div>
                   </div>
@@ -3596,22 +3602,22 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                         >
                           <label
                             cmdk-label=""
-                            for="radix-_r_2a_"
-                            id="radix-_r_29_"
+                            for="radix-_r_2r_"
+                            id="radix-_r_2q_"
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
                           <button
-                            aria-describedby="root_region__oneof_select__value"
+                            aria-controls="_r_2o_"
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             aria-labelledby="root_region__label"
                             class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                             id="root_region__oneof_select"
+                            role="combobox"
                             type="button"
                           >
                             <span
                               class="flex-1 line-clamp-1"
-                              id="root_region__oneof_select__value"
                             >
                               Europe
                             </span>
@@ -3635,6 +3641,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                           </button>
                           <div
                             class="relative"
+                            id="_r_2o_"
                           />
                         </div>
                       </div>
@@ -3657,21 +3664,21 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                           >
                             <label
                               cmdk-label=""
-                              for="radix-_r_2d_"
-                              id="radix-_r_2c_"
+                              for="radix-_r_2v_"
+                              id="radix-_r_2u_"
                               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                             />
                             <button
-                              aria-describedby="root_region__value"
+                              aria-controls="_r_2s_"
                               aria-expanded="false"
                               aria-haspopup="listbox"
                               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                               id="root_region"
+                              role="combobox"
                               type="button"
                             >
                               <span
                                 class="flex-1 line-clamp-1"
-                                id="root_region__value"
                               >
                                 Germany
                               </span>
@@ -3695,6 +3702,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                             </button>
                             <div
                               class="relative"
+                              id="_r_2s_"
                             />
                           </div>
                         </div>
@@ -3744,15 +3752,18 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
           >
             <label
               cmdk-label=""
-              for="radix-_r_2j_"
-              id="radix-_r_2i_"
+              for="radix-_r_37_"
+              id="radix-_r_36_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
+              aria-controls="_r_34_"
               aria-expanded="false"
               aria-haspopup="listbox"
+              aria-label="Select ..."
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
               id="root"
+              role="combobox"
               type="button"
             >
               <span
@@ -3780,6 +3791,7 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
             </button>
             <div
               class="relative"
+              id="_r_34_"
             />
           </div>
         </div>
@@ -3821,15 +3833,18 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
           >
             <label
               cmdk-label=""
-              for="radix-_r_27_"
-              id="radix-_r_26_"
+              for="radix-_r_2n_"
+              id="radix-_r_2m_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
+              aria-controls="_r_2k_"
               aria-expanded="false"
               aria-haspopup="listbox"
+              aria-label="Select ..."
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
               id="root"
+              role="combobox"
               type="button"
             >
               <span
@@ -3857,6 +3872,7 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
             </button>
             <div
               class="relative"
+              id="_r_2k_"
             />
           </div>
         </div>
@@ -3898,15 +3914,18 @@ exports[`select widget from oneOf boolean constants with a null option without a
           >
             <label
               cmdk-label=""
-              for="radix-_r_2g_"
-              id="radix-_r_2f_"
+              for="radix-_r_33_"
+              id="radix-_r_32_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
+              aria-controls="_r_30_"
               aria-expanded="false"
               aria-haspopup="listbox"
+              aria-label="Select ..."
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
               id="root"
+              role="combobox"
               type="button"
             >
               <span
@@ -3934,6 +3953,7 @@ exports[`select widget from oneOf boolean constants with a null option without a
             </button>
             <div
               class="relative"
+              id="_r_30_"
             />
           </div>
         </div>
@@ -3975,15 +3995,18 @@ exports[`select widget from oneOf constants without a type 1`] = `
           >
             <label
               cmdk-label=""
-              for="radix-_r_24_"
-              id="radix-_r_23_"
+              for="radix-_r_2j_"
+              id="radix-_r_2i_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
+              aria-controls="_r_2g_"
               aria-expanded="false"
               aria-haspopup="listbox"
+              aria-label="Select ..."
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
               id="root"
+              role="combobox"
               type="button"
             >
               <span
@@ -4011,6 +4034,7 @@ exports[`select widget from oneOf constants without a type 1`] = `
             </button>
             <div
               class="relative"
+              id="_r_2g_"
             />
           </div>
         </div>
@@ -4052,15 +4076,18 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
           >
             <label
               cmdk-label=""
-              for="radix-_r_2m_"
-              id="radix-_r_2l_"
+              for="radix-_r_3b_"
+              id="radix-_r_3a_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
+              aria-controls="_r_38_"
               aria-expanded="false"
               aria-haspopup="listbox"
+              aria-label="Select ..."
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
               id="root"
+              role="combobox"
               type="button"
             >
               <span
@@ -4088,6 +4115,7 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
             </button>
             <div
               class="relative"
+              id="_r_38_"
             />
           </div>
         </div>
@@ -4129,15 +4157,18 @@ exports[`select widget with options sharing a String() in the realValue format (
           >
             <label
               cmdk-label=""
-              for="radix-_r_2s_"
-              id="radix-_r_2r_"
+              for="radix-_r_3j_"
+              id="radix-_r_3i_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
+              aria-controls="_r_3g_"
               aria-expanded="false"
               aria-haspopup="listbox"
+              aria-label="Select ..."
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
               id="root"
+              role="combobox"
               type="button"
             >
               <span
@@ -4165,6 +4196,7 @@ exports[`select widget with options sharing a String() in the realValue format (
             </button>
             <div
               class="relative"
+              id="_r_3g_"
             />
           </div>
         </div>
@@ -6751,22 +6783,22 @@ exports[`single fields > optional data controls > does not show optional control
                         >
                           <label
                             cmdk-label=""
-                            for="radix-_r_1g_"
-                            id="radix-_r_1f_"
+                            for="radix-_r_1p_"
+                            id="radix-_r_1o_"
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
                           <button
-                            aria-describedby="root_optionalObjectWithOneofs__oneof_select__value"
+                            aria-controls="_r_1m_"
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             aria-labelledby="root_optionalObjectWithOneofs__label"
                             class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                             id="root_optionalObjectWithOneofs__oneof_select"
+                            role="combobox"
                             type="button"
                           >
                             <span
                               class="flex-1 line-clamp-1"
-                              id="root_optionalObjectWithOneofs__oneof_select__value"
                             >
                               Option 1
                             </span>
@@ -6790,6 +6822,7 @@ exports[`single fields > optional data controls > does not show optional control
                           </button>
                           <div
                             class="relative"
+                            id="_r_1m_"
                           />
                         </div>
                       </div>
@@ -6885,22 +6918,22 @@ exports[`single fields > optional data controls > does not show optional control
                         >
                           <label
                             cmdk-label=""
-                            for="radix-_r_1j_"
-                            id="radix-_r_1i_"
+                            for="radix-_r_1t_"
+                            id="radix-_r_1s_"
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
                           <button
-                            aria-describedby="root_optionalArrayWithAnyofs__anyof_select__value"
+                            aria-controls="_r_1q_"
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             aria-labelledby="root_optionalArrayWithAnyofs__label"
                             class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                             id="root_optionalArrayWithAnyofs__anyof_select"
+                            role="combobox"
                             type="button"
                           >
                             <span
                               class="flex-1 line-clamp-1"
-                              id="root_optionalArrayWithAnyofs__anyof_select__value"
                             >
                               Option 1
                             </span>
@@ -6924,6 +6957,7 @@ exports[`single fields > optional data controls > does not show optional control
                           </button>
                           <div
                             class="relative"
+                            id="_r_1q_"
                           />
                         </div>
                       </div>
@@ -7845,23 +7879,23 @@ exports[`single fields > optional data controls > does not show optional control
                         >
                           <label
                             cmdk-label=""
-                            for="radix-_r_1m_"
-                            id="radix-_r_1l_"
+                            for="radix-_r_21_"
+                            id="radix-_r_20_"
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
                           <button
-                            aria-describedby="root_optionalObjectWithOneofs__oneof_select__value"
+                            aria-controls="_r_1u_"
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             aria-labelledby="root_optionalObjectWithOneofs__label"
                             class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 opacity-50 cursor-not-allowed"
                             disabled=""
                             id="root_optionalObjectWithOneofs__oneof_select"
+                            role="combobox"
                             type="button"
                           >
                             <span
                               class="flex-1 line-clamp-1"
-                              id="root_optionalObjectWithOneofs__oneof_select__value"
                             >
                               Option 1
                             </span>
@@ -7885,6 +7919,7 @@ exports[`single fields > optional data controls > does not show optional control
                           </button>
                           <div
                             class="relative"
+                            id="_r_1u_"
                           />
                         </div>
                       </div>
@@ -7980,23 +8015,23 @@ exports[`single fields > optional data controls > does not show optional control
                         >
                           <label
                             cmdk-label=""
-                            for="radix-_r_1p_"
-                            id="radix-_r_1o_"
+                            for="radix-_r_25_"
+                            id="radix-_r_24_"
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
                           <button
-                            aria-describedby="root_optionalArrayWithAnyofs__anyof_select__value"
+                            aria-controls="_r_22_"
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             aria-labelledby="root_optionalArrayWithAnyofs__label"
                             class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 opacity-50 cursor-not-allowed"
                             disabled=""
                             id="root_optionalArrayWithAnyofs__anyof_select"
+                            role="combobox"
                             type="button"
                           >
                             <span
                               class="flex-1 line-clamp-1"
-                              id="root_optionalArrayWithAnyofs__anyof_select__value"
                             >
                               Option 1
                             </span>
@@ -8020,6 +8055,7 @@ exports[`single fields > optional data controls > does not show optional control
                           </button>
                           <div
                             class="relative"
+                            id="_r_22_"
                           />
                         </div>
                       </div>
@@ -11885,15 +11921,18 @@ exports[`single fields > select field 1`] = `
           >
             <label
               cmdk-label=""
-              for="radix-_r_2_"
-              id="radix-_r_1_"
+              for="radix-_r_3_"
+              id="radix-_r_2_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
+              aria-controls="_r_0_"
               aria-expanded="false"
               aria-haspopup="listbox"
+              aria-label="Select ..."
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
               id="root"
+              role="combobox"
               type="button"
             >
               <span
@@ -11921,6 +11960,7 @@ exports[`single fields > select field 1`] = `
             </button>
             <div
               class="relative"
+              id="_r_0_"
             />
           </div>
         </div>
@@ -11962,8 +12002,8 @@ exports[`single fields > select field multiple choice 1`] = `
           >
             <label
               cmdk-label=""
-              for="radix-_r_5_"
-              id="radix-_r_4_"
+              for="radix-_r_6_"
+              id="radix-_r_5_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             >
               Select ...
@@ -11976,14 +12016,14 @@ exports[`single fields > select field multiple choice 1`] = `
               >
                 <input
                   aria-autocomplete="list"
-                  aria-controls="radix-_r_3_"
+                  aria-controls="radix-_r_4_"
                   aria-expanded="true"
-                  aria-labelledby="radix-_r_4_"
+                  aria-labelledby="radix-_r_5_"
                   autocomplete="off"
                   autocorrect="off"
                   class="rtl:mr-2 ltr:ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1"
                   cmdk-input=""
-                  id="radix-_r_5_"
+                  id="radix-_r_6_"
                   placeholder="Select ..."
                   role="combobox"
                   spellcheck="false"
@@ -12032,8 +12072,8 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
           >
             <label
               cmdk-label=""
-              for="radix-_r_k_"
-              id="radix-_r_j_"
+              for="radix-_r_m_"
+              id="radix-_r_l_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             >
               Select ...
@@ -12046,14 +12086,14 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
               >
                 <input
                   aria-autocomplete="list"
-                  aria-controls="radix-_r_i_"
+                  aria-controls="radix-_r_k_"
                   aria-expanded="true"
-                  aria-labelledby="radix-_r_j_"
+                  aria-labelledby="radix-_r_l_"
                   autocomplete="off"
                   autocorrect="off"
                   class="rtl:mr-2 ltr:ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1"
                   cmdk-input=""
-                  id="radix-_r_k_"
+                  id="radix-_r_m_"
                   placeholder="Select ..."
                   role="combobox"
                   spellcheck="false"
@@ -12253,8 +12293,8 @@ exports[`single fields > select field multiple choice formData 1`] = `
           >
             <label
               cmdk-label=""
-              for="radix-_r_10_"
-              id="radix-_r_v_"
+              for="radix-_r_15_"
+              id="radix-_r_14_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             >
               Select ...
@@ -12329,14 +12369,14 @@ exports[`single fields > select field multiple choice formData 1`] = `
                 </span>
                 <input
                   aria-autocomplete="list"
-                  aria-controls="radix-_r_u_"
+                  aria-controls="radix-_r_13_"
                   aria-expanded="true"
-                  aria-labelledby="radix-_r_v_"
+                  aria-labelledby="radix-_r_14_"
                   autocomplete="off"
                   autocorrect="off"
                   class="rtl:mr-2 ltr:ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1"
                   cmdk-input=""
-                  id="radix-_r_10_"
+                  id="radix-_r_15_"
                   placeholder="Select ..."
                   role="combobox"
                   spellcheck="false"
@@ -12385,8 +12425,8 @@ exports[`single fields > select field multiple choice with labels 1`] = `
           >
             <label
               cmdk-label=""
-              for="radix-_r_8_"
-              id="radix-_r_7_"
+              for="radix-_r_9_"
+              id="radix-_r_8_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             >
               Select ...
@@ -12399,14 +12439,14 @@ exports[`single fields > select field multiple choice with labels 1`] = `
               >
                 <input
                   aria-autocomplete="list"
-                  aria-controls="radix-_r_6_"
+                  aria-controls="radix-_r_7_"
                   aria-expanded="true"
-                  aria-labelledby="radix-_r_7_"
+                  aria-labelledby="radix-_r_8_"
                   autocomplete="off"
                   autocorrect="off"
                   class="rtl:mr-2 ltr:ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1"
                   cmdk-input=""
-                  id="radix-_r_8_"
+                  id="radix-_r_9_"
                   placeholder="Select ..."
                   role="combobox"
                   spellcheck="false"
@@ -12455,15 +12495,18 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
           >
             <label
               cmdk-label=""
-              for="radix-_r_b_"
-              id="radix-_r_a_"
+              for="radix-_r_d_"
+              id="radix-_r_c_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
+              aria-controls="_r_a_"
               aria-expanded="false"
               aria-haspopup="listbox"
+              aria-label="Select ..."
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
               id="root"
+              role="combobox"
               type="button"
             >
               <span
@@ -12491,6 +12534,7 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
             </button>
             <div
               class="relative"
+              id="_r_a_"
             />
           </div>
         </div>
@@ -12757,15 +12801,18 @@ exports[`single fields > select field single choice formData 1`] = `
           >
             <label
               cmdk-label=""
-              for="radix-_r_t_"
-              id="radix-_r_s_"
+              for="radix-_r_12_"
+              id="radix-_r_11_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
+              aria-controls="_r_v_"
               aria-expanded="false"
               aria-haspopup="listbox"
+              aria-label="Select ..."
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
               id="root"
+              role="combobox"
               type="button"
             >
               <span
@@ -12793,6 +12840,7 @@ exports[`single fields > select field single choice formData 1`] = `
             </button>
             <div
               class="relative"
+              id="_r_v_"
             />
           </div>
         </div>
@@ -12834,15 +12882,18 @@ exports[`single fields > select field single choice optgroups 1`] = `
           >
             <label
               cmdk-label=""
-              for="radix-_r_n_"
-              id="radix-_r_m_"
+              for="radix-_r_q_"
+              id="radix-_r_p_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
+              aria-controls="_r_n_"
               aria-expanded="false"
               aria-haspopup="listbox"
+              aria-label="Select ..."
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
               id="root"
+              role="combobox"
               type="button"
             >
               <span
@@ -12870,6 +12921,7 @@ exports[`single fields > select field single choice optgroups 1`] = `
             </button>
             <div
               class="relative"
+              id="_r_n_"
             />
           </div>
         </div>
@@ -12911,15 +12963,18 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
           >
             <label
               cmdk-label=""
-              for="radix-_r_q_"
-              id="radix-_r_p_"
+              for="radix-_r_u_"
+              id="radix-_r_t_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
+              aria-controls="_r_r_"
               aria-expanded="false"
               aria-haspopup="listbox"
+              aria-label="Select ..."
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
               id="root"
+              role="combobox"
               type="button"
             >
               <span
@@ -12947,6 +13002,7 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
             </button>
             <div
               class="relative"
+              id="_r_r_"
             />
           </div>
         </div>
@@ -13109,16 +13165,18 @@ exports[`single fields > select widget with description in schema and FieldTempl
           >
             <label
               cmdk-label=""
-              for="radix-_r_15_"
-              id="radix-_r_14_"
+              for="radix-_r_1b_"
+              id="radix-_r_1a_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
+              aria-controls="_r_18_"
               aria-describedby="root__description"
               aria-expanded="false"
               aria-haspopup="listbox"
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
               id="root"
+              role="combobox"
               type="button"
             >
               <span
@@ -13146,6 +13204,7 @@ exports[`single fields > select widget with description in schema and FieldTempl
             </button>
             <div
               class="relative"
+              id="_r_18_"
             />
           </div>
         </div>
@@ -13199,16 +13258,19 @@ exports[`single fields > select widget with selected oneOf option description 1`
           >
             <label
               cmdk-label=""
-              for="radix-_r_18_"
-              id="radix-_r_17_"
+              for="radix-_r_1f_"
+              id="radix-_r_1e_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
+              aria-controls="_r_1c_"
               aria-describedby="root__selectedOptionDescription"
               aria-expanded="false"
               aria-haspopup="listbox"
+              aria-label="Select ..."
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
               id="root"
+              role="combobox"
               type="button"
             >
               <span
@@ -13236,6 +13298,7 @@ exports[`single fields > select widget with selected oneOf option description 1`
             </button>
             <div
               class="relative"
+              id="_r_1c_"
             />
           </div>
           <div>
@@ -13285,15 +13348,18 @@ exports[`single fields > select widget with selected oneOf option description an
           >
             <label
               cmdk-label=""
-              for="radix-_r_1b_"
-              id="radix-_r_1a_"
+              for="radix-_r_1j_"
+              id="radix-_r_1i_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
+              aria-controls="_r_1g_"
               aria-expanded="false"
               aria-haspopup="listbox"
+              aria-label="Select ..."
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
               id="root"
+              role="combobox"
               type="button"
             >
               <span
@@ -13321,6 +13387,7 @@ exports[`single fields > select widget with selected oneOf option description an
             </button>
             <div
               class="relative"
+              id="_r_1g_"
             />
           </div>
         </div>
@@ -14333,21 +14400,21 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                     >
                       <label
                         cmdk-label=""
-                        for="radix-_r_2p_"
-                        id="radix-_r_2o_"
+                        for="radix-_r_3f_"
+                        id="radix-_r_3e_"
                         style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                       />
                       <button
-                        aria-describedby="root_answer__value"
+                        aria-controls="_r_3c_"
                         aria-expanded="false"
                         aria-haspopup="listbox"
                         class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                         id="root_answer"
+                        role="combobox"
                         type="button"
                       >
                         <span
                           class="flex-1 line-clamp-1"
-                          id="root_answer__value"
                         >
                           Yes
                         </span>
@@ -14371,6 +14438,7 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                       </button>
                       <div
                         class="relative"
+                        id="_r_3c_"
                       />
                     </div>
                   </div>
