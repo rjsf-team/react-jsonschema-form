@@ -13,7 +13,7 @@ import {
 import { CONSTRAINING_KEYWORDS, nodeOfSchema } from './retrieveSchema.ts';
 
 /** An option as matching reads it: the node it stands for, or a boolean option given as one */
-type OptionNode<S extends StrictRJSFSchema = RJSFSchema> = AdoptedSchema<S> | boolean;
+export type OptionNode<S extends StrictRJSFSchema = RJSFSchema> = AdoptedSchema<S> | boolean;
 
 /** Returns the node `option` stands for, see `nodeOfSchema()`, or the boolean it is
  *
