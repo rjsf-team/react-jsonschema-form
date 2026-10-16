@@ -25,7 +25,7 @@ import shallowAllOfMerge from '../shallowAllOfMerge.ts';
 import KeyedMemo from './keyedMemo.ts';
 import { stringKeyword } from './parseSchemaGraph.ts';
 import type { NodeId, ObjectNode, SchemaGraph, SchemaNode } from './parseSchemaGraph.ts';
-import { declaredProperty, dependencyCondition, targetOf } from './validationTargets.ts';
+import { dependencyCondition, targetOf } from './validationTargets.ts';
 
 /** The `$ref` targets entered on the way to a plan entry, from the nearest point the recursion rule restarts it at */
 export type RefPath = readonly NodeId[];
@@ -761,11 +761,8 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       .subschemas(provider.node.id, ONE_OF_KEY)
       .map(([, option]) => option)
       .filter((option) => {
-        const property = declaredProperty(this.graph, option, key);
-        return (
-          property !== undefined &&
-          this.holds(`dependency:${option}:${key}`, dependencyCondition(this.graph, key, property), this.depData)
-        );
+        const condition = dependencyCondition(this.graph, option, key);
+        return condition !== undefined && this.holds(`dependency:${option}:${key}`, condition, this.depData);
       });
     if (valid.length !== 1) {
       logOnce(`ignoring oneOf in dependencies of "${key}" because there isn't exactly one subschema that is valid`);
