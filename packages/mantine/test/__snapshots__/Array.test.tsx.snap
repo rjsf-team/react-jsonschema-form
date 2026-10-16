@@ -9318,6 +9318,7 @@ exports[`with title and description with global label off > array icons 1`] = `
                       style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                     >
                       <input
+                        aria-label="Test item"
                         class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                         data-variant="default"
                         id="root_0"
@@ -9512,6 +9513,7 @@ exports[`with title and description with global label off > array icons 1`] = `
                       style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                     >
                       <input
+                        aria-label="Test item"
                         class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                         data-variant="default"
                         id="root_1"
@@ -10004,6 +10006,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
                       style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                     >
                       <input
+                        aria-label="Test item"
                         class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                         data-variant="default"
                         id="root_0"
@@ -10046,6 +10049,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
                       style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-width: var(--ni-right-section-width-sm);"
                     >
                       <input
+                        aria-label="Test item"
                         class="m_8fb7ebe7 mantine-Input-input mantine-NumberInput-input"
                         data-variant="default"
                         id="root_1"
