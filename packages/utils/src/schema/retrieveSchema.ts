@@ -441,7 +441,7 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
         keyword,
         options.map((option) => {
           const node = isSchemaObject<S>(option) && !isDecided(option) ? graph.byObject(option) : undefined;
-          if (node === undefined || !isSchemaObject<S>(option)) {
+          if (node === undefined) {
             return option;
           }
           const provenance = childProvenance(field, {
