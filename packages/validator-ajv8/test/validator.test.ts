@@ -234,6 +234,23 @@ describe('AJV8Validator', () => {
         addSchemaSpy.mockRestore();
         removeSchemaSpy.mockRestore();
       });
+      it('normalizes the id of a root once, not on every isValid() against it', () => {
+        const localValidator = new AJV8Validator({});
+        const rootSchema: RJSFSchema = {
+          $id: 'http://example.com/root.json',
+          definitions: { s: { type: 'string' } },
+        };
+        const pointer: RJSFSchema = { $ref: '#/definitions/s' };
+        const parseSpy = vi.spyOn(localValidator.ajv.opts.uriResolver, 'parse');
+
+        expect(localValidator.isValid(pointer, 'x', rootSchema)).toBe(true);
+        const callsForFirst = parseSpy.mock.calls.length;
+        expect(localValidator.isValid(pointer, 1, rootSchema)).toBe(false);
+        expect(localValidator.isValid(pointer, 'y', rootSchema)).toBe(true);
+
+        expect(parseSpy).toHaveBeenCalledTimes(callsForFirst);
+        parseSpy.mockRestore();
+      });
       it('falls back to deep-equality when handleSchemaUpdate receives a different rootSchema reference', () => {
         const localValidator = new AJV8Validator({});
         const rootSchemaA: RJSFSchema = {
