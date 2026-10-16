@@ -629,14 +629,14 @@ Sometimes you may want to trigger events or modify external state when a field h
 
 ## onChange
 
-Called with the same first argument as `onSubmit` for every edit: user input, `setFieldValue()`, `reset()`, and blur validation or omission. It is not called for what the form derives on mount or when a prop changes; a field that sets its own value as it mounts, as the field of a `null` type does, reports an edit like any other. The edit has been applied by the time it is called: see [`formData`](#formdata) for how to keep a copy or undo it.
+Called with the same first argument as `onSubmit` for every edit: user input, `setFieldValue()`, `reset()`, and blur validation or omission. It is not called for what the form derives on mount or when a prop changes, such as the schema's defaults: read those with `getFormData()`. The edit has been applied by the time it is called, so not storing it does not undo it; refuse or rewrite edits in [`transformChange`](#transformchange).
 It will also receive, as the second argument, the `id` of the field which experienced the change.
 Generally, this will be the `id` of the field for which input data is modified.
 In the case of adding/removing of new fields in arrays or objects with `additionalProperties` or `patternProperties` and the rearranging of items in arrays, the `id` will be that of the array or object itself, rather than the item/field being added, removed or moved.
 
 `onChange` runs as the edit is processed. React may update the inputs afterward, so read `event.formData` rather than reading values from the DOM inside the callback.
 
-Each event carries the complete value, earlier edits of the same event included. A `setFieldValue()` call from inside `onChange` builds on the edit being handled. See the [migration examples](../migration-guides/v7.x%20upgrade%20guide.md#edits-are-applied-immediately-breaking-change).
+Each event carries the complete value, earlier edits of the same event included. A `setFieldValue()` call from inside `onChange` builds on the edit being handled. See the [migration examples](../migration-guides/v7.x%20upgrade%20guide.md#form-owns-its-data-breaking-change).
 
 ## onError
 
