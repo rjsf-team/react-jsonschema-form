@@ -15,7 +15,7 @@ import type { FormContextType, GenericObjectType, RJSFSchema, SchemaContext, Str
 import { closestOption } from './getClosestMatchingOption.ts';
 import { mergeAllOf, schemaFrom } from './graph/mergePlan.ts';
 import resolveConstantOptions from './resolveConstantOptions.ts';
-import { getValidationTarget, resolveOwnRef } from './retrieveSchema.ts';
+import { conditionHolds, resolveOwnRef } from './retrieveSchema.ts';
 
 /** Returns true when a form value is considered empty: null/undefined/'', an empty array, or a plain
  * object whose every own value is itself empty (recursive). Scalars like `0` and `false` are not empty.
@@ -53,7 +53,6 @@ export default function omitExtraData<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(context: SchemaContext<S, F>, schema: S, rootSchema: S = {} as S, formData?: T): T | undefined {
-  const { validator } = context;
   /** Type predicate that narrows `value` to `GenericObjectType` — true when `value` is a plain,
    * non-array object (i.e. a JSON object). Used to distinguish JSON objects from arrays and primitives.
    *
@@ -237,10 +236,7 @@ export default function omitExtraData<
     if (condition === undefined) {
       return target;
     }
-    const isThenBranch = isSchemaObject<S>(condition)
-      ? validator.isValid(getValidationTarget<S>(condition, rootSchema), source, rootSchema)
-      : condition;
-    const branch = isThenBranch ? then : otherwise;
+    const branch = conditionHolds<S, F>(context, condition, source, rootSchema) ? then : otherwise;
     return branch === undefined ? target : omit(branch as S | boolean, source, target, false);
   }
 
