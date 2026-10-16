@@ -17,11 +17,10 @@ import {
   UNEVALUATED_PROPERTIES_KEY,
 } from '../constants.ts';
 import getSchemaOwnTypes from '../getSchemaOwnTypes.ts';
-import getSchemaType from '../getSchemaType.ts';
-import getXxxOfKey from '../getXxxOfKey.ts';
 import getXxxOfOptions from '../getXxxOfOptions.ts';
 import guessType from '../guessType.ts';
 import isObject, { isSchemaObject } from '../isObject.ts';
+import rendersOwnFieldBesideOption from '../rendersOwnFieldBesideOption.ts';
 import type {
   FormContextType,
   GenericObjectType,
@@ -534,7 +533,7 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
       const optionChain = data === undefined ? extendedChain() : undefined;
       // Only an object renders a field of its own beside the option (see `rendersOwnFieldBesideOption()`), which stubs
       // the option's extra keys with its own; any other field leaves the option to stub them
-      const stubsOwnExtraKeys = getSchemaType<S>(merged) !== 'object';
+      const stubsOwnExtraKeys = !rendersOwnFieldBesideOption<S>(merged);
       Reflect.set(
         merged,
         keyword,
@@ -557,9 +556,8 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
       );
     }
   }
-  const xxxOfKey = getXxxOfKey<S>(merged);
-  const options: unknown[] = (xxxOfKey ? merged[xxxOfKey] : undefined) ?? [];
-  const selected = selectedOption === undefined ? undefined : options[selectedOption];
+  const selected: unknown =
+    selectedOption === undefined ? undefined : getXxxOfOptions<S>(merged)?.options[selectedOption];
   let option: S | undefined;
   if (isSchemaObject<S>(selected)) {
     option = retrieveSchema<unknown, S, F>(context, selected, graph.rawRoot, data);
