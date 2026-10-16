@@ -72,7 +72,10 @@ export default function CheckboxesWidget<
   } = getGroupLabelling<T, S, F>(props, 'group');
 
   const { rjsfSlotProps: muiSlotProps, ...otherMuiProps } = getMuiProps<T, S, F, CheckboxesWidgetMuiProps>(options);
-  const checkboxSlotProps = withInputSlot(optionAttributes, muiSlotProps?.checkbox?.slotProps);
+  // A `required` the form author gives the `Checkbox` goes on its `<input>`, as `RadioWidget`'s does, rather than on the
+  // `Checkbox`, whose `FormControlLabel` would mark each option's label `*`
+  const { required: authorRequired, ...checkboxProps } = muiSlotProps?.checkbox ?? {};
+  const checkboxSlotProps = withInputSlot({ ...optionAttributes, required: authorRequired }, checkboxProps.slotProps);
 
   const autofocusIndex = enumOptionsAutofocusIndex<S>(enumOptions, enumDisabled, autofocus);
   return (
@@ -83,20 +86,21 @@ export default function CheckboxesWidget<
           {label}
         </FormLabel>
       )}
-      <FormGroup {...otherMuiProps} {...muiSlotProps?.formGroup} id={id} row={!!inline} {...groupAttributes}>
+      {/* The plan's group attributes go beneath the form author's, as the plan's control attributes do on each checkbox */}
+      <FormGroup {...groupAttributes} {...otherMuiProps} {...muiSlotProps?.formGroup} id={id} row={!!inline}>
         {Array.isArray(enumOptions) &&
           enumOptions.map((option, index: number) => {
             const checked = enumOptionsIsSelected<S>(option.value, checkboxesValues);
             const itemDisabled = enumOptionsIsDisabled(option.value, enumDisabled);
             const checkbox = (
               <Checkbox
-                {...muiSlotProps?.checkbox}
+                {...checkboxProps}
                 id={optionId(id, index)}
                 name={htmlName || id}
                 checked={checked}
                 value={domValues[index]}
                 disabled={disabled || itemDisabled || readonly}
-                autoFocus={index === autofocusIndex}
+                autoFocus={checkboxProps.autoFocus ?? index === autofocusIndex}
                 onChange={handleChange(index)}
                 onBlur={blurHandlers[index]}
                 onFocus={focusHandlers[index]}

@@ -67,8 +67,13 @@ export default function RadioWidget<
   } = getGroupLabelling<T, S, F>(props, 'radiogroup');
 
   const { rjsfSlotProps: muiSlotProps, ...otherMuiProps } = getMuiProps<T, S, F, RadioWidgetMuiProps>(options);
-  // `required` goes on the `<input>` rather than the `Radio`, whose `FormControlLabel` would mark each option's label `*`
-  const radioSlotProps = withInputSlot({ ...optionAttributes, required }, muiSlotProps?.radio?.slotProps);
+  // `required`, the field's or one the form author gives the `Radio`, which replaces it, goes on the `<input>` rather
+  // than the `Radio`, whose `FormControlLabel` would mark each option's label `*`
+  const { required: authorRequired, ...radioProps } = muiSlotProps?.radio ?? {};
+  const radioSlotProps = withInputSlot(
+    { ...optionAttributes, required: authorRequired ?? required },
+    radioProps.slotProps,
+  );
 
   const autofocusIndex = enumOptionsAutofocusIndex<S>(enumOptions, enumDisabled, autofocus, value);
   return (
@@ -79,7 +84,9 @@ export default function RadioWidget<
           {label}
         </FormLabel>
       )}
+      {/* The plan's group attributes go beneath the form author's, as the plan's control attributes do on each radio */}
       <RadioGroup
+        {...groupAttributes}
         {...otherMuiProps}
         {...muiSlotProps?.radioGroup}
         id={id}
@@ -89,7 +96,6 @@ export default function RadioWidget<
         onChange={handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
-        {...groupAttributes}
       >
         {Array.isArray(enumOptions) &&
           enumOptions.map((option, index) => {
@@ -99,10 +105,10 @@ export default function RadioWidget<
                 {...muiSlotProps?.formControlLabel}
                 control={
                   <Radio
-                    {...muiSlotProps?.radio}
+                    {...radioProps}
                     name={htmlName || id}
                     id={optionId(id, index)}
-                    autoFocus={index === autofocusIndex}
+                    autoFocus={radioProps.autoFocus ?? index === autofocusIndex}
                     color='primary'
                     slotProps={radioSlotProps}
                   />
