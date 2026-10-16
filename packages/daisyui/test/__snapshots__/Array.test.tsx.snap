@@ -6053,6 +6053,7 @@ exports[`with title and description with global label off > array icons 1`] = `
                         style="position: relative;"
                       >
                         <input
+                          aria-label="Test item"
                           class="input input-bordered w-full"
                           id="root_0"
                           name="root_0"
@@ -6175,6 +6176,7 @@ exports[`with title and description with global label off > array icons 1`] = `
                         style="position: relative;"
                       >
                         <input
+                          aria-label="Test item"
                           class="input input-bordered w-full"
                           id="root_1"
                           name="root_1"
@@ -6489,6 +6491,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
                         style="position: relative;"
                       >
                         <input
+                          aria-label="Test item"
                           class="input input-bordered w-full"
                           id="root_0"
                           name="root_0"
@@ -6518,6 +6521,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
                         style="position: relative;"
                       >
                         <input
+                          aria-label="Test item"
                           class="input input-bordered w-full"
                           id="root_1"
                           inputmode="decimal"
