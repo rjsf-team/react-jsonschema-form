@@ -822,3 +822,59 @@ describe('SelectWidget combobox', () => {
     expect(screen.getByRole('combobox')).toHaveAccessibleName('Select ...');
   });
 });
+
+describe("the single select's combobox while its listbox is open", () => {
+  const enumOptions = [
+    { label: 'Red', value: 'red' },
+    { label: 'Green', value: 'green' },
+    { label: 'Blue', value: 'blue' },
+  ];
+
+  test('points at the listbox and at the option it highlights, which focus never leaves it for, and Enter chooses', async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    render(
+      <SelectWidget
+        {...makeWidgetMockProps({
+          id: 'root_color',
+          label: 'Color',
+          disabled: false,
+          readonly: false,
+          onChange,
+          options: { enumOptions },
+        })}
+      />,
+    );
+    const combobox = screen.getByRole('combobox', { expanded: false });
+
+    // Moving the highlight scrolls the item into view with an API jsdom lacks
+    Element.prototype.scrollIntoView = vi.fn();
+    try {
+      await user.click(combobox);
+      await user.keyboard('{ArrowDown}');
+
+      const highlighted = screen
+        .getAllByRole('option')
+        .find((option) => option.getAttribute('aria-selected') === 'true');
+      expect(highlighted).toHaveTextContent('Green');
+      expect(combobox).toHaveFocus();
+      expect(combobox).toHaveAttribute('aria-activedescendant', highlighted!.id);
+      expect(combobox).toHaveAttribute('aria-controls', screen.getByRole('listbox').id);
+
+      await user.keyboard('{Enter}');
+      expect(onChange).toHaveBeenLastCalledWith('green');
+      expect(combobox).toHaveAttribute('aria-expanded', 'false');
+      expect(combobox).not.toHaveAttribute('aria-activedescendant');
+
+      // The options mount under new ids as the listbox reopens, keeping the highlight they had
+      await user.click(combobox);
+      const rehighlighted = screen
+        .getAllByRole('option')
+        .find((option) => option.getAttribute('aria-selected') === 'true');
+      expect(rehighlighted).toHaveTextContent('Green');
+      expect(combobox).toHaveAttribute('aria-activedescendant', rehighlighted!.id);
+    } finally {
+      delete (Element.prototype as Partial<Element>).scrollIntoView;
+    }
+  });
+});

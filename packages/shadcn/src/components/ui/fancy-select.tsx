@@ -105,6 +105,12 @@ export function FancySelect({
 }: Readonly<FancySelectInterface>): ReactElement {
   const [open, setOpen] = useState(false);
   const popupId = useId();
+  // Focus stays on the combobox while cmdk highlights an option, so the combobox points at the highlighted option and at
+  // the listbox holding it by the ids cmdk gives them, which it keeps to itself. cmdk reports the option it highlights
+  // only while its value is controlled
+  const [highlighted, setHighlighted] = useState('');
+  const [highlightedId, setHighlightedId] = useState<string>();
+  const [listboxId, setListboxId] = useState<string>();
   const selectedItem = items?.find((item) => item.value === selected);
   const selectedRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -116,6 +122,18 @@ export function FancySelect({
       });
     }
   }, [open]);
+
+  // Read on opening too, not only as the highlight moves: the options mount afresh, under new ids, each time the listbox
+  // opens, while cmdk keeps the highlight it had and reports no change
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!open || !container) {
+      return;
+    }
+    const options = [...container.querySelectorAll<HTMLElement>('[cmdk-item]')];
+    setHighlightedId(options.find((option) => option.dataset.value === highlighted)?.id);
+    setListboxId(container.querySelector<HTMLElement>('[cmdk-list]')?.id);
+  }, [open, highlighted]);
 
   const handleBlur = (e: FocusEvent<HTMLDivElement>) => {
     if (containerRef.current && !containerRef.current.contains(e.relatedTarget)) {
@@ -161,11 +179,13 @@ export function FancySelect({
       aria-disabled={disabled}
       onBlur={handleBlur}
       onFocus={onFocus}
+      value={highlighted}
+      onValueChange={setHighlighted}
       aria-placeholder={ariaPlaceholder}
     >
       {/* A combobox, as a native select is, so it can be `aria-invalid`, which a button can't, and holds the item it
-          displays as its value. cmdk gives its listbox an id of its own, so the combobox controls the element the
-          listbox opens in */}
+          displays as its value. It controls the listbox while it is open, and the element the listbox opens in while
+          it is closed */}
       <button
         id={id}
         type='button'
@@ -175,7 +195,8 @@ export function FancySelect({
         autoFocus={autoFocus}
         aria-expanded={open}
         aria-haspopup='listbox'
-        aria-controls={popupId}
+        aria-controls={(open && listboxId) || popupId}
+        aria-activedescendant={open ? highlightedId : undefined}
         aria-label={ariaLabel}
         aria-labelledby={ariaLabelledby}
         aria-describedby={ariaDescribedby}
