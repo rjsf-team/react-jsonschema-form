@@ -4,6 +4,7 @@ import {
   getTemplates,
   getUiOptions,
   hasTemplateErrors,
+  templateDrawsDescription,
   templateDrawsLabel,
   templateDrawsPlannedLabel,
   templateLabelFor,
@@ -92,7 +93,7 @@ export default function FieldTemplate<
           </Label>
         )}
         {children}
-        {rawDescription && !leavesPartsToCheckbox ? (
+        {templateDrawsDescription<T, S, F>(props) && rawDescription && !leavesPartsToCheckbox ? (
           <Text as='p' block style={{ marginTop: 0, marginBottom: 0 }}>
             {description}
           </Text>
