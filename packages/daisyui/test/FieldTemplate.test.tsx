@@ -1,9 +1,11 @@
+import { getTestRegistry } from '@rjsf/core/testing';
 import type { FieldProps, RJSFSchema, ThemePresentation, UiSchema, WidgetProps } from '@rjsf/utils';
-import { fieldLabelId } from '@rjsf/utils';
+import { fieldLabelId, toFieldPath } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 
-import Form from '../src/index.ts';
+import Form, { generateTemplates } from '../src/index.ts';
+import DaisyFieldTemplate from '../src/templates/FieldTemplate/FieldTemplate.tsx';
 import DaisyCheckboxWidget from '../src/widgets/CheckboxWidget/CheckboxWidget.tsx';
 import DaisyToggleWidget from '../src/widgets/ToggleWidget/ToggleWidget.tsx';
 
@@ -653,5 +655,44 @@ describe('FieldTemplate', () => {
 
     expect(screen.queryByText('Name')).not.toBeInTheDocument();
     expect(container.querySelector('input[type="hidden"]')).toBeInTheDocument();
+  });
+});
+
+describe('FieldTemplate rendered without a plan, as outside SchemaField', () => {
+  function renderTemplate(displayLabel: boolean) {
+    const registry = getTestRegistry({}, {}, generateTemplates());
+    return render(
+      <DaisyFieldTemplate
+        id='root_foo'
+        fieldPath={toFieldPath('foo')}
+        label='Foo'
+        keyName='foo'
+        description={<span id='root_foo__description'>About foo</span>}
+        rawDescription='About foo'
+        // oxlint-disable-next-line typescript/no-deprecated -- a template rendered without a plan reads the deprecated prop
+        displayLabel={displayLabel}
+        schema={{ type: 'string' }}
+        registry={registry}
+        readonly={false}
+        disabled={false}
+        required={false}
+        onChange={vi.fn()}
+        onKeyRename={vi.fn()}
+        onKeyRenameBlur={vi.fn()}
+        onRemoveProperty={vi.fn()}
+      >
+        <input id='root_foo' />
+      </DaisyFieldTemplate>,
+    );
+  }
+
+  it('draws the description where displayLabel lets it draw the label', () => {
+    const { container } = renderTemplate(true);
+    expect(container.querySelector('#root_foo__description')).toHaveTextContent('About foo');
+  });
+
+  it('draws no description where displayLabel turns the label off', () => {
+    const { container } = renderTemplate(false);
+    expect(container.querySelector('#root_foo__description')).toBeNull();
   });
 });
