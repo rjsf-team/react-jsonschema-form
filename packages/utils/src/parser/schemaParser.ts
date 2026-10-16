@@ -8,12 +8,13 @@ import {
   ITEMS_KEY,
   PATTERN_PROPERTIES_KEY,
   PROPERTIES_KEY,
+  REF_KEY,
   THEN_KEY,
 } from '../constants.ts';
 import { sortedJSONStringify } from '../hashForSchema.ts';
 import { isSchemaObject } from '../isObject.ts';
 import logOnce from '../logOnce.ts';
-import { resolveAnyOrOneOfSchemas, retrieveSchemaInternal } from '../schema/retrieveSchema.ts';
+import { resolveAnyOrOneOfSchemas, resolveOwnRef, retrieveSchemaInternal } from '../schema/retrieveSchema.ts';
 import type { FormContextType, RJSFSchema, SchemaContext, SchemaParserOptions, StrictRJSFSchema } from '../types.ts';
 import type { SchemaMap } from './ParserValidator.ts';
 import ParserValidator from './ParserValidator.ts';
@@ -133,6 +134,11 @@ function parseSchema<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
   // the subschema it is in the root, and both `parsed` and `resolved` key by content: a recursive schema reaches the
   // same subschemas again and stops there
   const schemas = retrieveSchemaInternal<T, S, F>(context, schema, rootSchema, undefined, true);
+  // `omitExtraData()` walks the schema a `$ref` names as it walks one written in place, so the `dependencies` and the
+  // `if` branches above are read off that schema too, which resolution merges away
+  if (typeof schema[REF_KEY] === 'string') {
+    parseSchema<T, S, F>(context, state, rootSchema, resolveOwnRef<S>(schema, rootSchema));
+  }
   schemas.forEach((localSchema) => {
     const resolvedKey = sortedJSONStringify(localSchema);
     if (!state.resolved.has(resolvedKey)) {

@@ -158,6 +158,17 @@ export default function precompiledCoverageTests(buildValidator: BuildPrecompile
         DEPENDENCY_ONE_OF_OMITTED,
       );
     });
+    it("covers the options of a dependency's oneOf in the definition a property's $ref names", () => {
+      const rootSchema: RJSFSchema = {
+        definitions: { person: SCHEMA_DEPENDENCY_ONE_OF },
+        type: 'object',
+        properties: { owner: { $ref: '#/definitions/person' } },
+      };
+      const validator = buildValidator(rootSchema);
+      expect(omitExtraData({ validator }, rootSchema, rootSchema, { owner: DEPENDENCY_ONE_OF_FORM_DATA })).toEqual({
+        owner: DEPENDENCY_ONE_OF_OMITTED,
+      });
+    });
     it('covers the merge of two patternProperties that match the same key', () => {
       const rootSchema = SCHEMA_TWO_MATCHING_PATTERNS;
       const validator = buildValidator(rootSchema);
