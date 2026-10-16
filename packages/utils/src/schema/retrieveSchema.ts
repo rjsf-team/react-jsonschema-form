@@ -104,9 +104,10 @@ export default function retrieveSchema<
   return view;
 }
 
-/** The views of the schemas that merge nothing and hold no subschemas, by schema. Such a view reads neither the data nor
- * the context, and `isSelect()` and `sanitizeDataForNewSchema()` retrieve every property of a form on every edit, so
- * it is retrieved once per root rather than planned again on each call.
+/** The views of the schemas that merge nothing and hold no subschemas, by schema: a call root, or a subschema
+ * `retrieveSchema()` handed out for a field that merges nothing. Such a view reads neither the data nor the context, and
+ * `isSelect()` and `sanitizeDataForNewSchema()` retrieve every property of a form on every edit, so it is retrieved
+ * once per root rather than planned again on each call.
  */
 const leafViews = new WeakMap<object, { readonly graph: object; readonly view: object }>();
 
@@ -137,9 +138,16 @@ export function isLeafSchema(schema: object): boolean {
   return !NON_LEAF_KEYWORDS.some((keyword) => Object.hasOwn(schema, keyword));
 }
 
-/** Whether `schema` is a call root, rather than a schema `retrieveSchema()` handed out, that is a leaf */
+/** Whether `schema` is a leaf whose view depends on nothing but `schema`: a call root, or a subschema handed out as it
+ * stands for a field that merges nothing. A copy a caller made of a handed-out subschema is planned from its own
+ * keywords, so it is not one.
+ */
 function isLeaf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, schema: S): boolean {
-  return readProvenance<S>(schema, graph) === undefined && isLeafSchema(schema);
+  if (!isLeafSchema(schema)) {
+    return false;
+  }
+  const stamped = readProvenance<S>(schema, graph);
+  return stamped === undefined || (handedOut.has(schema) && mergesNothing(stamped.graph, stamped.seeds));
 }
 
 /** The schemas `retrieveSchema()` handed out. A schema found here is one of them as it was handed out, so it is
@@ -173,16 +181,20 @@ function stubOf<S extends StrictRJSFSchema>(rawRoot: S, value: unknown, provenan
   return stub;
 }
 
-/** A view, with the values of the data's keys it read: those of the properties whose own plan read their data */
+/** A view, with the checks that say whether it still holds for other data: one per property whose own plan read its
+ * data
+ */
 interface MemoizedView {
   readonly view: object;
-  readonly reads: readonly (readonly [string, unknown])[];
+  readonly holds: readonly ((data: unknown) => boolean)[];
 }
 
 /** The views that read the data only through some of its keys, by field, plan, whether options are resolved and
- * whether there is data: an object field's data is a new object on every edit, which leaves the values of the keys
- * the edit did not touch as they were, so such a view is the same until one of the keys it read changes. A key holding
- * an object is not read for a memoized view, since a caller may mutate that object in place.
+ * whether there is data: an object field's data is a new object on every edit, so such a view is reused while each
+ * property that read its data would be handed out as before. A property handed out as it stands depends on its data
+ * only through whether it collapses, which is checked again against the data, so a caller that mutates that data in
+ * place gets an answer for what the data holds now. A property its patterns are merged into belongs to an object that
+ * stubs its extra keys, whose view is not memoized.
  */
 const views = new KeyedMemo<MemoizedView>();
 
@@ -371,13 +383,10 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
   const plan = planned ?? planOf(seeds, data);
   const viewKey = [field, plan, resolveOptions, data === undefined];
   const memoized = views.peek(viewKey);
-  if (
-    memoized?.reads.every(([key, value]) => Object.is(valueOf(data, key), value)) &&
-    isSchemaObject<S>(memoized.view)
-  ) {
+  if (memoized?.holds.every((holds) => holds(data)) && isSchemaObject<S>(memoized.view)) {
     return memoized.view;
   }
-  const reads: [string, unknown][] = [];
+  const holds: ((dataToCheck: unknown) => boolean)[] = [];
   const seedNode = graph.node(seeds[0].node);
   if (field.optionOf !== undefined && seedNode.kind === 'schema' && addsNothing(plan, field, field.optionOf.set)) {
     // An option such as a `$ref` back to the schema offering it: merged in, it would render that schema again inside
@@ -432,14 +441,17 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
       const { next, provenance } = child(propertySeeds, edge, isObject(data) && Object.hasOwn(data, key));
       const own = valueOf(data, key);
       const childPlan = planOf(next.seeds, own);
-      if (childPlan.readsData || patterned) {
-        reads.push([key, own]);
-      }
       const position: FieldPosition = { edge, view: 'render', dataDriven: next.dataDriven, chain: next.chain };
-      if (collapses(graph, childPlan, position)) {
+      const collapsed = collapses(graph, childPlan, position);
+      if (childPlan.readsData) {
+        holds.push(
+          (dataToCheck) => collapses(graph, planOf(next.seeds, valueOf(dataToCheck, key)), position) === collapsed,
+        );
+      }
+      if (collapsed) {
         // A boolean property collapses as the empty schema it stands for
-        const collapsed = isSchemaObject<S>(value) ? value : schemaFrom(graph.rawRoot, {});
-        return [key, handOut({ ...collapsed, [RJSF_REF_CYCLE_KEY]: true }, provenance)];
+        const shown = isSchemaObject<S>(value) ? value : schemaFrom(graph.rawRoot, {});
+        return [key, handOut({ ...shown, [RJSF_REF_CYCLE_KEY]: true }, provenance)];
       }
       return [
         key,
@@ -505,9 +517,8 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
     field,
   );
   // A view whose own plan read the data, or whose options or extra keys were resolved for it, holds for that data alone
-  const readsObject = reads.some(([, value]) => typeof value === 'object' && value !== null);
-  if (!plan.readsData && !resolveOptions && !stubsExtraKeys && !readsObject) {
-    views.set(viewKey, { view, reads });
+  if (!plan.readsData && !resolveOptions && !stubsExtraKeys) {
+    views.set(viewKey, { view, holds });
   }
   return view;
 }

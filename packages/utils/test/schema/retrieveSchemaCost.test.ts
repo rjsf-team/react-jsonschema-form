@@ -1,4 +1,4 @@
-import { getDefaultFormState, retrieveSchema } from '../../src/index.ts';
+import { RJSF_REF_CYCLE_KEY, getDefaultFormState, isObject, retrieveSchema } from '../../src/index.ts';
 import type { RJSFSchema } from '../../src/index.ts';
 import { miniValidator } from './graph/miniValidator.ts';
 
@@ -30,12 +30,37 @@ describe('the cost of an edit to a wide object', () => {
     const view = retrieveSchema(context, root, root, { f0: 'a' });
     expect(retrieveSchema(context, root, root, { f0: 'b', f1: 'c' })).toBe(view);
     expect(retrieveSchema(context, view, root, { f0: 'd' })).toBe(view);
-    // An object under a key the view reads may be mutated in place, so the view is not kept for it
-    const child = { a: 'y' };
-    const withChild = retrieveSchema(context, root, root, { child });
-    expect(withChild).not.toBe(view);
-    expect(retrieveSchema(context, root, root, { f0: 'e', child })).not.toBe(withChild);
+    // `child` is handed out as it stands whatever its data, so an object there keeps the view too
+    expect(retrieveSchema(context, root, root, { f0: 'e', child: { a: 'x' } })).toBe(view);
     expect(retrieveSchema(context, root, root, { f0: 'e' }, true)).not.toBe(view);
+  });
+  it('hands out a new view once a key the view reads would collapse, even when its object is mutated in place', () => {
+    const context = { validator: miniValidator() };
+    const root: RJSFSchema = {
+      definitions: {
+        node: {
+          type: 'object',
+          properties: {
+            k: { type: 'string' },
+            child: {
+              type: 'object',
+              properties: { a: { type: 'string' } },
+              if: { properties: { a: { const: 'x' } }, required: ['a'] },
+              then: { $ref: '#/definitions/node' },
+            },
+          },
+        },
+      },
+      $ref: '#/definitions/node',
+    };
+    const child = { a: 'y' };
+    const view = retrieveSchema(context, root, root, { child });
+    expect(retrieveSchema(context, root, root, { k: 'e', child })).toBe(view);
+    child.a = 'x';
+    const collapsed = retrieveSchema(context, root, root, { k: 'e', child });
+    expect(collapsed).not.toBe(view);
+    const shownChild = collapsed.properties?.child;
+    expect(isObject(shownChild) && Reflect.get(shownChild, RJSF_REF_CYCLE_KEY)).toBe(true);
   });
   it('plans a spread copy of a handed-out view once while its keywords stay the same', () => {
     const context = { validator: miniValidator() };
