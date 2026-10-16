@@ -810,4 +810,56 @@ describe('the element with a field error id', () => {
     expect(errorElement).toBeVisible();
     expect(screen.getByRole('textbox')).toHaveAccessibleDescription('An error');
   });
+
+  function PlainFieldTemplate({ children, errors }: { children: ReactNode; errors: ReactNode }) {
+    return (
+      <div>
+        {children}
+        {errors}
+      </div>
+    );
+  }
+  function CustomWidget({ id, value, onChange }: WidgetProps) {
+    return (
+      <input
+        id={id}
+        value={typeof value === 'string' ? value : ''}
+        onChange={(event) => onChange(event.target.value)}
+        aria-describedby={ariaDescribedByIds(id)}
+      />
+    );
+  }
+
+  async function expectOneElementDescribingTheInput(customTemplate: boolean, customWidget: boolean) {
+    const rootErrors: ErrorSchema = { __errors: ['An error'] };
+    const { container } = render(
+      <WrappedForm
+        schema={{ type: 'string' }}
+        uiSchema={customWidget ? { 'ui:widget': CustomWidget } : {}}
+        templates={customTemplate ? { FieldTemplate: PlainFieldTemplate } : {}}
+        validator={validator}
+        extraErrors={rootErrors}
+        showErrorList={false}
+      />,
+    );
+    await user.type(screen.getByRole('textbox'), 'x');
+
+    expect(duplicateIds(container)).toEqual([]);
+    expect(container.querySelectorAll(`[id="${errorId('root')}"]`)).toHaveLength(1);
+    expect(container.querySelector(`[id="${errorId('root')}"]`)).toHaveTextContent('An error');
+    expect(screen.getByRole('textbox')).toHaveAccessibleDescription('An error');
+  }
+
+  test.each<[string, boolean, boolean]>([
+    ["a Mantine widget under Mantine's FieldTemplate", false, false],
+    ["a custom widget under Mantine's FieldTemplate", false, true],
+    ['a Mantine widget under a custom FieldTemplate', true, false],
+  ])('is the one element that describes the input by the errors, for %s', async (_, customTemplate, customWidget) => {
+    await expectOneElementDescribingTheInput(customTemplate, customWidget);
+  });
+
+  // Known gap: a custom FieldTemplate leaves the hidden copy without the id, and a custom widget shows no error element
+  test.fails('is the one element that describes the input by the errors, for a custom widget under a custom FieldTemplate', async () => {
+    await expectOneElementDescribingTheInput(true, true);
+  });
 });
