@@ -886,7 +886,7 @@ describe('anyOf', () => {
     it.each([
       { moves: false, title: 'under the same id' },
       { moves: true, title: 'moved to another id in the same render' },
-    ])('keeps a declined switch the data does not fit, as 6.11.0 kept it, $title', async ({ moves }) => {
+    ])('keeps a declined switch the data does not fit, $title', async ({ moves }) => {
       const { container } = render(<SwitchedField answers={false} moves={moves} />);
 
       await user.selectOptions(container.querySelector('select')!, 'B');

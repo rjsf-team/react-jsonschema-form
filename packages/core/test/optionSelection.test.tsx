@@ -320,7 +320,7 @@ describe('option selection as form state', () => {
       });
       const steps = counts.slice(1).map((count, index) => count - counts[index]);
 
-      // Before, each level multiplied the matching done below it by the number of options it scored
+      // Each level adds the same matching, rather than multiplying the matching below it by the options it scores
       expect(new Set(steps).size).toBe(1);
     });
 
@@ -438,7 +438,7 @@ describe('option selection as form state', () => {
       ],
     });
 
-    it('switches to the option the declared discriminator names, as on 6.11.0', async () => {
+    it('switches to the option the declared discriminator names', async () => {
       const { node } = createFormComponent({
         schema: optionsBy({ discriminator: { propertyName: 'kind' } }),
         initialFormData: { kind: 'a' },
@@ -450,7 +450,7 @@ describe('option selection as form state', () => {
       expect(ids(node, 'input, select')).toEqual(['root_kind', 'root__oneof_select', 'root_kind', 'root_y']);
     });
 
-    it('matches the option again without a declared discriminator, as on 6.11.0', async () => {
+    it('matches the option again without a declared discriminator', async () => {
       const { node } = createFormComponent({ schema: optionsBy({}), initialFormData: { kind: 'a' } });
 
       await user.selectOptions(selectOf(node, 'root_kind'), 'b');
@@ -558,7 +558,7 @@ describe('option selection as form state', () => {
       },
     );
 
-    it("matches the option again after an edit to a property only an option's required names, as on 6.11.0", async () => {
+    it("matches the option again after an edit to a property only an option's required names", async () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: { a: { type: 'string' }, b: { type: 'string' } },
@@ -576,7 +576,7 @@ describe('option selection as form state', () => {
       expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { b: 'x' } }), 'root_b');
     });
 
-    it('matches the option again after an edit to a property options tell apart by their number of keys, as on 6.11.0', async () => {
+    it('matches the option again after an edit to a property options tell apart by their number of keys', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: { a: { type: 'string' }, b: { type: 'string' } },
@@ -758,7 +758,7 @@ describe('option selection as form state', () => {
     await user.selectOptions(selectOf(node, 'root_x__anyof_select'), 'A2');
 
     await user.selectOptions(selectOf(node, 'root_kind'), 'b');
-    // v7 carried the index over, opening the new list on B2
+    // The selection is kept by the list it was made in, so the new list opens on the option the data matches
     expect(getSelected(selectOf(node, 'root_x__anyof_select'))).toBe('B1');
 
     await user.selectOptions(selectOf(node, 'root_kind'), 'a');
@@ -779,7 +779,7 @@ describe('option selection as form state', () => {
     };
     const { node, rerender } = createFormComponent({ schema, formData: { o: { a: 'x' } }, onChange: () => undefined });
     await user.selectOptions(selectOf(node, 'root_o__anyof_select'), 'B');
-    // The parent ignores the switch, which leaves the data the selection was made with, as on 6.11.0
+    // The parent ignores the switch, which leaves the data the selection was made with
     expect(selectOf(node, 'root_o__anyof_select')).toHaveValue('1');
 
     rerender({ schema, formData: { o: { a: 'v' } }, onChange: () => undefined });
@@ -877,7 +877,7 @@ describe('option selection as form state', () => {
       );
     }
 
-    it('is matched again after a reset, as on 6.11.0', async () => {
+    it('is matched again after a reset', async () => {
       const ref = createFormRef();
       const { node } = createFormComponent({ ref, schema, initialFormData: { a: 'x' } });
       await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
@@ -892,7 +892,7 @@ describe('option selection as form state', () => {
     it.each([
       { edits: false, title: 'right after the switch' },
       { edits: true, title: 'after an edit under the new option' },
-    ])('is matched again when an accepting parent pushes it back, as on 6.11.0, $title', async ({ edits }) => {
+    ])('is matched again when an accepting parent pushes it back, $title', async ({ edits }) => {
       const { container } = render(<UndoingParent />);
       await user.selectOptions(selectOf(container, 'root__oneof_select'), 'B');
       if (edits) {
