@@ -284,10 +284,10 @@ export function dependencyOption<S extends StrictRJSFSchema, F extends FormConte
 const ownRefs = new KeyedMemo<object>();
 
 /** Returns a schema's own `$ref` resolved, the definition overridden by the keywords beside the reference and marked
- * with it, as a schema an option's `$ref` stands for is scored and validated. Under draft 2019-09 and 2020-12 it is
- * instead the `allOf` of the keywords beside the reference and of the reference alone, as the form reads it. The reference is resolved through the
- * schema graph, from where the schema sits in the root, as the form resolves it. Only that reference is followed: the
- * validator follows those below it against the root schema. The result is made once per schema and shared, so that a
+ * with it, as a schema an option's `$ref` stands for is scored and validated. Under draft 2019-09 and 2020-12, where
+ * those keywords do more than annotate, it is instead the `allOf` of them and of the definition, as the form reads it.
+ * The reference is resolved through the schema graph, from where the schema sits in the root, as the form resolves it.
+ * Only that reference is followed: the validator follows those below it against the root schema. The result is made once per schema and shared, so that a
  * memo keyed on it hits across calls, and a caller copies it rather than changing it.
  *
  * @param schema - The schema whose own `$ref` is to be resolved
@@ -307,11 +307,12 @@ export function resolveOwnRef<S extends StrictRJSFSchema = RJSFSchema>(schema: S
     return known;
   }
   const { graph, seeds } = fieldOf<S>(rootGraph, schema);
-  const conjunction = conjunctionOf<S>(graph, seeds[0].node);
+  const definition = refDefinition<S>(graph, seeds[0].node);
+  const siblings = withoutKeys(schema, REF_KEY);
   const resolved: S =
-    conjunction === undefined
-      ? { ...refDefinition<S>(graph, seeds[0].node), ...withoutKeys(schema, REF_KEY), [RJSF_REF_KEY]: ref }
-      : { ...conjunction.raw, [RJSF_REF_KEY]: ref };
+    conjunctionOf<S>(graph, seeds[0].node) === undefined
+      ? { ...definition, ...siblings, [RJSF_REF_KEY]: ref }
+      : schemaFrom(schema, { [ALL_OF_KEY]: [siblings, definition], [RJSF_REF_KEY]: ref });
   ownRefs.set(keys, resolved);
   return resolved;
 }

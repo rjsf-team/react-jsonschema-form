@@ -13,6 +13,7 @@ import {
   ErrorSchemaBuilder,
   getDefaultFormState,
   getFirstMatchingOption,
+  isSchemaObject,
   noop,
   retrieveSchema,
 } from '@rjsf/utils';
@@ -3447,5 +3448,35 @@ describe('AJV8Validator resolving a $ref local to the root', () => {
     expect(validator.isValid({ $ref: '#/definitions/x' }, 's', rootSchema)).toBe(true);
     expect(validator.isValid({ $ref: '#/definitions/x' }, 's', edited)).toBe(false);
     expect(validator.isValid({ $ref: '#/definitions/x' }, 1, edited)).toBe(true);
+  });
+  it('scores a 2020-12 option whose $ref has constraints beside it against the resource it sits in', () => {
+    const rootSchema: RJSFSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $id: 'http://x/root.json',
+      $defs: {
+        x: { type: 'object', properties: { v: { const: 'root' } }, required: ['v'] },
+        B: {
+          $id: 'http://x/b.json',
+          $defs: { x: { type: 'object', properties: { v: { const: 'b' } }, required: ['v'] } },
+          type: 'object',
+          properties: {
+            c: {
+              oneOf: [
+                { $ref: '#/$defs/x', minProperties: 1 },
+                { type: 'object', properties: { w: { type: 'number' } }, required: ['w'] },
+              ],
+            },
+          },
+        },
+      },
+      type: 'object',
+      properties: { b: { $ref: 'http://x/b.json' } },
+    };
+    const schemaUtils = createSchemaUtils({ validator: new AJV8Validator({}) }, rootSchema);
+    const schemaOf = (value: unknown): RJSFSchema => (isSchemaObject(value) ? value : {});
+    const b = schemaUtils.retrieveSchema(schemaOf(schemaUtils.retrieveSchema(rootSchema).properties?.b));
+    const options = (schemaUtils.retrieveSchema(schemaOf(b.properties?.c), { v: 'b' }).oneOf ?? []).map(schemaOf);
+    expect(schemaUtils.getFirstMatchingOption({ v: 'b' }, options)).toBe(0);
+    expect(schemaUtils.getClosestMatchingOption({ v: 'b' }, options)).toBe(0);
   });
 });
