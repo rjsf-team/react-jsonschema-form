@@ -115,7 +115,8 @@ interface BestOption {
   readonly score: () => number;
 }
 
-/** The options picked for data held in an object or array, by validator, merge, options, flags and the data itself.
+/** The options picked for data held in an object or array, by validator, merge, root, flags, the option objects
+ * themselves, since an option's view scores the data apart from the option it was retrieved from, and the data itself.
  * Form data is replaced rather than mutated, so the same object is the same data; scoring an option list reads the
  * lists nested below it for each candidate, so without this every level of a recursion through options multiplies the
  * matching done below it by the number of candidates (#4990). Other data scores no nested list and is not kept.
@@ -158,11 +159,17 @@ function bestOption<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   if (typeof formData !== 'object' || formData === null) {
     return compute();
   }
-  const keys = optionNodes.flatMap((option): unknown[] =>
-    typeof option === 'boolean' ? [option] : [option.graph, option.node],
-  );
   return picked.get(
-    [context.validator, context.customMergeAllOf, relax, discriminatorField, selectedOption, ...keys, formData],
+    [
+      context.validator,
+      context.customMergeAllOf,
+      rootSchema,
+      relax,
+      discriminatorField,
+      selectedOption,
+      ...options,
+      formData,
+    ],
     compute,
   );
 }

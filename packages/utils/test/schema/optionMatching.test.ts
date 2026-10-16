@@ -97,4 +97,22 @@ describe('matching options through the schema graph', () => {
     );
     expect(Object.keys(retrieved.properties ?? {})).toEqual(['y']);
   });
+  it('scores the views retrieveSchema() hands out for the options apart from the options they were retrieved from', () => {
+    const conditional: RJSFSchema = {
+      type: 'object',
+      properties: { kind: { type: 'string' } },
+      if: { properties: { kind: { const: 'a' } } },
+      then: { properties: { n: { type: 'number' } } },
+    };
+    const declared: RJSFSchema = { type: 'object', properties: { kind: { type: 'string' }, n: { type: 'number' } } };
+    const rootSchema: RJSFSchema = { anyOf: [conditional, declared] };
+    const context = { validator: miniValidator() };
+    const formData = { kind: 'a', n: 1 };
+    // The raw option leaves `n` to its condition, which only its view takes, so the two score the data differently
+    expect(getClosestMatchingOption(context, rootSchema, formData, [conditional, declared], 0)).toBe(1);
+    const views = retrieveSchema(context, rootSchema, rootSchema, formData, true).anyOf ?? [];
+    const objectViews = views.filter((view): view is RJSFSchema => typeof view === 'object');
+    expect(objectViews).toHaveLength(2);
+    expect(getClosestMatchingOption(context, rootSchema, formData, objectViews, 0)).toBe(0);
+  });
 });
