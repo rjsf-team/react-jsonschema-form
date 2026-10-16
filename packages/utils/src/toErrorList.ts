@@ -13,7 +13,8 @@ export default function toErrorList<T = unknown>(
   errorSchema?: ErrorSchema<T>,
   fieldPath: string[] = [],
 ): RJSFValidationError[] {
-  return errorSchema ? errorsFrom(errorSchema, fieldPath) : [];
+  // An untyped caller may pass a string, such as a raw server message, which holds no errors to list
+  return typeof errorSchema === 'object' && errorSchema !== null ? errorsFrom(errorSchema, fieldPath) : [];
 }
 
 /** Does the actual conversion, walking the entries of an `ErrorSchema` node so that the recursive call for a nested

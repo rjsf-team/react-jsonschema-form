@@ -199,5 +199,34 @@ describe('validationDataMerge()', () => {
       const result = validationDataMerge({ errors: [], errorSchema: {} }, { list: [item('extra')] });
       expect(result).toEqual({ errors: [listed(0, 'extra')], errorSchema: { list: { 0: item('extra') } } });
     });
+
+    it.each([
+      ['no additional errors', undefined],
+      ['empty additional errors', {}],
+      ['additional errors that hold only undefined', { other: undefined }],
+    ])('returns an existing array as the object keyed by index with %s', (_, additional) => {
+      const validationData: ValidationData<any> = {
+        errors: [listed(0, 'first')],
+        errorSchema: { list: [item('first')] },
+      };
+      expect(validationDataMerge(validationData, additional)).toStrictEqual({
+        errors: [listed(0, 'first')],
+        errorSchema: { list: { 0: item('first') } },
+      });
+    });
+
+    it('returns validationData itself with nothing to merge when its errorSchema holds no array', () => {
+      const validationData: ValidationData<any> = {
+        errors: [listed(0, 'first')],
+        errorSchema: { list: { 0: item('first') } },
+      };
+      expect(validationDataMerge(validationData, { other: undefined })).toBe(validationData);
+    });
+  });
+
+  it('lists nothing for a primitive additionalErrorSchema, as an untyped caller may pass', () => {
+    const validationData: ValidationData<unknown> = { errors: [], errorSchema: {} };
+    // @ts-expect-error a string is not an ErrorSchema
+    expect(validationDataMerge(validationData, 'bad').errors).toEqual([]);
   });
 });

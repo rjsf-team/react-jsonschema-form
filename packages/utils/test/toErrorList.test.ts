@@ -12,6 +12,10 @@ describe('toErrorList()', () => {
   it('Returns an empty array when an object with a non-plain child object is provided', () => {
     expect(toErrorList({ nonObject: new Error('non-object') })).toEqual([]);
   });
+  it('Returns an empty array when a primitive is provided, as an untyped caller may pass', () => {
+    // @ts-expect-error a string is not an ErrorSchema
+    expect(toErrorList('bad')).toEqual([]);
+  });
   it('Returns the expected list of errors when given an ErrorSchema', () => {
     expect(toErrorList(TEST_ERROR_SCHEMA)).toEqual(TEST_ERROR_LIST_OUTPUT);
   });

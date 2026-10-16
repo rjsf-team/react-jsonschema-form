@@ -2508,6 +2508,7 @@ unsetByPath(obj, ['a', 'missing']); // true, nothing to remove
 Unwraps the `errorHandler` structure into the associated `ErrorSchema`, stripping the `addError()` functions from it.
 An array of the handlers of an array field's items, which a `customValidate` may return, is unwrapped into the object keyed by index that `toErrorSchema()` builds.
 A `null` or `undefined` child, such as the entry such an array holds for an item without errors, is left out.
+What sits under `__errors` is a leaf, as every other walk of an `ErrorSchema` reads it.
 
 #### Parameters
 
@@ -2611,10 +2612,10 @@ Converts a UTC date string, an epoch number or a `Date` into a local Date format
 ### validationDataMerge&lt;T = unknown>()
 
 Merges the errors in `additionalErrorSchema` into the existing `validationData` by combining the hierarchies in the two `ErrorSchema`s and then appending the error list from the `additionalErrorSchema` obtained by calling `toErrorList()` on the `errors` in the `validationData`.
-If no `additionalErrorSchema` is passed, or an empty one, then `validationData` is returned as it is, an array its `errorSchema` holds for the items of an array field included.
 The existing `errors` are always kept, also when their `errorSchema` is empty, as it is when a `transformErrors` clears every `message`.
-An array either `ErrorSchema` holds for the items of an array field is merged as the object keyed by index that `toErrorSchema()` builds, so it neither replaces the other's errors for those items nor is appended to an array of them.
+An array either `ErrorSchema` holds for the items of an array field is returned as the object keyed by index that `toErrorSchema()` builds, so it neither replaces the other's errors for those items nor is appended to an array of them, and the result has that shape whether or not there is anything to merge.
 A `null` or `undefined` either `ErrorSchema` holds for an item or field without errors is left out of the merge rather than replacing the other's errors there.
+If no `additionalErrorSchema` is passed, or one that holds nothing, then `validationData` itself is returned when its `errorSchema` holds no such array and no `null` or `undefined`.
 
 #### Parameters
 

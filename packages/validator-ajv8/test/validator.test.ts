@@ -763,8 +763,10 @@ describe('AJV8Validator', () => {
                 },
               },
             };
-            const validate = (_formData: unknown, errors: FormValidation) =>
-              ({ ...errors, list: [{ name: { __errors: ['taken'] } }] }) as unknown as FormValidation;
+            const validate = (_formData: unknown, errors: FormValidation): FormValidation => ({
+              ...errors,
+              list: [{ name: { __errors: ['taken'] } }],
+            });
             const result = validator.validateFormData({ list: [{ name: 'abc' }, { name: 'a' }] }, schema, validate);
             expect(result.errorSchema.list).toEqual({
               0: { name: { __errors: ['taken'] } },

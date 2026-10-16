@@ -154,4 +154,14 @@ describe('FormValidation type', () => {
 
     expect(added).toEqual(['root', 'leaf', 'nested', 'array item']);
   });
+
+  it('rejects an array as the node of array data, as ErrorSchema does', () => {
+    const node = () => ({ __errors: [], addError: () => {} });
+    const keyed: FormValidation<Data> = { ...node(), tags: { ...node(), 0: node() } };
+    // @ts-expect-error an array's items are keyed by index in an object
+    const listed: FormValidation<Data> = { ...node(), tags: [node()] };
+
+    expect(keyed.tags?.[0]).toBeDefined();
+    expect(listed.tags).toBeDefined();
+  });
 });
