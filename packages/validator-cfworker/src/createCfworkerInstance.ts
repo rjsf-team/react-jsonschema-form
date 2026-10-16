@@ -72,9 +72,12 @@ function indexDependencies(lookup: Record<string, Schema | boolean>): void {
       for (const [key, dependency] of Object.entries(dependencies)) {
         const at = `${pointer ?? ''}/dependencies/${encodePointer(key)}`;
         if (ignoredKeyword[key] && isObject(dependency) && lookup[`${base}#${at}`] === undefined) {
-          const known = new Set(Object.keys(lookup));
-          dereference(dependency, lookup, new URL(base), at);
-          pending.push(...Object.entries(lookup).flatMap(([indexed, value]) => (known.has(indexed) ? [] : [value])));
+          // Indexed into an object inheriting from the lookup, the engine still rejects a URI the lookup holds, and the
+          // entries it adds are the object's own
+          const indexed: Record<string, Schema | boolean> = Object.create(lookup);
+          dereference(dependency, indexed, new URL(base), at);
+          Object.assign(lookup, indexed);
+          pending.push(...Object.values(indexed));
         }
       }
     }
