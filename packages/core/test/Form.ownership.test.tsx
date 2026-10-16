@@ -1014,7 +1014,7 @@ describe('form data ownership', () => {
       },
     };
 
-    it('a oneOf selector keeps a declined switch the data does not fit, as 6.11.0 kept it', async () => {
+    it('a oneOf selector keeps a declined switch the data does not fit', async () => {
       const log = createParentLog<{ status: { by: string } }>();
       const { container } = render(
         <RejectingParent schema={oneOfSchema} initialValue={{ status: { by: 'me' } }} log={log} />,
