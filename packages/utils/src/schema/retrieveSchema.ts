@@ -59,7 +59,7 @@ import buildPlan, {
 } from './graph/mergePlan.ts';
 import type { MergePlan, OptionRequest, PlanPolicy, Seed } from './graph/mergePlan.ts';
 import parseSchemaGraph from './graph/parseSchemaGraph.ts';
-import type { NodeId, SchemaGraph } from './graph/parseSchemaGraph.ts';
+import type { NodeId, ObjectNode, SchemaGraph } from './graph/parseSchemaGraph.ts';
 import { childProvenance, extendChain, readProvenance, rootProvenance, stamp } from './graph/provenance.ts';
 import type { GuardChain, Provenance } from './graph/provenance.ts';
 import { childField, collapses, ownRefTargets, restartSeeds } from './graph/recursionRule.ts';
@@ -275,12 +275,14 @@ export function dependencyOption<S extends StrictRJSFSchema, F extends FormConte
   }
   const resolved = options.map((option) => {
     const node = graph.node(option);
-    return node.kind === 'schema' ? resolveOwnRef<S>(node.raw, graph.rawRoot) : booleanSchema(node, graph.rawRoot);
+    return node.kind === 'schema' ? resolveNodeOwnRef<S>(graph, node) : booleanSchema(node, graph.rawRoot);
   });
   return getFirstMatchingOption({ validator }, data, resolved, graph.rawRoot, discriminator);
 }
 
-/** The schemas `resolveOwnRef()` made, by graph and the schema holding the reference */
+/** The schemas `resolveOwnRef()` made, by graph and the schema holding the reference, and those `resolveNodeOwnRef()`
+ * made, by graph and node
+ */
 const ownRefs = new KeyedMemo<object>();
 
 /** Returns a schema's own `$ref` resolved, the definition overridden by the keywords beside the reference and marked
@@ -307,14 +309,35 @@ export function resolveOwnRef<S extends StrictRJSFSchema = RJSFSchema>(schema: S
     return known;
   }
   const { graph, seeds } = fieldOf<S>(rootGraph, schema);
-  const definition = refDefinition<S>(graph, seeds[0].node);
-  const siblings = withoutKeys(schema, REF_KEY);
-  const resolved: S =
-    conjunctionOf<S>(graph, seeds[0].node) === undefined
-      ? { ...definition, ...siblings, [RJSF_REF_KEY]: ref }
-      : schemaFrom(schema, { [ALL_OF_KEY]: [siblings, definition], [RJSF_REF_KEY]: ref });
+  const resolved = ownRefResolved(graph, seeds[0].node, schema, ref);
   ownRefs.set(keys, resolved);
   return resolved;
+}
+
+/** Returns the own `$ref` of the node `node` resolved, as `resolveOwnRef()` resolves a schema's, from the node itself
+ * rather than from where its object is first found, since one object reached in two resources is a node in each
+ */
+function resolveNodeOwnRef<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, node: ObjectNode<S>): S {
+  const ref = node.raw[REF_KEY];
+  if (typeof ref !== 'string') {
+    return node.raw;
+  }
+  const keys = [graph, node.id];
+  const known = ownRefs.peek(keys);
+  if (isSchemaObject<S>(known)) {
+    return known;
+  }
+  const resolved = ownRefResolved(graph, node.id, node.raw, ref);
+  ownRefs.set(keys, resolved);
+  return resolved;
+}
+
+function ownRefResolved<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId, schema: S, ref: string): S {
+  const definition = refDefinition<S>(graph, id);
+  const siblings = withoutKeys(schema, REF_KEY);
+  return conjunctionOf<S>(graph, id) === undefined
+    ? { ...definition, ...siblings, [RJSF_REF_KEY]: ref }
+    : schemaFrom(schema, { [ALL_OF_KEY]: [siblings, definition], [RJSF_REF_KEY]: ref });
 }
 
 /** Whether an option's plan adds nothing to the plan of the field offering it, beyond the option's own `$ref` */
