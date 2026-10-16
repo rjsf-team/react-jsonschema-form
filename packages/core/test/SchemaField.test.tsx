@@ -702,7 +702,13 @@ describe('SchemaField', () => {
 
     const titled: RJSFSchema = { type: 'string', title: 'Val', description: 'Desc' };
     const titledAnyOf: RJSFSchema = { ...titled, anyOf: [{ minLength: 2 }, { maxLength: 5 }] };
-    it.each<{ spelling: string; schema: RJSFSchema; named: RJSFSchema; uiSchema: UiSchema; props?: NoValFormProps }>([
+    it.each<{
+      spelling: string;
+      schema: RJSFSchema;
+      named: RJSFSchema;
+      uiSchema: UiSchema;
+      props?: Omit<NoValFormProps, 'schema'>;
+    }>([
       {
         spelling: "ui:field: 'SchemaField' on an anyOf",
         schema: { type: 'object', properties: { val: titledAnyOf } },
