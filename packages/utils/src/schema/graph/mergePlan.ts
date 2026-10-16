@@ -48,6 +48,10 @@ export function occurrencesBeforeLast(refPath: RefPath, target: NodeId): number 
 export interface Seed {
   readonly node: NodeId;
   readonly refPath: RefPath;
+  /** Whether a `then`/`else`, `dependencies` entry or chosen option declares the node, whose keywords are merged over
+   * those of the field's other seeds as the branch is merged over the schema declaring it
+   */
+  readonly over?: boolean;
 }
 
 /** How a plan entry joined the plan */
@@ -66,6 +70,8 @@ export interface Provider<S extends StrictRJSFSchema = RJSFSchema> {
   readonly refPath: RefPath;
   /** A property of the node's `properties` the plan leaves out: the one a dependency's `oneOf` option is chosen by */
   readonly drops?: string;
+  /** Whether the node is in a branch merged over the schema declaring it, see `Seed.over` */
+  readonly over?: boolean;
 }
 
 /** The keywords one chain of `$ref`s supplies to a plan, each with the node providing it: the target's keywords,
@@ -140,7 +146,8 @@ export interface MergePlan<S extends StrictRJSFSchema = RJSFSchema> {
   /** The merged schema, with `RJSF_REF_KEY` naming the `$ref` the field's own node was resolved from */
   readonly schema: S;
   /** The chains of the plan in the order a child's seeds are merged in: a branch's before the keywords it is merged
-   * into, a conjunction's members after them, so the first seed of a child is the one whose keywords win
+   * into and marked as a branch's, a conjunction's members after them, so the first of a child's seeds that no branch
+   * holds is the one whose keywords win among those, and a branch's are merged over them
    */
   readonly chains: readonly Keywords<S>[];
   readonly choices: readonly OptionChoice[];
@@ -191,7 +198,7 @@ const seedKeys = new WeakMap<readonly Seed[], string>();
 export function seedsKey(seeds: readonly Seed[]): string {
   let key = seedKeys.get(seeds);
   if (key === undefined) {
-    key = seeds.map(({ node, refPath }) => `${node}:${refPath.join('.')}`).join(';');
+    key = seeds.map(({ node, refPath, over }) => `${node}:${refPath.join('.')}${over ? '^' : ''}`).join(';');
     seedKeys.set(seeds, key);
   }
   return key;
@@ -238,8 +245,14 @@ export function booleanSchema<S extends StrictRJSFSchema>(node: SchemaNode<S>, t
   return schemaOfBoolean(node.kind !== 'boolean' || node.value, template);
 }
 
+/** Returns `chain` with each of its providers marked as one a branch holds, see `Seed.over` */
+function overChain<S extends StrictRJSFSchema>(chain: Keywords<S>): Keywords<S> {
+  return new Map([...chain].map(([key, provider]) => [key, provider.over ? provider : { ...provider, over: true }]));
+}
+
 /** Merges `branch` into `part` with `mergeSchemas()`, the branch's keywords winning, keeping the `RJSF_REF_KEY` of
- * `part` when it has one, so the merged schema is still named after the field's own `$ref`
+ * `part` when it has one, so the merged schema is still named after the field's own `$ref`. The branch's chains are
+ * marked, so that a child they seed is merged the same way.
  */
 function mergeBranch<S extends StrictRJSFSchema>(part: Part<S>, branch: Part<S>): Part<S> {
   const schema = schemaFrom(part.schema, mergeSchemas(part.schema, branch.schema));
@@ -247,7 +260,7 @@ function mergeBranch<S extends StrictRJSFSchema>(part: Part<S>, branch: Part<S>)
   if (ownRef !== undefined) {
     Reflect.set(schema, RJSF_REF_KEY, ownRef);
   }
-  return { schema, chains: [...branch.chains, ...part.chains] };
+  return { schema, chains: [...branch.chains.map(overChain), ...part.chains] };
 }
 
 function withRequired<S extends StrictRJSFSchema>(schema: S, required: readonly string[]): S {
@@ -460,10 +473,22 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
 
   build(seeds: readonly Seed[]): MergePlan<S> {
     const empty = { schema: schemaFrom(this.graph.rawRoot, {}), chains: [] };
-    const [first = empty, ...rest] = seeds.flatMap((seed) => this.expand(seed.node, seed.refPath, 'seed', true) ?? []);
+    const conjoined: Part<S>[] = [];
+    const over: Part<S>[] = [];
+    for (const seed of seeds) {
+      const part = this.expand(seed.node, seed.refPath, 'seed', true);
+      if (part !== undefined) {
+        (seed.over ? over : conjoined).push(part);
+      }
+    }
     // Several seeds are merged as the `allOf` of them all, which is how a property is merged with the patterns its name
-    // matches, so a `customMergeAllOf` is handed them as it is handed every other conjunction
-    const merged = rest.length === 0 ? first : this.conjoin(empty, [first, ...rest]);
+    // matches, so a `customMergeAllOf` is handed them as it is handed every other conjunction. A branch's seeds are
+    // merged over them last to first, as the branches were merged over the schema declaring them
+    const [first = over.pop() ?? empty, ...rest] = conjoined;
+    let merged = rest.length === 0 ? first : this.conjoin(empty, [first, ...rest]);
+    for (let index = over.length - 1; index >= 0; index -= 1) {
+      merged = mergeBranch(merged, over[index]);
+    }
     return {
       graph: this.graph,
       seeds,
@@ -854,6 +879,10 @@ export interface Seeding<S extends StrictRJSFSchema = RJSFSchema> {
   readonly chains: readonly Keywords<S>[];
 }
 
+function seedOf<S extends StrictRJSFSchema>(node: NodeId, { refPath, over }: Provider<S>): Seed {
+  return over ? { node, refPath, over } : { node, refPath };
+}
+
 /** Returns the seeds of the subschema `keyword` holds, or holds under `key`, in each chain providing the keyword
  *
  * @param seeding - The field's graph and chains
@@ -872,7 +901,7 @@ export function seedsAt<S extends StrictRJSFSchema = RJSFSchema>(
       provider && (key === undefined || provider.drops !== key)
         ? graph.child(provider.node.id, keyword, key)
         : undefined;
-    return provider === undefined || node === undefined ? [] : [{ node, refPath: provider.refPath }];
+    return provider === undefined || node === undefined ? [] : [seedOf(node, provider)];
   });
 }
 
@@ -914,7 +943,7 @@ export function childSeeds<S extends StrictRJSFSchema = RJSFSchema>(
       : seeding.graph
           .subschemas(provider.node.id, PATTERN_PROPERTIES_KEY)
           .filter(([pattern]) => patternRegExp(pattern).test(key))
-          .map(([, node]) => ({ node, refPath: provider.refPath }));
+          .map(([, node]) => seedOf(node, provider));
   });
   const declared = seedsAt(seeding, PROPERTIES_KEY, key);
   if (declared.length > 0) {

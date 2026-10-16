@@ -1,4 +1,4 @@
-import { getDefaultFormState, isObject } from '../../src/index.ts';
+import { createSchemaUtils, getDefaultFormState, isObject } from '../../src/index.ts';
 import type { DefaultFormStateBehavior, RJSFSchema } from '../../src/index.ts';
 import { computeDefaults, getObjectDefaults } from '../../src/schema/getDefaultFormState.ts';
 import { miniValidator } from './graph/miniValidator.ts';
@@ -661,6 +661,49 @@ describe('getDefaultFormState() reading $ref, branches and extra keys as the for
       expect(defaultsOf(inherited)).toEqual({ p: { k: 'x', t: 't' } });
     },
   );
+
+  describe('a property a branch declares again', () => {
+    const branchProperties: RJSFSchema['properties'] = {
+      o: { default: { y: 2 } },
+      n: { properties: { j: { type: 'string', default: 'bj' } } },
+      k: { const: { d: 2 } },
+    };
+    const properties: RJSFSchema['properties'] = {
+      a: { type: 'string', default: 'x' },
+      o: { default: { x: 1 } },
+      n: { type: 'object', properties: { i: { type: 'string', default: 'bi' } } },
+      k: { type: 'object', const: { c: 1 }, properties: { c: {} } },
+    };
+    const shapes: [string, RJSFSchema][] = [
+      [
+        'then',
+        {
+          type: 'object',
+          properties,
+          if: { properties: { a: { const: 'x' } } },
+          then: { properties: branchProperties },
+        },
+      ],
+      ['dependencies', { type: 'object', properties, dependencies: { a: { properties: branchProperties } } }],
+      ['oneOf', { type: 'object', properties, oneOf: [{ properties: branchProperties }] }],
+    ];
+    it.each(shapes)('is merged from a %s as the branch is merged into the field, the branch winning', (_, schema) => {
+      const defaults = defaultsOf(schema);
+      expect(defaults).toEqual({ a: 'x', o: { x: 1, y: 2 }, n: { i: 'bi', j: 'bj' }, k: { c: 1 } });
+      expect(isObject(defaults) && isObject(defaults.n) ? Object.keys(defaults.n) : []).toEqual(['i', 'j']);
+    });
+    it('renders in the order and with the default the field it is merged into shows', () => {
+      const [, schema] = shapes[0];
+      const schemaUtils = createSchemaUtils({ validator }, schema);
+      const view = schemaUtils.retrieveSchema(schema, { a: 'x' });
+      const propertyOf = (key: string, data?: unknown) => {
+        const property = view.properties?.[key];
+        return schemaUtils.retrieveSchema(typeof property === 'object' ? property : {}, data);
+      };
+      expect(Object.keys(propertyOf('n', {}).properties ?? {})).toEqual(['i', 'j']);
+      expect(propertyOf('o').default).toEqual({ x: 1, y: 2 });
+    });
+  });
 
   it('resolves a $ref to an $anchor, and one under a nested $id with a path segment against that $id', () => {
     const target: RJSFSchema = { type: 'object', properties: { v: { type: 'string', default: 'v' } } };

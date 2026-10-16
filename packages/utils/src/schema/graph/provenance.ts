@@ -120,7 +120,7 @@ function intern<S extends StrictRJSFSchema>(
     graph,
     parent,
     seeds: Object.freeze(
-      fields.seeds.map(({ node, refPath }) => Object.freeze({ node, refPath: Object.freeze([...refPath]) })),
+      fields.seeds.map((seed) => Object.freeze({ ...seed, refPath: Object.freeze([...seed.refPath]) })),
     ),
     chain: fields.chain,
     optionOf: fields.optionOf,

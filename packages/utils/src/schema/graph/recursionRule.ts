@@ -118,7 +118,7 @@ export function collapses<S extends StrictRJSFSchema = RJSFSchema>(
  * @returns - The restarted seeds
  */
 export function restartSeeds(seeds: readonly Seed[]): Seed[] {
-  return seeds.map(({ node }) => ({ node, refPath: [] }));
+  return seeds.map((seed) => ({ ...seed, refPath: [] }));
 }
 
 /** A child as its parent hands it on: its seeds and the guard chain it is checked against */
