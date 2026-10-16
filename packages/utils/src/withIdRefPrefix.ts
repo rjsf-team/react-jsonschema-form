@@ -52,7 +52,7 @@ function prefixRefs<S extends StrictRJSFSchema = RJSFSchema>(
   return schemaNode;
 }
 
-/** Returns the id a validator registers `rootSchema` under, and so the prefix `withIdRefPrefix()` gives the local
+/** Returns the id a validator registers `rootSchema` under, and so the prefix `withRootIdRefPrefix()` gives the local
  * `$ref`s it rewrites: the root's own `$id`, or `ROOT_SCHEMA_PREFIX` where it has none, since an empty `$id` names
  * nothing a `$ref` could resolve against
  *
@@ -63,28 +63,34 @@ export function rootSchemaIdOf<S extends StrictRJSFSchema = RJSFSchema>(rootSche
   return rootSchema[ID_KEY] || ROOT_SCHEMA_PREFIX;
 }
 
-/** Recursively prefixes every `$ref` local to the root document, one starting with `#`, with the id the root schema is
- * registered under, `ROOT_SCHEMA_PREFIX` unless another is given. This is used in isValid to make references to the
- * rootSchema. An id ending in an empty fragment, as `http://example.com/root.json#` does, names the same document as
- * one without it, so that `#` is left out of the prefix rather than doubled.
+/** Recursively prefixes every `$ref` local to the root document, one starting with `#`, with the id `rootSchema` is
+ * registered under, as `rootSchemaIdOf()` returns it. An id ending in an empty fragment, as `http://example.com/root.json#`
+ * does, names the same document as one without it, so that `#` is left out of the prefix rather than doubled. This is
+ * what a validator applies to a schema it validates beside `rootSchema`, so that a `$ref` local to the root resolves
+ * against the root whatever the schema holding it is registered as.
  *
  * @param schemaNode - The object node to which the prefix is added when a REF_KEY is part of it
- * @param [prefix=ROOT_SCHEMA_PREFIX] - The id of the root schema the local `$ref`s name, such as the root's own `$id`
+ * @param rootSchema - The root schema the local `$ref`s name
  * @returns - A copy of the `schemaNode` with updated `$ref`s
  */
-export default function withIdRefPrefix<S extends StrictRJSFSchema = RJSFSchema>(schemaNode: S[], prefix?: string): S[];
-export default function withIdRefPrefix<S extends StrictRJSFSchema = RJSFSchema>(schemaNode: S, prefix?: string): S;
-export default function withIdRefPrefix<S extends StrictRJSFSchema = RJSFSchema>(
-  schemaNode: S[keyof S],
-  prefix?: string,
-): S[keyof S];
+export function withRootIdRefPrefix<S extends StrictRJSFSchema = RJSFSchema>(schemaNode: S, rootSchema: S): S {
+  return prefixRefs<S>(schemaNode, rootSchemaIdOf(rootSchema).replace(/#$/, ''));
+}
+
+/** Recursively prefixes all `$ref`s local to the root document, one starting with `#`, with the value of the
+ * `ROOT_SCHEMA_PREFIX` constant. This is used in isValid to make references to the rootSchema
+ *
+ * @param schemaNode - The object node to which a ROOT_SCHEMA_PREFIX is added when a REF_KEY is part of it
+ * @returns - A copy of the `schemaNode` with updated `$ref`s
+ */
+export default function withIdRefPrefix<S extends StrictRJSFSchema = RJSFSchema>(schemaNode: S[]): S[];
+export default function withIdRefPrefix<S extends StrictRJSFSchema = RJSFSchema>(schemaNode: S): S;
+export default function withIdRefPrefix<S extends StrictRJSFSchema = RJSFSchema>(schemaNode: S[keyof S]): S[keyof S];
 export default function withIdRefPrefix<S extends StrictRJSFSchema = RJSFSchema>(
   schemaNode: S | S[] | S[keyof S],
-  prefix?: string,
 ): S | S[] | S[keyof S];
 export default function withIdRefPrefix<S extends StrictRJSFSchema = RJSFSchema>(
   schemaNode: S | S[] | S[keyof S],
-  prefix: string = ROOT_SCHEMA_PREFIX,
 ): S | S[] | S[keyof S] {
-  return prefixRefs<S>(schemaNode, prefix.replace(/#$/, ''));
+  return prefixRefs<S>(schemaNode, ROOT_SCHEMA_PREFIX);
 }

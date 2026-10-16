@@ -1,5 +1,5 @@
 import type { RJSFSchema, StrictRJSFSchema } from '../src/index.ts';
-import { ROOT_SCHEMA_PREFIX, rootSchemaIdOf, withIdRefPrefix } from '../src/index.ts';
+import { ROOT_SCHEMA_PREFIX, rootSchemaIdOf, withIdRefPrefix, withRootIdRefPrefix } from '../src/index.ts';
 
 describe('withIdRefPrefix()', () => {
   it('should recursively add id prefix to all refs', () => {
@@ -11,16 +11,6 @@ describe('withIdRefPrefix()', () => {
     };
 
     expect(withIdRefPrefix(schema)).toEqual(expected);
-  });
-  it('prefixes a local $ref with the root id it is given, leaving any other $ref as it stands', () => {
-    const schema: RJSFSchema = {
-      properties: { local: { $ref: '#/definitions/a' }, absolute: { $ref: 'https://example.com/other.json#/x' } },
-      allOf: [{ $ref: '#' }, true],
-    };
-    expect(withIdRefPrefix(schema, 'root')).toEqual({
-      properties: { local: { $ref: 'root#/definitions/a' }, absolute: { $ref: 'https://example.com/other.json#/x' } },
-      allOf: [{ $ref: 'root#' }, true],
-    });
   });
   it('shouldn`t mutate the schema', () => {
     const schema: RJSFSchema = {
@@ -55,14 +45,33 @@ describe('withIdRefPrefix()', () => {
     >();
     expect(prefixed<StrictRJSFSchema>([{ $ref: '#/defs/foo' }])).toEqual([{ $ref: '__rjsf_rootSchema#/defs/foo' }]);
   });
-  it('should leave the empty fragment an id ends in out of the prefix', () => {
-    expect(withIdRefPrefix({ $ref: '#/if' }, 'http://example.com/root.json#')).toEqual({
-      $ref: 'http://example.com/root.json#/if',
-    });
+  it('takes the schema alone, so it can be handed to map()', () => {
+    expect([{ $ref: '#/a' }].map(withIdRefPrefix)).toEqual([{ $ref: '__rjsf_rootSchema#/a' }]);
   });
   it('should handle null schemaNode', () => {
     const schemaNode = null;
     expect(withIdRefPrefix(schemaNode)).toEqual(schemaNode);
+  });
+});
+
+describe('withRootIdRefPrefix()', () => {
+  it("prefixes a local $ref with the root's $id, leaving any other $ref as it stands", () => {
+    const schema: RJSFSchema = {
+      properties: { local: { $ref: '#/definitions/a' }, absolute: { $ref: 'https://example.com/other.json#/x' } },
+      allOf: [{ $ref: '#' }, true],
+    };
+    expect(withRootIdRefPrefix(schema, { $id: 'root' })).toEqual({
+      properties: { local: { $ref: 'root#/definitions/a' }, absolute: { $ref: 'https://example.com/other.json#/x' } },
+      allOf: [{ $ref: 'root#' }, true],
+    });
+  });
+  it('prefixes a local $ref with ROOT_SCHEMA_PREFIX for a root without an $id', () => {
+    expect(withRootIdRefPrefix({ $ref: '#/a' }, {})).toEqual({ $ref: `${ROOT_SCHEMA_PREFIX}#/a` });
+  });
+  it('should leave the empty fragment an id ends in out of the prefix', () => {
+    expect(withRootIdRefPrefix({ $ref: '#/if' }, { $id: 'http://example.com/root.json#' })).toEqual({
+      $ref: 'http://example.com/root.json#/if',
+    });
   });
 });
 

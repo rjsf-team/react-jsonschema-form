@@ -8,7 +8,7 @@ import type {
   ValidationData,
   ValidatorType,
 } from '@rjsf/utils';
-import { deepEquals, logOnce, ID_KEY, rootSchemaIdOf, schemaKey, withIdRefPrefix } from '@rjsf/utils';
+import { deepEquals, logOnce, ID_KEY, rootSchemaIdOf, schemaKey, withRootIdRefPrefix } from '@rjsf/utils';
 import type { ValidationError, Validator } from 'ata-validator';
 
 import createAtaInstance from './createAtaInstance.ts';
@@ -202,7 +202,7 @@ export default class ATAValidator<
     }
     const rootSchemaId = rootSchemaIdOf(rootSchema);
     // Inject $id into a copy of the rootSchema so ata's schema registry can
-    // resolve `<rootSchemaId>#/...` refs produced by `withIdRefPrefix`.
+    // resolve `<rootSchemaId>#/...` refs produced by `withRootIdRefPrefix`.
     // The original user-supplied schema is left untouched.
     const rootWithId =
       rootSchema[ID_KEY] === rootSchemaId
@@ -228,7 +228,7 @@ export default class ATAValidator<
     let id: string | undefined;
     try {
       this.handleSchemaUpdate(rootSchema);
-      const schemaWithIdRefPrefix = withIdRefPrefix<S>(schema, rootSchemaIdOf(rootSchema));
+      const schemaWithIdRefPrefix = withRootIdRefPrefix<S>(schema, rootSchema);
       id = schemaKey(schemaWithIdRefPrefix);
       const validator = this.getOrBuild(id, schemaWithIdRefPrefix);
       return validator.validate(ATAValidator.cloneForValidation(formData)).valid;

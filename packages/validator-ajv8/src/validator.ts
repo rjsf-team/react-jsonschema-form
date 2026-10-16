@@ -8,7 +8,7 @@ import type {
   ValidationData,
   ValidatorType,
 } from '@rjsf/utils';
-import { deepEquals, isObject, logOnce, ID_KEY, rootSchemaIdOf, schemaKey, withIdRefPrefix } from '@rjsf/utils';
+import { deepEquals, isObject, logOnce, ID_KEY, rootSchemaIdOf, schemaKey, withRootIdRefPrefix } from '@rjsf/utils';
 import type { ErrorObject, ValidateFunction, Ajv } from 'ajv';
 
 import createAjvInstance from './createAjvInstance.ts';
@@ -286,7 +286,7 @@ export default class AJV8Validator<
       this.handleSchemaUpdate(rootSchema);
       // A `$ref` local to the root, such as one in an option or a condition a form scores or picks a branch with,
       // names the root by the id it is registered under, whatever the schema holding it is registered as
-      const schemaWithIdRefPrefix = withIdRefPrefix<S>(schema, rootSchemaIdOf(rootSchema));
+      const schemaWithIdRefPrefix = withRootIdRefPrefix<S>(schema, rootSchema);
       schemaId = schemaKey(schemaWithIdRefPrefix);
       // Add schema by an explicit ID so it can be fetched later
       // Fall back to using compile if necessary

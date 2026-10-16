@@ -162,7 +162,7 @@ import utcToLocal from './utcToLocal.ts';
 import validationDataMerge from './validationDataMerge.ts';
 import type { WidgetAriaPropsInput } from './widgetAriaProps.ts';
 import widgetAriaProps from './widgetAriaProps.ts';
-import withIdRefPrefix, { rootSchemaIdOf } from './withIdRefPrefix.ts';
+import withIdRefPrefix, { rootSchemaIdOf, withRootIdRefPrefix } from './withIdRefPrefix.ts';
 
 export type * from './types.ts';
 export * from './enums.ts';
@@ -353,6 +353,7 @@ export {
   validationDataMerge,
   widgetAriaProps,
   withIdRefPrefix,
+  withRootIdRefPrefix,
   rootSchemaIdOf,
   bracketNameGenerator,
   dotNotationNameGenerator,
