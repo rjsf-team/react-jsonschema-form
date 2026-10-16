@@ -21,6 +21,7 @@ import SchemaField from '../src/components/fields/SchemaField.tsx';
 import Form, { generateTheme } from '../src/index.ts';
 import MarkdownTemplate from '../src/markdown.tsx';
 import { createFormComponent, setupConsoleWarnSuppression, submitForm } from './testUtils.tsx';
+import type { NoValFormProps } from './testUtils.tsx';
 
 const user = userEvent.setup();
 
@@ -697,6 +698,62 @@ describe('SchemaField', () => {
       expect(new Set(renderWidget.mock.calls.map(([id]) => id))).toEqual(new Set(['root_val']));
       expect(screen.getAllByText('bad')).toHaveLength(1);
       expect(node.querySelectorAll('#root_val__error')).toHaveLength(1);
+    });
+
+    const titled: RJSFSchema = { type: 'string', title: 'Val', description: 'Desc' };
+    const titledAnyOf: RJSFSchema = { ...titled, anyOf: [{ minLength: 2 }, { maxLength: 5 }] };
+    it.each<{ spelling: string; schema: RJSFSchema; named: RJSFSchema; uiSchema: UiSchema; props?: NoValFormProps }>([
+      {
+        spelling: "ui:field: 'SchemaField' on an anyOf",
+        schema: { type: 'object', properties: { val: titledAnyOf } },
+        named: { type: 'object', properties: { val: titledAnyOf } },
+        uiSchema: { val: { 'ui:field': 'SchemaField' } },
+      },
+      {
+        spelling: "ui:field: 'SchemaField' on an array's items",
+        schema: { type: 'array', items: titled },
+        named: { type: 'array', items: titled },
+        uiSchema: { items: { 'ui:field': 'SchemaField' } },
+        props: { formData: ['x'] },
+      },
+      {
+        spelling: "ui:field: 'SchemaField' on an anyOf array item",
+        schema: { type: 'array', items: titledAnyOf },
+        named: { type: 'array', items: titledAnyOf },
+        uiSchema: { items: { 'ui:field': 'SchemaField' } },
+        props: { formData: ['x'] },
+      },
+      {
+        spelling: "ui:field: 'SchemaField' on an extra key",
+        schema: { type: 'object', additionalProperties: titled },
+        named: { type: 'object', additionalProperties: titled },
+        uiSchema: { additionalProperties: { 'ui:field': 'SchemaField' } },
+        props: { formData: { k: 'x' } },
+      },
+      {
+        spelling: "ui:field: 'SchemaField' on an object with errors",
+        schema: { type: 'object', properties: { o: { type: 'object', title: 'O', properties: { a: titled } } } },
+        named: { type: 'object', properties: { o: { type: 'object', title: 'O', properties: { a: titled } } } },
+        uiSchema: { o: { 'ui:field': 'SchemaField' } },
+        props: { extraErrors: { o: { __errors: ['o bad'], a: { __errors: ['a bad'] } } } },
+      },
+      {
+        spelling: "ui:globalOptions.field: 'SchemaField' on an anyOf",
+        schema: { type: 'object', properties: { val: titledAnyOf } },
+        named: { type: 'object', properties: { val: titledAnyOf } },
+        uiSchema: { 'ui:globalOptions': { field: 'SchemaField' } },
+      },
+      {
+        spelling: "a $id naming 'SchemaField' on an anyOf",
+        schema: { type: 'object', properties: { val: titledAnyOf } },
+        named: { type: 'object', properties: { val: { ...titledAnyOf, $id: 'SchemaField' } } },
+        uiSchema: {},
+      },
+    ])('renders $spelling exactly as with no field named', ({ schema, named, uiSchema, props }) => {
+      const { node: unnamedNode } = createFormComponent({ schema, showErrorList: false, ...props });
+      const { node: namedNode } = createFormComponent({ schema: named, uiSchema, showErrorList: false, ...props });
+
+      expect(namedNode.innerHTML).toBe(unnamedNode.innerHTML);
     });
 
     const describedSchema: RJSFSchema = {

@@ -35,11 +35,13 @@ import {
   fieldPathToName,
   ITEMS_KEY,
   TranslatableString,
+  UI_FIELD_KEY,
 } from '@rjsf/utils';
 
 import useFieldView from '../../hooks/useFieldView.ts';
 import { EMPTY_UI_SCHEMA } from '../constants.ts';
 import { moveOfItems } from '../formState.ts';
+import { isSchemaFieldOwn, lookUpUiField, withoutNamedField } from './namedField.ts';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 
 /** A row's stable React `key`, and its `order`: when the row was added, counted across every array */
@@ -605,12 +607,8 @@ function ArrayFieldItemInner<
     handleRemoveItem,
     handleReorderItems,
   } = props;
-  const {
-    schemaUtils,
-    fields: { ArraySchemaField, SchemaField },
-    globalUiOptions,
-    globalFormOptions,
-  } = registry;
+  const { schemaUtils, fields, globalUiOptions, globalFormOptions } = registry;
+  const { ArraySchemaField, SchemaField } = fields;
   const itemSchema = useMemo(
     () => schemaUtils.retrieveSchema(rawItemSchema, itemData),
     [schemaUtils, rawItemSchema, itemData],
@@ -620,7 +618,18 @@ function ArrayFieldItemInner<
   const ItemSchemaField = ArraySchemaField || SchemaField;
   const readsFormData = useReadsFormData(ArrayFieldItem);
   const { ArrayFieldItemTemplate } = getTemplates<T[], S, F>(registry, uiOptions);
-  const displayLabel = schemaUtils.getDisplayLabel(itemSchema, itemUiSchema, globalUiOptions);
+  // Labelled as the item's `SchemaField` labels it, which reads a `ui:field` naming `SchemaField` as naming no field
+  const namesSchemaFieldOwn = isSchemaFieldOwn<T[], S, F>(
+    lookUpUiField<T[], S, F>(itemUiSchema?.[UI_FIELD_KEY], fields),
+    fields,
+  );
+  const displayLabel = schemaUtils.getDisplayLabel(
+    itemSchema,
+    itemUiSchema && namesSchemaFieldOwn
+      ? withoutNamedField<T[], S, F>(itemUiSchema, globalUiOptions?.field)
+      : itemUiSchema,
+    globalUiOptions,
+  );
   const { description } = getUiOptions(itemUiSchema);
   const hasDescription = !!description || !!itemSchema.description;
   const { orderable, removable, copyable } = itemButtonOptions(uiOptions);
