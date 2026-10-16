@@ -148,6 +148,51 @@ describe('transformChange', () => {
     ]);
   });
 
+  describe.each(['oneOf', 'anyOf'] as const)('an %s option switch', (keyword) => {
+    interface Status {
+      by?: string;
+      reason?: string;
+      until?: string;
+    }
+    interface Decision {
+      status?: Status;
+    }
+    // Each option requires its own property, so the data alone says which option it fits
+    const decisionSchema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        status: {
+          [keyword]: [
+            { title: 'Approved', type: 'object', properties: { by: { type: 'string' } }, required: ['by'] },
+            { title: 'Rejected', type: 'object', properties: { reason: { type: 'string' } }, required: ['reason'] },
+            { title: 'Deferred', type: 'object', properties: { until: { type: 'string' } }, required: ['until'] },
+          ],
+        },
+      },
+    };
+    const selector = (node: ParentNode) => elementOf(node, `#root_status__${keyword.toLowerCase()}_select`);
+
+    it('refused, returns the selector to the option the data fits', async () => {
+      const transformChange = vi.fn<NonNullable<FormProps<Decision>['transformChange']>>((_next, previous) => previous);
+      const ref = createFormRef<Decision>();
+      const { node, reported } = renderForm<Decision>({
+        ref,
+        schema: decisionSchema,
+        initialFormData: { status: { by: 'me' } },
+        transformChange,
+      });
+
+      await user.selectOptions(selector(node), 'Rejected');
+
+      expect(transformChange).toHaveBeenCalled();
+      expect(selector(node)).toHaveValue('0');
+      expect(node.querySelector('#root_status_by')).toHaveValue('me');
+      expect(node.querySelector('#root_status_reason')).not.toBeInTheDocument();
+      expect(handleOf(ref).getFormData()).toEqual({ status: { by: 'me' } });
+      expect(reported.filter(({ formData }) => formData.status?.by !== 'me')).toEqual([]);
+    });
+  });
+
   describe('sibling renders', () => {
     const onFieldTemplateRender = vi.fn<(id: string) => void>();
     function CountingFieldTemplate(props: FieldTemplateProps) {
