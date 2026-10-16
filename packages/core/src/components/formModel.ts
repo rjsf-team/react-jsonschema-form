@@ -447,7 +447,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       isIgnoredFormDataWarned = true;
       // oxlint-disable-next-line no-console
       console.warn(
-        "Form: `formData` changed after the form mounted and was ignored. Like `initialFormData`, it seeds the form on mount and on `reset()` only, and the form owns its data after that. To show other data, remount the form with a `key`, or call `setFieldValue('', data)` on its ref.",
+        "Form: `formData` changed after the form mounted and was ignored. Like `initialFormData`, it seeds the form on mount and on `reset()` only, and the form owns its data after that. To show other data, remount the form with a `key`, or call `setFieldValue('', data)` on its ref. See https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#show-other-data-after-mount",
       );
     },
     handle,
