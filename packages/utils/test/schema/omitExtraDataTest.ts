@@ -1825,5 +1825,26 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         expect(formData.route.mux.p2s).toHaveLength(1);
       });
     });
+
+    describe('own prototype-named keys', () => {
+      it('keeps an own toString string and drops an extra __proto__ key', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { toString: { type: 'string' }, a: { type: 'string' } },
+        };
+        const formData = JSON.parse('{"__proto__":{"x":1},"toString":"t","a":"v"}');
+        const result = omitExtraData({ validator: testValidator }, schema, schema, formData);
+        expect(Object.getPrototypeOf(result)).toBe(Object.prototype);
+        expect(Object.hasOwn(result, '__proto__')).toBe(false);
+        expect(Object.getOwnPropertyDescriptor(result, 'toString')?.value).toBe('t');
+        expect(result.a).toBe('v');
+      });
+
+      it('does not read an inherited member as a schema property', () => {
+        const schema: RJSFSchema = { type: 'object', properties: { a: { type: 'string' } } };
+        const result = omitExtraData({ validator: testValidator }, schema, schema, { a: 'v', toString: 't' });
+        expect(result).toEqual({ a: 'v' });
+      });
+    });
   });
 }
