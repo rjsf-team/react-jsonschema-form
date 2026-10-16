@@ -746,9 +746,9 @@ export const IDENTIFIER_KEYWORDS: string[] = ['$id', '$anchor', '$dynamicAnchor'
 export const CONTAINER_KEYWORDS: string[] = ['$defs', 'definitions'];
 
 /** Every keyword that constrains the value, for the reasons the first two lists above give. They are only ever
- * consulted together, and once per property key, so they are consulted as one.
+ * consulted together, once per key a schema holds, so they are consulted as one.
  */
-const CONSTRAINING_KEYWORDS = new Set<string>([...VALUE_KEYWORDS, ...SUBSCHEMA_KEYWORDS]);
+export const CONSTRAINING_KEYWORDS = new Set<string>([...VALUE_KEYWORDS, ...SUBSCHEMA_KEYWORDS]);
 
 /** The keywords no stub carries, whatever the stub keeps of the rest, for the reasons the two lists above give: both
  * reasons are about building a stub once per property key, not about what the stub then says of the value.

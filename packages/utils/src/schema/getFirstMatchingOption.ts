@@ -1,15 +1,16 @@
 import { CONST_KEY, ENUM_KEY } from '../constants.ts';
+import guessType from '../guessType.ts';
 import { isSchemaObject } from '../isObject.ts';
 import { getByPath } from '../pathUtils.ts';
 import type { FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
-import type { AdoptedSchema } from './graph/parseSchemaGraph.ts';
+import type { AdoptedSchema, SchemaNode } from './graph/parseSchemaGraph.ts';
 import {
   declaredProperties,
   declaredPropertyTarget,
   holdsDeclaredKey,
   scoringTarget,
 } from './graph/validationTargets.ts';
-import { nodeOfSchema } from './retrieveSchema.ts';
+import { CONSTRAINING_KEYWORDS, nodeOfSchema } from './retrieveSchema.ts';
 
 /** An option as matching reads it: the node it stands for, or a boolean option given as one */
 type OptionNode<S extends StrictRJSFSchema = RJSFSchema> = AdoptedSchema<S> | boolean;
@@ -24,10 +25,54 @@ export function optionNodeOf<S extends StrictRJSFSchema = RJSFSchema>(option: un
   return isSchemaObject<S>(option) ? nodeOfSchema<S>(option, rootSchema) : Boolean(option);
 }
 
+/** Returns whether `type`, a schema's `type` keyword, allows `value`, as a schema without one does
+ *
+ * @param type - The `type` keyword, if any
+ * @param value - The value
+ * @returns - Whether the keyword allows the value
+ */
+function typeAllows(type: unknown, value: unknown): boolean {
+  if (type === undefined) {
+    return true;
+  }
+  const valueType = guessType(value);
+  return (Array.isArray(type) ? type : [type]).some(
+    (entry) => entry === valueType || (entry === 'integer' && Number.isInteger(value)),
+  );
+}
+
+/** Returns the values a discriminator declaration says the property holds by its `const` or `enum`. A declaration
+ * stating neither gives an empty list when it cannot reject `value`, holding no keyword that constrains a value but a
+ * `type` allowing it, and undefined otherwise, since only the validator can check what it says
+ *
+ * @param node - The declaration's node
+ * @param value - The data's value for the property
+ * @returns - The lists of values the declaration states
+ */
+function statedValues<S extends StrictRJSFSchema = RJSFSchema>(
+  node: SchemaNode<S>,
+  value: unknown,
+): (readonly unknown[])[] | undefined {
+  if (node.kind !== 'schema' || node.raw.type === 'object' || node.raw.type === 'array') {
+    return undefined;
+  }
+  const { raw } = node;
+  if (CONST_KEY in raw) {
+    return [[raw[CONST_KEY]]];
+  }
+  const enumValues = raw[ENUM_KEY];
+  if (Array.isArray(enumValues)) {
+    return [enumValues];
+  }
+  const constrains = Object.keys(raw).some((key) => CONSTRAINING_KEYWORDS.has(key));
+  return constrains || !typeAllows(raw.type, value) ? undefined : [];
+}
+
 /** Returns the index of the first option whose discriminator property says by its `const` or `enum` alone that it holds
- * the data's value for `discriminatorField`, which needs no validator: each declaration `declaredProperties()` finds
- * that states a `const` or `enum` holds the value, and at least one states one. A declaration that is a boolean or of
- * type `object` or `array` says nothing this way.
+ * the data's value for `discriminatorField`, which needs no validator: at least one declaration `declaredProperties()`
+ * finds states a `const` or `enum`, each one that does holds the value, and every other one holds no keyword
+ * constraining a value but a `type` allowing it. An option with a declaration that is a boolean, is of type `object` or
+ * `array`, or constrains the value otherwise, such as by a `pattern`, a `$ref` or an `allOf`, is left for the validator.
  *
  * @param options - The options
  * @param formData - The data being matched
@@ -50,18 +95,15 @@ export function simpleDiscriminatorMatch<S extends StrictRJSFSchema = RJSFSchema
     if (typeof option === 'boolean') {
       return false;
     }
-    const nodes = declaredProperties(option.graph, option.node, discriminatorField).map((id) => option.graph.node(id));
-    const raws = nodes.flatMap((node) =>
-      node.kind === 'schema' && node.raw.type !== 'object' && node.raw.type !== 'array' ? [node.raw] : [],
-    );
-    const stated: (readonly unknown[])[] = raws.flatMap((raw) => {
-      if (CONST_KEY in raw) {
-        return [[raw[CONST_KEY]]];
+    const stated: (readonly unknown[])[] = [];
+    for (const id of declaredProperties(option.graph, option.node, discriminatorField)) {
+      const values = statedValues<S>(option.graph.node(id), value);
+      if (values === undefined) {
+        return false;
       }
-      const enumValues = raw[ENUM_KEY];
-      return Array.isArray(enumValues) ? [enumValues] : [];
-    });
-    return raws.length === nodes.length && stated.length > 0 && stated.every((values) => values.includes(value));
+      stated.push(...values);
+    }
+    return stated.length > 0 && stated.every((values) => values.includes(value));
   });
   return index < 0 ? undefined : index;
 }
