@@ -292,7 +292,8 @@ const RenderNothing = () => null;
  * @param xxxOfKey - The keyword the `schema`'s options are read from, if it has any
  * @param isSelectSchema - Whether the `schema` is an `enum` or a `oneOf`/`anyOf` that represents a select
  * @param hasConstantOptions - Whether that select offers at least one option, see `isConstantSelect()`
- * @returns - The `Field` component that renders the actual field data, whether that component is the named field,
+ * @returns - The `Field` component that renders the actual field data, whether that component is a named field written
+ *            for the schema, which `FallbackField` is not,
  *            whether it renders the `schema`'s `anyOf`/`oneOf` options itself, and whether the `schema` has options for `SchemaFieldRender` to render an
  *            option selector of. Both flags are decided here so that this function and `SchemaFieldRender` read the
  *            same answers, and `SchemaFieldRender` reads them together: when the fallback UI has the schema it renders
@@ -436,7 +437,7 @@ function getFieldComponent<
 
   return {
     FieldComponent: yieldsToOptions && FieldComponent !== fields.ObjectField ? RenderNothing : FieldComponent,
-    rendersNamedField: namedField !== undefined && !yieldsToOptions,
+    rendersNamedField: namedField !== undefined && !isFallbackField && !yieldsToOptions,
     // `yieldsToOptions` requires `!rendersOptionsItself`, so the flags read the same whether or not the field is withheld
     rendersOptionsItself,
     rendersOptionSelector,
@@ -519,11 +520,13 @@ function SchemaFieldRender<
           globalFormOptions,
         );
   }, [isRefCycle, namedAbove, ownUiSchema, globalUiOptions, schema, fields, fieldPath, globalFormOptions]);
-  // `SchemaField` named for its own data is the field that renders it with no field named, so it is rendered that way,
-  // and everything reading this field's `uiSchema` reads it as naming no field: the label `getDisplayLabel()` would
-  // otherwise leave to the named field, and the `anyOf`/`oneOf` options, whose fields would name it again
+  // `SchemaField` named for its own data is the field that renders it with no field named, so it is rendered that way.
+  // `FallbackField` still renders, as it does for a schema whose type sends it there, within this field's template.
+  // For either, everything reading this field's `uiSchema` reads it as naming no field: the label `getDisplayLabel()`
+  // would otherwise leave to the named field, the value field `FallbackField` renders, and the `anyOf`/`oneOf` options,
+  // whose fields would name it again
   const namesSchemaFieldOwn = isSchemaFieldOwn<T, S, F>(uiField?.namedField, fields);
-  const namedField = namesSchemaFieldOwn ? undefined : uiField?.namedField;
+  const namedField = uiField?.namedField === fields.SchemaField ? undefined : uiField?.namedField;
   const resolvedUiSchema = useMemo(
     () =>
       namedAbove || namesSchemaFieldOwn ? withoutNamedField<T, S, F>(ownUiSchema, globalUiOptions?.field) : ownUiSchema,

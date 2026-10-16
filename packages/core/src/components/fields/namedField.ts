@@ -18,18 +18,20 @@ export function lookUpUiField<
   return typeof field === 'string' ? getByPath(fields, field) : field;
 }
 
-/** Whether a named field is `SchemaField` itself, which renders the schema the way it is rendered with no field named
+/** Whether a named field is one `SchemaField` renders the data through when no field is named: `SchemaField` itself,
+ * or `FallbackField`, which it renders for a type no other field takes. Neither is a field written for the schema, so
+ * naming one leaves the label and the field's frame as they are when the schema's type picks the field
  *
  * @param field - What the `ui:field`, `ui:globalOptions.field` or `$id` refers to
  * @param fields - The registered fields
- * @returns - Whether the field is `SchemaField`
+ * @returns - Whether the field is `SchemaField` or `FallbackField`
  */
 export function isSchemaFieldOwn<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(field: unknown, fields: Registry<T, S, F>['fields']): boolean {
-  return field === fields.SchemaField;
+  return field === fields.SchemaField || field === fields.FallbackField;
 }
 
 /** Returns `uiSchema` with the field it names shadowed in each spelling, for what renders at the same data path as the
