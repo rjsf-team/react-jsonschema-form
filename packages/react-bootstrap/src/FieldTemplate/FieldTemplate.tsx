@@ -3,6 +3,7 @@ import {
   getTemplates,
   getUiOptions,
   hasTemplateErrors,
+  templateDrawsDescription,
   templateDrawsLabel,
   templateLabelFor,
   templateMarksRequired,
@@ -83,7 +84,7 @@ export default function FieldTemplate<
           </Form.Label>
         )}
         {children}
-        {rawDescription && !leavesPartsToCheckbox && (
+        {templateDrawsDescription<T, S, F>(props) && rawDescription && !leavesPartsToCheckbox && (
           <Form.Text as='div' className={hasError ? 'text-danger' : 'text-muted'}>
             {description}
           </Form.Text>
