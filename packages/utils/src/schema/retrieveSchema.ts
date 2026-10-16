@@ -39,6 +39,7 @@ import buildPlan, {
   conjunctionOf,
   refDefinition,
   schemaFrom,
+  schemaOfBoolean,
   seedsAt,
   tupleSeeds,
   withoutKeys,
@@ -562,7 +563,7 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
   if (isSchemaObject<S>(selected)) {
     option = retrieveSchema<unknown, S, F>(context, selected, graph.rawRoot, data);
   } else if (selected !== undefined) {
-    option = schemaFrom(graph.rawRoot, selected ? {} : { not: {} });
+    option = schemaOfBoolean(Boolean(selected), graph.rawRoot);
   }
   // An option's own extra keys are stubbed with the field offering it, which knows which option is selected
   const fieldSchema = option === undefined ? merged : withOptionExtraKeys<S>(merged, option);

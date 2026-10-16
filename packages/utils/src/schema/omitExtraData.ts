@@ -301,7 +301,7 @@ export default function omitExtraData<
     }
     const discriminator = getDiscriminatorFieldFromSchema<S>(childSchema);
     const asOption = (option: unknown): S =>
-      isSchemaObject<S>(option) ? option : schemaFrom(rootSchema, option ? {} : { not: {} });
+      isSchemaObject<S>(option) ? option : schemaOfBoolean(Boolean(option), rootSchema);
     let winning: unknown;
     if (fieldState) {
       const options = oneOf.map(asOption);
