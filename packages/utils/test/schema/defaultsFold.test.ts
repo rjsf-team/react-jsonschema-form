@@ -629,6 +629,39 @@ describe('getDefaultFormState() reading $ref, branches and extra keys as the for
     },
   );
 
+  it.each([undefined, 'https://json-schema.org/draft/2019-09/schema', draft2020])(
+    'under %s, fills the then of an if beside a $ref under the default allOf behavior, as the form renders it',
+    ($schema) => {
+      const dialect = $schema === undefined ? {} : { $schema };
+      const Base: RJSFSchema = { type: 'object', properties: { k: { type: 'string', default: 'x' } } };
+      const condition: RJSFSchema = {
+        if: { properties: { k: { const: 'x' } } },
+        then: { properties: { t: { type: 'string', default: 't' } } },
+      };
+      const inPlace: RJSFSchema = {
+        ...dialect,
+        $defs: { Base, T: true },
+        type: 'object',
+        properties: { p: { $ref: '#/$defs/Base', ...condition }, b: { $ref: '#/$defs/T', minProperties: 0 } },
+      };
+      const reached: RJSFSchema = {
+        ...dialect,
+        $defs: { Base, Conditioned: { $ref: '#/$defs/Base', ...condition } },
+        type: 'object',
+        properties: { p: { $ref: '#/$defs/Conditioned' } },
+      };
+      const inherited: RJSFSchema = {
+        ...dialect,
+        $defs: { Conditioned: { ...Base, ...condition } },
+        type: 'object',
+        properties: { p: { $ref: '#/$defs/Conditioned', required: ['k'] } },
+      };
+      expect(defaultsOf(inPlace)).toEqual({ p: { k: 'x', t: 't' } });
+      expect(defaultsOf(reached)).toEqual({ p: { k: 'x', t: 't' } });
+      expect(defaultsOf(inherited)).toEqual({ p: { k: 'x', t: 't' } });
+    },
+  );
+
   it('resolves a $ref to an $anchor, and one under a nested $id with a path segment against that $id', () => {
     const target: RJSFSchema = { type: 'object', properties: { v: { type: 'string', default: 'v' } } };
     const anchored = { ...target, $anchor: 'nodeA' };

@@ -370,6 +370,21 @@ function ownProviders<S extends StrictRJSFSchema>(
   return providers;
 }
 
+/** Whether the schema the node `id` reads as declares an `if` of its own, along its chain of references, the members
+ * of a `conjunction` counting as its own keywords, since they are the keywords written beside the `$ref`
+ */
+function declaresCondition<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId): boolean {
+  const node = graph.node(id);
+  if (node.kind !== 'schema') {
+    return false;
+  }
+  const conjunction = asTarget(graph, node);
+  if (conjunction !== node) {
+    return graph.subschemas(conjunction.id, ALL_OF_KEY).some(([, member]) => declaresCondition(graph, member));
+  }
+  return Object.hasOwn(node.raw, IF_KEY) || (node.ref !== undefined && declaresCondition(graph, node.ref));
+}
+
 /** The definitions `refDefinition()` read, by graph and node */
 const definitions = new KeyedMemo<object>();
 
@@ -493,7 +508,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       return { schema: booleanSchema(node, this.graph.rawRoot), chains: [] };
     }
     const keywords = this.flatten(asTarget(this.graph, node), refPath);
-    if (top && this.policy.allOf === 'if' && keywords.has(IF_KEY)) {
+    if (top && this.policy.allOf === 'if' && (keywords.has(IF_KEY) || declaresCondition(this.graph, id))) {
       this.mergeAllOf = true;
     }
     const schema = keywordSchema(node.raw, keywords);
