@@ -14,7 +14,7 @@ import deepEquals from '../deepEquals.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getOptionUiSchema from '../getOptionUiSchema.ts';
 import getPropertySchema from '../getPropertySchema.ts';
-import getRenderedOptionSchema, { rendersOwnFieldBesideOption } from '../getRenderedOptionSchema.ts';
+import getRenderedOptionSchema from '../getRenderedOptionSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
 import getSchemaTypeForValue from '../getSchemaTypeForValue.ts';
 import getStaticItemsUiSchema from '../getStaticItemsUiSchema.ts';
@@ -33,6 +33,7 @@ import mergeObjects from '../mergeObjects.ts';
 import mergeSchemas from '../mergeSchemas.ts';
 import optionsList from '../optionsList.ts';
 import { getByPath } from '../pathUtils.ts';
+import rendersOwnFieldBesideOption from '../rendersOwnFieldBesideOption.ts';
 import resolveUiSchema from '../resolveUiSchema.ts';
 import toConstant from '../toConstant.ts';
 import type {

@@ -11,7 +11,7 @@ import { fieldPathFromList } from '../fieldPath.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getItemUiSchemaForItem from '../getItemUiSchemaForItem.ts';
 import getOptionUiSchema from '../getOptionUiSchema.ts';
-import getRenderedOptionSchema, { rendersOwnFieldBesideOption } from '../getRenderedOptionSchema.ts';
+import getRenderedOptionSchema from '../getRenderedOptionSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
 import getSchemaTypeForValue from '../getSchemaTypeForValue.ts';
 import getUiOptions from '../getUiOptions.ts';
@@ -23,6 +23,7 @@ import isObject from '../isObject.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
 import mergeSchemas from '../mergeSchemas.ts';
 import { getByPath } from '../pathUtils.ts';
+import rendersOwnFieldBesideOption from '../rendersOwnFieldBesideOption.ts';
 import resolveUiSchema from '../resolveUiSchema.ts';
 import { isOptionalDataControlsType } from '../shouldRenderOptionalField.ts';
 import type {

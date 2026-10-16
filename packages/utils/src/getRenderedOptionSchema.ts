@@ -15,9 +15,9 @@ import {
   THEN_KEY,
   UNEVALUATED_PROPERTIES_KEY,
 } from './constants.ts';
-import getSchemaType from './getSchemaType.ts';
 import isObject from './isObject.ts';
 import mergeSchemas from './mergeSchemas.ts';
+import rendersOwnFieldBesideOption from './rendersOwnFieldBesideOption.ts';
 import { withoutKeys } from './schema/graph/mergePlan.ts';
 import { CONTAINER_KEYWORDS, IDENTIFIER_KEYWORDS } from './schema/retrieveSchema.ts';
 import { isSubschemaKeyword, keywordShape } from './schemaUri.ts';
@@ -223,19 +223,6 @@ function meetSubschema(parent: unknown, option: unknown): unknown {
   return Object.hasOwn(parent, REF_KEY) || Object.hasOwn(option, REF_KEY)
     ? { [ALL_OF_KEY]: [parent, option] }
     : meetSchemas(parent, option);
-}
-
-/** Whether the field of `schema` renders a field of its own beside its selected `anyOf`/`oneOf` option, as an object's
- * `ObjectField` does (see `getFieldComponent()` in `SchemaField`). Such a field shows its own properties and other
- * keywords, so its option is read merged with the whole field; every other field leaves the whole field to the option
- * as `getRenderedOptionSchema()` renders it. Everything that picks between the two reads this, so that none of them
- * renders one option and seeds or walks another.
- *
- * @param schema - The schema holding the options
- * @returns - True when the field renders a field of its own beside the option
- */
-export function rendersOwnFieldBesideOption<S extends StrictRJSFSchema = RJSFSchema>(schema: S): boolean {
-  return getSchemaType<S>(schema) === 'object';
 }
 
 /** Returns the schema an `anyOf`/`oneOf` option of `parent` is rendered with, the one place that decides what an option
