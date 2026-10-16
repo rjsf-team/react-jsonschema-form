@@ -394,6 +394,18 @@ function declaredKeys<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: Nod
   return declaredKeysMemo.get([graph, id], () => readDeclaredKeys(graph, id));
 }
 
+/** Returns `pattern` compiled, or nothing for one no flag compiles. Matching asks of each option whether it fits the
+ * data, and a validator reads an option holding such a pattern as one that fits nothing, so the pattern names no key
+ * rather than taking every option match down with it.
+ */
+function compiledPattern(pattern: string): RegExp[] {
+  try {
+    return [patternRegExp(pattern)];
+  } catch {
+    return [];
+  }
+}
+
 function readDeclaredKeys<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId): DeclaredKeys {
   const scope = scopeOf(graph, id).flatMap((node) =>
     isObject(node.raw.properties) ? [{ node, declared: Object.keys(node.raw.properties) }] : [],
@@ -407,7 +419,7 @@ function readDeclaredKeys<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id:
   }
   const patterns = scope
     .flatMap(({ node }) => graph.subschemas(node.id, PATTERN_PROPERTIES_KEY))
-    .map(([pattern]) => patternRegExp(pattern));
+    .flatMap(([pattern]) => compiledPattern(pattern));
   return { names, patterns };
 }
 
