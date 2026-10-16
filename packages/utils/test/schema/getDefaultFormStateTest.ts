@@ -6158,7 +6158,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             dependencyCases.map((dependencyCase) => ({ ...placement, ...dependencyCase })),
           ),
         )(
-          'should populate the defaults of $entry in a dependencies entry in $where once its property has a value, whatever emptyObjectFields is',
+          'should populate the defaults of $entry in a dependencies entry in $where once its property has a value, even when emptyObjectFields is skipEmptyDefaults',
           ({ wrap, wrapData, dependency }) => {
             const dependentSchema = (animal: RJSFSchema): RJSFSchema =>
               wrap({ type: 'object', properties: { animal }, dependencies: { animal: dependency } });
@@ -6173,6 +6173,9 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             expect(
               getDefaults(defaultedSchema, { allOf: 'skipDefaults', emptyObjectFields: 'skipEmptyDefaults' }),
             ).toEqual(wrapData({ animal: 'Cat', food: 'meat' }));
+            expect(getDefaults(defaultedSchema, { allOf: 'skipDefaults', emptyObjectFields: 'skipDefaults' })).toEqual(
+              formData,
+            );
             expect(getDefaults(noDefaultSchema, { allOf: 'skipDefaults' })).toEqual(formData);
           },
         );
