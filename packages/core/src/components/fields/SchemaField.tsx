@@ -332,8 +332,8 @@ const RenderNothing = () => null;
  * @param xxxOfKey - The keyword the `schema`'s options are read from, if it has any
  * @param isSelectSchema - Whether the `schema` is an `enum` or a `oneOf`/`anyOf` that represents a select
  * @param hasConstantOptions - Whether that select offers at least one option, see `isConstantSelect()`
- * @returns - The `Field` component that renders the actual field data, whether that component renders the `schema`'s
- *            `anyOf`/`oneOf` options itself, and whether the `schema` has options for `SchemaFieldRender` to render an
+ * @returns - The `Field` component that renders the actual field data, whether that component is the named field,
+ *            whether it renders the `schema`'s `anyOf`/`oneOf` options itself, and whether the `schema` has options for `SchemaFieldRender` to render an
  *            option selector of. Both flags are decided here so that this function and `SchemaFieldRender` read the
  *            same answers, and `SchemaFieldRender` reads them together: when the fallback UI has the schema it renders
  *            those options itself, within the value field for the type it has pinned, so the selector it would render
@@ -354,6 +354,7 @@ function getFieldComponent<
   hasConstantOptions: boolean,
 ): {
   FieldComponent: Field<T, S, F>;
+  rendersNamedField: boolean;
   rendersOptionsItself: boolean;
   rendersOptionSelector: boolean;
 } {
@@ -475,6 +476,7 @@ function getFieldComponent<
 
   return {
     FieldComponent: yieldsToOptions && FieldComponent !== fields.ObjectField ? RenderNothing : FieldComponent,
+    rendersNamedField: namedField !== undefined && !yieldsToOptions,
     // `yieldsToOptions` requires `!rendersOptionsItself`, so the flags read the same whether or not the field is withheld
     rendersOptionsItself,
     rendersOptionSelector,
@@ -590,7 +592,6 @@ function SchemaFieldRender<
           globalFormOptions,
         );
   }, [isRefCycle, namedAbove, ownUiOptions, globalUiOptions, schema, fields, fieldPath, globalFormOptions]);
-  const namesField = uiField?.namedField !== undefined;
   const fieldToRender =
     uiField &&
     getFieldComponent<T, S, F>(
@@ -603,6 +604,15 @@ function SchemaFieldRender<
       isSelectSchema,
       hasConstantOptions,
     );
+  // A named field that yields to the options renders nothing, so it claims no data path and the options may each apply
+  // a field their own uiSchema names. Those rendered against this field's `uiSchema`, which is every option without one
+  // of its own, would otherwise name the declined field again. Memoized because `MultiSchemaField` derives its
+  // per-option `uiSchema` array from this one and hands that array to a `useCallback`
+  const declinesNamedField = uiField?.namedField !== undefined && fieldToRender?.rendersNamedField === false;
+  const optionsUiSchema = useMemo(
+    () => (declinesNamedField ? withoutNamedField<T, S, F>(uiSchema, globalUiOptions?.field) : uiSchema),
+    [declinesNamedField, uiSchema, globalUiOptions],
+  );
   // The fallback UI renders the options itself, against the schema with its type pinned to the one its selector is on,
   // so rendering them here as well would show the same option selector twice — once for the union and once for the
   // type in effect — and only the inner one would follow the type the user chose
@@ -677,7 +687,7 @@ function SchemaFieldRender<
       </RawFormDataContext>,
     );
   }
-  const { FieldComponent, rendersOptionSelector } = fieldToRender;
+  const { FieldComponent, rendersNamedField, rendersOptionSelector } = fieldToRender;
 
   const { FieldTemplate, DescriptionFieldTemplate, FieldHelpTemplate, FieldErrorTemplate } = getTemplates<T, S, F>(
     registry,
@@ -878,7 +888,7 @@ function SchemaFieldRender<
   // the data. The named-field context is provided whether or not a field is named here, since adding or removing a
   // provider would remount everything below it
   return withUiState(
-    <NamedFieldContext value={namesField ? fieldPath : pathNamedAbove}>
+    <NamedFieldContext value={rendersNamedField ? fieldPath : pathNamedAbove}>
       <RawFormDataContext value={undefined}>
         <FieldTemplate {...fieldProps}>
           <>
@@ -902,7 +912,7 @@ function SchemaFieldRender<
                     registry={registry}
                     required={effectiveRequired}
                     schema={schema}
-                    uiSchema={uiSchema}
+                    uiSchema={optionsUiSchema}
                   />
                 </RawFormDataContext>
               </ShownOptionContext>
