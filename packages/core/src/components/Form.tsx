@@ -376,8 +376,10 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
     model.attach();
     return model.detach;
   }, [model]);
-  // After every commit of a shown form, which may be the one a queued `submit()` waits for
+  // After every commit of a shown form, which may be the one a queued `submit()` waits for, or one that answered moves
+  // the form proposed, which `committed()` could not render for
   useLayoutEffect(() => {
+    model.uiState.notifyRestored();
     model.submitWhenRendered();
   });
 

@@ -235,6 +235,22 @@ export function isPathPrefix(prefix: FieldPathList, path: FieldPathList): boolea
   return prefix.length <= path.length && prefix.every((segment, i) => String(segment) === String(path[i]));
 }
 
+/** The selections and expansions of a form at one moment */
+interface UiStateSnapshot {
+  selections: Map<FieldPath, Map<string, OptionSelection>>;
+  expanded: Set<FieldPath>;
+}
+
+/** Moves a parent-owned form proposed: the containers whose keys moved, each with the data the form rendered there
+ * before, and the state from before the moves. The parent declines them by rendering that data again. `moved` is the
+ * state after the moves, kept once a commit declined them, for a parent that renders the moved data later
+ */
+interface ProposedMoves {
+  containers: { path: FieldPathList; before: unknown }[];
+  unmoved: UiStateSnapshot;
+  moved?: UiStateSnapshot;
+}
+
 /** The state of a form that is about what it shows rather than the data: the option selected for each option list, by
  * the path of the field offering it and the list, and which collapsed `$ref` cycles are expanded, by path. It lives as
  * long as the form, so a field that unmounts and mounts again finds its selection, and follows the moves of array items
@@ -245,8 +261,27 @@ export function createUiState() {
   let selections = new Map<FieldPath, Map<string, OptionSelection>>();
   let expanded = new Set<FieldPath>();
   let picks = 0;
+  // The moves a parent-owned form proposed, until a commit answers them, see `move()`
+  let proposedMoves: ProposedMoves | undefined;
+  // Whether a commit restored the state of before or after proposed moves, which the fields have yet to be told of
+  let isRestored = false;
   const listeners = new Set<() => void>();
   const notify = () => listeners.forEach((listener) => listener());
+  const save = (): UiStateSnapshot => ({
+    selections: new Map([...selections].map(([path, lists]) => [path, new Map(lists)])),
+    expanded: new Set(expanded),
+  });
+  const restore = (snapshot: UiStateSnapshot) => {
+    ({ selections, expanded } = snapshot);
+    isRestored = true;
+  };
+  // A choice the user makes once a commit declined the moves is made on the state the parent kept, so the moved state
+  // is not brought back over it
+  const endWaitForMoves = () => {
+    if (proposedMoves?.moved) {
+      proposedMoves = undefined;
+    }
+  };
   const selectionAt = (path: FieldPath, list: string) => selections.get(path)?.get(list);
   const setSelection = (path: FieldPath, list: string, selection: OptionSelection) => {
     const lists = selections.get(path);
@@ -266,6 +301,7 @@ export function createUiState() {
     selection: selectionAt,
     /** Selects option `index` of `list` at `path` for the field's `data` as it is shown */
     select: (path: FieldPath, list: string, index: number, data: unknown) => {
+      endWaitForMoves();
       picks += 1;
       setSelection(path, list, { index, pick: picks, holdsFor: [data], isReleased: false });
       notify();
@@ -294,6 +330,7 @@ export function createUiState() {
      * be matched
      */
     edited: (path: FieldPath, dataAt: (path: FieldPathList) => unknown, isProposal: boolean) => {
+      endWaitForMoves();
       const segments = fieldPathToList(path);
       for (const [at, lists] of selections) {
         const atSegments = fieldPathToList(at);
@@ -306,9 +343,26 @@ export function createUiState() {
       }
     },
     /** Records the data the form rendered at each selection's field: the one data the selection holds for from now on,
-     * or none where the field showed other data, matched again. It changes no option shown, so nothing is notified
+     * or none where the field showed other data, matched again. It answers the moves a parent-owned form proposed: the
+     * data from before them at every container they moved declines them, and restores the state from before them, and
+     * any other data takes them, the moved state coming back for a parent that renders the moved data only after a
+     * commit that declined it. Called as React commits, where nothing may render, so a restore is notified by
+     * `notifyRestored()` instead
      */
     rendered: (dataAt: (path: FieldPathList) => unknown) => {
+      if (proposedMoves) {
+        const { containers, unmoved, moved } = proposedMoves;
+        const isDeclined = containers.every(({ path, before }) => deepEquals(dataAt(path), before));
+        if (isDeclined && !moved) {
+          proposedMoves = { containers, unmoved, moved: save() };
+          restore(unmoved);
+        } else if (!isDeclined) {
+          proposedMoves = undefined;
+          if (moved) {
+            restore(moved);
+          }
+        }
+      }
       for (const [at, lists] of selections) {
         const data = dataAt(fieldPathToList(at));
         for (const [list, selection] of lists) {
@@ -319,14 +373,32 @@ export function createUiState() {
         }
       }
     },
+    /** Tells the fields of a restore `rendered()` made, from a layout Effect of the commit that made it */
+    notifyRestored: () => {
+      if (isRestored) {
+        isRestored = false;
+        notify();
+      }
+    },
     isExpanded: (path: FieldPath) => expanded.has(path),
     expand: (path: FieldPath) => {
+      endWaitForMoves();
       expanded.add(path);
       notify();
     },
-    /** Moves the selections and expansions under the array or object at `container` as its keys moved */
-    move: (container: FieldPath, newKeyOf: KeyMove) => {
+    /** Moves the selections and expansions under the array or object at `container` as its keys moved. For a move a
+     * parent-owned form proposes, `rendered` is the data the form rendered at `container`, which a commit answering the
+     * proposal compares to, see `rendered()`
+     */
+    move: (container: FieldPath, newKeyOf: KeyMove, rendered?: { data: unknown }) => {
       const containerSegments = fieldPathToList(container);
+      if (rendered) {
+        const proposed = proposedMoves && !proposedMoves.moved ? proposedMoves : { containers: [], unmoved: save() };
+        proposedMoves = {
+          ...proposed,
+          containers: [...proposed.containers, { path: containerSegments, before: rendered.data }],
+        };
+      }
       const movedSelections = new Map<FieldPath, Map<string, OptionSelection>>();
       for (const [path, lists] of selections) {
         const to = movedPath(path, containerSegments, newKeyOf);

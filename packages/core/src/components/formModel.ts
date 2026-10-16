@@ -389,7 +389,9 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     const move = announced?.fieldPath === fieldPath ? announced : undefined;
     if (move) {
       announced = undefined;
-      uiState.move(fieldPath, move.newOwnKeyOf ?? move.newKeyOf);
+      // A parent-owned form's move is a proposal, which the parent declines by rendering the data it rendered before
+      const rendered = start.isControlled ? { data: getAt(start.formData, fieldPathToList(fieldPath)) } : undefined;
+      uiState.move(fieldPath, move.newOwnKeyOf ?? move.newKeyOf, rendered);
     }
     const edit: PendingChange<T> = {
       newValue,

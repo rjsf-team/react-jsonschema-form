@@ -635,6 +635,70 @@ describe('option selection as form state', () => {
     expect(selectOf(node, 'root_1__anyof_select')).toHaveValue('1');
   });
 
+  it('keeps the selections of array items on their items when the parent declines the reorder', async () => {
+    const schema: RJSFSchema = {
+      type: 'array',
+      items: {
+        anyOf: [
+          { title: 'A', type: 'object', properties: { name: { type: 'string' } } },
+          { title: 'B', type: 'object', properties: { name: { type: 'string' }, more: { type: 'string' } } },
+        ],
+      },
+    };
+    const formData = [{ name: 'first' }, { name: 'second' }];
+    const { node, rerender } = createFormComponent({ schema, formData, onChange: () => undefined });
+    await user.selectOptions(selectOf(node, 'root_0__anyof_select'), 'B');
+
+    await user.click(node.querySelectorAll('.rjsf-array-item-move-down')[0]);
+
+    expect(node.querySelector('#root_0_name')).toHaveValue('first');
+    expect(selectOf(node, 'root_0__anyof_select')).toHaveValue('1');
+    expect(node.querySelector('#root_1_name')).toHaveValue('second');
+    expect(selectOf(node, 'root_1__anyof_select')).toHaveValue('0');
+
+    // A parent answering with its own rows again declines the reorder the same way
+    await user.click(node.querySelectorAll('.rjsf-array-item-move-down')[0]);
+    rerender({ schema, formData: [{ name: 'first' }, { name: 'second' }], onChange: () => undefined });
+
+    expect(selectOf(node, 'root_0__anyof_select')).toHaveValue('1');
+    expect(selectOf(node, 'root_1__anyof_select')).toHaveValue('0');
+  });
+
+  it('moves the selections of array items with the items a parent renders only after a commit without them', async () => {
+    const schema: RJSFSchema = {
+      type: 'array',
+      items: {
+        anyOf: [
+          { title: 'A', type: 'object', properties: { name: { type: 'string' } } },
+          { title: 'B', type: 'object', properties: { name: { type: 'string' }, more: { type: 'string' } } },
+        ],
+      },
+    };
+    function LateParent() {
+      const [formData, setFormData] = useState<unknown>([{ name: 'first' }, { name: 'second' }]);
+      return (
+        <Form
+          schema={schema}
+          validator={validator}
+          formData={formData}
+          // Applied after the commit that renders the proposal, as a parent awaiting something first does
+          onChange={(event) => {
+            queueMicrotask(() => setFormData(event.formData));
+          }}
+        />
+      );
+    }
+    const { container } = render(<LateParent />);
+    await user.selectOptions(selectOf(container, 'root_0__anyof_select'), 'B');
+
+    await user.click(container.querySelectorAll('.rjsf-array-item-move-down')[0]);
+
+    expect(container.querySelector('#root_0_name')).toHaveValue('second');
+    expect(selectOf(container, 'root_0__anyof_select')).toHaveValue('0');
+    expect(container.querySelector('#root_1_name')).toHaveValue('first');
+    expect(selectOf(container, 'root_1__anyof_select')).toHaveValue('1');
+  });
+
   it('drops the selection of an additional property with the property, so one added under its name starts over', async () => {
     const schema: RJSFSchema = {
       type: 'object',
@@ -1075,6 +1139,21 @@ describe('cycle expansion as form state', () => {
 
     expect(node.querySelector('#root_0_child-button')).toBeInTheDocument();
     expect(node.querySelector('#root_1_child_name')).toBeInTheDocument();
+  });
+
+  it('keeps an expansion on its array item when the parent declines the reorder', async () => {
+    const { node } = createFormComponent({
+      schema,
+      formData: [{ name: 'a' }, { name: 'b' }],
+      onChange: () => undefined,
+    });
+    await user.click(elementOf(node, '#root_0_child-button'));
+
+    await user.click(node.querySelectorAll('.rjsf-array-item-move-down')[0]);
+
+    expect(node.querySelector('#root_0_name')).toHaveValue('a');
+    expect(node.querySelector('#root_0_child_name')).toBeInTheDocument();
+    expect(node.querySelector('#root_1_child-button')).toBeInTheDocument();
   });
 
   it('keeps an expansion through a reset', async () => {
