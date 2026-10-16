@@ -559,7 +559,7 @@ function SchemaFieldRender<
   // field beside the option, whose extra keys are stubbed once, with the selected option: a key the option declares is
   // left to it, and any other is described by the object's extra-key keywords and the option's together
   const { uiState, isOwn: ownsUiState } = useUiState();
-  const { selectedOption, keepSelection, editOwnProperty } = useShownOption<T, S, F>(
+  const { selectedOption, selectOption, keepSelection, editOwnProperty } = useShownOption<T, S, F>(
     uiState,
     registry,
     fieldPath,
@@ -576,8 +576,8 @@ function SchemaFieldRender<
   );
   const hasOptions = xxxOfOptions !== undefined;
   const shownOption = useMemo(
-    () => (xxxOfOptions && selectedOption >= 0 ? { fieldPath, option: xxxOfOptions[selectedOption] } : undefined),
-    [xxxOfOptions, selectedOption, fieldPath],
+    () => (xxxOfOptions ? { fieldPath, options: xxxOfOptions, selectedOption, selectOption } : undefined),
+    [xxxOfOptions, selectedOption, selectOption, fieldPath],
   );
 
   /** Intermediary `onChange` handler for field components that will inject the `id` of the current field into the
@@ -843,26 +843,28 @@ function SchemaFieldRender<
         <>
           {field}
           {XxxOfField && (
-            <RawFormDataContext value={readsFormData ? XxxOfField : undefined}>
-              <XxxOfField
-                name={name}
-                disabled={disabled}
-                readonly={readonly}
-                hideError={hideError}
-                errorSchema={errorSchema}
-                formData={formData}
-                fieldPath={fieldPath}
-                id={fieldId}
-                onBlur={props.onBlur}
-                onChange={handleOptionFieldChange}
-                onFocus={props.onFocus}
-                options={xxxOfOptions}
-                registry={registry}
-                required={effectiveRequired}
-                schema={schema}
-                uiSchema={XxxOfUiSchema}
-              />
-            </RawFormDataContext>
+            <ShownOptionContext value={shownOption}>
+              <RawFormDataContext value={readsFormData ? XxxOfField : undefined}>
+                <XxxOfField
+                  name={name}
+                  disabled={disabled}
+                  readonly={readonly}
+                  hideError={hideError}
+                  errorSchema={errorSchema}
+                  formData={formData}
+                  fieldPath={fieldPath}
+                  id={fieldId}
+                  onBlur={props.onBlur}
+                  onChange={handleOptionFieldChange}
+                  onFocus={props.onFocus}
+                  options={xxxOfOptions}
+                  registry={registry}
+                  required={effectiveRequired}
+                  schema={schema}
+                  uiSchema={XxxOfUiSchema}
+                />
+              </RawFormDataContext>
+            </ShownOptionContext>
           )}
         </>
       </FieldTemplate>

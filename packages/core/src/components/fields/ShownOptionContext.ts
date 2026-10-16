@@ -1,15 +1,20 @@
 import { createContext, use } from 'react';
 import type { FieldPath } from '@rjsf/utils';
 
-/** The `anyOf`/`oneOf` option `SchemaField` shows beside the field it renders directly below this context */
+/** The `anyOf`/`oneOf` options `SchemaField` renders for the field at `fieldPath`, and the one it shows, see
+ * `useOptionSelection()`
+ */
 interface ShownOption {
   fieldPath: FieldPath;
-  option: unknown;
+  /** The options, each retrieved for the field's data */
+  options: readonly unknown[];
+  selectedOption: number;
+  selectOption: (index: number) => void;
 }
 
-/** Set by every `SchemaField` around its field component, undefined where it shows no option. A field reads the option
- * from here rather than working it out again, which would repeat every rule by which `SchemaField` decides whether the
- * options render, the `uiSchema`'s included
+/** Set by every `SchemaField` around its field component and its option field, undefined where it renders no options.
+ * A field reads the option from here rather than working it out again, which would repeat every rule by which
+ * `SchemaField` decides whether the options render, the `uiSchema`'s included
  */
 const ShownOptionContext = createContext<ShownOption | undefined>(undefined);
 
@@ -18,7 +23,7 @@ const ShownOptionContext = createContext<ShownOption | undefined>(undefined);
  */
 export function useShownOptionBeside(fieldPath: FieldPath): unknown {
   const shown = use(ShownOptionContext);
-  return shown?.fieldPath === fieldPath ? shown.option : undefined;
+  return shown?.fieldPath === fieldPath && shown.selectedOption >= 0 ? shown.options[shown.selectedOption] : undefined;
 }
 
 export default ShownOptionContext;
