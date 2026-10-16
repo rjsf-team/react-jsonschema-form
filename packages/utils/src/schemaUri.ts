@@ -39,18 +39,14 @@ const ENCODED_UNRESERVED = /%(?:2[de]|5f|7e|3\d|4[1-9a-f]|5[0-9a]|6[1-9a-f]|7[0-
 export function resolveUri(base: string, ref: string): string {
   try {
     const resolved = new URL(ref, new URL(base, SYNTHETIC_BASE));
-    if (resolved.protocol !== SYNTHETIC_PROTOCOL) {
-      // A non-special scheme keeps its host as written, but RFC 3986 §6.2.2.1 makes the host case-insensitive
-      resolved.hostname = resolved.hostname.toLowerCase();
-      return resolved.href;
+    const synthetic = resolved.protocol === SYNTHETIC_PROTOCOL;
+    if (synthetic && resolved.host === SYNTHETIC_HOST) {
+      const rooted = ref.startsWith('/') || base.startsWith('/');
+      return resolved.href.slice(rooted ? SYNTHETIC_ORIGIN.length : SYNTHETIC_BASE.length);
     }
-    if (resolved.host !== SYNTHETIC_HOST) {
-      // A non-special scheme keeps its host as written, but RFC 3986 §6.2.2.1 makes the host case-insensitive
-      resolved.hostname = resolved.hostname.toLowerCase();
-      return resolved.href.slice(SYNTHETIC_PROTOCOL.length);
-    }
-    const rooted = ref.startsWith('/') || base.startsWith('/');
-    return resolved.href.slice(rooted ? SYNTHETIC_ORIGIN.length : SYNTHETIC_BASE.length);
+    // A non-special scheme keeps its host as written, but RFC 3986 §6.2.2.1 makes the host case-insensitive
+    resolved.hostname = resolved.hostname.toLowerCase();
+    return synthetic ? resolved.href.slice(SYNTHETIC_PROTOCOL.length) : resolved.href;
   } catch {
     return ref;
   }
