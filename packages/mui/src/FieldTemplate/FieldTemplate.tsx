@@ -8,6 +8,7 @@ import {
   getTemplates,
   getUiOptions,
   hasTemplateErrors,
+  templateDrawsDescription,
   templateDrawsLabel,
   templateDrawsPlannedLabel,
   templateLabelFor,
@@ -117,7 +118,7 @@ export default function FieldTemplate<
           </FormLabel>
         )}
         {children}
-        {!leavesPartsToCheckbox && rawDescription ? (
+        {!leavesPartsToCheckbox && templateDrawsDescription<T, S, F>(props) && rawDescription ? (
           <Typography variant='caption' color='textSecondary' {...muiSlotProps?.fieldTypography}>
             {description}
           </Typography>
