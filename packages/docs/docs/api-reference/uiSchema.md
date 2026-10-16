@@ -174,6 +174,8 @@ See [Custom Widgets and Fields](../advanced-customization/custom-widgets-fields.
 
 A field's own `ui:field` comes first, then `ui:globalOptions.field`, then a field registered under the schema's [`$id`](../advanced-customization/custom-widgets-fields.md#custom-field-by-id).
 The field they name is applied once per data path: a `SchemaField` the named field renders for its own data, and the selected `anyOf`/`oneOf` option, render as though no field were named, the option's own `ui:field` or `$id` included.
+The `SchemaField` the named field renders leaves out what the field's own `SchemaField` already rendered around it — the label, description, help, extra-key row and `anyOf`/`oneOf` option selector — so each renders once.
+A `ui:field` leaves the label to the field it names, so that `SchemaField` renders the label, along with the description a theme renders beside it; `ui:field: 'SchemaField'` names the default field, whose label renders as though no field were named.
 
 ### `ui:fieldReplacesAnyOrOneOf`
 
