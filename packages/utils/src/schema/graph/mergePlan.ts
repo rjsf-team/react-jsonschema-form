@@ -389,13 +389,12 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     // Several seeds are merged as the `allOf` of them all, which is how a property is merged with the patterns its name
     // matches, so a `customMergeAllOf` is handed them as it is handed every other conjunction
     const merged = rest.length === 0 ? first : this.conjoin(empty, [first, ...rest]);
-    const set = new Set(this.entries.map(({ node }) => node));
     return {
       graph: this.graph,
       seeds,
       entries: this.entries,
-      set,
-      setKey: [...set].sort((a, b) => a - b).join(','),
+      set: this.seen,
+      setKey: [...this.seen].sort((a, b) => a - b).join(','),
       schema: merged.schema,
       chains: merged.chains,
       choices: this.choices,
