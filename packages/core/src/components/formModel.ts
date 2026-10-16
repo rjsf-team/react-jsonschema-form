@@ -105,6 +105,19 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     }
   };
   hold(initial.formData);
+  // Development only, once per form: a handle call the form dropped because it was detached. A field's change, blur or
+  // focus is dropped silently, since a widget flushing a draft from its Effect cleanup is expected to arrive then
+  let isDroppedCallWarned = false;
+  const warnDroppedCall = (method: string) => {
+    if (!isDevelopment || isDroppedCallWarned) {
+      return;
+    }
+    isDroppedCallWarned = true;
+    // oxlint-disable-next-line no-console
+    console.warn(
+      `Form: \`${method}()\` was called on a form that is hidden by \`<Activity>\` or has unmounted, and was dropped. React asks that hidden content be treated as unmounted, so the form takes calls again once it is shown. See https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#a-form-inside-a-hidden-activity`,
+    );
+  };
 
   /** The form's current state, the one an operation starts from: the store's, under the props of the last commit, and
    * the state that commit rendered when the store has not changed since. Derived again only for an operation made
@@ -359,8 +372,12 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
      * so the submit event is dispatched without it, and schema validation alone checks the data
      */
     submit: () => {
+      if (isDetached) {
+        warnDroppedCall('submit');
+        return;
+      }
       const view = formWindow();
-      if (isDetached || !view || !(formElement instanceof view.HTMLFormElement)) {
+      if (!view || !(formElement instanceof view.HTMLFormElement)) {
         return;
       }
       if (current().formData === rendered.formData) {
@@ -375,6 +392,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
      */
     reset: () => {
       if (isDetached) {
+        warnDroppedCall('reset');
         return;
       }
       const props = committedProps;
@@ -388,6 +406,10 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
      * resolve to `null` rather than `undefined`.
      */
     setFieldValue: (fieldPath: string | FieldPathList, newValue?: unknown) => {
+      if (isDetached) {
+        warnDroppedCall('setFieldValue');
+        return;
+      }
       let path = fieldPath;
       if (typeof path === 'string') {
         // `''` is the documented spelling of the root; splitting it would name a property called `''` instead

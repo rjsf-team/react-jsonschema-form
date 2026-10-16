@@ -543,8 +543,12 @@ describe('a formData passed to a form hidden by Activity', () => {
 
     expect(handle.getFormData()).toEqual({ name: 'edited', other: 'y' });
     expectToHaveBeenCalledWithFormData(onChange, { name: 'edited', other: 'y' }, 'root_name');
-    // The warning is an Effect's, which waits for the form to be shown
-    expect(warnings.consoleSpy).toHaveBeenCalledTimes(1);
+    // The dropped handle call is warned about as it is made; the ignored `formData` warning is an Effect's, which
+    // waits for the form to be shown
+    const messages = warnings.consoleSpy.mock.calls.map(([message]) => String(message));
+    expect(messages).toHaveLength(2);
+    expect(messages[0]).toMatch(/`setFieldValue\(\)` was called on a form that is hidden/);
+    expect(messages[1]).toMatch(/`formData` changed after the form mounted/);
   });
 });
 

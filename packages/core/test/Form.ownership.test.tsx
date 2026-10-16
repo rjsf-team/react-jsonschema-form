@@ -84,6 +84,9 @@ describe('form data ownership', () => {
     warnings.consoleSpy.mock.calls.filter(([message]) =>
       String(message).includes('`formData` changed after the form mounted'),
     );
+  /** The warnings the form gave about a handle call it dropped while hidden or after unmounting */
+  const droppedCallWarnings = () =>
+    warnings.consoleSpy.mock.calls.filter(([message]) => String(message).includes('and was dropped'));
 
   describe('edits are the form’s own', () => {
     it('an edit is shown and reported whatever its parent does with it', async () => {
@@ -913,6 +916,45 @@ describe('form data ownership', () => {
       expect(onChange).not.toHaveBeenCalled();
       expect(onSubmit).not.toHaveBeenCalled();
       expect(handle.getFormData()).toEqual({ a: 'edited' });
+    });
+
+    it('warns once, in development, about the handle calls it drops while hidden by Activity', () => {
+      const ref = createFormRef<Data>();
+      const { hide, show } = renderInActivity(() => (
+        <Form<Data> ref={ref} schema={schema} validator={validator} initialFormData={{ a: 'seed' }} />
+      ));
+      const handle = handleOf(ref);
+      hide();
+
+      act(() => handle.setFieldValue('a', 'dropped'));
+      act(() => handle.reset());
+      act(() => handle.submit());
+
+      expect(droppedCallWarnings()).toHaveLength(1);
+      expect(droppedCallWarnings()[0][0]).toMatch(/`setFieldValue\(\)` was called on a form that is hidden/);
+      expect(handle.getFormData()).toEqual({ a: 'seed' });
+
+      show();
+      act(() => handle.setFieldValue('a', 'shown'));
+
+      expect(handle.getFormData()).toEqual({ a: 'shown' });
+      expect(droppedCallWarnings()).toHaveLength(1);
+    });
+
+    it('warns once, in development, about a handle call made after the form unmounted', () => {
+      const ref = createFormRef<Data>();
+      const { unmount } = render(
+        <Form<Data> ref={ref} schema={schema} validator={validator} initialFormData={{ a: 'seed' }} />,
+      );
+      const handle = handleOf(ref);
+      unmount();
+
+      act(() => handle.reset());
+      act(() => handle.setFieldValue('a', 'dropped'));
+
+      expect(droppedCallWarnings()).toHaveLength(1);
+      expect(droppedCallWarnings()[0][0]).toMatch(/`reset\(\)` was called on a form that is hidden/);
+      expect(handle.getFormData()).toEqual({ a: 'seed' });
     });
 
     /** A widget that sets its field to `to` from `useCommitEffect` */
