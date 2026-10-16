@@ -287,6 +287,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed the `SelectWidget` trigger falling back to a hardcoded `'Select...'` with no value selected, no `ui:placeholder` and no label, fixing [#5498](https://github.com/rjsf-team/react-jsonschema-form/issues/5498). The fallback now reads `translateString(TranslatableString.SelectPlaceholder)`, the way the shadcn widget does, so a custom `translateString` localizes it (the default English text becomes `'Select ...'`)
 - `DateWidget` positions its calendar popup from a layout Effect, before the browser paints it, so the popup no longer shows where it was last for a frame as it opens
 - The date pickers report blur, and the focus the trigger holds after it, from the handler that closes the popup instead of from an Effect after the save renders, with the value the close stores; a `flushSync` in `onBlur` now runs at once, and a throw from `onBlur` leaves the handler instead of being rethrown from a timer
+- `DaisyUIFrameProvider` falls back to the theme last stored when `dataTheme` is cleared, rather than the one stored when it mounted ([#5556](https://github.com/rjsf-team/react-jsonschema-form/pull/5556))
 
 ## @rjsf/fluentui-rc
 

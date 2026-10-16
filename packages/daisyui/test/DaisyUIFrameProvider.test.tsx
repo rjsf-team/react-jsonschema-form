@@ -100,6 +100,24 @@ describe('DaisyUIFrameProvider', () => {
     expect(mockSetItem).toHaveBeenCalledWith('daisyui-theme', 'light');
   });
 
+  test('falls back to the theme last stored when the chosen theme is cleared', () => {
+    localStorageMock['daisyui-theme'] = 'cupcake';
+    // Rendered as the playground renders it, through the element the factory's component returns, so a new `subtheme`
+    // changes the mounted provider's props rather than remounting it
+    function Frame({ subtheme }: { subtheme?: { dataTheme?: string } }) {
+      return __createDaisyUIFrameProvider({ children: <div>Test Content</div>, subtheme })({});
+    }
+    const { container, rerender } = render(<Frame />);
+    expect(container.querySelector('[data-theme="cupcake"]')).not.toBeNull();
+
+    rerender(<Frame subtheme={{ dataTheme: 'dark' }} />);
+    expect(mockSetItem).toHaveBeenCalledWith('daisyui-theme', 'dark');
+    rerender(<Frame />);
+
+    expect(container.querySelector('[data-theme="dark"]')).not.toBeNull();
+    expect(mockGetItem).toHaveBeenCalledTimes(1);
+  });
+
   test('handles localStorage exceptions gracefully', () => {
     // Make localStorage.getItem throw an exception
     mockGetItem.mockImplementationOnce(() => {
