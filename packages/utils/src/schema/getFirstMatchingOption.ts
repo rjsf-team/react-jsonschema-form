@@ -6,7 +6,7 @@ import { declaredProperty, holdsDeclaredKey, scoringTarget, targetOf } from './g
 import { nodeOfSchema } from './retrieveSchema.ts';
 
 /** An option as matching reads it: the node it stands for, or a boolean option given as one */
-export type OptionNode<S extends StrictRJSFSchema = RJSFSchema> = AdoptedSchema<S> | boolean;
+type OptionNode<S extends StrictRJSFSchema = RJSFSchema> = AdoptedSchema<S> | boolean;
 
 /** Returns the node `option` stands for, see `nodeOfSchema()`, or the boolean it is
  *
@@ -32,8 +32,11 @@ export function simpleDiscriminatorMatch<S extends StrictRJSFSchema = RJSFSchema
   formData: unknown,
   discriminatorField?: string,
 ): number | undefined {
-  const value = formData && discriminatorField ? getByPath(formData, discriminatorField) : undefined;
-  if (value === undefined || !discriminatorField) {
+  if (!formData || !discriminatorField) {
+    return undefined;
+  }
+  const value = getByPath(formData, discriminatorField);
+  if (value === undefined) {
     return undefined;
   }
   const index = options.findIndex((option) => {
@@ -74,13 +77,15 @@ export function optionMatches<S extends StrictRJSFSchema = RJSFSchema, F extends
     return option;
   }
   const { graph, node } = option;
-  const discriminator = discriminatorField ? declaredProperty(graph, node, discriminatorField) : undefined;
-  if (discriminatorField && discriminator !== undefined) {
-    return context.validator.isValid(
-      targetOf(graph, discriminator),
-      getByPath(formData, discriminatorField),
-      graph.rawRoot,
-    );
+  if (discriminatorField) {
+    const discriminator = declaredProperty(graph, node, discriminatorField);
+    if (discriminator !== undefined) {
+      return context.validator.isValid(
+        targetOf(graph, discriminator),
+        getByPath(formData, discriminatorField),
+        graph.rawRoot,
+      );
+    }
   }
   return (
     holdsDeclaredKey(graph, node, formData) &&
