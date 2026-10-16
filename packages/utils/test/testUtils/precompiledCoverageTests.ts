@@ -1,5 +1,12 @@
 import type { CustomValidator, RJSFSchema, SchemaParserOptions, ValidatorType } from '../../src/index.ts';
-import { createSchemaUtils, getDefaultFormState, omitExtraData, retrieveSchema } from '../../src/index.ts';
+import {
+  createSchemaUtils,
+  getDefaultFormState,
+  getFirstMatchingOption,
+  omitExtraData,
+  retrieveSchema,
+  schemaKey,
+} from '../../src/index.ts';
 import {
   MERGED_PATTERN_KEY_FORM_DATA,
   MERGED_PATTERN_PROPERTY_FORM_DATA,
@@ -46,6 +53,47 @@ export type BuildPrecompiledValidator = (rootSchema: RJSFSchema, options?: Schem
  * @param buildValidator - Compiles a schema and returns the package's precompiled validator for it
  */
 export default function precompiledCoverageTests(buildValidator: BuildPrecompiledValidator) {
+  describe('missing precompiled validators', () => {
+    const rootSchema: RJSFSchema = { $id: 'root', type: 'string' };
+
+    it('includes a contained schema ID while retaining the lookup key', () => {
+      const validator = buildValidator(rootSchema);
+      const missingSchema: RJSFSchema = { allOf: [{ $id: 'defs/person.json', type: 'object' }] };
+
+      expect(() => validator.isValid(missingSchema, {}, rootSchema)).toThrow(
+        `No precompiled validator function was found for the given schema for "${schemaKey(missingSchema)}" (contained schema "defs/person.json")`,
+      );
+    });
+
+    it.each<RJSFSchema>([
+      { type: 'number' },
+      { allOf: [] },
+      { allOf: [false] },
+      { allOf: [true] },
+      { allOf: [{}] },
+      { allOf: [{ $id: '' }] },
+    ])('retains the hash-only diagnostic for an unnamed schema: %j', (missingSchema) => {
+      const validator = buildValidator(rootSchema);
+
+      expect(() => validator.isValid(missingSchema, {}, rootSchema)).toThrow(
+        `No precompiled validator function was found for the given schema for "${schemaKey(missingSchema)}"`,
+      );
+    });
+
+    it.each(['oneOf', 'anyOf'] as const)('names an ID added to a %s option after precompilation', (keyword) => {
+      const option: RJSFSchema = { type: 'object', properties: { name: { type: 'string' } } };
+      const options: RJSFSchema[] = [{ type: 'object', properties: { other: { type: 'string' } } }, option];
+      const schema: RJSFSchema = { [keyword]: options };
+      const validator = buildValidator(schema);
+      expect(getFirstMatchingOption({ validator }, { name: 'Ada' }, options, schema)).toBe(1);
+      const changedOption: RJSFSchema = { ...option, $id: 'namedOption' };
+
+      expect(() => getFirstMatchingOption({ validator }, { name: 'Ada' }, [options[0], changedOption], schema)).toThrow(
+        /^No precompiled validator function was found for the given schema for "-?[0-9a-f]+" \(contained schema "namedOption\?rjsf=[^"]+"\)$/,
+      );
+    });
+  });
+
   describe('with a customMergeAllOf', () => {
     const rootSchema = SCHEMA_MERGED_FOR_PATTERN_PROPERTY;
     const formData = MERGED_PATTERN_PROPERTY_FORM_DATA;

@@ -102,7 +102,10 @@ export default class AJV8PrecompiledValidator<
     const key = schemaKey(schema);
     const validator = this.validateFns[key];
     if (!validator) {
-      throw new Error(`No precompiled validator function was found for the given schema for "${key}"`);
+      const containedSchema = schema.allOf?.[0];
+      const containedId = typeof containedSchema === 'object' ? containedSchema[ID_KEY] : undefined;
+      const context = containedId ? ` (contained schema "${containedId}")` : '';
+      throw new Error(`No precompiled validator function was found for the given schema for "${key}"${context}`);
     }
     return validator;
   }
