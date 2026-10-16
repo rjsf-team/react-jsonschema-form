@@ -319,6 +319,26 @@ export function getValidationTarget<S extends StrictRJSFSchema = RJSFSchema>(sch
   return pointerTo<S>(graph, node) ?? withVariantId<S>(schema);
 }
 
+/** Returns whether `data` satisfies the `if` `condition`: a schema one is checked as `getValidationTarget()` names it,
+ * and a boolean one holds whatever it says
+ *
+ * @param context - The `SchemaContext` whose `validator` checks the condition
+ * @param condition - What the `if` holds
+ * @param data - The data the condition is checked against
+ * @param rootSchema - The root schema the condition belongs to
+ * @returns - Whether the condition holds
+ */
+export function conditionHolds<S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
+  context: SchemaContext<S, F>,
+  condition: unknown,
+  data: unknown,
+  rootSchema: S,
+): boolean {
+  return isSchemaObject<S>(condition)
+    ? context.validator.isValid(getValidationTarget<S>(condition, rootSchema), data, rootSchema)
+    : Boolean(condition);
+}
+
 /** The schemas `resolveOwnRef()` made, by graph and the schema holding the reference */
 const ownRefs = new KeyedMemo<object>();
 
@@ -955,10 +975,7 @@ function declaredPropertyNames<S extends StrictRJSFSchema = RJSFSchema, F extend
   const refs = new Set(followedRefs);
   merged.push(referencedDefinition<S>(schema, rootSchema, refs));
   if (IF_KEY in schema && rootSchema !== undefined) {
-    const condition: unknown = schema[IF_KEY];
-    const holds = isSchemaObject<S>(condition)
-      ? context.validator.isValid(getValidationTarget<S>(condition, rootSchema), formData, rootSchema)
-      : Boolean(condition);
+    const holds = conditionHolds<S, F>(context, schema[IF_KEY], formData, rootSchema);
     merged.push((holds ? schema[THEN_KEY] : schema[ELSE_KEY]) as S | boolean | undefined);
   }
   const properties = schema[PROPERTIES_KEY];
