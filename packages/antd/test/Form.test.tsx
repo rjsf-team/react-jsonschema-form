@@ -619,6 +619,9 @@ describe('antd focusOnFirstError', () => {
       { 'ui:widget': 'checkboxes' },
       '#root_x-0',
     ],
+    // The date parts' group carries the field's id but isn't focusable, so its first part is focused
+    ['alt-date group', { type: 'string' }, { 'ui:widget': 'alt-date' }, '#root_x_year'],
+    ['alt-datetime group', { type: 'string' }, { 'ui:widget': 'alt-datetime' }, '#root_x_year'],
     // The slider's root carries the field's id but isn't focusable, so the handle inside it is focused
     ['slider', { type: 'number' }, { 'ui:widget': 'range' }, '#root_x [role="slider"]'],
   ])('moves focus to a %s with errors', async (_, x, ui, focused) => {
@@ -736,4 +739,37 @@ describe("antd widgets carry their field's plan on the element a user focuses", 
 
     expect(screen.getByRole('slider')).toHaveAccessibleName('Volume');
   });
+});
+
+describe('antd focuses and names its groups as core does', () => {
+  test.each<[string, RJSFSchema, string]>([
+    ['radio', { type: 'string', enum: ['red', 'green'] }, 'radio'],
+    ['checkboxes', { type: 'array', items: { type: 'string', enum: ['red', 'green'] }, uniqueItems: true }, 'checkbox'],
+  ])('focuses the first %s a user can choose under ui:autofocus', (widget, color, role) => {
+    render(
+      <Form
+        schema={{ type: 'object', properties: { color } }}
+        uiSchema={{ color: { 'ui:widget': widget, 'ui:autofocus': true, 'ui:enumDisabled': ['red'] } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getAllByRole(role)[1]).toHaveFocus();
+  });
+
+  test.each(['alt-date', 'alt-datetime'])(
+    "names the %s parts' group by the template's label, which draws no for",
+    (widget) => {
+      const { container } = render(
+        <Form
+          schema={{ type: 'object', properties: { when: { type: 'string', title: 'When' } } }}
+          uiSchema={{ when: { 'ui:widget': widget } }}
+          validator={validator}
+        />,
+      );
+
+      expect(screen.getByRole('group', { name: 'When' })).toHaveAttribute('id', 'root_when');
+      expect(container.querySelector('label[for="root_when"]')).toBeNull();
+    },
+  );
 });

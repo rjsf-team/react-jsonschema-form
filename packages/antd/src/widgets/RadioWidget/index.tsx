@@ -2,6 +2,7 @@ import type { FocusEvent } from 'react';
 import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   enumOptionSelectedValue,
+  enumOptionsAutofocusIndex,
   enumOptionsIsDisabled,
   enumOptionValueDecoder,
   enumOptionsDomValues,
@@ -58,6 +59,7 @@ export default function RadioWidget<
     'radiogroup',
   );
 
+  const autofocusIndex = enumOptionsAutofocusIndex<S>(enumOptions, enumDisabled, autofocus);
   return (
     <Radio.Group
       id={id}
@@ -73,7 +75,7 @@ export default function RadioWidget<
           <Radio
             id={optionId(id, i)}
             name={htmlName || id}
-            autoFocus={i === 0 ? autofocus : false}
+            autoFocus={i === autofocusIndex}
             // `undefined` rather than `false` for an enabled option, since antd reads its `DisabledContext` only when
             // the radio leaves `disabled` unset
             disabled={fieldDisabled || enumOptionsIsDisabled(option.value, enumDisabled) || undefined}
