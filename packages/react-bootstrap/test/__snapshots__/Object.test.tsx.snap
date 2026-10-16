@@ -4451,6 +4451,7 @@ exports[`object fields > with title and description with global label off > addi
                 >
                   <div>
                     <input
+                      aria-label="foo"
                       class="form-control"
                       id="root_foo"
                       name="root_foo"
@@ -4564,6 +4565,7 @@ exports[`object fields > with title and description with global label off > obje
               >
                 <div>
                   <input
+                    aria-label="A"
                     class="form-control"
                     id="root_a"
                     name="root_a"
@@ -4588,6 +4590,7 @@ exports[`object fields > with title and description with global label off > obje
               >
                 <div>
                   <input
+                    aria-label="B"
                     class="form-control"
                     id="root_b"
                     inputmode="decimal"
@@ -4658,6 +4661,7 @@ exports[`object fields > with title and description with global label off > show
                 >
                   <div>
                     <input
+                      aria-label="additionalProperty"
                       class="form-control"
                       id="root_additionalProperty"
                       name="root_additionalProperty"

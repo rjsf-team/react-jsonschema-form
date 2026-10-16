@@ -372,3 +372,32 @@ describe("react-bootstrap's error and help elements carry the ids their field's 
     expect(container.querySelector('#root_pet')).toHaveAccessibleDescription('pick one');
   });
 });
+
+describe('react-bootstrap names a control whose label ui:label false hides', () => {
+  test.each<[string, string, RJSFSchema, UiSchema]>([
+    ['text input', 'textbox', { type: 'string' }, {}],
+    ['radio group', 'radiogroup', { type: 'string', enum: ['a', 'b'] }, { 'ui:widget': 'radio' }],
+    [
+      'checkboxes group',
+      'group',
+      { type: 'array', items: { enum: ['a', 'b'] }, uniqueItems: true },
+      { 'ui:widget': 'checkboxes' },
+    ],
+    ['range', 'slider', { type: 'number' }, { 'ui:widget': 'range' }],
+    ['textarea', 'textbox', { type: 'string' }, { 'ui:widget': 'textarea' }],
+    // The checkbox draws its own label, so it is the one hiding it and taking the plan's `aria-label` in its place
+    ['checkbox', 'checkbox', { type: 'boolean' }, {}],
+  ])('names a %s by the label text ui:label false hides', (_, role, schema, uiSchema) => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { pet: { ...schema, title: 'Pet' } } }}
+        uiSchema={{ pet: { ...uiSchema, 'ui:label': false } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.queryByText('Pet')).toBeNull();
+    expect(screen.getByRole(role)).toHaveAccessibleName('Pet');
+    expectReferencesResolve(container);
+  });
+});

@@ -5595,6 +5595,7 @@ exports[`with title and description with global label off > array icons 1`] = `
                       >
                         <div>
                           <input
+                            aria-label="Test item"
                             class="form-control"
                             id="root_0"
                             name="root_0"
@@ -5715,6 +5716,7 @@ exports[`with title and description with global label off > array icons 1`] = `
                       >
                         <div>
                           <input
+                            aria-label="Test item"
                             class="form-control"
                             id="root_1"
                             name="root_1"
@@ -5961,6 +5963,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
                       >
                         <div>
                           <input
+                            aria-label="Test item"
                             class="form-control"
                             id="root_0"
                             name="root_0"
@@ -5989,6 +5992,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
                       >
                         <div>
                           <input
+                            aria-label="Test item"
                             class="form-control"
                             id="root_1"
                             inputmode="decimal"
