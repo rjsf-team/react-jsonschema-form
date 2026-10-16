@@ -175,7 +175,8 @@ See [Custom Widgets and Fields](../advanced-customization/custom-widgets-fields.
 A field's own `ui:field` comes first, then `ui:globalOptions.field`, then a field registered under the schema's [`$id`](../advanced-customization/custom-widgets-fields.md#custom-field-by-id).
 The field they name is applied once per data path: a `SchemaField` the named field renders for its own data, and the selected `anyOf`/`oneOf` option, render as though no field were named, the option's own `ui:field` or `$id` included.
 The field's own `SchemaField` renders the label, description, help, extra-key row and `anyOf`/`oneOf` option selector around the named field, and the `SchemaField` the named field renders is the bare field, without a `FieldTemplate` or options, so each renders once.
-A `ui:field` leaves the label to the field it names, so a custom field that renders `SchemaField` gets no label unless it draws one; `ui:field: 'SchemaField'` names the default field, which is labelled as though no field were named.
+A `ui:field` leaves the label to the field it names, so the field's own `FieldTemplate` renders none around a custom field that renders `SchemaField`. Whether the bare field draws one depends on the theme: a theme whose widgets draw their own label, such as mui, mantine, chakra-ui or fluentui-rc, still labels the bare field's input, and one whose `FieldTemplate` draws the label, such as core, renders none unless the custom field draws it.
+`SchemaField` and `FallbackField` are not custom fields, whichever of the three ways names them: `SchemaField` renders exactly as though no field were named, and `FallbackField` renders as it does for a schema whose type sends it there, labelled as though no field were named.
 
 ### `ui:fieldReplacesAnyOrOneOf`
 
@@ -186,7 +187,7 @@ If the flag is omitted or set to `false`, your custom field is rendered beside t
 
 The flag needs a `ui:field`, or a `$id`, that resolves to a field.
 A name no field is registered under names nothing for the `anyOf`/`oneOf` to give way to, so the options are rendered as though the flag were absent: dropping them would leave an object union with no way to reach the `properties` of any option while the validator still required them.
-A `ui:field` naming `FallbackField` does not take them away either, whatever [`useFallbackUiForUnsupportedType`](./form-props.md#usefallbackuiforunsupportedtype) says.
+A `ui:field` naming `SchemaField` names no custom field, so the options are rendered as without one, and a `ui:field` naming `FallbackField` does not take them away either, whatever [`useFallbackUiForUnsupportedType`](./form-props.md#usefallbackuiforunsupportedtype) says.
 With that prop on, the [fallback UI](../json-schema/single.md#multiple-types) renders the options itself, against the schema whose type its selector has pinned.
 With it off the same name renders the unsupported-field template, which renders nothing of the schema, so there is nothing for the options to give way to and they are rendered in its place.
 

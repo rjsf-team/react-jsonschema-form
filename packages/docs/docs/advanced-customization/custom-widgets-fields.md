@@ -553,7 +553,7 @@ render(<Form schema={schema} validator={validator} fields={fields} />, document.
 ```
 
 A `$id` names the field the way [`ui:field`](../api-reference/uiSchema.md#uifield) does, after the field's own `ui:field` and `ui:globalOptions.field`: the field renders beside an `anyOf`/`oneOf` option selector, or in place of the options with `ui:fieldReplacesAnyOrOneOf`.
-A named field is applied once per data path, so one that renders `registry.fields.SchemaField` for its own data gets the default field for the schema there, whatever the `uiSchema` it passes names, as the bare field, inside the label, description, help, extra-key row and option selector the field's own `SchemaField` renders, so each renders once. A field named by `ui:field` draws its own label, as the label is left to it.
+A named field is applied once per data path, so one that renders `registry.fields.SchemaField` for its own data gets the default field for the schema there, whatever the `uiSchema` it passes names, as the bare field, inside the label, description, help, extra-key row and option selector the field's own `SchemaField` renders, so each renders once. The label of a field named by `ui:field` is left to it, so the `FieldTemplate` renders none; a theme whose widgets draw their own label, such as mui, still labels the default field's input. Naming `SchemaField` or `FallbackField` names no custom field: `SchemaField` renders as though no field were named, and `FallbackField` as it does when the schema's type picks it.
 
 ### Wrapping an existing field to customize it
 
