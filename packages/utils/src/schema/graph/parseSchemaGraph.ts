@@ -382,11 +382,14 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
   }
 
   private register(node: ObjectNode<S>, startsResource: boolean): void {
+    const anchor = this.anchored ? stringKeyword(node.raw, '$anchor') : undefined;
+    if (!startsResource && anchor === undefined) {
+      return;
+    }
     const key = resourceKey(node.baseUri);
     if (startsResource && !this.resources.has(key)) {
       this.resources.set(key, node);
     }
-    const anchor = this.anchored ? stringKeyword(node.raw, '$anchor') : undefined;
     if (anchor !== undefined) {
       this.anchors.set(`${key}#${anchor}`, node.id);
     }
