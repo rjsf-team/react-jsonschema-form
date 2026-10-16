@@ -991,6 +991,20 @@ A widget rendered without a plan is described by [ariaDescribedByIds()](#ariades
 
 - string | undefined: The `aria-describedby`, or undefined when nothing describes the control
 
+### getControlFallbackName()
+
+Gets the name a control takes where no label names it, for one that takes no name from what it displays, such as a combobox trigger, whose contents are its value: the field's label, else its `placeholder`, which is all an author has said about a field with no title, such as an array item, as a native input falls back to it for its name, and last the translated `prompt`.
+A widget gives it as the control's `aria-label` where [isNamedByTemplateLabel()](#isnamedbytemplatelabel) says no label the template draws names the control, and its caller handed it no `aria-label` of its own.
+
+#### Parameters
+
+- props: Pick&lt;WidgetProps&lt;T, S, F>, 'label' | 'placeholder' | 'registry'> - The widget's `label`, `placeholder` and `registry`
+- [prompt=TranslatableString.SelectPlaceholder]: TranslatableString - The prompt a field with neither is named by
+
+#### Returns
+
+- string: The name
+
 ### getDateElementProps()
 
 Given date & time information with optional yearRange & format, returns props for DateElement
@@ -1074,7 +1088,21 @@ A deprecated field's label is decorated with the `DeprecatedLabel` marker under 
 
 - string: The label, or `''` when the field has none
 
-### getFieldTypeForWidget&lt;S extends StrictRJSFSchema = RJSFSchema>()
+### getFieldTypeForUiSchema&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getfieldtypeforuischema}
+
+Gets the type of the field `SchemaField` renders a schema by, as [getFieldTypeForWidget()](#getfieldtypeforwidget) does for the field's own `ui:widget` in its `uiSchema`.
+Only that one picks the field, so `ui:globalOptions` is not read.
+
+#### Parameters
+
+- schema: S - The schema for the field
+- [uiSchema]: UiSchema&lt;T, S, F> - The uiSchema for the field
+
+#### Returns
+
+- string | undefined: The type of the field that renders the field's own widget
+
+### getFieldTypeForWidget&lt;S extends StrictRJSFSchema = RJSFSchema>() {#getfieldtypeforwidget}
 
 Gets the type of the field `SchemaField` renders a schema with its `ui:widget` by. For a `type` list naming several non-null types, that is the type [getWidgetType()](#getwidgettype) picks for a named widget, so a `textarea` on a `['null', 'boolean', 'string']` is the `string` one. A `format` picks no other type's field, as it constrains only the list's string member, so an `email` on a `['number', 'string']` stays a `number`. A select over such a list is the type [getSelectFieldType()](#getselectfieldtype) gives its `type` list, as `SchemaField` renders it through that field whatever the widget. Otherwise it is the type `getSchemaType()` resolves. `SchemaField` renders the field of that type, and `getDisplayLabel()`, `getDefaultFormState()` and `FallbackField`'s type selector follow it, so the label, the defaults and the selected type of a field are those of the field on screen.
 
@@ -1959,6 +1987,21 @@ A widget whose contents would otherwise name it, such as a button displaying its
 #### Returns
 
 - boolean: True when the label is drawn by the template or above
+
+### isNamedByTemplateLabel()
+
+Whether a label the `FieldTemplate` draws names a widget's control, so the widget needs no name of its own.
+Under its field's plan, that is a label the template draws, here or for a field above rendering the same id, as [isLabelledByTemplate()](#islabelledbytemplate) says.
+Without a plan the widget answers from what it is handed: a label that isn't hidden, with text.
+A template draws no other text in its place, neither the property name, which `SchemaField` already made the label of a field with no title, nor a required field's `*` alone, which would name the control "star".
+
+#### Parameters
+
+- props: Pick&lt;WidgetProps&lt;T, S, F>, 'label' | 'hideLabel' | 'presentation'> - The widget's `label`, `hideLabel` and `presentation`
+
+#### Returns
+
+- boolean: True when a label the template draws names the control
 
 ### isObject()
 
