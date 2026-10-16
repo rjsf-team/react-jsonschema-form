@@ -182,7 +182,7 @@ describe("fluentui-rc widgets are named by their label and carry the field's id 
   });
 
   test.each(groups)(
-    'leaves a %s group whose label is hidden unnamed, rather than named by an id no element has',
+    "names a %s group whose label is hidden by the label's text, rather than by an id no element has",
     (widget, x) => {
       const { container } = render(
         <Form
@@ -192,10 +192,27 @@ describe("fluentui-rc widgets are named by their label and carry the field's id 
         />,
       );
 
-      expect(container.querySelector('#root_x')).toHaveAccessibleName('');
+      expect(container.querySelector('#root_x')).toHaveAccessibleName('X');
       expect(container.querySelector('#root_x')).not.toHaveAttribute('aria-labelledby');
     },
   );
+
+  test.each<[string, string, RJSFSchema, UiSchema]>([
+    ['text input', 'textbox', { type: 'string' }, {}],
+    ['range', 'slider', { type: 'number' }, { 'ui:widget': 'range' }],
+  ])('names a %s by the label text ui:label false hides', (_, role, schema, uiSchema) => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { pet: { ...schema, title: 'Pet' } } }}
+        uiSchema={{ pet: { ...uiSchema, 'ui:label': false } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.queryByText('Pet')).toBeNull();
+    expect(screen.getByRole(role)).toHaveAccessibleName('Pet');
+    expectReferencesResolve(container);
+  });
 
   // A required field asks for one checkbox, not each, while a radio is required, as core's are
   test.each([
