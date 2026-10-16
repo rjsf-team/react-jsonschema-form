@@ -280,7 +280,7 @@ describe("mui widgets are named by their label and carry the field's id on the e
   });
 
   test.each(groups)(
-    'leaves a %s group whose label is hidden unnamed, rather than named by an id no element has',
+    "names a %s group whose label is hidden by the label's text, rather than by an id no element has",
     (widget, x) => {
       const { container } = render(
         <Form
@@ -290,10 +290,44 @@ describe("mui widgets are named by their label and carry the field's id on the e
         />,
       );
 
-      expect(container.querySelector('#root_x')).toHaveAccessibleName('');
+      expect(container.querySelector('#root_x')).toHaveAccessibleName('X');
       expect(container.querySelector('#root_x')).not.toHaveAttribute('aria-labelledby');
     },
   );
+
+  test.each<[string, string, RJSFSchema, UiSchema]>([
+    ['text input', 'textbox', { type: 'string' }, {}],
+    ['range', 'slider', { type: 'number' }, { 'ui:widget': 'range' }],
+  ])('names a %s by the label text ui:label false hides', (_, role, schema, uiSchema) => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { pet: { ...schema, title: 'Pet' } } }}
+        uiSchema={{ pet: { ...uiSchema, 'ui:label': false } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.queryByText('Pet')).toBeNull();
+    expect(screen.getByRole(role)).toHaveAccessibleName('Pet');
+    expectReferencesResolve(container);
+  });
+
+  // The `Slider` puts the name it is given on the `<input>` the plan names, so the author's name is kept over the plan's
+  test.each([
+    ['ui:options.mui', { 'aria-label': 'Volume' }],
+    ['the slider target', { rjsfSlotProps: { slider: { 'aria-label': 'Volume' } } }],
+    ['getAriaLabel', { getAriaLabel: () => 'Volume' }],
+  ])('names a slider by the name the form author gives it through %s, over the plan', (_, mui) => {
+    render(
+      <Form
+        schema={{ type: 'object', properties: { pet: { type: 'number', title: 'Pet' } } }}
+        uiSchema={{ pet: { 'ui:widget': 'range', 'ui:label': false, 'ui:options': { mui } } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('slider')).toHaveAccessibleName('Volume');
+  });
 
   // A required field asks for one checkbox, not each, while a radio is required, as core's are
   test.each([
