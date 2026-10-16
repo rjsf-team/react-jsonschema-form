@@ -278,8 +278,7 @@ export function resolveOwnRef<S extends StrictRJSFSchema = RJSFSchema>(schema: S
     return schema;
   }
   const { graph, seeds } = fieldOf<S>(parseSchemaGraph<S>(rootSchema), schema);
-  const { [REF_KEY]: _ref, ...siblings } = schema;
-  return { ...refDefinition<S>(graph, seeds[0].node), ...siblings, [RJSF_REF_KEY]: ref };
+  return { ...refDefinition<S>(graph, seeds[0].node), ...withoutKeys(schema, REF_KEY), [RJSF_REF_KEY]: ref };
 }
 
 /** Whether an option's plan adds nothing to the plan of the field offering it, beyond the option's own `$ref` */
