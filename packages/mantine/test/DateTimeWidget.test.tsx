@@ -120,9 +120,9 @@ describe('DateTimeWidget', () => {
     test.each(['date-time', 'datetime', 'iso-date-time'])('renders a labelled time group for format=%s', (format) => {
       renderWidget({ schema: { type: 'string', format } });
 
-      const group = screen.getByRole('group', { name: 'DateTime time' });
+      const group = screen.getByRole('group', { name: 'DateTime, Time' });
       expect(group).toBeInTheDocument();
-      for (const name of ['Hours', 'Minutes', 'Seconds']) {
+      for (const name of ['hour', 'minute', 'second']) {
         expect(screen.getByRole('spinbutton', { name })).toBeInTheDocument();
       }
     });
@@ -134,23 +134,23 @@ describe('DateTimeWidget', () => {
         </MantineProvider>,
       );
 
-      expect(screen.queryByRole('group', { name: 'DateTime time' })).not.toBeInTheDocument();
-      expect(screen.queryByRole('spinbutton', { name: 'Hours' })).not.toBeInTheDocument();
+      expect(screen.queryByRole('group', { name: 'DateTime, Time' })).not.toBeInTheDocument();
+      expect(screen.queryByRole('spinbutton', { name: 'hour' })).not.toBeInTheDocument();
     });
 
     test('shows the time of the stored value', () => {
       renderWidget({ value: '2024-01-01T10:30:15', schema: { type: 'string', format: 'iso-date-time' } });
 
-      expect(screen.getByRole('spinbutton', { name: 'Hours' })).toHaveValue('10');
-      expect(screen.getByRole('spinbutton', { name: 'Minutes' })).toHaveValue('30');
-      expect(screen.getByRole('spinbutton', { name: 'Seconds' })).toHaveValue('15');
+      expect(screen.getByRole('spinbutton', { name: 'hour' })).toHaveValue('10');
+      expect(screen.getByRole('spinbutton', { name: 'minute' })).toHaveValue('30');
+      expect(screen.getByRole('spinbutton', { name: 'second' })).toHaveValue('15');
     });
 
     test('commits the stored date with the picked time for format=iso-date-time', async () => {
       const onChange = vi.fn();
       renderWidget({ onChange, value: '2024-01-01T10:30:00', schema: { type: 'string', format: 'iso-date-time' } });
 
-      await user.click(screen.getByRole('spinbutton', { name: 'Hours' }));
+      await user.click(screen.getByRole('spinbutton', { name: 'hour' }));
       await user.keyboard('11');
 
       expect(onChange).toHaveBeenLastCalledWith('2024-01-01T11:30:00');
@@ -160,7 +160,7 @@ describe('DateTimeWidget', () => {
       const onChange = vi.fn();
       renderWidget({ onChange, value: dayjs('2024-01-01 10:30:00').toISOString() });
 
-      await user.click(screen.getByRole('spinbutton', { name: 'Hours' }));
+      await user.click(screen.getByRole('spinbutton', { name: 'hour' }));
       await user.keyboard('11');
 
       expect(onChange).toHaveBeenLastCalledWith(dayjs('2024-01-01 11:30:00').toISOString());
@@ -170,12 +170,12 @@ describe('DateTimeWidget', () => {
       const onChange = vi.fn();
       renderWidget({ onChange, schema: { type: 'string', format: 'iso-date-time' } });
 
-      await user.click(screen.getByRole('spinbutton', { name: 'Hours' }));
+      await user.click(screen.getByRole('spinbutton', { name: 'hour' }));
       await user.keyboard('083015');
 
       expect(onChange).not.toHaveBeenCalled();
-      expect(screen.getByRole('spinbutton', { name: 'Hours' })).toHaveValue('08');
-      expect(screen.getByRole('spinbutton', { name: 'Seconds' })).toHaveValue('15');
+      expect(screen.getByRole('spinbutton', { name: 'hour' })).toHaveValue('08');
+      expect(screen.getByRole('spinbutton', { name: 'second' })).toHaveValue('15');
     });
 
     test('describes the hours input by the field ids and marks it invalid when there are errors', () => {
@@ -184,7 +184,7 @@ describe('DateTimeWidget', () => {
         rawErrors: ['An error'],
       });
 
-      const hours = screen.getByRole('spinbutton', { name: 'Hours' });
+      const hours = screen.getByRole('spinbutton', { name: 'hour' });
       expect(hours).toHaveAttribute('aria-describedby', ariaDescribedByIds('root'));
       expect(hours).toHaveAttribute('aria-invalid', 'true');
       expect(hours).toHaveAccessibleDescription(/Test description/);
@@ -193,7 +193,7 @@ describe('DateTimeWidget', () => {
     test('names the time group without a label', () => {
       renderWidget({ label: '' });
 
-      expect(screen.getByRole('group', { name: 'Date time' })).toBeInTheDocument();
+      expect(screen.getByRole('group', { name: 'Time' })).toBeInTheDocument();
     });
 
     test.each([
@@ -208,7 +208,7 @@ describe('DateTimeWidget', () => {
         ...props,
       });
 
-      const hours = screen.getByRole('spinbutton', { name: 'Hours' });
+      const hours = screen.getByRole('spinbutton', { name: 'hour' });
       await user.click(hours);
       await user.keyboard('11');
 
