@@ -877,6 +877,22 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
       ).toEqual({ addr: { street: 'x', zip: undefined } });
       expect(schemaUtils.sanitizeDataForNewSchema(addr(false), addr(true), { addr: null })).toEqual({ addr: null });
     });
+    it('gives an object property the data does not hold an empty object, without descending into a recursive $ref', () => {
+      const rootSchema: RJSFSchema = {
+        definitions: {
+          node: { type: 'object', properties: { name: { type: 'string' }, child: { $ref: '#/definitions/node' } } },
+        },
+      };
+      const treeOption: RJSFSchema = { type: 'object', properties: { tree: { $ref: '#/definitions/node' } } };
+      const otherOption: RJSFSchema = { type: 'object', properties: { b: { type: 'string' } } };
+      expect(
+        sanitizeDataForNewSchema({ validator: testValidator }, rootSchema, treeOption, otherOption, { b: 'v' }),
+      ).toEqual({ b: undefined, tree: {} });
+    });
+    it('leaves out an object property the data does not hold whose schema declares no properties', () => {
+      const newSchema: RJSFSchema = { type: 'object', properties: { meta: { type: 'object' } } };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldDisjointSchema, {})).toEqual({});
+    });
     it('keeps a value of another type that a type list naming object allows', () => {
       const schema = (title: string): RJSFSchema => ({
         type: 'object',

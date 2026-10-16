@@ -56,6 +56,13 @@ function isSameType(oldType: unknown, newType: unknown): boolean {
   return oldTypes.size === newTypes.size && oldType.every((type) => newTypes.has(type));
 }
 
+/** What data holding no object is sanitized to against the object schema `schema`: an empty object where it declares
+ * `properties`, for the defaults to fill, and otherwise nothing
+ */
+function emptyObjectFor<S extends StrictRJSFSchema>(schema: S): object | undefined {
+  return schema[PROPERTIES_KEY] ? {} : undefined;
+}
+
 function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>(schema: S, formValue: unknown) {
   const enumValues = enumValuesForSchema(schema);
   if (!enumValues || enumValues.some((value) => deepEquals(value, formValue))) {
@@ -86,7 +93,8 @@ function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>
  *       - If `removeOldSchemaData` has an entry for the key, delete it since the new schema has the same property
  *       - If type of the key in the new schema is `object`, or `array` with array data, and the key isn't a select
  *         over object or array constants (see `isWholeValueSelect()`):
- *         - Store the value from the recursive `sanitizeDataForNewSchema` call in `nestedData[key]`
+ *         - Store the value from the recursive `sanitizeDataForNewSchema` call in `nestedData[key]`, or, for data that
+ *           holds no object, an empty object when the new schema declares `properties`
  *       - Otherwise, check for default, const or enum values:
  *         - Get the old and new `default` values from the schema and check:
  *           - If the new `default` value does not match the form value:
@@ -201,13 +209,18 @@ export default function sanitizeDataForNewSchema<
           // introduces), so its data is filtered against the new schema rather than cleared for an old side
           // that declares no array
           const borrowOld = isNewProperty && isArrayValue;
-          const itemData = sanitizeDataForNewSchema<T, S, F>(
-            context,
-            rootSchema,
-            newKeyedSchema,
-            borrowOld ? newKeyedSchema : oldKeyedSchema,
-            formValue,
-          );
+          // Data holding no object has no properties to sanitize. Descending into it would sanitize the absent
+          // properties of every level a recursive `$ref` reaches, without end
+          const itemData =
+            isArrayValue || isPlainObject(formValue)
+              ? sanitizeDataForNewSchema<T, S, F>(
+                  context,
+                  rootSchema,
+                  newKeyedSchema,
+                  borrowOld ? newKeyedSchema : oldKeyedSchema,
+                  formValue,
+                )
+              : emptyObjectFor<S>(newKeyedSchema);
           if (itemData !== undefined || isArrayValue) {
             // only put undefined values for the array type and not the object type
             nestedData[key] = itemData;
