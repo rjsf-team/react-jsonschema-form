@@ -440,25 +440,22 @@ describe('chakra-ui CheckboxesWidget', () => {
 
 describe('chakra-ui RadioWidget', () => {
   test.each([
-    ['whose label is hidden', { title: 'Color' }, { 'ui:label': false }],
-    ['with no label', {}, {}],
-  ])(
-    'leaves a group %s unnamed, rather than named by the description or by an id no element has',
-    (_, title, uiSchema) => {
-      render(
-        <WrappedForm
-          schema={{ type: 'string', ...title, description: 'Pick a color', enum: ['red', 'blue'] }}
-          uiSchema={{ 'ui:widget': 'radio', ...uiSchema }}
-          validator={validator}
-        />,
-      );
+    ['whose label is hidden by its text', { title: 'Color' }, { 'ui:label': false }, 'Color'],
+    ['with no label unnamed', {}, {}, ''],
+  ])('names a group %s, rather than by the description or by an id no element has', (_, title, uiSchema, name) => {
+    render(
+      <WrappedForm
+        schema={{ type: 'string', ...title, description: 'Pick a color', enum: ['red', 'blue'] }}
+        uiSchema={{ 'ui:widget': 'radio', ...uiSchema }}
+        validator={validator}
+      />,
+    );
 
-      const group = screen.getByRole('radiogroup');
-      expect(group).toHaveAccessibleName('');
-      const labelledBy = group.getAttribute('aria-labelledby')?.split(' ').filter(Boolean) ?? [];
-      expect(labelledBy.filter((labelId) => !document.getElementById(labelId))).toEqual([]);
-    },
-  );
+    const group = screen.getByRole('radiogroup');
+    expect(group).toHaveAccessibleName(name);
+    const labelledBy = group.getAttribute('aria-labelledby')?.split(' ').filter(Boolean) ?? [];
+    expect(labelledBy.filter((labelId) => !document.getElementById(labelId))).toEqual([]);
+  });
 
   test('names its group by the label it draws rather than by the description', () => {
     render(
@@ -712,5 +709,25 @@ describe('chakra-ui ObjectFieldTemplate', () => {
 
     expect(screen.queryByRole('heading')).not.toBeInTheDocument();
     expect(container.querySelector('#root_pet__optionalRemove')).toBeInTheDocument();
+  });
+});
+
+describe('chakra-ui names a control whose label ui:label false hides', () => {
+  test.each<[string, string, RJSFSchema, UiSchema]>([
+    ['text input', 'textbox', { type: 'string' }, {}],
+    ['radio group', 'radiogroup', { type: 'string', enum: ['a', 'b'] }, { 'ui:widget': 'radio' }],
+    ['range', 'slider', { type: 'number' }, { 'ui:widget': 'range' }],
+  ])('names a %s by the label text ui:label false hides', (_, role, schema, uiSchema) => {
+    const { container } = render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { pet: { ...schema, title: 'Pet' } } }}
+        uiSchema={{ pet: { ...uiSchema, 'ui:label': false } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.queryByText('Pet')).toBeNull();
+    expect(screen.getByRole(role)).toHaveAccessibleName('Pet');
+    expectReferencesResolve(container);
   });
 });

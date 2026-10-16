@@ -947,9 +947,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       >
                         <h5
                           class="chakra-heading emotion-7"
-                          id="root_person__title"
                         >
-                          Person Info
+                          <span
+                            id="root_person__title"
+                          >
+                            Person Info
+                          </span>
                         </h5>
                         <span
                           aria-orientation="horizontal"
@@ -7223,9 +7226,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       >
                         <h5
                           class="chakra-heading emotion-7"
-                          id="root_person__title"
                         >
-                          Person Info
+                          <span
+                            id="root_person__title"
+                          >
+                            Person Info
+                          </span>
                         </h5>
                         <span
                           aria-orientation="horizontal"
@@ -13590,9 +13596,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       >
                         <h5
                           class="chakra-heading emotion-7"
-                          id="root_person__title"
                         >
-                          Person Info
+                          <span
+                            id="root_person__title"
+                          >
+                            Person Info
+                          </span>
                         </h5>
                         <span
                           aria-orientation="horizontal"
@@ -17666,9 +17675,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       >
                         <h5
                           class="chakra-heading emotion-7"
-                          id="root_person__title"
                         >
-                          Person Info
+                          <span
+                            id="root_person__title"
+                          >
+                            Person Info
+                          </span>
                         </h5>
                         <span
                           aria-orientation="horizontal"
@@ -23802,9 +23814,12 @@ exports[`Three even column grid > renders person and address in three columns, n
                     >
                       <h5
                         class="chakra-heading emotion-6"
-                        id="root_person__title"
                       >
-                        Person Info
+                        <span
+                          id="root_person__title"
+                        >
+                          Person Info
+                        </span>
                       </h5>
                       <span
                         aria-orientation="horizontal"
@@ -27389,9 +27404,12 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     >
                       <h5
                         class="chakra-heading emotion-6"
-                        id="root_person__title"
                       >
-                        Person Info
+                        <span
+                          id="root_person__title"
+                        >
+                          Person Info
+                        </span>
                       </h5>
                       <span
                         aria-orientation="horizontal"

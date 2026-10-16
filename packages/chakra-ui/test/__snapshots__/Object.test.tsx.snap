@@ -283,9 +283,12 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                     >
                       <h5
                         class="chakra-heading emotion-6"
-                        id="root_person__title"
                       >
-                        person
+                        <span
+                          id="root_person__title"
+                        >
+                          person
+                        </span>
                       </h5>
                       <span
                         aria-orientation="horizontal"
@@ -358,9 +361,12 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                               >
                                 <h5
                                   class="chakra-heading emotion-6"
-                                  id="root_person_address__title"
                                 >
-                                  address
+                                  <span
+                                    id="root_person_address__title"
+                                  >
+                                    address
+                                  </span>
                                 </h5>
                                 <span
                                   aria-orientation="horizontal"
@@ -1912,9 +1918,12 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                       >
                         <h5
                           class="chakra-heading emotion-23"
-                          id="root_tags__title"
                         >
-                          tags
+                          <span
+                            id="root_tags__title"
+                          >
+                            tags
+                          </span>
                         </h5>
                         <span
                           aria-orientation="horizontal"
@@ -2975,9 +2984,12 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                     >
                       <h5
                         class="chakra-heading emotion-6"
-                        id="root_person__title"
                       >
-                        person
+                        <span
+                          id="root_person__title"
+                        >
+                          person
+                        </span>
                       </h5>
                       <span
                         aria-orientation="horizontal"
@@ -3050,9 +3062,12 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                               >
                                 <h5
                                   class="chakra-heading emotion-6"
-                                  id="root_person_address__title"
                                 >
-                                  address
+                                  <span
+                                    id="root_person_address__title"
+                                  >
+                                    address
+                                  </span>
                                 </h5>
                                 <span
                                   aria-orientation="horizontal"
@@ -3738,9 +3753,12 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                       >
                         <h5
                           class="chakra-heading emotion-16"
-                          id="root_items__title"
                         >
-                          items
+                          <span
+                            id="root_items__title"
+                          >
+                            items
+                          </span>
                         </h5>
                         <span
                           aria-orientation="horizontal"
@@ -6605,9 +6623,12 @@ exports[`object fields > additionalProperties, array type 1`] = `
                         >
                           <h5
                             class="chakra-heading emotion-12"
-                            id="root_foo__title"
                           >
-                            foo
+                            <span
+                              id="root_foo__title"
+                            >
+                              foo
+                            </span>
                           </h5>
                           <span
                             aria-orientation="horizontal"
@@ -8452,9 +8473,12 @@ exports[`object fields > additionalProperties, object type 1`] = `
                       >
                         <h5
                           class="chakra-heading emotion-12"
-                          id="root_foo__title"
                         >
-                          foo
+                          <span
+                            id="root_foo__title"
+                          >
+                            foo
+                          </span>
                         </h5>
                         <span
                           aria-orientation="horizontal"
@@ -12050,9 +12074,12 @@ exports[`object fields > with title and description > additionalProperties 1`] =
           >
             <h5
               class="chakra-heading emotion-3"
-              id="root__title"
             >
-              Test field
+              <span
+                id="root__title"
+              >
+                Test field
+              </span>
             </h5>
             <span
               aria-orientation="horizontal"
@@ -12523,9 +12550,12 @@ exports[`object fields > with title and description > object 1`] = `
           >
             <h5
               class="chakra-heading emotion-3"
-              id="root__title"
             >
-              Test field
+              <span
+                id="root__title"
+              >
+                Test field
+              </span>
             </h5>
             <span
               aria-orientation="horizontal"
@@ -13132,9 +13162,12 @@ exports[`object fields > with title and description > show add button and fields
           >
             <h5
               class="chakra-heading emotion-3"
-              id="root__title"
             >
-              Test field
+              <span
+                id="root__title"
+              >
+                Test field
+              </span>
             </h5>
             <span
               aria-orientation="horizontal"
@@ -13767,9 +13800,12 @@ exports[`object fields > with title and description from both > additionalProper
           >
             <h5
               class="chakra-heading emotion-3"
-              id="root__title"
             >
-              My Field
+              <span
+                id="root__title"
+              >
+                My Field
+              </span>
             </h5>
             <span
               aria-orientation="horizontal"
@@ -14240,9 +14276,12 @@ exports[`object fields > with title and description from both > object 1`] = `
           >
             <h5
               class="chakra-heading emotion-3"
-              id="root__title"
             >
-              My Field
+              <span
+                id="root__title"
+              >
+                My Field
+              </span>
             </h5>
             <span
               aria-orientation="horizontal"
@@ -14849,9 +14888,12 @@ exports[`object fields > with title and description from uiSchema > additionalPr
           >
             <h5
               class="chakra-heading emotion-3"
-              id="root__title"
             >
-              My Field
+              <span
+                id="root__title"
+              >
+                My Field
+              </span>
             </h5>
             <span
               aria-orientation="horizontal"
@@ -15322,9 +15364,12 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
           >
             <h5
               class="chakra-heading emotion-3"
-              id="root__title"
             >
-              My Field
+              <span
+                id="root__title"
+              >
+                My Field
+              </span>
             </h5>
             <span
               aria-orientation="horizontal"
@@ -15931,9 +15976,12 @@ exports[`object fields > with title and description from uiSchema > show add but
           >
             <h5
               class="chakra-heading emotion-3"
-              id="root__title"
             >
-              My Field
+              <span
+                id="root__title"
+              >
+                My Field
+              </span>
             </h5>
             <span
               aria-orientation="horizontal"
@@ -16555,6 +16603,7 @@ exports[`object fields > with title and description with global label off > addi
                         role="group"
                       >
                         <input
+                          aria-label="foo"
                           class="chakra-input emotion-11"
                           data-part="input"
                           data-scope="field"
@@ -16893,6 +16942,7 @@ exports[`object fields > with title and description with global label off > obje
                       role="group"
                     >
                       <input
+                        aria-label="A"
                         class="chakra-input emotion-6"
                         data-part="input"
                         data-scope="field"
@@ -16928,6 +16978,7 @@ exports[`object fields > with title and description with global label off > obje
                       role="group"
                     >
                       <input
+                        aria-label="B"
                         class="chakra-input emotion-6"
                         data-part="input"
                         data-scope="field"
@@ -17405,6 +17456,7 @@ exports[`object fields > with title and description with global label off > show
                         role="group"
                       >
                         <input
+                          aria-label="additionalProperty"
                           class="chakra-input emotion-11"
                           data-part="input"
                           data-scope="field"
