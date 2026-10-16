@@ -286,6 +286,21 @@ export default function pointerValidationTests(buildValidator: (rootSchema: RJSF
         const options = optionsOf(rootSchema.properties?.pet, 'oneOf');
         expect(schemaUtils.getFirstMatchingOption({ petType: 'dog' }, options, 'petType')).toBe(1);
       });
+      it.each([
+        ['a pattern', { pattern: '^c' }, { pattern: '^d' }],
+        ['a $ref to a const', { $ref: '#/definitions/CatKind' }, { $ref: '#/definitions/DogKind' }],
+        ['an allOf of a const', { allOf: [{ const: 'cat' }] }, { allOf: [{ const: 'dog' }] }],
+      ])(
+        'checking the value against a base enumerating every kind and an own declaration that is %s',
+        (_name, catKind: RJSFSchema, dogKind: RJSFSchema) => {
+          const rootSchema = base(enumerating, pet('cat', catKind), pet('dog', dogKind));
+          rootSchema.definitions = { ...rootSchema.definitions, CatKind: { const: 'cat' }, DogKind: { const: 'dog' } };
+          const schemaUtils = createSchemaUtils({ validator: buildValidator(rootSchema) }, rootSchema);
+          const options = optionsOf(rootSchema.properties?.pet, 'oneOf');
+          expect(schemaUtils.getFirstMatchingOption({ petType: 'dog' }, options, 'petType')).toBe(1);
+          expect(schemaUtils.getClosestMatchingOption({ petType: 'dog' }, options, 0, 'petType')).toBe(1);
+        },
+      );
       it('choosing a dependency oneOf option the same way', () => {
         const kind = (value: string): RJSFSchema => ({
           allOf: [

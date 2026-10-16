@@ -31,6 +31,36 @@ describe('matching options through the schema graph', () => {
     });
     expect(validator.calls).toBe(0);
   });
+  describe('reading a base that declares the discriminator with neither a const nor an enum', () => {
+    type Case = [name: string, kind: RJSFSchema, values: (string | number)[], value: string | number];
+    const matching = (kind: RJSFSchema, values: readonly (string | number)[], value: string | number) => {
+      const options: RJSFSchema[] = values.map((entry) => ({
+        allOf: [{ $ref: '#/definitions/Base' }, { properties: { kind: { const: entry } } }],
+      }));
+      const field: RJSFSchema = { discriminator: { propertyName: 'kind' }, oneOf: options };
+      const rootSchema: RJSFSchema = {
+        definitions: { Base: { properties: { kind } } },
+        type: 'object',
+        properties: { v: field },
+      };
+      const validator = miniValidator();
+      const index = getFirstMatchingOption({ validator }, { kind: value }, options, rootSchema, 'kind');
+      return { index, calls: validator.calls };
+    };
+    it.each<Case>([
+      ['no type', { title: 'Kind' }, ['a', 'b'], 'b'],
+      ['a type list allowing the value', { type: ['null', 'string'] }, ['a', 'b'], 'b'],
+      ['an integer type the value is', { type: 'integer' }, [1, 2], 2],
+    ])('matches by const alone past one with %s', (_name, kind: RJSFSchema, values, value) => {
+      expect(matching(kind, values, value)).toEqual({ index: 1, calls: 0 });
+    });
+    it.each<Case>([
+      ['a type the value is not', { type: 'integer' }, [1, 1.5], 1.5],
+      ['a pattern', { type: 'string', pattern: '.' }, ['a', 'b'], 'b'],
+    ])('leaves the validator to check past one with %s', (_name, kind: RJSFSchema, values, value) => {
+      expect(matching(kind, values, value).calls).toBeGreaterThan(0);
+    });
+  });
   it('matches past an option holding a patternProperties pattern no flag compiles', () => {
     const options: RJSFSchema[] = [
       { type: 'object', properties: { a: { type: 'string' } }, patternProperties: { '(?<x': { type: 'string' } } },

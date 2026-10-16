@@ -2868,7 +2868,7 @@ An object option is matched more strictly than it describes itself: the data has
 An option whose `properties` name nothing matches only where it takes keys they don't name, such as one describing a map.
 Where something in that scope declares `properties`, every `required` in the scope, and every `dependencies` entry listing names, is dropped for scoring, since a key the user has yet to fill in would fail it: an option stating one is validated as a copy without them, which names the subschemas below it by `$ref`s into the root and carries no `$id`.
 An option whose scope declares no `properties`, such as `{ required: ['email'] }`, is validated with its `required`, which is what it is chosen by.
-With a `discriminatorField`, an option whose property of that name has a `const` or `enum` holding the data's value matches without the validator, and one whose property says it by other keywords is matched by that property alone.
+With a `discriminatorField`, an option matches without the validator where a declaration of its property of that name states a `const` or `enum`, every declaration stating one holds the data's value, and every other declaration holds no keyword constraining a value but a `type` allowing it. Any other option naming the property, such as one declaring it by a `pattern`, a `$ref` or an `allOf` beside an `enum` in a shared base, is matched by the validator on that property alone.
 The property is read from every declaration of it that applies whatever the data, so with `allOf: [{ $ref: Base }, { properties: { petType: { const: 'cat' } } }]`, where `Base` declares `petType` as any string, the option holds `petType: 'cat'` and no other value.
 
 #### Parameters
