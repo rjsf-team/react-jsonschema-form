@@ -222,6 +222,19 @@ A `schema.propertyNames.enum` caps the object in the same way: once every name i
 
 - boolean: True if the schema element has additionalProperties or patternProperties keywords, is expandable, is not at the maxProperties limit and has a name its `propertyNames.enum` allows left to take
 
+### constrainsValue()
+
+Says whether `keyword` of a schema constrains the value the schema describes, either directly, as `enum`, `minLength` or `required` do, or by way of other subschemas, as `allOf`, `not` or `$ref` do.
+`type` does not count, nor does an annotation such as `title`, an identifier such as `$id`, a container such as `$defs`, a `discriminator` or a keyword outside JSON Schema's validation vocabulary, such as an `x-` extension: none of those rejects a value.
+
+#### Parameters
+
+- keyword: string - The keyword
+
+#### Returns
+
+- boolean: True when the keyword constrains the value
+
 ### createErrorHandler&lt;T = unknown>()
 
 Given a `formData` object, recursively creates a `FormValidation` error handling structure around it

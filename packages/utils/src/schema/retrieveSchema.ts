@@ -719,6 +719,17 @@ export const CONTAINER_KEYWORDS: string[] = ['$defs', 'definitions'];
  */
 export const CONSTRAINING_KEYWORDS = new Set<string>([...VALUE_KEYWORDS, ...SUBSCHEMA_KEYWORDS]);
 
+/** Whether `keyword` of a schema constrains the value it describes, directly or by way of other subschemas. `type` does
+ * not count, nor does an annotation, an identifier, a container such as `$defs`, a `discriminator` or any keyword
+ * outside JSON Schema's validation vocabulary, such as an `x-` extension: none of those rejects a value
+ *
+ * @param keyword - The keyword
+ * @returns - True when the keyword constrains the value
+ */
+export function constrainsValue(keyword: string): boolean {
+  return CONSTRAINING_KEYWORDS.has(keyword);
+}
+
 /** The keywords no stub carries, whatever the stub keeps of the rest, for the reasons the two lists above give: both
  * reasons are about building a stub once per property key, not about what the stub then says of the value.
  */
