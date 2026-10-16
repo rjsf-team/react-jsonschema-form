@@ -26,6 +26,23 @@ describe('widgetAriaProps()', () => {
   it('names the widget as its caller asked', () => {
     expect(widgetAriaProps({ ...colorProps, 'aria-label': 'When, year' })['aria-label']).toBe('When, year');
   });
+  it('names the widget by the label text its plan hides, unless its caller names it', () => {
+    const presentation = resolveFieldPresentation({
+      id: 'root_color',
+      declaration: {
+        label: 'template',
+        description: 'template',
+        errors: 'template',
+        help: 'template',
+        labelledBy: 'for',
+      },
+      label: 'Color',
+      showLabel: false,
+    });
+    const props = { ...colorProps, 'aria-describedby': undefined, presentation };
+    expect(widgetAriaProps(props)['aria-label']).toBe('Color');
+    expect(widgetAriaProps({ ...props, 'aria-label': 'Paint' })['aria-label']).toBe('Paint');
+  });
   it("follows the caller's ids with the description of the selected option", () => {
     expect(widgetAriaProps(colorProps)['aria-describedby']).toBe('ext root_color__description');
   });

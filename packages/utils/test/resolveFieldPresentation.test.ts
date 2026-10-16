@@ -78,6 +78,31 @@ describe('resolveFieldPresentation()', () => {
       expect(plan.describedBy).toEqual([`${ID}__help`]);
     });
 
+    it('names the control by the label text ui:label false hides', () => {
+      expect(resolve({ showLabel: false }).control?.attributes).toEqual({ 'aria-label': 'Foo' });
+      expect(resolve({ declaration: WIDGET_LABEL, showLabel: false }).control?.attributes).toEqual({
+        'aria-label': 'Foo',
+      });
+    });
+
+    it("names an option's control by the hidden label of the field above, as that label names it while it shows", () => {
+      const field = resolve({ label: 'Pet', showLabel: false });
+      expect(resolve({ inherited: field, label: 'Dog', showLabel: false }).control?.attributes).toEqual({
+        'aria-label': 'Pet',
+      });
+      const untitled = resolve({ label: '', showLabel: false });
+      expect(resolve({ inherited: untitled, label: 'Dog', showLabel: false }).control?.attributes).toEqual({
+        'aria-label': 'Dog',
+      });
+    });
+
+    it('gives no aria-label to a control with no label text, one whose label shows, or one a label above names', () => {
+      expect(resolve({ label: '', showLabel: false }).control?.attributes).toEqual({});
+      expect(resolve().control?.attributes).toEqual({});
+      const above = resolve();
+      expect(resolve({ inherited: above, showLabel: false }).control?.attributes).toEqual({});
+    });
+
     // An opted-out optional field has no control on screen for a `<label for>` to name
     it('draws no template label with no control to name', () => {
       const plan = resolve({ hasControl: false, description: 'Describes foo', errors: ['is required'] });

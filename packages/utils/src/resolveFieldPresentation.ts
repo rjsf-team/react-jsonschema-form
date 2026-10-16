@@ -117,7 +117,10 @@ function placeText<Text>(
  *   control above was pointed at that label too, since its template may then draw it with no `for`, or when its id
  *   isn't the one that label's `for` names. Its `requiredMarker` follows `required` whether or not there is a control,
  *   so a container's heading is marked too, and an `above` label carries the marker of the label drawn above, so the
- *   plan describes that one label as it is drawn; the control's own `required` stays this level's.
+ *   plan describes that one label as it is drawn; the control's own `required` stays this level's. A control whose
+ *   label `showLabel` hides is named by the label's text through `aria-label`, since hiding the label is a choice of
+ *   layout, not of the control's name, or by the text of the nearest field above rendering the same id whose label is
+ *   hidden too, as an option's control is named by its field's label while it shows.
  * - The description and help show where they have text, the description only where `showLabel` allows it. Text any
  *   field above already shows is `above`, as is a part with no text under a field above that shows one; text of its
  *   own takes `optionDescriptionId()` or `optionHelpId()` when a field above shows text under the id it would take,
@@ -224,6 +227,12 @@ export default function resolveFieldPresentation(inputs: FieldPresentationInputs
       (declaration.labelledBy === 'aria-labelledby' || forMissesControl)
     ) {
       attributes['aria-labelledby'] = labelId;
+    }
+    // Named as the label above would name it were it shown, so a field above rendering this id names it by its text
+    const hiddenLabel =
+      plansAbove.find((plan) => plan.control?.attributes['aria-label'])?.control?.attributes['aria-label'] ?? labelText;
+    if (hiddenLabel && !showLabel && !labelAbove) {
+      attributes['aria-label'] = hiddenLabel;
     }
     if (required) {
       attributes.required = true;
