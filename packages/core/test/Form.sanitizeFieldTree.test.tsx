@@ -772,6 +772,37 @@ describe('sanitize as a diff of the field trees before and after a change', () =
     expect(last?.rows?.[0]).toEqual({ kind: 'y', tags: [] });
   });
 
+  it('judges a copied row the copy flips the constraints of, as it judges the row it copies', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        list: {
+          type: 'array',
+          items: { type: 'object', properties: { color: { type: 'string', enum: ['r', 'g'] } } },
+        },
+      },
+      allOf: [
+        {
+          if: { properties: { list: { minItems: 2 } } },
+          then: { properties: { list: { items: { properties: { color: { enum: ['r'] } } } } } },
+        },
+      ],
+    };
+    const events: IChangeEvent<{ list?: { color?: string }[] }>[] = [];
+    const { container } = render(
+      <Form<{ list?: { color?: string }[] }>
+        schema={schema}
+        validator={validator}
+        uiSchema={{ list: { 'ui:options': { copyable: true } } }}
+        initialFormData={{ list: [{ color: 'g' }] }}
+        onChange={(event) => events.push(event)}
+      />,
+    );
+    await user.click(elementOf(container, `#${buttonId('root_list_0', 'copy')}`));
+    const last = events[events.length - 1].formData;
+    expect(last).toEqual({ list: [{ color: 'r' }, { color: 'r' }] });
+  });
+
   it('keeps each row paired with its own previous value across a reorder (#5451)', async () => {
     const schema: RJSFSchema = {
       type: 'object',
