@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { chakra, Fieldset, useSlotRecipe } from '@chakra-ui/react';
+import { Fieldset, useSlotRecipe } from '@chakra-ui/react';
 import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
   getTemplates,
@@ -11,6 +11,7 @@ import {
   templateMarksRequired,
 } from '@rjsf/utils';
 
+import { RecipeLabel, RequiredMarker } from '../components/ui/field.tsx';
 import { labelledByOrNone } from '../utils.ts';
 
 interface TemplateLabelProps {
@@ -25,21 +26,10 @@ interface TemplateLabelProps {
 function TemplateLabel({ id, htmlFor, requiredMarker, disabled, children }: TemplateLabelProps) {
   const fieldStyles = useSlotRecipe({ key: 'field' })();
   return (
-    <chakra.label
-      htmlFor={htmlFor}
-      id={id}
-      data-disabled={disabled ? '' : undefined}
-      className='chakra-field__label'
-      css={fieldStyles.label}
-      mb={1.5}
-    >
+    <RecipeLabel htmlFor={htmlFor} id={id} data-disabled={disabled ? '' : undefined} css={fieldStyles.label} mb={1.5}>
       {children}
-      {requiredMarker && (
-        <chakra.span className='chakra-field__requiredIndicator' css={fieldStyles.requiredIndicator} aria-hidden>
-          *
-        </chakra.span>
-      )}
-    </chakra.label>
+      {requiredMarker && <RequiredMarker />}
+    </RecipeLabel>
   );
 }
 

@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { formTests, themeTests } from '@rjsf/snapshot-tests';
 import type { FormValidation, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
-import { errorId, helpId, optionHelpId } from '@rjsf/utils';
+import { bracketNameGenerator, errorId, helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -755,5 +755,51 @@ describe('chakra-ui names a control whose label ui:label false hides', () => {
     expect(screen.queryByText('Pet')).toBeNull();
     expect(screen.getByRole(role)).toHaveAccessibleName('Pet');
     expectReferencesResolve(container);
+  });
+});
+
+describe('chakra-ui names and focuses its controls as core does', () => {
+  test.each([
+    ['range', { 'ui:widget': 'range' }],
+    ['updown', { 'ui:widget': 'updown' }],
+  ])('names a %s form value by htmlName', (_, uiSchema) => {
+    const { container } = render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { volume: { type: 'integer', title: 'Volume' } } }}
+        uiSchema={{ volume: uiSchema }}
+        nameGenerator={bracketNameGenerator}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('input[name="root[volume]"]')).toBeInTheDocument();
+  });
+
+  test.each<[string, RJSFSchema, string]>([
+    ['radio', { type: 'string', enum: ['red', 'green'] }, 'radio'],
+    ['checkboxes', { type: 'array', items: { type: 'string', enum: ['red', 'green'] }, uniqueItems: true }, 'checkbox'],
+  ])('focuses the first %s a user can choose under ui:autofocus', (widget, color, role) => {
+    render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { color } }}
+        uiSchema={{ color: { 'ui:widget': widget, 'ui:autofocus': true, 'ui:enumDisabled': ['red'] } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getAllByRole(role)[1]).toHaveFocus();
+  });
+
+  test("focuses a radio group's checked radio under ui:autofocus, where Tab into the group lands", () => {
+    render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { color: { type: 'string', enum: ['red', 'green', 'blue'] } } }}
+        uiSchema={{ color: { 'ui:widget': 'radio', 'ui:autofocus': true } }}
+        initialFormData={{ color: 'blue' }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getAllByRole('radio')[2]).toHaveFocus();
   });
 });

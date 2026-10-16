@@ -2,6 +2,7 @@ import { CheckboxGroup, FieldsetRoot, Stack, Text, FieldsetLegend } from '@chakr
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   enumOptionSelectedValue,
+  enumOptionsAutofocusIndex,
   enumOptionsIsDisabled,
   enumOptionValueDecoder,
   enumOptionsDomValues,
@@ -21,7 +22,7 @@ export default function CheckboxesWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { id, htmlName, disabled, options, value, readonly, onChange, onBlur, onFocus, label } = props;
+  const { id, htmlName, disabled, options, value, readonly, autofocus, onChange, onBlur, onFocus, label } = props;
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
@@ -40,6 +41,7 @@ export default function CheckboxesWidget<
     option: optionAttributes,
   } = getGroupLabelling<T, S, F>(props, 'group');
 
+  const autofocusIndex = enumOptionsAutofocusIndex<S>(enumOptions, enumDisabled, autofocus);
   return (
     <FieldsetRoot
       mb={1}
@@ -79,7 +81,7 @@ export default function CheckboxesWidget<
                   disabled={disabled || itemDisabled || readonly}
                   onBlur={blurHandlers[index]}
                   onFocus={focusHandlers[index]}
-                  inputProps={optionAttributes}
+                  inputProps={{ ...optionAttributes, autoFocus: index === autofocusIndex }}
                 >
                   {option.label && <Text>{option.label}</Text>}
                 </Checkbox>

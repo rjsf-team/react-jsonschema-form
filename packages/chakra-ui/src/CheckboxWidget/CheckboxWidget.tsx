@@ -26,6 +26,7 @@ export default function CheckboxWidget<
     value,
     disabled,
     readonly,
+    autofocus,
     onChange,
     onBlur,
     onFocus,
@@ -77,6 +78,7 @@ export default function CheckboxWidget<
         inputProps={{
           ...controlAttributes,
           'aria-labelledby': labelledByOrNone(controlAttributes['aria-labelledby'], drawsLabel),
+          autoFocus: autofocus,
         }}
       >
         {drawsLabel ? (

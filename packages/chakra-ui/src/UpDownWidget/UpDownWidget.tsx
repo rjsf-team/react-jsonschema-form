@@ -12,7 +12,20 @@ export default function UpDownWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { id, readonly, disabled, label, value, onChange, onBlur, onFocus, required, presentation } = props;
+  const {
+    id,
+    htmlName,
+    readonly,
+    disabled,
+    autofocus,
+    label,
+    value,
+    onChange,
+    onBlur,
+    onFocus,
+    required,
+    presentation,
+  } = props;
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
 
   const handleChange = ({ value: newValue }: NumberInputValueChangeDetails) => onChange(newValue);
@@ -39,9 +52,9 @@ export default function UpDownWidget<
         onValueChange={handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
-        inputProps={getControlAttributes<T, S, F>({ id, presentation })}
+        inputProps={{ ...getControlAttributes<T, S, F>({ id, presentation }), autoFocus: autofocus }}
         id={id}
-        name={id}
+        name={htmlName || id}
       />
     </Field>
   );

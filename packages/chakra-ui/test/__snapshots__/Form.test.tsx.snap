@@ -578,9 +578,15 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
 }
 
 .emotion-15 {
-  color: var(--chakra-colors-fg-error);
   -webkit-margin-start: var(--chakra-spacing-1);
   margin-inline-start: var(--chakra-spacing-1);
+}
+
+@layer recipes {
+  .emotion-15 {
+    color: var(--chakra-colors-fg-error);
+    line-height: 1;
+  }
 }
 
 .emotion-20 {
@@ -1116,7 +1122,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                         </span>
                                         <span
                                           aria-hidden="true"
-                                          class="emotion-15"
+                                          class="chakra-field__requiredIndicator emotion-15"
                                         >
                                           *
                                         </span>
@@ -1376,7 +1382,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                         </span>
                                         <span
                                           aria-hidden="true"
-                                          class="emotion-15"
+                                          class="chakra-field__requiredIndicator emotion-15"
                                         >
                                           *
                                         </span>
@@ -5741,9 +5747,15 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
 }
 
 .emotion-15 {
-  color: var(--chakra-colors-fg-error);
   -webkit-margin-start: var(--chakra-spacing-1);
   margin-inline-start: var(--chakra-spacing-1);
+}
+
+@layer recipes {
+  .emotion-15 {
+    color: var(--chakra-colors-fg-error);
+    line-height: 1;
+  }
 }
 
 .emotion-20 {
@@ -6279,7 +6291,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                         </span>
                                         <span
                                           aria-hidden="true"
-                                          class="emotion-15"
+                                          class="chakra-field__requiredIndicator emotion-15"
                                         >
                                           *
                                         </span>
@@ -6539,7 +6551,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                         </span>
                                         <span
                                           aria-hidden="true"
-                                          class="emotion-15"
+                                          class="chakra-field__requiredIndicator emotion-15"
                                         >
                                           *
                                         </span>
@@ -22782,9 +22794,15 @@ exports[`single fields > optional data controls > does not show optional control
 }
 
 .emotion-32 {
-  color: var(--chakra-colors-fg-error);
   -webkit-margin-start: var(--chakra-spacing-1);
   margin-inline-start: var(--chakra-spacing-1);
+}
+
+@layer recipes {
+  .emotion-32 {
+    color: var(--chakra-colors-fg-error);
+    line-height: 1;
+  }
 }
 
 .emotion-45 {
@@ -23482,7 +23500,7 @@ exports[`single fields > optional data controls > does not show optional control
                                   </span>
                                   <span
                                     aria-hidden="true"
-                                    class="emotion-32"
+                                    class="chakra-field__requiredIndicator emotion-32"
                                   >
                                     *
                                   </span>
@@ -23726,7 +23744,7 @@ exports[`single fields > optional data controls > does not show optional control
                                     </span>
                                     <span
                                       aria-hidden="true"
-                                      class="emotion-32"
+                                      class="chakra-field__requiredIndicator emotion-32"
                                     >
                                       *
                                     </span>
@@ -23890,7 +23908,7 @@ exports[`single fields > optional data controls > does not show optional control
                         </span>
                         <span
                           aria-hidden="true"
-                          class="emotion-32"
+                          class="chakra-field__requiredIndicator emotion-32"
                         >
                           *
                         </span>
@@ -23980,7 +23998,7 @@ exports[`single fields > optional data controls > does not show optional control
                           </span>
                           <span
                             aria-hidden="true"
-                            class="emotion-32"
+                            class="chakra-field__requiredIndicator emotion-32"
                           >
                             *
                           </span>
@@ -24834,9 +24852,15 @@ exports[`single fields > optional data controls > does not show optional control
 }
 
 .emotion-32 {
-  color: var(--chakra-colors-fg-error);
   -webkit-margin-start: var(--chakra-spacing-1);
   margin-inline-start: var(--chakra-spacing-1);
+}
+
+@layer recipes {
+  .emotion-32 {
+    color: var(--chakra-colors-fg-error);
+    line-height: 1;
+  }
 }
 
 .emotion-45 {
@@ -25548,7 +25572,7 @@ exports[`single fields > optional data controls > does not show optional control
                                   </span>
                                   <span
                                     aria-hidden="true"
-                                    class="emotion-32"
+                                    class="chakra-field__requiredIndicator emotion-32"
                                   >
                                     *
                                   </span>
@@ -25801,7 +25825,7 @@ exports[`single fields > optional data controls > does not show optional control
                                     </span>
                                     <span
                                       aria-hidden="true"
-                                      class="emotion-32"
+                                      class="chakra-field__requiredIndicator emotion-32"
                                     >
                                       *
                                     </span>
@@ -25967,7 +25991,7 @@ exports[`single fields > optional data controls > does not show optional control
                         </span>
                         <span
                           aria-hidden="true"
-                          class="emotion-32"
+                          class="chakra-field__requiredIndicator emotion-32"
                         >
                           *
                         </span>
@@ -26064,7 +26088,7 @@ exports[`single fields > optional data controls > does not show optional control
                           </span>
                           <span
                             aria-hidden="true"
-                            class="emotion-32"
+                            class="chakra-field__requiredIndicator emotion-32"
                           >
                             *
                           </span>
@@ -27068,9 +27092,15 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
 }
 
 .emotion-33 {
-  color: var(--chakra-colors-fg-error);
   -webkit-margin-start: var(--chakra-spacing-1);
   margin-inline-start: var(--chakra-spacing-1);
+}
+
+@layer recipes {
+  .emotion-33 {
+    color: var(--chakra-colors-fg-error);
+    line-height: 1;
+  }
 }
 
 .emotion-46 {
@@ -27640,7 +27670,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                   </span>
                                   <span
                                     aria-hidden="true"
-                                    class="emotion-33"
+                                    class="chakra-field__requiredIndicator emotion-33"
                                   >
                                     *
                                   </span>
@@ -27884,7 +27914,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                     </span>
                                     <span
                                       aria-hidden="true"
-                                      class="emotion-33"
+                                      class="chakra-field__requiredIndicator emotion-33"
                                     >
                                       *
                                     </span>
@@ -28183,7 +28213,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                         </span>
                         <span
                           aria-hidden="true"
-                          class="emotion-33"
+                          class="chakra-field__requiredIndicator emotion-33"
                         >
                           *
                         </span>
@@ -28273,7 +28303,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                           </span>
                           <span
                             aria-hidden="true"
-                            class="emotion-33"
+                            class="chakra-field__requiredIndicator emotion-33"
                           >
                             *
                           </span>
@@ -28706,9 +28736,15 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
 }
 
 .emotion-27 {
-  color: var(--chakra-colors-fg-error);
   -webkit-margin-start: var(--chakra-spacing-1);
   margin-inline-start: var(--chakra-spacing-1);
+}
+
+@layer recipes {
+  .emotion-27 {
+    color: var(--chakra-colors-fg-error);
+    line-height: 1;
+  }
 }
 
 .emotion-40 {
@@ -29221,7 +29257,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                   </span>
                                   <span
                                     aria-hidden="true"
-                                    class="emotion-27"
+                                    class="chakra-field__requiredIndicator emotion-27"
                                   >
                                     *
                                   </span>
@@ -29444,7 +29480,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                     </span>
                                     <span
                                       aria-hidden="true"
-                                      class="emotion-27"
+                                      class="chakra-field__requiredIndicator emotion-27"
                                     >
                                       *
                                     </span>
@@ -29715,7 +29751,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                         </span>
                         <span
                           aria-hidden="true"
-                          class="emotion-27"
+                          class="chakra-field__requiredIndicator emotion-27"
                         >
                           *
                         </span>
@@ -29812,7 +29848,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                           </span>
                           <span
                             aria-hidden="true"
-                            class="emotion-27"
+                            class="chakra-field__requiredIndicator emotion-27"
                           >
                             *
                           </span>
@@ -30210,9 +30246,15 @@ exports[`single fields > optional data controls > shows "add" optional controls 
 }
 
 .emotion-28 {
-  color: var(--chakra-colors-fg-error);
   -webkit-margin-start: var(--chakra-spacing-1);
   margin-inline-start: var(--chakra-spacing-1);
+}
+
+@layer recipes {
+  .emotion-28 {
+    color: var(--chakra-colors-fg-error);
+    line-height: 1;
+  }
 }
 
 .emotion-33 {
@@ -30664,7 +30706,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                         </span>
                         <span
                           aria-hidden="true"
-                          class="emotion-28"
+                          class="chakra-field__requiredIndicator emotion-28"
                         >
                           *
                         </span>
@@ -30754,7 +30796,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                           </span>
                           <span
                             aria-hidden="true"
-                            class="emotion-28"
+                            class="chakra-field__requiredIndicator emotion-28"
                           >
                             *
                           </span>
@@ -31097,9 +31139,15 @@ exports[`single fields > optional data controls > shows "add" optional controls 
 }
 
 .emotion-22 {
-  color: var(--chakra-colors-fg-error);
   -webkit-margin-start: var(--chakra-spacing-1);
   margin-inline-start: var(--chakra-spacing-1);
+}
+
+@layer recipes {
+  .emotion-22 {
+    color: var(--chakra-colors-fg-error);
+    line-height: 1;
+  }
 }
 
 .emotion-27 {
@@ -31503,7 +31551,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                         </span>
                         <span
                           aria-hidden="true"
-                          class="emotion-22"
+                          class="chakra-field__requiredIndicator emotion-22"
                         >
                           *
                         </span>
@@ -31600,7 +31648,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                           </span>
                           <span
                             aria-hidden="true"
-                            class="emotion-22"
+                            class="chakra-field__requiredIndicator emotion-22"
                           >
                             *
                           </span>

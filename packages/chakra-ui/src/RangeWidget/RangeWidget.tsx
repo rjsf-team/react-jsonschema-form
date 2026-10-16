@@ -33,6 +33,7 @@ export default function RangeWidget<
     onChange,
     label,
     id,
+    htmlName,
     presentation,
   } = props;
   const thumbRef = useRef<HTMLDivElement>(null);
@@ -75,7 +76,7 @@ export default function RangeWidget<
         // The thumb, which a user focuses, carries the field's id, and is named by the label through
         // `aria-labelledby`, since a `for` can't name it
         ids={{ thumb: () => id, label: labelId }}
-        name={id}
+        name={htmlName || id}
         disabled={disabled || readonly}
         value={[value]}
         onValueChange={handleChange}
