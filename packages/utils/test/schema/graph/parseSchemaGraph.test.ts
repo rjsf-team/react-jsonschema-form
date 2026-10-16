@@ -51,7 +51,6 @@ describe('parseSchemaGraph()', () => {
       expect(graph.root).toBe(0);
       expect(root.pointer).toBe('');
       expect(root.raw).toBe(schema);
-      expect(root.literalId).toBe('literal-id');
       expect(root.pureRef).toBe(false);
     });
     const pointers = (entries: [string, NodeId][]) => entries.map(([key, id]) => [key, graph.node(id).pointer]);
@@ -117,9 +116,6 @@ describe('parseSchemaGraph()', () => {
     it('throws for an id with no node', () => {
       expect(() => graph.node(10_000)).toThrow('No node 10000 in this schema graph');
       expect(() => graph.node(-1)).toThrow('No node -1 in this schema graph');
-    });
-    it('records no diagnostics for a schema without references', () => {
-      expect(graph.diagnostics).toEqual([]);
     });
   });
 
@@ -210,12 +206,6 @@ describe('parseSchemaGraph()', () => {
         reason: 'dangling',
         message,
       });
-      expect(graph.diagnostics).toContainEqual({
-        node: graph.byPointer(`/definitions/${name}`),
-        ref,
-        reason: 'dangling',
-        message,
-      });
     });
   });
 
@@ -260,8 +250,21 @@ describe('parseSchemaGraph()', () => {
     it.each(['toEmpty', 'fine', 'alias'])('%s resolves', (name) => {
       expect(graph.node(at(graph, `/definitions/${name}`).ref ?? -1).kind).toBe('schema');
     });
-    it('records a diagnostic per $ref', () => {
-      expect(graph.diagnostics.map(({ ref, reason }) => [ref, reason])).toEqual([
+    it('records why each $ref resolves to nothing', () => {
+      const invalid = [
+        'self',
+        'deep',
+        'deeper',
+        'deepest',
+        'into',
+        'intoSelf',
+        'twoA',
+        'twoB',
+        'toMissing',
+        'chainToMissing',
+        'emptyRef',
+      ].map((name) => target(graph, `/definitions/${name}`));
+      expect(invalid.map((node) => (node.kind === 'invalid' ? [node.ref, node.reason] : node.kind))).toEqual([
         ['#/definitions/self', 'circular-alias'],
         ['#/definitions/deeper', 'circular-alias'],
         ['#/definitions/deepest', 'circular-alias'],
@@ -365,16 +368,18 @@ describe('parseSchemaGraph()', () => {
       expect(objectNode(adopted.graph, adopted.node).ref).toBe(graph.byPointer('/$defs/one'));
     });
     it('keeps an $id under a keyword that holds no subschemas from naming a resource or moving the base (#5529)', () => {
-      const graph = parseSchemaGraph({
+      const root: RJSFSchema = {
         $schema: JSON_SCHEMA_DRAFT_2020_12,
         $id: 'https://example.com/root.json',
         $defs: { real: { $id: 'n.json', type: 'boolean' }, s: { type: 'string' } },
         components: { Pet: { type: 'object', properties: { n: { $id: 'n.json', $ref: '#/$defs/s' } } } },
         properties: { pet: { $ref: '#/components/Pet' } },
-      });
+      };
+      const graph = parseSchemaGraph(root);
       expect(target(graph, '/properties/pet').pointer).toBe('/components/Pet');
       expect(target(graph, '/components/Pet/properties/n').pointer).toBe('/$defs/s');
-      expect(graph.resolveRef('n.json')).toBe(graph.byPointer('/$defs/real'));
+      const adopted = graph.adopt({ $ref: 'n.json' });
+      expect(objectNode(adopted.graph, adopted.node).ref).toBe(graph.byPointer('/$defs/real'));
     });
     it('points an unknown resource or anchor at an invalid node', () => {
       const graph = parseSchemaGraph(schema);
@@ -391,33 +396,6 @@ describe('parseSchemaGraph()', () => {
       });
       expect(target(graph, '/$defs/y').pointer).toBe('/$defs/x');
       expect(target(graph, '/$defs/bad').kind).toBe('invalid');
-    });
-  });
-
-  describe('resolveRef()', () => {
-    const schema: RJSFSchema = {
-      definitions: { a: { type: 'string' }, t: false },
-      unreferenced: { x: { type: 'number' } },
-      properties: { p: { $ref: '#/definitions/a' } },
-    };
-    const graph = parseSchemaGraph(schema);
-
-    it('resolves a ui:definitions key to the node it names', () => {
-      expect(graph.resolveRef('#/definitions/a')).toBe(graph.byPointer('/definitions/a'));
-      expect(graph.resolveRef('#/definitions/t')).toBe(graph.byPointer('/definitions/t'));
-    });
-    it('finds nothing at a location no walk or $ref parsed', () => {
-      expect(graph.resolveRef('#/unreferenced/x')).toBeUndefined();
-      expect(graph.resolveRef('#/definitions/missing')).toBeUndefined();
-      expect(graph.resolveRef('#/definitions/a/type')).toBeUndefined();
-    });
-    it('resolves from a boolean node against the root base under draft 2020-12', () => {
-      const scoped = parseSchemaGraph({
-        $schema: JSON_SCHEMA_DRAFT_2020_12,
-        $id: 'https://example.com/r.json',
-        $defs: { t: true, s: { type: 'string' } },
-      });
-      expect(scoped.resolveRef('#/$defs/s', scoped.byPointer('/$defs/t'))).toBe(scoped.byPointer('/$defs/s'));
     });
   });
 
@@ -453,7 +431,6 @@ describe('parseSchemaGraph()', () => {
       expect(adopted.graph.byPointer('/components/x')).toBe(refs[2]);
       expect(adopted.graph.byObject(schema)).toBe(graph.root);
       expect(adopted.graph.node(graph.root).pointer).toBe('');
-      expect(adopted.graph.diagnostics).toEqual(graph.diagnostics);
     });
     it('parses a copy once while each copy for the same key has the keywords of the last', () => {
       const of = {};
@@ -465,13 +442,32 @@ describe('parseSchemaGraph()', () => {
       expect(retitled).not.toBe(adopted);
       expect(graph.adoptCopy({ ...keywords, title: 'U', description: 'D' }, of)).not.toBe(retitled);
     });
+    it('follows a chain through the nodes of the graph it extends to a boolean, and to data as nothing', () => {
+      const base = parseSchemaGraph(
+        looseSchema({
+          definitions: {
+            no: false,
+            toNo: { $ref: '#/definitions/no' },
+            text: { type: 'string' },
+            toData: { $ref: '#/definitions/text/type' },
+          },
+        }),
+      );
+      const toNo = base.adopt({ $ref: '#/definitions/toNo' });
+      expect(objectNode(toNo.graph, toNo.node).ref).toBe(base.byPointer('/definitions/toNo'));
+      const toData = base.adopt({ $ref: '#/definitions/toData' });
+      expect(toData.graph.node(objectNode(toData.graph, toData.node).ref ?? -1)).toMatchObject({
+        kind: 'invalid',
+        reason: 'dangling',
+        message: 'Could not find a definition for #/definitions/text/type.',
+      });
+    });
     it('extends an extending graph in turn', () => {
       const first = graph.adopt({ $ref: '#/$defs/a' });
       const second = first.graph.adopt({ items: { $ref: '#/$defs/broken' } });
       expect(second.graph.base).toBe(first.graph);
       const items = objectNode(second.graph, second.graph.child(second.node, 'items'));
       expect(second.graph.node(items.ref ?? -1)).toMatchObject({ kind: 'invalid', ref: '#/$defs/broken' });
-      expect(second.graph.diagnostics).toHaveLength(graph.diagnostics.length + 1);
     });
     it('gives a boolean of an extending graph its own node where the graph it extends has another value', () => {
       const first = graph.adopt({ items: true });

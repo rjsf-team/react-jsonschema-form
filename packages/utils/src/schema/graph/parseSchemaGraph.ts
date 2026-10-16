@@ -52,8 +52,6 @@ export interface ObjectNode<S extends StrictRJSFSchema = RJSFSchema> {
   readonly pointer: string;
   /** The base URI `$ref`s inside the subschema resolve against */
   readonly baseUri: string;
-  /** The `$id` exactly as written, which the `fields` registry is keyed on */
-  readonly literalId?: string;
   readonly raw: S;
   /** Whether the subschema is a `$ref` and nothing that changes what it resolves to */
   readonly pureRef: boolean;
@@ -68,15 +66,6 @@ export interface ObjectNode<S extends StrictRJSFSchema = RJSFSchema> {
 
 export type SchemaNode<S extends StrictRJSFSchema = RJSFSchema> = BooleanNode | InvalidNode | ObjectNode<S>;
 
-/** A `$ref` that resolves to no subschema, recorded once when the graph is parsed */
-export interface Diagnostic {
-  /** The node holding the `$ref` */
-  readonly node: NodeId;
-  readonly ref: string;
-  readonly reason: InvalidReason;
-  readonly message: string;
-}
-
 /** A root schema parsed once into nodes, one per subschema. Nothing in it changes after the parse. */
 export interface SchemaGraph<S extends StrictRJSFSchema = RJSFSchema> {
   /** The root the graph was parsed from; every pointer is a pointer into it */
@@ -84,7 +73,6 @@ export interface SchemaGraph<S extends StrictRJSFSchema = RJSFSchema> {
   readonly root: NodeId;
   /** The graph this one extends with a schema from outside the root, for a graph `adoptSchema()` returned */
   readonly base?: SchemaGraph<S>;
-  readonly diagnostics: readonly Diagnostic[];
   node(id: NodeId): SchemaNode<S>;
   /** The node first found at `pointer`, if one was */
   byPointer(pointer: string): NodeId | undefined;
@@ -98,8 +86,6 @@ export interface SchemaGraph<S extends StrictRJSFSchema = RJSFSchema> {
   subschemas(id: NodeId, keyword: string): [string, NodeId][];
   /** The node parsed from the object subschema `raw`, if one was */
   byObject(raw: object): NodeId | undefined;
-  /** The node `ref` resolves to from inside `from`, among those parsed, as a `ui:definitions` key is resolved */
-  resolveRef(ref: string, from?: NodeId): NodeId | undefined;
   /** Returns the node `raw` parsed to, parsing a schema from outside the root into a graph that extends this one with
    * it, once per object. A call root such as the `{ allOf: [property, ...patterns] }` a caller builds, or an option
    * spread over its parent, is such a schema: its `$ref`s resolve against the root like any other.
@@ -208,7 +194,6 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
   readonly rawRoot: S;
   readonly root: NodeId;
   readonly base?: Graph<S>;
-  readonly diagnostics: Diagnostic[];
   /** Whether `$anchor` names a location, as it does under a draft 2020-12 root */
   private readonly anchored: boolean;
   /** Whether the keywords beside a `$ref` apply alongside it, as they do from draft 2019-09 on: a draft-07 `$ref`
@@ -236,7 +221,6 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
     const rootId = stringKeyword(rawRoot, ID_KEY);
     this.rootBase = rootId === undefined ? '' : resolveUri('', rootId);
     this.offset = base === undefined ? 0 : base.offset + base.own.length;
-    this.diagnostics = base === undefined ? [] : [...base.diagnostics];
     this.root = base === undefined ? this.parse(rawRoot, '', '').id : base.root;
   }
 
@@ -285,10 +269,6 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
       const child = key === undefined ? undefined : this.nodeAt(node, tokens, sub);
       return child === undefined ? [] : [[key, child]];
     });
-  }
-
-  resolveRef(ref: string, from: NodeId = this.root): NodeId | undefined {
-    return this.resolve(ref, from, false);
   }
 
   adopt(raw: S): AdoptedSchema<S> {
@@ -367,7 +347,6 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
       }
       return known;
     }
-    const literalId = stringKeyword(value, ID_KEY);
     const resourceId = data ? undefined : this.resourceId(value);
     const node: Mutable<ObjectNode<S>> = {
       kind: 'schema',
@@ -377,9 +356,6 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
       raw: value,
       pureRef: isPureRef(value),
     };
-    if (literalId !== undefined) {
-      node.literalId = literalId;
-    }
     this.objects.set(value, node);
     this.add(node);
     if (data) {
@@ -436,12 +412,12 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
     const hops = new Map<NodeId, NodeId | undefined>();
     const resolved: Mutable<ObjectNode<S>>[] = [];
     for (let next = this.pendingRefs.shift(); next !== undefined; next = this.pendingRefs.shift()) {
-      hops.set(next.id, this.resolve(refOf(next.raw), next.id, true));
+      hops.set(next.id, this.resolve(refOf(next.raw), next.baseUri, true));
       resolved.push(next);
     }
     for (const node of resolved) {
       const ref = refOf(node.raw);
-      const failure = this.chainFailure(ref, node.id, hops);
+      const failure = this.chainFailure(ref, node, hops);
       if (failure === undefined) {
         node.ref = hops.get(node.id);
         if (this.keywordsApplyBesideRef && Object.keys(node.raw).some((key) => !NON_ANNOTATING_KEYS.has(key))) {
@@ -457,7 +433,6 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
         };
         this.add(invalid);
         node.ref = invalid.id;
-        this.diagnostics.push({ node: node.id, ref, ...failure });
       }
     }
   }
@@ -517,25 +492,25 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
    */
   private chainFailure(
     first: string,
-    from: NodeId,
+    from: ObjectNode<S>,
     hops: ReadonlyMap<NodeId, NodeId | undefined>,
   ): { reason: InvalidReason; message: string } | undefined {
     const followed: string[] = [];
     const written: string[] = [];
     let ref = first;
-    let refKey = this.refKey(first, from);
-    let target = hops.get(from);
+    let refKey = resolveUri(from.baseUri, first);
+    let target = hops.get(from.id);
     for (;;) {
       if (target === undefined) {
         return { reason: 'dangling', message: `Could not find a definition for ${ref}.` };
       }
       const targetNode = this.node(target);
       // An empty `$ref` ends the chain there
-      const nextRef = targetNode.kind === 'schema' ? refOf(targetNode.raw) : '';
-      if (nextRef === '') {
+      if (targetNode.kind !== 'schema' || refOf(targetNode.raw) === '') {
         return undefined;
       }
-      const nextKey = this.refKey(nextRef, target);
+      const nextRef = refOf(targetNode.raw);
+      const nextKey = resolveUri(targetNode.baseUri, nextRef);
       if (followed.includes(nextKey)) {
         if (written.length === 1) {
           return { reason: 'circular-alias', message: `Definition for ${ref} is a circular reference` };
@@ -552,17 +527,12 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
       ref = nextRef;
       refKey = nextKey;
       // A node parsed with the graph this one extends had its `$ref` resolved there
-      target = hops.has(target) ? hops.get(target) : this.resolve(ref, target, false);
+      target = hops.has(target) ? hops.get(target) : this.resolve(ref, targetNode.baseUri, false);
     }
   }
 
-  private refKey(ref: string, from: NodeId): string {
-    const fromNode = this.node(from);
-    return resolveUri(fromNode.kind === 'schema' ? fromNode.baseUri : this.rootBase, ref);
-  }
-
-  private resolve(ref: string, from: NodeId, create: boolean): NodeId | undefined {
-    const absolute = this.refKey(ref, from);
+  private resolve(ref: string, base: string, create: boolean): NodeId | undefined {
+    const absolute = resolveUri(base, ref);
     // An empty `$ref` with no base to resolve it against names no resource, where `#` names the root
     if (absolute === '') {
       return undefined;
@@ -644,7 +614,7 @@ function refOf(raw: object): string {
 const graphs = new WeakMap<object, object>();
 
 /** Parses `rawRoot` into a `SchemaGraph`, once per root object: the graph of a root already parsed is returned again.
- * A `$ref` that resolves to nothing parses to an `InvalidNode` and a diagnostic rather than throwing, since only
+ * A `$ref` that resolves to nothing parses to an `InvalidNode` rather than throwing, since only
  * entering the reference throws.
  *
  * @param rawRoot - The root schema, as `schemaUtils.getRootSchema()` returns it
