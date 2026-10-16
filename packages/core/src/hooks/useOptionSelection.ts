@@ -1,6 +1,7 @@
-import { useCallback, useInsertionEffect, useMemo, useRef, useSyncExternalStore } from 'react';
+import { use, useCallback, useInsertionEffect, useMemo, useRef, useSyncExternalStore } from 'react';
 import type { FieldPath, FormContextType, Registry, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
+import ShownOptionContext from '../components/fields/ShownOptionContext.ts';
 import type { UiState } from '../components/uiState.ts';
 import { optionListKey, optionsMayDisagreeAbout, shownOption } from '../components/uiState.ts';
 import useUiState from './useUiState.ts';
@@ -134,13 +135,17 @@ export default function useOptionSelection<
   formData: T | undefined,
   discriminatorField?: string,
 ): OptionSelectionState {
-  const { selectedOption, selectOption } = useShownOption<T, S, F>(
+  const shown = use(ShownOptionContext);
+  // `SchemaField` has already worked out the option it shows from these very options, so `AnyOfField` reads it there
+  const above = shown?.fieldPath === fieldPath && shown.options === options ? shown : undefined;
+  const own = useShownOption<T, S, F>(
     useUiState().uiState,
     registry,
     fieldPath,
-    options,
+    above ? undefined : options,
     formData,
     discriminatorField,
   );
+  const { selectedOption, selectOption } = above ?? own;
   return useMemo(() => ({ selectedOption, selectOption }), [selectedOption, selectOption]);
 }
