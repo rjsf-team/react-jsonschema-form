@@ -935,10 +935,7 @@ function stubSchemaForSubSchema<S extends StrictRJSFSchema = RJSFSchema>(
   if (type === undefined) {
     return offersOptions ? { ...subSchema } : guessedTypeSchema<S>(formData, subSchema);
   }
-  return {
-    ...(offersOptions ? subSchema : stubbableSchema<S>(subSchema)),
-    type,
-  };
+  return { ...(offersOptions ? subSchema : stubbableSchema<S>(subSchema)), type };
 }
 
 /** Returns the subschemas a `dependencies` entry merges into the schema it belongs to for the `formData` in hand,
@@ -985,10 +982,7 @@ function dependencySubschemas<S extends StrictRJSFSchema = RJSFSchema, F extends
   // as a `$ref` leaves them behind that reference for `referencedDefinition()` to read as options beside the branch
   // settled here, which strips whatever the referring schema declares itself. Read as options, a name every branch
   // declares counts as one the form renders even where no single branch qualifies and none of the `oneOf` is merged in
-  const withoutOneOf = {
-    ...dependentWithoutOneOf,
-    [ONE_OF_KEY]: [] as S[],
-  } as unknown as S;
+  const withoutOneOf = { ...dependentWithoutOneOf, [ONE_OF_KEY]: [] as S[] } as unknown as S;
   const matching =
     rootSchema === undefined
       ? []
@@ -1003,14 +997,14 @@ function dependencySubschemas<S extends StrictRJSFSchema = RJSFSchema, F extends
           // resolution reads a reference, so a `properties` the branch declares itself answers on its own
           const branchProperties =
             branch[PROPERTIES_KEY] ?? referencedDefinition<S>(branch, rootSchema, new Set<string>())?.[PROPERTIES_KEY];
-          const conditionPropertySchema = branchProperties?.[dependencyKey];
+          const conditionPropertySchema =
+            branchProperties && Object.hasOwn(branchProperties, dependencyKey)
+              ? branchProperties[dependencyKey]
+              : undefined;
           if (!conditionPropertySchema) {
             return false;
           }
-          const conditionSchema = {
-            type: 'object',
-            properties: { [dependencyKey]: conditionPropertySchema },
-          } as S;
+          const conditionSchema = { type: 'object', properties: { [dependencyKey]: conditionPropertySchema } } as S;
           return context.validator.isValid(conditionSchema, formData, rootSchema);
         });
   return matching.length === 1 ? [withoutOneOf, matching[0]] : [withoutOneOf];
@@ -1369,14 +1363,7 @@ export function stubExistingAdditionalProperties<
     }
     // Set our additional property flag so we know it was dynamically added
     (stub as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG] = true;
-    // `defineProperty`, since assigning a key called `__proto__` runs the setter `Object.prototype` carries: it would
-    // re-point this clone's prototype at the stub and declare no property, leaving the value with no field at all
-    Object.defineProperty(schema.properties, key, {
-      value: stub,
-      configurable: true,
-      enumerable: true,
-      writable: true,
-    });
+    setOwn(schema.properties, key, stub);
   }
 
   return schema;
@@ -1574,10 +1561,7 @@ export function retrieveSchemaInternal<
         return [{ key, branches }];
       });
       const firstBranches = Object.fromEntries(branchesByKey.map(({ key, branches: [first] }) => [key, first]));
-      const withFirstBranches: S = {
-        ...resolvedSchema,
-        properties: { ...properties, ...firstBranches },
-      };
+      const withFirstBranches: S = { ...resolvedSchema, properties: { ...properties, ...firstBranches } };
       withMergedProperties = [
         withFirstBranches,
         ...branchesByKey.flatMap(({ key, branches }) =>
@@ -1922,7 +1906,7 @@ export function processDependencies<
   for (const dependencyKey in dependencies) {
     if (
       (expandAllBranches || getByPath(formData, dependencyKey) !== undefined) &&
-      (!resolvedSchema.properties || dependencyKey in resolvedSchema.properties)
+      (!resolvedSchema.properties || Object.hasOwn(resolvedSchema.properties, dependencyKey))
     ) {
       const [remainingDependencies, dependencyValue] = splitKeyElementFromObject(dependencyKey, dependencies);
       if (Array.isArray(dependencyValue)) {
@@ -2097,7 +2081,9 @@ export function withExactlyOneSubschema<
     if (typeof subschema === 'boolean' || !subschema?.properties) {
       return false;
     }
-    const { [dependencyKey]: conditionPropertySchema } = subschema.properties;
+    const conditionPropertySchema = Object.hasOwn(subschema.properties, dependencyKey)
+      ? subschema.properties[dependencyKey]
+      : undefined;
     if (conditionPropertySchema) {
       const conditionSchema: S = {
         type: 'object',
