@@ -1259,6 +1259,38 @@ describe('uiSchema', () => {
         expect(node.querySelector('[type=range]')).toHaveValue('13.14');
       });
 
+      it('should render through the BaseInputTemplate its uiSchema names', () => {
+        const CustomRangeInput = () => <span className='custom-range-input' />;
+        const { node } = createFormComponent({
+          schema,
+          uiSchema: { foo: { 'ui:widget': 'range', 'ui:BaseInputTemplate': CustomRangeInput } },
+        });
+
+        expect(node.querySelector('.custom-range-input')).toBeInTheDocument();
+        expect(node.querySelectorAll('[type=range]')).toHaveLength(0);
+      });
+
+      // A browser ignores `readonly` on a range input, so a read-only range is disabled to keep it from being dragged
+      it('should disable a read-only range', () => {
+        const { node } = createFormComponent({
+          schema,
+          uiSchema: { foo: { 'ui:widget': 'range', 'ui:readonly': true } },
+        });
+
+        expect(node.querySelector('[type=range]')).toBeDisabled();
+      });
+
+      // A range input can't show an empty value, so clearing it would leave the slider at its midpoint
+      it('should draw no allowClearTextInputs clear button', () => {
+        const { node } = createFormComponent({
+          schema,
+          uiSchema: { foo: { 'ui:widget': 'range', 'ui:allowClearTextInputs': true } },
+          initialFormData: { foo: 13.14 },
+        });
+
+        expect(node.querySelector('button.btn-clear')).not.toBeInTheDocument();
+      });
+
       it('should call onChange handler when value is updated', () => {
         const { node, onChange } = createFormComponent({
           schema,
