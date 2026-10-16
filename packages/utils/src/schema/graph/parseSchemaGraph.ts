@@ -1,5 +1,6 @@
 import {
   ALL_OF_KEY,
+  DEFAULT_KEY,
   DEFINITIONS_KEY,
   ID_KEY,
   JSON_SCHEMA_DRAFT_2019_09,
@@ -61,9 +62,9 @@ export interface ObjectNode<S extends StrictRJSFSchema = RJSFSchema> {
   readonly pureRef: boolean;
   /** The node the `$ref` resolves to, which is an `InvalidNode` when it resolves to nothing */
   readonly ref?: NodeId;
-  /** Under draft 2019-09 or 2020-12, for a `$ref` with keywords beside it that resolves: the node it reads as, the
-   * `allOf` of those keywords and of the `$ref` alone, since those dialects apply a `$ref` beside other keywords rather
-   * than replacing them
+  /** Under draft 2019-09 or 2020-12, for a `$ref` that resolves with keywords beside it that do more than annotate: the
+   * node it reads as, the `allOf` of those keywords and of the `$ref` alone, since those dialects apply a `$ref` beside
+   * other keywords rather than replacing them
    */
   readonly conjunction?: NodeId;
 }
@@ -122,10 +123,26 @@ export const EXTERNAL_POINTER = '~external';
 /** The keywords that can stand beside a `$ref` without changing what it resolves to */
 const PURE_REF_KEYS = new Set([REF_KEY, DEFINITIONS_KEY, '$defs', SCHEMA_KEY, '$comment', 'title', 'description']);
 
-/** The keywords that identify a schema or hold definitions for others and say nothing of the instance, so a `$ref`
- * beside nothing else has nothing to be the `allOf` of
+/** The keywords that identify a schema, hold definitions for others or only annotate the instance, so a `$ref` beside
+ * nothing else reads as its target with those annotations on top, as an `allOf` adding only annotations does
  */
-const NON_ANNOTATING_KEYS = new Set([REF_KEY, ID_KEY, '$anchor', DEFINITIONS_KEY, '$defs', SCHEMA_KEY, '$comment']);
+const NON_CONSTRAINING_KEYS = new Set([
+  REF_KEY,
+  ID_KEY,
+  '$anchor',
+  DEFAULT_KEY,
+  DEFINITIONS_KEY,
+  '$defs',
+  SCHEMA_KEY,
+  '$comment',
+  'title',
+  'description',
+  DEFAULT_KEY,
+  'examples',
+  'deprecated',
+  'readOnly',
+  'writeOnly',
+]);
 
 function escapeToken(token: string): string {
   return token.replaceAll('~', '~0').replaceAll('/', '~1');
@@ -463,7 +480,7 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
       const failure = this.chainFailure(ref, node, hops);
       if (failure === undefined) {
         node.ref = hops.get(node.id);
-        if (this.laterDialect && Object.keys(node.raw).some((key) => !NON_ANNOTATING_KEYS.has(key))) {
+        if (this.laterDialect && Object.keys(node.raw).some((key) => !NON_CONSTRAINING_KEYS.has(key))) {
           node.conjunction = this.addConjunction(node);
         }
       } else {

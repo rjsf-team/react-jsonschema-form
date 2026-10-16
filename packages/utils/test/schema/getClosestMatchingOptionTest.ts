@@ -462,5 +462,24 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
       expect(getClosestMatchingOption({ validator: testValidator }, rootSchema, { b: 'y' }, options)).toEqual(1);
       expect(getClosestMatchingOption({ validator: testValidator }, rootSchema, { a: 'y' }, options)).toEqual(0);
     });
+    it.each([undefined, 'https://json-schema.org/draft/2020-12/schema'])(
+      'under %s, scores an option written as a $ref beside only annotations as its target',
+      ($schema) => {
+        const rootSchema: RJSFSchema = {
+          ...($schema === undefined ? {} : { $schema }),
+          $defs: {
+            a: { type: 'object', properties: { x: { type: 'string' }, z: { type: 'string' } }, required: ['q'] },
+            b: { type: 'object', properties: { y: { type: 'number' }, w: { type: 'string' } }, required: ['q'] },
+          },
+        };
+        const options: RJSFSchema[] = [
+          { $ref: '#/$defs/a', title: 'A' },
+          { $ref: '#/$defs/b', title: 'B' },
+        ];
+        expect(getClosestMatchingOption({ validator: testValidator }, rootSchema, { y: 1, w: 'w' }, options)).toEqual(
+          1,
+        );
+      },
+    );
   });
 }

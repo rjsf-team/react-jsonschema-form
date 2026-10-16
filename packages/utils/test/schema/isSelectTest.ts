@@ -73,5 +73,22 @@ export default function isSelectTest(testValidator: TestValidatorType) {
       const schemaUtils = createSchemaUtils({ validator: testValidator }, rootSchema);
       expect(schemaUtils.isSelect(color)).toBe(false);
     });
+    it.each([undefined, 'https://json-schema.org/draft/2020-12/schema'])(
+      'under %s, should be true for constant options written as $refs beside only annotations',
+      ($schema) => {
+        const color: RJSFSchema = {
+          type: 'string',
+          oneOf: [{ $ref: '#/$defs/red', title: 'Red' }, { const: 'green' }],
+        };
+        const rootSchema: RJSFSchema = {
+          ...($schema === undefined ? {} : { $schema }),
+          $defs: { red: { const: 'red' } },
+          type: 'object',
+          properties: { color },
+        };
+        const schemaUtils = createSchemaUtils({ validator: testValidator }, rootSchema);
+        expect(schemaUtils.isSelect(color)).toBe(true);
+      },
+    );
   });
 }

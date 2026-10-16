@@ -587,6 +587,48 @@ describe('getDefaultFormState() reading $ref, branches and extra keys as the for
     },
   );
 
+  it.each([undefined, 'https://json-schema.org/draft/2019-09/schema', draft2020])(
+    'under %s, fills a $ref beside only annotations as its target, in place, reached through a $ref and as an option',
+    ($schema) => {
+      const Pet: RJSFSchema = { type: 'object', properties: { name: { type: 'string', default: 'n' } } };
+      const annotations = { title: 'My pet', description: 'd', examples: [{}], deprecated: false, readOnly: false };
+      const dialect = $schema === undefined ? {} : { $schema };
+      const inPlace: RJSFSchema = {
+        ...dialect,
+        $defs: { Pet },
+        type: 'object',
+        properties: { p: { $ref: '#/$defs/Pet', ...annotations } },
+      };
+      const reached: RJSFSchema = {
+        ...dialect,
+        $defs: { Pet, Named: { $ref: '#/$defs/Pet', ...annotations } },
+        type: 'object',
+        properties: { p: { $ref: '#/$defs/Named' } },
+      };
+      const option: RJSFSchema = {
+        ...dialect,
+        $defs: { Pet },
+        type: 'object',
+        properties: {
+          p: {
+            oneOf: [
+              { $ref: '#/$defs/Pet', title: 'Pet' },
+              { type: 'object', title: 'None' },
+            ],
+          },
+        },
+      };
+      expect(defaultsOf(inPlace)).toEqual({ p: { name: 'n' } });
+      expect(defaultsOf(reached)).toEqual({ p: { name: 'n' } });
+      expect(defaultsOf(option)).toEqual({ p: { name: 'n' } });
+      const withDefault: RJSFSchema = {
+        $defs: { Pet },
+        properties: { p: { $ref: '#/$defs/Pet', default: { name: 'd' } } },
+      };
+      expect(defaultsOf({ ...dialect, ...withDefault })).toEqual(defaultsOf(withDefault));
+    },
+  );
+
   it('resolves a $ref to an $anchor, and one under a nested $id with a path segment against that $id', () => {
     const target: RJSFSchema = { type: 'object', properties: { v: { type: 'string', default: 'v' } } };
     const anchored = { ...target, $anchor: 'nodeA' };

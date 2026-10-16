@@ -358,4 +358,15 @@ describe('resolveUiSchema() - option walk through the schema graph', () => {
     expect(result.oneOf).toEqual([{ 'ui:title': 'Leaf' }]);
     expect(warn).not.toHaveBeenCalled();
   });
+
+  it('walks the options of a 2020-12 $ref beside only annotations, as of one beside nothing', () => {
+    const field: RJSFSchema = { $ref: '#/$defs/node', title: 'Node' };
+    const rootSchema: RJSFSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $defs: { node: { oneOf: [{ $ref: '#/$defs/leaf' }, { type: 'number' }] }, leaf: { type: 'string' } },
+      properties: { field },
+    };
+    const result = resolveUiSchema(field, undefined, makeRegistry(rootSchema, optionDefinitions));
+    expect(result.oneOf).toEqual([{ 'ui:title': 'Leaf' }]);
+  });
 });

@@ -704,17 +704,31 @@ describe('ownChains()', () => {
 });
 
 describe('conjunctionOf()', () => {
-  it('returns the allOf a $ref with keywords beside it reads as under 2020-12, and nothing for any other node', () => {
+  it('returns the allOf a $ref with constraints beside it reads as under 2020-12, and nothing for any other node', () => {
     const rootSchema: RJSFSchema = {
       $schema: JSON_SCHEMA_DRAFT_2020_12,
       $defs: { x: { type: 'string' }, t: true },
-      properties: { beside: { $ref: '#/$defs/x', title: 'beside' }, pure: { $ref: '#/$defs/x' } },
+      properties: {
+        beside: { $ref: '#/$defs/x', minLength: 1 },
+        annotated: {
+          $ref: '#/$defs/x',
+          title: 'a',
+          description: 'd',
+          default: 'x',
+          examples: ['x'],
+          deprecated: true,
+          readOnly: true,
+          writeOnly: false,
+        },
+        pure: { $ref: '#/$defs/x' },
+      },
     };
     const graph = parseSchemaGraph(rootSchema);
     const at = (pointer: string) => graph.byPointer(pointer) ?? graph.root;
     expect(conjunctionOf(graph, at('/properties/beside'))?.raw).toEqual({
-      allOf: [{ title: 'beside' }, { $ref: '#/$defs/x' }],
+      allOf: [{ minLength: 1 }, { $ref: '#/$defs/x' }],
     });
+    expect(conjunctionOf(graph, at('/properties/annotated'))).toBeUndefined();
     expect(conjunctionOf(graph, at('/properties/pure'))).toBeUndefined();
     expect(conjunctionOf(graph, at('/$defs/t'))).toBeUndefined();
     const draft07 = parseSchemaGraph({
@@ -734,7 +748,7 @@ describe('refDefinition()', () => {
         $id: 'child.json',
         type: 'object',
         properties: { a: { anyOf: [{ $ref: '#/$defs/x' }, { type: 'number' }] } },
-        $defs: { x: { $ref: '#/$defs/y', title: 'x' }, y: { type: 'string' } },
+        $defs: { x: { $ref: '#/$defs/y', minLength: 1 }, y: { type: 'string' } },
       },
       t: true,
       alias: { $ref: '#/$defs/alias' },
@@ -758,7 +772,7 @@ describe('refDefinition()', () => {
 
   it('resolves a $ref against the base URI of the node holding it, conjoining a chained target', () => {
     expect(refDefinition(graph, node('/$defs/child/properties/a/anyOf/0'))).toEqual({
-      allOf: [{ title: 'x' }, { $ref: '#/$defs/y' }],
+      allOf: [{ minLength: 1 }, { $ref: '#/$defs/y' }],
     });
   });
   it('follows a chain of references with nothing beside them to the definition it ends at', () => {
