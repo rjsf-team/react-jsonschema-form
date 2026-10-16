@@ -4390,7 +4390,7 @@ exports[`with title and description > array icons 1`] = `
                               value="a"
                             />
                           </div>
-                          <span
+                          <div
                             class="text-xs font-medium text-muted-foreground"
                           >
                             <div>
@@ -4401,7 +4401,7 @@ exports[`with title and description > array icons 1`] = `
                                 a test item description
                               </div>
                             </div>
-                          </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -4572,7 +4572,7 @@ exports[`with title and description > array icons 1`] = `
                               value="b"
                             />
                           </div>
-                          <span
+                          <div
                             class="text-xs font-medium text-muted-foreground"
                           >
                             <div>
@@ -4583,7 +4583,7 @@ exports[`with title and description > array icons 1`] = `
                                 a test item description
                               </div>
                             </div>
-                          </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -4842,7 +4842,7 @@ exports[`with title and description > checkboxes 1`] = `
             </div>
           </div>
         </div>
-        <span
+        <div
           class="text-xs font-medium text-muted-foreground"
         >
           <div>
@@ -4853,7 +4853,7 @@ exports[`with title and description > checkboxes 1`] = `
               a test description
             </div>
           </div>
-        </span>
+        </div>
       </div>
     </div>
     <div>
@@ -4952,7 +4952,7 @@ exports[`with title and description > fixed array 1`] = `
                               value=""
                             />
                           </div>
-                          <span
+                          <div
                             class="text-xs font-medium text-muted-foreground"
                           >
                             <div>
@@ -4963,7 +4963,7 @@ exports[`with title and description > fixed array 1`] = `
                                 a test item description
                               </div>
                             </div>
-                          </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -5010,7 +5010,7 @@ exports[`with title and description > fixed array 1`] = `
                               value=""
                             />
                           </div>
-                          <span
+                          <div
                             class="text-xs font-medium text-muted-foreground"
                           >
                             <div>
@@ -5021,7 +5021,7 @@ exports[`with title and description > fixed array 1`] = `
                                 a test item description
                               </div>
                             </div>
-                          </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -5240,7 +5240,7 @@ exports[`with title and description from both > array icons 1`] = `
                               value="a"
                             />
                           </div>
-                          <span
+                          <div
                             class="text-xs font-medium text-muted-foreground"
                           >
                             <div>
@@ -5251,7 +5251,7 @@ exports[`with title and description from both > array icons 1`] = `
                                 a fancier item description
                               </div>
                             </div>
-                          </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -5422,7 +5422,7 @@ exports[`with title and description from both > array icons 1`] = `
                               value="b"
                             />
                           </div>
-                          <span
+                          <div
                             class="text-xs font-medium text-muted-foreground"
                           >
                             <div>
@@ -5433,7 +5433,7 @@ exports[`with title and description from both > array icons 1`] = `
                                 a fancier item description
                               </div>
                             </div>
-                          </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -5692,7 +5692,7 @@ exports[`with title and description from both > checkboxes 1`] = `
             </div>
           </div>
         </div>
-        <span
+        <div
           class="text-xs font-medium text-muted-foreground"
         >
           <div>
@@ -5703,7 +5703,7 @@ exports[`with title and description from both > checkboxes 1`] = `
               a fancier description
             </div>
           </div>
-        </span>
+        </div>
       </div>
     </div>
     <div>
@@ -5802,7 +5802,7 @@ exports[`with title and description from both > fixed array 1`] = `
                               value=""
                             />
                           </div>
-                          <span
+                          <div
                             class="text-xs font-medium text-muted-foreground"
                           >
                             <div>
@@ -5813,7 +5813,7 @@ exports[`with title and description from both > fixed array 1`] = `
                                 a fancier item description
                               </div>
                             </div>
-                          </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -5860,7 +5860,7 @@ exports[`with title and description from both > fixed array 1`] = `
                               value=""
                             />
                           </div>
-                          <span
+                          <div
                             class="text-xs font-medium text-muted-foreground"
                           >
                             <div>
@@ -5871,7 +5871,7 @@ exports[`with title and description from both > fixed array 1`] = `
                                 a fancier item description
                               </div>
                             </div>
-                          </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -6090,7 +6090,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                               value="a"
                             />
                           </div>
-                          <span
+                          <div
                             class="text-xs font-medium text-muted-foreground"
                           >
                             <div>
@@ -6101,7 +6101,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                                 a fancier item description
                               </div>
                             </div>
-                          </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -6272,7 +6272,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                               value="b"
                             />
                           </div>
-                          <span
+                          <div
                             class="text-xs font-medium text-muted-foreground"
                           >
                             <div>
@@ -6283,7 +6283,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                                 a fancier item description
                               </div>
                             </div>
-                          </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -6542,7 +6542,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
             </div>
           </div>
         </div>
-        <span
+        <div
           class="text-xs font-medium text-muted-foreground"
         >
           <div>
@@ -6553,7 +6553,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
               a fancier description
             </div>
           </div>
-        </span>
+        </div>
       </div>
     </div>
     <div>
@@ -6652,7 +6652,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                               value=""
                             />
                           </div>
-                          <span
+                          <div
                             class="text-xs font-medium text-muted-foreground"
                           >
                             <div>
@@ -6663,7 +6663,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                                 a fancier item description
                               </div>
                             </div>
-                          </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -6710,7 +6710,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                               value=""
                             />
                           </div>
-                          <span
+                          <div
                             class="text-xs font-medium text-muted-foreground"
                           >
                             <div>
@@ -6721,7 +6721,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                                 a fancier item description
                               </div>
                             </div>
-                          </span>
+                          </div>
                         </div>
                       </div>
                     </div>

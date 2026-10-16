@@ -2295,7 +2295,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                         value="foo"
                       />
                     </div>
-                    <span
+                    <div
                       class="text-xs font-medium text-muted-foreground"
                     >
                       <div>
@@ -2306,7 +2306,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                           A description
                         </div>
                       </div>
-                    </span>
+                    </div>
                   </div>
                 </div>
                 <div
@@ -2743,7 +2743,7 @@ exports[`object fields > additionalProperties, description 1`] = `
                         value="foo"
                       />
                     </div>
-                    <span
+                    <div
                       class="text-xs font-medium text-muted-foreground"
                     >
                       <div>
@@ -2754,7 +2754,7 @@ exports[`object fields > additionalProperties, description 1`] = `
                           item description
                         </div>
                       </div>
-                    </span>
+                    </div>
                   </div>
                 </div>
                 <div
@@ -4317,7 +4317,7 @@ exports[`object fields > with title and description > object 1`] = `
                       value=""
                     />
                   </div>
-                  <span
+                  <div
                     class="text-xs font-medium text-muted-foreground"
                   >
                     <div>
@@ -4328,7 +4328,7 @@ exports[`object fields > with title and description > object 1`] = `
                         A description
                       </div>
                     </div>
-                  </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -4369,7 +4369,7 @@ exports[`object fields > with title and description > object 1`] = `
                       value=""
                     />
                   </div>
-                  <span
+                  <div
                     class="text-xs font-medium text-muted-foreground"
                   >
                     <div>
@@ -4380,7 +4380,7 @@ exports[`object fields > with title and description > object 1`] = `
                         B description
                       </div>
                     </div>
-                  </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -4901,7 +4901,7 @@ exports[`object fields > with title and description from both > object 1`] = `
                       value=""
                     />
                   </div>
-                  <span
+                  <div
                     class="text-xs font-medium text-muted-foreground"
                   >
                     <div>
@@ -4912,7 +4912,7 @@ exports[`object fields > with title and description from both > object 1`] = `
                         a fancier item A description
                       </div>
                     </div>
-                  </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -4953,7 +4953,7 @@ exports[`object fields > with title and description from both > object 1`] = `
                       value=""
                     />
                   </div>
-                  <span
+                  <div
                     class="text-xs font-medium text-muted-foreground"
                   >
                     <div>
@@ -4964,7 +4964,7 @@ exports[`object fields > with title and description from both > object 1`] = `
                         a fancier item B description
                       </div>
                     </div>
-                  </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -5272,7 +5272,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                       value=""
                     />
                   </div>
-                  <span
+                  <div
                     class="text-xs font-medium text-muted-foreground"
                   >
                     <div>
@@ -5283,7 +5283,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                         a fancier item A description
                       </div>
                     </div>
-                  </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -5324,7 +5324,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                       value=""
                     />
                   </div>
-                  <span
+                  <div
                     class="text-xs font-medium text-muted-foreground"
                   >
                     <div>
@@ -5335,7 +5335,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                         a fancier item B description
                       </div>
                     </div>
-                  </span>
+                  </div>
                 </div>
               </div>
             </div>

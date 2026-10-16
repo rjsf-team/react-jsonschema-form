@@ -4971,7 +4971,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
             </label>
           </div>
         </div>
-        <span
+        <div
           class="text-xs font-medium text-muted-foreground"
         >
           <div>
@@ -4982,13 +4982,13 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
               A group of checkboxes
             </div>
           </div>
-        </span>
-        <span
+        </div>
+        <div
           class="text-xs font-medium text-muted-foreground"
           id="root__help"
         >
           Select all that apply
-        </span>
+        </div>
       </div>
     </div>
     <div>
@@ -5118,7 +5118,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
             </label>
           </div>
         </div>
-        <span
+        <div
           class="text-xs font-medium text-muted-foreground"
         >
           <div>
@@ -5129,7 +5129,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
               At least one option must be selected
             </div>
           </div>
-        </span>
+        </div>
       </div>
     </div>
     <div>
@@ -5192,7 +5192,7 @@ exports[`single fields > field with description 1`] = `
                       value=""
                     />
                   </div>
-                  <span
+                  <div
                     class="text-xs font-medium text-muted-foreground"
                   >
                     <div>
@@ -5203,7 +5203,7 @@ exports[`single fields > field with description 1`] = `
                         some description
                       </div>
                     </div>
-                  </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -5271,7 +5271,7 @@ exports[`single fields > field with description in uiSchema 1`] = `
                       value=""
                     />
                   </div>
-                  <span
+                  <div
                     class="text-xs font-medium text-muted-foreground"
                   >
                     <div>
@@ -5282,7 +5282,7 @@ exports[`single fields > field with description in uiSchema 1`] = `
                         some other description
                       </div>
                     </div>
-                  </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -5350,7 +5350,7 @@ exports[`single fields > field with markdown description 1`] = `
                       value=""
                     />
                   </div>
-                  <span
+                  <div
                     class="text-xs font-medium text-muted-foreground"
                   >
                     <div>
@@ -5367,7 +5367,7 @@ exports[`single fields > field with markdown description 1`] = `
                         </span>
                       </div>
                     </div>
-                  </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -5435,7 +5435,7 @@ exports[`single fields > field with markdown description in uiSchema 1`] = `
                       value=""
                     />
                   </div>
-                  <span
+                  <div
                     class="text-xs font-medium text-muted-foreground"
                   >
                     <div>
@@ -5446,7 +5446,7 @@ exports[`single fields > field with markdown description in uiSchema 1`] = `
                         some other description
                       </div>
                     </div>
-                  </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -5710,12 +5710,12 @@ exports[`single fields > help and error display 1`] = `
             an error
           </span>
         </div>
-        <span
+        <div
           class="text-xs font-medium text-destructive"
           id="root__help"
         >
           help me!
-        </span>
+        </div>
       </div>
     </div>
     <div>
@@ -9106,9 +9106,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     class="p-4 border rounded-md bg-background shadow-sm"
                   >
                     <div
-                      class="mb-4"
-                    />
-                    <div
                       class="rjsf-field rjsf-field-object"
                     >
                       <div
@@ -9203,9 +9200,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   <div
                     class="p-4 border rounded-md bg-background shadow-sm"
                   >
-                    <div
-                      class="mb-4"
-                    />
                     <div
                       class="rjsf-field rjsf-field-array"
                     >
@@ -10142,9 +10136,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     class="p-4 border rounded-md bg-background shadow-sm"
                   >
                     <div
-                      class="mb-4"
-                    />
-                    <div
                       class="rjsf-field rjsf-field-object"
                     >
                       <div
@@ -10200,9 +10191,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   <div
                     class="p-4 border rounded-md bg-background shadow-sm"
                   >
-                    <div
-                      class="mb-4"
-                    />
                     <div
                       class="rjsf-field rjsf-field-array"
                     >
@@ -10662,9 +10650,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                     class="p-4 border rounded-md bg-background shadow-sm"
                   >
                     <div
-                      class="mb-4"
-                    />
-                    <div
                       class="rjsf-field rjsf-field-object"
                     >
                       <div
@@ -10759,9 +10744,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                   <div
                     class="p-4 border rounded-md bg-background shadow-sm"
                   >
-                    <div
-                      class="mb-4"
-                    />
                     <div
                       class="rjsf-field rjsf-field-array"
                     >
@@ -11184,9 +11166,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                     class="p-4 border rounded-md bg-background shadow-sm"
                   >
                     <div
-                      class="mb-4"
-                    />
-                    <div
                       class="rjsf-field rjsf-field-object"
                     >
                       <div
@@ -11242,9 +11221,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                   <div
                     class="p-4 border rounded-md bg-background shadow-sm"
                   >
-                    <div
-                      class="mb-4"
-                    />
                     <div
                       class="rjsf-field rjsf-field-array"
                     >
@@ -11560,7 +11536,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
             </div>
           </div>
         </div>
-        <span
+        <div
           class="text-xs font-medium text-muted-foreground"
         >
           <div>
@@ -11571,7 +11547,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
               This is a radio description
             </div>
           </div>
-        </span>
+        </div>
       </div>
     </div>
     <div>
@@ -13173,7 +13149,7 @@ exports[`single fields > select widget with description in schema and FieldTempl
             />
           </div>
         </div>
-        <span
+        <div
           class="text-xs font-medium text-muted-foreground"
         >
           <div>
@@ -13184,7 +13160,7 @@ exports[`single fields > select widget with description in schema and FieldTempl
               This is a select description
             </div>
           </div>
-        </span>
+        </div>
       </div>
     </div>
     <div>
@@ -13466,7 +13442,7 @@ exports[`single fields > string field > field with markdown help and description
             value=""
           />
         </div>
-        <span
+        <div
           class="text-xs font-medium text-muted-foreground"
         >
           <div>
@@ -13486,8 +13462,8 @@ exports[`single fields > string field > field with markdown help and description
               </span>
             </div>
           </div>
-        </span>
-        <span
+        </div>
+        <div
           class="text-xs font-medium text-muted-foreground"
           id="root__help"
         >
@@ -13503,7 +13479,7 @@ exports[`single fields > string field > field with markdown help and description
               a link
             </a>
           </span>
-        </span>
+        </div>
       </div>
     </div>
     <div>
@@ -13551,7 +13527,7 @@ exports[`single fields > string field > field with markdown help text 1`] = `
             value=""
           />
         </div>
-        <span
+        <div
           class="text-xs font-medium text-muted-foreground"
         >
           <div>
@@ -13562,8 +13538,8 @@ exports[`single fields > string field > field with markdown help text 1`] = `
               A field with markdown help text
             </div>
           </div>
-        </span>
-        <span
+        </div>
+        <div
           class="text-xs font-medium text-muted-foreground"
           id="root__help"
         >
@@ -13579,7 +13555,7 @@ exports[`single fields > string field > field with markdown help text 1`] = `
               a link
             </a>
           </span>
-        </span>
+        </div>
       </div>
     </div>
     <div>
@@ -13627,7 +13603,7 @@ exports[`single fields > string field > field with markdown help text without a 
             value=""
           />
         </div>
-        <span
+        <div
           class="text-xs font-medium text-muted-foreground"
         >
           <div>
@@ -13638,13 +13614,13 @@ exports[`single fields > string field > field with markdown help text without a 
               A field with raw help text
             </div>
           </div>
-        </span>
-        <span
+        </div>
+        <div
           class="text-xs font-medium text-muted-foreground"
           id="root__help"
         >
           This is **markdown** help text with [a link](https://example.com)
-        </span>
+        </div>
       </div>
     </div>
     <div>
@@ -13850,7 +13826,7 @@ exports[`single fields > string field > required field with markdown help 1`] = 
             value="[object Object]"
           />
         </div>
-        <span
+        <div
           class="text-xs font-medium text-muted-foreground"
         >
           <div>
@@ -13861,8 +13837,8 @@ exports[`single fields > string field > required field with markdown help 1`] = 
               A required field with markdown help
             </div>
           </div>
-        </span>
-        <span
+        </div>
+        <div
           class="text-xs font-medium text-muted-foreground"
           id="root__help"
         >
@@ -13873,7 +13849,7 @@ exports[`single fields > string field > required field with markdown help 1`] = 
             </strong>
             . Please provide a value.
           </span>
-        </span>
+        </div>
       </div>
     </div>
     <div>

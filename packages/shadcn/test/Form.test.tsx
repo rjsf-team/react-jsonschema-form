@@ -1,8 +1,8 @@
 import { formTests, themeTests } from '@rjsf/snapshot-tests';
 import type { FormValidation, RJSFSchema, UiSchema } from '@rjsf/utils';
-import { bracketNameGenerator, fieldLabelId } from '@rjsf/utils';
+import { bracketNameGenerator, errorId, fieldLabelId, helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import Form, { generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
@@ -442,5 +442,105 @@ describe('shadcn templates', () => {
     expect(container.querySelector('#root_pet_XxxOf__title')).toHaveTextContent(/^Pet$/);
     expect(container.querySelector('#root_pet_XxxOf__title')?.parentElement).toHaveTextContent(/^Pet\*$/);
     expect(container.querySelector('#root_pet__anyof_select')).toHaveAccessibleName('Pet');
+  });
+
+  test("keeps an optional object's data control where ui:label turns its heading off", () => {
+    const { container } = render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: { pet: { type: 'object', title: 'Pet', properties: { a: { type: 'string' } } } },
+        }}
+        uiSchema={{ 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] }, pet: { 'ui:label': false } }}
+        formData={{ pet: { a: 'x' } }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('#root_pet__title')).not.toBeInTheDocument();
+    expect(container.querySelector('#root_pet__optionalRemove')).toBeInTheDocument();
+  });
+
+  test("draws no heading for an array option whose ui:title repeats its field's label", () => {
+    const { container } = render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: {
+            tags: { type: 'array', items: { type: 'string' }, anyOf: [{ maxItems: 3 }, { minItems: 1 }] },
+          },
+        }}
+        uiSchema={{ tags: { 'ui:title': 'Tags', anyOf: [{ 'ui:title': 'Tags' }, {}] } }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector(`#${fieldLabelId('root_tags')}`)).toHaveTextContent('Tags');
+    expect(container.querySelector('#root_tags__title')).not.toBeInTheDocument();
+  });
+
+  test("keeps an optional array option's data control where a field above draws its heading", () => {
+    const { container } = render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: {
+            tags: {
+              title: 'Tags',
+              anyOf: [
+                { type: 'array', items: { type: 'string' } },
+                { type: 'array', items: { type: 'number' } },
+              ],
+            },
+          },
+        }}
+        uiSchema={{ 'ui:globalOptions': { enableOptionalDataFieldForType: ['array'] } }}
+        formData={{ tags: ['a'] }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector(`#${fieldLabelId('root_tags')}`)).toHaveTextContent('Tags');
+    expect(container.querySelector('#root_tags__title')).not.toBeInTheDocument();
+    expect(container.querySelector('#root_tags__optionalRemove')).toBeInTheDocument();
+  });
+});
+
+describe("shadcn's error and help elements carry the ids their field's plan describes its control by", () => {
+  const schema: RJSFSchema = {
+    type: 'object',
+    properties: {
+      pet: {
+        title: 'Pet',
+        anyOf: [
+          { title: 'Dog', type: 'string' },
+          { title: 'Cat', type: 'number' },
+        ],
+      },
+    },
+  };
+
+  test("renders an option's own help as a block under its own id, beside the field's", () => {
+    const { container } = render(
+      <Form
+        schema={schema}
+        uiSchema={{ pet: { 'ui:help': 'Pick a pet', anyOf: [{ 'ui:help': 'Dogs bark' }, {}] } }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelectorAll(`#${helpId('root_pet')}`)).toHaveLength(1);
+    expect(container.querySelector(`div#${helpId('root_pet')}`)).toHaveTextContent('Pick a pet');
+    expect(container.querySelector(`div#${optionHelpId('root_pet')}`)).toHaveTextContent('Dogs bark');
+    expect(container.querySelector('#root_pet')).toHaveAccessibleDescription('Pick a pet Dogs bark');
+  });
+
+  test("renders an anyOf field's errors once, under the id its control is described by", () => {
+    const { container } = render(
+      <Form schema={schema} extraErrors={{ pet: { __errors: ['pick one'] } }} validator={validator} />,
+    );
+
+    expect(container.querySelectorAll(`#${errorId('root_pet')}`)).toHaveLength(1);
+    expect(container.querySelector('#root_pet')).toHaveAccessibleDescription('pick one');
   });
 });

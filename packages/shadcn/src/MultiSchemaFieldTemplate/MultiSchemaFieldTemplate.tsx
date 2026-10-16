@@ -9,7 +9,8 @@ export default function MultiSchemaFieldTemplate<
 >({ selector, optionSchemaField }: MultiSchemaFieldTemplateProps<T, S, F>) {
   return (
     <div className={cn('p-4 border rounded-md bg-background shadow-sm')}>
-      <div className={cn('mb-4')}>{selector}</div>
+      {/* No row is laid out for a selector the field doesn't render, as while an optional field has no data (#5401) */}
+      {selector ? <div className={cn('mb-4')}>{selector}</div> : null}
       {optionSchemaField}
     </div>
   );
