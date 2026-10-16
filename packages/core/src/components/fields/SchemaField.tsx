@@ -293,12 +293,12 @@ const RenderNothing = () => null;
  * @param isSelectSchema - Whether the `schema` is an `enum` or a `oneOf`/`anyOf` that represents a select
  * @param hasConstantOptions - Whether that select offers at least one option, see `isConstantSelect()`
  * @returns - The `Field` component that renders the actual field data, whether that component is a named field written
- *            for the schema, which `FallbackField` is not,
- *            whether it renders the `schema`'s `anyOf`/`oneOf` options itself, and whether the `schema` has options for `SchemaFieldRender` to render an
- *            option selector of. Both flags are decided here so that this function and `SchemaFieldRender` read the
- *            same answers, and `SchemaFieldRender` reads them together: when the fallback UI has the schema it renders
- *            those options itself, within the value field for the type it has pinned, so the selector it would render
- *            is left unrendered even though the schema calls for one
+ *            for the schema, which `FallbackField` is not, whether it renders the `schema`'s `anyOf`/`oneOf` options
+ *            itself, and whether the `schema` has options for `SchemaFieldRender` to render an option selector of. The
+ *            last two flags are decided here so that this function and `SchemaFieldRender` read the same answers, and
+ *            `SchemaFieldRender` reads them together: when the fallback UI has the schema it renders those options
+ *            itself, within the value field for the type it has pinned, so the selector it would render is left
+ *            unrendered even though the schema calls for one
  */
 function getFieldComponent<
   T = unknown,
@@ -562,9 +562,9 @@ function SchemaFieldRender<
   const ownUiOptions = useMemo(() => getUiOptions<T, S, F>(uiSchema), [uiSchema]);
   // What `getUiOptions(uiSchema, globalUiOptions)` returns, without reading the `uiSchema`'s keys a second time, except
   // that a global `required` it drops is kept: nothing reads `required` from these options, since `ui:required` is
-  // resolved from `ownUiOptions` alone below. Nothing compares either object by identity; both are memoized because the React Compiler
-  // (`react/preserve-manual-memoization`) refuses the options memo below when the flags it depends on derive from an
-  // object rebuilt each render, which it takes for one that may still be mutated
+  // resolved from `ownUiOptions` alone below. Nothing compares either object by identity; both are memoized because the
+  // React Compiler (`react/preserve-manual-memoization`) refuses the options memo below when the flags it depends on
+  // derive from an object rebuilt each render, which it takes for one that may still be mutated
   const uiOptions = useMemo<UIOptionsType<T, S, F>>(
     () => ({ ...globalUiOptions, ...ownUiOptions }),
     [globalUiOptions, ownUiOptions],
@@ -581,15 +581,6 @@ function SchemaFieldRender<
       isSelectSchema,
       hasConstantOptions,
     );
-  // A named field that yields to the options renders nothing, so it claims no data path and the options may each apply
-  // a field their own uiSchema names. Those rendered against this field's `uiSchema`, which is every option without one
-  // of its own, would otherwise name the declined field again. Memoized because `MultiSchemaField` derives its
-  // per-option `uiSchema` array from this one and hands that array to a `useCallback`
-  const declinesNamedField = namedField !== undefined && fieldToRender?.rendersNamedField === false;
-  const optionsUiSchema = useMemo(
-    () => (declinesNamedField ? withoutNamedField<T, S, F>(uiSchema, globalUiOptions?.field) : uiSchema),
-    [declinesNamedField, uiSchema, globalUiOptions],
-  );
   // The fallback UI renders the options itself, against the schema with its type pinned to the one its selector is on,
   // so rendering them here as well would show the same option selector twice — once for the union and once for the
   // type in effect — and only the inner one would follow the type the user chose. Below a named field, the
@@ -912,7 +903,7 @@ function SchemaFieldRender<
                 registry={registry}
                 required={effectiveRequired}
                 schema={schema}
-                uiSchema={optionsUiSchema}
+                uiSchema={uiSchema}
               />
             </RawFormDataContext>
           </ShownOptionContext>
