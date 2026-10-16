@@ -543,3 +543,33 @@ describe("fluentui-rc's error and help elements carry the ids their field's plan
     expect(screen.getByRole('textbox')).toHaveAccessibleDescription('pick one or another');
   });
 });
+
+describe('fluentui-rc focuses its groups as core does', () => {
+  test.each<[string, RJSFSchema, string]>([
+    ['radio', { type: 'string', enum: ['red', 'green'] }, 'radio'],
+    ['checkboxes', { type: 'array', items: { type: 'string', enum: ['red', 'green'] }, uniqueItems: true }, 'checkbox'],
+  ])('focuses the first %s a user can choose under ui:autofocus', (widget, color, role) => {
+    render(
+      <Form
+        schema={{ type: 'object', properties: { color } }}
+        uiSchema={{ color: { 'ui:widget': widget, 'ui:autofocus': true, 'ui:enumDisabled': ['red'] } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getAllByRole(role)[1]).toHaveFocus();
+  });
+
+  test("focuses a radio group's checked radio under ui:autofocus, where Tab into the group lands", () => {
+    render(
+      <Form
+        schema={{ type: 'object', properties: { color: { type: 'string', enum: ['red', 'green', 'blue'] } } }}
+        uiSchema={{ color: { 'ui:widget': 'radio', 'ui:autofocus': true } }}
+        initialFormData={{ color: 'blue' }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getAllByRole('radio')[2]).toHaveFocus();
+  });
+});

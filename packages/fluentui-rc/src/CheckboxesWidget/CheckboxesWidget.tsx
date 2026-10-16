@@ -3,6 +3,7 @@ import { Label, Checkbox } from '@fluentui/react-components';
 import { Flex } from '@fluentui/react-migration-v0-v9';
 import type { FormContextType, WidgetProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
+  enumOptionsAutofocusIndex,
   enumOptionsDeselectValue,
   enumOptionsDomValues,
   enumOptionsIsDisabled,
@@ -49,6 +50,7 @@ export default function CheckboxesWidget<
     option: optionAttributes,
   } = getGroupLabelling<T, S, F>(props, 'group');
 
+  const autofocusIndex = enumOptionsAutofocusIndex<S>(enumOptions, enumDisabled, autofocus);
   return (
     <>
       {drawsLabel && (
@@ -72,7 +74,7 @@ export default function CheckboxesWidget<
                 checked={checked}
                 value={domValues[index]}
                 disabled={disabled || itemDisabled || readonly}
-                autoFocus={autofocus && index === 0}
+                autoFocus={index === autofocusIndex}
                 onChange={handleChange(index)}
                 onBlur={blurHandlers[index]}
                 onFocus={focusHandlers[index]}

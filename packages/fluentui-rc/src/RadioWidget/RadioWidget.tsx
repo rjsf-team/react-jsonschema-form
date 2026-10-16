@@ -3,6 +3,7 @@ import type { RadioGroupProps } from '@fluentui/react-components';
 import { Label, Radio, RadioGroup } from '@fluentui/react-components';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
+  enumOptionsAutofocusIndex,
   enumOptionsIsDisabled,
   enumOptionValueDecoder,
   enumOptionSelectedValue,
@@ -45,6 +46,7 @@ export default function RadioWidget<
     option: optionAttributes,
   } = getGroupLabelling<T, S, F>(props, 'radiogroup');
 
+  const autofocusIndex = enumOptionsAutofocusIndex<S>(enumOptions, enumDisabled, autofocus, value);
   return (
     <>
       {drawsLabel && (
@@ -69,7 +71,7 @@ export default function RadioWidget<
             return (
               <Radio
                 id={optionId(id, index)}
-                autoFocus={autofocus && index === 0}
+                autoFocus={index === autofocusIndex}
                 label={option.label}
                 value={domValues[index]}
                 // oxlint-disable-next-line react/no-array-index-key
