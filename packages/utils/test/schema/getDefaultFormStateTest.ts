@@ -5882,6 +5882,18 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             if: { properties: { x: { const: 1 } } },
           },
         };
+        const nestedPlacements = [
+          {
+            where: 'array items',
+            wrap: (schema: RJSFSchema): RJSFSchema => ({ type: 'array', items: schema }),
+            wrapData: (data: object) => [data],
+          },
+          {
+            where: 'an object property',
+            wrap: (schema: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { nested: schema } }),
+            wrapData: (data: object) => ({ nested: data }),
+          },
+        ];
 
         it('should populate default values correctly', () => {
           expect(
@@ -6088,18 +6100,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ).toEqual({ animalInfo: { animal: 'Cat', food: 'meat' } });
         });
 
-        it.each([
-          {
-            where: 'array items',
-            wrap: (schema: RJSFSchema): RJSFSchema => ({ type: 'array', items: schema }),
-            wrapData: (data: object) => [data],
-          },
-          {
-            where: 'an object property',
-            wrap: (schema: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { nested: schema } }),
-            wrapData: (data: object) => ({ nested: data }),
-          },
-        ])(
+        it.each(nestedPlacements)(
           "should populate a property's allOf conditional defaults with createDeepAllOfMerge in $where whose schema also has a direct if",
           ({ wrap, wrapData }) => {
             const deepMerge = createDeepAllOfMerge(shallowAllOfMerge) as Experimental_CustomMergeAllOf;
@@ -6143,6 +6144,38 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             ),
           ).toEqual([{ animal: 'Cat' }]);
         });
+
+        const dependencyCases: { entry: string; dependency: RJSFSchema }[] = [
+          { entry: 'an allOf with an if-then-else', dependency: { allOf: [animalCondition] } },
+          {
+            entry: 'an allOf with a plain property default',
+            dependency: { allOf: [{ properties: { food: { type: 'string', default: 'meat' } } }] },
+          },
+          { entry: 'a direct if-then-else', dependency: animalCondition },
+        ];
+        it.each(
+          nestedPlacements.flatMap((placement) =>
+            dependencyCases.map((dependencyCase) => ({ ...placement, ...dependencyCase })),
+          ),
+        )(
+          'should populate the defaults of $entry in a dependencies entry in $where once its property has a value, whatever emptyObjectFields is',
+          ({ wrap, wrapData, dependency }) => {
+            const dependentSchema = (animal: RJSFSchema): RJSFSchema =>
+              wrap({ type: 'object', properties: { animal }, dependencies: { animal: dependency } });
+            const defaultedSchema = dependentSchema({ type: 'string', default: 'Cat' });
+            const noDefaultSchema = dependentSchema({ type: 'string' });
+            const formData = wrapData({});
+            const getDefaults = (schema: RJSFSchema, behavior: Experimental_DefaultFormStateBehavior) =>
+              getDefaultFormState(testValidator, schema, formData, schema, undefined, behavior);
+            expect(getDefaults(defaultedSchema, { allOf: 'skipDefaults' })).toEqual(
+              wrapData({ animal: 'Cat', food: 'meat' }),
+            );
+            expect(
+              getDefaults(defaultedSchema, { allOf: 'skipDefaults', emptyObjectFields: 'skipEmptyDefaults' }),
+            ).toEqual(wrapData({ animal: 'Cat', food: 'meat' }));
+            expect(getDefaults(noDefaultSchema, { allOf: 'skipDefaults' })).toEqual(formData);
+          },
+        );
       });
     });
     describe('defaults with oneOf', () => {
