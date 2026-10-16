@@ -6152,6 +6152,10 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             dependency: { allOf: [{ properties: { food: { type: 'string', default: 'meat' } } }] },
           },
           { entry: 'a direct if-then-else', dependency: animalCondition },
+          {
+            entry: 'an if-then-else whose if requires the property',
+            dependency: { ...animalCondition, if: { properties: { animal: { const: 'Cat' } }, required: ['animal'] } },
+          },
         ];
         it.each(
           nestedPlacements.flatMap((placement) =>
