@@ -3,8 +3,8 @@ import { useCallback } from 'react';
 import { SchemaExamples } from '@rjsf/core';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
   examplesId,
+  getControlAttributes,
   getExampleSuggestions,
   getInputProps,
   getNumericInputTitle,
@@ -36,6 +36,7 @@ export default function BaseInputTemplate<
     children,
     extraProps,
     registry,
+    presentation,
   } = props;
   const { ClearButton } = registry.templates.ButtonTemplates;
   const derivedInputProps = getInputProps<T, S, F>(schema, type, options);
@@ -64,26 +65,36 @@ export default function BaseInputTemplate<
 
   const exampleSuggestions = getExampleSuggestions<S>(schema);
   const hasExamples = exampleSuggestions.length > 0;
+  const isInvalid = hasWidgetErrors<T, S, F>(props);
+  const controlProps = {
+    id,
+    name: htmlName || id,
+    placeholder,
+    autoFocus: autofocus,
+    required,
+    disabled,
+    title: callerPattern ? undefined : getNumericInputTitle(derivedInputProps, registry.translateString),
+    readOnly: readonly,
+    list: hasExamples ? examplesId(id) : undefined,
+    ...inputProps,
+    value: value || value === 0 ? value : '',
+    onChange: onChangeOverride ?? handleChange,
+    onBlur: handleBlur,
+    onFocus: handleFocus,
+    ...getControlAttributes<T, S, F>({ id, presentation }, hasExamples ? [examplesId(id)] : []),
+  };
   return (
     <>
-      <Form.Control
-        id={id}
-        name={htmlName || id}
-        placeholder={placeholder}
-        autoFocus={autofocus}
-        required={required}
-        disabled={disabled}
-        title={callerPattern ? undefined : getNumericInputTitle(derivedInputProps, registry.translateString)}
-        readOnly={readonly}
-        className={hasWidgetErrors<T, S, F>(props) ? 'is-invalid' : ''}
-        list={hasExamples ? examplesId(id) : undefined}
-        {...inputProps}
-        value={value || value === 0 ? value : ''}
-        onChange={onChangeOverride ?? handleChange}
-        onBlur={handleBlur}
-        onFocus={handleFocus}
-        aria-describedby={ariaDescribedByIds(id, hasExamples)}
-      />
+      {inputProps.type === 'range' ? (
+        // `Form.Range` takes Bootstrap's `form-range` class through its prefix, which a `ThemeProvider` can rename, and
+        // has no `isInvalid`, so its error state is the class `Form.Control` would add
+        <Form.Range
+          {...controlProps}
+          className={[inputProps.className, isInvalid && 'is-invalid'].filter(Boolean).join(' ') || undefined}
+        />
+      ) : (
+        <Form.Control isInvalid={isInvalid} {...controlProps} />
+      )}
       {options.allowClearTextInputs && !readonly && !disabled && value && (
         <ClearButton registry={registry} onClick={handleClear} />
       )}

@@ -1,5 +1,5 @@
 import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getTemplates, getUiOptions, hasTemplateErrors, templateDrawsLabel } from '@rjsf/utils';
+import { getTemplates, getUiOptions, hasTemplateErrors, templateDrawsLabel, templateLabelFor } from '@rjsf/utils';
 import { Form } from 'react-bootstrap';
 
 export default function FieldTemplate<
@@ -66,7 +66,11 @@ export default function FieldTemplate<
     >
       <Form.Group>
         {displayLabel && !leavesPartsToCheckbox && (
-          <Form.Label htmlFor={id} id={presentation?.label.id} className={hasError ? 'text-danger' : ''}>
+          <Form.Label
+            htmlFor={templateLabelFor<T, S, F>(props)}
+            id={presentation?.label.id}
+            className={hasError ? 'text-danger' : ''}
+          >
             {label}
             {required ? '*' : null}
           </Form.Label>
