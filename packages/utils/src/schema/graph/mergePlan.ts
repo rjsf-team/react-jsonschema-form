@@ -206,9 +206,19 @@ function symbolsOf(schemas: readonly object[]): Map<symbol, unknown> {
   return symbols;
 }
 
-/** The schema a boolean subschema reads as: `true` as `{}`, `false` as `{ not: {} }` */
+/** Returns the schema the boolean subschema `value` reads as: `true` as `{}`, `false` as `{ not: {} }`
+ *
+ * @param value - The boolean subschema
+ * @param template - A schema of the type to return, whose keywords are not copied
+ * @returns - The object schema
+ */
+export function schemaOfBoolean<S extends StrictRJSFSchema>(value: boolean, template: S): S {
+  return schemaFrom(template, value ? {} : { not: {} });
+}
+
+/** The schema a boolean node reads as, as `schemaOfBoolean()` reads its value; any other node reads as `{}` */
 export function booleanSchema<S extends StrictRJSFSchema>(node: SchemaNode<S>, template: S): S {
-  return schemaFrom(template, node.kind === 'boolean' && !node.value ? { not: {} } : {});
+  return schemaOfBoolean(node.kind !== 'boolean' || node.value, template);
 }
 
 /** Merges `branch` into `part` with `mergeSchemas()`, the branch's keywords winning, keeping the `RJSF_REF_KEY` of
