@@ -821,9 +821,10 @@ export function getObjectDefaults<
       },
       {},
     ) as T;
-    if (!shouldRetrieveSchema && (ALL_OF_KEY in schema || IF_KEY in schema)) {
+    // `isObject()` holds for the object the reduce built; it is what lets the branches' nulls be added to it
+    if (!shouldRetrieveSchema && (ALL_OF_KEY in schema || IF_KEY in schema) && isObject(objectDefaults)) {
       Object.assign(
-        objectDefaults as GenericObjectType,
+        objectDefaults,
         nullFillsOfSkippedBranches<T, S, F>(context, schema, {
           rootSchema,
           _recurseList,
