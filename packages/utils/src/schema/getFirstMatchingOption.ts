@@ -68,11 +68,37 @@ function statedValues<S extends StrictRJSFSchema = RJSFSchema>(
   return constrains || !typeAllows(raw.type, value) ? undefined : [];
 }
 
+/** Returns whether the declarations of `discriminatorField` that `declaredProperties()` finds in the option say by their
+ * `const` or `enum` alone that it holds `value`, see `simpleDiscriminatorMatch()`, or undefined when one of them leaves
+ * that to the validator
+ *
+ * @param option - The option's node
+ * @param discriminatorField - The name of the property the options are told apart by
+ * @param value - The data's value for the property
+ * @returns - Whether the option holds the value, or undefined when only the validator can tell
+ */
+function statesValue<S extends StrictRJSFSchema = RJSFSchema>(
+  { graph, node }: AdoptedSchema<S>,
+  discriminatorField: string,
+  value: unknown,
+): boolean | undefined {
+  const stated: (readonly unknown[])[] = [];
+  for (const id of declaredProperties(graph, node, discriminatorField)) {
+    const values = statedValues<S>(graph.node(id), value);
+    if (values === undefined) {
+      return undefined;
+    }
+    stated.push(...values);
+  }
+  return stated.length > 0 && stated.every((values) => values.includes(value));
+}
+
 /** Returns the index of the first option whose discriminator property says by its `const` or `enum` alone that it holds
  * the data's value for `discriminatorField`, which needs no validator: at least one declaration `declaredProperties()`
  * finds states a `const` or `enum`, each one that does holds the value, and every other one holds no keyword
  * constraining a value but a `type` allowing it. An option with a declaration that is a boolean, is of type `object` or
- * `array`, or constrains the value otherwise, such as by a `pattern`, a `$ref` or an `allOf`, is left for the validator.
+ * `array`, or constrains the value otherwise, such as by a `pattern`, a `$ref` or an `allOf`, is left for the validator,
+ * and so are the options after it, since the first option that matches is the one wanted.
  *
  * @param options - The options
  * @param formData - The data being matched
@@ -91,21 +117,15 @@ export function simpleDiscriminatorMatch<S extends StrictRJSFSchema = RJSFSchema
   if (value === undefined) {
     return undefined;
   }
-  const index = options.findIndex((option) => {
-    if (typeof option === 'boolean') {
-      return false;
+  for (const [index, option] of options.entries()) {
+    const states = typeof option === 'boolean' ? false : statesValue(option, discriminatorField, value);
+    // An option only the validator can tell holds the value or not comes before any later option matching by its
+    // `const` or `enum` alone, and the first option that matches is the one wanted
+    if (states !== false) {
+      return states ? index : undefined;
     }
-    const stated: (readonly unknown[])[] = [];
-    for (const id of declaredProperties(option.graph, option.node, discriminatorField)) {
-      const values = statedValues<S>(option.graph.node(id), value);
-      if (values === undefined) {
-        return false;
-      }
-      stated.push(...values);
-    }
-    return stated.length > 0 && stated.every((values) => values.includes(value));
-  });
-  return index < 0 ? undefined : index;
+  }
+  return undefined;
 }
 
 /** Returns whether `option` matches `formData`. With a `discriminatorField` the option names a property for, only that

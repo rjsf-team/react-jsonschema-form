@@ -1,5 +1,11 @@
 import type { RJSFSchema } from '../../src/index.ts';
-import { getClosestMatchingOption, getFirstMatchingOption, omitExtraData, retrieveSchema } from '../../src/index.ts';
+import {
+  getClosestMatchingOption,
+  getFirstMatchingOption,
+  isObject,
+  omitExtraData,
+  retrieveSchema,
+} from '../../src/index.ts';
 import { miniValidator } from './graph/miniValidator.ts';
 
 describe('matching options through the schema graph', () => {
@@ -60,6 +66,22 @@ describe('matching options through the schema graph', () => {
     ])('leaves the validator to check past one with %s', (_name, kind: RJSFSchema, values, value) => {
       expect(matching(kind, values, value).calls).toBeGreaterThan(0);
     });
+  });
+  it('asks the validator in order where an earlier option declares the discriminator with a constraint it has to read', () => {
+    const oneOf: RJSFSchema[] = [
+      { allOf: [{ $ref: '#/definitions/Base' }], properties: { kind: { const: 'a' }, x: {} } },
+      { type: 'object', properties: { kind: { enum: ['a', 'z'] }, y: {} } },
+    ];
+    const field: RJSFSchema = { discriminator: { propertyName: 'kind' }, oneOf };
+    const rootSchema: RJSFSchema = {
+      definitions: { Base: { type: 'object', properties: { kind: { type: 'string', minLength: 1 } } } },
+      type: 'object',
+      properties: { v: field },
+    };
+    const context = { validator: miniValidator() };
+    expect(getFirstMatchingOption(context, { kind: 'a' }, oneOf, rootSchema, 'kind')).toBe(0);
+    expect(getClosestMatchingOption(context, rootSchema, { kind: 'a' }, oneOf, 0, 'kind')).toBe(0);
+    expect(getFirstMatchingOption(context, { kind: 'q', y: 1 }, oneOf.slice(1), rootSchema, 'kind')).toBe(0);
   });
   it('matches past an option holding a patternProperties pattern no flag compiles', () => {
     const options: RJSFSchema[] = [
