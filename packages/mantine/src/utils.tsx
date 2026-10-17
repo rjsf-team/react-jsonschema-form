@@ -197,7 +197,8 @@ export function ErrorCopyIdProvider({ id, children }: { id?: string; children: R
 
 /** The id for the error element a widget or template shows. The field's `errorId(id)` is what its inputs are described
  * by, and exactly one element has it. Inside the field's own `FieldTemplate`, which renders the hidden copy of the
- * field's errors, the copy has it, see `useErrorCopyId()`, and the element shown has no id of the field's, so a custom
+ * field's errors when the field's `FieldErrorTemplate` is this theme's, the copy has it, see `useErrorCopyId()`, and
+ * the element shown has no id of the field's, so a custom
  * widget that shows no errors is described by them too, and a Mantine widget's are read once. Anywhere else, as for a
  * `oneOf`/`anyOf` selector, which has an id of its own, a widget rendered by itself, or a custom `FieldTemplate`, the
  * element shown has it.

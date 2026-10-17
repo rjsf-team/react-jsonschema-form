@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { createElement, use } from 'react';
 import { createTheme, InputWrapperContext, MantineProvider } from '@mantine/core';
-import type { ErrorSchema, FieldProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import type { ErrorSchema, FieldErrorProps, FieldProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { ariaDescribedByIds, descriptionId, errorId, helpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
@@ -857,6 +857,43 @@ describe('the element with a field error id', () => {
   ])('is the one element that describes the input by the errors, for %s', async (_, customTemplate, customWidget) => {
     await expectOneElementDescribingTheInput(customTemplate, customWidget);
   });
+
+  function ListErrors({ errors }: FieldErrorProps) {
+    return (
+      <ul>
+        {errors?.map((error, index) => (
+          // oxlint-disable-next-line react/no-array-index-key
+          <li key={index}>{error}</li>
+        ))}
+      </ul>
+    );
+  }
+
+  test.each<[string, UiSchema, { FieldErrorTemplate?: typeof ListErrors }]>([
+    ['given to the form', {}, { FieldErrorTemplate: ListErrors }],
+    ["given in the field's uiSchema", { 'ui:FieldErrorTemplate': ListErrors }, {}],
+  ])(
+    'is the error a Mantine widget shows, for a custom FieldErrorTemplate that has no id, %s',
+    async (_, uiSchema, templates) => {
+      const rootErrors: ErrorSchema = { __errors: ['An error'] };
+      const { container } = render(
+        <WrappedForm
+          schema={{ type: 'string' }}
+          uiSchema={uiSchema}
+          templates={templates}
+          validator={validator}
+          extraErrors={rootErrors}
+          showErrorList={false}
+        />,
+      );
+      await user.type(screen.getByRole('textbox'), 'x');
+
+      expect(duplicateIds(container)).toEqual([]);
+      expect(container.querySelectorAll(`[id="${errorId('root')}"]`)).toHaveLength(1);
+      expect(container.querySelector(`[id="${errorId('root')}"]`)).toHaveTextContent('An error');
+      expect(screen.getByRole('textbox')).toHaveAccessibleDescription('An error');
+    },
+  );
 
   // Known gap: a custom FieldTemplate leaves the hidden copy without the id, and a custom widget shows no error element
   test.fails('is the one element that describes the input by the errors, for a custom widget under a custom FieldTemplate', async () => {
