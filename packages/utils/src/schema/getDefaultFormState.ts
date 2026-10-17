@@ -65,6 +65,7 @@ import type {
   OptionPolicy,
   PlanEntry,
   PlanPolicy,
+  RefPath,
   Seed,
 } from './graph/mergePlan.ts';
 import parseSchemaGraph from './graph/parseSchemaGraph.ts';
@@ -987,18 +988,22 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
     (offered) => offered.keyword === key && offered.options.length === options.length && offered.list === options,
   );
   if (choice === undefined) {
-    // The options are not a list the plan met as it stands, such as one a `customMergeAllOf` rewrote, so the option
-    // is read as written and the field computed from it as a schema of its own
+    // The options are not a list the plan met as it stands, such as the cross product a merge makes of two lists or
+    // one a `customMergeAllOf` copied, so the option is read as written and the field computed from it. It is still
+    // the same field, reached the same way: it keeps its edge, and the longest ref path the lists it merges were
+    // offered under, or a recursion through the option would start afresh at every level
     const option = schemaFrom(rootSchema, options[index]);
     const rendered = rendersOwnField
       ? mergeSchemas(remaining, option)
       : withDefaultOf(remaining, getRenderedOptionSchema<S>(remaining, resolveOwnRef<S>(option, rootSchema)));
     const adopted = graph.adopt(schemaFrom(rootSchema, rendered));
+    const offeredAt = view.choices
+      .filter((offered) => offered.keyword === key)
+      .reduce<RefPath>((longest, { refPath }) => (refPath.length > longest.length ? refPath : longest), []);
     const optionField: DefaultsField<S> = {
       ...field,
       graph: adopted.graph,
-      seeds: [{ node: adopted.node, refPath: [] }],
-      edge: 'root',
+      seeds: [{ node: adopted.node, refPath: offeredAt }],
     };
     const optionView = settle(context, optionField, view.data, view.depData);
     return foldView<T, S, F>(context, { ...optionView, options: { ...optionView.options, chosen } }, branchProps);

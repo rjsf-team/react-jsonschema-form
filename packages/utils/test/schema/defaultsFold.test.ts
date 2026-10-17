@@ -1,5 +1,5 @@
 import { createSchemaUtils, getDefaultFormState, isObject } from '../../src/index.ts';
-import type { DefaultFormStateBehavior, RJSFSchema } from '../../src/index.ts';
+import type { DefaultFormStateBehavior, RJSFSchema, SchemaContext } from '../../src/index.ts';
 import { computeDefaults, getObjectDefaults } from '../../src/schema/getDefaultFormState.ts';
 import looseSchema from './graph/looseSchema.ts';
 import { miniValidator } from './graph/miniValidator.ts';
@@ -324,6 +324,83 @@ describe('getDefaultFormState() on recursive schemas', () => {
     const defaults = defaultsOf(schema, undefined, behavior);
     expect(defaults).toEqual(expected);
     expect(defaultsOf(schema, defaults, behavior)).toEqual(expected);
+  });
+
+  describe('a recursion through an option list a merge rebuilt', () => {
+    const optA: RJSFSchema = { properties: { next: { $ref: D('node') }, a: { type: 'string', default: 'x' } } };
+    const optB: RJSFSchema = { properties: { b: { type: 'string' } } };
+    const optC: RJSFSchema = { properties: { c: { type: 'string', default: 'c' } } };
+    const optD: RJSFSchema = { properties: { d: { type: 'string' } } };
+    // A merge that copies what it merges, as a `customMergeAllOf` may, hands back a list no node declares
+    const copyingMerge = (schema: RJSFSchema): RJSFSchema => {
+      const { allOf = [], ...rest } = schema;
+      return allOf.reduce<RJSFSchema>(
+        (merged, member) => (isObject(member) ? { ...merged, ...structuredClone(member) } : merged),
+        structuredClone(rest),
+      );
+    };
+    const twoLists = { next: { a: 'x', c: 'c' }, a: 'x', c: 'c' };
+    it.each<[string, RJSFSchema, DefaultFormStateBehavior | undefined, Partial<SchemaContext>, unknown]>([
+      [
+        'a $ref with an anyOf beside it whose target has an anyOf',
+        {
+          definitions: {
+            node: {
+              type: 'object',
+              anyOf: [{ properties: { a: { type: 'string', default: 'x' } } }, optB],
+              properties: { next: { $ref: D('node'), anyOf: [optC, optD] } },
+            },
+          },
+          $ref: D('node'),
+        },
+        undefined,
+        {},
+        { next: { c: 'c', a: 'x' }, a: 'x' },
+      ],
+      [
+        'an allOf of two option lists beside an if',
+        {
+          definitions: {
+            node: {
+              type: 'object',
+              if: { properties: { k: { const: 'z' } } },
+              then: { properties: { t: { type: 'string' } } },
+              allOf: [{ anyOf: [optA, optB] }, { anyOf: [optC, optD] }],
+            },
+          },
+          $ref: D('node'),
+        },
+        undefined,
+        {},
+        twoLists,
+      ],
+      [
+        'an allOf of two option lists',
+        {
+          definitions: { node: { type: 'object', allOf: [{ anyOf: [optA, optB] }, { anyOf: [optC, optD] }] } },
+          $ref: D('node'),
+        },
+        { allOf: 'populateDefaults' },
+        {},
+        twoLists,
+      ],
+      [
+        'one list a customMergeAllOf copied',
+        { definitions: { node: { type: 'object', allOf: [{ anyOf: [optA, optB] }] } }, $ref: D('node') },
+        { allOf: 'populateDefaults' },
+        { customMergeAllOf: copyingMerge },
+        { next: { a: 'x' }, a: 'x' },
+      ],
+    ])(
+      'terminates on %s, expanding the recursion once as through a list the plan met',
+      (_, schema, behavior, context, expected) => {
+        const defaults = getDefaultFormState(
+          { validator, defaultFormStateBehavior: behavior, ...context },
+          { schema, rootSchema: schema },
+        );
+        expect(defaults).toEqual(expected);
+      },
+    );
   });
 
   it('gives nothing for an anyOf option that refers back to the schema offering it, and the other option for its data', () => {
