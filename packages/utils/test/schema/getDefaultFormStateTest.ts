@@ -8089,6 +8089,24 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
       },
     );
 
+    describe('the null of an anyOf/oneOf option', () => {
+      const defaultsOf = (option: RJSFSchema) => {
+        const schema: RJSFSchema = { type: 'object', properties: { p: { oneOf: [option, { type: 'string' }] } } };
+        return getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema });
+      };
+
+      it('is left out for an option of `type: "null"`, which renders no field', () => {
+        expect(defaultsOf({ type: 'null' })).toEqual({});
+      });
+
+      it.each<[string, RJSFSchema]>([
+        ["`type: ['null']`", { type: ['null'] }],
+        ['`const: null`', { const: null }],
+      ])('is filled in for an option of %s, which renders a field', (_, option) => {
+        expect(defaultsOf(option)).toEqual({ p: null });
+      });
+    });
+
     describe('array object reference sharing fix (issue #4756)', () => {
       const schema: RJSFSchema = {
         type: 'object',

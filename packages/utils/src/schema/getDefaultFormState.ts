@@ -626,8 +626,13 @@ export function computeDefaults<
   );
 
   let defaultsWithFormData: T | T[] | null | undefined = defaultBasedOnSchemaType ?? defaults;
-  // A `null` schema allows one value, so a missing one is that value, except for an option, whose field renders nothing
-  if (defaultsWithFormData === undefined && !isRenderedOption && getSchemaType<S>(schema) === 'null') {
+  // A `null` schema allows one value, so a missing one is that value, except for an option of `type: 'null'` itself,
+  // which `MultiSchemaField` renders no field for; one that is `null` only through a `type` list renders `NullField`
+  if (
+    defaultsWithFormData === undefined &&
+    !(isRenderedOption && schema.type === 'null') &&
+    getSchemaType<S>(schema) === 'null'
+  ) {
     defaultsWithFormData = null;
     onNullFill?.();
   }
