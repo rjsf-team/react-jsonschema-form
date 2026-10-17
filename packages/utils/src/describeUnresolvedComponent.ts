@@ -1,15 +1,12 @@
 import { isValidElement } from 'react';
 
+import describeElementGivenAsComponent from './describeElementGivenAsComponent.ts';
+
 /** Describes a value given in place of a component, either directly or as a name to look one up by, that did not
  * resolve to anything `isComponentType()` accepts, for a warning that it was ignored. Every option that takes a
  * component or a name describes it here, so the warnings for each read alike. A React element is called out on its
  * own, whether given directly or found under a name, since passing `<MyField />` for `MyField` is the likely mistake
- * and "got object" wouldn't say what to change. `@rjsf/utils` words the same case for `ui:widget` through its own
- * internal `describeElementGivenAsComponent()`, which this package can't import, so keep the two in step.
- *
- * Internal to `@rjsf/core`: `package.json` excludes `./lib/describeUnresolvedComponent.js` from the `./lib/*.js`
- * exports wildcard so it can't be deep-imported, since a reachable subpath would have to keep working until the next
- * major.
+ * and "got object" wouldn't say what to change. `null` is called out as `null` for the same reason.
  *
  * @param given - The value given for the option, a component or a name to look one up by
  * @param resolved - What `given` resolved to: the value found under it when it is a name, otherwise `given` itself
@@ -24,8 +21,8 @@ export default function describeUnresolvedComponent(
   exampleName: string,
 ): string {
   const description = isValidElement(resolved)
-    ? `is a React element rather than a component (pass ${exampleName}, not <${exampleName} />)`
-    : `is not a component (got ${typeof resolved})`;
+    ? describeElementGivenAsComponent(exampleName)
+    : `is not a component (got ${resolved === null ? 'null' : typeof resolved})`;
   if (typeof given !== 'string') {
     return description;
   }

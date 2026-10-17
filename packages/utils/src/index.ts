@@ -16,6 +16,7 @@ import dataURItoBlob from './dataURItoBlob.ts';
 import dateElementLabel, { dateElementAriaLabel } from './dateElementLabel.ts';
 import dateRangeOptions from './dateRangeOptions.ts';
 import deepEquals, { deepEqualsUndefinedAsMissing } from './deepEquals.ts';
+import describeUnresolvedComponent from './describeUnresolvedComponent.ts';
 import englishStringTranslator from './englishStringTranslator.ts';
 import enumOptionsDeselectValue from './enumOptionsDeselectValue.ts';
 import enumOptionsDomValues from './enumOptionsDomValues.ts';
@@ -213,6 +214,7 @@ export {
   deepEquals,
   deepEqualsUndefinedAsMissing,
   DEFAULT_BOOLEAN_WIDGET,
+  describeUnresolvedComponent,
   descriptionId,
   englishStringTranslator,
   enumOptionSelectedValue,

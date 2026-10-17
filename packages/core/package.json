@@ -26,7 +26,6 @@
     "./lib": "./lib/index.js",
     "./lib/components/formModel.js": null,
     "./lib/components/formState.js": null,
-    "./lib/describeUnresolvedComponent.js": null,
     "./lib/fieldLabelForLog.js": null,
     "./lib/hasOptionLabels.js": null,
     "./lib/*.js": "./lib/*.js",
