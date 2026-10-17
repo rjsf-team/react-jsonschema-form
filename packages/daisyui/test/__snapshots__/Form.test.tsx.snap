@@ -78,6 +78,7 @@ exports[`format iso-time 1`] = `
           <input
             class="input input-bordered w-full"
             id="root"
+            name="root"
             type="time"
             value=""
           />
@@ -5183,6 +5184,7 @@ exports[`single fields > format time 1`] = `
           <input
             class="input input-bordered w-full"
             id="root"
+            name="root"
             type="time"
             value=""
           />
@@ -12561,6 +12563,7 @@ exports[`single fields > slider field 1`] = `
               id="root"
               max="100"
               min="42"
+              name="root"
               step="1"
               type="range"
               value="75"

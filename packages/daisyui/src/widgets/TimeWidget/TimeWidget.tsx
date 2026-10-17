@@ -26,7 +26,7 @@ export default function TimeWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { id, onChange, onFocus, onBlur, required, disabled, readonly, autofocus, presentation } = props;
+  const { id, htmlName, onChange, onFocus, onBlur, required, disabled, readonly, autofocus, presentation } = props;
   const { localValue: displayValue, computeTimeValue } = useTimeWidgetProps(props);
 
   /** Handle focus events
@@ -76,6 +76,7 @@ export default function TimeWidget<
       <input
         type='time'
         id={id}
+        name={htmlName || id}
         className='input input-bordered w-full'
         value={displayValue || ''}
         required={required}

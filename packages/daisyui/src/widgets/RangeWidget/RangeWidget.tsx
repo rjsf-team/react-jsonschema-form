@@ -20,6 +20,7 @@ export default function RangeWidget<
   F extends FormContextType = FormContextType,
 >({
   id,
+  htmlName,
   value,
   required,
   disabled,
@@ -68,8 +69,11 @@ export default function RangeWidget<
         <input
           type='range'
           id={id}
+          name={htmlName || id}
           className='range'
-          value={value || schema.default}
+          // `''` with neither a value nor a default keeps the input controlled from its first render, and shows it at the
+          // middle of the range, as the browser shows one with no value
+          value={value ?? schema.default ?? ''}
           required={required}
           disabled={disabled || readonly}
           autoFocus={autofocus}

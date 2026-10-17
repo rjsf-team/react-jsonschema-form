@@ -382,6 +382,8 @@ should change the heading of the (upcoming) version to include a major version b
 - **BREAKING CHANGE:** `TitleField` and `ArrayFieldTitleTemplate` mark a required object's or array's heading `*`, as `@rjsf/core`'s do, outside the text carrying the title id, so an option selector named by that id isn't named "Pet *". `ArrayFieldTitleTemplate` puts the id on a `<span>` around the title's text rather than on its `<h3>`, as `TitleField` does, so a selector aimed at `h3#root_tags__title` should aim at `span#root_tags__title` ([#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
 - The first checkbox of `CheckboxesWidget` a user can choose, `TextareaWidget`, `TimeWidget`, `SelectWidget`'s combobox, and so an `AltDateWidget`'s first part, and the `DateWidget` and `DateTimeWidget` triggers take `ui:autofocus`, which they ignored, as `@rjsf/core`'s widgets do, and a multiple `SelectWidget`'s listbox is `aria-multiselectable` ([#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
 - `AltDateWidget` hands `DateElement` its plan, so each date part is described by the field's parts that render, rather than by `ariaDescribedByIds()`, whose ids no element may have, and is `aria-invalid` while its errors show ([#5542](https://github.com/rjsf-team/react-jsonschema-form/issues/5542))
+- `RangeWidget` and `TimeWidget` name their inputs by `htmlName`, as the other widgets do, so a form's `nameGenerator` reaches them ([#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
+- Fixed `RangeWidget` showing a stored `0` at its schema's `default`, or at the middle of the range without one ([#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
 
 ## @rjsf/fluentui-rc
 

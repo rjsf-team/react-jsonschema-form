@@ -1,8 +1,8 @@
 import { formTests, themeTests } from '@rjsf/snapshot-tests';
 import type { FormValidation, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
-import { errorId, fieldLabelId, helpId, optionHelpId } from '@rjsf/utils';
+import { bracketNameGenerator, errorId, fieldLabelId, helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import Form, { generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
@@ -519,5 +519,59 @@ describe('daisyui focuses its groups as core does', () => {
     );
 
     expect(screen.getByRole('radio', { name })).toHaveFocus();
+  });
+});
+
+describe('daisyui RangeWidget and TimeWidget', () => {
+  test('a range shows a stored 0 rather than its default', () => {
+    render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: { x: { type: 'integer', title: 'X', minimum: 0, maximum: 10, default: 5 } },
+        }}
+        uiSchema={{ x: { 'ui:widget': 'range' } }}
+        initialFormData={{ x: 0 }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('slider', { name: 'X' })).toHaveValue('0');
+  });
+
+  test('keeps a range with no value and no default controlled when it is moved', () => {
+    const consoleError = vi.spyOn(console, 'error');
+    try {
+      render(
+        <Form
+          schema={{ type: 'object', properties: { x: { type: 'number', title: 'X', minimum: 0, maximum: 10 } } }}
+          uiSchema={{ x: { 'ui:widget': 'range' } }}
+          validator={validator}
+        />,
+      );
+
+      // user-event edits no `type=range` input, so the move is a change event
+      fireEvent.change(screen.getByRole('slider', { name: 'X' }), { target: { value: '3' } });
+
+      expect(consoleError.mock.calls.flat().join(' ')).not.toContain('uncontrolled');
+    } finally {
+      consoleError.mockRestore();
+    }
+  });
+
+  test.each<[string, RJSFSchema, UiSchema]>([
+    ['range', { type: 'number' }, { 'ui:widget': 'range' }],
+    ['time', { type: 'string', format: 'time' }, {}],
+  ])('names a %s input by the name the form generates', (_, x, uiSchema) => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { x } }}
+        uiSchema={{ x: uiSchema }}
+        nameGenerator={bracketNameGenerator}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('#root_x')).toHaveAttribute('name', 'root[x]');
   });
 });
