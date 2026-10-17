@@ -4,6 +4,8 @@ import {
   ADDITIONAL_PROPERTY_FLAG,
   JSON_SCHEMA_DRAFT_2019_09,
   JSON_SCHEMA_DRAFT_2020_12,
+  noop,
+  resetLogOnce,
   RJSF_REF_KEY,
 } from '../../../src/index.ts';
 import type { RJSFSchema, SchemaContext } from '../../../src/index.ts';
@@ -894,5 +896,22 @@ describe('refDefinition()', () => {
     expect(() => refDefinition(graph, node('/properties/dangling'))).toThrow(
       'Could not find a definition for #/$defs/missing.',
     );
+  });
+  it('keeps a chained target whose keywords cannot be merged with those beside it as the allOf of both, saying so', () => {
+    const conflicting: RJSFSchema = {
+      definitions: {
+        Base: { type: 'object', properties: { id: { type: 'string' } } },
+        NumericId: { $ref: '#/definitions/Base', properties: { id: { type: 'number' } } },
+      },
+      properties: { item: { $ref: '#/definitions/NumericId' } },
+    };
+    resetLogOnce();
+    const warn = vi.spyOn(console, 'warn').mockImplementation(noop);
+    const conflictGraph = parseSchemaGraph(conflicting);
+    expect(refDefinition(conflictGraph, conflictGraph.byPointer('/properties/item') ?? -1)).toEqual({
+      allOf: [{ properties: { id: { type: 'number' } } }, { type: 'object', properties: { id: { type: 'string' } } }],
+    });
+    expect(warn).toHaveBeenCalledWith('could not merge subschemas in allOf:\n', expect.any(Error));
+    warn.mockRestore();
   });
 });

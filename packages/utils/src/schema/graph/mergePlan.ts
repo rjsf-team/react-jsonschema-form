@@ -429,6 +429,24 @@ export function refDefinition<S extends StrictRJSFSchema = RJSFSchema>(graph: Sc
     : schemaFrom(graph.rawRoot, {});
 }
 
+/** Returns the keywords `beside` a `$ref` and the `definition` it names merged as the `allOf` of both, as the form
+ * merges them. Two that cannot be merged, such as a `type` beside the `$ref` that the definition's `type` shares no
+ * value with, stay the `allOf` of both, which a validator reads the same way, rather than failing every reader.
+ *
+ * @param template - A schema of the type to return, whose keywords are not copied
+ * @param beside - The keywords beside the `$ref`
+ * @param definition - The definition the `$ref` names
+ * @returns - The merged schema, or the `allOf` of both where they cannot be merged
+ */
+export function conjoinDefinition<S extends StrictRJSFSchema>(template: S, beside: S, definition: S): S {
+  try {
+    return schemaFrom(template, shallowAllOfMerge({ [ALL_OF_KEY]: [beside, definition] }));
+  } catch (error) {
+    logOnce('could not merge subschemas in allOf:\n', 'warn', error);
+    return schemaFrom(template, { [ALL_OF_KEY]: [beside, definition] });
+  }
+}
+
 /** Returns the schema the node `id` reads as, its own `$ref` followed as `refDefinition()` follows one */
 function definitionOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId): S {
   const keys = [graph, id];
@@ -445,10 +463,10 @@ function definitionOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: Nod
   }
   const target = definitionOf(graph, node.ref);
   const beside = withoutKeys(node.raw, REF_KEY);
-  const definition = schemaFrom(
-    node.raw,
-    node.conjunction === undefined ? { ...target, ...beside } : shallowAllOfMerge({ allOf: [beside, target] }),
-  );
+  const definition =
+    node.conjunction === undefined
+      ? schemaFrom(node.raw, { ...target, ...beside })
+      : conjoinDefinition(node.raw, beside, target);
   definitions.set(keys, definition);
   return definition;
 }
