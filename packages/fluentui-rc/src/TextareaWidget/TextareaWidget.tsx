@@ -1,7 +1,7 @@
 import type { ChangeEvent, FocusEvent } from 'react';
 import { Label, Textarea, makeStyles } from '@fluentui/react-components';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, labelValue, widgetDrawsLabel } from '@rjsf/utils';
+import { getControlAttributes, labelValue, widgetDrawsLabel } from '@rjsf/utils';
 
 const useStyles = makeStyles({
   label: {
@@ -35,6 +35,7 @@ export default function TextareaWidget<
     onFocus,
     autofocus,
     options,
+    presentation,
   } = props;
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const classes = useStyles();
@@ -67,7 +68,7 @@ export default function TextareaWidget<
         onChange={onChangeOverride || handleChange}
         onFocus={handleFocus}
         onBlur={handleBlur}
-        aria-describedby={ariaDescribedByIds(id)}
+        {...getControlAttributes<T, S, F>({ id, presentation })}
         rows={rows}
       />
     </>

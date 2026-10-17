@@ -6,17 +6,21 @@ import {
   enumOptionsDomValues,
   enumOptionsIndexForValue,
   enumOptionValueDecoder,
+  getControlFallbackName,
+  getLabelId,
   getOptionValueFormat,
   groupEnumOptions,
   hasWidgetErrors,
   isEnumOptionsGroup,
-  labelValue,
+  isNamedByTemplateLabel,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
   useSelectFocusHandlers,
   widgetAriaProps,
   widgetDrawsLabel,
 } from '@rjsf/utils';
+
+import { fieldLabelSlot } from '../utils.ts';
 
 function getValue(data: OptionOnSelectData, multiple: boolean) {
   if (multiple) {
@@ -57,6 +61,12 @@ function SelectWidget<
     presentation,
   } = props;
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
+  // An empty label element would still name the dropdown, by nothing, over an `aria-label` it is given, and one holding
+  // only a required field's `*` would name it "star", so a label is drawn only with text. Where none names it, the
+  // dropdown, whose contents are its value, is named by the field's label, its placeholder or the translated prompt
+  const drawsLabel = !hideLabel && !!label;
+  const ariaProps = widgetAriaProps(props);
+  const namedElsewhere = drawsLabel || isNamedByTemplateLabel<T, S, F>(props);
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
@@ -89,9 +99,7 @@ function SelectWidget<
 
   return (
     <Field
-      // An empty label element would still name the dropdown, by nothing, over an `aria-label` it is given. A required
-      // field keeps it, since the label is where the required mark is shown
-      label={labelValue(label, hideLabel || (!label && !required))}
+      label={drawsLabel ? fieldLabelSlot(label, id, getLabelId<T, S, F>(props)) : undefined}
       validationState={hasWidgetErrors<T, S, F>(props) ? 'error' : undefined}
       required={required}
     >
@@ -107,7 +115,8 @@ function SelectWidget<
         onFocus={handleFocus}
         onOptionSelect={handleChange}
         selectedOptions={selectedOptions}
-        {...widgetAriaProps(props)}
+        {...ariaProps}
+        aria-label={ariaProps['aria-label'] ?? (namedElsewhere ? undefined : getControlFallbackName<T, S, F>(props))}
       >
         {showPlaceholderOption && <Option value=''>{placeholder || ''}</Option>}
         {groupEnumOptions<S>(enumOptions, optgroups, enumDisabled).map((item) =>
