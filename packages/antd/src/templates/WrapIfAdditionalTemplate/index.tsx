@@ -115,6 +115,7 @@ export default function WrapIfAdditionalTemplate<
               ) : (
                 <Input
                   key={keyName}
+                  aria-label={hasKeyLabel ? undefined : keyLabel}
                   className='form-control'
                   defaultValue={keyName}
                   disabled={disabled || (readonlyAsDisabled && readonly)}

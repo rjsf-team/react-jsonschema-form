@@ -645,6 +645,30 @@ describe('antd focusOnFirstError', () => {
 });
 
 describe("antd widgets carry their field's plan on the element a user focuses", () => {
+  test('a required select tells assistive technology it is required', () => {
+    render(
+      <Form
+        schema={{ type: 'object', required: ['pet'], properties: { pet: { type: 'string', enum: ['cat', 'dog'] } } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('combobox')).toHaveAttribute('aria-required', 'true');
+  });
+
+  test("names the additional property key's input by its label where ui:label: false hides it", () => {
+    render(
+      <Form
+        schema={{ type: 'object', additionalProperties: { type: 'string' } }}
+        uiSchema={{ additionalProperties: { 'ui:label': false } }}
+        formData={{ first: 'a' }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('textbox', { name: 'first Key' })).toHaveAttribute('id', 'root_first-key');
+  });
+
   test.each([
     ['text', { type: 'string' }, {}],
     ['number', { type: 'number' }, {}],
