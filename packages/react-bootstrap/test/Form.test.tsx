@@ -123,7 +123,7 @@ describe("react-bootstrap widgets carry their field's plan on the element a user
       <Form
         schema={{ type: 'object', properties: { volume: { type: 'integer', title: 'Volume' } } }}
         uiSchema={{ volume: { 'ui:widget': 'range', 'ui:allowClearTextInputs': true } }}
-        formData={{ volume: 3 }}
+        initialFormData={{ volume: 3 }}
         validator={validator}
       />,
     );
@@ -188,7 +188,7 @@ describe("react-bootstrap widgets carry their field's plan on the element a user
       expect(group).toHaveRole(role);
       expect(group).toHaveAccessibleName('Color');
       expect(group?.getAttribute('aria-invalid')).toBe(groupInvalid);
-      expect(container.querySelector(`#${fieldLabelId('root_color')}`)).not.toHaveAttribute('for');
+      expect(container.querySelector(`#${fieldLabelId('root_color')}`)?.closest('label')).not.toHaveAttribute('for');
       for (const option of screen.getAllByRole(item)) {
         expect(option.getAttribute('aria-invalid')).toBe(optionInvalid);
         expect(option).toHaveClass('is-invalid');
@@ -303,7 +303,7 @@ describe('react-bootstrap templates', () => {
           properties: { pet: { type: 'object', title: 'Pet', properties: { a: { type: 'string' } } } },
         }}
         uiSchema={{ 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] }, pet: { 'ui:label': false } }}
-        formData={{ pet: { a: 'x' } }}
+        initialFormData={{ pet: { a: 'x' } }}
         validator={validator}
       />,
     );
@@ -346,7 +346,7 @@ describe('react-bootstrap templates', () => {
           },
         }}
         uiSchema={{ 'ui:globalOptions': { enableOptionalDataFieldForType: ['array'] } }}
-        formData={{ tags: ['a'] }}
+        initialFormData={{ tags: ['a'] }}
         validator={validator}
       />,
     );
@@ -422,6 +422,37 @@ describe('react-bootstrap names a control whose label ui:label false hides', () 
     expect(screen.queryByText('Pet')).toBeNull();
     expect(screen.getByRole(role)).toHaveAccessibleName('Pet');
     expectReferencesResolve(container);
+  });
+});
+
+describe('react-bootstrap labels and key inputs', () => {
+  test("names a required field's group by its label's text, without the required marker", () => {
+    render(
+      <Form
+        schema={{
+          type: 'object',
+          required: ['color'],
+          properties: { color: { type: 'string', title: 'Color', enum: ['red', 'blue'] } },
+        }}
+        uiSchema={{ color: { 'ui:widget': 'radio' } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('radiogroup', { name: 'Color' })).toBeInTheDocument();
+  });
+
+  test("names the additional property key's input by its label where ui:label: false hides it", () => {
+    render(
+      <Form
+        schema={{ type: 'object', additionalProperties: { type: 'string' } }}
+        uiSchema={{ additionalProperties: { 'ui:label': false } }}
+        initialFormData={{ first: 'a' }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('textbox', { name: 'first Key' })).toHaveAttribute('id', 'root_first-key');
   });
 });
 

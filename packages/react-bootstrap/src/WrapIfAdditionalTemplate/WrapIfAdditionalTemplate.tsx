@@ -76,6 +76,7 @@ export default function WrapIfAdditionalTemplate<
           ) : (
             <Form.Control
               key={keyName}
+              aria-label={hasKeyLabel ? undefined : keyLabel}
               required={required}
               defaultValue={keyName}
               disabled={disabled || readonly}

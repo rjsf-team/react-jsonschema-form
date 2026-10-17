@@ -39,4 +39,16 @@ describe('BaseInputTemplate', () => {
 
     expect(container.querySelector('input')).toHaveClass('x', 'is-invalid');
   });
+
+  test("keeps a className extraProps carries beside a range's own and invalid styles", () => {
+    const { container } = render(
+      <BaseInputTemplate
+        type='range'
+        // oxlint-disable-next-line typescript/no-deprecated -- a template rendered without a plan reads the deprecated prop
+        {...makeWidgetMockProps({ rawErrors: ['too short'], extraProps: { className: 'x' }, value: 3 })}
+      />,
+    );
+
+    expect(container.querySelector('input')).toHaveClass('x', 'is-invalid', 'form-range');
+  });
 });
