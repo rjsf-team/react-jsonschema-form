@@ -21,4 +21,31 @@ describe('unwrapErrorHandler()', () => {
   it('A fully loaded FormValidation returns the associated ErrorSchema', () => {
     expect(unwrapErrorHandler(POPULATED_WRAPPER)).toEqual(TEST_ERROR_SCHEMA);
   });
+  it('strips the addError() functions from an array of item handlers, keying the items by index', () => {
+    const handler = createErrorHandler({ list: [{ name: 'a' }, { name: 'b' }] });
+    handler.list?.[1]?.name?.addError('taken');
+    const returned: FormValidation = { ...handler, list: [handler.list?.[0], handler.list?.[1]] };
+    expect(unwrapErrorHandler(returned)).toStrictEqual({
+      [ERRORS_KEY]: [],
+      list: {
+        0: { [ERRORS_KEY]: [], name: { [ERRORS_KEY]: [] } },
+        1: { [ERRORS_KEY]: [], name: { [ERRORS_KEY]: ['taken'] } },
+      },
+    });
+  });
+  it('leaves out the null and undefined children of an array of item handlers and of an object', () => {
+    const handler = createErrorHandler({ list: ['a', 'b'] });
+    handler.list?.[1]?.addError('taken');
+    const returned: FormValidation = { ...handler, list: [null, handler.list?.[1]], other: undefined };
+    expect(unwrapErrorHandler(returned)).toStrictEqual({
+      [ERRORS_KEY]: [],
+      list: { 1: { [ERRORS_KEY]: ['taken'] } },
+    });
+  });
+  it('leaves what sits under __errors as a leaf, as the other walks of an ErrorSchema read it', () => {
+    const misplaced = { a: { [ERRORS_KEY]: ['x'] } };
+    // @ts-expect-error `__errors` holds messages, so the type rejects a node there
+    const returned: FormValidation = { ...createErrorHandler({}), [ERRORS_KEY]: misplaced };
+    expect(unwrapErrorHandler(returned)[ERRORS_KEY]).toBe(misplaced);
+  });
 });

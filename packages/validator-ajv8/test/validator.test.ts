@@ -8,7 +8,7 @@ import type {
   UiSchema,
   ValidatorType,
 } from '@rjsf/utils';
-import { ErrorSchemaBuilder, getFirstMatchingOption, noop, retrieveSchema } from '@rjsf/utils';
+import { createSchemaUtils, ErrorSchemaBuilder, getFirstMatchingOption, noop, retrieveSchema } from '@rjsf/utils';
 import type { Ajv } from 'ajv';
 import ajvI18n from 'ajv-i18n';
 import { Ajv2019 } from 'ajv/dist/2019.js';
@@ -752,6 +752,32 @@ describe('AJV8Validator', () => {
             ]);
           });
         });
+        describe('customValidate returns an array for the items of an array field', () => {
+          it("lists its errors and keeps ajv's for the other items", () => {
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: {
+                list: {
+                  type: 'array',
+                  items: { type: 'object', properties: { name: { type: 'string', minLength: 3 } } },
+                },
+              },
+            };
+            const validate = (_formData: unknown, errors: FormValidation): FormValidation => ({
+              ...errors,
+              list: [{ name: { __errors: ['taken'] } }],
+            });
+            const result = validator.validateFormData({ list: [{ name: 'abc' }, { name: 'a' }] }, schema, validate);
+            expect(result.errorSchema.list).toEqual({
+              0: { name: { __errors: ['taken'] } },
+              1: { name: { __errors: ['must NOT have fewer than 3 characters'] } },
+            });
+            expect(result.errors.map(({ stack }) => stack)).toEqual([
+              '.list.1.name must NOT have fewer than 3 characters',
+              '.list.0.name taken',
+            ]);
+          });
+        });
         describe('uiSchema declares ui:initialValue', () => {
           it('passes customValidate a formData reflecting the ui:initialValue default, matching what the form renders', () => {
             const validate = vi.fn((_formData: unknown, errors: FormValidation) => errors);
@@ -1312,6 +1338,43 @@ describe('AJV8Validator', () => {
     let validator: AJV8Validator;
     beforeAll(() => {
       validator = new AJV8Validator({ AjvClass: Ajv2020 });
+    });
+    describe('the root `createSchemaUtils()` rewrites under a relative base', () => {
+      const child = (id: string): RJSFSchema => ({
+        $id: id,
+        type: 'object',
+        properties: { a: { $ref: '#/$defs/x' } },
+        $defs: { x: { type: 'string' } },
+      });
+      it.each([
+        ['no', undefined],
+        ['a relative', 'schemas/root.json'],
+      ])('resolves each `$ref` in a nested resource under a root with %s `$id`', (_, rootId) => {
+        const rootSchema: RJSFSchema = {
+          $schema: 'https://json-schema.org/draft/2020-12/schema',
+          ...(rootId === undefined ? {} : { $id: rootId }),
+          type: 'object',
+          properties: {
+            c: { $ref: '#/$defs/parent/$defs/child' },
+            d: { $ref: '#/$defs/sub' },
+            e: { $ref: '#/$defs/x' },
+          },
+          $defs: {
+            parent: { $id: 'nested/parent.json', $defs: { child: child('child.json') } },
+            sub: child('sub/child.json'),
+            x: { type: 'number' },
+          },
+        };
+        const rewritten = createSchemaUtils({ validator }, rootSchema).getRootSchema();
+
+        const { errors } = validator.validateFormData({ c: { a: 1 }, d: { a: 1 }, e: 'e' }, rewritten);
+
+        expect(errors.map(({ stack }) => stack)).toStrictEqual([
+          '.c.a must be string',
+          '.d.a must be string',
+          '.e must be number',
+        ]);
+      });
     });
     describe('validator.isValid()', () => {
       it('should return true if the data is valid against the schema', () => {
