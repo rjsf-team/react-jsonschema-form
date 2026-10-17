@@ -1,11 +1,20 @@
 import { forwardRef, useState } from 'react';
-import type { ErrorSchema, FieldTemplateProps, RJSFSchema, WidgetProps } from '@rjsf/utils';
+import type {
+  BaseInputTemplateProps,
+  ErrorSchema,
+  FieldTemplateProps,
+  RJSFSchema,
+  SubmitButtonProps,
+  WidgetProps,
+} from '@rjsf/utils';
+import { getExampleSuggestions } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { act, render } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
+import Label from '../src/components/templates/FieldTemplate/Label.tsx';
 import type { IChangeEvent } from '../src/index.ts';
-import Form, { FieldTemplate as DefaultFieldTemplate } from '../src/index.ts';
+import Form, { FieldTemplate as DefaultFieldTemplate, SchemaExamples } from '../src/index.ts';
 import {
   AcceptingParent,
   createFormComponent,
@@ -281,6 +290,63 @@ describe('render stability across sibling fields', () => {
 
     expect(renderCount('root_second')).toBe(secondBefore);
     expect(renderCount('root_nested')).toBe(nestedBefore);
+  });
+
+  describe('a keystroke in a field', () => {
+    const fieldSchema: RJSFSchema = { type: 'string', title: 'A', examples: ['one', 'two'] };
+    const keystrokeSchema: RJSFSchema = { type: 'object', properties: { a: fieldSchema } };
+
+    it('does not render the submit button template again', async () => {
+      const SubmitButton = vi.fn((_props: SubmitButtonProps) => <button type='submit'>Submit</button>);
+      createFormComponent({ schema: keystrokeSchema, templates: { ButtonTemplates: { SubmitButton } } });
+      expect(SubmitButton).toHaveBeenCalledTimes(1);
+
+      await user.type(screen.getByLabelText('A'), 'abc');
+
+      expect(screen.getByLabelText('A')).toHaveValue('abc');
+      expect(SubmitButton).toHaveBeenCalledTimes(1);
+    });
+
+    it('does not render the suggestions of that field again', async () => {
+      // `SchemaExamples` reads the length of its suggestions each time it renders, which a spy cannot be put on since
+      // `getExampleSuggestions()` freezes the array
+      let lengthReads = 0;
+      const suggestions = new Proxy(getExampleSuggestions(fieldSchema), {
+        get(target, key, receiver): unknown {
+          lengthReads += key === 'length' ? 1 : 0;
+          return Reflect.get(target, key, receiver);
+        },
+      });
+      const onTemplateRender = vi.fn();
+      function CountingInputTemplate({ id, schema, value, onChange }: BaseInputTemplateProps) {
+        onTemplateRender();
+        return (
+          <>
+            <input id={id} value={value ?? ''} onChange={(event) => onChange(event.target.value)} />
+            <SchemaExamples id={id} schema={schema} suggestions={suggestions} />
+          </>
+        );
+      }
+      const { node } = createFormComponent({
+        schema: keystrokeSchema,
+        templates: { BaseInputTemplate: CountingInputTemplate },
+      });
+      expect(node.querySelectorAll('datalist option')).toHaveLength(2);
+      const readsToRender = lengthReads;
+      expect(readsToRender).toBeGreaterThan(0);
+      onTemplateRender.mockClear();
+
+      await user.type(screen.getByLabelText('A'), 'abc');
+
+      expect(onTemplateRender).toHaveBeenCalled();
+      expect(lengthReads).toBe(readsToRender);
+    });
+
+    // A label takes only strings and a boolean, none of which a test can count the reads of, and it renders the same
+    // DOM whether it is skipped or not, so this is the one thing that fails when its `memo()` is taken away
+    it('has a memoized label, which its unchanged props skip', () => {
+      expect(Label).toHaveProperty('$$typeof', Symbol.for('react.memo'));
+    });
   });
 
   it('a replaced widget takes effect even when both are forwardRef components', () => {
