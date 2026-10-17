@@ -125,6 +125,7 @@ export default function WrapIfAdditionalTemplate<
           <Field label={hasKeyLabel ? fieldLabelSlot(keyLabel, keyId) : undefined} required={required}>
             <Input
               key={keyName}
+              aria-label={hasKeyLabel ? undefined : keyLabel}
               required={required}
               defaultValue={keyName}
               disabled={disabled || readonly}

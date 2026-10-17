@@ -284,6 +284,21 @@ describe("fluentui-rc widgets are named by their label and carry the field's id 
   });
 });
 
+describe('fluentui-rc WrapIfAdditionalTemplate', () => {
+  test("names the additional property key's input by its label where ui:label: false hides it", () => {
+    render(
+      <Form
+        schema={{ type: 'object', additionalProperties: { type: 'string' } }}
+        uiSchema={{ additionalProperties: { 'ui:label': false } }}
+        formData={{ first: 'a' }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('textbox', { name: 'first Key' })).toHaveAttribute('id', 'root_first-key');
+  });
+});
+
 describe('fluentui-rc CheckboxWidget', () => {
   test('draws no label of its own where ui:label turns it off', () => {
     render(

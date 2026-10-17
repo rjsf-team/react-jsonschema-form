@@ -7,6 +7,7 @@ import {
   enumOptionsIndexForValue,
   enumOptionValueDecoder,
   getControlFallbackName,
+  getLabelId,
   getOptionValueFormat,
   groupEnumOptions,
   hasWidgetErrors,
@@ -98,8 +99,7 @@ function SelectWidget<
 
   return (
     <Field
-      // The plan numbers the label beneath one a field above draws under `fieldLabelId(id)`, such as a radio selector's
-      label={drawsLabel ? fieldLabelSlot(label, id, presentation?.label.id) : undefined}
+      label={drawsLabel ? fieldLabelSlot(label, id, getLabelId<T, S, F>(props)) : undefined}
       validationState={hasWidgetErrors<T, S, F>(props) ? 'error' : undefined}
       required={required}
     >
