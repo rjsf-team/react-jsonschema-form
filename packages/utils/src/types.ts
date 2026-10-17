@@ -830,7 +830,8 @@ export interface PresentationDeclaration<Owner extends PartOwner = PartOwner> {
   /** Who draws the field's `ui:help` */
   help?: Owner;
   /** How a label the template draws reaches the control: its `for`, or the control pointing `aria-labelledby` at the
-   * label's `fieldLabelId(id)`, which a group of controls needs since `for` names a single element
+   * id the field's plan gives the label, `fieldLabelId(id)` unless a label a field above draws already takes it, which
+   * a group of controls needs since `for` names a single element
    */
   labelledBy?: 'for' | 'aria-labelledby';
   /** Whether the control, left alone, already holds `false`, as an unchecked checkbox or switch does where its field

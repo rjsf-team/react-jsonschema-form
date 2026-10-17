@@ -1212,7 +1212,7 @@ A widget that draws its own label for the group draws it with no `for`, which ca
 
 ### getGroupLabelling&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getgrouplabelling}
 
-Gets what a widget rendering a group of controls, such as radios or checkboxes, needs to draw its own label for the group and to label the group by it: whether it draws one, the id it draws it under, [fieldLabelId()](#fieldlabelid), and the attributes [getGroupAttributes()](#getgroupattributes) gives the group and each control in it, given that label's id where the widget draws one.
+Gets what a widget rendering a group of controls, such as radios or checkboxes, needs to draw its own label for the group and to label the group by it: whether it draws one, the id it draws it under, which its plan gives it, or [fieldLabelId()](#fieldlabelid) without one, and the attributes [getGroupAttributes()](#getgroupattributes) gives the group and each control in it, given that label's id where the widget draws one.
 The label is drawn with no `for`, which can't name the group's wrapper, so the group points `aria-labelledby` at it instead, where its field's plan names the group by no other label.
 A widget draws the label where [widgetDrawsLabel()](#widgetdrawslabel) says it does and it has text, so a group whose label is hidden is named by its text through the `aria-label` the plan gives it, and one with no label is left unnamed, rather than either being named by a label that isn't drawn.
 
@@ -2285,6 +2285,21 @@ Each further level showing a description of its own beneath those is numbered, s
 
 - string: The consistent id for the option's own description element from the given `id` and `depth`
 
+### optionLabelId()
+
+Return a consistent `id` for the label a selected `anyOf`/`oneOf` option or the fallback UI's value field draws of its own, beneath a field whose own component already draws a label under the id it would take, such as the option selector drawing an `anyOf` field's label beside an option whose widget draws its own.
+Each further level drawing a label beneath those is numbered, so an option of an option that draws its own takes `optionLabel2`.
+It is the id [resolveFieldPresentation()](#resolvefieldpresentation) plans for it, which [getGroupLabelling()](#getgrouplabelling) draws a group's label under.
+
+#### Parameters
+
+- id: string - The id of the field
+- [depth=1]: number - How many fields above rendering the same `id` draw a label
+
+#### Returns
+
+- string: The consistent id for the option's own label element from the given `id` and `depth`
+
 ### optionHelpId()
 
 Return a consistent `id` for the help a selected `anyOf`/`oneOf` option or the fallback UI's value field renders of its own, beneath a field that renders a different help under [helpId()](#helpid) for the same `id`.
@@ -2541,11 +2556,11 @@ Builds a field's plan (`FieldPresentation`) of what draws its label, description
 It predicts nothing: whether a part shows is decided from the decisions passed in, so a template and a widget reading the plan agree on it.
 Each part is placed `template` or `self` by its declared owner, `above` when a field above rendering the same id already draws it, or `none`.
 
-- The label shows where it has text and `showLabel` allows it. A label its template draws needs a control to name. It is `above`, under the id and text of the label drawn there, when the template of a field above rendering the same id already draws it, whoever would draw it here, so a widget that draws its own label doesn't name the control a second time; a level with no control, such as a container whose label is its own heading, keeps its label only when no field above already draws its text, or else is `above` under the id of the label that does. A label with a control to name takes [fieldLabelId()](#fieldlabelid); a heading takes [titleId()](#titleid), the id every title template renders it under, so a heading kept beneath a label above has an id of its own. The control points `aria-labelledby` at a label its template draws, or one above, when its declaration says so, when the control above was pointed at that label too, since its template may then draw it with no `for`, or when its id isn't the one that label's `for` names. The label's `requiredMarker` follows `required` whether or not there is a control, so a container's heading is marked too, and an `above` label carries the marker of the label drawn above along with its text and id, while the control's own `required` stays this level's.
+- The label shows where it has text and `showLabel` allows it. A label its template draws needs a control to name. It is `above`, under the id and text of the label drawn there, when the template of a field above rendering the same id already draws it, whoever would draw it here, so a widget that draws its own label doesn't name the control a second time; a level with no control, such as a container whose label is its own heading, keeps its label only when no field above already draws its text, or else is `above` under the id of the label that does. A label with a control to name takes [fieldLabelId()](#fieldlabelid); a heading takes [titleId()](#titleid), the id every title template renders it under, so a heading kept beneath a label above has an id of its own. A label of its own with a control to name takes [optionLabelId()](#optionlabelid) instead when a field above draws a label under the id it would take, numbered by how many fields above draw one. The control points `aria-labelledby` at a label its template draws, or one above, when its declaration says so, when the control above was pointed at that label too, since its template may then draw it with no `for`, or when its id isn't the one that label's `for` names. The label's `requiredMarker` follows `required` whether or not there is a control, so a container's heading is marked too, and an `above` label carries the marker of the label drawn above along with its text and id, while the control's own `required` stays this level's.
 - The description and help show where they have text, the description only where `showLabel` allows it, since `ui:label: false` hides both. Text any field above already shows is `above`, as is a part with no text under a field above that shows one. Text is compared with `===`, so an element `ui:help` is matched only by the same element, which an option inheriting its field's `uiSchema` carries; to repeat one in an option's own `uiSchema`, reuse the one element rather than writing the JSX again. Text of its own takes [optionDescriptionId()](#optiondescriptionid) or [optionHelpId()](#optionhelpid) when a field above shows text under the id it would take, numbered by how many fields above show text of their own, so each level's text has an id of its own.
 - The errors are the field's own with `hideError` applied, or, under a field above, that field's, which it draws.
 - The control is described by the parts that render, here or above, which the plan lists as `describedBy`, and is `aria-invalid` whenever errors show. A field below rendering the same id inherits `describedBy`, so a widget adds the ids of the elements it renders to describe its own control, such as its `examplesId()` list, with [getControlAttributes()](#getcontrolattributes) rather than through the plan.
-- The plan records `showLabel` as resolved, so a widget reads whether `ui:label: false` hides its field's label and description from it. A control whose label it hides, with no label above naming it, takes the label's text as its `aria-label`, since hiding the label is a choice of layout, not of the control's name, or the `aria-label` of the nearest field above rendering the same id whose label is hidden too, as an option's control is named by its field's label while it shows; `getGroupAttributes()` puts it on a group's wrapper. A control the template labels and whose declaration says `labelledBy: 'aria-labelledby'` points `aria-labelledby` at [fieldLabelId()](#fieldlabelid).
+- The plan records `showLabel` as resolved, so a widget reads whether `ui:label: false` hides its field's label and description from it. A control whose label it hides, with no label above naming it, takes the label's text as its `aria-label`, since hiding the label is a choice of layout, not of the control's name, or the `aria-label` of the nearest field above rendering the same id whose label is hidden too, as an option's control is named by its field's label while it shows; `getGroupAttributes()` puts it on a group's wrapper. A control the template labels and whose declaration says `labelledBy: 'aria-labelledby'` points `aria-labelledby` at the id its plan gives the label: [fieldLabelId()](#fieldlabelid), or [optionLabelId()](#optionlabelid) beneath a label a field above draws under that id.
 
 #### Parameters
 
