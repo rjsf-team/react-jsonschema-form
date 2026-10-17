@@ -54,9 +54,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="form-label"
                     for="root_person_name_first"
-                    id="root_person_name_first__label"
                   >
-                    First Name*
+                    <span
+                      id="root_person_name_first__label"
+                    >
+                      First Name
+                    </span>
+                    *
                   </label>
                   <input
                     class="form-control"
@@ -80,9 +84,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="form-label"
                     for="root_person_name_middle"
-                    id="root_person_name_middle__label"
                   >
-                    Middle
+                    <span
+                      id="root_person_name_middle__label"
+                    >
+                      Middle
+                    </span>
                   </label>
                   <input
                     class="form-control"
@@ -105,9 +112,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="form-label"
                     for="root_person_name_last"
-                    id="root_person_name_last__label"
                   >
-                    Last Name*
+                    <span
+                      id="root_person_name_last__label"
+                    >
+                      Last Name
+                    </span>
+                    *
                   </label>
                   <input
                     class="form-control"
@@ -135,9 +146,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="form-label"
                     for="root_person_birth_date"
-                    id="root_person_birth_date__label"
                   >
-                    Date of Birth*
+                    <span
+                      id="root_person_birth_date__label"
+                    >
+                      Date of Birth
+                    </span>
+                    *
                   </label>
                   <input
                     class="form-control"
@@ -160,9 +175,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 <div>
                   <label
                     class="form-label"
-                    id="root_person_race__label"
                   >
-                    Race*
+                    <span
+                      id="root_person_race__label"
+                    >
+                      Race
+                    </span>
+                    *
                   </label>
                   <div
                     aria-labelledby="root_person_race__label"
@@ -304,9 +323,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           <label
                             class="form-label"
                             for="root_person_address_line_1"
-                            id="root_person_address_line_1__label"
                           >
-                            Address*
+                            <span
+                              id="root_person_address_line_1__label"
+                            >
+                              Address
+                            </span>
+                            *
                           </label>
                           <input
                             class="form-control"
@@ -330,9 +353,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           <label
                             class="form-label"
                             for="root_person_address_line_2"
-                            id="root_person_address_line_2__label"
                           >
-                            Address 2
+                            <span
+                              id="root_person_address_line_2__label"
+                            >
+                              Address 2
+                            </span>
                           </label>
                           <input
                             class="form-control"
@@ -355,9 +381,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           <label
                             class="form-label"
                             for="root_person_address_city"
-                            id="root_person_address_city__label"
                           >
-                            City*
+                            <span
+                              id="root_person_address_city__label"
+                            >
+                              City
+                            </span>
+                            *
                           </label>
                           <input
                             class="form-control"
@@ -385,9 +415,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             <label
                               class="form-label"
                               for="root_person_address_state"
-                              id="root_person_address_state__label"
                             >
-                              State*
+                              <span
+                                id="root_person_address_state__label"
+                              >
+                                State
+                              </span>
+                              *
                             </label>
                             <select
                               class="form-select"
@@ -692,9 +726,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             <label
                               class="form-label"
                               for="root_person_address_postal_code"
-                              id="root_person_address_postal_code__label"
                             >
-                              ZIP Code*
+                              <span
+                                id="root_person_address_postal_code__label"
+                              >
+                                ZIP Code
+                              </span>
+                              *
                             </label>
                             <input
                               class="form-control"
@@ -729,9 +767,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <div>
                       <label
                         class="form-label"
-                        id="root_employment__label"
                       >
-                        Employment
+                        <span
+                          id="root_employment__label"
+                        >
+                          Employment
+                        </span>
                       </label>
                       <div
                         aria-labelledby="root_employment__label"
@@ -808,9 +849,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="form-label"
                         for="root_employment_business"
-                        id="root_employment_business__label"
                       >
-                        Company Name*
+                        <span
+                          id="root_employment_business__label"
+                        >
+                          Company Name
+                        </span>
+                        *
                       </label>
                       <input
                         class="form-control"
@@ -834,9 +879,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="form-label"
                         for="root_employment_title"
-                        id="root_employment_title__label"
                       >
-                        Job Title
+                        <span
+                          id="root_employment_title__label"
+                        >
+                          Job Title
+                        </span>
                       </label>
                       <input
                         class="form-control"
@@ -859,9 +907,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="form-label"
                         for="root_employment_location_city"
-                        id="root_employment_location_city__label"
                       >
-                        City*
+                        <span
+                          id="root_employment_location_city__label"
+                        >
+                          City
+                        </span>
+                        *
                       </label>
                       <input
                         class="form-control"
@@ -885,9 +937,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="form-label"
                         for="root_employment_location_state"
-                        id="root_employment_location_state__label"
                       >
-                        State*
+                        <span
+                          id="root_employment_location_state__label"
+                        >
+                          State
+                        </span>
+                        *
                       </label>
                       <select
                         class="form-select"
@@ -1254,9 +1310,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="form-label"
                     for="root_person_name_first"
-                    id="root_person_name_first__label"
                   >
-                    First Name*
+                    <span
+                      id="root_person_name_first__label"
+                    >
+                      First Name
+                    </span>
+                    *
                   </label>
                   <input
                     class="form-control"
@@ -1280,9 +1340,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="form-label"
                     for="root_person_name_middle"
-                    id="root_person_name_middle__label"
                   >
-                    Middle
+                    <span
+                      id="root_person_name_middle__label"
+                    >
+                      Middle
+                    </span>
                   </label>
                   <input
                     class="form-control"
@@ -1305,9 +1368,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="form-label"
                     for="root_person_name_last"
-                    id="root_person_name_last__label"
                   >
-                    Last Name*
+                    <span
+                      id="root_person_name_last__label"
+                    >
+                      Last Name
+                    </span>
+                    *
                   </label>
                   <input
                     class="form-control"
@@ -1335,9 +1402,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="form-label"
                     for="root_person_birth_date"
-                    id="root_person_birth_date__label"
                   >
-                    Date of Birth*
+                    <span
+                      id="root_person_birth_date__label"
+                    >
+                      Date of Birth
+                    </span>
+                    *
                   </label>
                   <input
                     class="form-control"
@@ -1360,9 +1431,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 <div>
                   <label
                     class="form-label"
-                    id="root_person_race__label"
                   >
-                    Race*
+                    <span
+                      id="root_person_race__label"
+                    >
+                      Race
+                    </span>
+                    *
                   </label>
                   <div
                     aria-labelledby="root_person_race__label"
@@ -1504,9 +1579,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           <label
                             class="form-label"
                             for="root_person_address_line_1"
-                            id="root_person_address_line_1__label"
                           >
-                            Address*
+                            <span
+                              id="root_person_address_line_1__label"
+                            >
+                              Address
+                            </span>
+                            *
                           </label>
                           <input
                             class="form-control"
@@ -1530,9 +1609,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           <label
                             class="form-label"
                             for="root_person_address_line_2"
-                            id="root_person_address_line_2__label"
                           >
-                            Address 2
+                            <span
+                              id="root_person_address_line_2__label"
+                            >
+                              Address 2
+                            </span>
                           </label>
                           <input
                             class="form-control"
@@ -1555,9 +1637,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           <label
                             class="form-label"
                             for="root_person_address_city"
-                            id="root_person_address_city__label"
                           >
-                            City*
+                            <span
+                              id="root_person_address_city__label"
+                            >
+                              City
+                            </span>
+                            *
                           </label>
                           <input
                             class="form-control"
@@ -1585,9 +1671,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             <label
                               class="form-label"
                               for="root_person_address_state"
-                              id="root_person_address_state__label"
                             >
-                              State*
+                              <span
+                                id="root_person_address_state__label"
+                              >
+                                State
+                              </span>
+                              *
                             </label>
                             <select
                               class="form-select"
@@ -1892,9 +1982,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             <label
                               class="form-label"
                               for="root_person_address_postal_code"
-                              id="root_person_address_postal_code__label"
                             >
-                              ZIP Code*
+                              <span
+                                id="root_person_address_postal_code__label"
+                              >
+                                ZIP Code
+                              </span>
+                              *
                             </label>
                             <input
                               class="form-control"
@@ -1929,9 +2023,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <div>
                       <label
                         class="form-label"
-                        id="root_employment__label"
                       >
-                        Employment
+                        <span
+                          id="root_employment__label"
+                        >
+                          Employment
+                        </span>
                       </label>
                       <div
                         aria-labelledby="root_employment__label"
@@ -2008,9 +2105,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="form-label"
                         for="root_employment_district"
-                        id="root_employment_district__label"
                       >
-                        District Name
+                        <span
+                          id="root_employment_district__label"
+                        >
+                          District Name
+                        </span>
                       </label>
                       <input
                         class="form-control"
@@ -2033,9 +2133,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="form-label"
                         for="root_employment_school"
-                        id="root_employment_school__label"
                       >
-                        School Name*
+                        <span
+                          id="root_employment_school__label"
+                        >
+                          School Name
+                        </span>
+                        *
                       </label>
                       <input
                         class="form-control"
@@ -2059,9 +2163,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="form-label"
                         for="root_employment_title"
-                        id="root_employment_title__label"
                       >
-                        Job Title
+                        <span
+                          id="root_employment_title__label"
+                        >
+                          Job Title
+                        </span>
                       </label>
                       <input
                         class="form-control"
@@ -2084,9 +2191,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="form-label"
                         for="root_employment_location_city"
-                        id="root_employment_location_city__label"
                       >
-                        City*
+                        <span
+                          id="root_employment_location_city__label"
+                        >
+                          City
+                        </span>
+                        *
                       </label>
                       <input
                         class="form-control"
@@ -2110,9 +2221,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="form-label"
                         for="root_employment_location_state"
-                        id="root_employment_location_state__label"
                       >
-                        State*
+                        <span
+                          id="root_employment_location_state__label"
+                        >
+                          State
+                        </span>
+                        *
                       </label>
                       <select
                         class="form-select"
@@ -2479,9 +2594,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="form-label"
                     for="root_person_name_first"
-                    id="root_person_name_first__label"
                   >
-                    First Name*
+                    <span
+                      id="root_person_name_first__label"
+                    >
+                      First Name
+                    </span>
+                    *
                   </label>
                   <input
                     class="form-control"
@@ -2505,9 +2624,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="form-label"
                     for="root_person_name_middle"
-                    id="root_person_name_middle__label"
                   >
-                    Middle
+                    <span
+                      id="root_person_name_middle__label"
+                    >
+                      Middle
+                    </span>
                   </label>
                   <input
                     class="form-control"
@@ -2530,9 +2652,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="form-label"
                     for="root_person_name_last"
-                    id="root_person_name_last__label"
                   >
-                    Last Name*
+                    <span
+                      id="root_person_name_last__label"
+                    >
+                      Last Name
+                    </span>
+                    *
                   </label>
                   <input
                     class="form-control"
@@ -2560,9 +2686,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="form-label"
                     for="root_person_birth_date"
-                    id="root_person_birth_date__label"
                   >
-                    Date of Birth*
+                    <span
+                      id="root_person_birth_date__label"
+                    >
+                      Date of Birth
+                    </span>
+                    *
                   </label>
                   <input
                     class="form-control"
@@ -2585,9 +2715,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 <div>
                   <label
                     class="form-label"
-                    id="root_person_race__label"
                   >
-                    Race*
+                    <span
+                      id="root_person_race__label"
+                    >
+                      Race
+                    </span>
+                    *
                   </label>
                   <div
                     aria-labelledby="root_person_race__label"
@@ -2729,9 +2863,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           <label
                             class="form-label"
                             for="root_person_address_line_1"
-                            id="root_person_address_line_1__label"
                           >
-                            Address*
+                            <span
+                              id="root_person_address_line_1__label"
+                            >
+                              Address
+                            </span>
+                            *
                           </label>
                           <input
                             class="form-control"
@@ -2755,9 +2893,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           <label
                             class="form-label"
                             for="root_person_address_line_2"
-                            id="root_person_address_line_2__label"
                           >
-                            Address 2
+                            <span
+                              id="root_person_address_line_2__label"
+                            >
+                              Address 2
+                            </span>
                           </label>
                           <input
                             class="form-control"
@@ -2780,9 +2921,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           <label
                             class="form-label"
                             for="root_person_address_city"
-                            id="root_person_address_city__label"
                           >
-                            City*
+                            <span
+                              id="root_person_address_city__label"
+                            >
+                              City
+                            </span>
+                            *
                           </label>
                           <input
                             class="form-control"
@@ -2810,9 +2955,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             <label
                               class="form-label"
                               for="root_person_address_state"
-                              id="root_person_address_state__label"
                             >
-                              State*
+                              <span
+                                id="root_person_address_state__label"
+                              >
+                                State
+                              </span>
+                              *
                             </label>
                             <select
                               class="form-select"
@@ -3117,9 +3266,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             <label
                               class="form-label"
                               for="root_person_address_postal_code"
-                              id="root_person_address_postal_code__label"
                             >
-                              ZIP Code*
+                              <span
+                                id="root_person_address_postal_code__label"
+                              >
+                                ZIP Code
+                              </span>
+                              *
                             </label>
                             <input
                               class="form-control"
@@ -3154,9 +3307,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <div>
                       <label
                         class="form-label"
-                        id="root_employment__label"
                       >
-                        Employment
+                        <span
+                          id="root_employment__label"
+                        >
+                          Employment
+                        </span>
                       </label>
                       <div
                         aria-labelledby="root_employment__label"
@@ -3233,9 +3389,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="form-label"
                         for="root_employment_description"
-                        id="root_employment_description__label"
                       >
-                        Describe your job*
+                        <span
+                          id="root_employment_description__label"
+                        >
+                          Describe your job
+                        </span>
+                        *
                       </label>
                       <div
                         class="input-group"
@@ -3324,9 +3484,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="form-label"
                     for="root_person_name_first"
-                    id="root_person_name_first__label"
                   >
-                    First Name*
+                    <span
+                      id="root_person_name_first__label"
+                    >
+                      First Name
+                    </span>
+                    *
                   </label>
                   <input
                     class="form-control"
@@ -3350,9 +3514,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="form-label"
                     for="root_person_name_middle"
-                    id="root_person_name_middle__label"
                   >
-                    Middle
+                    <span
+                      id="root_person_name_middle__label"
+                    >
+                      Middle
+                    </span>
                   </label>
                   <input
                     class="form-control"
@@ -3375,9 +3542,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="form-label"
                     for="root_person_name_last"
-                    id="root_person_name_last__label"
                   >
-                    Last Name*
+                    <span
+                      id="root_person_name_last__label"
+                    >
+                      Last Name
+                    </span>
+                    *
                   </label>
                   <input
                     class="form-control"
@@ -3405,9 +3576,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="form-label"
                     for="root_person_birth_date"
-                    id="root_person_birth_date__label"
                   >
-                    Date of Birth*
+                    <span
+                      id="root_person_birth_date__label"
+                    >
+                      Date of Birth
+                    </span>
+                    *
                   </label>
                   <input
                     class="form-control"
@@ -3430,9 +3605,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 <div>
                   <label
                     class="form-label"
-                    id="root_person_race__label"
                   >
-                    Race*
+                    <span
+                      id="root_person_race__label"
+                    >
+                      Race
+                    </span>
+                    *
                   </label>
                   <div
                     aria-labelledby="root_person_race__label"
@@ -3574,9 +3753,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           <label
                             class="form-label"
                             for="root_person_address_line_1"
-                            id="root_person_address_line_1__label"
                           >
-                            Address*
+                            <span
+                              id="root_person_address_line_1__label"
+                            >
+                              Address
+                            </span>
+                            *
                           </label>
                           <input
                             class="form-control"
@@ -3600,9 +3783,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           <label
                             class="form-label"
                             for="root_person_address_line_2"
-                            id="root_person_address_line_2__label"
                           >
-                            Address 2
+                            <span
+                              id="root_person_address_line_2__label"
+                            >
+                              Address 2
+                            </span>
                           </label>
                           <input
                             class="form-control"
@@ -3625,9 +3811,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           <label
                             class="form-label"
                             for="root_person_address_city"
-                            id="root_person_address_city__label"
                           >
-                            City*
+                            <span
+                              id="root_person_address_city__label"
+                            >
+                              City
+                            </span>
+                            *
                           </label>
                           <input
                             class="form-control"
@@ -3655,9 +3845,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             <label
                               class="form-label"
                               for="root_person_address_state"
-                              id="root_person_address_state__label"
                             >
-                              State*
+                              <span
+                                id="root_person_address_state__label"
+                              >
+                                State
+                              </span>
+                              *
                             </label>
                             <select
                               class="form-select"
@@ -3962,9 +4156,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             <label
                               class="form-label"
                               for="root_person_address_postal_code"
-                              id="root_person_address_postal_code__label"
                             >
-                              ZIP Code*
+                              <span
+                                id="root_person_address_postal_code__label"
+                              >
+                                ZIP Code
+                              </span>
+                              *
                             </label>
                             <input
                               class="form-control"
@@ -3999,9 +4197,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <div>
                       <label
                         class="form-label"
-                        id="root_employment__label"
                       >
-                        Employment
+                        <span
+                          id="root_employment__label"
+                        >
+                          Employment
+                        </span>
                       </label>
                       <div
                         aria-labelledby="root_employment__label"
@@ -4078,9 +4279,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="form-label"
                         for="root_employment_business"
-                        id="root_employment_business__label"
                       >
-                        Company Name*
+                        <span
+                          id="root_employment_business__label"
+                        >
+                          Company Name
+                        </span>
+                        *
                       </label>
                       <input
                         class="form-control"
@@ -4104,9 +4309,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="form-label"
                         for="root_employment_title"
-                        id="root_employment_title__label"
                       >
-                        Job Title
+                        <span
+                          id="root_employment_title__label"
+                        >
+                          Job Title
+                        </span>
                       </label>
                       <input
                         class="form-control"
@@ -4129,9 +4337,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="form-label"
                         for="root_employment_location_city"
-                        id="root_employment_location_city__label"
                       >
-                        City*
+                        <span
+                          id="root_employment_location_city__label"
+                        >
+                          City
+                        </span>
+                        *
                       </label>
                       <input
                         class="form-control"
@@ -4155,9 +4367,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="form-label"
                         for="root_employment_location_state"
-                        id="root_employment_location_state__label"
                       >
-                        State*
+                        <span
+                          id="root_employment_location_state__label"
+                        >
+                          State
+                        </span>
+                        *
                       </label>
                       <select
                         class="form-select"
@@ -4517,9 +4733,13 @@ exports[`Three even column grid > renders person and address in three columns, n
                 <label
                   class="form-label"
                   for="root_person_name_first"
-                  id="root_person_name_first__label"
                 >
-                  First Name*
+                  <span
+                    id="root_person_name_first__label"
+                  >
+                    First Name
+                  </span>
+                  *
                 </label>
                 <input
                   class="form-control"
@@ -4543,9 +4763,12 @@ exports[`Three even column grid > renders person and address in three columns, n
                 <label
                   class="form-label"
                   for="root_person_name_middle"
-                  id="root_person_name_middle__label"
                 >
-                  Middle
+                  <span
+                    id="root_person_name_middle__label"
+                  >
+                    Middle
+                  </span>
                 </label>
                 <input
                   class="form-control"
@@ -4568,9 +4791,13 @@ exports[`Three even column grid > renders person and address in three columns, n
                 <label
                   class="form-label"
                   for="root_person_name_last"
-                  id="root_person_name_last__label"
                 >
-                  Last Name*
+                  <span
+                    id="root_person_name_last__label"
+                  >
+                    Last Name
+                  </span>
+                  *
                 </label>
                 <input
                   class="form-control"
@@ -4594,9 +4821,13 @@ exports[`Three even column grid > renders person and address in three columns, n
                 <label
                   class="form-label"
                   for="root_person_birth_date"
-                  id="root_person_birth_date__label"
                 >
-                  Date of Birth*
+                  <span
+                    id="root_person_birth_date__label"
+                  >
+                    Date of Birth
+                  </span>
+                  *
                 </label>
                 <input
                   class="form-control"
@@ -4619,9 +4850,13 @@ exports[`Three even column grid > renders person and address in three columns, n
               <div>
                 <label
                   class="form-label"
-                  id="root_person_race__label"
                 >
-                  Race*
+                  <span
+                    id="root_person_race__label"
+                  >
+                    Race
+                  </span>
+                  *
                 </label>
                 <div
                   aria-labelledby="root_person_race__label"
@@ -4749,9 +4984,13 @@ exports[`Three even column grid > renders person and address in three columns, n
                 <label
                   class="form-label"
                   for="root_person_address_line_1"
-                  id="root_person_address_line_1__label"
                 >
-                  Address*
+                  <span
+                    id="root_person_address_line_1__label"
+                  >
+                    Address
+                  </span>
+                  *
                 </label>
                 <input
                   class="form-control"
@@ -4775,9 +5014,12 @@ exports[`Three even column grid > renders person and address in three columns, n
                 <label
                   class="form-label"
                   for="root_person_address_line_2"
-                  id="root_person_address_line_2__label"
                 >
-                  Address 2
+                  <span
+                    id="root_person_address_line_2__label"
+                  >
+                    Address 2
+                  </span>
                 </label>
                 <input
                   class="form-control"
@@ -4800,9 +5042,13 @@ exports[`Three even column grid > renders person and address in three columns, n
                 <label
                   class="form-label"
                   for="root_person_address_city"
-                  id="root_person_address_city__label"
                 >
-                  City*
+                  <span
+                    id="root_person_address_city__label"
+                  >
+                    City
+                  </span>
+                  *
                 </label>
                 <input
                   class="form-control"
@@ -4826,9 +5072,13 @@ exports[`Three even column grid > renders person and address in three columns, n
                 <label
                   class="form-label"
                   for="root_person_address_state"
-                  id="root_person_address_state__label"
                 >
-                  State*
+                  <span
+                    id="root_person_address_state__label"
+                  >
+                    State
+                  </span>
+                  *
                 </label>
                 <select
                   class="form-select"
@@ -5188,9 +5438,13 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 <label
                   class="form-label"
                   for="root_person_name_first"
-                  id="root_person_name_first__label"
                 >
-                  First Name*
+                  <span
+                    id="root_person_name_first__label"
+                  >
+                    First Name
+                  </span>
+                  *
                 </label>
                 <input
                   class="form-control"
@@ -5214,9 +5468,12 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 <label
                   class="form-label"
                   for="root_person_name_middle"
-                  id="root_person_name_middle__label"
                 >
-                  Middle
+                  <span
+                    id="root_person_name_middle__label"
+                  >
+                    Middle
+                  </span>
                 </label>
                 <input
                   class="form-control"
@@ -5239,9 +5496,13 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 <label
                   class="form-label"
                   for="root_person_name_first"
-                  id="root_person_name_first__label"
                 >
-                  First Name*
+                  <span
+                    id="root_person_name_first__label"
+                  >
+                    First Name
+                  </span>
+                  *
                 </label>
                 <input
                   class="form-control"
@@ -5265,9 +5526,13 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 <label
                   class="form-label"
                   for="root_person_birth_date"
-                  id="root_person_birth_date__label"
                 >
-                  Date of Birth*
+                  <span
+                    id="root_person_birth_date__label"
+                  >
+                    Date of Birth
+                  </span>
+                  *
                 </label>
                 <input
                   class="form-control"
@@ -5290,9 +5555,13 @@ exports[`Two even column grid > renders person and address in two columns, no em
               <div>
                 <label
                   class="form-label"
-                  id="root_person_race__label"
                 >
-                  Race*
+                  <span
+                    id="root_person_race__label"
+                  >
+                    Race
+                  </span>
+                  *
                 </label>
                 <div
                   aria-labelledby="root_person_race__label"
@@ -5420,9 +5689,13 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 <label
                   class="form-label"
                   for="root_person_address_line_1"
-                  id="root_person_address_line_1__label"
                 >
-                  Address*
+                  <span
+                    id="root_person_address_line_1__label"
+                  >
+                    Address
+                  </span>
+                  *
                 </label>
                 <input
                   class="form-control"
@@ -5446,9 +5719,12 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 <label
                   class="form-label"
                   for="root_person_address_line_2"
-                  id="root_person_address_line_2__label"
                 >
-                  Address 2
+                  <span
+                    id="root_person_address_line_2__label"
+                  >
+                    Address 2
+                  </span>
                 </label>
                 <input
                   class="form-control"
@@ -5471,9 +5747,13 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 <label
                   class="form-label"
                   for="root_person_address_city"
-                  id="root_person_address_city__label"
                 >
-                  City*
+                  <span
+                    id="root_person_address_city__label"
+                  >
+                    City
+                  </span>
+                  *
                 </label>
                 <input
                   class="form-control"
@@ -5497,9 +5777,13 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 <label
                   class="form-label"
                   for="root_person_address_state"
-                  id="root_person_address_state__label"
                 >
-                  State*
+                  <span
+                    id="root_person_address_state__label"
+                  >
+                    State
+                  </span>
+                  *
                 </label>
                 <select
                   class="form-select"
