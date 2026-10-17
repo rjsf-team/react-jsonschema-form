@@ -296,6 +296,7 @@ exports[`NativeSelectWidget > select field multiple choice 1`] = `
                 data-part="select"
                 data-scope="field"
                 id="root"
+                name="root"
               >
                 <option
                   value="0"
@@ -648,6 +649,7 @@ exports[`NativeSelectWidget > select field multiple choice with labels 1`] = `
                 data-part="select"
                 data-scope="field"
                 id="root"
+                name="root"
               >
                 <option
                   value="0"
@@ -1052,6 +1054,7 @@ exports[`NativeSelectWidget > select field with enum 1`] = `
                           data-part="select"
                           data-scope="field"
                           id="root_color"
+                          name="root_color"
                         >
                           <option
                             disabled=""

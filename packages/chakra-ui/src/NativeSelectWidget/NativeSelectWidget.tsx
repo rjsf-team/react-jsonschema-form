@@ -35,6 +35,7 @@ export default function NativeSelectWidget<
 >(props: WidgetProps<T, S, F>) {
   const {
     id,
+    htmlName,
     options,
     label,
     placeholder,
@@ -97,6 +98,7 @@ export default function NativeSelectWidget<
       <NativeSelect.Root>
         <NativeSelect.Field
           id={id}
+          name={htmlName || id}
           onBlur={handleBlur}
           onChange={handleChange}
           onFocus={handleFocus}

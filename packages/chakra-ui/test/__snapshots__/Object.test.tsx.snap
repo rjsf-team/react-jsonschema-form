@@ -16573,6 +16573,7 @@ exports[`object fields > with title and description with global label off > addi
                     role="group"
                   >
                     <input
+                      aria-label="foo Key"
                       class="chakra-input emotion-6"
                       data-part="input"
                       data-scope="field"
@@ -17426,6 +17427,7 @@ exports[`object fields > with title and description with global label off > show
                     role="group"
                   >
                     <input
+                      aria-label="additionalProperty Key"
                       class="chakra-input emotion-6"
                       data-part="input"
                       data-scope="field"
