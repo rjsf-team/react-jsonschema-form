@@ -1,4 +1,3 @@
-import type { JSONSchema7Object } from 'json-schema';
 
 import {
   ADDITIONAL_PROPERTIES_KEY,
@@ -685,10 +684,7 @@ export function getObjectDefaults<
         const propertySchema = getPropertySchema<S>(retrievedSchema, key);
         // Check if the parent schema has a const property defined AND we are supporting const as defaults, then we
         // should always return the computedDefault since it's coming from the const.
-        const hasParentConst =
-          isObject(parentConst) &&
-          Object.hasOwn(parentConst, key) &&
-          (parentConst as JSONSchema7Object)[key] !== undefined;
+        const hasParentConst = getByPath(parentConst, key) !== undefined;
         const hasConst =
           ((isObject(propertySchema) && CONST_KEY in propertySchema) || hasParentConst) &&
           defaultFormStateBehavior?.constAsDefaults !== 'never' &&
