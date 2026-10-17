@@ -71,9 +71,12 @@ function indexDependencies(lookup: Record<string, Schema | boolean>): void {
     const indexable: Schema = typeof schema === 'object' ? schema : {};
     const { __absolute_uri__: uri, dependencies } = indexable;
     if (uri !== undefined && isObject(dependencies)) {
-      const [base, pointer] = uri.split('#');
+      // The engine spells a `#` in a pointer as it stands, so only the first one starts the fragment
+      const fragmentAt = uri.indexOf('#');
+      const base = fragmentAt < 0 ? uri : uri.slice(0, fragmentAt);
+      const pointer = fragmentAt < 0 ? '' : uri.slice(fragmentAt + 1);
       for (const [key, dependency] of Object.entries(dependencies)) {
-        const at = `${pointer ?? ''}/dependencies/${encodePointer(key)}`;
+        const at = `${pointer}/dependencies/${encodePointer(key)}`;
         if (isObject(dependency) && lookup[`${base}#${at}`] === undefined) {
           const added = Object.entries(dereference(dependency, {}, new URL(base), at)).filter(
             ([indexedUri]) => lookup[indexedUri] === undefined,
