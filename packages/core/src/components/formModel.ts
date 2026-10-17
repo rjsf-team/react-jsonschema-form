@@ -111,6 +111,8 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   // Development only, once per form: a handle call the form dropped because it was detached. A field's change, blur or
   // focus is dropped silently, since a widget flushing a draft from its Effect cleanup is expected to arrive then
   let isDroppedCallWarned = false;
+  // The submit event `submit()` last dispatched, which goes no further than this form
+  let dispatchedSubmit: Event | undefined;
   const warnDroppedCall = (method: string) => {
     if (!isDevelopment || isDroppedCallWarned) {
       return;
@@ -387,6 +389,10 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   /** Validates and submits the form's data, with extra data omitted when `omitExtraData` asks for it */
   const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
+    // The event `submit()` dispatched stands in for this form's own submit, so an enclosing form does not get it too
+    if (event.nativeEvent === dispatchedSubmit) {
+      event.stopPropagation();
+    }
     // A detached form drops a submit event that still reaches it, such as one from a `<button form>` outside the
     // `<Activity>` that hides it, as it drops `submit()`
     if (isDetached || event.target !== event.currentTarget) {
@@ -426,7 +432,8 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       if (formElement instanceof view.HTMLFormElement && current().formData === rendered.formData) {
         formElement.requestSubmit();
       } else {
-        formElement.dispatchEvent(new view.SubmitEvent('submit', { bubbles: true, cancelable: true }));
+        dispatchedSubmit = new view.SubmitEvent('submit', { bubbles: true, cancelable: true });
+        formElement.dispatchEvent(dispatchedSubmit);
       }
     },
 

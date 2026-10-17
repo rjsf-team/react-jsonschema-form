@@ -112,6 +112,34 @@ describe('FormRef', () => {
       expect(onSubmit.mock.lastCall?.[0].formData).toEqual({ name: 'a' });
     });
 
+    it('keeps the submit event it dispatches to an element other than a form from an enclosing form', () => {
+      const ref = createFormRef();
+      const onSubmit = vi.fn();
+      const outerSubmit = vi.fn();
+      render(
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            outerSubmit();
+          }}
+        >
+          <Form
+            ref={ref}
+            schema={schema}
+            validator={validator}
+            initialFormData={{ name: 'a' }}
+            tagName='div'
+            onSubmit={onSubmit}
+          />
+        </form>,
+      );
+
+      act(() => handleOf(ref).submit());
+
+      expect(onSubmit).toHaveBeenCalledTimes(1);
+      expect(outerSubmit).not.toHaveBeenCalled();
+    });
+
     it('does nothing once the form is unmounted', () => {
       const { handle, unmount, onSubmit } = mountWithHandle({ schema, initialFormData: { name: 'a' } });
       unmount();
