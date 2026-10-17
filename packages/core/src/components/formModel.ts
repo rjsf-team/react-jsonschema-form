@@ -84,8 +84,9 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   // attachment, since a form first rendered inside a hidden `<Activity>` runs no layout Effect until it is shown
   let isDetached = true;
   // Development only, for the warning about a `formData` passed after mount, which the form ignores: the prop as the
-  // last commit passed it, and every object the form's data has been, since a parent that stores what `onChange`
-  // reported passes those back, later ones as well as the latest
+  // last commit passed it, and every object an operation made the form's data, since a parent that stores what
+  // `onChange` reported passes those back, later ones as well as the latest. The seed is not among them: a parent that
+  // puts its record back, as a Cancel button does, expects the form to show it
   // oxlint-disable-next-line typescript/no-deprecated -- the form still reads the deprecated alias
   let lastFormDataProp = initialProps.formData;
   const heldData = new WeakSet<object>();
@@ -96,7 +97,6 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       heldData.add(data);
     }
   };
-  hold(initial.formData);
   // Development only, once per form: a handle call the form dropped because it was detached. A field's change, blur or
   // focus is dropped silently, since a widget flushing a draft from its Effect cleanup is expected to arrive then
   let isDroppedCallWarned = false;
@@ -531,7 +531,6 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       rendered = derived;
       renderedFrom = from;
       derivedCache = undefined;
-      hold(derived.formData);
     },
     /** Warns, once, that the `formData` prop changed after mount to a value the form ignores: neither data it has held
      * nor a copy of the data it holds. Called after the commit that passed it, in development only

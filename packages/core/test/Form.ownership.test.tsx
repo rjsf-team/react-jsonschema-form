@@ -221,6 +221,34 @@ describe('form data ownership', () => {
       expect(ignoredFormDataWarnings()).toHaveLength(0);
     });
 
+    it('warns when a parent puts back the record it seeded the form with, as a Cancel button does', async () => {
+      const record: Data = { a: 'saved' };
+      function Parent() {
+        const [value, setValue] = useState<Data | undefined>(record);
+        return (
+          <>
+            <Form<Data>
+              schema={schema}
+              validator={validator}
+              // oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias: a `formData` passed after mount is ignored with a warning
+              formData={value}
+              onChange={(event) => setValue(event.formData)}
+            />
+            <button type='button' onClick={() => setValue(record)}>
+              Cancel
+            </button>
+          </>
+        );
+      }
+      const { container } = render(<Parent />);
+
+      await user.type(input(container, 'root_a'), '!');
+      await user.click(screen.getByRole('button', { name: 'Cancel' }));
+
+      expect(input(container, 'root_a')).toHaveValue('saved!');
+      expect(ignoredFormDataWarnings()).toHaveLength(1);
+    });
+
     it('keeps the edits of a form whose parent stores none across the parent’s re-renders', async () => {
       const record: Data = { a: 'record' };
       function Parent({ tick }: { tick: number }) {
