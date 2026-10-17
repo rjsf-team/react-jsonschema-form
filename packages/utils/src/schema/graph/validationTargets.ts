@@ -427,8 +427,8 @@ function readDeclaredKeys<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id:
 /** Returns whether the object `data` holds a key the option `id` declares, which scoring asks on top of the option's
  * schema: an object validates against an object option whatever keys it holds, as long as none conflicts, so without
  * it a "none of these" option would take every object. A key counts when a `properties` or `patternProperties` in the
- * option's scope names it. An option declaring no `properties` is not asked; one whose `properties` name nothing
- * matches only where it takes extra keys, and then whatever the data holds.
+ * option's scope names it and it holds a value. An option declaring no `properties` is not asked; one whose
+ * `properties` name nothing matches only where it takes extra keys, and then whatever the data holds.
  *
  * @param graph - The graph of the root
  * @param id - The option's node
@@ -445,8 +445,13 @@ export function holdsDeclaredKey<S extends StrictRJSFSchema = RJSFSchema>(
     return declared;
   }
   const { names, patterns } = declared;
+  // A key holding `undefined`, as an option switch leaves the keys of the option before it, is one JSON has no value
+  // for, which a validator's `required` reads as missing too
   return (
-    !isObject(data) || Object.keys(data).some((key) => names.has(key) || patterns.some((pattern) => pattern.test(key)))
+    !isObject(data) ||
+    Object.entries(data).some(
+      ([key, value]) => value !== undefined && (names.has(key) || patterns.some((pattern) => pattern.test(key))),
+    )
   );
 }
 

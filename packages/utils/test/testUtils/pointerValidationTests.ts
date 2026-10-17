@@ -72,6 +72,24 @@ export default function pointerValidationTests(buildValidator: (rootSchema: RJSF
       const data = { kind: 'x', id: '1' };
       expect(schemaUtils.getClosestMatchingOption(data, viewsFor(data))).toBe(0);
     });
+    it('matches an option by a key the data holds a value for, not one an option switch cleared to undefined', () => {
+      const rootSchema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          v: {
+            oneOf: [
+              { type: 'object', properties: { phone: { type: 'string' } } },
+              { type: 'object', properties: { email: { type: 'string' } } },
+            ],
+          },
+        },
+      };
+      const schemaUtils = createSchemaUtils({ validator: buildValidator(rootSchema) }, rootSchema);
+      const options = optionsOf(rootSchema.properties?.v, 'oneOf');
+      const data = { phone: undefined, email: 'a' };
+      expect(schemaUtils.getFirstMatchingOption(data, options)).toBe(1);
+      expect(schemaUtils.getClosestMatchingOption(data, options, 1)).toBe(1);
+    });
     it('checks an if that is a $ref into a root carrying an $id against that root', () => {
       const rootSchema: RJSFSchema = {
         $id: 'http://example.com/root.json',
