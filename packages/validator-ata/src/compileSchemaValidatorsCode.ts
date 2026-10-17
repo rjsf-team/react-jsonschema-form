@@ -7,6 +7,7 @@ import {
   normalizeUri,
   REF_KEY,
   resolveUri,
+  SCHEMA_KEY,
   getValidationSchemas,
 } from '@rjsf/utils';
 import { Validator } from 'ata-validator';
@@ -259,7 +260,11 @@ function standalone(schema: GenericObjectType, rootSchema: object): GenericObjec
     const [name, value, base] = next;
     carried[name] = compilable(rewrite(value, base));
   }
-  return count === 0 ? document : { ...document, [container]: carried };
+  // The dialect the root declares decides how ata reads the keywords of every subschema it carries, as it does where the
+  // live validator resolves a pointer into the root
+  const dialect: unknown = getByPath(rootSchema, [SCHEMA_KEY]);
+  const declared = typeof dialect === 'string' ? { [SCHEMA_KEY]: dialect, ...document } : document;
+  return count === 0 ? declared : { ...declared, [container]: carried };
 }
 
 /** Compiles a schema into a precompiled validator module. ata's

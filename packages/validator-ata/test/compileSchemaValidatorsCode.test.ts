@@ -6,7 +6,7 @@ import pointerValidationTests, {
 } from '../../utils/test/testUtils/pointerValidationTests.ts';
 import precompiledCoverageTests from '../../utils/test/testUtils/precompiledCoverageTests.ts';
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
-import { createPrecompiledValidator } from '../src/index.ts';
+import { createPrecompiledValidator, customizeValidator } from '../src/index.ts';
 import loadModule from './harness/loadModule.ts';
 
 const schema: RJSFSchema = {
@@ -371,5 +371,22 @@ describe('compileSchemaValidatorsCode', () => {
     const rootSchema: RJSFSchema = { title: 'Anything' };
     const validator = createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(rootSchema)), rootSchema);
     expect(validator.isValid(rootSchema, 1, rootSchema)).toBe(true);
+  });
+  test("compiles a pointer under the root's $schema, as the live validator reads the subschema in the root", () => {
+    const rootSchema: RJSFSchema = {
+      $schema: 'http://json-schema.org/draft-07/schema#',
+      type: 'object',
+      properties: {
+        v: {
+          anyOf: [{ type: 'array', items: [{ type: 'string' }], additionalItems: false }, { type: 'number' }],
+        },
+      },
+    };
+    const live = customizeValidator();
+    const validator = createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(rootSchema)), rootSchema);
+    const pointer: RJSFSchema = { $ref: '#/properties/v/anyOf/0' };
+    expect(live.isValid(pointer, ['x', 1], rootSchema)).toBe(false);
+    expect(validator.isValid(pointer, ['x', 1], rootSchema)).toBe(false);
+    expect(validator.isValid(pointer, ['x'], rootSchema)).toBe(true);
   });
 });
