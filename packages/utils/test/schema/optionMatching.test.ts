@@ -1,11 +1,5 @@
 import type { RJSFSchema } from '../../src/index.ts';
-import {
-  getClosestMatchingOption,
-  getFirstMatchingOption,
-  isObject,
-  omitExtraData,
-  retrieveSchema,
-} from '../../src/index.ts';
+import { getClosestMatchingOption, getFirstMatchingOption, omitExtraData, retrieveSchema } from '../../src/index.ts';
 import { miniValidator } from './graph/miniValidator.ts';
 
 describe('matching options through the schema graph', () => {
@@ -82,6 +76,17 @@ describe('matching options through the schema graph', () => {
     expect(getFirstMatchingOption(context, { kind: 'a' }, oneOf, rootSchema, 'kind')).toBe(0);
     expect(getClosestMatchingOption(context, rootSchema, { kind: 'a' }, oneOf, 0, 'kind')).toBe(0);
     expect(getFirstMatchingOption(context, { kind: 'q', y: 1 }, oneOf.slice(1), rootSchema, 'kind')).toBe(0);
+  });
+  it.each<[string, RJSFSchema]>([
+    ['additionalProperties', { additionalProperties: { type: 'string' } }],
+    ['patternProperties', { patternProperties: { '^s_': { type: 'string' } } }],
+  ])('matches an option whose properties name nothing by the %s an allOf entry declares', (_name, entry) => {
+    const oneOf: RJSFSchema[] = [
+      { type: 'object', properties: { n: { type: 'number' } } },
+      { type: 'object', properties: {}, allOf: [entry] },
+    ];
+    const rootSchema: RJSFSchema = { type: 'object', properties: { v: { oneOf } } };
+    expect(getFirstMatchingOption({ validator: miniValidator() }, { s_a: 'x' }, oneOf, rootSchema)).toBe(1);
   });
   it('matches past an option holding a patternProperties pattern no flag compiles', () => {
     const options: RJSFSchema[] = [

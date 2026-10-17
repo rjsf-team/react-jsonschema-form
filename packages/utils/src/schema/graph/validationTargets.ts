@@ -408,15 +408,13 @@ function compiledPattern(pattern: string): RegExp[] {
 
 function readDeclaredKeys<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId): DeclaredKeys {
   const scope = scopeOf(graph, id);
-  const declaring = scope.flatMap((node) =>
-    isObject(node.raw.properties) ? [{ node, declared: Object.keys(node.raw.properties) }] : [],
-  );
+  const declaring = scope.flatMap((node) => (isObject(node.raw.properties) ? [Object.keys(node.raw.properties)] : []));
   if (declaring.length === 0) {
     return true;
   }
-  const names = new Set(declaring.flatMap(({ declared }) => declared));
+  const names = new Set(declaring.flat());
   if (names.size === 0) {
-    return declaring.some(({ node }) => allowsAdditionalProperties(node.raw));
+    return scope.some((node) => allowsAdditionalProperties(node.raw));
   }
   const patterns = scope
     .flatMap((node) => graph.subschemas(node.id, PATTERN_PROPERTIES_KEY))
