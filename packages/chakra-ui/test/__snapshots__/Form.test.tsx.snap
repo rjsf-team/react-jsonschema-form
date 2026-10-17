@@ -10519,7 +10519,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                               data-part="label"
                               data-scope="field"
                               for="root_region__oneof_select"
-                              id="root_region__oneof_select__label"
+                              id="root_region__label"
                             >
                               region
                             </label>
@@ -10532,7 +10532,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                             >
                               <select
                                 aria-hidden="true"
-                                aria-labelledby="root_region__oneof_select__label"
+                                aria-labelledby="root_region__label"
                                 id="select:root_region__oneof_select:select"
                                 name="root_region__oneof_select"
                                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
@@ -10563,7 +10563,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                                   aria-expanded="false"
                                   aria-haspopup="listbox"
                                   aria-invalid="false"
-                                  aria-labelledby="root_region__oneof_select__label"
+                                  aria-labelledby="root_region__label"
                                   aria-required="false"
                                   class="chakra-select__trigger emotion-12"
                                   data-part="trigger"
@@ -10614,7 +10614,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                                 style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
                               >
                                 <div
-                                  aria-labelledby="root_region__oneof_select__label"
+                                  aria-labelledby="root_region__label"
                                   class="chakra-select__content emotion-18"
                                   data-part="content"
                                   data-scope="select"
@@ -10713,7 +10713,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                                   data-part="label"
                                   data-scope="field"
                                   for="root_region"
-                                  id="root_region__label"
+                                  id="root_region__optionLabel"
                                 >
                                   Europe
                                 </label>
@@ -10726,7 +10726,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                                 >
                                   <select
                                     aria-hidden="true"
-                                    aria-labelledby="root_region__label"
+                                    aria-labelledby="root_region__optionLabel"
                                     id="select:root_region:select"
                                     name="root_region"
                                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
@@ -10757,7 +10757,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                                       aria-expanded="false"
                                       aria-haspopup="listbox"
                                       aria-invalid="false"
-                                      aria-labelledby="root_region__label"
+                                      aria-labelledby="root_region__optionLabel"
                                       aria-required="false"
                                       class="chakra-select__trigger emotion-12"
                                       data-part="trigger"
@@ -10808,7 +10808,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                                     style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
                                   >
                                     <div
-                                      aria-labelledby="root_region__label"
+                                      aria-labelledby="root_region__optionLabel"
                                       class="chakra-select__content emotion-18"
                                       data-part="content"
                                       data-scope="select"
@@ -24088,7 +24088,7 @@ exports[`single fields > optional data controls > does not show optional control
                               data-part="label"
                               data-scope="field"
                               for="root_optionalObjectWithOneofs__oneof_select"
-                              id="root_optionalObjectWithOneofs__oneof_select__label"
+                              id="root_optionalObjectWithOneofs__label"
                             >
                               optionalObjectWithOneofs
                             </label>
@@ -24101,7 +24101,7 @@ exports[`single fields > optional data controls > does not show optional control
                             >
                               <select
                                 aria-hidden="true"
-                                aria-labelledby="root_optionalObjectWithOneofs__oneof_select__label"
+                                aria-labelledby="root_optionalObjectWithOneofs__label"
                                 id="select:root_optionalObjectWithOneofs__oneof_select:select"
                                 name="root_optionalObjectWithOneofs__oneof_select"
                                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
@@ -24137,7 +24137,7 @@ exports[`single fields > optional data controls > does not show optional control
                                   aria-expanded="false"
                                   aria-haspopup="listbox"
                                   aria-invalid="false"
-                                  aria-labelledby="root_optionalObjectWithOneofs__oneof_select__label"
+                                  aria-labelledby="root_optionalObjectWithOneofs__label"
                                   aria-required="false"
                                   class="chakra-select__trigger emotion-108"
                                   data-part="trigger"
@@ -24188,7 +24188,7 @@ exports[`single fields > optional data controls > does not show optional control
                                 style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
                               >
                                 <div
-                                  aria-labelledby="root_optionalObjectWithOneofs__oneof_select__label"
+                                  aria-labelledby="root_optionalObjectWithOneofs__label"
                                   class="chakra-select__content emotion-114"
                                   data-part="content"
                                   data-scope="select"
@@ -24403,7 +24403,7 @@ exports[`single fields > optional data controls > does not show optional control
                               data-part="label"
                               data-scope="field"
                               for="root_optionalArrayWithAnyofs__anyof_select"
-                              id="root_optionalArrayWithAnyofs__anyof_select__label"
+                              id="root_optionalArrayWithAnyofs__label"
                             >
                               optionalArrayWithAnyofs
                             </label>
@@ -24416,7 +24416,7 @@ exports[`single fields > optional data controls > does not show optional control
                             >
                               <select
                                 aria-hidden="true"
-                                aria-labelledby="root_optionalArrayWithAnyofs__anyof_select__label"
+                                aria-labelledby="root_optionalArrayWithAnyofs__label"
                                 id="select:root_optionalArrayWithAnyofs__anyof_select:select"
                                 name="root_optionalArrayWithAnyofs__anyof_select"
                                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
@@ -24452,7 +24452,7 @@ exports[`single fields > optional data controls > does not show optional control
                                   aria-expanded="false"
                                   aria-haspopup="listbox"
                                   aria-invalid="false"
-                                  aria-labelledby="root_optionalArrayWithAnyofs__anyof_select__label"
+                                  aria-labelledby="root_optionalArrayWithAnyofs__label"
                                   aria-required="false"
                                   class="chakra-select__trigger emotion-108"
                                   data-part="trigger"
@@ -24503,7 +24503,7 @@ exports[`single fields > optional data controls > does not show optional control
                                 style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
                               >
                                 <div
-                                  aria-labelledby="root_optionalArrayWithAnyofs__anyof_select__label"
+                                  aria-labelledby="root_optionalArrayWithAnyofs__label"
                                   class="chakra-select__content emotion-114"
                                   data-part="content"
                                   data-scope="select"
@@ -26183,7 +26183,7 @@ exports[`single fields > optional data controls > does not show optional control
                               data-readonly=""
                               data-scope="field"
                               for="root_optionalObjectWithOneofs__oneof_select"
-                              id="root_optionalObjectWithOneofs__oneof_select__label"
+                              id="root_optionalObjectWithOneofs__label"
                             >
                               optionalObjectWithOneofs
                             </label>
@@ -26197,7 +26197,7 @@ exports[`single fields > optional data controls > does not show optional control
                             >
                               <select
                                 aria-hidden="true"
-                                aria-labelledby="root_optionalObjectWithOneofs__oneof_select__label"
+                                aria-labelledby="root_optionalObjectWithOneofs__label"
                                 disabled=""
                                 id="select:root_optionalObjectWithOneofs__oneof_select:select"
                                 name="root_optionalObjectWithOneofs__oneof_select"
@@ -26235,7 +26235,7 @@ exports[`single fields > optional data controls > does not show optional control
                                   aria-expanded="false"
                                   aria-haspopup="listbox"
                                   aria-invalid="false"
-                                  aria-labelledby="root_optionalObjectWithOneofs__oneof_select__label"
+                                  aria-labelledby="root_optionalObjectWithOneofs__label"
                                   aria-required="false"
                                   class="chakra-select__trigger emotion-108"
                                   data-disabled=""
@@ -26292,7 +26292,7 @@ exports[`single fields > optional data controls > does not show optional control
                                 style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
                               >
                                 <div
-                                  aria-labelledby="root_optionalObjectWithOneofs__oneof_select__label"
+                                  aria-labelledby="root_optionalObjectWithOneofs__label"
                                   class="chakra-select__content emotion-114"
                                   data-part="content"
                                   data-scope="select"
@@ -26517,7 +26517,7 @@ exports[`single fields > optional data controls > does not show optional control
                               data-readonly=""
                               data-scope="field"
                               for="root_optionalArrayWithAnyofs__anyof_select"
-                              id="root_optionalArrayWithAnyofs__anyof_select__label"
+                              id="root_optionalArrayWithAnyofs__label"
                             >
                               optionalArrayWithAnyofs
                             </label>
@@ -26531,7 +26531,7 @@ exports[`single fields > optional data controls > does not show optional control
                             >
                               <select
                                 aria-hidden="true"
-                                aria-labelledby="root_optionalArrayWithAnyofs__anyof_select__label"
+                                aria-labelledby="root_optionalArrayWithAnyofs__label"
                                 disabled=""
                                 id="select:root_optionalArrayWithAnyofs__anyof_select:select"
                                 name="root_optionalArrayWithAnyofs__anyof_select"
@@ -26569,7 +26569,7 @@ exports[`single fields > optional data controls > does not show optional control
                                   aria-expanded="false"
                                   aria-haspopup="listbox"
                                   aria-invalid="false"
-                                  aria-labelledby="root_optionalArrayWithAnyofs__anyof_select__label"
+                                  aria-labelledby="root_optionalArrayWithAnyofs__label"
                                   aria-required="false"
                                   class="chakra-select__trigger emotion-108"
                                   data-disabled=""
@@ -26626,7 +26626,7 @@ exports[`single fields > optional data controls > does not show optional control
                                 style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
                               >
                                 <div
-                                  aria-labelledby="root_optionalArrayWithAnyofs__anyof_select__label"
+                                  aria-labelledby="root_optionalArrayWithAnyofs__label"
                                   class="chakra-select__content emotion-114"
                                   data-part="content"
                                   data-scope="select"

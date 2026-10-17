@@ -50,8 +50,9 @@ export default function RangeWidget<
   const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target?.value);
 
   const chakraProps = getChakra(options);
-  const labelId = fieldLabelId(id);
   const drawsLabel = !hideLabel && !!label;
+  // The plan numbers the label beneath one a field above draws under `fieldLabelId(id)`, such as a radio selector's
+  const labelId = drawsLabel && presentation ? presentation.label.id : fieldLabelId(id);
   const controlAttributes = getControlAttributes<T, S, F>({ id, presentation });
 
   return (

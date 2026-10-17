@@ -43,10 +43,12 @@ export default function SelectWidget<
     autofocus,
     onChange,
     schema,
+    presentation,
   } = props;
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
-  const labelId = fieldLabelId(id);
   const drawsLabel = !hideLabel && !!label;
+  // The plan numbers the label beneath one a field above draws under `fieldLabelId(id)`, such as a radio selector's
+  const labelId = drawsLabel && presentation ? presentation.label.id : fieldLabelId(id);
   const ariaProps = widgetAriaProps(props);
   const labelledBy = labelledByOrNone(ariaProps['aria-labelledby'], drawsLabel);
   const { enumOptions, enumDisabled, emptyValue, optgroups } = options;

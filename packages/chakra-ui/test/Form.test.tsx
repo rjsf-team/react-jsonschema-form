@@ -759,6 +759,19 @@ describe('chakra-ui names and focuses its controls as core does', () => {
     expect(container.querySelector('input[name="root[volume]"]')).toBeInTheDocument();
   });
 
+  test('names a native select form value by htmlName', () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { color: { type: 'string', title: 'Color', enum: ['red', 'blue'] } } }}
+        uiSchema={{ color: { 'ui:widget': 'NativeSelectWidget' } }}
+        nameGenerator={bracketNameGenerator}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('select[name="root[color]"]')).toBeInTheDocument();
+  });
+
   test.each<[string, RJSFSchema, string]>([
     ['radio', { type: 'string', enum: ['red', 'green'] }, 'radio'],
     ['checkboxes', { type: 'array', items: { type: 'string', enum: ['red', 'green'] }, uniqueItems: true }, 'checkbox'],
@@ -772,5 +785,53 @@ describe('chakra-ui names and focuses its controls as core does', () => {
     );
 
     expect(screen.getAllByRole(role)[1]).toHaveFocus();
+  });
+});
+
+describe("chakra-ui draws a widget's own label under the id its plan gives it", () => {
+  // The radio selector draws the field's label under its plan's id, so an option drawing its own takes a numbered one
+  test.each<[string, RJSFSchema, UiSchema, unknown, string]>([
+    ['select', { type: 'string', enum: ['a', 'b'] }, {}, 'a', 'combobox'],
+    ['range', { type: 'number' }, { 'ui:widget': 'range' }, 3, 'slider'],
+  ])(
+    "draws an option's %s label beneath a radio selector under its own id, rather than the selector's",
+    (_, option, optionUiSchema, value, role) => {
+      const { container } = render(
+        <WrappedForm
+          schema={{ type: 'object', properties: { pet: { title: 'Pet', anyOf: [{ title: 'Kind', ...option }] } } }}
+          uiSchema={{ pet: { 'ui:widget': 'radio', anyOf: [optionUiSchema] } }}
+          formData={{ pet: value }}
+          validator={validator}
+        />,
+      );
+
+      expect(container.querySelectorAll('[id="root_pet__label"]')).toHaveLength(1);
+      expect(screen.getByRole('radiogroup')).toHaveAccessibleName('Pet');
+      expect(container.querySelector('#root_pet__optionLabel')).toBeInTheDocument();
+      expect(screen.getByRole(role)).toHaveAccessibleName(
+        container.querySelector('#root_pet__optionLabel')?.textContent,
+      );
+      expectReferencesResolve(container);
+    },
+  );
+});
+
+describe('chakra-ui WrapIfAdditionalTemplate', () => {
+  test("names a propertyNames key select by the key's label where ui:label false hides it", () => {
+    render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          propertyNames: { enum: ['foo', 'bar'] },
+          additionalProperties: { type: 'string' },
+        }}
+        uiSchema={{ additionalProperties: { 'ui:label': false } }}
+        formData={{ foo: 'a' }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('combobox')).toHaveAccessibleName('foo Key');
+    expect(screen.queryByText('foo Key')).toBeNull();
   });
 });

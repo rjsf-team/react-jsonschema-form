@@ -39,7 +39,7 @@ export default function WrapIfAdditionalTemplate<
   const { templates, translateString } = registry;
   // Button templates are not overridden in the uiSchema
   const { RemoveButton } = templates.ButtonTemplates;
-  const keyLabel = hasKeyLabel ? translateString(TranslatableString.KeyLabel, [label]) : undefined;
+  const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
   const hasDescription = !!rawDescription;
   const margin = hasDescription ? 58 : 22;
@@ -64,7 +64,8 @@ export default function WrapIfAdditionalTemplate<
         {propertyNamesEnum ? (
           <AdditionalPropertyKeySelect<T, S, F>
             id={`${id}-key`}
-            label={keyLabel ?? ''}
+            label={keyLabel}
+            hideLabel={!hasKeyLabel}
             value={keyName}
             propertyNamesEnum={propertyNamesEnum}
             onKeyRename={onKeyRename}
@@ -74,7 +75,7 @@ export default function WrapIfAdditionalTemplate<
             registry={registry}
           />
         ) : (
-          <Field required={required} label={keyLabel} id={`${id}-key`}>
+          <Field required={required} label={hasKeyLabel ? keyLabel : undefined} id={`${id}-key`}>
             <Input
               key={keyName}
               defaultValue={keyName}
