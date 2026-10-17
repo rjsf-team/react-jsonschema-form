@@ -68,6 +68,7 @@ export default function SelectWidget<
     disabled,
     placeholder,
     readonly,
+    required,
     autofocus,
     value,
     multiple,
@@ -206,7 +207,9 @@ export default function SelectWidget<
           id={id}
           type='button'
           tabIndex={0}
-          autoFocus={autofocus}
+          // Disabled only through `aria-disabled`, so it would still take focus and open its listbox on mount, which a
+          // disabled native control can't
+          autoFocus={autofocus && !disabled}
           onMouseDown={(event) => {
             event.preventDefault();
             event.currentTarget.focus();
@@ -223,6 +226,8 @@ export default function SelectWidget<
           {...ariaProps}
           aria-label={ariaProps['aria-label'] ?? (named ? undefined : fallbackName)}
           aria-disabled={disabled || readonly || undefined}
+          // A button takes no `required`, so the combobox says it as a native select's attribute would
+          aria-required={required || undefined}
         >
           <span className='truncate'>{hasValue ? selectedLabels.join(', ') : placeholder || fallbackName}</span>
           {/* Decoration, and hidden from the value the combobox's contents give it, which would otherwise end in the

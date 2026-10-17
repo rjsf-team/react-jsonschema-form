@@ -77,8 +77,20 @@ export default function DateTimeWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { id, value, label, presentation, placeholder, options, disabled, readonly, autofocus, schema, registry } =
-    props;
+  const {
+    id,
+    value,
+    label,
+    presentation,
+    placeholder,
+    options,
+    disabled,
+    readonly,
+    required,
+    autofocus,
+    schema,
+    registry,
+  } = props;
   const named = isNamedByTemplateLabel<T, S, F>(props);
   const { localValue } = getDateTimeLocalValue(schema, value);
   const formatDate = useDateFormatter<S>(schema, 'date-time');
@@ -169,6 +181,7 @@ export default function DateTimeWidget<
           popupId={popupId}
           disabled={disabled}
           readonly={readonly}
+          required={required}
           autofocus={autofocus}
           triggerRef={triggerRef}
           onClick={togglePicker}

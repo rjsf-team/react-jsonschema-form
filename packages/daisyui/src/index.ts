@@ -6,7 +6,7 @@ export { default as Form, generateForm } from './DaisyUIForm.tsx';
 export { __createDaisyUIFrameProvider } from './DaisyUIFrameProvider.tsx';
 export { default as GridTemplate } from './templates/GridTemplate/GridTemplate.tsx';
 export { default as Templates, generateTemplates } from './templates/Templates.tsx';
-export { getGroupProps } from './utils.ts';
+export { getGroupAndOptionProps, getGroupProps } from './utils.ts';
 // Re-exported so a consumer's custom daisyui widget reaches the id generator the built-in ones use without a second
 // import, and cannot drift from it by hand-building the suffix
 export { fieldLabelId } from '@rjsf/utils';

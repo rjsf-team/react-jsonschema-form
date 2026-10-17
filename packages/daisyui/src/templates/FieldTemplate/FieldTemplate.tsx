@@ -9,7 +9,7 @@ import type {
 } from '@rjsf/utils';
 import {
   DEFAULT_BOOLEAN_WIDGET,
-  fieldLabelId,
+  getLabelId,
   getTemplates,
   getUiOptions,
   getWidgetType,
@@ -170,13 +170,11 @@ export default function FieldTemplate<
         style={daisy.style}
       >
         {templateDrawsLabel<T, S, F>(props) && !widgetRendersLabel && !!label && (
-          <label
-            id={presentation?.label.id ?? fieldLabelId(id)}
-            htmlFor={templateLabelFor<T, S, F>(props)}
-            className='label'
-          >
+          <label htmlFor={templateLabelFor<T, S, F>(props)} className='label'>
             <span className='label-text font-medium'>
-              {label}
+              {/* The label's id goes on its text alone, as a group or an option selector is named through it, and the
+                  `*` isn't part of that name; a control its `for` names takes the whole label */}
+              <span id={getLabelId<T, S, F>(props)}>{label}</span>
               {templateMarksRequired<T, S, F>(props) && <RequiredMarker />}
             </span>
           </label>

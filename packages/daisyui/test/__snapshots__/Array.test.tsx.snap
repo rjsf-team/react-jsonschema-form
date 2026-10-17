@@ -541,12 +541,15 @@ exports[`array fields > empty errors array 1`] = `
                   <label
                     class="label"
                     for="root_name"
-                    id="root_name__label"
                   >
                     <span
                       class="label-text font-medium"
                     >
-                      name
+                      <span
+                        id="root_name__label"
+                      >
+                        name
+                      </span>
                     </span>
                   </label>
                   <div
@@ -722,12 +725,15 @@ exports[`array fields > has errors 1`] = `
                   <label
                     class="label"
                     for="root_name"
-                    id="root_name__label"
                   >
                     <span
                       class="label-text font-medium"
                     >
-                      name
+                      <span
+                        id="root_name__label"
+                      >
+                        name
+                      </span>
                     </span>
                   </label>
                   <div
@@ -808,12 +814,15 @@ exports[`array fields > no errors 1`] = `
                   <label
                     class="label"
                     for="root_name"
-                    id="root_name__label"
                   >
                     <span
                       class="label-text font-medium"
                     >
-                      name
+                      <span
+                        id="root_name__label"
+                      >
+                        name
+                      </span>
                     </span>
                   </label>
                   <div
@@ -898,12 +907,15 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               <label
                                 class="label"
                                 for="root_0_name"
-                                id="root_0_name__label"
                               >
                                 <span
                                   class="label-text font-medium"
                                 >
-                                  name
+                                  <span
+                                    id="root_0_name__label"
+                                  >
+                                    name
+                                  </span>
                                 </span>
                               </label>
                               <div
@@ -937,12 +949,15 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               <label
                                 class="label"
                                 for="root_0_value"
-                                id="root_0_value__label"
                               >
                                 <span
                                   class="label-text font-medium"
                                 >
-                                  value
+                                  <span
+                                    id="root_0_value__label"
+                                  >
+                                    value
+                                  </span>
                                 </span>
                               </label>
                               <div
@@ -1071,12 +1086,15 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               <label
                                 class="label"
                                 for="root_1_name"
-                                id="root_1_name__label"
                               >
                                 <span
                                   class="label-text font-medium"
                                 >
-                                  name
+                                  <span
+                                    id="root_1_name__label"
+                                  >
+                                    name
+                                  </span>
                                 </span>
                               </label>
                               <div
@@ -1110,12 +1128,15 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               <label
                                 class="label"
                                 for="root_1_value"
-                                id="root_1_value__label"
                               >
                                 <span
                                   class="label-text font-medium"
                                 >
-                                  value
+                                  <span
+                                    id="root_1_value__label"
+                                  >
+                                    value
+                                  </span>
                                 </span>
                               </label>
                               <div
@@ -2562,12 +2583,15 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               <label
                                 class="label"
                                 for="root_0_name"
-                                id="root_0_name__label"
                               >
                                 <span
                                   class="label-text font-medium"
                                 >
-                                  name
+                                  <span
+                                    id="root_0_name__label"
+                                  >
+                                    name
+                                  </span>
                                 </span>
                               </label>
                               <div
@@ -2601,12 +2625,15 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               <label
                                 class="label"
                                 for="root_0_value"
-                                id="root_0_value__label"
                               >
                                 <span
                                   class="label-text font-medium"
                                 >
-                                  value
+                                  <span
+                                    id="root_0_value__label"
+                                  >
+                                    value
+                                  </span>
                                 </span>
                               </label>
                               <div
@@ -2735,12 +2762,15 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               <label
                                 class="label"
                                 for="root_1_name"
-                                id="root_1_name__label"
                               >
                                 <span
                                   class="label-text font-medium"
                                 >
-                                  name
+                                  <span
+                                    id="root_1_name__label"
+                                  >
+                                    name
+                                  </span>
                                 </span>
                               </label>
                               <div
@@ -2774,12 +2804,15 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               <label
                                 class="label"
                                 for="root_1_value"
-                                id="root_1_value__label"
                               >
                                 <span
                                   class="label-text font-medium"
                                 >
-                                  value
+                                  <span
+                                    id="root_1_value__label"
+                                  >
+                                    value
+                                  </span>
                                 </span>
                               </label>
                               <div
@@ -3250,12 +3283,15 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                               <label
                                 class="label"
                                 for="root_0_name"
-                                id="root_0_name__label"
                               >
                                 <span
                                   class="label-text font-medium"
                                 >
-                                  name
+                                  <span
+                                    id="root_0_name__label"
+                                  >
+                                    name
+                                  </span>
                                 </span>
                               </label>
                               <div
@@ -3402,12 +3438,15 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                               <label
                                 class="label"
                                 for="root_1_name"
-                                id="root_1_name__label"
                               >
                                 <span
                                   class="label-text font-medium"
                                 >
-                                  name
+                                  <span
+                                    id="root_1_name__label"
+                                  >
+                                    name
+                                  </span>
                                 </span>
                               </label>
                               <div
@@ -3718,12 +3757,15 @@ exports[`with title and description > array icons 1`] = `
                     <label
                       class="label"
                       for="root_0"
-                      id="root_0__label"
                     >
                       <span
                         class="label-text font-medium"
                       >
-                        Test item
+                        <span
+                          id="root_0__label"
+                        >
+                          Test item
+                        </span>
                         <span
                           class="text-error ml-1"
                         >
@@ -3867,12 +3909,15 @@ exports[`with title and description > array icons 1`] = `
                     <label
                       class="label"
                       for="root_1"
-                      id="root_1__label"
                     >
                       <span
                         class="label-text font-medium"
                       >
-                        Test item
+                        <span
+                          id="root_1__label"
+                        >
+                          Test item
+                        </span>
                         <span
                           class="text-error ml-1"
                         >
@@ -4068,12 +4113,15 @@ exports[`with title and description > checkboxes 1`] = `
         <label
           class="label"
           for="root"
-          id="root__label"
         >
           <span
             class="label-text font-medium"
           >
-            Test field
+            <span
+              id="root__label"
+            >
+              Test field
+            </span>
           </span>
         </label>
         <div
@@ -4247,12 +4295,15 @@ exports[`with title and description > fixed array 1`] = `
                     <label
                       class="label"
                       for="root_0"
-                      id="root_0__label"
                     >
                       <span
                         class="label-text font-medium"
                       >
-                        Test item
+                        <span
+                          id="root_0__label"
+                        >
+                          Test item
+                        </span>
                         <span
                           class="text-error ml-1"
                         >
@@ -4303,12 +4354,15 @@ exports[`with title and description > fixed array 1`] = `
                     <label
                       class="label"
                       for="root_1"
-                      id="root_1__label"
                     >
                       <span
                         class="label-text font-medium"
                       >
-                        Test item
+                        <span
+                          id="root_1__label"
+                        >
+                          Test item
+                        </span>
                         <span
                           class="text-error ml-1"
                         >
@@ -4508,12 +4562,15 @@ exports[`with title and description from both > array icons 1`] = `
                     <label
                       class="label"
                       for="root_0"
-                      id="root_0__label"
                     >
                       <span
                         class="label-text font-medium"
                       >
-                        My Item
+                        <span
+                          id="root_0__label"
+                        >
+                          My Item
+                        </span>
                         <span
                           class="text-error ml-1"
                         >
@@ -4657,12 +4714,15 @@ exports[`with title and description from both > array icons 1`] = `
                     <label
                       class="label"
                       for="root_1"
-                      id="root_1__label"
                     >
                       <span
                         class="label-text font-medium"
                       >
-                        My Item
+                        <span
+                          id="root_1__label"
+                        >
+                          My Item
+                        </span>
                         <span
                           class="text-error ml-1"
                         >
@@ -4858,12 +4918,15 @@ exports[`with title and description from both > checkboxes 1`] = `
         <label
           class="label"
           for="root"
-          id="root__label"
         >
           <span
             class="label-text font-medium"
           >
-            My Field
+            <span
+              id="root__label"
+            >
+              My Field
+            </span>
           </span>
         </label>
         <div
@@ -5037,12 +5100,15 @@ exports[`with title and description from both > fixed array 1`] = `
                     <label
                       class="label"
                       for="root_0"
-                      id="root_0__label"
                     >
                       <span
                         class="label-text font-medium"
                       >
-                        My Item
+                        <span
+                          id="root_0__label"
+                        >
+                          My Item
+                        </span>
                         <span
                           class="text-error ml-1"
                         >
@@ -5093,12 +5159,15 @@ exports[`with title and description from both > fixed array 1`] = `
                     <label
                       class="label"
                       for="root_1"
-                      id="root_1__label"
                     >
                       <span
                         class="label-text font-medium"
                       >
-                        My Item
+                        <span
+                          id="root_1__label"
+                        >
+                          My Item
+                        </span>
                         <span
                           class="text-error ml-1"
                         >
@@ -5298,12 +5367,15 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                     <label
                       class="label"
                       for="root_0"
-                      id="root_0__label"
                     >
                       <span
                         class="label-text font-medium"
                       >
-                        My Item
+                        <span
+                          id="root_0__label"
+                        >
+                          My Item
+                        </span>
                         <span
                           class="text-error ml-1"
                         >
@@ -5447,12 +5519,15 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                     <label
                       class="label"
                       for="root_1"
-                      id="root_1__label"
                     >
                       <span
                         class="label-text font-medium"
                       >
-                        My Item
+                        <span
+                          id="root_1__label"
+                        >
+                          My Item
+                        </span>
                         <span
                           class="text-error ml-1"
                         >
@@ -5648,12 +5723,15 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
         <label
           class="label"
           for="root"
-          id="root__label"
         >
           <span
             class="label-text font-medium"
           >
-            My Field
+            <span
+              id="root__label"
+            >
+              My Field
+            </span>
           </span>
         </label>
         <div
@@ -5827,12 +5905,15 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                     <label
                       class="label"
                       for="root_0"
-                      id="root_0__label"
                     >
                       <span
                         class="label-text font-medium"
                       >
-                        My Item
+                        <span
+                          id="root_0__label"
+                        >
+                          My Item
+                        </span>
                         <span
                           class="text-error ml-1"
                         >
@@ -5883,12 +5964,15 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                     <label
                       class="label"
                       for="root_1"
-                      id="root_1__label"
                     >
                       <span
                         class="label-text font-medium"
                       >
-                        My Item
+                        <span
+                          id="root_1__label"
+                        >
+                          My Item
+                        </span>
                         <span
                           class="text-error ml-1"
                         >

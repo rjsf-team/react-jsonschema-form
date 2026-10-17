@@ -48,6 +48,8 @@ interface DatePickerTriggerProps<
   disabled?: boolean;
   /** Whether the field is read-only, which stops the popup opening while leaving the value it displays reachable */
   readonly?: boolean;
+  /** Whether the field is required, which this combobox says through `aria-required`, as a button takes no `required` */
+  required?: boolean;
   /** Whether `ui:autofocus` asks for this button to be focused as it mounts */
   autofocus?: boolean;
   /** The ref the popup positions itself against and returns focus to */
@@ -88,6 +90,7 @@ export default function DatePickerTrigger<
   popupId,
   disabled,
   readonly,
+  required,
   autofocus,
   triggerRef,
   onClick,
@@ -119,6 +122,7 @@ export default function DatePickerTrigger<
       aria-expanded={isOpen}
       aria-controls={isOpen ? popupId : undefined}
       aria-label={named ? undefined : fallbackName}
+      aria-required={required || undefined}
       {...controlAttributes}
       ref={triggerRef}
     >
