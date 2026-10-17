@@ -4,7 +4,6 @@ import {
   getAdditionalPropertySchema,
   getMatchingPatternProperties,
 } from '../additionalPropertiesUtils.ts';
-import { combinationsUpTo } from '../combinationsOf.ts';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   ALL_OF_KEY,
@@ -110,7 +109,9 @@ function normalizeBooleanSchema<S extends StrictRJSFSchema = RJSFSchema>(schema:
 
 /** Resolves a conditional block (if/else/then) by removing the condition and merging the appropriate conditional branch
  * with the rest of the schema. If `expandAllBranches` is true, then the `retrieveSchemaInteral()` results for both
- * conditions will be returned.
+ * conditions will be returned: a `false` branch as `{ not: {} }`, and a missing, `true` or `{}` one as the schema
+ * without the condition, which is what a form renders until the data selects the other branch. The one the `formData`
+ * selects is listed first.
  *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param schema - The schema for which resolving a condition is desired
@@ -138,84 +139,122 @@ export function resolveCondition<
   preserveDependencies = false,
   passCount = 0,
 ): S[] {
-  const { if: expression, then, else: otherwise, ...resolvedSchemaLessConditional } = schema;
-
+  const { if: expression, then, else: otherwise, ...rest } = schema;
   // `null` is checked as `{}` like `undefined`: object keywords such as `required` ignore non-objects, so a `null`
   // would satisfy `if: { required: ['a'] }` and take `then` for an object with no data
   const conditionValue = context.validator.isValid(expression as S, formData ?? {}, rootSchema);
-  const schemaLessConditional = resolvedSchemaLessConditional as S;
-  let resolvedSchemas = [schemaLessConditional];
-  let schemas: S[] = [];
-  if (expandAllBranches) {
-    if (then && typeof then !== 'boolean') {
-      const thenSchema = then as unknown as S;
-      schemas = schemas.concat(
-        retrieveSchemaInternal<T, S, F>(
-          context,
-          thenSchema,
-          rootSchema,
-          formData,
-          expandAllBranches,
-          enclosingRefPath<S>(schema, recurseList, THEN_KEY),
-          undefined,
-          preserveDependencies,
-          passCount > 0 ? 1 : 0,
-        ),
-      );
-    }
-    if (otherwise && typeof otherwise !== 'boolean') {
-      const otherwiseSchema = otherwise as unknown as S;
-      schemas = schemas.concat(
-        retrieveSchemaInternal<T, S, F>(
-          context,
-          otherwiseSchema,
-          rootSchema,
-          formData,
-          expandAllBranches,
-          enclosingRefPath<S>(schema, recurseList, ELSE_KEY),
-          undefined,
-          preserveDependencies,
-          passCount > 0 ? 1 : 0,
-        ),
-      );
-    }
-  } else {
-    const conditionalBranch = (conditionValue ? then : otherwise) as S | boolean | undefined;
-    if (conditionalBranch !== undefined) {
-      const conditionalSchema = normalizeBooleanSchema<S>(conditionalBranch);
-      schemas = schemas.concat(
-        retrieveSchemaInternal<T, S, F>(
-          context,
-          conditionalSchema,
-          rootSchema,
-          formData,
-          expandAllBranches,
-          enclosingRefPath<S>(schema, recurseList, conditionValue ? THEN_KEY : ELSE_KEY),
-          undefined,
-          preserveDependencies,
-          passCount > 0 ? 1 : 0,
-        ),
-      );
-    }
+  // A missing, `true` or `{}` branch leaves the schema without the condition
+  const changing = (branch: unknown) =>
+    branch === undefined || branch === true || (isObject(branch) && !Object.keys(branch).length)
+      ? undefined
+      : (branch as S | boolean);
+  const selected = changing(conditionValue ? then : otherwise);
+  // Expanding all branches lists each form once, two `false` branches being the one form, and the form the data selects
+  // first: it is the one a form renders for that data, which `combineForms()` keeps once it has to drop combinations
+  const branches = expandAllBranches
+    ? [...new Set([selected, changing(conditionValue ? otherwise : then)])]
+    : [selected];
+  return branches
+    .flatMap((branch) =>
+      branch === undefined
+        ? [rest as S]
+        : retrieveSchemaInternal<T, S, F>(
+            context,
+            normalizeBooleanSchema<S>(branch),
+            rootSchema,
+            formData,
+            expandAllBranches,
+            enclosingRefPath<S>(schema, recurseList, branch === then ? THEN_KEY : ELSE_KEY),
+            undefined,
+            preserveDependencies,
+            passCount > 0 ? 1 : 0,
+          ).map((s) => mergeBranch<S>(rest as S, s)),
+    )
+    .flatMap((s) =>
+      // As with `dependencies`, the merged result is re-walked as a follow-up pass so refs that were already expanded
+      // keep their fixpoint depth and a $ref already flagged as a cycle stays collapsed.
+      retrieveSchemaInternal<T, S, F>(
+        context,
+        s,
+        rootSchema,
+        formData,
+        expandAllBranches,
+        recurseList,
+        undefined,
+        preserveDependencies,
+        passCount + 1,
+      ),
+    );
+}
+
+/** The most forms expanding all branches combines across the lists of one `allOf` or one schema's `dependencies`. Each
+ * one is a schema a parse resolves and compiles, and the combinations grow as the product of the lists' lengths
+ */
+const MAX_COMBINED_FORMS = 256;
+
+/** A combination being built past `MAX_COMBINED_FORMS`, with where it stands: `0` while it holds only the first form
+ * of each list, which is the one the data selects, `1` once it holds one other form, and below `0` for the one that
+ * holds the last form of each list, counting down from `-1` the lists it took other than their first from
+ */
+type Combination<P> = [P, number];
+
+/** Returns the forms a combination standing at `state` takes from the next list of `forms`, and where it stands then.
+ * Past `MAX_COMBINED_FORMS` only the forms the data selects together, each other form alone with those, and the last
+ * form of each together are combined, so the combinations grow with the lists' lengths rather than their product.
+ *
+ * @param state - Where the combination stands, as `Combination` describes
+ * @param forms - The next list of forms, the one the data selects first
+ * @param bounded - Whether the combinations are past `MAX_COMBINED_FORMS`, else every form is taken
+ * @returns - The forms the combination takes, each with where it stands then
+ */
+function nextForms<F>(state: number, forms: F[], bounded: boolean): [F, number][] {
+  if (!bounded || !state) {
+    return forms.map((form, index) => [form, index && 1]);
   }
-  if (schemas.length) {
-    resolvedSchemas = schemas.map((s) => mergeBranch<S>(schemaLessConditional, s));
+  return state > 0 ? [[forms[0], 1]] : [[forms[forms.length - 1], forms.length > 1 ? state - 1 : state]];
+}
+
+/** Returns the combinations `nextForms()` built. The one holding the last form of each list is left out when it took
+ * other than the first form from at most one list, being one that is built anyway, and a warning naming `what` was
+ * combined is logged when it is kept, since combinations in between were then dropped.
+ *
+ * @param combinations - The combinations built
+ * @param what - Names what was combined, for the warning
+ * @returns - The combinations to expand
+ */
+function combined<P>(combinations: Combination<P>[], what: () => string): P[] {
+  const kept = combinations.filter(([, state]) => state >= 0 || state < -2);
+  if (kept.length < combinations.length || !kept.some(([, state]) => state < 0)) {
+    return kept.map(([combination]) => combination);
   }
-  // As with `dependencies`, the merged result is re-walked as a follow-up pass so refs that were already expanded
-  // keep their fixpoint depth and a $ref already flagged as a cycle stays collapsed.
-  return resolvedSchemas.flatMap((s) =>
-    retrieveSchemaInternal<T, S, F>(
-      context,
-      s,
-      rootSchema,
-      formData,
-      expandAllBranches,
-      recurseList,
-      undefined,
-      preserveDependencies,
-      passCount + 1,
-    ),
+  logOnce(
+    `Expanding all branches of ${what()} gives more than the ${MAX_COMBINED_FORMS} combinations that are expanded, so only the forms the data selects together, each other form alone and the last forms together were. A form whose data selects a combination in between has no compiled validator.`,
+    'warn',
   );
+  return kept.map(([combination]) => combination);
+}
+
+/** Returns the combinations of one element of each list, as `getAllPermutationsOfXxxOf()` does, as long as there are
+ * at most `MAX_COMBINED_FORMS` of them, and past that the ones `nextForms()` keeps
+ *
+ * @param lists - The forms of each entry, in order, each with the one the data selects first
+ * @param what - Names what is being combined, for the warning
+ * @returns - The combinations to expand
+ */
+function combineForms<S extends StrictRJSFSchema = RJSFSchema>(lists: S[][], what: () => string): S[][] {
+  if (lists.reduce((product, list) => product * list.length, 1) <= MAX_COMBINED_FORMS) {
+    return getAllPermutationsOfXxxOf<S>(lists);
+  }
+  let combinations: Combination<S[]>[] = [
+    [[], 0],
+    [[], -1],
+  ];
+  for (const list of lists) {
+    combinations = combinations.flatMap(([combination, state]) =>
+      nextForms(state, list, true).map(([form, next]): Combination<S[]> => [[...combination, form], next]),
+    );
+  }
+  return combined(combinations, what);
 }
 
 /** Given a list of lists of allOf, anyOf or oneOf values, create a list of lists of all permutations of the values. The
@@ -480,11 +519,11 @@ export function resolveSchema<
         passCount > 0 ? 1 : 0,
       ),
     );
-    const allPermutations = getAllPermutationsOfXxxOf<S>(allOfSchemaElements);
-    return allPermutations.map((permutation) => ({
-      ...schema,
-      allOf: permutation,
-    }));
+    return combineForms<S>(allOfSchemaElements, () => {
+      // Its start and its end, since allOfs written alike start alike, and an allOf past the limit is long
+      const json = JSON.stringify(schema.allOf);
+      return `the allOf of ${schema.allOf!.length} entries ${json.slice(0, 60)}…${json.slice(-60)}`;
+    }).map((allOf) => ({ ...schema, allOf }));
   }
   // No $ref or dependencies or allOf attribute was found, returning the original schema.
   return [schema];
@@ -1780,8 +1819,11 @@ export function resolveDependencies<
     formData,
     recurseList,
   );
-  return resolvedSchemas.flatMap((resolvedSchema) => {
-    const applied = processDependencies<T, S, F>(
+  // A dependency whose key the form data does not have is left unapplied, so a form renders -- and scores its options
+  // against -- the schema with whichever subset of them the data has filled in. Expanding all branches returns each of
+  // those subsets
+  return resolvedSchemas.flatMap((resolvedSchema) =>
+    processDependencies<T, S, F>(
       context,
       dependencies,
       resolvedSchema,
@@ -1790,100 +1832,13 @@ export function resolveDependencies<
       recurseList,
       formData,
       passCount,
-    );
-    // A dependency whose key the form data does not have is left unapplied, so a form renders -- and scores its
-    // options against -- the schema with whichever subset of them the data has filled in, where expanding returns
-    // only the one with all of them applied. The subsets in between are expanded here, and the empty one below
-    if (!expandAllBranches || applied.some((appliedSchema) => deepEquals(appliedSchema, resolvedSchema))) {
-      return applied;
-    }
-    return [
-      ...applied,
-      ...partiallyApplied<T, S, F>(context, dependencies, resolvedSchema, rootSchema, recurseList, formData, passCount),
-      resolvedSchema,
-    ];
-  });
-}
-
-/** The most schema `dependencies` one schema may have for every subset of them to be expanded. There are `2 ** k`
- * of those and each one resolves the schema afresh, so the count doubles with every key added
- */
-const MAX_COMBINED_SCHEMA_DEPENDENCIES = 8;
-
-/** Returns the `resolvedSchema` with each proper, non-empty subset of its schema `dependencies` applied. A form
- * applies a dependency once its key has a value, so a user part-way through filling an object in renders it with some
- * of them applied, and that is the schema its options are scored against -- a precompiled validator with only the
- * none- and all-applied forms throws `No precompiled validator function was found for the given schema` on the
- * keystroke that fills the first one in.
- *
- * Only the dependencies holding a schema are varied. A dependency holding a list of names adds them to `required`,
- * which scoring drops, so it describes nothing a validator has to have compiled.
- *
- * @param context - The `SchemaContext` that will be forwarded to all the APIs
- * @param dependencies - The `dependencies` of the schema being resolved
- * @param resolvedSchema - The schema the dependencies are applied to, with none of them applied
- * @param rootSchema - The root schema that will be forwarded to all the APIs
- * @param recurseList - The list of recursive references already processed
- * @param [formData] - The current formData, if any, to assist retrieving a schema
- * @param [passCount=0] - The pass of the `resolveReference` fixpoint loop this resolution belongs to
- * @returns - The schema with each proper, non-empty subset of its schema dependencies applied
- */
-function partiallyApplied<
-  T = unknown,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = FormContextType,
->(
-  context: SchemaContext<S, F>,
-  dependencies: S['dependencies'],
-  resolvedSchema: S,
-  rootSchema: S,
-  recurseList: string[],
-  formData?: T,
-  passCount = 0,
-): S[] {
-  // Iterated rather than read through a default, since this is only reached for a schema that has `dependencies` and
-  // a default for the one it cannot have would be a branch no test can take
-  const schemaKeys: string[] = [];
-  for (const key in dependencies) {
-    if (isObject(dependencies[key])) {
-      schemaKeys.push(key);
-    }
-  }
-  if (schemaKeys.length < 2) {
-    return [];
-  }
-  const subsets = combinationsUpTo(schemaKeys, MAX_COMBINED_SCHEMA_DEPENDENCIES, () =>
-    // The keys are named so that a second schema over the limit is reported rather than deduped into the first one's
-    // warning, which says nothing that tells the two apart
-    logOnce(
-      `A schema has ${schemaKeys.length} schema dependencies, more than the ${MAX_COMBINED_SCHEMA_DEPENDENCIES} whose subsets can all be expanded, so only each dependency alone and all of them together were expanded. A form applies the subset whose keys the data has filled in, so a form part-way between those has no compiled validator. Give the object fewer schema dependencies, nesting what they describe if need be. The keys are: ${schemaKeys.join(', ')}`,
-      'warn',
     ),
   );
-  return subsets
-    .filter((subset) => subset.length < schemaKeys.length)
-    .flatMap((subset) => {
-      const partial: Record<string, unknown> = { ...dependencies };
-      for (const key of schemaKeys) {
-        if (!subset.includes(key)) {
-          delete partial[key];
-        }
-      }
-      return processDependencies<T, S, F>(
-        context,
-        partial as S['dependencies'],
-        resolvedSchema,
-        rootSchema,
-        true,
-        recurseList,
-        formData,
-        passCount,
-      );
-    });
 }
 
-/** Processes all the `dependencies` recursively into the list of `resolvedSchema`s as needed. Passes the
- * `expandAllBranches` flag down to the `withDependentSchema()` and the recursive `processDependencies()` helper calls.
+/** Processes all the `dependencies` into the list of `resolvedSchema`s as needed. Passes the `expandAllBranches` flag
+ * down to the `withDependentSchema()` helper calls. Expanding all branches also returns the schema with each subset of
+ * its schema dependencies left unapplied, bounded as `nextForms()` describes.
  *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param dependencies - The set of dependencies that needs to be processed
@@ -1911,20 +1866,33 @@ export function processDependencies<
   formData?: T,
   passCount = 0,
 ): S[] {
-  let schemas = [resolvedSchema];
-  // Process dependencies updating the local schema properties as appropriate.
-  for (const dependencyKey in dependencies) {
-    if (
-      (expandAllBranches || getByPath(formData, dependencyKey) !== undefined) &&
-      (!resolvedSchema.properties || dependencyKey in resolvedSchema.properties)
-    ) {
-      const [remainingDependencies, dependencyValue] = splitKeyElementFromObject(dependencyKey, dependencies);
+  // Each path applies the first dependency its schema has the key of, then the rest, re-checking the ones skipped
+  // since an applied dependency can declare their keys. Expanding all branches also leaves each schema dependency
+  // unapplied, as a form does until its key is filled in, which makes every subset of them a path. Past
+  // `MAX_COMBINED_FORMS` paths the walk starts again, bounded as `nextForms()` describes
+  const walk = (bounded: boolean) => {
+    const paths: Combination<S>[] = [];
+    const advance = (schema: S, remaining: GenericObjectType, state: number) => {
+      if (!bounded && paths.length > MAX_COMBINED_FORMS) {
+        return;
+      }
+      const dependencyKey = Object.keys(remaining).find(
+        (key) =>
+          (expandAllBranches || getByPath(formData, key) !== undefined) &&
+          (!schema.properties || key in schema.properties),
+      );
+      if (dependencyKey === undefined) {
+        paths.push([schema, state]);
+        return;
+      }
+      const [remainingDependencies, dependencyValue] = splitKeyElementFromObject(dependencyKey, remaining);
+      let forms = [schema];
       if (Array.isArray(dependencyValue)) {
-        schemas[0] = withDependentProperties<S>(resolvedSchema, dependencyValue);
+        forms = [withDependentProperties<S>(schema, dependencyValue)];
       } else if (isObject(dependencyValue)) {
-        schemas = withDependentSchema<T, S, F>(
+        forms = withDependentSchema<T, S, F>(
           context,
-          resolvedSchema,
+          schema,
           rootSchema,
           dependencyKey,
           dependencyValue as S,
@@ -1933,22 +1901,26 @@ export function processDependencies<
           formData,
           passCount,
         );
+        if (expandAllBranches && !forms.some((form) => deepEquals(form, schema))) {
+          // Listed last, after the forms with it applied, unless the walk is bounded and the data has not filled its
+          // key in, which makes it the form the data selects
+          forms = bounded && getByPath(formData, dependencyKey) === undefined ? [schema, ...forms] : [...forms, schema];
+        }
       }
-      return schemas.flatMap((schema) =>
-        processDependencies<T, S, F>(
-          context,
-          remainingDependencies,
-          schema,
-          rootSchema,
-          expandAllBranches,
-          recurseList,
-          formData,
-          passCount,
-        ),
-      );
+      for (const [form, next] of nextForms(state, forms, bounded)) {
+        advance(form, remainingDependencies, next);
+      }
+    };
+    for (const state of bounded ? [0, -1] : [0]) {
+      advance(resolvedSchema, { ...dependencies }, state);
     }
+    return paths;
+  };
+  let paths = walk(false);
+  if (paths.length > MAX_COMBINED_FORMS) {
+    paths = walk(true);
   }
-  return schemas;
+  return combined(paths, () => `the dependencies on ${Object.keys({ ...dependencies }).join(', ')}`);
 }
 
 /** Updates a schema with additionally required properties added
