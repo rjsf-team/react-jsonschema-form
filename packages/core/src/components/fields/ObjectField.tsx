@@ -48,6 +48,7 @@ import {
 
 import useReadFieldData from '../../hooks/useReadFieldData.ts';
 import useSendMove from '../../hooks/useSendMove.ts';
+import useWarnIfFormDataNotPassedThrough from '../../hooks/useWarnIfFormDataNotPassedThrough.ts';
 import { ADDITIONAL_PROPERTY_KEY_REMOVE, EMPTY_UI_SCHEMA } from '../constants.ts';
 import RichDescription from '../RichDescription.tsx';
 
@@ -391,6 +392,7 @@ export default function ObjectField<
   const readRenderedData = useCallback(() => renderedFormData.current, []);
   const readData = useReadFieldData(fieldPath, readRenderedData);
   const sendMove = useSendMove(fieldPath);
+  useWarnIfFormDataNotPassedThrough('ObjectField', id, fieldPath, formData);
 
   const schema: S = useMemo(
     () => schemaUtils.retrieveSchema(rawSchema, formData, true),

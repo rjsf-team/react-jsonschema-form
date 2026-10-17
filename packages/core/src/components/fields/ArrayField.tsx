@@ -39,6 +39,7 @@ import {
 
 import useReadFieldData from '../../hooks/useReadFieldData.ts';
 import useSendMove from '../../hooks/useSendMove.ts';
+import useWarnIfFormDataNotPassedThrough from '../../hooks/useWarnIfFormDataNotPassedThrough.ts';
 import { EMPTY_UI_SCHEMA } from '../constants.ts';
 import { moveOfItems } from '../formState.ts';
 
@@ -1110,6 +1111,7 @@ export default function ArrayField<
   const { globalFormOptions, schemaUtils, translateString } = registry;
   const { keyedFormData, readSentRows, readSentItems, updateKeyedFormData } = useKeyedFormData<T>(formData);
   const readItems = useReadFieldData(fieldPath, readSentItems);
+  useWarnIfFormDataNotPassedThrough('ArrayField', fieldId, fieldPath, formData);
   const sendMove = useSendMove(fieldPath);
   // Counts the rows the handlers made, so that a row a handler adds never takes the key of one it removed in the same
   // event, whose instance React would then reuse; mutated by handlers only, so rendering stays pure

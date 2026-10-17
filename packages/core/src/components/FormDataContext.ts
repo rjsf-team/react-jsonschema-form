@@ -20,5 +20,7 @@ interface FormDataAccess {
   sendMove(move: AnnouncedMove, send: () => void): MoveOutcome | undefined;
   /** The form's current data at `path` */
   readField<D>(path: FieldPath): D;
+  /** The form's data at `path` as its last commit rendered it, which a field rendered in that commit was handed */
+  readRenderedField<D>(path: FieldPath): D;
 }
 export default createContext<FormDataAccess | undefined>(undefined);

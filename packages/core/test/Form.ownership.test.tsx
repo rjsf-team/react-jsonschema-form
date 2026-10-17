@@ -1,7 +1,7 @@
 import { Component, StrictMode, startTransition, useEffect, useLayoutEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 import type { ErrorSchema, FieldProps, RJSFSchema, WidgetProps } from '@rjsf/utils';
-import { deepEquals, getTemplates, getUiOptions, noop } from '@rjsf/utils';
+import { buttonId, deepEquals, getTemplates, getUiOptions, noop } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -1285,6 +1285,66 @@ describe('form data ownership', () => {
       expect(handleOf(ref).getFormData()).toEqual({ a: 'formData' });
       expect(bothSeedsWarnings()).toHaveLength(1);
       expect(String(bothSeedsWarnings()[0][0])).toContain('`formData`');
+    });
+
+    describe('a container field rendered with other data than the form holds at its path', () => {
+      /** The warnings the form gave about a container field not passed the form's data */
+      const passThroughWarnings = () =>
+        warnings.consoleSpy.mock.calls.filter(([message]) => String(message).includes('pass `formData` through'));
+      interface ListData {
+        list?: string[];
+        record?: { a?: string };
+      }
+      const listSchema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          list: { type: 'array', items: { type: 'string' } },
+          record: { type: 'object', properties: { a: { type: 'string' } } },
+        },
+      };
+
+      it('warns once, naming the field, for a wrapper that hands ArrayField a sorted copy', async () => {
+        function SortedList(props: FieldProps<string[]>) {
+          const { ArrayField } = props.registry.fields;
+          return <ArrayField {...props} formData={[...(props.formData ?? [])].sort()} />;
+        }
+        const { container } = render(
+          <Form<ListData>
+            schema={listSchema}
+            uiSchema={{ list: { 'ui:field': SortedList } }}
+            validator={validator}
+            initialFormData={{ list: ['b', 'a'] }}
+          />,
+        );
+        await user.click(elementOf(container, `#${buttonId('root_list', 'add')}`));
+
+        expect(passThroughWarnings()).toHaveLength(1);
+        expect(String(passThroughWarnings()[0][0])).toContain('ArrayField');
+        expect(String(passThroughWarnings()[0][0])).toContain('root_list');
+      });
+
+      it('does not warn for wrappers that pass formData through, or a widget that edits as it mounts', () => {
+        function PassingRecord(props: FieldProps) {
+          const { ObjectField } = props.registry.fields;
+          return <ObjectField {...props} />;
+        }
+        function ChangeOnMountWidget({ onChange }: WidgetProps) {
+          useLayoutEffect(() => {
+            onChange('mounted');
+          }, [onChange]);
+          return null;
+        }
+        render(
+          <Form<ListData>
+            schema={listSchema}
+            uiSchema={{ record: { 'ui:field': PassingRecord, a: { 'ui:widget': ChangeOnMountWidget } } }}
+            validator={validator}
+            initialFormData={{ list: ['b', 'a'], record: {} }}
+          />,
+        );
+
+        expect(passThroughWarnings()).toHaveLength(0);
+      });
     });
 
     it('does not warn when only one seed is passed', () => {

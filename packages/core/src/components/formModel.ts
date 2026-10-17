@@ -500,6 +500,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     },
     /** The latest value at `path`: an edit made since the form last rendered included */
     readField: <D>(path: FieldPath) => getAt<D>(current().formData, fieldPathToList(path)),
+    readRenderedField: <D>(path: FieldPath) => getAt<D>(rendered.formData, fieldPathToList(path)),
     getSnapshot: () => published,
     subscribe: (listener: () => void) => {
       listeners.add(listener);
