@@ -115,12 +115,6 @@ exports[`array fields > array icons 1`] = `
                         <div
                           class="flex flex-col gap-2"
                         >
-                          <label
-                            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                            for="root_0"
-                          >
-                            *
-                          </label>
                           <div
                             class="p-0.5"
                           >
@@ -284,12 +278,6 @@ exports[`array fields > array icons 1`] = `
                         <div
                           class="flex flex-col gap-2"
                         >
-                          <label
-                            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                            for="root_1"
-                          >
-                            *
-                          </label>
                           <div
                             class="p-0.5"
                           >
@@ -511,10 +499,6 @@ exports[`array fields > checkboxes 1`] = `
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div
           class="p-0.5"
         >
@@ -542,7 +526,6 @@ exports[`array fields > checkboxes 1`] = `
                 <input
                   aria-autocomplete="list"
                   aria-controls="radix-_r_0_"
-                  aria-describedby="root__error root__description root__help"
                   aria-expanded="true"
                   aria-labelledby="radix-_r_1_"
                   autocomplete="off"
@@ -604,6 +587,7 @@ exports[`array fields > empty errors array 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_name"
+                    id="root_name__label"
                   >
                     name
                   </label>
@@ -675,12 +659,6 @@ exports[`array fields > fixed array 1`] = `
                         <div
                           class="flex flex-col gap-2"
                         >
-                          <label
-                            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                            for="root_0"
-                          >
-                            *
-                          </label>
                           <div
                             class="p-0.5"
                           >
@@ -717,12 +695,6 @@ exports[`array fields > fixed array 1`] = `
                         <div
                           class="flex flex-col gap-2"
                         >
-                          <label
-                            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                            for="root_1"
-                          >
-                            *
-                          </label>
                           <div
                             class="p-0.5"
                           >
@@ -848,6 +820,7 @@ exports[`array fields > has errors 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-destructive"
                     for="root_name"
+                    id="root_name__label"
                   >
                     name
                   </label>
@@ -924,6 +897,7 @@ exports[`array fields > no errors 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_name"
+                    id="root_name__label"
                   >
                     name
                   </label>
@@ -1013,6 +987,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                     <label
                                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                       for="root_0_name"
+                                      id="root_0_name__label"
                                     >
                                       name
                                     </label>
@@ -1049,6 +1024,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                     <label
                                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                       for="root_0_value"
+                                      id="root_0_value__label"
                                     >
                                       value
                                     </label>
@@ -1207,6 +1183,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                     <label
                                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                       for="root_1_name"
+                                      id="root_1_name__label"
                                     >
                                       name
                                     </label>
@@ -1243,6 +1220,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                     <label
                                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                       for="root_1_value"
+                                      id="root_1_value__label"
                                     >
                                       value
                                     </label>
@@ -1464,12 +1442,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                         <div
                           class="flex flex-col gap-2"
                         >
-                          <label
-                            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                            for="root_0"
-                          >
-                            *
-                          </label>
                           <div
                             class="p-0.5"
                           >
@@ -1600,12 +1572,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                         <div
                           class="flex flex-col gap-2"
                         >
-                          <label
-                            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                            for="root_1"
-                          >
-                            *
-                          </label>
                           <div
                             class="p-0.5"
                           >
@@ -1794,10 +1760,6 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div
           class="p-0.5"
         >
@@ -1825,7 +1787,6 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
                 <input
                   aria-autocomplete="list"
                   aria-controls="radix-_r_f_"
-                  aria-describedby="root__error root__description root__help"
                   aria-expanded="true"
                   aria-labelledby="radix-_r_g_"
                   autocomplete="off"
@@ -1892,12 +1853,6 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                         <div
                           class="flex flex-col gap-2"
                         >
-                          <label
-                            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                            for="root_0"
-                          >
-                            *
-                          </label>
                           <div
                             class="p-0.5"
                           >
@@ -1934,12 +1889,6 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                         <div
                           class="flex flex-col gap-2"
                         >
-                          <label
-                            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                            for="root_1"
-                          >
-                            *
-                          </label>
                           <div
                             class="p-0.5"
                           >
@@ -1980,7 +1929,6 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                           class="flex flex-col gap-2"
                         >
                           <div
-                            aria-describedby="root_2__error root_2__description root_2__help"
                             class="relative "
                           >
                             <div
@@ -1988,7 +1936,6 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                             >
                               <button
                                 aria-checked="true"
-                                aria-required="true"
                                 class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                                 data-slot="checkbox"
                                 data-state="checked"
@@ -2024,7 +1971,6 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                                 aria-hidden="true"
                                 checked=""
                                 name="root[2]"
-                                required=""
                                 style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                                 tabindex="-1"
                                 type="checkbox"
@@ -2121,12 +2067,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                           <div
                                             class="flex flex-col gap-2"
                                           >
-                                            <label
-                                              class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                                              for="root_0_0"
-                                            >
-                                              *
-                                            </label>
                                             <div
                                               class="p-0.5"
                                             >
@@ -2257,12 +2197,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                           <div
                                             class="flex flex-col gap-2"
                                           >
-                                            <label
-                                              class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                                              for="root_0_1"
-                                            >
-                                              *
-                                            </label>
                                             <div
                                               class="p-0.5"
                                             >
@@ -2563,12 +2497,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                           <div
                                             class="flex flex-col gap-2"
                                           >
-                                            <label
-                                              class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                                              for="root_1_0"
-                                            >
-                                              *
-                                            </label>
                                             <div
                                               class="p-0.5"
                                             >
@@ -2699,12 +2627,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                           <div
                                             class="flex flex-col gap-2"
                                           >
-                                            <label
-                                              class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                                              for="root_1_1"
-                                            >
-                                              *
-                                            </label>
                                             <div
                                               class="p-0.5"
                                             >
@@ -3081,6 +3003,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                     <label
                                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                       for="root_0_name"
+                                      id="root_0_name__label"
                                     >
                                       name
                                     </label>
@@ -3117,6 +3040,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                     <label
                                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                       for="root_0_value"
+                                      id="root_0_value__label"
                                     >
                                       value
                                     </label>
@@ -3275,6 +3199,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                     <label
                                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                       for="root_1_name"
+                                      id="root_1_name__label"
                                     >
                                       name
                                     </label>
@@ -3311,6 +3236,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                     <label
                                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                       for="root_1_value"
+                                      id="root_1_value__label"
                                     >
                                       value
                                     </label>
@@ -3532,12 +3458,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                         <div
                           class="flex flex-col gap-2"
                         >
-                          <label
-                            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                            for="root_0"
-                          >
-                            *
-                          </label>
                           <div
                             class="p-0.5"
                           >
@@ -3668,12 +3588,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                         <div
                           class="flex flex-col gap-2"
                         >
-                          <label
-                            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                            for="root_1"
-                          >
-                            *
-                          </label>
                           <div
                             class="p-0.5"
                           >
@@ -3903,6 +3817,7 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                                     <label
                                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                       for="root_0_name"
+                                      id="root_0_name__label"
                                     >
                                       name
                                     </label>
@@ -4091,6 +4006,7 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                                     <label
                                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                       for="root_1_name"
+                                      id="root_1_name__label"
                                     >
                                       name
                                     </label>
@@ -4474,6 +4390,7 @@ exports[`with title and description > array icons 1`] = `
                           <label
                             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             for="root_0"
+                            id="root_0__label"
                           >
                             Test item*
                           </label>
@@ -4655,6 +4572,7 @@ exports[`with title and description > array icons 1`] = `
                           <label
                             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             for="root_1"
+                            id="root_1__label"
                           >
                             Test item*
                           </label>
@@ -4894,6 +4812,7 @@ exports[`with title and description > checkboxes 1`] = `
         <label
           class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
           for="root"
+          id="root__label"
         >
           Test field
         </label>
@@ -4924,7 +4843,7 @@ exports[`with title and description > checkboxes 1`] = `
                 <input
                   aria-autocomplete="list"
                   aria-controls="radix-_r_3_"
-                  aria-describedby="root__error root__description root__help"
+                  aria-describedby="root__description"
                   aria-expanded="true"
                   aria-labelledby="radix-_r_4_"
                   autocomplete="off"
@@ -5030,6 +4949,7 @@ exports[`with title and description > fixed array 1`] = `
                           <label
                             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             for="root_0"
+                            id="root_0__label"
                           >
                             Test item*
                           </label>
@@ -5084,6 +5004,7 @@ exports[`with title and description > fixed array 1`] = `
                           <label
                             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             for="root_1"
+                            id="root_1__label"
                           >
                             Test item*
                           </label>
@@ -5310,6 +5231,7 @@ exports[`with title and description from both > array icons 1`] = `
                           <label
                             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             for="root_0"
+                            id="root_0__label"
                           >
                             My Item*
                           </label>
@@ -5491,6 +5413,7 @@ exports[`with title and description from both > array icons 1`] = `
                           <label
                             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             for="root_1"
+                            id="root_1__label"
                           >
                             My Item*
                           </label>
@@ -5730,6 +5653,7 @@ exports[`with title and description from both > checkboxes 1`] = `
         <label
           class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
           for="root"
+          id="root__label"
         >
           My Field
         </label>
@@ -5760,7 +5684,7 @@ exports[`with title and description from both > checkboxes 1`] = `
                 <input
                   aria-autocomplete="list"
                   aria-controls="radix-_r_9_"
-                  aria-describedby="root__error root__description root__help"
+                  aria-describedby="root__description"
                   aria-expanded="true"
                   aria-labelledby="radix-_r_a_"
                   autocomplete="off"
@@ -5866,6 +5790,7 @@ exports[`with title and description from both > fixed array 1`] = `
                           <label
                             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             for="root_0"
+                            id="root_0__label"
                           >
                             My Item*
                           </label>
@@ -5920,6 +5845,7 @@ exports[`with title and description from both > fixed array 1`] = `
                           <label
                             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             for="root_1"
+                            id="root_1__label"
                           >
                             My Item*
                           </label>
@@ -6146,6 +6072,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                           <label
                             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             for="root_0"
+                            id="root_0__label"
                           >
                             My Item*
                           </label>
@@ -6327,6 +6254,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                           <label
                             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             for="root_1"
+                            id="root_1__label"
                           >
                             My Item*
                           </label>
@@ -6566,6 +6494,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
         <label
           class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
           for="root"
+          id="root__label"
         >
           My Field
         </label>
@@ -6596,7 +6525,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
                 <input
                   aria-autocomplete="list"
                   aria-controls="radix-_r_6_"
-                  aria-describedby="root__error root__description root__help"
+                  aria-describedby="root__description"
                   aria-expanded="true"
                   aria-labelledby="radix-_r_7_"
                   autocomplete="off"
@@ -6702,6 +6631,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                           <label
                             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             for="root_0"
+                            id="root_0__label"
                           >
                             My Item*
                           </label>
@@ -6756,6 +6686,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                           <label
                             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             for="root_1"
+                            id="root_1__label"
                           >
                             My Item*
                           </label>
@@ -7342,7 +7273,6 @@ exports[`with title and description with global label off > checkboxes 1`] = `
                 <input
                   aria-autocomplete="list"
                   aria-controls="radix-_r_c_"
-                  aria-describedby="root__error root__description root__help"
                   aria-expanded="true"
                   aria-labelledby="radix-_r_d_"
                   autocomplete="off"

@@ -628,7 +628,6 @@ exports[`array fields > checkboxes 1`] = `
                     >
                       <input
                         aria-autocomplete="list"
-                        aria-describedby="root__error root__description root__help"
                         aria-expanded="false"
                         aria-haspopup="listbox"
                         autocomplete="new-password"
@@ -728,6 +727,7 @@ exports[`array fields > empty errors array 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                              id="root_name__label"
                             >
                               <label
                                 class=""
@@ -1117,6 +1117,7 @@ exports[`array fields > has errors 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                              id="root_name__label"
                             >
                               <label
                                 class=""
@@ -1269,6 +1270,7 @@ exports[`array fields > no errors 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                              id="root_name__label"
                             >
                               <label
                                 class=""
@@ -1414,6 +1416,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                 >
                                                   <div
                                                     class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                    id="root_0_name__label"
                                                   >
                                                     <label
                                                       class=""
@@ -1471,6 +1474,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                 >
                                                   <div
                                                     class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                    id="root_0_value__label"
                                                   >
                                                     <label
                                                       class=""
@@ -1736,6 +1740,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                 >
                                                   <div
                                                     class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                    id="root_1_name__label"
                                                   >
                                                     <label
                                                       class=""
@@ -1793,6 +1798,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                 >
                                                   <div
                                                     class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                    id="root_1_value__label"
                                                   >
                                                     <label
                                                       class=""
@@ -2542,7 +2548,6 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
                     >
                       <input
                         aria-autocomplete="list"
-                        aria-describedby="root__error root__description root__help"
                         aria-expanded="false"
                         aria-haspopup="listbox"
                         autocomplete="new-password"
@@ -2830,12 +2835,10 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                                           class="ant-checkbox ant-wave-target css-dev-only-do-not-override-oc1rc0 ant-checkbox-checked"
                                         >
                                           <input
-                                            aria-describedby="root_2__error root_2__description root_2__help"
                                             checked=""
                                             class="ant-checkbox-input"
                                             id="root_2"
                                             name="root[2]"
-                                            required=""
                                             type="checkbox"
                                           />
                                         </span>
@@ -4085,6 +4088,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                 >
                                                   <div
                                                     class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                    id="root_0_name__label"
                                                   >
                                                     <label
                                                       class=""
@@ -4142,6 +4146,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                 >
                                                   <div
                                                     class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                    id="root_0_value__label"
                                                   >
                                                     <label
                                                       class=""
@@ -4407,6 +4412,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                 >
                                                   <div
                                                     class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                    id="root_1_name__label"
                                                   >
                                                     <label
                                                       class=""
@@ -4464,6 +4470,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                 >
                                                   <div
                                                     class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                    id="root_1_value__label"
                                                   >
                                                     <label
                                                       class=""
@@ -5251,6 +5258,7 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                                                 >
                                                   <div
                                                     class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                    id="root_0_name__label"
                                                   >
                                                     <label
                                                       class=""
@@ -5486,6 +5494,7 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                                                 >
                                                   <div
                                                     class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                    id="root_1_name__label"
                                                   >
                                                     <label
                                                       class=""
@@ -5780,7 +5789,7 @@ exports[`with title and description > array 1`] = `
                     >
                       <label
                         class=""
-                        for="root__title"
+                        id="root__title"
                         title="Test field"
                       >
                         Test field
@@ -5914,7 +5923,7 @@ exports[`with title and description > array icons 1`] = `
                     >
                       <label
                         class=""
-                        for="root__title"
+                        id="root__title"
                         title="Test field"
                       >
                         Test field
@@ -5948,6 +5957,7 @@ exports[`with title and description > array icons 1`] = `
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                  id="root_0__label"
                                 >
                                   <label
                                     class="ant-form-item-required"
@@ -6159,6 +6169,7 @@ exports[`with title and description > array icons 1`] = `
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                  id="root_1__label"
                                 >
                                   <label
                                     class="ant-form-item-required"
@@ -6450,6 +6461,7 @@ exports[`with title and description > checkboxes 1`] = `
         >
           <div
             class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+            id="root__label"
           >
             <label
               class=""
@@ -6490,7 +6502,7 @@ exports[`with title and description > checkboxes 1`] = `
                     >
                       <input
                         aria-autocomplete="list"
-                        aria-describedby="root__error root__description root__help"
+                        aria-describedby="root__description"
                         aria-expanded="false"
                         aria-haspopup="listbox"
                         autocomplete="new-password"
@@ -6595,7 +6607,7 @@ exports[`with title and description > fixed array 1`] = `
                     >
                       <label
                         class=""
-                        for="root__title"
+                        id="root__title"
                         title="Test field"
                       >
                         Test field
@@ -6629,6 +6641,7 @@ exports[`with title and description > fixed array 1`] = `
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                  id="root_0__label"
                                 >
                                   <label
                                     class="ant-form-item-required"
@@ -6705,6 +6718,7 @@ exports[`with title and description > fixed array 1`] = `
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                  id="root_1__label"
                                 >
                                   <label
                                     class="ant-form-item-required"
@@ -6893,7 +6907,7 @@ exports[`with title and description from both > array 1`] = `
                     >
                       <label
                         class=""
-                        for="root__title"
+                        id="root__title"
                         title="My Field"
                       >
                         My Field
@@ -7027,7 +7041,7 @@ exports[`with title and description from both > array icons 1`] = `
                     >
                       <label
                         class=""
-                        for="root__title"
+                        id="root__title"
                         title="My Field"
                       >
                         My Field
@@ -7061,6 +7075,7 @@ exports[`with title and description from both > array icons 1`] = `
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                  id="root_0__label"
                                 >
                                   <label
                                     class="ant-form-item-required"
@@ -7272,6 +7287,7 @@ exports[`with title and description from both > array icons 1`] = `
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                  id="root_1__label"
                                 >
                                   <label
                                     class="ant-form-item-required"
@@ -7563,6 +7579,7 @@ exports[`with title and description from both > checkboxes 1`] = `
         >
           <div
             class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+            id="root__label"
           >
             <label
               class=""
@@ -7603,7 +7620,7 @@ exports[`with title and description from both > checkboxes 1`] = `
                     >
                       <input
                         aria-autocomplete="list"
-                        aria-describedby="root__error root__description root__help"
+                        aria-describedby="root__description"
                         aria-expanded="false"
                         aria-haspopup="listbox"
                         autocomplete="new-password"
@@ -7708,7 +7725,7 @@ exports[`with title and description from both > fixed array 1`] = `
                     >
                       <label
                         class=""
-                        for="root__title"
+                        id="root__title"
                         title="My Field"
                       >
                         My Field
@@ -7742,6 +7759,7 @@ exports[`with title and description from both > fixed array 1`] = `
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                  id="root_0__label"
                                 >
                                   <label
                                     class="ant-form-item-required"
@@ -7818,6 +7836,7 @@ exports[`with title and description from both > fixed array 1`] = `
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                  id="root_1__label"
                                 >
                                   <label
                                     class="ant-form-item-required"
@@ -8006,7 +8025,7 @@ exports[`with title and description from uiSchema > array 1`] = `
                     >
                       <label
                         class=""
-                        for="root__title"
+                        id="root__title"
                         title="My Field"
                       >
                         My Field
@@ -8140,7 +8159,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                     >
                       <label
                         class=""
-                        for="root__title"
+                        id="root__title"
                         title="My Field"
                       >
                         My Field
@@ -8174,6 +8193,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                  id="root_0__label"
                                 >
                                   <label
                                     class="ant-form-item-required"
@@ -8385,6 +8405,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                  id="root_1__label"
                                 >
                                   <label
                                     class="ant-form-item-required"
@@ -8676,6 +8697,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
         >
           <div
             class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+            id="root__label"
           >
             <label
               class=""
@@ -8716,7 +8738,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
                     >
                       <input
                         aria-autocomplete="list"
-                        aria-describedby="root__error root__description root__help"
+                        aria-describedby="root__description"
                         aria-expanded="false"
                         aria-haspopup="listbox"
                         autocomplete="new-password"
@@ -8821,7 +8843,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                     >
                       <label
                         class=""
-                        for="root__title"
+                        id="root__title"
                         title="My Field"
                       >
                         My Field
@@ -8855,6 +8877,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                  id="root_0__label"
                                 >
                                   <label
                                     class="ant-form-item-required"
@@ -8931,6 +8954,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                  id="root_1__label"
                                 >
                                   <label
                                     class="ant-form-item-required"
@@ -9114,10 +9138,6 @@ exports[`with title and description with global label off > array 1`] = `
                     style="margin-inline: -12px;"
                   >
                     <div
-                      class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                      style="padding-inline: 12px;"
-                    />
-                    <div
                       class="ant-col ant-col-24 row array-item-list css-dev-only-do-not-override-oc1rc0 css-var-root"
                       style="padding-inline: 12px;"
                     />
@@ -9174,19 +9194,6 @@ exports[`with title and description with global label off > array 1`] = `
                 </fieldset>
               </div>
             </div>
-            <div
-              class="ant-form-item-additional"
-            >
-              <div
-                class="ant-form-item-extra"
-              >
-                <span
-                  id="root__description"
-                >
-                  a test description
-                </span>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -9235,10 +9242,6 @@ exports[`with title and description with global label off > array icons 1`] = `
                     style="margin-inline: -12px;"
                   >
                     <div
-                      class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                      style="padding-inline: 12px;"
-                    />
-                    <div
                       class="ant-col ant-col-24 row array-item-list css-dev-only-do-not-override-oc1rc0 css-var-root"
                       style="padding-inline: 12px;"
                     >
@@ -9285,19 +9288,6 @@ exports[`with title and description with global label off > array icons 1`] = `
                                         <span
                                           class="ant-input-suffix"
                                         />
-                                      </span>
-                                    </div>
-                                  </div>
-                                  <div
-                                    class="ant-form-item-additional"
-                                  >
-                                    <div
-                                      class="ant-form-item-extra"
-                                    >
-                                      <span
-                                        id="root_0__description"
-                                      >
-                                        a test item description
                                       </span>
                                     </div>
                                   </div>
@@ -9485,19 +9475,6 @@ exports[`with title and description with global label off > array icons 1`] = `
                                         <span
                                           class="ant-input-suffix"
                                         />
-                                      </span>
-                                    </div>
-                                  </div>
-                                  <div
-                                    class="ant-form-item-additional"
-                                  >
-                                    <div
-                                      class="ant-form-item-extra"
-                                    >
-                                      <span
-                                        id="root_1__description"
-                                      >
-                                        a test item description
                                       </span>
                                     </div>
                                   </div>
@@ -9696,19 +9673,6 @@ exports[`with title and description with global label off > array icons 1`] = `
                 </fieldset>
               </div>
             </div>
-            <div
-              class="ant-form-item-additional"
-            >
-              <div
-                class="ant-form-item-extra"
-              >
-                <span
-                  id="root__description"
-                >
-                  a test description
-                </span>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -9770,9 +9734,9 @@ exports[`with title and description with global label off > checkboxes 1`] = `
                     >
                       <input
                         aria-autocomplete="list"
-                        aria-describedby="root__error root__description root__help"
                         aria-expanded="false"
                         aria-haspopup="listbox"
+                        aria-label="Test field"
                         autocomplete="new-password"
                         class="ant-select-input"
                         id="root"
@@ -9807,19 +9771,6 @@ exports[`with title and description with global label off > checkboxes 1`] = `
                     </span>
                   </div>
                 </div>
-              </div>
-            </div>
-            <div
-              class="ant-form-item-additional"
-            >
-              <div
-                class="ant-form-item-extra"
-              >
-                <span
-                  id="root__description"
-                >
-                  a test description
-                </span>
               </div>
             </div>
           </div>
@@ -9870,10 +9821,6 @@ exports[`with title and description with global label off > fixed array 1`] = `
                     style="margin-inline: -12px;"
                   >
                     <div
-                      class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                      style="padding-inline: 12px;"
-                    />
-                    <div
                       class="ant-col ant-col-24 row array-item-list css-dev-only-do-not-override-oc1rc0 css-var-root"
                       style="padding-inline: 12px;"
                     >
@@ -9920,19 +9867,6 @@ exports[`with title and description with global label off > fixed array 1`] = `
                                         <span
                                           class="ant-input-suffix"
                                         />
-                                      </span>
-                                    </div>
-                                  </div>
-                                  <div
-                                    class="ant-form-item-additional"
-                                  >
-                                    <div
-                                      class="ant-form-item-extra"
-                                    >
-                                      <span
-                                        id="root_0__description"
-                                      >
-                                        a test item description
                                       </span>
                                     </div>
                                   </div>
@@ -10048,19 +9982,6 @@ exports[`with title and description with global label off > fixed array 1`] = `
                                       </div>
                                     </div>
                                   </div>
-                                  <div
-                                    class="ant-form-item-additional"
-                                  >
-                                    <div
-                                      class="ant-form-item-extra"
-                                    >
-                                      <span
-                                        id="root_1__description"
-                                      >
-                                        a test item description
-                                      </span>
-                                    </div>
-                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -10070,19 +9991,6 @@ exports[`with title and description with global label off > fixed array 1`] = `
                     </div>
                   </div>
                 </fieldset>
-              </div>
-            </div>
-            <div
-              class="ant-form-item-additional"
-            >
-              <div
-                class="ant-form-item-extra"
-              >
-                <span
-                  id="root__description"
-                >
-                  a test description
-                </span>
               </div>
             </div>
           </div>

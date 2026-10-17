@@ -65,7 +65,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                       >
                                         <label
                                           class=""
-                                          for="root_person__title"
+                                          id="root_person__title"
                                           title="person"
                                         >
                                           person
@@ -91,6 +91,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                             >
                                               <div
                                                 class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                id="root_person_name__label"
                                               >
                                                 <label
                                                   class=""
@@ -168,7 +169,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                                         >
                                                           <label
                                                             class=""
-                                                            for="root_person_address__title"
+                                                            id="root_person_address__title"
                                                             title="address"
                                                           >
                                                             address
@@ -194,6 +195,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                                               >
                                                                 <div
                                                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                                  id="root_person_address_street__label"
                                                                 >
                                                                   <label
                                                                     class=""
@@ -251,6 +253,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                                               >
                                                                 <div
                                                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                                  id="root_person_address_city__label"
                                                                 >
                                                                   <label
                                                                     class=""
@@ -308,6 +311,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                                               >
                                                                 <div
                                                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                                  id="root_person_address_country__label"
                                                                 >
                                                                   <label
                                                                     class=""
@@ -433,6 +437,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                              id="root_name__label"
                             >
                               <label
                                 class=""
@@ -553,6 +558,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                  id="root_customField__label"
                                 >
                                   <label
                                     class=""
@@ -746,6 +752,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                              id="root_name__label"
                             >
                               <label
                                 class=""
@@ -803,6 +810,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                              id="root_age__label"
                             >
                               <label
                                 class=""
@@ -935,7 +943,6 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                                       class="ant-checkbox ant-wave-target css-dev-only-do-not-override-oc1rc0 ant-checkbox-checked"
                                     >
                                       <input
-                                        aria-describedby="root_active__error root_active__description root_active__help"
                                         checked=""
                                         class="ant-checkbox-input"
                                         id="root_active"
@@ -992,7 +999,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                                       >
                                         <label
                                           class=""
-                                          for="root_tags__title"
+                                          id="root_tags__title"
                                           title="tags"
                                         >
                                           tags
@@ -1026,6 +1033,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                                                 >
                                                   <div
                                                     class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                    id="root_tags_0__label"
                                                   >
                                                     <label
                                                       class="ant-form-item-required"
@@ -1193,6 +1201,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                                                 >
                                                   <div
                                                     class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                    id="root_tags_1__label"
                                                   >
                                                     <label
                                                       class="ant-form-item-required"
@@ -1465,6 +1474,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                              id="root_firstName__label"
                             >
                               <label
                                 class=""
@@ -1522,6 +1532,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                              id="root_lastName__label"
                             >
                               <label
                                 class=""
@@ -1579,6 +1590,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                              id="root_age__label"
                             >
                               <label
                                 class=""
@@ -1766,7 +1778,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                       >
                                         <label
                                           class=""
-                                          for="root_person__title"
+                                          id="root_person__title"
                                           title="person"
                                         >
                                           person
@@ -1792,6 +1804,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                             >
                                               <div
                                                 class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                id="root_person_name__label"
                                               >
                                                 <label
                                                   class=""
@@ -1869,7 +1882,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                                         >
                                                           <label
                                                             class=""
-                                                            for="root_person_address__title"
+                                                            id="root_person_address__title"
                                                             title="address"
                                                           >
                                                             address
@@ -1895,6 +1908,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                                               >
                                                                 <div
                                                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                                  id="root_person_address_street__label"
                                                                 >
                                                                   <label
                                                                     class=""
@@ -1952,6 +1966,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                                               >
                                                                 <div
                                                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                                  id="root_person_address_city__label"
                                                                 >
                                                                   <label
                                                                     class=""
@@ -2077,6 +2092,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                              id="root_name__label"
                             >
                               <label
                                 class=""
@@ -2134,6 +2150,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                              id="root_count__label"
                             >
                               <label
                                 class=""
@@ -2273,7 +2290,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                                       >
                                         <label
                                           class=""
-                                          for="root_items__title"
+                                          id="root_items__title"
                                           title="items"
                                         >
                                           items
@@ -2307,6 +2324,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                                                 >
                                                   <div
                                                     class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                    id="root_items_0__label"
                                                   >
                                                     <label
                                                       class="ant-form-item-required"
@@ -2474,6 +2492,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                                                 >
                                                   <div
                                                     class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                    id="root_items_1__label"
                                                   >
                                                     <label
                                                       class="ant-form-item-required"
@@ -2746,6 +2765,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                              id="root_firstName__label"
                             >
                               <label
                                 class=""
@@ -2803,6 +2823,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                              id="root_lastName__label"
                             >
                               <label
                                 class=""
@@ -2860,6 +2881,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                              id="root_age__label"
                             >
                               <label
                                 class=""
@@ -3090,6 +3112,7 @@ exports[`object fields > additionalProperties 1`] = `
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                  id="root_foo__label"
                                 >
                                   <label
                                     class=""
@@ -3377,6 +3400,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                  id="root_foo__label"
                                 >
                                   <label
                                     class=""
@@ -3645,17 +3669,6 @@ exports[`object fields > additionalProperties, array type 1`] = `
                                 class="ant-row ant-form-item-row css-dev-only-do-not-override-oc1rc0 css-var-root"
                               >
                                 <div
-                                  class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                >
-                                  <label
-                                    class=""
-                                    for="root_foo"
-                                    title="foo"
-                                  >
-                                    foo
-                                  </label>
-                                </div>
-                                <div
                                   class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-oc1rc0 css-var-root"
                                 >
                                   <div
@@ -3678,7 +3691,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
                                           >
                                             <label
                                               class=""
-                                              for="root_foo__title"
+                                              id="root_foo__title"
                                               title="foo"
                                             >
                                               foo
@@ -3965,6 +3978,7 @@ exports[`object fields > additionalProperties, description 1`] = `
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                  id="root_foo__label"
                                 >
                                   <label
                                     class=""
@@ -4234,6 +4248,7 @@ exports[`object fields > additionalProperties, label off 1`] = `
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                  id="root_foo__label"
                                 >
                                   <label
                                     class=""
@@ -4489,17 +4504,6 @@ exports[`object fields > additionalProperties, object type 1`] = `
                                 class="ant-row ant-form-item-row css-dev-only-do-not-override-oc1rc0 css-var-root"
                               >
                                 <div
-                                  class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                >
-                                  <label
-                                    class=""
-                                    for="root_foo"
-                                    title="foo"
-                                  >
-                                    foo
-                                  </label>
-                                </div>
-                                <div
                                   class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-oc1rc0 css-var-root"
                                 >
                                   <div
@@ -4521,7 +4525,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
                                           >
                                             <label
                                               class=""
-                                              for="root_foo__title"
+                                              id="root_foo__title"
                                               title="foo"
                                             >
                                               foo
@@ -4547,6 +4551,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
                                                 >
                                                   <div
                                                     class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                    id="root_foo_foo__label"
                                                   >
                                                     <label
                                                       class=""
@@ -4843,6 +4848,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                  id="root_foo__label"
                                 >
                                   <label
                                     class=""
@@ -5130,6 +5136,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                  id="root_foo__label"
                                 >
                                   <label
                                     class=""
@@ -5323,6 +5330,7 @@ exports[`object fields > object 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                              id="root_a__label"
                             >
                               <label
                                 class=""
@@ -5380,6 +5388,7 @@ exports[`object fields > object 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                              id="root_b__label"
                             >
                               <label
                                 class=""
@@ -5610,6 +5619,7 @@ exports[`object fields > show add button and fields if additionalProperties is t
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                  id="root_additionalProperty__label"
                                 >
                                   <label
                                     class=""
@@ -5794,7 +5804,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                     >
                       <label
                         class=""
-                        for="root__title"
+                        id="root__title"
                         title="Test field"
                       >
                         Test field
@@ -5883,6 +5893,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                  id="root_foo__label"
                                 >
                                   <label
                                     class=""
@@ -6080,7 +6091,7 @@ exports[`object fields > with title and description > object 1`] = `
                     >
                       <label
                         class=""
-                        for="root__title"
+                        id="root__title"
                         title="Test field"
                       >
                         Test field
@@ -6106,6 +6117,7 @@ exports[`object fields > with title and description > object 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                              id="root_a__label"
                             >
                               <label
                                 class=""
@@ -6176,6 +6188,7 @@ exports[`object fields > with title and description > object 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                              id="root_b__label"
                             >
                               <label
                                 class=""
@@ -6360,7 +6373,7 @@ exports[`object fields > with title and description > show add button and fields
                     >
                       <label
                         class=""
-                        for="root__title"
+                        id="root__title"
                         title="Test field"
                       >
                         Test field
@@ -6449,6 +6462,7 @@ exports[`object fields > with title and description > show add button and fields
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                  id="root_additionalProperty__label"
                                 >
                                   <label
                                     class=""
@@ -6646,7 +6660,7 @@ exports[`object fields > with title and description from both > additionalProper
                     >
                       <label
                         class=""
-                        for="root__title"
+                        id="root__title"
                         title="My Field"
                       >
                         My Field
@@ -6735,6 +6749,7 @@ exports[`object fields > with title and description from both > additionalProper
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                  id="root_foo__label"
                                 >
                                   <label
                                     class=""
@@ -6932,7 +6947,7 @@ exports[`object fields > with title and description from both > object 1`] = `
                     >
                       <label
                         class=""
-                        for="root__title"
+                        id="root__title"
                         title="My Field"
                       >
                         My Field
@@ -6958,6 +6973,7 @@ exports[`object fields > with title and description from both > object 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                              id="root_a__label"
                             >
                               <label
                                 class=""
@@ -7028,6 +7044,7 @@ exports[`object fields > with title and description from both > object 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                              id="root_b__label"
                             >
                               <label
                                 class=""
@@ -7212,7 +7229,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                     >
                       <label
                         class=""
-                        for="root__title"
+                        id="root__title"
                         title="My Field"
                       >
                         My Field
@@ -7301,6 +7318,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                  id="root_foo__label"
                                 >
                                   <label
                                     class=""
@@ -7498,7 +7516,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                     >
                       <label
                         class=""
-                        for="root__title"
+                        id="root__title"
                         title="My Field"
                       >
                         My Field
@@ -7524,6 +7542,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                              id="root_a__label"
                             >
                               <label
                                 class=""
@@ -7594,6 +7613,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                              id="root_b__label"
                             >
                               <label
                                 class=""
@@ -7778,7 +7798,7 @@ exports[`object fields > with title and description from uiSchema > show add but
                     >
                       <label
                         class=""
-                        for="root__title"
+                        id="root__title"
                         title="My Field"
                       >
                         My Field
@@ -7867,6 +7887,7 @@ exports[`object fields > with title and description from uiSchema > show add but
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                  id="root_additionalProperty__label"
                                 >
                                   <label
                                     class=""
@@ -8246,19 +8267,6 @@ exports[`object fields > with title and description with global label off > addi
                 </fieldset>
               </div>
             </div>
-            <div
-              class="ant-form-item-additional"
-            >
-              <div
-                class="ant-form-item-extra"
-              >
-                <span
-                  id="root__description"
-                >
-                  a test description
-                </span>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -8343,19 +8351,6 @@ exports[`object fields > with title and description with global label off > obje
                                     <span
                                       class="ant-input-suffix"
                                     />
-                                  </span>
-                                </div>
-                              </div>
-                              <div
-                                class="ant-form-item-additional"
-                              >
-                                <div
-                                  class="ant-form-item-extra"
-                                >
-                                  <span
-                                    id="root_a__description"
-                                  >
-                                    A description
                                   </span>
                                 </div>
                               </div>
@@ -8465,19 +8460,6 @@ exports[`object fields > with title and description with global label off > obje
                                   </div>
                                 </div>
                               </div>
-                              <div
-                                class="ant-form-item-additional"
-                              >
-                                <div
-                                  class="ant-form-item-extra"
-                                >
-                                  <span
-                                    id="root_b__description"
-                                  >
-                                    B description
-                                  </span>
-                                </div>
-                              </div>
                             </div>
                           </div>
                         </div>
@@ -8485,19 +8467,6 @@ exports[`object fields > with title and description with global label off > obje
                     </div>
                   </div>
                 </fieldset>
-              </div>
-            </div>
-            <div
-              class="ant-form-item-additional"
-            >
-              <div
-                class="ant-form-item-extra"
-              >
-                <span
-                  id="root__description"
-                >
-                  a test description
-                </span>
               </div>
             </div>
           </div>
@@ -8732,19 +8701,6 @@ exports[`object fields > with title and description with global label off > show
                     </div>
                   </div>
                 </fieldset>
-              </div>
-            </div>
-            <div
-              class="ant-form-item-additional"
-            >
-              <div
-                class="ant-form-item-extra"
-              >
-                <span
-                  id="root__description"
-                >
-                  a test description
-                </span>
               </div>
             </div>
           </div>

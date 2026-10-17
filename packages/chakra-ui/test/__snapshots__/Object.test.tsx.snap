@@ -1846,7 +1846,6 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                       role="group"
                     >
                       <label
-                        aria-describedby="root_active__error root_active__description root_active__help"
                         class="chakra-checkbox__root emotion-16"
                         data-part="root"
                         data-scope="checkbox"
@@ -10610,7 +10609,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                           for="_r_17_"
                           id="field::_r_17_::label"
                         >
-                          foo
+                          foo (deprecated)
                         </label>
                         <input
                           aria-describedby="root_foo__error root_foo__description root_foo__help"

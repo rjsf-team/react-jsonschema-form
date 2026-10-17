@@ -18,7 +18,6 @@ exports[`format iso-date-time 1`] = `
             class="w-full"
           >
             <button
-              aria-describedby="root__error root__description root__help"
               aria-expanded="false"
               aria-haspopup="true"
               class="input input-bordered w-full flex items-center justify-between cursor-pointer "
@@ -46,13 +45,6 @@ exports[`format iso-date-time 1`] = `
               </svg>
             </button>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -87,13 +79,6 @@ exports[`format iso-time 1`] = `
             id="root"
             type="time"
             value=""
-          />
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
           />
         </div>
       </div>
@@ -216,13 +201,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                             />
                                           </div>
                                         </div>
-                                        <div
-                                          class="rjsf-field-error-template text-red-600"
-                                        >
-                                          <ul
-                                            class="list-disc list-inside"
-                                          />
-                                        </div>
                                       </div>
                                     </div>
                                   </div>
@@ -245,7 +223,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                               class="mr-2"
                                             >
                                               <input
-                                                aria-describedby="root_tasks_0_done__error root_tasks_0_done__description root_tasks_0_done__help"
                                                 class="checkbox"
                                                 id="root_tasks_0_done"
                                                 name="root[tasks][0][done]"
@@ -259,24 +236,10 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                             </span>
                                           </label>
                                         </div>
-                                        <div
-                                          class="rjsf-field-error-template text-red-600"
-                                        >
-                                          <ul
-                                            class="list-disc list-inside"
-                                          />
-                                        </div>
                                       </div>
                                     </div>
                                   </div>
                                 </div>
-                              </div>
-                              <div
-                                class="rjsf-field-error-template text-red-600"
-                              >
-                                <ul
-                                  class="list-disc list-inside"
-                                />
                               </div>
                             </div>
                           </div>
@@ -418,13 +381,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                             />
                                           </div>
                                         </div>
-                                        <div
-                                          class="rjsf-field-error-template text-red-600"
-                                        >
-                                          <ul
-                                            class="list-disc list-inside"
-                                          />
-                                        </div>
                                       </div>
                                     </div>
                                   </div>
@@ -447,7 +403,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                               class="mr-2"
                                             >
                                               <input
-                                                aria-describedby="root_tasks_1_done__error root_tasks_1_done__description root_tasks_1_done__help"
                                                 checked=""
                                                 class="checkbox"
                                                 id="root_tasks_1_done"
@@ -462,24 +417,10 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                             </span>
                                           </label>
                                         </div>
-                                        <div
-                                          class="rjsf-field-error-template text-red-600"
-                                        >
-                                          <ul
-                                            class="list-disc list-inside"
-                                          />
-                                        </div>
                                       </div>
                                     </div>
                                   </div>
                                 </div>
-                              </div>
-                              <div
-                                class="rjsf-field-error-template text-red-600"
-                              >
-                                <ul
-                                  class="list-disc list-inside"
-                                />
                               </div>
                             </div>
                           </div>
@@ -592,24 +533,10 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                       </div>
                     </div>
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -708,13 +635,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                                     value="foo"
                                   />
                                 </div>
-                              </div>
-                              <div
-                                class="rjsf-field-error-template text-red-600"
-                              >
-                                <ul
-                                  class="list-disc list-inside"
-                                />
                               </div>
                             </div>
                           </div>
@@ -834,13 +754,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                                   />
                                 </div>
                               </div>
-                              <div
-                                class="rjsf-field-error-template text-red-600"
-                              >
-                                <ul
-                                  class="list-disc list-inside"
-                                />
-                              </div>
                             </div>
                           </div>
                           <div
@@ -952,24 +865,10 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                       </div>
                     </div>
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -1084,24 +983,10 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                       </label>
                     </div>
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -1199,13 +1084,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                 />
                               </div>
                             </div>
-                            <div
-                              class="rjsf-field-error-template text-red-600"
-                            >
-                              <ul
-                                class="list-disc list-inside"
-                              />
-                            </div>
                           </div>
                         </div>
                       </div>
@@ -1245,13 +1123,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                   value=""
                                 />
                               </div>
-                            </div>
-                            <div
-                              class="rjsf-field-error-template text-red-600"
-                            >
-                              <ul
-                                class="list-disc list-inside"
-                              />
                             </div>
                           </div>
                         </div>
@@ -1321,13 +1192,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                           />
                                         </div>
                                       </div>
-                                      <div
-                                        class="rjsf-field-error-template text-red-600"
-                                      >
-                                        <ul
-                                          class="list-disc list-inside"
-                                        />
-                                      </div>
                                     </div>
                                   </div>
                                 </div>
@@ -1368,48 +1232,20 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                           />
                                         </div>
                                       </div>
-                                      <div
-                                        class="rjsf-field-error-template text-red-600"
-                                      >
-                                        <ul
-                                          class="list-disc list-inside"
-                                        />
-                                      </div>
                                     </div>
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                            <div
-                              class="rjsf-field-error-template text-red-600"
-                            >
-                              <ul
-                                class="list-disc list-inside"
-                              />
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -1507,24 +1343,10 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                       </label>
                     </div>
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -1584,7 +1406,6 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                       class="dropdown w-full"
                     >
                       <button
-                        aria-describedby="root_color__error root_color__description root_color__help"
                         class="btn btn-outline w-full text-left flex justify-between items-center "
                         id="root_color"
                         tabindex="0"
@@ -1655,24 +1476,10 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                       </ul>
                     </div>
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -1742,13 +1549,6 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                       />
                     </div>
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
@@ -1792,13 +1592,6 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                       />
                     </div>
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
@@ -1821,7 +1614,6 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                         class="mr-2"
                       >
                         <input
-                          aria-describedby="root_active__error root_active__description root_active__help"
                           class="checkbox"
                           id="root_active"
                           name="root[active]"
@@ -1835,24 +1627,10 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                       </span>
                     </label>
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -1915,24 +1693,10 @@ exports[`nameGenerator > bracketNameGenerator > textarea field 1`] = `
                       rows="5"
                     />
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -2054,13 +1818,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                             />
                                           </div>
                                         </div>
-                                        <div
-                                          class="rjsf-field-error-template text-red-600"
-                                        >
-                                          <ul
-                                            class="list-disc list-inside"
-                                          />
-                                        </div>
                                       </div>
                                     </div>
                                   </div>
@@ -2083,7 +1840,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                               class="mr-2"
                                             >
                                               <input
-                                                aria-describedby="root_tasks_0_done__error root_tasks_0_done__description root_tasks_0_done__help"
                                                 class="checkbox"
                                                 id="root_tasks_0_done"
                                                 name="root.tasks.0.done"
@@ -2097,24 +1853,10 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                             </span>
                                           </label>
                                         </div>
-                                        <div
-                                          class="rjsf-field-error-template text-red-600"
-                                        >
-                                          <ul
-                                            class="list-disc list-inside"
-                                          />
-                                        </div>
                                       </div>
                                     </div>
                                   </div>
                                 </div>
-                              </div>
-                              <div
-                                class="rjsf-field-error-template text-red-600"
-                              >
-                                <ul
-                                  class="list-disc list-inside"
-                                />
                               </div>
                             </div>
                           </div>
@@ -2256,13 +1998,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                             />
                                           </div>
                                         </div>
-                                        <div
-                                          class="rjsf-field-error-template text-red-600"
-                                        >
-                                          <ul
-                                            class="list-disc list-inside"
-                                          />
-                                        </div>
                                       </div>
                                     </div>
                                   </div>
@@ -2285,7 +2020,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                               class="mr-2"
                                             >
                                               <input
-                                                aria-describedby="root_tasks_1_done__error root_tasks_1_done__description root_tasks_1_done__help"
                                                 checked=""
                                                 class="checkbox"
                                                 id="root_tasks_1_done"
@@ -2300,24 +2034,10 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                             </span>
                                           </label>
                                         </div>
-                                        <div
-                                          class="rjsf-field-error-template text-red-600"
-                                        >
-                                          <ul
-                                            class="list-disc list-inside"
-                                          />
-                                        </div>
                                       </div>
                                     </div>
                                   </div>
                                 </div>
-                              </div>
-                              <div
-                                class="rjsf-field-error-template text-red-600"
-                              >
-                                <ul
-                                  class="list-disc list-inside"
-                                />
                               </div>
                             </div>
                           </div>
@@ -2430,24 +2150,10 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                       </div>
                     </div>
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -2546,13 +2252,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                                     value="foo"
                                   />
                                 </div>
-                              </div>
-                              <div
-                                class="rjsf-field-error-template text-red-600"
-                              >
-                                <ul
-                                  class="list-disc list-inside"
-                                />
                               </div>
                             </div>
                           </div>
@@ -2672,13 +2371,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                                   />
                                 </div>
                               </div>
-                              <div
-                                class="rjsf-field-error-template text-red-600"
-                              >
-                                <ul
-                                  class="list-disc list-inside"
-                                />
-                              </div>
                             </div>
                           </div>
                           <div
@@ -2790,24 +2482,10 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                       </div>
                     </div>
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -2905,13 +2583,6 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                 />
                               </div>
                             </div>
-                            <div
-                              class="rjsf-field-error-template text-red-600"
-                            >
-                              <ul
-                                class="list-disc list-inside"
-                              />
-                            </div>
                           </div>
                         </div>
                       </div>
@@ -2951,13 +2622,6 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                   value=""
                                 />
                               </div>
-                            </div>
-                            <div
-                              class="rjsf-field-error-template text-red-600"
-                            >
-                              <ul
-                                class="list-disc list-inside"
-                              />
                             </div>
                           </div>
                         </div>
@@ -3027,13 +2691,6 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                           />
                                         </div>
                                       </div>
-                                      <div
-                                        class="rjsf-field-error-template text-red-600"
-                                      >
-                                        <ul
-                                          class="list-disc list-inside"
-                                        />
-                                      </div>
                                     </div>
                                   </div>
                                 </div>
@@ -3074,48 +2731,20 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                           />
                                         </div>
                                       </div>
-                                      <div
-                                        class="rjsf-field-error-template text-red-600"
-                                      >
-                                        <ul
-                                          class="list-disc list-inside"
-                                        />
-                                      </div>
                                     </div>
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                            <div
-                              class="rjsf-field-error-template text-red-600"
-                            >
-                              <ul
-                                class="list-disc list-inside"
-                              />
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -3175,7 +2804,6 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                       class="dropdown w-full"
                     >
                       <button
-                        aria-describedby="root_color__error root_color__description root_color__help"
                         class="btn btn-outline w-full text-left flex justify-between items-center "
                         id="root_color"
                         tabindex="0"
@@ -3246,24 +2874,10 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                       </ul>
                     </div>
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -3333,13 +2947,6 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                       />
                     </div>
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
@@ -3383,13 +2990,6 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                       />
                     </div>
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
@@ -3412,7 +3012,6 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                         class="mr-2"
                       >
                         <input
-                          aria-describedby="root_active__error root_active__description root_active__help"
                           class="checkbox"
                           id="root_active"
                           name="root.active"
@@ -3426,24 +3025,10 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                       </span>
                     </label>
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -3515,13 +3100,6 @@ exports[`radio widget with options sharing a String() in the realValue format (#
             </label>
           </div>
         </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -3586,7 +3164,8 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                           class="dropdown w-full"
                         >
                           <button
-                            aria-describedby="root_region__oneof_select__value root_region__oneof_select__error root_region__oneof_select__description root_region__oneof_select__help"
+                            aria-describedby="root_region__oneof_select__value"
+                            aria-labelledby="root_region__label"
                             class="btn btn-outline w-full text-left flex justify-between items-center "
                             id="root_region__oneof_select"
                             tabindex="0"
@@ -3649,17 +3228,6 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                       <div
                         class="field-template mb-3"
                       >
-                        <label
-                          class="label"
-                          for="root_region"
-                          id="root_region__label"
-                        >
-                          <span
-                            class="label-text font-medium"
-                          >
-                            Europe
-                          </span>
-                        </label>
                         <div
                           class="form-control w-full"
                         >
@@ -3667,7 +3235,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                             class="dropdown w-full"
                           >
                             <button
-                              aria-describedby="root_region__value root_region__error root_region__description root_region__help"
+                              aria-describedby="root_region__value"
                               class="btn btn-outline w-full text-left flex justify-between items-center "
                               id="root_region"
                               tabindex="0"
@@ -3723,13 +3291,6 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                             </ul>
                           </div>
                         </div>
-                        <div
-                          class="rjsf-field-error-template text-red-600"
-                        >
-                          <ul
-                            class="list-disc list-inside"
-                          />
-                        </div>
                       </div>
                     </div>
                   </div>
@@ -3737,13 +3298,6 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
               </div>
             </div>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -3777,7 +3331,6 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
             class="dropdown w-full"
           >
             <button
-              aria-describedby="root__error root__description root__help"
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
               tabindex="0"
@@ -3818,13 +3371,6 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
             </ul>
           </div>
         </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -3857,7 +3403,6 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
             class="dropdown w-full"
           >
             <button
-              aria-describedby="root__error root__description root__help"
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
               tabindex="0"
@@ -3928,13 +3473,6 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
             </ul>
           </div>
         </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -3967,7 +3505,6 @@ exports[`select widget from oneOf boolean constants with a null option without a
             class="dropdown w-full"
           >
             <button
-              aria-describedby="root__error root__description root__help"
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
               tabindex="0"
@@ -4038,13 +3575,6 @@ exports[`select widget from oneOf boolean constants with a null option without a
             </ul>
           </div>
         </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -4077,7 +3607,6 @@ exports[`select widget from oneOf constants without a type 1`] = `
             class="dropdown w-full"
           >
             <button
-              aria-describedby="root__error root__description root__help"
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
               tabindex="0"
@@ -4133,13 +3662,6 @@ exports[`select widget from oneOf constants without a type 1`] = `
             </ul>
           </div>
         </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -4172,7 +3694,6 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
             class="dropdown w-full"
           >
             <button
-              aria-describedby="root__error root__description root__help"
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
               tabindex="0"
@@ -4228,13 +3749,6 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
             </ul>
           </div>
         </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -4267,7 +3781,6 @@ exports[`select widget with options sharing a String() in the realValue format (
             class="dropdown w-full"
           >
             <button
-              aria-describedby="root__error root__description root__help"
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
               tabindex="0"
@@ -4322,13 +3835,6 @@ exports[`select widget with options sharing a String() in the realValue format (
               </li>
             </ul>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -4446,24 +3952,10 @@ exports[`single fields > Cyclic schema 1`] = `
                       </div>
                     </div>
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -4494,18 +3986,10 @@ exports[`single fields > checkbox field 1`] = `
           class="form-control"
         >
           <input
-            aria-describedby="root__error root__description root__help"
             class="checkbox"
             id="root"
             name="root"
             type="checkbox"
-          />
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
           />
         </div>
       </div>
@@ -4553,7 +4037,7 @@ exports[`single fields > checkbox field with description in schema and FieldTemp
               class="mr-2"
             >
               <input
-                aria-describedby="root__error root__description root__help"
+                aria-describedby="root__description"
                 class="checkbox"
                 id="root"
                 name="root"
@@ -4566,13 +4050,6 @@ exports[`single fields > checkbox field with description in schema and FieldTemp
               test
             </span>
           </label>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -4609,7 +4086,6 @@ exports[`single fields > checkbox field with label 1`] = `
               class="mr-2"
             >
               <input
-                aria-describedby="root__error root__description root__help"
                 class="checkbox"
                 id="root"
                 name="root"
@@ -4622,13 +4098,6 @@ exports[`single fields > checkbox field with label 1`] = `
               test
             </span>
           </label>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -4675,7 +4144,7 @@ exports[`single fields > checkbox field with label and description 1`] = `
               class="mr-2"
             >
               <input
-                aria-describedby="root__error root__description root__help"
+                aria-describedby="root__description"
                 class="checkbox"
                 id="root"
                 name="root"
@@ -4688,13 +4157,6 @@ exports[`single fields > checkbox field with label and description 1`] = `
               test
             </span>
           </label>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -4749,7 +4211,7 @@ exports[`single fields > checkbox field with label and rich text description 1`]
               class="mr-2"
             >
               <input
-                aria-describedby="root__error root__description root__help"
+                aria-describedby="root__description"
                 class="checkbox"
                 id="root"
                 name="root"
@@ -4762,13 +4224,6 @@ exports[`single fields > checkbox field with label and rich text description 1`]
               test
             </span>
           </label>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -4885,13 +4340,6 @@ exports[`single fields > checkboxes field 1`] = `
             </label>
           </div>
         </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -5000,13 +4448,6 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
           >
             A group of checkboxes
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
         <div
           class="rjsf-field-help-template text-gray-500 text-sm"
@@ -5122,13 +4563,6 @@ exports[`single fields > checkboxes widget with required field 1`] = `
             At least one option must be selected
           </div>
         </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -5207,24 +4641,10 @@ exports[`single fields > field with description 1`] = `
                       some description
                     </div>
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -5304,24 +4724,10 @@ exports[`single fields > field with description in uiSchema 1`] = `
                       some other description
                     </div>
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -5407,24 +4813,10 @@ exports[`single fields > field with markdown description 1`] = `
                       </span>
                     </div>
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -5504,24 +4896,10 @@ exports[`single fields > field with markdown description in uiSchema 1`] = `
                       some other description
                     </div>
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -5565,13 +4943,6 @@ exports[`single fields > format color 1`] = `
             />
           </div>
         </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -5604,7 +4975,6 @@ exports[`single fields > format date 1`] = `
             class="w-full"
           >
             <button
-              aria-describedby="root__error root__description root__help"
               aria-expanded="false"
               aria-haspopup="true"
               class="input input-bordered w-full flex items-center justify-between cursor-pointer "
@@ -5632,13 +5002,6 @@ exports[`single fields > format date 1`] = `
               </svg>
             </button>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -5672,7 +5035,6 @@ exports[`single fields > format datetime 1`] = `
             class="w-full"
           >
             <button
-              aria-describedby="root__error root__description root__help"
               aria-expanded="false"
               aria-haspopup="true"
               class="input input-bordered w-full flex items-center justify-between cursor-pointer "
@@ -5700,13 +5062,6 @@ exports[`single fields > format datetime 1`] = `
               </svg>
             </button>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -5741,13 +5096,6 @@ exports[`single fields > format time 1`] = `
             id="root"
             type="time"
             value=""
-          />
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
           />
         </div>
       </div>
@@ -5864,13 +5212,6 @@ exports[`single fields > hidden field 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -5913,13 +5254,6 @@ exports[`single fields > hidden label 1`] = `
             />
           </div>
         </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -5944,15 +5278,7 @@ exports[`single fields > null field 1`] = `
     >
       <div
         class="field-template mb-3"
-      >
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
-      </div>
+      />
     </div>
     <div>
       <button
@@ -5996,13 +5322,6 @@ exports[`single fields > number field 0 1`] = `
               value="0"
             />
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -6048,13 +5367,6 @@ exports[`single fields > number field 1`] = `
               value=""
             />
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -6165,13 +5477,6 @@ exports[`single fields > optional data controls > does not show optional control
                                 />
                               </div>
                             </div>
-                            <div
-                              class="rjsf-field-error-template text-red-600"
-                            >
-                              <ul
-                                class="list-disc list-inside"
-                              />
-                            </div>
                           </div>
                         </div>
                       </div>
@@ -6240,24 +5545,10 @@ exports[`single fields > optional data controls > does not show optional control
                                           />
                                         </div>
                                       </div>
-                                      <div
-                                        class="rjsf-field-error-template text-red-600"
-                                      >
-                                        <ul
-                                          class="list-disc list-inside"
-                                        />
-                                      </div>
                                     </div>
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                            <div
-                              class="rjsf-field-error-template text-red-600"
-                            >
-                              <ul
-                                class="list-disc list-inside"
-                              />
                             </div>
                           </div>
                         </div>
@@ -6327,24 +5618,10 @@ exports[`single fields > optional data controls > does not show optional control
                                           />
                                         </div>
                                       </div>
-                                      <div
-                                        class="rjsf-field-error-template text-red-600"
-                                      >
-                                        <ul
-                                          class="list-disc list-inside"
-                                        />
-                                      </div>
                                     </div>
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                            <div
-                              class="rjsf-field-error-template text-red-600"
-                            >
-                              <ul
-                                class="list-disc list-inside"
-                              />
                             </div>
                           </div>
                         </div>
@@ -6414,13 +5691,6 @@ exports[`single fields > optional data controls > does not show optional control
                                 </div>
                               </div>
                             </div>
-                            <div
-                              class="rjsf-field-error-template text-red-600"
-                            >
-                              <ul
-                                class="list-disc list-inside"
-                              />
-                            </div>
                           </div>
                         </div>
                       </div>
@@ -6488,13 +5758,6 @@ exports[`single fields > optional data controls > does not show optional control
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                            <div
-                              class="rjsf-field-error-template text-red-600"
-                            >
-                              <ul
-                                class="list-disc list-inside"
-                              />
                             </div>
                           </div>
                         </div>
@@ -6564,24 +5827,10 @@ exports[`single fields > optional data controls > does not show optional control
                                 </div>
                               </div>
                             </div>
-                            <div
-                              class="rjsf-field-error-template text-red-600"
-                            >
-                              <ul
-                                class="list-disc list-inside"
-                              />
-                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
                   </div>
                 </div>
               </div>
@@ -6651,13 +5900,6 @@ exports[`single fields > optional data controls > does not show optional control
                       </div>
                     </div>
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
@@ -6726,24 +5968,10 @@ exports[`single fields > optional data controls > does not show optional control
                                 />
                               </div>
                             </div>
-                            <div
-                              class="rjsf-field-error-template text-red-600"
-                            >
-                              <ul
-                                class="list-disc list-inside"
-                              />
-                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
                   </div>
                 </div>
               </div>
@@ -6813,13 +6041,6 @@ exports[`single fields > optional data controls > does not show optional control
                       </div>
                     </div>
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
@@ -6856,7 +6077,8 @@ exports[`single fields > optional data controls > does not show optional control
                           class="dropdown w-full"
                         >
                           <button
-                            aria-describedby="root_optionalObjectWithOneofs__oneof_select__value root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
+                            aria-describedby="root_optionalObjectWithOneofs__oneof_select__value"
+                            aria-labelledby="root_optionalObjectWithOneofs__label"
                             class="btn btn-outline w-full text-left flex justify-between items-center "
                             id="root_optionalObjectWithOneofs__oneof_select"
                             tabindex="0"
@@ -6938,19 +6160,6 @@ exports[`single fields > optional data controls > does not show optional control
                           class="form-control "
                         >
                           <div
-                            class="title-field mb-6"
-                            id="root_optionalObjectWithOneofs__title"
-                          >
-                            <h2
-                              class="text-3xl font-bold text-primary mb-2"
-                            >
-                              optionalObjectWithOneofs
-                            </h2>
-                            <div
-                              class="divider divider-primary my-0"
-                            />
-                          </div>
-                          <div
                             class="grid grid-cols-1 gap-4 mb-4"
                           >
                             <div
@@ -6991,24 +6200,10 @@ exports[`single fields > optional data controls > does not show optional control
                                       />
                                     </div>
                                   </div>
-                                  <div
-                                    class="rjsf-field-error-template text-red-600"
-                                  >
-                                    <ul
-                                      class="list-disc list-inside"
-                                    />
-                                  </div>
                                 </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                        <div
-                          class="rjsf-field-error-template text-red-600"
-                        >
-                          <ul
-                            class="list-disc list-inside"
-                          />
                         </div>
                       </div>
                     </div>
@@ -7049,7 +6244,8 @@ exports[`single fields > optional data controls > does not show optional control
                           class="dropdown w-full"
                         >
                           <button
-                            aria-describedby="root_optionalArrayWithAnyofs__anyof_select__value root_optionalArrayWithAnyofs__anyof_select__error root_optionalArrayWithAnyofs__anyof_select__description root_optionalArrayWithAnyofs__anyof_select__help"
+                            aria-describedby="root_optionalArrayWithAnyofs__anyof_select__value"
+                            aria-labelledby="root_optionalArrayWithAnyofs__label"
                             class="btn btn-outline w-full text-left flex justify-between items-center "
                             id="root_optionalArrayWithAnyofs__anyof_select"
                             tabindex="0"
@@ -7130,12 +6326,6 @@ exports[`single fields > optional data controls > does not show optional control
                         <div
                           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
                         >
-                          <h3
-                            class="text-2xl font-bold"
-                            id="root_optionalArrayWithAnyofs__title"
-                          >
-                            optionalArrayWithAnyofs
-                          </h3>
                           <div
                             class="flex flex-col gap-4"
                           >
@@ -7183,13 +6373,6 @@ exports[`single fields > optional data controls > does not show optional control
                             </div>
                           </div>
                         </div>
-                        <div
-                          class="rjsf-field-error-template text-red-600"
-                        >
-                          <ul
-                            class="list-disc list-inside"
-                          />
-                        </div>
                       </div>
                     </div>
                   </div>
@@ -7197,13 +6380,6 @@ exports[`single fields > optional data controls > does not show optional control
               </div>
             </div>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -7315,13 +6491,6 @@ exports[`single fields > optional data controls > does not show optional control
                                 />
                               </div>
                             </div>
-                            <div
-                              class="rjsf-field-error-template text-red-600"
-                            >
-                              <ul
-                                class="list-disc list-inside"
-                              />
-                            </div>
                           </div>
                         </div>
                       </div>
@@ -7391,24 +6560,10 @@ exports[`single fields > optional data controls > does not show optional control
                                           />
                                         </div>
                                       </div>
-                                      <div
-                                        class="rjsf-field-error-template text-red-600"
-                                      >
-                                        <ul
-                                          class="list-disc list-inside"
-                                        />
-                                      </div>
                                     </div>
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                            <div
-                              class="rjsf-field-error-template text-red-600"
-                            >
-                              <ul
-                                class="list-disc list-inside"
-                              />
                             </div>
                           </div>
                         </div>
@@ -7479,24 +6634,10 @@ exports[`single fields > optional data controls > does not show optional control
                                           />
                                         </div>
                                       </div>
-                                      <div
-                                        class="rjsf-field-error-template text-red-600"
-                                      >
-                                        <ul
-                                          class="list-disc list-inside"
-                                        />
-                                      </div>
                                     </div>
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                            <div
-                              class="rjsf-field-error-template text-red-600"
-                            >
-                              <ul
-                                class="list-disc list-inside"
-                              />
                             </div>
                           </div>
                         </div>
@@ -7567,13 +6708,6 @@ exports[`single fields > optional data controls > does not show optional control
                                 </div>
                               </div>
                             </div>
-                            <div
-                              class="rjsf-field-error-template text-red-600"
-                            >
-                              <ul
-                                class="list-disc list-inside"
-                              />
-                            </div>
                           </div>
                         </div>
                       </div>
@@ -7642,13 +6776,6 @@ exports[`single fields > optional data controls > does not show optional control
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                            <div
-                              class="rjsf-field-error-template text-red-600"
-                            >
-                              <ul
-                                class="list-disc list-inside"
-                              />
                             </div>
                           </div>
                         </div>
@@ -7719,24 +6846,10 @@ exports[`single fields > optional data controls > does not show optional control
                                 </div>
                               </div>
                             </div>
-                            <div
-                              class="rjsf-field-error-template text-red-600"
-                            >
-                              <ul
-                                class="list-disc list-inside"
-                              />
-                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
                   </div>
                 </div>
               </div>
@@ -7807,13 +6920,6 @@ exports[`single fields > optional data controls > does not show optional control
                       </div>
                     </div>
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
@@ -7883,24 +6989,10 @@ exports[`single fields > optional data controls > does not show optional control
                                 />
                               </div>
                             </div>
-                            <div
-                              class="rjsf-field-error-template text-red-600"
-                            >
-                              <ul
-                                class="list-disc list-inside"
-                              />
-                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
                   </div>
                 </div>
               </div>
@@ -7971,13 +7063,6 @@ exports[`single fields > optional data controls > does not show optional control
                       </div>
                     </div>
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
@@ -8014,7 +7099,8 @@ exports[`single fields > optional data controls > does not show optional control
                           class="dropdown w-full"
                         >
                           <button
-                            aria-describedby="root_optionalObjectWithOneofs__oneof_select__value root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
+                            aria-describedby="root_optionalObjectWithOneofs__oneof_select__value"
+                            aria-labelledby="root_optionalObjectWithOneofs__label"
                             class="btn btn-outline w-full text-left flex justify-between items-center btn-disabled"
                             id="root_optionalObjectWithOneofs__oneof_select"
                             tabindex="0"
@@ -8096,19 +7182,6 @@ exports[`single fields > optional data controls > does not show optional control
                           class="form-control "
                         >
                           <div
-                            class="title-field mb-6"
-                            id="root_optionalObjectWithOneofs__title"
-                          >
-                            <h2
-                              class="text-3xl font-bold text-primary mb-2"
-                            >
-                              optionalObjectWithOneofs
-                            </h2>
-                            <div
-                              class="divider divider-primary my-0"
-                            />
-                          </div>
-                          <div
                             class="grid grid-cols-1 gap-4 mb-4"
                           >
                             <div
@@ -8149,24 +7222,10 @@ exports[`single fields > optional data controls > does not show optional control
                                       />
                                     </div>
                                   </div>
-                                  <div
-                                    class="rjsf-field-error-template text-red-600"
-                                  >
-                                    <ul
-                                      class="list-disc list-inside"
-                                    />
-                                  </div>
                                 </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                        <div
-                          class="rjsf-field-error-template text-red-600"
-                        >
-                          <ul
-                            class="list-disc list-inside"
-                          />
                         </div>
                       </div>
                     </div>
@@ -8207,7 +7266,8 @@ exports[`single fields > optional data controls > does not show optional control
                           class="dropdown w-full"
                         >
                           <button
-                            aria-describedby="root_optionalArrayWithAnyofs__anyof_select__value root_optionalArrayWithAnyofs__anyof_select__error root_optionalArrayWithAnyofs__anyof_select__description root_optionalArrayWithAnyofs__anyof_select__help"
+                            aria-describedby="root_optionalArrayWithAnyofs__anyof_select__value"
+                            aria-labelledby="root_optionalArrayWithAnyofs__label"
                             class="btn btn-outline w-full text-left flex justify-between items-center btn-disabled"
                             id="root_optionalArrayWithAnyofs__anyof_select"
                             tabindex="0"
@@ -8288,12 +7348,6 @@ exports[`single fields > optional data controls > does not show optional control
                         <div
                           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
                         >
-                          <h3
-                            class="text-2xl font-bold"
-                            id="root_optionalArrayWithAnyofs__title"
-                          >
-                            optionalArrayWithAnyofs
-                          </h3>
                           <div
                             class="flex flex-col gap-4"
                           >
@@ -8342,13 +7396,6 @@ exports[`single fields > optional data controls > does not show optional control
                             </div>
                           </div>
                         </div>
-                        <div
-                          class="rjsf-field-error-template text-red-600"
-                        >
-                          <ul
-                            class="list-disc list-inside"
-                          />
-                        </div>
                       </div>
                     </div>
                   </div>
@@ -8356,13 +7403,6 @@ exports[`single fields > optional data controls > does not show optional control
               </div>
             </div>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -8506,13 +7546,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                 />
                               </div>
                             </div>
-                            <div
-                              class="rjsf-field-error-template text-red-600"
-                            >
-                              <ul
-                                class="list-disc list-inside"
-                              />
-                            </div>
                           </div>
                         </div>
                       </div>
@@ -8576,13 +7609,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                               </div>
                               <div
                                 class="grid grid-cols-1 gap-4 mb-4"
-                              />
-                            </div>
-                            <div
-                              class="rjsf-field-error-template text-red-600"
-                            >
-                              <ul
-                                class="list-disc list-inside"
                               />
                             </div>
                           </div>
@@ -8653,24 +7679,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                           />
                                         </div>
                                       </div>
-                                      <div
-                                        class="rjsf-field-error-template text-red-600"
-                                      >
-                                        <ul
-                                          class="list-disc list-inside"
-                                        />
-                                      </div>
                                     </div>
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                            <div
-                              class="rjsf-field-error-template text-red-600"
-                            >
-                              <ul
-                                class="list-disc list-inside"
-                              />
                             </div>
                           </div>
                         </div>
@@ -8740,13 +7752,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                 </div>
                               </div>
                             </div>
-                            <div
-                              class="rjsf-field-error-template text-red-600"
-                            >
-                              <ul
-                                class="list-disc list-inside"
-                              />
-                            </div>
                           </div>
                         </div>
                       </div>
@@ -8804,13 +7809,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                   class="rjsf-array-item-list"
                                 />
                               </div>
-                            </div>
-                            <div
-                              class="rjsf-field-error-template text-red-600"
-                            >
-                              <ul
-                                class="list-disc list-inside"
-                              />
                             </div>
                           </div>
                         </div>
@@ -8880,24 +7878,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                 </div>
                               </div>
                             </div>
-                            <div
-                              class="rjsf-field-error-template text-red-600"
-                            >
-                              <ul
-                                class="list-disc list-inside"
-                              />
-                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
                   </div>
                 </div>
               </div>
@@ -8998,13 +7982,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                   />
                                 </div>
                               </div>
-                              <div
-                                class="rjsf-field-error-template text-red-600"
-                              >
-                                <ul
-                                  class="list-disc list-inside"
-                                />
-                              </div>
                             </div>
                           </div>
                           <div
@@ -9068,13 +8045,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
                   </div>
                 </div>
               </div>
@@ -9144,24 +8114,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                 />
                               </div>
                             </div>
-                            <div
-                              class="rjsf-field-error-template text-red-600"
-                            >
-                              <ul
-                                class="list-disc list-inside"
-                              />
-                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
                   </div>
                 </div>
               </div>
@@ -9230,13 +8186,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
                   </div>
                 </div>
               </div>
@@ -9315,13 +8264,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             class="grid grid-cols-1 gap-4 mb-4"
                           />
                         </div>
-                        <div
-                          class="rjsf-field-error-template text-red-600"
-                        >
-                          <ul
-                            class="list-disc list-inside"
-                          />
-                        </div>
                       </div>
                     </div>
                   </div>
@@ -9395,13 +8337,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             />
                           </div>
                         </div>
-                        <div
-                          class="rjsf-field-error-template text-red-600"
-                        >
-                          <ul
-                            class="list-disc list-inside"
-                          />
-                        </div>
                       </div>
                     </div>
                   </div>
@@ -9409,13 +8344,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               </div>
             </div>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -9527,13 +8455,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                 />
                               </div>
                             </div>
-                            <div
-                              class="rjsf-field-error-template text-red-600"
-                            >
-                              <ul
-                                class="list-disc list-inside"
-                              />
-                            </div>
                           </div>
                         </div>
                       </div>
@@ -9571,13 +8492,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                   No data for optional field
                                 </em>
                               </div>
-                            </div>
-                            <div
-                              class="rjsf-field-error-template text-red-600"
-                            >
-                              <ul
-                                class="list-disc list-inside"
-                              />
                             </div>
                           </div>
                         </div>
@@ -9648,24 +8562,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                           />
                                         </div>
                                       </div>
-                                      <div
-                                        class="rjsf-field-error-template text-red-600"
-                                      >
-                                        <ul
-                                          class="list-disc list-inside"
-                                        />
-                                      </div>
                                     </div>
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                            <div
-                              class="rjsf-field-error-template text-red-600"
-                            >
-                              <ul
-                                class="list-disc list-inside"
-                              />
                             </div>
                           </div>
                         </div>
@@ -9736,13 +8636,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                 </div>
                               </div>
                             </div>
-                            <div
-                              class="rjsf-field-error-template text-red-600"
-                            >
-                              <ul
-                                class="list-disc list-inside"
-                              />
-                            </div>
                           </div>
                         </div>
                       </div>
@@ -9776,13 +8669,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                   class="rjsf-array-item-list"
                                 />
                               </div>
-                            </div>
-                            <div
-                              class="rjsf-field-error-template text-red-600"
-                            >
-                              <ul
-                                class="list-disc list-inside"
-                              />
                             </div>
                           </div>
                         </div>
@@ -9853,24 +8739,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                 </div>
                               </div>
                             </div>
-                            <div
-                              class="rjsf-field-error-template text-red-600"
-                            >
-                              <ul
-                                class="list-disc list-inside"
-                              />
-                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
                   </div>
                 </div>
               </div>
@@ -9943,13 +8815,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                   />
                                 </div>
                               </div>
-                              <div
-                                class="rjsf-field-error-template text-red-600"
-                              >
-                                <ul
-                                  class="list-disc list-inside"
-                                />
-                              </div>
                             </div>
                           </div>
                           <div
@@ -10015,13 +8880,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
                   </div>
                 </div>
               </div>
@@ -10092,24 +8950,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                 />
                               </div>
                             </div>
-                            <div
-                              class="rjsf-field-error-template text-red-600"
-                            >
-                              <ul
-                                class="list-disc list-inside"
-                              />
-                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
                   </div>
                 </div>
               </div>
@@ -10180,13 +9024,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                       </div>
                     </div>
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
@@ -10237,13 +9074,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             </em>
                           </div>
                         </div>
-                        <div
-                          class="rjsf-field-error-template text-red-600"
-                        >
-                          <ul
-                            class="list-disc list-inside"
-                          />
-                        </div>
                       </div>
                     </div>
                   </div>
@@ -10293,13 +9123,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             />
                           </div>
                         </div>
-                        <div
-                          class="rjsf-field-error-template text-red-600"
-                        >
-                          <ul
-                            class="list-disc list-inside"
-                          />
-                        </div>
                       </div>
                     </div>
                   </div>
@@ -10307,13 +9130,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               </div>
             </div>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -10421,13 +9237,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                       class="grid grid-cols-1 gap-4 mb-4"
                     />
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
@@ -10485,13 +9294,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                         class="rjsf-array-item-list"
                       />
                     </div>
-                  </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
                   </div>
                 </div>
               </div>
@@ -10561,24 +9363,10 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                 />
                               </div>
                             </div>
-                            <div
-                              class="rjsf-field-error-template text-red-600"
-                            >
-                              <ul
-                                class="list-disc list-inside"
-                              />
-                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
                   </div>
                 </div>
               </div>
@@ -10647,13 +9435,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
                   </div>
                 </div>
               </div>
@@ -10732,13 +9513,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                             class="grid grid-cols-1 gap-4 mb-4"
                           />
                         </div>
-                        <div
-                          class="rjsf-field-error-template text-red-600"
-                        >
-                          <ul
-                            class="list-disc list-inside"
-                          />
-                        </div>
                       </div>
                     </div>
                   </div>
@@ -10812,13 +9586,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                             />
                           </div>
                         </div>
-                        <div
-                          class="rjsf-field-error-template text-red-600"
-                        >
-                          <ul
-                            class="list-disc list-inside"
-                          />
-                        </div>
                       </div>
                     </div>
                   </div>
@@ -10826,13 +9593,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
               </div>
             </div>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -10915,13 +9675,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                       </em>
                     </div>
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
@@ -10956,13 +9709,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                         class="rjsf-array-item-list"
                       />
                     </div>
-                  </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
                   </div>
                 </div>
               </div>
@@ -11035,24 +9781,10 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                 />
                               </div>
                             </div>
-                            <div
-                              class="rjsf-field-error-template text-red-600"
-                            >
-                              <ul
-                                class="list-disc list-inside"
-                              />
-                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
                   </div>
                 </div>
               </div>
@@ -11124,13 +9856,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                       </div>
                     </div>
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
@@ -11183,13 +9908,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                             </em>
                           </div>
                         </div>
-                        <div
-                          class="rjsf-field-error-template text-red-600"
-                        >
-                          <ul
-                            class="list-disc list-inside"
-                          />
-                        </div>
                       </div>
                     </div>
                   </div>
@@ -11241,13 +9959,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                             />
                           </div>
                         </div>
-                        <div
-                          class="rjsf-field-error-template text-red-600"
-                        >
-                          <ul
-                            class="list-disc list-inside"
-                          />
-                        </div>
                       </div>
                     </div>
                   </div>
@@ -11255,13 +9966,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
               </div>
             </div>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -11305,13 +10009,6 @@ exports[`single fields > password field 1`] = `
               value=""
             />
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -11381,13 +10078,6 @@ exports[`single fields > radio field 1`] = `
               </span>
             </label>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -11480,13 +10170,6 @@ exports[`single fields > radio widget with description in schema and FieldTempla
             This is a radio description
           </div>
         </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -11537,7 +10220,6 @@ exports[`single fields > required checkbox field 1`] = `
                         class="mr-2"
                       >
                         <input
-                          aria-describedby="root_agree__error root_agree__description root_agree__help"
                           class="checkbox"
                           id="root_agree"
                           name="root_agree"
@@ -11551,24 +10233,10 @@ exports[`single fields > required checkbox field 1`] = `
                       </span>
                     </label>
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -11620,7 +10288,6 @@ exports[`single fields > required checkbox field, default true 1`] = `
                         class="mr-2"
                       >
                         <input
-                          aria-describedby="root_agree__error root_agree__description root_agree__help"
                           checked=""
                           class="checkbox"
                           id="root_agree"
@@ -11635,24 +10302,10 @@ exports[`single fields > required checkbox field, default true 1`] = `
                       </span>
                     </label>
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -11716,13 +10369,6 @@ exports[`single fields > schema examples 1`] = `
             value="Safari"
           />
         </datalist>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -11782,13 +10428,6 @@ exports[`single fields > schema examples with mixed types (string examples and n
             value="1433"
           />
         </datalist>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -11821,7 +10460,6 @@ exports[`single fields > select field 1`] = `
             class="dropdown w-full"
           >
             <button
-              aria-describedby="root__error root__description root__help"
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
               tabindex="0"
@@ -11877,13 +10515,6 @@ exports[`single fields > select field 1`] = `
             </ul>
           </div>
         </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -11916,7 +10547,6 @@ exports[`single fields > select field multiple choice 1`] = `
             class="dropdown w-full"
           >
             <button
-              aria-describedby="root__error root__description root__help"
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
               tabindex="0"
@@ -12022,13 +10652,6 @@ exports[`single fields > select field multiple choice 1`] = `
             </ul>
           </div>
         </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -12061,7 +10684,6 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
             class="dropdown w-full"
           >
             <button
-              aria-describedby="root__error root__description root__help"
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
               tabindex="0"
@@ -12168,13 +10790,6 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
             </ul>
           </div>
         </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -12279,13 +10894,6 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
             </label>
           </div>
         </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -12318,7 +10926,6 @@ exports[`single fields > select field multiple choice formData 1`] = `
             class="dropdown w-full"
           >
             <button
-              aria-describedby="root__error root__description root__help"
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
               tabindex="0"
@@ -12426,13 +11033,6 @@ exports[`single fields > select field multiple choice formData 1`] = `
             </ul>
           </div>
         </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -12465,7 +11065,6 @@ exports[`single fields > select field multiple choice with labels 1`] = `
             class="dropdown w-full"
           >
             <button
-              aria-describedby="root__error root__description root__help"
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
               tabindex="0"
@@ -12551,13 +11150,6 @@ exports[`single fields > select field multiple choice with labels 1`] = `
             </ul>
           </div>
         </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -12590,7 +11182,6 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
             class="dropdown w-full"
           >
             <button
-              aria-describedby="root__error root__description root__help"
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
               tabindex="0"
@@ -12646,13 +11237,6 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
               </li>
             </ul>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -12723,13 +11307,6 @@ exports[`single fields > select field single choice enumDisabled using radio wid
               </span>
             </label>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -12803,13 +11380,6 @@ exports[`single fields > select field single choice form disabled using radio wi
             </label>
           </div>
         </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -12843,7 +11413,6 @@ exports[`single fields > select field single choice formData 1`] = `
             class="dropdown w-full"
           >
             <button
-              aria-describedby="root__error root__description root__help"
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
               tabindex="0"
@@ -12899,13 +11468,6 @@ exports[`single fields > select field single choice formData 1`] = `
             </ul>
           </div>
         </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -12938,7 +11500,6 @@ exports[`single fields > select field single choice optgroups 1`] = `
             class="dropdown w-full"
           >
             <button
-              aria-describedby="root__error root__description root__help"
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
               tabindex="0"
@@ -13054,13 +11615,6 @@ exports[`single fields > select field single choice optgroups 1`] = `
             </ul>
           </div>
         </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -13093,7 +11647,6 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
             class="dropdown w-full"
           >
             <button
-              aria-describedby="root__error root__description root__help"
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
               tabindex="0"
@@ -13210,13 +11763,6 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
             </ul>
           </div>
         </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -13289,13 +11835,6 @@ exports[`single fields > select field single choice uiSchema disabled using radi
             </label>
           </div>
         </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -13339,7 +11878,7 @@ exports[`single fields > select widget with description in schema and FieldTempl
             class="dropdown w-full"
           >
             <button
-              aria-describedby="root__error root__description root__help"
+              aria-describedby="root__description"
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
               tabindex="0"
@@ -13405,13 +11944,6 @@ exports[`single fields > select widget with description in schema and FieldTempl
             This is a select description
           </div>
         </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -13444,7 +11976,7 @@ exports[`single fields > select widget with selected oneOf option description 1`
             class="dropdown w-full"
           >
             <button
-              aria-describedby="root__error root__description root__help"
+              aria-describedby="root__selectedOptionDescription"
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
               tabindex="0"
@@ -13501,7 +12033,7 @@ exports[`single fields > select widget with selected oneOf option description 1`
           </div>
           <div
             class="description-field my-4"
-            id="root__description"
+            id="root__selectedOptionDescription"
           >
             <div
               class="text-sm text-base-content/80"
@@ -13509,13 +12041,6 @@ exports[`single fields > select widget with selected oneOf option description 1`
               Foo description
             </div>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -13549,7 +12074,6 @@ exports[`single fields > select widget with selected oneOf option description an
             class="dropdown w-full"
           >
             <button
-              aria-describedby="root__error root__description root__help"
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
               tabindex="0"
@@ -13605,13 +12129,6 @@ exports[`single fields > select widget with selected oneOf option description an
             </ul>
           </div>
         </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -13658,13 +12175,6 @@ exports[`single fields > slider field 1`] = `
               75
             </span>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -13737,13 +12247,6 @@ exports[`single fields > string field > field with markdown help and description
               </strong>
             </span>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
         <div
           class="rjsf-field-help-template text-gray-500 text-sm"
@@ -13826,13 +12329,6 @@ exports[`single fields > string field > field with markdown help text 1`] = `
           </div>
         </div>
         <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
-        <div
           class="rjsf-field-help-template text-gray-500 text-sm"
           id="root__help"
         >
@@ -13913,13 +12409,6 @@ exports[`single fields > string field > field with markdown help text without a 
           </div>
         </div>
         <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
-        <div
           class="rjsf-field-help-template text-gray-500 text-sm"
           id="root__help"
         >
@@ -13969,13 +12458,6 @@ exports[`single fields > string field > format data-url 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -14017,13 +12499,6 @@ exports[`single fields > string field > format email 1`] = `
               value=""
             />
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -14067,13 +12542,6 @@ exports[`single fields > string field > format uri 1`] = `
             />
           </div>
         </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -14115,13 +12583,6 @@ exports[`single fields > string field > regular 1`] = `
               value=""
             />
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -14187,13 +12648,6 @@ exports[`single fields > string field > required field with markdown help 1`] = 
           </div>
         </div>
         <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
-        <div
           class="rjsf-field-help-template text-gray-500 text-sm"
           id="root__help"
         >
@@ -14247,13 +12701,6 @@ exports[`single fields > string field > string field with allowClearTextInputs a
               value="foo"
             />
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -14316,13 +12763,6 @@ exports[`single fields > string field > string field with allowClearTextInputs a
             </button>
           </div>
         </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -14365,13 +12805,6 @@ exports[`single fields > string field > string field with placeholder 1`] = `
             />
           </div>
         </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -14405,13 +12838,6 @@ exports[`single fields > textarea field 1`] = `
             id="root"
             name="root"
             rows="5"
-          />
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
           />
         </div>
       </div>
@@ -14495,24 +12921,10 @@ exports[`single fields > title field 1`] = `
                       />
                     </div>
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -14548,13 +12960,6 @@ exports[`single fields > unsupported field 1`] = `
           <pre>
             {}
           </pre>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -14599,13 +13004,6 @@ exports[`single fields > up/down field 1`] = `
             />
           </div>
         </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -14647,13 +13045,6 @@ exports[`single fields > using custom tagName 1`] = `
               value=""
             />
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -14697,13 +13088,6 @@ exports[`string field with autocapitalize 1`] = `
               value=""
             />
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -14763,7 +13147,7 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                       class="dropdown w-full"
                     >
                       <button
-                        aria-describedby="root_answer__value root_answer__error root_answer__description root_answer__help"
+                        aria-describedby="root_answer__value"
                         class="btn btn-outline w-full text-left flex justify-between items-center "
                         id="root_answer"
                         tabindex="0"
@@ -14819,24 +13203,10 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                       </ul>
                     </div>
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>

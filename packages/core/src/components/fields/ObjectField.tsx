@@ -379,6 +379,7 @@ export default function ObjectField<
     onChange,
     registry,
     title,
+    presentation,
   } = props;
   const uiSchema: UiSchema<T, S, F> = rawUiSchema ?? EMPTY_UI_SCHEMA;
   const { fields, schemaUtils, translateString, globalUiOptions, rootSchema, uiSchemaDefinitions } = registry;
@@ -777,11 +778,23 @@ export default function ObjectField<
     <OptionalDataControlsField {...props} schema={schema} />
   ) : undefined;
 
-  // getDisplayLabel() always returns false for object types, so just check the `uiOptions.label`
+  // The plan says whether the heading and description are the object's to draw, so an option repeating its field's
+  // title draws no second heading
   const showLabel = uiBooleanOption(uiOptions.label) ?? true;
+  let shownTitle = showLabel ? templateTitle : '';
+  let shownDescription = showLabel ? description : undefined;
+  if (presentation) {
+    // The key input beside an `additionalProperties` entry already shows its key, which labels the entry, so the
+    // heading the object draws itself takes the `ui:title` or the schema `title` naming such entries where there is one
+    const ownHeading =
+      (isAdditionalPropertySchema(schema) && (uiOptions.title || schema.title)) || presentation.label.text;
+    shownTitle = presentation.label.by === 'self' ? ownHeading : '';
+    shownDescription = presentation.description.by === 'self' ? presentation.description.text : undefined;
+  }
   const templateProps = {
-    title: showLabel ? templateTitle : '',
-    description: showLabel ? description : undefined,
+    title: shownTitle,
+    description: shownDescription,
+    presentation,
     properties: orderedProperties.map((propertyName) => {
       // Read off the schema this render resolved rather than through `uiSchemaForKey()`, which answers for the
       // callbacks from the schema the last render committed: `declaresProperty()` is the question both of them put

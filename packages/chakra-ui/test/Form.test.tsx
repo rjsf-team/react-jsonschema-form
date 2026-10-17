@@ -71,3 +71,35 @@ describe('chakra-ui AltDateWidget', () => {
     },
   );
 });
+
+describe('chakra-ui SelectWidget', () => {
+  test("names an object's option selector by the object's heading", () => {
+    render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          title: 'Pet',
+          properties: { name: { type: 'string' } },
+          anyOf: [
+            { title: 'Dog', properties: { bark: { type: 'string' } } },
+            { title: 'Cat', properties: { meow: { type: 'string' } } },
+          ],
+        }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('combobox')).toHaveAccessibleName('Pet');
+  });
+
+  test('keeps the name its own label gives it', () => {
+    render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { color: { title: 'Color', type: 'string', enum: ['red', 'blue'] } } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('combobox')).toHaveAccessibleName('Color');
+  });
+});

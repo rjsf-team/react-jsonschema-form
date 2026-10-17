@@ -1,12 +1,12 @@
 import type { ChangeEvent } from 'react';
 import type { FormContextType, WidgetProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
   enumOptionsDeselectValue,
   enumOptionsDomValues,
   enumOptionsIsDisabled,
   enumOptionsIsSelected,
   enumOptionsSelectValue,
+  getGroupAttributes,
   getOptionValueFormat,
   optionId,
   useOptionFocusHandlers,
@@ -32,6 +32,7 @@ function CheckboxesWidget<
   onBlur,
   onFocus,
   htmlName,
+  presentation,
 }: WidgetProps<T, S, F>) {
   const { inline = false, enumOptions, enumDisabled } = options;
   const optionValueFormat = getOptionValueFormat(options);
@@ -40,8 +41,12 @@ function CheckboxesWidget<
 
   const { focusHandlers, blurHandlers } = useOptionFocusHandlers<T, S, F>({ id, options, onFocus, onBlur });
 
+  const { group: groupAttributes, option: optionAttributes } = getGroupAttributes<T, S, F>(
+    { id, presentation },
+    'group',
+  );
   return (
-    <div className='checkboxes' id={id}>
+    <div className='checkboxes' id={id} {...groupAttributes}>
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, index) => {
           const checked = enumOptionsIsSelected<S>(option.value, checkboxesValues);
@@ -69,7 +74,7 @@ function CheckboxesWidget<
                 onChange={handleChange}
                 onBlur={blurHandlers[index]}
                 onFocus={focusHandlers[index]}
-                aria-describedby={ariaDescribedByIds(id)}
+                {...optionAttributes}
               />
               <span>{option.label}</span>
             </span>

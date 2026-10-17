@@ -77,7 +77,20 @@ export default function DateTimeWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { id, value, label, name, hideLabel, placeholder, options, disabled, readonly, schema, registry } = props;
+  const {
+    id,
+    value,
+    label,
+    name,
+    hideLabel,
+    presentation,
+    placeholder,
+    options,
+    disabled,
+    readonly,
+    schema,
+    registry,
+  } = props;
   const { localValue } = getDateTimeLocalValue(schema, value);
   const formatDate = useDateFormatter<S>(schema, 'date-time');
   // Initialize the local date from the parent's value. For `iso-date-time`, a stored value that happens to
@@ -160,6 +173,7 @@ export default function DateTimeWidget<
           label={label}
           name={name}
           hideLabel={hideLabel}
+          presentation={presentation}
           placeholder={placeholder}
           formattedValue={formattedValue}
           isOpen={isOpen}

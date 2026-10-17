@@ -4947,7 +4947,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                           id="root_foo-label"
                           style="--input-label-size: var(--mantine-font-size-sm);"
                         >
-                          foo
+                          foo (deprecated)
                         </label>
                         <div
                           class="m_6c018570 mantine-Input-wrapper mantine-TextInput-wrapper"

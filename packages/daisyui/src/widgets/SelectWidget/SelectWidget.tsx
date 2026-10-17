@@ -67,6 +67,7 @@ export default function SelectWidget<
     label,
     name,
     hideLabel,
+    presentation,
     disabled,
     placeholder,
     readonly,
@@ -200,17 +201,20 @@ export default function SelectWidget<
           className={`btn btn-outline w-full text-left flex justify-between items-center ${
             disabled || readonly ? 'btn-disabled' : ''
           }`}
-          /* The label or `aria-label` naming this button replaces its contents as its name, so the option it displays
-             is announced as its description instead — the same split a native control makes between its name and its
-             value, and the same one `DatePickerTrigger` makes, through the predicate both share */
+          /* The label, `aria-label` or plan's `aria-labelledby` naming this button replaces its contents as its name, so
+             the option it displays is announced as its description instead — the same split a native control makes
+             between its name and its value, and the same one `DatePickerTrigger` makes, through the predicate both
+             share. The plan points an option selector at its field's label, whose `for` names the field's own control */
           aria-label={ariaProps['aria-label']}
+          aria-labelledby={ariaProps['aria-labelledby']}
           aria-describedby={getTriggerDescribedBy({
             id,
             label,
             name,
             hideLabel,
+            presentation,
             hasValue,
-            named: !!ariaProps['aria-label'],
+            named: !!ariaProps['aria-label'] || !!ariaProps['aria-labelledby'],
             describedBy: ariaProps['aria-describedby'] ?? '',
           })}
         >
@@ -253,6 +257,8 @@ export default function SelectWidget<
         registry={registry}
         uiSchema={uiSchema}
         value={value}
+        hideLabel={hideLabel}
+        presentation={presentation}
       />
     </div>
   );

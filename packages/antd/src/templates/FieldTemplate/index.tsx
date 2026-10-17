@@ -25,6 +25,7 @@ export default function FieldTemplate<
     hidden,
     id,
     label,
+    presentation,
     rawErrors,
     hideError,
     rawDescription,
@@ -64,7 +65,9 @@ export default function FieldTemplate<
       descriptionProps.extra = descriptionNode;
       break;
   }
-  const isCheckbox = uiOptions.widget === 'checkbox';
+  // The plan's `displayLabel` already says whether a checkbox draws its own label; the guess by the `checkbox` alias
+  // is left for a template rendered without one, so a label the plan gives the template isn't dropped
+  const leavesPartsToCheckbox = !presentation && uiOptions.widget === 'checkbox';
   // Help and errors share antd's only below-field slot, and antd draws an empty explain block for a node that renders
   // nothing, so each one is gated on whether it has anything to say
   const helpNode = rawHelp ? help : undefined;
@@ -83,8 +86,11 @@ export default function FieldTemplate<
         hasFeedback={(schema.type !== 'array' && schema.type !== 'object') || isWholeValueSelect<S>(schema)}
         help={explainNode}
         htmlFor={id}
-        label={displayLabel && !isCheckbox && label}
-        labelCol={labelCol}
+        label={displayLabel && !leavesPartsToCheckbox && label}
+        // antd's label takes no id, so its column carries the one a control labelled through `aria-labelledby` points
+        // at, which holds what the label's `for` names the field's own control by. The label stays a string, which antd
+        // strips a trailing colon from and gives a `title`
+        labelCol={presentation ? { ...labelCol, id: presentation.label.id } : labelCol}
         required={required}
         style={wrapperStyle}
         validateStatus={hasError ? 'error' : undefined}

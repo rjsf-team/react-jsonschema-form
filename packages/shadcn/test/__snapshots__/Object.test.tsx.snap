@@ -60,6 +60,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                             <label
                               class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                               for="root_person_name"
+                              id="root_person_name__label"
                             >
                               name
                             </label>
@@ -127,6 +128,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                       <label
                                         class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                         for="root_person_address_street"
+                                        id="root_person_address_street__label"
                                       >
                                         street
                                       </label>
@@ -163,6 +165,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                       <label
                                         class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                         for="root_person_address_city"
+                                        id="root_person_address_city__label"
                                       >
                                         city
                                       </label>
@@ -199,6 +202,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                       <label
                                         class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                         for="root_person_address_country"
+                                        id="root_person_address_country__label"
                                       >
                                         country
                                       </label>
@@ -275,6 +279,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_name"
+                    id="root_name__label"
                   >
                     name
                   </label>
@@ -340,6 +345,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                     <label
                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       for="root_customField"
+                      id="root_customField__label"
                     >
                       customField
                     </label>
@@ -497,6 +503,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_name"
+                    id="root_name__label"
                   >
                     name
                   </label>
@@ -533,6 +540,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_age"
+                    id="root_age__label"
                   >
                     age
                   </label>
@@ -570,7 +578,6 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                   class="flex flex-col gap-2"
                 >
                   <div
-                    aria-describedby="root_active__error root_active__description root_active__help"
                     class="relative "
                   >
                     <div
@@ -578,7 +585,6 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                     >
                       <button
                         aria-checked="true"
-                        aria-required="false"
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="checked"
@@ -686,6 +692,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                                     <label
                                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                       for="root_tags_0"
+                                      id="root_tags_0__label"
                                     >
                                       tags-1*
                                     </label>
@@ -822,6 +829,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                                     <label
                                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                       for="root_tags_1"
+                                      id="root_tags_1__label"
                                     >
                                       tags-2*
                                     </label>
@@ -1036,6 +1044,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_firstName"
+                    id="root_firstName__label"
                   >
                     firstName
                   </label>
@@ -1072,6 +1081,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_lastName"
+                    id="root_lastName__label"
                   >
                     lastName
                   </label>
@@ -1108,6 +1118,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_age"
+                    id="root_age__label"
                   >
                     age
                   </label>
@@ -1208,6 +1219,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                             <label
                               class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                               for="root_person_name"
+                              id="root_person_name__label"
                             >
                               name
                             </label>
@@ -1275,6 +1287,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                       <label
                                         class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                         for="root_person_address_street"
+                                        id="root_person_address_street__label"
                                       >
                                         street
                                       </label>
@@ -1311,6 +1324,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                       <label
                                         class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                         for="root_person_address_city"
+                                        id="root_person_address_city__label"
                                       >
                                         city
                                       </label>
@@ -1387,6 +1401,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_name"
+                    id="root_name__label"
                   >
                     name
                   </label>
@@ -1423,6 +1438,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_count"
+                    id="root_count__label"
                   >
                     count
                   </label>
@@ -1501,6 +1517,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                                     <label
                                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                       for="root_items_0"
+                                      id="root_items_0__label"
                                     >
                                       items-1*
                                     </label>
@@ -1637,6 +1654,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                                     <label
                                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                       for="root_items_1"
+                                      id="root_items_1__label"
                                     >
                                       items-2*
                                     </label>
@@ -1851,6 +1869,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_firstName"
+                    id="root_firstName__label"
                   >
                     firstName
                   </label>
@@ -1887,6 +1906,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_lastName"
+                    id="root_lastName__label"
                   >
                     lastName
                   </label>
@@ -1923,6 +1943,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_age"
+                    id="root_age__label"
                   >
                     age
                   </label>
@@ -2021,6 +2042,7 @@ exports[`object fields > additionalProperties 1`] = `
                     <label
                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       for="root_foo"
+                      id="root_foo__label"
                     >
                       foo
                     </label>
@@ -2204,6 +2226,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
                           <button
+                            aria-describedby="root_foo-key__value"
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -2212,6 +2235,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                           >
                             <span
                               class="flex-1 line-clamp-1"
+                              id="root_foo-key__value"
                             >
                               foo
                             </span>
@@ -2259,6 +2283,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                     <label
                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       for="root_foo"
+                      id="root_foo__label"
                     >
                       foo
                     </label>
@@ -2454,12 +2479,6 @@ exports[`object fields > additionalProperties, array type 1`] = `
                   <div
                     class="flex flex-col gap-2"
                   >
-                    <label
-                      class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                      for="root_foo"
-                    >
-                      foo
-                    </label>
                     <div>
                       <div
                         class="m-0 flex p-0"
@@ -2709,6 +2728,7 @@ exports[`object fields > additionalProperties, description 1`] = `
                     <label
                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       for="root_foo"
+                      id="root_foo__label"
                     >
                       foo
                     </label>
@@ -2907,6 +2927,7 @@ exports[`object fields > additionalProperties, label off 1`] = `
                     <label
                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       for="root_foo"
+                      id="root_foo__label"
                     >
                       foo
                     </label>
@@ -3090,12 +3111,6 @@ exports[`object fields > additionalProperties, object type 1`] = `
                   <div
                     class="flex flex-col gap-2"
                   >
-                    <label
-                      class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                      for="root_foo"
-                    >
-                      foo
-                    </label>
                     <div
                       class="my-1 flex flex-col gap-0.5"
                       id="root_foo__title"
@@ -3130,6 +3145,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
                               <label
                                 class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                 for="root_foo_foo"
+                                id="root_foo_foo__label"
                               >
                                 foo
                               </label>
@@ -3318,6 +3334,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
                           <button
+                            aria-describedby="root_foo-key__value"
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -3326,6 +3343,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                           >
                             <span
                               class="flex-1 line-clamp-1"
+                              id="root_foo-key__value"
                             >
                               foo
                             </span>
@@ -3364,6 +3382,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                     <label
                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       for="root_foo"
+                      id="root_foo__label"
                     >
                       foo
                     </label>
@@ -3547,6 +3566,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
                           <button
+                            aria-describedby="root_foo-key__value"
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -3555,6 +3575,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                           >
                             <span
                               class="flex-1 line-clamp-1"
+                              id="root_foo-key__value"
                             >
                               foo
                             </span>
@@ -3593,6 +3614,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                     <label
                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       for="root_foo"
+                      id="root_foo__label"
                     >
                       foo (deprecated)
                     </label>
@@ -3750,6 +3772,7 @@ exports[`object fields > object 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_a"
+                    id="root_a__label"
                   >
                     A
                   </label>
@@ -3786,6 +3809,7 @@ exports[`object fields > object 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_b"
+                    id="root_b__label"
                   >
                     B
                   </label>
@@ -3884,6 +3908,7 @@ exports[`object fields > show add button and fields if additionalProperties is t
                     <label
                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       for="root_additionalProperty"
+                      id="root_additionalProperty__label"
                     >
                       additionalProperty
                     </label>
@@ -4094,6 +4119,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                     <label
                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       for="root_foo"
+                      id="root_foo__label"
                     >
                       foo
                     </label>
@@ -4275,6 +4301,7 @@ exports[`object fields > with title and description > object 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_a"
+                    id="root_a__label"
                   >
                     A
                   </label>
@@ -4323,6 +4350,7 @@ exports[`object fields > with title and description > object 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_b"
+                    id="root_b__label"
                   >
                     B
                   </label>
@@ -4457,6 +4485,7 @@ exports[`object fields > with title and description > show add button and fields
                     <label
                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       for="root_additionalProperty"
+                      id="root_additionalProperty__label"
                     >
                       additionalProperty
                     </label>
@@ -4667,6 +4696,7 @@ exports[`object fields > with title and description from both > additionalProper
                     <label
                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       for="root_foo"
+                      id="root_foo__label"
                     >
                       foo
                     </label>
@@ -4848,6 +4878,7 @@ exports[`object fields > with title and description from both > object 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_a"
+                    id="root_a__label"
                   >
                     My Item A
                   </label>
@@ -4896,6 +4927,7 @@ exports[`object fields > with title and description from both > object 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_b"
+                    id="root_b__label"
                   >
                     My Item B
                   </label>
@@ -5030,6 +5062,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                     <label
                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       for="root_foo"
+                      id="root_foo__label"
                     >
                       foo
                     </label>
@@ -5211,6 +5244,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_a"
+                    id="root_a__label"
                   >
                     My Item A
                   </label>
@@ -5259,6 +5293,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_b"
+                    id="root_b__label"
                   >
                     My Item B
                   </label>
@@ -5393,6 +5428,7 @@ exports[`object fields > with title and description from uiSchema > show add but
                     <label
                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       for="root_additionalProperty"
+                      id="root_additionalProperty__label"
                     >
                       additionalProperty
                     </label>

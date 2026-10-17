@@ -19,6 +19,7 @@ export default function FieldTemplate<
     style,
     disabled,
     displayLabel,
+    presentation,
     hidden,
     label,
     keyName,
@@ -45,7 +46,9 @@ export default function FieldTemplate<
   if (hidden) {
     return <div style={{ display: 'none' }}>{children}</div>;
   }
-  const isCheckbox = uiOptions.widget === 'checkbox';
+  // The plan's description already says whether a checkbox draws its own; the guess by the `checkbox` alias is left
+  // for a template rendered without one, so a description the plan gives the template isn't dropped
+  const leavesPartsToCheckbox = !presentation && uiOptions.widget === 'checkbox';
   return (
     <WrapIfAdditionalTemplate
       classNames={classNames}
@@ -55,6 +58,7 @@ export default function FieldTemplate<
       label={label}
       keyName={keyName}
       displayLabel={displayLabel}
+      presentation={presentation}
       rawDescription={rawDescription}
       onKeyRename={onKeyRename}
       onKeyRenameBlur={onKeyRenameBlur}
@@ -68,7 +72,7 @@ export default function FieldTemplate<
     >
       <Field validationState={hasError ? 'error' : undefined} required={required}>
         {children}
-        {displayLabel && rawDescription && !isCheckbox ? (
+        {rawDescription && !leavesPartsToCheckbox ? (
           <Text as='p' block style={{ marginTop: 0, marginBottom: 0 }}>
             {description}
           </Text>

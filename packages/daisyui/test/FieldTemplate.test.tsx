@@ -1,4 +1,4 @@
-import type { FieldProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import type { FieldProps, RJSFSchema, ThemePresentation, UiSchema, WidgetProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 
@@ -19,10 +19,21 @@ function CustomWidget({ id, value }: WidgetProps) {
   return <input type='text' id={id} readOnly value={String(value ?? '')} />;
 }
 
-function renderForm(uiSchema: UiSchema = {}, fieldSchema: RJSFSchema = agree, widgets = {}) {
+function renderForm(
+  uiSchema: UiSchema = {},
+  fieldSchema: RJSFSchema = agree,
+  widgets = {},
+  presentation?: ThemePresentation,
+) {
   const schema: RJSFSchema = { type: 'object', properties: { agree: fieldSchema } };
   const { container } = render(
-    <Form schema={schema} uiSchema={uiSchema} validator={validator} widgets={{ custom: CustomWidget, ...widgets }} />,
+    <Form
+      schema={schema}
+      uiSchema={uiSchema}
+      validator={validator}
+      widgets={{ custom: CustomWidget, ...widgets }}
+      presentation={presentation}
+    />,
   );
   return {
     container,
@@ -169,25 +180,29 @@ describe('FieldTemplate', () => {
     // Of the boolean aliases only `checkbox` is recognized, so a field that names another alias whose key holds a
     // widget rendering its own label gets the template's label and description as well, the description twice under
     // one id. A known limitation, pinned so it changes on purpose
-    test('renders a second label and description for another boolean alias whose key holds the toggle', () => {
-      const { container, templateLabel } = renderForm(
-        { agree: { 'ui:widget': 'radio' } },
-        { ...agree, description: 'Whether you agree' },
-        { RadioWidget: DaisyToggleWidget },
-      );
+    test.each(['radio', 'RadioWidget'])(
+      'draws the label and description once, through the template, for a toggle under the RadioWidget key, named as %s',
+      (widget) => {
+        const { container, templateLabel } = renderForm(
+          { agree: { 'ui:widget': widget } },
+          { ...agree, description: 'Whether you agree' },
+          { RadioWidget: DaisyToggleWidget },
+        );
 
-      expect(templateLabel()).toHaveTextContent('Agree');
-      expect(screen.getAllByText('Agree')).toHaveLength(2);
-      expect(screen.getAllByText('Whether you agree')).toHaveLength(2);
-      expect(container.querySelectorAll('[id="root_agree__description"]')).toHaveLength(2);
-      expect(screen.getByRole('checkbox')).toHaveClass('toggle');
-    });
+        expect(templateLabel()).toHaveTextContent('Agree');
+        expect(screen.getAllByText('Agree')).toHaveLength(1);
+        expect(screen.getAllByText('Whether you agree')).toHaveLength(1);
+        expect(container.querySelectorAll('[id="root_agree__description"]')).toHaveLength(1);
+        expect(screen.getByRole('checkbox')).toHaveClass('toggle');
+      },
+    );
 
-    test('leaves the label and description to the toggle when the field names the key that holds it', () => {
+    test('leaves the label and description to the toggle when the key holding it declares that it draws them', () => {
       const { templateLabel } = renderForm(
         { agree: { 'ui:widget': 'RadioWidget' } },
         { ...agree, description: 'Whether you agree' },
         { RadioWidget: DaisyToggleWidget },
+        { widgets: { RadioWidget: { label: 'self', description: 'self' } } },
       );
 
       expect(templateLabel()).toBeNull();
@@ -417,10 +432,9 @@ describe('FieldTemplate', () => {
       expect(screen.getByRole('button', { name: 'Color' })).toHaveAccessibleDescription('');
     });
 
-    // The template labels the field's own control, not this selector, so nothing outside the button names it and its
-    // contents are its whole name — the value it displays is announced twice, which is the cost of a predicate that
-    // can only answer from the label the widget was handed
-    test('is named by its own contents where no label points at it', () => {
+    // The template's label names the field's own control through its `for`, and the selector through the
+    // `aria-labelledby` its plan gives it, so the option it displays is its description
+    test("is named by its field's label, and described by the option it displays", () => {
       render(
         <Form
           schema={{
@@ -441,10 +455,27 @@ describe('FieldTemplate', () => {
       );
 
       const selector = document.getElementById('root_region__oneof_select')!;
-      expect(screen.queryByLabelText('Region')).not.toBe(selector);
-      // The dropdown arrow is decoration, and hidden, so the name it falls back to is the option alone
-      expect(selector).toHaveAccessibleName('Europe');
+      expect(selector).toHaveAccessibleName('Region');
       expect(selector).toHaveAccessibleDescription('Europe');
+    });
+
+    test('is named by the heading of an object with properties beside its options', () => {
+      render(
+        <Form
+          schema={{
+            type: 'object',
+            title: 'Pet',
+            properties: { name: { type: 'string' } },
+            anyOf: [
+              { title: 'Dog', properties: { bark: { type: 'string' } } },
+              { title: 'Cat', properties: { meow: { type: 'string' } } },
+            ],
+          }}
+          validator={validator}
+        />,
+      );
+
+      expect(document.getElementById('root__anyof_select')).toHaveAccessibleName('Pet');
     });
 
     // Naming the button by reference instead would point at an id only this theme's `FieldTemplate` renders, leaving
@@ -469,7 +500,7 @@ describe('FieldTemplate', () => {
       expect(screen.getByRole('button', { name: 'Color' })).toHaveAccessibleDescription('green');
     });
 
-    // Its own label already spells the key out, so referencing the key it displays would announce it twice
+    // Named by the label its template draws, which replaces the key it displays, so the key is its description
     test('keeps the name its own label gives it for an additionalProperties entry', () => {
       render(
         <Form
@@ -485,7 +516,7 @@ describe('FieldTemplate', () => {
 
       const keySelect = document.getElementById('root_alpha-key')!;
       expect(keySelect).toHaveAccessibleName('alpha Key');
-      expect(keySelect).toHaveAccessibleDescription('');
+      expect(keySelect).toHaveAccessibleDescription('alpha');
     });
   });
 

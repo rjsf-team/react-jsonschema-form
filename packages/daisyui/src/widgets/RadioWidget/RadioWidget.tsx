@@ -36,6 +36,7 @@ export default function RadioWidget<
   value,
   label,
   hideLabel,
+  presentation,
   required,
   disabled,
   readonly,
@@ -82,7 +83,10 @@ export default function RadioWidget<
   return (
     <div className='form-control'>
       {/* Display the options in a vertical flex layout for better spacing */}
-      <div className='flex flex-col gap-2 mt-1' {...getGroupProps({ id, label, name, hideLabel, role: 'radiogroup' })}>
+      <div
+        className='flex flex-col gap-2 mt-1'
+        {...getGroupProps({ id, label, name, hideLabel, presentation, role: 'radiogroup' })}
+      >
         {enumOptions?.map((option, index) => {
           const optionDisabled = disabled || readonly || enumOptionsIsDisabled(option.value, enumDisabled);
           const classNames = getOptionClassNames(optionDisabled);

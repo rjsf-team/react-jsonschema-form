@@ -2991,7 +2991,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                   class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-20"
                 >
                   <span
-                    aria-describedby="root_active__error root_active__description root_active__help"
                     class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium Mui-checked MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-21"
                   >
                     <input
@@ -15249,7 +15248,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                       for="root_foo"
                       id="root_foo-label"
                     >
-                      foo
+                      foo (deprecated)
                     </label>
                     <div
                       class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-7"
@@ -15271,7 +15270,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                           class="emotion-12"
                         >
                           <span>
-                            foo
+                            foo (deprecated)
                           </span>
                         </legend>
                       </fieldset>

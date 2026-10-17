@@ -5,6 +5,7 @@ import type {
   ArrayFieldTemplateProps,
   ErrorSchema,
   FieldPath,
+  FieldPresentation,
   FieldProps,
   FormContextType,
   Registry,
@@ -14,6 +15,7 @@ import type {
   UIOptionsType,
 } from '@rjsf/utils';
 import {
+  ADDITIONAL_PROPERTY_FLAG,
   getByPath,
   toPath,
   allowAdditionalItems,
@@ -21,7 +23,6 @@ import {
   getStaticItemsUiSchema,
   getTemplates,
   getUiOptions,
-  isCustomWidget,
   isFixedItems,
   isFormDataAvailable,
   isObject,
@@ -34,11 +35,18 @@ import {
   fieldPathToName,
   ITEMS_KEY,
   TranslatableString,
+  uiBooleanOption,
 } from '@rjsf/utils';
 
 import useFieldView from '../../hooks/useFieldView.ts';
 import { EMPTY_UI_SCHEMA } from '../constants.ts';
 import { moveOfItems } from '../formState.ts';
+import {
+  ARRAY_MODE_DEFAULT_WIDGETS,
+  displaysLabel,
+  getArrayFieldMode,
+  getWidgetLabelProps,
+} from './fieldWidgetUtils.ts';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 
 /** A row's stable React `key`, and its `order`: when the row was added, counted across every array */
@@ -194,6 +202,7 @@ function ArrayAsMultiSelect<
     onFocus,
     registry,
     rawErrors,
+    presentation,
     hideError,
     name,
     onSelectChange,
@@ -209,14 +218,15 @@ function ArrayAsMultiSelect<
   const itemsUiSchema = (uiSchema?.items ?? uiSchema) as UiSchema<T[], S, F>;
   const enumOptions = optionsList<T[], S, F>(itemsSchema, itemsUiSchema);
   const {
-    widget = 'select',
+    widget = ARRAY_MODE_DEFAULT_WIDGETS.multiSelect,
     title: uiTitle,
     placeholder,
     ...options
   } = getUiOptions<T[], S, F>(uiSchema, globalUiOptions);
   const { Widget } = resolveWidget<T[], S, F>(schema, widget, widgets);
-  const label = uiTitle ?? schema.title ?? name;
-  const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
+  const labelProps = getWidgetLabelProps<T, S, F>(presentation, uiTitle ?? schema.title ?? name, () =>
+    displaysLabel(registry, schema, uiSchema),
+  );
   return (
     <Widget
       id={id}
@@ -234,11 +244,11 @@ function ArrayAsMultiSelect<
       readonly={readonly}
       hideError={hideError}
       required={required}
-      label={label}
-      hideLabel={!displayLabel}
+      {...labelProps}
       placeholder={placeholder}
       autofocus={autofocus}
       rawErrors={rawErrors}
+      presentation={presentation}
       htmlName={htmlName}
     />
   );
@@ -265,15 +275,17 @@ function ArrayAsCustomWidget<
     formData: items = [],
     registry,
     rawErrors,
+    presentation,
     name,
     onSelectChange,
     htmlName,
   } = props;
-  const { widgets, schemaUtils, globalUiOptions } = registry;
+  const { widgets, globalUiOptions } = registry;
   const { widget, title: uiTitle, placeholder, ...options } = getUiOptions<T[], S, F>(uiSchema, globalUiOptions);
   const { Widget } = resolveWidget<T[], S, F>(schema, widget, widgets);
-  const label = uiTitle ?? schema.title ?? name;
-  const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
+  const labelProps = getWidgetLabelProps<T, S, F>(presentation, uiTitle ?? schema.title ?? name, () =>
+    displaysLabel(registry, schema, uiSchema),
+  );
   return (
     <Widget
       id={id}
@@ -291,11 +303,11 @@ function ArrayAsCustomWidget<
       readonly={readonly}
       hideError={hideError}
       required={required}
-      label={label}
-      hideLabel={!displayLabel}
+      {...labelProps}
       placeholder={placeholder}
       autofocus={autofocus}
       rawErrors={rawErrors}
+      presentation={presentation}
       htmlName={htmlName}
     />
   );
@@ -322,20 +334,22 @@ function ArrayAsFiles<
     registry,
     formData: items = [],
     rawErrors,
+    presentation,
     hideError,
     onSelectChange,
     htmlName,
   } = props;
-  const { widgets, schemaUtils, globalUiOptions } = registry;
+  const { widgets, globalUiOptions } = registry;
   const {
-    widget = 'files',
+    widget = ARRAY_MODE_DEFAULT_WIDGETS.files,
     title: uiTitle,
     placeholder,
     ...options
   } = getUiOptions<T[], S, F>(uiSchema, globalUiOptions);
   const { Widget } = resolveWidget<T[], S, F>(schema, widget, widgets);
-  const label = uiTitle ?? schema.title ?? name;
-  const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
+  const labelProps = getWidgetLabelProps<T, S, F>(presentation, uiTitle ?? schema.title ?? name, () =>
+    displaysLabel(registry, schema, uiSchema),
+  );
   return (
     <Widget
       options={options}
@@ -355,8 +369,8 @@ function ArrayAsFiles<
       registry={registry}
       autofocus={autofocus}
       rawErrors={rawErrors}
-      label={label}
-      hideLabel={!displayLabel}
+      presentation={presentation}
+      {...labelProps}
       placeholder={placeholder}
       htmlName={htmlName}
     />
@@ -604,7 +618,6 @@ function ArrayFieldItemInner<
   const {
     schemaUtils,
     fields: { ArraySchemaField, SchemaField },
-    globalUiOptions,
     globalFormOptions,
   } = registry;
   const itemSchema = useMemo(
@@ -616,7 +629,7 @@ function ArrayFieldItemInner<
   const ItemSchemaField = ArraySchemaField || SchemaField;
   const readsFormData = useReadsFormData(ArrayFieldItem);
   const { ArrayFieldItemTemplate } = getTemplates<T[], S, F>(registry, uiOptions);
-  const displayLabel = schemaUtils.getDisplayLabel(itemSchema, itemUiSchema, globalUiOptions);
+  const displayLabel = displaysLabel<T[], S, F>(registry, itemSchema, itemUiSchema);
   const { description } = getUiOptions(itemUiSchema);
   const hasDescription = !!description || !!itemSchema.description;
   const { orderable, removable, copyable } = itemButtonOptions(uiOptions);
@@ -770,6 +783,39 @@ interface InternalArrayFieldProps<
   handleReorderItems: (event: MouseEvent<HTMLButtonElement>, index: number, newIndex: number) => void;
 }
 
+/** Gets the heading an array's template draws, so a template that reads only `title` draws exactly that heading, and
+ * lays out what it would put beside it elsewhere where it is empty: under its plan, the field's label where the array
+ * draws its own heading, and none where a field above already draws that text; without a plan, its `ui:title` or own
+ * title, and none where `ui:label: false` turns it off
+ *
+ * @param presentation - The array's plan, if `SchemaField` built one
+ * @param schema - The array's schema
+ * @param fieldTitle - The array's own title
+ * @param uiOptions - The array's ui options, read only without a plan
+ * @returns - The `title` its template is handed
+ */
+function getArrayHeading<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
+  presentation: FieldPresentation | undefined,
+  schema: S,
+  fieldTitle: string,
+  uiOptions: UIOptionsType<T[], S, F>,
+): string {
+  if (!presentation) {
+    return (uiBooleanOption(uiOptions.label) ?? true) ? uiOptions.title || fieldTitle : '';
+  }
+  if (presentation.label.by !== 'self') {
+    return '';
+  }
+  // The key input beside an `additionalProperties` entry already shows its key, which labels the entry, so the heading
+  // the array draws itself takes the `ui:title` or the schema `title` naming such entries where there is one, as an
+  // object's does
+  return (ADDITIONAL_PROPERTY_FLAG in schema && (uiOptions.title || schema.title)) || presentation.label.text;
+}
+
 /** Renders a normal array without any limitations of length
  */
 function NormalArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
@@ -799,6 +845,7 @@ function NormalArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
     handleCopyItem,
     handleRemoveItem,
     handleReorderItems,
+    presentation,
   } = props;
   const fieldTitle = schema.title || title || name;
   const { schemaUtils, fields, formContext, globalUiOptions } = registry;
@@ -820,6 +867,7 @@ function NormalArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
   const optionalDataControl = renderOptionalField ? <OptionalDataControlsField {...props} /> : undefined;
   const arrayProps: ArrayFieldTemplateProps<T[], S, F> = {
     canAdd,
+    presentation,
     items: actualFormData.map((keyedItem, index: number) => {
       const { key, item } = keyedItem;
       // While we are actually dealing with a single item of type T, the types require a T[], so cast
@@ -872,7 +920,7 @@ function NormalArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
     hideError,
     required,
     schema,
-    title: fieldTitle,
+    title: getArrayHeading<T, S, F>(presentation, schema, fieldTitle, uiOptions),
     formData,
     errorSchema,
     rawErrors,
@@ -913,6 +961,7 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     handleCopyItem,
     handleRemoveItem,
     handleReorderItems,
+    presentation,
   } = props;
   // A `type` list naming `array` alongside another type can hold a `null` or a value of that other type here
   let items: T[] = Array.isArray(props.formData) ? props.formData : [];
@@ -937,6 +986,7 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   const itemNames = useItemNames<T, S, F>(keyedFormData, registry, schema, uiSchema, uiOptions, schemaItems.length);
   const arrayProps: ArrayFieldTemplateProps<T[], S, F> = {
     canAdd,
+    presentation,
     className: `rjsf-field rjsf-field-array rjsf-field-array-fixed-items${extraClass}`,
     disabled,
     id,
@@ -1005,7 +1055,7 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     registry,
     schema,
     uiSchema,
-    title: fieldTitle,
+    title: getArrayHeading<T, S, F>(presentation, schema, fieldTitle, uiOptions),
     errorSchema,
     rawErrors,
     optionalDataControl,
@@ -1085,7 +1135,7 @@ export default function ArrayField<
   F extends FormContextType = FormContextType,
 >(props: FieldProps<T[], S, F>) {
   const { schema, uiSchema, fieldPath, id: fieldId, registry, formData, onChange } = props;
-  const { globalFormOptions, schemaUtils, translateString } = registry;
+  const { globalFormOptions, translateString } = registry;
   const { keyedFormData, updateKeyedFormData } = useKeyedFormData<T>(formData);
   const view = useFieldView(fieldPath, keyedFormData, ArrayField);
   /** Every return renders through this, so a template or widget below never inherits what was said of this field */
@@ -1264,8 +1314,8 @@ export default function ArrayField<
     [onChange, fieldPath, fieldId],
   );
 
-  const isMissingItems = !(ITEMS_KEY in schema);
-  if (isMissingItems && !globalFormOptions.useFallbackUiForUnsupportedType) {
+  const mode = getArrayFieldMode<T[], S, F>(schema, uiSchema, registry);
+  if (mode === 'unsupported') {
     const uiOptions = getUiOptions<T[], S, F>(uiSchema);
     const { UnsupportedFieldTemplate } = getTemplates<T[], S, F>(registry, uiOptions);
 
@@ -1280,7 +1330,7 @@ export default function ArrayField<
     );
   }
   // An items schema with type as undefined triggers FallbackField later on
-  const arraySchema = isMissingItems ? { ...schema, [ITEMS_KEY]: { type: undefined } } : schema;
+  const arraySchema = ITEMS_KEY in schema ? schema : { ...schema, [ITEMS_KEY]: { type: undefined } };
   const arrayAsMultiProps: ArrayAsFieldProps<T[], S, F> = {
     ...props,
     schema: arraySchema,
@@ -1299,18 +1349,17 @@ export default function ArrayField<
     keyedFormData,
     onChange: handleChange,
   };
-  if (schemaUtils.isMultiSelect(arrayAsMultiProps.schema)) {
-    // If array has enum or uniqueItems set to true, call renderMultiSelect() to render the default multiselect widget or a custom widget, if specified.
-    return vouchForItems(<ArrayAsMultiSelect<T, S, F> {...arrayAsMultiProps} />);
+  switch (mode) {
+    case 'multiSelect':
+      // If array has enum or uniqueItems set to true, call renderMultiSelect() to render the default multiselect widget or a custom widget, if specified.
+      return vouchForItems(<ArrayAsMultiSelect<T, S, F> {...arrayAsMultiProps} />);
+    case 'customWidget':
+      return vouchForItems(<ArrayAsCustomWidget<T, S, F> {...arrayAsMultiProps} />);
+    case 'fixed':
+      return vouchForItems(<FixedArray<T, S, F> {...arrayProps} />);
+    case 'files':
+      return vouchForItems(<ArrayAsFiles<T, S, F> {...arrayAsMultiProps} />);
+    default:
+      return vouchForItems(<NormalArray<T, S, F> {...arrayProps} />);
   }
-  if (isCustomWidget<T[], S, F>(uiSchema)) {
-    return vouchForItems(<ArrayAsCustomWidget<T, S, F> {...arrayAsMultiProps} />);
-  }
-  if (isFixedItems(arrayAsMultiProps.schema)) {
-    return vouchForItems(<FixedArray<T, S, F> {...arrayProps} />);
-  }
-  if (schemaUtils.isFilesArray(arrayAsMultiProps.schema, uiSchema)) {
-    return vouchForItems(<ArrayAsFiles<T, S, F> {...arrayAsMultiProps} />);
-  }
-  return vouchForItems(<NormalArray<T, S, F> {...arrayProps} />);
 }

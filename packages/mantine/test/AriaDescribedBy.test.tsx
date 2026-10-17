@@ -319,23 +319,25 @@ describe('aria-describedby', () => {
       expect(describedByValues(container)).toEqual([`${ariaDescribedByIds('root')} ${successId}`]);
     });
 
-    test.each<[string, RJSFSchema, UiSchema?]>([
-      ['text', { type: 'string' }],
-      ['textarea', { type: 'string' }, { 'ui:widget': 'textarea' }],
-      ['password', { type: 'string' }, { 'ui:widget': 'password' }],
-      ['select', enumSchema],
-      ['color', { type: 'string', format: 'color' }],
-      ['file', { type: 'string', format: 'data-url' }],
-      ['time', { type: 'string', format: 'time' }],
-      ['date', { type: 'string', format: 'date' }],
-    ])('still describes the %s widget when wrapperProps has an id', (_, schema, uiSchema = {}) => {
+    // The select takes its describers from the field's plan, which lists only the parts that render: the description
+    // every schema here is given
+    test.each<[string, RJSFSchema, UiSchema, string]>([
+      ['text', { type: 'string' }, {}, ariaDescribedByIds('root')],
+      ['textarea', { type: 'string' }, { 'ui:widget': 'textarea' }, ariaDescribedByIds('root')],
+      ['password', { type: 'string' }, { 'ui:widget': 'password' }, ariaDescribedByIds('root')],
+      ['select', enumSchema, {}, 'root__description'],
+      ['color', { type: 'string', format: 'color' }, {}, ariaDescribedByIds('root')],
+      ['file', { type: 'string', format: 'data-url' }, {}, ariaDescribedByIds('root')],
+      ['time', { type: 'string', format: 'time' }, {}, ariaDescribedByIds('root')],
+      ['date', { type: 'string', format: 'date' }, {}, ariaDescribedByIds('root')],
+    ])('still describes the %s widget when wrapperProps has an id', (_, schema, uiSchema, describedBy) => {
       const { container } = renderThemed({}, schema, {
         ...uiSchema,
         'ui:options': { success: 'Looks good', wrapperProps: { id: 'wrapped' } },
       });
 
       expect(container.querySelector('[id="root-success"]')).toHaveTextContent('Looks good');
-      expect(describedByValues(container)).toEqual([`${ariaDescribedByIds('root')} root-success`]);
+      expect(describedByValues(container)).toEqual([`${describedBy} root-success`]);
     });
 
     test.each([
@@ -716,5 +718,192 @@ describe('aria-describedby', () => {
 
     expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
     expect(container.querySelector(`[id="${errorId('root')}"]`)).toHaveTextContent('Own error');
+  });
+
+  test('describes a selected option once, under the id its control is described by', () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          properties: { region: { oneOf: [{ title: 'None', type: 'null' }, { $ref: '#/$defs/europe' }] } },
+          $defs: {
+            europe: {
+              title: 'Europe',
+              description: 'A country in Europe',
+              oneOf: [
+                { const: 'FR', title: 'France' },
+                { const: 'DE', title: 'Germany' },
+              ],
+            },
+          },
+        }}
+        formData={{ region: 'DE' }}
+        validator={validator}
+      />,
+    );
+
+    expect(shownWithText('A country in Europe')).toHaveLength(1);
+    expect(container.querySelector(`#${descriptionId('root_region')}`)).toHaveTextContent('A country in Europe');
+  });
+
+  test('gives the field description and a selected option description an id each', () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          properties: {
+            region: {
+              oneOf: [
+                { title: 'None', type: 'null' },
+                { title: 'Text', type: 'string', description: 'Opt desc' },
+              ],
+            },
+          },
+        }}
+        uiSchema={{ region: { 'ui:description': 'Where you live' } }}
+        formData={{ region: 'a' }}
+        validator={validator}
+      />,
+    );
+
+    expect(shownWithText('Where you live')).toHaveLength(1);
+    expect(shownWithText('Opt desc')).toHaveLength(1);
+    const ids = Array.from(container.querySelectorAll('[id$="__description"]'), (element) => element.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  test.each([
+    ['without', {}],
+    ['with', { 'ui:description': 'Where you live' }],
+  ])('renders a nested oneOf option description once, %s a field description', (_, fieldUiSchema) => {
+    const { container } = render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          properties: {
+            region: {
+              oneOf: [
+                { title: 'None', type: 'null' },
+                {
+                  title: 'Inner',
+                  oneOf: [
+                    { title: 'Text', type: 'string' },
+                    { title: 'Number', type: 'number' },
+                  ],
+                },
+              ],
+            },
+          },
+        }}
+        uiSchema={{ region: { ...fieldUiSchema, oneOf: [{}, { 'ui:description': 'Inner desc' }] } }}
+        formData={{ region: 'a' }}
+        validator={validator}
+      />,
+    );
+
+    expect(shownWithText('Inner desc')).toHaveLength(1);
+    const ids = Array.from(container.querySelectorAll('[id$="__description"]'), (element) => element.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  test('gives the field description and a checkbox option description an id each', () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          properties: {
+            x: {
+              oneOf: [
+                { type: 'boolean', description: 'Opt desc' },
+                { type: 'string', title: 'Text' },
+              ],
+            },
+          },
+        }}
+        uiSchema={{ x: { 'ui:description': 'Field desc' } }}
+        formData={{ x: true }}
+        validator={validator}
+      />,
+    );
+
+    expect(shownWithText('Field desc')).toHaveLength(1);
+    expect(shownWithText('Opt desc')).toHaveLength(1);
+    const ids = Array.from(container.querySelectorAll('[id$="__description"]'), (element) => element.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  test('describes a selector by the field description it renders, and by no other', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        region: {
+          oneOf: [
+            { title: 'None', type: 'null' },
+            { title: 'Text', type: 'string' },
+          ],
+        },
+      },
+    };
+    const selectorDescribedBy = (uiSchema: UiSchema) => {
+      const { container, unmount } = render(
+        <WrappedForm schema={schema} uiSchema={uiSchema} formData={{ region: 'a' }} validator={validator} />,
+      );
+      const describedBy = container.querySelector('#root_region__oneof_select')!.getAttribute('aria-describedby');
+      unmount();
+      // A selector nothing describes carries no `aria-describedby` at all
+      return describedBy?.split(' ') ?? [];
+    };
+
+    expect(selectorDescribedBy({ region: { 'ui:description': 'Where you live' } })).toContain(
+      descriptionId('root_region'),
+    );
+    expect(selectorDescribedBy({})).not.toContain(descriptionId('root_region'));
+    expect(
+      selectorDescribedBy({ region: { 'ui:description': 'Where you live', 'ui:options': { label: false } } }),
+    ).not.toContain(descriptionId('root_region'));
+  });
+
+  test('describes a range selector by the field description it renders', () => {
+    render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          properties: {
+            region: {
+              oneOf: [
+                { title: 'Text', type: 'string' },
+                { title: 'Flag', type: 'boolean' },
+              ],
+            },
+          },
+        }}
+        uiSchema={{ region: { 'ui:widget': 'range', 'ui:description': 'Where you live', oneOf: [{}, {}] } }}
+        formData={{ region: 'a' }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('slider').getAttribute('aria-describedby')?.split(' ')).toContain(
+      descriptionId('root_region'),
+    );
+  });
+
+  test("names an object's option selector by the object's heading", () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          title: 'Pet',
+          properties: { name: { type: 'string' } },
+          anyOf: [
+            { title: 'Dog', properties: { bark: { type: 'string' } } },
+            { title: 'Cat', properties: { meow: { type: 'string' } } },
+          ],
+        }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('input#root__anyof_select')).toHaveAccessibleName('Pet');
   });
 });

@@ -53,6 +53,8 @@ export default function SelectWidget<
     value,
     schema,
     uiSchema,
+    hideLabel,
+    presentation,
   } = props;
   const [open, setOpen] = useState(false);
   const { formContext } = registry;
@@ -148,6 +150,8 @@ export default function SelectWidget<
         registry={registry}
         uiSchema={uiSchema}
         value={value}
+        hideLabel={hideLabel}
+        presentation={presentation}
       />
     </>
   );
