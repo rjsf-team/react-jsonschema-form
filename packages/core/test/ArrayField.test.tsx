@@ -35,6 +35,7 @@ import {
   expectToHaveBeenCalledWithFormData,
   fieldErrorsById,
   handleOf,
+  input,
   ListeningParent,
   reportedBy,
   submitForm,
@@ -4838,6 +4839,36 @@ describe('ArrayField', () => {
 
       // The removal starts from the rendered ['a'], not from the refused ['a', undefined]
       expectToHaveBeenCalledWithFormData(onChange, [], 'root');
+    });
+
+    it('should drop a remove a custom parent refused from the rows a later event keys its items by', async () => {
+      // A custom field that refuses every remove without the form committing anything
+      function NoRemoveField(props: FieldProps<string[]>) {
+        const { ArrayField: InnerArrayField } = props.registry.fields;
+        return (
+          <InnerArrayField
+            {...props}
+            onChange={(value, fieldPath, errorSchema, id) => {
+              if (!Array.isArray(value) || !Array.isArray(props.formData) || value.length >= props.formData.length) {
+                props.onChange(value, fieldPath, errorSchema, id);
+              }
+            }}
+          />
+        );
+      }
+      const { node } = createFormComponent({
+        schema,
+        initialFormData: ['a', 'b', 'c'],
+        uiSchema: { 'ui:field': NoRemoveField },
+      });
+      const third = input(node, 'root_2');
+
+      await user.click(node.querySelectorAll('.rjsf-array-item-remove')[1]);
+      await user.click(node.querySelectorAll('.rjsf-array-item-move-down')[0]);
+
+      expect([0, 1, 2].map((index) => input(node, `root_${index}`).value)).toEqual(['b', 'a', 'c']);
+      // The row of the item the refused remove would have dropped still shows that item
+      expect(input(node, 'root_2')).toBe(third);
     });
 
     it('should drop an add a custom parent threw on from the rows a later event starts from', async () => {

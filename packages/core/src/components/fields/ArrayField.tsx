@@ -1083,9 +1083,11 @@ function useKeyedFormData<T = unknown>(formData: T[] = NO_ITEMS): KeyedFormDataS
     [itemKeys, items],
   );
   const sentRows = useRef(keyedFormData);
+  // Every commit, not only one that changed the rows: a change that never reached the form, as under a custom field
+  // that keeps it to itself, re-renders the rows it sent no data for, which must not outlive that render
   useLayoutEffect(() => {
     sentRows.current = keyedFormData;
-  }, [keyedFormData]);
+  });
   const readSentRows = useCallback(() => sentRows.current, []);
   const readSentItems = useCallback(() => keyedToPlainFormData(sentRows.current), []);
 
