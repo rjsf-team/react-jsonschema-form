@@ -1,9 +1,10 @@
 import type { FocusEvent } from 'react';
 import type { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
 import {
-  getControlDescribedBy,
+  getControlAttributes,
   getTemplates,
   getWidgetDescription,
+  hasWidgetErrors,
   schemaRequiresTrueValue,
   widgetDrawsLabel,
 } from '@rjsf/utils';
@@ -45,10 +46,7 @@ export default function CheckboxWidget<
 
   const description = getWidgetDescription<T, S, F>(props);
   return (
-    <Form.Group
-      className={disabled || readonly ? 'disabled' : ''}
-      aria-describedby={getControlDescribedBy<T, S, F>({ id, presentation })}
-    >
+    <Form.Group className={disabled || readonly ? 'disabled' : ''}>
       {description && (
         <DescriptionFieldTemplate
           id={description.id}
@@ -71,12 +69,14 @@ export default function CheckboxWidget<
         }
         checked={typeof value === 'undefined' ? false : value}
         required={trueValueRequired}
+        isInvalid={hasWidgetErrors<T, S, F>(props)}
         disabled={disabled || readonly}
         autoFocus={autofocus}
         onChange={handleChange}
         type='checkbox'
         onBlur={handleBlur}
         onFocus={handleFocus}
+        {...getControlAttributes<T, S, F>({ id, presentation })}
       />
     </Form.Group>
   );

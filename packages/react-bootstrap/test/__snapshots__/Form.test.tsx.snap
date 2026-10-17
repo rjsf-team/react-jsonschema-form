@@ -10,7 +10,6 @@ exports[`format iso-date-time 1`] = `
     >
       <div>
         <input
-          aria-describedby="root__error root__description root__help"
           class="form-control"
           id="root"
           name="root"
@@ -42,7 +41,6 @@ exports[`format iso-time 1`] = `
     >
       <div>
         <input
-          aria-describedby="root__error root__description root__help"
           class="form-control"
           id="root"
           name="root"
@@ -97,10 +95,13 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                       >
                         <div
                           class="my-1"
-                          id="root_tasks__title"
                         >
                           <h5>
-                            tasks
+                            <span
+                              id="root_tasks__title"
+                            >
+                              tasks
+                            </span>
                           </h5>
                           <hr
                             class="border-0 bg-secondary mt-0"
@@ -123,10 +124,14 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                   <div>
                                     <div
                                       class="my-1"
-                                      id="root_tasks_0__title"
                                     >
                                       <h5>
-                                        tasks-1
+                                        <span
+                                          id="root_tasks_0__title"
+                                        >
+                                          tasks-1
+                                        </span>
+                                        *
                                       </h5>
                                       <hr
                                         class="border-0 bg-secondary mt-0"
@@ -151,12 +156,14 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                               <label
                                                 class="form-label"
                                                 for="root_tasks_0_title"
-                                                id="root_tasks_0_title__label"
                                               >
-                                                title
+                                                <span
+                                                  id="root_tasks_0_title__label"
+                                                >
+                                                  title
+                                                </span>
                                               </label>
                                               <input
-                                                aria-describedby="root_tasks_0_title__error root_tasks_0_title__description root_tasks_0_title__help"
                                                 class="form-control"
                                                 id="root_tasks_0_title"
                                                 name="root[tasks][0][title]"
@@ -293,10 +300,14 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                   <div>
                                     <div
                                       class="my-1"
-                                      id="root_tasks_1__title"
                                     >
                                       <h5>
-                                        tasks-2
+                                        <span
+                                          id="root_tasks_1__title"
+                                        >
+                                          tasks-2
+                                        </span>
+                                        *
                                       </h5>
                                       <hr
                                         class="border-0 bg-secondary mt-0"
@@ -321,12 +332,14 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                               <label
                                                 class="form-label"
                                                 for="root_tasks_1_title"
-                                                id="root_tasks_1_title__label"
                                               >
-                                                title
+                                                <span
+                                                  id="root_tasks_1_title__label"
+                                                >
+                                                  title
+                                                </span>
                                               </label>
                                               <input
-                                                aria-describedby="root_tasks_1_title__error root_tasks_1_title__description root_tasks_1_title__help"
                                                 class="form-control"
                                                 id="root_tasks_1_title"
                                                 name="root[tasks][1][title]"
@@ -550,10 +563,13 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                       >
                         <div
                           class="my-1"
-                          id="root_tags__title"
                         >
                           <h5>
-                            tags
+                            <span
+                              id="root_tags__title"
+                            >
+                              tags
+                            </span>
                           </h5>
                           <hr
                             class="border-0 bg-secondary mt-0"
@@ -577,12 +593,15 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                                     <label
                                       class="form-label"
                                       for="root_tags_0"
-                                      id="root_tags_0__label"
                                     >
-                                      tags-1*
+                                      <span
+                                        id="root_tags_0__label"
+                                      >
+                                        tags-1
+                                      </span>
+                                      *
                                     </label>
                                     <input
-                                      aria-describedby="root_tags_0__error root_tags_0__description root_tags_0__help"
                                       class="form-control"
                                       id="root_tags_0"
                                       name="root[tags][0]"
@@ -679,12 +698,15 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                                     <label
                                       class="form-label"
                                       for="root_tags_1"
-                                      id="root_tags_1__label"
                                     >
-                                      tags-2*
+                                      <span
+                                        id="root_tags_1__label"
+                                      >
+                                        tags-2
+                                      </span>
+                                      *
                                     </label>
                                     <input
-                                      aria-describedby="root_tags_1__error root_tags_1__description root_tags_1__help"
                                       class="form-control"
                                       id="root_tags_1"
                                       name="root[tags][1]"
@@ -859,17 +881,22 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                 <div>
                   <label
                     class="form-label"
-                    for="root_choices"
-                    id="root_choices__label"
                   >
-                    choices
+                    <span
+                      id="root_choices__label"
+                    >
+                      choices
+                    </span>
                   </label>
-                  <div>
+                  <div
+                    aria-labelledby="root_choices__label"
+                    id="root_choices"
+                    role="group"
+                  >
                     <div
                       class="bg-transparent border-0 form-check"
                     >
                       <input
-                        aria-describedby="root_choices__error root_choices__description root_choices__help"
                         class="form-check-input"
                         id="root_choices-0"
                         name="root[choices][]"
@@ -888,7 +915,6 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                       class="bg-transparent border-0 form-check"
                     >
                       <input
-                        aria-describedby="root_choices__error root_choices__description root_choices__help"
                         class="form-check-input"
                         id="root_choices-1"
                         name="root[choices][]"
@@ -907,7 +933,6 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                       class="bg-transparent border-0 form-check"
                     >
                       <input
-                        aria-describedby="root_choices__error root_choices__description root_choices__help"
                         class="form-check-input"
                         id="root_choices-2"
                         name="root[choices][]"
@@ -968,10 +993,13 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                 <div>
                   <div
                     class="my-1"
-                    id="root_person__title"
                   >
                     <h5>
-                      person
+                      <span
+                        id="root_person__title"
+                      >
+                        person
+                      </span>
                     </h5>
                     <hr
                       class="border-0 bg-secondary mt-0"
@@ -996,12 +1024,14 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                             <label
                               class="form-label"
                               for="root_person_firstName"
-                              id="root_person_firstName__label"
                             >
-                              firstName
+                              <span
+                                id="root_person_firstName__label"
+                              >
+                                firstName
+                              </span>
                             </label>
                             <input
-                              aria-describedby="root_person_firstName__error root_person_firstName__description root_person_firstName__help"
                               class="form-control"
                               id="root_person_firstName"
                               name="root[person][firstName]"
@@ -1028,12 +1058,14 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                             <label
                               class="form-label"
                               for="root_person_lastName"
-                              id="root_person_lastName__label"
                             >
-                              lastName
+                              <span
+                                id="root_person_lastName__label"
+                              >
+                                lastName
+                              </span>
                             </label>
                             <input
-                              aria-describedby="root_person_lastName__error root_person_lastName__description root_person_lastName__help"
                               class="form-control"
                               id="root_person_lastName"
                               name="root[person][lastName]"
@@ -1059,10 +1091,13 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                           <div>
                             <div
                               class="my-1"
-                              id="root_person_address__title"
                             >
                               <h5>
-                                address
+                                <span
+                                  id="root_person_address__title"
+                                >
+                                  address
+                                </span>
                               </h5>
                               <hr
                                 class="border-0 bg-secondary mt-0"
@@ -1087,12 +1122,14 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                       <label
                                         class="form-label"
                                         for="root_person_address_street"
-                                        id="root_person_address_street__label"
                                       >
-                                        street
+                                        <span
+                                          id="root_person_address_street__label"
+                                        >
+                                          street
+                                        </span>
                                       </label>
                                       <input
-                                        aria-describedby="root_person_address_street__error root_person_address_street__description root_person_address_street__help"
                                         class="form-control"
                                         id="root_person_address_street"
                                         name="root[person][address][street]"
@@ -1119,12 +1156,14 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                       <label
                                         class="form-label"
                                         for="root_person_address_city"
-                                        id="root_person_address_city__label"
                                       >
-                                        city
+                                        <span
+                                          id="root_person_address_city__label"
+                                        >
+                                          city
+                                        </span>
                                       </label>
                                       <input
-                                        aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                                         class="form-control"
                                         id="root_person_address_city"
                                         name="root[person][address][city]"
@@ -1187,19 +1226,23 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                 <div>
                   <label
                     class="form-label"
-                    for="root_option"
-                    id="root_option__label"
                   >
-                    option
+                    <span
+                      id="root_option__label"
+                    >
+                      option
+                    </span>
                   </label>
                   <div
+                    aria-labelledby="root_option__label"
                     class="mb-0"
+                    id="root_option"
+                    role="radiogroup"
                   >
                     <div
                       class="form-check"
                     >
                       <input
-                        aria-describedby="root_option__error root_option__description root_option__help"
                         class="form-check-input"
                         id="root_option-0"
                         name="root[option]"
@@ -1218,7 +1261,6 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                       class="form-check"
                     >
                       <input
-                        aria-describedby="root_option__error root_option__description root_option__help"
                         class="form-check-input"
                         id="root_option-1"
                         name="root[option]"
@@ -1280,9 +1322,12 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                   <label
                     class="form-label"
                     for="root_color"
-                    id="root_color__label"
                   >
-                    color
+                    <span
+                      id="root_color__label"
+                    >
+                      color
+                    </span>
                   </label>
                   <select
                     class="form-select"
@@ -1354,12 +1399,14 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                   <label
                     class="form-label"
                     for="root_firstName"
-                    id="root_firstName__label"
                   >
-                    firstName
+                    <span
+                      id="root_firstName__label"
+                    >
+                      firstName
+                    </span>
                   </label>
                   <input
-                    aria-describedby="root_firstName__error root_firstName__description root_firstName__help"
                     class="form-control"
                     id="root_firstName"
                     name="root[firstName]"
@@ -1386,12 +1433,14 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                   <label
                     class="form-label"
                     for="root_age"
-                    id="root_age__label"
                   >
-                    age
+                    <span
+                      id="root_age__label"
+                    >
+                      age
+                    </span>
                   </label>
                   <input
-                    aria-describedby="root_age__error root_age__description root_age__help"
                     class="form-control"
                     id="root_age"
                     inputmode="decimal"
@@ -1485,15 +1534,17 @@ exports[`nameGenerator > bracketNameGenerator > textarea field 1`] = `
                   <label
                     class="form-label"
                     for="root_description"
-                    id="root_description__label"
                   >
-                    description
+                    <span
+                      id="root_description__label"
+                    >
+                      description
+                    </span>
                   </label>
                   <div
                     class="input-group"
                   >
                     <textarea
-                      aria-describedby="root_description__error root_description__description root_description__help"
                       class="form-control"
                       id="root_description"
                       name="root[description]"
@@ -1553,10 +1604,13 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                       >
                         <div
                           class="my-1"
-                          id="root_tasks__title"
                         >
                           <h5>
-                            tasks
+                            <span
+                              id="root_tasks__title"
+                            >
+                              tasks
+                            </span>
                           </h5>
                           <hr
                             class="border-0 bg-secondary mt-0"
@@ -1579,10 +1633,14 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                   <div>
                                     <div
                                       class="my-1"
-                                      id="root_tasks_0__title"
                                     >
                                       <h5>
-                                        tasks-1
+                                        <span
+                                          id="root_tasks_0__title"
+                                        >
+                                          tasks-1
+                                        </span>
+                                        *
                                       </h5>
                                       <hr
                                         class="border-0 bg-secondary mt-0"
@@ -1607,12 +1665,14 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                               <label
                                                 class="form-label"
                                                 for="root_tasks_0_title"
-                                                id="root_tasks_0_title__label"
                                               >
-                                                title
+                                                <span
+                                                  id="root_tasks_0_title__label"
+                                                >
+                                                  title
+                                                </span>
                                               </label>
                                               <input
-                                                aria-describedby="root_tasks_0_title__error root_tasks_0_title__description root_tasks_0_title__help"
                                                 class="form-control"
                                                 id="root_tasks_0_title"
                                                 name="root.tasks.0.title"
@@ -1749,10 +1809,14 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                   <div>
                                     <div
                                       class="my-1"
-                                      id="root_tasks_1__title"
                                     >
                                       <h5>
-                                        tasks-2
+                                        <span
+                                          id="root_tasks_1__title"
+                                        >
+                                          tasks-2
+                                        </span>
+                                        *
                                       </h5>
                                       <hr
                                         class="border-0 bg-secondary mt-0"
@@ -1777,12 +1841,14 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                               <label
                                                 class="form-label"
                                                 for="root_tasks_1_title"
-                                                id="root_tasks_1_title__label"
                                               >
-                                                title
+                                                <span
+                                                  id="root_tasks_1_title__label"
+                                                >
+                                                  title
+                                                </span>
                                               </label>
                                               <input
-                                                aria-describedby="root_tasks_1_title__error root_tasks_1_title__description root_tasks_1_title__help"
                                                 class="form-control"
                                                 id="root_tasks_1_title"
                                                 name="root.tasks.1.title"
@@ -2006,10 +2072,13 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                       >
                         <div
                           class="my-1"
-                          id="root_tags__title"
                         >
                           <h5>
-                            tags
+                            <span
+                              id="root_tags__title"
+                            >
+                              tags
+                            </span>
                           </h5>
                           <hr
                             class="border-0 bg-secondary mt-0"
@@ -2033,12 +2102,15 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                                     <label
                                       class="form-label"
                                       for="root_tags_0"
-                                      id="root_tags_0__label"
                                     >
-                                      tags-1*
+                                      <span
+                                        id="root_tags_0__label"
+                                      >
+                                        tags-1
+                                      </span>
+                                      *
                                     </label>
                                     <input
-                                      aria-describedby="root_tags_0__error root_tags_0__description root_tags_0__help"
                                       class="form-control"
                                       id="root_tags_0"
                                       name="root.tags.0"
@@ -2135,12 +2207,15 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                                     <label
                                       class="form-label"
                                       for="root_tags_1"
-                                      id="root_tags_1__label"
                                     >
-                                      tags-2*
+                                      <span
+                                        id="root_tags_1__label"
+                                      >
+                                        tags-2
+                                      </span>
+                                      *
                                     </label>
                                     <input
-                                      aria-describedby="root_tags_1__error root_tags_1__description root_tags_1__help"
                                       class="form-control"
                                       id="root_tags_1"
                                       name="root.tags.1"
@@ -2315,10 +2390,13 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                 <div>
                   <div
                     class="my-1"
-                    id="root_person__title"
                   >
                     <h5>
-                      person
+                      <span
+                        id="root_person__title"
+                      >
+                        person
+                      </span>
                     </h5>
                     <hr
                       class="border-0 bg-secondary mt-0"
@@ -2343,12 +2421,14 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                             <label
                               class="form-label"
                               for="root_person_firstName"
-                              id="root_person_firstName__label"
                             >
-                              firstName
+                              <span
+                                id="root_person_firstName__label"
+                              >
+                                firstName
+                              </span>
                             </label>
                             <input
-                              aria-describedby="root_person_firstName__error root_person_firstName__description root_person_firstName__help"
                               class="form-control"
                               id="root_person_firstName"
                               name="root.person.firstName"
@@ -2375,12 +2455,14 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                             <label
                               class="form-label"
                               for="root_person_lastName"
-                              id="root_person_lastName__label"
                             >
-                              lastName
+                              <span
+                                id="root_person_lastName__label"
+                              >
+                                lastName
+                              </span>
                             </label>
                             <input
-                              aria-describedby="root_person_lastName__error root_person_lastName__description root_person_lastName__help"
                               class="form-control"
                               id="root_person_lastName"
                               name="root.person.lastName"
@@ -2406,10 +2488,13 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                           <div>
                             <div
                               class="my-1"
-                              id="root_person_address__title"
                             >
                               <h5>
-                                address
+                                <span
+                                  id="root_person_address__title"
+                                >
+                                  address
+                                </span>
                               </h5>
                               <hr
                                 class="border-0 bg-secondary mt-0"
@@ -2434,12 +2519,14 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                       <label
                                         class="form-label"
                                         for="root_person_address_street"
-                                        id="root_person_address_street__label"
                                       >
-                                        street
+                                        <span
+                                          id="root_person_address_street__label"
+                                        >
+                                          street
+                                        </span>
                                       </label>
                                       <input
-                                        aria-describedby="root_person_address_street__error root_person_address_street__description root_person_address_street__help"
                                         class="form-control"
                                         id="root_person_address_street"
                                         name="root.person.address.street"
@@ -2466,12 +2553,14 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                       <label
                                         class="form-label"
                                         for="root_person_address_city"
-                                        id="root_person_address_city__label"
                                       >
-                                        city
+                                        <span
+                                          id="root_person_address_city__label"
+                                        >
+                                          city
+                                        </span>
                                       </label>
                                       <input
-                                        aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                                         class="form-control"
                                         id="root_person_address_city"
                                         name="root.person.address.city"
@@ -2535,9 +2624,12 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                   <label
                     class="form-label"
                     for="root_color"
-                    id="root_color__label"
                   >
-                    color
+                    <span
+                      id="root_color__label"
+                    >
+                      color
+                    </span>
                   </label>
                   <select
                     class="form-select"
@@ -2609,12 +2701,14 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                   <label
                     class="form-label"
                     for="root_firstName"
-                    id="root_firstName__label"
                   >
-                    firstName
+                    <span
+                      id="root_firstName__label"
+                    >
+                      firstName
+                    </span>
                   </label>
                   <input
-                    aria-describedby="root_firstName__error root_firstName__description root_firstName__help"
                     class="form-control"
                     id="root_firstName"
                     name="root.firstName"
@@ -2641,12 +2735,14 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                   <label
                     class="form-label"
                     for="root_age"
-                    id="root_age__label"
                   >
-                    age
+                    <span
+                      id="root_age__label"
+                    >
+                      age
+                    </span>
                   </label>
                   <input
-                    aria-describedby="root_age__error root_age__description root_age__help"
                     class="form-control"
                     id="root_age"
                     inputmode="decimal"
@@ -2724,12 +2820,13 @@ exports[`radio widget with options sharing a String() in the realValue format (#
       <div>
         <div
           class="mb-0"
+          id="root"
+          role="radiogroup"
         >
           <div
             class="form-check"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="form-check-input"
               id="root-0"
               name="root"
@@ -2748,7 +2845,6 @@ exports[`radio widget with options sharing a String() in the realValue format (#
             class="form-check"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               checked=""
               class="form-check-input"
               id="root-1"
@@ -2806,9 +2902,12 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                   <label
                     class="form-label"
                     for="root_region"
-                    id="root_region__label"
                   >
-                    region
+                    <span
+                      id="root_region__label"
+                    >
+                      region
+                    </span>
                   </label>
                   <div
                     class="card"
@@ -3152,10 +3251,13 @@ exports[`single fields > Cyclic schema 1`] = `
       <div>
         <div
           class="my-1"
-          id="root__title"
         >
           <h5>
-            A registration form
+            <span
+              id="root__title"
+            >
+              A registration form
+            </span>
           </h5>
           <hr
             class="border-0 bg-secondary mt-0"
@@ -3187,10 +3289,13 @@ exports[`single fields > Cyclic schema 1`] = `
                 <div>
                   <div
                     class="my-1"
-                    id="root_child__title"
                   >
                     <h5>
-                      A registration form
+                      <span
+                        id="root_child__title"
+                      >
+                        A registration form
+                      </span>
                     </h5>
                     <hr
                       class="border-0 bg-secondary mt-0"
@@ -3302,7 +3407,6 @@ exports[`single fields > checkbox field with description in schema and FieldTemp
     >
       <div>
         <div
-          aria-describedby="root__description"
           class=""
         >
           <div>
@@ -3317,6 +3421,7 @@ exports[`single fields > checkbox field with description in schema and FieldTemp
             class="form-check"
           >
             <input
+              aria-describedby="root__description"
               class="form-check-input"
               id="root"
               name="root"
@@ -3399,7 +3504,6 @@ exports[`single fields > checkbox field with label and description 1`] = `
     >
       <div>
         <div
-          aria-describedby="root__description"
           class=""
         >
           <div>
@@ -3414,6 +3518,7 @@ exports[`single fields > checkbox field with label and description 1`] = `
             class="form-check"
           >
             <input
+              aria-describedby="root__description"
               class="form-check-input"
               id="root"
               name="root"
@@ -3452,7 +3557,6 @@ exports[`single fields > checkbox field with label and rich text description 1`]
     >
       <div>
         <div
-          aria-describedby="root__description"
           class=""
         >
           <div>
@@ -3475,6 +3579,7 @@ exports[`single fields > checkbox field with label and rich text description 1`]
             class="form-check"
           >
             <input
+              aria-describedby="root__description"
               class="form-check-input"
               id="root"
               name="root"
@@ -3514,17 +3619,22 @@ exports[`single fields > checkboxes field 1`] = `
       <div>
         <label
           class="form-label"
-          for="root"
-          id="root__label"
         >
-          An enum list rendered as checkboxes
+          <span
+            id="root__label"
+          >
+            An enum list rendered as checkboxes
+          </span>
         </label>
-        <div>
+        <div
+          aria-labelledby="root__label"
+          id="root"
+          role="group"
+        >
           <div
             class="bg-transparent border-0 form-check"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="form-check-input"
               id="root-0"
               name="root"
@@ -3543,7 +3653,6 @@ exports[`single fields > checkboxes field 1`] = `
             class="bg-transparent border-0 form-check"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="form-check-input"
               id="root-1"
               name="root"
@@ -3562,7 +3671,6 @@ exports[`single fields > checkboxes field 1`] = `
             class="bg-transparent border-0 form-check"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="form-check-input"
               id="root-2"
               name="root"
@@ -3581,7 +3689,6 @@ exports[`single fields > checkboxes field 1`] = `
             class="bg-transparent border-0 form-check"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="form-check-input"
               id="root-3"
               name="root"
@@ -3622,17 +3729,23 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
       <div>
         <label
           class="form-label"
-          for="root"
-          id="root__label"
         >
-          Checkbox Group
+          <span
+            id="root__label"
+          >
+            Checkbox Group
+          </span>
         </label>
-        <div>
+        <div
+          aria-labelledby="root__label"
+          id="root"
+          role="group"
+        >
           <div
             class="bg-transparent border-0 form-check form-check-inline"
           >
             <input
-              aria-describedby="root__error root__description root__help"
+              aria-describedby="root__description root__help"
               checked=""
               class="form-check-input"
               id="root-0"
@@ -3652,7 +3765,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
             class="bg-transparent border-0 form-check form-check-inline"
           >
             <input
-              aria-describedby="root__error root__description root__help"
+              aria-describedby="root__description root__help"
               class="form-check-input"
               id="root-1"
               name="root"
@@ -3671,7 +3784,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
             class="bg-transparent border-0 form-check form-check-inline"
           >
             <input
-              aria-describedby="root__error root__description root__help"
+              aria-describedby="root__description root__help"
               class="form-check-input"
               id="root-2"
               name="root"
@@ -3687,7 +3800,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
             </label>
           </div>
         </div>
-        <small
+        <div
           class="text-muted form-text"
         >
           <div>
@@ -3698,13 +3811,13 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
               A group of checkboxes
             </div>
           </div>
-        </small>
-        <small
+        </div>
+        <div
           class="text-muted form-text"
           id="root__help"
         >
           Select all that apply
-        </small>
+        </div>
       </div>
     </div>
     <div>
@@ -3730,17 +3843,23 @@ exports[`single fields > checkboxes widget with required field 1`] = `
       <div>
         <label
           class="form-label"
-          for="root"
-          id="root__label"
         >
-          Required Checkbox Group
+          <span
+            id="root__label"
+          >
+            Required Checkbox Group
+          </span>
         </label>
-        <div>
+        <div
+          aria-labelledby="root__label"
+          id="root"
+          role="group"
+        >
           <div
             class="bg-transparent border-0 form-check"
           >
             <input
-              aria-describedby="root__error root__description root__help"
+              aria-describedby="root__description"
               class="form-check-input"
               id="root-0"
               name="root"
@@ -3759,7 +3878,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
             class="bg-transparent border-0 form-check"
           >
             <input
-              aria-describedby="root__error root__description root__help"
+              aria-describedby="root__description"
               class="form-check-input"
               id="root-1"
               name="root"
@@ -3778,7 +3897,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
             class="bg-transparent border-0 form-check"
           >
             <input
-              aria-describedby="root__error root__description root__help"
+              aria-describedby="root__description"
               class="form-check-input"
               id="root-2"
               name="root"
@@ -3794,7 +3913,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
             </label>
           </div>
         </div>
-        <small
+        <div
           class="text-muted form-text"
         >
           <div>
@@ -3805,7 +3924,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
               At least one option must be selected
             </div>
           </div>
-        </small>
+        </div>
       </div>
     </div>
     <div>
@@ -3847,12 +3966,15 @@ exports[`single fields > field with description 1`] = `
                   <label
                     class="form-label"
                     for="root_my-field"
-                    id="root_my-field__label"
                   >
-                    my-field
+                    <span
+                      id="root_my-field__label"
+                    >
+                      my-field
+                    </span>
                   </label>
                   <input
-                    aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                    aria-describedby="root_my-field__description"
                     class="form-control"
                     id="root_my-field"
                     name="root_my-field"
@@ -3860,7 +3982,7 @@ exports[`single fields > field with description 1`] = `
                     type="text"
                     value=""
                   />
-                  <small
+                  <div
                     class="text-muted form-text"
                   >
                     <div>
@@ -3871,7 +3993,7 @@ exports[`single fields > field with description 1`] = `
                         some description
                       </div>
                     </div>
-                  </small>
+                  </div>
                 </div>
               </div>
             </div>
@@ -3918,12 +4040,15 @@ exports[`single fields > field with description in uiSchema 1`] = `
                   <label
                     class="form-label"
                     for="root_my-field"
-                    id="root_my-field__label"
                   >
-                    my-field
+                    <span
+                      id="root_my-field__label"
+                    >
+                      my-field
+                    </span>
                   </label>
                   <input
-                    aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                    aria-describedby="root_my-field__description"
                     class="form-control"
                     id="root_my-field"
                     name="root_my-field"
@@ -3931,7 +4056,7 @@ exports[`single fields > field with description in uiSchema 1`] = `
                     type="text"
                     value=""
                   />
-                  <small
+                  <div
                     class="text-muted form-text"
                   >
                     <div>
@@ -3942,7 +4067,7 @@ exports[`single fields > field with description in uiSchema 1`] = `
                         some other description
                       </div>
                     </div>
-                  </small>
+                  </div>
                 </div>
               </div>
             </div>
@@ -3989,12 +4114,15 @@ exports[`single fields > field with markdown description 1`] = `
                   <label
                     class="form-label"
                     for="root_my-field"
-                    id="root_my-field__label"
                   >
-                    my-field
+                    <span
+                      id="root_my-field__label"
+                    >
+                      my-field
+                    </span>
                   </label>
                   <input
-                    aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                    aria-describedby="root_my-field__description"
                     class="form-control"
                     id="root_my-field"
                     name="root_my-field"
@@ -4002,7 +4130,7 @@ exports[`single fields > field with markdown description 1`] = `
                     type="text"
                     value=""
                   />
-                  <small
+                  <div
                     class="text-muted form-text"
                   >
                     <div>
@@ -4019,7 +4147,7 @@ exports[`single fields > field with markdown description 1`] = `
                         </span>
                       </div>
                     </div>
-                  </small>
+                  </div>
                 </div>
               </div>
             </div>
@@ -4066,12 +4194,15 @@ exports[`single fields > field with markdown description in uiSchema 1`] = `
                   <label
                     class="form-label"
                     for="root_my-field"
-                    id="root_my-field__label"
                   >
-                    my-field
+                    <span
+                      id="root_my-field__label"
+                    >
+                      my-field
+                    </span>
                   </label>
                   <input
-                    aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                    aria-describedby="root_my-field__description"
                     class="form-control"
                     id="root_my-field"
                     name="root_my-field"
@@ -4079,7 +4210,7 @@ exports[`single fields > field with markdown description in uiSchema 1`] = `
                     type="text"
                     value=""
                   />
-                  <small
+                  <div
                     class="text-muted form-text"
                   >
                     <div>
@@ -4090,7 +4221,7 @@ exports[`single fields > field with markdown description in uiSchema 1`] = `
                         some other description
                       </div>
                     </div>
-                  </small>
+                  </div>
                 </div>
               </div>
             </div>
@@ -4120,7 +4251,6 @@ exports[`single fields > format color 1`] = `
     >
       <div>
         <input
-          aria-describedby="root__error root__description root__help"
           class="form-control form-control-color"
           id="root"
           name="root"
@@ -4152,7 +4282,6 @@ exports[`single fields > format date 1`] = `
     >
       <div>
         <input
-          aria-describedby="root__error root__description root__help"
           class="form-control"
           id="root"
           name="root"
@@ -4184,7 +4313,6 @@ exports[`single fields > format datetime 1`] = `
     >
       <div>
         <input
-          aria-describedby="root__error root__description root__help"
           class="form-control"
           id="root"
           name="root"
@@ -4216,7 +4344,6 @@ exports[`single fields > format time 1`] = `
     >
       <div>
         <input
-          aria-describedby="root__error root__description root__help"
           class="form-control"
           id="root"
           name="root"
@@ -4272,8 +4399,9 @@ exports[`single fields > help and error display 1`] = `
     >
       <div>
         <input
-          aria-describedby="root__error root__description root__help"
-          class="is-invalid form-control"
+          aria-describedby="root__error root__help"
+          aria-invalid="true"
+          class="form-control is-invalid"
           id="root"
           name="root"
           placeholder=""
@@ -4294,12 +4422,12 @@ exports[`single fields > help and error display 1`] = `
             </small>
           </li>
         </ul>
-        <small
+        <div
           class="text-danger form-text"
           id="root__help"
         >
           help me!
-        </small>
+        </div>
       </div>
     </div>
     <div>
@@ -4371,7 +4499,6 @@ exports[`single fields > hidden label 1`] = `
     >
       <div>
         <input
-          aria-describedby="root__error root__description root__help"
           class="form-control"
           id="root"
           name="root"
@@ -4425,7 +4552,6 @@ exports[`single fields > number field 0 1`] = `
     >
       <div>
         <input
-          aria-describedby="root__error root__description root__help"
           class="form-control"
           id="root"
           inputmode="decimal"
@@ -4460,7 +4586,6 @@ exports[`single fields > number field 1`] = `
     >
       <div>
         <input
-          aria-describedby="root__error root__description root__help"
           class="form-control"
           id="root"
           inputmode="decimal"
@@ -4496,10 +4621,13 @@ exports[`single fields > optional data controls > does not show optional control
       <div>
         <div
           class="my-1"
-          id="root__title"
         >
           <h5>
-            test
+            <span
+              id="root__title"
+            >
+              test
+            </span>
           </h5>
           <hr
             class="border-0 bg-secondary mt-0"
@@ -4523,10 +4651,13 @@ exports[`single fields > optional data controls > does not show optional control
                 <div>
                   <div
                     class="my-1"
-                    id="root_nestedObjectOptional__title"
                   >
                     <h5>
-                      nestedObjectOptional
+                      <span
+                        id="root_nestedObjectOptional__title"
+                      >
+                        nestedObjectOptional
+                      </span>
                     </h5>
                     <hr
                       class="border-0 bg-secondary mt-0"
@@ -4551,12 +4682,14 @@ exports[`single fields > optional data controls > does not show optional control
                             <label
                               class="form-label"
                               for="root_nestedObjectOptional_test"
-                              id="root_nestedObjectOptional_test__label"
                             >
-                              test
+                              <span
+                                id="root_nestedObjectOptional_test__label"
+                              >
+                                test
+                              </span>
                             </label>
                             <input
-                              aria-describedby="root_nestedObjectOptional_test__error root_nestedObjectOptional_test__description root_nestedObjectOptional_test__help"
                               class="form-control"
                               id="root_nestedObjectOptional_test"
                               name="root_nestedObjectOptional_test"
@@ -4582,10 +4715,13 @@ exports[`single fields > optional data controls > does not show optional control
                           <div>
                             <div
                               class="my-1"
-                              id="root_nestedObjectOptional_deepObjectOptional__title"
                             >
                               <h5>
-                                deepObjectOptional
+                                <span
+                                  id="root_nestedObjectOptional_deepObjectOptional__title"
+                                >
+                                  deepObjectOptional
+                                </span>
                               </h5>
                               <hr
                                 class="border-0 bg-secondary mt-0"
@@ -4610,12 +4746,14 @@ exports[`single fields > optional data controls > does not show optional control
                                       <label
                                         class="form-label"
                                         for="root_nestedObjectOptional_deepObjectOptional_deepTest"
-                                        id="root_nestedObjectOptional_deepObjectOptional_deepTest__label"
                                       >
-                                        deepTest
+                                        <span
+                                          id="root_nestedObjectOptional_deepObjectOptional_deepTest__label"
+                                        >
+                                          deepTest
+                                        </span>
                                       </label>
                                       <input
-                                        aria-describedby="root_nestedObjectOptional_deepObjectOptional_deepTest__error root_nestedObjectOptional_deepObjectOptional_deepTest__description root_nestedObjectOptional_deepObjectOptional_deepTest__help"
                                         class="form-control"
                                         id="root_nestedObjectOptional_deepObjectOptional_deepTest"
                                         name="root_nestedObjectOptional_deepObjectOptional_deepTest"
@@ -4646,10 +4784,14 @@ exports[`single fields > optional data controls > does not show optional control
                           <div>
                             <div
                               class="my-1"
-                              id="root_nestedObjectOptional_deepObject__title"
                             >
                               <h5>
-                                deepObject
+                                <span
+                                  id="root_nestedObjectOptional_deepObject__title"
+                                >
+                                  deepObject
+                                </span>
+                                *
                               </h5>
                               <hr
                                 class="border-0 bg-secondary mt-0"
@@ -4674,12 +4816,14 @@ exports[`single fields > optional data controls > does not show optional control
                                       <label
                                         class="form-label"
                                         for="root_nestedObjectOptional_deepObject_deepTest"
-                                        id="root_nestedObjectOptional_deepObject_deepTest__label"
                                       >
-                                        deepTest
+                                        <span
+                                          id="root_nestedObjectOptional_deepObject_deepTest__label"
+                                        >
+                                          deepTest
+                                        </span>
                                       </label>
                                       <input
-                                        aria-describedby="root_nestedObjectOptional_deepObject_deepTest__error root_nestedObjectOptional_deepObject_deepTest__description root_nestedObjectOptional_deepObject_deepTest__help"
                                         class="form-control"
                                         id="root_nestedObjectOptional_deepObject_deepTest"
                                         name="root_nestedObjectOptional_deepObject_deepTest"
@@ -4717,10 +4861,13 @@ exports[`single fields > optional data controls > does not show optional control
                                 >
                                   <div
                                     class="my-1"
-                                    id="root_nestedObjectOptional_deepArrayOptional__title"
                                   >
                                     <h5>
-                                      deepArrayOptional
+                                      <span
+                                        id="root_nestedObjectOptional_deepArrayOptional__title"
+                                      >
+                                        deepArrayOptional
+                                      </span>
                                     </h5>
                                     <hr
                                       class="border-0 bg-secondary mt-0"
@@ -4802,10 +4949,13 @@ exports[`single fields > optional data controls > does not show optional control
                                 >
                                   <div
                                     class="my-1"
-                                    id="root_nestedObjectOptional_deepArrayOptional2__title"
                                   >
                                     <h5>
-                                      deepArrayOptional2
+                                      <span
+                                        id="root_nestedObjectOptional_deepArrayOptional2__title"
+                                      >
+                                        deepArrayOptional2
+                                      </span>
                                     </h5>
                                     <hr
                                       class="border-0 bg-secondary mt-0"
@@ -4887,10 +5037,14 @@ exports[`single fields > optional data controls > does not show optional control
                                 >
                                   <div
                                     class="my-1"
-                                    id="root_nestedObjectOptional_deepArray__title"
                                   >
                                     <h5>
-                                      deepArray
+                                      <span
+                                        id="root_nestedObjectOptional_deepArray__title"
+                                      >
+                                        deepArray
+                                      </span>
+                                      *
                                     </h5>
                                     <hr
                                       class="border-0 bg-secondary mt-0"
@@ -4977,10 +5131,13 @@ exports[`single fields > optional data controls > does not show optional control
                       >
                         <div
                           class="my-1"
-                          id="root_nestedArrayOptional__title"
                         >
                           <h5>
-                            nestedArrayOptional
+                            <span
+                              id="root_nestedArrayOptional__title"
+                            >
+                              nestedArrayOptional
+                            </span>
                           </h5>
                           <hr
                             class="border-0 bg-secondary mt-0"
@@ -5055,10 +5212,14 @@ exports[`single fields > optional data controls > does not show optional control
                 <div>
                   <div
                     class="my-1"
-                    id="root_nestedObject__title"
                   >
                     <h5>
-                      nestedObject
+                      <span
+                        id="root_nestedObject__title"
+                      >
+                        nestedObject
+                      </span>
+                      *
                     </h5>
                     <hr
                       class="border-0 bg-secondary mt-0"
@@ -5083,12 +5244,14 @@ exports[`single fields > optional data controls > does not show optional control
                             <label
                               class="form-label"
                               for="root_nestedObject_test"
-                              id="root_nestedObject_test__label"
                             >
-                              test
+                              <span
+                                id="root_nestedObject_test__label"
+                              >
+                                test
+                              </span>
                             </label>
                             <input
-                              aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
                               class="form-control"
                               id="root_nestedObject_test"
                               name="root_nestedObject_test"
@@ -5126,10 +5289,14 @@ exports[`single fields > optional data controls > does not show optional control
                       >
                         <div
                           class="my-1"
-                          id="root_nestedArray__title"
                         >
                           <h5>
-                            nestedArray
+                            <span
+                              id="root_nestedArray__title"
+                            >
+                              nestedArray
+                            </span>
+                            *
                           </h5>
                           <hr
                             class="border-0 bg-secondary mt-0"
@@ -5204,10 +5371,12 @@ exports[`single fields > optional data controls > does not show optional control
                 <div>
                   <label
                     class="form-label"
-                    for="root_optionalObjectWithOneofs"
-                    id="root_optionalObjectWithOneofs__label"
                   >
-                    optionalObjectWithOneofs
+                    <span
+                      id="root_optionalObjectWithOneofs__label"
+                    >
+                      optionalObjectWithOneofs
+                    </span>
                   </label>
                   <div
                     class="card"
@@ -5264,12 +5433,14 @@ exports[`single fields > optional data controls > does not show optional control
                                     <label
                                       class="form-label"
                                       for="root_optionalObjectWithOneofs_name"
-                                      id="root_optionalObjectWithOneofs_name__label"
                                     >
-                                      name
+                                      <span
+                                        id="root_optionalObjectWithOneofs_name__label"
+                                      >
+                                        name
+                                      </span>
                                     </label>
                                     <input
-                                      aria-describedby="root_optionalObjectWithOneofs_name__error root_optionalObjectWithOneofs_name__description root_optionalObjectWithOneofs_name__help"
                                       class="form-control"
                                       id="root_optionalObjectWithOneofs_name"
                                       name="root_optionalObjectWithOneofs_name"
@@ -5305,10 +5476,12 @@ exports[`single fields > optional data controls > does not show optional control
                 <div>
                   <label
                     class="form-label"
-                    for="root_optionalArrayWithAnyofs"
-                    id="root_optionalArrayWithAnyofs__label"
                   >
-                    optionalArrayWithAnyofs
+                    <span
+                      id="root_optionalArrayWithAnyofs__label"
+                    >
+                      optionalArrayWithAnyofs
+                    </span>
                   </label>
                   <div
                     class="card"
@@ -5438,10 +5611,13 @@ exports[`single fields > optional data controls > does not show optional control
       <div>
         <div
           class="my-1"
-          id="root__title"
         >
           <h5>
-            test
+            <span
+              id="root__title"
+            >
+              test
+            </span>
           </h5>
           <hr
             class="border-0 bg-secondary mt-0"
@@ -5465,10 +5641,13 @@ exports[`single fields > optional data controls > does not show optional control
                 <div>
                   <div
                     class="my-1"
-                    id="root_nestedObjectOptional__title"
                   >
                     <h5>
-                      nestedObjectOptional
+                      <span
+                        id="root_nestedObjectOptional__title"
+                      >
+                        nestedObjectOptional
+                      </span>
                     </h5>
                     <hr
                       class="border-0 bg-secondary mt-0"
@@ -5493,12 +5672,14 @@ exports[`single fields > optional data controls > does not show optional control
                             <label
                               class="form-label"
                               for="root_nestedObjectOptional_test"
-                              id="root_nestedObjectOptional_test__label"
                             >
-                              test
+                              <span
+                                id="root_nestedObjectOptional_test__label"
+                              >
+                                test
+                              </span>
                             </label>
                             <input
-                              aria-describedby="root_nestedObjectOptional_test__error root_nestedObjectOptional_test__description root_nestedObjectOptional_test__help"
                               class="form-control"
                               id="root_nestedObjectOptional_test"
                               name="root_nestedObjectOptional_test"
@@ -5525,10 +5706,13 @@ exports[`single fields > optional data controls > does not show optional control
                           <div>
                             <div
                               class="my-1"
-                              id="root_nestedObjectOptional_deepObjectOptional__title"
                             >
                               <h5>
-                                deepObjectOptional
+                                <span
+                                  id="root_nestedObjectOptional_deepObjectOptional__title"
+                                >
+                                  deepObjectOptional
+                                </span>
                               </h5>
                               <hr
                                 class="border-0 bg-secondary mt-0"
@@ -5553,12 +5737,14 @@ exports[`single fields > optional data controls > does not show optional control
                                       <label
                                         class="form-label"
                                         for="root_nestedObjectOptional_deepObjectOptional_deepTest"
-                                        id="root_nestedObjectOptional_deepObjectOptional_deepTest__label"
                                       >
-                                        deepTest
+                                        <span
+                                          id="root_nestedObjectOptional_deepObjectOptional_deepTest__label"
+                                        >
+                                          deepTest
+                                        </span>
                                       </label>
                                       <input
-                                        aria-describedby="root_nestedObjectOptional_deepObjectOptional_deepTest__error root_nestedObjectOptional_deepObjectOptional_deepTest__description root_nestedObjectOptional_deepObjectOptional_deepTest__help"
                                         class="form-control"
                                         id="root_nestedObjectOptional_deepObjectOptional_deepTest"
                                         name="root_nestedObjectOptional_deepObjectOptional_deepTest"
@@ -5590,10 +5776,14 @@ exports[`single fields > optional data controls > does not show optional control
                           <div>
                             <div
                               class="my-1"
-                              id="root_nestedObjectOptional_deepObject__title"
                             >
                               <h5>
-                                deepObject
+                                <span
+                                  id="root_nestedObjectOptional_deepObject__title"
+                                >
+                                  deepObject
+                                </span>
+                                *
                               </h5>
                               <hr
                                 class="border-0 bg-secondary mt-0"
@@ -5618,12 +5808,14 @@ exports[`single fields > optional data controls > does not show optional control
                                       <label
                                         class="form-label"
                                         for="root_nestedObjectOptional_deepObject_deepTest"
-                                        id="root_nestedObjectOptional_deepObject_deepTest__label"
                                       >
-                                        deepTest
+                                        <span
+                                          id="root_nestedObjectOptional_deepObject_deepTest__label"
+                                        >
+                                          deepTest
+                                        </span>
                                       </label>
                                       <input
-                                        aria-describedby="root_nestedObjectOptional_deepObject_deepTest__error root_nestedObjectOptional_deepObject_deepTest__description root_nestedObjectOptional_deepObject_deepTest__help"
                                         class="form-control"
                                         id="root_nestedObjectOptional_deepObject_deepTest"
                                         name="root_nestedObjectOptional_deepObject_deepTest"
@@ -5662,10 +5854,13 @@ exports[`single fields > optional data controls > does not show optional control
                                 >
                                   <div
                                     class="my-1"
-                                    id="root_nestedObjectOptional_deepArrayOptional__title"
                                   >
                                     <h5>
-                                      deepArrayOptional
+                                      <span
+                                        id="root_nestedObjectOptional_deepArrayOptional__title"
+                                      >
+                                        deepArrayOptional
+                                      </span>
                                     </h5>
                                     <hr
                                       class="border-0 bg-secondary mt-0"
@@ -5748,10 +5943,13 @@ exports[`single fields > optional data controls > does not show optional control
                                 >
                                   <div
                                     class="my-1"
-                                    id="root_nestedObjectOptional_deepArrayOptional2__title"
                                   >
                                     <h5>
-                                      deepArrayOptional2
+                                      <span
+                                        id="root_nestedObjectOptional_deepArrayOptional2__title"
+                                      >
+                                        deepArrayOptional2
+                                      </span>
                                     </h5>
                                     <hr
                                       class="border-0 bg-secondary mt-0"
@@ -5834,10 +6032,14 @@ exports[`single fields > optional data controls > does not show optional control
                                 >
                                   <div
                                     class="my-1"
-                                    id="root_nestedObjectOptional_deepArray__title"
                                   >
                                     <h5>
-                                      deepArray
+                                      <span
+                                        id="root_nestedObjectOptional_deepArray__title"
+                                      >
+                                        deepArray
+                                      </span>
+                                      *
                                     </h5>
                                     <hr
                                       class="border-0 bg-secondary mt-0"
@@ -5925,10 +6127,13 @@ exports[`single fields > optional data controls > does not show optional control
                       >
                         <div
                           class="my-1"
-                          id="root_nestedArrayOptional__title"
                         >
                           <h5>
-                            nestedArrayOptional
+                            <span
+                              id="root_nestedArrayOptional__title"
+                            >
+                              nestedArrayOptional
+                            </span>
                           </h5>
                           <hr
                             class="border-0 bg-secondary mt-0"
@@ -6004,10 +6209,14 @@ exports[`single fields > optional data controls > does not show optional control
                 <div>
                   <div
                     class="my-1"
-                    id="root_nestedObject__title"
                   >
                     <h5>
-                      nestedObject
+                      <span
+                        id="root_nestedObject__title"
+                      >
+                        nestedObject
+                      </span>
+                      *
                     </h5>
                     <hr
                       class="border-0 bg-secondary mt-0"
@@ -6032,12 +6241,14 @@ exports[`single fields > optional data controls > does not show optional control
                             <label
                               class="form-label"
                               for="root_nestedObject_test"
-                              id="root_nestedObject_test__label"
                             >
-                              test
+                              <span
+                                id="root_nestedObject_test__label"
+                              >
+                                test
+                              </span>
                             </label>
                             <input
-                              aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
                               class="form-control"
                               id="root_nestedObject_test"
                               name="root_nestedObject_test"
@@ -6076,10 +6287,14 @@ exports[`single fields > optional data controls > does not show optional control
                       >
                         <div
                           class="my-1"
-                          id="root_nestedArray__title"
                         >
                           <h5>
-                            nestedArray
+                            <span
+                              id="root_nestedArray__title"
+                            >
+                              nestedArray
+                            </span>
+                            *
                           </h5>
                           <hr
                             class="border-0 bg-secondary mt-0"
@@ -6155,10 +6370,12 @@ exports[`single fields > optional data controls > does not show optional control
                 <div>
                   <label
                     class="form-label"
-                    for="root_optionalObjectWithOneofs"
-                    id="root_optionalObjectWithOneofs__label"
                   >
-                    optionalObjectWithOneofs
+                    <span
+                      id="root_optionalObjectWithOneofs__label"
+                    >
+                      optionalObjectWithOneofs
+                    </span>
                   </label>
                   <div
                     class="card"
@@ -6216,12 +6433,14 @@ exports[`single fields > optional data controls > does not show optional control
                                     <label
                                       class="form-label"
                                       for="root_optionalObjectWithOneofs_name"
-                                      id="root_optionalObjectWithOneofs_name__label"
                                     >
-                                      name
+                                      <span
+                                        id="root_optionalObjectWithOneofs_name__label"
+                                      >
+                                        name
+                                      </span>
                                     </label>
                                     <input
-                                      aria-describedby="root_optionalObjectWithOneofs_name__error root_optionalObjectWithOneofs_name__description root_optionalObjectWithOneofs_name__help"
                                       class="form-control"
                                       id="root_optionalObjectWithOneofs_name"
                                       name="root_optionalObjectWithOneofs_name"
@@ -6257,10 +6476,12 @@ exports[`single fields > optional data controls > does not show optional control
                 <div>
                   <label
                     class="form-label"
-                    for="root_optionalArrayWithAnyofs"
-                    id="root_optionalArrayWithAnyofs__label"
                   >
-                    optionalArrayWithAnyofs
+                    <span
+                      id="root_optionalArrayWithAnyofs__label"
+                    >
+                      optionalArrayWithAnyofs
+                    </span>
                   </label>
                   <div
                     class="card"
@@ -6392,10 +6613,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
       <div>
         <div
           class="my-1"
-          id="root__title"
         >
           <h5>
-            test
+            <span
+              id="root__title"
+            >
+              test
+            </span>
           </h5>
           <hr
             class="border-0 bg-secondary mt-0"
@@ -6419,7 +6643,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                 <div>
                   <div
                     class="my-1"
-                    id="root_nestedObjectOptional__title"
                   >
                     <div
                       class="p-0 container-fluid"
@@ -6431,7 +6654,11 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                           class="col-11"
                         >
                           <h5>
-                            nestedObjectOptional
+                            <span
+                              id="root_nestedObjectOptional__title"
+                            >
+                              nestedObjectOptional
+                            </span>
                           </h5>
                         </div>
                         <div
@@ -6484,12 +6711,14 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             <label
                               class="form-label"
                               for="root_nestedObjectOptional_test"
-                              id="root_nestedObjectOptional_test__label"
                             >
-                              test
+                              <span
+                                id="root_nestedObjectOptional_test__label"
+                              >
+                                test
+                              </span>
                             </label>
                             <input
-                              aria-describedby="root_nestedObjectOptional_test__error root_nestedObjectOptional_test__description root_nestedObjectOptional_test__help"
                               class="form-control"
                               id="root_nestedObjectOptional_test"
                               name="root_nestedObjectOptional_test"
@@ -6515,7 +6744,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                           <div>
                             <div
                               class="my-1"
-                              id="root_nestedObjectOptional_deepObjectOptional__title"
                             >
                               <div
                                 class="p-0 container-fluid"
@@ -6527,7 +6755,11 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                     class="col-11"
                                   >
                                     <h5>
-                                      deepObjectOptional
+                                      <span
+                                        id="root_nestedObjectOptional_deepObjectOptional__title"
+                                      >
+                                        deepObjectOptional
+                                      </span>
                                     </h5>
                                   </div>
                                   <div
@@ -6590,10 +6822,14 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                           <div>
                             <div
                               class="my-1"
-                              id="root_nestedObjectOptional_deepObject__title"
                             >
                               <h5>
-                                deepObject
+                                <span
+                                  id="root_nestedObjectOptional_deepObject__title"
+                                >
+                                  deepObject
+                                </span>
+                                *
                               </h5>
                               <hr
                                 class="border-0 bg-secondary mt-0"
@@ -6618,12 +6854,14 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                       <label
                                         class="form-label"
                                         for="root_nestedObjectOptional_deepObject_deepTest"
-                                        id="root_nestedObjectOptional_deepObject_deepTest__label"
                                       >
-                                        deepTest
+                                        <span
+                                          id="root_nestedObjectOptional_deepObject_deepTest__label"
+                                        >
+                                          deepTest
+                                        </span>
                                       </label>
                                       <input
-                                        aria-describedby="root_nestedObjectOptional_deepObject_deepTest__error root_nestedObjectOptional_deepObject_deepTest__description root_nestedObjectOptional_deepObject_deepTest__help"
                                         class="form-control"
                                         id="root_nestedObjectOptional_deepObject_deepTest"
                                         name="root_nestedObjectOptional_deepObject_deepTest"
@@ -6661,10 +6899,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                 >
                                   <div
                                     class="my-1"
-                                    id="root_nestedObjectOptional_deepArrayOptional__title"
                                   >
                                     <h5>
-                                      deepArrayOptional
+                                      <span
+                                        id="root_nestedObjectOptional_deepArrayOptional__title"
+                                      >
+                                        deepArrayOptional
+                                      </span>
                                     </h5>
                                     <hr
                                       class="border-0 bg-secondary mt-0"
@@ -6746,7 +6987,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                 >
                                   <div
                                     class="my-1"
-                                    id="root_nestedObjectOptional_deepArrayOptional2__title"
                                   >
                                     <div
                                       class="p-0 container-fluid"
@@ -6758,7 +6998,11 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                           class="col-11"
                                         >
                                           <h5>
-                                            deepArrayOptional2
+                                            <span
+                                              id="root_nestedObjectOptional_deepArrayOptional2__title"
+                                            >
+                                              deepArrayOptional2
+                                            </span>
                                           </h5>
                                         </div>
                                         <div
@@ -6831,10 +7075,14 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                 >
                                   <div
                                     class="my-1"
-                                    id="root_nestedObjectOptional_deepArray__title"
                                   >
                                     <h5>
-                                      deepArray
+                                      <span
+                                        id="root_nestedObjectOptional_deepArray__title"
+                                      >
+                                        deepArray
+                                      </span>
+                                      *
                                     </h5>
                                     <hr
                                       class="border-0 bg-secondary mt-0"
@@ -6921,7 +7169,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                       >
                         <div
                           class="my-1"
-                          id="root_nestedArrayOptional__title"
                         >
                           <div
                             class="p-0 container-fluid"
@@ -6933,7 +7180,11 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                 class="col-11"
                               >
                                 <h5>
-                                  nestedArrayOptional
+                                  <span
+                                    id="root_nestedArrayOptional__title"
+                                  >
+                                    nestedArrayOptional
+                                  </span>
                                 </h5>
                               </div>
                               <div
@@ -6985,12 +7236,15 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                     <label
                                       class="form-label"
                                       for="root_nestedArrayOptional_0"
-                                      id="root_nestedArrayOptional_0__label"
                                     >
-                                      nestedArrayOptional-1*
+                                      <span
+                                        id="root_nestedArrayOptional_0__label"
+                                      >
+                                        nestedArrayOptional-1
+                                      </span>
+                                      *
                                     </label>
                                     <input
-                                      aria-describedby="root_nestedArrayOptional_0__error root_nestedArrayOptional_0__description root_nestedArrayOptional_0__help"
                                       class="form-control"
                                       id="root_nestedArrayOptional_0"
                                       name="root_nestedArrayOptional_0"
@@ -7097,10 +7351,14 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                 <div>
                   <div
                     class="my-1"
-                    id="root_nestedObject__title"
                   >
                     <h5>
-                      nestedObject
+                      <span
+                        id="root_nestedObject__title"
+                      >
+                        nestedObject
+                      </span>
+                      *
                     </h5>
                     <hr
                       class="border-0 bg-secondary mt-0"
@@ -7125,12 +7383,14 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             <label
                               class="form-label"
                               for="root_nestedObject_test"
-                              id="root_nestedObject_test__label"
                             >
-                              test
+                              <span
+                                id="root_nestedObject_test__label"
+                              >
+                                test
+                              </span>
                             </label>
                             <input
-                              aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
                               class="form-control"
                               id="root_nestedObject_test"
                               name="root_nestedObject_test"
@@ -7168,10 +7428,14 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                       >
                         <div
                           class="my-1"
-                          id="root_nestedArray__title"
                         >
                           <h5>
-                            nestedArray
+                            <span
+                              id="root_nestedArray__title"
+                            >
+                              nestedArray
+                            </span>
+                            *
                           </h5>
                           <hr
                             class="border-0 bg-secondary mt-0"
@@ -7250,9 +7514,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   >
                     <div
                       class="card-body"
-                    />
-                    <div
-                      class="card-body"
                     >
                       <div
                         class="rjsf-field rjsf-field-object"
@@ -7260,7 +7521,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                         <div>
                           <div
                             class="my-1"
-                            id="root_optionalObjectWithOneofs__title"
                           >
                             <div
                               class="p-0 container-fluid"
@@ -7272,7 +7532,11 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                   class="col-11"
                                 >
                                   <h5>
-                                    optionalObjectWithOneofs
+                                    <span
+                                      id="root_optionalObjectWithOneofs__title"
+                                    >
+                                      optionalObjectWithOneofs
+                                    </span>
                                   </h5>
                                 </div>
                                 <div
@@ -7343,9 +7607,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   >
                     <div
                       class="card-body"
-                    />
-                    <div
-                      class="card-body"
                     >
                       <div
                         class="rjsf-field rjsf-field-array"
@@ -7360,7 +7621,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                               >
                                 <div
                                   class="my-1"
-                                  id="root_optionalArrayWithAnyofs__title"
                                 >
                                   <div
                                     class="p-0 container-fluid"
@@ -7372,7 +7632,11 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                         class="col-11"
                                       >
                                         <h5>
-                                          optionalArrayWithAnyofs
+                                          <span
+                                            id="root_optionalArrayWithAnyofs__title"
+                                          >
+                                            optionalArrayWithAnyofs
+                                          </span>
                                         </h5>
                                       </div>
                                       <div
@@ -7454,10 +7718,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
       <div>
         <div
           class="my-1"
-          id="root__title"
         >
           <h5>
-            test
+            <span
+              id="root__title"
+            >
+              test
+            </span>
           </h5>
           <hr
             class="border-0 bg-secondary mt-0"
@@ -7481,10 +7748,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                 <div>
                   <div
                     class="my-1"
-                    id="root_nestedObjectOptional__title"
                   >
                     <h5>
-                      nestedObjectOptional
+                      <span
+                        id="root_nestedObjectOptional__title"
+                      >
+                        nestedObjectOptional
+                      </span>
                     </h5>
                     <hr
                       class="border-0 bg-secondary mt-0"
@@ -7509,12 +7779,14 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             <label
                               class="form-label"
                               for="root_nestedObjectOptional_test"
-                              id="root_nestedObjectOptional_test__label"
                             >
-                              test
+                              <span
+                                id="root_nestedObjectOptional_test__label"
+                              >
+                                test
+                              </span>
                             </label>
                             <input
-                              aria-describedby="root_nestedObjectOptional_test__error root_nestedObjectOptional_test__description root_nestedObjectOptional_test__help"
                               class="form-control"
                               id="root_nestedObjectOptional_test"
                               name="root_nestedObjectOptional_test"
@@ -7541,10 +7813,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                           <div>
                             <div
                               class="my-1"
-                              id="root_nestedObjectOptional_deepObjectOptional__title"
                             >
                               <h5>
-                                deepObjectOptional
+                                <span
+                                  id="root_nestedObjectOptional_deepObjectOptional__title"
+                                >
+                                  deepObjectOptional
+                                </span>
                               </h5>
                               <hr
                                 class="border-0 bg-secondary mt-0"
@@ -7578,10 +7853,14 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                           <div>
                             <div
                               class="my-1"
-                              id="root_nestedObjectOptional_deepObject__title"
                             >
                               <h5>
-                                deepObject
+                                <span
+                                  id="root_nestedObjectOptional_deepObject__title"
+                                >
+                                  deepObject
+                                </span>
+                                *
                               </h5>
                               <hr
                                 class="border-0 bg-secondary mt-0"
@@ -7606,12 +7885,14 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                       <label
                                         class="form-label"
                                         for="root_nestedObjectOptional_deepObject_deepTest"
-                                        id="root_nestedObjectOptional_deepObject_deepTest__label"
                                       >
-                                        deepTest
+                                        <span
+                                          id="root_nestedObjectOptional_deepObject_deepTest__label"
+                                        >
+                                          deepTest
+                                        </span>
                                       </label>
                                       <input
-                                        aria-describedby="root_nestedObjectOptional_deepObject_deepTest__error root_nestedObjectOptional_deepObject_deepTest__description root_nestedObjectOptional_deepObject_deepTest__help"
                                         class="form-control"
                                         id="root_nestedObjectOptional_deepObject_deepTest"
                                         name="root_nestedObjectOptional_deepObject_deepTest"
@@ -7650,10 +7931,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                 >
                                   <div
                                     class="my-1"
-                                    id="root_nestedObjectOptional_deepArrayOptional__title"
                                   >
                                     <h5>
-                                      deepArrayOptional
+                                      <span
+                                        id="root_nestedObjectOptional_deepArrayOptional__title"
+                                      >
+                                        deepArrayOptional
+                                      </span>
                                     </h5>
                                     <hr
                                       class="border-0 bg-secondary mt-0"
@@ -7736,10 +8020,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                 >
                                   <div
                                     class="my-1"
-                                    id="root_nestedObjectOptional_deepArrayOptional2__title"
                                   >
                                     <h5>
-                                      deepArrayOptional2
+                                      <span
+                                        id="root_nestedObjectOptional_deepArrayOptional2__title"
+                                      >
+                                        deepArrayOptional2
+                                      </span>
                                     </h5>
                                     <hr
                                       class="border-0 bg-secondary mt-0"
@@ -7783,10 +8070,14 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                 >
                                   <div
                                     class="my-1"
-                                    id="root_nestedObjectOptional_deepArray__title"
                                   >
                                     <h5>
-                                      deepArray
+                                      <span
+                                        id="root_nestedObjectOptional_deepArray__title"
+                                      >
+                                        deepArray
+                                      </span>
+                                      *
                                     </h5>
                                     <hr
                                       class="border-0 bg-secondary mt-0"
@@ -7874,10 +8165,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                       >
                         <div
                           class="my-1"
-                          id="root_nestedArrayOptional__title"
                         >
                           <h5>
-                            nestedArrayOptional
+                            <span
+                              id="root_nestedArrayOptional__title"
+                            >
+                              nestedArrayOptional
+                            </span>
                           </h5>
                           <hr
                             class="border-0 bg-secondary mt-0"
@@ -7901,12 +8195,15 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                     <label
                                       class="form-label"
                                       for="root_nestedArrayOptional_0"
-                                      id="root_nestedArrayOptional_0__label"
                                     >
-                                      nestedArrayOptional-1*
+                                      <span
+                                        id="root_nestedArrayOptional_0__label"
+                                      >
+                                        nestedArrayOptional-1
+                                      </span>
+                                      *
                                     </label>
                                     <input
-                                      aria-describedby="root_nestedArrayOptional_0__error root_nestedArrayOptional_0__description root_nestedArrayOptional_0__help"
                                       class="form-control"
                                       id="root_nestedArrayOptional_0"
                                       name="root_nestedArrayOptional_0"
@@ -8016,10 +8313,14 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                 <div>
                   <div
                     class="my-1"
-                    id="root_nestedObject__title"
                   >
                     <h5>
-                      nestedObject
+                      <span
+                        id="root_nestedObject__title"
+                      >
+                        nestedObject
+                      </span>
+                      *
                     </h5>
                     <hr
                       class="border-0 bg-secondary mt-0"
@@ -8044,12 +8345,14 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             <label
                               class="form-label"
                               for="root_nestedObject_test"
-                              id="root_nestedObject_test__label"
                             >
-                              test
+                              <span
+                                id="root_nestedObject_test__label"
+                              >
+                                test
+                              </span>
                             </label>
                             <input
-                              aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
                               class="form-control"
                               id="root_nestedObject_test"
                               name="root_nestedObject_test"
@@ -8088,10 +8391,14 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                       >
                         <div
                           class="my-1"
-                          id="root_nestedArray__title"
                         >
                           <h5>
-                            nestedArray
+                            <span
+                              id="root_nestedArray__title"
+                            >
+                              nestedArray
+                            </span>
+                            *
                           </h5>
                           <hr
                             class="border-0 bg-secondary mt-0"
@@ -8171,9 +8478,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   >
                     <div
                       class="card-body"
-                    />
-                    <div
-                      class="card-body"
                     >
                       <div
                         class="rjsf-field rjsf-field-object"
@@ -8181,10 +8485,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                         <div>
                           <div
                             class="my-1"
-                            id="root_optionalObjectWithOneofs__title"
                           >
                             <h5>
-                              optionalObjectWithOneofs
+                              <span
+                                id="root_optionalObjectWithOneofs__title"
+                              >
+                                optionalObjectWithOneofs
+                              </span>
                             </h5>
                             <hr
                               class="border-0 bg-secondary mt-0"
@@ -8226,9 +8533,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   >
                     <div
                       class="card-body"
-                    />
-                    <div
-                      class="card-body"
                     >
                       <div
                         class="rjsf-field rjsf-field-array"
@@ -8243,10 +8547,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                               >
                                 <div
                                   class="my-1"
-                                  id="root_optionalArrayWithAnyofs__title"
                                 >
                                   <h5>
-                                    optionalArrayWithAnyofs
+                                    <span
+                                      id="root_optionalArrayWithAnyofs__title"
+                                    >
+                                      optionalArrayWithAnyofs
+                                    </span>
                                   </h5>
                                   <hr
                                     class="border-0 bg-secondary mt-0"
@@ -8299,10 +8606,13 @@ exports[`single fields > optional data controls > shows "add" optional controls 
       <div>
         <div
           class="my-1"
-          id="root__title"
         >
           <h5>
-            test
+            <span
+              id="root__title"
+            >
+              test
+            </span>
           </h5>
           <hr
             class="border-0 bg-secondary mt-0"
@@ -8326,7 +8636,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                 <div>
                   <div
                     class="my-1"
-                    id="root_nestedObjectOptional__title"
                   >
                     <div
                       class="p-0 container-fluid"
@@ -8338,7 +8647,11 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                           class="col-11"
                         >
                           <h5>
-                            nestedObjectOptional
+                            <span
+                              id="root_nestedObjectOptional__title"
+                            >
+                              nestedObjectOptional
+                            </span>
                           </h5>
                         </div>
                         <div
@@ -8408,7 +8721,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                       >
                         <div
                           class="my-1"
-                          id="root_nestedArrayOptional__title"
                         >
                           <div
                             class="p-0 container-fluid"
@@ -8420,7 +8732,11 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                 class="col-11"
                               >
                                 <h5>
-                                  nestedArrayOptional
+                                  <span
+                                    id="root_nestedArrayOptional__title"
+                                  >
+                                    nestedArrayOptional
+                                  </span>
                                 </h5>
                               </div>
                               <div
@@ -8486,10 +8802,14 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                 <div>
                   <div
                     class="my-1"
-                    id="root_nestedObject__title"
                   >
                     <h5>
-                      nestedObject
+                      <span
+                        id="root_nestedObject__title"
+                      >
+                        nestedObject
+                      </span>
+                      *
                     </h5>
                     <hr
                       class="border-0 bg-secondary mt-0"
@@ -8514,12 +8834,14 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                             <label
                               class="form-label"
                               for="root_nestedObject_test"
-                              id="root_nestedObject_test__label"
                             >
-                              test
+                              <span
+                                id="root_nestedObject_test__label"
+                              >
+                                test
+                              </span>
                             </label>
                             <input
-                              aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
                               class="form-control"
                               id="root_nestedObject_test"
                               name="root_nestedObject_test"
@@ -8557,10 +8879,14 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                       >
                         <div
                           class="my-1"
-                          id="root_nestedArray__title"
                         >
                           <h5>
-                            nestedArray
+                            <span
+                              id="root_nestedArray__title"
+                            >
+                              nestedArray
+                            </span>
+                            *
                           </h5>
                           <hr
                             class="border-0 bg-secondary mt-0"
@@ -8639,9 +8965,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                   >
                     <div
                       class="card-body"
-                    />
-                    <div
-                      class="card-body"
                     >
                       <div
                         class="rjsf-field rjsf-field-object"
@@ -8649,7 +8972,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                         <div>
                           <div
                             class="my-1"
-                            id="root_optionalObjectWithOneofs__title"
                           >
                             <div
                               class="p-0 container-fluid"
@@ -8661,7 +8983,11 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                   class="col-11"
                                 >
                                   <h5>
-                                    optionalObjectWithOneofs
+                                    <span
+                                      id="root_optionalObjectWithOneofs__title"
+                                    >
+                                      optionalObjectWithOneofs
+                                    </span>
                                   </h5>
                                 </div>
                                 <div
@@ -8732,9 +9058,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                   >
                     <div
                       class="card-body"
-                    />
-                    <div
-                      class="card-body"
                     >
                       <div
                         class="rjsf-field rjsf-field-array"
@@ -8749,7 +9072,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                               >
                                 <div
                                   class="my-1"
-                                  id="root_optionalArrayWithAnyofs__title"
                                 >
                                   <div
                                     class="p-0 container-fluid"
@@ -8761,7 +9083,11 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                         class="col-11"
                                       >
                                         <h5>
-                                          optionalArrayWithAnyofs
+                                          <span
+                                            id="root_optionalArrayWithAnyofs__title"
+                                          >
+                                            optionalArrayWithAnyofs
+                                          </span>
                                         </h5>
                                       </div>
                                       <div
@@ -8843,10 +9169,13 @@ exports[`single fields > optional data controls > shows "add" optional controls 
       <div>
         <div
           class="my-1"
-          id="root__title"
         >
           <h5>
-            test
+            <span
+              id="root__title"
+            >
+              test
+            </span>
           </h5>
           <hr
             class="border-0 bg-secondary mt-0"
@@ -8870,10 +9199,13 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                 <div>
                   <div
                     class="my-1"
-                    id="root_nestedObjectOptional__title"
                   >
                     <h5>
-                      nestedObjectOptional
+                      <span
+                        id="root_nestedObjectOptional__title"
+                      >
+                        nestedObjectOptional
+                      </span>
                     </h5>
                     <hr
                       class="border-0 bg-secondary mt-0"
@@ -8914,10 +9246,13 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                       >
                         <div
                           class="my-1"
-                          id="root_nestedArrayOptional__title"
                         >
                           <h5>
-                            nestedArrayOptional
+                            <span
+                              id="root_nestedArrayOptional__title"
+                            >
+                              nestedArrayOptional
+                            </span>
                           </h5>
                           <hr
                             class="border-0 bg-secondary mt-0"
@@ -8954,10 +9289,14 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                 <div>
                   <div
                     class="my-1"
-                    id="root_nestedObject__title"
                   >
                     <h5>
-                      nestedObject
+                      <span
+                        id="root_nestedObject__title"
+                      >
+                        nestedObject
+                      </span>
+                      *
                     </h5>
                     <hr
                       class="border-0 bg-secondary mt-0"
@@ -8982,12 +9321,14 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                             <label
                               class="form-label"
                               for="root_nestedObject_test"
-                              id="root_nestedObject_test__label"
                             >
-                              test
+                              <span
+                                id="root_nestedObject_test__label"
+                              >
+                                test
+                              </span>
                             </label>
                             <input
-                              aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
                               class="form-control"
                               disabled=""
                               id="root_nestedObject_test"
@@ -9026,10 +9367,14 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                       >
                         <div
                           class="my-1"
-                          id="root_nestedArray__title"
                         >
                           <h5>
-                            nestedArray
+                            <span
+                              id="root_nestedArray__title"
+                            >
+                              nestedArray
+                            </span>
+                            *
                           </h5>
                           <hr
                             class="border-0 bg-secondary mt-0"
@@ -9109,9 +9454,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                   >
                     <div
                       class="card-body"
-                    />
-                    <div
-                      class="card-body"
                     >
                       <div
                         class="rjsf-field rjsf-field-object"
@@ -9119,10 +9461,13 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                         <div>
                           <div
                             class="my-1"
-                            id="root_optionalObjectWithOneofs__title"
                           >
                             <h5>
-                              optionalObjectWithOneofs
+                              <span
+                                id="root_optionalObjectWithOneofs__title"
+                              >
+                                optionalObjectWithOneofs
+                              </span>
                             </h5>
                             <hr
                               class="border-0 bg-secondary mt-0"
@@ -9164,9 +9509,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                   >
                     <div
                       class="card-body"
-                    />
-                    <div
-                      class="card-body"
                     >
                       <div
                         class="rjsf-field rjsf-field-array"
@@ -9181,10 +9523,13 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                               >
                                 <div
                                   class="my-1"
-                                  id="root_optionalArrayWithAnyofs__title"
                                 >
                                   <h5>
-                                    optionalArrayWithAnyofs
+                                    <span
+                                      id="root_optionalArrayWithAnyofs__title"
+                                    >
+                                      optionalArrayWithAnyofs
+                                    </span>
                                   </h5>
                                   <hr
                                     class="border-0 bg-secondary mt-0"
@@ -9237,7 +9582,6 @@ exports[`single fields > password field 1`] = `
     >
       <div>
         <input
-          aria-describedby="root__error root__description root__help"
           class="form-control"
           id="root"
           name="root"
@@ -9270,12 +9614,13 @@ exports[`single fields > radio field 1`] = `
       <div>
         <div
           class="mb-0"
+          id="root"
+          role="radiogroup"
         >
           <div
             class="form-check"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="form-check-input"
               id="root-0"
               name="root"
@@ -9294,7 +9639,6 @@ exports[`single fields > radio field 1`] = `
             class="form-check"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="form-check-input"
               id="root-1"
               name="root"
@@ -9335,19 +9679,24 @@ exports[`single fields > radio widget with description in schema and FieldTempla
       <div>
         <label
           class="form-label"
-          for="root"
-          id="root__label"
         >
-          test
+          <span
+            id="root__label"
+          >
+            test
+          </span>
         </label>
         <div
+          aria-labelledby="root__label"
           class="mb-0"
+          id="root"
+          role="radiogroup"
         >
           <div
             class="form-check"
           >
             <input
-              aria-describedby="root__error root__description root__help"
+              aria-describedby="root__description"
               class="form-check-input"
               id="root-0"
               name="root"
@@ -9366,7 +9715,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
             class="form-check"
           >
             <input
-              aria-describedby="root__error root__description root__help"
+              aria-describedby="root__description"
               class="form-check-input"
               id="root-1"
               name="root"
@@ -9382,7 +9731,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
             </label>
           </div>
         </div>
-        <small
+        <div
           class="text-muted form-text"
         >
           <div>
@@ -9393,7 +9742,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
               This is a radio description
             </div>
           </div>
-        </small>
+        </div>
       </div>
     </div>
     <div>
@@ -9547,7 +9896,7 @@ exports[`single fields > schema examples 1`] = `
     >
       <div>
         <input
-          aria-describedby="root__error root__description root__help root__examples"
+          aria-describedby="root__examples"
           class="form-control"
           id="root"
           list="root__examples"
@@ -9599,7 +9948,7 @@ exports[`single fields > schema examples with mixed types (string examples and n
     >
       <div>
         <input
-          aria-describedby="root__error root__description root__help root__examples"
+          aria-describedby="root__examples"
           class="form-control"
           id="root"
           inputmode="numeric"
@@ -9790,12 +10139,14 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
       class="rjsf-field rjsf-field-array"
     >
       <div>
-        <div>
+        <div
+          id="root"
+          role="group"
+        >
           <div
             class="bg-transparent border-0 form-check"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="form-check-input"
               id="root-0"
               name="root"
@@ -9814,7 +10165,6 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
             class="bg-transparent border-0 form-check"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="form-check-input"
               disabled=""
               id="root-1"
@@ -9834,7 +10184,6 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
             class="bg-transparent border-0 form-check"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="form-check-input"
               id="root-2"
               name="root"
@@ -9853,7 +10202,6 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
             class="bg-transparent border-0 form-check"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="form-check-input"
               id="root-3"
               name="root"
@@ -10032,12 +10380,13 @@ exports[`single fields > select field single choice enumDisabled using radio wid
       <div>
         <div
           class="mb-0"
+          id="root"
+          role="radiogroup"
         >
           <div
             class="form-check"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="form-check-input"
               id="root-0"
               name="root"
@@ -10056,7 +10405,6 @@ exports[`single fields > select field single choice enumDisabled using radio wid
             class="form-check"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="form-check-input"
               disabled=""
               id="root-1"
@@ -10098,12 +10446,13 @@ exports[`single fields > select field single choice form disabled using radio wi
       <div>
         <div
           class="mb-0"
+          id="root"
+          role="radiogroup"
         >
           <div
             class="form-check"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="form-check-input"
               disabled=""
               id="root-0"
@@ -10123,7 +10472,6 @@ exports[`single fields > select field single choice form disabled using radio wi
             class="form-check"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="form-check-input"
               disabled=""
               id="root-1"
@@ -10329,12 +10677,13 @@ exports[`single fields > select field single choice uiSchema disabled using radi
       <div>
         <div
           class="mb-0"
+          id="root"
+          role="radiogroup"
         >
           <div
             class="form-check"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="form-check-input"
               disabled=""
               id="root-0"
@@ -10354,7 +10703,6 @@ exports[`single fields > select field single choice uiSchema disabled using radi
             class="form-check"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="form-check-input"
               disabled=""
               id="root-1"
@@ -10397,9 +10745,12 @@ exports[`single fields > select widget with description in schema and FieldTempl
         <label
           class="form-label"
           for="root"
-          id="root__label"
         >
-          test
+          <span
+            id="root__label"
+          >
+            test
+          </span>
         </label>
         <select
           aria-describedby="root__description"
@@ -10421,7 +10772,7 @@ exports[`single fields > select widget with description in schema and FieldTempl
             No
           </option>
         </select>
-        <small
+        <div
           class="text-muted form-text"
         >
           <div>
@@ -10432,7 +10783,7 @@ exports[`single fields > select widget with description in schema and FieldTempl
               This is a select description
             </div>
           </div>
-        </small>
+        </div>
       </div>
     </div>
     <div>
@@ -10555,6 +10906,7 @@ exports[`single fields > slider field 1`] = `
           max="100"
           min="42"
           name="root"
+          placeholder=""
           type="range"
           value="75"
         />
@@ -10589,12 +10941,15 @@ exports[`single fields > string field > field with markdown help and description
         <label
           class="form-label"
           for="root"
-          id="root__label"
         >
-          Markdown Help and Description
+          <span
+            id="root__label"
+          >
+            Markdown Help and Description
+          </span>
         </label>
         <input
-          aria-describedby="root__error root__description root__help"
+          aria-describedby="root__description root__help"
           class="form-control"
           id="root"
           name="root"
@@ -10602,7 +10957,7 @@ exports[`single fields > string field > field with markdown help and description
           type="text"
           value=""
         />
-        <small
+        <div
           class="text-muted form-text"
         >
           <div>
@@ -10622,8 +10977,8 @@ exports[`single fields > string field > field with markdown help and description
               </span>
             </div>
           </div>
-        </small>
-        <small
+        </div>
+        <div
           class="text-muted form-text"
           id="root__help"
         >
@@ -10639,7 +10994,7 @@ exports[`single fields > string field > field with markdown help and description
               a link
             </a>
           </span>
-        </small>
+        </div>
       </div>
     </div>
     <div>
@@ -10666,12 +11021,15 @@ exports[`single fields > string field > field with markdown help text 1`] = `
         <label
           class="form-label"
           for="root"
-          id="root__label"
         >
-          Markdown Help Test
+          <span
+            id="root__label"
+          >
+            Markdown Help Test
+          </span>
         </label>
         <input
-          aria-describedby="root__error root__description root__help"
+          aria-describedby="root__description root__help"
           class="form-control"
           id="root"
           name="root"
@@ -10679,7 +11037,7 @@ exports[`single fields > string field > field with markdown help text 1`] = `
           type="text"
           value=""
         />
-        <small
+        <div
           class="text-muted form-text"
         >
           <div>
@@ -10690,8 +11048,8 @@ exports[`single fields > string field > field with markdown help text 1`] = `
               A field with markdown help text
             </div>
           </div>
-        </small>
-        <small
+        </div>
+        <div
           class="text-muted form-text"
           id="root__help"
         >
@@ -10707,7 +11065,7 @@ exports[`single fields > string field > field with markdown help text 1`] = `
               a link
             </a>
           </span>
-        </small>
+        </div>
       </div>
     </div>
     <div>
@@ -10734,12 +11092,15 @@ exports[`single fields > string field > field with markdown help text without a 
         <label
           class="form-label"
           for="root"
-          id="root__label"
         >
-          Raw Help Test
+          <span
+            id="root__label"
+          >
+            Raw Help Test
+          </span>
         </label>
         <input
-          aria-describedby="root__error root__description root__help"
+          aria-describedby="root__description root__help"
           class="form-control"
           id="root"
           name="root"
@@ -10747,7 +11108,7 @@ exports[`single fields > string field > field with markdown help text without a 
           type="text"
           value=""
         />
-        <small
+        <div
           class="text-muted form-text"
         >
           <div>
@@ -10758,13 +11119,13 @@ exports[`single fields > string field > field with markdown help text without a 
               A field with raw help text
             </div>
           </div>
-        </small>
-        <small
+        </div>
+        <div
           class="text-muted form-text"
           id="root__help"
         >
           This is **markdown** help text with [a link](https://example.com)
-        </small>
+        </div>
       </div>
     </div>
     <div>
@@ -10790,7 +11151,6 @@ exports[`single fields > string field > format data-url 1`] = `
       <div>
         <div>
           <input
-            aria-describedby="root__error root__description root__help"
             class="form-control"
             id="root"
             name="root"
@@ -10823,7 +11183,6 @@ exports[`single fields > string field > format email 1`] = `
     >
       <div>
         <input
-          aria-describedby="root__error root__description root__help"
           class="form-control"
           id="root"
           name="root"
@@ -10855,7 +11214,6 @@ exports[`single fields > string field > format uri 1`] = `
     >
       <div>
         <input
-          aria-describedby="root__error root__description root__help"
           class="form-control"
           id="root"
           name="root"
@@ -10887,7 +11245,6 @@ exports[`single fields > string field > regular 1`] = `
     >
       <div>
         <input
-          aria-describedby="root__error root__description root__help"
           class="form-control"
           id="root"
           name="root"
@@ -10921,12 +11278,15 @@ exports[`single fields > string field > required field with markdown help 1`] = 
         <label
           class="form-label"
           for="root"
-          id="root__label"
         >
-          Required Field with Markdown Help
+          <span
+            id="root__label"
+          >
+            Required Field with Markdown Help
+          </span>
         </label>
         <input
-          aria-describedby="root__error root__description root__help"
+          aria-describedby="root__description root__help"
           class="form-control"
           id="root"
           name="root"
@@ -10934,7 +11294,7 @@ exports[`single fields > string field > required field with markdown help 1`] = 
           type="text"
           value="[object Object]"
         />
-        <small
+        <div
           class="text-muted form-text"
         >
           <div>
@@ -10945,8 +11305,8 @@ exports[`single fields > string field > required field with markdown help 1`] = 
               A required field with markdown help
             </div>
           </div>
-        </small>
-        <small
+        </div>
+        <div
           class="text-muted form-text"
           id="root__help"
         >
@@ -10957,7 +11317,7 @@ exports[`single fields > string field > required field with markdown help 1`] = 
             </strong>
             . Please provide a value.
           </span>
-        </small>
+        </div>
       </div>
     </div>
     <div>
@@ -10982,7 +11342,6 @@ exports[`single fields > string field > string field with allowClearTextInputs a
     >
       <div>
         <input
-          aria-describedby="root__error root__description root__help"
           class="form-control"
           id="root"
           name="root"
@@ -11015,7 +11374,6 @@ exports[`single fields > string field > string field with allowClearTextInputs a
     >
       <div>
         <input
-          aria-describedby="root__error root__description root__help"
           class="form-control"
           id="root"
           name="root"
@@ -11066,7 +11424,6 @@ exports[`single fields > string field > string field with placeholder 1`] = `
     >
       <div>
         <input
-          aria-describedby="root__error root__description root__help"
           class="form-control"
           id="root"
           name="root"
@@ -11101,7 +11458,6 @@ exports[`single fields > textarea field 1`] = `
           class="input-group"
         >
           <textarea
-            aria-describedby="root__error root__description root__help"
             class="form-control"
             id="root"
             name="root"
@@ -11134,10 +11490,13 @@ exports[`single fields > title field 1`] = `
       <div>
         <div
           class="my-1"
-          id="root__title"
         >
           <h5>
-            Titre 1
+            <span
+              id="root__title"
+            >
+              Titre 1
+            </span>
           </h5>
           <hr
             class="border-0 bg-secondary mt-0"
@@ -11162,12 +11521,14 @@ exports[`single fields > title field 1`] = `
                   <label
                     class="form-label"
                     for="root_title"
-                    id="root_title__label"
                   >
-                    Titre 2
+                    <span
+                      id="root_title__label"
+                    >
+                      Titre 2
+                    </span>
                   </label>
                   <input
-                    aria-describedby="root_title__error root_title__description root_title__help"
                     class="form-control"
                     id="root_title"
                     name="root_title"
@@ -11237,7 +11598,6 @@ exports[`single fields > up/down field 1`] = `
     >
       <div>
         <input
-          aria-describedby="root__error root__description root__help"
           class="form-control"
           id="root"
           name="root"
@@ -11270,7 +11630,6 @@ exports[`single fields > using custom tagName 1`] = `
     >
       <div>
         <input
-          aria-describedby="root__error root__description root__help"
           class="form-control"
           id="root"
           name="root"
@@ -11302,7 +11661,6 @@ exports[`string field with autocapitalize 1`] = `
     >
       <div>
         <input
-          aria-describedby="root__error root__description root__help"
           autocapitalize="words"
           class="form-control"
           id="root"
@@ -11352,9 +11710,12 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                   <label
                     class="form-label"
                     for="root_answer"
-                    id="root_answer__label"
                   >
-                    My Answer
+                    <span
+                      id="root_answer__label"
+                    >
+                      My Answer
+                    </span>
                   </label>
                   <select
                     class="form-select"

@@ -3,8 +3,8 @@ import { useCallback } from 'react';
 import { SchemaExamples } from '@rjsf/core';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
   examplesId,
+  getControlAttributes,
   getExampleSuggestions,
   getInputProps,
   getNumericInputTitle,
@@ -36,6 +36,7 @@ export default function BaseInputTemplate<
     children,
     extraProps,
     registry,
+    presentation,
   } = props;
   const { ClearButton } = registry.templates.ButtonTemplates;
   const derivedInputProps = getInputProps<T, S, F>(schema, type, options);
@@ -67,6 +68,8 @@ export default function BaseInputTemplate<
   return (
     <>
       <Form.Control
+        // Bootstrap styles a range input by its own class rather than `form-control`
+        bsPrefix={inputProps.type === 'range' ? 'form-range' : undefined}
         id={id}
         name={htmlName || id}
         placeholder={placeholder}
@@ -75,14 +78,14 @@ export default function BaseInputTemplate<
         disabled={disabled}
         title={callerPattern ? undefined : getNumericInputTitle(derivedInputProps, registry.translateString)}
         readOnly={readonly}
-        className={hasWidgetErrors<T, S, F>(props) ? 'is-invalid' : ''}
+        isInvalid={hasWidgetErrors<T, S, F>(props)}
         list={hasExamples ? examplesId(id) : undefined}
         {...inputProps}
         value={value || value === 0 ? value : ''}
         onChange={onChangeOverride ?? handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
-        aria-describedby={ariaDescribedByIds(id, hasExamples)}
+        {...getControlAttributes<T, S, F>({ id, presentation }, hasExamples ? [examplesId(id)] : [])}
       />
       {options.allowClearTextInputs && !readonly && !disabled && value && (
         <ClearButton registry={registry} onClick={handleClear} />

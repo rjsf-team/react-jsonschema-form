@@ -1,5 +1,5 @@
 import type { ArrayFieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { buttonId, getArrayDescription, getTemplates, getUiOptions } from '@rjsf/utils';
+import { buttonId, getArrayDescription, getTemplates, getUiOptions, titleDrawsOptionalDataControl } from '@rjsf/utils';
 import { Col, Container, Row } from 'react-bootstrap';
 
 export default function ArrayFieldTemplate<
@@ -25,7 +25,7 @@ export default function ArrayFieldTemplate<
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const { ArrayFieldDescriptionTemplate, ArrayFieldTitleTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   const shownDescription = getArrayDescription<T, S, F>(props);
-  const showOptionalDataControlInTitle = !readonly && !disabled;
+  const showOptionalDataControlInTitle = titleDrawsOptionalDataControl<T, S, F>(props);
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
@@ -36,7 +36,7 @@ export default function ArrayFieldTemplate<
         <Col className='p-0 m-0'>
           <ArrayFieldTitleTemplate
             id={id}
-            title={uiOptions.title || title}
+            title={title}
             schema={schema}
             uiSchema={uiSchema}
             required={required}

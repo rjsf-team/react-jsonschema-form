@@ -86,7 +86,7 @@ export default function SelectWidget<
         multiple={multiple}
         disabled={disabled || readonly}
         autoFocus={autofocus}
-        className={hasWidgetErrors<T, S, F>(props) ? 'is-invalid' : ''}
+        isInvalid={hasWidgetErrors<T, S, F>(props)}
         onBlur={
           onBlur &&
           ((event: FocusEvent<HTMLSelectElement>) => {
