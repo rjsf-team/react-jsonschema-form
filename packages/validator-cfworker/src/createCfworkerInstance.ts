@@ -1,6 +1,6 @@
 import * as CFWorkerJsonSchema from '@cfworker/json-schema';
 import type { Schema, SchemaDraft, ValidationResult } from '@cfworker/json-schema';
-import { dereference, encodePointer, ignoredKeyword, validate, Validator } from '@cfworker/json-schema';
+import { dereference, encodePointer, validate, Validator } from '@cfworker/json-schema';
 import { isObject } from '@rjsf/utils';
 
 import type { CFWorkerFormatChecker, CustomValidatorOptionsType } from './types.ts';
@@ -57,8 +57,11 @@ export function installFormats(
 
 /** Indexes the `dependencies` schemas the engine leaves out of its `$ref` lookup. It reads a `dependencies` as one
  * subschema rather than a map of them, so an entry named like a keyword it ignores there (`type`, `required`, `enum`,
- * ...) is never indexed, and a `$ref` into one, such as the condition RJSF matches a dependency's `oneOf` option on,
- * would not resolve.
+ * ...) is never indexed, nor is one named like a keyword holding a map of subschemas (`properties`, `definitions`,
+ * ...), whose own keys it indexes as subschemas instead, and a `$ref` into one, such as the condition RJSF matches a
+ * dependency's `oneOf` option on, would not resolve. Such an entry is indexed into a lookup of its own, since the
+ * engine rejects a URI twice and may already hold one below it under the pointer it misread, and only the URIs the
+ * lookup lacks are added.
  *
  * @param lookup - The lookup to index, in place
  */
@@ -71,13 +74,12 @@ function indexDependencies(lookup: Record<string, Schema | boolean>): void {
       const [base, pointer] = uri.split('#');
       for (const [key, dependency] of Object.entries(dependencies)) {
         const at = `${pointer ?? ''}/dependencies/${encodePointer(key)}`;
-        if (ignoredKeyword[key] && isObject(dependency) && lookup[`${base}#${at}`] === undefined) {
-          // Indexed into an object inheriting from the lookup, the engine still rejects a URI the lookup holds, and the
-          // entries it adds are the object's own
-          const indexed: Record<string, Schema | boolean> = Object.create(lookup);
-          dereference(dependency, indexed, new URL(base), at);
-          Object.assign(lookup, indexed);
-          pending.push(...Object.values(indexed));
+        if (isObject(dependency) && lookup[`${base}#${at}`] === undefined) {
+          const added = Object.entries(dereference(dependency, {}, new URL(base), at)).filter(
+            ([indexedUri]) => lookup[indexedUri] === undefined,
+          );
+          Object.assign(lookup, Object.fromEntries(added));
+          pending.push(...added.map(([, indexed]) => indexed));
         }
       }
     }

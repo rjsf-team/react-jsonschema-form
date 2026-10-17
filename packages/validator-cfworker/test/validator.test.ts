@@ -385,6 +385,19 @@ describe('CFWorkerValidator validating a subschema by its place in the root', ()
     expect(validator.isValid(pointer, 'a', rootSchema)).toBe(true);
     expect(validator.isValid(pointer, 'b', rootSchema)).toBe(false);
   });
+  it.each(['properties', 'definitions', '$defs', 'patternProperties', 'dependentSchemas'])(
+    'resolves a pointer into a dependencies entry named like the map keyword %s',
+    (key) => {
+      const validator = customizeValidator();
+      const rootSchema: RJSFSchema = {
+        properties: { [key]: { type: 'string' } },
+        dependencies: { [key]: { oneOf: [{ properties: { [key]: { const: 'a' } } }] } },
+      };
+      const pointer: RJSFSchema = { $ref: `#/dependencies/${key}/oneOf/0/properties/${key}` };
+      expect(validator.isValid(pointer, 'a', rootSchema)).toBe(true);
+      expect(validator.isValid(pointer, 'b', rootSchema)).toBe(false);
+    },
+  );
 });
 
 pointerValidationTests(() => customizeValidator());
