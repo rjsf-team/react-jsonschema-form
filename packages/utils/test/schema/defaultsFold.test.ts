@@ -1,6 +1,7 @@
 import { createSchemaUtils, getDefaultFormState, isObject } from '../../src/index.ts';
 import type { DefaultFormStateBehavior, RJSFSchema } from '../../src/index.ts';
 import { computeDefaults, getObjectDefaults } from '../../src/schema/getDefaultFormState.ts';
+import looseSchema from './graph/looseSchema.ts';
 import { miniValidator } from './graph/miniValidator.ts';
 
 const validator = miniValidator();
@@ -766,6 +767,29 @@ describe('getDefaultFormState() reading $ref, branches and extra keys as the for
     }
     expect(defaultsOf(schema)).toEqual(expected);
     expect(schema).toEqual(pristine);
+  });
+
+  it('copies a default held in a proxy, as an observable store holds one, and hands a class instance through', () => {
+    class Money {
+      readonly amount = 5;
+    }
+    const money = new Money();
+    const shared = { a: 1 };
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        list: { type: 'array', items: { type: 'string' }, default: new Proxy(['x', 'y'], {}) },
+        map: { type: 'object', properties: { a: { type: 'number' } }, default: new Proxy({ a: 1 }, {}) },
+        price: looseSchema({ default: money }),
+        pair: { type: 'array', default: [shared, shared] },
+      },
+    };
+    const defaults = defaultsOf(schema);
+    expect(defaults).toEqual({ list: ['x', 'y'], map: { a: 1 }, price: money, pair: [shared, shared] });
+    expect(isObject(defaults) && defaults.price).toBe(money);
+    // A value met twice is copied once, as `structuredClone()` copies it
+    const pair: unknown = isObject(defaults) ? defaults.pair : undefined;
+    expect(Array.isArray(pair) && pair[0] === pair[1] && pair[0] !== shared).toBe(true);
   });
 
   it('resolves a $ref to an $anchor, and one under a nested $id with a path segment against that $id', () => {

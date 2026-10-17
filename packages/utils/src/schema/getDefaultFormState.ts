@@ -26,6 +26,7 @@ import isConstant from '../isConstant.ts';
 import isConstantOptionList from '../isConstantOptionList.ts';
 import isFixedItems from '../isFixedItems.ts';
 import isObject, { isSchemaObject } from '../isObject.ts';
+import isPlainObject from '../isPlainObject.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
 import mergeDefaultsWithFormData from '../mergeDefaultsWithFormData.ts';
 import mergeObjects from '../mergeObjects.ts';
@@ -864,11 +865,40 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
   return defaultsWithFormData;
 }
 
-/** Returns a schema's `default` or `const` as the defaults hold it, an object or array copied: the schema, which can be
- * the merged schema of a memoized plan, is shared across calls, and the caller may change the defaults it is handed
+/** Returns `value` with every array and plain object in it copied, as `ownValue()` copies a `default`. Anything else,
+ * such as a class instance, is the caller's own value and stays as it is, and a proxy over an array or an object, as
+ * an observable store holds one, is read through as the data it stands for. A value met twice is copied once.
+ */
+function copiedValue(value: unknown, copies: WeakMap<object, unknown>): unknown {
+  if (!Array.isArray(value) && !isPlainObject(value)) {
+    return value;
+  }
+  const known = copies.get(value);
+  if (known !== undefined) {
+    return known;
+  }
+  if (Array.isArray(value)) {
+    const copy: unknown[] = new Array<unknown>(value.length);
+    copies.set(value, copy);
+    value.forEach((item: unknown, index) => {
+      copy[index] = copiedValue(item, copies);
+    });
+    return copy;
+  }
+  const copy: GenericObjectType = {};
+  copies.set(value, copy);
+  for (const [key, entry] of Object.entries(value)) {
+    copy[key] = copiedValue(entry, copies);
+  }
+  return copy;
+}
+
+/** Returns a schema's `default` or `const` as the defaults hold it, its arrays and plain objects copied: the schema,
+ * which can be the merged schema of a memoized plan, is shared across calls, and the caller may change the defaults it
+ * is handed
  */
 function ownValue<V>(value: V): V {
-  return typeof value === 'object' && value !== null ? structuredClone(value) : value;
+  return asDeclared<V>(copiedValue(value, new WeakMap()));
 }
 
 /** Picks the option of a field offering `anyOf`/`oneOf` options that its data, or its default, matches, and the context
