@@ -8,7 +8,7 @@ import { cn } from '../../lib/utils.ts';
 
 /** The props for the Slider component */
 export type SliderProps = ComponentProps<typeof Root> & {
-  /** Additional props for each thumb, the element a user focuses */
+  /** Additional props for each thumb, the element a user focuses; its `id` and `ref` go on the first thumb only */
   thumbProps?: ComponentProps<typeof Thumb>;
 };
 
@@ -17,7 +17,8 @@ export type SliderProps = ComponentProps<typeof Root> & {
  *
  * @param props - The props for the Slider component
  * @param props.className - Additional CSS classes to apply to the slider
- * @param [props.thumbProps] - Additional props for each thumb, the element a user focuses
+ * @param [props.thumbProps] - Additional props for each thumb, the element a user focuses; its `id` and `ref` go on the
+ *   first thumb only
  * @param ref - The forwarded ref for the slider element
  * @returns A slider input element with track and thumb
  */
@@ -31,6 +32,9 @@ function Slider({ className, defaultValue, value, min = 0, max = 100, thumbProps
     }
     return [min, max];
   }, [value, defaultValue, min, max]);
+  // An id must name one element, so it and the ref, which points at the thumb carrying it, go on the first thumb alone;
+  // every thumb takes the rest, such as its name and description
+  const { id: thumbId, ref: thumbRef, ...everyThumbProps } = thumbProps ?? {};
   return (
     <Root
       data-slot='slider'
@@ -59,7 +63,8 @@ function Slider({ className, defaultValue, value, min = 0, max = 100, thumbProps
         <Thumb
           data-slot='slider-thumb'
           key={index}
-          {...thumbProps}
+          {...everyThumbProps}
+          {...(index === 0 && { id: thumbId, ref: thumbRef })}
           className={cn(
             'border-primary bg-background ring-ring/50 block size-4 shrink-0 rounded-full border shadow-sm transition-[color,box-shadow] hover:ring-4 focus-visible:ring-4 focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50',
             thumbProps?.className,

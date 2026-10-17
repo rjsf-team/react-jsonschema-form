@@ -166,6 +166,18 @@ export function FancyMultiSelect({
     [openList, onFocus],
   );
 
+  // The list opens on focus anywhere in the select, a remove button's included, which the input's blur doesn't follow, so
+  // it closes as focus leaves the select
+  const handleBlur = useCallback(
+    (e: FocusEvent<HTMLDivElement>) => {
+      if (!e.currentTarget.contains(e.relatedTarget)) {
+        setOpen(false);
+      }
+      onBlur?.(e);
+    },
+    [onBlur],
+  );
+
   function renderItem(item: FancySelectItem) {
     // Keyed and identified by index, since `String()` turns every object value into `[object Object]`. cmdk searches
     // its `value`, which stays text spelled the way an untitled option is labelled, and its `keywords`, which carry the
@@ -200,7 +212,7 @@ export function FancyMultiSelect({
       onKeyDown={handleKeyDown}
       className={cn('overflow-visible bg-transparent', className)}
       aria-disabled={disabled}
-      onBlur={onBlur}
+      onBlur={handleBlur}
       onFocus={handleFocus}
     >
       <div

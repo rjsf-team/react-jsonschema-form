@@ -87,6 +87,7 @@ export default function WrapIfAdditionalTemplate<
               ) : (
                 <Input
                   key={keyName}
+                  aria-label={hasKeyLabel ? undefined : keyLabel}
                   required={required}
                   defaultValue={keyName}
                   disabled={disabled || readonly}

@@ -79,6 +79,29 @@ interface FancySelectInterface {
   placeholder: string;
 }
 
+/** The value cmdk holds an item under, trimmed as cmdk trims both the value an item registers and the highlight it
+ * reports, so the highlight is matched by it
+ *
+ * @param item - The item
+ * @returns - Its trimmed value
+ */
+function cmdkValue(item: FancySelectItem) {
+  return String(item.value).trim();
+}
+
+/** The option cmdk renders for a value it holds, found by the `data-value` it gives the option, since it keeps the
+ * option's id to itself
+ *
+ * @param container - The element the options render in
+ * @param value - The value cmdk holds the option under
+ * @returns - The option, if it is rendered
+ */
+function cmdkOption(container: HTMLElement | null, value: string) {
+  return [...(container?.querySelectorAll<HTMLElement>('[cmdk-item]') ?? [])].find(
+    (option) => option.dataset.value === value,
+  );
+}
+
 /**
  * A fancy select component that provides a styled dropdown with search functionality
  * @param props - The component props
@@ -209,12 +232,7 @@ export function FancySelect({
           e.preventDefault();
           e.stopPropagation();
         }}
-        onSelect={() => {
-          if (!item.disabled) {
-            onValueChange?.(item.value);
-            setOpen(false);
-          }
-        }}
+        onSelect={() => choose(item)}
         className={cn(
           'cursor-pointer relative flex items-center justify-between rounded-sm py-1.5 gap-2 rtl:flex-row-reverse',
           item.value === selected && 'font-semibold',
@@ -294,6 +312,8 @@ export function FancySelect({
           } else {
             return;
           }
+          e.preventDefault();
+          e.stopPropagation();
         }}
         className={cn(
           'flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50',
