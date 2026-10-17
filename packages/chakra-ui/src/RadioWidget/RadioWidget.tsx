@@ -2,15 +2,15 @@ import type { ChangeEvent, FocusEvent } from 'react';
 import { Stack } from '@chakra-ui/react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
   enumOptionSelectedValue,
+  enumOptionsAutofocusIndex,
   enumOptionsIsDisabled,
   enumOptionValueDecoder,
   enumOptionsDomValues,
+  getGroupLabelling,
   getOptionValueFormat,
   labelValue,
   optionId,
-  widgetDrawsLabel,
 } from '@rjsf/utils';
 
 import { Field } from '../components/ui/field.tsx';
@@ -22,8 +22,8 @@ export default function RadioWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { id, htmlName, options, value, required, disabled, readonly, label, onChange, onBlur, onFocus } = props;
-  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
+  const { id, htmlName, options, value, required, disabled, readonly, autofocus, label, onChange, onBlur, onFocus } =
+    props;
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
@@ -39,23 +39,38 @@ export default function RadioWidget<
   const selectValue = enumOptionSelectedValue(value, enumOptions, false, optionValueFormat, null);
 
   const chakraProps = getChakra(options);
+  const {
+    drawsLabel,
+    labelId,
+    group: groupAttributes,
+    option: optionAttributes,
+  } = getGroupLabelling<T, S, F>(props, 'radiogroup');
+  const optionIndexes = new Map(domValues.map((domValue, index) => [domValue, index]));
 
+  const autofocusIndex = enumOptionsAutofocusIndex<S>(enumOptions, enumDisabled, autofocus);
   return (
     <Field
       mb={1}
       disabled={disabled || readonly}
       required={required}
       readOnly={readonly}
-      label={labelValue(label, hideLabel || !label)}
+      label={labelValue(label, !drawsLabel)}
+      ids={{ label: labelId }}
+      labelNamesNoControl
       {...chakraProps}
     >
       <RadioGroup
+        // The group carries the field's id and each radio its option's, as core's do
+        ids={{ root: id, itemHiddenInput: (domValue) => optionId(id, optionIndexes.get(domValue) ?? -1) }}
         onChange={handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
         value={selectValue}
         name={htmlName || id}
-        aria-describedby={ariaDescribedByIds(id)}
+        {...groupAttributes}
+        // Named by the label this widget draws, where the plan names it by no other, or by nothing where none is drawn:
+        // Ark ignores an undefined override and would point the group at a label that isn't rendered
+        aria-labelledby={groupAttributes['aria-labelledby'] ?? ''}
       >
         <Stack direction={row ? 'row' : 'column'}>
           {Array.isArray(enumOptions) &&
@@ -67,8 +82,8 @@ export default function RadioWidget<
                   value={domValues[index]}
                   // oxlint-disable-next-line react/no-array-index-key
                   key={index}
-                  id={optionId(id, index)}
                   disabled={disabled || itemDisabled || readonly}
+                  inputProps={{ ...optionAttributes, autoFocus: index === autofocusIndex }}
                 >
                   {option.label}
                 </Radio>

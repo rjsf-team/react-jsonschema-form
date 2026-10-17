@@ -48,8 +48,8 @@ export const SelectTrigger = ({
       ref={ref}
       aria-label={ariaLabel}
       aria-describedby={ariaDescribedBy}
-      // Passed only when given, since an undefined one would drop the field label Chakra points the trigger at
-      {...(ariaLabelledBy && { 'aria-labelledby': ariaLabelledBy })}
+      // Ark keeps the field label it points the trigger at for an undefined one; an empty one points it at nothing
+      aria-labelledby={ariaLabelledBy}
       {...(ariaInvalid && { 'aria-invalid': ariaInvalid })}
     >
       {children}

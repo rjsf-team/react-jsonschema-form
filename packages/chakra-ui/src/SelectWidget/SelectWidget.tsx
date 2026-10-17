@@ -7,10 +7,13 @@ import {
   enumOptionValueDecoder,
   enumOptionsDomValues,
   flattenGroupedOptions,
+  getControlFallbackName,
+  getLabelId,
   getOptionValueFormat,
   groupEnumOptions,
-  hasVisibleErrors,
+  hasWidgetErrors,
   isEnumOptionsGroup,
+  isNamedByTemplateLabel,
   labelValue,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
@@ -21,7 +24,7 @@ import {
 
 import { Field } from '../components/ui/field.tsx';
 import { SelectRoot, SelectTrigger, SelectValueText } from '../components/ui/select.tsx';
-import { getChakra } from '../utils.ts';
+import { getChakra, labelledByOrNone } from '../utils.ts';
 
 export default function SelectWidget<
   T = unknown,
@@ -44,6 +47,15 @@ export default function SelectWidget<
     schema,
   } = props;
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
+  const drawsLabel = !hideLabel && !!label;
+  const labelId = getLabelId<T, S, F>(props);
+  const ariaProps = widgetAriaProps(props);
+  const labelledBy = labelledByOrNone(ariaProps['aria-labelledby'], drawsLabel);
+  // A trigger shows its value, not a name, so where no label names it, it is named by the field's label, its placeholder
+  // or the translated prompt
+  const ariaLabel =
+    ariaProps['aria-label'] ??
+    (drawsLabel || isNamedByTemplateLabel<T, S, F>(props) ? undefined : getControlFallbackName<T, S, F>(props));
   const { enumOptions, enumDisabled, emptyValue, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = useMemo(
@@ -111,8 +123,10 @@ export default function SelectWidget<
       disabled={disabled || readonly}
       required={required}
       readOnly={readonly}
-      invalid={hasVisibleErrors(props)}
-      label={labelValue(label, hideLabel || !label)}
+      invalid={hasWidgetErrors<T, S, F>(props)}
+      label={labelValue(label, !drawsLabel)}
+      id={id}
+      ids={{ label: labelId }}
       position='relative'
       {...chakraProps}
     >
@@ -120,6 +134,9 @@ export default function SelectWidget<
       <SelectRoot
         collection={selectOptions}
         id={id}
+        // The trigger, which a user focuses, carries the field's id, so the label's `for` names it. Ark's own ids replace
+        // the field's, so the label's is restated
+        ids={{ trigger: id, label: labelId }}
         name={htmlName || id}
         multiple={isMultiple}
         closeOnSelect={!isMultiple}
@@ -130,13 +147,11 @@ export default function SelectWidget<
         value={formValue}
         positioning={{ placement: 'bottom' }}
       >
-        <ChakraSelect.Control>
-          <SelectTrigger {...widgetAriaProps(props)}>
-            <SelectValueText placeholder={placeholder} />
-          </SelectTrigger>
-        </ChakraSelect.Control>
+        <SelectTrigger {...ariaProps} aria-label={ariaLabel} aria-labelledby={labelledBy}>
+          <SelectValueText placeholder={placeholder} />
+        </SelectTrigger>
         <ChakraSelect.Positioner minWidth='100% !important' zIndex='2 !important' top='calc(100% + 5px) !important'>
-          <ChakraSelect.Content>
+          <ChakraSelect.Content aria-labelledby={labelledBy}>
             {groupedOptions.map((option) =>
               isEnumOptionsGroup<S>(option) ? (
                 <ChakraSelect.ItemGroup key={`optgroup-${option.label}`}>

@@ -38,3 +38,21 @@ export function getChakra(
 export function isInputElement(target: EventTarget): target is HTMLInputElement {
   return 'valueAsNumber' in target;
 }
+
+/** The `aria-labelledby` for a part Ark points at a label of its own: the one the plan names, else the label drawn
+ * here, or, with no label drawn, an empty one, since Ark ignores an undefined override and would point the part at a
+ * label that isn't rendered. An undefined `drawnLabelId` keeps Ark's own pointer, for a part it points at the label
+ * drawn here already.
+ *
+ * @param plannedLabelledBy - The `aria-labelledby` the field's plan gives the part, if any
+ * @param drawsLabel - Whether a label is drawn for the part to point at
+ * @param [drawnLabelId] - The id of that label, where Ark doesn't already point the part at it
+ * @returns - The `aria-labelledby` to pass, or undefined to keep Ark's
+ */
+export function labelledByOrNone(
+  plannedLabelledBy: string | undefined,
+  drawsLabel: boolean,
+  drawnLabelId?: string,
+): string | undefined {
+  return plannedLabelledBy ?? (drawsLabel ? drawnLabelId : '');
+}

@@ -4,12 +4,12 @@ import { Input } from '@chakra-ui/react';
 import { SchemaExamples } from '@rjsf/core';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
   examplesId,
+  getControlAttributes,
   getExampleSuggestions,
   getInputProps,
   getNumericInputTitle,
-  hasVisibleErrors,
+  hasWidgetErrors,
   labelValue,
   widgetDrawsLabel,
 } from '@rjsf/utils';
@@ -40,6 +40,7 @@ export default function BaseInputTemplate<
     placeholder,
     disabled,
     registry,
+    presentation,
   } = props;
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const inputProps = getInputProps<T, S, F>(schema, type, options);
@@ -68,8 +69,9 @@ export default function BaseInputTemplate<
       disabled={disabled || readonly}
       required={required}
       readOnly={readonly}
-      invalid={hasVisibleErrors(props)}
+      invalid={hasWidgetErrors<T, S, F>(props)}
       label={labelValue(label, hideLabel || !label)}
+      id={id}
       {...chakraProps}
     >
       <Input
@@ -84,7 +86,7 @@ export default function BaseInputTemplate<
         title={getNumericInputTitle(inputProps, registry.translateString)}
         {...inputProps}
         list={hasExamples ? examplesId(id) : undefined}
-        aria-describedby={ariaDescribedByIds(id, hasExamples)}
+        {...getControlAttributes<T, S, F>({ id, presentation }, hasExamples ? [examplesId(id)] : [])}
       />
       {options.allowClearTextInputs && !readonly && !disabled && value && (
         <ClearButton registry={registry} onClick={onClear} />
