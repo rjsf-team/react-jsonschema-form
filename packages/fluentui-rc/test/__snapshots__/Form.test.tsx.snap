@@ -1422,6 +1422,7 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                   >
                     <button
                       aria-expanded="false"
+                      aria-labelledby="root_color__label"
                       class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
                       data-tabster="{"focusable":{"ignoreKeydown":{"Escape":false}}}"
                       id="root_color"
@@ -2809,6 +2810,7 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                   >
                     <button
                       aria-expanded="false"
+                      aria-labelledby="root_color__label"
                       class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
                       data-tabster="{"focusable":{"ignoreKeydown":{"Escape":false}}}"
                       id="root_color"
@@ -3129,6 +3131,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                       >
                         <button
                           aria-expanded="false"
+                          aria-labelledby="root_region__label"
                           class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
                           data-tabster="{"focusable":{"ignoreKeydown":{"Escape":false}}}"
                           id="root_region__oneof_select"
@@ -3204,6 +3207,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                         >
                           <button
                             aria-expanded="false"
+                            aria-labelledby="root_region__optionLabel"
                             class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
                             data-tabster="{"focusable":{"ignoreKeydown":{"Escape":false}}}"
                             id="root_region"
@@ -5985,6 +5989,7 @@ exports[`single fields > optional data controls > does not show optional control
                       >
                         <button
                           aria-expanded="false"
+                          aria-labelledby="root_optionalObjectWithOneofs__label"
                           class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
                           data-tabster="{"focusable":{"ignoreKeydown":{"Escape":false}}}"
                           id="root_optionalObjectWithOneofs__oneof_select"
@@ -6116,6 +6121,7 @@ exports[`single fields > optional data controls > does not show optional control
                       >
                         <button
                           aria-expanded="false"
+                          aria-labelledby="root_optionalArrayWithAnyofs__label"
                           class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
                           data-tabster="{"focusable":{"ignoreKeydown":{"Escape":false}}}"
                           id="root_optionalArrayWithAnyofs__anyof_select"
@@ -6926,6 +6932,7 @@ exports[`single fields > optional data controls > does not show optional control
                       >
                         <button
                           aria-expanded="false"
+                          aria-labelledby="root_optionalObjectWithOneofs__label"
                           class="fui-Dropdown__button ___b67tb00_4t2umz0 f122n59 f1c21dwh f3bhgqh f1ewtqcl f1s2aq7o f14mj54c fdrzuqr f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
                           data-tabster="{"focusable":{"ignoreKeydown":{"Escape":false}}}"
                           disabled=""
@@ -7057,6 +7064,7 @@ exports[`single fields > optional data controls > does not show optional control
                       >
                         <button
                           aria-expanded="false"
+                          aria-labelledby="root_optionalArrayWithAnyofs__label"
                           class="fui-Dropdown__button ___b67tb00_4t2umz0 f122n59 f1c21dwh f3bhgqh f1ewtqcl f1s2aq7o f14mj54c fdrzuqr f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
                           data-tabster="{"focusable":{"ignoreKeydown":{"Escape":false}}}"
                           disabled=""
@@ -11452,6 +11460,7 @@ exports[`single fields > select widget with description in schema and FieldTempl
             <button
               aria-describedby="root__description"
               aria-expanded="false"
+              aria-labelledby="root__label"
               class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
               data-tabster="{"focusable":{"ignoreKeydown":{"Escape":false}}}"
               id="root"
@@ -12668,6 +12677,7 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                   >
                     <button
                       aria-expanded="false"
+                      aria-labelledby="root_answer__label"
                       class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
                       data-tabster="{"focusable":{"ignoreKeydown":{"Escape":false}}}"
                       id="root_answer"

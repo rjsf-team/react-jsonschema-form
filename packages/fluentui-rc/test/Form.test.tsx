@@ -1,7 +1,7 @@
 import { Switch } from '@fluentui/react-components';
 import { formTests, themeTests } from '@rjsf/snapshot-tests';
 import type { FormValidation, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
-import { errorId, helpId, optionHelpId } from '@rjsf/utils';
+import { bracketNameGenerator, errorId, helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -200,6 +200,7 @@ describe("fluentui-rc widgets are named by their label and carry the field's id 
   test.each<[string, string, RJSFSchema, UiSchema]>([
     ['text input', 'textbox', { type: 'string' }, {}],
     ['range', 'slider', { type: 'number' }, { 'ui:widget': 'range' }],
+    ['checkbox', 'checkbox', { type: 'boolean' }, {}],
   ])('names a %s by the label text ui:label false hides', (_, role, schema, uiSchema) => {
     const { container } = render(
       <Form
@@ -246,6 +247,19 @@ describe("fluentui-rc widgets are named by their label and carry the field's id 
     expect(screen.getByRole('slider', { name: 'X' })).toHaveAttribute('required');
   });
 
+  test("names the slider's input by the name a nameGenerator gives it", () => {
+    render(
+      <Form
+        schema={{ type: 'object', properties: { x: { type: 'number', title: 'X' } } }}
+        uiSchema={{ x: { 'ui:widget': 'range' } }}
+        nameGenerator={bracketNameGenerator}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('slider', { name: 'X' })).toHaveAttribute('name', 'root[x]');
+  });
+
   test("focuses the slider's input under ui:autofocus, as core does", () => {
     render(
       <Form
@@ -274,13 +288,28 @@ describe("fluentui-rc widgets are named by their label and carry the field's id 
     const { container } = render(
       <Form
         schema={{ type: 'object', additionalProperties: { type: 'string' } }}
-        formData={{ foo: 'a' }}
+        initialFormData={{ foo: 'a' }}
         validator={validator}
       />,
     );
 
     expect(screen.getByRole('textbox', { name: 'foo Key' })).toHaveAttribute('id', 'root_foo-key');
     expectReferencesResolve(container);
+  });
+});
+
+describe('fluentui-rc WrapIfAdditionalTemplate', () => {
+  test("names the additional property key's input by its label where ui:label: false hides it", () => {
+    render(
+      <Form
+        schema={{ type: 'object', additionalProperties: { type: 'string' } }}
+        uiSchema={{ additionalProperties: { 'ui:label': false } }}
+        initialFormData={{ first: 'a' }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('textbox', { name: 'first Key' })).toHaveAttribute('id', 'root_first-key');
   });
 });
 
@@ -407,7 +436,7 @@ describe('fluentui-rc TitleField', () => {
           required: ['pet'],
         }}
         uiSchema={{ 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] } }}
-        formData={{ pet: { name: 'Rex' } }}
+        initialFormData={{ pet: { name: 'Rex' } }}
         validator={validator}
       />,
     );
@@ -476,7 +505,7 @@ describe('fluentui-rc ArrayFieldTemplate', () => {
       <Form
         schema={{ type: 'object', properties: { tags: { type: 'array', title: 'Tags', items: { type: 'string' } } } }}
         uiSchema={{ tags: { 'ui:label': false }, 'ui:globalOptions': { enableOptionalDataFieldForType: ['array'] } }}
-        formData={{ tags: ['a'] }}
+        initialFormData={{ tags: ['a'] }}
         validator={validator}
       />,
     );
@@ -495,7 +524,7 @@ describe('fluentui-rc ObjectFieldTemplate', () => {
           properties: { pet: { type: 'object', title: 'Pet', properties: { a: { type: 'string' } } } },
         }}
         uiSchema={{ 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] }, pet: { 'ui:label': false } }}
-        formData={{ pet: { a: 'x' } }}
+        initialFormData={{ pet: { a: 'x' } }}
         validator={validator}
       />,
     );
@@ -584,7 +613,7 @@ describe("fluentui-rc draws a select's own label under the id its plan gives it"
           properties: { pet: { title: 'Pet', anyOf: [{ title: 'Kind', type: 'string', enum: ['a', 'b'] }] } },
         }}
         uiSchema={{ pet: { 'ui:widget': 'radio', anyOf: [{}] } }}
-        formData={{ pet: 'a' }}
+        initialFormData={{ pet: 'a' }}
         validator={validator}
       />,
     );
@@ -609,5 +638,31 @@ describe("fluentui-rc draws a select's own label under the id its plan gives it"
 
     expect(container.querySelector('#root_pet__label')).toHaveAttribute('for', 'root_pet__anyof_select');
     expect(screen.getByRole('combobox')).toHaveAccessibleName('Pet');
+  });
+
+  // Both option selectors carry the id `root_pet__anyof_select`, so a label's `for` alone would name the outer one twice
+  test("names a nested anyOf's option selectors each by its own label", () => {
+    const { container } = render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: {
+            pet: {
+              title: 'Pet',
+              anyOf: [
+                { title: 'Inner', anyOf: [{ type: 'string', title: 'S', enum: ['a'] }, { type: 'number' }] },
+                { type: 'number' },
+              ],
+            },
+          },
+        }}
+        validator={validator}
+      />,
+    );
+
+    const [outer, inner] = screen.getAllByRole('combobox');
+    expect(outer).toHaveAccessibleName('Pet');
+    expect(inner).toHaveAccessibleName('Inner');
+    expectReferencesResolve(container);
   });
 });

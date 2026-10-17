@@ -6,17 +6,18 @@ import {
   enumOptionsDomValues,
   enumOptionsIndexForValue,
   enumOptionValueDecoder,
-  getControlFallbackName,
+  getControlAriaLabel,
+  getLabelId,
   getOptionValueFormat,
   groupEnumOptions,
   hasWidgetErrors,
   isEnumOptionsGroup,
-  isNamedByTemplateLabel,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
   useSelectFocusHandlers,
   widgetAriaProps,
   widgetDrawsLabel,
+  widgetDrawsLabelText,
 } from '@rjsf/utils';
 
 import { fieldLabelSlot } from '../utils.ts';
@@ -63,9 +64,9 @@ function SelectWidget<
   // An empty label element would still name the dropdown, by nothing, over an `aria-label` it is given, and one holding
   // only a required field's `*` would name it "star", so a label is drawn only with text. Where none names it, the
   // dropdown, whose contents are its value, is named by the field's label, its placeholder or the translated prompt
-  const drawsLabel = !hideLabel && !!label;
+  const drawsLabel = widgetDrawsLabelText<T, S, F>(props);
+  const labelId = getLabelId<T, S, F>(props);
   const ariaProps = widgetAriaProps(props);
-  const namedElsewhere = drawsLabel || isNamedByTemplateLabel<T, S, F>(props);
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
@@ -98,8 +99,7 @@ function SelectWidget<
 
   return (
     <Field
-      // The plan numbers the label beneath one a field above draws under `fieldLabelId(id)`, such as a radio selector's
-      label={drawsLabel ? fieldLabelSlot(label, id, presentation?.label.id) : undefined}
+      label={drawsLabel ? fieldLabelSlot(label, id, labelId) : undefined}
       validationState={hasWidgetErrors<T, S, F>(props) ? 'error' : undefined}
       required={required}
     >
@@ -115,8 +115,11 @@ function SelectWidget<
         onFocus={handleFocus}
         onOptionSelect={handleChange}
         selectedOptions={selectedOptions}
+        // Fluent names the dropdown only through its label's `for` where that `for` matches its id, an id a nested
+        // `anyOf`'s option selector shares with the selector above it, so the dropdown points at its own label's id too
+        aria-labelledby={drawsLabel ? labelId : undefined}
         {...ariaProps}
-        aria-label={ariaProps['aria-label'] ?? (namedElsewhere ? undefined : getControlFallbackName<T, S, F>(props))}
+        aria-label={getControlAriaLabel<T, S, F>(props, ariaProps['aria-label'], drawsLabel)}
       >
         {showPlaceholderOption && <Option value=''>{placeholder || ''}</Option>}
         {groupEnumOptions<S>(enumOptions, optgroups, enumDisabled).map((item) =>

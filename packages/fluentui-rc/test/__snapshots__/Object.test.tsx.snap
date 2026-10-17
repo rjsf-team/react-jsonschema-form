@@ -1941,6 +1941,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                   >
                     <button
                       aria-expanded="false"
+                      aria-labelledby="root_foo-key__label"
                       class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
                       data-tabster="{"focusable":{"ignoreKeydown":{"Escape":false}}}"
                       id="root_foo-key"
@@ -2852,6 +2853,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                   >
                     <button
                       aria-expanded="false"
+                      aria-labelledby="root_foo-key__label"
                       class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
                       data-tabster="{"focusable":{"ignoreKeydown":{"Escape":false}}}"
                       id="root_foo-key"
@@ -3052,6 +3054,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                   >
                     <button
                       aria-expanded="false"
+                      aria-labelledby="root_foo-key__label"
                       class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
                       data-tabster="{"focusable":{"ignoreKeydown":{"Escape":false}}}"
                       id="root_foo-key"
@@ -4824,6 +4827,7 @@ exports[`object fields > with title and description with global label off > addi
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
+                      aria-label="foo Key"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_foo-key"
                       name="root_foo-key"
@@ -5052,6 +5056,7 @@ exports[`object fields > with title and description with global label off > show
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
+                      aria-label="additionalProperty Key"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_additionalProperty-key"
                       name="root_additionalProperty-key"
