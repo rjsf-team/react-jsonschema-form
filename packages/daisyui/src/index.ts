@@ -6,9 +6,10 @@ export { default as Form, generateForm } from './DaisyUIForm.tsx';
 export { __createDaisyUIFrameProvider } from './DaisyUIFrameProvider.tsx';
 export { default as GridTemplate } from './templates/GridTemplate/GridTemplate.tsx';
 export { default as Templates, generateTemplates } from './templates/Templates.tsx';
-export { getGroupProps } from './utils.ts';
-// Re-exported so a consumer's custom daisyui widget reaches the id generator the built-in ones use without a second
-// import, and cannot drift from it by hand-building the suffix
+export { getGroupAndOptionProps, getGroupProps } from './utils.ts';
+// Re-exported for a replacement `FieldTemplate` or a widget rendered without a plan, which name their label by it rather
+// than hand-building the suffix. Under a plan the label's id is the plan's, which `getLabelId()` reads, so a custom
+// group widget takes its props from `getGroupProps()` or `getGroupAndOptionProps()`, which follow it
 export { fieldLabelId } from '@rjsf/utils';
 export { default as Theme, generateTheme } from './theme/index.ts';
 export { default as Widgets, generateWidgets } from './widgets/Widgets.tsx';

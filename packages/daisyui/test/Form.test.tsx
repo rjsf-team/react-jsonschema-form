@@ -201,8 +201,37 @@ describe('daisyui FieldTemplate', () => {
       />,
     );
 
-    expect(container.querySelector(`#${fieldLabelId('root_color')}`)).not.toHaveAttribute('for');
+    expect(container.querySelector(`#${fieldLabelId('root_color')}`)?.closest('label')).not.toHaveAttribute('for');
     expect(screen.getByRole(role, { name: 'Color' })).toBeInTheDocument();
+  });
+
+  test("names a required field's group by its label's text, without the required marker", () => {
+    render(
+      <Form
+        schema={{
+          type: 'object',
+          required: ['color'],
+          properties: { color: { type: 'string', title: 'Color', enum: ['red', 'blue'] } },
+        }}
+        uiSchema={{ color: { 'ui:widget': 'radio' } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('radiogroup', { name: 'Color' })).toBeInTheDocument();
+  });
+
+  test("names the additional property key's input by its label where ui:label: false hides it", () => {
+    render(
+      <Form
+        schema={{ type: 'object', additionalProperties: { type: 'string' } }}
+        uiSchema={{ additionalProperties: { 'ui:label': false } }}
+        initialFormData={{ first: 'a' }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('textbox', { name: 'first Key' })).toHaveAttribute('id', 'root_first-key');
   });
 
   test.each([

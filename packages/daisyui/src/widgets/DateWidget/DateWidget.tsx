@@ -89,7 +89,7 @@ export default function DateWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { id, value, label, presentation, placeholder, options, disabled, readonly, autofocus, schema, registry } =
+  const { id, value, presentation, placeholder, options, disabled, readonly, required, autofocus, schema, registry } =
     props;
   const named = isNamedByTemplateLabel<T, S, F>(props);
   const pickerName = getDatePickerName<T, S, F>(props);
@@ -188,6 +188,7 @@ export default function DateWidget<
           popupId={popupId}
           disabled={disabled}
           readonly={readonly}
+          required={required}
           autofocus={autofocus}
           triggerRef={triggerRef}
           onClick={togglePicker}

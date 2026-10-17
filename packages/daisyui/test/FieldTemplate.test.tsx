@@ -9,11 +9,11 @@ import DaisyFieldTemplate from '../src/templates/FieldTemplate/FieldTemplate.tsx
 import DaisyCheckboxWidget from '../src/widgets/CheckboxWidget/CheckboxWidget.tsx';
 import DaisyToggleWidget from '../src/widgets/ToggleWidget/ToggleWidget.tsx';
 
-/** The label `FieldTemplate` renders above the control, found by the `fieldLabelId()` it alone carries: a widget's own
- * label (`CheckboxWidget`, `ToggleWidget`) has no id, and a group's label has no `htmlFor` to find it by
+/** The label `FieldTemplate` renders above the control, found by the `fieldLabelId()` it alone carries, on its text: a
+ * widget's own label (`CheckboxWidget`, `ToggleWidget`) has no id, and a group's label has no `htmlFor` to find it by
  */
 function fieldLabel(container: HTMLElement, id: string) {
-  return container.querySelector(`label#${fieldLabelId(id)}`);
+  return container.querySelector(`#${fieldLabelId(id)}`)?.closest('label') ?? null;
 }
 
 const agree: RJSFSchema = { type: 'boolean', title: 'Agree' };

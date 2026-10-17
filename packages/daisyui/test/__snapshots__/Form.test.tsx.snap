@@ -189,12 +189,15 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                         <label
                                           class="label"
                                           for="root_tasks_0_title"
-                                          id="root_tasks_0_title__label"
                                         >
                                           <span
                                             class="label-text font-medium"
                                           >
-                                            title
+                                            <span
+                                              id="root_tasks_0_title__label"
+                                            >
+                                              title
+                                            </span>
                                           </span>
                                         </label>
                                         <div
@@ -376,12 +379,15 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                         <label
                                           class="label"
                                           for="root_tasks_1_title"
-                                          id="root_tasks_1_title__label"
                                         >
                                           <span
                                             class="label-text font-medium"
                                           >
-                                            title
+                                            <span
+                                              id="root_tasks_1_title__label"
+                                            >
+                                              title
+                                            </span>
                                           </span>
                                         </label>
                                         <div
@@ -627,12 +633,15 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                               <label
                                 class="label"
                                 for="root_tags_0"
-                                id="root_tags_0__label"
                               >
                                 <span
                                   class="label-text font-medium"
                                 >
-                                  tags-1
+                                  <span
+                                    id="root_tags_0__label"
+                                  >
+                                    tags-1
+                                  </span>
                                   <span
                                     class="text-error ml-1"
                                   >
@@ -744,12 +753,15 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                               <label
                                 class="label"
                                 for="root_tags_1"
-                                id="root_tags_1__label"
                               >
                                 <span
                                   class="label-text font-medium"
                                 >
-                                  tags-2
+                                  <span
+                                    id="root_tags_1__label"
+                                  >
+                                    tags-2
+                                  </span>
                                   <span
                                     class="text-error ml-1"
                                   >
@@ -932,12 +944,15 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                 >
                   <label
                     class="label"
-                    id="root_choices__label"
                   >
                     <span
                       class="label-text font-medium"
                     >
-                      choices
+                      <span
+                        id="root_choices__label"
+                      >
+                        choices
+                      </span>
                     </span>
                   </label>
                   <div
@@ -1081,12 +1096,15 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                             <label
                               class="label"
                               for="root_person_firstName"
-                              id="root_person_firstName__label"
                             >
                               <span
                                 class="label-text font-medium"
                               >
-                                firstName
+                                <span
+                                  id="root_person_firstName__label"
+                                >
+                                  firstName
+                                </span>
                               </span>
                             </label>
                             <div
@@ -1120,12 +1138,15 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                             <label
                               class="label"
                               for="root_person_lastName"
-                              id="root_person_lastName__label"
                             >
                               <span
                                 class="label-text font-medium"
                               >
-                                lastName
+                                <span
+                                  id="root_person_lastName__label"
+                                >
+                                  lastName
+                                </span>
                               </span>
                             </label>
                             <div
@@ -1190,12 +1211,15 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                       <label
                                         class="label"
                                         for="root_person_address_street"
-                                        id="root_person_address_street__label"
                                       >
                                         <span
                                           class="label-text font-medium"
                                         >
-                                          street
+                                          <span
+                                            id="root_person_address_street__label"
+                                          >
+                                            street
+                                          </span>
                                         </span>
                                       </label>
                                       <div
@@ -1229,12 +1253,15 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                       <label
                                         class="label"
                                         for="root_person_address_city"
-                                        id="root_person_address_city__label"
                                       >
                                         <span
                                           class="label-text font-medium"
                                         >
-                                          city
+                                          <span
+                                            id="root_person_address_city__label"
+                                          >
+                                            city
+                                          </span>
                                         </span>
                                       </label>
                                       <div
@@ -1310,12 +1337,15 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                 >
                   <label
                     class="label"
-                    id="root_option__label"
                   >
                     <span
                       class="label-text font-medium"
                     >
-                      option
+                      <span
+                        id="root_option__label"
+                      >
+                        option
+                      </span>
                     </span>
                   </label>
                   <div
@@ -1411,12 +1441,15 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                   <label
                     class="label"
                     for="root_color"
-                    id="root_color__label"
                   >
                     <span
                       class="label-text font-medium"
                     >
-                      color
+                      <span
+                        id="root_color__label"
+                      >
+                        color
+                      </span>
                     </span>
                   </label>
                   <div
@@ -1548,12 +1581,15 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                   <label
                     class="label"
                     for="root_firstName"
-                    id="root_firstName__label"
                   >
                     <span
                       class="label-text font-medium"
                     >
-                      firstName
+                      <span
+                        id="root_firstName__label"
+                      >
+                        firstName
+                      </span>
                     </span>
                   </label>
                   <div
@@ -1587,12 +1623,15 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                   <label
                     class="label"
                     for="root_age"
-                    id="root_age__label"
                   >
                     <span
                       class="label-text font-medium"
                     >
-                      age
+                      <span
+                        id="root_age__label"
+                      >
+                        age
+                      </span>
                     </span>
                   </label>
                   <div
@@ -1697,12 +1736,15 @@ exports[`nameGenerator > bracketNameGenerator > textarea field 1`] = `
                   <label
                     class="label"
                     for="root_description"
-                    id="root_description__label"
                   >
                     <span
                       class="label-text font-medium"
                     >
-                      description
+                      <span
+                        id="root_description__label"
+                      >
+                        description
+                      </span>
                     </span>
                   </label>
                   <div
@@ -1826,12 +1868,15 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                         <label
                                           class="label"
                                           for="root_tasks_0_title"
-                                          id="root_tasks_0_title__label"
                                         >
                                           <span
                                             class="label-text font-medium"
                                           >
-                                            title
+                                            <span
+                                              id="root_tasks_0_title__label"
+                                            >
+                                              title
+                                            </span>
                                           </span>
                                         </label>
                                         <div
@@ -2013,12 +2058,15 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                         <label
                                           class="label"
                                           for="root_tasks_1_title"
-                                          id="root_tasks_1_title__label"
                                         >
                                           <span
                                             class="label-text font-medium"
                                           >
-                                            title
+                                            <span
+                                              id="root_tasks_1_title__label"
+                                            >
+                                              title
+                                            </span>
                                           </span>
                                         </label>
                                         <div
@@ -2264,12 +2312,15 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                               <label
                                 class="label"
                                 for="root_tags_0"
-                                id="root_tags_0__label"
                               >
                                 <span
                                   class="label-text font-medium"
                                 >
-                                  tags-1
+                                  <span
+                                    id="root_tags_0__label"
+                                  >
+                                    tags-1
+                                  </span>
                                   <span
                                     class="text-error ml-1"
                                   >
@@ -2381,12 +2432,15 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                               <label
                                 class="label"
                                 for="root_tags_1"
-                                id="root_tags_1__label"
                               >
                                 <span
                                   class="label-text font-medium"
                                 >
-                                  tags-2
+                                  <span
+                                    id="root_tags_1__label"
+                                  >
+                                    tags-2
+                                  </span>
                                   <span
                                     class="text-error ml-1"
                                   >
@@ -2601,12 +2655,15 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                             <label
                               class="label"
                               for="root_person_firstName"
-                              id="root_person_firstName__label"
                             >
                               <span
                                 class="label-text font-medium"
                               >
-                                firstName
+                                <span
+                                  id="root_person_firstName__label"
+                                >
+                                  firstName
+                                </span>
                               </span>
                             </label>
                             <div
@@ -2640,12 +2697,15 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                             <label
                               class="label"
                               for="root_person_lastName"
-                              id="root_person_lastName__label"
                             >
                               <span
                                 class="label-text font-medium"
                               >
-                                lastName
+                                <span
+                                  id="root_person_lastName__label"
+                                >
+                                  lastName
+                                </span>
                               </span>
                             </label>
                             <div
@@ -2710,12 +2770,15 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                       <label
                                         class="label"
                                         for="root_person_address_street"
-                                        id="root_person_address_street__label"
                                       >
                                         <span
                                           class="label-text font-medium"
                                         >
-                                          street
+                                          <span
+                                            id="root_person_address_street__label"
+                                          >
+                                            street
+                                          </span>
                                         </span>
                                       </label>
                                       <div
@@ -2749,12 +2812,15 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                       <label
                                         class="label"
                                         for="root_person_address_city"
-                                        id="root_person_address_city__label"
                                       >
                                         <span
                                           class="label-text font-medium"
                                         >
-                                          city
+                                          <span
+                                            id="root_person_address_city__label"
+                                          >
+                                            city
+                                          </span>
                                         </span>
                                       </label>
                                       <div
@@ -2831,12 +2897,15 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                   <label
                     class="label"
                     for="root_color"
-                    id="root_color__label"
                   >
                     <span
                       class="label-text font-medium"
                     >
-                      color
+                      <span
+                        id="root_color__label"
+                      >
+                        color
+                      </span>
                     </span>
                   </label>
                   <div
@@ -2968,12 +3037,15 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                   <label
                     class="label"
                     for="root_firstName"
-                    id="root_firstName__label"
                   >
                     <span
                       class="label-text font-medium"
                     >
-                      firstName
+                      <span
+                        id="root_firstName__label"
+                      >
+                        firstName
+                      </span>
                     </span>
                   </label>
                   <div
@@ -3007,12 +3079,15 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                   <label
                     class="label"
                     for="root_age"
-                    id="root_age__label"
                   >
                     <span
                       class="label-text font-medium"
                     >
-                      age
+                      <span
+                        id="root_age__label"
+                      >
+                        age
+                      </span>
                     </span>
                   </label>
                   <div
@@ -3187,12 +3262,15 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                   <label
                     class="label"
                     for="root_region"
-                    id="root_region__label"
                   >
                     <span
                       class="label-text font-medium"
                     >
-                      region
+                      <span
+                        id="root_region__label"
+                      >
+                        region
+                      </span>
                     </span>
                   </label>
                   <div
@@ -4338,12 +4416,15 @@ exports[`single fields > checkboxes field 1`] = `
       >
         <label
           class="label"
-          id="root__label"
         >
           <span
             class="label-text font-medium"
           >
-            An enum list rendered as checkboxes
+            <span
+              id="root__label"
+            >
+              An enum list rendered as checkboxes
+            </span>
           </span>
         </label>
         <div
@@ -4452,12 +4533,15 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
       >
         <label
           class="label"
-          id="root__label"
         >
           <span
             class="label-text font-medium"
           >
-            Checkbox Group
+            <span
+              id="root__label"
+            >
+              Checkbox Group
+            </span>
           </span>
         </label>
         <div
@@ -4569,12 +4653,15 @@ exports[`single fields > checkboxes widget with required field 1`] = `
       >
         <label
           class="label"
-          id="root__label"
         >
           <span
             class="label-text font-medium"
           >
-            Required Checkbox Group
+            <span
+              id="root__label"
+            >
+              Required Checkbox Group
+            </span>
           </span>
         </label>
         <div
@@ -4695,12 +4782,15 @@ exports[`single fields > field with description 1`] = `
                   <label
                     class="label"
                     for="root_my-field"
-                    id="root_my-field__label"
                   >
                     <span
                       class="label-text font-medium"
                     >
-                      my-field
+                      <span
+                        id="root_my-field__label"
+                      >
+                        my-field
+                      </span>
                     </span>
                   </label>
                   <div
@@ -4778,12 +4868,15 @@ exports[`single fields > field with description in uiSchema 1`] = `
                   <label
                     class="label"
                     for="root_my-field"
-                    id="root_my-field__label"
                   >
                     <span
                       class="label-text font-medium"
                     >
-                      my-field
+                      <span
+                        id="root_my-field__label"
+                      >
+                        my-field
+                      </span>
                     </span>
                   </label>
                   <div
@@ -4861,12 +4954,15 @@ exports[`single fields > field with markdown description 1`] = `
                   <label
                     class="label"
                     for="root_my-field"
-                    id="root_my-field__label"
                   >
                     <span
                       class="label-text font-medium"
                     >
-                      my-field
+                      <span
+                        id="root_my-field__label"
+                      >
+                        my-field
+                      </span>
                     </span>
                   </label>
                   <div
@@ -4950,12 +5046,15 @@ exports[`single fields > field with markdown description in uiSchema 1`] = `
                   <label
                     class="label"
                     for="root_my-field"
-                    id="root_my-field__label"
                   >
                     <span
                       class="label-text font-medium"
                     >
-                      my-field
+                      <span
+                        id="root_my-field__label"
+                      >
+                        my-field
+                      </span>
                     </span>
                   </label>
                   <div
@@ -5547,12 +5646,15 @@ exports[`single fields > optional data controls > does not show optional control
                             <label
                               class="label"
                               for="root_nestedObjectOptional_test"
-                              id="root_nestedObjectOptional_test__label"
                             >
                               <span
                                 class="label-text font-medium"
                               >
-                                test
+                                <span
+                                  id="root_nestedObjectOptional_test__label"
+                                >
+                                  test
+                                </span>
                               </span>
                             </label>
                             <div
@@ -5617,12 +5719,15 @@ exports[`single fields > optional data controls > does not show optional control
                                       <label
                                         class="label"
                                         for="root_nestedObjectOptional_deepObjectOptional_deepTest"
-                                        id="root_nestedObjectOptional_deepObjectOptional_deepTest__label"
                                       >
                                         <span
                                           class="label-text font-medium"
                                         >
-                                          deepTest
+                                          <span
+                                            id="root_nestedObjectOptional_deepObjectOptional_deepTest__label"
+                                          >
+                                            deepTest
+                                          </span>
                                         </span>
                                       </label>
                                       <div
@@ -5697,12 +5802,15 @@ exports[`single fields > optional data controls > does not show optional control
                                       <label
                                         class="label"
                                         for="root_nestedObjectOptional_deepObject_deepTest"
-                                        id="root_nestedObjectOptional_deepObject_deepTest__label"
                                       >
                                         <span
                                           class="label-text font-medium"
                                         >
-                                          deepTest
+                                          <span
+                                            id="root_nestedObjectOptional_deepObject_deepTest__label"
+                                          >
+                                            deepTest
+                                          </span>
                                         </span>
                                       </label>
                                       <div
@@ -6071,12 +6179,15 @@ exports[`single fields > optional data controls > does not show optional control
                             <label
                               class="label"
                               for="root_nestedObject_test"
-                              id="root_nestedObject_test__label"
                             >
                               <span
                                 class="label-text font-medium"
                               >
-                                test
+                                <span
+                                  id="root_nestedObject_test__label"
+                                >
+                                  test
+                                </span>
                               </span>
                             </label>
                             <div
@@ -6190,12 +6301,15 @@ exports[`single fields > optional data controls > does not show optional control
                 >
                   <label
                     class="label"
-                    id="root_optionalObjectWithOneofs__label"
                   >
                     <span
                       class="label-text font-medium"
                     >
-                      optionalObjectWithOneofs
+                      <span
+                        id="root_optionalObjectWithOneofs__label"
+                      >
+                        optionalObjectWithOneofs
+                      </span>
                     </span>
                   </label>
                   <div
@@ -6311,12 +6425,15 @@ exports[`single fields > optional data controls > does not show optional control
                                   <label
                                     class="label"
                                     for="root_optionalObjectWithOneofs_name"
-                                    id="root_optionalObjectWithOneofs_name__label"
                                   >
                                     <span
                                       class="label-text font-medium"
                                     >
-                                      name
+                                      <span
+                                        id="root_optionalObjectWithOneofs_name__label"
+                                      >
+                                        name
+                                      </span>
                                     </span>
                                   </label>
                                   <div
@@ -6358,12 +6475,15 @@ exports[`single fields > optional data controls > does not show optional control
                 >
                   <label
                     class="label"
-                    id="root_optionalArrayWithAnyofs__label"
                   >
                     <span
                       class="label-text font-medium"
                     >
-                      optionalArrayWithAnyofs
+                      <span
+                        id="root_optionalArrayWithAnyofs__label"
+                      >
+                        optionalArrayWithAnyofs
+                      </span>
                     </span>
                   </label>
                   <div
@@ -6609,12 +6729,15 @@ exports[`single fields > optional data controls > does not show optional control
                             <label
                               class="label"
                               for="root_nestedObjectOptional_test"
-                              id="root_nestedObjectOptional_test__label"
                             >
                               <span
                                 class="label-text font-medium"
                               >
-                                test
+                                <span
+                                  id="root_nestedObjectOptional_test__label"
+                                >
+                                  test
+                                </span>
                               </span>
                             </label>
                             <div
@@ -6680,12 +6803,15 @@ exports[`single fields > optional data controls > does not show optional control
                                       <label
                                         class="label"
                                         for="root_nestedObjectOptional_deepObjectOptional_deepTest"
-                                        id="root_nestedObjectOptional_deepObjectOptional_deepTest__label"
                                       >
                                         <span
                                           class="label-text font-medium"
                                         >
-                                          deepTest
+                                          <span
+                                            id="root_nestedObjectOptional_deepObjectOptional_deepTest__label"
+                                          >
+                                            deepTest
+                                          </span>
                                         </span>
                                       </label>
                                       <div
@@ -6761,12 +6887,15 @@ exports[`single fields > optional data controls > does not show optional control
                                       <label
                                         class="label"
                                         for="root_nestedObjectOptional_deepObject_deepTest"
-                                        id="root_nestedObjectOptional_deepObject_deepTest__label"
                                       >
                                         <span
                                           class="label-text font-medium"
                                         >
-                                          deepTest
+                                          <span
+                                            id="root_nestedObjectOptional_deepObject_deepTest__label"
+                                          >
+                                            deepTest
+                                          </span>
                                         </span>
                                       </label>
                                       <div
@@ -7140,12 +7269,15 @@ exports[`single fields > optional data controls > does not show optional control
                             <label
                               class="label"
                               for="root_nestedObject_test"
-                              id="root_nestedObject_test__label"
                             >
                               <span
                                 class="label-text font-medium"
                               >
-                                test
+                                <span
+                                  id="root_nestedObject_test__label"
+                                >
+                                  test
+                                </span>
                               </span>
                             </label>
                             <div
@@ -7261,12 +7393,15 @@ exports[`single fields > optional data controls > does not show optional control
                 >
                   <label
                     class="label"
-                    id="root_optionalObjectWithOneofs__label"
                   >
                     <span
                       class="label-text font-medium"
                     >
-                      optionalObjectWithOneofs
+                      <span
+                        id="root_optionalObjectWithOneofs__label"
+                      >
+                        optionalObjectWithOneofs
+                      </span>
                     </span>
                   </label>
                   <div
@@ -7386,12 +7521,15 @@ exports[`single fields > optional data controls > does not show optional control
                                   <label
                                     class="label"
                                     for="root_optionalObjectWithOneofs_name"
-                                    id="root_optionalObjectWithOneofs_name__label"
                                   >
                                     <span
                                       class="label-text font-medium"
                                     >
-                                      name
+                                      <span
+                                        id="root_optionalObjectWithOneofs_name__label"
+                                      >
+                                        name
+                                      </span>
                                     </span>
                                   </label>
                                   <div
@@ -7433,12 +7571,15 @@ exports[`single fields > optional data controls > does not show optional control
                 >
                   <label
                     class="label"
-                    id="root_optionalArrayWithAnyofs__label"
                   >
                     <span
                       class="label-text font-medium"
                     >
-                      optionalArrayWithAnyofs
+                      <span
+                        id="root_optionalArrayWithAnyofs__label"
+                      >
+                        optionalArrayWithAnyofs
+                      </span>
                     </span>
                   </label>
                   <div
@@ -7722,12 +7863,15 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             <label
                               class="label"
                               for="root_nestedObjectOptional_test"
-                              id="root_nestedObjectOptional_test__label"
                             >
                               <span
                                 class="label-text font-medium"
                               >
-                                test
+                                <span
+                                  id="root_nestedObjectOptional_test__label"
+                                >
+                                  test
+                                </span>
                               </span>
                             </label>
                             <div
@@ -7865,12 +8009,15 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                       <label
                                         class="label"
                                         for="root_nestedObjectOptional_deepObject_deepTest"
-                                        id="root_nestedObjectOptional_deepObject_deepTest__label"
                                       >
                                         <span
                                           class="label-text font-medium"
                                         >
-                                          deepTest
+                                          <span
+                                            id="root_nestedObjectOptional_deepObject_deepTest__label"
+                                          >
+                                            deepTest
+                                          </span>
                                         </span>
                                       </label>
                                       <div
@@ -8178,12 +8325,15 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                               <label
                                 class="label"
                                 for="root_nestedArrayOptional_0"
-                                id="root_nestedArrayOptional_0__label"
                               >
                                 <span
                                   class="label-text font-medium"
                                 >
-                                  nestedArrayOptional-1
+                                  <span
+                                    id="root_nestedArrayOptional_0__label"
+                                  >
+                                    nestedArrayOptional-1
+                                  </span>
                                   <span
                                     class="text-error ml-1"
                                   >
@@ -8323,12 +8473,15 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             <label
                               class="label"
                               for="root_nestedObject_test"
-                              id="root_nestedObject_test__label"
                             >
                               <span
                                 class="label-text font-medium"
                               >
-                                test
+                                <span
+                                  id="root_nestedObject_test__label"
+                                >
+                                  test
+                                </span>
                               </span>
                             </label>
                             <div
@@ -8676,12 +8829,15 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             <label
                               class="label"
                               for="root_nestedObjectOptional_test"
-                              id="root_nestedObjectOptional_test__label"
                             >
                               <span
                                 class="label-text font-medium"
                               >
-                                test
+                                <span
+                                  id="root_nestedObjectOptional_test__label"
+                                >
+                                  test
+                                </span>
                               </span>
                             </label>
                             <div
@@ -8793,12 +8949,15 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                       <label
                                         class="label"
                                         for="root_nestedObjectOptional_deepObject_deepTest"
-                                        id="root_nestedObjectOptional_deepObject_deepTest__label"
                                       >
                                         <span
                                           class="label-text font-medium"
                                         >
-                                          deepTest
+                                          <span
+                                            id="root_nestedObjectOptional_deepObject_deepTest__label"
+                                          >
+                                            deepTest
+                                          </span>
                                         </span>
                                       </label>
                                       <div
@@ -9056,12 +9215,15 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                               <label
                                 class="label"
                                 for="root_nestedArrayOptional_0"
-                                id="root_nestedArrayOptional_0__label"
                               >
                                 <span
                                   class="label-text font-medium"
                                 >
-                                  nestedArrayOptional-1
+                                  <span
+                                    id="root_nestedArrayOptional_0__label"
+                                  >
+                                    nestedArrayOptional-1
+                                  </span>
                                   <span
                                     class="text-error ml-1"
                                   >
@@ -9204,12 +9366,15 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             <label
                               class="label"
                               for="root_nestedObject_test"
-                              id="root_nestedObject_test__label"
                             >
                               <span
                                 class="label-text font-medium"
                               >
-                                test
+                                <span
+                                  id="root_nestedObject_test__label"
+                                >
+                                  test
+                                </span>
                               </span>
                             </label>
                             <div
@@ -9642,12 +9807,15 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                             <label
                               class="label"
                               for="root_nestedObject_test"
-                              id="root_nestedObject_test__label"
                             >
                               <span
                                 class="label-text font-medium"
                               >
-                                test
+                                <span
+                                  id="root_nestedObject_test__label"
+                                >
+                                  test
+                                </span>
                               </span>
                             </label>
                             <div
@@ -10083,12 +10251,15 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                             <label
                               class="label"
                               for="root_nestedObject_test"
-                              id="root_nestedObject_test__label"
                             >
                               <span
                                 class="label-text font-medium"
                               >
-                                test
+                                <span
+                                  id="root_nestedObject_test__label"
+                                >
+                                  test
+                                </span>
                               </span>
                             </label>
                             <div
@@ -10440,12 +10611,15 @@ exports[`single fields > radio widget with description in schema and FieldTempla
       >
         <label
           class="label"
-          id="root__label"
         >
           <span
             class="label-text font-medium"
           >
-            test
+            <span
+              id="root__label"
+            >
+              test
+            </span>
           </span>
         </label>
         <div
@@ -12247,12 +12421,15 @@ exports[`single fields > select widget with description in schema and FieldTempl
         <label
           class="label"
           for="root"
-          id="root__label"
         >
           <span
             class="label-text font-medium"
           >
-            test
+            <span
+              id="root__label"
+            >
+              test
+            </span>
           </span>
         </label>
         <div
@@ -12603,12 +12780,15 @@ exports[`single fields > string field > field with markdown help and description
         <label
           class="label"
           for="root"
-          id="root__label"
         >
           <span
             class="label-text font-medium"
           >
-            Markdown Help and Description
+            <span
+              id="root__label"
+            >
+              Markdown Help and Description
+            </span>
           </span>
         </label>
         <div
@@ -12692,12 +12872,15 @@ exports[`single fields > string field > field with markdown help text 1`] = `
         <label
           class="label"
           for="root"
-          id="root__label"
         >
           <span
             class="label-text font-medium"
           >
-            Markdown Help Test
+            <span
+              id="root__label"
+            >
+              Markdown Help Test
+            </span>
           </span>
         </label>
         <div
@@ -12772,12 +12955,15 @@ exports[`single fields > string field > field with markdown help text without a 
         <label
           class="label"
           for="root"
-          id="root__label"
         >
           <span
             class="label-text font-medium"
           >
-            Raw Help Test
+            <span
+              id="root__label"
+            >
+              Raw Help Test
+            </span>
           </span>
         </label>
         <div
@@ -13007,12 +13193,15 @@ exports[`single fields > string field > required field with markdown help 1`] = 
         <label
           class="label"
           for="root"
-          id="root__label"
         >
           <span
             class="label-text font-medium"
           >
-            Required Field with Markdown Help
+            <span
+              id="root__label"
+            >
+              Required Field with Markdown Help
+            </span>
           </span>
         </label>
         <div
@@ -13291,12 +13480,15 @@ exports[`single fields > title field 1`] = `
                   <label
                     class="label"
                     for="root_title"
-                    id="root_title__label"
                   >
                     <span
                       class="label-text font-medium"
                     >
-                      Titre 2
+                      <span
+                        id="root_title__label"
+                      >
+                        Titre 2
+                      </span>
                     </span>
                   </label>
                   <div
@@ -13523,12 +13715,15 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                   <label
                     class="label"
                     for="root_answer"
-                    id="root_answer__label"
                   >
                     <span
                       class="label-text font-medium"
                     >
-                      My Answer
+                      <span
+                        id="root_answer__label"
+                      >
+                        My Answer
+                      </span>
                     </span>
                   </label>
                   <div

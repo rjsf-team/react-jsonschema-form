@@ -306,6 +306,19 @@ describe('SelectWidget', () => {
     );
   });
 
+  test('tells assistive technology a required select is required, as its trigger takes no required attribute', () => {
+    render(<SelectWidget {...makeWidgetMockProps({ options: { enumOptions }, autofocus: false, required: true })} />);
+
+    expect(screen.getByRole('combobox')).toHaveAttribute('aria-required', 'true');
+  });
+
+  test('takes no ui:autofocus while disabled, as a disabled native select takes none', () => {
+    render(<SelectWidget {...makeWidgetMockProps({ options: { enumOptions }, autofocus: true, disabled: true })} />);
+
+    expect(screen.getByRole('combobox')).not.toHaveFocus();
+    expect(screen.getByRole('combobox')).toHaveAttribute('aria-expanded', 'false');
+  });
+
   test('names a select with no title by its placeholder before the translated prompt', () => {
     render(
       <Form

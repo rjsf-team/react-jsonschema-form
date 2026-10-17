@@ -421,6 +421,15 @@ describe('DateWidget', () => {
     expect(disabled.querySelector('button[aria-haspopup]')).toBeDisabled();
   });
 
+  test.each([
+    [true, 'true'],
+    [false, null],
+  ])('says through aria-required whether the field is required, where required is %s', (required, ariaRequired) => {
+    render(<DateWidget {...makeWidgetMockProps({ value: '2020-05-03', schema, required, autofocus: false })} />);
+
+    expect(screen.getByRole('combobox').getAttribute('aria-required')).toBe(ariaRequired);
+  });
+
   // The trigger's name comes partly from the label `FieldTemplate` renders, so these go through a `Form`
   describe('the trigger it renders', () => {
     const dateSchema = { type: 'object' as const, properties: { birthday: { ...schema, title: 'Birthday' } } };
