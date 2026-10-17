@@ -37,6 +37,9 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/validator-ata
 
 - Updated `ata-validator` from `^1.23.0` to `^1.40.1` ([#5420](https://github.com/rjsf-team/react-jsonschema-form/pull/5420))
+- Updated `ata-validator` from `^1.40.1` to `^1.55.0`, which fixes a crash in precompiled validators: a one-character value under `minLength: 1`, or an emoji under a `maxLength`, threw `_cpLen is not defined` ([#PRNUM](https://github.com/rjsf-team/react-jsonschema-form/pull/PRNUM))
+- Fixed apps that import only `createPrecompiledValidator` bundling all of ata-validator anyway: the default export's `customizeValidator()` call is now marked pure, so bundlers drop it. On a sign-up form the app goes from 295.3 KB to 163.0 KB gzipped ([#PRNUM](https://github.com/rjsf-team/react-jsonschema-form/pull/PRNUM))
+- Documented precompiled validators in the README ([#PRNUM](https://github.com/rjsf-team/react-jsonschema-form/pull/PRNUM))
 
 ## Dev / docs / playground
 

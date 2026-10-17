@@ -26,6 +26,7 @@
 - [Installation](#installation)
 - [Usage](#usage)
 - [Customization](#customization)
+- [Precompiled validators](#precompiled-validators)
 - [Differences from validator-ajv8](#differences-from-validator-ajv8)
 
 ## About
@@ -77,11 +78,36 @@ const validator = customizeValidator({
 
 A `Localizer` may be supplied as the second argument. ata error objects use the same field names as AJV (`keyword`, `instancePath`, `schemaPath`, `params`, `message`, `parentSchema`), so localizers that mutate `message` in place port across without changes. The pre-quote dance that the AJV validator runs against `ajv-i18n` is intentionally not replicated here — ata's error params are frozen, and the existing locale catalogues for AJV are not portable to ata's keyword set.
 
+## Precompiled validators
+
+If your schema is known at build time, you can compile it to plain JavaScript and ship the generated module instead of the validator. This works like `validator-ajv8`'s precompiled validators.
+
+1. Generate the module in a build script (Node only):
+
+```ts
+import fs from 'node:fs';
+import { compileSchemaValidatorsCode } from '@rjsf/validator-ata/compileSchemaValidators';
+import schema from './schema.json' with { type: 'json' };
+
+fs.writeFileSync('./src/precompiled-validator.cjs', compileSchemaValidatorsCode(schema));
+```
+
+2. Use it in the app:
+
+```ts
+import { createPrecompiledValidator } from '@rjsf/validator-ata';
+import validateFns from './precompiled-validator.cjs';
+import schema from './schema.json';
+
+const validator = createPrecompiledValidator(validateFns, schema);
+```
+
+The generated module imports nothing, so ata-validator is not in your bundle. Measured on a sign-up form (React 19, esbuild, minified and gzipped): the whole app is 290.2 KB with the runtime validator and 163.0 KB with the precompiled one; the same app without any validator is 156.4 KB. Custom formats must be a `RegExp` or a pattern string here, not a function. Run the build step again when the schema changes.
+
 ## Differences from validator-ajv8
 
 The `ValidatorType` contract is identical, and the shared `@rjsf/utils` schema test suite passes against this validator with the deltas below. Behavior outside of this list mirrors `validator-ajv8`.
 
-- **Precompiled validators** are not yet wired through. The `compileSchemaValidators` and `createPrecompiledValidator` entrypoints exposed by `validator-ajv8` are slated for a follow-up release that adapts ata's `bundleStandalone` codegen to the RJSF-expected `ValidatorFunctions` shape.
 - **`ajvOptionsOverrides`, `ajvFormatOptions`, `AjvClass`** have no equivalents and are intentionally not accepted. `ataOptionsOverrides` replaces the first; built-in formats are always installed and don't require an opt-in flag.
 - **`isValid` and `rawValidation` deep-clone `formData` before passing it to ata**. ata's default-applier writes `default` values into the input object during validation, while AJV treats validation as a pure operation. The clone preserves the AJV contract RJSF expects when probing data through repeated `isValid` calls (oneOf/anyOf option resolution).
 - **Custom-keyword extensions** (e.g. `ajv-errors`, `ajv-merge-patch`) have no ata-side counterpart yet. Schemas using these keywords will validate (ata silently ignores unknown keywords) but the extension semantics are not applied.
