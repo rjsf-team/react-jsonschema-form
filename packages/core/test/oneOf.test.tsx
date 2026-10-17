@@ -2282,6 +2282,49 @@ describe('oneOf', () => {
     });
   });
 
+  describe('the selector of a required field', () => {
+    const recordSelectWidget = () => {
+      const selectorProps = vi.fn<(props: WidgetProps) => void>();
+      function RecordingSelectWidget(props: WidgetProps) {
+        if (props.name?.endsWith('__oneof_select')) {
+          selectorProps(props);
+        }
+        return <SelectWidget {...props} />;
+      }
+      return { selectorProps, RecordingSelectWidget };
+    };
+    const pets = (required: string[]): RJSFSchema => ({
+      type: 'object',
+      required,
+      properties: {
+        pet: {
+          oneOf: [
+            { title: 'Cat', type: 'string' },
+            { title: 'Dog', type: 'number' },
+          ],
+        },
+      },
+    });
+
+    it.each([
+      ['the schema requires it', pets(['pet']), {}, true],
+      ['its ui:required is true', pets([]), { pet: { 'ui:required': true } }, true],
+      ['it is optional', pets([]), {}, false],
+    ])('is told it is required when %s (#5527)', (_, schema, uiSchema, required) => {
+      const { selectorProps, RecordingSelectWidget } = recordSelectWidget();
+
+      createFormComponent({ schema, uiSchema, widgets: { SelectWidget: RecordingSelectWidget } });
+
+      expect(selectorProps.mock.lastCall?.[0]?.required).toBe(required);
+    });
+
+    it('marks the selector of a field the schema requires required (#5527)', () => {
+      createFormComponent({ schema: pets(['pet']) });
+
+      expect(screen.getByRole('combobox')).toBeRequired();
+    });
+  });
+
   describe('OpenAPI discriminator support', () => {
     const schema: RJSFSchema = {
       type: 'object',
@@ -2363,10 +2406,11 @@ describe('oneOf', () => {
     const uiSchema = {
       'ui:field': () => <div className='custom-field'>Custom field</div>,
     };
-    it('should be rendered twice', () => {
+    it('should be rendered once, beside the selected option, which renders its own field (#5358)', () => {
       const { node } = createFormComponent({ schema, uiSchema });
       const fields = node.querySelectorAll('.custom-field');
-      expect(fields).toHaveLength(2);
+      expect(fields).toHaveLength(1);
+      expect(node.querySelectorAll('.rjsf-field-number input#root')).toHaveLength(1);
     });
     it('should render <select>', () => {
       const { node } = createFormComponent({ schema, uiSchema });

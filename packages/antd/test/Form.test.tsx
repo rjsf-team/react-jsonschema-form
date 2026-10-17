@@ -1,5 +1,5 @@
 import { formTests, themeTests } from '@rjsf/snapshot-tests';
-import type { ErrorSchema, RJSFSchema } from '@rjsf/utils';
+import type { ErrorSchema, FieldProps, RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -283,5 +283,128 @@ describe('antd specific tests', () => {
 
     await user.click(screen.getByRole('button', { name: button }));
     expect(onChange).not.toHaveBeenCalled();
+  });
+
+  function WrappingField(props: FieldProps) {
+    const { SchemaField } = props.registry.fields;
+    return <SchemaField {...props} />;
+  }
+  const describedSchema: RJSFSchema = {
+    type: 'object',
+    properties: { val: { type: 'string', title: 'Value', description: 'Desc' } },
+  };
+
+  test.each<[string, RJSFSchema, UiSchema]>([
+    ["ui:field: 'SchemaField'", describedSchema, { val: { 'ui:field': 'SchemaField', 'ui:help': 'Help' } }],
+    [
+      "ui:options.field: 'SchemaField'",
+      describedSchema,
+      { val: { 'ui:options': { field: 'SchemaField' }, 'ui:help': 'Help' } },
+    ],
+    [
+      "ui:globalOptions.field: 'SchemaField'",
+      describedSchema,
+      { 'ui:globalOptions': { field: 'SchemaField' }, val: { 'ui:help': 'Help' } },
+    ],
+    [
+      'a ui:options.field wrapping SchemaField',
+      describedSchema,
+      { val: { 'ui:options': { field: 'wrapping' }, 'ui:help': 'Help' } },
+    ],
+    [
+      'a ui:globalOptions.field wrapping SchemaField',
+      describedSchema,
+      { 'ui:globalOptions': { field: 'wrapping' }, val: { 'ui:help': 'Help' } },
+    ],
+    [
+      'a $id wrapping SchemaField',
+      {
+        type: 'object',
+        properties: { val: { $id: 'wrapping', type: 'string', title: 'Value', description: 'Desc' } },
+      },
+      { val: { 'ui:help': 'Help' } },
+    ],
+  ])('renders one label, description and help for the field %s names', (_, schema, uiSchema) => {
+    const { container } = render(
+      <Form schema={schema} uiSchema={uiSchema} fields={{ wrapping: WrappingField }} validator={validator} />,
+    );
+
+    expect(container.querySelectorAll('input#root_val')).toHaveLength(1);
+    expect(container.querySelectorAll('label[for="root_val"]')).toHaveLength(1);
+    expect(container.querySelectorAll('#root_val__description')).toHaveLength(1);
+    expect(container.querySelectorAll('#root_val__help')).toHaveLength(1);
+  });
+
+  test('leaves the label to a field a ui:field names that wraps SchemaField, rendering one description and help', () => {
+    const { container } = render(
+      <Form
+        schema={describedSchema}
+        uiSchema={{ val: { 'ui:field': 'wrapping', 'ui:help': 'Help' } }}
+        fields={{ wrapping: WrappingField }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelectorAll('input#root_val')).toHaveLength(1);
+    expect(container.querySelector('label[for="root_val"]')).not.toBeInTheDocument();
+    expect(container.querySelectorAll('#root_val__description')).toHaveLength(1);
+    expect(container.querySelectorAll('#root_val__help')).toHaveLength(1);
+  });
+
+  const anyOfSchema: RJSFSchema = {
+    type: 'object',
+    properties: { val: { type: 'string', anyOf: [{ minLength: 2 }, { maxLength: 5 }] } },
+  };
+
+  test.each<[string, RJSFSchema, UiSchema]>([
+    ["ui:field: 'SchemaField'", anyOfSchema, { val: { 'ui:field': 'SchemaField' } }],
+    ["ui:options.field: 'SchemaField'", anyOfSchema, { val: { 'ui:options': { field: 'SchemaField' } } }],
+    ["ui:globalOptions.field: 'SchemaField'", anyOfSchema, { 'ui:globalOptions': { field: 'SchemaField' } }],
+    ['a ui:field wrapping SchemaField', anyOfSchema, { val: { 'ui:field': 'wrapping' } }],
+    ['a ui:options.field wrapping SchemaField', anyOfSchema, { val: { 'ui:options': { field: 'wrapping' } } }],
+    [
+      'a $id wrapping SchemaField',
+      { type: 'object', properties: { val: { $id: 'wrapping', anyOf: [{ type: 'string' }, { type: 'number' }] } } },
+      {},
+    ],
+  ])('renders one option selector and one input for an anyOf the field %s names', (_, schema, uiSchema) => {
+    const { container } = render(
+      <Form schema={schema} uiSchema={uiSchema} fields={{ wrapping: WrappingField }} validator={validator} />,
+    );
+
+    expect(container.querySelectorAll('#root_val__anyof_select')).toHaveLength(1);
+    expect(container.querySelectorAll('input#root_val')).toHaveLength(1);
+  });
+
+  const extraKeySchema: RJSFSchema = { type: 'object', additionalProperties: { type: 'string' } };
+
+  test.each<[string, RJSFSchema, UiSchema]>([
+    ["ui:field: 'SchemaField'", extraKeySchema, { additionalProperties: { 'ui:field': 'SchemaField' } }],
+    [
+      "ui:options.field: 'SchemaField'",
+      extraKeySchema,
+      { additionalProperties: { 'ui:options': { field: 'SchemaField' } } },
+    ],
+    ['a ui:field wrapping SchemaField', extraKeySchema, { additionalProperties: { 'ui:field': 'wrapping' } }],
+    [
+      'a ui:options.field wrapping SchemaField',
+      extraKeySchema,
+      { additionalProperties: { 'ui:options': { field: 'wrapping' } } },
+    ],
+    ['a $id wrapping SchemaField', { type: 'object', additionalProperties: { $id: 'wrapping', type: 'string' } }, {}],
+  ])('renders one key input and one remove button for an extra key the field %s names', (_, schema, uiSchema) => {
+    const { container } = render(
+      <Form
+        schema={schema}
+        uiSchema={uiSchema}
+        formData={{ foo: 'x' }}
+        fields={{ wrapping: WrappingField }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelectorAll('input#root_foo-key')).toHaveLength(1);
+    expect(container.querySelectorAll('input#root_foo')).toHaveLength(1);
+    expect(container.querySelectorAll('button#root_foo__remove')).toHaveLength(1);
   });
 });

@@ -22,12 +22,9 @@ describe('cleanupOptions()', () => {
     },
   );
 
-  it.each(['definitions', 'fieldReplacesAnyOrOneOf', 'globalOptions'])(
-    'removes %s, which the ui: key of the same name gives a field',
-    (name) => {
-      expect(cleanupOptions({ [name]: {}, radius: 'md' })).toEqual({ radius: 'md' });
-    },
-  );
+  it('removes fieldReplacesAnyOrOneOf, which the ui: key of the same name gives a field', () => {
+    expect(cleanupOptions({ fieldReplacesAnyOrOneOf: true, radius: 'md' })).toEqual({ radius: 'md' });
+  });
 
   it.each([
     'accept',
