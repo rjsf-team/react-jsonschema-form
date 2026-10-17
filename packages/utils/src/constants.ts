@@ -22,7 +22,6 @@ export const GUESSED_TYPE_FLAG = Symbol('__guessed_type');
 export const ID_KEY = '$id';
 export const IF_KEY = 'if';
 export const ITEMS_KEY = 'items';
-export const JUNK_OPTION_ID = '_$junk_option_schema_id$_';
 export const NAME_KEY = '$name';
 export const ONE_OF_KEY = 'oneOf';
 export const PATTERN_PROPERTIES_KEY = 'patternProperties';
@@ -40,12 +39,6 @@ export const RJSF_REF_CYCLE_KEY = Symbol('__rjsf_ref_cycle');
  * without it.
  */
 export const RJSF_PROVENANCE_KEY = Symbol('__rjsf_provenance');
-/** Marked a schema resolved from a `$ref` that had branch keywords (`allOf`, `dependencies`, `else`, `then`) beside it
- * with the names of those keywords.
- *
- * @deprecated - `retrieveSchema()` no longer adds it to any schema. It stays exported until v8.
- */
-export const RJSF_REF_SIBLING_BRANCHES_KEY = Symbol('__rjsf_ref_sibling_branches');
 export const SCHEMA_KEY = '$schema';
 export const DEFAULT_ID_PREFIX = 'root';
 export const DEFAULT_ID_SEPARATOR = '_';

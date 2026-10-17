@@ -1,13 +1,5 @@
 import type { ErrorSchema, FormValidation, RJSFSchema, RJSFValidationError, UiSchema } from '@rjsf/utils';
-import {
-  ErrorSchemaBuilder,
-  JUNK_OPTION_ID,
-  RJSF_REF_KEY,
-  hashForSchema,
-  mergeSchemas,
-  noop,
-  retrieveSchema,
-} from '@rjsf/utils';
+import { ErrorSchemaBuilder, hashForSchema, mergeSchemas, noop, retrieveSchema } from '@rjsf/utils';
 import type { Mock } from 'vitest';
 
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
@@ -80,47 +72,19 @@ describe('ATAPrecompiledValidator', () => {
       });
     });
     describe('validator.isValid()', () => {
-      it('should return true if the data is valid against the schema', () => {
-        const schema: RJSFSchema = {
-          type: 'object',
-          properties: {
-            name: { type: 'string' },
-          },
-          anyOf: [
-            {
-              required: ['name'],
-            },
-          ],
-          [RJSF_REF_KEY]: '#/definitions/foo',
-        };
-
-        expect(validator.isValid(schema, { name: 'bar' }, rootSchema)).toBe(true);
+      it('should return true if the data is valid against the subschema a pointer names', () => {
+        expect(validator.isValid({ $ref: '#/properties/multi/anyOf/0' }, { name: 'bar' }, rootSchema)).toBe(true);
       });
-      it('should return false if the data is not valid against the schema', () => {
-        const schema: RJSFSchema = {
-          type: 'object',
-          properties: {
-            name: { type: 'string' },
-          },
-          anyOf: [
-            {
-              required: ['name'],
-            },
-          ],
-          [RJSF_REF_KEY]: '#/definitions/foo',
-        };
-
-        expect(validator.isValid(schema, { name: 12345 }, rootSchema)).toBe(false);
+      it('should return false if the data is not valid against the subschema a pointer names', () => {
+        expect(validator.isValid({ $ref: '#/properties/multi/anyOf/0' }, { name: 12345 }, rootSchema)).toBe(false);
       });
-      it('should return false if junk option id is passed', () => {
-        const schema: RJSFSchema = {
-          type: 'object',
-          properties: {
-            name: { type: 'string' },
-          },
-          $id: JUNK_OPTION_ID,
-        };
-        expect(validator.isValid(schema, { name: 'foo' }, rootSchema)).toBe(false);
+      it('should name the subschema of a pointer it has no function for', () => {
+        const schema: RJSFSchema = { $ref: '#/definitions/notListed' };
+        expect(() => validator.isValid(schema, {}, rootSchema)).toThrow(
+          new Error(
+            `No precompiled validator function was found for the given schema for "${hashForSchema(schema)}" (the subschema at "#/definitions/notListed")`,
+          ),
+        );
       });
       it('should throw if the schema is not recognized', () => {
         const schema: RJSFSchema = 'foobarbaz' as unknown as RJSFSchema;

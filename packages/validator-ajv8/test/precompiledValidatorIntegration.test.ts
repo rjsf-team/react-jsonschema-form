@@ -4,9 +4,9 @@
  * compiled from a oneOf/anyOf that contains options with `additionalProperties: false`.
  *
  * The critical property under test: omitExtraData's handleOneOf relaxes
- * `additionalProperties:false → true` before scoring options, and resolveAnyOrOneOfSchemas
- * now captures those relaxed schemas (plus their augmented forms) in the schemaParser so
- * that precompiled validators can find them via isValid() without throwing.
+ * `additionalProperties:false → true` before scoring options, and the compile list holds the
+ * relaxed form of every option the schema graph names, so that precompiled validators can find
+ * them via isValid() without throwing.
  */
 
 import type { RJSFSchema } from '@rjsf/utils';
@@ -14,9 +14,8 @@ import {
   createSchemaUtils,
   getClosestMatchingOption,
   getFirstMatchingOption,
+  getValidationTarget,
   omitExtraData,
-  relaxOptionsForScoring,
-  withVariantId,
 } from '@rjsf/utils';
 
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
@@ -30,28 +29,30 @@ function buildPrecompiledValidator(schema: RJSFSchema) {
 
 // ─── Test schemas ─────────────────────────────────────────────────────────────
 
+const STRICT_OPTIONS: RJSFSchema[] = [
+  {
+    type: 'object',
+    properties: {
+      kind: { const: 'a' },
+      foo: { type: 'string' },
+    },
+    additionalProperties: false,
+  },
+  {
+    type: 'object',
+    properties: {
+      kind: { const: 'b' },
+      bar: { type: 'string' },
+    },
+    additionalProperties: false,
+  },
+];
+
 /** oneOf with direct additionalProperties:false on each branch */
-const STRICT_ONEOF_SCHEMA: RJSFSchema = {
-  type: 'object',
-  oneOf: [
-    {
-      type: 'object',
-      properties: {
-        kind: { const: 'a' },
-        foo: { type: 'string' },
-      },
-      additionalProperties: false,
-    },
-    {
-      type: 'object',
-      properties: {
-        kind: { const: 'b' },
-        bar: { type: 'string' },
-      },
-      additionalProperties: false,
-    },
-  ],
-};
+const STRICT_ONEOF_SCHEMA: RJSFSchema = { type: 'object', oneOf: STRICT_OPTIONS };
+
+/** Copies of the options the compile list does not hold, which a caller may hand the matchers to ignore extra keys */
+const RELAXED_COPIES = STRICT_OPTIONS.map((option) => ({ ...option, additionalProperties: true }));
 
 /** oneOf where each branch is a $ref to a definition that has additionalProperties:false */
 const STRICT_ONEOF_REF_SCHEMA: RJSFSchema = {
@@ -89,74 +90,60 @@ describe('precompiled validator integration: oneOf with additionalProperties:fal
 
     describe('getFirstMatchingOption()', () => {
       it('returns 0 when formData matches the first strict option exactly', () => {
-        const options = STRICT_ONEOF_SCHEMA.oneOf as RJSFSchema[];
+        const options = STRICT_OPTIONS;
         expect(getFirstMatchingOption({ validator }, { kind: 'a', foo: 'hello' }, options, STRICT_ONEOF_SCHEMA)).toBe(
           0,
         );
       });
 
       it('returns 1 when formData matches the second strict option exactly', () => {
-        const options = STRICT_ONEOF_SCHEMA.oneOf as RJSFSchema[];
+        const options = STRICT_OPTIONS;
         expect(getFirstMatchingOption({ validator }, { kind: 'b', bar: 'world' }, options, STRICT_ONEOF_SCHEMA)).toBe(
           1,
         );
       });
-
-      it('does not throw when called with manually relaxed options and data containing extra keys', () => {
-        const relaxed = relaxOptionsForScoring(STRICT_ONEOF_SCHEMA.oneOf as RJSFSchema[]);
+      it('matches uncompiled copies of the options that allow extra keys', () => {
+        const formData = { kind: 'a', foo: 'hello', extra: 'data' };
         expect(() =>
-          getFirstMatchingOption(
-            { validator },
-            { kind: 'a', foo: 'hello', extra: 'data' },
-            relaxed,
-            STRICT_ONEOF_SCHEMA,
-          ),
+          getFirstMatchingOption({ validator }, formData, RELAXED_COPIES, STRICT_ONEOF_SCHEMA),
         ).not.toThrow();
-      });
-
-      it('finds the correct match with relaxed options and extra keys in formData', () => {
-        const relaxed = relaxOptionsForScoring(STRICT_ONEOF_SCHEMA.oneOf as RJSFSchema[]);
-        expect(
-          getFirstMatchingOption(
-            { validator },
-            { kind: 'a', foo: 'hello', extra: 'data' },
-            relaxed,
-            STRICT_ONEOF_SCHEMA,
-          ),
-        ).toBe(0);
+        expect(getFirstMatchingOption({ validator }, formData, RELAXED_COPIES, STRICT_ONEOF_SCHEMA)).toBe(0);
       });
     });
 
     describe('getClosestMatchingOption()', () => {
       it('returns 0 for formData matching the first strict option', () => {
-        const options = STRICT_ONEOF_SCHEMA.oneOf as RJSFSchema[];
+        const options = STRICT_OPTIONS;
         expect(
           getClosestMatchingOption({ validator }, STRICT_ONEOF_SCHEMA, { kind: 'a', foo: 'hello' }, options, 0),
         ).toBe(0);
       });
 
-      it('returns 1 for formData matching the second strict option', () => {
-        const options = STRICT_ONEOF_SCHEMA.oneOf as RJSFSchema[];
+      it('returns 1 for formData matching the second strict option, also with a key no option declares', () => {
+        const options = STRICT_OPTIONS;
         expect(
           getClosestMatchingOption({ validator }, STRICT_ONEOF_SCHEMA, { kind: 'b', bar: 'world' }, options, 0),
         ).toBe(1);
-      });
-
-      it('does not throw with relaxed options and extra keys in formData', () => {
-        const relaxed = relaxOptionsForScoring(STRICT_ONEOF_SCHEMA.oneOf as RJSFSchema[]);
-        expect(() =>
-          getClosestMatchingOption({ validator }, STRICT_ONEOF_SCHEMA, { kind: 'a', extra: 'data' }, relaxed, 0),
-        ).not.toThrow();
-      });
-
-      it('picks the correct branch with relaxed options and extra keys', () => {
-        const relaxed = relaxOptionsForScoring(STRICT_ONEOF_SCHEMA.oneOf as RJSFSchema[]);
         expect(
           getClosestMatchingOption(
             { validator },
             STRICT_ONEOF_SCHEMA,
             { kind: 'b', bar: 'hello', extra: 'ignored' },
-            relaxed,
+            options,
+            0,
+          ),
+        ).toBe(1);
+      });
+      it('scores uncompiled copies of the options that allow extra keys', () => {
+        expect(() =>
+          getClosestMatchingOption({ validator }, STRICT_ONEOF_SCHEMA, { kind: 'a', extra: 'data' }, RELAXED_COPIES, 0),
+        ).not.toThrow();
+        expect(
+          getClosestMatchingOption(
+            { validator },
+            STRICT_ONEOF_SCHEMA,
+            { kind: 'b', bar: 'world', extra: 'data' },
+            RELAXED_COPIES,
             0,
           ),
         ).toBe(1);
@@ -266,15 +253,17 @@ describe('precompiled validator integration: oneOf with additionalProperties:fal
         const validator = buildPrecompiledValidator(DEPENDENCY_ONEOF_SCHEMA);
         const schemaUtils = createSchemaUtils({ validator }, DEPENDENCY_ONEOF_SCHEMA);
         const options = DEPENDENCY_ONEOF_SCHEMA.oneOf as RJSFSchema[];
-        // `MultiSchemaField` scores the option it retrieved and then validates it as it stands, which asked for a
-        // schema no parse had reached for a partly filled-in option and threw rather than rendering
+        // `MultiSchemaField` scores the option it retrieved and then validates it by its place in the root, which
+        // does not depend on which of the dependencies the data has filled in
         const chosen = getClosestMatchingOption({ validator }, DEPENDENCY_ONEOF_SCHEMA, formData, options, 0);
         const retrieved = schemaUtils.retrieveSchema(options[chosen], formData);
-        expect(validator.isValid(withVariantId(retrieved), formData, DEPENDENCY_ONEOF_SCHEMA)).toBe(true);
+        expect(
+          validator.isValid(getValidationTarget(retrieved, DEPENDENCY_ONEOF_SCHEMA), formData, DEPENDENCY_ONEOF_SCHEMA),
+        ).toBe(true);
       },
     );
   });
-  describe('a retrieved option validated as it stands', () => {
+  describe('a retrieved option validated by its place in the root', () => {
     /** The options carry an `$id`, which is what a validator keys the function it compiles by, so a retrieved option
      * validated under it would be answered by the function compiled for the option as declared
      */
@@ -286,14 +275,16 @@ describe('precompiled validator integration: oneOf with additionalProperties:fal
       ],
     };
 
-    it('is compiled under the derived $id that MultiSchemaField validates it under', () => {
+    it('is compiled as the pointer MultiSchemaField validates it with, whatever $id it carries', () => {
       const validator = buildPrecompiledValidator(ID_ONEOF_SCHEMA);
       const schemaUtils = createSchemaUtils({ validator }, ID_ONEOF_SCHEMA);
       // `MultiSchemaField` keeps the chosen option while the data still fits it, which asks the validator for the
       // option it retrieved rather than for a scoring form of it
       const retrieved = schemaUtils.retrieveSchema(ID_ONEOF_SCHEMA.oneOf![0] as RJSFSchema, { a: 'x' });
-      expect(validator.isValid(withVariantId(retrieved), { a: 'x' }, ID_ONEOF_SCHEMA)).toBe(true);
-      expect(validator.isValid(withVariantId(retrieved), { a: 5 }, ID_ONEOF_SCHEMA)).toBe(false);
+      const target = getValidationTarget(retrieved, ID_ONEOF_SCHEMA);
+      expect(target).toEqual({ $ref: '#/oneOf/0' });
+      expect(validator.isValid(target, { a: 'x' }, ID_ONEOF_SCHEMA)).toBe(true);
+      expect(validator.isValid(target, { a: 5 }, ID_ONEOF_SCHEMA)).toBe(false);
     });
 
     it('is compiled for an option that carries no $id of its own', () => {
@@ -307,7 +298,7 @@ describe('precompiled validator integration: oneOf with additionalProperties:fal
       const validator = buildPrecompiledValidator(anonymous);
       const schemaUtils = createSchemaUtils({ validator }, anonymous);
       const retrieved = schemaUtils.retrieveSchema(anonymous.oneOf![1] as RJSFSchema, { b: 1 });
-      expect(validator.isValid(withVariantId(retrieved), { b: 1 }, anonymous)).toBe(true);
+      expect(validator.isValid(getValidationTarget(retrieved, anonymous), { b: 1 }, anonymous)).toBe(true);
     });
   });
 });

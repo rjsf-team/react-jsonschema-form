@@ -12,11 +12,17 @@ import {
   getObjectDefaults,
   ensureFormDataMatchingSchema,
 } from '../../src/schema/getDefaultFormState.ts';
-import { resolveDependencies } from '../../src/schema/retrieveSchema.ts';
 import { RECURSIVE_REF, RECURSIVE_REF_ALLOF } from '../testUtils/testData.ts';
 import type { TestValidatorType } from './types.ts';
 
-export default function getDefaultFormStateTest(testValidator: TestValidatorType) {
+/** Runs the `getDefaultFormState()` suite against `testValidator`
+ *
+ * @param testValidator - The validator the suite runs against
+ * @param [readsTupleItems=true] - Whether the validator's dialect reads an array-valued `items` as a tuple, which
+ *        Ajv's 2020-12 class rejects: a condition the form validates by its place in such a root is then checked
+ *        against a root that validator cannot compile, and fails as validating the whole root does
+ */
+export default function getDefaultFormStateTest(testValidator: TestValidatorType, readsTupleItems = true) {
   describe('getDefaultFormState()', () => {
     let consoleWarnSpy: MockInstance;
     beforeAll(() => {
@@ -2894,7 +2900,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         test('getDefaultFormState', () => {
           expect(
             getDefaultFormState({ validator: testValidator }, { schema, formData, includeUndefinedValues }),
-          ).toEqual(expected);
+          ).toEqual(readsTupleItems ? expected : formData);
         });
 
         test('computeDefaults', () => {
@@ -3200,84 +3206,6 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
 
     it('getInnerSchemaForArrayItem() item of type boolean returns empty schema', () => {
       expect(getInnerSchemaForArrayItem({ items: [true] }, AdditionalItemsHandling.Ignore, 0)).toEqual({});
-    });
-    describe('resolveDependencies()', () => {
-      it('test an object with dependencies', () => {
-        const schema: RJSFSchema = {
-          type: 'object',
-          properties: {
-            first: {
-              type: 'string',
-              enum: ['no', 'yes'],
-              default: 'no',
-            },
-          },
-          dependencies: {
-            first: {
-              oneOf: [
-                {
-                  properties: {
-                    first: {
-                      enum: ['yes'],
-                    },
-                    second: {
-                      type: 'object',
-                      properties: {
-                        deeplyNestedThird: {
-                          type: 'string',
-                          enum: ['before', 'after'],
-                          default: 'before',
-                        },
-                      },
-                    },
-                  },
-                },
-                {
-                  properties: {
-                    first: {
-                      enum: ['no'],
-                    },
-                  },
-                },
-              ],
-            },
-          },
-        };
-
-        // Mock isValid so that withExactlyOneSubschema works as expected
-        testValidator.setReturnValues({
-          isValid: [
-            true, // First oneOf... first === first
-            false, // Second oneOf... second !== first
-          ],
-        });
-        expect(
-          resolveDependencies({ validator: testValidator }, schema, schema, false, [], {
-            first: 'yes',
-          }),
-        ).toEqual([
-          {
-            type: 'object',
-            properties: {
-              first: {
-                type: 'string',
-                enum: ['no', 'yes'],
-                default: 'no',
-              },
-              second: {
-                type: 'object',
-                properties: {
-                  deeplyNestedThird: {
-                    type: 'string',
-                    enum: ['before', 'after'],
-                    default: 'before',
-                  },
-                },
-              },
-            },
-          },
-        ]);
-      });
     });
     describe('computeDefaultBasedOnSchemaTypeAndDefaults()', () => {
       let schema: RJSFSchema;
@@ -7521,6 +7449,30 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             ],
           },
         });
+      });
+      it("applies a dependency's oneOf option that declares the property in an allOf entry", () => {
+        testValidator.setReturnValues({ isValid: [false, true] });
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { k: { type: 'string', enum: ['a', 'b'] } },
+          dependencies: {
+            k: {
+              oneOf: [
+                {
+                  allOf: [{ properties: { k: { enum: ['a'] } } }],
+                  properties: { ka: { type: 'string', default: 'A' } },
+                },
+                {
+                  allOf: [{ properties: { k: { enum: ['b'] } } }],
+                  properties: { kb: { type: 'string', default: 'B' } },
+                },
+              ],
+            },
+          },
+        };
+        expect(
+          getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema, formData: { k: 'b' } }),
+        ).toEqual({ k: 'b', kb: 'B' });
       });
       it('should populate defaults for nested dependencies in arrays when matching enum values in oneOf', () => {
         // Mock isValid so that withExactlyOneSubschema works as expected

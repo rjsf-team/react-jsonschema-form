@@ -13,6 +13,7 @@ import {
   ErrorSchemaBuilder,
   getDefaultFormState,
   getFirstMatchingOption,
+  getValidationTarget,
   isSchemaObject,
   noop,
   retrieveSchema,
@@ -24,6 +25,11 @@ import { Ajv2020 } from 'ajv/dist/2020.js';
 import metaSchemaDraft6 from 'ajv/lib/refs/json-schema-draft-06.json' with { type: 'json' };
 import type { Mock } from 'vitest';
 
+import pointerValidationTests, {
+  absoluteRefValidationTests,
+  sharedSubschemaValidationTests,
+} from '../../utils/test/testUtils/pointerValidationTests.ts';
+import customizeValidator from '../src/customizeValidator.ts';
 import type { Localizer } from '../src/index.ts';
 import AJV8Validator from '../src/validator.ts';
 import { expectWarn } from './harness/testData.ts';
@@ -228,6 +234,23 @@ describe('AJV8Validator', () => {
         addSchemaSpy.mockRestore();
         removeSchemaSpy.mockRestore();
       });
+      it('normalizes the id of a root once, not on every isValid() against it', () => {
+        const localValidator = new AJV8Validator({});
+        const rootSchema: RJSFSchema = {
+          $id: 'http://example.com/root.json',
+          definitions: { s: { type: 'string' } },
+        };
+        const pointer: RJSFSchema = { $ref: '#/definitions/s' };
+        const parseSpy = vi.spyOn(localValidator.ajv.opts.uriResolver, 'parse');
+
+        expect(localValidator.isValid(pointer, 'x', rootSchema)).toBe(true);
+        const callsForFirst = parseSpy.mock.calls.length;
+        expect(localValidator.isValid(pointer, 1, rootSchema)).toBe(false);
+        expect(localValidator.isValid(pointer, 'y', rootSchema)).toBe(true);
+
+        expect(parseSpy).toHaveBeenCalledTimes(callsForFirst);
+        parseSpy.mockRestore();
+      });
       it('falls back to deep-equality when handleSchemaUpdate receives a different rootSchema reference', () => {
         const localValidator = new AJV8Validator({});
         const rootSchemaA: RJSFSchema = {
@@ -286,6 +309,17 @@ describe('AJV8Validator', () => {
         );
         expect(defaults).toEqual({ k: 'x', t: 't' });
       });
+    });
+    it('replaces a root whose $id ends in an empty fragment with an edited root under the same $id', () => {
+      const localValidator = new AJV8Validator({});
+      const root: RJSFSchema = {
+        $id: 'http://example.com/root.json#',
+        definitions: { x: { type: 'string' } },
+      };
+      const edited: RJSFSchema = { ...root, definitions: { x: { type: 'number' } } };
+      expect(localValidator.isValid({ $ref: '#/definitions/x' }, 's', root)).toBe(true);
+      expect(localValidator.isValid({ $ref: '#/definitions/x' }, 's', edited)).toBe(false);
+      expect(localValidator.isValid({ $ref: '#/definitions/x' }, 1, edited)).toBe(true);
     });
     describe('scoring an option whose $id is the base of a relative $ref', () => {
       const pickOptions: RJSFSchema[] = [
@@ -3441,9 +3475,14 @@ describe('AJV8Validator resolving a $ref local to the root', () => {
     expect(validator.isValid(ref, 's', numberRoot)).toBe(false);
     expect(validator.isValid(ref, 5, numberRoot)).toBe(true);
   });
-  it('replaces a root whose $id ends in an empty fragment with an edited root under the same $id', () => {
+  it.each([
+    'https://example.com/root.json#',
+    'http://example.com:80/root.json',
+    'HTTP://Example.COM/root.json',
+    'http://example.com/a b.json',
+  ])('replaces a root whose $id is %j with an edited root under the same $id', (id) => {
     const validator = new AJV8Validator({});
-    const rootSchema: RJSFSchema = { $id: 'https://example.com/root.json#', definitions: { x: { type: 'string' } } };
+    const rootSchema: RJSFSchema = { $id: id, definitions: { x: { type: 'string' } } };
     const edited: RJSFSchema = { ...rootSchema, definitions: { x: { type: 'number' } } };
     expect(validator.isValid({ $ref: '#/definitions/x' }, 's', rootSchema)).toBe(true);
     expect(validator.isValid({ $ref: '#/definitions/x' }, 's', edited)).toBe(false);
@@ -3479,6 +3518,37 @@ describe('AJV8Validator resolving a $ref local to the root', () => {
     expect(schemaUtils.getFirstMatchingOption({ v: 'b' }, options)).toBe(0);
     expect(schemaUtils.getClosestMatchingOption({ v: 'b' }, options)).toBe(0);
   });
+  it('matches the options beside dependencies of an object reached in two resources as each resource reads them', () => {
+    const shared: RJSFSchema = {
+      type: 'object',
+      properties: { k: { type: 'string' } },
+      dependencies: { k: { properties: { d: { type: 'string' } } } },
+      oneOf: [{ $ref: '#/$defs/o1' }, { $ref: '#/$defs/o2' }],
+    };
+    const resource = (id: string, first: string, second: string): RJSFSchema => ({
+      $id: id,
+      $defs: {
+        o1: { properties: { k: { const: first }, one: { type: 'string' } } },
+        o2: { properties: { k: { const: second }, two: { type: 'string' } } },
+        s: shared,
+      },
+    });
+    const rootSchema: RJSFSchema = {
+      $id: 'http://x/root.json',
+      type: 'object',
+      $defs: { A: resource('http://x/a.json', 'x', 'y'), B: resource('http://x/b.json', 'y', 'x') },
+      properties: { pa: { $ref: 'http://x/a.json#/$defs/s' }, pb: { $ref: 'http://x/b.json#/$defs/s' } },
+    };
+    const schemaUtils = createSchemaUtils({ validator: new AJV8Validator({}) }, rootSchema);
+    const view = schemaUtils.retrieveSchema(rootSchema, { pa: { k: 'x' }, pb: { k: 'x' } });
+    const propertyKeys = (key: string) => {
+      const property = view.properties?.[key];
+      const retrieved = schemaUtils.retrieveSchema(isSchemaObject(property) ? property : {}, { k: 'x' });
+      return Object.keys(retrieved.properties ?? {});
+    };
+    expect(propertyKeys('pa')).toEqual(['k', 'one', 'd']);
+    expect(propertyKeys('pb')).toEqual(['k', 'two', 'd']);
+  });
   it('compiles a schema with an $id of its own anew under each root it is checked against', () => {
     const validator = new AJV8Validator({});
     const rootA: RJSFSchema = { $id: 'http://a.example/root.json', definitions: { x: { type: 'string' } } };
@@ -3489,4 +3559,66 @@ describe('AJV8Validator resolving a $ref local to the root', () => {
     expect(validator.isValid(own, 'str', rootB)).toBe(false);
     expect(validator.isValid(own, 'str', rootA)).toBe(true);
   });
+  it.each(['http://example.com:80/root.json', 'HTTP://Example.COM/root.json', 'http://example.com/a b.json'])(
+    'validates form data against an edited root whose $id is %j rather than the root it replaced',
+    (id) => {
+      const validator = new AJV8Validator({});
+      const rootSchema: RJSFSchema = {
+        $id: id,
+        definitions: { x: { type: 'string' } },
+        type: 'object',
+        properties: { x: { $ref: '#/definitions/x' } },
+      };
+      const edited: RJSFSchema = { ...rootSchema, definitions: { x: { type: 'number' } } };
+      expect(validator.isValid({ $ref: '#/definitions/x' }, 's', rootSchema)).toBe(true);
+      expect(validator.isValid({ $ref: '#/definitions/x' }, 1, edited)).toBe(true);
+      expect(validator.validateFormData({ x: 1 }, edited).errors).toEqual([]);
+    },
+  );
 });
+
+describe('AJV8Validator validating a subschema by its place in the root', () => {
+  it('does not answer a pointer with what it compiled for an earlier root', () => {
+    const validator = customizeValidator();
+    const pointer: RJSFSchema = { $ref: '#/definitions/X' };
+    expect(validator.isValid(pointer, 's', { definitions: { X: { type: 'string' } } })).toBe(true);
+    const numberRoot: RJSFSchema = { definitions: { X: { type: 'number' } } };
+    expect(validator.isValid(pointer, 's', numberRoot)).toBe(false);
+    expect(validator.isValid(pointer, 5, numberRoot)).toBe(true);
+  });
+  it('resolves a pointer into a root that carries an $id', () => {
+    const validator = customizeValidator();
+    const rootSchema: RJSFSchema = { $id: 'http://example.com/root.json', definitions: { X: { type: 'string' } } };
+    expect(validator.isValid({ $ref: '#/definitions/X' }, 's', rootSchema)).toBe(true);
+    expect(validator.isValid({ $ref: '#/definitions/X' }, 5, rootSchema)).toBe(false);
+  });
+  it('resolves a pointer into a root whose $id ends in an empty fragment', () => {
+    const validator = customizeValidator();
+    const rootSchema: RJSFSchema = { $id: 'http://example.com/root.json#', definitions: { X: { type: 'string' } } };
+    expect(validator.isValid({ $ref: '#/definitions/X' }, 's', rootSchema)).toBe(true);
+    expect(validator.isValid({ $ref: '#/definitions/X' }, 5, rootSchema)).toBe(false);
+  });
+  it('resolves a pointer under $defs to a property whose name holds characters a fragment may and may not hold, a # ending it', () => {
+    const validator = customizeValidator();
+    const property: RJSFSchema = { type: 'string' };
+    const rootSchema: RJSFSchema = { $defs: { X: { properties: { 'a$b:c@d+e#f g%h#': property } } } };
+    const pointer = getValidationTarget(property, rootSchema);
+    expect(pointer).toEqual({ $ref: '#/$defs/X/properties/a$b:c@d+e%23f%20g%25h%23' });
+    expect(validator.isValid(pointer, 's', rootSchema)).toBe(true);
+    expect(validator.isValid(pointer, 5, rootSchema)).toBe(false);
+  });
+  it('resolves a pointer into a dependencies entry named like a keyword', () => {
+    const validator = customizeValidator();
+    const rootSchema: RJSFSchema = {
+      properties: { type: { type: 'string' } },
+      dependencies: { type: { oneOf: [{ properties: { type: { const: 'a' } } }] } },
+    };
+    const pointer: RJSFSchema = { $ref: '#/dependencies/type/oneOf/0/properties/type' };
+    expect(validator.isValid(pointer, 'a', rootSchema)).toBe(true);
+    expect(validator.isValid(pointer, 'b', rootSchema)).toBe(false);
+  });
+});
+
+pointerValidationTests(() => customizeValidator());
+absoluteRefValidationTests(() => customizeValidator());
+sharedSubschemaValidationTests(() => customizeValidator());

@@ -15,6 +15,7 @@ import {
   getDiscriminatorFieldFromSchema,
   getRenderedOptionSchema,
   getTemplates,
+  getValidationTarget,
   getUiOptions,
   getXxxOfKey,
   isFormDataAvailable,
@@ -25,7 +26,6 @@ import {
   shouldRenderOptionalField,
   TranslatableString,
   UI_OPTIONS_KEY,
-  withVariantId,
 } from '@rjsf/utils';
 
 import fieldLabelForLog from '../../fieldLabelForLog.ts';
@@ -79,9 +79,12 @@ function optionForData<
     // matches several options keeps the explicit choice, and one whose data does not is put back on the option that
     // describes it
     const chosen = selectedOption >= 0 ? options[selectedOption] : undefined;
-    // The retrieved option is not the schema its own `$id` names, and a validator caches what it compiles under
-    // that `$id`, so it is validated under one derived from its content, as the option scoring does
-    if (chosen && schemaUtils.getValidator().isValid(withVariantId<S>(chosen), formData, registry.rootSchema)) {
+    if (
+      chosen &&
+      schemaUtils
+        .getValidator()
+        .isValid(getValidationTarget<S>(chosen, registry.rootSchema), formData, registry.rootSchema)
+    ) {
       return selectedOption;
     }
   } else if (!isFormDataChanged) {

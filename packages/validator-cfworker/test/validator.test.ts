@@ -1,4 +1,5 @@
 import type { Validator as EngineValidator } from '@cfworker/json-schema';
+import { dereference } from '@cfworker/json-schema';
 import type {
   CustomValidator,
   ErrorTransformer,
@@ -7,8 +8,11 @@ import type {
   RJSFValidationError,
   UiSchema,
 } from '@rjsf/utils';
-import { ROOT_SCHEMA_PREFIX } from '@rjsf/utils';
+import { ROOT_SCHEMA_PREFIX, getValidationTarget, isObject } from '@rjsf/utils';
 
+import pointerValidationTests, {
+  absoluteRefValidationTests,
+} from '../../utils/test/testUtils/pointerValidationTests.ts';
 import createCfworkerInstance, { installFormats } from '../src/createCfworkerInstance.ts';
 import customizeValidator from '../src/customizeValidator.ts';
 import * as pkg from '../src/index.ts';
@@ -243,6 +247,20 @@ describe('createCfworkerInstance()', () => {
     expect(extenderFn).toHaveBeenCalledTimes(1);
   });
 
+  it('resolves a $ref to a schema the extender adds', () => {
+    const validator = createCfworkerInstance(
+      { $ref: 'https://example.com/added' },
+      {
+        extenderFn: (engine) => {
+          engine.addSchema({ $id: 'https://example.com/added', type: 'number' });
+          return engine;
+        },
+      },
+    );
+    expect(validator.validate(1).valid).toBe(true);
+    expect(validator.validate('one').valid).toBe(false);
+  });
+
   it('fails loudly if the engine format registry is unavailable', () => {
     expect(() => installFormats({}, null as never)).toThrow('did not expose its format registry');
   });
@@ -300,3 +318,74 @@ describe('validateFormData() with a transformErrors that clears every message', 
     expect(validator.validateFormData({ a: 'short' }, schema, customValidate, transformErrors).errors).toEqual(errors);
   });
 });
+
+describe('CFWorkerValidator validating a subschema by its place in the root', () => {
+  it('does not answer a pointer with what it compiled for an earlier root', () => {
+    const validator = customizeValidator();
+    const pointer: RJSFSchema = { $ref: '#/definitions/X' };
+    expect(validator.isValid(pointer, 's', { definitions: { X: { type: 'string' } } })).toBe(true);
+    const numberRoot: RJSFSchema = { definitions: { X: { type: 'number' } } };
+    expect(validator.isValid(pointer, 's', numberRoot)).toBe(false);
+    expect(validator.isValid(pointer, 5, numberRoot)).toBe(true);
+  });
+  it('resolves a pointer into a root that carries an $id', () => {
+    const validator = customizeValidator();
+    const rootSchema: RJSFSchema = { $id: 'http://example.com/root.json', definitions: { X: { type: 'string' } } };
+    expect(validator.isValid({ $ref: '#/definitions/X' }, 's', rootSchema)).toBe(true);
+    expect(validator.isValid({ $ref: '#/definitions/X' }, 5, rootSchema)).toBe(false);
+  });
+  it('resolves a pointer into a root whose $id ends in an empty fragment', () => {
+    const validator = customizeValidator();
+    const rootSchema: RJSFSchema = { $id: 'http://example.com/root.json#', definitions: { X: { type: 'string' } } };
+    expect(validator.isValid({ $ref: '#/definitions/X' }, 's', rootSchema)).toBe(true);
+    expect(validator.isValid({ $ref: '#/definitions/X' }, 5, rootSchema)).toBe(false);
+  });
+  it('validates against the root itself where its $id ends in an empty fragment', () => {
+    const validator = customizeValidator();
+    const rootSchema: RJSFSchema = {
+      $id: 'http://example.com/root.json#',
+      definitions: { X: { type: 'string' } },
+      type: 'object',
+      properties: { k: { $ref: '#/definitions/X' } },
+    };
+    expect(validator.isValid(rootSchema, { k: 's' }, rootSchema)).toBe(true);
+    expect(validator.isValid(rootSchema, { k: 5 }, rootSchema)).toBe(false);
+    expect(validator.validateFormData({ k: 's' }, rootSchema).errors).toEqual([]);
+    expect(validator.validateFormData({ k: 5 }, rootSchema).errors.map((error) => error.property)).toContain('.k');
+  });
+  it('resolves a pointer under $defs to a property whose name holds characters a fragment may and may not hold, a # ending it', () => {
+    const validator = customizeValidator();
+    const property: RJSFSchema = { type: 'string' };
+    const rootSchema: RJSFSchema = { $defs: { X: { properties: { 'a$b:c@d+e#f g%h#': property } } } };
+    const pointer = getValidationTarget(property, rootSchema);
+    expect(pointer).toEqual({ $ref: '#/$defs/X/properties/a$b:c@d+e%23f%20g%25h%23' });
+    expect(validator.isValid(pointer, 's', rootSchema)).toBe(true);
+    expect(validator.isValid(pointer, 5, rootSchema)).toBe(false);
+  });
+  it('finds the absolute URI the engine stamps on each schema it indexes a dependencies entry named like a keyword through', () => {
+    // `createCfworkerInstance()` reads the `__absolute_uri__` `dereference()` stamps on each schema it indexes, which an
+    // engine upgrade could rename; this names it, where the test below only stops resolving
+    const schemas = Object.values(dereference({ properties: { a: { type: 'string' } } })).filter(isObject);
+    expect(schemas).toHaveLength(2);
+    expect(schemas.every(({ __absolute_uri__: uri }) => typeof uri === 'string')).toBe(true);
+  });
+  it('resolves a $ref with no fragment as it stands', () => {
+    const validator = customizeValidator();
+    const rootSchema: RJSFSchema = { definitions: { X: { $id: 'http://example.com/x.json', type: 'number' } } };
+    expect(validator.isValid({ $ref: 'http://example.com/x.json' }, 1, rootSchema)).toBe(true);
+    expect(validator.isValid({ $ref: 'http://example.com/x.json' }, 's', rootSchema)).toBe(false);
+  });
+  it('resolves a pointer into a dependencies entry named like a keyword', () => {
+    const validator = customizeValidator();
+    const rootSchema: RJSFSchema = {
+      properties: { type: { type: 'string' } },
+      dependencies: { type: { oneOf: [{ properties: { type: { const: 'a' } } }] } },
+    };
+    const pointer: RJSFSchema = { $ref: '#/dependencies/type/oneOf/0/properties/type' };
+    expect(validator.isValid(pointer, 'a', rootSchema)).toBe(true);
+    expect(validator.isValid(pointer, 'b', rootSchema)).toBe(false);
+  });
+});
+
+pointerValidationTests(() => customizeValidator());
+absoluteRefValidationTests(() => customizeValidator());

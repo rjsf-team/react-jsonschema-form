@@ -1,11 +1,15 @@
 import type { RJSFSchema } from '@rjsf/utils';
-import { ID_KEY, schemaKey, schemaParser } from '@rjsf/utils';
+import { schemaKey, getValidationSchemas } from '@rjsf/utils';
+import uri from 'ajv/dist/runtime/uri.js';
 
+import pointerValidationTests, {
+  sharedSubschemaValidationTests,
+} from '../../utils/test/testUtils/pointerValidationTests.ts';
 import precompiledCoverageTests from '../../utils/test/testUtils/precompiledCoverageTests.ts';
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
+import { compiledSchemas as compiled } from '../src/compileSchemaValidatorsCode.ts';
 import createAjvInstance from '../src/createAjvInstance.ts';
 import { createPrecompiledValidator } from '../src/index.ts';
-import qualifyRootRefs from '../src/qualifyRootRefs.ts';
 import { SUPER_SCHEMA_OPTIONS, evalValidatorCode, superSchema } from './harness/compileSuperSchema.ts';
 import { CUSTOM_OPTIONS, expectWarn } from './harness/testData.ts';
 
@@ -16,17 +20,14 @@ vi.mock('../src/createAjvInstance', async (importOriginal) => {
   return { default: vi.fn((...args: any[]) => realCreateAjvInstance(...args)) };
 });
 
-/** The parsed schemas as they are compiled: every one but the root names the root in its local `$ref`s */
-function compiledSchemas(rootSchema: RJSFSchema): RJSFSchema[] {
-  const rootId = schemaKey(rootSchema);
-  return Object.values(schemaParser(rootSchema)).map((parsed) =>
-    parsed[ID_KEY] === rootId ? parsed : qualifyRootRefs(parsed, rootId),
-  );
+/** The parsed schemas as they are compiled */
+function compiledSchemas(rootSchema: RJSFSchema): Record<string, RJSFSchema> {
+  return compiled(getValidationSchemas(rootSchema), schemaKey(rootSchema), uri.default).schemas;
 }
 
 describe('compileSchemaValidatorsCode()', () => {
   describe('compiling without additional options', () => {
-    let schemas: RJSFSchema[];
+    let schemas: Record<string, RJSFSchema>;
     beforeAll(() => {
       schemas = compiledSchemas(superSchema);
       // superSchema deliberately uses the unregistered "phone-us" format, which AJV warns about
@@ -48,7 +49,7 @@ describe('compileSchemaValidatorsCode()', () => {
     });
   });
   describe('compiling WITH additional options', () => {
-    let schemas: RJSFSchema[];
+    let schemas: Record<string, RJSFSchema>;
     beforeAll(() => {
       schemas = compiledSchemas(superSchema);
       compileSchemaValidatorsCode(superSchema, SUPER_SCHEMA_OPTIONS);
@@ -92,15 +93,17 @@ describe('compileSchemaValidatorsCode()', () => {
       },
     };
     const validateFns = evalValidatorCode(compileSchemaValidatorsCode(rootSchema));
-    const validateRoot = validateFns['http://x.example/root.json'];
+    const validateRoot = validateFns[schemaKey(rootSchema)];
     expect(validateRoot({ v: { k: 3 } })).toBe(true);
     expect(validateRoot({ v: { k: true } })).toBe(false);
   });
   precompiledCoverageTests((rootSchema, options) =>
-    createPrecompiledValidator(
-      evalValidatorCode(compileSchemaValidatorsCode(rootSchema, options)),
-      rootSchema,
-      options,
-    ),
+    createPrecompiledValidator(evalValidatorCode(compileSchemaValidatorsCode(rootSchema)), rootSchema, options),
+  );
+  pointerValidationTests((rootSchema) =>
+    createPrecompiledValidator(evalValidatorCode(compileSchemaValidatorsCode(rootSchema)), rootSchema),
+  );
+  sharedSubschemaValidationTests((rootSchema) =>
+    createPrecompiledValidator(evalValidatorCode(compileSchemaValidatorsCode(rootSchema)), rootSchema),
   );
 });

@@ -14,7 +14,6 @@ import {
   UNEVALUATED_PROPERTIES_KEY,
 } from './constants.ts';
 import isObject from './isObject.ts';
-import type { GenericObjectType } from './types.ts';
 
 /** RFC 3986 §5.1.4 lets an implementation assume a default base URI when a schema has none, and `$id`s may be
  * relative URI-references (2020-12 §8.2.1). The `URL` parser only resolves against an absolute base, so relative
@@ -113,17 +112,4 @@ export function keywordShape(key: string, value: unknown): 'map' | 'array' | 'si
     return 'single';
   }
   return undefined;
-}
-
-/** Splits out the value at the `key` in `object` from the `object`, returning an array that contains in the first
- * location, the `object` minus the `key: value` and in the second location the `value`.
- *
- * @param key - The key from the object to extract
- * @param object - The object from which to extract the element
- * @returns - An array with the first value being the object minus the `key` element and the second element being the
- *      value from `object[key]`
- */
-export function splitKeyElementFromObject(key: string, object: GenericObjectType): [GenericObjectType, unknown] {
-  const { [key]: value, ...remaining } = object;
-  return [remaining, value];
 }

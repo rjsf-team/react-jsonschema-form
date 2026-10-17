@@ -1,6 +1,7 @@
 import * as CFWorkerJsonSchema from '@cfworker/json-schema';
-import type { Schema } from '@cfworker/json-schema';
-import { Validator } from '@cfworker/json-schema';
+import type { Schema, SchemaDraft, ValidationResult } from '@cfworker/json-schema';
+import { dereference, encodePointer, ignoredKeyword, validate, Validator } from '@cfworker/json-schema';
+import { isObject } from '@rjsf/utils';
 
 import type { CFWorkerFormatChecker, CustomValidatorOptionsType } from './types.ts';
 
@@ -54,6 +55,76 @@ export function installFormats(
   }
 }
 
+/** Indexes the `dependencies` schemas the engine leaves out of its `$ref` lookup. It reads a `dependencies` as one
+ * subschema rather than a map of them, so an entry named like a keyword it ignores there (`type`, `required`, `enum`,
+ * ...) is never indexed, and a `$ref` into one, such as the condition RJSF matches a dependency's `oneOf` option on,
+ * would not resolve.
+ *
+ * @param lookup - The lookup to index, in place
+ */
+function indexDependencies(lookup: Record<string, Schema | boolean>): void {
+  const pending = Object.values(lookup);
+  for (let schema = pending.pop(); schema !== undefined; schema = pending.pop()) {
+    const indexable: Schema = typeof schema === 'object' ? schema : {};
+    const { __absolute_uri__: uri, dependencies } = indexable;
+    if (uri !== undefined && isObject(dependencies)) {
+      const [base, pointer] = uri.split('#');
+      for (const [key, dependency] of Object.entries(dependencies)) {
+        const at = `${pointer ?? ''}/dependencies/${encodePointer(key)}`;
+        if (ignoredKeyword[key] && isObject(dependency) && lookup[`${base}#${at}`] === undefined) {
+          // Indexed into an object inheriting from the lookup, the engine still rejects a URI the lookup holds, and the
+          // entries it adds are the object's own
+          const indexed: Record<string, Schema | boolean> = Object.create(lookup);
+          dereference(dependency, indexed, new URL(base), at);
+          Object.assign(lookup, indexed);
+          pending.push(...Object.values(indexed));
+        }
+      }
+    }
+  }
+}
+
+/** A `Validator` that resolves `$ref`s through a lookup it is given, since the engine's own lookup is private and its
+ * public `addSchema()` can only index a whole schema under its `$id`, not a subschema under its pointer.
+ */
+class LookupValidator extends Validator {
+  private readonly root: Schema | boolean;
+
+  private readonly refs: Record<string, Schema | boolean>;
+
+  private readonly rootDraft: SchemaDraft;
+
+  private readonly stopAtFirstError: boolean;
+
+  /** Builds a validator that validates against `root`, resolving `$ref`s through `refs`.
+   *
+   * @param root - The schema to validate against
+   * @param refs - The lookup, already holding `root`, that `addSchema()` indexes into and `validate()` resolves through
+   * @param rootDraft - The draft to validate under
+   * @param stopAtFirstError - Whether to stop after the first validation error
+   */
+  constructor(
+    root: Schema | boolean,
+    refs: Record<string, Schema | boolean>,
+    rootDraft: SchemaDraft,
+    stopAtFirstError: boolean,
+  ) {
+    super(root, rootDraft, stopAtFirstError);
+    this.root = root;
+    this.refs = refs;
+    this.rootDraft = rootDraft;
+    this.stopAtFirstError = stopAtFirstError;
+  }
+
+  override validate(instance: unknown): ValidationResult {
+    return validate(instance, this.root, this.rootDraft, this.refs, this.stopAtFirstError);
+  }
+
+  override addSchema(schema: Schema, id?: string): void {
+    dereference(id ? { ...schema, $id: id } : schema, this.refs);
+  }
+}
+
 /** Builds a schema-bound `@cfworker/json-schema` validator.
  *
  * @param schema - The schema the validator will use
@@ -71,7 +142,9 @@ export default function createCfworkerInstance(
   installFormats(customFormats);
   // The engine annotates schemas during dereferencing. Clone every user-owned
   // schema so frozen RJSF fixtures and application schemas remain untouched.
-  let validator = new Validator(structuredClone(schema), draft, shortCircuit);
+  const root = structuredClone(schema);
+  const lookup = dereference(root);
+  let validator: Validator = new LookupValidator(root, lookup, draft, shortCircuit);
 
   for (const additionalSchema of additionalMetaSchemas ?? []) {
     validator.addSchema(structuredClone(additionalSchema), additionalSchema.$id);
@@ -79,6 +152,7 @@ export default function createCfworkerInstance(
   if (rootSchema && rootSchema !== schema) {
     validator.addSchema(structuredClone(rootSchema), rootSchema.$id);
   }
+  indexDependencies(lookup);
   if (typeof extenderFn === 'function') {
     validator = extenderFn(validator);
   }
