@@ -51,6 +51,7 @@ export default function SelectWidget<
     options,
     placeholder,
     readonly,
+    required,
     value,
     schema,
     uiSchema,
@@ -142,6 +143,7 @@ export default function SelectWidget<
         onOpenChange={setOpen}
         showSearch={{ filterOption }}
         {...widgetAriaProps(props)}
+        aria-required={required || undefined}
         options={selectOptions}
       />
       <SelectedOptionDescription

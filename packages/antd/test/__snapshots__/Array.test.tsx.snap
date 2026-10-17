@@ -170,7 +170,6 @@ exports[`array fields > array icons 1`] = `
                                         style="width: 100%;"
                                       >
                                         <input
-                                          aria-describedby="root_0__error root_0__description root_0__help"
                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                           id="root_0"
                                           name="root_0"
@@ -357,7 +356,6 @@ exports[`array fields > array icons 1`] = `
                                         style="width: 100%;"
                                       >
                                         <input
-                                          aria-describedby="root_1__error root_1__description root_1__help"
                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                           id="root_1"
                                           name="root_1"
@@ -751,7 +749,6 @@ exports[`array fields > empty errors array 1`] = `
                                     style="width: 100%;"
                                   >
                                     <input
-                                      aria-describedby="root_name__error root_name__description root_name__help"
                                       class="ant-input css-dev-only-do-not-override-oc1rc0"
                                       id="root_name"
                                       name="root_name"
@@ -856,7 +853,6 @@ exports[`array fields > fixed array 1`] = `
                                         style="width: 100%;"
                                       >
                                         <input
-                                          aria-describedby="root_0__error root_0__description root_0__help"
                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                           id="root_0"
                                           name="root_0"
@@ -908,7 +904,6 @@ exports[`array fields > fixed array 1`] = `
                                         style="width: 100%;"
                                       >
                                         <input
-                                          aria-describedby="root_1__error root_1__description root_1__help"
                                           autocomplete="off"
                                           class="ant-input-number-input"
                                           id="root_1"
@@ -1141,7 +1136,8 @@ exports[`array fields > has errors 1`] = `
                                     style="width: 100%;"
                                   >
                                     <input
-                                      aria-describedby="root_name__error root_name__description root_name__help"
+                                      aria-describedby="root_name__error"
+                                      aria-invalid="true"
                                       class="ant-input css-dev-only-do-not-override-oc1rc0"
                                       id="root_name"
                                       name="root_name"
@@ -1294,7 +1290,6 @@ exports[`array fields > no errors 1`] = `
                                     style="width: 100%;"
                                   >
                                     <input
-                                      aria-describedby="root_name__error root_name__description root_name__help"
                                       class="ant-input css-dev-only-do-not-override-oc1rc0"
                                       id="root_name"
                                       name="root_name"
@@ -1440,7 +1435,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                           style="width: 100%;"
                                                         >
                                                           <input
-                                                            aria-describedby="root_0_name__error root_0_name__description root_0_name__help"
                                                             class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                             id="root_0_name"
                                                             name="root[0][name]"
@@ -1498,7 +1492,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                           style="width: 100%;"
                                                         >
                                                           <input
-                                                            aria-describedby="root_0_value__error root_0_value__description root_0_value__help"
                                                             aria-valuenow="10"
                                                             autocomplete="off"
                                                             class="ant-input-number-input"
@@ -1764,7 +1757,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                           style="width: 100%;"
                                                         >
                                                           <input
-                                                            aria-describedby="root_1_name__error root_1_name__description root_1_name__help"
                                                             class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                             id="root_1_name"
                                                             name="root[1][name]"
@@ -1822,7 +1814,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                           style="width: 100%;"
                                                         >
                                                           <input
-                                                            aria-describedby="root_1_value__error root_1_value__description root_1_value__help"
                                                             aria-valuenow="20"
                                                             autocomplete="off"
                                                             class="ant-input-number-input"
@@ -2152,7 +2143,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                                         style="width: 100%;"
                                       >
                                         <input
-                                          aria-describedby="root_0__error root_0__description root_0__help"
                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                           id="root_0"
                                           name="root[0]"
@@ -2308,7 +2298,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                                         style="width: 100%;"
                                       >
                                         <input
-                                          aria-describedby="root_1__error root_1__description root_1__help"
                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                           id="root_1"
                                           name="root[1]"
@@ -2668,7 +2657,6 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                                         style="width: 100%;"
                                       >
                                         <input
-                                          aria-describedby="root_0__error root_0__description root_0__help"
                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                           id="root_0"
                                           name="root[0]"
@@ -2720,7 +2708,6 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                                         style="width: 100%;"
                                       >
                                         <input
-                                          aria-describedby="root_1__error root_1__description root_1__help"
                                           aria-valuenow="42"
                                           autocomplete="off"
                                           class="ant-input-number-input"
@@ -2976,7 +2963,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                                               style="width: 100%;"
                                                             >
                                                               <input
-                                                                aria-describedby="root_0_0__error root_0_0__description root_0_0__help"
                                                                 class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                                 id="root_0_0"
                                                                 name="root[0][0]"
@@ -3132,7 +3118,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                                               style="width: 100%;"
                                                             >
                                                               <input
-                                                                aria-describedby="root_0_1__error root_0_1__description root_0_1__help"
                                                                 class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                                 id="root_0_1"
                                                                 name="root[0][1]"
@@ -3490,7 +3475,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                                               style="width: 100%;"
                                                             >
                                                               <input
-                                                                aria-describedby="root_1_0__error root_1_0__description root_1_0__help"
                                                                 class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                                 id="root_1_0"
                                                                 name="root[1][0]"
@@ -3646,7 +3630,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                                               style="width: 100%;"
                                                             >
                                                               <input
-                                                                aria-describedby="root_1_1__error root_1_1__description root_1_1__help"
                                                                 class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                                 id="root_1_1"
                                                                 name="root[1][1]"
@@ -4112,7 +4095,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                           style="width: 100%;"
                                                         >
                                                           <input
-                                                            aria-describedby="root_0_name__error root_0_name__description root_0_name__help"
                                                             class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                             id="root_0_name"
                                                             name="root.0.name"
@@ -4170,7 +4152,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                           style="width: 100%;"
                                                         >
                                                           <input
-                                                            aria-describedby="root_0_value__error root_0_value__description root_0_value__help"
                                                             aria-valuenow="10"
                                                             autocomplete="off"
                                                             class="ant-input-number-input"
@@ -4436,7 +4417,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                           style="width: 100%;"
                                                         >
                                                           <input
-                                                            aria-describedby="root_1_name__error root_1_name__description root_1_name__help"
                                                             class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                             id="root_1_name"
                                                             name="root.1.name"
@@ -4494,7 +4474,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                           style="width: 100%;"
                                                         >
                                                           <input
-                                                            aria-describedby="root_1_value__error root_1_value__description root_1_value__help"
                                                             aria-valuenow="20"
                                                             autocomplete="off"
                                                             class="ant-input-number-input"
@@ -4824,7 +4803,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                                         style="width: 100%;"
                                       >
                                         <input
-                                          aria-describedby="root_0__error root_0__description root_0__help"
                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                           id="root_0"
                                           name="root.0"
@@ -4980,7 +4958,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                                         style="width: 100%;"
                                       >
                                         <input
-                                          aria-describedby="root_1__error root_1__description root_1__help"
                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                           id="root_1"
                                           name="root.1"
@@ -5282,7 +5259,6 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                                                           style="width: 100%;"
                                                         >
                                                           <input
-                                                            aria-describedby="root_0_name__error root_0_name__description root_0_name__help"
                                                             class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                             id="root_0_name"
                                                             name="root_0_name"
@@ -5518,7 +5494,6 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                                                           style="width: 100%;"
                                                         >
                                                           <input
-                                                            aria-describedby="root_1_name__error root_1_name__description root_1_name__help"
                                                             class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                             id="root_1_name"
                                                             name="root_1_name"
@@ -5789,10 +5764,13 @@ exports[`with title and description > array 1`] = `
                     >
                       <label
                         class=""
-                        id="root__title"
                         title="Test field"
                       >
-                        Test field
+                        <span
+                          id="root__title"
+                        >
+                          Test field
+                        </span>
                       </label>
                       <div
                         class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -5923,10 +5901,13 @@ exports[`with title and description > array icons 1`] = `
                     >
                       <label
                         class=""
-                        id="root__title"
                         title="Test field"
                       >
-                        Test field
+                        <span
+                          id="root__title"
+                        >
+                          Test field
+                        </span>
                       </label>
                       <div
                         class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -5981,7 +5962,7 @@ exports[`with title and description > array icons 1`] = `
                                         style="width: 100%;"
                                       >
                                         <input
-                                          aria-describedby="root_0__error root_0__description root_0__help"
+                                          aria-describedby="root_0__description"
                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                           id="root_0"
                                           name="root_0"
@@ -6193,7 +6174,7 @@ exports[`with title and description > array icons 1`] = `
                                         style="width: 100%;"
                                       >
                                         <input
-                                          aria-describedby="root_1__error root_1__description root_1__help"
+                                          aria-describedby="root_1__description"
                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                           id="root_1"
                                           name="root_1"
@@ -6607,10 +6588,13 @@ exports[`with title and description > fixed array 1`] = `
                     >
                       <label
                         class=""
-                        id="root__title"
                         title="Test field"
                       >
-                        Test field
+                        <span
+                          id="root__title"
+                        >
+                          Test field
+                        </span>
                       </label>
                       <div
                         class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -6665,7 +6649,7 @@ exports[`with title and description > fixed array 1`] = `
                                         style="width: 100%;"
                                       >
                                         <input
-                                          aria-describedby="root_0__error root_0__description root_0__help"
+                                          aria-describedby="root_0__description"
                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                           id="root_0"
                                           name="root_0"
@@ -6742,7 +6726,7 @@ exports[`with title and description > fixed array 1`] = `
                                         style="width: 100%;"
                                       >
                                         <input
-                                          aria-describedby="root_1__error root_1__description root_1__help"
+                                          aria-describedby="root_1__description"
                                           autocomplete="off"
                                           class="ant-input-number-input"
                                           id="root_1"
@@ -6907,10 +6891,13 @@ exports[`with title and description from both > array 1`] = `
                     >
                       <label
                         class=""
-                        id="root__title"
                         title="My Field"
                       >
-                        My Field
+                        <span
+                          id="root__title"
+                        >
+                          My Field
+                        </span>
                       </label>
                       <div
                         class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -7041,10 +7028,13 @@ exports[`with title and description from both > array icons 1`] = `
                     >
                       <label
                         class=""
-                        id="root__title"
                         title="My Field"
                       >
-                        My Field
+                        <span
+                          id="root__title"
+                        >
+                          My Field
+                        </span>
                       </label>
                       <div
                         class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -7099,7 +7089,7 @@ exports[`with title and description from both > array icons 1`] = `
                                         style="width: 100%;"
                                       >
                                         <input
-                                          aria-describedby="root_0__error root_0__description root_0__help"
+                                          aria-describedby="root_0__description"
                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                           id="root_0"
                                           name="root_0"
@@ -7311,7 +7301,7 @@ exports[`with title and description from both > array icons 1`] = `
                                         style="width: 100%;"
                                       >
                                         <input
-                                          aria-describedby="root_1__error root_1__description root_1__help"
+                                          aria-describedby="root_1__description"
                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                           id="root_1"
                                           name="root_1"
@@ -7725,10 +7715,13 @@ exports[`with title and description from both > fixed array 1`] = `
                     >
                       <label
                         class=""
-                        id="root__title"
                         title="My Field"
                       >
-                        My Field
+                        <span
+                          id="root__title"
+                        >
+                          My Field
+                        </span>
                       </label>
                       <div
                         class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -7783,7 +7776,7 @@ exports[`with title and description from both > fixed array 1`] = `
                                         style="width: 100%;"
                                       >
                                         <input
-                                          aria-describedby="root_0__error root_0__description root_0__help"
+                                          aria-describedby="root_0__description"
                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                           id="root_0"
                                           name="root_0"
@@ -7860,7 +7853,7 @@ exports[`with title and description from both > fixed array 1`] = `
                                         style="width: 100%;"
                                       >
                                         <input
-                                          aria-describedby="root_1__error root_1__description root_1__help"
+                                          aria-describedby="root_1__description"
                                           autocomplete="off"
                                           class="ant-input-number-input"
                                           id="root_1"
@@ -8025,10 +8018,13 @@ exports[`with title and description from uiSchema > array 1`] = `
                     >
                       <label
                         class=""
-                        id="root__title"
                         title="My Field"
                       >
-                        My Field
+                        <span
+                          id="root__title"
+                        >
+                          My Field
+                        </span>
                       </label>
                       <div
                         class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -8159,10 +8155,13 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                     >
                       <label
                         class=""
-                        id="root__title"
                         title="My Field"
                       >
-                        My Field
+                        <span
+                          id="root__title"
+                        >
+                          My Field
+                        </span>
                       </label>
                       <div
                         class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -8217,7 +8216,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                                         style="width: 100%;"
                                       >
                                         <input
-                                          aria-describedby="root_0__error root_0__description root_0__help"
+                                          aria-describedby="root_0__description"
                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                           id="root_0"
                                           name="root_0"
@@ -8429,7 +8428,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                                         style="width: 100%;"
                                       >
                                         <input
-                                          aria-describedby="root_1__error root_1__description root_1__help"
+                                          aria-describedby="root_1__description"
                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                           id="root_1"
                                           name="root_1"
@@ -8843,10 +8842,13 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                     >
                       <label
                         class=""
-                        id="root__title"
                         title="My Field"
                       >
-                        My Field
+                        <span
+                          id="root__title"
+                        >
+                          My Field
+                        </span>
                       </label>
                       <div
                         class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -8901,7 +8903,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                                         style="width: 100%;"
                                       >
                                         <input
-                                          aria-describedby="root_0__error root_0__description root_0__help"
+                                          aria-describedby="root_0__description"
                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                           id="root_0"
                                           name="root_0"
@@ -8978,7 +8980,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                                         style="width: 100%;"
                                       >
                                         <input
-                                          aria-describedby="root_1__error root_1__description root_1__help"
+                                          aria-describedby="root_1__description"
                                           autocomplete="off"
                                           class="ant-input-number-input"
                                           id="root_1"
@@ -9276,7 +9278,7 @@ exports[`with title and description with global label off > array icons 1`] = `
                                         style="width: 100%;"
                                       >
                                         <input
-                                          aria-describedby="root_0__error root_0__description root_0__help"
+                                          aria-label="Test item"
                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                           id="root_0"
                                           name="root_0"
@@ -9463,7 +9465,7 @@ exports[`with title and description with global label off > array icons 1`] = `
                                         style="width: 100%;"
                                       >
                                         <input
-                                          aria-describedby="root_1__error root_1__description root_1__help"
+                                          aria-label="Test item"
                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                           id="root_1"
                                           name="root_1"
@@ -9855,7 +9857,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
                                         style="width: 100%;"
                                       >
                                         <input
-                                          aria-describedby="root_0__error root_0__description root_0__help"
+                                          aria-label="Test item"
                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                           id="root_0"
                                           name="root_0"
@@ -9907,7 +9909,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
                                         style="width: 100%;"
                                       >
                                         <input
-                                          aria-describedby="root_1__error root_1__description root_1__help"
+                                          aria-label="Test item"
                                           autocomplete="off"
                                           class="ant-input-number-input"
                                           id="root_1"

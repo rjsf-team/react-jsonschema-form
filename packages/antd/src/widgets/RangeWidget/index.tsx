@@ -1,5 +1,5 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps, GenericObjectType } from '@rjsf/utils';
-import { ariaDescribedByIds, rangeSpec } from '@rjsf/utils';
+import { getControlAttributes, rangeSpec } from '@rjsf/utils';
 import { Slider } from 'antd';
 
 /** The `RangeWidget` component uses the `BaseInputTemplate` changing the type to `range` and wrapping the result
@@ -12,11 +12,30 @@ export default function RangeWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { autofocus, disabled, registry, id, onBlur, onChange, onFocus, placeholder, readonly, schema, value } = props;
+  const {
+    autofocus,
+    disabled,
+    registry,
+    id,
+    onBlur,
+    onChange,
+    onFocus,
+    placeholder,
+    readonly,
+    required,
+    schema,
+    value,
+    presentation,
+  } = props;
   const { formContext } = registry;
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
   const { min, max, step } = rangeSpec(schema);
+
+  const { 'aria-labelledby': ariaLabelledBy, 'aria-label': ariaLabel } = getControlAttributes<T, S, F>({
+    id,
+    presentation,
+  });
 
   const handleChange = (nextValue: number) => onChange(nextValue);
 
@@ -44,7 +63,12 @@ export default function RangeWidget<
       step={step}
       value={value}
       {...extraProps}
-      aria-describedby={ariaDescribedByIds(id)}
+      // The slider's handle is what takes focus, and it takes no `aria-describedby` or `aria-invalid`, nor a
+      // `handleRender` to add them, so it is only named, by the label a `for` can't reach or by the text of one
+      // `ui:label: false` hides, and marked required
+      ariaLabelledByForHandle={ariaLabelledBy}
+      ariaLabelForHandle={ariaLabel}
+      ariaRequired={required}
     />
   );
 }

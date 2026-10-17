@@ -1,11 +1,12 @@
 import type { FocusEvent } from 'react';
 import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
   enumOptionSelectedValue,
+  enumOptionsAutofocusIndex,
   enumOptionsIsDisabled,
   enumOptionValueDecoder,
   enumOptionsDomValues,
+  getGroupAttributes,
   getOptionValueFormat,
   optionId,
 } from '@rjsf/utils';
@@ -33,6 +34,7 @@ export default function RadioWidget<
   options,
   readonly,
   value,
+  presentation,
 }: WidgetProps<T, S, F>) {
   const { formContext } = registry;
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
@@ -52,7 +54,12 @@ export default function RadioWidget<
     onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
 
   const selectValue = enumOptionSelectedValue(value, enumOptions, false, optionValueFormat, emptyValue);
+  const { group: groupAttributes, option: optionAttributes } = getGroupAttributes<T, S, F>(
+    { id, presentation },
+    'radiogroup',
+  );
 
+  const autofocusIndex = enumOptionsAutofocusIndex<S>(enumOptions, enumDisabled, autofocus);
   return (
     <Radio.Group
       id={id}
@@ -61,20 +68,21 @@ export default function RadioWidget<
       onBlur={!readonly ? handleBlur : undefined}
       onFocus={!readonly ? handleFocus : undefined}
       value={selectValue}
-      aria-describedby={ariaDescribedByIds(id)}
+      {...groupAttributes}
     >
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, i) => (
           <Radio
             id={optionId(id, i)}
             name={htmlName || id}
-            autoFocus={i === 0 ? autofocus : false}
+            autoFocus={i === autofocusIndex}
             // `undefined` rather than `false` for an enabled option, since antd reads its `DisabledContext` only when
             // the radio leaves `disabled` unset
             disabled={fieldDisabled || enumOptionsIsDisabled(option.value, enumDisabled) || undefined}
             // oxlint-disable-next-line react/no-array-index-key
             key={i}
             value={domValues[i]}
+            {...optionAttributes}
           >
             {option.label}
           </Radio>
