@@ -1,11 +1,10 @@
 import type { RJSFSchema } from '@rjsf/utils';
-import { ID_KEY, schemaKey, schemaParser } from '@rjsf/utils';
+import { ID_KEY, schemaKey, schemaParser, withRootIdRefPrefix } from '@rjsf/utils';
 
 import precompiledCoverageTests from '../../utils/test/testUtils/precompiledCoverageTests.ts';
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
 import createAjvInstance from '../src/createAjvInstance.ts';
 import { createPrecompiledValidator } from '../src/index.ts';
-import qualifyRootRefs from '../src/qualifyRootRefs.ts';
 import { SUPER_SCHEMA_OPTIONS, evalValidatorCode, superSchema } from './harness/compileSuperSchema.ts';
 import { CUSTOM_OPTIONS, expectWarn } from './harness/testData.ts';
 
@@ -20,7 +19,7 @@ vi.mock('../src/createAjvInstance', async (importOriginal) => {
 function compiledSchemas(rootSchema: RJSFSchema): RJSFSchema[] {
   const rootId = schemaKey(rootSchema);
   return Object.values(schemaParser(rootSchema)).map((parsed) =>
-    parsed[ID_KEY] === rootId ? parsed : qualifyRootRefs(parsed, rootId),
+    parsed[ID_KEY] === rootId ? parsed : withRootIdRefPrefix(parsed, { [ID_KEY]: rootId }),
   );
 }
 
