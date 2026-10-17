@@ -354,6 +354,52 @@ describe('precompiled validator integration: oneOf with additionalProperties:fal
         { p: 'y', r: 'b' },
       ],
     ],
+    [
+      'more one-sided conditions in an `allOf` than are combined, some of them `else`-only',
+      {
+        type: 'object',
+        allOf: Array.from({ length: 9 }, (_, i) => ({
+          if: { properties: { [`k${i}`]: { const: 'x' } }, required: [`k${i}`] },
+          [i < 5 ? 'then' : 'else']: { properties: { [`v${i}`]: { type: 'string' } } },
+        })),
+      },
+      [{}, { k0: 'x' }, { k5: 'x' }],
+    ],
+    [
+      'more one-sided conditions in its `dependencies` than are combined',
+      {
+        type: 'object',
+        properties: Object.fromEntries(Array.from({ length: 9 }, (_, i) => [`k${i}`, { type: 'string' }])),
+        dependencies: Object.fromEntries(
+          Array.from({ length: 9 }, (_, i) => [
+            `k${i}`,
+            {
+              if: { properties: { [`k${i}`]: { const: 'x' } }, required: [`k${i}`] },
+              then: { properties: { [`v${i}`]: { type: 'string' } } },
+            },
+          ]),
+        ),
+      },
+      [{}, { k0: 'x' }, { k3: 'x' }, { k8: 'q' }],
+    ],
+    [
+      'more schema dependencies holding a condition than are combined',
+      {
+        type: 'object',
+        properties: Object.fromEntries(Array.from({ length: 8 }, (_, i) => [`k${i}`, { type: 'string' }])),
+        dependencies: Object.fromEntries(
+          Array.from({ length: 8 }, (_, i) => [
+            `k${i}`,
+            {
+              properties: { [`p${i}`]: { type: 'string' } },
+              if: { properties: { [`k${i}`]: { const: 'x' } }, required: [`k${i}`] },
+              then: { properties: { [`v${i}`]: { type: 'string' } } },
+            },
+          ]),
+        ),
+      },
+      [{}, { k0: 'q' }, { k0: 'x' }],
+    ],
   ] as [string, RJSFSchema, object[]][])('an option with %s', (_, option, formDatas) => {
     const schema: RJSFSchema = {
       type: 'object',

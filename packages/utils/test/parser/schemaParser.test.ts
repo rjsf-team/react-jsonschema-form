@@ -525,7 +525,7 @@ describe('schemaParser()', () => {
     };
     schemaParser(rootSchema);
     expect(consoleWarnSpy).toHaveBeenCalledWith(
-      expect.stringMatching(/A schema has 9 schema dependencies, more than the 8 whose subsets can all be expanded/),
+      expect.stringMatching(/the dependencies on k0, .*k8 gives more than the 256 combinations that are expanded/),
     );
     expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('k0, k1'));
     consoleWarnSpy.mockRestore();

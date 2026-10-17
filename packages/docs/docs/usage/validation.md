@@ -70,7 +70,9 @@ An `$id` of the empty string names nothing, so a schema carrying one is looked u
 A key can match any subset of an object's `patternProperties` and a form renders it with the merge of the subset it matches, so every subset has to be compiled; an object may have at most 16 of them for the compile to cover every subset.
 An object with more is still compiled, with each pattern alone and all of them together, and the compile warns that a key matching some other subset of them has no compiled validator.
 A form that renders such a key throws `No precompiled validator function was found for the given schema` when it validates it, so a compile that succeeds with that warning is not a guarantee that every sub-schema the form reaches was covered.
-An object may likewise have at most 8 schema `dependencies` for every subset of them to be compiled, since a form applies the subset whose keys the data has filled in; an object with more is compiled with each dependency alone and all of them together, and warns the same way.
+A form likewise applies the subset of an object's schema `dependencies` whose keys the data has filled in, and each `if` with only one of `then` and `else` gives two schemas, one with the branch applied and one without, so each such condition doubles the schemas compiled for it, and with them the size of the compiled output: a `oneOf` option holding an `allOf` of 8 such conditions is compiled for each of their 256 combinations.
+The schemas an `allOf` or an object's `dependencies` combine into, counting a dependency left unapplied as one of them, are compiled for up to 256 combinations.
+Past that, the compile covers the schemas the empty data selects, each other schema alone beside them and the last schema of each together, and warns the same way.
 
 ```js
 import { compileSchemaValidators } from '@rjsf/validator-ajv8';
