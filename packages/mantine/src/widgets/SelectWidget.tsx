@@ -123,6 +123,9 @@ export default function SelectWidget<
       {multiple ? (
         <MultiSelect
           {...sharedProps}
+          // Its search input, the element a user focuses, takes no `required`, which goes to the hidden input holding
+          // the values, so it says it as a native select's attribute would
+          aria-required={required || undefined}
           value={enumOptionSelectedValue(value, enumOptions, true, optionValueFormat, [])}
         />
       ) : (
