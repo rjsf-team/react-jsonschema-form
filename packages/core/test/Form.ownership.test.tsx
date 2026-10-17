@@ -1,4 +1,4 @@
-import { Component, StrictMode, startTransition, useEffect, useLayoutEffect, useState } from 'react';
+import { Activity, Component, StrictMode, startTransition, useEffect, useLayoutEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 import type { ErrorSchema, FieldProps, RJSFSchema, WidgetProps } from '@rjsf/utils';
 import { buttonId, deepEquals, getTemplates, getUiOptions, noop } from '@rjsf/utils';
@@ -938,6 +938,47 @@ describe('form data ownership', () => {
       expect(onChange).not.toHaveBeenCalled();
       expect(onSubmit).not.toHaveBeenCalled();
       expect(handle.getFormData()).toEqual({ a: 'edited' });
+    });
+
+    it.each([
+      ['valid', { a: 'seed' }],
+      ['invalid', { a: 'x' }],
+    ])('drops a submit event that reaches a form hidden by Activity, with %s data', (_, seedData) => {
+      const onSubmit = vi.fn();
+      const onError = vi.fn();
+      const { container, hide } = renderInActivity(() => (
+        <Form<Data>
+          schema={{ ...schema, properties: { ...schema.properties, a: { type: 'string', minLength: 2 } } }}
+          validator={validator}
+          initialFormData={seedData}
+          noHtml5Validate
+          onSubmit={onSubmit}
+          onError={onError}
+        />
+      ));
+      hide();
+
+      act(() => {
+        elementOf(container, 'form').dispatchEvent(new SubmitEvent('submit', { bubbles: true, cancelable: true }));
+      });
+
+      expect(onSubmit).not.toHaveBeenCalled();
+      expect(onError).not.toHaveBeenCalled();
+    });
+
+    it('drops a submit event that reaches a form first rendered hidden by Activity', () => {
+      const onSubmit = vi.fn();
+      const { container } = render(
+        <Activity mode='hidden'>
+          <Form<Data> schema={schema} validator={validator} initialFormData={{ a: 'seed' }} onSubmit={onSubmit} />
+        </Activity>,
+      );
+
+      act(() => {
+        elementOf(container, 'form').dispatchEvent(new SubmitEvent('submit', { bubbles: true, cancelable: true }));
+      });
+
+      expect(onSubmit).not.toHaveBeenCalled();
     });
 
     it('warns once, in development, about the handle calls it drops while hidden by Activity', () => {

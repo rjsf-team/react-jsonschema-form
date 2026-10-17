@@ -91,8 +91,9 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   // A form an `<Activity>` hides is detached as an unmounted one is, the way React asks of hidden content, and drops
   // what reaches it then: a draft a widget flushes from an Effect cleanup, a timer or a file read that finishes late,
   // or a call through a handle kept past the unmount. Reported through the `onChange` of the last render, it would be
-  // stored as the data of whichever form replaced this one, or of a form the user cannot see
-  let isDetached = false;
+  // stored as the data of whichever form replaced this one, or of a form the user cannot see. Detached until the first
+  // attachment, since a form first rendered inside a hidden `<Activity>` runs no layout Effect until it is shown
+  let isDetached = true;
   // Development only, for the warning about a `formData` passed after mount, which the form ignores: the prop as the
   // last commit passed it, and every object the form's data has been, since a parent that stores what `onChange`
   // reported passes those back, later ones as well as the latest
@@ -386,7 +387,9 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   /** Validates and submits the form's data, with extra data omitted when `omitExtraData` asks for it */
   const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (event.target !== event.currentTarget) {
+    // A detached form drops a submit event that still reaches it, such as one from a `<button form>` outside the
+    // `<Activity>` that hides it, as it drops `submit()`
+    if (isDetached || event.target !== event.currentTarget) {
       return;
     }
     const props = committedProps;
