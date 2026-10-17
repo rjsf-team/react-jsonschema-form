@@ -6,12 +6,14 @@ import {
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionsDomValues,
-  fieldLabelId,
   flattenGroupedOptions,
+  getControlFallbackName,
+  getLabelId,
   getOptionValueFormat,
   groupEnumOptions,
   hasWidgetErrors,
   isEnumOptionsGroup,
+  isNamedByTemplateLabel,
   labelValue,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
@@ -43,14 +45,17 @@ export default function SelectWidget<
     autofocus,
     onChange,
     schema,
-    presentation,
   } = props;
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const drawsLabel = !hideLabel && !!label;
-  // The plan numbers the label beneath one a field above draws under `fieldLabelId(id)`, such as a radio selector's
-  const labelId = drawsLabel && presentation ? presentation.label.id : fieldLabelId(id);
+  const labelId = getLabelId<T, S, F>(props);
   const ariaProps = widgetAriaProps(props);
   const labelledBy = labelledByOrNone(ariaProps['aria-labelledby'], drawsLabel);
+  // A trigger shows its value, not a name, so where no label names it, it is named by the field's label, its placeholder
+  // or the translated prompt
+  const ariaLabel =
+    ariaProps['aria-label'] ??
+    (drawsLabel || isNamedByTemplateLabel<T, S, F>(props) ? undefined : getControlFallbackName<T, S, F>(props));
   const { enumOptions, enumDisabled, emptyValue, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = useMemo(
@@ -142,7 +147,7 @@ export default function SelectWidget<
         value={formValue}
         positioning={{ placement: 'bottom' }}
       >
-        <SelectTrigger {...ariaProps} aria-labelledby={labelledBy}>
+        <SelectTrigger {...ariaProps} aria-label={ariaLabel} aria-labelledby={labelledBy}>
           <SelectValueText placeholder={placeholder} />
         </SelectTrigger>
         <ChakraSelect.Positioner minWidth='100% !important' zIndex='2 !important' top='calc(100% + 5px) !important'>

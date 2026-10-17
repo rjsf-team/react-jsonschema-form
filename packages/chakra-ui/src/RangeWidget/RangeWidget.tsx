@@ -3,8 +3,8 @@ import { useEffect, useRef } from 'react';
 import type { SliderValueChangeDetails } from '@chakra-ui/react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
-  fieldLabelId,
   getControlAttributes,
+  getLabelId,
   hasWidgetErrors,
   labelValue,
   rangeSpec,
@@ -51,8 +51,7 @@ export default function RangeWidget<
 
   const chakraProps = getChakra(options);
   const drawsLabel = !hideLabel && !!label;
-  // The plan numbers the label beneath one a field above draws under `fieldLabelId(id)`, such as a radio selector's
-  const labelId = drawsLabel && presentation ? presentation.label.id : fieldLabelId(id);
+  const labelId = getLabelId<T, S, F>(props);
   const controlAttributes = getControlAttributes<T, S, F>({ id, presentation });
 
   return (

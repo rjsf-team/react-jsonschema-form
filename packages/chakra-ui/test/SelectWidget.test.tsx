@@ -116,4 +116,12 @@ describe('SelectWidget control', () => {
     expect(container.querySelectorAll('[id="select:root:control"]')).toHaveLength(1);
     expect(screen.getAllByRole('combobox')).toHaveLength(1);
   });
+  test.each<[string, RJSFSchema]>([
+    ['an untitled anyOf selector', { anyOf: [{ type: 'string' }, { type: 'number' }] }],
+    ['a select whose field has no title or name', { type: 'string', enum: ['foo', 'bar'] }],
+  ])('names %s by the translated prompt where no label names it', (_, schema) => {
+    render(<Form schema={schema} validator={validator} />);
+
+    expect(screen.getAllByRole('combobox')[0]).toHaveAccessibleName('Select ...');
+  });
 });
