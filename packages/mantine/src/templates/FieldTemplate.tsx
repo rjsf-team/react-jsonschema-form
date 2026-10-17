@@ -37,8 +37,11 @@ export default function FieldTemplate<
   const templates = getTemplates<T, S, F>(registry, uiOptions);
   const { WrapIfAdditionalTemplate } = templates;
   // Only this theme's `FieldErrorTemplate` renders the hidden copy that takes the field's error id. A custom one may
-  // render no element with it, so the error element a Mantine widget shows keeps the id then
-  const rendersErrorCopy = templates.FieldErrorTemplate === FieldErrorTemplate;
+  // render no element with it, so the error element a Mantine widget shows keeps the id then. Resolved as `SchemaField`
+  // resolves the one it renders, `ui:globalOptions` included
+  const rendersErrorCopy =
+    getTemplates<T, S, F>(registry, getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions)).FieldErrorTemplate ===
+    FieldErrorTemplate;
 
   if (hidden) {
     return <Box display='none'>{children}</Box>;

@@ -872,6 +872,7 @@ describe('the element with a field error id', () => {
   test.each<[string, UiSchema, { FieldErrorTemplate?: typeof ListErrors }]>([
     ['given to the form', {}, { FieldErrorTemplate: ListErrors }],
     ["given in the field's uiSchema", { 'ui:FieldErrorTemplate': ListErrors }, {}],
+    ["given in the uiSchema's ui:globalOptions", { 'ui:globalOptions': { FieldErrorTemplate: ListErrors } }, {}],
   ])(
     'is the error a Mantine widget shows, for a custom FieldErrorTemplate that has no id, %s',
     async (_, uiSchema, templates) => {
