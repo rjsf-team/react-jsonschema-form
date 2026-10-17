@@ -8807,5 +8807,52 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(schemaUtils.getDefaultFormState(schemaUtils.getRootSchema())).toEqual({ c: { v: 'ok' } });
       });
     });
+    describe('of a subschema retrieveSchema() handed out', () => {
+      // The root and the nested resource each define `x`, so a `$ref` resolved against the wrong one fills 1
+      it.each<[string, RJSFSchema]>([
+        [
+          'draft-07',
+          {
+            definitions: {
+              x: { type: 'number', default: 1 },
+              child: {
+                $id: 'child.json',
+                definitions: { x: { type: 'string', default: 'nested' } },
+                type: 'array',
+                items: { $ref: '#/definitions/x' },
+              },
+            },
+            type: 'object',
+            properties: { list: { $ref: '#/definitions/child' } },
+          },
+        ],
+        [
+          'draft 2020-12',
+          {
+            $schema: 'https://json-schema.org/draft/2020-12/schema',
+            $id: 'https://example.com/root.json',
+            $defs: {
+              x: { type: 'number', default: 1 },
+              child: {
+                $id: 'nested/child.json',
+                $defs: { x: { type: 'string', default: 'nested' } },
+                type: 'array',
+                items: { $ref: '#/$defs/x' },
+              },
+            },
+            type: 'object',
+            properties: { list: { $ref: 'nested/child.json' } },
+          },
+        ],
+      ])('fills an item of a nested resource from that resource, as a new row does (%s)', (_, schema) => {
+        const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
+        const list = schemaUtils.retrieveSchema(schema).properties?.list;
+        const items = isObject(list) ? schemaUtils.retrieveSchema(list).items : undefined;
+        if (!isObject(items) || Array.isArray(items)) {
+          throw new Error('The list has no items schema');
+        }
+        expect(schemaUtils.getDefaultFormState(items)).toBe('nested');
+      });
+    });
   });
 }

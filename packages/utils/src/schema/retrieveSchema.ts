@@ -216,8 +216,12 @@ function mergesNothing<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, seeds:
  * option merged with what it inherits or a custom field's spread with a keyword of its own, is planned from its own
  * keywords, with the ref path and chain of the field it copies: restarting the ref path would let a field that copies
  * its schema at every level recurse without end.
+ *
+ * @param graph - The graph of the current root
+ * @param schema - The schema whose field is wanted
+ * @returns - The provenance of the field
  */
-function fieldOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, schema: S): Provenance<S> {
+export function fieldOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, schema: S): Provenance<S> {
   const stamped = readProvenance<S>(schema, graph);
   if (stamped === undefined) {
     const adopted = graph.adopt(schema);

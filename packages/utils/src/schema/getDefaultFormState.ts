@@ -75,6 +75,7 @@ import isSelect from './isSelect.ts';
 import resolveConstantOptions from './resolveConstantOptions.ts';
 import retrieveSchema, {
   dependencyOption,
+  fieldOf,
   isLeafSchema,
   resolveOwnRef,
   stubExistingAdditionalProperties,
@@ -1403,11 +1404,12 @@ function typeDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>(
 }
 
 /** Returns the field a call to one of the exported helpers starts from: `rawSchema` as a call root of the graph of
- * `rootSchema`, from which its `$ref`s resolve
+ * `rootSchema`. A subschema `retrieveSchema()` handed out is the field it was handed out for, so its `$ref`s resolve in
+ * the resource it sits in, as retrieving it resolves them; its ref path restarts all the same
  */
 function callRoot<S extends StrictRJSFSchema>(rootSchema: S | undefined, rawSchema: S): DefaultsField<S> {
-  const adopted = parseSchemaGraph<S>(rootSchema ?? schemaFrom(rawSchema, {})).adopt(rawSchema);
-  return { graph: adopted.graph, seeds: [{ node: adopted.node, refPath: [] }], expanded: false, edge: 'root' };
+  const { graph, seeds } = fieldOf<S>(parseSchemaGraph<S>(rootSchema ?? schemaFrom(rawSchema, {})), rawSchema);
+  return { graph, seeds: restartSeeds(seeds), expanded: false, edge: 'root' };
 }
 
 /** The view the exported helpers read `rawSchema` through: the schema as it stands, or, for one with an `if` (unless
