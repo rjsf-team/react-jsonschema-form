@@ -1103,13 +1103,17 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   });
   for (const key of Object.keys(schema.properties ?? {})) {
     const propertySchema = getPropertySchema<S>(schema, key);
+    // A property written as a `$ref` keeps its `const` and `type` in the definition it names
+    const readProperty = isSchemaObject<S>(propertySchema)
+      ? resolveOwnRef<S>(propertySchema, rootSchema)
+      : propertySchema;
     // Check if the parent schema has a const property defined AND we are supporting const as defaults, then we
     // should always return the computedDefault since it's coming from the const.
     const hasParentConst = isObject(parentConst) && Reflect.get(parentConst, key) !== undefined;
     const hasConst =
-      ((isObject(propertySchema) && CONST_KEY in propertySchema) || hasParentConst) &&
+      ((isObject(readProperty) && CONST_KEY in readProperty) || hasParentConst) &&
       defaultFormStateBehavior?.constAsDefaults !== 'never' &&
-      !constIsAjvDataReference(propertySchema);
+      !constIsAjvDataReference(readProperty);
     // A property stubbed by `stubExistingAdditionalProperties()` from `additionalProperties`/`patternProperties`
     // (flagged here, same as ObjectField's own rendering) shares `uiSchema.additionalProperties` with every other such
     // property, rather than a dynamically-named entry.
@@ -1134,7 +1138,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
       schema.required,
       defaultFormStateBehavior?.emptyObjectFields,
       hasConst,
-      isObject(propertySchema) && propertySchema.type === 'null',
+      isObject(readProperty) && readProperty.type === 'null',
     );
   }
   const { additionalProperties } = schema;

@@ -244,6 +244,28 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         });
       });
 
+      describe('a property written as a $ref to a const', () => {
+        const schema: RJSFSchema = {
+          definitions: { K: { type: 'string', const: 'k' } },
+          type: 'object',
+          properties: { constInPlace: { type: 'string', const: 'k' }, constViaRef: { $ref: '#/definitions/K' } },
+        };
+        it.each<NonNullable<DefaultFormStateBehavior['emptyObjectFields']>>([
+          'skipDefaults',
+          'populateRequiredDefaults',
+        ])(
+          'fills the const behind the $ref as the const written in place, under emptyObjectFields %s',
+          (emptyObjectFields) => {
+            expect(
+              getDefaultFormState(
+                { validator: testValidator, defaultFormStateBehavior: { emptyObjectFields } },
+                { schema, rootSchema: schema },
+              ),
+            ).toEqual({ constInPlace: 'k', constViaRef: 'k' });
+          },
+        );
+      });
+
       describe('an object with an optional property that has a nested required property', () => {
         const schema: RJSFSchema = {
           type: 'object',
