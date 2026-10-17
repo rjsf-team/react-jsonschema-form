@@ -22,7 +22,7 @@ const compiledPatterns = new Map<string, RegExp>();
  * @param pattern - The `patternProperties` pattern to compile
  * @returns - The compiled pattern
  */
-function patternRegExp(pattern: string): RegExp {
+export function patternRegExp(pattern: string): RegExp {
   const cached = compiledPatterns.get(pattern);
   if (cached !== undefined) {
     return cached;

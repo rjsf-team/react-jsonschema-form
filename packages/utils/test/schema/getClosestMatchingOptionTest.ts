@@ -44,14 +44,14 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
     it('returns 0 when formData is empty object', () => {
       expect(calculateIndexScore({ validator: testValidator }, oneOfSchema, firstOption, {})).toEqual(0);
     });
-    it('returns 1 for first option in oneOf schema', () => {
+    it('returns 2 for first option in oneOf schema, scoring its $ref property as the definition it names', () => {
       expect(calculateIndexScore({ validator: testValidator }, oneOfSchema, firstOption, ONE_OF_SCHEMA_DATA)).toEqual(
-        1,
+        2,
       );
     });
-    it('returns 8 for second option in oneOf schema', () => {
+    it('returns 10 for second option in oneOf schema', () => {
       expect(calculateIndexScore({ validator: testValidator }, oneOfSchema, secondOption, ONE_OF_SCHEMA_DATA)).toEqual(
-        9,
+        10,
       );
     });
     it('scores a property by the anyOf of a schema that also has a oneOf', () => {
@@ -430,6 +430,56 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
           ),
         ).toEqual(0);
       });
+      it('scores a property written as a recursive $ref as the definition it names, as far as the data goes', () => {
+        const rootSchema: RJSFSchema = {
+          definitions: { Node: { type: 'object', properties: { next: { $ref: '#/definitions/Node' } } } },
+        };
+        const nodeOptions: RJSFSchema[] = [
+          { properties: { a: { $ref: '#/definitions/Node' } } },
+          { properties: { a: { type: 'object', properties: { next: { type: 'object' }, z: { type: 'string' } } } } },
+        ];
+        expect(
+          getClosestMatchingOption(
+            { validator: testValidator },
+            rootSchema,
+            { a: { next: { next: {} } } },
+            nodeOptions,
+          ),
+        ).toEqual(0);
+      });
     });
+    it('reads the keywords beside a $ref that an option reaches through another $ref in place of its target', () => {
+      const rootSchema: RJSFSchema = {
+        definitions: {
+          O: { properties: { a: { type: 'string' } } },
+          M: { $ref: '#/definitions/O', properties: { b: { type: 'string' } } },
+        },
+      };
+      const options: RJSFSchema[] = [
+        { type: 'object', properties: { a: { type: 'string' } } },
+        { $ref: '#/definitions/M' },
+      ];
+      expect(getClosestMatchingOption({ validator: testValidator }, rootSchema, { b: 'y' }, options)).toEqual(1);
+      expect(getClosestMatchingOption({ validator: testValidator }, rootSchema, { a: 'y' }, options)).toEqual(0);
+    });
+    it.each([undefined, 'https://json-schema.org/draft/2020-12/schema'])(
+      'under %s, scores an option written as a $ref beside only annotations as its target',
+      ($schema) => {
+        const rootSchema: RJSFSchema = {
+          ...($schema === undefined ? {} : { $schema }),
+          $defs: {
+            a: { type: 'object', properties: { x: { type: 'string' }, z: { type: 'string' } }, required: ['q'] },
+            b: { type: 'object', properties: { y: { type: 'number' }, w: { type: 'string' } }, required: ['q'] },
+          },
+        };
+        const options: RJSFSchema[] = [
+          { $ref: '#/$defs/a', title: 'A' },
+          { $ref: '#/$defs/b', title: 'B' },
+        ];
+        expect(getClosestMatchingOption({ validator: testValidator }, rootSchema, { y: 1, w: 'w' }, options)).toEqual(
+          1,
+        );
+      },
+    );
   });
 }

@@ -722,22 +722,20 @@ Derives the HTML `name` for `fieldPath` using the `nameGenerator` in `globalForm
 
 ### findSchemaDefinition&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
-Given the name of a `$ref` from within a schema, using the `rootSchema`, look up and return the sub-schema using the path provided by that reference.
-If `#` is not the first character of the reference, or the path does not exist in the schema, then throw an Error.
-Otherwise, return the sub-schema. Also deals with nested `$ref`s in the sub-schema.
+**Deprecated.** Kept for callers written against 6.x; resolve a `$ref` as the form does with `schemaUtils.retrieveSchema({ $ref })` instead.
+
+Returns the definition `$ref` names in `rootSchema`, resolved through the schema graph as the form resolves a field's `$ref`: a JSON pointer, an `$anchor` or the `$id` of an embedded resource, each resolved against the `$id`s around it, with every `$ref` below the target followed, the annotations beside a followed `$ref` read over the target's and any other keywords beside it merged with the target as the `allOf` of both.
+The result is shared across calls and marked with `RJSF_REF_KEY`, so copy it rather than changing it.
+Throws `Could not find a definition for …` for a `$ref` that names nothing, and `Definition for … is a circular reference` for a chain of `$ref`s that loops back on itself.
 
 #### Parameters
 
-- $ref: string - The ref string for which the schema definition is desired
-- [rootSchema={}]: S - The root schema in which to search for the definition
+- [$ref]: string - The `$ref` to resolve
+- [rootSchema={}]: S - The root schema the `$ref` names a definition of
 
 #### Returns
 
-- S: The sub-schema within the `rootSchema` which matches the `$ref` if it exists
-
-#### Throws
-
-- Error indicating that no schema for that reference exists
+- S: The definition the `$ref` names
 
 ### flattenGroupedOptions&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
@@ -2122,6 +2120,25 @@ Forgets every message `logOnce()` has already logged, so each will be logged aga
 Tests need it so each one sees its own warnings.
 An app that swaps schemas at runtime needs it for the same reason the playground does: a wizard whose steps reuse the same field ids, a schema editor or a form builder would otherwise have the second schema's warnings held back by the first's.
 
+### resolveConstantOptions&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns `schema` with the own `$ref` of each of its `anyOf`/`oneOf` options resolved when that makes every option a constant, the shape a select is read from, and `schema` itself otherwise.
+`retrieveSchema()` hands an option written as a `$ref` out as it stands, for the field that renders it to retrieve, but a select renders no field per option, so `isSelect()`, `isMultiSelect()`, `getDisplayLabel()`, `getDefaultFormState()`, `omitExtraData()`, `sanitizeDataForNewSchema()` and the fields read a select's options through this before `optionsList()` labels them or a select over object or array constants is told from a container.
+The result is made once per schema and shared.
+
+#### Parameters
+
+- schema: S - The retrieved schema that may offer options written as `$ref`s
+- rootSchema: S - The root schema the references name definitions of
+
+#### Returns
+
+- S: The schema with its constant options resolved, or `schema` itself
+
+#### Throws
+
+- Error for an option's reference that resolves to nothing, as retrieving that option does
+
 ### resolveDefaultWidget&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Computes the widget name a field falls back to when no `ui:widget` is specified, along with the `enumOptions` (if any) that back a `select`-like fallback.
@@ -2194,6 +2211,18 @@ Recursively checks whether the given raw `schema` contains a `dependencies` or `
 #### Returns
 
 - boolean: True if a `dependencies` or `if` keyword exists below the root of the schema
+
+### rootSchemaIdOf&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns the id a validator registers the root schema under, which is the prefix [withRootIdRefPrefix()](#withrootidrefprefixsextendsstrictrjsfschemarjsfschema) gives a local `$ref`: the root's own `$id`, or the value of the `ROOT_SCHEMA_PREFIX` constant where it has none, since an empty `$id` names nothing a `$ref` could resolve against.
+
+#### Parameters
+
+- rootSchema: S - The root schema
+
+#### Returns
+
+- string: The id the root is registered under
 
 ### schemaKey&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
@@ -2655,12 +2684,27 @@ widgetAriaProps(partProps); // { 'aria-label': 'When, year', 'aria-describedby':
 
 ### withIdRefPrefix&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
-Recursively prefixes all `$ref`s in a schema with the value of the `ROOT_SCHEMA_PREFIX` constant.
+Recursively prefixes every `$ref` local to the root document, one starting with `#`, with the value of the `ROOT_SCHEMA_PREFIX` constant.
 This is used in isValid to make references to the rootSchema
 
 #### Parameters
 
 - schemaNode: S - The object node to which a `ROOT_SCHEMA_PREFIX` is added when a `$ref` is part of it
+
+#### Returns
+
+- S: A copy of the `schemaNode` with updated `$ref`s
+
+### withRootIdRefPrefix&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Recursively prefixes every `$ref` local to the root document, one starting with `#`, with the id a validator registers `rootSchema` under, as [rootSchemaIdOf()](#rootschemaidofsextendsstrictrjsfschemarjsfschema) returns it: the root's own `$id`, or the value of the `ROOT_SCHEMA_PREFIX` constant where it has none.
+An id ending in an empty fragment names the same document as one without it, so that `#` is left out: `withRootIdRefPrefix({ $ref: '#/if' }, { $id: 'http://example.com/root.json#' })` gives `{ $ref: 'http://example.com/root.json#/if' }`.
+A validator applies it to a schema it validates beside `rootSchema`, so that a `$ref` local to the root resolves against the root whatever the schema holding it is registered as.
+
+#### Parameters
+
+- schemaNode: S - The object node to which the prefix is added when a `$ref` is part of it
+- rootSchema: S - The root schema the local `$ref`s name
 
 #### Returns
 
@@ -2893,7 +2937,7 @@ When the schema has both keywords, `anyOf` is the one checked (see `getXxxOfKey(
 
 Normalises a list of `oneOf`/`anyOf` options for use in option-scoring only (not for filtering).
 Boolean schemas are converted to their object equivalents (`true` → `{}`, `false` → `{not:{}}`).
-When `resolveRefs` is `true`, each object option is first passed through `resolveAllReferences` so that `$ref`-based options expose their `additionalProperties` constraint before relaxation.
+When `resolveRefs` is `true`, each object option has its own `$ref` resolved first so that `$ref`-based options expose their `additionalProperties` constraint before relaxation.
 Any option whose `additionalProperties` is `false` is widened to `true` so that `getClosestMatchingOption` / `validator.isValid()` does not produce false negatives when the form data contains keys not listed in `properties`.
 A widened option is not the schema its `$id` names, so it is given an `$id` of `<the option's>?rjsf=<the widened option's hash>`: distinct enough that a validator compiles a function for it rather than reusing the option's, while keeping the option's `$id` as the base that a relative `$ref` inside it resolves against.
 
@@ -2909,9 +2953,9 @@ A widened option is not the schema its `$id` names, so it is given an `$id` of `
 
 ### retrieveSchema&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
-Retrieves an expanded schema that has had all of its conditions, additional properties, references and dependencies
-resolved and merged into the `schema` given a `context`, `rootSchema` and `rawFormData` that is used to do the
-potentially recursive resolution.
+Retrieves the schema of one field: the `schema` with its own `$ref`, `allOf`, `if`/`then`/`else`, `dependencies` and the patterns its properties match merged in for the `rawFormData`, and the additional properties of that data stubbed among its `properties`.
+The schema is resolved one level at a time: a `$ref` under `properties`, `items` or an `anyOf`/`oneOf` option is handed out as it stands, for the caller to retrieve when it renders that subschema.
+Every subschema handed out carries where it came from, so retrieving it resolves it as the field it is: a recursive `$ref` under `properties` is handed out flagged with `RJSF_REF_CYCLE_KEY`, retrieving a copy with that flag set to `false` expands it by one level, and retrieving a schema `retrieveSchema()` returned gives the same schema back.
 
 #### Parameters
 
@@ -2919,6 +2963,7 @@ potentially recursive resolution.
 - schema: S - The schema for which retrieving a schema is desired
 - [rootSchema={}]: S - The root schema that will be forwarded to all the APIs
 - [rawFormData]: T | undefined - The current formData, if any, to assist retrieving a schema
+- [resolveAnyOfOrOneOfRefs=false]: boolean - Whether to resolve the `anyOf`/`oneOf` options too, each as `retrieveSchema()` resolves it
 
 #### Returns
 

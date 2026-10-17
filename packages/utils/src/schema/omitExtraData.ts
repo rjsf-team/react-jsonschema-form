@@ -5,7 +5,6 @@ import {
   getAdditionalPropertySchema,
   getMatchingPatternProperties,
 } from '../additionalPropertiesUtils.ts';
-import findSchemaDefinition from '../findSchemaDefinition.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
 import getSchemaTypeForValue from '../getSchemaTypeForValue.ts';
@@ -14,7 +13,8 @@ import isObject, { isSchemaObject } from '../isObject.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
 import type { FormContextType, GenericObjectType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
 import getClosestMatchingOption from './getClosestMatchingOption.ts';
-import { mergeAllOf, relaxOptionsForScoring, resolveAllReferences } from './retrieveSchema.ts';
+import resolveConstantOptions from './resolveConstantOptions.ts';
+import { mergeAllOf, relaxOptionsForScoring, resolveOwnRef } from './retrieveSchema.ts';
 
 /** Returns true when a form value is considered empty: null/undefined/'', an empty array, or a plain
  * object whose every own value is itself empty (recursive). Scalars like `0` and `false` are not empty.
@@ -105,7 +105,7 @@ export default function omitExtraData<
         // Resolve $ref so we can inspect the effective required list for the inner schema.
         let sd = isSchemaObject<S>(schemaDef) ? schemaDef : ({} as S);
         if (sd.$ref !== undefined) {
-          sd = resolveRef(sd.$ref);
+          sd = resolveOwnRef<S>(sd, rootSchema);
         }
         // A key the `patternProperties` match is described by the `allOf` of every pattern matching it, which is where
         // the names it requires live: read off the wrapper around them it requires nothing, and a required child
@@ -276,9 +276,7 @@ export default function omitExtraData<
     const winning = (oneOf as (S | boolean)[])[bestIndex];
     // For object options, re-resolve without relaxation so additionalProperties:false is respected.
     // For boolean options, scoringOptions already holds the converted schema (true→{}, false→{not:{}}).
-    const resolved: S = isObject(winning)
-      ? resolveAllReferences<S>(winning, rootSchema, [])
-      : scoringOptions[bestIndex];
+    const resolved: S = isSchemaObject<S>(winning) ? resolveOwnRef<S>(winning, rootSchema) : scoringOptions[bestIndex];
     return omit(resolved, source, target, false);
   }
 
@@ -344,34 +342,14 @@ export default function omitExtraData<
    */
   const mergedAllOfSchemas = new WeakMap<object, S>();
 
-  /** Each `$ref` resolved once per call, so that the same reference is the same object everywhere it is read. A `$ref`
-   * with sibling keywords resolves to a wrapper `findSchemaDefinition()` builds fresh on every call, which the
-   * `allOf` merges are remembered under: resolved twice, such a schema is merged twice over for every node of the form
-   * data it describes
-   */
-  const resolvedRefs = new Map<string, S>();
-
-  /** Resolves a `$ref` against this call's `rootSchema`
-   *
-   * @param ref - The reference to resolve
-   * @returns - The schema it names
-   */
-  function resolveRef(ref: string): S {
-    let resolved = resolvedRefs.get(ref);
-    if (resolved === undefined) {
-      resolved = findSchemaDefinition<S>(ref, rootSchema);
-      resolvedRefs.set(ref, resolved);
-    }
-    return resolved;
-  }
-
-  /** Resolves the references of one `allOf` entry
+  /** Resolves the reference of one `allOf` entry. Only its own `$ref` needs resolving: the merge would hoist it rather
+   * than follow it, where the ones below are resolved as `omit()` reaches them
    *
    * @param entry - The `allOf` entry to resolve, which a boolean shorthand leaves alone
-   * @returns - The entry with its references resolved
+   * @returns - The entry with its own reference resolved
    */
-  function resolveAllOfEntry(entry: JSONSchema7Definition): S | boolean {
-    return isObject(entry) ? resolveAllReferences<S>(entry as S, rootSchema, []) : entry;
+  function resolveAllOfEntry(entry: JSONSchema7Definition): JSONSchema7Definition {
+    return isSchemaObject<S>(entry) ? resolveOwnRef<S>(entry, rootSchema) : entry;
   }
 
   /** Returns the merge of a schema's `allOf`, made once per schema object and remembered for the rest of this call.
@@ -420,7 +398,7 @@ export default function omitExtraData<
     const { $ref: ref, allOf } = localSchema;
 
     if (ref !== undefined) {
-      return omit(resolveRef(ref), source, target, useSourceAsFallback);
+      return omit(resolveOwnRef<S>(localSchema, rootSchema), source, target, useSourceAsFallback);
     }
     if (allOf) {
       localSchema = mergeAllOfOnce(localSchema, allOf);
@@ -444,6 +422,8 @@ export default function omitExtraData<
       }
     }
 
+    // The options of a select are read as the constants they name, as the form renders them, `$ref`s included
+    localSchema = resolveConstantOptions<S>(localSchema, rootSchema);
     let filtered = handleAnyOf(localSchema, source, handleOneOf(localSchema.oneOf, localSchema, source, target));
 
     // A select holds one of its constants as a whole, so an `object` or `array` one has no contents to prune. A value of

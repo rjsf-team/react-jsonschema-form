@@ -969,6 +969,62 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({ inner: { name: '' } });
       });
 
+      it('keeps the fields of both the keywords beside a $ref and its target, along a chain of references, as the form does', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          definitions: {
+            O: { type: 'object', properties: { a: { type: 'string' } } },
+            M: { $ref: '#/definitions/O', properties: { b: { type: 'string' } } },
+          },
+          properties: {
+            v: { $ref: '#/definitions/M' },
+            w: { $ref: '#/definitions/O', properties: { c: { type: 'string' } } },
+          },
+        };
+        const formData = { v: { a: 'x', b: 'y', d: 'gone' }, w: { a: 'x', c: 'z', d: 'gone' } };
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({
+          v: { a: 'x', b: 'y' },
+          w: { a: 'x', c: 'z' },
+        });
+      });
+
+      it.each(['https://json-schema.org/draft/2019-09/schema', 'https://json-schema.org/draft/2020-12/schema'])(
+        "under %s, keeps the fields of both a field's own $ref and the keywords beside it, as the form renders them",
+        ($schema) => {
+          const schema: RJSFSchema = {
+            $schema,
+            type: 'object',
+            $defs: { Pet: { type: 'object', properties: { name: { type: 'string' } }, required: ['name'] } },
+            properties: { cat: { $ref: '#/$defs/Pet', properties: { meow: { type: 'string' } } } },
+          };
+          const formData = { cat: { name: 'x', meow: 'y', extra: 'drop' } };
+          expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({
+            cat: { name: 'x', meow: 'y' },
+          });
+        },
+      );
+
+      it('resolves a $ref under a relative $id against that $id', () => {
+        const schema: RJSFSchema = {
+          $schema: 'https://json-schema.org/draft/2020-12/schema',
+          $id: 'https://example.com/root.json',
+          $defs: {
+            child: {
+              $id: 'child.json',
+              type: 'object',
+              properties: { a: { $ref: '#/$defs/x' } },
+              $defs: { x: { type: 'object', properties: { k: { type: 'string' } } } },
+            },
+          },
+          type: 'object',
+          properties: { c: { $ref: 'child.json' } },
+        };
+        const formData = { c: { a: { k: 'kept', extra: 'drop' }, extra: 'drop' } };
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({
+          c: { a: { k: 'kept' } },
+        });
+      });
+
       it('uses customMergeAllOf when provided', () => {
         const schema: RJSFSchema = {
           allOf: [
@@ -1824,6 +1880,28 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         // The original p2s array must not have grown (the old bug caused it to grow unboundedly).
         expect(formData.route.mux.p2s).toHaveLength(1);
       });
+    });
+    it('keeps the fields of a $ref under a relative root $id through createSchemaUtils()', () => {
+      const schema: RJSFSchema = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        $id: 'nested/root.json',
+        $defs: { c: { $id: 'child.json', type: 'object', properties: { v: { type: 'string' } } } },
+        type: 'object',
+        properties: { c: { $ref: 'child.json' } },
+      };
+      const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
+      expect(schemaUtils.omitExtraData(schemaUtils.getRootSchema(), { c: { v: 'x', extra: 1 } })).toEqual({
+        c: { v: 'x' },
+      });
+    });
+    it('keeps the value of a select over object constants written as $refs whole', () => {
+      const schema: RJSFSchema = {
+        definitions: { A: { const: { k: 'a' }, title: 'A' }, B: { const: { k: 'b' }, title: 'B' } },
+        type: 'object',
+        properties: { pick: { type: 'object', oneOf: [{ $ref: '#/definitions/A' }, { $ref: '#/definitions/B' }] } },
+      };
+      const formData = { pick: { k: 'b' }, extra: 1 };
+      expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({ pick: { k: 'b' } });
     });
   });
 }

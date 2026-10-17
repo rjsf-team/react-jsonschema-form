@@ -134,6 +134,23 @@ describe('schemaParser()', () => {
     const schemaMap = schemaParser(RECURSIVE_REF_ALLOF);
     expect(schemaMap).toMatchSnapshot();
   });
+  it('terminates on an allOf entry declaring a recursive property its own pattern matches (#5452 b)', () => {
+    const rootSchema: RJSFSchema = {
+      $ref: '#/definitions/node',
+      definitions: {
+        node: {
+          type: 'object',
+          allOf: [
+            {
+              properties: { child: { $ref: '#/definitions/node' }, name: { type: 'string' } },
+              patternProperties: { '^child': { title: 'Child' } },
+            },
+          ],
+        },
+      },
+    };
+    expect(Object.values(schemaParser(rootSchema))).toEqual([{ ...rootSchema, $id: expect.any(String) }]);
+  });
   it('parses schema dependencies properly', () => {
     const schemaMap = schemaParser(SCHEMA_DEPENDENCIES);
     expect(schemaMap).toMatchSnapshot();

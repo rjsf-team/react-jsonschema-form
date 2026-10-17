@@ -12,11 +12,11 @@ import {
   REQUIRED_KEY,
   THEN_KEY,
 } from './constants.ts';
-import { isSubschemaKeyword, keywordShape } from './findSchemaDefinition.ts';
 import getSchemaType from './getSchemaType.ts';
 import isObject from './isObject.ts';
 import mergeSchemas from './mergeSchemas.ts';
 import { CONTAINER_KEYWORDS, IDENTIFIER_KEYWORDS } from './schema/retrieveSchema.ts';
+import { isSubschemaKeyword, keywordShape } from './schemaUri.ts';
 import type { GenericObjectType, RJSFSchema, StrictRJSFSchema } from './types.ts';
 
 /** The keywords of a non-object parent that its option is rendered without. The options themselves and the
@@ -71,10 +71,10 @@ const POSITIONAL_KEYWORDS = new Set<string>([ITEMS_KEY, 'prefixItems']);
  * otherwise keep the Add button enabled for items that validation then rejects. `uniqueItems` holds when either asks
  * for it, and a `required` list asks for every name either asks for. A keyword holding subschemas is met subschema by
  * subschema, see `meetSubschema()`, within a map of named schemas such as `properties` entry by entry, since the names
- * are data, and within a tuple position by position. Which keywords hold subschemas is read from the classifier the
- * schema walks in `findSchemaDefinition()` share, so a value keyword such as a `const` object is never read as a
- * schema. Any other keyword both declare that cannot be combined into one value, such as a `format`, a `pattern`, a
- * `multipleOf` or an `enum`, is the option's.
+ * are data, and within a tuple position by position. Which keywords hold subschemas is read from the classifier every
+ * schema walk shares, so a value keyword such as a `const` object is never read as a schema. Any other keyword both
+ * declare that cannot be combined into one value, such as a `format`, a `pattern`, a `multipleOf` or an `enum`, is the
+ * option's.
  *
  * @param parent - What the option inherits from the parent
  * @param option - The option

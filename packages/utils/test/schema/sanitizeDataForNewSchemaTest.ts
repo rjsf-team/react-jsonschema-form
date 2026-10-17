@@ -1993,5 +1993,23 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         ).toEqual(data);
       });
     });
+    it('keeps a value a select over object constants written as $refs still offers, as a property and as an item', () => {
+      const definitions: RJSFSchema['definitions'] = { A: { const: { k: 'a' } }, B: { const: { k: 'b' } } };
+      const pick: RJSFSchema = { type: 'object', oneOf: [{ $ref: '#/definitions/A' }, { $ref: '#/definitions/B' }] };
+      const oldSchema: RJSFSchema = {
+        definitions,
+        type: 'object',
+        properties: { pick, list: { type: 'array', items: pick }, other: { type: 'string' } },
+      };
+      const newSchema: RJSFSchema = {
+        ...oldSchema,
+        properties: { ...oldSchema.properties, other: { type: 'number' } },
+      };
+      const data = { pick: { k: 'b' }, list: [{ k: 'a' }, { k: 'c' }], other: 'x' };
+      expect(sanitizeDataForNewSchema({ validator: testValidator }, newSchema, newSchema, oldSchema, data)).toEqual({
+        pick: { k: 'b' },
+        list: [{ k: 'a' }],
+      });
+    });
   });
 }

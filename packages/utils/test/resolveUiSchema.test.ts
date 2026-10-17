@@ -1,5 +1,14 @@
-import type { Registry, RJSFSchema, TemplatesType, UiSchema, UiSchemaDefinitions } from '../src/index.ts';
-import { RJSF_REF_KEY, noop, resolveUiSchema } from '../src/index.ts';
+import type {
+  Registry,
+  RJSFSchema,
+  TemplatesType,
+  UiSchema,
+  UiSchemaDefinitions,
+  ValidatorType,
+} from '../src/index.ts';
+import { RJSF_REF_KEY, createSchemaUtils, noop, resolveUiSchema, retrieveSchema } from '../src/index.ts';
+import looseSchema from './schema/graph/looseSchema.ts';
+import getTestValidator from './testUtils/getTestValidator.ts';
 
 beforeEach(() => {
   vi.spyOn(console, 'warn').mockImplementation(noop);
@@ -245,5 +254,119 @@ describe('resolveUiSchema()', () => {
       name: { 'ui:placeholder': 'Override', 'ui:disabled': true },
       'ui:order': ['name', 'children'],
     });
+  });
+});
+
+describe('resolveUiSchema() - definitions composed through allOf', () => {
+  const rootSchema: RJSFSchema = {
+    definitions: {
+      B: { type: 'object', properties: { n: { type: 'string' } } },
+      A: { allOf: [{ $ref: '#/definitions/B' }], properties: { m: { type: 'string' } } },
+    },
+    type: 'array',
+    items: { $ref: '#/definitions/A' },
+  };
+  const definitions: UiSchemaDefinitions = {
+    '#/definitions/B': { 'ui:title': 'FROM_B', 'ui:help': 'HELP_B' },
+    '#/definitions/A': { 'ui:description': 'FROM_A', 'ui:help': 'HELP_A' },
+  };
+  const validator: ValidatorType = {
+    validateFormData: () => ({ errors: [], errorSchema: {} }),
+    isValid: () => true,
+    rawValidation: () => ({}),
+  };
+
+  it('applies only the entry of the $ref the field was resolved from, not those of the definitions it composes', () => {
+    const { items } = retrieveSchema({ validator }, rootSchema, rootSchema);
+    const handedOut: RJSFSchema = typeof items === 'object' && !Array.isArray(items) ? items : {};
+    const resolved = retrieveSchema({ validator }, handedOut, rootSchema);
+    const fromA = { 'ui:description': 'FROM_A', 'ui:help': 'HELP_A' };
+    expect(resolveUiSchema(handedOut, undefined, makeRegistry(rootSchema, definitions))).toEqual(fromA);
+    expect(resolveUiSchema(resolved, undefined, makeRegistry(rootSchema, definitions))).toEqual(fromA);
+    expect(
+      resolveUiSchema({ allOf: [{ $ref: '#/definitions/B' }] }, undefined, makeRegistry(rootSchema, definitions)),
+    ).toEqual({});
+  });
+  it('applies the entry of the definition an extra key of the data names through its additionalProperties', () => {
+    const mapSchema: RJSFSchema = {
+      definitions: { A: { allOf: [{ type: 'object', properties: { a: { type: 'string' } } }] } },
+      type: 'object',
+      additionalProperties: { $ref: '#/definitions/A' },
+    };
+    const { properties } = retrieveSchema({ validator }, mapSchema, mapSchema, { k: {} });
+    const handedOut: RJSFSchema = typeof properties?.k === 'object' ? properties.k : {};
+    const resolved = retrieveSchema({ validator }, handedOut, mapSchema, {});
+    expect(Reflect.get(resolved, RJSF_REF_KEY)).toBe('#/definitions/A');
+    expect(
+      resolveUiSchema(
+        resolved,
+        undefined,
+        makeRegistry(mapSchema, { '#/definitions/A': { 'ui:description': 'FROM_A' } }),
+      ),
+    ).toEqual({ 'ui:description': 'FROM_A' });
+  });
+});
+
+describe('resolveUiSchema() - option walk through the schema graph', () => {
+  const optionDefinitions: UiSchemaDefinitions = { '#/$defs/leaf': { 'ui:title': 'Leaf' } };
+
+  it('walks the options of a definition an $anchor names, without a warning', () => {
+    const rootSchema: RJSFSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $defs: {
+        node: looseSchema({ $anchor: 'nd', oneOf: [{ $ref: '#/$defs/leaf' }] }),
+        leaf: { type: 'string' },
+      },
+    };
+    const warn = vi.spyOn(console, 'warn').mockImplementation(noop);
+    const result = resolveUiSchema({ $ref: '#nd' }, undefined, makeRegistry(rootSchema, optionDefinitions));
+    expect(result.oneOf).toEqual([{ 'ui:title': 'Leaf' }]);
+    expect(warn).not.toHaveBeenCalled();
+  });
+
+  it('walks the options of the definition a chain of aliases leads to', () => {
+    const rootSchema: RJSFSchema = {
+      $defs: { alias: { $ref: '#/$defs/node' }, node: { anyOf: [{ $ref: '#/$defs/leaf' }] }, leaf: { type: 'string' } },
+    };
+    const result = resolveUiSchema({ $ref: '#/$defs/alias' }, undefined, makeRegistry(rootSchema, optionDefinitions));
+    expect(result.anyOf).toEqual([{ 'ui:title': 'Leaf' }]);
+  });
+
+  it('walks the options of the definition an alias with sibling keywords leads to', () => {
+    const rootSchema: RJSFSchema = {
+      $defs: {
+        alias: { $ref: '#/$defs/node', type: 'string', minLength: 1 },
+        node: { oneOf: [{ $ref: '#/$defs/leaf' }, { type: 'string' }] },
+        leaf: { type: 'string' },
+      },
+    };
+    const result = resolveUiSchema({ $ref: '#/$defs/alias' }, undefined, makeRegistry(rootSchema, optionDefinitions));
+    expect(result.oneOf).toEqual([{ 'ui:title': 'Leaf' }]);
+  });
+
+  it('walks the options of a $ref under a relative root $id from the root createSchemaUtils() hands out', () => {
+    const field: RJSFSchema = { $ref: 'child.json' };
+    const rootSchema: RJSFSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $id: 'nested/root.json',
+      $defs: { child: { $id: 'child.json', oneOf: [{ $ref: '#/$defs/leaf' }], $defs: { leaf: { type: 'string' } } } },
+      properties: { field },
+    };
+    const schemaUtils = createSchemaUtils({ validator: getTestValidator({}) }, rootSchema);
+    const warn = vi.spyOn(console, 'warn').mockImplementation(noop);
+    const result = resolveUiSchema(field, undefined, makeRegistry(schemaUtils.getRootSchema(), optionDefinitions));
+    expect(result.oneOf).toEqual([{ 'ui:title': 'Leaf' }]);
+    expect(warn).not.toHaveBeenCalled();
+  });
+
+  it('walks the options of a 2020-12 $ref beside only annotations, as of one beside nothing', () => {
+    const field: RJSFSchema = { $ref: '#/$defs/node', title: 'Node' };
+    const rootSchema: RJSFSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $defs: { node: { oneOf: [{ $ref: '#/$defs/leaf' }, { type: 'number' }] }, leaf: { type: 'string' } },
+      properties: { field },
+    };
+    const result = resolveUiSchema(field, undefined, makeRegistry(rootSchema, optionDefinitions));
+    expect(result.oneOf).toEqual([{ 'ui:title': 'Leaf' }]);
   });
 });

@@ -1257,6 +1257,27 @@ describe('ArrayField', () => {
     };
 
     describe('Select multiple widget', () => {
+      it('should render constant item options written as $refs as a multiple select with their titles', () => {
+        const { node } = createFormComponent({
+          schema: {
+            definitions: { red: { const: 'red', title: 'Red' }, blue: { const: 'blue', title: 'Blue' } },
+            type: 'object',
+            properties: {
+              colors: {
+                type: 'array',
+                uniqueItems: true,
+                items: { anyOf: [{ $ref: '#/definitions/red' }, { $ref: '#/definitions/blue' }] },
+              },
+            },
+          },
+        });
+        expect(node.querySelector('select#root_colors')).toHaveAttribute('multiple');
+        expect(Array.from(node.querySelectorAll('select#root_colors option'), (option) => option.textContent)).toEqual([
+          'Red',
+          'Blue',
+        ]);
+      });
+
       it('should render a select widget', () => {
         const { node } = createFormComponent({ schema });
 

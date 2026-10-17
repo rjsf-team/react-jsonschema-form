@@ -3,11 +3,11 @@ import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.
 import getOptionMatchingSimpleDiscriminator from '../getOptionMatchingSimpleDiscriminator.ts';
 import getXxxOfKey from '../getXxxOfKey.ts';
 import guessType from '../guessType.ts';
-import isObject from '../isObject.ts';
-import { getByPath, hasByPath } from '../pathUtils.ts';
+import isObject, { isSchemaObject } from '../isObject.ts';
+import { getByPath } from '../pathUtils.ts';
 import type { FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
 import getFirstMatchingOption from './getFirstMatchingOption.ts';
-import retrieveSchema, { resolveAllReferences } from './retrieveSchema.ts';
+import { resolveOwnRef } from './retrieveSchema.ts';
 
 /** A junk option used to determine when the getFirstMatchingOption call really matches an option rather than returning
  * the first item
@@ -22,20 +22,76 @@ export const JUNK_OPTION: StrictRJSFSchema = {
   },
 };
 
-/** Recursive function that calculates the score of a `formData` against the given `schema`. The computation is fairly
- * simple. Initially the total score is 0. When `schema.properties` object exists, then all the `key/value` pairs within
- * the object are processed as follows after obtaining the formValue from `formData` using the `key`:
- * - If the `value` contains a `$ref`, `calculateIndexScore()` is called recursively with the formValue and the new
- *   schema that is the result of the ref in the schema being resolved and that sub-schema's resulting score is added to
- *   the total, as long as the formValue has data to score; a `$ref` with no form data left is not followed.
+/** Returns the score of one property's `formValue` against the `value` schema describing it, as
+ * `calculateIndexScore()` adds it up:
+ * - If the `value` is a `$ref` and the formValue is neither `undefined` nor `null`, it is scored as the definition it
+ *   names, with the keywords beside it, as though written in its place. A recursive `$ref` names a definition holding
+ *   that same `$ref` one level down, so only the form data, consumed a key at a time, bounds the descent.
  * - If the `value` contains an `anyOf` or `oneOf` and the formValue is neither `undefined` nor `null`, then score based
  *   on the index returned from calling `getClosestMatchingOption()` of that `anyOf`/`oneOf`.
  * - If the type of the `value` is 'object', `calculateIndexScore()` is called recursively with the formValue and the
- *   `value` itself as the sub-schema, and the score is added to the total.
- * - If the type of the `value` matches the guessed-type of the `formValue`, the score is incremented by 1, UNLESS the
- *   value has a truthy `default` or a `const`. In those case, if the `default` or `const` and the `formValue` match,
- *   the score is incremented by another 1 otherwise it is decremented by 1. A missing formValue is not compared to a
- *   `const`.
+ *   `value` itself as the sub-schema, plus one when the formValue is an object too.
+ * - If the type of the `value` matches the guessed-type of the `formValue`, the score is 1, UNLESS the value has a
+ *   truthy `default` or a `const`. In those case, if the `default` or `const` and the `formValue` match, the score is
+ *   incremented by another 1 otherwise it is decremented by 1. A missing formValue is not compared to a `const`.
+ *
+ * @param context - The `SchemaContext` that will be forwarded to all the APIs
+ * @param rootSchema - The root JSON schema of the entire form
+ * @param value - The schema of the property
+ * @param formValue - The form data the property holds
+ * @returns - The property's score
+ */
+function propertyScore<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(context: SchemaContext<S, F>, rootSchema: S, value: S, formValue: unknown): number {
+  if (typeof value[REF_KEY] === 'string') {
+    return formValue == null
+      ? 0
+      : propertyScore<T, S, F>(context, rootSchema, resolveOwnRef<S>(value, rootSchema), formValue);
+  }
+  const xxxOfKey = getXxxOfKey<S>(value);
+  if (xxxOfKey && formValue != null) {
+    const discriminator = getDiscriminatorFieldFromSchema<S>(value);
+    return getClosestMatchingOption<unknown, S, F>(
+      context,
+      rootSchema,
+      formValue,
+      getByPath<S[]>(value, xxxOfKey),
+      -1,
+      discriminator,
+    );
+  }
+  if (value.type === 'object') {
+    // If the structure is matching then give it a little boost in score
+    const structureBoost = typeof formValue === 'object' && formValue !== null ? 1 : 0;
+    return structureBoost + calculateIndexScore<T, S, F>(context, rootSchema, value, formValue);
+  }
+  if (value.type !== guessType(formValue)) {
+    return 0;
+  }
+  // If the types match, then we bump the score by one
+  if (value.default) {
+    // Score a value that matches the default higher and any other value lower. Only a truthy default is
+    // scored, as before: the check doesn't require `readOnly`, so scoring `default: false` would penalize a
+    // user who ticks the box, the same way a truthy default already penalizes one who clears it
+    return formValue === value.default ? 2 : 0;
+  }
+  if (value.const !== undefined && formValue !== undefined) {
+    // If the schema contains a const value score the value that matches the const higher and any non-matching
+    // value lower. A missing value is skipped: `guessType(undefined)` is 'null', so it reaches here for a
+    // `const: null` property and would otherwise be penalized for not being `null`
+    return formValue === value.const ? 2 : 0;
+  }
+  // TODO eventually, deal with enums/arrays
+  return 1;
+}
+
+/** Recursive function that calculates the score of a `formData` against the given `schema`. The computation is fairly
+ * simple. Initially the total score is 0. When `schema.properties` object exists, then each property's form value,
+ * read from `formData` with its `key`, is scored against the property's schema, as `propertyScore()` describes, and
+ * the scores are added up. A schema without `properties` scores 1 when its `type` is the guessed-type of `formData`.
  *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param rootSchema - The root JSON schema of the entire form
@@ -47,74 +103,22 @@ export function calculateIndexScore<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(context: SchemaContext<S, F>, rootSchema: S, schema?: S, formData?: any): number {
-  let totalScore = 0;
-  if (schema) {
-    if (isObject(schema.properties)) {
-      totalScore += Object.entries(schema.properties).reduce((score, [key, value]) => {
-        // An own-property read, so a schema property legally named `toString`, `constructor` or `valueOf` reads the
-        // data's own value rather than the one every object inherits, which would never look like missing data
-        const formValue = getByPath<T>(formData, key);
-        if (typeof value === 'boolean') {
-          return score;
-        }
-        if (hasByPath(value, REF_KEY)) {
-          // `resolveAllReferences()` leaves a recursive `$ref` in place, so `retrieveSchema()` below resolves the same
-          // definition again and hands back a schema holding that same `$ref` one level down. The descent is bounded
-          // only by the form data being consumed a key at a time, so it never terminates once that data runs out.
-          // Descending anyway could only ever add points for the absence of data — an empty object matching a
-          // property-less `type: 'object'`, `undefined` matching a `type: 'null'` property — so a `$ref` is followed
-          // only as far as the form data goes.
-          if (formValue == null) {
-            return score;
-          }
-          const newSchema = retrieveSchema<T, S, F>(context, value as S, rootSchema, formValue);
-          return score + calculateIndexScore<T, S, F>(context, rootSchema, newSchema, formValue);
-        }
-        const xxxOfKey = getXxxOfKey<S>(value as S);
-        if (xxxOfKey && formValue != null) {
-          const discriminator = getDiscriminatorFieldFromSchema<S>(value as S);
-          return (
-            score +
-            getClosestMatchingOption<T, S, F>(
-              context,
-              rootSchema,
-              formValue,
-              getByPath<S[]>(value, xxxOfKey),
-              -1,
-              discriminator,
-            )
-          );
-        }
-        if (value.type === 'object') {
-          // If the structure is matching then give it a little boost in score
-          const structureBoost = typeof formValue === 'object' && formValue !== null ? 1 : 0;
-          return score + structureBoost + calculateIndexScore<T, S, F>(context, rootSchema, value as S, formValue);
-        }
-        if (value.type === guessType(formValue)) {
-          // If the types match, then we bump the score by one
-          let newScore = score + 1;
-          if (value.default) {
-            // Score a value that matches the default higher and any other value lower. Only a truthy default is
-            // scored, as before: the check doesn't require `readOnly`, so scoring `default: false` would penalize a
-            // user who ticks the box, the same way a truthy default already penalizes one who clears it
-            newScore += formValue === value.default ? 1 : -1;
-          } else if (value.const !== undefined && formValue !== undefined) {
-            // If the schema contains a const value score the value that matches the const higher and any non-matching
-            // value lower. A missing value is skipped: `guessType(undefined)` is 'null', so it reaches here for a
-            // `const: null` property and would otherwise be penalized for not being `null`
-            newScore += formValue === value.const ? 1 : -1;
-          }
-          // TODO eventually, deal with enums/arrays
-          return newScore;
-        }
-        return score;
-      }, 0);
-    } else if (typeof schema.type === 'string' && schema.type === guessType(formData)) {
-      totalScore += 1;
-    }
+>(context: SchemaContext<S, F>, rootSchema: S, schema?: S, formData?: unknown): number {
+  if (!schema) {
+    return 0;
   }
-  return totalScore;
+  if (isObject(schema.properties)) {
+    return Object.entries(schema.properties).reduce(
+      // An own-property read, so a schema property legally named `toString`, `constructor` or `valueOf` reads the
+      // data's own value rather than the one every object inherits, which would never look like missing data
+      (score, [key, value]) =>
+        isSchemaObject<S>(value)
+          ? score + propertyScore<T, S, F>(context, rootSchema, value, getByPath<T>(formData, key))
+          : score,
+      0,
+    );
+  }
+  return typeof schema.type === 'string' && schema.type === guessType(formData) ? 1 : 0;
 }
 
 /** Determines which of the given `options` provided most closely matches the `formData`. Using
@@ -151,8 +155,8 @@ export default function getClosestMatchingOption<
   selectedOption = -1,
   discriminatorField?: string,
 ): number {
-  // First resolve any refs in the options
-  const resolvedOptions = options.map((option) => resolveAllReferences<S>(option, rootSchema, []));
+  // First resolve each option's own ref
+  const resolvedOptions = options.map((option) => resolveOwnRef<S>(option, rootSchema));
 
   const simpleDiscriminatorMatch = getOptionMatchingSimpleDiscriminator(formData, options, discriminatorField);
   if (typeof simpleDiscriminatorMatch === 'number') {

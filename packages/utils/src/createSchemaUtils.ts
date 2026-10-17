@@ -1,6 +1,4 @@
-import { JSON_SCHEMA_DRAFT_2020_12, SCHEMA_KEY } from './constants.ts';
 import deepEquals from './deepEquals.ts';
-import { makeAllReferencesAbsolute } from './findSchemaDefinition.ts';
 import logOnce from './logOnce.ts';
 import replaceEqualDeep from './replaceEqualDeep.ts';
 import {
@@ -45,11 +43,6 @@ class SchemaUtils<
 > implements SchemaUtilsType<T, S, F> {
   private readonly context: SchemaContext<S, F>;
   rootSchema: S;
-  /** The `rootSchema` exactly as the caller passed it. A draft 2020-12 root is stored above with every relative `$ref`
-   * rewritten against its `$id`, so comparing that rewritten copy with what a caller passes back would never match and
-   * `doesSchemaUtilsDiffer()` would report a difference on every render
-   */
-  private readonly rawRootSchema: S;
   /** The last `retrieveSchema()` result per schema object, used only as the base for `replaceEqualDeep()` so a
    * recomputed schema keeps the identity of every subschema that did not change. Nothing is served from it directly,
    * so a `rawFormData` object mutated in place after a call is still resolved afresh. Resolving the `anyOf`/`oneOf`
@@ -64,12 +57,7 @@ class SchemaUtils<
    * @param rootSchema - The root schema that will be forwarded to all the APIs
    */
   constructor(context: SchemaContext<S, F>, rootSchema: S) {
-    if (rootSchema?.[SCHEMA_KEY] === JSON_SCHEMA_DRAFT_2020_12) {
-      this.rootSchema = makeAllReferencesAbsolute(rootSchema, '#');
-    } else {
-      this.rootSchema = rootSchema;
-    }
-    this.rawRootSchema = rootSchema;
+    this.rootSchema = rootSchema;
     // A v6 caller passing the validator here leaves `validator` undefined, which surfaces only as a `TypeError` from
     // inside `retrieveSchema()` that names nothing. Warned rather than thrown, since TypeScript already rejects it
     if (context && !('validator' in context) && typeof (context as GenericObjectType).isValid === 'function') {
@@ -83,7 +71,8 @@ class SchemaUtils<
     this.context = Object.freeze({ ...context });
   }
 
-  /** Returns the `rootSchema` in the `SchemaUtilsType`
+  /** Returns the `rootSchema` in the `SchemaUtilsType`: the object the `SchemaUtilsType` was created with, its `$ref`s
+   * as written, since each one is resolved against the `$id`s around it where it is looked up
    *
    * @returns - The `rootSchema`
    */
@@ -120,7 +109,7 @@ class SchemaUtils<
     // the `retrieveSchema()` caches, so the stale read is the deliberate trade
     return (
       this.context.validator !== context.validator ||
-      !deepEquals(this.rawRootSchema, rootSchema) ||
+      !deepEquals(this.rootSchema, rootSchema) ||
       !deepEquals(this.context.defaultFormStateBehavior ?? {}, context.defaultFormStateBehavior ?? {}) ||
       this.context.customMergeAllOf !== context.customMergeAllOf
     );

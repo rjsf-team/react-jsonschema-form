@@ -274,4 +274,21 @@ describe('schemaHasNestedConditional()', () => {
     };
     expect(schemaHasNestedConditional(schema, schema)).toBe(false);
   });
+  it('finds an if below a $ref under a relative $id, resolved against that $id', () => {
+    const schema: RJSFSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $id: 'https://example.com/root.json',
+      $defs: {
+        child: {
+          $id: 'child.json',
+          type: 'object',
+          properties: { a: { $ref: '#/$defs/x' } },
+          $defs: { x: { type: 'object', if: { required: ['k'] }, then: { required: ['m'] } } },
+        },
+      },
+      type: 'object',
+      properties: { c: { $ref: 'child.json' } },
+    };
+    expect(schemaHasNestedConditional(schema, schema)).toBe(true);
+  });
 });

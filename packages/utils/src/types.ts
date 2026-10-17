@@ -1886,7 +1886,8 @@ export interface SchemaUtilsType<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 > {
-  /** Returns the `rootSchema` in the `SchemaUtilsType`
+  /** Returns the `rootSchema` in the `SchemaUtilsType`: the object the `SchemaUtilsType` was created with, its `$ref`s
+   * as written, since each one is resolved against the `$id`s around it where it is looked up
    *
    * @returns - The rootSchema
    */

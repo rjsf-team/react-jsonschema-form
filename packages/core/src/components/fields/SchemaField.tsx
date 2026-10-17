@@ -40,6 +40,7 @@ import {
   isFormDataAvailable,
   logOnce,
   omitConsumedStyling,
+  resolveConstantOptions,
   resolveUiSchema,
   RJSF_REF_CYCLE_KEY,
   shouldRenderOptionalField,
@@ -91,10 +92,15 @@ interface SelectSchemaInfo<S extends StrictRJSFSchema> {
  * schema's `type`, but JSON Schema doesn't require that `type`, and without it neither a field nor a widget can be
  * resolved, so it is inferred from the constant values.
  *
- * @param retrievedSchema - The retrieved schema for the field
+ * @param fieldSchema - The retrieved schema for the field
+ * @param rootSchema - The root schema the `$ref`s of its options name definitions of
  * @returns - The `SelectSchemaInfo` for the schema
  */
-function getSelectSchemaInfo<S extends StrictRJSFSchema = RJSFSchema>(retrievedSchema: S): SelectSchemaInfo<S> {
+function getSelectSchemaInfo<S extends StrictRJSFSchema = RJSFSchema>(
+  fieldSchema: S,
+  rootSchema: S,
+): SelectSchemaInfo<S> {
+  const retrievedSchema = resolveConstantOptions<S>(fieldSchema, rootSchema);
   const xxxOfKey = getXxxOfKey<S>(retrievedSchema);
   const options = xxxOfKey && retrievedSchema[xxxOfKey];
   const constantOptions = isConstantOptionList<S>(options, true) ? options : undefined;
@@ -462,7 +468,11 @@ function SchemaFieldRender<
   );
   // Kept apart from the widget below, which alone reads the `uiSchema`, so a `uiSchema` rebuilt on every render doesn't
   // hand a typeless select a new `schema` each time
-  const selectSchemaInfo = useMemo(() => getSelectSchemaInfo<S>(retrievedSchema), [retrievedSchema]);
+  const { rootSchema } = registry;
+  const selectSchemaInfo = useMemo(
+    () => getSelectSchemaInfo<S>(retrievedSchema, rootSchema),
+    [retrievedSchema, rootSchema],
+  );
   const { schema, xxxOfKey, isSelectSchema, hasConstantOptions } = selectSchemaInfo;
   const inferredWidget = useMemo(
     () => inferSelectWidget<T, S, F>(selectSchemaInfo, resolvedUiSchema),
@@ -555,7 +565,7 @@ function SchemaFieldRender<
     [retrievesOptions, xxxOfKey, schema, schemaUtils, formData],
   );
 
-  // Stop $ref cycles: when resolveAllReferences detects a repeated property $ref it tags the schema with this flag,
+  // Stop $ref cycles: `retrieveSchema()` hands out a property whose $ref leads back round a recursion with this flag,
   // which is when the field is left unresolved above. The check must come after all hook calls to satisfy React's
   // rules of hooks.
   if (!uiField || !fieldToRender) {

@@ -1,5 +1,6 @@
 import isConstantSelect from '../isConstantSelect.ts';
 import type { FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
+import resolveConstantOptions from './resolveConstantOptions.ts';
 import retrieveSchema from './retrieveSchema.ts';
 
 /** Checks to see if the `schema` combination represents a select
@@ -15,5 +16,5 @@ export default function isSelect<
   F extends FormContextType = FormContextType,
 >(context: SchemaContext<S, F>, theSchema: S, rootSchema: S = {} as S) {
   const schema = retrieveSchema<T, S, F>(context, theSchema, rootSchema);
-  return isConstantSelect<S>(schema, true);
+  return isConstantSelect<S>(resolveConstantOptions<S>(schema, rootSchema), true);
 }

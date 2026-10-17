@@ -1,10 +1,11 @@
 import type { RJSFSchema } from '@rjsf/utils';
-import { schemaParser } from '@rjsf/utils';
+import { ID_KEY, schemaKey, schemaParser } from '@rjsf/utils';
 
 import precompiledCoverageTests from '../../utils/test/testUtils/precompiledCoverageTests.ts';
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
 import createAjvInstance from '../src/createAjvInstance.ts';
 import { createPrecompiledValidator } from '../src/index.ts';
+import qualifyRootRefs from '../src/qualifyRootRefs.ts';
 import { SUPER_SCHEMA_OPTIONS, evalValidatorCode, superSchema } from './harness/compileSuperSchema.ts';
 import { CUSTOM_OPTIONS, expectWarn } from './harness/testData.ts';
 
@@ -15,11 +16,19 @@ vi.mock('../src/createAjvInstance', async (importOriginal) => {
   return { default: vi.fn((...args: any[]) => realCreateAjvInstance(...args)) };
 });
 
+/** The parsed schemas as they are compiled: every one but the root names the root in its local `$ref`s */
+function compiledSchemas(rootSchema: RJSFSchema): RJSFSchema[] {
+  const rootId = schemaKey(rootSchema);
+  return Object.values(schemaParser(rootSchema)).map((parsed) =>
+    parsed[ID_KEY] === rootId ? parsed : qualifyRootRefs(parsed, rootId),
+  );
+}
+
 describe('compileSchemaValidatorsCode()', () => {
   describe('compiling without additional options', () => {
     let schemas: RJSFSchema[];
     beforeAll(() => {
-      schemas = Object.values(schemaParser(superSchema));
+      schemas = compiledSchemas(superSchema);
       // superSchema deliberately uses the unregistered "phone-us" format, which AJV warns about
       expectWarn(() => compileSchemaValidatorsCode(superSchema), expect.stringContaining('unknown format'));
     });
@@ -41,7 +50,7 @@ describe('compileSchemaValidatorsCode()', () => {
   describe('compiling WITH additional options', () => {
     let schemas: RJSFSchema[];
     beforeAll(() => {
-      schemas = Object.values(schemaParser(superSchema));
+      schemas = compiledSchemas(superSchema);
       compileSchemaValidatorsCode(superSchema, SUPER_SCHEMA_OPTIONS);
     });
     it('create AJV instance was called with the expected options', () => {
@@ -67,6 +76,25 @@ describe('compileSchemaValidatorsCode()', () => {
         extenderFn,
       );
     });
+  });
+  it('compiles the options of a root whose $id ends in an empty fragment, their local $refs naming the root', () => {
+    const rootSchema: RJSFSchema = {
+      $id: 'http://x.example/root.json#',
+      definitions: { str: { type: 'string' }, num: { type: 'number' } },
+      type: 'object',
+      properties: {
+        v: {
+          oneOf: [
+            { type: 'object', properties: { k: { $ref: '#/definitions/str' } }, required: ['k'] },
+            { type: 'object', properties: { k: { $ref: '#/definitions/num' } }, required: ['k'] },
+          ],
+        },
+      },
+    };
+    const validateFns = evalValidatorCode(compileSchemaValidatorsCode(rootSchema));
+    const validateRoot = validateFns['http://x.example/root.json'];
+    expect(validateRoot({ v: { k: 3 } })).toBe(true);
+    expect(validateRoot({ v: { k: true } })).toBe(false);
   });
   precompiledCoverageTests((rootSchema, options) =>
     createPrecompiledValidator(

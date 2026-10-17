@@ -163,7 +163,7 @@ import utcToLocal from './utcToLocal.ts';
 import validationDataMerge from './validationDataMerge.ts';
 import type { WidgetAriaPropsInput } from './widgetAriaProps.ts';
 import widgetAriaProps from './widgetAriaProps.ts';
-import withIdRefPrefix from './withIdRefPrefix.ts';
+import withIdRefPrefix, { rootSchemaIdOf, withRootIdRefPrefix } from './withIdRefPrefix.ts';
 
 export type * from './types.ts';
 export * from './enums.ts';
@@ -231,6 +231,7 @@ export {
   expandButtonId,
   ErrorSchemaBuilder,
   fieldLabelId,
+  // oxlint-disable-next-line typescript/no-deprecated -- re-exported for callers written against 6.x
   findSchemaDefinition,
   flattenGroupedOptions,
   getAdditionalPropertySchema,
@@ -355,6 +356,8 @@ export {
   validationDataMerge,
   widgetAriaProps,
   withIdRefPrefix,
+  withRootIdRefPrefix,
+  rootSchemaIdOf,
   bracketNameGenerator,
   dotNotationNameGenerator,
 };
