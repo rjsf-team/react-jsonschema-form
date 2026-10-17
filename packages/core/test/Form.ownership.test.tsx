@@ -1049,6 +1049,35 @@ describe('form data ownership', () => {
       expect(select).toHaveValue('1');
     });
 
+    it('a oneOf selector checks the chosen option without the stubs of its additional keys when the switch is declined', async () => {
+      // The chosen option's stub for `k` is a guessed `{ type: 'string' }`, which takes `'x'`, but the option's own
+      // `additionalProperties` rejects it, so the data no longer fits the choice and the selector goes back to option 0
+      const stubbed: RJSFSchema = {
+        type: 'object',
+        properties: {
+          status: {
+            type: 'object',
+            oneOf: [
+              { title: 'Fixed', type: 'object', properties: { k: { const: 'x' } } },
+              {
+                title: 'Open',
+                type: 'object',
+                properties: { id: { type: 'string' } },
+                additionalProperties: { not: { const: 'x' } },
+              },
+            ],
+          },
+        },
+      };
+      const { container } = render(<RejectingParent schema={stubbed} initialValue={{ status: { k: 'x' } }} />);
+      const select = container.querySelector<HTMLSelectElement>('#root_status__oneof_select')!;
+      expect(select).toHaveValue('0');
+
+      await user.selectOptions(select, '1');
+
+      expect(select).toHaveValue('0');
+    });
+
     it('a self-owned oneOf switch that leaves the data unchanged keeps the chosen option the data does not fit yet', async () => {
       const rangeSchema: RJSFSchema = {
         type: 'object',

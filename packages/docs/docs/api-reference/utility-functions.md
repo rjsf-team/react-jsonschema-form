@@ -337,6 +337,19 @@ If `start` and `stop` are negative numbers (or zero), then they will be treated 
 
 - Error when `start` and `stop` aren't both %lt;= 0 or > 0
 
+### declineCheckSchema&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns the schema a retrieved option is checked against the data by, as [`MultiSchemaField`](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/core/src/components/fields/MultiSchemaField.tsx) does when a parent declines an option switch: the option without its stubbed properties (see [`withoutStubbedProperties()`](#withoutstubbedproperties)), under the `$id` [`withVariantId()`](#withvariantid) derives from that content.
+`schemaParser()` records this same schema for each option it retrieves, so a precompiled validator has it compiled.
+
+#### Parameters
+
+- option: S - The retrieved option
+
+#### Returns
+
+- S: The schema to check the option against the data by
+
 ### deepEquals()
 
 Implements a deep equals that treats all functions as equivalent and tracks circular references, so self-referential inputs do not recurse infinitely.
@@ -1734,6 +1747,18 @@ A boolean or missing subschema describes no value of its own, so it has nothing 
 
 - boolean: True when the definition is a schema object rather than a boolean shorthand or absent, narrowing it to `S`
 
+### isStubbedProperty()
+
+Returns whether a property schema is one `retrieveSchema()` stubbed into an object's `properties` for a key of the form data that its `patternProperties` or `additionalProperties` take, rather than one the schema declares.
+
+#### Parameters
+
+- property: unknown - The property schema to check
+
+#### Returns
+
+- boolean: True when the property is a stub for a key of the form data
+
 ### isValueEmpty()
 
 Returns true when a form value is considered empty: `null`, `undefined`, or `''` (empty string), an empty array (`[]`), or a plain object whose every own value is itself empty (checked recursively). Scalar values such as `0` and `false` are not considered empty.
@@ -2671,7 +2696,7 @@ This is used in isValid to make references to the rootSchema
 Returns a schema derived from one that carries an `$id` with an `$id` of its own, of `<the original's>?rjsf=<the derived schema's hash>`, and returns a schema with no `$id` as it stands.
 A validator caches the function it compiles for a schema under its `$id`, so a derived schema keeping the original's would be validated against the original's function.
 The original `$id` is kept as the base of the derived one, since a relative `$ref` the schema left for the validator to resolve resolves against it.
-This is what the option scoring applies to the forms of an option it validates — the one with `additionalProperties` relaxed, and the option an augmented schema holds — and what [`MultiSchemaField`](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/core/src/components/fields/MultiSchemaField.tsx) applies to the retrieved option it is handed before validating it, so each is compiled in its own right.
+This is what the option scoring applies to the forms of an option it validates — the one with `additionalProperties` relaxed, and the option an augmented schema holds — and what [`MultiSchemaField`](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/core/src/components/fields/MultiSchemaField.tsx) applies to the retrieved option it is handed, without its stubbed properties (see [`declineCheckSchema()`](#declinecheckschema)), before validating it, so each is compiled in its own right.
 A suffix already present is replaced rather than appended to, so deriving from a derived schema names the same schema either way.
 
 #### Parameters
@@ -2681,6 +2706,20 @@ A suffix already present is replaced rather than appended to, so deriving from a
 #### Returns
 
 - S: The schema, carrying an `$id` that names it rather than the one it was derived from
+
+### withoutStubbedProperties&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns a schema without the properties `retrieveSchema()` stubbed into it for the keys of the form data that its `patternProperties` or `additionalProperties` take, or `undefined` when it has none.
+The result is not equivalent to the stubbed schema: a stub carries a guessed type, `{ type: 'null' }` for a key the schema forbids, and drops subschema keywords such as `not`, so it can accept a value the keyword that takes the key rejects.
+Option scoring and `MultiSchemaField`'s decline check ([`declineCheckSchema()`](#declinecheckschema)) validate an option in this form, so every validator, live or precompiled, answers for the schema as written; the stubs only render the keys.
+
+#### Parameters
+
+- schema: S - A schema that may have been retrieved against form data
+
+#### Returns
+
+- S | undefined: The schema without its stubbed properties, or `undefined` when it has no stubbed property
 
 ## Validator-based utility functions
 

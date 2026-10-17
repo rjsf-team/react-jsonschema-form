@@ -3,6 +3,7 @@ import {
   allowsAdditionalProperties,
   getAdditionalPropertySchema,
   getMatchingPatternProperties,
+  isStubbedProperty,
 } from '../additionalPropertiesUtils.ts';
 import { combinationsUpTo } from '../combinationsOf.ts';
 import {
@@ -46,7 +47,11 @@ import type {
   SchemaContext,
   StrictRJSFSchema,
 } from '../types.ts';
-import getFirstMatchingOption, { withVariantId } from './getFirstMatchingOption.ts';
+import getFirstMatchingOption, {
+  declineCheckSchema,
+  scoringSchemaWithDataKeys,
+  withVariantId,
+} from './getFirstMatchingOption.ts';
 import shallowAllOfMerge from './shallowAllOfMerge.ts';
 
 // Backstop for the resolveReference <-> retrieveSchemaInternal loop: with the path reconstructed from RJSF_REF_KEY
@@ -1519,7 +1524,7 @@ export function retrieveSchemaInternal<
         // registered field, or a `default` of the pattern's type over a value of another, that the stub dropped on
         // purpose. The stubbing runs after this merge, so a key skipped here is one an earlier pass stubbed
         const property = properties[key];
-        if (isObject(property) && (property as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG]) {
+        if (isStubbedProperty(property)) {
           return [];
         }
         const matchingProperties = getMatchingPatternProperties(resolvedSchema, key);
@@ -1672,11 +1677,19 @@ export function resolveAnyOrOneOfSchemas<
         retrieveSchemaInternal<T, S, F>(context, item, rootSchema, formData, true, recurseList),
       );
       getFirstMatchingOption<T, S, F>(context, formData, retrievedOptions, rootSchema, discriminator);
-      // `MultiSchemaField` also validates a retrieved option as it stands, rather than scoring it: when a parent
-      // declines the switch to another option, the data still fitting the chosen one is what keeps it. That asks for
-      // the option under the derived `$id` scoring gives it, since the retrieved form is not what the option's own
-      // `$id` names, so the derivation is applied to the option here too
-      retrievedOptions.forEach((item) => context.validator.isValid(withVariantId<S>(item), formData, rootSchema));
+      // `MultiSchemaField` also checks a retrieved option against the data, rather than scoring it: when a parent
+      // declines the switch to another option, the data still fitting the chosen one is what keeps it. It checks the
+      // schema `declineCheckSchema()` gives, so that is the one recorded here
+      retrievedOptions.forEach((item) => context.validator.isValid(declineCheckSchema<S>(item), formData, rootSchema));
+      // Once the user adds a key an option's `patternProperties` or `additionalProperties` take, the option is
+      // retrieved with that key stubbed into its `properties`. Scoring and the decline check strip the stubs again,
+      // which leaves the option retrieved here: checked as above and, while the key holds a defined value, scored
+      // without the `anyOf` of its names that the key satisfies and without its `required`
+      retrievedOptions.forEach((item) => {
+        if (isObject(item) && allowsAdditionalProperties<S>(item)) {
+          context.validator.isValid(scoringSchemaWithDataKeys<S>(item), formData, rootSchema);
+        }
+      });
       getFirstMatchingOption<T, S, F>(
         context,
         formData,

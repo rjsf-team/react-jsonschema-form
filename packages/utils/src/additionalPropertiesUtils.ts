@@ -1,5 +1,6 @@
-import { ALL_OF_KEY, UNEVALUATED_PROPERTIES_KEY } from './constants.ts';
-import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
+import { ADDITIONAL_PROPERTY_FLAG, ALL_OF_KEY, UNEVALUATED_PROPERTIES_KEY } from './constants.ts';
+import isObject from './isObject.ts';
+import type { RJSFMarkedSchema, RJSFSchema, StrictRJSFSchema } from './types.ts';
 
 /** The compiled form of every `patternProperties` pattern seen so far, so that testing a key against one costs no
  * compile of its own. A schema names a small, fixed set of patterns, where the keys they are tested against are the
@@ -125,4 +126,51 @@ export function getAdditionalPropertySchema<S extends StrictRJSFSchema = RJSFSch
     }
   }
   return additionalPropertiesKeyword<S>(schema) ?? true;
+}
+
+/** Returns whether `property` is one `retrieveSchema()` stubbed into an object's `properties` for a key of the form data
+ * that its `patternProperties` or `additionalProperties` take, rather than one the schema declares.
+ *
+ * @param property - The property schema to check
+ * @returns - True when the property is a stub for a key of the form data
+ */
+export function isStubbedProperty(property: unknown): boolean {
+  return isObject(property) && Boolean((property as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG]);
+}
+
+/** Returns the `schema` without the properties `retrieveSchema()` stubbed into it for the keys of the form data that
+ * its `patternProperties` or `additionalProperties` take, or undefined when it has none. A retrieved object schema
+ * names every such key the user has typed, so its content, and with it its hash, depends on the data, where the
+ * schemas a precompiled validator holds come from the schema alone.
+ *
+ * The result is not equivalent to the stubbed schema: a stub carries a type guessed for its value, `{ type: 'null' }`
+ * for a key the schema forbids, and drops subschema keywords such as `not`, so it can accept a value the keyword that
+ * takes the key rejects. Without the stubs, that keyword decides again. This is the schema an option is validated by
+ * wherever it is scored or checked against the data, so that every validator, live or precompiled, answers for the
+ * schema as written rather than for the looser stubs, which are only there to render the keys.
+ *
+ * @param schema - A schema that may have been retrieved against form data
+ * @returns - The schema without its stubbed properties, or undefined when it has no stubbed property
+ */
+export function withoutStubbedProperties<S extends StrictRJSFSchema = RJSFSchema>(schema: S): S | undefined {
+  const { properties } = schema;
+  if (!isObject(properties)) {
+    return undefined;
+  }
+  const keys = Object.keys(properties);
+  const kept = keys.filter((key) => !isStubbedProperty(properties[key]));
+  if (kept.length === keys.length) {
+    return undefined;
+  }
+  const keptProperties: NonNullable<S['properties']> = {};
+  for (const key of kept) {
+    // `defineProperty`, as `stubExistingAdditionalProperties()` does, so a property called `__proto__` stays a property
+    Object.defineProperty(keptProperties, key, {
+      value: properties[key],
+      configurable: true,
+      enumerable: true,
+      writable: true,
+    });
+  }
+  return { ...schema, properties: keptProperties };
 }

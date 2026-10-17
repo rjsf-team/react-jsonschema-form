@@ -2,6 +2,8 @@ import {
   allowsAdditionalProperties,
   getAdditionalPropertySchema,
   getMatchingPatternProperties,
+  isStubbedProperty,
+  withoutStubbedProperties,
 } from './additionalPropertiesUtils.ts';
 import AdditionalPropertyKeySelect from './AdditionalPropertyKeySelect.tsx';
 import type { AdditionalPropertyKeySelectProps } from './AdditionalPropertyKeySelect.tsx';
@@ -355,6 +357,8 @@ export {
   validationDataMerge,
   widgetAriaProps,
   withIdRefPrefix,
+  withoutStubbedProperties,
+  isStubbedProperty,
   bracketNameGenerator,
   dotNotationNameGenerator,
 };
