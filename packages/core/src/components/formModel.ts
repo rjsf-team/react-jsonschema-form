@@ -132,6 +132,18 @@ function withOwned<T, S extends StrictRJSFSchema, F extends FormContextType>(
   return base.isControlled ? withMembers<FormState<T, S, F>>(IS_OWNED_BY_FORM, base, result) : result;
 }
 
+/** Whether `element` takes focus, as a form control or an element with a `tabindex` does. A hidden input, an element
+ * the `hidden` attribute hides, a disabled control and an `<a>` with no `href` report a `tabIndex` of 0 all the same,
+ * yet `focus()` leaves them unfocused
+ */
+function isFocusable(element: Node | null): element is HTMLElement {
+  return (
+    element instanceof HTMLElement &&
+    element.tabIndex >= 0 &&
+    !element.matches(':disabled, input[type="hidden"], [hidden], [hidden] *, a:not([href]):not([tabindex])')
+  );
+}
+
 /** Reports to the consumer for the model, and knows whether the form is attached. Its layout Effects are disconnected
  * while an `<Activity>` hides it as well as once it has unmounted, and have yet to connect when it is first rendered,
  * which inside a hidden `<Activity>` they do only once it is shown. Operations still apply then, but what they would
@@ -322,11 +334,27 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     if (!formElement) {
       return;
     }
+    // A focusable element carrying the id comes first, since one that isn't a form control, such as a slider's thumb, can
+    // share the id's name with a hidden input; a group's wrapper carrying it isn't focusable, so its controls are found.
+    // A form control named after the field is taken only where it takes focus, since a checkbox that isn't a form
+    // control, such as shadcn's, keeps its value in a hidden input named after the field too. A wrapper that isn't
+    // focusable and names no focusable form control, such as a slider's root around its thumb or a group of such
+    // checkboxes, leads to the focusable element inside it. Where no element carries the id, an element whose id starts
+    // with the field's (like radio buttons or checkboxes) is found, whether a native input or a button standing in for
+    // one. That prefix also matches a sibling's id, such as `root_nameSuffix` for `root_name`, so a field whose own
+    // control can't take focus, being disabled or hidden, leaves focus where it is rather than sending it to another
+    // field. Ids are compared as strings, so a property name holding a selector's syntax needs no escaping
+    const exact = Array.from(formElement.querySelectorAll('[id]')).find((element) => element.id === elementId) ?? null;
     const named = formElement instanceof HTMLFormElement ? formElement.elements.namedItem(elementId) : null;
-    // if not an exact match, try finding a focusable element starting with the element id (like radio buttons or
-    // checkboxes); some themes (e.g. shadcn) use button elements instead of native inputs for radio groups
-    const found = named ?? formElement.querySelector(`input[id^="${elementId}"], button[id^="${elementId}"]`);
-    const field = found instanceof RadioNodeList ? found.item(0) : found;
+    const namedControls = named instanceof RadioNodeList ? Array.from(named) : [named];
+    const field =
+      (isFocusable(exact) ? exact : null) ??
+      namedControls.find(isFocusable) ??
+      (exact
+        ? Array.from(exact.querySelectorAll('*')).find(isFocusable)
+        : Array.from(formElement.querySelectorAll('input[id], button[id]')).find(
+            (element) => element.id.startsWith(elementId) && isFocusable(element),
+          ));
     if (field instanceof HTMLElement) {
       field.focus();
     }

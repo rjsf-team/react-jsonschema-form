@@ -3,7 +3,7 @@ import FormLabel from '@mui/material/FormLabel';
 import type { SliderProps } from '@mui/material/Slider';
 import Slider from '@mui/material/Slider';
 import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, labelValue, rangeSpec } from '@rjsf/utils';
+import { ariaDescribedByIds, labelValue, rangeSpec, widgetDrawsLabel } from '@rjsf/utils';
 
 import { getMuiProps } from '../util.ts';
 
@@ -26,8 +26,8 @@ export default function RangeWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { value, readonly, disabled, onBlur, onFocus, options, schema, onChange, required, label, hideLabel, id } =
-    props;
+  const { value, readonly, disabled, onBlur, onFocus, options, schema, onChange, required, label, id } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const sliderProps = { value, label, id, name: id, ...rangeSpec<S>(schema) };
 
   const handleChange: NonNullable<SliderProps['onChange']> = (_, newValue) => onChange(newValue);

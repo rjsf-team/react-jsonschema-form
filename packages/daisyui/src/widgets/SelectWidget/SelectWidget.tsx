@@ -23,6 +23,7 @@ import {
   triggerValueId,
   useSelectFocusHandlers,
   widgetAriaProps,
+  widgetDrawsLabel,
 } from '@rjsf/utils';
 
 import { getTriggerDescribedBy } from '../../utils.ts';
@@ -66,7 +67,6 @@ export default function SelectWidget<
     options,
     label,
     name,
-    hideLabel,
     presentation,
     disabled,
     placeholder,
@@ -79,6 +79,7 @@ export default function SelectWidget<
     registry,
     uiSchema,
   } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal, optgroups } = options;
   const isMultiple = typeof multiple === 'undefined' ? false : multiple;
 

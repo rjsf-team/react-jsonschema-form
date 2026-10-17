@@ -11,6 +11,7 @@ import {
   getInputProps,
   getNumericInputTitle,
   labelValue,
+  widgetDrawsLabel,
 } from '@rjsf/utils';
 
 const useStyles = makeStyles({
@@ -45,7 +46,6 @@ export default function BaseInputTemplate<
     type,
     value,
     label,
-    hideLabel,
     onChange,
     onChangeOverride,
     onBlur,
@@ -55,6 +55,7 @@ export default function BaseInputTemplate<
     schema,
     registry,
   } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const { ClearButton } = registry.templates.ButtonTemplates;
   const classes = useStyles();
   const inputProps = getInputProps<T, S, F>(schema, type, options);

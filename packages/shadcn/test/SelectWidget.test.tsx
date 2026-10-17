@@ -23,6 +23,7 @@ describe('SelectWidget', () => {
             autofocus: false,
             disabled: false,
             readonly: false,
+            // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
             rawErrors: [],
             value: undefined,
             placeholder: 'Select a country',
@@ -62,6 +63,7 @@ describe('SelectWidget', () => {
             autofocus: false,
             disabled: true,
             readonly: false,
+            // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
             rawErrors: [],
             value: undefined,
             placeholder: 'Select a country',
@@ -95,6 +97,7 @@ describe('SelectWidget', () => {
           autofocus: false,
           disabled: false,
           readonly: false,
+          // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
           rawErrors: [],
           value: undefined,
           placeholder: 'Select a vehicle',
@@ -141,6 +144,7 @@ describe('SelectWidget', () => {
           disabled: false,
           readonly: false,
           multiple: true,
+          // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
           rawErrors: [],
           value: [],
           options: {
@@ -185,6 +189,7 @@ describe('SelectWidget', () => {
           autofocus: false,
           disabled: false,
           readonly: false,
+          // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
           rawErrors: [],
           value: undefined,
           options: {
@@ -220,6 +225,7 @@ describe('SelectWidget', () => {
           autofocus: false,
           disabled: false,
           readonly: false,
+          // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
           rawErrors: [],
           value: undefined,
           options: {
@@ -251,6 +257,7 @@ describe('SelectWidget', () => {
           autofocus: false,
           disabled: false,
           readonly: false,
+          // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
           rawErrors: [],
           value: undefined,
           onChange: onValueChange,
@@ -285,6 +292,7 @@ describe('SelectWidget', () => {
           disabled: false,
           readonly: false,
           multiple: true,
+          // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
           rawErrors: [],
           value: [],
           options: {
@@ -319,6 +327,7 @@ describe('SelectWidget', () => {
           disabled: false,
           readonly: false,
           multiple: true,
+          // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
           rawErrors: [],
           value: [],
           onChange,
@@ -360,6 +369,7 @@ describe('SelectWidget', () => {
           disabled: false,
           readonly: false,
           multiple: true,
+          // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
           rawErrors: [],
           value: [],
           options: {
@@ -390,6 +400,7 @@ describe('SelectWidget', () => {
             disabled: false,
             readonly: false,
             multiple: true,
+            // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
             rawErrors: [],
             value,
             onChange: (next) => {
@@ -432,6 +443,7 @@ describe('SelectWidget', () => {
             autofocus: false,
             disabled: false,
             readonly: false,
+            // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
             rawErrors: [],
             // Decoded as a DOM value, `1` would be read as the index of the option whose value is `0`
             value: 1,
@@ -469,6 +481,7 @@ describe('SelectWidget', () => {
             disabled: false,
             readonly: false,
             multiple: true,
+            // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
             rawErrors: [],
             value,
             onChange: (next) => {

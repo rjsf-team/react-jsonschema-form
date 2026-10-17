@@ -1,6 +1,7 @@
 import type { ChangeEvent, FocusEvent } from 'react';
 import { useCallback } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { widgetDrawsLabel } from '@rjsf/utils';
 
 import { getGroupProps } from '../../utils.ts';
 
@@ -23,23 +24,24 @@ export default function RatingWidget<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({
-  id,
-  value,
-  label,
-  name,
-  hideLabel,
-  presentation,
-  required,
-  disabled,
-  readonly,
-  autofocus,
-  onChange,
-  onFocus,
-  onBlur,
-  schema,
-  options,
-}: WidgetProps<T, S, F>) {
+>(props: WidgetProps<T, S, F>) {
+  const {
+    id,
+    value,
+    label,
+    name,
+    presentation,
+    required,
+    disabled,
+    readonly,
+    autofocus,
+    onChange,
+    onFocus,
+    onBlur,
+    schema,
+    options,
+  } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const { stars = 5, shape = 'star', color = 'orange', size = 'md', colorGradient = false } = options;
 
   // Use schema.maximum if provided, otherwise use stars option (limited to 1-5)

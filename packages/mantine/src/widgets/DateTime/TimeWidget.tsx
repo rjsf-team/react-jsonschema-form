@@ -2,7 +2,7 @@ import type { ChangeEvent, FocusEvent } from 'react';
 import { useCallback } from 'react';
 import { TimeInput } from '@mantine/dates';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { labelValue, useTimeWidgetProps } from '@rjsf/utils';
+import { labelValue, useTimeWidgetProps, widgetDrawsLabel } from '@rjsf/utils';
 
 import { cleanupOptions, getDescriptionProps, useAriaDescribedByProps, useVisibleErrors } from '../../utils.tsx';
 
@@ -31,12 +31,12 @@ export default function TimeWidget<
     readonly,
     autofocus,
     label,
-    hideLabel,
     options,
     onChange,
     onBlur,
     onFocus,
   } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
 
   const { localValue: displayValue, computeTimeValue } = useTimeWidgetProps(props);
   const emptyValue = options.emptyValue || '';

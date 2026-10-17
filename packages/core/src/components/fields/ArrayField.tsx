@@ -45,6 +45,7 @@ import {
   ARRAY_MODE_DEFAULT_WIDGETS,
   displaysLabel,
   getArrayFieldMode,
+  getWidgetErrorProps,
   getWidgetLabelProps,
 } from './fieldWidgetUtils.ts';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
@@ -247,7 +248,7 @@ function ArrayAsMultiSelect<
       {...labelProps}
       placeholder={placeholder}
       autofocus={autofocus}
-      rawErrors={rawErrors}
+      {...getWidgetErrorProps<T, S, F>(rawErrors)}
       presentation={presentation}
       htmlName={htmlName}
     />
@@ -306,7 +307,7 @@ function ArrayAsCustomWidget<
       {...labelProps}
       placeholder={placeholder}
       autofocus={autofocus}
-      rawErrors={rawErrors}
+      {...getWidgetErrorProps<T, S, F>(rawErrors)}
       presentation={presentation}
       htmlName={htmlName}
     />
@@ -368,7 +369,7 @@ function ArrayAsFiles<
       required={required}
       registry={registry}
       autofocus={autofocus}
-      rawErrors={rawErrors}
+      {...getWidgetErrorProps<T, S, F>(rawErrors)}
       presentation={presentation}
       {...labelProps}
       placeholder={placeholder}

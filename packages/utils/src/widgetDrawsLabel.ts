@@ -14,5 +14,6 @@ export default function widgetDrawsLabel<
   F extends FormContextType = FormContextType,
 >(props: Pick<WidgetProps<T, S, F>, 'hideLabel' | 'presentation'>): boolean {
   const { presentation } = props;
+  // oxlint-disable-next-line typescript/no-deprecated -- the fallback for a widget rendered without a plan
   return presentation ? presentation.label.by === 'self' : !props.hideLabel;
 }

@@ -1,8 +1,15 @@
-import type { FieldPresentation, FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
+import type {
+  FieldPresentation,
+  FormContextType,
+  GroupRole,
+  RJSFSchema,
+  StrictRJSFSchema,
+  UiSchema,
+} from '@rjsf/utils';
 import {
   fieldLabelId,
-  getControlAttributes,
   getControlDescribedBy,
+  getGroupAttributes,
   isLabelledByTemplate,
   isObject,
   triggerValueId,
@@ -41,8 +48,9 @@ export function getDaisy<
 
 interface GroupProps {
   id: string;
-  role: 'group' | 'radiogroup';
+  role: GroupRole;
   'aria-labelledby'?: string;
+  'aria-invalid'?: true;
 }
 
 interface GetGroupProps {
@@ -120,13 +128,14 @@ function hasLabelToReference({
  * @param hideLabel - Whether the label is hidden, in which case the template renders none
  * @param presentation - The field's plan, whose `aria-labelledby` for the control the group takes when there is one
  * @param role - The group role for the controls, `radiogroup` for radios and `group` for anything else
- * @returns - The `id`, `role` and, when there is a label to point at, `aria-labelledby` props for the group's wrapper
+ * @returns - The `id`, `role` and, when there is a label to point at, `aria-labelledby` props for the group's wrapper,
+ *        and under a plan with errors a `radiogroup`'s `aria-invalid`
  */
 export function getGroupProps({ id, label, name, hideLabel, presentation, role }: GetGroupProps): GroupProps {
-  // The plan already points a group declared as labelled by reference at the label that names it
+  // The plan already points a group declared as labelled by reference at the label that names it, and marks a
+  // `radiogroup` rather than its radios invalid
   if (presentation) {
-    const { 'aria-labelledby': labelledBy } = getControlAttributes({ id, presentation });
-    return labelledBy ? { id, role, 'aria-labelledby': labelledBy } : { id, role };
+    return { id, ...getGroupAttributes({ id, presentation }, role).group };
   }
   if (!hasLabelToReference({ label, name, hideLabel })) {
     return { id, role };

@@ -31,7 +31,7 @@ import {
 
 import fieldLabelForLog from '../../fieldLabelForLog.ts';
 import useSendOptionSwitch from '../../hooks/useSendOptionSwitch.ts';
-import { displaysLabel, getWidgetLabelProps } from './fieldWidgetUtils.ts';
+import { displaysLabel, getWidgetErrorProps, getWidgetLabelProps } from './fieldWidgetUtils.ts';
 import formDataForNewOption from './formDataForNewOption.ts';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 
@@ -334,7 +334,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
         disabled={disabled || enumOptions.length === 0}
         multiple={false}
         hideError={hideError}
-        rawErrors={rawErrors}
+        {...getWidgetErrorProps<T, S, F>(rawErrors)}
         errorSchema={fieldErrorSchema}
         value={selectedOption >= 0 ? selectedOption : undefined}
         options={{ enumOptions, ...uiOptions }}

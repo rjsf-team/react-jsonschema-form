@@ -2,6 +2,7 @@ import type { FocusEvent } from 'react';
 import { useCallback } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
+  enumOptionsAutofocusIndex,
   enumOptionsIsDisabled,
   enumOptionValueDecoder,
   enumOptionsDomValues,
@@ -54,6 +55,7 @@ function RadioWidget<
     { id, presentation },
     'radiogroup',
   );
+  const autofocusIndex = enumOptionsAutofocusIndex<S>(enumOptions, enumDisabled, autofocus);
   return (
     <div className='field-radio-group' id={id} {...groupAttributes}>
       {Array.isArray(enumOptions) &&
@@ -74,7 +76,7 @@ function RadioWidget<
                 required={required}
                 value={domValues[i]}
                 disabled={disabled || itemDisabled || readonly}
-                autoFocus={autofocus && i === 0}
+                autoFocus={i === autofocusIndex}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 onFocus={handleFocus}

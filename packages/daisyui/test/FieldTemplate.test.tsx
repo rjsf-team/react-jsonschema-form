@@ -324,12 +324,28 @@ describe('FieldTemplate', () => {
       expect(screen.getByRole('radiogroup')).toHaveAccessibleName('Agree');
     });
 
-    test('claims no name of its own when the label is hidden', () => {
+    test("is named by the hidden label's text rather than by a label it doesn't draw", () => {
       renderForm({ agree: { 'ui:widget': 'radio', 'ui:options': { label: false } } });
 
       const group = screen.getByRole('radiogroup');
       expect(group).not.toHaveAttribute('aria-labelledby');
-      expect(group).toHaveAccessibleName('');
+      expect(group).toHaveAccessibleName('Agree');
+    });
+
+    test('marks the radio group invalid rather than its radios while the field has errors', () => {
+      render(
+        <Form
+          schema={{ type: 'object', properties: { agree } }}
+          uiSchema={{ agree: { 'ui:widget': 'radio' } }}
+          validator={validator}
+          extraErrors={{ agree: { __errors: ['must agree'] } }}
+        />,
+      );
+
+      expect(screen.getByRole('radiogroup')).toHaveAttribute('aria-invalid', 'true');
+      for (const radio of screen.getAllByRole('radio')) {
+        expect(radio).not.toHaveAttribute('aria-invalid');
+      }
     });
   });
 

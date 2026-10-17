@@ -163,6 +163,7 @@ export function displaysLabel<
   schema: S,
   uiSchema?: UiSchema<T, S, F>,
 ): boolean {
+  // oxlint-disable-next-line typescript/no-deprecated -- kept through v7, and nothing in the plan answers it for those callers
   return schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
 }
 
@@ -185,7 +186,24 @@ export function getWidgetLabelProps<
   showsLabel: () => boolean,
 ): Pick<WidgetProps<T, S, F>, 'label' | 'hideLabel'> {
   const hideLabel = presentation ? hidesWidgetLabel(presentation) : !showsLabel();
+  // oxlint-disable-next-line typescript/no-deprecated -- set for a widget that doesn't read `presentation`
   return { label: presentation ? presentation.label.text : ownLabel, hideLabel };
+}
+
+/** Gets the deprecated `rawErrors` a field hands the widget it renders, for a widget that doesn't read `presentation`:
+ * the field's own error messages, whatever `ui:hideError` says, so the widget can render them its own way. The one
+ * place a field sets them
+ *
+ * @param rawErrors - The field's own error messages
+ * @returns - The `rawErrors` for the widget
+ */
+export function getWidgetErrorProps<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(rawErrors: string[] | undefined): Pick<WidgetProps<T, S, F>, 'rawErrors'> {
+  // oxlint-disable-next-line typescript/no-deprecated -- set for a widget that doesn't read `presentation`
+  return { rawErrors };
 }
 
 /** Gets the parts of a field's plan its template draws, from which the deprecated props a template that doesn't read
@@ -222,6 +240,7 @@ export function getDeprecatedTemplateProps<
 ): Pick<FieldTemplateProps<T, S, F>, 'displayLabel' | 'rawErrors'> {
   const displayLabel = presentation?.label.by === 'template';
   const rawErrors = hideError ? undefined : errors;
+  // oxlint-disable-next-line typescript/no-deprecated -- set for a template that doesn't read `presentation`
   return { displayLabel, rawErrors };
 }
 

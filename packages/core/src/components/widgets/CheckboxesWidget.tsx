@@ -1,6 +1,7 @@
 import type { ChangeEvent } from 'react';
 import type { FormContextType, WidgetProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
+  enumOptionsAutofocusIndex,
   enumOptionsDeselectValue,
   enumOptionsDomValues,
   enumOptionsIsDisabled,
@@ -45,6 +46,7 @@ function CheckboxesWidget<
     { id, presentation },
     'group',
   );
+  const autofocusIndex = enumOptionsAutofocusIndex<S>(enumOptions, enumDisabled, autofocus);
   return (
     <div className='checkboxes' id={id} {...groupAttributes}>
       {Array.isArray(enumOptions) &&
@@ -70,7 +72,7 @@ function CheckboxesWidget<
                 checked={checked}
                 value={domValues[index]}
                 disabled={disabled || itemDisabled || readonly}
-                autoFocus={autofocus && index === 0}
+                autoFocus={index === autofocusIndex}
                 onChange={handleChange}
                 onBlur={blurHandlers[index]}
                 onFocus={focusHandlers[index]}

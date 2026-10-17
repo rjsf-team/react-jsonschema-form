@@ -3296,7 +3296,7 @@ The closest match is determined using the number of matching properties, and mor
 ### getDisplayLabel&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Determines whether the combination of `schema` and `uiSchema` properties indicates that the label for the `schema` should be displayed in a UI.
-Deprecated: a field's plan, from [resolveFieldPresentation()](#resolvefieldpresentation), says what draws its label; `SchemaField` no longer derives `displayLabel` from this.
+Deprecated, and kept through v7 for a field rendered without a plan: a field's plan, from [resolveFieldPresentation()](#resolvefieldpresentation), says what draws its label; `SchemaField` no longer derives `displayLabel` from this.
 An `object` or `array` schema whose `anyOf`/`oneOf` is a list of constants renders as one select for the whole value, so it keeps its label.
 
 #### Parameters

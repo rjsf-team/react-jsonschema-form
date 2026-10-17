@@ -9,6 +9,7 @@ import {
   getWidgetDescription,
   labelValue,
   schemaRequiresTrueValue,
+  widgetDrawsLabel,
 } from '@rjsf/utils';
 
 import { getMuiProps } from '../util.ts';
@@ -42,7 +43,6 @@ export default function CheckboxWidget<
     disabled,
     readonly,
     label,
-    hideLabel,
     autofocus,
     onChange,
     onBlur,
@@ -53,6 +53,7 @@ export default function CheckboxWidget<
     uiSchema,
     required,
   } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
   // Because an unchecked checkbox will cause html5 validation to fail, only add
   // the "required" attribute if the field value must be "true", due to the

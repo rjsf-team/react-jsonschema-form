@@ -9,6 +9,7 @@ import {
   getOptionValueFormat,
   optionId,
   useOptionFocusHandlers,
+  widgetDrawsLabel,
 } from '@rjsf/utils';
 
 import { getGroupProps, getOptionClassNames } from '../../utils.ts';
@@ -31,21 +32,10 @@ export default function CheckboxesWidget<
   T,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({
-  id,
-  htmlName,
-  name,
-  disabled,
-  options,
-  value,
-  label,
-  hideLabel,
-  presentation,
-  readonly,
-  onChange,
-  onFocus,
-  onBlur,
-}: WidgetProps<T, S, F>) {
+>(props: WidgetProps<T, S, F>) {
+  const { id, htmlName, name, disabled, options, value, label, presentation, readonly, onChange, onFocus, onBlur } =
+    props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const { enumOptions, enumDisabled } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);

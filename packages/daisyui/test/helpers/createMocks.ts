@@ -30,6 +30,7 @@ export function makeWidgetMockProps(props: Partial<WidgetProps> = {}): WidgetPro
     onBlur: mockEventHandlers,
     onFocus: mockEventHandlers,
     multiple: false,
+    // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
     rawErrors: [''],
     value: 'test-value',
     options: {},

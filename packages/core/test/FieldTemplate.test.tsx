@@ -124,6 +124,7 @@ describe('FieldTemplate', () => {
           keyName='foo'
           description={<p id='root_foo__description'>About foo</p>}
           rawDescription='About foo'
+          // oxlint-disable-next-line typescript/no-deprecated -- a template rendered without a plan reads the deprecated prop
           displayLabel={displayLabel}
           schema={{ type: 'string' }}
           uiSchema={uiSchema}

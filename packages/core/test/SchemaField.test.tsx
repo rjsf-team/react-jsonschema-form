@@ -965,6 +965,7 @@ describe('SchemaField', () => {
     });
 
     describe('Custom error rendering', () => {
+      // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated prop a component without a plan reads
       const customStringWidget = (props: WidgetProps) => <div className='custom-text-widget'>{props.rawErrors}</div>;
 
       it('should pass rawErrors down to custom widgets', async () => {
@@ -1016,6 +1017,7 @@ describe('SchemaField', () => {
       });
 
       describe('Custom error rendering', () => {
+        // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated prop a component without a plan reads
         const customStringWidget = (props: WidgetProps) => <div className='custom-text-widget'>{props.rawErrors}</div>;
 
         it('should pass rawErrors down to custom widgets and render them', async () => {
@@ -1034,6 +1036,7 @@ describe('SchemaField', () => {
         });
 
         it('should withhold rawErrors from a custom FieldTemplate while leaving them in its errorSchema', async () => {
+          // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
           const customFieldTemplate = ({ children, rawErrors, errorSchema }: FieldTemplateProps) => (
             <div>
               {children}
