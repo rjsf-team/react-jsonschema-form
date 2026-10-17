@@ -1,6 +1,7 @@
 import type { ErrorSchema, FormValidation, RJSFSchema, RJSFValidationError, UiSchema } from '@rjsf/utils';
 import {
   createSchemaUtils,
+  declineCheckSchema,
   ErrorSchemaBuilder,
   getFirstMatchingOption,
   JUNK_OPTION_ID,
@@ -9,8 +10,6 @@ import {
   mergeSchemas,
   noop,
   retrieveSchema,
-  withVariantId,
-  withoutStubbedProperties,
 } from '@rjsf/utils';
 import type { Mock } from 'vitest';
 
@@ -546,7 +545,7 @@ describe('an option whose patternProperties or additionalProperties take keys fr
     [{ id: 'a', s_na: 'x' }, false, 1],
   ])('validates and scores the option retrieved against %j', (subFormData, valid, picked) => {
     const retrieved = options.map((option) => schemaUtils.retrieveSchema(option, subFormData));
-    const checked = withVariantId(withoutStubbedProperties(retrieved[0]) ?? retrieved[0]);
+    const checked = declineCheckSchema(retrieved[0]);
     expect(validator.isValid(checked, subFormData, schema)).toBe(valid);
     // option 1 also takes the data, so the pick says whether option 0 matched rather than falling back to it
     expect(getFirstMatchingOption({ validator }, subFormData, retrieved, schema)).toBe(picked);

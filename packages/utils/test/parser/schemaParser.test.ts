@@ -1,5 +1,6 @@
 import type { RJSFSchema } from '../../src/index.ts';
 import { ELSE_KEY, isObject, noop, resetLogOnce, schemaParser, THEN_KEY } from '../../src/index.ts';
+import { scoringSchemaWithDataKeys } from '../../src/schema/getFirstMatchingOption.ts';
 import {
   CHOICE as choice,
   mergeAllOfEntries,
@@ -193,7 +194,8 @@ describe('schemaParser()', () => {
         { properties: { a: { oneOf: [{ const: 'o3' }] } } },
       ],
     };
-    const schemas = Object.values(schemaParser(rootSchema));
+    // The map holds each schema under the `$id` it is keyed by
+    const schemas = Object.values(schemaParser(rootSchema)).map(({ $id: _id, ...schema }) => schema);
     expect(schemas).toContainEqual(expect.objectContaining({ const: 'p1' }));
     expect(schemas).toContainEqual(expect.objectContaining({ const: 'o1' }));
   });
@@ -239,7 +241,8 @@ describe('schemaParser()', () => {
       items: [{ oneOf: [{ const: 'i1' }, { const: 'i2' }] }, { type: 'string' }],
       additionalItems: { anyOf: [{ const: 'a1' }, { const: 'a2' }] },
     };
-    const schemas = Object.values(schemaParser(rootSchema));
+    // The map holds each schema under the `$id` it is keyed by
+    const schemas = Object.values(schemaParser(rootSchema)).map(({ $id: _id, ...schema }) => schema);
     expect(schemas).toContainEqual(expect.objectContaining({ const: 'i1' }));
     expect(schemas).toContainEqual(expect.objectContaining({ const: 'a1' }));
   });
@@ -251,7 +254,8 @@ describe('schemaParser()', () => {
       patternProperties: { '^x': { oneOf: [{ const: 'pp1' }, { const: 'pp2' }] } },
       additionalProperties: { oneOf: [{ const: 'ap1' }, { const: 'ap2' }] },
     };
-    const schemas = Object.values(schemaParser(rootSchema));
+    // The map holds each schema under the `$id` it is keyed by
+    const schemas = Object.values(schemaParser(rootSchema)).map(({ $id: _id, ...schema }) => schema);
     expect(schemas).toContainEqual(expect.objectContaining({ const: 'pp1' }));
     expect(schemas).toContainEqual(expect.objectContaining({ const: 'ap1' }));
   });
@@ -264,7 +268,8 @@ describe('schemaParser()', () => {
       properties: { a: { type: 'string' } },
       unevaluatedProperties: { oneOf: [{ const: 'up1' }, { const: 'up2' }] },
     };
-    const schemas = Object.values(schemaParser(rootSchema));
+    // The map holds each schema under the `$id` it is keyed by
+    const schemas = Object.values(schemaParser(rootSchema)).map(({ $id: _id, ...schema }) => schema);
     expect(schemas).toContainEqual(expect.objectContaining({ const: 'up1' }));
     expect(schemas).toContainEqual(expect.objectContaining({ const: 'up2' }));
   });
@@ -350,17 +355,15 @@ describe('schemaParser()', () => {
     const strict: RJSFSchema = {
       type: 'object',
       properties: { name: { type: 'string' } },
+      required: ['name'],
       additionalProperties: false,
     };
     const rootSchema: RJSFSchema = { type: 'object', properties: { v: { oneOf: [option, strict] } } };
-    const schemaMap = schemaParser(rootSchema);
-    // Scored while the data holds a key the patterns take: the option as it stands, less the `required` scoring drops
-    // and with no `anyOf` of its names, which the stubbed key satisfies
-    const { required: _required, ...scored } = option;
-    expect(Object.values(schemaMap)).toContainEqual(
-      expect.objectContaining({ ...scored, properties: option.properties }),
-    );
-    expect(Object.values(schemaMap)).not.toContainEqual(expect.objectContaining({ ...strict, anyOf: undefined }));
+    // The map holds each schema under the `$id` it is keyed by
+    const schemas = Object.values(schemaParser(rootSchema)).map(({ $id: _id, ...schema }) => schema);
+    // Scored while the data holds a key the patterns take, which an option that takes no such keys never is
+    expect(schemas).toContainEqual(scoringSchemaWithDataKeys(option));
+    expect(schemas).not.toContainEqual(scoringSchemaWithDataKeys(strict));
   });
   it('parses each combination of patternProperties a key can match, as the form merges every one it matches', () => {
     const rootSchema: RJSFSchema = {
@@ -726,7 +729,8 @@ describe('schemaParser()', () => {
       },
       $ref: '#/definitions/node',
     };
-    const schemas = Object.values(schemaParser(rootSchema));
+    // The map holds each schema under the `$id` it is keyed by
+    const schemas = Object.values(schemaParser(rootSchema)).map(({ $id: _id, ...schema }) => schema);
     expect(schemas).toContainEqual(expect.objectContaining({ const: 'p' }));
   });
   it('parses an option with its dependency left unapplied, as a form scores it before the key is filled in', () => {
@@ -765,7 +769,8 @@ describe('schemaParser()', () => {
     };
     // Resolving a dependency only validates the conditions `withExactlyOneSubschema()` builds out of its `oneOf`,
     // where `omitExtraData()` scores the options themselves, augmented with an `anyOf` of their required keys
-    const schemas = Object.values(schemaParser(rootSchema));
+    // The map holds each schema under the `$id` it is keyed by
+    const schemas = Object.values(schemaParser(rootSchema)).map(({ $id: _id, ...schema }) => schema);
     expect(schemas).toContainEqual(
       expect.objectContaining({ properties: { pet: { enum: ['No'] } }, anyOf: [{ required: ['pet'] }] }),
     );
@@ -789,7 +794,8 @@ describe('schemaParser()', () => {
     };
     // Resolution merges the branch into the schema it conditions, which applies the dependency rather than leaving it
     // to be scored, where `omitExtraData()` walks the branch's own schema and scores the `oneOf` of its dependency
-    const schemas = Object.values(schemaParser(rootSchema));
+    // The map holds each schema under the `$id` it is keyed by
+    const schemas = Object.values(schemaParser(rootSchema)).map(({ $id: _id, ...schema }) => schema);
     expect(schemas).toContainEqual(
       expect.objectContaining({ properties: { pet: { enum: ['No'] } }, anyOf: [{ required: ['pet'] }] }),
     );

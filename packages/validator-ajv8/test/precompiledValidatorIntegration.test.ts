@@ -17,7 +17,7 @@ import {
   omitExtraData,
   relaxOptionsForScoring,
   withVariantId,
-  withoutStubbedProperties,
+  declineCheckSchema,
 } from '@rjsf/utils';
 
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
@@ -318,27 +318,31 @@ describe('an option whose patternProperties or additionalProperties take keys fr
    * its `properties`. Those stubs only render the keys: options are scored and checked without them, so the precompiled
    * and live validators validate the same schema, and the keyword that takes a key decides its value
    */
-  function rootFor(options: RJSFSchema[]): RJSFSchema {
-    return { type: 'object', properties: { v: { oneOf: options } } };
+  function rootFor(options: RJSFSchema[], discriminator?: string): RJSFSchema {
+    const v: RJSFSchema = { oneOf: options };
+    if (discriminator) {
+      v.discriminator = { propertyName: discriminator };
+    }
+    return { type: 'object', properties: { v } };
   }
 
   /** The option the precompiled and the live validator each pick for `data`, scoring the options retrieved against
    * it as `MultiSchemaField` does, through both `getFirstMatchingOption()` and `getClosestMatchingOption()`
    */
-  function picks(options: RJSFSchema[], data: unknown) {
-    const root = rootFor(options);
+  function picks(options: RJSFSchema[], data: unknown, discriminator?: string) {
+    const root = rootFor(options, discriminator);
     return [buildPrecompiledValidator(root), customizeValidator()].map((validator) => {
       const schemaUtils = createSchemaUtils({ validator }, root);
       const retrieved = options.map((option) => schemaUtils.retrieveSchema(option, data));
       return [
-        getFirstMatchingOption({ validator }, data, retrieved, root),
-        getClosestMatchingOption({ validator }, root, data, retrieved),
+        getFirstMatchingOption({ validator }, data, retrieved, root, discriminator),
+        getClosestMatchingOption({ validator }, root, data, retrieved, 0, discriminator),
       ];
     });
   }
 
   it('does not let the `{ type: "null" }` stub of a key `additionalProperties: false` forbids match it', () => {
-    // v7 picked option 0, since the stub accepted `other: null`; option 0 forbids `other`, so option 1 is picked
+    // Option 0 forbids `other`, which its `{ type: 'null' }` stub would accept, so option 1 is picked
     const options: RJSFSchema[] = [
       {
         type: 'object',
@@ -354,7 +358,7 @@ describe('an option whose patternProperties or additionalProperties take keys fr
     ]);
   });
   it('applies the `not` a guessed-type stub drops', () => {
-    // v7 picked option 1, since its stub for `k` dropped `not`; `{ k: 'x' }` breaks option 1, so option 2 is picked
+    // `{ k: 'x' }` breaks option 1's `additionalProperties`, whose `not` its stub for `k` drops, so option 2 is picked
     const options: RJSFSchema[] = [
       { type: 'object', properties: { q: { type: 'number' } } },
       { type: 'object', properties: { id: { type: 'string' } }, additionalProperties: { not: { const: 'x' } } },
@@ -374,7 +378,7 @@ describe('an option whose patternProperties or additionalProperties take keys fr
       { type: 'object', properties: { q: { type: 'number' } } },
       { type: 'object', properties: { a: { type: 'string' } }, additionalProperties: true },
     ];
-    // v7's `anyOf` of the option's names failed for `z`, since `required` treats a key holding undefined as missing
+    // `required` treats a key holding undefined as missing, so `z` doesn't satisfy the `anyOf` of option 1's names
     const [precompiled, live] = picks(options, { z: undefined });
     expect(precompiled[0]).toBe(0);
     expect(live[0]).toBe(0);
@@ -382,6 +386,38 @@ describe('an option whose patternProperties or additionalProperties take keys fr
     expect(picks(options, { z: 'set' })).toEqual([
       [1, 1],
       [1, 1],
+    ]);
+  });
+  it('scores an option with a `required` by the schema the parse records for a key it takes', () => {
+    const options: RJSFSchema[] = [
+      { type: 'number' },
+      {
+        type: 'object',
+        properties: { id: { type: 'string' } },
+        required: ['id'],
+        additionalProperties: { type: 'string' },
+      },
+    ];
+    expect(picks(options, { id: 'a', k: 'v' })).toEqual([
+      [1, 1],
+      [1, 1],
+    ]);
+  });
+  it('scores an option whose discriminator is only a stub for the key of the data, rather than checking the stub', () => {
+    const options: RJSFSchema[] = [
+      { type: 'object', properties: { kind: { const: 'a' } } },
+      { type: 'object', properties: { x: {} }, additionalProperties: { not: { const: 'zzz' } } },
+    ];
+    // Option 1 doesn't declare `kind`, and its `additionalProperties` rejects `'zzz'`, which the stub would accept
+    const [precompiled, live] = picks(options, { kind: 'zzz' }, 'kind');
+    expect(precompiled[0]).toBe(0);
+    expect(live[0]).toBe(0);
+    // When no option validates, `getClosestMatchingOption()` falls back to a score that still counts the stub; both
+    // validators agree on it
+    expect(precompiled[1]).toBe(live[1]);
+    expect(picks(options, { kind: 'a' }, 'kind')).toEqual([
+      [0, 0],
+      [0, 0],
     ]);
   });
   it('checks a retrieved option that carries an `$id` as MultiSchemaField does when a switch is declined', () => {
@@ -394,8 +430,8 @@ describe('an option whose patternProperties or additionalProperties take keys fr
     const live = customizeValidator();
     for (const data of [{ k: 'v' }, { k: 1 }]) {
       const chosen = createSchemaUtils({ validator: live }, root).retrieveSchema(options[0], data);
-      const checked = withVariantId(withoutStubbedProperties(chosen) ?? chosen);
-      // threw "No precompiled validator function was found for the given schema for "http://e.com/opt.json?rjsf=..."
+      // Checked as `MultiSchemaField` checks it, under an `$id` derived from its content without the stubs
+      const checked = declineCheckSchema(chosen);
       expect(validator.isValid(checked, data, root)).toBe(live.isValid(checked, data, root));
     }
     expect(picks(options, { k: 'v' })).toEqual([

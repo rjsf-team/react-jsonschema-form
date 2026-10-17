@@ -10,6 +10,7 @@ import type {
 } from '@rjsf/utils';
 import {
   ANY_OF_KEY,
+  declineCheckSchema,
   deepEquals,
   ERRORS_KEY,
   getDiscriminatorFieldFromSchema,
@@ -25,8 +26,6 @@ import {
   shouldRenderOptionalField,
   TranslatableString,
   UI_OPTIONS_KEY,
-  withVariantId,
-  withoutStubbedProperties,
 } from '@rjsf/utils';
 
 import fieldLabelForLog from '../../fieldLabelForLog.ts';
@@ -80,16 +79,9 @@ function optionForData<
     // matches several options keeps the explicit choice, and one whose data does not is put back on the option that
     // describes it
     const chosen = selectedOption >= 0 ? options[selectedOption] : undefined;
-    // The retrieved option is validated without the properties `retrieveSchema()` stubbed into it for the keys of the
-    // data, as the option scoring does: the stubs only render those keys, and the keyword that takes each key decides
-    // whether its value fits. That schema is not the one the option's own `$id` names, and a validator caches what it
-    // compiles under that `$id`, so it is validated under one derived from its content
-    if (
-      chosen &&
-      schemaUtils
-        .getValidator()
-        .isValid(withVariantId<S>(withoutStubbedProperties<S>(chosen) ?? chosen), formData, registry.rootSchema)
-    ) {
+    // The retrieved option is checked without the properties `retrieveSchema()` stubbed into it for the keys of the
+    // data, as the option scoring does, under an `$id` derived from that content
+    if (chosen && schemaUtils.getValidator().isValid(declineCheckSchema<S>(chosen), formData, registry.rootSchema)) {
       return selectedOption;
     }
   } else if (!isFormDataChanged) {
