@@ -3440,6 +3440,24 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(ensureFormDataMatchingSchema({ validator: testValidator }, color, rootSchema, 'blue')).toEqual('blue');
         expect(ensureFormDataMatchingSchema({ validator: testValidator }, color, rootSchema, 'green')).toBeUndefined();
       });
+      it('drops a value none of the options of a property written as a $ref to an allOf holds', () => {
+        const rootSchema: RJSFSchema = {
+          definitions: { E: { allOf: [{ type: 'string', enum: ['a', 'b'] }] } },
+          type: 'object',
+          properties: {
+            inPlace: { allOf: [{ type: 'string', enum: ['a', 'b'] }] },
+            viaRef: { $ref: '#/definitions/E' },
+            free: true,
+          },
+        };
+        expect(
+          ensureFormDataMatchingSchema({ validator: testValidator }, rootSchema, rootSchema, {
+            inPlace: 'zzz',
+            viaRef: 'zzz',
+            free: 'zzz',
+          }),
+        ).toEqual({ inPlace: undefined, viaRef: undefined, free: 'zzz' });
+      });
       it('Test schema with const property', () => {
         schema = {
           type: 'string',

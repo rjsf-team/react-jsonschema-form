@@ -1565,8 +1565,12 @@ export function ensureFormDataMatchingSchema<
     const matched: GenericObjectType = { ...validFormData };
     for (const key of Object.keys(schemaToMatch.properties)) {
       const propertySchema = getPropertySchema<S>(schemaToMatch, key);
-      if (key in matched && (shouldRetrieveAllOf || (isObject(propertySchema) && ALL_OF_KEY in propertySchema))) {
-        matched[key] = ensureFormDataMatchingSchema<unknown, S, F>(context, propertySchema, rootSchema, matched[key]);
+      // A property written as a `$ref` is matched as the definition it names, whose `allOf` it is
+      const readProperty = isSchemaObject<S>(propertySchema)
+        ? resolveOwnRef<S>(propertySchema, rootSchema)
+        : propertySchema;
+      if (key in matched && (shouldRetrieveAllOf || (isObject(readProperty) && ALL_OF_KEY in readProperty))) {
+        matched[key] = ensureFormDataMatchingSchema<unknown, S, F>(context, readProperty, rootSchema, matched[key]);
       }
     }
     validFormData = matched;
