@@ -4,7 +4,7 @@ import type { FormControlLabelProps } from '@mui/material/FormControlLabel';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
-  getControlDescribedBy,
+  getControlAttributes,
   getTemplates,
   getWidgetDescription,
   labelValue,
@@ -12,7 +12,7 @@ import {
   widgetDrawsLabel,
 } from '@rjsf/utils';
 
-import { getMuiProps } from '../util.ts';
+import { getMuiProps, withInputSlot } from '../util.ts';
 
 /** Properties available for the `rjsfSlotProps` target of the CheckboxWidget. */
 export interface CheckboxWidgetMuiProps extends GenericObjectType {
@@ -93,8 +93,12 @@ export default function CheckboxWidget<
             onChange={handleChange}
             onBlur={handleBlur}
             onFocus={handleFocus}
-            aria-describedby={getControlDescribedBy<T, S, F>({ id, presentation })}
             {...muiSlotProps?.checkbox}
+            // The `<input>` carrying the field's id takes its plan, rather than the `<span>` around it
+            slotProps={withInputSlot(
+              getControlAttributes<T, S, F>({ id, presentation }),
+              muiSlotProps?.checkbox?.slotProps,
+            )}
           />
         }
         label={labelValue(label, hideLabel, false)}
