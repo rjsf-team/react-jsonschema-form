@@ -88,6 +88,7 @@ export default function WrapIfAdditionalTemplate<
               type='text'
               className='input input-bordered'
               id={`${id}-key`}
+              aria-label={hasKeyLabel ? undefined : keyLabel}
               onBlur={onKeyRenameBlur}
               defaultValue={keyName}
               disabled={disabled || readonly}

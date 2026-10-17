@@ -444,6 +444,8 @@ export function useDatePicker<V>({
 
   return {
     isOpen,
+    // The popup's own id, which the trigger controls while it is open
+    popupId: `${id}__popup`,
     month: draft.month,
     displayedDate,
     containerRef,

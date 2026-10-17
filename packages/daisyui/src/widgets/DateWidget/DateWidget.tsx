@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useMemo } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { TranslatableString, widgetDrawsLabel } from '@rjsf/utils';
+import { isNamedByTemplateLabel, TranslatableString } from '@rjsf/utils';
 import { format, startOfDay } from 'date-fns';
 
 import DatePickerCalendar, { CALENDAR_MIN_WIDTH } from '../DatePickerCalendar.tsx';
 import { readDateOnly, readInstant, useDateFormatter, useDatePicker, windowOf } from '../datePickerHooks.ts';
-import DatePickerTrigger from '../DatePickerTrigger.tsx';
+import DatePickerTrigger, { DatePickerDialog } from '../DatePickerTrigger.tsx';
 
 /** The calendar day at the front of a date-time, whatever separator, time and zone follow it */
 const LEADING_DAY = /^\d{4}-\d{2}-\d{2}/;
@@ -89,12 +89,26 @@ export default function DateWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { id, value, label, name, presentation, placeholder, options, disabled, readonly, schema, registry } = props;
-  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
+  const {
+    id,
+    value,
+    label,
+    presentation,
+    placeholder,
+    options,
+    disabled,
+    readonly,
+    required,
+    autofocus,
+    schema,
+    registry,
+  } = props;
+  const named = isNamedByTemplateLabel<T, S, F>(props);
   const initialDate = useMemo(() => parseDateValue(value), [value]);
   const formatDate = useDateFormatter<S>(schema, 'date');
   const {
     isOpen,
+    popupId,
     month,
     displayedDate,
     containerRef,
@@ -177,14 +191,16 @@ export default function DateWidget<
         <DatePickerTrigger<T, S, F>
           id={id}
           label={label}
-          name={name}
-          hideLabel={hideLabel}
+          named={named}
           presentation={presentation}
           placeholder={placeholder}
           formattedValue={formattedValue}
           isOpen={isOpen}
+          popupId={popupId}
           disabled={disabled}
           readonly={readonly}
+          required={required}
+          autofocus={autofocus}
           triggerRef={triggerRef}
           onClick={togglePicker}
           onFocus={handleFocus}
@@ -202,19 +218,21 @@ export default function DateWidget<
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className='p-3' style={{ minWidth: CALENDAR_MIN_WIDTH, minHeight: 350 }}>
-              <DatePickerCalendar
-                selectedDate={displayedDate}
-                month={month}
-                onMonthChange={handleMonthChange}
-                onSelect={handleSelect}
-              />
-            </div>
-            <div className='p-3 flex justify-end border-t border-base-300'>
-              <button type='button' className='btn btn-sm btn-primary' onClick={handleDone}>
-                {registry.translateString(TranslatableString.DoneLabel)}
-              </button>
-            </div>
+            <DatePickerDialog<T, S, F> id={popupId} label={label} placeholder={placeholder} registry={registry}>
+              <div className='p-3' style={{ minWidth: CALENDAR_MIN_WIDTH, minHeight: 350 }}>
+                <DatePickerCalendar
+                  selectedDate={displayedDate}
+                  month={month}
+                  onMonthChange={handleMonthChange}
+                  onSelect={handleSelect}
+                />
+              </div>
+              <div className='p-3 flex justify-end border-t border-base-300'>
+                <button type='button' className='btn btn-sm btn-primary' onClick={handleDone}>
+                  {registry.translateString(TranslatableString.DoneLabel)}
+                </button>
+              </div>
+            </DatePickerDialog>
           </div>
         )}
       </div>
