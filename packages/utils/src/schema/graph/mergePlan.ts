@@ -790,9 +790,12 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     Reflect.deleteProperty(properties, key);
     const schema = { ...chosen.schema };
     Reflect.set(schema, PROPERTIES_KEY, properties);
+    // A chain a nested dependency chose already drops the key its own option was chosen by, which stays dropped
     const chains = chosen.chains.map((chain) => {
       const declaring = chain.get(PROPERTIES_KEY);
-      return declaring === undefined ? chain : new Map(chain).set(PROPERTIES_KEY, { ...declaring, drops: key });
+      return declaring === undefined || declaring.drops !== undefined
+        ? chain
+        : new Map(chain).set(PROPERTIES_KEY, { ...declaring, drops: key });
     });
     return mergeBranch(part, { schema, chains });
   }

@@ -435,6 +435,42 @@ describe('buildPlan()', () => {
           plan.entries.filter(({ edge }) => edge === 'dependency').map(({ node }) => plan.graph.node(node).pointer),
         ).toEqual(['/dependencies/kind', '/dependencies/kind/oneOf/0', '/dependencies/other']);
       });
+      it("leaves the key each nested option is chosen by out of that option's seeds", () => {
+        const plan = planOf(
+          {
+            type: 'object',
+            properties: { pet: { type: 'string', enum: ['No', 'Yes'] } },
+            dependencies: {
+              pet: {
+                oneOf: [
+                  { properties: { pet: { enum: ['No'] } } },
+                  {
+                    properties: { pet: { enum: ['Yes'] }, kind: { type: 'string', enum: ['Dog', 'Cat'] } },
+                    dependencies: {
+                      kind: {
+                        oneOf: [
+                          { properties: { kind: { enum: ['Dog'] }, breed: { type: 'string' } } },
+                          { properties: { kind: { enum: ['Cat'] }, lives: { type: 'number' } } },
+                        ],
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+          },
+          { data: { pet: 'Yes', kind: 'Dog' } },
+        );
+        expect(seedsOf(plan, seedsAt(plan, 'properties', 'pet'))).toEqual([['/properties/pet', []]]);
+        expect(seedsOf(plan, seedsAt(plan, 'properties', 'kind'))).toEqual([
+          ['/dependencies/pet/oneOf/1/properties/kind', []],
+        ]);
+        expect(plan.schema.properties).toEqual({
+          pet: { type: 'string', enum: ['No', 'Yes'] },
+          kind: { type: 'string', enum: ['Dog', 'Cat'] },
+          breed: { type: 'string' },
+        });
+      });
       it('leaves a dependency whose oneOf is not a list as it is', () => {
         const plan = planOf(looseSchema({ dependencies: { kind: { oneOf: 'garbage', title: 't' } } }), {
           data: { kind: 'a' },
