@@ -1,6 +1,6 @@
 // oxlint-disable no-console
 import type { SubmitEvent } from 'react';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
@@ -15,7 +15,7 @@ import type {
   UiSchema,
   ValidatorType,
 } from '@rjsf/utils';
-import { createSchemaUtils, resetLogOnce } from '@rjsf/utils';
+import { createSchemaUtils, deepEquals, resetLogOnce } from '@rjsf/utils';
 
 import { samples } from '../samples/index.ts';
 import type { Sample, UiSchemaForTheme } from '../samples/Sample.ts';
@@ -193,7 +193,7 @@ export function loadedState(
   const knownValidator =
     validator !== undefined && Object.hasOwn(validators, validator) ? validator : DEFAULT_VALIDATOR;
 
-  // The playground owns the form data, so it seeds the schema defaults itself, the way any controlled parent does
+  // Seeded with the schema defaults here, so the formData editor and a share link show the data the form mounts with
   const loadedFormData = sharedFormData ?? sampleFormData;
   let formData = loadedFormData;
   try {
@@ -259,11 +259,13 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
   const [subtheme, setSubtheme] = useState<string | null>(null);
   const [stylesheet, setStylesheet] = useState<string | null>(initial.stylesheet ?? null);
   const [validator, setValidator] = useState<string>(initial.validator ?? DEFAULT_VALIDATOR);
-  const [formKey, setFormKey] = useState(0);
-  // The form owns its data once it has mounted, so data edited in the JSON editor reaches it by remounting it
+  // A load remounts every form the playground seeds, the selectors and the options drawer's included. The form owns
+  // its data once it has mounted, so data edited in the formData editor reaches it by remounting the main form alone
+  const [loadKey, setLoadKey] = useState(0);
+  const [editKey, setEditKey] = useState(0);
   const setEditedFormData = useCallback((data: unknown) => {
     setFormData(data);
-    setFormKey((key) => key + 1);
+    setEditKey((key) => key + 1);
   }, []);
   const [liveSettings, setLiveSettings] = useState<LiveSettings>(initial.liveSettings);
   const [otherFormProps, setOtherFormProps] = useState<Partial<FormProps>>(initial.otherFormProps);
@@ -298,7 +300,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
         setSampleName(next.sampleName);
         setUiSchemaGenerator(next.uiSchemaGenerator);
       }
-      setFormKey((key) => key + 1);
+      setLoadKey((key) => key + 1);
       setSchema(next.schema);
       setUiSchema(next.uiSchema);
       setFormData(next.formData);
@@ -339,6 +341,20 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
     [setFormData, setShareURL],
   );
 
+  // The form fills in the defaults a new schema, uiSchema or default-state setting brings without calling `onChange`, so
+  // the formData editor, a share link and the raw validation would go on showing the data from before. The form's data
+  // lives in its own model, outside the playground's state, so it is read once the commit that passes the change is
+  // done, the way an Effect synchronizes with an external system; data that `onChange` already reported is kept as it is
+  useEffect(() => {
+    const form = playGroundFormRef.current;
+    if (!form) {
+      return;
+    }
+    const derived = form.getFormData();
+    setFormData((previous: unknown) => (deepEquals(previous, derived) ? previous : derived));
+    // oxlint-disable-next-line react/exhaustive-effect-dependencies -- the props the form re-derives its data from, after whose commit the Effect re-reads it
+  }, [schema, uiSchema, liveSettings]);
+
   const onFormDataSubmit = useCallback(
     ({ formData: submittedFormData }: IChangeEvent, event: SubmitEvent<HTMLFormElement>) => {
       console.log('submitted formData', submittedFormData);
@@ -355,7 +371,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
       <Box sx={{ width: '100%' }}>
         {sharedSetupError !== undefined && <Alert severity='error'>Unable to load form setup data.</Alert>}
         <Editors
-          formKey={formKey}
+          loadKey={loadKey}
           themes={themes}
           theme={theme}
           subtheme={subtheme}
@@ -386,7 +402,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
             subtheme={subtheme || 'light'}
           >
             <FormComponent
-              key={formKey}
+              key={`${loadKey}-${editKey}`}
               {...otherFormProps}
               {...liveSettings}
               liveValidate={toLiveSetting(liveSettings.liveValidate)}
@@ -413,7 +429,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
         </ErrorBoundary>
       </Box>
       <OptionsDrawer
-        formKey={formKey}
+        loadKey={loadKey}
         schema={schema}
         uiSchema={uiSchema}
         formData={formData}
