@@ -79,6 +79,7 @@ export default function SelectWidget<
     // Given to the combobox below, so kept off the field's root, where `textFieldProps` are spread
     'aria-label': _ariaLabel,
     'aria-describedby': _ariaDescribedBy,
+    presentation: _presentation,
     ...textFieldProps
   } = props;
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal, optgroups } = options;

@@ -3324,7 +3324,6 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                                             foo
                                             <input
                                               aria-autocomplete="list"
-                                              aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
                                               aria-expanded="false"
                                               aria-haspopup="listbox"
                                               autocomplete="new-password"
@@ -4791,7 +4790,6 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                                             foo
                                             <input
                                               aria-autocomplete="list"
-                                              aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
                                               aria-expanded="false"
                                               aria-haspopup="listbox"
                                               autocomplete="new-password"
@@ -5079,7 +5077,6 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                                             foo
                                             <input
                                               aria-autocomplete="list"
-                                              aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
                                               aria-expanded="false"
                                               aria-haspopup="listbox"
                                               autocomplete="new-password"

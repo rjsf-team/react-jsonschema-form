@@ -680,6 +680,26 @@ render(<Form schema={schema} validator={validator} onSubmit={onSubmit} />, docum
 
 > Note: If there are fields in the `formData` that are not represented in the schema, they will be retained by default. If you would like to remove those extra values on form submission, you may need to set the `omitExtraData` and/or `liveOmit` props.
 
+## presentation
+
+A `ThemePresentation` declaring which parts of a field (its label, description, errors and help) the fields and widgets you register draw themselves, under the keys you register them by, plus a `default` for every part its own entry for a widget leaves out, which overrides the theme's and `@rjsf/core`'s declarations of those parts, and a `fieldDefault` for every part a field's merged entry leaves out.
+It is layered part by part over the theme's declarations, which are layered over `@rjsf/core`'s, and the merged result is `registry.presentation`.
+See [Custom Themes](../advanced-customization/custom-themes.md#presentation) for more information.
+
+```tsx
+import { Form } from '@rjsf/core';
+import { ThemePresentation } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+// MyLabelledWidget draws its own label, so the FieldTemplate draws none for it
+const presentation: ThemePresentation = { widgets: { MyLabelledWidget: { label: 'self' } } };
+
+render(
+  <Form schema={schema} validator={validator} widgets={{ MyLabelledWidget }} presentation={presentation} />,
+  document.getElementById('app'),
+);
+```
+
 ## schema
 
 **Required**! Form schema. We support JSON schema draft-07 by default. See [Schema Reference](https://json-schema.org/draft-07/json-schema-release-notes.html) for more information.
