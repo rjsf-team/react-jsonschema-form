@@ -1,5 +1,4 @@
 import type { Validator as EngineValidator } from '@cfworker/json-schema';
-import { dereference } from '@cfworker/json-schema';
 import type {
   CustomValidator,
   ErrorTransformer,
@@ -8,7 +7,7 @@ import type {
   RJSFValidationError,
   UiSchema,
 } from '@rjsf/utils';
-import { ROOT_SCHEMA_PREFIX, getValidationTarget, isObject } from '@rjsf/utils';
+import { ROOT_SCHEMA_PREFIX, getValidationTarget } from '@rjsf/utils';
 
 import pointerValidationTests, {
   absoluteRefValidationTests,
@@ -362,13 +361,6 @@ describe('CFWorkerValidator validating a subschema by its place in the root', ()
     expect(validator.isValid(pointer, 's', rootSchema)).toBe(true);
     expect(validator.isValid(pointer, 5, rootSchema)).toBe(false);
   });
-  it('finds the absolute URI the engine stamps on each schema it indexes a dependencies entry named like a keyword through', () => {
-    // `createCfworkerInstance()` reads the `__absolute_uri__` `dereference()` stamps on each schema it indexes, which an
-    // engine upgrade could rename; this names it, where the test below only stops resolving
-    const schemas = Object.values(dereference({ properties: { a: { type: 'string' } } })).filter(isObject);
-    expect(schemas).toHaveLength(2);
-    expect(schemas.every(({ __absolute_uri__: uri }) => typeof uri === 'string')).toBe(true);
-  });
   it('resolves a $ref with no fragment as it stands', () => {
     const validator = customizeValidator();
     const rootSchema: RJSFSchema = { definitions: { X: { $id: 'http://example.com/x.json', type: 'number' } } };
@@ -410,6 +402,21 @@ describe('CFWorkerValidator validating a subschema by its place in the root', ()
     expect(validator.isValid(inA, 'B', rootSchema)).toBe(false);
     expect(validator.isValid(inAB, 'B', rootSchema)).toBe(true);
     expect(validator.isValid(inAB, 'A', rootSchema)).toBe(false);
+  });
+  it('resolves a pointer from the root into a dependencies entry named like a keyword inside a nested resource', () => {
+    const validator = customizeValidator();
+    const rootSchema: RJSFSchema = {
+      properties: {
+        n: {
+          $id: 'http://example.com/n.json',
+          definitions: { A: { const: 'a' } },
+          dependencies: { type: { oneOf: [{ properties: { type: { $ref: '#/definitions/A' } } }] } },
+        },
+      },
+    };
+    const pointer: RJSFSchema = { $ref: '#/properties/n/dependencies/type/oneOf/0/properties/type' };
+    expect(validator.isValid(pointer, 'a', rootSchema)).toBe(true);
+    expect(validator.isValid(pointer, 'b', rootSchema)).toBe(false);
   });
 });
 

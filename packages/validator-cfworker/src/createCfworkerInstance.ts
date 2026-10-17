@@ -59,22 +59,26 @@ export function installFormats(
  * subschema rather than a map of them, so an entry named like a keyword it ignores there (`type`, `required`, `enum`,
  * ...) is never indexed, nor is one named like a keyword holding a map of subschemas (`properties`, `definitions`,
  * ...), whose own keys it indexes as subschemas instead, and a `$ref` into one, such as the condition RJSF matches a
- * dependency's `oneOf` option on, would not resolve. Such an entry is indexed into a lookup of its own, since the
+ * dependency's `oneOf` option on, would not resolve. Such an entry is indexed under every URI the lookup holds the
+ * schema with the `dependencies` under, since a schema inside a resource of its own is reached both by the resource's
+ * URI and by its pointer from the root, which is how RJSF names it. It is indexed into a lookup of its own, since the
  * engine rejects a URI twice and may already hold one below it under the pointer it misread, and only the URIs the
  * lookup lacks are added.
  *
  * @param lookup - The lookup to index, in place
  */
 function indexDependencies(lookup: Record<string, Schema | boolean>): void {
-  const pending = Object.values(lookup);
-  for (let schema = pending.pop(); schema !== undefined; schema = pending.pop()) {
-    const indexable: Schema = typeof schema === 'object' ? schema : {};
-    const { __absolute_uri__: uri, dependencies } = indexable;
-    if (uri !== undefined && isObject(dependencies)) {
-      // The engine spells a `#` in a pointer as it stands, so only the first one starts the fragment
-      const fragmentAt = uri.indexOf('#');
-      const base = fragmentAt < 0 ? uri : uri.slice(0, fragmentAt);
-      const pointer = fragmentAt < 0 ? '' : uri.slice(fragmentAt + 1);
+  // In the order the engine indexed them, so a resource's own URI comes before the pointer from the root that reaches
+  // it, and the `$ref`s inside an entry are resolved against the resource's base
+  const pending = Object.entries(lookup);
+  for (let next = pending.shift(); next !== undefined; next = pending.shift()) {
+    const [uri, schema] = next;
+    const dependencies = typeof schema === 'object' ? schema.dependencies : undefined;
+    // The engine spells a `#` in a pointer as it stands, so only the first one starts the fragment
+    const fragmentAt = uri.indexOf('#');
+    const base = fragmentAt < 0 ? uri : uri.slice(0, fragmentAt);
+    const pointer = fragmentAt < 0 ? '' : uri.slice(fragmentAt + 1);
+    if (isObject(dependencies) && (pointer === '' || pointer.startsWith('/'))) {
       for (const [key, dependency] of Object.entries(dependencies)) {
         const at = `${pointer}/dependencies/${encodePointer(key)}`;
         if (isObject(dependency) && lookup[`${base}#${at}`] === undefined) {
@@ -82,7 +86,7 @@ function indexDependencies(lookup: Record<string, Schema | boolean>): void {
             ([indexedUri]) => lookup[indexedUri] === undefined,
           );
           Object.assign(lookup, Object.fromEntries(added));
-          pending.push(...added.map(([, indexed]) => indexed));
+          pending.push(...added);
         }
       }
     }
