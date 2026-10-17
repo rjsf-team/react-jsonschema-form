@@ -7647,6 +7647,7 @@ exports[`object fields > with title and description with global label off > addi
                           style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                         >
                           <input
+                            aria-label="foo Key"
                             class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                             data-variant="default"
                             id="root_foo-key"
@@ -8052,6 +8053,7 @@ exports[`object fields > with title and description with global label off > show
                           style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                         >
                           <input
+                            aria-label="additionalProperty Key"
                             class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                             data-variant="default"
                             id="root_additionalProperty-key"

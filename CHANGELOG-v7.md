@@ -472,6 +472,7 @@ should change the heading of the (upcoming) version to include a major version b
 - `FieldHelpTemplate` renders the help in a `<div>` rather than a `<p>`, since `RichHelp` can render markdown blocks, which a `<p>` can't hold ([#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
 - Declares `@rjsf/core`'s `RatingWidget`, which draws no label or description, as leaving both to the template, so `FieldTemplate` draws them and its stars' `radiogroup` is named by the label, where a rating field had neither and was described by a description id no element had ([#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
 - `RadioWidget` focuses its checked radio under `ui:autofocus`, where Tab into the group lands, or the first a user can choose where none is checked or `ui:enumDisabled` disables it, and `CheckboxesWidget` the first checkbox a user can choose, where both took the first option, which takes no focus where `ui:enumDisabled` disables it ([#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
+- `WrapIfAdditionalTemplate` names an `additionalProperties` entry's key input by the key's label through `aria-label` where `ui:label: false` leaves no label drawn, as `@rjsf/core`'s does, and a `multiple` `SelectWidget`'s search input is `aria-required` while its field is required, since Mantine's `MultiSelect` puts `required` on its hidden input alone ([#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
 
 ## @rjsf/mui
 

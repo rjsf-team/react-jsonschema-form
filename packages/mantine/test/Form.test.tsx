@@ -220,6 +220,36 @@ describe('mantine FieldTemplate', () => {
   });
 });
 
+describe('mantine WrapIfAdditionalTemplate and SelectWidget', () => {
+  test("names the additional property key's input by its label where ui:label: false hides it", () => {
+    render(
+      <WrappedForm
+        schema={{ type: 'object', additionalProperties: { type: 'string' } }}
+        uiSchema={{ additionalProperties: { 'ui:label': false } }}
+        initialFormData={{ first: 'a' }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('textbox', { name: 'first Key' })).toHaveAttribute('id', 'root_first-key');
+  });
+
+  test('marks a required multiple select aria-required on the input a user focuses', () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          required: ['pets'],
+          properties: { pets: { type: 'array', items: { type: 'string', enum: ['cat', 'dog'] }, uniqueItems: true } },
+        }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('#root_pets')).toHaveAttribute('aria-required', 'true');
+  });
+});
+
 describe('mantine title templates', () => {
   test("mark a required object's heading outside its title id, so its option selector is named by the title alone", () => {
     const { container } = render(

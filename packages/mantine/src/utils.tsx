@@ -603,8 +603,7 @@ export function useHiddenTitle(
   hideLabel: boolean | undefined,
   inputWrapperOrder: unknown,
 ) {
-  const titleRendered =
-    !hideLabel && !!label && (!Array.isArray(inputWrapperOrder) || inputWrapperOrder.includes('label'));
+  const titleRendered = !hideLabel && !!label && rendersWrapperPart(inputWrapperOrder, 'label');
   return useMemo(
     () =>
       !!label && !titleRendered ? (

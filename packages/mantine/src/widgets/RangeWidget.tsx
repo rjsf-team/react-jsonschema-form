@@ -72,7 +72,6 @@ interface FieldSliderProps extends Omit<SliderProps, 'thumbProps'> {
   thumbProps?: GenericObjectType;
   successId: string;
   invalid: boolean;
-  titled: boolean;
 }
 
 /** A `Slider` whose focusable thumb carries the field's id, is named by the field's label and is described by its ids,
@@ -85,12 +84,13 @@ function FieldSlider({
   labelledBy,
   successId,
   invalid,
-  titled,
   thumbProps,
   thumbLabel,
   ...props
 }: FieldSliderProps) {
   const shownSuccessId = useShownSuccessId(successId);
+  // A `thumbLabel` key in `thumbProps` replaces the prop, even when `undefined`, since Mantine spreads `thumbProps` last
+  const namedByThumbLabel = thumbProps && 'thumbLabel' in thumbProps ? thumbProps.thumbLabel : thumbLabel;
   return (
     <Slider
       thumbLabel={thumbLabel}
@@ -179,7 +179,6 @@ export default function RangeWidget<
           {...themeProps}
           successId={successId}
           invalid={invalid}
-          titled={!!label}
           thumbProps={thumbProps}
           thumbLabel={thumbLabel}
         />
