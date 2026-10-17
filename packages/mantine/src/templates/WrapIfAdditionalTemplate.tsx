@@ -97,6 +97,7 @@ export default function WrapIfAdditionalTemplate<
                 key={keyName}
                 className='form-group'
                 label={hasKeyLabel ? keyLabel : undefined}
+                aria-label={hasKeyLabel ? undefined : keyLabel}
                 defaultValue={keyName}
                 required={required}
                 description={hasDescription ? '\u00A0' : undefined}

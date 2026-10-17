@@ -2,8 +2,10 @@ import { Grid, Title } from '@mantine/core';
 import type { ArrayFieldTitleProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { getUiOptions, titleId } from '@rjsf/utils';
 
-/** The `ArrayFieldTitleTemplate` component renders a `TitleFieldTemplate` with an `id` derived from
- * the `id`.
+import { RequiredMarker } from '../utils.tsx';
+
+/** The `ArrayFieldTitleTemplate` component renders the array's title, with the `titleId()` of its `id` on the title's
+ * text alone, as `TitleField` does
  *
  * @param props - The `ArrayFieldTitleProps` for the component
  */
@@ -12,18 +14,19 @@ export default function ArrayFieldTitleTemplate<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: ArrayFieldTitleProps<T, S, F>) {
-  const { id, title, uiSchema, registry, optionalDataControl } = props;
+  const { id, title, required, uiSchema, registry, optionalDataControl } = props;
 
   const options = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);
   const { label: displayLabel = true } = options;
   if (!title || !displayLabel) {
     return null;
   }
-  let heading = title ? (
-    <Title id={titleId(id)} order={4} fw='normal'>
-      {title}
+  let heading = (
+    <Title order={4} fw='normal'>
+      <span id={titleId(id)}>{title}</span>
+      {required && <RequiredMarker />}
     </Title>
-  ) : null;
+  );
   if (optionalDataControl) {
     heading = (
       <Grid>

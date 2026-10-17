@@ -1,12 +1,15 @@
 import type { ReactNode } from 'react';
 import { createTheme, MantineProvider, STYLE_PROPS_DATA, Tooltip } from '@mantine/core';
-import type { GenericObjectType, RJSFSchema, UiSchema } from '@rjsf/utils';
+import type { FormValidation, GenericObjectType, RJSFSchema, UiSchema } from '@rjsf/utils';
 import { titleId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 
 import Form from '../src/index.ts';
 import WrappedForm from './WrappedForm.tsx';
+
+const user = userEvent.setup();
 
 const orderWithoutLabel = ['description', 'input', 'error'];
 
@@ -93,6 +96,40 @@ describe('aria-labelledby', () => {
       expect(screen.getByRole(role)).toHaveAttribute('aria-labelledby', titleId('root'));
       expect(screen.getByRole(role)).toHaveAccessibleName('A title');
       expect(screen.getByText('A title')).not.toBeVisible();
+    },
+  );
+
+  test.each([
+    ['text', 'textbox', { type: 'string' }, {}],
+    ['textarea', 'textbox', { type: 'string' }, { 'ui:widget': 'textarea' }],
+  ] as [string, string, RJSFSchema, UiSchema][])(
+    '%s widget is named by the field title its plan hands it when the label is hidden',
+    (_, role, schema, uiSchema) => {
+      renderField({ ...schema, title: 'A title' }, { ...uiSchema, 'ui:label': false });
+
+      expect(screen.getByRole(role)).toHaveAttribute('aria-label', 'A title');
+      expect(screen.getByRole(role)).toHaveAccessibleName('A title');
+    },
+  );
+
+  // Its plan names an option's control by the hidden label of the field above, as it names an option's text input
+  test.each([
+    ['checkboxes', 'group', checkboxesSchema, { 'ui:widget': 'checkboxes' }, ['a']],
+    ['radio', 'radiogroup', enumSchema, { 'ui:widget': 'radio' }, 'a'],
+    ['range', 'slider', { type: 'integer' }, { 'ui:widget': 'range' }, 3],
+  ] as [string, string, RJSFSchema, UiSchema, unknown][])(
+    "%s widget of an anyOf option is named by its field's title when ui:label: false hides both labels",
+    (_, role, schema, uiSchema, formData) => {
+      render(
+        <WrappedForm
+          schema={{ title: 'A title', anyOf: [{ ...schema, title: 'An option' }, { type: 'boolean' }] }}
+          uiSchema={{ 'ui:label': false, anyOf: [uiSchema, {}] }}
+          initialFormData={formData}
+          validator={validator}
+        />,
+      );
+
+      expect(screen.getByRole(role)).toHaveAccessibleName('A title');
     },
   );
 
@@ -845,4 +882,55 @@ describe('aria-labelledby', () => {
       }
     },
   );
+});
+
+describe("the field's id is on the element a user focuses", () => {
+  const controls: [string, RJSFSchema, UiSchema, string][] = [
+    ['text input', { type: 'string' }, {}, 'textbox'],
+    ['textarea', { type: 'string' }, { 'ui:widget': 'textarea' }, 'textbox'],
+    ['number input', { type: 'number' }, {}, 'textbox'],
+    ['checkbox', { type: 'boolean' }, {}, 'checkbox'],
+    ['slider', { type: 'number' }, { 'ui:widget': 'range' }, 'slider'],
+    ['select', enumSchema, {}, 'combobox'],
+    ['multi-select', checkboxesSchema, {}, 'combobox'],
+  ];
+
+  test.each(controls)("names a %s by its label, and gives it the field's id", (_, x, ui, role) => {
+    render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { x: { ...x, title: 'X' } } }}
+        uiSchema={{ x: ui }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole(role, { name: 'X' })).toHaveAttribute('id', 'root_x');
+  });
+
+  // A group's wrapper carries the field's id but isn't focusable, so focus goes to its first option, as core's does,
+  // and an alt-date's to its first part
+  test.each<[string, RJSFSchema, UiSchema, string]>([
+    ...controls.map(([name, x, ui]): [string, RJSFSchema, UiSchema, string] => [name, x, ui, 'root_x']),
+    ['password input', { type: 'string' }, { 'ui:widget': 'password' }, 'root_x'],
+    ['radio group', enumSchema, { 'ui:widget': 'radio' }, 'root_x-0'],
+    ['checkboxes group', checkboxesSchema, { 'ui:widget': 'checkboxes' }, 'root_x-0'],
+    ['alt-date', { type: 'string' }, { 'ui:widget': 'alt-date' }, 'root_x_year'],
+  ])('moves focus to a %s with errors when focusOnFirstError is set', async (_, x, ui, focusedId) => {
+    render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { x: { ...x, title: 'X' } } }}
+        uiSchema={{ x: ui }}
+        validator={validator}
+        focusOnFirstError
+        customValidate={(_: unknown, errors: FormValidation<{ x?: unknown }>) => {
+          errors.x?.addError('bad');
+          return errors;
+        }}
+      />,
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Submit' }));
+
+    expect(document.activeElement).toHaveAttribute('id', focusedId);
+  });
 });
