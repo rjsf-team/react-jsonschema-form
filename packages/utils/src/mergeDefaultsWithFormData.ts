@@ -1,5 +1,6 @@
 import type { GenericObjectType } from './index.ts';
 import isObject from './isObject.ts';
+import setOwn from './setOwn.ts';
 
 /** Merges the `defaults` object of type `T` into the `formData` of type `T`
  *
@@ -68,42 +69,34 @@ export default function mergeDefaultsWithFormData<T = unknown>(
   if (isObject(formData)) {
     const formDataObj: GenericObjectType = formData;
     const defaultsObj: GenericObjectType | undefined = isObject(defaults) ? defaults : undefined;
-    const acc = { ...defaultsObj } as { [key in keyof T]: any }; // Prevent mutation of source object.
+    const acc: GenericObjectType = { ...defaultsObj }; // Prevent mutation of source object.
     return Object.keys(formDataObj).reduce((accumulator, key) => {
       const keyValue = formDataObj[key];
-      const keyExistsInDefaults = defaultsObj !== undefined && key in defaultsObj;
-      const keyExistsInFormData = key in formDataObj;
-      const keyDefault = defaultsObj?.[key] ?? {};
+      const keyExistsInDefaults = defaultsObj !== undefined && Object.hasOwn(defaultsObj, key);
+      const ownDefault = keyExistsInDefaults ? defaultsObj[key] : undefined;
       // If any direct child of this key's default is itself an object or array,
       // the shallow spread below would bypass its merge rules. Route those cases
       // to the recursive path; the recursive call repeats this check one level deeper.
       const defaultValueNeedsDeepMerge =
-        keyExistsInDefaults &&
-        isObject(keyDefault) &&
-        Object.values(keyDefault).some((v) => isObject(v) || Array.isArray(v));
+        isObject(ownDefault) && Object.values(ownDefault).some((v) => isObject(v) || Array.isArray(v));
 
-      const keyDefaultIsObject = keyExistsInDefaults && isObject(defaultsObj?.[key]);
-      const keyHasFormDataObject = keyExistsInFormData && isObject(keyValue);
+      const keyDefaultIsObject = isObject(ownDefault);
+      const keyHasFormDataObject = isObject(keyValue);
 
-      if (keyDefaultIsObject && keyHasFormDataObject && !defaultValueNeedsDeepMerge) {
-        accumulator[key as keyof T] = {
-          ...defaultsObj?.[key],
-          ...keyValue,
-        };
-        return accumulator;
-      }
-
-      accumulator[key as keyof T] = mergeDefaultsWithFormData<T>(
-        defaultsObj?.[key],
-        keyValue,
-        mergeExtraArrayDefaults,
-        defaultSupercedesUndefined,
-        // overrideFormDataWithDefaults can be true only when the key value exists in defaults
-        // Or if the key value doesn't exist in formData
-        overrideFormDataWithDefaults && (keyExistsInDefaults || !keyExistsInFormData),
-      );
+      const merged =
+        keyDefaultIsObject && keyHasFormDataObject && !defaultValueNeedsDeepMerge
+          ? { ...ownDefault, ...keyValue }
+          : mergeDefaultsWithFormData<T>(
+              ownDefault,
+              keyValue,
+              mergeExtraArrayDefaults,
+              defaultSupercedesUndefined,
+              // overrideFormDataWithDefaults can be true only when the key value exists in defaults
+              overrideFormDataWithDefaults && keyExistsInDefaults,
+            );
+      setOwn(accumulator, key, merged);
       return accumulator;
-    }, acc);
+    }, acc) as T;
   }
 
   /**
