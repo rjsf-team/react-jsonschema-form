@@ -23,6 +23,7 @@ export default function PasswordWidget<
     options,
     placeholder,
     readonly,
+    required,
     value,
     presentation,
   } = props;
@@ -47,6 +48,8 @@ export default function PasswordWidget<
       onChange={!readonly ? handleChange : undefined}
       onFocus={!readonly ? handleFocus : undefined}
       placeholder={placeholder}
+      readOnly={readonly}
+      required={required}
       value={value || ''}
       {...getControlAttributes<T, S, F>({ id, presentation })}
     />

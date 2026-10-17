@@ -33,6 +33,7 @@ export default function RadioWidget<
   onFocus,
   options,
   readonly,
+  required,
   value,
   presentation,
 }: WidgetProps<T, S, F>) {
@@ -81,6 +82,7 @@ export default function RadioWidget<
             disabled={fieldDisabled || enumOptionsIsDisabled(option.value, enumDisabled) || undefined}
             // oxlint-disable-next-line react/no-array-index-key
             key={i}
+            required={required}
             value={domValues[i]}
             {...optionAttributes}
           >

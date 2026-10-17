@@ -660,6 +660,49 @@ describe('antd focusOnFirstError', () => {
 });
 
 describe("antd widgets carry their field's plan on the element a user focuses", () => {
+  test('a required select tells assistive technology it is required', () => {
+    render(
+      <Form
+        schema={{ type: 'object', required: ['pet'], properties: { pet: { type: 'string', enum: ['cat', 'dog'] } } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('combobox')).toHaveAttribute('aria-required', 'true');
+  });
+
+  test.each<[string, RJSFSchema, UiSchema, string]>([
+    ['password', { type: 'string' }, { 'ui:widget': 'password' }, '#root_pet'],
+    ['textarea', { type: 'string' }, { 'ui:widget': 'textarea' }, '#root_pet'],
+    ['date', { type: 'string', format: 'date' }, {}, '#root_pet'],
+    ['radio', { type: 'string', enum: ['cat', 'dog'] }, { 'ui:widget': 'radio' }, 'input[type="radio"]'],
+  ])('marks a required %s input required', (_, pet, uiSchema, selector) => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', required: ['pet'], properties: { pet } }}
+        uiSchema={{ pet: uiSchema }}
+        validator={validator}
+      />,
+    );
+
+    const inputs = container.querySelectorAll(selector);
+    expect(inputs.length).toBeGreaterThan(0);
+    inputs.forEach((input) => expect(input).toBeRequired());
+  });
+
+  test("names the additional property key's input by its label where ui:label: false hides it", () => {
+    render(
+      <Form
+        schema={{ type: 'object', additionalProperties: { type: 'string' } }}
+        uiSchema={{ additionalProperties: { 'ui:label': false } }}
+        formData={{ first: 'a' }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('textbox', { name: 'first Key' })).toHaveAttribute('id', 'root_first-key');
+  });
+
   test.each([
     ['text', { type: 'string' }, {}],
     ['number', { type: 'number' }, {}],

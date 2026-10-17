@@ -35,6 +35,7 @@ export default function DateWidget<
   onFocus,
   placeholder,
   readonly,
+  required,
   value,
   showTime = false,
   schema,
@@ -72,6 +73,8 @@ export default function DateWidget<
       onChange={!readonly ? handleChange : undefined}
       onFocus={!readonly ? handleFocus : undefined}
       placeholder={placeholder}
+      inputReadOnly={readonly}
+      required={required}
       showTime={showTime}
       style={DATE_PICKER_STYLE}
       value={localValue ? dayjs(localValue) : undefined}
