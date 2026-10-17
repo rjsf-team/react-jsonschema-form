@@ -389,4 +389,21 @@ describe('compileSchemaValidatorsCode', () => {
     expect(validator.isValid(pointer, ['x', 1], rootSchema)).toBe(false);
     expect(validator.isValid(pointer, ['x'], rootSchema)).toBe(true);
   });
+  test('reads the keywords beside a $ref under a draft-07 root as the live validator reads them', () => {
+    const rootSchema: RJSFSchema = {
+      $schema: 'http://json-schema.org/draft-07/schema#',
+      definitions: { s: { type: 'string' } },
+      type: 'object',
+      properties: {
+        p: { $ref: '#/definitions/s', enum: ['ab'] },
+        v: { anyOf: [{ $ref: '#/properties/p' }, { type: 'number' }] },
+      },
+    };
+    const live = customizeValidator();
+    const validator = createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(rootSchema)), rootSchema);
+    expect(live.validateFormData({ p: 'xyz' }, rootSchema).errors).toEqual([]);
+    expect(validator.validateFormData({ p: 'xyz' }, rootSchema).errors).toEqual([]);
+    expect(validator.isValid({ $ref: '#/properties/v/anyOf/0' }, 'xyz', rootSchema)).toBe(true);
+    expect(validator.isValid({ $ref: '#/properties/v/anyOf/0' }, 5, rootSchema)).toBe(false);
+  });
 });

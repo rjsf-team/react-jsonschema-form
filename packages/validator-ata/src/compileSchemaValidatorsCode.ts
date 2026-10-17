@@ -58,6 +58,9 @@ function mapKeyword(key: string, value: unknown, map: (subschema: unknown) => un
   return SUBSCHEMA_KEYWORDS.has(key) ? map(value) : value;
 }
 
+/** The `$schema`s under which ata reads a schema as draft-07, as it spells them */
+const DRAFT_07_IDS = new Set(['http://json-schema.org/draft-07/schema#', 'http://json-schema.org/draft-07/schema']);
+
 /** Returns the subschemas `schema` holds under its keywords */
 function subschemasOf(schema: GenericObjectType): unknown[] {
   const subschemas: unknown[] = [];
@@ -204,6 +207,10 @@ function compilable(schema: unknown): GenericObjectType {
  */
 function standalone(schema: GenericObjectType, rootSchema: object): GenericObjectType {
   const container = isObject(getByPath(rootSchema, ['$defs'])) ? '$defs' : 'definitions';
+  // The dialect the root declares decides how ata reads the keywords of every subschema it carries, as it does where the
+  // live validator resolves a pointer into the root
+  const dialect: unknown = getByPath(rootSchema, [SCHEMA_KEY]);
+  const draft07 = typeof dialect === 'string' && DRAFT_07_IDS.has(dialect);
   const { root, resources } = resourcesOf(rootSchema);
   const names = new Map<unknown, Map<string, string>>();
   const pending: [string, unknown, Resource][] = [];
@@ -249,6 +256,10 @@ function standalone(schema: GenericObjectType, rootSchema: object): GenericObjec
     if (Object.keys(siblings).length === 0) {
       return reference;
     }
+    // Under draft-07 ata ignores what asserts beside a `$ref`, as that draft does, once it has read the `$ref` beside it
+    if (draft07) {
+      return { ...siblings, ...reference };
+    }
     // ata compiles no `$ref` beside keywords that assert something, so it is read as an `allOf` entry beside them, as
     // 2019-09, 2020-12 and Ajv read it
     const allOf: unknown = siblings[ALL_OF_KEY];
@@ -260,9 +271,6 @@ function standalone(schema: GenericObjectType, rootSchema: object): GenericObjec
     const [name, value, base] = next;
     carried[name] = compilable(rewrite(value, base));
   }
-  // The dialect the root declares decides how ata reads the keywords of every subschema it carries, as it does where the
-  // live validator resolves a pointer into the root
-  const dialect: unknown = getByPath(rootSchema, [SCHEMA_KEY]);
   const declared = typeof dialect === 'string' ? { [SCHEMA_KEY]: dialect, ...document } : document;
   return count === 0 ? declared : { ...declared, [container]: carried };
 }
