@@ -54,16 +54,23 @@ export default function omitExtraData<
   F extends FormContextType = FormContextType,
 >(context: SchemaContext<S, F>, schema: S, rootSchema: S = {} as S, formData?: T): T | undefined {
   const { validator } = context;
+  /** Reads `key` off `obj` only when it is an own property, returning `undefined` for a missing or
+   * inherited key, so an `Object.prototype` member is never mistaken for form data.
+   *
+   * @param obj - The object to read from
+   * @param key - The property key to read
+   * @returns - The own value at `key`, or `undefined`
+   */
+  function ownValue(obj: GenericObjectType, key: string): unknown {
+    return Object.hasOwn(obj, key) ? obj[key] : undefined;
+  }
+
   /** Type predicate that narrows `value` to `GenericObjectType` — true when `value` is a plain,
    * non-array object (i.e. a JSON object). Used to distinguish JSON objects from arrays and primitives.
    *
    * @param value - The value to check
    * @returns - True if `value` is a plain non-array object
    */
-  function ownValue(obj: GenericObjectType, key: string): unknown {
-    return Object.hasOwn(obj, key) ? obj[key] : undefined;
-  }
-
   function isObjectValue(value: unknown): value is GenericObjectType {
     return isObject(value);
   }
@@ -105,7 +112,7 @@ export default function omitExtraData<
      * @param [required=false] - When true the property is never pruned regardless of its filtered value
      */
     function setProperty(key: string, schemaDef: S | boolean, value: unknown, required = false) {
-      const v = omit(schemaDef, value, Object.hasOwn(target, key) ? target[key] : undefined);
+      const v = omit(schemaDef, value, ownValue(target, key));
       if (!required && isObject(v)) {
         // Resolve $ref so we can inspect the effective required list for the inner schema.
         let sd = isSchemaObject<S>(schemaDef) ? schemaDef : ({} as S);
@@ -167,7 +174,8 @@ export default function omitExtraData<
       const addlSchema = additionalProperties as S | boolean;
       if (patternPropertiesRest !== undefined) {
         for (const key of patternPropertiesRest) {
-          setProperty(key, addlSchema, ownValue(source, key), requiredSet.has(key));
+          // `patternPropertiesRest` comes from `Object.entries(source)`, so its keys are always own
+          setProperty(key, addlSchema, source[key], requiredSet.has(key));
         }
       } else {
         const knownProperties = new Set(Object.keys(properties ?? {}));
@@ -334,7 +342,7 @@ export default function omitExtraData<
     let result = target;
     for (const [key, deps] of Object.entries(dependencies)) {
       // Skip property dependencies (string arrays); only process schema dependencies.
-      if (key in source && !Array.isArray(deps)) {
+      if (Object.hasOwn(source, key) && !Array.isArray(deps)) {
         result = omit(deps as S | boolean, source, result, false);
       }
     }
