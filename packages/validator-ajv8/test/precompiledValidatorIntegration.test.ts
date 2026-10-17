@@ -310,4 +310,27 @@ describe('precompiled validator integration: oneOf with additionalProperties:fal
       expect(validator.isValid(withVariantId(retrieved), { b: 1 }, anonymous)).toBe(true);
     });
   });
+
+  describe('a boolean if', () => {
+    const branches: RJSFSchema = {
+      then: { properties: { t: { type: 'string', default: 't' } } },
+      else: { properties: { e: { type: 'string', default: 'e' } } },
+    };
+    it.each<[string, RJSFSchema, unknown]>([
+      ['true', { type: 'object', properties: { a: { type: 'string' } }, if: true, ...branches }, { a: 'x', t: 't' }],
+      ['false', { type: 'object', properties: { a: { type: 'string' } }, if: false, ...branches }, { a: 'x', e: 'e' }],
+      [
+        'true on a property',
+        {
+          type: 'object',
+          properties: { p: { type: 'object', properties: { a: { type: 'string' } }, if: true, ...branches } },
+        },
+        { p: { a: 'x', t: 't' } },
+      ],
+    ])('takes the branch an if of %s takes, which needs no compiled function', (_, schema, expected) => {
+      const schemaUtils = createSchemaUtils({ validator: buildPrecompiledValidator(schema) }, schema);
+      const formData = 'p' in (schema.properties ?? {}) ? { p: { a: 'x' } } : { a: 'x' };
+      expect(schemaUtils.getDefaultFormState(schema, formData)).toEqual(expected);
+    });
+  });
 });

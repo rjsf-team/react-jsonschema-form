@@ -1829,7 +1829,8 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           };
           const cases: [string, RJSFSchema, boolean[]][] = [
             ['an allOf entry', { allOf: [typedInput] }, [false, true]],
-            ['the then of an if', { if: true, then: typedInput }, [true, false, true]],
+            // A boolean `if` is not put to the validator, so the options are the only checks it answers
+            ['the then of an if', { if: true, then: typedInput }, [false, true]],
           ];
           it.each(cases)('applies the option the data matches from %s', (_, dependency, isValid) => {
             testValidator.setReturnValues({ isValid });

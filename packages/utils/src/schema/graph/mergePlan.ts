@@ -679,9 +679,13 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       return without;
     }
     const conditionNode = this.graph.node(condition);
-    const conditionSchema =
-      conditionNode.kind === 'schema' ? conditionNode.raw : booleanSchema(conditionNode, this.graph.rawRoot);
-    const branchKey = this.holds(`if:${condition}`, conditionSchema, this.data) ? THEN_KEY : ELSE_KEY;
+    // A boolean `if` holds or fails whatever the data, which needs no validator to say, nor a precompiled one to have a
+    // function for the schema it reads as
+    const satisfied =
+      conditionNode.kind === 'schema'
+        ? this.holds(`if:${condition}`, conditionNode.raw, this.data)
+        : conditionNode.kind !== 'boolean' || conditionNode.value;
+    const branchKey = satisfied ? THEN_KEY : ELSE_KEY;
     const branchPart = this.branch(keywords.get(branchKey), branchKey, dependencyKey);
     return branchPart === undefined ? without : mergeBranch(without, branchPart);
   }

@@ -296,6 +296,16 @@ describe('buildPlan()', () => {
       });
       expect(keywordsOf(plan)).toEqual({ title: 'from the target', then: { title: 'beside the $ref' } });
     });
+    it('takes the branch a boolean if takes without asking the validator', () => {
+      const validator = miniValidator();
+      expect(keywordsOf(planOf({ if: true, then: { title: 't' } }, { context: { validator } }))).toEqual({
+        title: 't',
+      });
+      expect(keywordsOf(planOf({ if: false, else: { title: 'e' } }, { context: { validator } }))).toEqual({
+        title: 'e',
+      });
+      expect(validator.calls).toBe(0);
+    });
     it('drops the conditional keywords when there is no branch to take or the if is not a schema', () => {
       expect(keywordsOf(planOf({ if: true, else: { title: 'e' } }))).toEqual({});
       expect(keywordsOf(planOf(looseSchema({ if: true, then: 'garbage', title: 't' })))).toEqual({ title: 't' });
@@ -720,7 +730,7 @@ describe('buildPlan()', () => {
   describe('memoization', () => {
     it('returns the same plan for the same graph, seeds, data, policy and context', () => {
       const context = { validator: miniValidator() };
-      const graph = parseSchemaGraph({ type: 'object', if: true, then: { title: 't' } });
+      const graph = parseSchemaGraph({ type: 'string', if: { minLength: 1 }, then: { title: 't' } });
       const seeds = [{ node: graph.root, refPath: [] }];
       const data = 'x';
       const plan = buildPlan({ context, graph, seeds, data });
