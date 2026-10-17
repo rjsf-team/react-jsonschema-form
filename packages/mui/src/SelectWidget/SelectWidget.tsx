@@ -17,6 +17,7 @@ import {
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionsDomValues,
+  getControlAriaLabel,
   getOptionValueFormat,
   groupEnumOptions,
   hasWidgetErrors,
@@ -27,6 +28,7 @@ import {
   useSelectFocusHandlers,
   widgetAriaProps,
   widgetDrawsLabel,
+  widgetDrawsLabelText,
 } from '@rjsf/utils';
 
 import { describeByHelperText, getMuiProps, withSlotProps } from '../util.ts';
@@ -111,6 +113,9 @@ export default function SelectWidget<
     textFieldOverrides.id ?? id,
     textFieldOverrides.helperText,
   );
+  // The combobox shows its value, not a name, so where no label names it, it is named by the field's label, its
+  // placeholder or the translated prompt
+  const ariaLabel = getControlAriaLabel<T, S, F>(props, ariaProps['aria-label'], widgetDrawsLabelText<T, S, F>(props));
   const showPlaceholderOption = !isMultiple && schema.default === undefined;
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, isMultiple);
 
@@ -153,7 +158,7 @@ export default function SelectWidget<
             ...muiSlotProps?.select,
             multiple,
           },
-          htmlInput: withSlotProps(ariaProps, muiSlotProps?.htmlInput),
+          htmlInput: withSlotProps({ ...ariaProps, 'aria-label': ariaLabel }, muiSlotProps?.htmlInput),
         }}
       >
         {showPlaceholderOption && <MenuItem value=''>{placeholder}</MenuItem>}

@@ -426,6 +426,19 @@ describe("mui widgets are named by their label and carry the field's id on the e
     expectReferencesResolve(container);
   });
 
+  test("names an additional property's key input by its label's text where ui:label: false leaves it unlabelled", () => {
+    render(
+      <Form
+        schema={{ type: 'object', additionalProperties: { type: 'string' } }}
+        uiSchema={{ additionalProperties: { 'ui:label': false } }}
+        initialFormData={{ foo: 'bar' }}
+        validator={validator}
+      />,
+    );
+
+    expect(document.getElementById('root_foo-key')).toHaveAccessibleName('foo Key');
+  });
+
   test("keeps the field's id on the slider's root for a range of several values, whose every thumb takes its input slot", () => {
     const { RangeWidget } = generateWidgets();
     const { container } = render(
@@ -486,6 +499,17 @@ describe("mui widgets are named by their label and carry the field's id on the e
 
     expect(screen.getByRole('combobox', { name: 'foo Key' })).not.toHaveAttribute('aria-describedby');
     expectReferencesResolve(container);
+  });
+});
+
+describe('mui SelectWidget', () => {
+  test.each<[string, RJSFSchema]>([
+    ['an untitled anyOf selector', { anyOf: [{ type: 'string' }, { type: 'number' }] }],
+    ['a select whose field has no title or name', { type: 'string', enum: ['foo', 'bar'] }],
+  ])('names %s by the translated prompt where no label names it', (_, schema) => {
+    render(<Form schema={schema} validator={validator} />);
+
+    expect(screen.getAllByRole('combobox')[0]).toHaveAccessibleName('Select ...');
   });
 });
 

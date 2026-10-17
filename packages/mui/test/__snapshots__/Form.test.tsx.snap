@@ -14118,6 +14118,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
             <div
               aria-expanded="false"
               aria-haspopup="listbox"
+              aria-label="Select ..."
               class="MuiSelect-select MuiSelect-outlined MuiInputBase-input MuiOutlinedInput-input emotion-3"
               id="root"
               role="combobox"
@@ -14631,6 +14632,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
             <div
               aria-expanded="false"
               aria-haspopup="listbox"
+              aria-label="Select ..."
               class="MuiSelect-select MuiSelect-outlined MuiInputBase-input MuiOutlinedInput-input emotion-3"
               id="root"
               role="combobox"
@@ -15145,6 +15147,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
             <div
               aria-expanded="false"
               aria-haspopup="listbox"
+              aria-label="Select ..."
               class="MuiSelect-select MuiSelect-outlined MuiInputBase-input MuiOutlinedInput-input emotion-3"
               id="root"
               role="combobox"
@@ -15658,6 +15661,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
             <div
               aria-expanded="false"
               aria-haspopup="listbox"
+              aria-label="Select ..."
               class="MuiSelect-select MuiSelect-outlined MuiInputBase-input MuiOutlinedInput-input emotion-3"
               id="root"
               role="combobox"
@@ -16172,6 +16176,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
             <div
               aria-expanded="false"
               aria-haspopup="listbox"
+              aria-label="Select ..."
               class="MuiSelect-select MuiSelect-outlined MuiInputBase-input MuiOutlinedInput-input emotion-3"
               id="root"
               role="combobox"
@@ -16685,6 +16690,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
             <div
               aria-expanded="false"
               aria-haspopup="listbox"
+              aria-label="Select ..."
               class="MuiSelect-select MuiSelect-outlined MuiInputBase-input MuiOutlinedInput-input emotion-3"
               id="root"
               role="combobox"
@@ -39843,6 +39849,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
             <div
               aria-expanded="false"
               aria-haspopup="listbox"
+              aria-label="Select ..."
               class="MuiSelect-select MuiSelect-outlined MuiInputBase-input MuiOutlinedInput-input emotion-3"
               id="root"
               role="combobox"
@@ -40362,6 +40369,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
             <div
               aria-expanded="false"
               aria-haspopup="listbox"
+              aria-label="Select ..."
               class="MuiSelect-select MuiSelect-outlined MuiSelect-multiple MuiInputBase-input MuiOutlinedInput-input emotion-3"
               id="root"
               role="combobox"
@@ -40880,6 +40888,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
             <div
               aria-expanded="false"
               aria-haspopup="listbox"
+              aria-label="Select ..."
               class="MuiSelect-select MuiSelect-outlined MuiSelect-multiple MuiInputBase-input MuiOutlinedInput-input emotion-3"
               id="root"
               role="combobox"
@@ -41851,6 +41860,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
             <div
               aria-expanded="false"
               aria-haspopup="listbox"
+              aria-label="Select ..."
               class="MuiSelect-select MuiSelect-outlined MuiSelect-multiple MuiInputBase-input MuiOutlinedInput-input emotion-3"
               id="root"
               role="combobox"
@@ -42364,6 +42374,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
             <div
               aria-expanded="false"
               aria-haspopup="listbox"
+              aria-label="Select ..."
               class="MuiSelect-select MuiSelect-outlined MuiSelect-multiple MuiInputBase-input MuiOutlinedInput-input emotion-3"
               id="root"
               role="combobox"
@@ -42882,6 +42893,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
             <div
               aria-expanded="false"
               aria-haspopup="listbox"
+              aria-label="Select ..."
               class="MuiSelect-select MuiSelect-outlined MuiInputBase-input MuiOutlinedInput-input emotion-3"
               id="root"
               role="combobox"
@@ -44365,6 +44377,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
             <div
               aria-expanded="false"
               aria-haspopup="listbox"
+              aria-label="Select ..."
               class="MuiSelect-select MuiSelect-outlined MuiInputBase-input MuiOutlinedInput-input emotion-3"
               id="root"
               role="combobox"
@@ -44879,6 +44892,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
             <div
               aria-expanded="false"
               aria-haspopup="listbox"
+              aria-label="Select ..."
               class="MuiSelect-select MuiSelect-outlined MuiInputBase-input MuiOutlinedInput-input emotion-3"
               id="root"
               role="combobox"
@@ -45398,6 +45412,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
             <div
               aria-expanded="false"
               aria-haspopup="listbox"
+              aria-label="Select ..."
               class="MuiSelect-select MuiSelect-outlined MuiInputBase-input MuiOutlinedInput-input emotion-3"
               id="root"
               role="combobox"
@@ -46986,6 +47001,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
               aria-describedby="root__selectedOptionDescription"
               aria-expanded="false"
               aria-haspopup="listbox"
+              aria-label="Select ..."
               class="MuiSelect-select MuiSelect-outlined MuiInputBase-input MuiOutlinedInput-input emotion-3"
               id="root"
               role="combobox"
@@ -47506,6 +47522,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
             <div
               aria-expanded="false"
               aria-haspopup="listbox"
+              aria-label="Select ..."
               class="MuiSelect-select MuiSelect-outlined MuiInputBase-input MuiOutlinedInput-input emotion-3"
               id="root"
               role="combobox"
