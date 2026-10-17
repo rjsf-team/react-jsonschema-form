@@ -5,7 +5,9 @@ import type { EventFormData } from './IChangeEvent.ts';
 /** Public methods exposed by a Form ref.
  * Commands read and write Form's latest stored value, edits made earlier in the same tick included. Use event handlers
  * for user actions, or Effects for synchronization after prop changes: the form takes the props of a commit before any
- * layout Effect of that commit runs, so a command issued from one, a widget's or a sibling's, starts from them. A form
+ * layout Effect of that commit runs, and before the layout cleanup of any field the commit removes, so a command issued
+ * from one, a widget's or a sibling's, starts from them. A sibling the commit removes is the exception: React runs its
+ * cleanup before it reaches the form, so a command from it starts from the props of the commit before. A form
  * that has unmounted, or that an `<Activity>` hides, which React asks to
  * be treated alike, drops changes, `reset()` and `submit()`, and its validation methods return their result without
  * calling `onError`.

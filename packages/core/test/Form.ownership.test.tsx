@@ -1152,6 +1152,34 @@ describe('form data ownership', () => {
       expect(handleOf(ref).getFormData()).toEqual({ b: 'set' });
     });
 
+    it("a removed field's layout cleanup reports through the props of the commit that removes it", () => {
+      interface Versioned {
+        a?: string;
+        b?: string;
+        version?: number;
+      }
+      // Flushes a draft as it unmounts, as a widget that keeps its own draft does
+      function FlushingWidget({ onChange }: WidgetProps) {
+        useLayoutEffect(() => () => onChange('flushed'), [onChange]);
+        return null;
+      }
+      const reported: [number, Versioned][] = [];
+      const tree = (version: number) => (
+        <Form<Versioned>
+          schema={version === 1 ? schema : { type: 'object', properties: { a: { type: 'string' } } }}
+          uiSchema={{ b: { 'ui:widget': FlushingWidget } }}
+          validator={validator}
+          initialFormData={{ a: 'a' }}
+          onChange={(event) => reported.push([version, event.formData])}
+        />
+      );
+      const { rerender } = render(tree(1));
+
+      rerender(tree(2));
+
+      expect(reported).toEqual([[2, { a: 'a', b: 'flushed' }]]);
+    });
+
     it('a setFieldValue from inside onChange builds on the edit being handled', async () => {
       const ref = createFormRef<Data>();
       const reported: Data[] = [];

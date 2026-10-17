@@ -178,7 +178,7 @@ useEffect(() => {
 }, [formRef, schema, data]);
 ```
 
-Form takes the props of a commit in an insertion Effect, which React runs before any layout Effect of that commit. A command issued from the setup of a layout Effect, a callback ref being attached, or a class component's `componentDidMount` or `componentDidUpdate`, in the commit that renders new props, therefore sees those props wherever it sits: inside the form, such as a widget's, or in a sibling rendered before or after it. Passive Effects and event handlers see them too.
+Form takes the props of a commit in an insertion Effect, which React runs before any layout Effect of that commit. A command issued from the setup of a layout Effect, a callback ref being attached, or a class component's `componentDidMount` or `componentDidUpdate`, in the commit that renders new props, therefore sees those props wherever it sits: inside the form, such as a widget's, or in a sibling rendered before or after it. The insertion Effect is the first thing inside the form element, so the layout cleanup of a field the commit removes, which flushes a draft as a widget unmounts, sees them too. The exception is the cleanup of a sibling of the form that the commit removes: React runs it before it reaches the form, so a command from it sees the props of the commit before. Passive Effects and event handlers see the new props too.
 
 Do not issue commands while rendering or from a validation function. React may repeat those calls or abandon the render, and an edit made while a validation runs has the operation that ran it validate a second time, on the edited data.
 

@@ -325,6 +325,19 @@ type ValidationProps<T, S extends StrictRJSFSchema, F extends FormContextType> =
   'customValidate' | 'transformErrors'
 >;
 
+/** Hands each commit's props and state to the model, see `committed()`, from an insertion Effect rendered first inside
+ * the form element. React runs every insertion Effect of a commit before any layout Effect in it, so a command from a
+ * layout Effect, a widget's or an earlier sibling's, starts from the props of the commit that runs it. It walks the tree
+ * in order as it does, and runs the layout cleanups of what the commit removes on the way, so being first inside the
+ * form element also has this run before the cleanup of any field the commit removes, which flushes a draft from it
+ * under the new props too. Hidden content renders, and runs its insertion Effects, so the model keeps up while an
+ * `<Activity>` hides the form
+ */
+function Handoff({ handOff }: { handOff: () => void }) {
+  useInsertionEffect(handOff);
+  return null;
+}
+
 /** Attaches the form to its model for as long as it is shown, from the first layout Effect in the form's subtree: React
  * runs a subtree's layout Effects children first and siblings in order, so this setup runs before any field's,
  * including when an `<Activity>` shows the form again or StrictMode replays the Effects, and an edit a widget makes
@@ -359,14 +372,9 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   if (state !== cache.state) {
     setCache({ model, published, props, state });
   }
-  // Each commit tells the model the props and the state it rendered, which operations start from. From an insertion
-  // Effect, since React runs every insertion Effect of a commit before any layout Effect in it: a command issued from
-  // a layout Effect, a widget's or an earlier sibling's, then starts from the props of the commit that runs it, where
-  // a layout Effect of the form's own would run after both. Hidden content renders, and runs its insertion Effects, so
-  // the model keeps up while an `<Activity>` hides the form; the attachment is the `Attachment` rendered below
-  useInsertionEffect(() => {
-    model.committed(props, state, published);
-  });
+  // Each commit tells the model the props and the state it rendered, which operations start from, through the
+  // `Handoff` rendered below; the attachment is the `Attachment` after it
+  const handOff = () => model.committed(props, state, published);
   // oxlint-disable-next-line typescript/no-deprecated -- the form still reads the deprecated alias
   const { formData: formDataProp, initialFormData } = props;
   useEffect(() => {
@@ -453,6 +461,7 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
         onSubmit={model.handleSubmit}
         ref={setFormElement}
       >
+        <Handoff handOff={handOff} />
         <Attachment attach={model.attached} />
         {showErrorList === 'top' && renderErrors()}
         <SchemaFieldComponent

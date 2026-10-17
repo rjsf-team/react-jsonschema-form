@@ -518,10 +518,11 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
         isDetached = true;
       };
     },
-    /** Called from an insertion Effect of every commit of the form with what it rendered: its props, the state it
-     * showed and the store's state that was derived from. React runs every insertion Effect of a commit before any of
-     * its layout Effects, so a command from a layout Effect anywhere in the tree, an earlier sibling's or a widget's,
-     * starts from that commit's props; a layout Effect would run after those and leave them the previous commit's.
+    /** Called from an insertion Effect of every commit of the form, the `Handoff` rendered first inside the form
+     * element, with what it rendered: its props, the state it showed and the store's state that was derived from. React
+     * runs every insertion Effect of a commit before any of its layout Effects, and before the layout cleanups of the
+     * fields the commit removes, which come after it in the tree, so a command from either starts from that commit's
+     * props; a layout Effect would run after those and leave them the previous commit's.
      * Only recorded, for the operations that start from it; nothing is published, since the render already shows it.
      */
     committed: (nextProps: FormProps<T, S, F>, derived: FormState<T, S, F>, from: FormState<T, S, F>) => {
