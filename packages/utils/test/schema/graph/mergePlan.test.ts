@@ -471,6 +471,32 @@ describe('buildPlan()', () => {
           breed: { type: 'string' },
         });
       });
+      it.each(['oneOf', 'anyOf'])('keeps the %s the chosen option offers itself', (keyword) => {
+        const choice = [
+          { title: 'By email', properties: { email: { type: 'string' } } },
+          { title: 'By phone', properties: { phone: { type: 'string' } } },
+        ];
+        const plan = planOf(
+          {
+            type: 'object',
+            properties: { contact: { type: 'string', enum: ['none', 'yes'] } },
+            dependencies: {
+              contact: {
+                oneOf: [
+                  { properties: { contact: { enum: ['none'] } } },
+                  { properties: { contact: { enum: ['yes'] } }, [keyword]: choice },
+                ],
+              },
+            },
+          },
+          { data: { contact: 'yes' } },
+        );
+        expect(keywordsOf(plan)).toEqual({
+          type: 'object',
+          properties: { contact: { type: 'string', enum: ['none', 'yes'] } },
+          [keyword]: choice,
+        });
+      });
       it('leaves a dependency whose oneOf is not a list as it is', () => {
         const plan = planOf(looseSchema({ dependencies: { kind: { oneOf: 'garbage', title: 't' } } }), {
           data: { kind: 'a' },

@@ -727,7 +727,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
         const dependent = this.expandBranch(dependency, provider.refPath, 'dependency', key);
         if (dependent !== undefined) {
           Object.keys(dependent.schema.properties ?? {}).forEach((name) => declared?.add(name));
-          next = mergeBranch(next, { ...dependent, schema: withoutKeys(dependent.schema, ONE_OF_KEY) });
+          next = mergeBranch(next, dependent);
         }
       }
     }
@@ -761,12 +761,14 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
   }
 
   /** Applies the one option of a dependency's `oneOf` whose `properties[key]` the data satisfies, less that property;
-   * with no such option or several, none is applied
+   * with no such option or several, none is applied. The list is chosen from rather than offered, so it is dropped
+   * before the option is merged in, which keeps an `anyOf` or `oneOf` the option offers itself
    */
   private applyExactlyOne(part: Part<S>, key: string, provider: Provider<S> | undefined): Part<S> {
     if (provider === undefined) {
       return part;
     }
+    const withoutList = { ...part, schema: withoutKeys(part.schema, ONE_OF_KEY) };
     const valid = this.graph
       .subschemas(provider.node.id, ONE_OF_KEY)
       .map(([, option]) => option)
@@ -780,11 +782,11 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       });
     if (valid.length !== 1) {
       logOnce(`ignoring oneOf in dependencies of "${key}" because there isn't exactly one subschema that is valid`);
-      return part;
+      return withoutList;
     }
     const chosen = this.expandBranch(valid[0], provider.refPath, 'dependency');
     if (chosen === undefined) {
-      return part;
+      return withoutList;
     }
     const properties = { ...chosen.schema.properties };
     Reflect.deleteProperty(properties, key);
@@ -797,7 +799,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
         ? chain
         : new Map(chain).set(PROPERTIES_KEY, { ...declaring, drops: key });
     });
-    return mergeBranch(part, { schema, chains });
+    return mergeBranch(withoutList, { schema, chains });
   }
 
   private applyOption(
