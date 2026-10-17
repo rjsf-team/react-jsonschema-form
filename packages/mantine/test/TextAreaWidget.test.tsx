@@ -68,4 +68,9 @@ describe('TextareaWidget', () => {
     });
     expect(queryByText('Test description')).not.toBeInTheDocument();
   });
+
+  test('sets the rows from options on the textarea itself, since cleanupOptions() strips them', () => {
+    const { getByRole } = renderWidget({ options: { rows: 4 } });
+    expect(getByRole('textbox')).toHaveAttribute('rows', '4');
+  });
 });

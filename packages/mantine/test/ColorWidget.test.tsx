@@ -68,4 +68,32 @@ describe('ColorWidget', () => {
     });
     expect(queryByText('Test description')).not.toBeInTheDocument();
   });
+
+  describe('a format from options, which cleanupOptions() strips', () => {
+    function renderWithFormat(value: string, format: string) {
+      const onChange = vi.fn();
+      const { rerender } = renderWidget({ value, onChange });
+      // `ColorInput` converts its color only when the format changes, not to the one it mounts with
+      rerender(
+        <MantineProvider>
+          <ColorWidget {...makeProps({ value, onChange, options: { format } })} />
+        </MantineProvider>,
+      );
+      return onChange;
+    }
+
+    test('is passed on to ColorInput, which converts the color to it', () => {
+      expect(renderWithFormat('#ff0000', 'rgba')).toHaveBeenCalledWith('rgba(255, 0, 0, 1)');
+    });
+
+    test.each(['DMY', 'MDY', 'YMD'])("is ignored when it's the alt-date widgets' order %s", (format) => {
+      expect(renderWithFormat('rgba(255, 0, 0, 1)', format)).not.toHaveBeenCalled();
+    });
+
+    test("is passed on when ColorInput doesn't know it, such as a format a later Mantine release adds", () => {
+      // A format left out converts nothing, so the conversion to hex, Mantine's fallback for a format it doesn't know,
+      // shows this one reached `ColorInput`
+      expect(renderWithFormat('rgba(255, 0, 0, 1)', 'not-a-color-format')).toHaveBeenCalledWith('#ff0000');
+    });
+  });
 });

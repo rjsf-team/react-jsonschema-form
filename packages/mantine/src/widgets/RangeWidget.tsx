@@ -60,7 +60,7 @@ const sliderExcludedKeyRecord: Record<SliderExcludedKey, true> = {
   withSuccessStyles: true,
   wrapperProps: true,
 };
-const sliderExcludedKeys = Object.keys(sliderExcludedKeyRecord);
+const sliderExcludedKeys = new Set(Object.keys(sliderExcludedKeyRecord));
 
 interface FieldSliderProps extends Omit<SliderProps, 'thumbProps'> {
   id: string;

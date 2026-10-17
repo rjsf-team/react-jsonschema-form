@@ -1,5 +1,12 @@
 import { createRef } from 'react';
-import type { ErrorListProps, ErrorSchema, FormValidation, RJSFSchema, RJSFValidationError } from '@rjsf/utils';
+import type {
+  ErrorListProps,
+  ErrorSchema,
+  FieldProps,
+  FormValidation,
+  RJSFSchema,
+  RJSFValidationError,
+} from '@rjsf/utils';
 import { noop } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import { act, render, screen } from '@testing-library/react';
@@ -1712,6 +1719,113 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         expect(onChange.mock.lastCall![0].errors).toEqual([
           expect.objectContaining({ property: '.addr.street', message }),
         ]);
+      });
+    });
+
+    describe('errors held in arrays for the items of an array field', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          list: {
+            type: 'array',
+            items: { type: 'object', properties: { name: { type: 'string', minLength: 3 } } },
+          },
+        },
+      };
+      const formData = { list: [{ name: 'abc' }, { name: 'abc' }] };
+      const extraErrors: ErrorSchema = { list: [{ name: { __errors: ['taken'] } }] };
+
+      it('blocks the submit, shows and lists the error and passes it to onError', async () => {
+        const { node, onError, onSubmit } = createFormComponent({ schema, formData, extraErrors });
+
+        await submitForm(node, user);
+
+        expect(onSubmit).not.toHaveBeenCalled();
+        expect(onError).toHaveBeenLastCalledWith([
+          expect.objectContaining({ property: '.list.0.name', message: 'taken' }),
+        ]);
+        expect(fieldErrorsById(node)).toEqual({ root_list_0_name: ['taken'] });
+        expect(errorListMessages(node)).toEqual(['.list.0.name taken']);
+      });
+
+      it("focuses the item's field on submit with focusOnFirstError", async () => {
+        const { node } = createFormComponent({ schema, formData, extraErrors, focusOnFirstError: true });
+
+        await submitForm(node, user);
+
+        expect(node.querySelector('#root_list_0_name')).toHaveFocus();
+      });
+
+      it('passes the error to a focusOnFirstError callback', async () => {
+        const focusOnFirstError = vi.fn();
+        const { node } = createFormComponent({ schema, formData, extraErrors, focusOnFirstError });
+
+        await submitForm(node, user);
+
+        expect(focusOnFirstError).toHaveBeenCalledWith(
+          expect.objectContaining({ property: '.list.0.name', message: 'taken' }),
+        );
+      });
+
+      it("keeps the validator's errors for the other items", async () => {
+        const { node } = createFormComponent({
+          schema,
+          formData: { list: [{ name: 'abc' }, { name: 'a' }] },
+          extraErrors,
+        });
+
+        await submitForm(node, user);
+
+        expect(fieldErrorsById(node)).toEqual({
+          root_list_0_name: ['taken'],
+          root_list_1_name: ['must NOT have fewer than 3 characters'],
+        });
+      });
+
+      it('passes the error keyed by index to onSubmit when it does not block', async () => {
+        const { node, onSubmit } = createFormComponent({ schema, formData, extraErrors, extraErrorsAreWarnings: true });
+
+        await submitForm(node, user);
+
+        expect(onSubmit).toHaveBeenCalledTimes(1);
+        const { errors, errorSchema } = onSubmit.mock.lastCall![0];
+        expect(errors).toEqual([expect.objectContaining({ property: '.list.0.name', message: 'taken' })]);
+        expect(errorSchema).toStrictEqual({ list: { 0: { name: { __errors: ['taken'] } } } });
+      });
+
+      it('drops an error a field raised in an array once the item it describes changes', async () => {
+        function RaisingField(props: FieldProps) {
+          const { ObjectField } = props.registry.fields;
+          return (
+            <>
+              <button
+                type='button'
+                onClick={() => props.onChange(props.formData, props.fieldPath, { list: [{ __errors: ['custom!'] }] })}
+              >
+                Raise
+              </button>
+              <ObjectField {...props} />
+            </>
+          );
+        }
+        const { node, onError, onSubmit } = createFormComponent({
+          schema: { type: 'object', properties: { list: { type: 'array', items: { type: 'string' } } } },
+          formData: { list: ['a'] },
+          uiSchema: { 'ui:field': RaisingField },
+        });
+
+        await user.click(screen.getByRole('button', { name: 'Raise' }));
+        await submitForm(node, user);
+
+        expect(onError).toHaveBeenLastCalledWith([
+          expect.objectContaining({ property: '.list.0', message: 'custom!' }),
+        ]);
+
+        await user.type(node.querySelector<HTMLInputElement>('#root_list_0')!, 'b');
+        await submitForm(node, user);
+
+        expect(onSubmit).toHaveBeenCalledTimes(1);
+        expect(onError).toHaveBeenCalledTimes(1);
       });
     });
   });

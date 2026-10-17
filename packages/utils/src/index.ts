@@ -12,6 +12,7 @@ import asNumber from './asNumber.ts';
 import callWithDeferredThrow from './callWithDeferredThrow.ts';
 import canExpand from './canExpand.ts';
 import createErrorHandler from './createErrorHandler.ts';
+import createRootSchemaGuard from './createRootSchemaGuard.ts';
 import createSchemaUtils from './createSchemaUtils.ts';
 import dataURItoBlob from './dataURItoBlob.ts';
 import dateElementLabel, { dateElementAriaLabel } from './dateElementLabel.ts';
@@ -29,6 +30,7 @@ import enumOptionsValueForIndex from './enumOptionsValueForIndex.ts';
 import enumOptionValueDecoder from './enumOptionValueDecoder.ts';
 import enumOptionValueLabel from './enumOptionValueLabel.ts';
 import ErrorSchemaBuilder from './ErrorSchemaBuilder.ts';
+import errorSchemaChild from './errorSchemaChild.ts';
 import {
   ROOT_FIELD_PATH,
   fieldPathEndsWithIndex,
@@ -111,7 +113,6 @@ import isFixedItems from './isFixedItems.ts';
 import isFormDataAvailable from './isFormDataAvailable.ts';
 import isObject, { isSchemaObject } from './isObject.ts';
 import isPlainObject from './isPlainObject.ts';
-import isRootSchema from './isRootSchema.ts';
 import isWholeValueSelect from './isWholeValueSelect.ts';
 import labelValue from './labelValue.ts';
 import localTimeToOffsetTime from './localTimeToOffsetTime.ts';
@@ -203,6 +204,7 @@ export {
   callWithDeferredThrow,
   canExpand,
   createErrorHandler,
+  createRootSchemaGuard,
   createSchemaUtils,
   DateElement,
   dataURItoBlob,
@@ -226,6 +228,7 @@ export {
   enumOptionsSelectValue,
   enumOptionsValueForIndex,
   errorId,
+  errorSchemaChild,
   examplesId,
   expandButtonId,
   ErrorSchemaBuilder,
@@ -290,7 +293,6 @@ export {
   isFormDataAvailable,
   isObject,
   isPlainObject,
-  isRootSchema,
   isSchemaObject,
   isWholeValueSelect,
   labelValue,
