@@ -1404,6 +1404,53 @@ describe('ObjectField', () => {
       ]);
     });
 
+    it('should keep a property in its place when transformChange rewrites the name it is renamed to', async () => {
+      const ref = createFormRef<GenericObjectType>();
+      const { node } = createFormComponent({
+        ref,
+        schema: { type: 'object', additionalProperties: { type: 'string' } },
+        initialFormData: { first: 'a', second: 'b' },
+        transformChange: (next) =>
+          isPlainObject(next)
+            ? Object.fromEntries(Object.entries(next).map(([key, value]) => [key.toLowerCase(), value]))
+            : next,
+      });
+
+      const keyInput = elementOf(node, '#root_first-key');
+      await user.clear(keyInput);
+      await user.type(keyInput, 'RENAMED');
+      await user.tab();
+
+      expect(handleOf(ref).getFormData()).toEqual({ renamed: 'a', second: 'b' });
+      expect([...node.querySelectorAll('input[id$="-key"]')].map((keyField) => keyField.id)).toEqual([
+        'root_renamed-key',
+        'root_second-key',
+      ]);
+    });
+
+    it('should give the renamed property its own instance when transformChange puts the old name back', async () => {
+      const ref = createFormRef<GenericObjectType>();
+      const consoleError = vi.spyOn(console, 'error');
+      const { node } = createFormComponent({
+        ref,
+        schema: { type: 'object', additionalProperties: { type: 'string' } },
+        initialFormData: { A: 'a' },
+        transformChange: (next) => (isPlainObject(next) && !('A' in next) ? { ...next, A: '' } : next),
+      });
+      const valueA = elementOf(node, '#root_A');
+
+      const keyInput = elementOf(node, '#root_A-key');
+      await user.clear(keyInput);
+      await user.type(keyInput, 'B');
+      await user.tab();
+
+      expect(handleOf(ref).getFormData()).toEqual({ B: 'a', A: '' });
+      expect(elementOf(node, '#root_B')).toHaveValue('a');
+      expect(elementOf(node, '#root_A')).toBe(valueA);
+      expect(consoleError).not.toHaveBeenCalled();
+      consoleError.mockRestore();
+    });
+
     it('should seed from the uiSchema entry of a declared name a property is renamed onto', async () => {
       // The field the declared name brings up reads `uiSchema.count`, so seeding through `uiSchema.additionalProperties`
       // would hand that number field the `ui:initialValue` written for the string the other keys hold

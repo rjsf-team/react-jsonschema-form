@@ -725,16 +725,27 @@ export default function ObjectField<
         const renamedObj = Object.assign({}, ...keyValues);
 
         // The errors the form holds under the old name describe the property, so they go to its new name with it
-        const isRefused =
-          sendMove({ newKeyOf: (key) => (key === oldKey ? actualNewKey : key) }, () => onChange(renamedObj, fieldPath))
-            ?.kind === 'refused';
+        const outcome = sendMove({ newKeyOf: (key) => (key === oldKey ? actualNewKey : key) }, () =>
+          onChange(renamedObj, fieldPath),
+        );
+        // A rewrite decided the object's keys itself, so the properties take the order of the data it kept, and the
+        // renamed one keeps its instance only where the kept data holds it under the new name and not the old one
+        const rewrittenKeys =
+          outcome?.kind === 'rewritten' ? Object.keys(isObject(outcome.kept) ? outcome.kept : {}) : undefined;
         // Recorded once the rename is taken: a refused one leaves the property its name, its place among the others
         // and the React key the last rename gave another property, so that property keeps its instance
-        if (!isRefused) {
+        if (
+          outcome?.kind !== 'refused' &&
+          (!rewrittenKeys || (rewrittenKeys.includes(actualNewKey) && !rewrittenKeys.includes(oldKey)))
+        ) {
           setLastRenamedProperty((previous) => ({
             previousKey: oldKey !== previous.currentKey ? oldKey : previous.previousKey,
             currentKey: actualNewKey,
           }));
+        }
+        if (rewrittenKeys) {
+          setAdditionalPropertyOrder(rewrittenKeys);
+        } else if (outcome?.kind !== 'refused') {
           setAdditionalPropertyOrder((order) =>
             order.map((property) => (property === oldKey ? actualNewKey : property)),
           );
