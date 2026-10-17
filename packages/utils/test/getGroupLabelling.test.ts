@@ -50,6 +50,25 @@ describe('getGroupLabelling()', () => {
     });
   });
 
+  it('gives the id of the label the template draws, numbered beneath a label a component above draws', () => {
+    const option = resolveFieldPresentation({
+      id: ID,
+      declaration: {
+        label: 'template',
+        description: 'template',
+        errors: 'template',
+        help: 'template',
+        labelledBy: 'aria-labelledby',
+      },
+      label: 'Bar',
+      inherited: plan('self'),
+    });
+    const { drawsLabel, labelId, group } = getGroupLabelling({ id: ID, label: 'Bar', presentation: option }, 'group');
+    expect(drawsLabel).toBe(false);
+    expect(labelId).toBe(`${ID}__optionLabel`);
+    expect(group['aria-labelledby']).toBe(`${ID}__optionLabel`);
+  });
+
   it('draws the label of a widget rendered without a plan, and names the group by it', () => {
     expect(getGroupLabelling({ id: ID, label: 'Foo' }, 'group').group).toEqual({
       role: 'group',
