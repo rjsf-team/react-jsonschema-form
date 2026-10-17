@@ -27,6 +27,21 @@ describe('schemaHasNestedConditional()', () => {
     };
     expect(schemaHasNestedConditional(ifSchema, ifSchema)).toBe(false);
   });
+  it("reads a root $ref with constraints beside it as its target, whose own if is the root's", () => {
+    const schema: RJSFSchema = {
+      definitions: {
+        main: {
+          type: 'object',
+          properties: { kind: { type: 'string' } },
+          if: { properties: { kind: { const: 'a' } } },
+          then: { required: ['kind'] },
+        },
+      },
+      $ref: '#/definitions/main',
+      required: ['kind'],
+    };
+    expect(schemaHasNestedConditional(schema, schema)).toBe(false);
+  });
   it('returns true for a dependencies keyword nested inside properties', () => {
     const schema: RJSFSchema = {
       type: 'object',

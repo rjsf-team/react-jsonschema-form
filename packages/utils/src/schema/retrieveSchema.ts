@@ -50,6 +50,7 @@ import buildPlan, {
   booleanSchema,
   cachedPolicy,
   childSeeds,
+  conjoinDefinition,
   conjunctionOf,
   refDefinition,
   schemaFrom,
@@ -303,9 +304,11 @@ const ownRefs = new KeyedMemo<object>();
 
 /** Returns a schema's own `$ref` resolved and marked with it, as a schema an option's `$ref` stands for is scored and
  * validated: the definition overridden by the keywords beside the reference where those only annotate, and otherwise
- * the `allOf` of them and of the definition, as the form reads it. The reference is resolved through the schema graph,
- * from where the schema sits in the root, as the form resolves it. Only that reference is followed: the validator
- * follows those below it against the root schema. The result is made once per schema and shared, so that a memo keyed on it hits across calls, and a caller copies it rather than changing it.
+ * the `allOf` of them and of the definition merged, as the form reads it, so that scoring, constant options and the
+ * `ui:definitions` walk read the keywords of both sides. The reference is resolved through the schema graph, from where
+ * the schema sits in the root, as the form resolves it. Only that reference is followed: the validator follows those
+ * below it against the root schema. The result is made once per schema and shared, so that a memo keyed on it hits
+ * across calls, and a caller copies it rather than changing it.
  *
  * @param schema - The schema whose own `$ref` is to be resolved
  * @param rootSchema - The root schema the reference names a definition of
@@ -352,7 +355,7 @@ function ownRefResolved<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: N
   const siblings = withoutKeys(schema, REF_KEY);
   return conjunctionOf<S>(graph, id) === undefined
     ? { ...definition, ...siblings, [RJSF_REF_KEY]: ref }
-    : schemaFrom(schema, { [ALL_OF_KEY]: [siblings, definition], [RJSF_REF_KEY]: ref });
+    : { ...conjoinDefinition(schema, siblings, definition), [RJSF_REF_KEY]: ref };
 }
 
 /** Whether an option's plan adds nothing to the plan of the field offering it, beyond the option's own `$ref` */

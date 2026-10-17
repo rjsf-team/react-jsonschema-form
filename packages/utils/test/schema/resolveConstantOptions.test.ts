@@ -16,6 +16,16 @@ describe('resolveConstantOptions()', () => {
     });
     expect(resolveConstantOptions(schema, rootSchema)).toBe(resolved);
   });
+  it('reads an option whose $ref has constraints beside it as the allOf of both, merged into the constant', () => {
+    const schema: RJSFSchema = {
+      type: 'string',
+      oneOf: [{ $ref: '#/definitions/red', type: 'string' }, { const: 'green' }],
+    };
+    expect(resolveConstantOptions(schema, rootSchema)).toEqual({
+      type: 'string',
+      oneOf: [{ const: 'red', title: 'Red', type: 'string', [RJSF_REF_KEY]: '#/definitions/red' }, { const: 'green' }],
+    });
+  });
   it('returns the schema itself when an option it resolves is not a constant', () => {
     const schema: RJSFSchema = { anyOf: [{ $ref: '#/definitions/red' }, { $ref: '#/definitions/text' }] };
     expect(resolveConstantOptions(schema, rootSchema)).toBe(schema);

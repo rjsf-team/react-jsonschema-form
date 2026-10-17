@@ -462,6 +462,31 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
       expect(getClosestMatchingOption({ validator: testValidator }, rootSchema, { b: 'y' }, options)).toEqual(1);
       expect(getClosestMatchingOption({ validator: testValidator }, rootSchema, { a: 'y' }, options)).toEqual(0);
     });
+    it('scores an option and a property written as a $ref with constraints beside it as the allOf of both', () => {
+      const rootSchema: RJSFSchema = {
+        definitions: {
+          O: { properties: { a: { type: 'string' } } },
+          Dog: { type: 'object', properties: { bark: { type: 'string' }, name: { type: 'string' } } },
+        },
+      };
+      const options: RJSFSchema[] = [
+        { type: 'object', properties: { a: { type: 'string' } } },
+        { $ref: '#/definitions/O', properties: { b: { type: 'string' } } },
+      ];
+      expect(getClosestMatchingOption({ validator: testValidator }, rootSchema, { b: 'y' }, options)).toEqual(1);
+      const pets: RJSFSchema[] = [
+        { properties: { pet: { $ref: '#/definitions/Dog', required: ['bark'] } } },
+        { properties: { pet: { type: 'object', properties: { meow: { type: 'string' } } } } },
+      ];
+      expect(
+        getClosestMatchingOption(
+          { validator: testValidator },
+          rootSchema,
+          { pet: { bark: 'woof', name: 'Rex' } },
+          pets,
+        ),
+      ).toEqual(0);
+    });
     it.each([undefined, 'https://json-schema.org/draft/2020-12/schema'])(
       'under %s, scores an option written as a $ref beside only annotations as its target',
       ($schema) => {

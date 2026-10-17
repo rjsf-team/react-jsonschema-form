@@ -344,6 +344,16 @@ describe('resolveUiSchema() - option walk through the schema graph', () => {
     expect(result.oneOf).toEqual([{ 'ui:title': 'Leaf' }]);
   });
 
+  it('walks the options of the definition a $ref with constraints beside it names, as the allOf of both', () => {
+    const field: RJSFSchema = { $ref: '#/$defs/node', type: 'string' };
+    const rootSchema: RJSFSchema = {
+      $defs: { node: { oneOf: [{ $ref: '#/$defs/leaf' }, { type: 'string' }] }, leaf: { type: 'string' } },
+      properties: { field },
+    };
+    const result = resolveUiSchema(field, undefined, makeRegistry(rootSchema, optionDefinitions));
+    expect(result.oneOf).toEqual([{ 'ui:title': 'Leaf' }]);
+  });
+
   it('walks the options of a $ref under a relative root $id from the root createSchemaUtils() hands out', () => {
     const field: RJSFSchema = { $ref: 'child.json' };
     const rootSchema: RJSFSchema = {
