@@ -735,9 +735,11 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
   }
 
   /** The subschema an option of a dependency's `oneOf` names its condition with: its `properties[key]`, read off the
-   * option as written, or, for an option spelled as a `$ref`, off the schema it resolves to
+   * option as written, or, for an option spelled as a `$ref`, off the schema it resolves to. That schema is planned
+   * from the ref path the list was entered with, its recursive `$ref`s left unfollowed, since one leading back to the
+   * schema declaring the dependency would otherwise read the same condition again without end
    */
-  private dependencyCondition(option: NodeId, key: string): unknown {
+  private dependencyCondition(option: NodeId, key: string, refPath: RefPath): unknown {
     const node = this.graph.node(option);
     if (node.kind !== 'schema') {
       return undefined;
@@ -755,7 +757,8 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     const resolved = new PlanBuilder(this.context, this.graph, this.data, this.depData, {
       ...this.policy,
       allOf: true,
-    }).build([{ node: option, refPath: [] }]);
+      cutRecursion: true,
+    }).build([{ node: option, refPath }]);
     const properties: unknown = resolved.schema.properties;
     return isObject(properties) ? properties[key] : undefined;
   }
@@ -773,7 +776,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       .subschemas(provider.node.id, ONE_OF_KEY)
       .map(([, option]) => option)
       .filter((option) => {
-        const condition = this.dependencyCondition(option, key);
+        const condition = this.dependencyCondition(option, key, provider.refPath);
         if (!condition) {
           return false;
         }

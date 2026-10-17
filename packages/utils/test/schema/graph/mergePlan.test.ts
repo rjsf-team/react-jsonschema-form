@@ -497,6 +497,34 @@ describe('buildPlan()', () => {
           [keyword]: choice,
         });
       });
+      it('reads the condition of an option that is a $ref back to the schema declaring the dependency', () => {
+        const base: RJSFSchema = {
+          type: 'object',
+          properties: { kind: { type: 'string', enum: ['a', 'b'] } },
+          dependencies: { kind: { oneOf: [{ $ref: D('a') }, { $ref: D('b') }] } },
+        };
+        const schema: RJSFSchema = {
+          definitions: {
+            base,
+            a: { properties: { kind: { const: 'a' }, x: { type: 'string' } } },
+            // `b` extends the schema offering it, as a subtype does
+            b: { allOf: [{ $ref: D('base') }], properties: { kind: { const: 'b' }, y: { type: 'string' } } },
+          },
+          $ref: D('base'),
+        };
+        expect(Object.keys(planOf(schema, { data: { kind: 'b' } }).schema.properties ?? {})).toEqual(['kind', 'y']);
+        expect(Object.keys(planOf(schema, { data: { kind: 'a' } }).schema.properties ?? {})).toEqual(['kind', 'x']);
+        // An option naming the very schema that declares the dependency adds no condition of its own
+        const log = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+        const self: RJSFSchema = {
+          type: 'object',
+          properties: { kind: { type: 'string', enum: ['a', 'b'] } },
+          dependencies: { kind: { oneOf: [{ $ref: D('self') }] } },
+        };
+        const own = planOf({ definitions: { self }, $ref: D('self') }, { data: { kind: 'a' } });
+        expect(keywordsOf(own)).toEqual({ type: 'object', properties: { kind: { type: 'string', enum: ['a', 'b'] } } });
+        log.mockRestore();
+      });
       it('leaves a dependency whose oneOf is not a list as it is', () => {
         const plan = planOf(looseSchema({ dependencies: { kind: { oneOf: 'garbage', title: 't' } } }), {
           data: { kind: 'a' },
