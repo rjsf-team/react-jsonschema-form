@@ -16,6 +16,7 @@ import {
   getByPath,
   ErrorSchemaBuilder,
   getDiscriminatorFieldFromSchema,
+  getPropertySchema,
   getVisibleErrors,
   isObject,
   ONE_OF_KEY,
@@ -1110,6 +1111,27 @@ describe('LayoutMultiSchemaField', () => {
         { label: 'A', value: 'a' },
         { label: 'B', value: 'b' },
       ]);
+    });
+    test('reads the value of a selector property written as a $ref off the definition it names', () => {
+      const schema: RJSFSchema = {
+        definitions: {
+          catKind: { title: 'Cat', type: 'string', const: 'cat' },
+          dogKind: { title: 'Dog', type: 'string', const: 'dog' },
+        },
+        discriminator: { propertyName: 'kind' },
+        oneOf: [
+          { type: 'object', properties: { kind: { $ref: '#/definitions/catKind' }, meow: { type: 'string' } } },
+          { type: 'object', properties: { kind: { $ref: '#/definitions/dogKind' }, bark: { type: 'string' } } },
+        ],
+      };
+      const { schemaUtils } = getTestRegistry(schema);
+      const enumOptions = computeEnumOptions(schema, schema[ONE_OF_KEY] as RJSFSchema[], schemaUtils);
+      expect(enumOptions.map(({ label, value }) => ({ label, value }))).toEqual([
+        { label: 'Cat', value: 'cat' },
+        { label: 'Dog', value: 'dog' },
+      ]);
+      expect(getPropertySchema(enumOptions[1].schema, 'kind')).toEqual(expect.objectContaining({ type: 'string' }));
+      expect(getSelectedOption(enumOptions, 'kind', 'dog')).toBe(enumOptions[1].schema);
     });
     test('throws error when no enumOptions are generated', () => {
       const { schemaUtils } = getTestRegistry({});

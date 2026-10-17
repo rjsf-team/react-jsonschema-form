@@ -1,4 +1,5 @@
 import { ANY_OF_KEY, createSchemaUtils, ONE_OF_KEY } from '../../src/index.ts';
+import type { RJSFSchema } from '../../src/index.ts';
 import {
   ANSWER_1,
   ANSWER_2,
@@ -67,6 +68,22 @@ export default function findSelectedOptionInXxxOfTest(testValidator: TestValidat
       expect(
         schemaUtils.findSelectedOptionInXxxOf(testOneOfDiscriminatorSchema, 'ignored_in_this_test', ONE_OF_KEY, {}),
       ).toBeUndefined();
+    });
+    test('returns the option whose selector property, written as a $ref, holds the value', () => {
+      const rootSchema: RJSFSchema = {
+        definitions: {
+          catKind: { type: 'string', const: 'cat' },
+          dogKind: { type: 'string', const: 'dog' },
+        },
+        discriminator: { propertyName: 'kind' },
+        oneOf: [
+          { type: 'object', properties: { kind: { $ref: '#/definitions/catKind' }, meow: { type: 'string' } } },
+          { type: 'object', properties: { kind: { $ref: '#/definitions/dogKind' }, bark: { type: 'string' } } },
+        ],
+      };
+      const utils = createSchemaUtils({ validator: testValidator }, rootSchema);
+      const selected = utils.findSelectedOptionInXxxOf(rootSchema, 'kind', ONE_OF_KEY, { kind: 'dog' });
+      expect(Object.keys(selected?.properties ?? {})).toEqual(['kind', 'bark']);
     });
     test('returns undefined when formData has non-existent anyOf value via the discriminator', () => {
       expect(

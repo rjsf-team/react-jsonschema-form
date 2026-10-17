@@ -29,6 +29,7 @@ import {
   getUiOptions,
   getXxxOfKey,
   getVisibleErrors,
+  isSchemaObject,
   noop,
   omitConsumedStyling,
   TranslatableString,
@@ -95,7 +96,26 @@ export function computeEnumOptions<
   uiSchema?: UiSchema<T, S, F>,
   formData?: T,
 ): EnumOptionsType<S>[] {
-  const realOptions = options.map((opt: S) => schemaUtils.retrieveSchema(opt, formData));
+  let selectorField = getDiscriminatorFieldFromSchema<S>(schema);
+  if (uiSchema) {
+    const { optionsSchemaSelector = selectorField } = getUiOptions<T, S, F>(uiSchema);
+    selectorField = optionsSchemaSelector;
+  }
+  const realOptions = options.map((opt: S) => {
+    const option = schemaUtils.retrieveSchema(opt, formData);
+    const selector = selectorField && option[PROPERTIES_KEY]?.[selectorField];
+    // An option hands its properties out as written, so a selector written as a `$ref` is retrieved for the value,
+    // title and type it is read for
+    return selectorField && isSchemaObject<S>(selector)
+      ? {
+          ...option,
+          [PROPERTIES_KEY]: {
+            ...option[PROPERTIES_KEY],
+            [selectorField]: schemaUtils.retrieveSchema(selector, getByPath(formData, selectorField)),
+          },
+        }
+      : option;
+  });
   let tempSchema = schema;
   const xxxOfKey = getXxxOfKey<S>(schema);
   if (xxxOfKey) {
