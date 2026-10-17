@@ -486,6 +486,32 @@ describe.each([
     expect(trigger).toHaveFocus();
   });
 
+  test('Done on an empty field reports the blur and focus with the emptied value the close stores', async () => {
+    const onChange = vi.fn();
+    const onBlur = vi.fn();
+    const onFocus = vi.fn();
+    const { container } = render(
+      <Widget
+        {...makeWidgetMockProps({
+          id: 'date',
+          value: '',
+          autofocus: false,
+          schema: { type: 'string', format },
+          onChange,
+          onBlur,
+          onFocus,
+        })}
+      />,
+    );
+    await user.click(triggerIn(container));
+    onFocus.mockClear();
+    await user.click(screen.getByText('Done'));
+
+    expect(onChange).toHaveBeenLastCalledWith(undefined);
+    expect(onBlur).toHaveBeenLastCalledWith('date', undefined);
+    expect(onFocus).toHaveBeenLastCalledWith('date', undefined);
+  });
+
   test('Done runs a flushSync from onBlur at once, with no error from React', async () => {
     function Parent() {
       const [, setTick] = useState(0);

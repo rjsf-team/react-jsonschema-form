@@ -262,25 +262,26 @@ export function useDatePicker<V>({
    * so for a focus a close returns to the trigger, which `reportHeldFocus()` reports after that close's blur
    */
   const reportFocus = useCallback(
-    (reported: unknown = value) => {
+    // No default: a close that stores `undefined` reports it, which a default would replace with the old value
+    (reported: unknown) => {
       if (!isFocusReported.current) {
         isFocusReported.current = true;
         onFocus?.(id, reported);
       }
     },
-    [id, onFocus, value],
+    [id, onFocus],
   );
 
   /** Tell the consumer the field has lost the focus, unless they have been told so already
    */
   const reportBlur = useCallback(
-    (reported: unknown = value) => {
+    (reported: unknown) => {
       if (isFocusReported.current) {
         isFocusReported.current = false;
         onBlur?.(id, reported);
       }
     },
-    [id, onBlur, value],
+    [id, onBlur],
   );
 
   /** Report the blur a close causes, and then the focus the trigger holds, which is how the consumer hears that the
@@ -402,9 +403,9 @@ export function useDatePicker<V>({
       resetToStoredValue();
       isOpenNow.current = true;
       setIsOpen(true);
-      reportFocus();
+      reportFocus(value);
     },
-    [closePicker, isOpen, reportFocus, resetToStoredValue],
+    [closePicker, isOpen, reportFocus, resetToStoredValue, value],
   );
 
   /** Report blur on the trigger, unless the popup is open: the focus has moved into it, which the field still holds,
@@ -412,9 +413,9 @@ export function useDatePicker<V>({
    */
   const handleBlur = useCallback(() => {
     if (!isOpenNow.current) {
-      reportBlur();
+      reportBlur(value);
     }
-  }, [reportBlur]);
+  }, [reportBlur, value]);
 
   /** Close the popup from its Done button, returning focus to the trigger it was opened from — unconditionally, where
    * Escape returns it only from inside the popup: a browser that does not focus a button on click, as Safari does not,
@@ -428,7 +429,7 @@ export function useDatePicker<V>({
   }, [closePicker]);
 
   /** Report the trigger's own focus, with the value the field holds; the focus event itself is no value to report */
-  const handleFocus = useCallback(() => reportFocus(), [reportFocus]);
+  const handleFocus = useCallback(() => reportFocus(value), [reportFocus, value]);
 
   // What the trigger displays and the calendar selects: the date the user is choosing while the popup is open, and
   // otherwise the one the form holds, so nothing the form did not take is left on screen once the popup is closed
