@@ -4,7 +4,8 @@ import { helpId } from '@rjsf/utils';
 
 import { cn } from '../lib/utils.ts';
 
-/** The `FieldHelpTemplate` component renders any help desired for a field
+/** The `FieldHelpTemplate` component renders any help desired for a field, in a block element, since `RichHelp` can
+ * render markdown blocks
  *
  * @param props - The `FieldHelpProps` to be rendered
  */
@@ -19,11 +20,11 @@ export default function FieldHelpTemplate<
   }
 
   return (
-    <span
+    <div
       className={cn('text-xs font-medium text-muted-foreground', { 'text-destructive': hasErrors })}
       id={presentation?.help.id ?? helpId(id)}
     >
       <RichHelp help={help} registry={registry} uiSchema={uiSchema} />
-    </span>
+    </div>
   );
 }

@@ -6,15 +6,22 @@ import { Range, Root, Thumb, Track } from '@radix-ui/react-slider';
 
 import { cn } from '../../lib/utils.ts';
 
+/** The props for the Slider component */
+export type SliderProps = ComponentProps<typeof Root> & {
+  /** Additional props for each thumb, the element a user focuses */
+  thumbProps?: ComponentProps<typeof Thumb>;
+};
+
 /**
  * A slider component for selecting a numeric value within a range
  *
  * @param props - The props for the Slider component
  * @param props.className - Additional CSS classes to apply to the slider
+ * @param [props.thumbProps] - Additional props for each thumb, the element a user focuses
  * @param ref - The forwarded ref for the slider element
  * @returns A slider input element with track and thumb
  */
-function Slider({ className, defaultValue, value, min = 0, max = 100, ...props }: ComponentProps<typeof Root>) {
+function Slider({ className, defaultValue, value, min = 0, max = 100, thumbProps, ...props }: SliderProps) {
   const enumValues = useMemo(() => {
     if (Array.isArray(value)) {
       return value;
@@ -52,7 +59,11 @@ function Slider({ className, defaultValue, value, min = 0, max = 100, ...props }
         <Thumb
           data-slot='slider-thumb'
           key={index}
-          className='border-primary bg-background ring-ring/50 block size-4 shrink-0 rounded-full border shadow-sm transition-[color,box-shadow] hover:ring-4 focus-visible:ring-4 focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50'
+          {...thumbProps}
+          className={cn(
+            'border-primary bg-background ring-ring/50 block size-4 shrink-0 rounded-full border shadow-sm transition-[color,box-shadow] hover:ring-4 focus-visible:ring-4 focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50',
+            thumbProps?.className,
+          )}
         />
       ))}
     </Root>

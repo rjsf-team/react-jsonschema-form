@@ -1,8 +1,7 @@
 'use client';
 
 import type { FocusEvent, FocusEventHandler, ReactElement } from 'react';
-import { useEffect, useRef, useState } from 'react';
-import { triggerValueId } from '@rjsf/utils';
+import { useEffect, useId, useRef, useState } from 'react';
 import { Check, ChevronDown } from 'lucide-react';
 
 import { cn } from '../../lib/utils.ts';
@@ -43,7 +42,7 @@ export const UNGROUPED_SECTION_KEY = 'ungrouped';
  * Props interface for the FancySelect component
  */
 interface FancySelectInterface {
-  /** The id given to the button that opens the dropdown, so a label can point at it */
+  /** The id given to the combobox that opens the dropdown, so a label can point at it */
   id?: string;
   /** Array of items to display in the dropdown */
   items: FancySelectItem[] | undefined;
@@ -55,15 +54,15 @@ interface FancySelectInterface {
   onValueChange?: (value: any) => void;
   /** Whether the component should autofocus */
   autoFocus?: boolean;
-  /** Accessible name given to the button that opens the dropdown, for a select that no label points at */
+  /** Accessible name given to the combobox that opens the dropdown, for a select that no label points at, since a
+   * combobox takes no name from the item it displays, which is its value */
   ariaLabel?: string;
-  /** The ids of the elements naming the button, for a select whose label's `for` names another element */
+  /** The ids of the elements naming the combobox, for a select whose label's `for` names another element */
   ariaLabelledby?: string;
-  /** Whether something other than its own contents names the button, a label pointing at it or `ariaLabel`, which
-   * replaces the selected item it displays as its name, so that item is announced as its description instead */
-  named?: boolean;
   /** ID of the element that describes this select */
   ariaDescribedby?: string;
+  /** Whether the select is invalid, which the combobox says through `aria-invalid` */
+  ariaInvalid?: boolean;
   /** Aria placeholder text */
   ariaPlaceholder?: string;
   /** Additional className for styling */
@@ -74,7 +73,7 @@ interface FancySelectInterface {
   onBlur?: FocusEventHandler<HTMLDivElement> | undefined;
   /** Callback function for focus event */
   onFocus?: FocusEventHandler<HTMLDivElement> | undefined;
-  /** Whether the field is required */
+  /** Whether the field is required, which the combobox says through `aria-required` */
   required?: boolean;
   /** Placeholder text when no item is selected */
   placeholder: string;
@@ -96,19 +95,25 @@ export function FancySelect({
   placeholder,
   ariaLabel,
   ariaLabelledby,
-  named = false,
   ariaDescribedby,
+  ariaInvalid,
   ariaPlaceholder,
+  required,
   onFocus,
   onBlur,
   className,
 }: Readonly<FancySelectInterface>): ReactElement {
   const [open, setOpen] = useState(false);
+  const popupId = useId();
+  // Focus stays on the combobox while cmdk highlights an option, so the combobox points at the highlighted option and at
+  // the listbox holding it by the ids cmdk gives them, which it keeps to itself. cmdk reports the option it highlights
+  // only while its value is controlled
+  const [highlighted, setHighlighted] = useState('');
+  const [highlightedId, setHighlightedId] = useState<string>();
+  const [listboxId, setListboxId] = useState<string>();
   const selectedItem = items?.find((item) => item.value === selected);
   const selectedRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const valueId = named && selectedItem && id ? triggerValueId(id) : undefined;
-  const describedBy = [valueId, ariaDescribedby].filter(Boolean).join(' ') || undefined;
 
   useEffect(() => {
     if (open && selectedRef.current) {
@@ -117,6 +122,18 @@ export function FancySelect({
       });
     }
   }, [open]);
+
+  // Read on opening too, not only as the highlight moves: the options mount afresh, under new ids, each time the listbox
+  // opens, while cmdk keeps the highlight it had and reports no change
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!open || !container) {
+      return;
+    }
+    const options = [...container.querySelectorAll<HTMLElement>('[cmdk-item]')];
+    setHighlightedId(options.find((option) => option.dataset.value === highlighted)?.id);
+    setListboxId(container.querySelector<HTMLElement>('[cmdk-list]')?.id);
+  }, [open, highlighted]);
 
   const handleBlur = (e: FocusEvent<HTMLDivElement>) => {
     if (containerRef.current && !containerRef.current.contains(e.relatedTarget)) {
@@ -159,23 +176,38 @@ export function FancySelect({
     <Command
       ref={containerRef}
       className={cn('overflow-visible bg-transparent', className)}
-      autoFocus={autoFocus}
       aria-disabled={disabled}
       onBlur={handleBlur}
       onFocus={onFocus}
+      value={highlighted}
+      onValueChange={setHighlighted}
       aria-placeholder={ariaPlaceholder}
     >
+      {/* A combobox, as a native select is, so it can be `aria-invalid`, which a button can't, and holds the item it
+          displays as its value. It controls the listbox while it is open, and the element the listbox opens in while
+          it is closed */}
       <button
         id={id}
         type='button'
+        role='combobox'
         disabled={disabled}
+        // oxlint-disable-next-line jsx-a11y/no-autofocus -- the widget's `ui:autofocus`, as the widgets the rule is off for honor it
+        autoFocus={autoFocus}
         aria-expanded={open}
         aria-haspopup='listbox'
+        aria-controls={(open && listboxId) || popupId}
+        aria-activedescendant={open ? highlightedId : undefined}
         aria-label={ariaLabel}
         aria-labelledby={ariaLabelledby}
-        aria-describedby={describedBy}
+        aria-describedby={ariaDescribedby}
+        aria-invalid={ariaInvalid || undefined}
+        aria-required={required || undefined}
         onClick={() => !disabled && setOpen(!open)}
         onKeyDown={(e) => {
+          // Enter on a highlighted option is left to cmdk, which chooses it
+          if (e.key === 'Enter' && open && highlightedId) {
+            return;
+          }
           if ((e.key === 'Enter' || e.key === ' ') && !disabled) {
             e.preventDefault();
             e.stopPropagation();
@@ -188,12 +220,12 @@ export function FancySelect({
           className,
         )}
       >
-        <span id={valueId} className={cn('flex-1 line-clamp-1', !selectedItem && 'text-muted-foreground')}>
+        <span className={cn('flex-1 line-clamp-1', !selectedItem && 'text-muted-foreground')}>
           {selectedItem ? selectedItem.label : placeholder}
         </span>
         <ChevronDown className='h-4 w-4 opacity-50' />
       </button>
-      <div className='relative'>
+      <div id={popupId} className='relative'>
         {open && items && items.length > 0 ? (
           <div
             style={{ top: '0.5rem' }}

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { RJSFSchema } from '@rjsf/utils';
-import { TranslatableString } from '@rjsf/utils';
+import { englishStringTranslator, TranslatableString } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -43,7 +43,8 @@ describe('SelectWidget', () => {
     expect(screen.getByLabelText('before select')).toHaveFocus();
 
     await user.tab();
-    const trigger = screen.getByRole('button', { name: /select a country/i });
+    const trigger = screen.getByRole('combobox');
+    expect(trigger).toHaveTextContent('Select a country');
     expect(trigger).toHaveFocus();
     expect(trigger).toHaveAttribute('aria-expanded', 'false');
     expect(trigger).toHaveAttribute('aria-haspopup', 'listbox');
@@ -79,7 +80,8 @@ describe('SelectWidget', () => {
       </>,
     );
 
-    const trigger = screen.getByRole('button', { name: /select a country/i });
+    const trigger = screen.getByRole('combobox');
+    expect(trigger).toHaveTextContent('Select a country');
     expect(trigger).toBeDisabled();
 
     await user.tab();
@@ -112,7 +114,8 @@ describe('SelectWidget', () => {
       />,
     );
 
-    const trigger = screen.getByRole('button', { name: /select a vehicle/i });
+    const trigger = screen.getByRole('combobox');
+    expect(trigger).toHaveTextContent('Select a vehicle');
     await user.click(trigger);
 
     const carOptions = screen.getAllByRole('option', { name: 'Car' });
@@ -207,7 +210,7 @@ describe('SelectWidget', () => {
       />,
     );
 
-    await user.click(screen.getByRole('button'));
+    await user.click(screen.getByRole('combobox'));
 
     expect(screen.getByRole('group', { name: 'Group A' })).toBeInTheDocument();
     expect(screen.getByRole('option', { name: 'Foo' })).toBeInTheDocument();
@@ -240,7 +243,7 @@ describe('SelectWidget', () => {
       />,
     );
 
-    await user.click(screen.getByRole('button'));
+    await user.click(screen.getByRole('combobox'));
 
     expect(screen.getByRole('group', { name: 'ungrouped-1' })).toBeInTheDocument();
     expect(screen.getByRole('option', { name: 'Bar' })).toBeInTheDocument();
@@ -277,7 +280,7 @@ describe('SelectWidget', () => {
       />,
     );
 
-    await user.click(screen.getByRole('button'));
+    await user.click(screen.getByRole('combobox'));
     await user.click(screen.getByRole('option', { name: 'Baz' }));
 
     expect(onValueChange).toHaveBeenCalledWith('baz');
@@ -611,7 +614,7 @@ describe('single SelectWidget translated placeholder', () => {
   test('a custom translateString drives the trigger', () => {
     const schema = { type: 'string' as const, enum: ['red', 'blue'] };
     render(<Form schema={schema} validator={validator} translateString={translateToFrench} />);
-    expect(screen.getByRole('button', { expanded: false })).toHaveTextContent('Choisir ...');
+    expect(screen.getByRole('combobox', { expanded: false })).toHaveTextContent('Choisir ...');
   });
 
   test('an option with an empty label renders blank once selected instead of the placeholder', () => {
@@ -623,7 +626,7 @@ describe('single SelectWidget translated placeholder', () => {
       ],
     };
     render(<Form schema={schema} validator={validator} formData='none' />);
-    const trigger = screen.getByRole('button', { expanded: false });
+    const trigger = screen.getByRole('combobox', { expanded: false });
     expect(trigger).toHaveTextContent(/^$/);
   });
 });
@@ -663,7 +666,7 @@ describe('SelectWidget named and described by its caller', () => {
   });
 });
 
-describe('SelectWidget whose button the field label names', () => {
+describe('SelectWidget whose combobox the field label names', () => {
   const enumOptions = [
     { label: 'Red', value: 'red' },
     { label: 'Blue', value: 'blue' },
@@ -678,19 +681,46 @@ describe('SelectWidget whose button the field label names', () => {
         />
       </>,
     );
-    return screen.getByRole('button', { expanded: false });
+    return screen.getByRole('combobox', { expanded: false });
   }
 
-  test('describes the button by its value when the label shows the property name of an untitled field', () => {
-    const button = renderLabelled({ label: '', name: 'color' }, 'color');
+  // A combobox takes no name from the item it displays, which is its value, so it is neither named nor described by it
+  // `SchemaField` hands an untitled field its property name as its label, which the template's label shows
+  test('is named by the label showing the property name of an untitled field, holding its value', () => {
+    const combobox = renderLabelled({ label: 'color', name: 'color' }, 'color');
 
-    expect(button).toHaveAccessibleDescription(expect.stringContaining('Red'));
+    expect(combobox).toHaveAccessibleName('color');
+    expect(combobox).not.toHaveAccessibleDescription(expect.stringContaining('Red'));
+    expect(combobox).toHaveTextContent('Red');
   });
 
-  test('describes the button by its value when the label shows only the required mark', () => {
-    const button = renderLabelled({ label: '', name: '', required: true }, '*');
+  // The template draws no label holding only a required field's `*`, which would name it "star"
+  test('names a required select with no label text by the select prompt, holding its value', () => {
+    render(
+      <SelectWidget
+        {...makeWidgetMockProps({
+          id: 'root_color',
+          value: 'red',
+          label: '',
+          required: true,
+          options: { enumOptions },
+        })}
+      />,
+    );
+    const combobox = screen.getByRole('combobox', { expanded: false });
 
-    expect(button).toHaveAccessibleDescription(expect.stringContaining('Red'));
+    expect(combobox).toHaveAccessibleName(englishStringTranslator(TranslatableString.SelectPlaceholder));
+    expect(combobox).toHaveTextContent('Red');
+  });
+
+  test('names a select with no label text by its placeholder before the select prompt', () => {
+    render(
+      <SelectWidget
+        {...makeWidgetMockProps({ id: 'root_color', label: '', placeholder: 'Pick one', options: { enumOptions } })}
+      />,
+    );
+
+    expect(screen.getByRole('combobox', { expanded: false })).toHaveAccessibleName('Pick one');
   });
 });
 
@@ -711,5 +741,140 @@ describe('an anyOf option selector', () => {
     const { container } = render(<Form schema={schema} validator={validator} />);
 
     expect(container.querySelector('#root_foo__anyof_select')).toHaveAccessibleName('Foo');
+  });
+});
+
+describe('SelectWidget combobox', () => {
+  const colors: RJSFSchema = { type: 'string', title: 'Color', enum: ['red', 'blue'] };
+
+  test.each<[string, RJSFSchema]>([
+    ['single', colors],
+    [
+      'multiple',
+      { type: 'array', title: 'Color', items: { type: 'string', enum: ['red', 'blue'] }, uniqueItems: true },
+    ],
+  ])('a %s select is invalid while its field shows errors, and described by them', (_, color) => {
+    render(
+      <Form
+        schema={{ type: 'object', properties: { color } }}
+        validator={validator}
+        extraErrors={{ color: { __errors: ['is wrong'] } }}
+      />,
+    );
+
+    const combobox = screen.getByRole('combobox');
+    expect(combobox).toHaveAttribute('aria-invalid', 'true');
+    expect(combobox).toHaveAccessibleDescription(expect.stringContaining('is wrong'));
+  });
+
+  test('a single select is named by the field label its plan hides', () => {
+    render(
+      <Form
+        schema={{ type: 'object', properties: { color: colors } }}
+        uiSchema={{ color: { 'ui:label': false } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('combobox')).toHaveAccessibleName('Color');
+  });
+
+  test.each([
+    ['a required', ['color'], true],
+    ['an optional', [], false],
+  ])("%s single select's combobox says whether its field is required", (_, required, isRequired) => {
+    render(<Form schema={{ type: 'object', required, properties: { color: colors } }} validator={validator} />);
+
+    expect(screen.getByRole('combobox').getAttribute('aria-required')).toBe(isRequired ? 'true' : null);
+  });
+
+  test.each<[string, RJSFSchema]>([
+    ['single', colors],
+    [
+      'multiple',
+      { type: 'array', title: 'Color', items: { type: 'string', enum: ['red', 'blue'] }, uniqueItems: true },
+    ],
+  ])("focuses a %s select's combobox under ui:autofocus", (_, color) => {
+    render(
+      <Form
+        schema={{ type: 'object', properties: { color } }}
+        uiSchema={{ color: { 'ui:autofocus': true } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('combobox')).toHaveFocus();
+  });
+
+  test('a single select no label names is named by the select prompt where it has no title', () => {
+    render(
+      <SelectWidget
+        {...makeWidgetMockProps({
+          label: '',
+          name: '',
+          required: false,
+          value: undefined,
+          options: { enumOptions: [{ label: 'Red', value: 'red' }] },
+        })}
+      />,
+    );
+
+    expect(screen.getByRole('combobox')).toHaveAccessibleName('Select ...');
+  });
+});
+
+describe("the single select's combobox while its listbox is open", () => {
+  const enumOptions = [
+    { label: 'Red', value: 'red' },
+    { label: 'Green', value: 'green' },
+    { label: 'Blue', value: 'blue' },
+  ];
+
+  test('points at the listbox and at the option it highlights, which focus never leaves it for, and Enter chooses', async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    render(
+      <SelectWidget
+        {...makeWidgetMockProps({
+          id: 'root_color',
+          label: 'Color',
+          disabled: false,
+          readonly: false,
+          onChange,
+          options: { enumOptions },
+        })}
+      />,
+    );
+    const combobox = screen.getByRole('combobox', { expanded: false });
+
+    // Moving the highlight scrolls the item into view with an API jsdom lacks
+    Element.prototype.scrollIntoView = vi.fn();
+    try {
+      await user.click(combobox);
+      await user.keyboard('{ArrowDown}');
+
+      const highlighted = screen
+        .getAllByRole('option')
+        .find((option) => option.getAttribute('aria-selected') === 'true');
+      expect(highlighted).toHaveTextContent('Green');
+      expect(combobox).toHaveFocus();
+      expect(combobox).toHaveAttribute('aria-activedescendant', highlighted!.id);
+      expect(combobox).toHaveAttribute('aria-controls', screen.getByRole('listbox').id);
+
+      await user.keyboard('{Enter}');
+      expect(onChange).toHaveBeenLastCalledWith('green');
+      expect(combobox).toHaveAttribute('aria-expanded', 'false');
+      expect(combobox).not.toHaveAttribute('aria-activedescendant');
+
+      // The options mount under new ids as the listbox reopens, keeping the highlight they had
+      await user.click(combobox);
+      const rehighlighted = screen
+        .getAllByRole('option')
+        .find((option) => option.getAttribute('aria-selected') === 'true');
+      expect(rehighlighted).toHaveTextContent('Green');
+      expect(combobox).toHaveAttribute('aria-activedescendant', rehighlighted!.id);
+    } finally {
+      delete (Element.prototype as Partial<Element>).scrollIntoView;
+    }
   });
 });

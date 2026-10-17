@@ -1,5 +1,13 @@
 import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getTemplates, getUiOptions, hasTemplateErrors, templateDrawsLabel } from '@rjsf/utils';
+import {
+  getTemplates,
+  getUiOptions,
+  hasTemplateErrors,
+  templateDrawsDescription,
+  templateDrawsLabel,
+  templateLabelFor,
+  templateMarksRequired,
+} from '@rjsf/utils';
 
 import { cn } from '../lib/utils.ts';
 
@@ -70,24 +78,26 @@ export default function FieldTemplate<
       registry={registry}
     >
       <div className='flex flex-col gap-2'>
-        {displayLabel && !leavesPartsToCheckbox && (
+        {/* No label without text, which would hold only a required field's `*` and name the control "star" */}
+        {displayLabel && !!label && !leavesPartsToCheckbox && (
           <label
             className={cn(
               'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
               { ' text-destructive': hasError },
             )}
-            htmlFor={id}
-            id={presentation?.label.id}
+            htmlFor={templateLabelFor<T, S, F>(props)}
           >
-            {label}
-            {required ? '*' : null}
+            {/* The label's id goes on its text alone, as a group or an option selector is named through it, and the
+                `*` isn't part of that name; a control its `for` names takes the whole label */}
+            {presentation ? <span id={presentation.label.id}>{label}</span> : label}
+            {templateMarksRequired<T, S, F>(props) ? '*' : null}
           </label>
         )}
         {children}
-        {rawDescription && !leavesPartsToCheckbox && (
-          <span className={cn('text-xs font-medium text-muted-foreground', { ' text-destructive': hasError })}>
+        {templateDrawsDescription<T, S, F>(props) && rawDescription && !leavesPartsToCheckbox && (
+          <div className={cn('text-xs font-medium text-muted-foreground', { ' text-destructive': hasError })}>
             {description}
-          </span>
+          </div>
         )}
         {errors}
         {help}
