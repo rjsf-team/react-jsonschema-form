@@ -8,6 +8,7 @@ import {
   helpId,
   optionDescriptionId,
   optionHelpId,
+  optionLabelId,
   titleId,
 } from './idGenerators.ts';
 import type {
@@ -112,15 +113,17 @@ function placeText<Text>(
  *   It is `above`, under the id and text of the label drawn there, when the template of a field above rendering the
  *   same id already draws it, whoever would draw it here, so a widget that draws its own label doesn't name the control
  *   a second time. A level with no control, such as a container whose label is its own heading, keeps its label only
- *   when no field above already draws its text, or else is `above` under the id of the label that does. The control
- *   points `aria-labelledby` at a label its template draws, or one above, when its declaration says so, when the
- *   control above was pointed at that label too, since its template may then draw it with no `for`, or when its id
- *   isn't the one that label's `for` names. Its `requiredMarker` follows `required` whether or not there is a control,
- *   so a container's heading is marked too, and an `above` label carries the marker of the label drawn above, so the
- *   plan describes that one label as it is drawn; the control's own `required` stays this level's. A control whose
- *   label `showLabel` hides is named by the label's text through `aria-label`, since hiding the label is a choice of
- *   layout, not of the control's name, or by the text of the nearest field above rendering the same id whose label is
- *   hidden too, as an option's control is named by its field's label while it shows.
+ *   when no field above already draws its text, or else is `above` under the id of the label that does. A label of its
+ *   own with a control to name takes `optionLabelId()` when a field above draws a label under the id it would take,
+ *   numbered by how many fields above draw one. The control points `aria-labelledby` at a label its template draws, or
+ *   one above, when its declaration says so, when the control above was pointed at that label too, since its template
+ *   may then draw it with no `for`, or when its id isn't the one that label's `for` names. Its `requiredMarker` follows
+ *   `required` whether or not there is a control, so a container's heading is marked too, and an `above` label carries
+ *   the marker of the label drawn above, so the plan describes that one label as it is drawn; the control's own
+ *   `required` stays this level's. A control whose label `showLabel` hides is named by the label's text through
+ *   `aria-label`, since hiding the label is a choice of layout, not of the control's name, or by the text of the
+ *   nearest field above rendering the same id whose label is hidden too, as an option's control is named by its
+ *   field's label while it shows.
  * - The description and help show where they have text, the description only where `showLabel` allows it. Text any
  *   field above already shows is `above`, as is a part with no text under a field above that shows one; text of its
  *   own takes `optionDescriptionId()` or `optionHelpId()` when a field above shows text under the id it would take,
@@ -164,14 +167,20 @@ export default function resolveFieldPresentation(inputs: FieldPresentationInputs
       ? plansAbove.find((plan) => plan.label.by === 'template')
       : plansAbove.find((plan) => rendersHere(plan.label.by) && plan.label.text === labelText);
   // A level with a control is named by a label; one with none, such as a container, draws its label as the heading every
-  // title template renders under `titleId()`
+  // title template renders under `titleId()`, whatever the plan says. A label a field above draws, such as the one an
+  // `anyOf` field's selector draws itself, may already take a control's id
+  const ownLabelId = (hasControl ? fieldLabelId : titleId)(partId(declaration.label));
+  const labelsAbove = plansAbove.filter((plan) => rendersHere(plan.label.by));
   const {
     text: shownLabel,
     id: labelId,
     requiredMarker,
   } = labelAbove?.label ?? {
     text: labelText,
-    id: (hasControl ? fieldLabelId : titleId)(partId(declaration.label)),
+    id:
+      hasControl && labelsAbove.some((plan) => plan.label.id === ownLabelId)
+        ? optionLabelId(partId(declaration.label), labelsAbove.length)
+        : ownLabelId,
     requiredMarker: required,
   };
   let labelBy: PartPlacement = declaration.label;

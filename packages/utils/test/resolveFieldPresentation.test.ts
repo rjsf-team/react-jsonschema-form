@@ -272,6 +272,36 @@ describe('resolveFieldPresentation()', () => {
       expect(resolve({ inherited: componentLabelled }).label.by).toBe('template');
     });
 
+    it('draws a template label beneath one a component above draws under an option id, which a group points at', () => {
+      const group = resolve({
+        inherited: resolve({ declaration: WIDGET_LABEL }),
+        declaration: { ...TEMPLATE, labelledBy: 'aria-labelledby' },
+      });
+      expect(group.label).toMatchObject({ by: 'template', id: `${ID}__optionLabel` });
+      expect(group.control?.attributes['aria-labelledby']).toBe(`${ID}__optionLabel`);
+    });
+
+    it('draws a label of its own beneath one a component above draws under an option id, numbered by depth', () => {
+      const field = resolve({ declaration: WIDGET_LABEL });
+      const option = resolve({ declaration: WIDGET_LABEL, label: 'Bar', inherited: field });
+      const nested = resolve({ declaration: WIDGET_LABEL, label: 'Baz', inherited: option });
+      expect([field.label.id, option.label.id, nested.label.id]).toEqual([
+        `${ID}__label`,
+        `${ID}__optionLabel`,
+        `${ID}__optionLabel2`,
+      ]);
+      expect(option.label.by).toBe('self');
+      expect(resolve({ declaration: WIDGET_LABEL, label: 'Bar', inherited: resolve({ label: '' }) }).label.id).toBe(
+        `${ID}__label`,
+      );
+    });
+
+    it('keeps a heading under titleId(), which every title template renders it under, beneath a heading above', () => {
+      const container = resolve({ declaration: WIDGET_LABEL, hasControl: false });
+      const nested = resolve({ declaration: WIDGET_LABEL, label: 'Dog', hasControl: false, inherited: container });
+      expect(nested.label).toEqual({ text: 'Dog', by: 'self', id: `${ID}__title`, requiredMarker: false });
+    });
+
     it("doesn't draw a description or help the field above shows", () => {
       const plan = resolve({ inherited: above, description: 'Describes the field', help: 'Helps with the field' });
       expect(plan.description).toEqual({ text: 'Describes the field', by: 'above', id: `${ID}__description` });

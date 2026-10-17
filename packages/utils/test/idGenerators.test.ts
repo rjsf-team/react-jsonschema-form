@@ -11,6 +11,7 @@ import {
   optionalControlsId,
   optionDescriptionId,
   optionHelpId,
+  optionLabelId,
   optionId,
   selectedOptionDescriptionId,
   titleId,
@@ -75,6 +76,10 @@ describe('idGenerators', () => {
   });
   it('option description id is generated for simple id', () => {
     expect(optionDescriptionId(SIMPLE_ID)).toEqual(`${SIMPLE_ID}__optionDescription`);
+  });
+  it('option label id is generated for simple id, and numbered past the first nesting level', () => {
+    expect(optionLabelId(SIMPLE_ID)).toEqual(`${SIMPLE_ID}__optionLabel`);
+    expect(optionLabelId(SIMPLE_ID, 2)).toEqual(`${SIMPLE_ID}__optionLabel2`);
   });
   it('option help id is generated for simple id', () => {
     expect(optionHelpId(SIMPLE_ID)).toEqual(`${SIMPLE_ID}__optionHelp`);

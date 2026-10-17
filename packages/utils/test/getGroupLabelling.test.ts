@@ -29,6 +29,18 @@ describe('getGroupLabelling()', () => {
     });
   });
 
+  it('draws the label under the id its plan gives it, beneath a label a component above draws', () => {
+    const option = resolveFieldPresentation({
+      id: ID,
+      declaration: { label: 'self', description: 'template', errors: 'template', help: 'template', labelledBy: 'for' },
+      label: 'Bar',
+      inherited: plan('self'),
+    });
+    const { labelId, group } = getGroupLabelling({ id: ID, label: 'Bar', presentation: option }, 'radiogroup');
+    expect(labelId).toBe(`${ID}__optionLabel`);
+    expect(group['aria-labelledby']).toBe(`${ID}__optionLabel`);
+  });
+
   it('draws no label its plan gives the template, and names the group by the one the template draws', () => {
     expect(getGroupLabelling({ id: ID, label: 'Foo', presentation: plan('template') }, 'group')).toEqual({
       drawsLabel: false,
