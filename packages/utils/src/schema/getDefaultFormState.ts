@@ -177,31 +177,30 @@ export function computeDefaultBasedOnSchemaTypeAndDefaults<T = unknown, S extend
  * @param emptyObjectFields - How to treat an empty object field, stated by the caller rather than read off the
  *        context, since the `additionalProperties` pass deliberately does not apply the form's setting
  * @param isConst - Optional flag, if true, indicates that the schema has a const property defined, thus we should always return the computedDefault since it's coming from the const.
- * @param isNullType - The type of the schema is null
+ * @param holdsNull - Whether `computedDefault` holds the `null` a missing value of a `null` schema is filled in as,
+ *        itself or under a property of the objects along the way, see `ComputeDefaultsProps.onNullFill`. It is added
+ *        like a const, with those objects, whatever `emptyObjectFields` says: that `null` is the one value the field
+ *        rendered for the schema can hold, and the other defaults the objects hold were already left out by this rule
  */
 function maybeAddDefaultToObject<T = unknown>(
   acc: GenericObjectType,
   key: string,
-  computedDefault: T | T[] | undefined,
+  computedDefault: T | T[] | null | undefined,
   includeUndefinedValues: boolean | 'excludeObjectChildren',
   isParentRequired?: boolean,
   requiredFields: string[] = [],
   emptyObjectFields: NonNullable<DefaultFormStateBehavior['emptyObjectFields']> = 'populateAllDefaults',
   isConst = false,
-  isNullType = false,
+  holdsNull = false,
 ) {
-  if (includeUndefinedValues === true || isConst) {
+  if (includeUndefinedValues === true || isConst || holdsNull) {
     // If includeUndefinedValues is explicitly true
     // Or if the schema has a const property defined, then we should always return the computedDefault since it's coming from the const.
     acc[key] = computedDefault;
   } else if (includeUndefinedValues === 'excludeObjectChildren') {
     // Fix for Issue #4709: When in 'excludeObjectChildren' mode, don't set primitive fields to empty objects
     // Only add the computed default if it's not an empty object placeholder for a primitive field
-    if (
-      (isNullType && computedDefault !== undefined) ||
-      !isObject(computedDefault) ||
-      Object.keys(computedDefault).length > 0
-    ) {
+    if (!isObject(computedDefault) || Object.keys(computedDefault).length > 0) {
       acc[key] = computedDefault;
     }
     // If computedDefault is an empty object {}, don't add it - let the field stay undefined
@@ -250,6 +249,10 @@ interface ComputeDefaultsProps<
 > extends Omit<GetDefaultFormStateProps<T, S, F>, 'schema' | 'formData'> {
   /** Any defaults provided by the parent field in the schema */
   parentDefaults?: T;
+  /** Whether the schema is the `anyOf`/`oneOf` option a field renders, whose `null` option renders no field and so is
+   * left without a value
+   */
+  isRenderedOption?: boolean;
   /** The current formData, if any, onto which to provide any missing defaults */
   rawFormData?: T;
   /** The list of ref names currently being recursed, used to prevent infinite recursion */
@@ -258,6 +261,12 @@ interface ComputeDefaultsProps<
   required?: boolean;
   /** Optional flag, if true, indicates this schema was required because it is the root. */
   requiredAsRoot?: boolean;
+  /** Called when the defaults computed hold the `null` a missing value of a `null` schema is filled in as, itself or
+   * under a property of the objects along the way, wherever the schema brings that property in from: its own
+   * `properties`, a `$ref`, `allOf`, `if`/`then`/`else` or `dependencies`. An array's items do not report it: a field
+   * renders an item only for one the data holds
+   */
+  onNullFill?: () => void;
   /** Optional flag, if true, It will merge defaults into formData.
    *  The formData should take precedence unless it's not valid. This is useful when for example the value from formData does not exist in the schema 'enum' property, in such cases we take the value from the defaults because the value from the formData is not valid.
    */
@@ -276,6 +285,64 @@ function withDefaultOf(parent: GenericObjectType, renderedOption: GenericObjectT
   return DEFAULT_KEY in parent ? mergeSchemas({ [DEFAULT_KEY]: parent[DEFAULT_KEY] }, renderedOption) : renderedOption;
 }
 
+/** The `null` a missing value of a `null` schema is filled in as, for each property an `allOf`
+ * or `if` of `schema` brings in that the form's settings leave out of the defaults. The field rendered for such a
+ * property renders all the same, from the schema `SchemaField` retrieves, and a `null` schema's one value is the value
+ * it holds, so that `null` is added, with the objects that lead to it, and nothing else the branches would default.
+ *
+ * @param context - The `SchemaContext` the defaults are computed in
+ * @param schema - The object schema, with the `allOf` or `if` left out of its defaults
+ * @param props - The root schema, the `$ref`s being recursed, the object's form data and the caller's `onNullFill`
+ * @returns - The defaults of those properties that hold such a `null`, keyed by property
+ */
+function nullFillsOfSkippedBranches<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  schema: S,
+  {
+    rootSchema,
+    _recurseList,
+    rawFormData,
+    onNullFill,
+  }: { rootSchema: S; _recurseList: string[]; rawFormData: T; onNullFill?: () => void },
+) {
+  const [rendered] = retrieveSchemaInternal<T, S, F>(
+    context,
+    schema,
+    rootSchema,
+    rawFormData,
+    false,
+    enclosingRefPath<S>(schema, _recurseList),
+  );
+  // Under these settings the defaults of a property hold nothing but a `null` fill and the objects leading to it
+  const nullsOnly: SchemaContext<S, F> = {
+    ...context,
+    defaultFormStateBehavior: {
+      ...context.defaultFormStateBehavior,
+      emptyObjectFields: 'skipDefaults',
+      constAsDefaults: 'never',
+    },
+  };
+  const nullFills: GenericObjectType = {};
+  Object.keys(rendered.properties ?? {})
+    .filter((key) => !Object.hasOwn(schema.properties ?? {}, key))
+    .forEach((key) => {
+      let holdsNull = false;
+      const computedDefault = computeDefaults<T, S, F>(nullsOnly, getPropertySchema<S>(rendered, key), {
+        rootSchema,
+        _recurseList: enclosingRefPath<S>(rendered, _recurseList),
+        rawFormData: getByPath<T>(rawFormData, key),
+        onNullFill: () => {
+          holdsNull = true;
+        },
+      });
+      if (holdsNull) {
+        nullFills[key] = computedDefault;
+        onNullFill?.();
+      }
+    });
+  return nullFills;
+}
+
 /** Computes the defaults for the current `schema` given the `rawFormData` and `parentDefaults` if any. This drills into
  * each level of the schema, recursively, to fill out every level of defaults provided by the schema.
  *
@@ -288,7 +355,11 @@ export function computeDefaults<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(context: SchemaContext<S, F>, rawSchema: S, inputProps: ComputeDefaultsProps<T, S, F> = {}): T | T[] | undefined {
+>(
+  context: SchemaContext<S, F>,
+  rawSchema: S,
+  inputProps: ComputeDefaultsProps<T, S, F> = {},
+): T | T[] | null | undefined {
   const { defaultFormStateBehavior } = context;
   const {
     parentDefaults,
@@ -301,6 +372,8 @@ export function computeDefaults<
     initialDefaultsGenerated,
     uiSchema: localUiSchema,
     uiSchemaDefinitions,
+    isRenderedOption = false,
+    onNullFill,
   } = inputProps;
   // Apply `ui:definitions` at every node, keyed by the `$ref` `retrieveSchema()` recorded when it resolved this
   // node, so defaults see the same uiSchema `SchemaField` renders with.
@@ -321,6 +394,8 @@ export function computeDefaults<
   // fragment (matching `MultiSchemaField`'s `optionsUiSchema`/`optionUiSchema`) is what its fields see, rather than
   // the parent uiSchema, which is otherwise passed straight through.
   let branchUiSchema = uiSchema;
+  // Whether `schemaToCompute` is the option a field renders, or the schema a rendered option's `$ref` names
+  let computesRenderedOption = isRenderedOption && REF_KEY in schema;
   // Worked out by the `oneOf`/`anyOf` branch, so it isn't worked out again for this node's type-based default
   let isWholeValue: boolean | undefined;
   const xxxOf = getXxxOfOptions<S>(schema);
@@ -374,7 +449,8 @@ export function computeDefaults<
     const schemaDefaults =
       getSchemaType<S>(schema) === 'array' && !isWholeValueSelect<S>(schema)
         ? undefined
-        : getDefaultBasedOnSchemaType(context, schema, computeDefaultsProps, defaults);
+        : // Only the defaults of the resolved schema, computed below, are the ones this node reports a `null` fill for
+          getDefaultBasedOnSchemaType(context, schema, { ...computeDefaultsProps, onNullFill: undefined }, defaults);
     const objectDefaults: GenericObjectType = isObject(schemaDefaults) ? schemaDefaults : {};
     const defaultFormData: T = { ...objectDefaults, ...formData };
     const resolvedSchema = resolveDependencies<T, S, F>(
@@ -479,6 +555,7 @@ export function computeDefaults<
         schemaToCompute = withDefaultOf(remaining, renderedOption) as S;
       }
       branchUiSchema = getOptionUiSchema<T, S, F>(uiSchema, key, optionIndex);
+      computesRenderedOption = true;
     }
   } else if (shouldPopulateAllOfDefaults(schema, defaultFormStateBehavior) && getSchemaType<S>(schema) !== 'object') {
     // `allOf` on an object schema is already resolved by `getObjectDefaults()`. On any other schema
@@ -507,6 +584,8 @@ export function computeDefaults<
 
   if (schemaToCompute) {
     return computeDefaults<T, S, F>(contextToCompute, schemaToCompute, {
+      isRenderedOption: computesRenderedOption,
+      onNullFill,
       rootSchema,
       includeUndefinedValues,
       _recurseList: updatedRecurseList,
@@ -546,7 +625,12 @@ export function computeDefaults<
     isWholeValue,
   );
 
-  let defaultsWithFormData = defaultBasedOnSchemaType ?? defaults;
+  let defaultsWithFormData: T | T[] | null | undefined = defaultBasedOnSchemaType ?? defaults;
+  // A `null` schema allows one value, so a missing one is that value, except for an option, whose field renders nothing
+  if (defaultsWithFormData === undefined && !isRenderedOption && getSchemaType<S>(schema) === 'null') {
+    defaultsWithFormData = null;
+    onNullFill?.();
+  }
   // if shouldMergeDefaultsIntoFormData is true, then merge the defaults into the formData.
   if (shouldMergeDefaultsIntoFormData) {
     const { arrayMinItems = {} } = defaultFormStateBehavior ?? {};
@@ -640,6 +724,7 @@ export function getObjectDefaults<
     initialDefaultsGenerated,
     uiSchema,
     uiSchemaDefinitions,
+    onNullFill,
   }: ComputeDefaultsProps<T, S, F> = {},
   defaults?: T | T[],
 ): T {
@@ -692,7 +777,11 @@ export function getObjectDefaults<
         const addedByAdditionalProperty = Boolean((propertySchema as RJSFMarkedSchema)?.[ADDITIONAL_PROPERTY_FLAG]);
         // Compute the defaults for this node, with the parent defaults we might
         // have from a previous run: defaults[key].
+        let holdsNull = false;
         const computedDefault = computeDefaults<T, S, F>(context, propertySchema, {
+          onNullFill: () => {
+            holdsNull = true;
+          },
           rootSchema,
           _recurseList: childRecurseList,
           includeUndefinedValues: includeUndefinedValues === true,
@@ -717,13 +806,27 @@ export function getObjectDefaults<
           retrievedSchema.required,
           defaultFormStateBehavior?.emptyObjectFields,
           hasConst,
-          propertySchema?.type === 'null',
+          holdsNull,
         );
+        if (holdsNull) {
+          onNullFill?.();
+        }
 
         return acc;
       },
       {},
     ) as T;
+    if (!shouldRetrieveSchema && (ALL_OF_KEY in schema || IF_KEY in schema)) {
+      Object.assign(
+        objectDefaults as GenericObjectType,
+        nullFillsOfSkippedBranches<T, S, F>(context, schema, {
+          rootSchema,
+          _recurseList,
+          rawFormData: formData,
+          onNullFill,
+        }),
+      );
+    }
     if (retrievedSchema.additionalProperties && !initialDefaultsGenerated) {
       // as per spec additionalProperties may be either schema or boolean
       const additionalPropertiesSchema = isObject(retrievedSchema.additionalProperties)
@@ -1080,7 +1183,7 @@ export default function getDefaultFormState<
     const { mergeDefaultsIntoFormData } = context.defaultFormStateBehavior ?? {};
     const defaultSupercedesUndefined = mergeDefaultsIntoFormData === 'useDefaultIfFormDataUndefined';
     const matchingFormData = ensureFormDataMatchingSchema<T, S, F>(context, schema, rootSchema ?? schema, formData);
-    const result = mergeDefaultsWithFormData<T | T[]>(
+    const result = mergeDefaultsWithFormData<T | T[] | null>(
       defaults,
       matchingFormData,
       true, // set to true to add any additional default array entries.

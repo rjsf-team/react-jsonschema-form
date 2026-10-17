@@ -67,7 +67,7 @@ const errorSchema: Sample = {
       },
     },
   },
-  formData: {
+  initialFormData: {
     lastName: 'Norris',
     age: 75,
     bio: 'Roundhouse kicking asses since 1940',

@@ -1,6 +1,8 @@
+import { createRef } from 'react';
+import type { FormRef } from '@rjsf/core';
 import type { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { render, screen } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import Form from './WrappedForm.tsx';
@@ -45,5 +47,68 @@ describe('UpDownWidget focus handlers', () => {
     trigger.focus();
 
     expect(onFocus).toHaveBeenCalledWith('root', undefined);
+  });
+});
+
+describe('UpDownWidget value', () => {
+  it('shows a value set from outside the widget, through the form', async () => {
+    const ref = createRef<FormRef>();
+    render(
+      <Form
+        ref={ref}
+        schema={{ type: 'integer' }}
+        uiSchema={{ 'ui:widget': 'updown' }}
+        initialFormData={5}
+        validator={validator}
+      />,
+    );
+
+    act(() => ref.current?.setFieldValue('', 9));
+
+    await waitFor(() => expect(screen.getByRole('spinbutton')).toHaveValue('9'));
+  });
+
+  it.each<[string, (form: FormRef) => void]>([
+    ['clears the value from outside the widget', (form) => form.setFieldValue('', undefined)],
+    ['resets to a seed without the value', (form) => form.reset()],
+  ])('shows nothing once the form %s', async (_, clear) => {
+    const ref = createRef<FormRef>();
+    render(
+      <Form
+        ref={ref}
+        schema={{ type: 'object', properties: { n: { type: 'integer' } } }}
+        uiSchema={{ n: { 'ui:widget': 'updown' } }}
+        initialFormData={{}}
+        validator={validator}
+      />,
+    );
+    const input = screen.getByRole('spinbutton');
+    await user.type(input, '5');
+    await waitFor(() => expect(input).toHaveValue('5'));
+
+    act(() => {
+      if (ref.current) {
+        clear(ref.current);
+      }
+    });
+
+    await waitFor(() => expect(input).toHaveValue(''));
+  });
+
+  it('shows what the user types', async () => {
+    render(
+      <Form
+        schema={{ type: 'integer' }}
+        uiSchema={{ 'ui:widget': 'updown' }}
+        initialFormData={5}
+        validator={validator}
+      />,
+    );
+    const input = screen.getByRole('spinbutton');
+
+    await user.clear(input);
+    await user.type(input, '42');
+
+    expect(input).toHaveValue('42');
   });
 });

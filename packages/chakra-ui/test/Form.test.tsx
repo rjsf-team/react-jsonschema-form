@@ -39,7 +39,7 @@ describe('chakra-ui AltDateWidget', () => {
       <WrappedForm
         schema={{ type: 'string', format: 'date' }}
         uiSchema={{ 'ui:widget': 'alt-date', 'ui:readonly': true }}
-        formData='2020-01-02'
+        initialFormData='2020-01-02'
         validator={validator}
         onChange={onChange}
       />,
@@ -59,7 +59,7 @@ describe('chakra-ui AltDateWidget', () => {
         <WrappedForm
           schema={{ type: 'string', format: 'date' }}
           uiSchema={{ 'ui:widget': 'alt-date', 'ui:disabled': true }}
-          formData='2020-01-02'
+          initialFormData='2020-01-02'
           templates={{ FieldTemplate: BareFieldTemplate }}
           validator={validator}
           onChange={onChange}

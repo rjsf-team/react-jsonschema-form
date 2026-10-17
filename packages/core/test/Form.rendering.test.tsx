@@ -1,6 +1,7 @@
 import { createRef } from 'react';
 import type { FieldTemplateProps, RJSFSchema, UiSchema, ValidatorType } from '@rjsf/utils';
 import { JSON_SCHEMA_TYPES } from '@rjsf/utils';
+import { act } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import FallbackField from '../src/components/fields/FallbackField.tsx';
@@ -8,6 +9,8 @@ import Form from '../src/index.ts';
 import type { NoValFormProps } from './testUtils.tsx';
 import {
   createComponent,
+  createFormRef,
+  handleOf,
   createFormComponent as createDirectFormComponent,
   expectToHaveBeenCalledWithFormData,
   setupConsoleErrorSuppression,
@@ -208,7 +211,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       const { node } = createFormComponent({
         schema: multiTypeSchema,
         useFallbackUiForUnsupportedType: true,
-        formData: { multi: false },
+        initialFormData: { multi: false },
       });
 
       const select = node.querySelector('select')!;
@@ -235,7 +238,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       const { node, onChange } = createFormComponent({
         schema: { type: 'object', additionalProperties: true },
         useFallbackUiForUnsupportedType: true,
-        formData: { aKey: '42' },
+        initialFormData: { aKey: '42' },
       });
 
       const select = node.querySelector('select')!;
@@ -496,7 +499,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
           },
         },
         useFallbackUiForUnsupportedType: true,
-        formData: { multi: { a: 'hello' } },
+        initialFormData: { multi: { a: 'hello' } },
       });
 
       // The options describe the object's members even though the schema around them names no `properties` of its
@@ -513,7 +516,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       const { node } = createFormComponent({
         schema: { type: ['object', 'string'], unevaluatedProperties: false },
         useFallbackUiForUnsupportedType: true,
-        formData: { a: 'hello' },
+        initialFormData: { a: 'hello' },
       });
 
       // The keyword says what the object takes as much as `additionalProperties` would, and the `true` written in for
@@ -568,7 +571,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       const { node } = createFormComponent({
         schema: { type: 'object', properties: { foo: { title: 'Foo', type: ['object', 'string'] } } },
         useFallbackUiForUnsupportedType: true,
-        formData: { foo: { k: 1 } },
+        initialFormData: { foo: { k: 1 } },
       });
 
       // An `object` field renders no label, so its own title is the only heading the value has and must survive the
@@ -666,13 +669,15 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         type: 'object',
         properties: { val: { type: ['array', 'string'], items: { type: 'string' } } },
       } as RJSFSchema;
-      const { node, rerender } = createFormComponent({
+      const ref = createFormRef();
+      const { node } = createFormComponent({
+        ref,
         schema,
         useFallbackUiForUnsupportedType: true,
-        formData: { val: ['an item'] },
+        initialFormData: { val: ['an item'] },
       });
 
-      rerender({ schema, useFallbackUiForUnsupportedType: true, formData: { val: '' } });
+      act(() => handleOf(ref).setFieldValue('', { val: '' }));
 
       // Only an additional property stores a cleared value as the empty string; anywhere else it is a `string` like
       // any other, so the selector must follow it rather than leave the array UI standing over string data
@@ -682,16 +687,18 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
 
     it('gives way to an empty string that replaces the object of an additional property', () => {
       const schema = { type: 'object', additionalProperties: true } as RJSFSchema;
-      const { node, rerender } = createFormComponent({
+      const ref = createFormRef();
+      const { node } = createFormComponent({
+        ref,
         schema,
         useFallbackUiForUnsupportedType: true,
-        formData: { aKey: { a: 1 } },
+        initialFormData: { aKey: { a: 1 } },
       });
 
-      rerender({ schema, useFallbackUiForUnsupportedType: true, formData: { aKey: '' } });
+      act(() => handleOf(ref).setFieldValue('', { aKey: '' }));
 
       // An `object` selection starts out as the empty object of its own rather than the empty string a cleared value
-      // is stored as, so this one arrived from outside the form and is `string` data the selector has to follow
+      // is stored as, so this one arrived from outside the field and is `string` data the selector has to follow
       const select = node.querySelector<HTMLSelectElement>('#root_aKey___internal_type_selector')!;
       expect(Array.from(select.options).find((o) => o.selected)?.textContent).toBe('string');
     });
@@ -701,7 +708,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         schema: { type: 'object', properties: { multi: { type: ['string', 'number'] } } },
         uiSchema: { multi: { 'ui:widget': () => <div id='own-widget' /> } },
         useFallbackUiForUnsupportedType: true,
-        formData: { multi: 'a string' },
+        initialFormData: { multi: 'a string' },
       });
 
       // A control written for this schema handles the union itself, so wrapping it in a selector that pins the type
@@ -715,7 +722,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         schema: { type: 'object', additionalProperties: true },
         uiSchema: { additionalProperties: { 'ui:widget': () => <div id='own-widget' /> } },
         useFallbackUiForUnsupportedType: true,
-        formData: { aKey: 'a' },
+        initialFormData: { aKey: 'a' },
       });
 
       // The schema lists no types for such a control to handle — the stub's type came from the data — so the
@@ -732,7 +739,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
           schema: multiTypeSchema,
           uiSchema: { multi: { 'ui:options': { label } } },
           useFallbackUiForUnsupportedType: true,
-          formData: { multi: 'a string' },
+          initialFormData: { multi: 'a string' },
         });
 
         // Asserted first so that a selector gone missing fails here rather than passing the label check below, which a
@@ -747,7 +754,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       const { node } = createFormComponent({
         schema: { type: 'object', additionalProperties: { enum: ['a', 'b'] } },
         useFallbackUiForUnsupportedType: true,
-        formData: { aKey: 'a' },
+        initialFormData: { aKey: 'a' },
       });
 
       // The schema constrains the value even though it names no type, so every type is not on offer for it
@@ -762,7 +769,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       const { node } = createFormComponent({
         schema: { type: 'object', additionalProperties: { title: 'Anything' } },
         useFallbackUiForUnsupportedType: true,
-        formData: { aKey: 'a' },
+        initialFormData: { aKey: 'a' },
       });
 
       // A title says nothing about the value, so the property is as free as `additionalProperties: true` leaves it
@@ -775,7 +782,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       const { node } = createFormComponent({
         schema: { type: 'object', additionalProperties: { readOnly: true } },
         useFallbackUiForUnsupportedType: true,
-        formData: { aKey: 'a' },
+        initialFormData: { aKey: 'a' },
       });
 
       // `readOnly` is no constraint on the type, so every type is on offer, but changing it would change the value
@@ -900,7 +907,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       const { node } = createFormComponent({
         schema: { type: 'object', properties: { val: { type: ['null', 'boolean', 'string'] } } },
         uiSchema: { 'ui:globalOptions': { widget: 'textarea' } },
-        formData: { val: true },
+        initialFormData: { val: true },
         useFallbackUiForUnsupportedType: true,
       });
 
@@ -913,7 +920,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       const { node } = createFormComponent({
         schema: { type: 'object', properties: { val: { type: ['null', 'boolean', 'string'] } } },
         uiSchema: { val: { 'ui:widget': 'textarea' } },
-        formData: { val: 5 },
+        initialFormData: { val: 5 },
         useFallbackUiForUnsupportedType: true,
       });
 
@@ -931,7 +938,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         const { node } = createFormComponent({
           schema: { type: 'object', properties: { val: { type } } },
           uiSchema: { val: { 'ui:widget': 'range' } },
-          formData: { val: {} },
+          initialFormData: { val: {} },
           useFallbackUiForUnsupportedType: true,
         });
 
@@ -946,7 +953,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       const { node } = createFormComponent({
         schema: { type: 'object', properties: { val: { type: ['number', 'string'] } } },
         uiSchema: { val: { 'ui:widget': 'textarea' } },
-        formData: { val: null },
+        initialFormData: { val: null },
         useFallbackUiForUnsupportedType: true,
       });
 
@@ -982,7 +989,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
           properties: { val: { type: ['array', 'string'], items: { type: 'string' } } },
         },
         uiSchema: { val: { 'ui:widget': 'text' } },
-        formData: { val: [] },
+        initialFormData: { val: [] },
         useFallbackUiForUnsupportedType: true,
       });
 
@@ -1028,7 +1035,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
           },
         },
         useFallbackUiForUnsupportedType: true,
-        formData: { val: null },
+        initialFormData: { val: null },
       });
 
       // A nullable type is not a union, so the option inherits the single type it resolves to and renders a field
@@ -1041,9 +1048,10 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       const props: NoValFormProps = {
         schema: { type: 'object', additionalProperties: true },
         useFallbackUiForUnsupportedType: true,
-        formData: { aKey: 'a string' },
+        initialFormData: { aKey: 'a string' },
       };
-      const { node, rerender } = createFormComponent(props);
+      const ref = createFormRef();
+      const { node } = createFormComponent({ ...props, ref });
 
       const selected = () =>
         Array.from(node.querySelectorAll<HTMLOptionElement>('#root_aKey___internal_type_selector option')).find(
@@ -1051,9 +1059,9 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         );
       expect(selected()).toHaveTextContent('string');
 
-      rerender({ ...props, formData: { aKey: { nested: 'value' } } });
+      act(() => handleOf(ref).setFieldValue('', { aKey: { nested: 'value' } }));
 
-      // Data replaced by a controlled parent never went through the selector, so the `string` selection gives way
+      // Data replaced from outside the field never went through the selector, so the `string` selection gives way
       // rather than leaving a text input to render the object as `[object Object]`
       expect(selected()).toHaveTextContent('object');
       expect(node.querySelector<HTMLInputElement>('#root_aKey_nested')).toHaveAttribute('value', 'value');
@@ -1066,9 +1074,10 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
           properties: { val: { type: ['object', 'number'], properties: { a: { type: 'string' } } } },
         },
         useFallbackUiForUnsupportedType: true,
-        formData: { val: { a: 'nested' } },
+        initialFormData: { val: { a: 'nested' } },
       };
-      const { node, rerender } = createFormComponent(props);
+      const ref = createFormRef();
+      const { node } = createFormComponent({ ...props, ref });
 
       const selected = () =>
         Array.from(node.querySelectorAll<HTMLOptionElement>('#root_val___internal_type_selector option')).find(
@@ -1076,7 +1085,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         );
       expect(selected()).toHaveTextContent('object');
 
-      rerender({ ...props, formData: { val: 5 } });
+      act(() => handleOf(ref).setFieldValue('', { val: 5 }));
       expect(selected()).toHaveTextContent('number');
       await user.clear(node.querySelector<HTMLInputElement>('#root_val')!);
 
@@ -1109,7 +1118,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       const { node, onChange } = createFormComponent({
         schema: { type: 'object', properties: { val: { type: ['string', 'integer'] } } },
         useFallbackUiForUnsupportedType: true,
-        formData: { val: '4' },
+        initialFormData: { val: '4' },
       });
 
       const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
@@ -1126,7 +1135,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       const { node, onChange } = createFormComponent({
         schema: { type: 'object', properties: { val: { type: ['number', 'integer'] } } },
         useFallbackUiForUnsupportedType: true,
-        formData: { val: -2.5 },
+        initialFormData: { val: -2.5 },
       });
 
       const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
@@ -1164,7 +1173,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       const { node, onChange } = createFormComponent({
         schema: { type: 'object', properties: { val: { type: ['boolean', 'string'] } } },
         useFallbackUiForUnsupportedType: true,
-        formData: { val: false },
+        initialFormData: { val: false },
       });
 
       const select = () => node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
@@ -1187,7 +1196,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       const { node } = createFormComponent({
         schema: { type: 'object', properties: { val: { type: ['string', 'number'] } } },
         useFallbackUiForUnsupportedType: true,
-        formData: { val: 'text' },
+        initialFormData: { val: 'text' },
       });
 
       const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
@@ -1257,9 +1266,10 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       const props: NoValFormProps = {
         schema: { type: 'object', additionalProperties: true },
         useFallbackUiForUnsupportedType: true,
-        formData: { aKey: 'text' },
+        initialFormData: { aKey: 'text' },
       };
-      const { node, rerender } = createFormComponent(props);
+      const ref = createFormRef();
+      const { node } = createFormComponent({ ...props, ref });
 
       const selected = () =>
         Array.from(node.querySelectorAll<HTMLOptionElement>('#root_aKey___internal_type_selector option')).find(
@@ -1267,7 +1277,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         );
       expect(selected()).toHaveTextContent('string');
 
-      rerender({ ...props, formData: { aKey: null } });
+      act(() => handleOf(ref).setFieldValue('', { aKey: null }));
 
       // An empty text input would hide the `null`, and the next keystroke would silently replace it
       expect(selected()).toHaveTextContent('null');
@@ -1360,7 +1370,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       const { node, onChange } = createFormComponent({
         schema: { type: 'object', properties: { val: { type: ['object', 'boolean'] } } },
         useFallbackUiForUnsupportedType: true,
-        formData: { val: {} },
+        initialFormData: { val: {} },
       });
 
       const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
@@ -1395,7 +1405,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         schema: { type: 'object', properties: { val: { type: ['string', 'number', 'null'] } } },
         uiSchema: { val: { 'ui:emptyValue': null } },
         useFallbackUiForUnsupportedType: true,
-        formData: { val: 'text' },
+        initialFormData: { val: 'text' },
       });
 
       await user.clear(node.querySelector<HTMLInputElement>('#root_val')!);
@@ -1410,7 +1420,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       const { node, onChange } = createFormComponent({
         schema: { type: 'object', properties: { val: { type: ['string', 'boolean'] } } },
         useFallbackUiForUnsupportedType: true,
-        formData: { val: ' False ' },
+        initialFormData: { val: ' False ' },
       });
 
       const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
@@ -1429,7 +1439,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       const { node, onChange } = createFormComponent({
         schema: { type: 'object', properties: { val: { type: ['boolean', 'string', 'number'] } } },
         useFallbackUiForUnsupportedType: true,
-        formData: { val: value },
+        initialFormData: { val: value },
       });
 
       const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
@@ -1451,7 +1461,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
           },
         },
         useFallbackUiForUnsupportedType: true,
-        formData: { val: { nested: 'x' } },
+        initialFormData: { val: { nested: 'x' } },
       });
 
       await user.click(node.querySelector('button[type=submit]')!);
@@ -1477,7 +1487,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
           properties: { val: { type: ['string', 'boolean'] } },
         },
         useFallbackUiForUnsupportedType: true,
-        formData: { val: '   ' },
+        initialFormData: { val: '   ' },
       });
 
       const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
@@ -1500,7 +1510,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         },
         useFallbackUiForUnsupportedType: true,
         transformErrors: (errors) => errors.map((error) => ({ ...error, message: undefined })),
-        formData: { other: 'x' },
+        initialFormData: { other: 'x' },
       });
 
       const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
@@ -1518,7 +1528,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
     it('renders an unconstrained additional property as its own type when the fallback UI is off', () => {
       const { node } = createFormComponent({
         schema: { type: 'object', additionalProperties: true },
-        formData: { aKey: 42 },
+        initialFormData: { aKey: 42 },
       });
 
       expect(node.querySelector('select')).not.toBeInTheDocument();
@@ -1582,7 +1592,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         const { node, onChange } = createFormComponent({
           schema,
           useFallbackUiForUnsupportedType: true,
-          formData: { val: text },
+          initialFormData: { val: text },
         });
         const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
 
@@ -1606,7 +1616,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         schema: { type: 'object', properties: { val: { type: ['string', 'number', 'boolean'] } } },
         uiSchema: { val: { 'ui:options': { emptyValue: false } } },
         useFallbackUiForUnsupportedType: true,
-        formData: { val: 'a string' },
+        initialFormData: { val: 'a string' },
       });
 
       await user.clear(node.querySelector<HTMLInputElement>('#root_val')!);
@@ -1617,17 +1627,19 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       expect(Array.from(select.options).find((o) => o.selected)?.textContent).toBe('string');
     });
 
-    it('gives way to a ui:emptyValue that replaces the object of a union from outside the form', () => {
+    it('gives way to a ui:emptyValue that replaces the object of a union from outside the field', () => {
       const schema = { type: 'object', properties: { val: { type: ['number', 'object'] } } } as RJSFSchema;
       const uiSchema = { val: { 'ui:options': { emptyValue: 0 } } };
-      const { node, rerender } = createFormComponent({
+      const ref = createFormRef();
+      const { node } = createFormComponent({
+        ref,
         schema,
         uiSchema,
         useFallbackUiForUnsupportedType: true,
-        formData: { val: { a: 1 } },
+        initialFormData: { val: { a: 1 } },
       });
 
-      rerender({ schema, uiSchema, useFallbackUiForUnsupportedType: true, formData: { val: 0 } });
+      act(() => handleOf(ref).setFieldValue('', { val: 0 }));
 
       // An `object` field renders no widget for a `ui:emptyValue` to belong to, so this `0` is not one of its inputs
       // reporting itself cleared: it is `number` data that arrived from outside and the selector has to follow
@@ -2093,15 +2105,14 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
     });
 
     describe('when props.formData does not equal the default values', () => {
-      it('should render the parent value as passed and not call props.onChange', () => {
-        // The parent owns the value, defaults included; seeding them is the parent's job (see the v7 upgrade guide).
-        // A direct `formData` prop, not the suite's creator, whose accepting parent seeds the defaults for this
+      it('should render the defaults added to the value without calling props.onChange', () => {
+        // A plain `formData` prop, without the extra-data props the suite's creator adds
         const formData = {
           foo: 123,
         };
-        const { node, onChange } = createDirectFormComponent({ schema, formData });
+        const { node, onChange } = createDirectFormComponent({ schema, initialFormData: formData });
         expect(onChange).not.toHaveBeenCalled();
-        expect(node.querySelector<HTMLInputElement>('#root_count')).toHaveValue('');
+        expect(node.querySelector<HTMLInputElement>('#root_count')).toHaveValue('789');
       });
     });
 
@@ -2110,7 +2121,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         const formData = {
           count: 789,
         };
-        const { onChange } = createFormComponent({ schema, formData });
+        const { onChange } = createFormComponent({ schema, initialFormData: formData });
         expect(onChange).not.toHaveBeenCalled();
       });
     });

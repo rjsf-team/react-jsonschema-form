@@ -79,7 +79,7 @@ const anyOf: Sample = {
       },
     ],
   },
-  formData: {},
+  initialFormData: {},
 };
 
 export default anyOf;

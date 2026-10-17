@@ -6,11 +6,11 @@ import type { Mock } from 'vitest';
 
 import type { FormProps } from '../src/index.ts';
 import type { NoValFormProps } from './testUtils.tsx';
-import { describeOwnerships, submitForm } from './testUtils.tsx';
+import { createFormComponent, submitForm } from './testUtils.tsx';
 
 const user = userEvent.setup();
 
-describeOwnerships('Validation', (createFormComponent) => {
+describe('Validation', () => {
   describe('Form integration, v8 validator', () => {
     describe('JSONSchema validation', () => {
       it('should block submit when a matched if/then branch resolves to false', async () => {
@@ -187,7 +187,7 @@ describeOwnerships('Validation', (createFormComponent) => {
         );
       });
 
-      it('re-validates a controlled form when the customValidate prop changes', () => {
+      it('re-validates when the customValidate prop changes', () => {
         const schema: RJSFSchema = { type: 'string' };
         function rejectEverything(_: FormProps['formData'], errors: FormValidation) {
           errors.addError('Invalid');
@@ -196,7 +196,7 @@ describeOwnerships('Validation', (createFormComponent) => {
         function acceptEverything(_: FormProps['formData'], errors: FormValidation) {
           return errors;
         }
-        const props: NoValFormProps = { schema, formData: 'a', liveValidate: 'onChange' };
+        const props: NoValFormProps = { schema, initialFormData: 'a', liveValidate: 'onChange' };
         const { node, rerender } = createFormComponent({ ...props, customValidate: acceptEverything });
         expect(node.textContent).not.toContain('Invalid');
 
@@ -426,7 +426,7 @@ describeOwnerships('Validation', (createFormComponent) => {
         });
 
         it('renders the error list after the fields when showErrorList is bottom', async () => {
-          const { node: bottomNode } = createFormComponent({ schema, formData: {}, showErrorList: 'bottom' });
+          const { node: bottomNode } = createFormComponent({ schema, initialFormData: {}, showErrorList: 'bottom' });
           await submitForm(bottomNode, user, true);
 
           expect(bottomNode.firstElementChild).not.toHaveClass('errors');

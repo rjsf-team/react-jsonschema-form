@@ -145,6 +145,11 @@ export default function formDataForNewOption<
     renderedOption<S>(parentSchema, oldOption),
     formData,
   );
+  // A `null` option renders no field, so the switch leaves the data as the sanitize did, rather than the `null` the
+  // option's defaults fill in for a field that renders one
+  if (newOption?.type === 'null') {
+    return newFormData;
+  }
   const newOptionForDefaults = withParentRequired<S>(parentSchema, newOption);
   if (newOptionForDefaults) {
     const oldOptionForDefaults = withParentRequired<S>(parentSchema, oldOption);

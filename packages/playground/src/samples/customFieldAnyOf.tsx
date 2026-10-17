@@ -141,7 +141,7 @@ const customFieldAnyOf: Sample = {
     'ui:field': UiField,
     'ui:fieldReplacesAnyOrOneOf': true,
   },
-  formData: {},
+  initialFormData: {},
 };
 
 export default customFieldAnyOf;

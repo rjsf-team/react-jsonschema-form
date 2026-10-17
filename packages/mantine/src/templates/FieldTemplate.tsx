@@ -2,6 +2,9 @@ import { Box } from '@mantine/core';
 import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { getTemplates, getUiOptions } from '@rjsf/utils';
 
+import { ErrorCopyIdProvider } from '../utils.tsx';
+import FieldErrorTemplate from './FieldErrorTemplate.tsx';
+
 /** The `FieldTemplate` component is the template used by `SchemaField` to render any field. It renders the field
  * content, (label, description, children, errors and help) inside a `WrapIfAdditional` component.
  *
@@ -31,28 +34,36 @@ export default function FieldTemplate<
   } = props;
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const { WrapIfAdditionalTemplate } = getTemplates<T, S, F>(registry, uiOptions);
+  const templates = getTemplates<T, S, F>(registry, uiOptions);
+  const { WrapIfAdditionalTemplate } = templates;
+  // Only this theme's `FieldErrorTemplate` renders the hidden copy that takes the field's error id. A custom one may
+  // render no element with it, so the error element a Mantine widget shows keeps the id then
+  const rendersErrorCopy = templates.FieldErrorTemplate === FieldErrorTemplate;
 
   if (hidden) {
     return <Box display='none'>{children}</Box>;
   }
 
+  // The hidden copy of the field's errors in `errors` has the field's error id, which the field's own error elements
+  // below then leave to it, see `useErrorElementId()`
   return (
-    <WrapIfAdditionalTemplate
-      id={id}
-      classNames={classNames}
-      style={style}
-      label={label}
-      displayLabel={displayLabel}
-      rawDescription={rawDescription}
-      schema={schema}
-      uiSchema={uiSchema}
-      registry={registry}
-      {...otherProps}
-    >
-      {children}
-      {errors}
-      {help}
-    </WrapIfAdditionalTemplate>
+    <ErrorCopyIdProvider id={errors && rendersErrorCopy ? id : undefined}>
+      <WrapIfAdditionalTemplate
+        id={id}
+        classNames={classNames}
+        style={style}
+        label={label}
+        displayLabel={displayLabel}
+        rawDescription={rawDescription}
+        schema={schema}
+        uiSchema={uiSchema}
+        registry={registry}
+        {...otherProps}
+      >
+        {children}
+        {errors}
+        {help}
+      </WrapIfAdditionalTemplate>
+    </ErrorCopyIdProvider>
   );
 }

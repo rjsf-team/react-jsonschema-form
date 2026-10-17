@@ -93,7 +93,7 @@ describe('SelectWidget focus and blur', () => {
         <Form
           schema={{ type: 'number', enum: [10, 20] }}
           uiSchema={{ 'ui:options': { optionValueFormat } }}
-          formData={20}
+          initialFormData={20}
           validator={validator}
           onFocus={onFocus}
           onBlur={onBlur}

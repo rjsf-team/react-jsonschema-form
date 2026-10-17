@@ -226,7 +226,7 @@ describe('antd specific tests', () => {
       anyOf: [{ minItems: 1 }, { maxItems: 3 }],
     };
     const { container } = render(
-      <Form schema={{ type: 'object', properties: { opt } }} validator={validator} formData={{ opt: ['x'] }} />,
+      <Form schema={{ type: 'object', properties: { opt } }} validator={validator} initialFormData={{ opt: ['x'] }} />,
     );
 
     expect(screen.getAllByText('Up to three')).toHaveLength(1);
@@ -275,7 +275,7 @@ describe('antd specific tests', () => {
       <Form
         schema={{ type: 'string', format: 'date' }}
         uiSchema={{ 'ui:widget': 'alt-date', [flag]: true }}
-        formData='2020-01-02'
+        initialFormData='2020-01-02'
         validator={validator}
         onChange={onChange}
       />,

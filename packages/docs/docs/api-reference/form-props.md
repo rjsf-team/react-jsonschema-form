@@ -471,22 +471,26 @@ See [AntD Customization](themes/antd/uiSchema.md#formcontext) for formContext cu
 
 ## formData
 
-The data of a form whose value you own, the way `value` works on an `<input>`. The form renders exactly what you pass, proposes every edit through [`onChange`](#onchange), and changes nothing until you pass the new value back:
+Deprecated: use [`initialFormData`](#initialformdata), which this is another name for. The form reads it only when it mounts and when `reset()` is called, which the name `formData` hides by reading as a controlled value.
+
+It seeds the form exactly as `initialFormData` does, and nothing more. When both are passed, `formData` is the seed, and in development the form warns once that `initialFormData` is ignored.
+
+The form owns its data after it mounts. The usual v6 pattern keeps working, since the value `onChange` reports is the form's own and passing it back changes nothing:
 
 ```tsx
 const [data, setData] = useState(record);
 <Form schema={schema} validator={validator} formData={data} onChange={(event) => setData(event.formData)} />;
 ```
 
-Ownership is decided when the form mounts and does not change afterwards: a form that mounts with `formData` defined is yours to update for its whole life, and one that mounts without it owns its data and ignores a `formData` prop that arrives later. Pass it from the first render, either by mounting the form once the data is there (give it a `key` to switch records) or by mounting with a complete fallback such as `formData={record ?? {}}`.
+Any other value passed after mount is ignored, with a warning in development only: a production build shows the seed, or the stale record, with nothing logged. That covers v6 code such as `formData={record ?? {}}` with `record` from a fetch, or a parent that resets by setting its state to a blank object. To show other data, a record that loads after mount or the next record, remount the form under a `key`, which also clears its errors and gives the record the values the form fills in on mount only, such as a [`ui:initialValue`](./uiSchema.md#initialvalue):
 
-Only `undefined` means "not passed". `null`, `false`, `0` and `''` are values, since each is valid JSON; this differs from `<input>`, where `value={null}` is uncontrolled. A form that mounts with `formData` stays yours if the prop later becomes `undefined`: it renders empty fields, generates no defaults and calls no `onChange`, and renders your next `formData` as usual. A field edit under a `null` or `undefined` root proposes the object or array the field lives in, with the defaults the edit creates.
+```tsx
+<Form key={record.id} schema={schema} validator={validator} initialFormData={record} onChange={save} />
+```
 
-Update `formData` from `onChange` with a plain state update in the handler, as for a controlled `<input>`. Edits made in the same tick build on each other's proposals, so later edits in that tick still carry one you transformed or declined; from the next render on, edits start from the value you stored. Updating from a Transition, `useDeferredValue`, a timeout or after an `await` is not supported: which value an edit made before your update lands is applied to is unspecified and may change. For expensive work downstream, keep this state synchronous and derive a deferred copy from it.
+To change the data in place, keeping the errors and the fields' own state, call [`setFieldValue('', data)`](../advanced-customization/internals.md#change-form-data-programmatically) on the form's ref, which reports the new value through `onChange` like any edit.
 
-The value includes its defaults: the form generates none for data it does not own, on mount or when the schema changes. Seed them yourself with `createSchemaUtils({ validator, customMergeAllOf, defaultFormStateBehavior }, schema).getDefaultFormState(schema, record)`, passing the same `customMergeAllOf` and `defaultFormStateBehavior` you pass to the form: computing defaults merges `allOf`s, so a context missing either setting seeds data the form itself would not produce.
-
-`reset()` on such a form clears its local errors only; the data is yours to reset by passing a new `formData`. For an editable form that should own its data, use [`initialFormData`](#initialformdata) instead.
+Only `undefined` means "not passed". `null` seeds the schema's defaults the way `undefined` does. `false`, `0` and `''` are values.
 
 ## id
 
@@ -536,7 +540,7 @@ id="root_first">` when rendering `first`.
 
 ## initialFormData
 
-The seed of a form that owns its data, the way `defaultValue` works on an `<input>`. It is filled in with the schema's defaults on the initial render, and again when `reset()` is called, and every edit is the form's own, reported through [`onChange`](#onchange). Read the current value with [`getFormData()`](../advanced-customization/internals.md#read-form-data-programmatically). A later change to this prop does not replace the data the form holds.
+The seed of the form's data, the way `defaultValue` works on an `<input>`. It is read, and filled in with the schema's defaults, when the form mounts and when `reset()` is called, and ignored otherwise, so a value written inline does not replace the data the form holds on a re-render. Every edit is reported through [`onChange`](#onchange); read the current value with [`getFormData()`](../advanced-customization/internals.md#read-form-data-programmatically). When both props are passed, [`formData`](#formdata), a deprecated name for this prop, is the seed and `initialFormData` is ignored. To show other data after mount, remount the form under a `key`, or call `setFieldValue('', data)` on its ref.
 
 ## nameGenerator
 
@@ -627,16 +631,14 @@ Sometimes you may want to trigger events or modify external state when a field h
 
 ## onChange
 
-Called with the same first argument as `onSubmit` for every edit: user input, `setFieldValue()`, and blur validation or omission. It is never called on mount or when a prop changes. For a form whose data you own, the event is a proposal: see [`formData`](#formdata) for how to apply it.
+Called with the same first argument as `onSubmit` for every edit: user input, `setFieldValue()`, `reset()`, and blur validation or omission. It is not called for what the form derives on mount or when a prop changes, such as the schema's defaults: read those with `getFormData()`. The edit has been applied by the time it is called, so not storing it does not undo it; refuse or rewrite edits in [`transformChange`](#transformchange).
 It will also receive, as the second argument, the `id` of the field which experienced the change.
 Generally, this will be the `id` of the field for which input data is modified.
 In the case of adding/removing of new fields in arrays or objects with `additionalProperties` or `patternProperties` and the rearranging of items in arrays, the `id` will be that of the array or object itself, rather than the item/field being added, removed or moved.
 
 `onChange` runs as the edit is processed. React may update the inputs afterward, so read `event.formData` rather than reading values from the DOM inside the callback.
 
-With `initialFormData`, each event includes earlier edits already stored by Form. With `formData`, each event proposes a complete value: the last value React rendered plus the edits proposed earlier in the same event. Your handler must pass the accepted value back to Form.
-
-A `setFieldValue()` call from inside `onChange` builds on the proposal being handled. See the [migration examples](../migration-guides/v7.x%20upgrade%20guide.md#edits-are-applied-immediately-breaking-change).
+Each event carries the complete value, earlier edits of the same event included. A `setFieldValue()` call from inside `onChange` builds on the edit being handled. See the [migration examples](../migration-guides/v7.x%20upgrade%20guide.md#form-owns-its-data-breaking-change).
 
 ## onError
 
@@ -725,6 +727,24 @@ A function can be passed to this prop in order to make modifications to the defa
 Pass a stable reference: a function recreated on every render of the parent counts as a changed prop, which re-derives the form's state and, with `liveValidate: 'onChange'`, re-validates the current data on every parent render. Wrap it in `useCallback` or define it outside the render function.
 
 Keep it pure. The form calls it while React renders whenever the errors on screen have to follow the props, for example when a `formData` you pass is validated live, so it follows [React's rules for rendering](https://react.dev/reference/rules/components-and-hooks-must-be-pure): no side effects, the same result for the same arguments, and no reliance on being called once, since React can render more than once (Strict Mode does in development) or discard a render.
+
+## transformChange
+
+A pure function that decides what an edit leaves the form with. The form calls it with the data the edit produced and the data before it, for a field's change and for `setFieldValue()`, before it stores the result, validates it and reports it through [`onChange`](#onchange). Return `next` to take the edit, `previous` to refuse it, or another value, such as `next` with a field upper-cased:
+
+```tsx
+<Form
+  schema={schema}
+  validator={validator}
+  transformChange={(next, previous) =>
+    (next?.title ?? '').length > 80 ? previous : { ...next, code: next?.code?.toUpperCase() }
+  }
+/>
+```
+
+It runs for every keystroke, so a rewrite has to hold for a value the user is still typing, and for a field they cleared, which is `undefined`. Upper-casing does; trimming would remove a space as soon as it is typed, so `hello world` would come out as `helloworld`. Trim on submit instead.
+
+Return `next`'s unchanged subtrees as they are, so their fields do not render again. A copy of `previous` refuses the edit as `previous` itself does. The function must be pure: the form may call it again for the same edit. It is not called for what the form derives on its own: the defaults for a new schema, the live omit a blur runs, or a `reset()`.
 
 ## translateString
 

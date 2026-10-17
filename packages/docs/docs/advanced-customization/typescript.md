@@ -11,12 +11,12 @@ Every other library in the `@rjsf/*` ecosystem use these same generics in their 
 For instance, in the `@rjsf/core` library the definitions of the `Form` component and the `withTheme()` and `generateTheme()` functions are as follows:
 
 ```ts
-export default class Form<
+export default function Form<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
-> extends Component<FormProps<T, S, F>, FormState<T, S, F>> {
-  // ... class implementation
+>(props: FormProps<T, S, F>) {
+  // ... function implementation
 }
 
 export default function withTheme<
@@ -71,7 +71,7 @@ const formData: FormData = {};
 
 const validator = customizeValidator();
 
-render(<Form<FormData> schema={schema} validator={validator} formData={formData} />, document.getElementById('app'));
+render(<Form<FormData> schema={schema} validator={validator} initialFormData={formData} />, document.getElementById('app'));
 ```
 
 ### S

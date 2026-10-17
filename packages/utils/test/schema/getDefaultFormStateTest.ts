@@ -475,7 +475,9 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           required: ['requiredProperty'],
         };
         const includeUndefinedValues = 'excludeObjectChildren';
+        // A `null` schema allows one value, so a missing one is that value
         const expected = {
+          optionalNullProperty: null,
           requiredProperty: 'foo',
         };
 
@@ -8016,6 +8018,76 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         empty: null,
       });
     });
+
+    describe.each(['skipDefaults', 'populateRequiredDefaults'] as const)(
+      'the null of a missing null value under emptyObjectFields: %s',
+      (emptyObjectFields) => {
+        const defaultsOf = (schema: RJSFSchema, formData?: unknown) =>
+          getDefaultFormState(
+            { validator: testValidator, defaultFormStateBehavior: { emptyObjectFields } },
+            { schema, formData, rootSchema: schema },
+          );
+
+        it('is filled in for an optional property, through a `$ref` and inside an optional object', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              n: { type: 'null' },
+              viaRef: { $ref: '#/$defs/alias' },
+              o: { type: 'object', properties: { n: { $ref: '#/$defs/none' }, s: { type: 'string', default: 'x' } } },
+            },
+            $defs: { alias: { $ref: '#/$defs/none' }, none: { type: 'null' } },
+          };
+          expect(defaultsOf(schema)).toEqual({ n: null, viaRef: null, o: { n: null } });
+        });
+
+        it.each<[string, RJSFSchema, unknown?]>([
+          ['allOf', { type: 'object', allOf: [{ properties: { n: { type: 'null' } }, required: ['n'] }] }],
+          [
+            'if/then',
+            {
+              type: 'object',
+              properties: { k: { type: 'string' } },
+              if: { properties: { k: { const: 'x' } } },
+              then: { properties: { n: { type: 'null' } } },
+            },
+          ],
+          [
+            'dependencies',
+            {
+              type: 'object',
+              properties: { k: { type: 'string' } },
+              dependencies: { k: { properties: { n: { type: 'null' } } } },
+            },
+            { a: { k: 'x' } },
+          ],
+        ])('is filled in inside an optional object for a property its %s brings in', (_, objectSchema, formData) => {
+          const schema: RJSFSchema = { type: 'object', properties: { a: objectSchema } };
+          expect(defaultsOf(schema, formData)).toEqual({ a: expect.objectContaining({ n: null }) });
+        });
+
+        it('is not looked for in an allOf that brings in no property', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: { a: { type: 'object', allOf: [{ minProperties: 0 }] } },
+          };
+          expect(defaultsOf(schema)).toEqual({});
+        });
+
+        it('is not added for a `default: null` of another type', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              s: { type: 'string', default: null },
+              viaRef: { $ref: '#/$defs/text', default: null },
+              o: { type: 'object', properties: { s: { type: 'string', default: 'x' } } },
+            },
+            $defs: { text: { $ref: '#/$defs/string' }, string: { type: 'string' } },
+          };
+          expect(defaultsOf(schema)).toEqual({});
+        });
+      },
+    );
 
     describe('array object reference sharing fix (issue #4756)', () => {
       const schema: RJSFSchema = {

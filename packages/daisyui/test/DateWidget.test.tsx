@@ -297,7 +297,7 @@ describe('DateWidget', () => {
     const { container } = render(
       <Form
         schema={{ type: 'object', properties: { birthday: { ...schema, title: 'Birthday' } } }}
-        formData={{ birthday: '2020-05-03' }}
+        initialFormData={{ birthday: '2020-05-03' }}
         validator={validator}
         onChange={onChange}
       />,
@@ -433,7 +433,7 @@ describe('DateWidget', () => {
     // The label names the button through `htmlFor`, which replaces the button's own contents, so the day it displays
     // would otherwise never be announced
     test('describes itself with the selected date, which its name replaces', () => {
-      render(<Form schema={dateSchema} formData={{ birthday: '2020-05-03' }} validator={validator} />);
+      render(<Form schema={dateSchema} initialFormData={{ birthday: '2020-05-03' }} validator={validator} />);
 
       const trigger = screen.getByRole('button', { name: 'Birthday' });
       expect(trigger).toHaveAccessibleName('Birthday');
@@ -446,7 +446,7 @@ describe('DateWidget', () => {
       render(
         <Form
           schema={dateSchema}
-          formData={{ birthday: '2020-05-03' }}
+          initialFormData={{ birthday: '2020-05-03' }}
           validator={validator}
           templates={{
             FieldTemplate: ({ id, label, children }) => (
@@ -491,7 +491,12 @@ describe('DateWidget', () => {
     ])('is closed again, committing its day, by a second click on the %s', async (_, press) => {
       const onChange = vi.fn();
       const { container } = render(
-        <Form schema={dateSchema} formData={{ birthday: '2020-05-03' }} validator={validator} onChange={onChange} />,
+        <Form
+          schema={dateSchema}
+          initialFormData={{ birthday: '2020-05-03' }}
+          validator={validator}
+          onChange={onChange}
+        />,
       );
 
       await openPicker(container);
@@ -507,7 +512,7 @@ describe('DateWidget', () => {
     // With no label element the trigger's contents are its own name, so referencing them as well would have the date
     // announced twice — once as the name and once as the description
     test('does not describe itself with its own name where there is no label', () => {
-      const { container } = render(<Form schema={schema} formData='2020-05-03' validator={validator} />);
+      const { container } = render(<Form schema={schema} initialFormData='2020-05-03' validator={validator} />);
 
       const trigger = container.querySelector('button[aria-haspopup]')!;
       expect(trigger).toHaveAccessibleName('May 3, 2020');

@@ -1,3 +1,4 @@
+import type { DefaultFormStateBehavior, RJSFSchema } from '@rjsf/utils';
 import { userEvent } from '@testing-library/user-event';
 
 import { createFormComponent, expectToHaveBeenCalledWithFormData, submitForm } from './testUtils.tsx';
@@ -43,13 +44,66 @@ describe('NullField', () => {
         schema: {
           type: 'null',
         },
-        formData: 3,
+        initialFormData: 3,
         // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated `noValidate` prop
         noValidate: true,
       });
 
       await submitForm(node, user);
       expectToHaveBeenCalledWithFormData(onSubmit, 3, true);
+    });
+  });
+
+  // A `null` schema allows one value, so a missing one is filled in as it, whatever the form says of other defaults
+  describe.each<NonNullable<DefaultFormStateBehavior['emptyObjectFields']>>([
+    'populateAllDefaults',
+    'populateRequiredDefaults',
+    'skipEmptyDefaults',
+    'skipDefaults',
+  ])('a missing value under emptyObjectFields: %s', (emptyObjectFields) => {
+    it.each<[string, RJSFSchema, unknown]>([
+      ['a required property', { type: 'object', required: ['n'], properties: { n: { type: 'null' } } }, { n: null }],
+      ['an optional property', { type: 'object', properties: { n: { type: 'null' } } }, { n: null }],
+      [
+        'an optional object',
+        { type: 'object', properties: { o: { type: 'object', properties: { n: { type: 'null' } } } } },
+        { o: { n: null } },
+      ],
+      [
+        "an optional object's allOf",
+        { type: 'object', properties: { a: { type: 'object', allOf: [{ properties: { n: { type: 'null' } } }] } } },
+        { a: { n: null } },
+      ],
+      [
+        "an optional object's if/then",
+        {
+          type: 'object',
+          properties: {
+            a: {
+              type: 'object',
+              properties: { k: { type: 'string' } },
+              if: { properties: { k: { const: 'x' } } },
+              then: { properties: { n: { type: 'null' } } },
+            },
+          },
+        },
+        { a: { n: null } },
+      ],
+      [
+        'a property whose $ref names a null schema',
+        { type: 'object', properties: { n: { $ref: '#/$defs/none' } }, $defs: { none: { type: 'null' } } },
+        { n: null },
+      ],
+    ])('of a null schema in %s is submitted as null', async (_, schema, submitted) => {
+      const { node, onSubmit, onError } = createFormComponent({
+        schema,
+        defaultFormStateBehavior: { emptyObjectFields },
+      });
+
+      await submitForm(node, user);
+
+      expect(onError).not.toHaveBeenCalled();
+      expectToHaveBeenCalledWithFormData(onSubmit, submitted, true);
     });
   });
 });

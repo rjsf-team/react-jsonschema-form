@@ -269,7 +269,7 @@ const schema: RJSFSchema = {
 const formData = 'a';
 
 render(
-  <Form schema={schema} formData={formData} validator={validator} liveValidate='onChange' />,
+  <Form schema={schema} initialFormData={formData} validator={validator} liveValidate='onChange' />,
   document.getElementById('app'),
 );
 ```
@@ -446,7 +446,7 @@ render((
   <Form schema={schema}
         validator={validator}
         showErrorList='top'
-        formData={""}
+        initialFormData={""}
         liveValidate='onChange'
         templates: {{ ErrorListTemplate }} />
 ), document.getElementById("app"));

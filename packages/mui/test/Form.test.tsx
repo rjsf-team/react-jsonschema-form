@@ -21,7 +21,7 @@ describe('typed form data', () => {
       <Form
         schema={schema}
         validator={validator}
-        formData={data}
+        initialFormData={data}
         onChange={({ formData }) => expectTypeOf(formData).toEqualTypeOf<Data>()}
       />,
     );
@@ -30,7 +30,7 @@ describe('typed form data', () => {
 
   it('the default Theme serves a typed withTheme() form', () => {
     const TypedForm = withTheme<Data>(Theme);
-    const { container } = render(<TypedForm schema={schema} validator={validator} formData={{ name: 'b' }} />);
+    const { container } = render(<TypedForm schema={schema} validator={validator} initialFormData={{ name: 'b' }} />);
     expect(container.querySelector<HTMLInputElement>('#root_name')?.value).toBe('b');
   });
 });

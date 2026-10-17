@@ -62,17 +62,17 @@ type ErrorState<T> = Pick<
   'errors' | 'errorSchema' | 'schemaValidationErrors' | 'schemaValidationErrorSchema'
 >;
 
-/** The errors a parent-owned form owns: those on display, the validator's, and the fields' own they are built from */
-export type OwnedErrorState<T> = ErrorState<T> & Pick<FormState<T>, 'customErrors'>;
+/** The errors a change leaves: those on display, the validator's, and the fields' own they are built from */
+type ChangedErrorState<T> = ErrorState<T> & Pick<FormState<T>, 'customErrors'>;
 
-/** The error members of `state` that a parent-owned form owns */
-export function ownedErrorsOf<T, S extends StrictRJSFSchema, F extends FormContextType>({
+/** The error members of `state` that a change works on */
+function errorStateOf<T, S extends StrictRJSFSchema, F extends FormContextType>({
   errors,
   errorSchema,
   schemaValidationErrors,
   schemaValidationErrorSchema,
   customErrors,
-}: FormState<T, S, F>): OwnedErrorState<T> {
+}: FormState<T, S, F>): ChangedErrorState<T> {
   return { errors, errorSchema, schemaValidationErrors, schemaValidationErrorSchema, customErrors };
 }
 
@@ -116,8 +116,8 @@ export function toIChangeEvent<
   };
 }
 
-/** A field change, applied by `applyChange()` */
-export interface PendingChange<T> {
+/** A field change, applied by `applyChangeToData()` and `applyChangeToErrorsOf()` */
+export interface FieldChange<T> {
   /** The `FieldPath` into the formData/errorSchema at which the `newValue`/`newErrorSchema` will be set */
   fieldPath: FieldPath;
   /** The new value to set into the formData */
@@ -134,10 +134,28 @@ export interface PendingChange<T> {
   newOwnKeyOf?: KeyMove;
   /** For a change that moved keys, whether the errors raised at `fieldPath` itself go too; see `AnnouncedMove` */
   dropsOwnErrors?: boolean;
+  /** Whether the fields' own errors stay as they are: a change no field made, such as the data a `transformChange`
+   * writes over an edit, says nothing of what any field raised
+   */
+  keepsOwnErrors?: boolean;
+  /** For a root write over an edit, such as `transformChange`'s, the path of a field the edit cleared: left without a
+   * value in the root write too, it stays cleared whatever defaults the root write merges in, as it did under the edit
+   */
+  clearedPath?: FieldPathList;
 }
 
+/** What became of a change that moved keys, see `FormDataAccess.sendMove()`: refused by `transformChange`, which leaves
+ * the keys where they were, or stored, with `kept`, what the form stored at the change's path. A change `transformChange`
+ * rewrote also has `edited`, what the change alone would have left there, for a field to tell which of the keys it
+ * moved still hold what it moved there
+ */
+export type MoveOutcome =
+  | { kind: 'refused' }
+  | { kind: 'taken'; kept: unknown }
+  | { kind: 'rewritten'; kept: unknown; edited: unknown };
+
 /** Where a change put what an array or object held under `key`: the new key, or `undefined` when it is gone */
-export type KeyMove = (key: string) => string | undefined;
+type KeyMove = (key: string) => string | undefined;
 
 /** A `KeyMove` with the path of the array or object whose keys it moved */
 export interface AnnouncedMove {
@@ -163,7 +181,7 @@ export function moveOfItems(newIndexOf: (index: number) => number | undefined): 
 }
 
 /** The part of the state that rendering derives from the props and the data alone: the schema utilities, the root and
- * resolved schemas, the uiSchema and the registry. Error and edit bookkeeping is the rest of `FormState`.
+ * resolved schemas, the uiSchema and the registry. Error bookkeeping is the rest of `FormState`.
  */
 type RenderContext<T, S extends StrictRJSFSchema, F extends FormContextType> = Pick<
   FormState<T, S, F>,
@@ -521,19 +539,19 @@ function moveErrorSchemaKeys<T>(errorSchema: ErrorSchema<T>, path: FieldPathList
  * follows its item to its new index, and an index the move maps no row onto pairs with the row's own starting
  * value
  *
- * The view only describes the data as it was before the write: an unannounced change, such as a pushed parent
- * value or a reset, can leave an array's length apart from the data's, and rebuilding at the new length would
+ * The view only describes the data as it was before the write: an unannounced change, such as a whole-form
+ * `setFieldValue('', data)` or a reset, can leave an array's length apart from the data's, and rebuilding at the new length would
  * pair a row with a neighbour's previous value, the very thing the length check refuses. Only that array is
  * dropped then, so the next sanitize filters it with no previous value rather than a wrong one, and the rest
  * of the view keeps its recorded moves
  */
-function moveSettledArrayAtPath<T>(
-  data: T,
+function moveSettledArrayAtPath(
+  data: unknown,
   path: FieldPathList,
   newKeyOf: KeyMove,
   newArray: unknown[],
   oldLength: number,
-): T | undefined {
+): unknown {
   const settled = getAt<unknown>(data, path);
   if (!Array.isArray(settled)) {
     return data;
@@ -543,7 +561,7 @@ function moveSettledArrayAtPath<T>(
     path.length === 0 ? value : setByPath(copyAlongPath(data, path), path, value);
   if (settled.length !== oldLength) {
     // Drop only this array: this position holds no previous array, and the rest of the view keeps its moves
-    return writeAtPath(undefined) as T | undefined;
+    return writeAtPath(undefined);
   }
   const moved: unknown[] = new Array(newArray.length);
   settled.forEach((item, index) => {
@@ -559,7 +577,67 @@ function moveSettledArrayAtPath<T>(
       moved[index] = newArray[index];
     }
   }
-  return writeAtPath(moved) as T;
+  return writeAtPath(moved);
+}
+
+/** The pairing view of a value written in place of `own` with no move announced, as `setFieldValue()` writes an array
+ * or object: the moved `view` wherever the written value holds what `own` does, since the container writes that moved
+ * the view moved those very rows, and the data as it last `settled`, from before those writes, wherever it holds
+ * something else, such as a reorder set back (#5451)
+ *
+ * @param written - The value written
+ * @param own - The data the value replaces
+ * @param view - The pairing view of `own`
+ * @param settled - The data as it last settled
+ * @returns - The pairing view of `written`
+ */
+function pairingViewOfWrite(written: unknown, own: unknown, view: unknown, settled: unknown): unknown {
+  return writtenView(written, own, view, settled)[0];
+}
+
+/** `pairingViewOfWrite()` with whether `written` holds what `own` does, decided in the one walk that builds the view:
+ * a container is unchanged when its keys are and every child is, so no subtree is compared again at each level above
+ * it
+ */
+function writtenView(written: unknown, own: unknown, view: unknown, settled: unknown): [unknown, boolean] {
+  if (Object.is(written, own)) {
+    return [view, true];
+  }
+  if (
+    Array.isArray(written) &&
+    Array.isArray(own) &&
+    Array.isArray(view) &&
+    written.length === own.length &&
+    view.length === own.length
+  ) {
+    let isUnchanged = true;
+    const items = Array.from(view, (item, index) => {
+      const [itemView, isItemUnchanged] = writtenView(
+        written[index],
+        own[index],
+        item,
+        Array.isArray(settled) ? settled[index] : undefined,
+      );
+      isUnchanged &&= isItemUnchanged;
+      return itemView;
+    });
+    return isUnchanged ? [view, true] : [items, false];
+  }
+  if (isPlainObject(written) && isPlainObject(own) && isPlainObject(view)) {
+    const settledObject = isPlainObject(settled) ? settled : {};
+    const viewKeys = new Set(Object.keys(view));
+    // The keys the view does not hold are compared once here, where the walk does not reach them
+    let isUnchanged = [...new Set([...Object.keys(written), ...Object.keys(own)])].every(
+      (key) => viewKeys.has(key) || deepEquals(written[key], own[key]),
+    );
+    const entries = Object.entries(view).map(([key, value]) => {
+      const [childView, isChildUnchanged] = writtenView(written[key], own[key], value, settledObject[key]);
+      isUnchanged &&= isChildUnchanged;
+      return [key, childView];
+    });
+    return isUnchanged ? [view, true] : [Object.fromEntries(entries), false];
+  }
+  return deepEquals(written, own) ? [view, true] : [settled, false];
 }
 
 /** `validation` after the keys of the array or object at `path` moved, the list by the rule `moveErrorSchemaKeys()`
@@ -587,7 +665,7 @@ function moveErrorKeys<T>(validation: ValidationData<T>, path: FieldPathList, ne
 /** What a change says of the field's own errors: its raise, with the removal of a key counting as an empty one, since
  * nothing is left at its path for an error to describe
  */
-function raiseOf<T>({ newValue, newErrorSchema }: PendingChange<T>): ErrorSchema<T> | undefined {
+function raiseOf<T>({ newValue, newErrorSchema }: FieldChange<T>): ErrorSchema<T> | undefined {
   return newErrorSchema ?? (newValue === ADDITIONAL_PROPERTY_KEY_REMOVE ? {} : undefined);
 }
 
@@ -598,11 +676,14 @@ function raiseOf<T>({ newValue, newErrorSchema }: PendingChange<T>): ErrorSchema
  * @param change - The change
  * @returns - The fields' own errors after the change, `current`'s own when the change left them as they were
  */
-export function ownErrorsAfterChange<T, S extends StrictRJSFSchema, F extends FormContextType>(
+function ownErrorsAfterChange<T, S extends StrictRJSFSchema, F extends FormContextType>(
   current: FormState<T, S, F>,
-  change: PendingChange<T>,
+  change: FieldChange<T>,
 ): ErrorSchema<T> | undefined {
-  const { fieldPath, newKeyOf, newOwnKeyOf, dropsOwnErrors } = change;
+  const { fieldPath, newKeyOf, newOwnKeyOf, dropsOwnErrors, keepsOwnErrors } = change;
+  if (keepsOwnErrors) {
+    return current.customErrors;
+  }
   const path = fieldPathToList(fieldPath);
   const raised = raiseOf(change);
   let { customErrors } = current;
@@ -634,29 +715,35 @@ export function ownErrorsAfterChange<T, S extends StrictRJSFSchema, F extends Fo
  *
  * A change that moved the keys of an array or object, an item to another index or a property to another name, moves
  * the errors of both with them, drops those under a key that is gone, and leaves the container's own where they are
- * unless it says they go too, as an option switch does. One that raises errors replaces the field's own at its path,
+ * unless it says they go too, as an option switch does. The validator's errors of the fields whose values the change
+ * replaced, `changed`, go the way `reconcileErrors()` drops them for replaced data: they describe values that are
+ * gone, and the next validation rewrites them anyway. One that raises errors replaces the field's own at its path,
  * an empty raise included, and takes the validator's off that path until the form validates again: the raise is the
  * field's say over its path. One that removes the key at its path counts as an empty raise. Any other change clears
  * the field's own `__errors` there.
  *
- * Reads none of the data, so a parent-owned form can apply a change to the errors it owns without deriving the data
- * the change proposes.
- *
  * @param current - The state the change applies to
  * @param change - The change
  * @param extraErrors - The `extraErrors` prop, which the displayed errors carry
+ * @param getDataChange - Returns what the change replaced in the data, see `dataChange()`; called only when there are
+ * validator errors to clear
  * @returns - The error members of the state after the change, `current`'s own when the change left them as they were
  */
-export function applyChangeToErrors<T, S extends StrictRJSFSchema, F extends FormContextType>(
+function applyChangeToErrors<T, S extends StrictRJSFSchema, F extends FormContextType>(
   current: FormState<T, S, F>,
-  change: PendingChange<T>,
+  change: FieldChange<T>,
   extraErrors: ErrorSchema<T> | undefined,
-): OwnedErrorState<T> {
+  getDataChange: () => DataChange,
+): ChangedErrorState<T> {
   const { fieldPath, newKeyOf } = change;
   const customErrors = ownErrorsAfterChange(current, change);
   const raised = raiseOf(change);
-  if (!newKeyOf && !raised && customErrors === current.customErrors) {
-    return ownedErrorsOf(current);
+  // Diffing the data is what a keystroke would otherwise cost every form, so it is skipped when no validator error is
+  // there to clear
+  const changed = current.schemaValidationErrors.length > 0 ? getDataChange() : UNCHANGED;
+  const isDataChanged = changed.isRootReplaced || changed.paths.length > 0;
+  if (!newKeyOf && !raised && customErrors === current.customErrors && !isDataChanged) {
+    return errorStateOf(current);
   }
   const path = fieldPathToList(fieldPath);
   // The validator's own result is the base `extraErrors` and the fields' own errors are merged onto again, as in
@@ -669,6 +756,7 @@ export function applyChangeToErrors<T, S extends StrictRJSFSchema, F extends For
   if (newKeyOf) {
     validation = moveErrorKeys(validation, path, newKeyOf);
   }
+  validation = withoutErrorsOfChanged(validation, changed);
   if (raised) {
     validation = withoutErrors(validation, (pathOfError) => isPathPrefix(path, pathOfError));
   }
@@ -707,7 +795,7 @@ interface DerivedData<T, S extends StrictRJSFSchema, F extends FormContextType> 
    * with the row's own starting value, while the old schema side keeps reading `settledFormData`, whose
    * conditionals resolved the way the settled data saw them. Settles and resets together with `settledFormData`
    */
-  settledFormDataForPairing: T | undefined;
+  settledFormDataForPairing: unknown;
   /** The schema the settling pass resolved for `settledFormData`: the previous-data side of the sanitize call
    * resolves from it, since the committed data's resolved schema already carries the root's conditionals for
    * data that can sit on the other side of a flip
@@ -759,18 +847,16 @@ interface DeriveDataOptions<T, S extends StrictRJSFSchema, F extends FormContext
 }
 
 /** The last settled form data and the root schema it settled under, for the `formDataSchema` marker pair: recorded
- * on construction and on every pass that sanitized, and otherwise carried untouched. A declined sanitize, a pushed
- * parent value or a reset leaves the snapshot alone, so no path needs its own clearing rule; a schema swap drops it
- * at the sanitize call, where the marker root no longer matches. The root is shared through `replaceEqualDeep()` so
- * a deep-equal rebuild of the schema keeps the reference
+ * on construction and on every pass that sanitized, and otherwise carried untouched. A declined sanitize, a whole-form
+ * `setFieldValue('', data)` or a reset leaves the snapshot alone, so no path needs its own clearing rule; a schema swap drops it
+ * at the sanitize call, where the marker root no longer matches. The caller shares the root against the marker
+ * through `replaceEqualDeep()`, so a deep-equal rebuild of the schema keeps the reference and matches by identity
  *
  * @param current - The state the pass starts from; `undefined` on construction
  * @param rootSchema - The root schema this pass settles under, shared against `current.formDataSchema` by the caller
  * @param sanitizeRan - Whether this pass sanitized the data
  * @param formData - The data this pass settled
  * @param retrievedSchema - The schema this pass resolved for `formData`
- * @param rootMatches - Whether `rootSchema` is already known to match `current.formDataSchema`, from a sharing the
- * caller itself computed; omitted, the marker root is shared here instead
  * @returns - The marker triple to commit
  */
 function settledFormDataState<T, S extends StrictRJSFSchema, F extends FormContextType>(
@@ -779,34 +865,29 @@ function settledFormDataState<T, S extends StrictRJSFSchema, F extends FormConte
   sanitizeRan: boolean,
   formData: T | undefined,
   retrievedSchema: S | undefined,
-  rootMatches?: boolean,
 ): {
   formDataSchema: S | undefined;
   settledFormData: T | undefined;
-  settledFormDataForPairing: T | undefined;
+  settledFormDataForPairing: unknown;
   settledRetrievedSchema: S | undefined;
 } {
   if (sanitizeRan || current === undefined) {
     return {
-      formDataSchema: replaceEqualDeep(current?.formDataSchema, rootSchema),
+      formDataSchema: rootSchema,
       settledFormData: formData,
       settledFormDataForPairing: formData,
       settledRetrievedSchema: retrievedSchema,
     };
   }
   // A marker whose root no longer matches can never become usable again, so it is dropped rather than held for
-  // the form's whole life; an empty marker also fails `hasSettledData`, so the sanitize call is unaffected. The
-  // caller that already shared the root against the marker passes the answer in, and this walks nothing twice
+  // the form's whole life; an empty marker also fails `hasSettledData`, so the sanitize call is unaffected
   if (current.formDataSchema !== undefined && rootSchema !== current.formDataSchema) {
-    const shared = rootMatches ?? replaceEqualDeep(current.formDataSchema, rootSchema) === current.formDataSchema;
-    if (!shared) {
-      return {
-        formDataSchema: undefined,
-        settledFormData: undefined,
-        settledFormDataForPairing: undefined,
-        settledRetrievedSchema: undefined,
-      };
-    }
+    return {
+      formDataSchema: undefined,
+      settledFormData: undefined,
+      settledFormDataForPairing: undefined,
+      settledRetrievedSchema: undefined,
+    };
   }
   return {
     formDataSchema: current.formDataSchema,
@@ -917,8 +998,8 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
         : replaceEqualDeep(
             formData,
             // The previous-data side is the data as it last settled under the current root schema and the
-            // schema that settling resolved, so a change no sanitize checked (a declined pass, a pushed parent
-            // value, a reset) still reads as a real difference where the enum filter runs (#5451)
+            // schema that settling resolved, so a change no sanitize checked (a declined pass, a whole-form
+            // `setFieldValue('', data)`, a reset) still reads as a real difference where the enum filter runs (#5451)
             schemaUtils.sanitizeDataForNewSchema(
               retrievedSchema,
               current?.retrievedSchema,
@@ -1096,14 +1177,7 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
     // A reset settles the way the first render does: the restored initial data is unchecked, but it is what
     // every later edit must compare against, or a flip back to the branch the reset restored reads as settled
     // on the wrong side. Passing no current state records the reset data and its resolved schema as the snapshot
-    ...settledFormDataState(
-      isReset ? undefined : current,
-      sharedRoot,
-      sanitizeRan,
-      formData,
-      retrievedSchema,
-      sharedRoot === current?.formDataSchema,
-    ),
+    ...settledFormDataState(isReset ? undefined : current, sharedRoot, sanitizeRan, formData, retrievedSchema),
   };
 }
 
@@ -1139,8 +1213,7 @@ function dataChange(formData: unknown, previous: unknown): DataChange {
     return UNCHANGED;
   }
   // The wrapper below would name the same paths for an object root, after a deep comparison of the whole root that
-  // comparing its fields one by one makes a second time; the data of a parent-owned form is compared on every render
-  // that hands it new data, so an object root is spared that
+  // comparing its fields one by one makes a second time, so an object root is spared that
   if (isPlainObject(formData) && isPlainObject(previous)) {
     return { isRootReplaced: false, paths: getChangedFields(formData, previous, true).map((field) => toPath(field)) };
   }
@@ -1153,6 +1226,63 @@ function dataChange(formData: unknown, previous: unknown): DataChange {
     isRootReplaced: fields.includes(root),
     paths: fields.map((field) => toPath(field).slice(1)),
   };
+}
+
+/** `validation` without the errors of the fields `changed` names: a changed field's errors go, with those of
+ * everything below it. Every container holding the field changed along with it, the root included, so an error of
+ * their own, such as the `uniqueItems` of the array the field sits in, goes too. Only their own: the other fields they
+ * hold did not change and keep theirs. A replaced root takes every error the validator reported on a field with it.
+ */
+function withoutErrorsOfChanged<T>(validation: ValidationData<T>, changed: DataChange): ValidationData<T> {
+  const { isRootReplaced, paths } = changed;
+  if (isRootReplaced) {
+    return withoutErrors(validation, () => true);
+  }
+  if (paths.length === 0) {
+    return validation;
+  }
+  return withoutErrors(validation, (pathOfError) =>
+    paths.some(
+      (pathOfField) =>
+        isPathPrefix(pathOfError, pathOfField) || (pathOfField.length > 0 && isPathPrefix(pathOfField, pathOfError)),
+    ),
+  );
+}
+
+/** `data` with what the array or object at `path` holds where `newKeyOf` put it: diffed against `changed`, a moved
+ * value is no change, so the errors that moved with a key are kept and those of a value that is gone are not. An array
+ * also holds the items `changed` added, so an add or a copy is no change either: no error sits under an index that
+ * held nothing, and the array's own errors stay for the next validation as they do through a remove or a reorder,
+ * whether or not the new item has a value. A property an object gained is a change, since the validator may have
+ * reported it missing.
+ */
+function withKeysMoved(data: unknown, changed: unknown, path: FieldPathList, newKeyOf: KeyMove): unknown {
+  const held = getAt<unknown>(data, path);
+  const newHeld = getAt<unknown>(changed, path);
+  let moved: unknown;
+  if (Array.isArray(held) && Array.isArray(newHeld)) {
+    const items: unknown[] = [...newHeld];
+    held.forEach((item, index) => {
+      // A removed item has no new key
+      const newKey = newKeyOf(String(index));
+      if (newKey !== undefined && Number(newKey) < items.length) {
+        items[Number(newKey)] = item;
+      }
+    });
+    moved = items;
+  } else if (isPlainObject(held) && isPlainObject(newHeld)) {
+    const properties: GenericObjectType = {};
+    for (const [key, value] of Object.entries(held)) {
+      const newKey = newKeyOf(key);
+      if (newKey !== undefined) {
+        properties[newKey] = value;
+      }
+    }
+    moved = properties;
+  } else {
+    return data;
+  }
+  return path.length === 0 ? moved : setByPath(copyAlongPath(data, path), path, moved);
 }
 
 /** Reconciles the errors for a derivation, either by validating `formData` or by carrying the committed validation
@@ -1181,27 +1311,12 @@ function reconcileErrors<T, S extends StrictRJSFSchema, F extends FormContextTyp
   // If the `props.noValidate` option is set or the schema has changed, we reset the error state. Otherwise the base has
   // to be the validator's own result, since `extraErrors` and `customErrors` are merged in below and `state.errors`
   // already carries them, which would merge each in a second time
-  let validation: ValidationData<T> = isErrorStateDropped
+  const validation: ValidationData<T> = isErrorStateDropped
     ? { errors: [], errorSchema: {} }
-    : {
-        errors: current?.schemaValidationErrors ?? [],
-        errorSchema: current?.schemaValidationErrorSchema ?? {},
-      };
-  const { isRootReplaced, paths } = isErrorStateDropped ? UNCHANGED : getDataChange();
-  if (isRootReplaced) {
-    // Every error the validator reported on a field describes the value that was replaced
-    validation = withoutErrors(validation, () => true);
-  } else if (paths.length > 0) {
-    // A changed field's errors go, with those of everything below it. Every container holding the field changed along
-    // with it, the root included, so an error of their own, such as the `uniqueItems` of the array the field sits in,
-    // goes too. Only their own: the other fields they hold did not change and keep theirs
-    validation = withoutErrors(validation, (pathOfError) =>
-      paths.some(
-        (pathOfField) =>
-          isPathPrefix(pathOfError, pathOfField) || (pathOfField.length > 0 && isPathPrefix(pathOfField, pathOfError)),
-      ),
-    );
-  }
+    : withoutErrorsOfChanged(
+        { errors: current?.schemaValidationErrors ?? [], errorSchema: current?.schemaValidationErrorSchema ?? {} },
+        getDataChange(),
+      );
   return {
     ...mergeErrors(validation, props.extraErrors, current?.customErrors),
     schemaValidationErrors: validation.errors,
@@ -1211,14 +1326,14 @@ function reconcileErrors<T, S extends StrictRJSFSchema, F extends FormContextTyp
 
 /** Whether a pass validates its data: only under `liveValidate: 'onChange'`, only for data that is there, and only when
  * something the errors depend on changed, so a parent re-render that touches neither the data nor the validation
- * shows no error the user has not earned yet. `'onBlur'` owns its validation pass in `onBlur()`.
+ * shows no error the user has not earned yet. `'onBlur'` owns its validation pass in `applyBlur()`.
  */
 function mustLiveValidate<T, S extends StrictRJSFSchema, F extends FormContextType>(
   props: FormProps<T, S, F>,
-  edit: boolean,
+  isDataPassed: boolean,
   isInputChanged: boolean,
 ): boolean {
-  return edit && isLiveValidated(props) && isInputChanged;
+  return isDataPassed && isLiveValidated(props) && isInputChanged;
 }
 
 /** Whether the form validates its data on every change */
@@ -1251,18 +1366,18 @@ function detectContextChanges<T, S extends StrictRJSFSchema, F extends FormConte
   };
 }
 
-/** The state of a self-owned form: on construction from its seed, and afterwards from the data it holds whenever the
- * schema, a `ui:emptyValue` or `defaultFormStateBehavior` changed, since those are the props whose change transforms
- * the data (a default it did not have before, a branch that no longer applies). No other prop change runs this: an
- * unrelated re-render must not rerun value initialization, so `deriveState()` re-derives the render context alone for
- * those.
+/** The state derived from data: on construction from the seed the props hand the form, and from the data the form
+ * holds whenever the schema, a `ui:emptyValue` or `defaultFormStateBehavior` changed, since those are the props whose
+ * change transforms the data (a default it did not have before, a branch that no longer applies). No other prop change
+ * runs this: an unrelated re-render must not rerun value initialization, so `deriveState()` re-derives the render
+ * context alone for those.
  *
  * @param current - The state the pass starts from; `undefined` on construction
- * @param inputFormData - The seed on construction, the held data afterwards
+ * @param inputFormData - The data to derive from
  * @param props - The current props
  * @returns - The new state, sharing every unchanged subtree with `current`
  */
-function deriveOwnedState<T, S extends StrictRJSFSchema, F extends FormContextType>(
+function deriveDataState<T, S extends StrictRJSFSchema, F extends FormContextType>(
   current: FormState<T, S, F> | undefined,
   inputFormData: T | undefined,
   props: FormProps<T, S, F>,
@@ -1277,125 +1392,35 @@ function deriveOwnedState<T, S extends StrictRJSFSchema, F extends FormContextTy
     settledRetrievedSchema,
   } = deriveFormData(current, inputFormData, {}, props);
   const { isSchemaChanged, isValidationPropChanged } = detectContextChanges(current, context);
-  const edit = current ? current.edit : inputFormData !== undefined;
   // Construction validates nothing: the errors of a seed the user has not touched are not shown until they are earned
   const isDataChanged = current !== undefined && formData !== current.formData;
+  const isDataPassed = current ? current.isDataPassed : inputFormData !== undefined;
   const errors = reconcileErrors(current, props, context, formData, {
     isSchemaChanged,
-    mustValidate: mustLiveValidate(props, edit, isDataChanged || isValidationPropChanged),
+    mustValidate: mustLiveValidate(props, isDataPassed, isDataChanged || isValidationPropChanged),
     validationSchema: areSchemaUtilsReused ? context.retrievedSchema : undefined,
+    // Without a validation pass, the errors of the fields the data changed at describe values that are gone. The
+    // data is shared against the committed data, so unchanged subtrees are skipped by identity
+    getDataChange: current && (() => dataChange(formData, current.formData)),
   });
   return {
-    ...(current ?? { isControlled: false }),
+    ...current,
     ...context,
     formData,
     formDataSchema,
     settledFormData,
     settledFormDataForPairing,
     settledRetrievedSchema,
-    edit,
+    isDataPassed,
     ...errors,
     initialDefaultsGenerated: true,
   };
 }
 
-/** The state of a parent-owned form: the render context for the `formData` prop, and the errors for it. The data is
- * the parent's exactly as passed, shared against the previous value only so an unchanged subtree keeps the reference
- * the fields hold; no default is generated and nothing is sanitized, on mount or on any later prop change, because the
- * parent owns the value and the value includes its defaults.
- *
- * @param current - The state the pass starts from; `undefined` on construction
- * @param props - The current props
- * @returns - The new state, sharing every unchanged subtree with `current`
- */
-function deriveControlledState<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  current: FormState<T, S, F> | undefined,
-  props: FormProps<T, S, F>,
-): FormState<T, S, F> {
-  const resolved = resolveSchemaUtils(props, current);
-  const { schemaUtils } = resolved;
-  const areSchemaUtilsReused = schemaUtils === current?.schemaUtils;
-  const formData = current ? replaceEqualDeep(current.formData, props.formData) : props.formData;
-  const isDataChanged = current !== undefined && formData !== current.formData;
-  const retrievedSchema = resolveRetrievedSchema(current, schemaUtils, formData);
-  const context = deriveRenderContext(props, retrievedSchema, current, resolved);
-  const { isSchemaChanged, isValidationPropChanged } = detectContextChanges(current, context);
-  const edit = props.formData !== undefined;
-  // Validated the way an edit is, with the schema resolved for this very data, whenever the utilities that resolve it
-  // are unchanged; a parent handing a proposal back therefore shows the errors the event carried
-  const errors = reconcileErrors(current, props, context, formData, {
-    isSchemaChanged,
-    mustValidate:
-      current?.isBlurValidationOwed === true || mustLiveValidate(props, edit, isDataChanged || isValidationPropChanged),
-    validationSchema: areSchemaUtilsReused ? retrievedSchema : undefined,
-    // The committed data is the previous prop, shared, so unchanged subtrees are skipped by identity
-    // The clearing stands in for the validation pass a live-validated form does not get, so it is for the other modes
-    // only: when the pass is merely skipped, the committed errors already describe this data and stay as they are.
-    // Construction has no committed errors to clear
-    getDataChange:
-      current === undefined || (edit && isLiveValidated(props))
-        ? undefined
-        : () => dataChange(formData, current.formData),
-  });
-  // A pushed value deep-equal to the edit path's sanitized proposal is that proposal accepted unchanged: the
-  // sanitize that produced it ran under the root the proposal carries, so the push settles it, moving the
-  // snapshot and the marker root to it and to the schema resolved for it here. The deep-equal read also accepts
-  // a parent that stores a copy of the reported data (`structuredClone`, a spread, a cloning store) rather than
-  // the reference itself. Any other pushed value leaves the snapshot alone. The settle stands only while the
-  // root is the one the proposal was sanitized under, judged against the proposal's own root rather than the
-  // snapshot's marker: a parent that changed the schema once dropped that marker, and the next honest proposal
-  // must still be acceptable, or no sanitize compares against settled data for the rest of the form's life. A
-  // schema swapped in beside the push never went through the sanitize, so such a push is an ordinary one
-  const acceptedProposal =
-    current?.proposedFormData !== undefined &&
-    current.proposedFormDataRoot !== undefined &&
-    deepEquals(current.proposedFormData, props.formData) &&
-    deepEquals(current.proposedFormDataRoot, schemaUtils.getRootSchema());
-  // The container write's moved pairing view waits for the parent's answer with the data it describes: a push
-  // of that data is the write accepted, so the moved view is adopted; any other pushed value declines the
-  // write's pairing, and the view stays as it was before the move
-  const pendingPairingAdopted =
-    current?.pendingPairingData !== undefined && deepEquals(current.pendingPairingData, props.formData);
-  const settledState = settledFormDataState(
-    current,
-    schemaUtils.getRootSchema(),
-    acceptedProposal,
-    formData,
-    retrievedSchema,
-  );
-  // A push answers the pending pairing either way, an adopted or settled one has been applied, and a dropped
-  // marker can never pair again; only an unanswered render keeps it pending
-  const pendingPairingAnswered =
-    isDataChanged || acceptedProposal || pendingPairingAdopted || settledState.settledFormDataForPairing === undefined;
-  return {
-    ...(current ?? { isControlled: true, initialDefaultsGenerated: true }),
-    ...context,
-    formData,
-    // A parent-owned value is never sanitized here, so the snapshot is recorded on construction and then carried;
-    // a pushed value leaves it alone unless it accepts the edit path's sanitized proposal unchanged, and the edit
-    // path's sanitize compares against it
-    ...settledState,
-    ...(pendingPairingAdopted && settledState.formDataSchema !== undefined
-      ? { settledFormDataForPairing: current?.pendingPairingView }
-      : {}),
-    // A new pushed value answers the outstanding proposal either way, and an accepted one has just been
-    // settled; only an unchanged render with the proposal still unanswered keeps it pending. An edit whose
-    // sanitized result deep-equals the committed data is accepted without counting as a change, so clearing
-    // on acceptance alone keeps every later render from re-walking the data and the root schema
-    proposedFormData: isDataChanged || acceptedProposal ? undefined : current?.proposedFormData,
-    proposedFormDataRoot: isDataChanged || acceptedProposal ? undefined : current?.proposedFormDataRoot,
-    pendingPairingView: pendingPairingAnswered ? undefined : current?.pendingPairingView,
-    pendingPairingData: pendingPairingAnswered ? undefined : current?.pendingPairingData,
-    edit,
-    ...errors,
-    isBlurValidationOwed: false,
-  };
-}
-
 /** Freezes plain objects and arrays in `data`, and nothing else: a `File`, a `Date` or a class instance is left
  * alone. Development only, and only ever applied to form data: the form data a consumer receives shares subtrees with
- * the value the change was applied to, which for a parent-owned form is the parent's own object, so a mutation of it
- * corrupts the parent's state silently. Frozen, it throws where the mutation happens instead.
+ * the value the change was applied to, the `formData` the consumer passed included, so a mutation of it corrupts the
+ * consumer's state silently. Frozen, it throws where the mutation happens instead.
  *
  * @param data - The form data to freeze
  */
@@ -1641,44 +1666,44 @@ function isWholeValueSelectAt<T, S extends StrictRJSFSchema, F extends FormConte
   return fieldSchema !== undefined && isWholeValueSelect<S>(fieldSchema);
 }
 
-/** Applies one `change` to `current`, returning the next state. The `newValue` is set at the change's path in the
- * data, which is then run through `deriveFormData()` for any missing defaults and, when the resolved schema changed,
- * sanitization. If `omitExtraData` and `liveOmit` are turned on, the data is filtered to remove any extra data not in
- * a form field. The errors the form holds are changed as `applyChangeToErrors()` describes; then the data is validated
- * if required. Reads nothing but its arguments and performs no callbacks: committing the result and notifying are the
- * caller's, which is what lets one pipeline serve a form that owns its data and one whose parent does.
+/** Applies the data of one `change` to `current`, returning the next state with `current`'s errors. The `newValue` is
+ * set at the change's path in the data, which is then run through `deriveFormData()` for any missing defaults and,
+ * when the resolved schema changed, sanitization. If `omitExtraData` and `liveOmit` are turned on, the data is filtered
+ * to remove any extra data not in a form field. The errors are `applyChangeToErrorsOf()`'s, kept apart so an edit's
+ * data can be decided on before anything validates it. Reads nothing but its arguments and performs no callbacks:
+ * committing the result and notifying are the caller's.
  *
  * @param current - The state the change applies to
  * @param change - The change to apply
  * @param props - The current props
  * @returns - The next state, sharing every unchanged subtree with `current`
  */
-export function applyChange<T, S extends StrictRJSFSchema, F extends FormContextType>(
+export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormContextType>(
   current: FormState<T, S, F>,
-  change: PendingChange<T>,
+  change: FieldChange<T>,
   props: FormProps<T, S, F>,
 ): FormState<T, S, F> {
   const { newValue, fieldPath } = change;
   // The single place where a `FieldPath` is parsed back into segments for writing into the formData
   const path = fieldPathToList(fieldPath);
-  const { extraErrors, omitExtraData, liveOmit, disabled, readonly } = props;
+  const { omitExtraData, liveOmit, disabled, readonly } = props;
   const { formData: oldFormData } = current;
   // The derivation below hands back the context for the data it settled on, resolved schema included, so committing
   // whatever it returns is what keeps state's resolved schema and the utilities that resolved it in step.
   let context: RenderContext<T, S, F> = current;
   // Carried from the committed state unless the derivation below settles the data anew
   let { formDataSchema, settledFormData, settledFormDataForPairing, settledRetrievedSchema } = current;
-  // Set where the derivation runs: whether it sanitized (settled) the data this change proposes
-  let proposalSettled = false;
   const isRootPath = path.length === 0;
   let formData: T | undefined;
   if (isRootPath) {
     formData = newValue;
   } else if (isObject(oldFormData) || Array.isArray(oldFormData)) {
-    formData = structuredClone(oldFormData);
+    // The write below lands on copies of the containers along the path; everything off it keeps the reference the
+    // fields hold, and nothing has to be walked afterwards to restore that sharing
+    formData = copyAlongPath(oldFormData, path);
   } else {
-    // A field edit under an empty root, which a parent-owned form can hold as `null` or `undefined`, creates the
-    // container the field lives in instead of being dropped
+    // A field edit under an empty root, a `null` seed or a cleared scalar, creates the container the field lives in
+    // instead of being dropped
     formData = (typeof path[0] === 'number' ? [] : {}) as T;
   }
 
@@ -1747,10 +1772,6 @@ export function applyChange<T, S extends StrictRJSFSchema, F extends FormContext
     settledFormData = derived.settledFormData;
     settledFormDataForPairing = derived.settledFormDataForPairing;
     settledRetrievedSchema = derived.settledRetrievedSchema;
-    // The proposal settles only when this pass sanitized (settled) the data it proposes; the value the parent
-    // answers is the one sent to it, after the cleared-leaf copy and any live omit below, so the marker itself
-    // is taken from `newFormData` once those ran
-    proposalSettled = derived.settledFormData === formData;
     // A container write announces where each item went but carries no sanitize of its own, so the snapshot it
     // carried still holds the pre-move rows and the next edit would pair each row with another row's previous
     // value. Move the pairing view's rows the same way; an inserted row pairs with its own starting value. The settled
@@ -1766,6 +1787,25 @@ export function applyChange<T, S extends StrictRJSFSchema, F extends FormContext
         newArray,
         oldLength,
       );
+    } else if (
+      (isObject(newValue) || Array.isArray(newValue)) &&
+      settledFormDataForPairing !== undefined &&
+      settledFormData === current.settledFormData
+    ) {
+      // A container written with no move announced, as `setFieldValue()` puts a reorder back, may replace rows the view
+      // moved, so where it holds something else than the data did the view is replaced by the data as it last settled
+      const view = getAt<unknown>(settledFormDataForPairing, path);
+      if (view !== undefined) {
+        const viewOfWrite = pairingViewOfWrite(
+          getAt<unknown>(formData, path),
+          getAt<unknown>(current.formData, path),
+          view,
+          getAt<unknown>(settledFormData, path),
+        );
+        settledFormDataForPairing = isRootPath
+          ? viewOfWrite
+          : setByPath(copyAlongPath(settledFormDataForPairing, path), path, viewOfWrite);
+      }
     }
 
     // Re-set to undefined after merging defaults so the user's clear is preserved in
@@ -1778,6 +1818,15 @@ export function applyChange<T, S extends StrictRJSFSchema, F extends FormContext
       // every container along the path, so the clear lands on copies of just those containers
       formData = setByPath(copyAlongPath(formData, path), path, undefined);
     }
+    const { clearedPath } = change;
+    if (
+      isRootPath &&
+      clearedPath &&
+      getAt<unknown>(newValue, clearedPath) === undefined &&
+      getAt<unknown>(formData, clearedPath) !== undefined
+    ) {
+      formData = setByPath(copyAlongPath(formData, clearedPath), clearedPath, undefined);
+    }
   }
 
   let newFormData = formData;
@@ -1786,38 +1835,71 @@ export function applyChange<T, S extends StrictRJSFSchema, F extends FormContext
     newFormData = context.schemaUtils.omitExtraData(context.schema, formData);
   }
 
-  // The proposal this change reports, kept only when the derivation sanitized it: a proposal the snapshot did
-  // not settle on must not move the snapshot when a parent accepts it, since an unsanitized or declined
-  // proposal that advanced it would re-hide the flip the next sanitize is meant to catch
-  const proposedFormData = proposalSettled ? newFormData : undefined;
-  const proposedFormDataRoot = proposalSettled ? formDataSchema : undefined;
-
-  let next: Partial<FormState<T, S, F>> = {
+  return {
+    ...current,
+    ...context,
     formData: newFormData,
     formDataSchema,
     settledFormData,
     settledFormDataForPairing,
     settledRetrievedSchema,
-    proposedFormData,
-    proposedFormDataRoot,
   };
-  if (isLiveValidated(props)) {
-    // The validation replaces the validator's result whole, so only the fields' own errors are carried through
-    const customErrors = ownErrorsAfterChange(current, change);
-    next = {
-      ...next,
-      ...runLiveValidation(props, context, newFormData, customErrors, context.retrievedSchema),
-      customErrors,
-    };
-  } else {
-    next = { ...next, ...applyChangeToErrors(current, change, extraErrors) };
-  }
-  return { ...current, ...context, ...next };
 }
 
-/** The state after `reset()` of a self-owned form: the data is re-derived from `initialFormData` the way an initial
- * render does it, and every error, including the custom ones fields raised, is cleared, and the render context the
- * derivation resolved with is committed alongside the data.
+/** The errors after one `change`, for `changed`, the state `applyChangeToData()` made of it, which still carries the
+ * errors from before the change. With `isValidated`, the data is validated and only the fields' own errors are
+ * carried through; otherwise they are changed as `applyChangeToErrors()` describes.
+ *
+ * @param changed - The state the change's data left, with the errors from before it
+ * @param previousFormData - The data before the change
+ * @param change - The change
+ * @param props - The current props
+ * @param isValidated - Whether the change's data is validated
+ * @returns - `changed` with the errors after the change
+ */
+export function applyChangeToErrorsOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  changed: FormState<T, S, F>,
+  previousFormData: T | undefined,
+  change: FieldChange<T>,
+  props: FormProps<T, S, F>,
+  isValidated: boolean,
+): FormState<T, S, F> {
+  const { formData } = changed;
+  if (isValidated) {
+    // The validation replaces the validator's result whole, so only the fields' own errors are carried through
+    const customErrors = ownErrorsAfterChange(changed, change);
+    return {
+      ...changed,
+      ...runLiveValidation(props, changed, formData, customErrors, changed.retrievedSchema),
+      customErrors,
+    };
+  }
+  // No validation rewrites the validator's errors here, so those of the replaced values are cleared instead. What a
+  // key move leaves is diffed with the keys where the move put them, so the errors that moved with them stay
+  const { newKeyOf } = change;
+  const getDataChange = () =>
+    dataChange(
+      formData,
+      newKeyOf
+        ? withKeysMoved(previousFormData, formData, fieldPathToList(change.fieldPath), newKeyOf)
+        : previousFormData,
+    );
+  return { ...changed, ...applyChangeToErrors(changed, change, props.extraErrors, getDataChange) };
+}
+
+/** The error members of a state with `extraErrors` as the only errors on display, as a reset or a valid submission
+ * leaves it
+ */
+function extraErrorsAlone<T>(extraErrors: ErrorSchema<T> | undefined): ErrorState<T> {
+  // Merged into nothing rather than listed as they are, so an array `extraErrors` holds for the items of an array
+  // field is keyed by index, as every `ErrorSchema` the form hands out is
+  const { errors, errorSchema } = validationDataMerge<T>({ errors: [], errorSchema: {} }, extraErrors);
+  return { errors, errorSchema, schemaValidationErrors: [], schemaValidationErrorSchema: {} };
+}
+
+/** The state after `reset()`: the data is re-derived from the props' seed the way an initial render does it, every
+ * error the form holds, including the custom ones fields raised, is cleared, which leaves `extraErrors` as the only
+ * errors on display, and the render context the derivation resolved with is committed alongside the data.
  *
  * @param current - The state being reset
  * @param props - The current props
@@ -1828,7 +1910,7 @@ export function applyReset<T, S extends StrictRJSFSchema, F extends FormContextT
   props: FormProps<T, S, F>,
 ): FormState<T, S, F> {
   const { formData, context, formDataSchema, settledFormData, settledFormDataForPairing, settledRetrievedSchema } =
-    deriveFormData(current, props.initialFormData, { isReset: true }, props);
+    deriveFormData(current, seedOf(props), { isReset: true }, props);
   return {
     ...current,
     ...context,
@@ -1837,10 +1919,7 @@ export function applyReset<T, S extends StrictRJSFSchema, F extends FormContextT
     settledFormData,
     settledFormDataForPairing,
     settledRetrievedSchema,
-    errorSchema: {},
-    errors: [],
-    schemaValidationErrors: [],
-    schemaValidationErrorSchema: {},
+    ...extraErrorsAlone(props.extraErrors),
     // The reset pass has generated the initial defaults, so the next unrelated recompute is not an initial pass and
     // will not resurrect a `ui:initialValue` the user has since cleared
     initialDefaultsGenerated: true,
@@ -1872,7 +1951,7 @@ export function applyBlur<T, S extends StrictRJSFSchema, F extends FormContextTy
 }
 
 /** Validates `formData` for a submission or `validateForm()`: whether the errors block, the merged errors to report,
- * and the state that displays them, which is `current` itself when the displayed errors do not change.
+ * and the state that displays them.
  *
  * @param current - The state being validated
  * @param props - The current props
@@ -1909,9 +1988,7 @@ export function applyValidation<T, S extends StrictRJSFSchema, F extends FormCon
     // are gone; the validator's own results are empty for both
     next = { ...current, errors, errorSchema, schemaValidationErrors: [], schemaValidationErrorSchema: {} };
   }
-  // Unlike the other `apply*` functions this one shares here rather than leaving it to `commit()`, because the caller
-  // decides whether to commit at all by comparing the result to the state it started from
-  return { hasError, next: replaceEqualDeep(current, next) };
+  return { hasError, next };
 }
 
 /** The state after a valid submission: the submitted data, with `extraErrors` as the only errors on display
@@ -1929,10 +2006,24 @@ export function applySubmit<T, S extends StrictRJSFSchema, F extends FormContext
   return {
     ...current,
     formData,
-    ...mergeErrors({ errors: [], errorSchema: {} }, props.extraErrors),
-    schemaValidationErrors: [],
-    schemaValidationErrorSchema: {},
+    ...extraErrorsAlone(props.extraErrors),
   };
+}
+
+/** The data the props seed the form with on mount and on `reset()`: `formData`, which is kept as another name for the
+ * seed, or else `initialFormData`. Only `undefined` leaves a prop unpassed, so a `null` `formData` is the seed, and
+ * seeds the same defaults an `undefined` does.
+ *
+ * @param props - The current props
+ * @returns - The seed, or `undefined` when the props pass none
+ */
+function seedOf<T, S extends StrictRJSFSchema, F extends FormContextType>(props: FormProps<T, S, F>): T | undefined {
+  // oxlint-disable-next-line typescript/no-deprecated -- the form still reads the deprecated alias
+  const { formData } = props;
+  if (formData === undefined) {
+    return props.initialFormData;
+  }
+  return formData;
 }
 
 export function initialState<T, S extends StrictRJSFSchema, F extends FormContextType>(
@@ -1941,19 +2032,15 @@ export function initialState<T, S extends StrictRJSFSchema, F extends FormContex
   if (!props.validator) {
     throw new Error('A validator is required for Form functionality to work');
   }
-  const { formData, initialFormData } = props;
-  return formData !== undefined
-    ? deriveControlledState(undefined, props)
-    : deriveOwnedState(undefined, initialFormData, props);
+  return deriveDataState(undefined, seedOf(props), props);
 }
 
-/** Derives the state to render from the props and the committed `state`, so a parent's value is rendered the moment it
- * arrives, with no stale commit in between. Nothing is remembered about the previous props: every derived member is
- * shared against the committed state, so an unchanged input hands back the reference the fields already hold and a
- * changed one is recognized by the new reference; when nothing changed, `state` itself is handed back. A parent-owned
- * form derives its render context and errors for the `formData` prop; a self-owned form derives its render context,
- * transforming the data it holds only for a schema, `ui:emptyValue` or `defaultFormStateBehavior` change, since an
- * unrelated re-render must not rerun value initialization.
+/** Derives the state to render from the props and the committed `state`. Nothing is remembered about the previous
+ * props: every derived member is shared against the committed state, so an unchanged input hands back the reference
+ * the fields already hold and a changed one is recognized by the new reference; when nothing changed, `state` itself
+ * is handed back. The data is the form's own after mount, so a `formData` or `initialFormData` passed later changes
+ * nothing; it is re-derived only for a schema, `ui:emptyValue` or `defaultFormStateBehavior` change, and any other
+ * prop change re-derives the render context alone, since an unrelated re-render must not rerun value initialization.
  *
  * @param props - The current props
  * @param state - The committed state
@@ -1963,9 +2050,6 @@ export function deriveState<T, S extends StrictRJSFSchema, F extends FormContext
   props: FormProps<T, S, F>,
   state: FormState<T, S, F>,
 ): FormState<T, S, F> {
-  if (state.isControlled) {
-    return replaceEqualDeep(state, deriveControlledState(state, props));
-  }
   const context = deriveRenderContext(props, state.retrievedSchema, state, resolveSchemaUtils(props, state));
   const { isSchemaChanged, isValidationPropChanged } = detectContextChanges(state, context);
   // Rebuilt schema utilities are not on their own a reason to rerun value initialization: they are rebuilt for a
@@ -1976,7 +2060,7 @@ export function deriveState<T, S extends StrictRJSFSchema, F extends FormContext
   const isEmptyValueChanged =
     context.uiSchema !== state.uiSchema && !deepEquals(emptyValuesOf(context.uiSchema), emptyValuesOf(state.uiSchema));
   if (isSchemaChanged || isEmptyValueChanged || context.defaultsBehavior !== state.defaultsBehavior) {
-    return replaceEqualDeep(state, deriveOwnedState(state, state.formData, props));
+    return replaceEqualDeep(state, deriveDataState(state, state.formData, props));
   }
   // Resolved only once it is known the data is not re-derived, which resolves it itself
   const resolvedContext = {
@@ -1984,7 +2068,7 @@ export function deriveState<T, S extends StrictRJSFSchema, F extends FormContext
     retrievedSchema: resolveRetrievedSchema(state, context.schemaUtils, state.formData),
   };
   const errors = reconcileErrors(state, props, resolvedContext, state.formData, {
-    mustValidate: mustLiveValidate(props, state.edit, isValidationPropChanged),
+    mustValidate: mustLiveValidate(props, state.isDataPassed, isValidationPropChanged),
     validationSchema: context.schemaUtils === state.schemaUtils ? resolvedContext.retrievedSchema : undefined,
   });
   return replaceEqualDeep(state, { ...state, ...resolvedContext, ...errors });

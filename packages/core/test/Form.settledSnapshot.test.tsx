@@ -1,4 +1,4 @@
-import { createRef, useEffect, useState } from 'react';
+import { createRef, useState } from 'react';
 import type { RJSFSchema } from '@rjsf/utils';
 import { buttonId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
@@ -7,7 +7,7 @@ import { userEvent } from '@testing-library/user-event';
 
 import type { FormRef, IChangeEvent } from '../src/index.ts';
 import Form from '../src/index.ts';
-import { AcceptingParent, createParentLog, handleOf, input, TransformingParent } from './testUtils.tsx';
+import { AcceptingParent, createParentLog, elementOf, handleOf, input, TransformingParent } from './testUtils.tsx';
 
 interface ColorListData {
   color?: string;
@@ -18,7 +18,7 @@ interface ColorListData {
 const user = userEvent.setup();
 
 describe('settled snapshot sanitization', () => {
-  it('sees a top-level conditional flipped by a declined change from the settled side (#5250)', async () => {
+  it('sees a top-level conditional flipped by an array write from the settled side (#5250)', async () => {
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -42,15 +42,15 @@ describe('settled snapshot sanitization', () => {
         onChange={(event) => events.push(event)}
       />,
     );
-    // The array write is declined, but it flips the conditional: the settled snapshot must remember the
+    // The array write runs no sanitize, but it flips the conditional: the settled snapshot must remember the
     // schema the settled data was resolved under, not the committed data's schema with the `then` merged in
-    await user.click(container.querySelector(`#${buttonId('root_list', 'add')}`)!);
+    await user.click(elementOf(container, `#${buttonId('root_list', 'add')}`));
     await user.type(input(container, 'root_name'), 'a');
     const last = events[events.length - 1].formData;
     expect(last?.color).toBe('r');
   });
 
-  it('advances the snapshot when a parent accepts a sanitized proposal unchanged (#5250 controlled)', async () => {
+  it('settles each edit when a parent stores what onChange reports (#5250)', async () => {
     interface PetData {
       pet: { mode?: string; color?: string };
     }
@@ -76,9 +76,9 @@ describe('settled snapshot sanitization', () => {
     const { container } = render(
       <AcceptingParent<PetData> schema={schema} initialValue={{ pet: { mode: 'strict', color: 'r' } }} log={log} />,
     );
-    await user.selectOptions(container.querySelector('#root_pet_mode')!, ['0']);
-    await user.selectOptions(container.querySelector('#root_pet_color')!, ['1']);
-    await user.selectOptions(container.querySelector('#root_pet_mode')!, ['1']);
+    await user.selectOptions(elementOf(container, '#root_pet_mode'), ['0']);
+    await user.selectOptions(elementOf(container, '#root_pet_color'), ['1']);
+    await user.selectOptions(elementOf(container, '#root_pet_mode'), ['1']);
     expect(log.value?.pet.color).toBe('r');
   });
 
@@ -109,17 +109,17 @@ describe('settled snapshot sanitization', () => {
       />,
     );
     // Flip to the else branch: 'a' is outside its enum and clears, and the snapshot settles there
-    await user.selectOptions(container.querySelector('#root_cond')!, ['1']);
+    await user.selectOptions(elementOf(container, '#root_cond'), ['1']);
     // The reset restores the initial data; the snapshot must settle on it, or the next flip is judged against
     // the else branch the first flip left behind
-    act(() => ref.current!.reset());
+    act(() => handleOf(ref).reset());
     // Flip again: judged against the restored data on the then branch, 'a' is a real difference and clears
-    await user.selectOptions(container.querySelector('#root_cond')!, ['1']);
+    await user.selectOptions(elementOf(container, '#root_cond'), ['1']);
     const last = events[events.length - 1].formData;
     expect(last?.pick).toBeUndefined();
   });
 
-  it('settles a proposal the parent accepted as a deep-equal copy (#5250 controlled)', async () => {
+  it('settles each edit when a parent stores a copy of what onChange reports (#5250)', async () => {
     interface PetData {
       pet: { mode?: string; color?: string };
     }
@@ -142,22 +142,22 @@ describe('settled snapshot sanitization', () => {
       },
     };
     const log = createParentLog<PetData>();
-    // A store that clones on write: the value handed back to the form is never the proposal's reference
+    // A store that clones on write: the form takes each copy as a new value, deep-equal to the data it holds
     const { container } = render(
       <TransformingParent<PetData>
         schema={schema}
         initialValue={{ pet: { mode: 'strict', color: 'r' } }}
         log={log}
-        transform={(proposal) => (proposal === undefined ? proposal : structuredClone(proposal))}
+        transform={(reported) => (reported === undefined ? reported : structuredClone(reported))}
       />,
     );
-    await user.selectOptions(container.querySelector('#root_pet_mode')!, ['0']);
-    await user.selectOptions(container.querySelector('#root_pet_color')!, ['1']);
-    await user.selectOptions(container.querySelector('#root_pet_mode')!, ['1']);
+    await user.selectOptions(elementOf(container, '#root_pet_mode'), ['0']);
+    await user.selectOptions(elementOf(container, '#root_pet_color'), ['1']);
+    await user.selectOptions(elementOf(container, '#root_pet_mode'), ['1']);
     expect(log.value?.pet.color).toBe('r');
   });
 
-  it('keeps settling accepted proposals after the parent changed the schema once (#5451)', async () => {
+  it('keeps settling edits after the parent changed the schema once (#5451)', async () => {
     interface PetData {
       pet: { mode?: string; color?: string };
     }
@@ -199,7 +199,7 @@ describe('settled snapshot sanitization', () => {
       },
     };
     const log = createParentLog<PetData>();
-    // A parent that widens the schema in the same update that hands the first proposal back, then accepts as usual
+    // A parent that widens the schema in the same update that stores the first edit, then stores edits as usual
     function SwappingOnceParent() {
       const [value, setValue] = useState<PetData | undefined>({ pet: { mode: 'strict', color: 'r' } });
       const [schema, setSchema] = useState<RJSFSchema>(baseSchema);
@@ -208,9 +208,10 @@ describe('settled snapshot sanitization', () => {
         <Form<PetData>
           schema={schema}
           validator={validator}
+          // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
           formData={value}
           onChange={(event) => {
-            log.proposals.push(event.formData);
+            log.reported.push(event.formData);
             log.events.push(event);
             setValue(event.formData);
             setSchema(widenedSchema);
@@ -219,13 +220,13 @@ describe('settled snapshot sanitization', () => {
       );
     }
     const { container } = render(<SwappingOnceParent />);
-    await user.selectOptions(container.querySelector('#root_pet_mode')!, ['0']);
-    await user.selectOptions(container.querySelector('#root_pet_color')!, ['1']);
-    await user.selectOptions(container.querySelector('#root_pet_mode')!, ['1']);
+    await user.selectOptions(elementOf(container, '#root_pet_mode'), ['0']);
+    await user.selectOptions(elementOf(container, '#root_pet_color'), ['1']);
+    await user.selectOptions(elementOf(container, '#root_pet_mode'), ['1']);
     expect(log.value?.pet.color).toBe('r');
   });
 
-  it('sanitizes a parent push that crossed a conditional branch without settling (#5250)', async () => {
+  it('sanitizes against the settled data after the data replaced through the handle crossed a conditional branch (#5250)', async () => {
     interface ModeData {
       mode?: string;
       color?: string;
@@ -257,16 +258,19 @@ describe('settled snapshot sanitization', () => {
       ],
     };
     const events: IChangeEvent<ModeData>[] = [];
-    const onChange = (event: IChangeEvent<ModeData>) => events.push(event);
-    const props = {
-      schema,
-      validator,
-      onChange,
-    };
-    // A parent-owned form whose parent pushes a value of its own that matches no proposal
-    const { container, rerender } = render(<Form<ModeData> {...props} formData={{ mode: 'basic', colors: [] }} />);
-    rerender(<Form<ModeData> {...props} formData={{ mode: 'advanced', color: 'c', colors: ['c'] }} />);
-    await user.selectOptions(container.querySelector('#root_mode')!, ['0']);
+    const ref = createRef<FormRef<ModeData>>();
+    const { container } = render(
+      <Form<ModeData>
+        ref={ref}
+        schema={schema}
+        validator={validator}
+        initialFormData={{ mode: 'basic', colors: [] }}
+        onChange={(event) => events.push(event)}
+      />,
+    );
+    // Data from outside the form's fields, set on the advanced branch
+    act(() => handleOf(ref).setFieldValue('', { mode: 'advanced', color: 'c', colors: ['c'] }));
+    await user.selectOptions(elementOf(container, '#root_mode'), ['0']);
     const last = events[events.length - 1].formData;
     expect(last?.color).toBeUndefined();
     expect(last?.colors).toEqual([]);
@@ -321,16 +325,16 @@ describe('settled snapshot sanitization', () => {
         onChange={(event) => events.push(event)}
       />,
     );
-    // The remove is declined, but the snapshot's rows move with the data's, so the surviving row still
-    // pairs with its own previous value: the sibling edit's sanitize finds no schema change for it and
+    // The remove runs no sanitize, but the pairing view's rows move with the data's, so the surviving row
+    // still pairs with its own previous value: the sibling edit's sanitize finds no schema change for it and
     // keeps the placeholders its branch offers
-    await user.click(container.querySelector(`#${buttonId('root_rows_0', 'remove')}`)!);
+    await user.click(elementOf(container, `#${buttonId('root_rows_0', 'remove')}`));
     await user.type(input(container, 'root_note'), 'n');
     const last = events[events.length - 1].formData;
     expect(last?.rows).toEqual([{ kind: 'y', tags: [null, null] }]);
   });
 
-  it('keeps the surviving row paired with its own previous value in a parent-owned form (#5451)', async () => {
+  it('keeps the surviving row paired with its own previous value when a parent stores each edit (#5451)', async () => {
     interface Row {
       kind?: string;
       tags?: (string | null)[];
@@ -378,95 +382,9 @@ describe('settled snapshot sanitization', () => {
         log={log}
       />,
     );
-    await user.click(container.querySelector(`#${buttonId('root_rows_0', 'remove')}`)!);
+    await user.click(elementOf(container, `#${buttonId('root_rows_0', 'remove')}`));
     await user.type(input(container, 'root_note'), 'n');
     expect(log.value?.rows).toEqual([{ kind: 'y', tags: [null, null] }]);
-  });
-
-  it('drops the pairing view when an unannounced change desynced its length from the data (#5451)', async () => {
-    interface Row {
-      kind?: string;
-      tags?: (string | null)[];
-    }
-    interface PairData {
-      note?: string;
-      rows?: Row[];
-    }
-    const schema: RJSFSchema = {
-      type: 'object',
-      properties: {
-        note: { type: 'string' },
-        rows: {
-          type: 'array',
-          items: {
-            type: 'object',
-            properties: {
-              kind: { type: 'string', enum: ['x', 'y'] },
-              tags: { type: 'array', items: { type: 'string' }, minItems: 2 },
-            },
-            allOf: [
-              {
-                if: { properties: { kind: { const: 'x' } } },
-                then: { properties: { tags: { items: { enum: ['a'] } } } },
-              },
-              {
-                if: { properties: { kind: { const: 'y' } } },
-                then: { properties: { tags: { items: { enum: ['b'] } } } },
-              },
-            ],
-          },
-        },
-      },
-    };
-    const log = createParentLog<PairData>();
-    const pusher: { push: (value: PairData | undefined) => void } = { push: () => undefined };
-    // A parent that accepts proposals as usual, then pushes a value of its own that matches none of them
-    function PushingParent() {
-      const [value, setValue] = useState<PairData | undefined>({
-        rows: [
-          { kind: 'x', tags: [null, null] },
-          { kind: 'y', tags: [null, null] },
-          { kind: 'y', tags: [null, null] },
-        ],
-      });
-      useEffect(() => {
-        pusher.push = setValue;
-      }, []);
-      Object.assign(log, { value });
-      return (
-        <Form<PairData>
-          schema={schema}
-          validator={validator}
-          formData={value}
-          onChange={(event) => {
-            log.proposals.push(event.formData);
-            log.events.push(event);
-            setValue(event.formData);
-          }}
-        />
-      );
-    }
-    const { container } = render(<PushingParent />);
-    // A push the form did not propose desyncs the pairing view's length from the data's
-    act(() =>
-      pusher.push({
-        rows: [
-          { kind: 'x', tags: [null, null] },
-          { kind: 'x', tags: [null, null] },
-          { kind: 'y', tags: [null, null] },
-          { kind: 'y', tags: [null, null] },
-        ],
-      }),
-    );
-    await user.click(container.querySelector(`#${buttonId('root_rows_0', 'remove')}`)!);
-    await user.type(input(container, 'root_note'), 'n');
-    // The desynced length drops only the rows array from the view, so each row pairs with no previous value
-    // and is filtered against its own branch: a stale value is never kept, though the placeholders go with it
-    expect(log.value?.rows).toEqual([
-      { kind: 'x', tags: [] },
-      { kind: 'y', tags: [] },
-      { kind: 'y', tags: [] },
-    ]);
   });
 
   it('keeps an added row paired with its own starting value on the next sibling edit (#5451)', async () => {
@@ -513,13 +431,13 @@ describe('settled snapshot sanitization', () => {
         onChange={(event) => events.push(event)}
       />,
     );
-    await user.click(container.querySelector(`#${buttonId('root_rows', 'add')}`)!);
+    await user.click(elementOf(container, `#${buttonId('root_rows', 'add')}`));
     await user.type(input(container, 'root_note'), 'n');
     const last = events[events.length - 1].formData;
     expect(last?.rows).toEqual([{ kind: 'x', tags: [null, null] }, { tags: [undefined, undefined] }]);
   });
 
-  it('does not settle an accepted proposal under a schema the parent swapped in beside the push', async () => {
+  it('drops the settled data when the parent swaps the schema as it stores an edit', async () => {
     interface SwapData {
       color?: string;
       name?: string;
@@ -547,7 +465,7 @@ describe('settled snapshot sanitization', () => {
       ],
     };
     const events: IChangeEvent<SwapData>[] = [];
-    // A parent that accepts every proposal and narrows color's enum in the same update that hands the first one back
+    // A parent that stores every edit and narrows color's enum in the same update that stores the first one
     function SwappingParent() {
       const [value, setValue] = useState<SwapData | undefined>({ color: 'g' });
       const [schema, setSchema] = useState<RJSFSchema>(wideSchema);
@@ -555,6 +473,7 @@ describe('settled snapshot sanitization', () => {
         <Form<SwapData>
           schema={schema}
           validator={validator}
+          // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
           formData={value}
           onChange={(event) => {
             events.push(event);
@@ -565,17 +484,17 @@ describe('settled snapshot sanitization', () => {
       );
     }
     const { container } = render(<SwappingParent />);
-    // The proposal carrying 'g' is accepted, but the narrow schema arrives beside the push, so the snapshot must
-    // not settle under it
+    // The edit carrying 'g' settles under the wide schema, and the narrow one arrives as the parent stores it, so
+    // the settled data no longer describes the root
     await user.type(input(container, 'root_name'), 'a');
     // The next edit sanitizes without a settled counterpart, so a value the narrow schema rejects is replaced
-    // with the option left, the way a swap with no proposal in flight is handled
+    // with the option left, the way any schema swap is handled
     await user.type(input(container, 'root_name'), 'b');
     const last = events[events.length - 1].formData;
     expect(last).toEqual({ color: 'r', name: 'ab' });
   });
 
-  it('settles an accepted proposal in a live-validated form', async () => {
+  it('settles each edit in a live-validated form', async () => {
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -602,14 +521,14 @@ describe('settled snapshot sanitization', () => {
         liveValidate='onChange'
       />,
     );
-    await user.selectOptions(container.querySelector('#root_mode')!, ['0']);
-    await user.selectOptions(container.querySelector('#root_color')!, ['1']);
-    // The flip back narrows color against the snapshot the accepted proposals settled: 'g' cannot stand
-    await user.selectOptions(container.querySelector('#root_mode')!, ['1']);
+    await user.selectOptions(elementOf(container, '#root_mode'), ['0']);
+    await user.selectOptions(elementOf(container, '#root_color'), ['1']);
+    // The flip back narrows color against the snapshot the edits settled: 'g' cannot stand
+    await user.selectOptions(elementOf(container, '#root_mode'), ['1']);
     expect(log.value?.color).toBe('r');
   });
 
-  it('settles the stacked proposal two edits in one event propose', async () => {
+  it('settles the second of two edits made in one event', async () => {
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -637,9 +556,10 @@ describe('settled snapshot sanitization', () => {
           ref={ref}
           schema={schema}
           validator={validator}
+          // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
           formData={value}
           onChange={(event) => {
-            log?.proposals.push(event.formData);
+            log?.reported.push(event.formData);
             log?.events.push(event);
             setValue(event.formData);
           }}
@@ -647,13 +567,13 @@ describe('settled snapshot sanitization', () => {
       );
     }
     render(<StackedParent />);
-    // Two edits in one event: the second is stacked on the first's pending proposal, and that stacked proposal
-    // is the one the parent answers
+    // Two edits in one event: the second applies on top of the first, which the form already holds, before the
+    // parent has rendered either
     act(() => {
       handleOf(ref).setFieldValue('mode', 'open');
       handleOf(ref).setFieldValue('color', 'g');
     });
-    // With the stacked proposal settled under 'open', flipping to strict filters 'g'; a snapshot stuck at
+    // With the second edit settled under 'open', flipping to strict filters 'g'; a snapshot stuck at
     // construction resolves 'strict' on both sides and keeps it
     act(() => handleOf(ref).setFieldValue('mode', 'strict'));
     expect(log.value).toEqual({ mode: 'strict', color: 'r' });
@@ -681,8 +601,8 @@ describe('settled snapshot sanitization', () => {
     const { container } = render(
       <AcceptingParent<NoteData> schema={schema} initialValue={{ note: 'x', color: 'g' }} log={log} />,
     );
-    // Clearing the leaf copies the proposal, so the parent answers a value that is not the one the edit path
-    // first built; that answered value is the one that must settle
+    // Clearing the leaf writes `undefined` over a copy of the data the edit path first built; that copy, the
+    // value sent, is the one that must settle
     await user.clear(input(container, 'root_note'));
     // The conditional is off while the note is clear, so 'g' settles with it; writing the note back flips it
     // on and the settled side still accepts 'g', so the filter replaces it
@@ -732,8 +652,8 @@ describe('settled snapshot sanitization', () => {
     // The add is an array write, so no sanitize runs and the snapshot keeps its one row; the kind flip then
     // faces two committed rows against one settled one, so the flipped row is filtered against its own
     // value alone and the 'a' the y-branch rejects goes, the way v7 and 99229b1 removed it
-    await user.click(container.querySelector(`#${buttonId('root_rows', 'add')}`)!);
-    await user.selectOptions(container.querySelector('#root_rows_0_kind')!, ['1']);
+    await user.click(elementOf(container, `#${buttonId('root_rows', 'add')}`));
+    await user.selectOptions(elementOf(container, '#root_rows_0_kind'), ['1']);
     const last = events[events.length - 1].formData;
     expect(last?.rows?.[0]).toEqual({ kind: 'y', tags: [] });
   });
@@ -787,10 +707,10 @@ describe('settled snapshot sanitization', () => {
         onChange={(event) => events.push(event)}
       />,
     );
-    // The reorder is declined, but the snapshot's rows move with the data's, so each row still pairs with
-    // its own previous value: the sibling edit's sanitize finds no schema change for either and keeps the
+    // The reorder runs no sanitize, but the pairing view's rows move with the data's, so each row still pairs
+    // with its own previous value: the sibling edit's sanitize finds no schema change for either and keeps the
     // placeholders their branches offer
-    await user.click(container.querySelector(`#${buttonId('root_rows_1', 'moveUp')}`)!);
+    await user.click(elementOf(container, `#${buttonId('root_rows_1', 'moveUp')}`));
     await user.type(input(container, 'root_note'), 'n');
     const last = events[events.length - 1].formData;
     expect(last?.rows).toEqual([
@@ -843,10 +763,10 @@ describe('settled snapshot sanitization', () => {
         onChange={(event) => events.push(event)}
       />,
     );
-    // The add is declined, but the snapshot's rows move with the data's: the first row still pairs with its
-    // own previous value, so the sibling edit's sanitize keeps its placeholders, and the added row has no
+    // The add runs no sanitize, but the pairing view's rows move with the data's: the first row still pairs with
+    // its own previous value, so the sibling edit's sanitize keeps its placeholders, and the added row has no
     // previous value of its own
-    await user.click(container.querySelector(`#${buttonId('root_rows', 'add')}`)!);
+    await user.click(elementOf(container, `#${buttonId('root_rows', 'add')}`));
     await user.type(input(container, 'root_note'), 'n');
     const last = events[events.length - 1].formData;
     expect(last?.rows?.[0]).toEqual({ kind: 'x', tags: [null, null] });
@@ -896,16 +816,16 @@ describe('settled snapshot sanitization', () => {
     // row's: the flip into the y-branch is a real difference and the 'a' it rejects goes. Resolving the old
     // side against `undefined` instead would satisfy both `if`s vacuously, read the merge as agreement, and
     // keep the stale value
-    await user.click(container.querySelector(`#${buttonId('root_rows', 'add')}`)!);
-    await user.selectOptions(container.querySelector('#root_rows_0_kind')!, ['0']);
+    await user.click(elementOf(container, `#${buttonId('root_rows', 'add')}`));
+    await user.selectOptions(elementOf(container, '#root_rows_0_kind'), ['0']);
     // The narrowed branch filters the placeholder items, so the 'a' goes in through an explicit add
-    await user.click(container.querySelector(`#${buttonId('root_rows_0_tags', 'add')}`)!);
-    await user.selectOptions(container.querySelector('#root_rows_0_tags_0')!, ['0']);
-    await user.selectOptions(container.querySelector('#root_rows_0_kind')!, ['1']);
+    await user.click(elementOf(container, `#${buttonId('root_rows_0_tags', 'add')}`));
+    await user.selectOptions(elementOf(container, '#root_rows_0_tags_0'), ['0']);
+    await user.selectOptions(elementOf(container, '#root_rows_0_kind'), ['1']);
     const last = events[events.length - 1].formData;
     expect(last?.rows?.[0]?.tags).toEqual([]);
   });
-  it('keeps each row paired with its own previous value when the parent declines a reorder (#5451)', async () => {
+  it('keeps each row paired with its own previous value when the parent sets a reorder back (#5451)', async () => {
     interface Row {
       kind?: string;
       tags?: (string | null)[];
@@ -940,33 +860,36 @@ describe('settled snapshot sanitization', () => {
         },
       },
     };
-    const log = createParentLog<PairData>();
+    const rows: Row[] = [
+      { kind: 'x', tags: [null, null] },
+      { kind: 'y', tags: [null, null] },
+    ];
+    const ref = createRef<FormRef<PairData>>();
     const { container } = render(
-      <TransformingParent<PairData>
+      <Form<PairData>
+        ref={ref}
         schema={schema}
-        initialValue={{
-          rows: [
-            { kind: 'x', tags: [null, null] },
-            { kind: 'y', tags: [null, null] },
-          ],
+        validator={validator}
+        initialFormData={{ rows }}
+        // A parent that declines any change to the leading row's kind by setting the rows back
+        onChange={({ formData }) => {
+          if (formData.rows?.[0]?.kind !== 'x') {
+            handleOf(ref).setFieldValue('rows', rows);
+          }
         }}
-        log={log}
-        // A parent that declines any change to the leading row's kind, answering the reorder with the
-        // value it already held
-        transform={(proposal) => (proposal?.rows?.[0]?.kind !== log.value?.rows?.[0]?.kind ? log.value : proposal)}
       />,
     );
-    // The reorder is declined, so the moved view never adopts: the sibling edit pairs each row with its
-    // own previous value, and both rows keep the placeholders their branches offer
-    await user.click(container.querySelector(`#${buttonId('root_rows_0', 'moveDown')}`)!);
+    // The rows set back are the ones from before the reorder, so the sibling edit pairs each row with its own
+    // previous value, and both rows keep the placeholders their branches offer
+    await user.click(elementOf(container, `#${buttonId('root_rows_0', 'moveDown')}`));
     await user.type(input(container, 'root_note'), 'n');
-    expect(log.value?.rows).toEqual([
+    expect(handleOf(ref).getFormData().rows).toEqual([
       { kind: 'x', tags: [null, null] },
       { kind: 'y', tags: [null, null] },
     ]);
   });
 
-  it('filters a row the parent pushed unannounced instead of pairing it with a surviving row (#5451)', async () => {
+  it('filters a row the parent added instead of pairing it with a surviving row (#5451)', async () => {
     interface Row {
       kind?: string;
       tags?: (string | null)[];
@@ -1001,38 +924,38 @@ describe('settled snapshot sanitization', () => {
         },
       },
     };
-    const log = createParentLog<PairData>();
+    const ref = createRef<FormRef<PairData>>();
     let appended = false;
     const { container } = render(
-      <TransformingParent<PairData>
+      <Form<PairData>
+        ref={ref}
         schema={schema}
-        initialValue={{
+        validator={validator}
+        initialFormData={{
           rows: [
             { kind: 'x', tags: [null, null] },
             { kind: 'y', tags: [null, null] },
           ],
         }}
-        log={log}
-        // A parent that appends a row of its own, unannounced, on the first note edit
-        transform={(proposal) => {
-          if (!appended && proposal?.note !== undefined) {
+        // A parent that appends a row of its own on the first note edit
+        onChange={({ formData }) => {
+          if (!appended && formData.note !== undefined) {
             appended = true;
-            return { ...proposal, rows: [...(proposal.rows ?? []), { kind: 'y', tags: ['a', 'a'] }] };
+            handleOf(ref).setFieldValue('rows', [...(formData.rows ?? []), { kind: 'y', tags: ['a', 'a'] }]);
           }
-          return proposal;
         }}
       />,
     );
     await user.type(input(container, 'root_note'), 'n');
-    await user.click(container.querySelector(`#${buttonId('root_rows_0', 'remove')}`)!);
+    await user.click(elementOf(container, `#${buttonId('root_rows_0', 'remove')}`));
     await user.type(input(container, 'root_note'), 'n');
-    const rows = log.value?.rows;
-    // The desynced length drops only the rows array from the view, so the pushed row pairs with no
-    // previous value and is filtered against its own branch: the tags 'y' never offered go
+    const { rows } = handleOf(ref).getFormData();
+    // The added row has no previous value of its own, so it is filtered against its own branch: the tags 'y' never
+    // offered go
     expect(rows?.[1]).toEqual({ kind: 'y', tags: [] });
   });
 
-  it('filters a root-level row the parent pushed unannounced after a length desync (#5451)', async () => {
+  it('filters a root-level row the parent added (#5451)', async () => {
     interface Row {
       kind?: string;
       note?: string;
@@ -1059,33 +982,33 @@ describe('settled snapshot sanitization', () => {
         ],
       },
     };
-    const log = createParentLog<Row[]>();
+    const ref = createRef<FormRef<Row[]>>();
     let appended = false;
     const { container } = render(
-      <TransformingParent<Row[]>
+      <Form<Row[]>
+        ref={ref}
         schema={schema}
-        initialValue={[
+        validator={validator}
+        initialFormData={[
           { kind: 'x', tags: [null, null] },
           { kind: 'y', tags: [null, null] },
         ]}
-        log={log}
-        // A parent that appends a row of its own, unannounced, on the first note edit
-        transform={(proposal) => {
-          if (!appended && proposal?.[0]?.note !== undefined) {
+        // A parent that appends a row of its own on the first note edit
+        onChange={({ formData }) => {
+          if (!appended && formData[0]?.note !== undefined) {
             appended = true;
-            return [...(proposal ?? []), { kind: 'y', tags: ['a', 'a'] }];
+            handleOf(ref).setFieldValue('', [...formData, { kind: 'y', tags: ['a', 'a'] }]);
           }
-          return proposal;
         }}
       />,
     );
     await user.type(input(container, 'root_0_note'), 'n');
-    await user.click(container.querySelector(`#${buttonId('root_0', 'remove')}`)!);
+    await user.click(elementOf(container, `#${buttonId('root_0', 'remove')}`));
     await user.type(input(container, 'root_0_note'), 'n');
-    const rows = log.value;
-    // The dropped root view reads as no settled data at all, so the pushed row pairs with no previous
-    // value and is filtered against its own branch: the tags 'y' never offered go, as on v7
-    expect(rows?.[1]).toEqual({ kind: 'y', tags: [] });
+    const rows = handleOf(ref).getFormData();
+    // The added row has no previous value of its own, so it is filtered against its own branch: the tags 'y' never
+    // offered go, as on v7
+    expect(rows[1]).toEqual({ kind: 'y', tags: [] });
   });
 
   it('keeps each row paired with its own previous value across a reorder at the document root (#5451)', async () => {
@@ -1127,7 +1050,7 @@ describe('settled snapshot sanitization', () => {
         onChange={(event) => events.push(event)}
       />,
     );
-    await user.click(container.querySelector(`#${buttonId('root_0', 'moveDown')}`)!);
+    await user.click(elementOf(container, `#${buttonId('root_0', 'moveDown')}`));
     await user.type(input(container, 'root_0_note'), 'n');
     const last = events[events.length - 1].formData;
     expect(last?.[0]?.kind).toBe('y');
@@ -1156,7 +1079,7 @@ describe('settled snapshot sanitization', () => {
         onChange={(event) => events.push(event)}
       />,
     );
-    await user.selectOptions(container.querySelector('#root_kind')!, 'b');
+    await user.selectOptions(elementOf(container, '#root_kind'), 'b');
     expect(events[events.length - 1].formData).toEqual({ kind: 'b', fixed: ['x'] });
   });
 });

@@ -187,15 +187,49 @@ export function useVisibleErrors(props: VisibleErrorsProps & { id: string }): Re
   return props.id === selectorErrorsId ? undefined : errorLines(getVisibleErrors(props));
 }
 
+// The id of the field whose `FieldTemplate` renders the hidden copy of its errors, see `useErrorElementId()`
+const ErrorCopyIdContext = createContext<string | undefined>(undefined);
+
+/** Provides the id of the field whose hidden copy of its errors `FieldTemplate` renders, see `useErrorElementId()` */
+export function ErrorCopyIdProvider({ id, children }: { id?: string; children: ReactNode }) {
+  return <ErrorCopyIdContext value={id}>{children}</ErrorCopyIdContext>;
+}
+
+/** The id for the error element a widget or template shows. The field's `errorId(id)` is what its inputs are described
+ * by, and exactly one element has it. Inside the field's own `FieldTemplate`, which renders the hidden copy of the
+ * field's errors when the field's `FieldErrorTemplate` is this theme's, the copy has it, see `useErrorCopyId()`, and
+ * the element shown has no id of the field's, so a custom
+ * widget that shows no errors is described by them too, and a Mantine widget's are read once. Anywhere else, as for a
+ * `oneOf`/`anyOf` selector, which has an id of its own, a widget rendered by itself, or a custom `FieldTemplate`, the
+ * element shown has it.
+ *
+ * @param id - The id of the field or selector the errors belong to
+ * @returns - `errorId(id)`, or `undefined` when the field's hidden copy has it
+ */
+export function useErrorElementId(id: string): string | undefined {
+  return use(ErrorCopyIdContext) === id ? undefined : errorId(id);
+}
+
+/** The id for the hidden copy of a field's errors: `errorId(id)` inside the field's own `FieldTemplate`, see
+ * `useErrorElementId()`, otherwise none, so it never shares the id with an element a widget shows
+ *
+ * @param id - The id of the field the errors belong to
+ * @returns - `errorId(id)`, or `undefined`
+ */
+export function useErrorCopyId(id: string): string | undefined {
+  return use(ErrorCopyIdContext) === id ? errorId(id) : undefined;
+}
+
 /** A hook for the own errors of an object, or an array rendered item by item, which no widget renders, for their
- * template to render with the field's `errorId(id)`. Every other field's widget renders its errors.
+ * template to show. Every other field's widget shows its errors.
  *
  * @param props - The props of the template, from which `id`, `rawErrors` and `hideError` are read
  * @returns - The error element to render, if any
  */
 export function useContainerErrors(props: VisibleErrorsProps & { id: string }) {
   const errors = useVisibleErrors(props);
-  return errors ? <Input.Error id={errorId(props.id)}>{errors}</Input.Error> : undefined;
+  const errorElementId = useErrorElementId(props.id);
+  return errors ? <Input.Error id={errorElementId}>{errors}</Input.Error> : undefined;
 }
 
 /** The keys of `T` it declares that `cleanupOptions()` doesn't strip. Mantine's own props reach a widget through the
@@ -384,8 +418,8 @@ interface AriaContainerOptions {
 
 /** Builds the `inputContainer` that overrides the aria ids Mantine reads from the `InputWrapper` context, wrapping
  * `ownContainer`, the container Mantine would otherwise render, after anything in `before`. The error element Mantine
- * renders is given the field's `errorId(id)`, the id the input is described by, the success message the known
- * `successId`, since Mantine's components derive it differently, and the description is rendered as a `div`. These are
+ * renders is given the id `useErrorElementId()` returns, the success message the known `successId`, since Mantine's
+ * components derive it differently, and the description is rendered as a `div`. These are
  * set top-level and in `wrapperProps`, since an explicit prop replaces the theme's default and Mantine gives the two a
  * different precedence for inputs and groups.
  */
@@ -416,9 +450,10 @@ function useAriaContainerProps({
     ),
     [describedBy, labelId, successId, successOnOptions, before, ownContainer],
   );
+  const errorElementId = useErrorElementId(id);
   return useMemo(() => {
     const descriptionProps = withDescriptionDiv(ownDescriptionProps);
-    const errorProps = { ...ownErrorProps, id: errorId(id) };
+    const errorProps = { ...ownErrorProps, id: errorElementId };
     const successProps = { ...ownSuccessProps, id: successId };
     return {
       inputContainer: container,
@@ -427,7 +462,7 @@ function useAriaContainerProps({
       successProps,
       wrapperProps: { ...wrapperObject, inputContainer: container, descriptionProps, errorProps, successProps },
     };
-  }, [container, id, ownDescriptionProps, ownErrorProps, ownSuccessProps, successId, wrapperObject]);
+  }, [container, errorElementId, ownDescriptionProps, ownErrorProps, ownSuccessProps, successId, wrapperObject]);
 }
 
 function pickOptions(options: GenericObjectType, names: readonly string[]) {
@@ -591,6 +626,7 @@ export function useFieldWrapperProps<
     ? withOwnRootProps(resolved, wrapperDefaults, asObject(options.wrapperProps))
     : resolved;
   const error = useVisibleErrors(widgetProps);
+  const errorElementId = useErrorElementId(id);
   const ownSuccessProps = asObject(resolved.successProps);
   const successId = successIdOf(id, ownSuccessProps);
   return {
@@ -603,7 +639,7 @@ export function useFieldWrapperProps<
       description,
       descriptionProps: withDescriptionDiv(resolved.descriptionProps),
       error,
-      errorProps: { ...asObject(resolved.errorProps), id: errorId(id) },
+      errorProps: { ...asObject(resolved.errorProps), id: errorElementId },
       successProps: { ...ownSuccessProps, id: successId },
     },
     inputWrapperOrder: resolved.inputWrapperOrder as unknown,
@@ -619,7 +655,7 @@ export function useFieldWrapperProps<
  * elements. Overriding the context from `inputContainer` is the one place the value Mantine applies can be replaced.
  * The container, `successProps`, `errorProps` and `descriptionProps` Mantine would otherwise apply are resolved as
  * Mantine's inputs resolve them, from the widget's options and the theme's `defaultProps`, and the error element is
- * given the field's `errorId(id)`, whatever `errorProps.id` says.
+ * given the id `useErrorElementId()` returns, whatever `errorProps.id` says.
  *
  * @param component - The Mantine input the props are spread on, whose theme `defaultProps` supply any `inputContainer`
  * @param id - The id of the field the input belongs to
@@ -684,7 +720,7 @@ export function useAriaDescribedByProps(
  * labels the group by a label it renders itself. The container, `labelProps`, `descriptionProps`, `errorProps`,
  * `successProps` and `inputWrapperOrder` Mantine would otherwise apply are resolved as Mantine's groups resolve them:
  * the widget's options or the group's theme `defaultProps`, then `wrapperProps`, then `InputWrapper`'s theme
- * `defaultProps`. The error element is given the field's `errorId(id)`, whatever `errorProps.id` says.
+ * `defaultProps`. The error element is given the id `useErrorElementId()` returns, whatever `errorProps.id` says.
  *
  * @param component - The Mantine group the props are spread on, whose theme `defaultProps` supply any `inputContainer`
  * @param widgetProps - The props of the widget, from which the label, its visibility, the errors and the options are

@@ -557,7 +557,7 @@ describe('SchemaField', () => {
       ])(
         'warns once about an unusable ui:field in %s items entry, not once per item',
         (_, schema, uiSchema, formData, label) => {
-          const { node } = createFormComponent({ schema, uiSchema, formData });
+          const { node } = createFormComponent({ schema, uiSchema, initialFormData: formData });
 
           expect(node.querySelectorAll('input')).toHaveLength(3);
           expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(

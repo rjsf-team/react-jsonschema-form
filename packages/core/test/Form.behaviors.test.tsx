@@ -13,7 +13,7 @@ import validator from '@rjsf/validator-ajv8';
 import { act, render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
-import type { FormProps, IChangeEvent } from '../src/index.ts';
+import type { FormProps, FormRef, IChangeEvent } from '../src/index.ts';
 import Form from '../src/index.ts';
 import type { NoValFormProps } from './testUtils.tsx';
 import {
@@ -22,9 +22,11 @@ import {
   createFormComponent,
   createFormRef,
   delayPromise,
+  elementOf,
   errorListMessages,
   expectToHaveBeenCalledWithFormData,
   fieldErrorsById,
+  handleOf,
   setupConsoleErrorSuppression,
   submitForm,
 } from './testUtils.tsx';
@@ -49,7 +51,7 @@ describe('Error paths that collide with prototype keys', () => {
         constructor: constructorFieldSchema,
       },
     };
-    const { node } = createFormComponent({ schema, formData: { constructor: 'ab' } });
+    const { node } = createFormComponent({ schema, initialFormData: { constructor: 'ab' } });
 
     await submitForm(node, user);
 
@@ -162,7 +164,7 @@ describe('Live validation onBlur', () => {
     expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ errorSchema: {} }), 'root');
   });
 
-  it('does not occur while typing when a controlled parent recreates an identity prop on every render', async () => {
+  it('does not occur while typing when a parent that stores edits recreates an identity prop on every render', async () => {
     function InlineCallbackParent() {
       const [value, setValue] = useState<string | null>(null);
       return (
@@ -170,6 +172,7 @@ describe('Live validation onBlur', () => {
           schema={schema}
           validator={validator}
           liveValidate='onBlur'
+          // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
           formData={value}
           onChange={(event) => setValue(event.formData ?? null)}
           // Recreated on every render of the parent, which is what makes the form see a changed identity prop on
@@ -189,7 +192,7 @@ describe('Live validation onBlur', () => {
     expect(container.querySelector('.error-detail li')).toHaveTextContent('must NOT have fewer than 8 characters');
   });
 
-  describe('when the data is replaced from outside the form', () => {
+  describe('when the data is replaced through setFieldValue', () => {
     const objectSchema: RJSFSchema = {
       type: 'object',
       properties: { name: { type: 'string', minLength: 8 }, other: { type: 'string' } },
@@ -200,16 +203,19 @@ describe('Live validation onBlur', () => {
       liveValidate = 'onBlur',
     }: Pick<FormProps, 'extraErrors' | 'liveValidate'>) {
       const [value, setValue] = useState<{ name?: string; other?: string }>({ name: 'longenough', other: 'b' });
+      const ref = useRef<FormRef<{ name?: string; other?: string }>>(null);
       return (
         <>
-          <button type='button' onClick={() => setValue({ name: 'short', other: 'zzz' })}>
+          <button type='button' onClick={() => handleOf(ref).setFieldValue('', { name: 'short', other: 'zzz' })}>
             replace
           </button>
           <Form
+            ref={ref}
             schema={objectSchema}
             validator={validator}
             liveValidate={liveValidate}
             extraErrors={extraErrors}
+            // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
             formData={value}
             onChange={(event) => setValue(event.formData)}
           />
@@ -220,7 +226,7 @@ describe('Live validation onBlur', () => {
     it('does not validate: the errors still wait for a blur', async () => {
       const { container } = render(<ReplacingParent />);
 
-      await user.click(container.querySelector('button')!);
+      await user.click(elementOf(container, 'button'));
 
       expect(container.querySelectorAll('.error-detail li')).toHaveLength(0);
 
@@ -234,7 +240,7 @@ describe('Live validation onBlur', () => {
       const extraErrors: ErrorSchema = { name: { __errors: ['from the server'] } };
       const { container } = render(<ReplacingParent extraErrors={extraErrors} />);
 
-      await user.click(container.querySelector('button')!);
+      await user.click(elementOf(container, 'button'));
 
       expect(errorListMessages(container)).toEqual(['.name from the server']);
     });
@@ -243,7 +249,7 @@ describe('Live validation onBlur', () => {
       const extraErrors: ErrorSchema = { name: { __errors: ['from the server'] } };
       const { container } = render(<ReplacingParent liveValidate='onChange' extraErrors={extraErrors} />);
 
-      await user.click(container.querySelector('button')!);
+      await user.click(elementOf(container, 'button'));
 
       expect(errorListMessages(container)).toEqual([
         '.name must NOT have fewer than 8 characters',
@@ -267,7 +273,7 @@ describe('Live validation onBlur', () => {
               validator={validator}
               liveValidate='onChange'
               extraErrors={extraErrors}
-              formData={shortName}
+              initialFormData={shortName}
               className={className}
             />
           </>
@@ -275,7 +281,7 @@ describe('Live validation onBlur', () => {
       }
       const { container } = render(<RestylingParent />);
 
-      await user.click(container.querySelector('button')!);
+      await user.click(elementOf(container, 'button'));
 
       expect(fieldErrorsById(container)).toEqual({ root_name: ['from the server'] });
     });
@@ -692,7 +698,11 @@ describe('omitExtraData on submit', () => {
   const formData = { foo: 'bar', baz: 'baz' };
 
   it('validates the current formData, extra fields included, if omitExtraData is false', async () => {
-    const { node, onSubmit, onError } = createFormComponent({ schema, formData, omitExtraData: false });
+    const { node, onSubmit, onError } = createFormComponent({
+      schema,
+      initialFormData: formData,
+      omitExtraData: false,
+    });
 
     await submitForm(node, user);
 
@@ -701,7 +711,7 @@ describe('omitExtraData on submit', () => {
   });
 
   it('validates and submits only the fields the schema describes if omitExtraData is true', async () => {
-    const { node, onSubmit, onError } = createFormComponent({ schema, formData, omitExtraData: true });
+    const { node, onSubmit, onError } = createFormComponent({ schema, initialFormData: formData, omitExtraData: true });
 
     await submitForm(node, user);
 
@@ -729,7 +739,7 @@ describe('omitExtraData prunes empty optional objects', () => {
   it('prunes an empty optional object on submit when omitExtraData is true', async () => {
     const { node, onSubmit } = createFormComponent({
       schema,
-      formData: { name: 'Alice', address: {} },
+      initialFormData: { name: 'Alice', address: {} },
       omitExtraData: true,
     });
 
@@ -755,7 +765,7 @@ describe('omitExtraData prunes empty optional objects', () => {
 
     const { node, onSubmit } = createFormComponent({
       schema: requiredAddressSchema,
-      formData: { name: 'Alice', address: {} },
+      initialFormData: { name: 'Alice', address: {} },
       omitExtraData: true,
     });
 
@@ -767,7 +777,7 @@ describe('omitExtraData prunes empty optional objects', () => {
   it('keeps an optional object when it has a non-empty field', async () => {
     const { node, onSubmit } = createFormComponent({
       schema,
-      formData: { name: 'Alice', address: { street: '123 Main St' } },
+      initialFormData: { name: 'Alice', address: { street: '123 Main St' } },
       omitExtraData: true,
     });
 
@@ -994,9 +1004,9 @@ describe('Async errors', () => {
     expect(errorListMessages(node)).toEqual([]);
   });
 
-  it('should display extraErrors on first async set with array field and controlled formData', async () => {
+  it('should display extraErrors on first async set with array field and a parent passing formData', async () => {
     // Reproduces https://github.com/rjsf-team/react-jsonschema-form/issues/4982
-    // When formData is controlled externally and the schema has an array field,
+    // When a parent passes formData and the schema has an array field,
     // setting extraErrors after submit should show errors on the first attempt.
     // The bug was in mergeErrors() where the customErrors merge (created by array
     // field interactions) overwrote the extraErrors merge by using the original
@@ -1029,6 +1039,7 @@ describe('Async errors', () => {
         <Form
           schema={schema}
           validator={validator}
+          // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
           formData={formData}
           onChange={({ formData: next }: IChangeEvent) => setFormData((next as Record<string, unknown>) ?? {})}
           extraErrors={extraErrors}
@@ -1133,6 +1144,7 @@ describe('Deriving state from changed props', () => {
           schema={schema}
           validator={validator}
           liveValidate='onChange'
+          // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
           formData={formData}
           onChange={(event) => setFormData(event.formData)}
           {...steps[step]}
@@ -1153,7 +1165,7 @@ describe('Deriving state from changed props', () => {
   it('does not validate untouched data when a prop that takes no part in validation changes', async () => {
     const { container } = render(<Parent steps={[{ formContext: { n: 1 } }, { formContext: { n: 2 } }]} />);
 
-    await user.click(container.querySelector('button')!);
+    await user.click(elementOf(container, 'button'));
 
     expect(container.querySelectorAll('.error-detail li')).toHaveLength(0);
   });
@@ -1161,9 +1173,35 @@ describe('Deriving state from changed props', () => {
   it('re-validates unchanged data when a prop that takes part in validation changes', async () => {
     const { container } = render(<Parent steps={[{ transformErrors: identity }, { transformErrors: alsoIdentity }]} />);
 
-    await user.click(container.querySelector('button')!);
+    await user.click(elementOf(container, 'button'));
 
     expect(container.querySelector('.error-detail li')).toHaveTextContent('must NOT have fewer than 8 characters');
+  });
+
+  it('does not validate a form that was never handed data when a prop that takes part in validation changes', async () => {
+    function Unseeded() {
+      const [step, setStep] = useState(0);
+      return (
+        <>
+          <button type='button' onClick={() => setStep(step + 1)}>
+            next
+          </button>
+          <Form
+            schema={{ type: 'object', required: ['name'], properties: { name: { type: 'string' } } }}
+            validator={validator}
+            liveValidate='onChange'
+            transformErrors={step === 0 ? identity : alsoIdentity}
+          />
+          <output>{step}</output>
+        </>
+      );
+    }
+    const { container } = render(<Unseeded />);
+
+    await user.click(elementOf(container, 'button'));
+
+    expect(container.querySelector('output')).toHaveTextContent('1');
+    expect(container.querySelectorAll('.error-detail li')).toHaveLength(0);
   });
 
   it('clears extraErrors the parent drops after a re-validation of unchanged data', async () => {
@@ -1179,9 +1217,9 @@ describe('Deriving state from changed props', () => {
     );
     expect(container.querySelector('.error-detail li')).toHaveTextContent('from the server');
 
-    await user.click(container.querySelector('button')!);
+    await user.click(elementOf(container, 'button'));
     expect(container.querySelectorAll('.error-detail li')).toHaveLength(2);
-    await user.click(container.querySelector('button')!);
+    await user.click(elementOf(container, 'button'));
 
     const messages = [...container.querySelectorAll('.error-detail li')].map((li) => li.textContent);
     expect(messages).toEqual(['must NOT have fewer than 8 characters']);
@@ -1191,7 +1229,7 @@ describe('Deriving state from changed props', () => {
     const extraErrors: ErrorSchema = { name: { __errors: ['from the server'] } };
     const { container } = render(<Parent steps={[{ extraErrors }, { extraErrors, className: 'x' }]} />);
 
-    await user.click(container.querySelector('button')!);
+    await user.click(elementOf(container, 'button'));
 
     const messages = [...container.querySelectorAll('.error-detail li')].map((li) => li.textContent);
     expect(messages).toEqual(['from the server']);
@@ -1214,14 +1252,14 @@ describe('Deriving state from changed props', () => {
           <button type='button' onClick={() => setMerge(() => lastWins)}>
             swap
           </button>
-          <Form schema={allOfSchema} validator={validator} formData={{ a: 'x' }} customMergeAllOf={merge} />
+          <Form schema={allOfSchema} validator={validator} initialFormData={{ a: 'x' }} customMergeAllOf={merge} />
         </>
       );
     }
     const { container } = render(<MergeParent />);
     expect(container.querySelector('label')).toHaveTextContent('A1');
 
-    await user.click(container.querySelector('button')!);
+    await user.click(elementOf(container, 'button'));
 
     expect(container.querySelector('label')).toHaveTextContent('A2');
   });
@@ -1247,7 +1285,7 @@ describe('customValidate', () => {
   });
 });
 
-describe('a self-owned form whose customMergeAllOf changes', () => {
+describe('a form whose customMergeAllOf changes', () => {
   it('validates a blur against the schema the new customMergeAllOf resolves', async () => {
     const allOfSchema: RJSFSchema = {
       type: 'object',
@@ -1274,7 +1312,7 @@ describe('a self-owned form whose customMergeAllOf changes', () => {
     }
     const { container } = render(<MergeParent />);
 
-    await user.click(container.querySelector('button')!);
+    await user.click(elementOf(container, 'button'));
     await user.click(container.querySelector('#root_a')!);
     await user.tab();
 
@@ -1423,7 +1461,7 @@ describe('Committing a handler result', () => {
     const { node } = createFormComponent({
       ref: formRef,
       schema,
-      formData: { name: 'short', extra: 'x' },
+      initialFormData: { name: 'short', extra: 'x' },
       omitExtraData: true,
       liveOmit: 'onBlur',
       onBlur: () => formRef.current!.validateForm(),
@@ -1448,6 +1486,7 @@ describe('Committing a handler result', () => {
           schema={schema}
           validator={validator}
           liveValidate='onBlur'
+          // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
           formData={formData}
           onChange={(e) => setFormData(e.formData)}
           onBlur={() => {
@@ -1483,6 +1522,7 @@ describe('Committing a handler result', () => {
           <Form
             schema={{ type: 'string' }}
             validator={validator}
+            // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
             formData={formData}
             className={`changes-${changeCount}`}
             widgets={{ TextWidget: RecordingWidget }}
@@ -1537,7 +1577,7 @@ describe('validateForm()', () => {
           schema={schema}
           uiSchema={uiSchema}
           validator={validator}
-          formData={listData}
+          initialFormData={listData}
           formContext={formContext}
         />
       );
@@ -1551,7 +1591,12 @@ describe('validateForm()', () => {
 
   it('validates the current formData, extra fields included, if omitExtraData is false', () => {
     const formRef = createFormRef();
-    const { onError } = createFormComponent({ ref: formRef, schema: strictSchema, formData, omitExtraData: false });
+    const { onError } = createFormComponent({
+      ref: formRef,
+      schema: strictSchema,
+      initialFormData: formData,
+      omitExtraData: false,
+    });
 
     act(() => {
       expect(formRef.current!.validateForm()).toBe(false);
@@ -1562,7 +1607,12 @@ describe('validateForm()', () => {
 
   it('validates only the fields the schema describes if omitExtraData is true', () => {
     const formRef = createFormRef();
-    const { onError } = createFormComponent({ ref: formRef, schema: strictSchema, formData, omitExtraData: true });
+    const { onError } = createFormComponent({
+      ref: formRef,
+      schema: strictSchema,
+      initialFormData: formData,
+      omitExtraData: true,
+    });
 
     act(() => {
       expect(formRef.current!.validateForm()).toBe(true);
@@ -1583,7 +1633,7 @@ describe('validateForm()', () => {
           },
         },
       },
-      formData: {},
+      initialFormData: {},
       ref,
     };
     const { rerender, node } = createFormComponent(props);
@@ -1599,7 +1649,7 @@ describe('validateForm()', () => {
     // populate the input and trigger a re-render from the parent.
     const textNode = node.querySelector<HTMLInputElement>('#root_input')!;
     await user.type(textNode, 'populated value');
-    rerender({ ...props, formData: { input: 'populated value' } });
+    rerender({ ...props, initialFormData: { input: 'populated value' } });
     // // error should still be present.
     errors = node.querySelectorAll('.error-detail');
     // screen.debug();
@@ -1630,7 +1680,7 @@ describe('validateForm()', () => {
     const props: NoValFormProps = {
       ref: formRef,
       schema,
-      formData: { foo: 'valid' },
+      initialFormData: { foo: 'valid' },
       extraErrors,
       extraErrorsAreWarnings: true,
     };
@@ -1664,7 +1714,7 @@ describe('validateForm()', () => {
     const props: NoValFormProps = {
       ref: formRef,
       schema,
-      formData: { foo: 'valid' },
+      initialFormData: { foo: 'valid' },
       extraErrors,
     };
     const { node, onError } = createFormComponent(props);
@@ -1699,7 +1749,7 @@ describe('validateForm()', () => {
     const props: NoValFormProps = {
       ref: formRef,
       schema,
-      formData: {},
+      initialFormData: {},
       extraErrors,
       extraErrorsAreWarnings: true,
     };
@@ -1774,7 +1824,7 @@ describe('validateForm()', () => {
     const props: NoValFormProps = {
       ref: formRef,
       schema,
-      formData: { foo: 'valid' },
+      initialFormData: { foo: 'valid' },
       extraErrors,
     };
     const { node, rerender } = createFormComponent(props);
@@ -2378,7 +2428,7 @@ describe('optionalDataControls', () => {
     const { node, onSubmit, onError } = createFormComponent({
       schema: thingSchema,
       uiSchema: { ...objectOnUiSchema, thing: { a: { 'ui:required': true } } },
-      formData: { thing: {} },
+      initialFormData: { thing: {} },
     });
 
     expect(node.querySelector('#root_thing_a')).toEqual(null);
@@ -2397,7 +2447,7 @@ describe('optionalDataControls', () => {
     const { node, onSubmit, onError } = createFormComponent({
       schema: thingSchema,
       uiSchema: { ...objectOnUiSchema, thing: { a: { 'ui:required': true } } },
-      formData: { thing: {} },
+      initialFormData: { thing: {} },
       noHtml5Validate: true,
     });
 
@@ -2509,7 +2559,7 @@ describe('nameGenerator', () => {
     const formData = {
       tags: ['foo', 'bar'],
     };
-    const { node } = createFormComponent({ schema, formData, nameGenerator: bracketNameGenerator });
+    const { node } = createFormComponent({ schema, initialFormData: formData, nameGenerator: bracketNameGenerator });
 
     const firstTagInput = node.querySelector('#root_tags_0');
     const secondTagInput = node.querySelector('#root_tags_1');
@@ -2540,7 +2590,7 @@ describe('nameGenerator', () => {
         { title: 'Task 2', done: true },
       ],
     };
-    const { node } = createFormComponent({ schema, formData, nameGenerator: bracketNameGenerator });
+    const { node } = createFormComponent({ schema, initialFormData: formData, nameGenerator: bracketNameGenerator });
 
     const firstTaskTitleInput = node.querySelector('#root_tasks_0_title');
     const firstTaskDoneInput = node.querySelector('#root_tasks_0_done');
@@ -2704,6 +2754,7 @@ describe('initialFormData feature to prevent form reset', () => {
 
     const props: NoValFormProps = {
       schema,
+      // oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias beside its `initialFormData` twin
       ...(formData !== undefined && { formData }),
     };
 
@@ -2717,8 +2768,8 @@ describe('initialFormData feature to prevent form reset', () => {
       />
     );
   };
-  it('show that a controlled Form keeps rendering the parent value when the parent does not accept edits', async () => {
-    // The parent owns `formData` and never hands a proposal back, so the edit is proposed but never rendered
+  it('show that a Form keeps the edits when the parent passes formData and stores nothing back', async () => {
+    // The form owns the edit; `formData` only seeds it on mount, so the parent passing it again leaves the edit in place
     const { container } = render(<FormWrapper formData={data} />);
     let input = container.querySelector<HTMLInputElement>('input')!;
     expect(input).toHaveAttribute('value', data.name);
@@ -2726,14 +2777,14 @@ describe('initialFormData feature to prevent form reset', () => {
     await user.clear(input);
     await user.type(input, 'new value');
     input = container.querySelector('input')!;
-    expect(input).toHaveAttribute('value', data.name);
+    expect(input).toHaveAttribute('value', 'new value');
 
     await submitForm(container.querySelector('form')!, user);
 
     input = container.querySelector('input')!;
-    expect(input).toHaveAttribute('value', data.name);
+    expect(input).toHaveAttribute('value', 'new value');
   });
-  it('show that Form does not reset with initialFormData when it is uncontrolled', async () => {
+  it('show that Form does not reset with initialFormData', async () => {
     const { container } = render(<FormWrapper initialFormData={data} />);
     let input = container.querySelector<HTMLInputElement>('input')!;
     expect(input).toHaveAttribute('value', data.name);
@@ -3064,7 +3115,7 @@ describe('clearing a field with a schema default does not re-apply the default (
 // NOTE: Some v6 tests labeled `a parent dropping data the form reported as absent` have been deleted
 //       This comment left as a marker for them so that a future merge commit will cause a conflict
 
-describe('dependency defaults in controlled forms', () => {
+describe('dependency defaults with a parent passing formData', () => {
   const triggersSchema: RJSFSchema = {
     type: 'array',
     default: [],
@@ -3323,7 +3374,7 @@ describe('dependencies/oneOf constraint violation produces validation errors on 
       commands: 'docker_ps',
       env: 'develop',
     };
-    const { node, onSubmit, onError } = createFormComponent({ schema, formData });
+    const { node, onSubmit, onError } = createFormComponent({ schema, initialFormData: formData });
     await submitForm(node, user);
 
     expect(onSubmit).not.toHaveBeenCalled();

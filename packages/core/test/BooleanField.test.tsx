@@ -498,7 +498,7 @@ describe('BooleanField', () => {
           },
         ],
       },
-      formData: true,
+      initialFormData: true,
       uiSchema: { 'ui:widget': 'radio' },
     });
 
@@ -519,7 +519,7 @@ describe('BooleanField', () => {
         ],
         anyOf: [{ title: 'A' }, { title: 'B' }],
       },
-      formData: true,
+      initialFormData: true,
       uiSchema: { 'ui:widget': 'radio' },
     });
 

@@ -1,4 +1,3 @@
-import { createRef } from 'react';
 import type {
   FieldProps,
   FieldTemplateProps,
@@ -11,12 +10,20 @@ import type {
   WidgetProps,
 } from '@rjsf/utils';
 import { noop } from '@rjsf/utils';
-import { screen } from '@testing-library/react';
+import { act, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import SchemaField from '../src/components/fields/SchemaField.tsx';
 import SelectWidget from '../src/components/widgets/SelectWidget.tsx';
-import { createFormComponent, getSelectedOptionValue, setupConsoleWarnSuppression, submitForm } from './testUtils.tsx';
+import {
+  createFormComponent,
+  createFormRef,
+  elementOf,
+  getSelectedOptionValue,
+  handleOf,
+  setupConsoleWarnSuppression,
+  submitForm,
+} from './testUtils.tsx';
 
 const user = userEvent.setup();
 
@@ -447,7 +454,7 @@ describe('oneOf', () => {
       });
       const { node, onChange } = createFormComponent({
         schema: { oneOf: [optionFor('a'), optionFor('b')] },
-        formData: { kind: 'a', runner: { name: 'a' } },
+        initialFormData: { kind: 'a', runner: { name: 'a' } },
         defaultFormStateBehavior: { emptyObjectFields: 'skipDefaults' },
       });
 
@@ -501,7 +508,7 @@ describe('oneOf', () => {
           { title: 'b', type: 'array', items: { type: 'number' }, default: [2] },
         ],
       };
-      const { node, onChange } = createFormComponent({ schema, formData: [7, 8] });
+      const { node, onChange } = createFormComponent({ schema, initialFormData: [7, 8] });
 
       await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
 
@@ -527,7 +534,7 @@ describe('oneOf', () => {
     });
     const { node, onChange } = createFormComponent({
       schema: { oneOf: [optionFor('a'), optionFor('b')] },
-      formData: { kind: 'a', runner: { name: 'a', ratio: 0 } },
+      initialFormData: { kind: 'a', runner: { name: 'a', ratio: 0 } },
     });
 
     await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
@@ -630,7 +637,7 @@ describe('oneOf', () => {
         },
       ],
     };
-    const { node, onChange } = createFormComponent({ schema, formData: { kind: 'a', flag: false } });
+    const { node, onChange } = createFormComponent({ schema, initialFormData: { kind: 'a', flag: false } });
 
     await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
 
@@ -653,7 +660,7 @@ describe('oneOf', () => {
     });
     const { node, onChange } = createFormComponent({
       schema: { oneOf: [optionFor('a', 'MIT'), optionFor('b', 'Apache')] },
-      formData: { kind: 'a', license: 'custom' },
+      initialFormData: { kind: 'a', license: 'custom' },
     });
 
     await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
@@ -687,7 +694,10 @@ describe('oneOf', () => {
         },
       ],
     };
-    const { node, onChange } = createFormComponent({ schema, formData: { kind: 'a', runner: { name: 'typed' } } });
+    const { node, onChange } = createFormComponent({
+      schema,
+      initialFormData: { kind: 'a', runner: { name: 'typed' } },
+    });
 
     await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
 
@@ -1151,20 +1161,16 @@ describe('oneOf', () => {
       },
     };
 
-    const { rerender, node } = createFormComponent({
-      ref: createRef(),
+    const ref = createFormRef();
+    const { node } = createFormComponent({
+      ref,
       schema,
-      formData: {},
+      initialFormData: {},
     });
 
     expect(node.querySelector('select')).toHaveValue('0');
 
-    rerender({
-      schema,
-      formData: {
-        userId: 'foobarbaz',
-      },
-    });
+    act(() => handleOf(ref).setFieldValue('userId', 'foobarbaz'));
 
     expect(node.querySelector('select')).toHaveValue('1');
   });
@@ -2514,7 +2520,7 @@ describe('oneOf', () => {
           },
         },
       };
-      const { node } = createFormComponent({ schema, formData: { myprop: 'X' } });
+      const { node } = createFormComponent({ schema, initialFormData: { myprop: 'X' } });
 
       const select = node.querySelector<HTMLSelectElement>('select#root_myprop');
       expect(select).toBeInTheDocument();
@@ -2552,7 +2558,7 @@ describe('oneOf', () => {
           mylist: { oneOf: [{ const: 'foo' }, { const: 'bar' }] },
         },
       };
-      const { node, onChange } = createFormComponent({ schema, formData: { myprop: 'foo' } });
+      const { node, onChange } = createFormComponent({ schema, initialFormData: { myprop: 'foo' } });
 
       expect(node.querySelector('#root_myprop__oneof_select')).toHaveValue('2');
       const select = node.querySelector<HTMLSelectElement>('select#root_myprop');
@@ -2787,7 +2793,7 @@ describe('oneOf', () => {
 
     it('should not infer a type or write form data for an empty oneOf', () => {
       const schema: RJSFSchema = { type: 'object', properties: { myprop: { oneOf: [] } } };
-      const { node, onChange } = createFormComponent({ schema, formData: {} });
+      const { node, onChange } = createFormComponent({ schema, initialFormData: {} });
 
       expect(node.querySelector('.unsupported-field')).toBeInTheDocument();
       expect(onChange).not.toHaveBeenCalled();
@@ -2803,7 +2809,7 @@ describe('oneOf', () => {
         properties: { myprop: { oneOf: [{ title: 'none', type: 'object' }, { $ref: '#/$defs/falsy' }] } },
         $defs: { falsy: { title: 'falsy', const: value } },
       };
-      const { node } = createFormComponent({ schema, formData: { myprop: value } });
+      const { node } = createFormComponent({ schema, initialFormData: { myprop: value } });
 
       expect(node.querySelector('.unsupported-field')).not.toBeInTheDocument();
       expect(node.querySelector(selector)).toBeInTheDocument();
@@ -2814,7 +2820,7 @@ describe('oneOf', () => {
         type: 'object',
         properties: { myprop: { title: 'X', oneOf: [{ title: 'None', const: null }] } },
       };
-      const { node } = createFormComponent({ schema, formData: { myprop: null } });
+      const { node } = createFormComponent({ schema, initialFormData: { myprop: null } });
 
       const select = node.querySelector<HTMLSelectElement>('select#root_myprop');
       expect(select).toBeInTheDocument();
@@ -2837,7 +2843,7 @@ describe('oneOf', () => {
             },
           },
         };
-        const { node, onChange } = createFormComponent({ schema, uiSchema, formData: { v: { a: 1 } } });
+        const { node, onChange } = createFormComponent({ schema, uiSchema, initialFormData: { v: { a: 1 } } });
 
         expect(node.querySelector('.unsupported-field')).not.toBeInTheDocument();
         const select = node.querySelector<HTMLSelectElement>('select#root_v')!;
@@ -2851,7 +2857,7 @@ describe('oneOf', () => {
           type: 'object',
           properties: { v: { anyOf: [{ const: [1, 2] }, { const: [3] }, { const: null }] } },
         };
-        const { node, onChange } = createFormComponent({ schema, uiSchema, formData: {} });
+        const { node, onChange } = createFormComponent({ schema, uiSchema, initialFormData: {} });
 
         const select = node.querySelector<HTMLSelectElement>('select#root_v')!;
         expect([...select.options].map((option) => option.text)).toEqual(['', '[1,2]', '[3]', 'null']);
@@ -2864,7 +2870,7 @@ describe('oneOf', () => {
           type: 'object',
           properties: { v: { anyOf: [{ const: [1, 2] }, { const: [3] }] } },
         };
-        const { node } = createFormComponent({ schema, uiSchema, formData: { v: [3] } });
+        const { node } = createFormComponent({ schema, uiSchema, initialFormData: { v: [3] } });
 
         expect(getSelectedOptionValue(node.querySelector<HTMLSelectElement>('select#root_v')!)).toEqual('[3]');
       });
@@ -2967,7 +2973,7 @@ describe('oneOf', () => {
           },
         },
       };
-      const { node, onChange } = createFormComponent({ schema, formData: {} });
+      const { node, onChange } = createFormComponent({ schema, initialFormData: {} });
 
       const select = node.querySelector<HTMLSelectElement>('select#root_v')!;
       expect([...select.options].map((option) => option.text)).toEqual(['', 'None', 'One', 'Bee']);
@@ -3593,7 +3599,7 @@ describe('oneOf', () => {
       const fromType = createFormComponent({ schema: typeSchema });
 
       expect(fromConst.node.innerHTML).toEqual(fromType.node.innerHTML);
-      // The constant is a seed default, so it is in the data on mount; a self-owned form reports edits only, so no
+      // The constant is a seed default, so it is in the data on mount; the form reports edits only, so no
       // `onChange` fires for it
       expect(fromConst.getFormData()).toEqual({ note: null });
       expect(fromConst.onChange).not.toHaveBeenCalled();
@@ -4370,5 +4376,88 @@ describe('oneOf', () => {
     await user.click(screen.getByRole('button', { name: 'Clear' }));
 
     expect(onChange.mock.lastCall![0].errorSchema).toEqual({});
+  });
+
+  it('puts the selector back on the option the data fits when onChange answers a switch by setting the field back', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        status: {
+          oneOf: [
+            { title: 'Approved', type: 'object', properties: { by: { type: 'string' } }, required: ['by'] },
+            { title: 'Rejected', type: 'object', properties: { reason: { type: 'string' } }, required: ['reason'] },
+          ],
+        },
+      },
+    };
+    const ref = createFormRef();
+    let refuses = false;
+    const { node } = createFormComponent({
+      ref,
+      schema,
+      initialFormData: { status: { by: 'me' } },
+      onChange: () => {
+        if (refuses) {
+          refuses = false;
+          handleOf(ref).setFieldValue('status', { by: 'me' });
+        }
+      },
+    });
+    refuses = true;
+
+    await user.selectOptions(elementOf(node, 'select'), 'Rejected');
+
+    expect(handleOf(ref).getFormData()).toEqual({ status: { by: 'me' } });
+    expect(node.querySelector('select')).toHaveValue('0');
+    expect(node.querySelector('#root_status_by')).toBeInTheDocument();
+    expect(node.querySelector('#root_status_reason')).not.toBeInTheDocument();
+  });
+});
+
+describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes', (keyword) => {
+  it('keeps the chosen option when the defaults the switch brings in add to the data it sent', async () => {
+    // Option A describes data with a `kind` and a `note` better than option B does, so only the user's choice keeps B
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        status: {
+          [keyword]: [
+            {
+              title: 'A',
+              type: 'object',
+              properties: { kind: { type: 'string' }, note: { type: 'string' }, by: { type: 'string' } },
+              required: ['by'],
+            },
+            {
+              title: 'B',
+              type: 'object',
+              properties: { kind: { const: 'b' }, reason: { type: 'string' } },
+              required: ['reason'],
+            },
+          ],
+        },
+      },
+      // The switched value turns this on, so the form's own derivation adds `note` under the field's path
+      allOf: [
+        {
+          if: {
+            properties: { status: { properties: { kind: { const: 'b' } }, required: ['kind'] } },
+            required: ['status'],
+          },
+          then: { properties: { status: { properties: { note: { type: 'string', default: 'n' } } } } },
+        },
+      ],
+    };
+    const { node, onChange } = createFormComponent({ schema, initialFormData: { status: { by: 'me' } } });
+    const selector = elementOf(node, `#root_status__${keyword.toLowerCase()}_select`);
+
+    await user.selectOptions(selector, 'B');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { status: { kind: 'b', note: 'n' } } }),
+      `root_status__${keyword.toLowerCase()}_select`,
+    );
+    expect(selector).toHaveValue('1');
+    expect(node.querySelector('#root_status_reason')).toBeInTheDocument();
   });
 });

@@ -40,7 +40,7 @@ describe('form data inference', () => {
       <Form
         schema={schema}
         validator={validator}
-        formData={data}
+        initialFormData={data}
         uiSchema={uiSchema}
         customValidate={customValidate}
         transformErrors={transformErrors}
@@ -85,7 +85,7 @@ describe('form data inference', () => {
       <Form
         schema={schema}
         validator={validator}
-        formData={data}
+        initialFormData={data}
         ref={ref}
         onChange={({ formData }) => expectTypeOf(formData).toEqualTypeOf<unknown>()}
       />,
