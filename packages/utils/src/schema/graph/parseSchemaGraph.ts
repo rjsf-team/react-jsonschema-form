@@ -438,14 +438,15 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
   }
 
   /** The `$id` of `raw` when it starts a resource: not a fragment-only `$id`, a draft-07 plain-name anchor that names a
-   * location in its resource, and not one beside a draft-07 `$ref`, which ignores it
+   * location in its resource, and not one beside a draft-07 `$ref`, which ignores it. The root's `$id` is the URI the
+   * root is registered under, as a validator registers it and as the root base is taken from it, whatever sits beside it
    */
   private resourceId(raw: unknown): string | undefined {
     const id = stringKeyword(raw, ID_KEY);
     if (id === undefined || id.startsWith('#')) {
       return undefined;
     }
-    return this.laterDialect || stringKeyword(raw, REF_KEY) === undefined ? id : undefined;
+    return this.laterDialect || raw === this.rawRoot || stringKeyword(raw, REF_KEY) === undefined ? id : undefined;
   }
 
   private register(node: ObjectNode<S>, startsResource: boolean): void {

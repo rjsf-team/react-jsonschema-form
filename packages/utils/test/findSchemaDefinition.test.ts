@@ -42,6 +42,20 @@ describe('findSchemaDefinition()', () => {
     });
   });
 
+  it('resolves a definition of a draft-07 root whose $id sits beside its own $ref', () => {
+    const root: RJSFSchema = {
+      $schema: 'http://json-schema.org/draft-07/schema#',
+      $id: 'https://example.com/person.schema.json',
+      $ref: '#/definitions/Person',
+      definitions: { Person: { type: 'object' }, Tag: { type: 'string', default: 't' } },
+    };
+    expect(findSchemaDefinition('#/definitions/Tag', root)).toEqual({
+      type: 'string',
+      default: 't',
+      [RJSF_REF_KEY]: '#/definitions/Tag',
+    });
+  });
+
   it('resolves a $ref to an $anchor', () => {
     expect(findSchemaDefinition('#nd', rootSchema)).toEqual({
       $anchor: 'nd',

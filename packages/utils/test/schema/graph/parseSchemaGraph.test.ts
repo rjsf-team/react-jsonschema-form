@@ -199,6 +199,20 @@ describe('parseSchemaGraph()', () => {
       expect(at(graph, '/definitions/whole').ref).toBe(graph.root);
       expect(target(graph, '/definitions/boolean')).toMatchObject({ kind: 'boolean', value: true });
     });
+    it('names a draft-07 root by an $id beside its own $ref, which is the URI the root is registered under', () => {
+      const root = looseSchema({
+        $schema: 'http://json-schema.org/draft-07/schema#',
+        $id: 'https://example.com/person.schema.json',
+        $ref: '#/definitions/Person',
+        definitions: { Person: { type: 'object' }, Tag: { type: 'string' } },
+      });
+      const rootGraph = parseSchemaGraph(root);
+      const tag = rootGraph.byPointer('/definitions/Tag');
+      for (const ref of ['#/definitions/Tag', 'https://example.com/person.schema.json#/definitions/Tag']) {
+        const adopted = rootGraph.adopt({ $ref: ref });
+        expect(objectNode(adopted.graph, adopted.node).ref).toBe(tag);
+      }
+    });
     it('parses a subschema a $ref names under a keyword no walk follows', () => {
       expect(target(graph, '/definitions/container')).toMatchObject({
         kind: 'schema',
