@@ -1451,6 +1451,25 @@ describe('ObjectField', () => {
       consoleError.mockRestore();
     });
 
+    it('should keep a property in its place when transformChange refuses its removal', async () => {
+      const ref = createFormRef<GenericObjectType>();
+      const { node } = createFormComponent({
+        ref,
+        schema: { type: 'object', additionalProperties: { type: 'string' } },
+        initialFormData: { first: 'a', second: 'b', third: 'c' },
+        transformChange: (next, previous) => (isPlainObject(next) && !('first' in next) ? previous : next),
+      });
+
+      await user.click(node.querySelectorAll('.rjsf-object-property-remove')[0]);
+
+      expect(handleOf(ref).getFormData()).toEqual({ first: 'a', second: 'b', third: 'c' });
+      expect([...node.querySelectorAll('input[id$="-key"]')].map((keyField) => keyField.id)).toEqual([
+        'root_first-key',
+        'root_second-key',
+        'root_third-key',
+      ]);
+    });
+
     it('should seed from the uiSchema entry of a declared name a property is renamed onto', async () => {
       // The field the declared name brings up reads `uiSchema.count`, so seeding through `uiSchema.additionalProperties`
       // would hand that number field the `ui:initialValue` written for the string the other keys hold

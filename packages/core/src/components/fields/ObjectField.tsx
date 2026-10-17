@@ -761,11 +761,15 @@ export default function ObjectField<
    */
   const handleRemoveProperty = useCallback(
     (key: string) => {
-      setAdditionalPropertyOrder((order) => order.filter((property) => property !== key));
       onChange(ADDITIONAL_PROPERTY_KEY_REMOVE as T, toFieldPath(key, fieldPath));
+      // Read off the data the removal left, so a removal `transformChange` refused leaves the property in its place
+      const data = readData();
+      if (!isObject(data) || !Object.hasOwn(data, key)) {
+        setAdditionalPropertyOrder((order) => order.filter((property) => property !== key));
+      }
       forgetChangedSeeds(key);
     },
-    [onChange, fieldPath, forgetChangedSeeds],
+    [onChange, fieldPath, forgetChangedSeeds, readData],
   );
 
   /** Returns the stable React key for a property. For the most recently renamed
