@@ -70,6 +70,26 @@ describe('NullField', () => {
         { o: { n: null } },
       ],
       [
+        "an optional object's allOf",
+        { type: 'object', properties: { a: { type: 'object', allOf: [{ properties: { n: { type: 'null' } } }] } } },
+        { a: { n: null } },
+      ],
+      [
+        "an optional object's if/then",
+        {
+          type: 'object',
+          properties: {
+            a: {
+              type: 'object',
+              properties: { k: { type: 'string' } },
+              if: { properties: { k: { const: 'x' } } },
+              then: { properties: { n: { type: 'null' } } },
+            },
+          },
+        },
+        { a: { n: null } },
+      ],
+      [
         'a property whose $ref names a null schema',
         { type: 'object', properties: { n: { $ref: '#/$defs/none' } }, $defs: { none: { type: 'null' } } },
         { n: null },

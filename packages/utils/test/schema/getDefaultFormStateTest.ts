@@ -8022,10 +8022,10 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
     describe.each(['skipDefaults', 'populateRequiredDefaults'] as const)(
       'the null of a missing null value under emptyObjectFields: %s',
       (emptyObjectFields) => {
-        const defaultsOf = (schema: RJSFSchema) =>
+        const defaultsOf = (schema: RJSFSchema, formData?: unknown) =>
           getDefaultFormState(
             { validator: testValidator, defaultFormStateBehavior: { emptyObjectFields } },
-            { schema, formData: undefined, rootSchema: schema },
+            { schema, formData, rootSchema: schema },
           );
 
         it('is filled in for an optional property, through a `$ref` and inside an optional object', () => {
@@ -8039,6 +8039,39 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             $defs: { alias: { $ref: '#/$defs/none' }, none: { type: 'null' } },
           };
           expect(defaultsOf(schema)).toEqual({ n: null, viaRef: null, o: { n: null } });
+        });
+
+        it.each<[string, RJSFSchema, unknown?]>([
+          ['allOf', { type: 'object', allOf: [{ properties: { n: { type: 'null' } }, required: ['n'] }] }],
+          [
+            'if/then',
+            {
+              type: 'object',
+              properties: { k: { type: 'string' } },
+              if: { properties: { k: { const: 'x' } } },
+              then: { properties: { n: { type: 'null' } } },
+            },
+          ],
+          [
+            'dependencies',
+            {
+              type: 'object',
+              properties: { k: { type: 'string' } },
+              dependencies: { k: { properties: { n: { type: 'null' } } } },
+            },
+            { a: { k: 'x' } },
+          ],
+        ])('is filled in inside an optional object for a property its %s brings in', (_, objectSchema, formData) => {
+          const schema: RJSFSchema = { type: 'object', properties: { a: objectSchema } };
+          expect(defaultsOf(schema, formData)).toEqual({ a: expect.objectContaining({ n: null }) });
+        });
+
+        it('is not looked for in an allOf that brings in no property', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: { a: { type: 'object', allOf: [{ minProperties: 0 }] } },
+          };
+          expect(defaultsOf(schema)).toEqual({});
         });
 
         it('is not added for a `default: null` of another type', () => {
