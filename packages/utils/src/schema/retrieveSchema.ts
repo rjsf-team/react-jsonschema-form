@@ -1559,6 +1559,10 @@ export function retrieveSchemaInternal<
   enteredRefs: readonly string[] = [],
   mergePatterns = true,
 ): S[] {
+  // A boolean `anyOf`/`oneOf` option reaches here as it is written, as `retrieveSchema()` reads one: as the empty schema
+  if (!isObject(schema)) {
+    return [schemaFrom(rootSchema, {})];
+  }
   const resolvedSchemas = resolveSchema<T, S, F>(
     context,
     schema,

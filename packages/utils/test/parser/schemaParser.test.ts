@@ -378,6 +378,29 @@ describe('schemaParser()', () => {
     };
     expect(Object.values(schemaParser(rootSchema))).toContainEqual(expect.objectContaining({ const: 'b' }));
   });
+  it.each<[string, RJSFSchema]>([
+    [
+      'a true anyOf option',
+      { type: 'object', properties: { p: { anyOf: [true, { type: 'string', title: 'text' }] } } },
+    ],
+    [
+      'a false oneOf option',
+      { type: 'object', properties: { p: { oneOf: [false, { type: 'string', title: 'text' }] } } },
+    ],
+    ['a true option of the root', { anyOf: [true, { type: 'string', title: 'text' }] }],
+    [
+      'a true option of a dependency oneOf',
+      {
+        type: 'object',
+        properties: { a: { type: 'string' } },
+        dependencies: {
+          a: { oneOf: [true, { title: 'text', properties: { a: { const: 'x' }, b: { type: 'string' } } }] },
+        },
+      },
+    ],
+  ])('parses the other options of a list holding %s', (_, rootSchema) => {
+    expect(Object.values(schemaParser(rootSchema))).toContainEqual(expect.objectContaining({ title: 'text' }));
+  });
   it('parses each pattern alone and all of them together for more patternProperties than can be combined', () => {
     const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
     const rootSchema: RJSFSchema = {
