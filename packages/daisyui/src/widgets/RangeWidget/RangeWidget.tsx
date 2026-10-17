@@ -20,6 +20,7 @@ export default function RangeWidget<
   F extends FormContextType = FormContextType,
 >({
   id,
+  htmlName,
   value,
   required,
   disabled,
@@ -68,8 +69,9 @@ export default function RangeWidget<
         <input
           type='range'
           id={id}
+          name={htmlName || id}
           className='range'
-          value={value || schema.default}
+          value={value || value === 0 ? value : schema.default}
           required={required}
           disabled={disabled || readonly}
           autoFocus={autofocus}
