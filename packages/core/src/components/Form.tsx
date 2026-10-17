@@ -404,6 +404,12 @@ function withoutAbsentValues(data: unknown): unknown {
   return normalize(data, true);
 }
 
+/** The number of pending changes applied back to back, each from the `setState` callback of the one before it, before
+ * the next one is deferred to a timeout. React throws "Maximum update depth exceeded" after more than 50 nested
+ * updates, and a parent that stores `formData` nests a few more, so this stays below that
+ */
+const MAX_NESTED_PENDING_CHANGES = 40;
+
 /** The definition of a pending change that will be processed in the `onChange` handler
  */
 interface PendingChange<T> {
@@ -431,6 +437,10 @@ export default class Form<
   /** The list of pending changes
    */
   pendingChanges: PendingChange<T>[] = [];
+
+  /** The number of pending changes applied back to back since `pendingChanges` was last empty or deferred
+   */
+  nestedPendingChanges = 0;
 
   /** The `formData` last handed to `onChange`, wrapped so that never having reported a change is distinguishable from
    * having reported `undefined`. A parent that stores what it receives is holding the form's own data even when it
@@ -1074,7 +1084,8 @@ export default class Form<
    * `liveOmit` are turned on, the `formData` will be filtered to remove any extra data not in a form field. Then, the
    * resulting `formData` will be validated if required. The state will be updated with the new updated (potentially
    * filtered) `formData`, any errors that resulted from validation. Finally the `onChange` callback will be called, if
-   * specified, with the updated state and the `processPendingChange()` function is called again.
+   * specified, with the updated state and the `processPendingChange()` function is called again, in a timeout once
+   * `MAX_NESTED_PENDING_CHANGES` changes in a row have been applied from the commit phase.
    */
   processPendingChange() {
     if (this.pendingChanges.length === 0) {
@@ -1241,7 +1252,13 @@ export default class Form<
       this.reportChange(toIChangeEvent({ ...this.state, ...state }), id);
       // Now remove the change we just completed and call this again
       this.pendingChanges.shift();
-      this.processPendingChange();
+      this.nestedPendingChanges = this.pendingChanges.length === 0 ? 0 : this.nestedPendingChanges + 1;
+      if (this.nestedPendingChanges >= MAX_NESTED_PENDING_CHANGES) {
+        this.nestedPendingChanges = 0;
+        setTimeout(() => this.processPendingChange());
+      } else {
+        this.processPendingChange();
+      }
     });
   }
 
