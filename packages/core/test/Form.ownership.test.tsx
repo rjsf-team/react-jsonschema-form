@@ -297,6 +297,28 @@ describe('form data ownership', () => {
       expect(ignoredFormDataWarnings()).toHaveLength(0);
     });
 
+    it('does not warn for a formData written inline whose content never changed', async () => {
+      function Parent({ tick }: { tick: number }) {
+        return (
+          <Form
+            schema={schema}
+            validator={validator}
+            // oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias: an inline literal re-created on every render
+            formData={{ a: 'seed' }}
+            className={`tick-${tick}`}
+            onChange={noop}
+          />
+        );
+      }
+      const { rerender, container } = render(<Parent tick={0} />);
+      await user.type(input(container, 'root_a'), 'x');
+
+      rerender(<Parent tick={1} />);
+
+      expect(input(container, 'root_a')).toHaveValue('seedx');
+      expect(ignoredFormDataWarnings()).toHaveLength(0);
+    });
+
     it('takes a copy of its data a parent stores without a warning', async () => {
       const log = createParentLog<Data>();
       const { container } = render(
@@ -1237,6 +1259,40 @@ describe('form data ownership', () => {
   });
 
   describe('development diagnostics', () => {
+    /** The warnings the form gave about being passed both seeds */
+    const bothSeedsWarnings = () =>
+      warnings.consoleSpy.mock.calls.filter(([message]) => String(message).includes('`initialFormData` is ignored'));
+
+    it('warns once, naming the seed that won, when both formData and initialFormData are passed', () => {
+      const ref = createFormRef<Data>();
+      function Parent({ tick }: { tick: number }) {
+        return (
+          <Form<Data>
+            ref={ref}
+            schema={schema}
+            validator={validator}
+            // oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias taking over initialFormData
+            formData={{ a: 'formData' }}
+            initialFormData={{ a: 'initialFormData' }}
+            className={`tick-${tick}`}
+          />
+        );
+      }
+      const { rerender } = render(<Parent tick={0} />);
+      rerender(<Parent tick={1} />);
+      act(() => handleOf(ref).reset());
+
+      expect(handleOf(ref).getFormData()).toEqual({ a: 'formData' });
+      expect(bothSeedsWarnings()).toHaveLength(1);
+      expect(String(bothSeedsWarnings()[0][0])).toContain('`formData`');
+    });
+
+    it('does not warn when only one seed is passed', () => {
+      render(<Form schema={schema} validator={validator} initialFormData={{ a: 'seed' }} />);
+
+      expect(bothSeedsWarnings()).toHaveLength(0);
+    });
+
     it('freezes the formData handed to onChange, leaving non-plain values alone', async () => {
       const when = new Date(0);
       const nested: RJSFSchema = {

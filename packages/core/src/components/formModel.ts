@@ -100,6 +100,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   let lastFormDataProp = initialProps.formData;
   const heldData = new WeakSet<object>();
   let isIgnoredFormDataWarned = false;
+  let isBothSeedsWarned = false;
   const hold = (data: unknown) => {
     if (isDevelopment && typeof data === 'object' && data !== null) {
       heldData.add(data);
@@ -533,7 +534,9 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
      * nor a copy of the data it holds. Called after the commit that passed it, in development only
      */
     warnIfFormDataIgnored: (formData: T | undefined) => {
-      if (Object.is(formData, lastFormDataProp)) {
+      // A copy of the last prop, as an inline literal is on every render, changed nothing the parent meant
+      if (Object.is(formData, lastFormDataProp) || deepEquals(formData, lastFormDataProp)) {
+        lastFormDataProp = formData;
         return;
       }
       lastFormDataProp = formData;
@@ -545,6 +548,19 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       // oxlint-disable-next-line no-console
       console.warn(
         "Form: `formData` changed after the form mounted and was ignored. Like `initialFormData`, it seeds the form on mount and on `reset()` only, and the form owns its data after that. To show other data, remount the form with a `key`, or call `setFieldValue('', data)` on its ref. See https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#show-other-data-after-mount",
+      );
+    },
+    /** Warns, once, that both `formData` and `initialFormData` were passed, naming the one the form seeds from. Called
+     * after the commit that passed them, in development only
+     */
+    warnIfBothSeedsPassed: (formData: T | undefined, initialFormData: T | undefined) => {
+      if (isBothSeedsWarned || formData === undefined || initialFormData === undefined) {
+        return;
+      }
+      isBothSeedsWarned = true;
+      // oxlint-disable-next-line no-console
+      console.warn(
+        'Form: `formData` and `initialFormData` were both passed. `formData` seeds the form and `initialFormData` is ignored. Pass `initialFormData` alone.',
       );
     },
     handle,

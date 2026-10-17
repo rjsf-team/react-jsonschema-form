@@ -56,10 +56,11 @@ export interface FormProps<
   children?: ReactNode;
   /** The uiSchema for the form */
   uiSchema?: UiSchema<Uninferred<T>, S, F>;
-  /** Another name for `initialFormData`, kept so that a form written for v6 keeps working, and taken over it when both
-   * are passed: the seed of the form's data, read when the form mounts and when `reset()` is called. The form owns its
-   * data after that, so passing back what `onChange` reported changes nothing, and passing another value is ignored,
-   * with a warning in development. To show other data, remount the form with a `key`, or call
+  /** Another name for `initialFormData`, kept so that a form written for v6 that passes back what `onChange` reported
+   * keeps working, and taken over it when both are passed: the seed of the form's data, read when the form mounts and
+   * when `reset()` is called. Unlike v6, it is only a seed: the form owns its data after that, so passing back what
+   * `onChange` reported changes nothing, and passing another value, such as a record that arrives after mount, is
+   * ignored, with a warning in development only. To show other data, remount the form with a `key`, or call
    * `setFieldValue('', data)` on its ref.
    *
    * @deprecated Use `initialFormData`, which this is another name for. The form reads it only on mount and on
@@ -367,12 +368,13 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
     model.committed(props, state, published);
   });
   // oxlint-disable-next-line typescript/no-deprecated -- the form still reads the deprecated alias
-  const { formData: formDataProp } = props;
+  const { formData: formDataProp, initialFormData } = props;
   useEffect(() => {
     if (isDevelopment) {
       model.warnIfFormDataIgnored(formDataProp);
+      model.warnIfBothSeedsPassed(formDataProp, initialFormData);
     }
-  }, [model, formDataProp]);
+  }, [model, formDataProp, initialFormData]);
   useImperativeHandle(ref, () => model.handle, [model]);
 
   const {

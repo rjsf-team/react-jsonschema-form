@@ -473,7 +473,7 @@ See [AntD Customization](themes/antd/uiSchema.md#formcontext) for formContext cu
 
 Deprecated: use [`initialFormData`](#initialformdata), which this is another name for. The form reads it only when it mounts and when `reset()` is called, which the name `formData` hides by reading as a controlled value.
 
-It is kept so that a form written for v6 keeps working, and seeds the form exactly as `initialFormData` does. When both are passed, `formData` is the seed.
+It seeds the form exactly as `initialFormData` does, and nothing more. When both are passed, `formData` is the seed, and in development the form warns once that `initialFormData` is ignored.
 
 The form owns its data after it mounts. The usual v6 pattern keeps working, since the value `onChange` reports is the form's own and passing it back changes nothing:
 
@@ -482,7 +482,7 @@ const [data, setData] = useState(record);
 <Form schema={schema} validator={validator} formData={data} onChange={(event) => setData(event.formData)} />;
 ```
 
-Any other value passed after mount is ignored, with a warning in development. To show other data, a record that loads after mount or the next record, remount the form under a `key`, which also clears its errors and gives the record the values the form fills in on mount only, such as a [`ui:initialValue`](./uiSchema.md#initialvalue):
+Any other value passed after mount is ignored, with a warning in development only: a production build shows the seed, or the stale record, with nothing logged. That covers v6 code such as `formData={record ?? {}}` with `record` from a fetch, or a parent that resets by setting its state to a blank object. To show other data, a record that loads after mount or the next record, remount the form under a `key`, which also clears its errors and gives the record the values the form fills in on mount only, such as a [`ui:initialValue`](./uiSchema.md#initialvalue):
 
 ```tsx
 <Form key={record.id} schema={schema} validator={validator} initialFormData={record} onChange={save} />
