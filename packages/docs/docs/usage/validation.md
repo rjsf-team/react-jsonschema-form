@@ -250,7 +250,7 @@ const validator = createPrecompiledValidator(precompiledValidator, schema);
 
 ## Live validation
 
-By default, form data are only validated when the form is submitted or when a new `formData` prop is passed to the `Form` component.
+By default, form data are only validated when the form is submitted, or through `validateForm()` on the form's ref.
 
 You can enable live form data validation by passing a `liveValidate` prop to the `Form` component, and set it to `'onChange'`. Then, every time a value changes within the form data tree (e.g. the user entering a character in a field), a validation operation is performed, and the validation results are reflected into the form state.
 

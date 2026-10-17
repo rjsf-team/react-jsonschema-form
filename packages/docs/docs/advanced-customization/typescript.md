@@ -39,7 +39,7 @@ export function generateTheme<
 The defaults describe the general case, where RJSF cannot know the shape of your data: the schema decides it at runtime.
 Because `T` defaults to `unknown` rather than `any`, code that reads `formData` without naming its type has to narrow it first.
 Providing custom types for these generics is the way to avoid that, and is useful whenever the caller is working with typed `formData`, `schema` or `formContext` props.
-`Form` infers `T` from the `formData` prop when one is passed, so naming it is only needed when there is no `formData` to infer from.
+`Form` infers `T` from the `initialFormData` prop (or its deprecated alias `formData`) when one is passed, so naming it is only needed when there is no seed to infer from.
 The validator has no `T`: `ValidatorType<S, F>` puts the form data type on `validateFormData<T>()`, so one validator serves every form.
 
 ## Overriding generics

@@ -168,14 +168,14 @@ The form stores the edit immediately and reports it through `onChange`. Several 
 
 ## Command timing
 
-Use event handlers for actions such as saving, resetting and validating. New `formData` belongs in the prop itself; it does not need an Effect that copies it into Form.
+Use event handlers for actions such as saving, resetting and validating. Other data reaches the form through `setFieldValue('', data)` where it arrives, or a remount under a `key`; a `formData` passed after mount is ignored.
 
-An existing integration may need to issue a command when props change. Use a passive `useEffect` for that synchronization. For example, a descendant receiving a stable `formRef` can validate when its supplied schema or data changes:
+An existing integration may need to issue a command when props change. Use a passive `useEffect` for that synchronization. For example, a descendant receiving a stable `formRef` can validate when its supplied schema changes:
 
 ```tsx
 useEffect(() => {
   formRef.current?.validateForm();
-}, [formRef, schema, data]);
+}, [formRef, schema]);
 ```
 
 Form takes the props of a commit in an insertion Effect, which React runs before any layout Effect of that commit. A command issued from the setup of a layout Effect, a callback ref being attached, or a class component's `componentDidMount` or `componentDidUpdate`, in the commit that renders new props, therefore sees those props wherever it sits: inside the form, such as a widget's, or in a sibling rendered before or after it. The insertion Effect is the first thing inside the form element, so the layout cleanup of a field the commit removes, which flushes a draft as a widget unmounts, sees them too. The exception is the cleanup of a sibling of the form that the commit removes: React runs it before it reaches the form, so a command from it sees the props of the commit before. Passive Effects and event handlers see the new props too.

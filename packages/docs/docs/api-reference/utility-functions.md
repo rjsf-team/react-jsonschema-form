@@ -2748,7 +2748,7 @@ Returns the superset of `formData` that includes the given set updated to includ
 
 #### Returns
 
-- T: The resulting `formData` with all the defaults provided
+- T | T[] | null | undefined: The resulting `formData` with all the defaults provided. A missing value of a `type: 'null'` schema is filled in as `null`, whatever `emptyObjectFields` says, except for an `anyOf`/`oneOf` option of `type: 'null'`, which renders no field; so the result is `null` for such a root
 
 ### getClosestMatchingOption&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 

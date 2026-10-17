@@ -58,7 +58,7 @@ See [Validation](../usage/validation.md) for more information.
 
 Pass a stable reference: a function recreated on every render of the parent counts as a changed prop, which re-derives the form's state and, with `liveValidate: 'onChange'`, re-validates the current data on every parent render. Wrap it in `useCallback` or define it outside the render function.
 
-Keep it pure. The form calls it while React renders whenever the errors on screen have to follow the props, for example when a `formData` you pass is validated live, so it follows [React's rules for rendering](https://react.dev/reference/rules/components-and-hooks-must-be-pure): no side effects, the same result for the same arguments, and no reliance on being called once, since React can render more than once (Strict Mode does in development) or discard a render.
+Keep it pure. The form calls it while React renders whenever the errors on screen have to follow the props, for example when a new `schema` is validated live, so it follows [React's rules for rendering](https://react.dev/reference/rules/components-and-hooks-must-be-pure): no side effects, the same result for the same arguments, and no reliance on being called once, since React can render more than once (Strict Mode does in development) or discard a render.
 
 ## defaultFormStateBehavior
 
@@ -726,7 +726,7 @@ A function can be passed to this prop in order to make modifications to the defa
 
 Pass a stable reference: a function recreated on every render of the parent counts as a changed prop, which re-derives the form's state and, with `liveValidate: 'onChange'`, re-validates the current data on every parent render. Wrap it in `useCallback` or define it outside the render function.
 
-Keep it pure. The form calls it while React renders whenever the errors on screen have to follow the props, for example when a `formData` you pass is validated live, so it follows [React's rules for rendering](https://react.dev/reference/rules/components-and-hooks-must-be-pure): no side effects, the same result for the same arguments, and no reliance on being called once, since React can render more than once (Strict Mode does in development) or discard a render.
+Keep it pure. The form calls it while React renders whenever the errors on screen have to follow the props, for example when a new `schema` is validated live, so it follows [React's rules for rendering](https://react.dev/reference/rules/components-and-hooks-must-be-pure): no side effects, the same result for the same arguments, and no reliance on being called once, since React can render more than once (Strict Mode does in development) or discard a render.
 
 ## transformChange
 
