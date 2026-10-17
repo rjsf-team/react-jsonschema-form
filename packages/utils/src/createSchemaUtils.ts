@@ -1,4 +1,4 @@
-import { ID_KEY, JSON_SCHEMA_DRAFT_2020_12, SCHEMA_KEY } from './constants.ts';
+import { JSON_SCHEMA_DRAFT_2020_12, SCHEMA_KEY } from './constants.ts';
 import deepEquals from './deepEquals.ts';
 import { makeAllReferencesAbsolute } from './findSchemaDefinition.ts';
 import logOnce from './logOnce.ts';
@@ -65,7 +65,7 @@ class SchemaUtils<
    */
   constructor(context: SchemaContext<S, F>, rootSchema: S) {
     if (rootSchema?.[SCHEMA_KEY] === JSON_SCHEMA_DRAFT_2020_12) {
-      this.rootSchema = makeAllReferencesAbsolute(rootSchema, rootSchema[ID_KEY] ?? '#');
+      this.rootSchema = makeAllReferencesAbsolute(rootSchema, '#');
     } else {
       this.rootSchema = rootSchema;
     }

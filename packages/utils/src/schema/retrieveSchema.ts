@@ -12,7 +12,6 @@ import {
   DEPENDENCIES_KEY,
   ELSE_KEY,
   GUESSED_TYPE_FLAG,
-  ID_KEY,
   IF_KEY,
   ITEMS_KEY,
   ONE_OF_KEY,
@@ -23,7 +22,11 @@ import {
   THEN_KEY,
 } from '../constants.ts';
 import deepEquals from '../deepEquals.ts';
-import findSchemaDefinition, { splitKeyElementFromObject } from '../findSchemaDefinition.ts';
+import findSchemaDefinition, {
+  findSchemaDefinitionWithBase,
+  ownBaseURI,
+  splitKeyElementFromObject,
+} from '../findSchemaDefinition.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getSchemaOwnTypes from '../getSchemaOwnTypes.ts';
 import getXxxOfKey from '../getXxxOfKey.ts';
@@ -613,6 +616,11 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
   const resolvedBefore = tally.resolved;
   let resolvedSchema: S = schema;
   let currentBaseURI = baseURI;
+  // A keyword beside the `$ref` replaces the definition's whole, and was written in the referring schema, so the refs
+  // under it keep that schema's base rather than taking the definition's
+  let siblingKeywords: object = {};
+  let siblingBaseURI = baseURI;
+  const baseFor = (keyword: string) => (keyword in siblingKeywords ? siblingBaseURI : currentBaseURI);
   // The recurse list is a path stack: entries are added only for the refs being expanded on the current resolution
   // path and are never shared with sibling subtrees or back with the caller. A $ref is a cycle only when it already
   // appears on the current path.
@@ -640,12 +648,12 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
     }
     pathList = [...pathList, $ref!];
     // Retrieve the referenced schema definition.
-    const refSchema = findSchemaDefinition<S>($ref, rootSchema, currentBaseURI);
+    let refSchema: S;
+    siblingBaseURI = ownBaseURI(localSchema, rootSchema, baseURI);
+    [refSchema, currentBaseURI] = findSchemaDefinitionWithBase<S>($ref, rootSchema, [], siblingBaseURI);
+    siblingKeywords = localSchema;
     resolvedSchema = resolvedSchemaOf<S>($ref, refSchema, localSchema);
     tally.count();
-    if (ID_KEY in resolvedSchema) {
-      currentBaseURI = resolvedSchema[ID_KEY];
-    }
     expandedRefs?.push($ref!);
   } else if (passCount > 0) {
     // Only on fixpoint re-walks (pass > 0): a subtree materialized by a previous pass still carries its source
@@ -680,7 +688,7 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
         value as S,
         rootSchema,
         pathList,
-        currentBaseURI,
+        baseFor(PROPERTIES_KEY),
         resolveAnyOfOrOneOfRefs,
         !resolveAnyOfOrOneOfRefs,
         expandedRefs,
@@ -703,7 +711,7 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
         resolvedSchema.items as S,
         rootSchema,
         pathList,
-        currentBaseURI,
+        baseFor(ITEMS_KEY),
         resolveAnyOfOrOneOfRefs,
         false,
         expandedRefs,
@@ -731,7 +739,7 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
             s,
             rootSchema,
             optionsPath,
-            currentBaseURI,
+            baseFor(key),
             resolveAnyOfOrOneOfRefs,
             false,
             expandedRefs,

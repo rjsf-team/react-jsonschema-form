@@ -29,6 +29,7 @@ import enumOptionsValueForIndex from './enumOptionsValueForIndex.ts';
 import enumOptionValueDecoder from './enumOptionValueDecoder.ts';
 import enumOptionValueLabel from './enumOptionValueLabel.ts';
 import ErrorSchemaBuilder from './ErrorSchemaBuilder.ts';
+import errorSchemaChild from './errorSchemaChild.ts';
 import {
   ROOT_FIELD_PATH,
   fieldPathEndsWithIndex,
@@ -227,6 +228,7 @@ export {
   enumOptionsSelectValue,
   enumOptionsValueForIndex,
   errorId,
+  errorSchemaChild,
   examplesId,
   expandButtonId,
   ErrorSchemaBuilder,
