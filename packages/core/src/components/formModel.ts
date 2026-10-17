@@ -48,17 +48,6 @@ import {
 type Deliver = (operation: () => void) => void;
 const deliverToCaller: Deliver = (operation) => operation();
 
-/** `value` as a quoted CSS string, for an attribute selector. An id is built from property names, which can hold a
- * quote, a backslash or a line break, such as an additional property's the user typed, any of which would otherwise
- * end the string or make the selector invalid
- */
-function asCssString(value: string) {
-  const escaped = value
-    .replace(/["\\]/g, '\\$&')
-    .replace(/[\n\r\f]/g, (character) => `\\${character.charCodeAt(0).toString(16)} `);
-  return `"${escaped}"`;
-}
-
 /** The model holds the form's state between renders and performs every operation on it. An operation starts from the
  * current state and reads the props once, as it starts, so that everything it computes and reports belongs to one
  * moment.
@@ -210,7 +199,9 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     const named = formElement instanceof view.HTMLFormElement ? formElement.elements.namedItem(elementId) : null;
     // if not an exact match, try finding a focusable element starting with the element id (like radio buttons or
     // checkboxes); some themes (e.g. shadcn) use button elements instead of native inputs for radio groups
-    const quotedId = asCssString(elementId);
+    // An id is built from property names, which can hold a quote, a backslash or a line break, such as an additional
+    // property's the user typed
+    const quotedId = `"${view.CSS.escape(elementId)}"`;
     const found = named ?? formElement.querySelector(`input[id^=${quotedId}], button[id^=${quotedId}]`);
     const field = found instanceof view.RadioNodeList ? found.item(0) : found;
     if (field instanceof view.HTMLElement) {
