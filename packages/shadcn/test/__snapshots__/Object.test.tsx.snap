@@ -63,9 +63,12 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                             <label
                               class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                               for="root_person_name"
-                              id="root_person_name__label"
                             >
-                              name
+                              <span
+                                id="root_person_name__label"
+                              >
+                                name
+                              </span>
                             </label>
                             <div
                               class="p-0.5"
@@ -133,9 +136,12 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                       <label
                                         class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                         for="root_person_address_street"
-                                        id="root_person_address_street__label"
                                       >
-                                        street
+                                        <span
+                                          id="root_person_address_street__label"
+                                        >
+                                          street
+                                        </span>
                                       </label>
                                       <div
                                         class="p-0.5"
@@ -169,9 +175,12 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                       <label
                                         class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                         for="root_person_address_city"
-                                        id="root_person_address_city__label"
                                       >
-                                        city
+                                        <span
+                                          id="root_person_address_city__label"
+                                        >
+                                          city
+                                        </span>
                                       </label>
                                       <div
                                         class="p-0.5"
@@ -205,9 +214,12 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                       <label
                                         class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                         for="root_person_address_country"
-                                        id="root_person_address_country__label"
                                       >
-                                        country
+                                        <span
+                                          id="root_person_address_country__label"
+                                        >
+                                          country
+                                        </span>
                                       </label>
                                       <div
                                         class="p-0.5"
@@ -281,9 +293,12 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_name"
-                    id="root_name__label"
                   >
-                    name
+                    <span
+                      id="root_name__label"
+                    >
+                      name
+                    </span>
                   </label>
                   <div
                     class="p-0.5"
@@ -346,9 +361,12 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                     <label
                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       for="root_customField"
-                      id="root_customField__label"
                     >
-                      customField
+                      <span
+                        id="root_customField__label"
+                      >
+                        customField
+                      </span>
                     </label>
                     <div
                       class="p-0.5"
@@ -503,9 +521,12 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_name"
-                    id="root_name__label"
                   >
-                    name
+                    <span
+                      id="root_name__label"
+                    >
+                      name
+                    </span>
                   </label>
                   <div
                     class="p-0.5"
@@ -539,9 +560,12 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_age"
-                    id="root_age__label"
                   >
-                    age
+                    <span
+                      id="root_age__label"
+                    >
+                      age
+                    </span>
                   </label>
                   <div
                     class="p-0.5"
@@ -693,9 +717,13 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                                     <label
                                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                       for="root_tags_0"
-                                      id="root_tags_0__label"
                                     >
-                                      tags-1*
+                                      <span
+                                        id="root_tags_0__label"
+                                      >
+                                        tags-1
+                                      </span>
+                                      *
                                     </label>
                                     <div
                                       class="p-0.5"
@@ -829,9 +857,13 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                                     <label
                                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                       for="root_tags_1"
-                                      id="root_tags_1__label"
                                     >
-                                      tags-2*
+                                      <span
+                                        id="root_tags_1__label"
+                                      >
+                                        tags-2
+                                      </span>
+                                      *
                                     </label>
                                     <div
                                       class="p-0.5"
@@ -1043,9 +1075,12 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_firstName"
-                    id="root_firstName__label"
                   >
-                    firstName
+                    <span
+                      id="root_firstName__label"
+                    >
+                      firstName
+                    </span>
                   </label>
                   <div
                     class="p-0.5"
@@ -1079,9 +1114,12 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_lastName"
-                    id="root_lastName__label"
                   >
-                    lastName
+                    <span
+                      id="root_lastName__label"
+                    >
+                      lastName
+                    </span>
                   </label>
                   <div
                     class="p-0.5"
@@ -1115,9 +1153,12 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_age"
-                    id="root_age__label"
                   >
-                    age
+                    <span
+                      id="root_age__label"
+                    >
+                      age
+                    </span>
                   </label>
                   <div
                     class="p-0.5"
@@ -1218,9 +1259,12 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                             <label
                               class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                               for="root_person_name"
-                              id="root_person_name__label"
                             >
-                              name
+                              <span
+                                id="root_person_name__label"
+                              >
+                                name
+                              </span>
                             </label>
                             <div
                               class="p-0.5"
@@ -1288,9 +1332,12 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                       <label
                                         class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                         for="root_person_address_street"
-                                        id="root_person_address_street__label"
                                       >
-                                        street
+                                        <span
+                                          id="root_person_address_street__label"
+                                        >
+                                          street
+                                        </span>
                                       </label>
                                       <div
                                         class="p-0.5"
@@ -1324,9 +1371,12 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                       <label
                                         class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                         for="root_person_address_city"
-                                        id="root_person_address_city__label"
                                       >
-                                        city
+                                        <span
+                                          id="root_person_address_city__label"
+                                        >
+                                          city
+                                        </span>
                                       </label>
                                       <div
                                         class="p-0.5"
@@ -1400,9 +1450,12 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_name"
-                    id="root_name__label"
                   >
-                    name
+                    <span
+                      id="root_name__label"
+                    >
+                      name
+                    </span>
                   </label>
                   <div
                     class="p-0.5"
@@ -1436,9 +1489,12 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_count"
-                    id="root_count__label"
                   >
-                    count
+                    <span
+                      id="root_count__label"
+                    >
+                      count
+                    </span>
                   </label>
                   <div
                     class="p-0.5"
@@ -1517,9 +1573,13 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                                     <label
                                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                       for="root_items_0"
-                                      id="root_items_0__label"
                                     >
-                                      items-1*
+                                      <span
+                                        id="root_items_0__label"
+                                      >
+                                        items-1
+                                      </span>
+                                      *
                                     </label>
                                     <div
                                       class="p-0.5"
@@ -1653,9 +1713,13 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                                     <label
                                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                       for="root_items_1"
-                                      id="root_items_1__label"
                                     >
-                                      items-2*
+                                      <span
+                                        id="root_items_1__label"
+                                      >
+                                        items-2
+                                      </span>
+                                      *
                                     </label>
                                     <div
                                       class="p-0.5"
@@ -1867,9 +1931,12 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_firstName"
-                    id="root_firstName__label"
                   >
-                    firstName
+                    <span
+                      id="root_firstName__label"
+                    >
+                      firstName
+                    </span>
                   </label>
                   <div
                     class="p-0.5"
@@ -1903,9 +1970,12 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_lastName"
-                    id="root_lastName__label"
                   >
-                    lastName
+                    <span
+                      id="root_lastName__label"
+                    >
+                      lastName
+                    </span>
                   </label>
                   <div
                     class="p-0.5"
@@ -1939,9 +2009,12 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_age"
-                    id="root_age__label"
                   >
-                    age
+                    <span
+                      id="root_age__label"
+                    >
+                      age
+                    </span>
                   </label>
                   <div
                     class="p-0.5"
@@ -2037,9 +2110,12 @@ exports[`object fields > additionalProperties 1`] = `
                     <label
                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       for="root_foo"
-                      id="root_foo__label"
                     >
-                      foo
+                      <span
+                        id="root_foo__label"
+                      >
+                        foo
+                      </span>
                     </label>
                     <div
                       class="p-0.5"
@@ -2278,9 +2354,12 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                     <label
                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       for="root_foo"
-                      id="root_foo__label"
                     >
-                      foo
+                      <span
+                        id="root_foo__label"
+                      >
+                        foo
+                      </span>
                     </label>
                     <div
                       class="p-0.5"
@@ -2726,9 +2805,12 @@ exports[`object fields > additionalProperties, description 1`] = `
                     <label
                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       for="root_foo"
-                      id="root_foo__label"
                     >
-                      foo
+                      <span
+                        id="root_foo__label"
+                      >
+                        foo
+                      </span>
                     </label>
                     <div
                       class="p-0.5"
@@ -2925,9 +3007,12 @@ exports[`object fields > additionalProperties, label off 1`] = `
                     <label
                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       for="root_foo"
-                      id="root_foo__label"
                     >
-                      foo
+                      <span
+                        id="root_foo__label"
+                      >
+                        foo
+                      </span>
                     </label>
                     <div
                       class="p-0.5"
@@ -3145,9 +3230,12 @@ exports[`object fields > additionalProperties, object type 1`] = `
                               <label
                                 class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                 for="root_foo_foo"
-                                id="root_foo_foo__label"
                               >
-                                foo
+                                <span
+                                  id="root_foo_foo__label"
+                                >
+                                  foo
+                                </span>
                               </label>
                               <div
                                 class="p-0.5"
@@ -3382,9 +3470,12 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                     <label
                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       for="root_foo"
-                      id="root_foo__label"
                     >
-                      foo
+                      <span
+                        id="root_foo__label"
+                      >
+                        foo
+                      </span>
                     </label>
                     <div
                       class="p-0.5"
@@ -3614,9 +3705,12 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                     <label
                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       for="root_foo"
-                      id="root_foo__label"
                     >
-                      foo (deprecated)
+                      <span
+                        id="root_foo__label"
+                      >
+                        foo (deprecated)
+                      </span>
                     </label>
                     <div
                       class="p-0.5"
@@ -3771,9 +3865,12 @@ exports[`object fields > object 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_a"
-                    id="root_a__label"
                   >
-                    A
+                    <span
+                      id="root_a__label"
+                    >
+                      A
+                    </span>
                   </label>
                   <div
                     class="p-0.5"
@@ -3807,9 +3904,12 @@ exports[`object fields > object 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_b"
-                    id="root_b__label"
                   >
-                    B
+                    <span
+                      id="root_b__label"
+                    >
+                      B
+                    </span>
                   </label>
                   <div
                     class="p-0.5"
@@ -3905,9 +4005,12 @@ exports[`object fields > show add button and fields if additionalProperties is t
                     <label
                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       for="root_additionalProperty"
-                      id="root_additionalProperty__label"
                     >
-                      additionalProperty
+                      <span
+                        id="root_additionalProperty__label"
+                      >
+                        additionalProperty
+                      </span>
                     </label>
                     <div
                       class="p-0.5"
@@ -4118,9 +4221,12 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                     <label
                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       for="root_foo"
-                      id="root_foo__label"
                     >
-                      foo
+                      <span
+                        id="root_foo__label"
+                      >
+                        foo
+                      </span>
                     </label>
                     <div
                       class="p-0.5"
@@ -4302,9 +4408,12 @@ exports[`object fields > with title and description > object 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_a"
-                    id="root_a__label"
                   >
-                    A
+                    <span
+                      id="root_a__label"
+                    >
+                      A
+                    </span>
                   </label>
                   <div
                     class="p-0.5"
@@ -4351,9 +4460,12 @@ exports[`object fields > with title and description > object 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_b"
-                    id="root_b__label"
                   >
-                    B
+                    <span
+                      id="root_b__label"
+                    >
+                      B
+                    </span>
                   </label>
                   <div
                     class="p-0.5"
@@ -4489,9 +4601,12 @@ exports[`object fields > with title and description > show add button and fields
                     <label
                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       for="root_additionalProperty"
-                      id="root_additionalProperty__label"
                     >
-                      additionalProperty
+                      <span
+                        id="root_additionalProperty__label"
+                      >
+                        additionalProperty
+                      </span>
                     </label>
                     <div
                       class="p-0.5"
@@ -4702,9 +4817,12 @@ exports[`object fields > with title and description from both > additionalProper
                     <label
                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       for="root_foo"
-                      id="root_foo__label"
                     >
-                      foo
+                      <span
+                        id="root_foo__label"
+                      >
+                        foo
+                      </span>
                     </label>
                     <div
                       class="p-0.5"
@@ -4886,9 +5004,12 @@ exports[`object fields > with title and description from both > object 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_a"
-                    id="root_a__label"
                   >
-                    My Item A
+                    <span
+                      id="root_a__label"
+                    >
+                      My Item A
+                    </span>
                   </label>
                   <div
                     class="p-0.5"
@@ -4935,9 +5056,12 @@ exports[`object fields > with title and description from both > object 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_b"
-                    id="root_b__label"
                   >
-                    My Item B
+                    <span
+                      id="root_b__label"
+                    >
+                      My Item B
+                    </span>
                   </label>
                   <div
                     class="p-0.5"
@@ -5073,9 +5197,12 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                     <label
                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       for="root_foo"
-                      id="root_foo__label"
                     >
-                      foo
+                      <span
+                        id="root_foo__label"
+                      >
+                        foo
+                      </span>
                     </label>
                     <div
                       class="p-0.5"
@@ -5257,9 +5384,12 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_a"
-                    id="root_a__label"
                   >
-                    My Item A
+                    <span
+                      id="root_a__label"
+                    >
+                      My Item A
+                    </span>
                   </label>
                   <div
                     class="p-0.5"
@@ -5306,9 +5436,12 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_b"
-                    id="root_b__label"
                   >
-                    My Item B
+                    <span
+                      id="root_b__label"
+                    >
+                      My Item B
+                    </span>
                   </label>
                   <div
                     class="p-0.5"
@@ -5444,9 +5577,12 @@ exports[`object fields > with title and description from uiSchema > show add but
                     <label
                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       for="root_additionalProperty"
-                      id="root_additionalProperty__label"
                     >
-                      additionalProperty
+                      <span
+                        id="root_additionalProperty__label"
+                      >
+                        additionalProperty
+                      </span>
                     </label>
                     <div
                       class="p-0.5"
@@ -5605,6 +5741,7 @@ exports[`object fields > with title and description with global label off > addi
                       class="pl-0.5"
                     >
                       <input
+                        aria-label="foo Key"
                         class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
                         data-slot="input"
                         id="root_foo-key"
@@ -5872,6 +6009,7 @@ exports[`object fields > with title and description with global label off > show
                       class="pl-0.5"
                     >
                       <input
+                        aria-label="additionalProperty Key"
                         class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
                         data-slot="input"
                         id="root_additionalProperty-key"

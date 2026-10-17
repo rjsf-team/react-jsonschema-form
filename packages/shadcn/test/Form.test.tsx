@@ -88,8 +88,10 @@ describe("shadcn widgets carry their field's plan on the element a user focuses"
     );
 
     expect(container.querySelector('input[name="root[volume]"]')).toHaveValue('3');
-    expect(container.querySelector(`#${fieldLabelId('root_volume')}`)).not.toHaveAttribute('for');
-    expect(container.querySelector(`#${fieldLabelId('root_volume')}`)).toHaveTextContent('Volume*');
+    const volumeLabel = container.querySelector(`#${fieldLabelId('root_volume')}`)?.closest('label');
+    expect(volumeLabel).not.toHaveAttribute('for');
+    expect(volumeLabel).toHaveTextContent('Volume*');
+    expect(screen.getByRole('slider')).toHaveAccessibleName('Volume');
   });
 
   test("focuses a range's thumb under ui:autofocus once Radix draws it", async () => {
@@ -357,7 +359,7 @@ describe("shadcn widgets carry their field's plan on the element a user focuses"
       expect(group).toHaveRole(role);
       expect(group).toHaveAccessibleName('Color');
       expect(group?.getAttribute('aria-invalid')).toBe(groupInvalid);
-      expect(container.querySelector(`#${fieldLabelId('root_color')}`)).not.toHaveAttribute('for');
+      expect(container.querySelector(`#${fieldLabelId('root_color')}`)?.closest('label')).not.toHaveAttribute('for');
       for (const option of screen.getAllByRole(item)) {
         expect(option.getAttribute('aria-invalid')).toBe(optionInvalid);
         expect(option).toHaveClass('border-destructive');
@@ -568,6 +570,21 @@ describe('shadcn names a control whose label ui:label false hides', () => {
     expect(screen.queryByText('Pet')).toBeNull();
     expect(screen.getByRole(role)).toHaveAccessibleName('Pet');
     expectReferencesResolve(container);
+  });
+});
+
+describe('shadcn key inputs', () => {
+  test("names the additional property key's input by its label where ui:label: false hides it", () => {
+    render(
+      <Form
+        schema={{ type: 'object', additionalProperties: { type: 'string' } }}
+        uiSchema={{ additionalProperties: { 'ui:label': false } }}
+        formData={{ first: 'a' }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('textbox', { name: 'first Key' })).toHaveAttribute('id', 'root_first-key');
   });
 });
 

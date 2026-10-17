@@ -86,9 +86,10 @@ export default function FieldTemplate<
               { ' text-destructive': hasError },
             )}
             htmlFor={templateLabelFor<T, S, F>(props)}
-            id={presentation?.label.id}
           >
-            {label}
+            {/* The label's id goes on its text alone, as a group or an option selector is named through it, and the
+                `*` isn't part of that name; a control its `for` names takes the whole label */}
+            {presentation ? <span id={presentation.label.id}>{label}</span> : label}
             {templateMarksRequired<T, S, F>(props) ? '*' : null}
           </label>
         )}
