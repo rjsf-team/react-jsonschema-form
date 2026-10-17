@@ -1212,7 +1212,7 @@ A widget that draws its own label for the group draws it with no `for`, which ca
 
 ### getGroupLabelling&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getgrouplabelling}
 
-Gets what a widget rendering a group of controls, such as radios or checkboxes, needs to draw its own label for the group and to label the group by it: whether it draws one, the id it draws it under, which its plan gives it, or [fieldLabelId()](#fieldlabelid) without one, and the attributes [getGroupAttributes()](#getgroupattributes) gives the group and each control in it, given that label's id where the widget draws one.
+Gets what a widget rendering a group of controls, such as radios or checkboxes, needs to draw its own label for the group and to label the group by it: whether it draws one, the id of the field's label from [getLabelId()](#getlabelid), which it draws it under, and the attributes [getGroupAttributes()](#getgroupattributes) gives the group and each control in it, given that label's id where the widget draws one.
 The label is drawn with no `for`, which can't name the group's wrapper, so the group points `aria-labelledby` at it instead, where its field's plan names the group by no other label.
 A widget draws the label where [widgetDrawsLabel()](#widgetdrawslabel) says it does and it has text, so a group whose label is hidden is named by its text through the `aria-label` the plan gives it, and one with no label is left unnamed, rather than either being named by a label that isn't drawn.
 
@@ -1223,7 +1223,7 @@ A widget draws the label where [widgetDrawsLabel()](#widgetdrawslabel) says it d
 
 #### Returns
 
-- \{ drawsLabel: boolean, labelId: string, group, option }: whether the widget draws the label and the id it draws it under, and the `group` and `option` attributes [getGroupAttributes()](#getgroupattributes) returns
+- \{ drawsLabel: boolean, labelId: string, group, option }: whether the widget draws the label and the id of the field's label, which a widget leaving the label to its template can still hand its own label slot, and the `group` and `option` attributes [getGroupAttributes()](#getgroupattributes) returns
 
 #### Example
 
@@ -1287,6 +1287,19 @@ A schema whose `type` is a single name lists nothing, since a name of its own is
 #### Returns
 
 - JSONSchema7TypeName[]: The JSON Schema types the `schema` lists, empty when it lists none
+
+### getLabelId&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getlabelid}
+
+Gets the id of a field's label, for a widget or template that draws it or names a control by it: the id the field's plan gives the label, whoever draws it, which is numbered with [optionLabelId()](#optionlabelid) beneath a label a field above draws under `fieldLabelId(id)`, or [fieldLabelId()](#fieldlabelid) for one rendered without a plan.
+A widget that draws its own label draws it under this id, so the label and the `aria-labelledby` its plan points at the label agree.
+
+#### Parameters
+
+- props: Pick&lt;WidgetProps&lt;T, S, F>, 'id' | 'presentation'> - The widget's or template's `id` and `presentation`
+
+#### Returns
+
+- string: The id of the field's label
 
 ### getMatchingPatternProperties&lt;S extends StrictRJSFSchema = RJSFSchema>()
 

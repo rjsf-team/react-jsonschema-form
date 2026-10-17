@@ -69,6 +69,18 @@ function rendersHere(by: PartPlacement) {
   return by === 'template' || by === 'self';
 }
 
+/** The id a part of this level's own takes: `ownId`, or, when a field above already renders that part under it, the
+ * option id numbered by how many fields above render one, so each level's own part has an id of its own
+ *
+ * @param ownId - The id the part takes with no field above rendering it
+ * @param optionId - The option id for a depth
+ * @param above - The part in the plans of the fields above rendering this id, nearest first
+ */
+function ownPartId(ownId: string, optionId: (depth: number) => string, above: readonly PartPresentation[]) {
+  const rendered = above.filter((part) => rendersHere(part.by));
+  return rendered.some((part) => part.id === ownId) ? optionId(rendered.length) : ownId;
+}
+
 /** Places a description or help:
  *
  * - With no text, `above` under the nearest field above that shows one, which it carries on to the levels beneath it,
@@ -76,8 +88,7 @@ function rendersHere(by: PartPlacement) {
  * - With the text a field above shows, `above`. Text is compared with `===`, so an element `ui:help` matches only the
  *   same element: an option inheriting its field's `uiSchema` carries it, but the same JSX written out again is another
  *   element, which no comparison of elements could tell apart reliably
- * - Otherwise by its owner, which is `none` when it is hidden here. It takes `ownId`, or, when a field above already
- *   shows text under that id, the option id numbered by how many fields above show text of their own, so even a
+ * - Otherwise by its owner, which is `none` when it is hidden here, under the id `ownPartId()` gives it, so even a
  *   hidden part's id names no element drawn above.
  *
  * @param owner - What draws the part here, or `none` when it is hidden here
@@ -98,11 +109,7 @@ function placeText<Text>(
   if (shown) {
     return { by: 'above', id: shown.id };
   }
-  const shownAbove = above.filter((part) => rendersHere(part.by));
-  return {
-    by: owner,
-    id: shownAbove.some((part) => part.id === ownId) ? optionId(shownAbove.length) : ownId,
-  };
+  return { by: owner, id: ownPartId(ownId, optionId, above) };
 }
 
 /** Builds a field's plan of what draws its label, description, help and errors, and the attributes its control

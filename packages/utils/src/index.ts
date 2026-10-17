@@ -65,6 +65,7 @@ import type { GroupRole } from './getGroupAttributes.ts';
 import getGroupLabelling from './getGroupLabelling.ts';
 import getInputProps from './getInputProps.ts';
 import getItemUiSchemaForItem from './getItemUiSchemaForItem.ts';
+import getLabelId from './getLabelId.ts';
 import getNumericInputTitle from './getNumericInputTitle.ts';
 import getOptionMatchingSimpleDiscriminator from './getOptionMatchingSimpleDiscriminator.ts';
 import getOptionUiSchema, { selectOptionUiSchema } from './getOptionUiSchema.ts';
@@ -299,6 +300,7 @@ export {
   getGroupLabelling,
   getInputProps,
   getItemUiSchemaForItem,
+  getLabelId,
   getMatchingPatternProperties,
   getNumericInputTitle,
   getOptionalDataControlsType,
