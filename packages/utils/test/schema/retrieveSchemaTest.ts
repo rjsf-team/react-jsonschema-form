@@ -151,6 +151,36 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       );
       expect(getAdditionalPropertyType(subSchema, rootSchema)).toBe('number');
     });
+    it('reads each definition once along a walk, however many of the definitions it reads refer to it', () => {
+      // Four definitions whose options each name the other three: read once per reference, the walk would follow every
+      // trail through them, which grows exponentially with the definitions (5 255 reads here, 30 million for five)
+      const reads = { count: 0 };
+      const counting: ProxyHandler<RJSFSchema> = {
+        get(target, key, receiver) {
+          reads.count += key === 'anyOf' ? 1 : 0;
+          const value: unknown = Reflect.get(target, key, receiver);
+          return value;
+        },
+      };
+      const indexes = [0, 1, 2, 3];
+      const definitions = Object.fromEntries(
+        indexes.map((index): [string, RJSFSchema] => [
+          `D${index}`,
+          new Proxy<RJSFSchema>(
+            { anyOf: indexes.filter((other) => other !== index).map((other) => ({ $ref: `#/definitions/D${other}` })) },
+            counting,
+          ),
+        ]),
+      );
+      const rootSchema: RJSFSchema = {
+        definitions,
+        type: 'object',
+        additionalProperties: { $ref: '#/definitions/D0' },
+      };
+      const start = reads.count;
+      expect(getAdditionalPropertyType({ $ref: '#/definitions/D0' }, rootSchema)).toBeUndefined();
+      expect(reads.count - start).toBeLessThan(50);
+    });
     it('returns the type an allOf entry names, since the merge holds the value to every entry at once', () => {
       expect(getAdditionalPropertyType({ allOf: [{ type: 'number' }] })).toBe('number');
       // An entry naming no type adds nothing to the one that does, whichever order they come in

@@ -687,7 +687,7 @@ export function getAdditionalPropertyType<S extends StrictRJSFSchema = RJSFSchem
  *
  * @param schema - The schema whose reference is to be looked up
  * @param rootSchema - The root schema the reference names a definition of, when there is one to look it up in
- * @param followed - The referring schemas already followed on this walk, which this one is added to
+ * @param followed - The definitions already read on this walk, which the one `schema` names is added to
  * @returns - The definition the reference names, less the keywords the referring schema shadows, or undefined where
  *          there is none to name or it was followed already
  */
@@ -702,10 +702,13 @@ function referencedDefinition<S extends StrictRJSFSchema = RJSFSchema>(
   const { graph, seeds } = fieldOf<S>(parseSchemaGraph<S>(rootSchema), schema);
   const [{ node }] = seeds;
   const target = ownRefTargets(graph, node).at(-1);
-  if (target === undefined || graph.node(target).kind === 'boolean' || followed.has(node)) {
+  // Keyed on the definition rather than the schema naming it, so a walk reads each definition once along a path, however
+  // many references lead to it: by the referring schema, a graph of definitions offering one another is read along
+  // every trail through it, which grows exponentially with the definitions
+  if (target === undefined || graph.node(target).kind === 'boolean' || followed.has(target)) {
     return undefined;
   }
-  followed.add(node);
+  followed.add(target);
   try {
     return withoutKeys(refDefinition<S>(graph, node), ...Object.keys(schema));
   } catch {
