@@ -3120,7 +3120,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                       <label
                         class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
                         for="root_region__oneof_select"
-                        id="root_region__oneof_select__label"
+                        id="root_region__label"
                       >
                         region
                       </label>
@@ -3195,7 +3195,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                         <label
                           class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
                           for="root_region"
-                          id="root_region__label"
+                          id="root_region__optionLabel"
                         >
                           Europe
                         </label>
@@ -5976,7 +5976,7 @@ exports[`single fields > optional data controls > does not show optional control
                       <label
                         class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
                         for="root_optionalObjectWithOneofs__oneof_select"
-                        id="root_optionalObjectWithOneofs__oneof_select__label"
+                        id="root_optionalObjectWithOneofs__label"
                       >
                         optionalObjectWithOneofs
                       </label>
@@ -6107,7 +6107,7 @@ exports[`single fields > optional data controls > does not show optional control
                       <label
                         class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
                         for="root_optionalArrayWithAnyofs__anyof_select"
-                        id="root_optionalArrayWithAnyofs__anyof_select__label"
+                        id="root_optionalArrayWithAnyofs__label"
                       >
                         optionalArrayWithAnyofs
                       </label>
@@ -6917,7 +6917,7 @@ exports[`single fields > optional data controls > does not show optional control
                       <label
                         class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
                         for="root_optionalObjectWithOneofs__oneof_select"
-                        id="root_optionalObjectWithOneofs__oneof_select__label"
+                        id="root_optionalObjectWithOneofs__label"
                       >
                         optionalObjectWithOneofs
                       </label>
@@ -7048,7 +7048,7 @@ exports[`single fields > optional data controls > does not show optional control
                       <label
                         class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
                         for="root_optionalArrayWithAnyofs__anyof_select"
-                        id="root_optionalArrayWithAnyofs__anyof_select__label"
+                        id="root_optionalArrayWithAnyofs__label"
                       >
                         optionalArrayWithAnyofs
                       </label>

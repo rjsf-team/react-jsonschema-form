@@ -98,7 +98,8 @@ function SelectWidget<
 
   return (
     <Field
-      label={drawsLabel ? fieldLabelSlot(label, id) : undefined}
+      // The plan numbers the label beneath one a field above draws under `fieldLabelId(id)`, such as a radio selector's
+      label={drawsLabel ? fieldLabelSlot(label, id, presentation?.label.id) : undefined}
       validationState={hasWidgetErrors<T, S, F>(props) ? 'error' : undefined}
       required={required}
     >
