@@ -1,4 +1,4 @@
-import type { ComponentProps, ReactNode } from 'react';
+import type { ComponentProps, MouseEventHandler, ReactNode } from 'react';
 import { chakra, Field as ChakraField, useFieldContext, useFieldStyles, useSlotRecipe } from '@chakra-ui/react';
 
 export interface FieldProps extends Omit<ComponentProps<typeof ChakraField.Root>, 'label'> {
@@ -10,6 +10,10 @@ export interface FieldProps extends Omit<ComponentProps<typeof ChakraField.Root>
    * which is named by pointing `aria-labelledby` at the label's id instead
    */
   labelNamesNoControl?: boolean;
+  /** Called when the label is clicked. A label drawn under `labelNamesNoControl` has no `for`, so a click on it
+   * activates nothing, and a widget can move focus to its control here as a `for` would
+   */
+  onLabelClick?: MouseEventHandler<HTMLLabelElement>;
 }
 
 /** A label drawn as Chakra's `Field.Label` draws one, with the `field` recipe's label class and the style it is handed,
@@ -38,11 +42,17 @@ export function RequiredMarker(props: ComponentProps<typeof chakra.span>) {
 /** The field's label with no `for`: Ark's `Field.Label` always sets one, and ignores an undefined override. It keeps the
  * rest of that label's attributes, as the recipe's disabled style keys off `data-disabled`
  */
-function LabelWithoutFor({ children }: { children: ReactNode }) {
+function LabelWithoutFor({
+  children,
+  onClick,
+}: {
+  children: ReactNode;
+  onClick?: MouseEventHandler<HTMLLabelElement>;
+}) {
   const { htmlFor: _htmlFor, ...labelProps } = useFieldContext().getLabelProps();
   const styles = useFieldStyles();
   return (
-    <RecipeLabel {...labelProps} css={styles.label}>
+    <RecipeLabel {...labelProps} css={styles.label} onClick={onClick}>
       {children}
     </RecipeLabel>
   );
@@ -58,6 +68,7 @@ function LabelWithoutFor({ children }: { children: ReactNode }) {
  * @param [props.errorText] - Error message to display below the field.
  * @param [props.optionalText] - Text to indicate that the field is optional.
  * @param [props.labelNamesNoControl] - Whether the label is drawn with no `for`, for a control a `for` can't name.
+ * @param [props.onLabelClick] - Called when the label is clicked.
  * @returns The rendered field component.
  */
 export const Field = ({
@@ -67,6 +78,7 @@ export const Field = ({
   errorText,
   optionalText,
   labelNamesNoControl,
+  onLabelClick,
   ref,
   ...rest
 }: FieldProps) => {
@@ -74,7 +86,7 @@ export const Field = ({
   return (
     <ChakraField.Root ref={ref} {...rest}>
       {label && (
-        <Label>
+        <Label onClick={onLabelClick}>
           {label}
           <ChakraField.RequiredIndicator fallback={optionalText} />
         </Label>

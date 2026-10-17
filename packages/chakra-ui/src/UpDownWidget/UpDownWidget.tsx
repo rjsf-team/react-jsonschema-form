@@ -26,7 +26,7 @@ export default function UpDownWidget<
     required,
     presentation,
   } = props;
-  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
+  const drawsLabel = widgetDrawsLabelText<T, S, F>(props);
 
   const handleChange = ({ value: newValue }: NumberInputValueChangeDetails) => onChange(newValue);
   // The handlers sit on the root, so the target may be an increment/decrement trigger rather than the input
@@ -43,7 +43,7 @@ export default function UpDownWidget<
       required={required}
       readOnly={readonly}
       invalid={hasWidgetErrors<T, S, F>(props)}
-      label={labelValue(label, hideLabel || !label)}
+      label={labelValue(label, !drawsLabel)}
       id={id}
       {...chakraProps}
     >

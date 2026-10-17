@@ -6,8 +6,9 @@ import {
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionsDomValues,
-  fieldLabelId,
   flattenGroupedOptions,
+  getControlAriaLabel,
+  getLabelId,
   getOptionValueFormat,
   groupEnumOptions,
   hasWidgetErrors,
@@ -17,7 +18,7 @@ import {
   SelectedOptionDescription,
   useSelectFocusHandlers,
   widgetAriaProps,
-  widgetDrawsLabel,
+  widgetDrawsLabelText,
 } from '@rjsf/utils';
 
 import { Field } from '../components/ui/field.tsx';
@@ -43,14 +44,14 @@ export default function SelectWidget<
     autofocus,
     onChange,
     schema,
-    presentation,
   } = props;
-  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
-  const drawsLabel = !hideLabel && !!label;
-  // The plan numbers the label beneath one a field above draws under `fieldLabelId(id)`, such as a radio selector's
-  const labelId = drawsLabel && presentation ? presentation.label.id : fieldLabelId(id);
+  const drawsLabel = widgetDrawsLabelText<T, S, F>(props);
+  const labelId = getLabelId<T, S, F>(props);
   const ariaProps = widgetAriaProps(props);
   const labelledBy = labelledByOrNone(ariaProps['aria-labelledby'], drawsLabel);
+  // A trigger shows its value, not a name, so where no label names it, it is named by the field's label, its placeholder
+  // or the translated prompt
+  const ariaLabel = getControlAriaLabel<T, S, F>(props, ariaProps['aria-label'], drawsLabel);
   const { enumOptions, enumDisabled, emptyValue, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = useMemo(
@@ -99,6 +100,7 @@ export default function SelectWidget<
   );
 
   const containerRef = useRef(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
   const chakraProps = getChakra(options);
 
   function renderItem(option: IndexedEnumOptionType<S>) {
@@ -120,6 +122,10 @@ export default function SelectWidget<
       readOnly={readonly}
       invalid={hasWidgetErrors<T, S, F>(props)}
       label={labelValue(label, !drawsLabel)}
+      // A `for` naming the trigger would make a click on the label click the trigger, which opens the listbox, so the
+      // label has none, names the trigger through `aria-labelledby` and, as zag's select label does, only focuses it
+      labelNamesNoControl
+      onLabelClick={() => triggerRef.current?.focus()}
       id={id}
       ids={{ label: labelId }}
       position='relative'
@@ -129,8 +135,8 @@ export default function SelectWidget<
       <SelectRoot
         collection={selectOptions}
         id={id}
-        // The trigger, which a user focuses, carries the field's id, so the label's `for` names it. Ark's own ids replace
-        // the field's, so the label's is restated
+        // The trigger, which a user focuses, carries the field's id, so `focusOnFirstError` reaches it, and Ark points
+        // it at the label's id. Ark's own ids replace the field's, so the label's is restated
         ids={{ trigger: id, label: labelId }}
         hiddenSelectLabelledBy={labelledBy}
         name={htmlName || id}
@@ -139,11 +145,16 @@ export default function SelectWidget<
         onBlur={handleBlur}
         onValueChange={isMultiple ? handleMultiChange : handleSingleChange}
         onFocus={handleFocus}
-        autoFocus={autofocus}
         value={formValue}
         positioning={{ placement: 'bottom' }}
       >
-        <SelectTrigger {...ariaProps} aria-labelledby={labelledBy}>
+        <SelectTrigger
+          ref={triggerRef}
+          autoFocus={autofocus}
+          {...ariaProps}
+          aria-label={ariaLabel}
+          aria-labelledby={labelledBy}
+        >
           <SelectValueText placeholder={placeholder} />
         </SelectTrigger>
         <ChakraSelect.Positioner minWidth='100% !important' zIndex='2 !important' top='calc(100% + 5px) !important'>

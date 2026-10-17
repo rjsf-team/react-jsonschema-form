@@ -1,4 +1,4 @@
-import { CheckboxGroup, FieldsetRoot, Stack, Text, FieldsetLegend } from '@chakra-ui/react';
+import { chakra, CheckboxGroup, FieldsetRoot, Stack, Text, useSlotRecipe } from '@chakra-ui/react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   enumOptionSelectedValue,
@@ -15,6 +15,7 @@ import {
 } from '@rjsf/utils';
 
 import { Checkbox } from '../components/ui/checkbox.tsx';
+import { RequiredMarker } from '../components/ui/field.tsx';
 import { getChakra, labelledByOrNone } from '../utils.ts';
 
 export default function CheckboxesWidget<
@@ -22,7 +23,8 @@ export default function CheckboxesWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { id, htmlName, disabled, options, value, readonly, autofocus, onChange, onBlur, onFocus, label } = props;
+  const { id, htmlName, disabled, options, value, readonly, required, autofocus, onChange, onBlur, onFocus, label } =
+    props;
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
@@ -41,18 +43,32 @@ export default function CheckboxesWidget<
     option: optionAttributes,
   } = getGroupLabelling<T, S, F>(props, 'group');
 
+  const legendStyles = useSlotRecipe({ key: 'fieldset' })().legend;
+
   const autofocusIndex = enumOptionsAutofocusIndex<S>(enumOptions, enumDisabled, autofocus);
   return (
     <FieldsetRoot
       mb={1}
       disabled={disabled || readonly}
       invalid={hasError}
-      // Ark points the fieldset at a legend id of its own whether or not the legend renders, so it is pointed at the
-      // legend drawn here, under the field's label id, or at nothing
-      aria-labelledby={labelledByOrNone(undefined, drawsLabel, labelId)}
+      // Ark points the fieldset at a legend id of its own, which never renders, so it is pointed at nothing: only the
+      // group inside it, which carries the field's id, is named by the label
+      aria-labelledby={labelledByOrNone(undefined, false)}
       {...chakraProps}
     >
-      {drawsLabel && <FieldsetLegend id={labelId}>{labelValue(label)}</FieldsetLegend>}
+      {drawsLabel && (
+        // Styled as the recipe's legend, but not drawn as a `<legend>`, which would name the fieldset too, so a screen
+        // reader entering the group would hear its name twice
+        <chakra.div
+          id={labelId}
+          className='fieldset__legend'
+          css={legendStyles}
+          data-disabled={disabled || readonly ? '' : undefined}
+        >
+          {labelValue(label)}
+          {required && <RequiredMarker ms={1} />}
+        </chakra.div>
+      )}
       <CheckboxGroup
         // The group carries the field's id and each checkbox's `<input>` its option's, as core's do
         id={id}
@@ -61,7 +77,6 @@ export default function CheckboxesWidget<
         }
         value={selectValue}
         {...groupAttributes}
-        aria-labelledby={groupAttributes['aria-labelledby'] ?? ''}
         readOnly={readonly}
         invalid={hasError}
       >

@@ -3,12 +3,12 @@ import { useEffect, useRef } from 'react';
 import type { SliderValueChangeDetails } from '@chakra-ui/react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
-  fieldLabelId,
   getControlAttributes,
+  getLabelId,
   hasWidgetErrors,
   labelValue,
   rangeSpec,
-  widgetDrawsLabel,
+  widgetDrawsLabelText,
 } from '@rjsf/utils';
 
 import { Field } from '../components/ui/field.tsx';
@@ -47,16 +47,14 @@ export default function RangeWidget<
       thumbRef.current?.focus();
     }
   }, []);
-  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const handleChange = ({ value: newValue }: SliderValueChangeDetails) =>
     onChange(newValue === undefined ? options.emptyValue : newValue[0]);
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target?.value);
   const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target?.value);
 
   const chakraProps = getChakra(options);
-  const drawsLabel = !hideLabel && !!label;
-  // The plan numbers the label beneath one a field above draws under `fieldLabelId(id)`, such as a radio selector's
-  const labelId = drawsLabel && presentation ? presentation.label.id : fieldLabelId(id);
+  const drawsLabel = widgetDrawsLabelText<T, S, F>(props);
+  const labelId = getLabelId<T, S, F>(props);
   const controlAttributes = getControlAttributes<T, S, F>({ id, presentation });
 
   return (
@@ -69,6 +67,9 @@ export default function RangeWidget<
       label={labelValue(label, !drawsLabel)}
       ids={{ label: labelId }}
       labelNamesNoControl
+      // The label has no `for`, which can't name the thumb, so a click on it focuses the thumb, as zag's own slider
+      // label does
+      onLabelClick={() => thumbRef.current?.focus()}
       {...chakraProps}
     >
       <Slider

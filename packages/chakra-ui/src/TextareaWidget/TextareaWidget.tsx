@@ -27,7 +27,7 @@ export default function TextareaWidget<
     required,
     presentation,
   } = props;
-  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
+  const drawsLabel = widgetDrawsLabelText<T, S, F>(props);
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLTextAreaElement>) =>
     onChange(newValue === '' ? options.emptyValue : newValue);
   const handleBlur = ({ target }: FocusEvent<HTMLTextAreaElement>) => onBlur(id, target?.value);
@@ -42,7 +42,7 @@ export default function TextareaWidget<
       required={required}
       readOnly={readonly}
       invalid={hasWidgetErrors<T, S, F>(props)}
-      label={labelValue(label, hideLabel || !label)}
+      label={labelValue(label, !drawsLabel)}
       id={id}
       {...chakraProps}
     >

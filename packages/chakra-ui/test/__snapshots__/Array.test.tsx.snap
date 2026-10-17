@@ -1509,6 +1509,7 @@ exports[`array fields > checkboxes 1`] = `
                   aria-expanded="false"
                   aria-haspopup="listbox"
                   aria-invalid="false"
+                  aria-label="Select ..."
                   aria-labelledby=""
                   aria-required="false"
                   class="chakra-select__trigger emotion-5"
@@ -1559,6 +1560,7 @@ exports[`array fields > checkboxes 1`] = `
                 style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
               >
                 <div
+                  aria-label="Select ..."
                   aria-labelledby=""
                   aria-multiselectable="true"
                   class="chakra-select__content emotion-11"
@@ -5311,6 +5313,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
                   aria-expanded="false"
                   aria-haspopup="listbox"
                   aria-invalid="false"
+                  aria-label="Select ..."
                   aria-labelledby=""
                   aria-required="false"
                   class="chakra-select__trigger emotion-5"
@@ -5361,6 +5364,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
                 style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
               >
                 <div
+                  aria-label="Select ..."
                   aria-labelledby=""
                   aria-multiselectable="true"
                   class="chakra-select__content emotion-11"
@@ -11541,7 +11545,6 @@ exports[`with title and description > checkboxes 1`] = `
               class="chakra-field__label emotion-5"
               data-part="label"
               data-scope="field"
-              for="root"
               id="root__label"
             >
               Test field
@@ -14019,7 +14022,6 @@ exports[`with title and description from both > checkboxes 1`] = `
               class="chakra-field__label emotion-5"
               data-part="label"
               data-scope="field"
-              for="root"
               id="root__label"
             >
               My Field
@@ -16497,7 +16499,6 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
               class="chakra-field__label emotion-5"
               data-part="label"
               data-scope="field"
-              for="root"
               id="root__label"
             >
               My Field
@@ -18798,6 +18799,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
                 style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
               >
                 <div
+                  aria-label="Test field"
                   aria-labelledby=""
                   aria-multiselectable="true"
                   class="chakra-select__content emotion-11"

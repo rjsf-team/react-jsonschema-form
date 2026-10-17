@@ -7,8 +7,9 @@ import {
   getTemplates,
   getUiOptions,
   getWidgetDescription,
+  hasWidgetErrors,
   schemaRequiresTrueValue,
-  widgetDrawsLabel,
+  widgetDrawsLabelText,
 } from '@rjsf/utils';
 
 import { Checkbox } from '../components/ui/checkbox.tsx';
@@ -38,7 +39,7 @@ export default function CheckboxWidget<
     schema,
     required,
   } = props;
-  const drawsLabel = widgetDrawsLabel<T, S, F>(props) && !!label;
+  const drawsLabel = widgetDrawsLabelText<T, S, F>(props);
   const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
   // The plan says which description this widget draws; without a plan, a template rendering the `checkbox` alias draws
   // the description itself
@@ -56,7 +57,7 @@ export default function CheckboxWidget<
   const controlAttributes = getControlAttributes<T, S, F>({ id, presentation });
 
   return (
-    <Field mb={1} required={trueValueRequired} id={id} {...chakraProps}>
+    <Field mb={1} required={trueValueRequired} invalid={hasWidgetErrors<T, S, F>(props)} id={id} {...chakraProps}>
       {description && (
         <DescriptionFieldTemplate
           id={description.id}

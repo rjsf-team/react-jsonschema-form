@@ -5835,7 +5835,6 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                       class="chakra-field__label emotion-6"
                       data-part="label"
                       data-scope="field"
-                      for="root_foo-key"
                       id="root_foo-key__label"
                     >
                       foo Key
@@ -9318,7 +9317,6 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                       class="chakra-field__label emotion-6"
                       data-part="label"
                       data-scope="field"
-                      for="root_foo-key"
                       id="root_foo-key__label"
                     >
                       foo Key
@@ -10347,7 +10345,6 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                       class="chakra-field__label emotion-6"
                       data-part="label"
                       data-scope="field"
-                      for="root_foo-key"
                       id="root_foo-key__label"
                     >
                       foo (deprecated) Key

@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { Activity, useState } from 'react';
 import { formTests, themeTests } from '@rjsf/snapshot-tests';
 import type { FormValidation, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { bracketNameGenerator, errorId, helpId, optionHelpId } from '@rjsf/utils';
@@ -51,7 +52,7 @@ describe('chakra-ui AltDateWidget', () => {
     expect(onChange.mock.lastCall?.[0].formData).toMatch(/T\d{2}:\d{2}:\d{2}/);
   });
 
-  test.each(['Now', 'Clear'])('a readonly alt-date ignores its %s button', async (button) => {
+  test.each(['Now', 'Clear'])('a readonly alt-date disables and ignores its %s button', async (button) => {
     const onChange = vi.fn();
     render(
       <WrappedForm
@@ -63,6 +64,7 @@ describe('chakra-ui AltDateWidget', () => {
       />,
     );
 
+    expect(screen.getByRole('button', { name: button })).toBeDisabled();
     await user.click(screen.getByRole('button', { name: button }));
     expect(onChange).not.toHaveBeenCalled();
   });
@@ -70,7 +72,7 @@ describe('chakra-ui AltDateWidget', () => {
   // The stock `FieldTemplate` renders a disabled field inside a disabled `<fieldset>`, which blocks the click before it
   // reaches the hook, so only a template without one shows the widget honoring `disabled` itself
   test.each(['Now', 'Clear'])(
-    'a disabled alt-date under a custom FieldTemplate ignores its %s button',
+    'a disabled alt-date under a custom FieldTemplate disables and ignores its %s button',
     async (button) => {
       const onChange = vi.fn();
       render(
@@ -84,6 +86,7 @@ describe('chakra-ui AltDateWidget', () => {
         />,
       );
 
+      expect(screen.getByRole('button', { name: button })).toBeDisabled();
       await user.click(screen.getByRole('button', { name: button }));
       expect(onChange).not.toHaveBeenCalled();
     },
@@ -91,6 +94,23 @@ describe('chakra-ui AltDateWidget', () => {
 });
 
 describe('chakra-ui SelectWidget', () => {
+  test('focuses the trigger on a click on its label, as a select label does, without opening the listbox', async () => {
+    render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { s: { type: 'string', title: 'S', enum: ['a', 'b'] } } }}
+        validator={validator}
+      />,
+    );
+
+    const label = screen.getByText('S');
+    expect(label).not.toHaveAttribute('for');
+    await user.click(label);
+
+    const trigger = screen.getByRole('combobox', { name: 'S' });
+    expect(trigger).toHaveFocus();
+    expect(trigger).toHaveAttribute('aria-expanded', 'false');
+  });
+
   // The listbox is closed, so it is queried among hidden elements; the trigger isn't, past Ark's hidden native select
   test.each([
     ['trigger', 'combobox', false],
@@ -106,6 +126,32 @@ describe('chakra-ui SelectWidget', () => {
 
     expect(screen.getByRole(role, { hidden })).toHaveAttribute('aria-labelledby', '');
     expect(container.querySelector('#root_x__label')).not.toBeInTheDocument();
+  });
+
+  test("points Ark's hidden native select of a select that draws no label at no label", () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { x: { type: 'string', title: 'X', enum: ['a', 'b'] } } }}
+        uiSchema={{ x: { 'ui:label': false } }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('select')).toHaveAttribute('aria-labelledby', '');
+  });
+
+  test.each<[string, RJSFSchema, UiSchema, string]>([
+    ['hides its label', { type: 'string', title: 'X', enum: ['a', 'b'] }, { 'ui:label': false }, 'X'],
+    ['has no title', { type: 'string', enum: ['a', 'b'] }, {}, 'Select ...'],
+  ])('names the listbox of a select that %s as it names the trigger', (_, schema, uiSchema, name) => {
+    render(<WrappedForm schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+    expect(screen.getByRole('combobox')).toHaveAccessibleName(name);
+    // The closed listbox is hidden, which leaves it no computed name, and opening it in jsdom trips zag's positioning,
+    // so its `aria-label` is checked beside the empty `aria-labelledby` that leaves the name to it
+    const listbox = screen.getByRole('listbox', { hidden: true });
+    expect(listbox).toHaveAttribute('aria-labelledby', '');
+    expect(listbox).toHaveAttribute('aria-label', name);
   });
 
   test("names an object's option selector by the object's heading", () => {
@@ -222,6 +268,33 @@ describe("chakra-ui widgets carry their field's plan on the element a user focus
     expectReferencesResolve(container);
   });
 
+  test('a checkbox with errors is styled invalid, as the other controls are', () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { b: { type: 'boolean', title: 'B' } } }}
+        extraErrors={{ b: { __errors: ['bad'] } }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('.chakra-checkbox__control')).toHaveAttribute('data-invalid');
+  });
+
+  // A template with no `<fieldset>` of Ark's, so the group's state comes from the widget alone
+  test('a radio group with errors is styled invalid under a FieldTemplate that draws no fieldset', () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { c: { type: 'string', title: 'C', enum: ['a', 'b'] } } }}
+        uiSchema={{ c: { 'ui:widget': 'radio' } }}
+        templates={{ FieldTemplate: BareFieldTemplate }}
+        extraErrors={{ c: { __errors: ['bad'] } }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('[data-scope="radio-group"][data-part="root"]')).toHaveAttribute('data-invalid');
+  });
+
   test('focuses the slider thumb under ui:autofocus, as core focuses its range input', () => {
     render(
       <WrappedForm
@@ -260,6 +333,97 @@ describe("chakra-ui widgets carry their field's plan on the element a user focus
     );
 
     expect(screen.getAllByRole('radio')[0]).toHaveFocus();
+  });
+
+  test('leaves focus where it is when an Activity around the form is shown again, rather than refocusing the thumb', async () => {
+    function Toggled() {
+      const [shown, setShown] = useState(true);
+      return (
+        <>
+          <button type='button' onClick={() => setShown(!shown)}>
+            Toggle
+          </button>
+          <Activity mode={shown ? 'visible' : 'hidden'}>
+            <WrappedForm
+              schema={{ type: 'object', properties: { x: { type: 'number', title: 'X' } } }}
+              uiSchema={{ x: { 'ui:widget': 'range', 'ui:autofocus': true } }}
+              validator={validator}
+            />
+          </Activity>
+        </>
+      );
+    }
+    render(<Toggled />);
+    expect(screen.getByRole('slider')).toHaveFocus();
+
+    const toggle = screen.getByRole('button', { name: 'Toggle' });
+    await user.click(toggle);
+    await user.click(toggle);
+    expect(toggle).toHaveFocus();
+  });
+
+  test.each<[string, RJSFSchema, UiSchema, string]>([
+    ['select', { type: 'string', title: 'X', enum: ['a', 'b'] }, {}, 'combobox'],
+    ['number input', { type: 'number', title: 'X' }, { 'ui:widget': 'updown' }, 'spinbutton'],
+    ['checkbox', { type: 'boolean', title: 'X' }, {}, 'checkbox'],
+    ['first date part', { type: 'string', format: 'date', title: 'X' }, { 'ui:widget': 'alt-date' }, 'combobox'],
+  ])('focuses its %s under ui:autofocus, as core does', (_, x, uiSchema, role) => {
+    render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { x } }}
+        uiSchema={{ x: { ...uiSchema, 'ui:autofocus': true } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getAllByRole(role)[0]).toHaveFocus();
+  });
+
+  test.each<[string, RJSFSchema, UiSchema, () => HTMLElement]>([
+    [
+      'the thumb of a slider',
+      { type: 'number', title: 'X' },
+      { 'ui:widget': 'range' },
+      () => screen.getByRole('slider'),
+    ],
+    [
+      "a radio group's checked radio",
+      { type: 'string', title: 'X', enum: ['a', 'b'], default: 'b' },
+      { 'ui:widget': 'radio' },
+      () => screen.getAllByRole('radio')[1],
+    ],
+  ])('focuses %s when its label, which has no for, is clicked', async (_, x, uiSchema, focused) => {
+    const { container } = render(
+      <WrappedForm schema={{ type: 'object', properties: { x } }} uiSchema={{ x: uiSchema }} validator={validator} />,
+    );
+
+    await user.click(container.querySelector('#root_x__label')!);
+    // Ark's slider refocuses its thumb on the next frame; letting it run while the form is mounted keeps it from
+    // looking the thumb up in a detached tree, which Vitest reports as an unhandled error
+    await new Promise((resolve) => {
+      requestAnimationFrame(resolve);
+    });
+
+    expect(focused()).toHaveFocus();
+  });
+
+  test('marks a required radio group required, on the group and on each radio', () => {
+    render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          required: ['c'],
+          properties: { c: { type: 'string', title: 'C', enum: ['a', 'b'] } },
+        }}
+        uiSchema={{ c: { 'ui:widget': 'radio' } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('radiogroup')).toHaveAttribute('aria-required', 'true');
+    for (const radio of screen.getAllByRole('radio')) {
+      expect(radio).toBeRequired();
+    }
   });
 
   const colors: RJSFSchema = { type: 'string', title: 'Color', enum: ['red', 'blue'] };
@@ -452,6 +616,41 @@ describe('chakra-ui CheckboxesWidget', () => {
     expectReferencesResolve(container);
     expect(container.querySelector('#root_y')).toHaveAccessibleName('Y');
   });
+
+  test('names its group once, by the label it draws, and leaves the fieldset around it unnamed', () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{ type: 'array', title: 'Colors', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true }}
+        uiSchema={{ 'ui:widget': 'checkboxes' }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('group', { name: 'Colors' })).toHaveAttribute('id', 'root');
+    expect(container.querySelector('legend')).toBeNull();
+    for (const fieldset of container.querySelectorAll('fieldset')) {
+      expect(fieldset).toHaveAccessibleName('');
+    }
+  });
+
+  test('marks the label it draws for a required group with a *, which its name leaves out', () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          required: ['c'],
+          properties: {
+            c: { type: 'array', title: 'C', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true },
+          },
+        }}
+        uiSchema={{ c: { 'ui:widget': 'checkboxes' } }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('#root_c__label')).toHaveTextContent(/^C\*$/);
+    expect(container.querySelector('#root_c')).toHaveAccessibleName('C');
+  });
 });
 
 describe('chakra-ui RadioWidget', () => {
@@ -584,7 +783,7 @@ describe('chakra-ui FieldTemplate', () => {
     expect(container.querySelector('#root_foo__label')).toHaveAttribute('data-disabled');
   });
 
-  test("points each field's fieldset at the label the template draws, or at nothing", () => {
+  test("points no field's fieldset at the label the template draws, which names the control inside it", () => {
     const { container } = render(
       <WrappedForm
         schema={{ type: 'object', properties: { foo: { type: 'string', title: 'Foo' } } }}
@@ -594,8 +793,22 @@ describe('chakra-ui FieldTemplate', () => {
     );
 
     const fieldsets = [...container.querySelectorAll('fieldset')];
-    expect(fieldsets.map((fieldset) => fieldset.getAttribute('aria-labelledby'))).toEqual(['', 'root_foo__label']);
-    expect(screen.getByRole('group', { name: 'Foo' })).toBe(fieldsets[1]);
+    expect(fieldsets.map((fieldset) => fieldset.getAttribute('aria-labelledby'))).toEqual(['', '']);
+    expect(screen.getByRole('textbox')).toHaveAccessibleName('Foo');
+    expect(screen.queryByRole('group', { name: 'Foo' })).toBeNull();
+  });
+
+  test("names a rating's radiogroup by the template's label once, with no fieldset of the same name around it", () => {
+    render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { score: { type: 'integer', title: 'Score', maximum: 3 } } }}
+        uiSchema={{ score: { 'ui:widget': 'RatingWidget' } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('radiogroup')).toHaveAccessibleName('Score');
+    expect(screen.queryByRole('group', { name: 'Score' })).toBeNull();
   });
 
   test('draws no label for a widget that draws its own', () => {

@@ -106,13 +106,10 @@ export default function FieldTemplate<
           {label}
         </TemplateLabel>
       )}
-      {/* Ark points the fieldset at its legend, which renders only for a description, so it is pointed at the label drawn
-          here instead, or at nothing, which leaves a description's legend naming it */}
-      <Fieldset.Root
-        disabled={disabled}
-        invalid={hasError}
-        aria-labelledby={labelledByOrNone(undefined, drawsLabel, presentation?.label.id)}
-      >
+      {/* Ark points the fieldset at its legend, which renders only for a description, so it is pointed at nothing, which
+          leaves a description's legend naming it. The label drawn here already names the control or group inside, so
+          naming the fieldset by it too would announce that name twice */}
+      <Fieldset.Root disabled={disabled} invalid={hasError} aria-labelledby={labelledByOrNone(undefined, false)}>
         {templateDrawsDescription<T, S, F>(props) && rawDescription ? (
           <Fieldset.Legend mt={2}>{description}</Fieldset.Legend>
         ) : null}
