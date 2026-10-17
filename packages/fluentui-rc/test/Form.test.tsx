@@ -573,3 +573,41 @@ describe('fluentui-rc focuses its groups as core does', () => {
     expect(screen.getAllByRole('radio')[2]).toHaveFocus();
   });
 });
+
+describe("fluentui-rc draws a select's own label under the id its plan gives it", () => {
+  // The radio selector draws the field's label under its plan's id, so an option drawing its own takes a numbered one
+  test("draws an option's select label beneath a radio selector under its own id, rather than the selector's", () => {
+    const { container } = render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: { pet: { title: 'Pet', anyOf: [{ title: 'Kind', type: 'string', enum: ['a', 'b'] }] } },
+        }}
+        uiSchema={{ pet: { 'ui:widget': 'radio', anyOf: [{}] } }}
+        formData={{ pet: 'a' }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelectorAll('[id="root_pet__label"]')).toHaveLength(1);
+    expect(screen.getByRole('radiogroup')).toHaveAccessibleName('Pet');
+    expect(container.querySelector('#root_pet__optionLabel')).toHaveTextContent('Kind');
+    expect(screen.getByRole('combobox')).toHaveAccessibleName('Kind');
+    expectReferencesResolve(container);
+  });
+
+  test('draws an option selector drawn as a select under its field label id', () => {
+    const { container } = render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: { pet: { title: 'Pet', anyOf: [{ type: 'string' }, { type: 'number' }] } },
+        }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('#root_pet__label')).toHaveAttribute('for', 'root_pet__anyof_select');
+    expect(screen.getByRole('combobox')).toHaveAccessibleName('Pet');
+  });
+});
