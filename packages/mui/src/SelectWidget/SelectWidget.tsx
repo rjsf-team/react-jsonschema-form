@@ -17,10 +17,12 @@ import {
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionsDomValues,
+  getControlFallbackName,
   getOptionValueFormat,
   groupEnumOptions,
   hasWidgetErrors,
   isEnumOptionsGroup,
+  isNamedByTemplateLabel,
   labelValue,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
@@ -111,6 +113,10 @@ export default function SelectWidget<
     textFieldOverrides.id ?? id,
     textFieldOverrides.helperText,
   );
+  // The combobox shows its value, not a name, so where no label names it, it is named by the field's label, its
+  // placeholder or the translated prompt
+  const namedElsewhere = (!hideLabel && !!label) || isNamedByTemplateLabel<T, S, F>(props);
+  const ariaLabel = ariaProps['aria-label'] ?? (namedElsewhere ? undefined : getControlFallbackName<T, S, F>(props));
   const showPlaceholderOption = !isMultiple && schema.default === undefined;
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, isMultiple);
 
@@ -153,7 +159,7 @@ export default function SelectWidget<
             ...muiSlotProps?.select,
             multiple,
           },
-          htmlInput: withSlotProps(ariaProps, muiSlotProps?.htmlInput),
+          htmlInput: withSlotProps({ ...ariaProps, 'aria-label': ariaLabel }, muiSlotProps?.htmlInput),
         }}
       >
         {showPlaceholderOption && <MenuItem value=''>{placeholder}</MenuItem>}

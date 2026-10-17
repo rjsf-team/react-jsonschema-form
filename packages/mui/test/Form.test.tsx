@@ -440,6 +440,17 @@ describe("mui widgets are named by their label and carry the field's id on the e
   });
 });
 
+describe('mui SelectWidget', () => {
+  test.each<[string, RJSFSchema]>([
+    ['an untitled anyOf selector', { anyOf: [{ type: 'string' }, { type: 'number' }] }],
+    ['a select whose field has no title or name', { type: 'string', enum: ['foo', 'bar'] }],
+  ])('names %s by the translated prompt where no label names it', (_, schema) => {
+    render(<Form schema={schema} validator={validator} />);
+
+    expect(screen.getAllByRole('combobox')[0]).toHaveAccessibleName('Select ...');
+  });
+});
+
 describe('mui CheckboxWidget', () => {
   test('draws no label of its own where ui:label turns it off', () => {
     render(
