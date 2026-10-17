@@ -1,11 +1,14 @@
-import { useState } from 'react';
+import { useMemo, useSyncExternalStore } from 'react';
 import type { FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getTemplates, getUiOptions, RJSF_REF_CYCLE_KEY } from '@rjsf/utils';
+import { expandRefCycle, getTemplates, getUiOptions } from '@rjsf/utils';
 
+import useUiState from '../../hooks/useUiState.ts';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 
-/** The `CyclicSchemaField` component is used to render a field in the schema that is marked with RJSF_REF_CYCLE_KEY ===
- * true
+/** The `CyclicSchemaField` component renders a field `retrieveSchema()` collapsed as a `$ref` cycle (marked with
+ * `RJSF_REF_CYCLE_KEY`): an Expand button until the field is expanded, and then the field resolved one level further.
+ * Which fields are expanded is the form's state, by path, so an expansion outlives the field's components and follows
+ * the moves the form is told of, of array items and of additional properties renamed or removed; outside a `Form` it is the outermost `SchemaField`'s, see `useUiState()`.
  *
  * @param props - The `FieldProps` for this template
  */
@@ -14,14 +17,21 @@ export default function CyclicSchemaField<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: FieldProps<T, S, F>) {
-  const [expanded, setExpanded] = useState(false);
+  const { uiState } = useUiState();
   const readsFormData = useReadsFormData(CyclicSchemaField);
-  const { name, registry, schema, uiSchema, id } = props;
-  const { globalUiOptions } = registry;
+  const { name, registry, schema, uiSchema, id, fieldPath } = props;
+  const readExpanded = () => uiState.isExpanded(fieldPath);
+  const expanded = useSyncExternalStore(uiState.subscribe, readExpanded, readExpanded);
+  const { globalUiOptions, fields, schemaUtils } = registry;
+  const rootSchema = schemaUtils.getRootSchema();
+  const expandedSchema = useMemo(
+    () => (expanded ? expandRefCycle<S>(schema, rootSchema) : undefined),
+    [expanded, schema, rootSchema],
+  );
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
   const { CyclicSchemaExpandTemplate } = getTemplates<T, S, F>(registry, uiOptions);
-  if (!expanded) {
+  if (expandedSchema === undefined) {
     return (
       <CyclicSchemaExpandTemplate
         registry={registry}
@@ -29,15 +39,14 @@ export default function CyclicSchemaField<
         uiSchema={uiSchema}
         name={name}
         id={id}
-        onExpand={() => setExpanded(true)}
+        onExpand={() => uiState.expand(fieldPath)}
       />
     );
   }
-  const { fields } = registry;
   const { SchemaField } = fields;
   return (
     <RawFormDataContext value={readsFormData ? SchemaField : undefined}>
-      <SchemaField {...props} schema={{ ...schema, [RJSF_REF_CYCLE_KEY]: false }} />
+      <SchemaField {...props} schema={expandedSchema} />
     </RawFormDataContext>
   );
 }

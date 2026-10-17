@@ -1014,7 +1014,7 @@ describe('form data ownership', () => {
       },
     };
 
-    it('a oneOf selector goes back to the option the data fits when the switch is declined', async () => {
+    it('a oneOf selector keeps a declined switch the data does not fit', async () => {
       const log = createParentLog<{ status: { by: string } }>();
       const { container } = render(
         <RejectingParent schema={oneOfSchema} initialValue={{ status: { by: 'me' } }} log={log} />,
@@ -1024,8 +1024,8 @@ describe('form data ownership', () => {
       await user.selectOptions(select, '1');
 
       expect(log.proposals).toHaveLength(1);
-      expect(select).toHaveValue('0');
-      expect(input(container, 'root_status_by')).toHaveValue('me');
+      expect(select).toHaveValue('1');
+      expect(container.querySelector('#root_status_reason')).toBeInTheDocument();
     });
 
     it('a oneOf selector keeps an explicit choice the data still fits when the switch is declined', async () => {

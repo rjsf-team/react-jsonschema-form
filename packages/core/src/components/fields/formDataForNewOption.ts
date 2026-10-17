@@ -8,6 +8,8 @@ import type {
   UiSchemaDefinitions,
 } from '@rjsf/utils';
 import {
+  CONST_KEY,
+  DEFAULT_KEY,
   deepEquals,
   getPropertySchema,
   getRenderedOptionSchema,
@@ -16,7 +18,7 @@ import {
   mergeSchemas,
 } from '@rjsf/utils';
 
-import { declaresOwnValue, declaresValueFor } from '../declaresValue.ts';
+import { asFieldValue } from '../uiState.ts';
 
 /** Returns `option` carrying the `required` that `parentSchema` declares, which is what decides whether the form
  * populates a key at all under a `defaultFormStateBehavior` keyed off `required`. A schema's defaults
@@ -53,8 +55,25 @@ function renderedOption<S extends StrictRJSFSchema = RJSFSchema>(parentSchema?: 
   return option && parentSchema ? getRenderedOptionSchema<S>(parentSchema, option) : option;
 }
 
-/** Determines whether `option` declares a value of its own for `key`, resolving the property's schema first.
- * `stalePathsForNewSchema()` applies the same rule to a conditional branch, through the same predicate.
+/** Determines whether `schema` declares a value of its own, which is what a schema that is not an object has instead
+ * of a per-property declaration.
+ *
+ * @param schema - The schema to test
+ * @returns - True when the schema declares a `default` or `const`
+ */
+function declaresOwnValue<S extends StrictRJSFSchema = RJSFSchema>(schema: S): boolean {
+  return DEFAULT_KEY in schema || CONST_KEY in schema;
+}
+
+/** Determines whether `option` declares a value for `key`, either on the property's own schema, resolved first, or in
+ * the option's own `default` object. `sanitizeFieldTree()` reads what a conditional branch declares for a key the same
+ * way.
+ *
+ * The computed defaults are no guide on their own, which is the whole reason this exists: `getDefaultFormState()` also
+ * returns a nested object's leaf defaults, `{}` for a required object, `[]` for a required array, `false` for a
+ * required boolean and an `items` default repeated up to `minItems`. None of those is the option saying what the key
+ * should hold, so treating them as such replaces a value the user is still holding with an empty container or with a
+ * subset of what was there.
  *
  * @param schemaUtils - The `SchemaUtilsType` implementation to resolve the property schema with
  * @param option - The option whose declaration is being tested
@@ -66,7 +85,32 @@ function optionDeclaresValueFor<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(schemaUtils: SchemaUtilsType<T, S, F>, option: S, key: string): boolean {
-  return declaresValueFor<S>(option, key, schemaUtils.retrieveSchema(getPropertySchema<S>(option, key)));
+  if (declaresOwnValue<S>(schemaUtils.retrieveSchema(getPropertySchema<S>(option, key)))) {
+    return true;
+  }
+  const optionDefault = option[DEFAULT_KEY];
+  // `Object.hasOwn()`, so a property named `constructor` or `toString` is not answered for by the member every object
+  // inherits under that name
+  return isPlainObject(optionDefault) && Object.hasOwn(optionDefault, key);
+}
+
+/** The field holding the options with `option` as its only one, and the field's uiSchema with the option's as its
+ * only one, which is how the field's own defaults for that option are computed; undefined when there is no field
+ * holding options
+ */
+function fieldWithOnlyOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  parentSchema: S | undefined,
+  option: S | undefined,
+  optionUiSchema: UiSchema<T, S, F> | undefined,
+): { schema: S; uiSchema: GenericObjectType | undefined } | undefined {
+  const xxxOfKey = parentSchema && getXxxOfKey<S>(parentSchema);
+  if (!parentSchema || !xxxOfKey) {
+    return undefined;
+  }
+  return {
+    schema: { ...parentSchema, [xxxOfKey]: [option] },
+    uiSchema: optionUiSchema && { [xxxOfKey]: [optionUiSchema] },
+  };
 }
 
 /** The uiSchemas the defaults of the two options are computed with, named so the old and new cannot be swapped */
@@ -89,9 +133,7 @@ interface OptionUiSchemas<T, S extends StrictRJSFSchema, F extends FormContextTy
  * A key qualifies only when all of the following hold, which between them keep the deletion from stranding data the
  * user or the caller supplied:
  *
- * - It carried a value over. A key that arrived empty has nothing stale in it, and emptying it further would rob
- *   `Form` of the all-`undefined` payload it reads as a switch away from a `null` option, which is the only way a
- *   default declared above the option is restored.
+ * - It carried a value over. A key that arrived empty has nothing stale in it.
  * - The new option declares a value for it, as a property `default`/`const` or through the option's own `default`
  *   object. The computed defaults say more than an option declares, so honoring them alone would delete a nested
  *   object's leaf defaults, a required array's `[]` or a required boolean's `false` — none of which the option
@@ -112,6 +154,13 @@ interface OptionUiSchemas<T, S extends StrictRJSFSchema, F extends FormContextTy
  * that suppresses object defaults. They describe what an earlier switch through here wrote rather than every default
  * the form holds — `Form` fills the root with `includeUndefinedValues: false`. That divergence only stops a key from
  * qualifying, so the worst it costs is that the replacement does not happen.
+ *
+ * A field that held nothing, as after a `null` option, and switches to an option whose defaults are an object gets
+ * what `sanitizeDataForNewSchema()` made of nothing for the option, its `undefined` keys left out, filled with the
+ * defaults of the field with that option as its only one, so a `default` the field itself declares is restored with
+ * the option's own, a `default` an ancestor declares for the field fills the keys they leave
+ * ([#5368](https://github.com/rjsf-team/react-jsonschema-form/issues/5368)), and an object property gets the empty
+ * object a switch from another object option gives it.
  *
  * Values are matched whole, per top-level key of the option: editing one leaf of a nested object leaves the whole
  * subtree in place, so its other leaves keep the old option's defaults.
@@ -197,25 +246,50 @@ export default function formDataForNewOption<
       if (deepEquals(bareDefaults, formData)) {
         return true;
       }
-      const xxxOfKey = parentSchema && getXxxOfKey<S>(parentSchema);
-      if (!xxxOfKey) {
+      const field = fieldWithOnlyOption<T, S, F>(parentSchema, oldOption, oldOptionUiSchema);
+      if (!field) {
         return false;
       }
-      const fieldWithOldOption = { ...parentSchema, [xxxOfKey]: [oldOption] } as S;
-      const fieldUiSchema: GenericObjectType | undefined = oldOptionUiSchema && { [xxxOfKey]: [oldOptionUiSchema] };
       const defaultsAsSeeded = (value: unknown) =>
         schemaUtils.getDefaultFormState(
-          fieldWithOldOption,
-          value as T,
+          field.schema,
+          asFieldValue<T>(value),
           'excludeObjectChildren',
           undefined,
-          fieldUiSchema,
+          field.uiSchema,
           uiSchemaDefinitions,
         );
       return (
         deepEquals(defaultsAsSeeded(undefined), formData) ||
         (bareDefaults !== undefined && deepEquals(defaultsAsSeeded(bareDefaults), formData))
       );
+    };
+    /** Computes what the field holds when it held nothing, for an option whose defaults are an object: `sanitized`,
+     * what `sanitizeDataForNewSchema()` made of nothing for the option, filled with the defaults of the field holding
+     * the options with the new option as its only one, so the field's own `default`, which a `null` option switched
+     * away from had replaced, lies beneath the option's, as it does on mount
+     * ([#5368](https://github.com/rjsf-team/react-jsonschema-form/issues/5368)), and the empty objects sanitize gives
+     * the option's object properties are written as a switch from another object option writes them. Undefined for any
+     * other option */
+    const fieldDefaultsForNewOption = (sanitized: T | undefined) => {
+      const field = fieldWithOnlyOption<T, S, F>(parentSchema, newOption, newOptionUiSchema);
+      if (!field || !isPlainObject(defaultsForNewOption())) {
+        return undefined;
+      }
+      // A field that held nothing has no key a user cleared, so it holds no `undefined` key either: one would keep the
+      // `default` an ancestor declares for that key from reaching it when `Form` fills the data in
+      const held = isPlainObject(sanitized)
+        ? Object.fromEntries(Object.entries(sanitized).filter(([, value]) => value !== undefined))
+        : {};
+      const fieldDefaults = schemaUtils.getDefaultFormState(
+        field.schema,
+        asFieldValue<T>(held),
+        false,
+        undefined,
+        field.uiSchema,
+        uiSchemaDefinitions,
+      );
+      return isPlainObject(fieldDefaults) ? fieldDefaults : undefined;
     };
     if (isPlainObject(newFormData)) {
       const sanitizedData = newFormData;
@@ -265,6 +339,11 @@ export default function formDataForNewOption<
       defaultsForNewOption() !== undefined
     ) {
       newFormData = undefined;
+    }
+    const heldNothing = formData === undefined || formData === null;
+    const fieldDefaults = heldNothing ? fieldDefaultsForNewOption(newFormData) : undefined;
+    if (fieldDefaults !== undefined) {
+      return fieldDefaults;
     }
     // Call getDefaultFormState to make sure defaults are populated on change. Pass "excludeObjectChildren"
     // so that only the root objects themselves are created without adding undefined children properties. With

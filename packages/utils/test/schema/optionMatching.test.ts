@@ -81,13 +81,60 @@ describe('matching options through the schema graph', () => {
     const rootSchema: RJSFSchema = { type: 'object', dependencies: { a: ['b'] }, oneOf: [] };
     expect(retrieveSchema({ validator: miniValidator() }, rootSchema, rootSchema, {})).not.toHaveProperty('oneOf');
   });
-  it('leaves unstubbed a key an option declares through the then of a boolean if', () => {
+  it('leaves unstubbed a key the selected option declares through the then of a boolean if', () => {
     const rootSchema: RJSFSchema = {
       type: 'object',
       additionalProperties: { type: 'string' },
       oneOf: [{ if: true, then: { properties: { x: { type: 'number' } } } }],
     };
-    const retrieved = retrieveSchema({ validator: miniValidator() }, rootSchema, rootSchema, { x: 1, y: 'y' });
+    const retrieved = retrieveSchema(
+      { validator: miniValidator() },
+      rootSchema,
+      rootSchema,
+      { x: 1, y: 'y' },
+      false,
+      0,
+    );
     expect(Object.keys(retrieved.properties ?? {})).toEqual(['y']);
+  });
+  it('scores the views retrieveSchema() hands out for the options apart from the options they were retrieved from', () => {
+    const conditional: RJSFSchema = {
+      type: 'object',
+      properties: { kind: { type: 'string' } },
+      if: { properties: { kind: { const: 'a' } } },
+      then: { properties: { n: { type: 'number' } } },
+    };
+    const declared: RJSFSchema = { type: 'object', properties: { kind: { type: 'string' }, n: { type: 'number' } } };
+    const rootSchema: RJSFSchema = { anyOf: [conditional, declared] };
+    const context = { validator: miniValidator() };
+    const formData = { kind: 'a', n: 1 };
+    // The raw option leaves `n` to its condition, which only its view takes, so the two score the data differently
+    expect(getClosestMatchingOption(context, rootSchema, formData, [conditional, declared], 0)).toBe(1);
+    const views = retrieveSchema(context, rootSchema, rootSchema, formData, true).anyOf ?? [];
+    const objectViews = views.filter((view): view is RJSFSchema => typeof view === 'object');
+    expect(objectViews).toHaveLength(2);
+    expect(getClosestMatchingOption(context, rootSchema, formData, objectViews, 0)).toBe(0);
+  });
+  it('picks for data mutated in place since the last call what it holds now, at any depth', () => {
+    const options: RJSFSchema[] = [
+      { type: 'object', properties: { a: { type: 'string' } }, required: ['a'] },
+      { type: 'object', properties: { b: { type: 'string' } }, required: ['b'] },
+    ];
+    const rootSchema: RJSFSchema = { type: 'object', properties: { v: { anyOf: options } } };
+    const context = { validator: miniValidator() };
+    const inner: Record<string, string> = { a: 'x' };
+    const formData = { v: inner };
+    const outer: RJSFSchema[] = [
+      { type: 'object', properties: { v: { anyOf: options } } },
+      { type: 'object', properties: { w: { type: 'string' } } },
+    ];
+    expect(getClosestMatchingOption(context, rootSchema, inner, options)).toBe(0);
+    expect(getClosestMatchingOption(context, rootSchema, formData, outer)).toBe(0);
+
+    delete inner.a;
+    inner.b = 'y';
+
+    expect(getClosestMatchingOption(context, rootSchema, inner, options)).toBe(1);
+    expect(getClosestMatchingOption(context, rootSchema, formData, outer)).toBe(0);
   });
 });

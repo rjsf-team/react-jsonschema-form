@@ -11,7 +11,7 @@ import { fieldPathFromList } from '../fieldPath.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getItemUiSchemaForItem from '../getItemUiSchemaForItem.ts';
 import getOptionUiSchema from '../getOptionUiSchema.ts';
-import getRenderedOptionSchema, { rendersOwnFieldBesideOption } from '../getRenderedOptionSchema.ts';
+import getRenderedOptionSchema from '../getRenderedOptionSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
 import getSchemaTypeForValue from '../getSchemaTypeForValue.ts';
 import getUiOptions from '../getUiOptions.ts';
@@ -23,12 +23,14 @@ import isObject from '../isObject.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
 import mergeSchemas from '../mergeSchemas.ts';
 import { getByPath } from '../pathUtils.ts';
+import rendersOwnFieldBesideOption from '../rendersOwnFieldBesideOption.ts';
 import resolveUiSchema from '../resolveUiSchema.ts';
 import { isOptionalDataControlsType } from '../shouldRenderOptionalField.ts';
 import type {
   ErrorSchema,
   FieldPath,
   FormContextType,
+  FormFieldState,
   GenericObjectType,
   GlobalUISchemaOptions,
   RJSFMarkedSchema,
@@ -41,7 +43,7 @@ import type {
 import uiBooleanOption from '../uiBooleanOption.ts';
 import getClosestMatchingOption from './getClosestMatchingOption.ts';
 import { AdditionalItemsHandling, getInnerSchemaForArrayItem } from './getDefaultFormState.ts';
-import retrieveSchema from './retrieveSchema.ts';
+import retrieveSchema, { expandRefCycle } from './retrieveSchema.ts';
 
 /** The schema and uiSchema of the `anyOf`/`oneOf` branch that applies to a node, and, for an object node, the option
  * itself. An object node's branch merges the whole node into the option, since the walk visits the properties the
@@ -63,23 +65,20 @@ interface SelectedBranch<T, S extends StrictRJSFSchema, F extends FormContextTyp
  * `uiSchema` (e.g. `uiSchema.thing.b`) is never consulted for a branch's own fields, matching what actually renders.
  */
 function resolveSelectedBranch<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  context: SchemaContext<S, F>,
-  rootSchema: S,
+  ctx: WalkContext<T, S, F>,
   schema: S,
   { key, options }: XxxOfOptions<S>,
   uiSchema: UiSchema<T, S, F>,
   formData: unknown,
+  path: (string | number)[],
 ): SelectedBranch<T, S, F> {
+  const { schemaContext, rootSchema, fieldState } = ctx;
   // Both keywords are dropped, since `MultiSchemaField` renders the option without the one it doesn't read either
   const { [ANY_OF_KEY]: _anyOf, [ONE_OF_KEY]: _oneOf, ...remaining } = schema;
-  const index = getClosestMatchingOption<T, S, F>(
-    context,
-    rootSchema,
-    formData as T,
-    options,
-    0,
-    getDiscriminatorFieldFromSchema<S>(schema),
-  );
+  const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
+  const index = fieldState
+    ? fieldState.selectedOption(fieldPathFromList(path), options, formData, discriminator)
+    : getClosestMatchingOption<unknown, S, F>(schemaContext, rootSchema, formData, options, 0, discriminator);
   // A boolean option is rendered as an empty schema, as `SchemaField` retrieves it
   const option = isObject(options[index]) ? options[index] : ({} as S);
   const optionUiSchema = getOptionUiSchema<T, S, F>(uiSchema, key, index) ?? {};
@@ -116,6 +115,7 @@ interface WalkContext<T, S extends StrictRJSFSchema, F extends FormContextType> 
   uiSchemaDefinitions?: UiSchemaDefinitions<S, F>;
   globalUiOptions?: GlobalUISchemaOptions;
   formContext?: F;
+  fieldState?: FormFieldState<S>;
   builder: ErrorSchemaBuilder<T>;
 }
 
@@ -128,10 +128,14 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   required: boolean,
   parentPresent: boolean,
 ) {
-  const { schemaContext, rootSchema, uiSchemaDefinitions, globalUiOptions, formContext, builder } = ctx;
+  const { schemaContext, rootSchema, uiSchemaDefinitions, globalUiOptions, formContext, fieldState, builder } = ctx;
   // A recursive $ref that `retrieveSchema()` flagged as a cycle is not rendered until the user expands it (see
-  // SchemaField/CyclicSchemaField), so nothing below it can be required of them
-  if ((schema as RJSFMarkedSchema)[RJSF_REF_CYCLE_KEY]) {
+  // SchemaField/CyclicSchemaField), so nothing below it can be required of them until then
+  if (Reflect.get(schema, RJSF_REF_CYCLE_KEY)) {
+    if (!fieldState?.isExpanded(fieldPathFromList(path))) {
+      return;
+    }
+    walk(ctx, expandRefCycle<S>(schema, rootSchema), localUiSchema, formData, path, required, parentPresent);
     return;
   }
   const uiSchema = resolveUiSchema<T, S, F>(schema, localUiSchema, { rootSchema, uiSchemaDefinitions });
@@ -168,7 +172,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     option,
     uiSchema: branchUiSchema,
   }: SelectedBranch<T, S, F> = xxxOf
-    ? resolveSelectedBranch<T, S, F>(schemaContext, rootSchema, resolvedSchema, xxxOf, uiSchema, formData)
+    ? resolveSelectedBranch<T, S, F>(ctx, resolvedSchema, xxxOf, uiSchema, formData, path)
     : { schema: resolvedSchema, uiSchema };
   // The option's own `SchemaField` reads `ui:required` from the option's uiSchema, and a required option renders its
   // fields rather than an Add button
@@ -312,6 +316,8 @@ function computeMightHaveUiRequired<T, S extends StrictRJSFSchema, F extends For
  * the `uiSchema` (resolved through `ui:definitions` the same way), returning an `ErrorSchema` holding a required
  * error for every field marked `ui:required: true` whose value is missing. The schema handed to the validator is left
  * untouched, so this works identically on the submit and live-validation paths and with precompiled validators.
+ * Given the form's `fieldState`, the walk follows the option each field shows and descends into the `$ref` cycles
+ * the user expanded, so the fields it walks are the ones on screen.
  */
 export default function getUiRequiredErrorSchema<
   T = unknown,
@@ -325,6 +331,7 @@ export default function getUiRequiredErrorSchema<
   uiSchemaDefinitions: UiSchemaDefinitions<S, F> | undefined = uiSchema?.[UI_DEFINITIONS_KEY],
   globalUiOptions?: GlobalUISchemaOptions,
   formContext?: F,
+  fieldState?: FormFieldState<S>,
 ): ErrorSchema<T> {
   const builder = new ErrorSchemaBuilder<T>();
   const hasDefinitions = uiSchemaDefinitions && Object.keys(uiSchemaDefinitions).length > 0;
@@ -339,6 +346,7 @@ export default function getUiRequiredErrorSchema<
       uiSchemaDefinitions: hasDefinitions ? uiSchemaDefinitions : undefined,
       globalUiOptions,
       formContext,
+      fieldState,
       builder,
     },
     rootSchema,

@@ -11,10 +11,17 @@ import isMultiSelect from './isMultiSelect.ts';
 import isSelect from './isSelect.ts';
 import omitExtraData, { isValueEmpty } from './omitExtraData.ts';
 import resolveConstantOptions from './resolveConstantOptions.ts';
-import retrieveSchema, { getAdditionalPropertyType, getValidationTarget } from './retrieveSchema.ts';
+import retrieveSchema, {
+  constrainsValue,
+  expandRefCycle,
+  getAdditionalPropertyType,
+  getValidationTarget,
+} from './retrieveSchema.ts';
 import sanitizeDataForNewSchema from './sanitizeDataForNewSchema.ts';
 
 export {
+  constrainsValue,
+  expandRefCycle,
   findFieldInSchema,
   findSelectedOptionInXxxOf,
   getAdditionalPropertyType,

@@ -1,4 +1,5 @@
 import {
+  ADDITIONAL_PROPERTIES_KEY,
   ALL_OF_KEY,
   ANY_OF_KEY,
   CONST_KEY,
@@ -8,13 +9,16 @@ import {
   IF_KEY,
   ITEMS_KEY,
   ONE_OF_KEY,
+  PATTERN_PROPERTIES_KEY,
   REF_KEY,
   REQUIRED_KEY,
   THEN_KEY,
+  UNEVALUATED_PROPERTIES_KEY,
 } from './constants.ts';
-import getSchemaType from './getSchemaType.ts';
 import isObject from './isObject.ts';
 import mergeSchemas from './mergeSchemas.ts';
+import rendersOwnFieldBesideOption from './rendersOwnFieldBesideOption.ts';
+import { withoutKeys } from './schema/graph/mergePlan.ts';
 import { CONTAINER_KEYWORDS, IDENTIFIER_KEYWORDS } from './schema/retrieveSchema.ts';
 import { isSubschemaKeyword, keywordShape } from './schemaUri.ts';
 import type { GenericObjectType, RJSFSchema, StrictRJSFSchema } from './types.ts';
@@ -39,6 +43,9 @@ const KEYWORDS_LEFT_ON_PARENT = new Set<string>([
   '$comment',
   ...CONTAINER_KEYWORDS,
 ]);
+
+/** The keywords describing an object's extra keys */
+const EXTRA_KEY_KEYWORDS = [ADDITIONAL_PROPERTIES_KEY, PATTERN_PROPERTIES_KEY, UNEVALUATED_PROPERTIES_KEY];
 
 /** The bounds a value has to meet under the parent and the option alike, so the stricter of the two is what applies */
 const LOWER_BOUNDS = new Set<string>(['minItems', 'minLength', 'minProperties', 'minimum', 'exclusiveMinimum']);
@@ -218,25 +225,15 @@ function meetSubschema(parent: unknown, option: unknown): unknown {
     : meetSchemas(parent, option);
 }
 
-/** Whether the field of `schema` renders a field of its own beside its selected `anyOf`/`oneOf` option, as an object's
- * `ObjectField` does (see `getFieldComponent()` in `SchemaField`). Such a field shows its own properties and other
- * keywords, so its option is read merged with the whole field; every other field leaves the whole field to the option
- * as `getRenderedOptionSchema()` renders it. Everything that picks between the two reads this, so that none of them
- * renders one option and seeds or walks another.
- *
- * @param schema - The schema holding the options
- * @returns - True when the field renders a field of its own beside the option
- */
-export function rendersOwnFieldBesideOption<S extends StrictRJSFSchema = RJSFSchema>(schema: S): boolean {
-  return getSchemaType<S>(schema) === 'object';
-}
-
 /** Returns the schema an `anyOf`/`oneOf` option of `parent` is rendered with, the one place that decides what an option
  * inherits from the schema holding it, so that `MultiSchemaField`, the `getUiRequiredErrorSchema()` walk and the
  * defaults `getDefaultFormState()` computes for a field that is not an object read the same option.
  *
  * An object parent renders its own `ObjectField` beside the option (see `getFieldComponent()` in `SchemaField`), which
- * shows the parent's properties and other keywords, so the option takes only its `required` list and its type. Every
+ * shows the parent's properties and other keywords, so the option takes only its `required` list and its type. That
+ * field also stubs the extra keys of the data, for the parent and the selected option together (see
+ * `retrieveSchema()`'s `selectedOption`), so the option is rendered without its own `additionalProperties`,
+ * `patternProperties` and `unevaluatedProperties`, which would stub the same keys a second time. Every
  * other parent renders nothing of its own and leaves the whole field to the option, so the option takes each of the
  * parent's keywords that describes the value, such as an array's `items` and `uniqueItems` or a string's `format`.
  * The two are met with `meetSchemas()`, so an option's `items` adds to the parent's rather than replacing them. A
@@ -256,6 +253,9 @@ export function rendersOwnFieldBesideOption<S extends StrictRJSFSchema = RJSFSch
  */
 export default function getRenderedOptionSchema<S extends StrictRJSFSchema = RJSFSchema>(parent: S, option: S): S {
   const rendersOwnField = rendersOwnFieldBesideOption<S>(parent);
+  if (rendersOwnField && EXTRA_KEY_KEYWORDS.some((keyword) => Object.hasOwn(option, keyword))) {
+    return getRenderedOptionSchema<S>(parent, withoutKeys<S>(option, ...EXTRA_KEY_KEYWORDS));
+  }
   const inherited: GenericObjectType = {};
   if (rendersOwnField) {
     if (parent.required) {

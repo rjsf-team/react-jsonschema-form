@@ -36,6 +36,8 @@ import { createFormModel } from './formModel.ts';
 import type { FormRef } from './FormRef.ts';
 import { deriveState, initialState, isDevelopment } from './formState.ts';
 import type { IChangeEvent } from './IChangeEvent.ts';
+import type { UiState } from './uiState.ts';
+import UiStateContext from './UiStateContext.ts';
 
 /** `T` itself for any concrete type, but not a position TypeScript infers `T` from. `FormProps` wraps the configuration
  * props and handlers in it, so `T` is inferred from `formData`/`initialFormData` (or a typed `ref`) and an unannotated
@@ -262,49 +264,8 @@ export interface FormState<
    * live validation do not resolve it again
    */
   retrievedSchema: S;
-  /** The root schema the committed `formData` last settled under: it was sanitized against that root, or it has
-   * only ever lived under it. Undefined while the root has changed since the data last settled; the previous-data filter chain in `sanitizeDataForNewSchema()` is only fed data
-   * whose marker matches, since both sides of that chain resolve `$ref`s against the one new root
-   */
-  formDataSchema?: S;
-  /** The committed data as it was when it last settled under `formDataSchema`: the snapshot the sanitize call is
-   * given as the previous data. A change no sanitize checked (a declined pass, a pushed parent value, a reset)
-   * leaves the snapshot alone, so it shows up as a real difference where the previous-data filter runs
-   */
-  settledFormData?: T;
-  /** `settledFormData` as the container writes carried since the settle moved it: the sanitize call pairs an
-   * array's rows against this view, so a row follows its item to its new index and an inserted index pairs
-   * with the row's own starting value, while the old schema side keeps reading `settledFormData`, whose
-   * conditionals resolved the way the settled data saw them. Settles and resets together with `settledFormData`
-   */
-  settledFormDataForPairing?: T;
-  /** The pairing view a container write moved, held with the data it describes until the parent answers the
-   * write: a push of that data adopts it, any other push leaves `settledFormDataForPairing` as it was before
-   * the move. Pending only between a parent-owned form's container write and the render that answers it
-   */
-  pendingPairingView?: T;
-  /** The data `pendingPairingView` describes: the container write's result as the parent was told it */
-  pendingPairingData?: T;
-  /** The schema `settledFormData` was resolved under when it settled: the previous-data side of the sanitize
-   * call resolves from it, since the committed data's `retrievedSchema` already carries the root's
-   * conditionals merged for data that can sit on the other side of a flip
-   */
-  settledRetrievedSchema?: S;
-  /** The sanitized proposal the edit path last reported: when a parent-owned form's parent pushes this value
-   * back, by reference or as a deep-equal copy, the push is the proposal accepted unchanged, so the render
-   * settles it as the new snapshot. Only a proposal the edit path sanitized may advance the snapshot this way
-   */
-  proposedFormData?: T;
-  /** The root schema the outstanding proposal was sanitized under: a push can accept the proposal only while
-   * the current root still is that root, since a schema swapped in beside the push never went through the
-   * sanitize. Owned and carried together with `proposedFormData`
-   */
-  proposedFormDataRoot?: S;
-  /** @description result of schemaHasNestedConditional(rootSchema, rootSchema). A memoized value, recomputed only
-   * when `schemaUtils` (and thus the root schema) is rebuilt, to avoid re-walking the whole schema on every
-   * derivation
-   */
-  hasNestedConditionalSchema: boolean;
+  /** The form's option selections and cycle expansions, see `createUiState()` */
+  uiState: UiState;
   /** Flag indicating whether the initial form defaults have been generated */
   initialDefaultsGenerated: boolean;
   /** The registry (re)computed only when props changed */
@@ -415,8 +376,10 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
     model.attach();
     return model.detach;
   }, [model]);
-  // After every commit of a shown form, which may be the one a queued `submit()` waits for
+  // After every commit of a shown form, which may be the one a queued `submit()` waits for, or one that answered moves
+  // the form proposed, which `committed()` could not render for
   useLayoutEffect(() => {
+    model.uiState.notifyRestored();
     model.submitWhenRendered();
   });
 
@@ -498,21 +461,23 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       >
         {showErrorList === 'top' && renderErrors()}
         <RawFormDataContext value={SchemaFieldComponent}>
-          <SchemaFieldComponent
-            name=''
-            schema={schema}
-            uiSchema={uiSchema}
-            errorSchema={errorSchema}
-            fieldPath={ROOT_FIELD_PATH}
-            id={registry.globalFormOptions.idPrefix}
-            formData={formData}
-            onChange={model.handleChange}
-            onBlur={model.handleBlur}
-            onFocus={model.handleFocus}
-            registry={registry}
-            disabled={disabled}
-            readonly={readonly}
-          />
+          <UiStateContext value={model.uiState}>
+            <SchemaFieldComponent
+              name=''
+              schema={schema}
+              uiSchema={uiSchema}
+              errorSchema={errorSchema}
+              fieldPath={ROOT_FIELD_PATH}
+              id={registry.globalFormOptions.idPrefix}
+              formData={formData}
+              onChange={model.handleChange}
+              onBlur={model.handleBlur}
+              onFocus={model.handleFocus}
+              registry={registry}
+              disabled={disabled}
+              readonly={readonly}
+            />
+          </UiStateContext>
         </RawFormDataContext>
 
         {children || submitButton}

@@ -24,6 +24,10 @@ interface ProvenanceFields {
    * adds nothing to that set renders nothing beside the selector
    */
   readonly optionOf?: { readonly setKey: string; readonly set: ReadonlySet<NodeId> };
+  /** For an `anyOf`/`oneOf` option, whether it stubs the extra keys of its data itself, which it does when the field
+   * offering it renders no field of its own beside it to stub them with
+   */
+  readonly stubsOwnExtraKeys?: boolean;
 }
 
 /** A copy's provenance: the field it is the schema of, by the graph it was planned in and the seeds and chain the
@@ -114,7 +118,13 @@ function intern<S extends StrictRJSFSchema>(
   parent?: Provenance<S>,
 ): Provenance<S> {
   const table = tableOf(graph);
-  const key = [parent?.id, seedsKey(fields.seeds), fields.chain?.id, fields.optionOf?.setKey].join('|');
+  const key = [
+    parent?.id,
+    seedsKey(fields.seeds),
+    fields.chain?.id,
+    fields.optionOf?.setKey,
+    fields.stubsOwnExtraKeys,
+  ].join('|');
   const interned = table.provenances.get(key);
   if (isProvenanceOf(interned, graph)) {
     return interned;
@@ -128,6 +138,7 @@ function intern<S extends StrictRJSFSchema>(
     ),
     chain: fields.chain,
     optionOf: fields.optionOf,
+    stubsOwnExtraKeys: fields.stubsOwnExtraKeys,
   };
   // A printed schema shows its stamp through this rather than the whole graph the stamp points into, as the diff of a
   // failed comparison prints it

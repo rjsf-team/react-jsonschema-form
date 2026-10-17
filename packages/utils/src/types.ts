@@ -282,6 +282,16 @@ export type FieldPathList = (string | number)[];
 /** Dot string or segment list for `getFromSchema` / `findFieldInSchema` (same segment rules as {@link FieldPathList}). */
 export type SchemaFieldPath = string | FieldPathList;
 
+/** What a form shows beyond its schema and data, which a walk of its fields reads to see the fields on screen: the
+ * option each field offering `anyOf`/`oneOf` options shows, and the collapsed `$ref` cycles the user expanded
+ */
+export interface FormFieldState<S extends StrictRJSFSchema = RJSFSchema> {
+  /** The index of the option the field at `fieldPath` shows among its `options`, each retrieved for `formData` */
+  selectedOption(fieldPath: FieldPath, options: S[], formData: unknown, discriminator?: string): number;
+  /** Whether the user expanded the collapsed `$ref` cycle at `fieldPath` */
+  isExpanded(fieldPath: FieldPath): boolean;
+}
+
 declare const FIELD_PATH_BRAND: unique symbol;
 
 /** Type identifying a field: a canonical, escaped string path such as `friends[0].firstName`, with the root
@@ -2022,9 +2032,11 @@ export interface SchemaUtilsType<
    *
    * @param schema - The schema to use for filtering the `formData`
    * @param [formData] - The formData to filter
+   * @param [fieldState] - The option each field shows, so a field offering `anyOf`/`oneOf` options keeps the data its
+   *        shown option describes. Without it, the option the data matches best
    * @returns The new form data, with any fields not defined in the schema removed
    */
-  omitExtraData(schema: S, formData?: T): T | undefined;
+  omitExtraData(schema: S, formData?: T, fieldState?: FormFieldState<S>): T | undefined;
   /** Retrieves an expanded schema that has had all of its conditions, additional properties, references and
    * dependencies resolved and merged into the `schema` given a `rawFormData` that is used to do the potentially
    * recursive resolution.
@@ -2032,9 +2044,11 @@ export interface SchemaUtilsType<
    * @param schema - The schema for which retrieving a schema is desired
    * @param [formData] - The current formData, if any, to assist retrieving a schema
    * @param [resolveAnyOfOrOneOfRefs] - Optional flag indicating whether to resolved refs in anyOf/oneOf lists
+   * @param [selectedOption] - The index of the `anyOf`/`oneOf` option selected for the field, whose declared
+   *        properties are left to it and whose extra-key keywords describe the extra keys with the field's own
    * @returns - The schema having its conditions, additional properties, references and dependencies resolved
    */
-  retrieveSchema(schema: S, formData?: T, resolveAnyOfOrOneOfRefs?: boolean): S;
+  retrieveSchema(schema: S, formData?: T, resolveAnyOfOrOneOfRefs?: boolean, selectedOption?: number): S;
   /** Returns an `ErrorSchema` holding a required error for every field marked `ui:required: true` (via
    * `ui:options.required` or its shorthand) in `uiSchema` whose value is missing from `formData`.
    *
@@ -2043,6 +2057,9 @@ export interface SchemaUtilsType<
    * @param [uiSchemaDefinitions] - Optional uiSchema fragments keyed by $ref path, resolved via `ui:definitions`
    * @param [globalUiOptions] - Optional global ui:options applied to every field
    * @param [formContext] - Optional formContext passed to the function form of `uiSchema.items`
+   * @param [fieldState] - The option each field shows and the `$ref` cycles the user expanded, so the fields walked
+   *        are the ones on screen. Without it, a field shows the option its data matches best, and nothing below a
+   *        collapsed cycle is walked
    * @returns - An `ErrorSchema` with a required error for every missing `ui:required` field
    */
   getUiRequiredErrorSchema(
@@ -2051,6 +2068,7 @@ export interface SchemaUtilsType<
     uiSchemaDefinitions?: UiSchemaDefinitions<S, F>,
     globalUiOptions?: GlobalUISchemaOptions,
     formContext?: F,
+    fieldState?: FormFieldState<S>,
   ): ErrorSchema<T>;
   /** Sanitize the `data` associated with the `oldSchema` so it is considered appropriate for the `newSchema`. If the
    * new schema does not contain any properties, then `undefined` is returned to clear all the form data. Due to the
@@ -2060,28 +2078,8 @@ export interface SchemaUtilsType<
    * @param [newSchema] - The new schema for which the data is being sanitized
    * @param [oldSchema] - The old schema from which the data originated
    * @param [data={}] - The form data associated with the schema, defaulting to an empty object when undefined
-   * @param [oldData] - The previous form data. The old schema itself resolves against the current `data`;
-   *      a separate chain resolved against `oldData` feeds only the enum filter decision, so a branch flip
-   *      between the previous and current data still filters a value the current data no longer resolves to.
-   *      `Form` passes the data as it last settled under the current root schema. `$ref`s on both sides
-   *      resolve against the one root schema, so pass `oldData` only when the root schema is unchanged,
-   *      which is how `Form` calls it
-   * @param [resolvedOldSchema] - `oldSchema` already resolved for `oldData` at the root: the root frame's
-   *      filter chain uses it directly instead of resolving `oldSchema` again. `Form` passes the schema its
-   *      settled snapshot was resolved under
-   * @param [oldDataForPairing] - The previous data array elements pair with, as the announced container
-   *      writes moved it: a row follows its item across a remove or reorder, and an inserted row pairs with
-   *      its own starting value. `Form` passes the settled data as its container writes moved it; omitted,
-   *      elements pair with `oldData` by index
    * @returns - The new form data, with all of the fields uniquely associated with the old schema set
    *      to `undefined`. Will return `undefined` if the new schema is not an object containing properties.
    */
-  sanitizeDataForNewSchema(
-    newSchema?: S,
-    oldSchema?: S,
-    data?: any,
-    oldData?: any,
-    resolvedOldSchema?: S,
-    oldDataForPairing?: any,
-  ): T;
+  sanitizeDataForNewSchema(newSchema?: S, oldSchema?: S, data?: unknown): T;
 }

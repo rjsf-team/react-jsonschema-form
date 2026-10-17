@@ -414,6 +414,32 @@ A field component will always be passed the following props:
   );
   ```
 
+The option a union field shows is the form's state, not the field's: `SchemaField` reads it too, to stub the extra keys of an object once, with the selected option, and it outlives the field's components and follows the moves the form makes, of array items and of additional properties renamed or removed.
+A custom `AnyOfField` or `OneOfField` reads and writes it with `useOptionSelection()` from `@rjsf/core`, rather than keeping its own, and sends the data for a newly selected option through `onChange` as before:
+
+```tsx
+import { useOptionSelection } from '@rjsf/core';
+
+function MyAnyOfField(props: FieldProps & { options: RJSFSchema[] }) {
+  const { fieldPath, formData, options, registry, schema } = props;
+  const { selectedOption, selectOption } = useOptionSelection(
+    registry,
+    fieldPath,
+    options,
+    formData,
+    getDiscriminatorFieldFromSchema(schema),
+  );
+  // render the selector on `selectedOption`; on a pick, `selectOption(index)` and then `onChange(newData, fieldPath)`
+}
+```
+
+With no selection, the option shown is the one `getClosestMatchingOption()` picks for the data.
+A selection holds for the data the form last rendered under it and for the data the form's own changes inside the option leave at the field, whatever those edits made of it, so a parent declining a switch or an edit keeps it too.
+Other data, such as a parent's new `formData`, a reset, a parent answering a switch with data of its own, or an edit to a property the object declares beside its options that the options can disagree about, one an option names under `properties`, such as with a `const` that tells the options apart, or under `required`, or any such property where an option carries a keyword that reads the object whole, such as `minProperties`, `not` or `additionalProperties`, is shown under the option `getClosestMatchingOption()` picks for it, the selection winning a tie, even when it is the data the field showed before the switch; that pick does not replace the selection.
+An edit to a property every option is silent about, where each carries only `type`, annotations such as `title`, and `properties` and `required` that leave the property out, holds the option shown, as an edit inside the option does.
+Outside a `Form`, the outermost `SchemaField` keeps the selections of the fields below it, and a component with no `SchemaField` or `Form` above it keeps its own.
+The selection is kept by the place of the option list in the root schema, so a condition that swaps the list the field offers starts the choice over and finds it again when it swaps back, while a schema that changes the list in place, such as by adding an option, keeps it.
+
 ## The `registry` object
 
 The `registry` is an object containing the registered core, theme and custom fields and widgets as well as the root schema, form context, schema utils.

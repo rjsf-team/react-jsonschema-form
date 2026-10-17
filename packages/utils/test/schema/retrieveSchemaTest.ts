@@ -4,6 +4,7 @@ import type { RJSFSchema } from '../../src/index.ts';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   GUESSED_TYPE_FLAG,
+  getAdditionalPropertySchema,
   createSchemaUtils,
   getByPath,
   getRenderedOptionSchema,
@@ -16,7 +17,9 @@ import {
   noop,
 } from '../../src/index.ts';
 import {
+  expandRefCycle,
   getAdditionalPropertyType,
+  getValidationTarget,
   resolveOwnRef,
   stubExistingAdditionalProperties,
 } from '../../src/schema/retrieveSchema.ts';
@@ -83,65 +86,6 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       expect(getAdditionalPropertyType({ oneOf: [{ type: 'string' }, true] })).toBeUndefined();
       expect(getAdditionalPropertyType({ anyOf: [{ minLength: 2 }] })).toBeUndefined();
     });
-    it('returns the type the definition a reference names says, given a root schema to look it up in', () => {
-      const rootSchema: RJSFSchema = {
-        definitions: {
-          cat: { type: 'object', properties: { meow: { type: 'string' } } },
-          dog: { properties: { woof: { type: 'string' } } },
-          named: { $ref: '#/definitions/cat' },
-          loop: { oneOf: [{ $ref: '#/definitions/loop' }] },
-        },
-      };
-      // A `$ref` is how an option usually names the object or the enum it is, so options spelled as one agree on a type
-      // the way inline options do
-      expect(
-        getAdditionalPropertyType(
-          { oneOf: [{ $ref: '#/definitions/cat' }, { $ref: '#/definitions/dog' }] },
-          rootSchema,
-        ),
-      ).toBe('object');
-      // Two options naming the same definition both read it, and a reference the definition itself holds is followed on
-      expect(
-        getAdditionalPropertyType(
-          { anyOf: [{ $ref: '#/definitions/cat' }, { $ref: '#/definitions/named' }] },
-          rootSchema,
-        ),
-      ).toBe('object');
-      // A reference followed once is not followed again, since a recursive option refers back to itself without end,
-      // and one naming no definition says nothing about the type
-      expect(getAdditionalPropertyType({ $ref: '#/definitions/loop' }, rootSchema)).toBeUndefined();
-      expect(getAdditionalPropertyType({ $ref: '#/definitions/missing' }, rootSchema)).toBeUndefined();
-      // Without a root schema there is no definition to read the type out of
-      expect(getAdditionalPropertyType({ $ref: '#/definitions/cat' })).toBeUndefined();
-    });
-    it('reads the subschemas merged in beside options that name no type between them', () => {
-      // The options answer only where they agree on a type. An `allOf` entry and a `$ref` beside them hold the value
-      // whichever option is chosen, so a type one of those names is the whole subschema's, which is what
-      // `retrieveSchema()` would read off the merge had anything resolved it
-      expect(getAdditionalPropertyType({ allOf: [{ type: 'number' }], anyOf: [{ minimum: 1 }, { maximum: 5 }] })).toBe(
-        'number',
-      );
-      const rootSchema: RJSFSchema = { definitions: { n: { type: 'number' } } };
-      expect(
-        getAdditionalPropertyType({ $ref: '#/definitions/n', anyOf: [{ minimum: 1 }, { maximum: 5 }] }, rootSchema),
-      ).toBe('number');
-      // Options that disagree are read the same way: the merge holds the value to the entry under either of them
-      expect(
-        getAdditionalPropertyType({ allOf: [{ type: 'number' }], anyOf: [{ type: 'number' }, { type: 'string' }] }),
-      ).toBe('number');
-    });
-    it('reads a definition two merged entries both name, where the first of them shadows its type', () => {
-      // Each entry follows the references reaching the subschema without consuming them for the entries beside it, as
-      // an option does: the second entry resolves the definition unshadowed, so the type behind it answers for the
-      // merge even where the first replaced it with a name JSON Schema does not define
-      const rootSchema: RJSFSchema = { definitions: { n: { type: 'number' } } };
-      // `JSON.parse` because a type name JSON Schema does not define is one only an untyped caller can write, which is
-      // also what makes the first entry shadow the definition's type without naming a type of its own
-      const subSchema: RJSFSchema = JSON.parse(
-        '{ "allOf": [{ "$ref": "#/definitions/n", "type": "notAType" }, { "$ref": "#/definitions/n" }] }',
-      );
-      expect(getAdditionalPropertyType(subSchema, rootSchema)).toBe('number');
-    });
     it('returns the type an allOf entry names, since the merge holds the value to every entry at once', () => {
       expect(getAdditionalPropertyType({ allOf: [{ type: 'number' }] })).toBe('number');
       // An entry naming no type adds nothing to the one that does, whichever order they come in
@@ -149,9 +93,41 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       expect(getAdditionalPropertyType({ allOf: [true, { enum: [1, 2] }] })).toBe('number');
       expect(getAdditionalPropertyType({ allOf: [{ minimum: 0 }] })).toBeUndefined();
     });
+    it('reads the allOf entries beside options that name no type between them', () => {
+      expect(getAdditionalPropertyType({ allOf: [{ type: 'number' }], anyOf: [{ minimum: 1 }, { maximum: 5 }] })).toBe(
+        'number',
+      );
+      expect(
+        getAdditionalPropertyType({ allOf: [{ type: 'number' }], anyOf: [{ type: 'number' }, { type: 'string' }] }),
+      ).toBe('number');
+    });
+    it('reads the schema as it stands, and the options retrieveSchema() resolved for it', () => {
+      const rootSchema: RJSFSchema = {
+        definitions: {
+          cat: { type: 'object', properties: { meow: { type: 'string' } } },
+          dog: { properties: { woof: { type: 'string' } } },
+        },
+      };
+      const subSchema: RJSFSchema = { oneOf: [{ $ref: '#/definitions/cat' }, { $ref: '#/definitions/dog' }] };
+      expect(getAdditionalPropertyType(subSchema)).toBeUndefined();
+      expect(getAdditionalPropertyType({ $ref: '#/definitions/cat' })).toBeUndefined();
+      expect(
+        getAdditionalPropertyType(retrieveSchema({ validator: testValidator }, subSchema, rootSchema, undefined, true)),
+      ).toBe('object');
+    });
     it('returns undefined for a schema that says nothing about the type', () => {
       expect(getAdditionalPropertyType({})).toBeUndefined();
       expect(getAdditionalPropertyType({ minLength: 2 })).toBeUndefined();
+    });
+  });
+  describe('getValidationTarget()', () => {
+    it('names a subschema of the root by its place, and hands any other schema over itself', () => {
+      const a: RJSFSchema = { type: 'string' };
+      const rootSchema: RJSFSchema = { definitions: { a } };
+      expect(getValidationTarget(a, rootSchema)).toEqual({
+        $ref: '#/definitions/a',
+      });
+      expect(getValidationTarget({ type: 'number' }, rootSchema)).toEqual({ type: 'number' });
     });
   });
   describe('resolveOwnRef()', () => {
@@ -495,25 +471,6 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         properties: {
           a: { type: 'string' },
           b: { type: 'number', [ADDITIONAL_PROPERTY_FLAG]: true },
-        },
-      });
-    });
-    it('should leave a key an anyOf or oneOf option declares to the option that renders it', () => {
-      const oneOf: RJSFSchema[] = [{ properties: { kind: { const: 'a' }, a: { type: 'string' } } }];
-      const schema: RJSFSchema = {
-        type: 'object',
-        patternProperties: { '^x_': { type: 'string' } },
-        oneOf,
-      };
-
-      const formData = { kind: 'a', a: 'v', other: 1 };
-      // The options are left for the option selector to choose between rather than merged in, so a key one of them
-      // declares is missing from the `properties` here and would otherwise be stubbed beside the field the chosen
-      // option renders for it, giving the one value two fields to be written from
-      expect(retrieveSchema({ validator: testValidator }, schema, {}, formData)).toEqual({
-        ...schema,
-        properties: {
-          other: { type: 'number', [ADDITIONAL_PROPERTY_FLAG]: true, [GUESSED_TYPE_FLAG]: true },
         },
       });
     });
@@ -2628,7 +2585,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         // Expanding it gives the pattern, as it does any other key
         const expanded = retrieveSchema(
           { validator: testValidator },
-          { ...schemaOf(b.properties?.a), [RJSF_REF_CYCLE_KEY]: false },
+          expandRefCycle(schemaOf(b.properties?.a), rootSchema),
           rootSchema,
           {},
         );
@@ -2652,6 +2609,178 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       });
     });
     describe('stubExistingAdditionalProperties()', () => {
+      it('stubs a key an option declares when no option is selected', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          additionalProperties: { type: 'string' },
+          anyOf: [{ properties: { count: { type: 'number' } } }],
+        };
+        expect(
+          retrieveSchema({ validator: testValidator }, schema, schema, { count: 1, other: 'o' }).properties,
+        ).toEqual({
+          count: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true },
+          other: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true },
+        });
+      });
+      it('stubs the extra keys of an option a field offers without an object field of its own beside it', () => {
+        const option: RJSFSchema = {
+          type: 'object',
+          properties: { id: { type: 'string' } },
+          additionalProperties: { type: 'string' },
+        };
+        const schema: RJSFSchema = { type: 'object', properties: { v: { oneOf: [option, { type: 'number' }] } } };
+        const formData = { id: 'a', extra: 'x' };
+        const context = { validator: testValidator };
+        const offered = schemaOf(retrieveSchema(context, schema, schema, { v: formData }).properties?.v);
+        // As `SchemaField` reads it: the field offering the option first, then the option out of that field
+        const field = retrieveSchema(context, offered, schema, formData);
+        const shown = retrieveSchema(context, schemaOf(field.oneOf?.[0]), schema, formData);
+        expect(shown.properties).toEqual({
+          id: { type: 'string' },
+          extra: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true },
+        });
+      });
+      it('leaves a key the selected option declares to it, and stubs the others once (#5461)', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          unevaluatedProperties: { type: 'string' },
+          anyOf: [
+            { title: 'A', properties: { a: { type: 'string' } } },
+            { title: 'B', properties: { a: { type: 'string' }, b: { type: 'number' } } },
+          ],
+        };
+        const formData = { a: 'x', b: 2 };
+        expect(retrieveSchema({ validator: testValidator }, schema, schema, formData, false, 1).properties).toEqual({});
+        expect(retrieveSchema({ validator: testValidator }, schema, schema, formData, false, 0).properties).toEqual({
+          b: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true },
+        });
+      });
+      it("describes a key the option allows without describing it by the object's own keyword (#5462)", () => {
+        const db: RJSFSchema = {
+          type: 'object',
+          properties: { host: { type: 'string' }, port: { type: 'number' } },
+        };
+        const schema: RJSFSchema = {
+          type: 'object',
+          additionalProperties: db,
+          anyOf: [{ title: 'A', patternProperties: { '^x-': { type: 'string' } } }],
+        };
+        const formData = { db: { host: 'h', port: 1 } };
+        expect(retrieveSchema({ validator: testValidator }, schema, schema, formData, false, 0).properties).toEqual({
+          db: { ...db, [ADDITIONAL_PROPERTY_FLAG]: true },
+        });
+      });
+      it('joins the extra-key keywords of the object and the option, forbidding a key either forbids', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          additionalProperties: { type: 'string' },
+          oneOf: [
+            { patternProperties: { '^x-': { minLength: 2 } }, additionalProperties: false },
+            { additionalProperties: { maxLength: 3 } },
+          ],
+        };
+        const formData = { 'x-a': 'v', other: 'o' };
+        expect(retrieveSchema({ validator: testValidator }, schema, schema, formData, false, 0).properties).toEqual({
+          'x-a': { type: 'string', minLength: 2, [ADDITIONAL_PROPERTY_FLAG]: true },
+          other: { type: 'null', [ADDITIONAL_PROPERTY_FLAG]: true },
+        });
+        expect(retrieveSchema({ validator: testValidator }, schema, schema, formData, false, 1).properties).toEqual({
+          'x-a': { type: 'string', maxLength: 3, [ADDITIONAL_PROPERTY_FLAG]: true },
+          other: { type: 'string', maxLength: 3, [ADDITIONAL_PROPERTY_FLAG]: true },
+        });
+        const both: RJSFSchema = {
+          type: 'object',
+          patternProperties: { '^x-': { type: 'string' } },
+          unevaluatedProperties: { type: 'string' },
+          anyOf: [{ patternProperties: { '^x-': { maxLength: 3 }, '^y-': { minLength: 1 } } }],
+        };
+        const joined = retrieveSchema({ validator: testValidator }, both, both, { 'x-a': 'v' }, false, 0);
+        expect(joined.patternProperties).toEqual({
+          '^x-': { allOf: [{ type: 'string' }, { maxLength: 3 }] },
+          '^y-': { minLength: 1 },
+        });
+        expect(joined.unevaluatedProperties).toEqual({ type: 'string' });
+      });
+      it('describes a key by the object and by the option apart, so neither one allowing it lifts the other forbidding it', () => {
+        const formData = { x1: 'v' };
+        const forbiddingOption: RJSFSchema = { properties: { b: { type: 'string' } }, unevaluatedProperties: false };
+        const optionForbids: RJSFSchema = {
+          type: 'object',
+          properties: { a: { type: 'string' } },
+          additionalProperties: { type: 'string' },
+          oneOf: [forbiddingOption],
+        };
+        const objectForbids: RJSFSchema = {
+          type: 'object',
+          properties: { a: { type: 'string' } },
+          additionalProperties: false,
+          oneOf: [{ patternProperties: { '^x': { type: 'string' } } }],
+        };
+        const optionForbidsBesidePattern: RJSFSchema = {
+          type: 'object',
+          properties: { a: { type: 'string' } },
+          patternProperties: { '^x': { type: 'string' } },
+          oneOf: [{ properties: { a: {} }, additionalProperties: false }],
+        };
+        for (const schema of [optionForbids, objectForbids, optionForbidsBesidePattern]) {
+          expect(
+            retrieveSchema({ validator: testValidator }, schema, schema, formData, false, 0).properties?.x1,
+          ).toEqual({ type: 'null', [ADDITIONAL_PROPERTY_FLAG]: true });
+        }
+      });
+      it("leaves a key the option evaluates out of the object's unevaluatedProperties", () => {
+        const formData = { x: 'hi', 'p-1': 'v' };
+        const schema: RJSFSchema = {
+          type: 'object',
+          unevaluatedProperties: false,
+          oneOf: [{ additionalProperties: { type: 'string' } }, { patternProperties: { '^p-': { type: 'string' } } }],
+        };
+        const describedByRest = retrieveSchema({ validator: testValidator }, schema, schema, formData, false, 0);
+        expect(describedByRest.properties).toEqual({
+          x: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true },
+          'p-1': { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true },
+        });
+        expect(getAdditionalPropertySchema(describedByRest, 'newKey')).toEqual({ type: 'string' });
+        const describedByPattern = retrieveSchema({ validator: testValidator }, schema, schema, formData, false, 1);
+        expect(describedByPattern.properties).toEqual({
+          x: { type: 'null', [ADDITIONAL_PROPERTY_FLAG]: true },
+          'p-1': { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true },
+        });
+        expect(getAdditionalPropertySchema(describedByPattern, 'p-2')).toEqual({ allOf: [{ type: 'string' }] });
+        expect(getAdditionalPropertySchema(describedByPattern, 'newKey')).toBe(false);
+      });
+      it('describes a new key of the joined field as it stubs an existing one', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          patternProperties: { '^x': { type: 'string' } },
+          oneOf: [{ properties: { a: { type: 'string' } }, additionalProperties: false }],
+        };
+        const field = retrieveSchema({ validator: testValidator }, schema, schema, { a: 'v', xa: 'hi' }, false, 0);
+        expect(field.properties?.xa).toEqual({ type: 'null', [ADDITIONAL_PROPERTY_FLAG]: true });
+        expect(getAdditionalPropertySchema(field, 'xb')).toBe(false);
+      });
+      it('stubs the extra keys an option alone describes with the object, and none for the option itself', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { name: { type: 'string' } },
+          oneOf: [{ additionalProperties: { type: 'number' } }, true],
+        };
+        const formData = { name: 'n', k: 1 };
+        const field = retrieveSchema({ validator: testValidator }, schema, schema, formData, false, 0);
+        expect(field.properties).toEqual({
+          name: { type: 'string' },
+          k: { type: 'number', [ADDITIONAL_PROPERTY_FLAG]: true },
+        });
+        // The field takes the option's extra-key keyword, which its add button and the seed of a new key read
+        expect(field.additionalProperties).toEqual({ type: 'number' });
+        // The option the field offers is handed out without stubs: the field stubs the keys with it
+        const option = schemaOf(field.oneOf?.[0]);
+        expect(retrieveSchema({ validator: testValidator }, option, schema, formData).properties).toBeUndefined();
+        // A boolean option allows every key without describing it
+        expect(retrieveSchema({ validator: testValidator }, schema, schema, formData, false, 1).properties).toEqual({
+          name: { type: 'string' },
+        });
+      });
       it('deals with undefined formData', () => {
         const schema: RJSFSchema = { type: 'string' };
         expect(stubExistingAdditionalProperties({ validator: testValidator }, schema)).toEqual({
@@ -2894,24 +3023,6 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           },
         });
       });
-      it('has anyOf options that all declare a property of their own', () => {
-        const schema: RJSFSchema = {
-          additionalProperties: true,
-          anyOf: [
-            { properties: { kind: { type: 'string' } } },
-            { properties: { kind: { type: 'string' } }, anyOf: [{ properties: { kind: { type: 'string' } } }] },
-          ],
-        };
-        const formData = { kind: 'a', other: true };
-        // A name every option declares has a field whichever option the user is shown, an option of an option included,
-        // so the object around them stubs no second field for it
-        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, undefined, formData)).toEqual({
-          ...schema,
-          properties: {
-            other: { type: 'boolean', [ADDITIONAL_PROPERTY_FLAG]: true, [GUESSED_TYPE_FLAG]: true },
-          },
-        });
-      });
       it('has anyOf options of which only some declare a property', () => {
         const schema: RJSFSchema = {
           additionalProperties: { type: 'string' },
@@ -2931,120 +3042,6 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             kind: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true },
             deep: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true },
           },
-        });
-      });
-      it('has an anyOf option that takes keys of its own', () => {
-        const schema: RJSFSchema = {
-          unevaluatedProperties: { type: 'number' },
-          oneOf: [{ patternProperties: { '^s_': { type: 'string' } } }],
-        };
-        const formData = { s_a: 'hello', other: 1 };
-        // An option that takes keys of its own has every key the data holds stubbed into it, the way the object around
-        // it does, so there is none left for the object to stub a second field for
-        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, undefined, formData)).toEqual({
-          ...schema,
-          properties: {},
-        });
-      });
-      it('has an anyOf option whose own options all take keys of theirs', () => {
-        const schema: RJSFSchema = {
-          additionalProperties: { type: 'string' },
-          oneOf: [{ oneOf: [{ additionalProperties: { type: 'number' } }] }],
-        };
-        const formData = { other: 1 };
-        // The option takes every key its own options take, so there is none left for the object to stub a second field
-        // for
-        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, undefined, formData)).toEqual({
-          ...schema,
-          properties: {},
-        });
-      });
-      it('has anyOf options that declare properties through a reference or an allOf', () => {
-        const schema: RJSFSchema = {
-          additionalProperties: true,
-          oneOf: [{ $ref: '#/definitions/named' }, { allOf: [{ $ref: '#/definitions/named' }] }],
-        };
-        const rootSchema: RJSFSchema = { definitions: { named: { properties: { name: { type: 'string' } } } } };
-        const formData = { name: 'a', other: true };
-        // An option declares its properties through a reference or an `allOf` as much as inline, and the names are
-        // looked up rather than the option resolved
-        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, rootSchema, formData)).toEqual({
-          ...schema,
-          properties: {
-            other: { type: 'boolean', [ADDITIONAL_PROPERTY_FLAG]: true, [GUESSED_TYPE_FLAG]: true },
-          },
-        });
-      });
-      it('has an anyOf option whose own properties shadow the ones its reference names', () => {
-        const schema: RJSFSchema = {
-          additionalProperties: { type: 'string' },
-          oneOf: [{ $ref: '#/definitions/named', properties: { shown: { type: 'number' } } }],
-        };
-        const rootSchema: RJSFSchema = { definitions: { named: { properties: { shadowed: { type: 'boolean' } } } } };
-        const formData = { shown: 1, shadowed: 'hi' };
-        // A reference resolves as `{ ...definition, ...option }`, so a keyword the option declares itself replaces the
-        // definition's rather than joining it: the option renders no field for `shadowed`, which is the object's to
-        // stub rather than a name it can leave to the option
-        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, rootSchema, formData)).toEqual({
-          ...schema,
-          properties: { shadowed: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true } },
-        });
-      });
-      it('has an anyOf option naming one definition twice, shadowing it only once', () => {
-        const schema: RJSFSchema = {
-          additionalProperties: { type: 'string' },
-          oneOf: [
-            {
-              allOf: [
-                { $ref: '#/definitions/named', properties: { shown: { type: 'number' } } },
-                { $ref: '#/definitions/named' },
-              ],
-            },
-          ],
-        };
-        const rootSchema: RJSFSchema = { definitions: { named: { properties: { named: { type: 'boolean' } } } } };
-        const formData = { shown: 1, named: true };
-        // The second entry resolves the definition unshadowed, so the option renders the name behind it after all:
-        // each entry follows the references reaching the option without consuming them for the entries beside it, as
-        // an option of its own would, where a list shared across them would have left the first entry's shadowed read
-        // standing as the definition's only one
-        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, rootSchema, formData)).toEqual({
-          ...schema,
-          properties: {},
-        });
-      });
-      it('has an anyOf option whose own condition shadows the one its reference names', () => {
-        const schema: RJSFSchema = {
-          additionalProperties: { type: 'string' },
-          oneOf: [
-            {
-              $ref: '#/definitions/conditioned',
-              if: { properties: { kind: { const: 'z' } }, required: ['kind'] },
-              then: { properties: { shown: { type: 'number' } } },
-            },
-          ],
-        };
-        const rootSchema: RJSFSchema = {
-          definitions: {
-            conditioned: {
-              properties: { kind: { type: 'string' } },
-              if: { properties: { kind: { const: 'a' } }, required: ['kind'] },
-              then: { properties: { hidden: { type: 'number' } } },
-            },
-          },
-        };
-        // The shadowed condition settles nothing the form renders, so its branch declares no name to leave to the
-        // option -- and it is never put to the validator, which is the only question asked about it anywhere, so a
-        // precompiled validator has no function compiled for it
-        testValidator.setReturnValues({ isValid: [false] });
-        expect(
-          stubExistingAdditionalProperties({ validator: testValidator }, schema, rootSchema, {
-            kind: 'a',
-            hidden: 1,
-          }),
-        ).toEqual({
-          ...schema,
-          properties: { hidden: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true } },
         });
       });
       it('has an anyOf option whose reference names no definition', () => {
@@ -3072,58 +3069,6 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           },
         });
       });
-      it('has an anyOf option that declares a property in the branch its condition takes', () => {
-        const schema: RJSFSchema = {
-          additionalProperties: { type: 'string' },
-          oneOf: [
-            {
-              properties: { kind: { type: 'string' } },
-              if: { properties: { kind: { const: 'a' } }, required: ['kind'] },
-              then: { properties: { extra: { type: 'number' } } },
-              else: { properties: { spare: { type: 'number' } } },
-            },
-          ],
-        };
-        const rootSchema: RJSFSchema = {};
-        // The branch the condition takes is the one whose properties the option renders, so a name it declares is
-        // passed over there and stubbed under the branch that leaves it undeclared
-        testValidator.setReturnValues({ isValid: [true] });
-        expect(
-          stubExistingAdditionalProperties({ validator: testValidator }, schema, rootSchema, {
-            kind: 'a',
-            extra: 1,
-          }),
-        ).toEqual({ ...schema, properties: {} });
-        testValidator.setReturnValues({ isValid: [false] });
-        expect(
-          stubExistingAdditionalProperties({ validator: testValidator }, schema, rootSchema, {
-            kind: 'b',
-            extra: 1,
-          }),
-        ).toEqual({
-          ...schema,
-          properties: { extra: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true } },
-        });
-      });
-      it('has an anyOf option with a condition and no root schema to resolve it against', () => {
-        const schema: RJSFSchema = {
-          additionalProperties: { type: 'string' },
-          oneOf: [
-            {
-              properties: { kind: { type: 'string' } },
-              if: { properties: { kind: { const: 'a' } } },
-              then: { properties: { extra: { type: 'number' } } },
-            },
-          ],
-        };
-        const formData = { kind: 'a', extra: 1 };
-        // Without a root schema there is nothing to resolve the condition against, so neither branch is read and the
-        // name it declares keeps the field the object stubs for it
-        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, undefined, formData)).toEqual({
-          ...schema,
-          properties: { extra: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true } },
-        });
-      });
       it('has a property name that is also a name on Object.prototype', () => {
         const schema: RJSFSchema = { additionalProperties: { type: 'string' } };
         const formData = { constructor: 'c', toString: 't' };
@@ -3135,94 +3080,6 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             constructor: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true },
             toString: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true },
           },
-        });
-      });
-      it('has an anyOf option whose reference names a definition that takes keys of its own', () => {
-        const schema: RJSFSchema = {
-          additionalProperties: { type: 'string' },
-          oneOf: [{ $ref: '#/definitions/anyMap' }],
-        };
-        const rootSchema: RJSFSchema = {
-          definitions: { anyMap: { type: 'object', additionalProperties: { type: 'number' } } },
-        };
-        const formData = { other: 1 };
-        // The definition the option is spelled as is what gives it that keyword, so the option renders every extra key
-        // the data holds as surely as one carrying the keyword inline does, and stubbing the key here would give the
-        // one value a second field beside the one the option renders for it
-        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, rootSchema, formData)).toEqual({
-          ...schema,
-          properties: {},
-        });
-      });
-      it('has an anyOf option composed of an allOf entry that takes keys of its own', () => {
-        const schema: RJSFSchema = {
-          additionalProperties: { type: 'string' },
-          oneOf: [{ allOf: [{ properties: { kind: { type: 'string' } } }, { $ref: '#/definitions/patternedMap' }] }],
-        };
-        const rootSchema: RJSFSchema = {
-          definitions: { patternedMap: { patternProperties: { '^x_': { type: 'number' } } } },
-        };
-        const formData = { x_one: 1 };
-        // The keyword is as much the option's for being reached through an entry of the `allOf` it is composed of, and
-        // through the reference that entry is spelled as, as it is for being written on the option itself
-        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, rootSchema, formData)).toEqual({
-          ...schema,
-          properties: {},
-        });
-      });
-      it('has an anyOf option whose reference names a definition offering options of its own', () => {
-        const schema: RJSFSchema = {
-          additionalProperties: { type: 'string' },
-          oneOf: [{ $ref: '#/definitions/variant' }],
-        };
-        const rootSchema: RJSFSchema = {
-          definitions: {
-            variant: {
-              oneOf: [
-                { properties: { shared: { type: 'number' } } },
-                { properties: { shared: { type: 'boolean' }, only: { type: 'number' } } },
-              ],
-            },
-          },
-        };
-        const formData = { shared: 1, only: 2 };
-        // The options behind the reference are the ones the option renders, so a name every one of them renders has
-        // that option's field whichever is chosen and stubbing it here would give the one value a second field, while
-        // a name only one of them declares keeps the field the object stubs for it
-        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, rootSchema, formData)).toEqual({
-          ...schema,
-          properties: { only: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true } },
-        });
-      });
-      it('has an anyOf option composed of an allOf entry offering options of its own', () => {
-        const schema: RJSFSchema = {
-          additionalProperties: { type: 'string' },
-          oneOf: [{ allOf: [{ oneOf: [{ properties: { nested: { type: 'number' } } }] }] }],
-        };
-        const formData = { nested: 1 };
-        // The options are as much the option's for being reached through an entry of the `allOf` it is composed of as
-        // they are for being written on the option itself
-        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, undefined, formData)).toEqual({
-          ...schema,
-          properties: {},
-        });
-      });
-      it('has an option declaring a name through a dependency the data brings in', () => {
-        const schema: RJSFSchema = {
-          additionalProperties: { type: 'string' },
-          oneOf: [
-            {
-              properties: { kind: { type: 'string' } },
-              dependencies: { kind: { properties: { extra: { type: 'number' } } } },
-            },
-          ],
-        };
-        const formData = { kind: 'a', extra: 3 };
-        // `retrieveSchema()` merges a dependency the data has the key of into the option before it renders, so the
-        // name it declares is the option's own and a stub for it would give the one value a second field
-        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, schema, formData)).toEqual({
-          ...schema,
-          properties: {},
         });
       });
       it('has an option declaring a name through a dependency the data leaves out', () => {
@@ -3249,36 +3106,6 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           },
         });
       });
-      it('has an option declaring a dependency as a list of required names', () => {
-        const schema: RJSFSchema = {
-          additionalProperties: { type: 'string' },
-          oneOf: [{ properties: { kind: { type: 'string' } }, dependencies: { kind: ['other'] } }],
-        };
-        const formData = { kind: 'a', other: 1 };
-        // A property-list dependency adds nothing to `required` but declares no name of its own
-        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, schema, formData)).toEqual({
-          ...schema,
-          properties: { other: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true } },
-        });
-      });
-      it("resolves an option's $ref under a nested $id against that $id for the names the option declares", () => {
-        const rootSchema: RJSFSchema = {
-          $schema: 'https://json-schema.org/draft/2020-12/schema',
-          $id: 'https://example.com/root.json',
-          $defs: {
-            child: {
-              $id: 'child.json',
-              type: 'object',
-              additionalProperties: { type: 'number' },
-              anyOf: [{ $ref: '#/$defs/x', additionalProperties: false }],
-              $defs: { x: { type: 'object', properties: { a: { type: 'string' } } } },
-            },
-          },
-          type: 'object',
-          properties: { c: { $ref: 'child.json' } },
-        };
-        expect(retrieveProperty(testValidator, rootSchema, 'c', rootSchema, { a: 'hi' }).properties).toEqual({});
-      });
       it('reads a $ref to a boolean definition as naming nothing', () => {
         const rootSchema: RJSFSchema = {
           definitions: { yes: true },
@@ -3289,243 +3116,6 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         expect(
           stubExistingAdditionalProperties({ validator: testValidator }, rootSchema, rootSchema, { a: 1 }).properties,
         ).toEqual({ a: { type: 'number', [ADDITIONAL_PROPERTY_FLAG]: true } });
-      });
-      it("has an option declaring a name through the branch a dependency's oneOf settles on the data", () => {
-        const schema: RJSFSchema = {
-          additionalProperties: { type: 'string' },
-          oneOf: [
-            {
-              properties: { kind: { type: 'string', enum: ['x', 'y'] } },
-              dependencies: {
-                kind: {
-                  oneOf: [
-                    { properties: { kind: { enum: ['x'] }, px: { type: 'number' } } },
-                    { properties: { kind: { enum: ['y'] }, py: { type: 'number' } } },
-                  ],
-                },
-              },
-            },
-          ],
-        };
-        // The first branch of the dependency matches and the second does not, which is the one valid branch
-        // `withExactlyOneSubschema()` needs to merge it in
-        testValidator.setReturnValues({ isValid: [true, false] });
-        const formData = { kind: 'x', px: 1 };
-        // `withExactlyOneSubschema()` merges that branch into the option with no selector involved, so `px` is a name
-        // the option renders: stubbing it would put a text input beside the number field the branch describes
-        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, schema, formData)).toEqual({
-          ...schema,
-          properties: {},
-        });
-      });
-      it('has an option declaring a name through a dependency spelled as a $ref to the oneOf', () => {
-        const rootSchema: RJSFSchema = {
-          definitions: {
-            dep: {
-              oneOf: [
-                { properties: { kind: { enum: ['x'] }, px: { type: 'number' } } },
-                { properties: { kind: { enum: ['y'] }, py: { type: 'number' } } },
-              ],
-            },
-          },
-        };
-        const schema: RJSFSchema = {
-          additionalProperties: { type: 'string' },
-          oneOf: [
-            {
-              properties: { kind: { type: 'string', enum: ['x', 'y'] } },
-              dependencies: { kind: { $ref: '#/definitions/dep' } },
-            },
-          ],
-        };
-        // The first branch of the dependency matches and the second does not, which is the one valid branch
-        // `withExactlyOneSubschema()` needs to merge it in
-        testValidator.setReturnValues({ isValid: [true, false] });
-        const formData = { kind: 'x', px: 1 };
-        // `withDependentSchema()` resolves the dependency before it takes the `oneOf` off, so the branch is settled
-        // from the data for this spelling as surely as for an inline one, and `px` is a name the option renders
-        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, rootSchema, formData)).toEqual({
-          ...schema,
-          properties: {},
-        });
-      });
-      it('has an option whose dependency spelled as a $ref qualifies no single branch', () => {
-        const branches: RJSFSchema[] = [
-          { properties: { kind: { type: 'string' }, px: { type: 'number' } } },
-          { properties: { kind: { type: 'string' }, px: { type: 'string' } } },
-        ];
-        const rootSchema: RJSFSchema = { definitions: { dep: { oneOf: branches } } };
-        const schema: RJSFSchema = {
-          additionalProperties: { type: 'string' },
-          oneOf: [
-            {
-              properties: { kind: { type: 'string' } },
-              dependencies: { kind: { $ref: '#/definitions/dep' } },
-            },
-          ],
-        };
-        // Neither branch constrains `kind` beyond the type the data has, so both match, which is the case
-        // `withExactlyOneSubschema()` logs and merges nothing in
-        testValidator.setReturnValues({ isValid: [true, true] });
-        const formData = { kind: 'x', px: 1 };
-        // With no branch merged there is no field for `px` under the option, as there is none for the inline spelling
-        // below: read through the reference, the branches would be options of their own and a name both declare one
-        // the form renders
-        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, rootSchema, formData)).toEqual({
-          ...schema,
-          properties: { px: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true } },
-        });
-      });
-      it('has an option whose dependency oneOf qualifies no single branch', () => {
-        const schema: RJSFSchema = {
-          additionalProperties: { type: 'string' },
-          oneOf: [
-            {
-              properties: { kind: { type: 'string' } },
-              dependencies: {
-                kind: {
-                  oneOf: [
-                    { properties: { kind: { type: 'string' }, px: { type: 'number' } } },
-                    { properties: { kind: { type: 'string' }, py: { type: 'number' } } },
-                  ],
-                },
-              },
-            },
-          ],
-        };
-        // Neither branch constrains `kind` beyond the type the data has, so both match, which is the case
-        // `withExactlyOneSubschema()` logs and merges nothing in
-        const formData = { kind: 'x', px: 1 };
-        // With no branch merged there is no field for `px` under the option, so the name is the object's to stub
-        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, schema, formData)).toEqual({
-          ...schema,
-          properties: { px: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true } },
-        });
-      });
-      it('has an option whose dependency oneOf holds a branch that names no condition', () => {
-        const schema: RJSFSchema = {
-          additionalProperties: { type: 'string' },
-          // `JSON.parse` because a boolean among the branches is a shape only an untyped caller can write, and it
-          // names no condition the way the branch beside it leaves `kind` out
-          oneOf: JSON.parse(
-            '[{ "properties": { "kind": { "type": "string" } }, "dependencies": { "kind": { "oneOf": [true, { "properties": { "px": { "type": "number" } } }, { "properties": { "kind": { "enum": ["x"] }, "py": { "type": "number" } } }] } } }]',
-          ),
-        };
-        // Only the branch naming `kind` is put to the validator at all, and it is the one that matches
-        testValidator.setReturnValues({ isValid: [true] });
-        const formData = { kind: 'x', px: 1, py: 2 };
-        // A branch that does not name the dependency key is no more a candidate than a boolean one, so the only
-        // branch merged in is the one that does: `py` is the option's name and `px` is the object's to stub
-        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, schema, formData)).toEqual({
-          ...schema,
-          properties: { px: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true } },
-        });
-      });
-      it("has an option whose dependency oneOf names its branches' conditions behind a $ref", () => {
-        const schema: RJSFSchema = {
-          additionalProperties: { type: 'string' },
-          definitions: {
-            x: { properties: { kind: { enum: ['x'] }, px: { type: 'number' } } },
-            y: { properties: { kind: { enum: ['y'] }, py: { type: 'number' } } },
-          },
-          oneOf: [
-            {
-              properties: { kind: { type: 'string', enum: ['x', 'y'] } },
-              dependencies: {
-                kind: {
-                  // The first branch names no condition of its own and none behind a reference either, so it is no
-                  // candidate and is never put to the validator
-                  oneOf: [{ required: ['kind'] }, { $ref: '#/definitions/x' }, { $ref: '#/definitions/y' }],
-                },
-              },
-            },
-          ],
-        };
-        // The condition the first reference names matches and the second's does not, which is the one valid branch
-        // `withExactlyOneSubschema()` needs to merge it in
-        testValidator.setReturnValues({ isValid: [true, false] });
-        const formData = { kind: 'x', px: 1 };
-        // `withDependentSchema()` resolves the branches before matching them, so the condition behind the reference is
-        // the one that settles the branch: read unresolved the branch names none, no branch qualifies, and `px` takes
-        // a text input beside the number field the branch renders it with
-        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, schema, formData)).toEqual({
-          ...schema,
-          properties: {},
-        });
-      });
-      it('has an option with a dependency oneOf and no root schema to match its branches against', () => {
-        const schema: RJSFSchema = {
-          additionalProperties: { type: 'string' },
-          oneOf: [
-            {
-              properties: { kind: { type: 'string' } },
-              dependencies: { kind: { oneOf: [{ properties: { kind: { enum: ['x'] }, px: { type: 'number' } } }] } },
-            },
-          ],
-        };
-        const formData = { kind: 'x', px: 1 };
-        // Without a root schema no branch is matched, as no condition is settled, so the names a branch declares are
-        // left to be stubbed rather than credited to the option
-        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, undefined, formData)).toEqual({
-          ...schema,
-          properties: { px: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true } },
-        });
-      });
-      it('describes its extra keys with unevaluatedProperties beside options that declare different names', () => {
-        const schema: RJSFSchema = {
-          type: 'object',
-          oneOf: [
-            { properties: { kind: { const: 'a' }, a: { type: 'object', properties: { x: { type: 'string' } } } } },
-            { properties: { kind: { const: 'b' }, b: { type: 'number' } } },
-          ],
-          unevaluatedProperties: { type: 'string' },
-        };
-        const formData = { kind: 'a', a: { x: 'hi' } };
-        // The keyword says nothing about a key the matching option evaluates, so a name that option declares is left
-        // to it: stubbing `a` here would put a text input over the object the first option describes, and writing to
-        // it would replace that object with a string
-        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, schema, formData)).toEqual({
-          ...schema,
-          properties: {},
-        });
-      });
-      it('describes its extra keys with unevaluatedProperties beside an option the data does not match', () => {
-        const schema: RJSFSchema = {
-          type: 'object',
-          oneOf: [
-            { properties: { kind: { const: 'b' }, b: { type: 'number' } } },
-            { properties: { kind: { const: 'a' }, a: { type: 'object', properties: { x: { type: 'string' } } } } },
-          ],
-          unevaluatedProperties: { type: 'string' },
-        };
-        // The matching option leads the list, which is the option the stub validator answers with as well as the one
-        // the data validates against, so the walk reads the same option under either
-        const formData = { kind: 'b', a: 'left over' };
-        // Only the option the data matches evaluates anything, so `a` is a key nothing evaluates: the keyword
-        // describes it and the object stubs it, where leaving it to the option declaring it would cost the value the
-        // only field it has
-        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, schema, formData)).toEqual({
-          ...schema,
-          properties: { a: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true } },
-        });
-      });
-      it('describes its extra keys with unevaluatedProperties beside an option whose reference names no definition', () => {
-        const schema: RJSFSchema = {
-          type: 'object',
-          oneOf: [{ properties: { a: { type: 'number' } } }, { $ref: '#/definitions/missing' }],
-          unevaluatedProperties: { type: 'string' },
-        };
-        // The matching option leads the list, which is the option the stub validator answers with, so the reference
-        // beside it is one the walk resolves to score and reads nothing else off
-        const formData = { a: 1, extra: 'hi' };
-        // Matching the option the data belongs to resolves the references first, and an unresolvable one is scored as
-        // it stands rather than throwing: the reference says as little about the data as the walk of the options reads
-        // off it, and whatever resolves the option to render it reports the reference on its own, where a throw here
-        // would take down an object that asked nothing but which of its keys to stub
-        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, schema, formData)).toEqual({
-          ...schema,
-          properties: { extra: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true } },
-        });
       });
       it('describes its extra keys with additionalProperties beside unevaluatedProperties', () => {
         const schema: RJSFSchema = {
@@ -3565,22 +3155,6 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         expect(Object.getOwnPropertyDescriptor(stubbed.properties, '__proto__')?.value).toEqual({
           type: 'string',
           [ADDITIONAL_PROPERTY_FLAG]: true,
-        });
-      });
-      it('has an anyOf option that refers back to the definition it is declared in', () => {
-        const schema: RJSFSchema = { additionalProperties: true, anyOf: [{ $ref: '#/definitions/loop' }] };
-        const rootSchema: RJSFSchema = {
-          definitions: {
-            loop: { properties: { deep: { type: 'string' } }, anyOf: [{ $ref: '#/definitions/loop' }] },
-          },
-        };
-        const formData = { deep: 'a', other: true };
-        // A reference followed once is not followed again, since a recursive option refers back to itself without end
-        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, rootSchema, formData)).toEqual({
-          ...schema,
-          properties: {
-            other: { type: 'boolean', [ADDITIONAL_PROPERTY_FLAG]: true, [GUESSED_TYPE_FLAG]: true },
-          },
         });
       });
       it('has additionalProperties with a default of another type than the data', () => {
@@ -4092,20 +3666,47 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         const retrieved = retrieveSchema({ validator: testValidator }, rootSchema, rootSchema);
         expect(retrieved.properties?.child).toEqual({ ...child, [RJSF_REF_CYCLE_KEY]: true });
       });
-      it('expands a collapsed property by one level when retrieved with its cycle flag cleared', () => {
+      it('expands a collapsed property by one level through expandRefCycle()', () => {
         const rootSchema: RJSFSchema = { definitions: { node }, $ref: D('node') };
         const retrieved = retrieveSchema({ validator: testValidator }, rootSchema, rootSchema);
         expect(retrieved.properties?.child).toEqual(collapsedChild);
-        const expanded = retrieveSchema(
-          { validator: testValidator },
-          { ...schemaOf(retrieved.properties?.child), [RJSF_REF_CYCLE_KEY]: false },
-          rootSchema,
-        );
-        expect(expanded).toEqual({
+        const expansion = expandRefCycle(schemaOf(retrieved.properties?.child), rootSchema);
+        expect(RJSF_REF_CYCLE_KEY in expansion).toBe(false);
+        expect(retrieveSchema({ validator: testValidator }, expansion, rootSchema)).toEqual({
           ...node,
           properties: { name: { type: 'string' }, child: collapsedChild },
           [RJSF_REF_KEY]: D('node'),
         });
+      });
+      it('reads a copy with its cycle flag cleared as a copy of the collapsed field, without restarting its ref path', () => {
+        const definitions: RJSFSchema['definitions'] = {
+          A: { type: 'object', properties: { b: { $ref: D('B') } } },
+          B: { type: 'object', properties: { a: { $ref: D('A') } } },
+        };
+        const rootSchema: RJSFSchema = { definitions, $ref: D('A') };
+        const b = retrieveProperty(
+          testValidator,
+          retrieveSchema({ validator: testValidator }, rootSchema, rootSchema),
+          'b',
+          rootSchema,
+        );
+        const collapsed = schemaOf(b.properties?.a);
+        const copy = retrieveSchema(
+          { validator: testValidator },
+          { ...collapsed, [RJSF_REF_CYCLE_KEY]: false },
+          rootSchema,
+        );
+        const expanded = retrieveSchema(
+          { validator: testValidator },
+          expandRefCycle(collapsed, rootSchema),
+          rootSchema,
+        );
+        // Expanded, `a` restarts its ref path, so `b` below it renders; the copy keeps the path `b` was reached through
+        expect(expanded.properties?.b).toEqual({ $ref: D('B') });
+        expect(copy.properties?.b).toEqual({ $ref: D('B'), [RJSF_REF_CYCLE_KEY]: true });
+      });
+      it('hands a schema it did not hand out back from expandRefCycle() without the flag', () => {
+        expect(expandRefCycle({ type: 'string', [RJSF_REF_CYCLE_KEY]: true }, {})).toEqual({ type: 'string' });
       });
       it.each<[string, RJSFSchema]>([
         [
@@ -4323,6 +3924,21 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           expect(cat.required).toEqual(['name']);
         },
       );
+      it('stubs the extra keys beside a selected boolean option, which declares none of them', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { a: { type: 'string' } },
+          additionalProperties: { type: 'string' },
+          oneOf: [true, false],
+        };
+        const formData = { a: 'x', extra: 'y' };
+        const withTrue = retrieveSchema({ validator: testValidator }, schema, schema, formData, false, 0);
+        const withFalse = retrieveSchema({ validator: testValidator }, schema, schema, formData, false, 1);
+        expect(withTrue.properties?.extra).toEqual(
+          expect.objectContaining({ type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true }),
+        );
+        expect(withFalse).toEqual(withTrue);
+      });
       it('resolves a $ref under a relative $id against that $id', () => {
         const rootSchema: RJSFSchema = {
           $schema: 'https://json-schema.org/draft/2020-12/schema',

@@ -29,7 +29,6 @@ import {
   applySubmit,
   applyValidation,
   getAt,
-  asFieldValue,
   deriveState,
   freezeFormData,
   isBlurValidated,
@@ -39,6 +38,7 @@ import {
   toIChangeEvent,
   validateFormData,
 } from './formState.ts';
+import { asFieldValue, fieldStateOf } from './uiState.ts';
 
 /** How an operation calls the consumer's callback: directly for a handle method, whose caller catches the throw, or
  * through `callWithDeferredThrow()` for a field, which can report from an Effect inside React's commit phase, where a
@@ -67,19 +67,6 @@ const IS_OWNED_BY_FORM = {
   uiSchema: false,
   schemaUtils: false,
   formData: false,
-  formDataSchema: false,
-  settledFormData: false,
-  // The pairing view is the form's own computation: a container write moves it with the data, and the parent's
-  // push of that write must not lose the move, or the next sanitize pairs each surviving row with a neighbour's
-  // previous value (#5451). A push the form did not propose leaves it as it is, which the length check guards
-  settledFormDataForPairing: true,
-  // The pending view and the data it describes are the form's own record of the container write it sent: the
-  // parent's push only answers it, and `deriveControlledState()` adopts or drops it
-  pendingPairingView: true,
-  pendingPairingData: true,
-  settledRetrievedSchema: false,
-  proposedFormData: true,
-  proposedFormDataRoot: true,
   edit: false,
   errors: true,
   errorSchema: true,
@@ -87,7 +74,7 @@ const IS_OWNED_BY_FORM = {
   schemaValidationErrorSchema: true,
   customErrors: true,
   retrievedSchema: false,
-  hasNestedConditionalSchema: false,
+  uiState: false,
   initialDefaultsGenerated: false,
   registry: false,
   isControlled: false,
@@ -234,6 +221,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   let epoch = 0;
   // The key move of the change a field is sending, see `FormDataAccess.sendMove()`
   let announced: AnnouncedMove | undefined;
+  const { uiState } = initial;
   const propose = (next: FormState<T, S, F>) => {
     // `commit()` freezes self-owned data; a proposal never reaches it
     if (isDevelopment) {
@@ -303,7 +291,9 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
    * `validateForm()` act on
    */
   const withExtraDataOmitted = (props: OperationProps<T, S, F>, start: FormState<T, S, F>, formData: T | undefined) =>
-    props.omitExtraData === true ? start.schemaUtils.omitExtraData(start.schema, formData) : formData;
+    props.omitExtraData === true
+      ? start.schemaUtils.omitExtraData(start.schema, formData, fieldStateOf(uiState, start.schemaUtils))
+      : formData;
 
   /** Attempts to focus on the field associated with the `error`. Uses the `property` field to compute path of the error
    * field, then, using the `idPrefix` and `idSeparator` converts that path into an id. Then the input element with that
@@ -399,6 +389,9 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     const move = announced?.fieldPath === fieldPath ? announced : undefined;
     if (move) {
       announced = undefined;
+      // A parent-owned form's move is a proposal, which the parent declines by rendering the data it rendered before
+      const rendered = start.isControlled ? { data: getAt(start.formData, fieldPathToList(fieldPath)) } : undefined;
+      uiState.move(fieldPath, move.newOwnKeyOf ?? move.newKeyOf, rendered);
     }
     const edit: PendingChange<T> = {
       newValue,
@@ -409,6 +402,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       dropsOwnErrors: move?.dropsOwnErrors,
     };
     const next = applyChange(pending ?? start, edit, props);
+    uiState.edited(fieldPath, (path) => getAt(next.formData, path), start.isControlled);
     if (!start.isControlled) {
       // A reentrant operation may have committed while this one was being calculated, so report what was committed
       const committed = commit(start, next, (base) => applyChange(base, edit, props));
@@ -424,42 +418,9 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       // `next` was built on `start` when no proposal is pending, so it already carries what the change did to them
       const isNext = base === start && !pending;
       if (isLiveValidated(props) || move) {
-        // The proposal the parent answers is `next` even here, so its marker is committed too: a live-validated
-        // or key-moving edit's proposal would otherwise never be recognized when the parent hands it back
-        return {
-          ...base,
-          customErrors: isNext ? next.customErrors : ownErrorsAfterChange(base, edit),
-          proposedFormData: next.proposedFormData,
-          proposedFormDataRoot: next.proposedFormDataRoot,
-          // A container write's moved pairing view is the form's own (see `IS_OWNED_BY_FORM`): its proposal never
-          // settles, so the parent's push of it keeps the committed marker. The moved view waits pending with the
-          // data it describes rather than committing: the parent answers the write by pushing that data back, and
-          // `deriveControlledState()` adopts the view only then, so a declined reorder keeps the view as it was
-          // before the move. Only a write made on the settled state is kept: one made beside an outstanding
-          // proposal would describe data that never settles
-          ...(move && isNext
-            ? { pendingPairingView: next.settledFormDataForPairing, pendingPairingData: next.formData }
-            : {}),
-        };
+        return { ...base, customErrors: isNext ? next.customErrors : ownErrorsAfterChange(base, edit) };
       }
-      // The outstanding proposal is the form's own too (see `IS_OWNED_BY_FORM`): without it the parent's answer cannot
-      // be told from an unrelated push, so `deriveControlledState()` would never settle an accepted proposal
-      if (isNext) {
-        return {
-          ...base,
-          ...ownedErrorsOf(next),
-          proposedFormData: next.proposedFormData,
-          proposedFormDataRoot: next.proposedFormDataRoot,
-        };
-      }
-      // `next` was built on the pending proposal, and `propose(next)` is what the parent answers, so its marker
-      // is the one to commit; the errors alone come from the committed state
-      return {
-        ...base,
-        ...applyChangeToErrors(base, edit, props.extraErrors),
-        proposedFormData: next.proposedFormData,
-        proposedFormDataRoot: next.proposedFormDataRoot,
-      };
+      return { ...base, ...(isNext ? ownedErrorsOf(next) : applyChangeToErrors(base, edit, props.extraErrors)) };
     };
     commit(start, withOwnedErrors(start), withOwnedErrors);
     propose(next);
@@ -633,6 +594,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
         }
       }
     },
+    uiState,
     /** The latest value at `path`: a self-owned edit or a pending proposal, else the rendered data */
     readField: <D>(path: FieldPath) => getAt<D>((pending ?? state).formData, fieldPathToList(path)),
     getSnapshot: () => snapshot,
@@ -661,6 +623,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       if (!isDetached() && snapshot === renderedSnapshot) {
         pending = undefined;
         epoch += 1;
+        uiState.rendered((path) => getAt(derived.formData, path));
       }
     },
     /** The setup of a layout Effect, which React runs when the form mounts and when an `<Activity>` shows it again:

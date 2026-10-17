@@ -886,12 +886,12 @@ describe('anyOf', () => {
     it.each([
       { moves: false, title: 'under the same id' },
       { moves: true, title: 'moved to another id in the same render' },
-    ])('puts a declined switch back on the option the data fits, $title', async ({ moves }) => {
+    ])('keeps a declined switch the data does not fit, $title', async ({ moves }) => {
       const { container } = render(<SwitchedField answers={false} moves={moves} />);
 
       await user.selectOptions(container.querySelector('select')!, 'B');
 
-      expect(container.querySelector('select')).toHaveValue('0');
+      expect(container.querySelector('select')).toHaveValue('1');
       expect(container.querySelector('select')).toHaveAttribute('id', `root_${moves ? 1 : 0}__anyof_select`);
     });
 
@@ -899,13 +899,13 @@ describe('anyOf', () => {
       { moves: false, title: 'under the same id' },
       { moves: true, title: 'moved to another id in the same render' },
     ])(
-      'keeps a switch the parent answered with new data, though that data fits the option that was left, $title',
+      'matches a switch the parent answered with data of its own the option does not fit again, $title',
       async ({ moves }) => {
         const { container } = render(<SwitchedField answers moves={moves} />);
 
         await user.selectOptions(container.querySelector('select')!, 'B');
 
-        expect(container.querySelector('select')).toHaveValue('1');
+        expect(container.querySelector('select')).toHaveValue('0');
         expect(container.querySelector('select')).toHaveAttribute('id', `root_${moves ? 1 : 0}__anyof_select`);
       },
     );

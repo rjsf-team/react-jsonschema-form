@@ -57,7 +57,7 @@ import getNumericInputTitle from './getNumericInputTitle.ts';
 import getOptionUiSchema, { selectOptionUiSchema } from './getOptionUiSchema.ts';
 import getOptionValueFormat from './getOptionValueFormat.ts';
 import getPropertySchema from './getPropertySchema.ts';
-import getRenderedOptionSchema, { rendersOwnFieldBesideOption } from './getRenderedOptionSchema.ts';
+import getRenderedOptionSchema from './getRenderedOptionSchema.ts';
 import getSchemaOwnTypes from './getSchemaOwnTypes.ts';
 import getSchemaType from './getSchemaType.ts';
 import getSchemaTypeForValue from './getSchemaTypeForValue.ts';
@@ -133,11 +133,11 @@ import parseDateString from './parseDateString.ts';
 import { getByPath, hasByPath, propertyToPath, setByPath, toPath, unsetByPath } from './pathUtils.ts';
 import type { ObjectPath } from './pathUtils.ts';
 import rangeSpec from './rangeSpec.ts';
+import rendersOwnFieldBesideOption from './rendersOwnFieldBesideOption.ts';
 import replaceEqualDeep from './replaceEqualDeep.ts';
 import replaceStringParameters from './replaceStringParameters.ts';
 import resolveDefaultWidget from './resolveDefaultWidget.ts';
 import resolveUiSchema from './resolveUiSchema.ts';
-import schemaHasNestedConditional from './schemaHasNestedConditional.ts';
 import schemaRequiresTrueValue from './schemaRequiresTrueValue.ts';
 import { normalizeUri, resolveUri } from './schemaUri.ts';
 import SelectedOptionDescription from './SelectedOptionDescription.tsx';
@@ -320,7 +320,6 @@ export {
   resolveDefaultWidget,
   resolveUiSchema,
   resolveWidget,
-  schemaHasNestedConditional,
   schemaKey,
   schemaRequiresTrueValue,
   setByPath,

@@ -1,21 +1,11 @@
-import { useCallback, useMemo, useState } from 'react';
-import type {
-  ErrorSchema,
-  FieldProps,
-  FormContextType,
-  Registry,
-  RJSFSchema,
-  StrictRJSFSchema,
-  UiSchema,
-} from '@rjsf/utils';
+import { useCallback, useMemo } from 'react';
+import type { ErrorSchema, FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
 import {
   ANY_OF_KEY,
-  deepEquals,
   ERRORS_KEY,
   getDiscriminatorFieldFromSchema,
   getRenderedOptionSchema,
   getTemplates,
-  getValidationTarget,
   getUiOptions,
   getXxxOfKey,
   isFormDataAvailable,
@@ -29,74 +19,11 @@ import {
 } from '@rjsf/utils';
 
 import fieldLabelForLog from '../../fieldLabelForLog.ts';
+import useOptionSelection from '../../hooks/useOptionSelection.ts';
 import useSendOptionSwitch from '../../hooks/useSendOptionSwitch.ts';
 import formDataForNewOption from './formDataForNewOption.ts';
 import optionRendersFieldLabel from './optionRendersFieldLabel.ts';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
-
-/** The option an `AnyOfField` has selected, with what it last rendered, to tell a change of data from a re-render */
-interface OptionSelection<T> {
-  selectedOption: number;
-  formData: T | undefined;
-  id: string;
-  /** The data the user's last option switch proposed, so re-matching the option to the data does not override the
-   * explicit choice. It is needed even when the switch is accepted, since getDefaultFormState populates undefined
-   * properties that make deepEquals see a false formData change.
-   */
-  proposal: { formData: T | undefined } | undefined;
-}
-
-/** Re-matches the selected option of an `AnyOfField` to data that changed under the same field
- *
- * @param selection - The selected option, and the data it was last matched against
- * @param formData - The data now rendered
- * @param options - The retrieved schema of each option
- * @param schema - The schema holding the options
- * @param registry - The `registry` object
- * @returns - The index of the option to select
- */
-function optionForData<
-  T = unknown,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = FormContextType,
->(
-  selection: OptionSelection<T>,
-  formData: T | undefined,
-  options: S[],
-  schema: S,
-  registry: Registry<T, S, F>,
-): number {
-  const { selectedOption, proposal } = selection;
-  const { schemaUtils } = registry;
-  const isFormDataChanged = !deepEquals(formData, selection.formData);
-  if (proposal) {
-    // A switch that proposed the data the form already held has nothing a parent could decline
-    if (isFormDataChanged || deepEquals(formData, proposal.formData)) {
-      return selectedOption;
-    }
-    // The option switch was proposed but the data did not follow it, which is what a parent declining the proposal
-    // looks like (RFC, section 5): the chosen option stays while the data still fits it, so a form whose data
-    // matches several options keeps the explicit choice, and one whose data does not is put back on the option that
-    // describes it
-    const chosen = selectedOption >= 0 ? options[selectedOption] : undefined;
-    if (
-      chosen &&
-      schemaUtils
-        .getValidator()
-        .isValid(getValidationTarget<S>(chosen, registry.rootSchema), formData, registry.rootSchema)
-    ) {
-      return selectedOption;
-    }
-  } else if (!isFormDataChanged) {
-    return selectedOption;
-  }
-  return schemaUtils.getClosestMatchingOption(
-    formData,
-    options,
-    selectedOption,
-    getDiscriminatorFieldFromSchema<S>(schema),
-  );
-}
 
 /** Returns `optionUiSchema` with the given `title` and `description` in place of the option's own, each where one is
  * given. They go in `ui:options`, and the option's top-level `ui:title`/`ui:description` they replace are
@@ -130,8 +57,9 @@ function withFieldLabel<T, S extends StrictRJSFSchema, F extends FormContextType
   return uiSchema;
 }
 
-/** The `AnyOfField` component is used to render a field in the schema that is an `anyOf`, `allOf` or `oneOf`. It tracks
- * the currently selected option and cleans up any irrelevant data in `formData`.
+/** The `AnyOfField` component is used to render a field in the schema that is an `anyOf`, `allOf` or `oneOf`. It shows
+ * the option `useOptionSelection()` holds for the field, selects another when the user picks one, and cleans up any
+ * irrelevant data in `formData`.
  *
  * @param props - The `FieldProps` for this template. `options` holds the option schemas, each already retrieved for
  *   `formData` by `SchemaField`, which is the one place they are retrieved; a custom field rendering this itself
@@ -164,35 +92,13 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   const readsFormData = useReadsFormData(AnyOfField);
   const sendOptionSwitch = useSendOptionSwitch(fieldPath);
 
-  const [selection, setSelection] = useState<OptionSelection<T>>(() => ({
-    selectedOption: schemaUtils.getClosestMatchingOption(
-      formData,
-      options,
-      0,
-      getDiscriminatorFieldFromSchema<S>(schema),
-    ),
+  const { selectedOption, selectOption } = useOptionSelection<T, S, F>(
+    registry,
+    fieldPath,
+    options,
     formData,
-    id,
-    proposal: undefined,
-  }));
-  const { selectedOption } = selection;
-
-  // Adjusted while rendering rather than in an effect, so the option that no longer describes the data is never
-  // committed. A pending proposal is settled by the first render after it, against the data rendered before it, whether
-  // or not the data followed it and whether or not the id changed in that render too. A render that changed the id with
-  // no proposal pending only records what it rendered.
-  // `Object.is`, since `NaN !== NaN` would have data a widget parsed to `NaN` set this state on every pass
-  if (!Object.is(selection.formData, formData) || selection.id !== id || selection.proposal) {
-    setSelection({
-      selectedOption:
-        selection.id === id || selection.proposal
-          ? optionForData<T, S, F>(selection, formData, options, schema, registry)
-          : selectedOption,
-      formData,
-      id,
-      proposal: undefined,
-    });
-  }
+    getDiscriminatorFieldFromSchema<S>(schema),
+  );
 
   const xxxOfKey = getXxxOfKey<S>(schema) ?? ONE_OF_KEY;
   const selectSuffix = xxxOfKey === ANY_OF_KEY ? '__anyof_select' : '__oneof_select';
@@ -261,7 +167,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
         uiSchemaDefinitions,
       });
 
-      setSelection((current) => ({ ...current, selectedOption: intOption, proposal: { formData: newFormData } }));
+      selectOption(intOption);
       sendOptionSwitch(
         schema,
         {
@@ -287,6 +193,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
       fieldPath,
       onChange,
       fieldId,
+      selectOption,
       sendOptionSwitch,
       optionsUiSchema,
       optionUiSchema,

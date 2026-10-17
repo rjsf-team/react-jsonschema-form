@@ -1,4 +1,5 @@
 import { useCallback, useMemo, memo } from 'react';
+import type { ReactElement } from 'react';
 import type {
   ErrorSchema,
   Field,
@@ -19,8 +20,10 @@ import {
   ANY_OF_KEY,
   descriptionId,
   fieldPathToId,
+  fieldPathToList,
   getByPath,
   getDeprecatedHandling,
+  getDiscriminatorFieldFromSchema,
   getFieldClassNames,
   getFieldTypeForWidget,
   getSchemaOwnTypes,
@@ -40,11 +43,11 @@ import {
   isFormDataAvailable,
   logOnce,
   omitConsumedStyling,
+  rendersOwnFieldBesideOption,
   resolveConstantOptions,
   resolveUiSchema,
   RJSF_REF_CYCLE_KEY,
   shouldRenderOptionalField,
-  isObject,
   toConstant,
   toFieldPath,
   TranslatableString,
@@ -57,8 +60,13 @@ import {
 import describeUnresolvedComponent from '../../describeUnresolvedComponent.ts';
 import fieldLabelForLog, { entryLabelForLog } from '../../fieldLabelForLog.ts';
 import hasOptionLabels from '../../hasOptionLabels.ts';
+import { useShownOption } from '../../hooks/useOptionSelection.ts';
+import useUiState from '../../hooks/useUiState.ts';
+import { retrievedOptionsOf } from '../uiState.ts';
+import UiStateContext from '../UiStateContext.ts';
 import optionRendersFieldLabel from './optionRendersFieldLabel.ts';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
+import ShownOptionContext from './ShownOptionContext.ts';
 
 /** The map of component type to FieldName */
 const COMPONENT_TYPES: Record<string, string> = {
@@ -444,17 +452,6 @@ function SchemaFieldRender<
   const { AnyOfField: _AnyOfField, OneOfField: _OneOfField, CyclicSchemaField } = fields;
   const readsFormData = useReadsFormData(SchemaField);
 
-  /** Intermediary `onChange` handler for field components that will inject the `id` of the current field into the
-   * `onChange` chain if it is not already being provided from a deeper level in the hierarchy
-   */
-  const handleFieldComponentChange = useCallback(
-    (newFormData: T | undefined, changedFieldPath: FieldPath, newErrorSchema?: ErrorSchema<T>, id?: string) => {
-      const theId = id || fieldId;
-      onChange(newFormData, changedFieldPath, newErrorSchema, theId);
-    },
-    [fieldId, onChange],
-  );
-
   const resolvedUiSchema = useMemo(
     () => resolveUiSchema<T, S, F>(_schema, _uiSchema, registry),
     [_schema, _uiSchema, registry],
@@ -551,28 +548,73 @@ function SchemaFieldRender<
   // type in effect — and only the inner one would follow the type the user chose
   const retrievesOptions =
     fieldToRender !== undefined && fieldToRender.rendersOptionSelector && !fieldToRender.rendersOptionsItself;
-  // `xxxOfKey` is what `rendersOptionSelector` was decided from, so it is set whenever that is, which the narrowing
-  // here restates for the lookup below. This is the one place the options are retrieved: `MultiSchemaField` renders
-  // what it is handed. Memoized so a re-render that changed neither the schema nor the data hands it the same array,
-  // which its callbacks key on
+  // `MultiSchemaField` renders the options it is handed. Memoized so a re-render that changed neither the schema nor
+  // the data hands it the same array, which its callbacks key on
   const xxxOfOptions = useMemo(
-    () =>
-      retrievesOptions && xxxOfKey !== undefined
-        ? schema[xxxOfKey]?.map((xxxOfSchema) =>
-            schemaUtils.retrieveSchema(isObject(xxxOfSchema) ? (xxxOfSchema as S) : ({} as S), formData),
-          )
-        : undefined,
-    [retrievesOptions, xxxOfKey, schema, schemaUtils, formData],
+    () => (retrievesOptions ? retrievedOptionsOf<T, S, F>(schemaUtils, schema, formData) : undefined),
+    [retrievesOptions, schema, schemaUtils, formData],
   );
 
+  // The option shown is the form's state, which `AnyOfField`/`OneOfField` read and write too. An object renders its own
+  // field beside the option, whose extra keys are stubbed once, with the selected option: a key the option declares is
+  // left to it, and any other is described by the object's extra-key keywords and the option's together
+  const { uiState, isOwn: ownsUiState } = useUiState();
+  const { list, selectedOption, selectOption, keepSelection, editOwnProperty } = useShownOption<T, S, F>(
+    uiState,
+    registry,
+    fieldPath,
+    xxxOfOptions,
+    formData,
+    getDiscriminatorFieldFromSchema<S>(schema),
+  );
+  const fieldSchema = useMemo(
+    () =>
+      xxxOfOptions && selectedOption >= 0 && rendersOwnFieldBesideOption<S>(schema)
+        ? schemaUtils.retrieveSchema(_schema, formData, false, selectedOption)
+        : schema,
+    [xxxOfOptions, selectedOption, schema, schemaUtils, _schema, formData],
+  );
+  const hasOptions = xxxOfOptions !== undefined;
+  const shownOption = useMemo(
+    () => (xxxOfOptions ? { fieldPath, options: xxxOfOptions, list, selectedOption, selectOption } : undefined),
+    [xxxOfOptions, list, selectedOption, selectOption, fieldPath],
+  );
+
+  /** Intermediary `onChange` handler for field components that will inject the `id` of the current field into the
+   * `onChange` chain if it is not already being provided from a deeper level in the hierarchy. An edit to a property
+   * of the object's own that the options can disagree about, through a keyword naming it or one reading the object
+   * whole, may be a choice between them, so the data it leaves is matched again. Any other edit holds the option shown,
+   * as an edit inside the option does: every option says the same of the property, so the edit cannot be a choice
+   * between them
+   */
+  const handleFieldComponentChange = useCallback(
+    (newFormData: T | undefined, changedFieldPath: FieldPath, newErrorSchema?: ErrorSchema<T>, id?: string) => {
+      if (hasOptions) {
+        editOwnProperty(fieldPathToList(changedFieldPath)[fieldPathToList(fieldPath).length]);
+      }
+      onChange(newFormData, changedFieldPath, newErrorSchema, id || fieldId);
+    },
+    [fieldId, fieldPath, onChange, hasOptions, editOwnProperty],
+  );
+  const handleOptionFieldChange = useCallback(
+    (newFormData: T | undefined, changedFieldPath: FieldPath, newErrorSchema?: ErrorSchema<T>, id?: string) => {
+      keepSelection();
+      onChange(newFormData, changedFieldPath, newErrorSchema, id);
+    },
+    [onChange, keepSelection],
+  );
+
+  // Outside a `Form` the outermost field's store is the one of the whole tree, so the fields below share its selections
+  const withUiState = (node: ReactElement): ReactElement =>
+    ownsUiState ? <UiStateContext value={uiState}>{node}</UiStateContext> : node;
   // Stop $ref cycles: `retrieveSchema()` hands out a property whose $ref leads back round a recursion with this flag,
   // which is when the field is left unresolved above. The check must come after all hook calls to satisfy React's
   // rules of hooks.
   if (!uiField || !fieldToRender) {
-    return (
+    return withUiState(
       <RawFormDataContext value={readsFormData ? CyclicSchemaField : undefined}>
         <CyclicSchemaField {...props} />
-      </RawFormDataContext>
+      </RawFormDataContext>,
     );
   }
   const { ignoredOwnField, ignoredGlobalField } = uiField;
@@ -679,7 +721,7 @@ function SchemaFieldRender<
       {...props}
       onChange={handleFieldComponentChange}
       id={fieldComponentId}
-      schema={schema}
+      schema={fieldSchema}
       uiSchema={fieldUiSchema}
       {...(fieldUiRequired !== undefined ? { required: effectiveRequired } : {})}
       disabled={disabled}
@@ -694,7 +736,9 @@ function SchemaFieldRender<
   );
   // Always wrapped, since switching between a wrapped and a bare field component remounts it and everything below it
   const field = (
-    <RawFormDataContext value={readsFormData ? FieldComponent : undefined}>{fieldComponent}</RawFormDataContext>
+    <ShownOptionContext value={shownOption}>
+      <RawFormDataContext value={readsFormData ? FieldComponent : undefined}>{fieldComponent}</RawFormDataContext>
+    </ShownOptionContext>
   );
 
   // If this schema has a title defined, but the user has set a new key/label, retain their input.
@@ -794,36 +838,38 @@ function SchemaFieldRender<
 
   // The field component and the option field are each vouched for directly: a custom template may pass on a view of
   // the data
-  return (
+  return withUiState(
     <RawFormDataContext value={undefined}>
       <FieldTemplate {...fieldProps}>
         <>
           {field}
           {XxxOfField && (
-            <RawFormDataContext value={readsFormData ? XxxOfField : undefined}>
-              <XxxOfField
-                name={name}
-                disabled={disabled}
-                readonly={readonly}
-                hideError={hideError}
-                errorSchema={errorSchema}
-                formData={formData}
-                fieldPath={fieldPath}
-                id={fieldId}
-                onBlur={props.onBlur}
-                onChange={props.onChange}
-                onFocus={props.onFocus}
-                options={xxxOfOptions}
-                registry={registry}
-                required={effectiveRequired}
-                schema={schema}
-                uiSchema={XxxOfUiSchema}
-              />
-            </RawFormDataContext>
+            <ShownOptionContext value={shownOption}>
+              <RawFormDataContext value={readsFormData ? XxxOfField : undefined}>
+                <XxxOfField
+                  name={name}
+                  disabled={disabled}
+                  readonly={readonly}
+                  hideError={hideError}
+                  errorSchema={errorSchema}
+                  formData={formData}
+                  fieldPath={fieldPath}
+                  id={fieldId}
+                  onBlur={props.onBlur}
+                  onChange={handleOptionFieldChange}
+                  onFocus={props.onFocus}
+                  options={xxxOfOptions}
+                  registry={registry}
+                  required={effectiveRequired}
+                  schema={schema}
+                  uiSchema={XxxOfUiSchema}
+                />
+              </RawFormDataContext>
+            </ShownOptionContext>
           )}
         </>
       </FieldTemplate>
-    </RawFormDataContext>
+    </RawFormDataContext>,
   );
 }
 

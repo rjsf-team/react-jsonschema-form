@@ -394,6 +394,18 @@ describe('getRenderedOptionSchema()', () => {
         properties: { b: { minLength: 1 } },
       });
     });
+    test("leaves the extra keys to the parent's field, which stubs them with the selected option", () => {
+      const option: RJSFSchema = {
+        properties: { b: { type: 'string' } },
+        additionalProperties: { type: 'number' },
+        patternProperties: { '^x': { type: 'string' } },
+        unevaluatedProperties: false,
+      };
+      expect(getRenderedOptionSchema({ type: 'object', properties }, option)).toEqual({
+        type: 'object',
+        properties: { b: { type: 'string' } },
+      });
+    });
     test('passes on the type list of a nullable object', () => {
       expect(getRenderedOptionSchema({ type: ['object', 'null'], properties }, { required: ['a'] })).toEqual({
         type: ['object', 'null'],

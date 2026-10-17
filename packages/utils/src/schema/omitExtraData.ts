@@ -5,17 +5,26 @@ import {
   getAdditionalPropertySchema,
   getMatchingPatternProperties,
 } from '../additionalPropertiesUtils.ts';
+import { fieldPathFromList } from '../fieldPath.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
 import getSchemaTypeForValue from '../getSchemaTypeForValue.ts';
 import isConstantOptionList from '../isConstantOptionList.ts';
 import isObject, { isSchemaObject } from '../isObject.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
-import type { FormContextType, GenericObjectType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
+import type {
+  FieldPathList,
+  FormContextType,
+  FormFieldState,
+  GenericObjectType,
+  RJSFSchema,
+  SchemaContext,
+  StrictRJSFSchema,
+} from '../types.ts';
 import { closestOption } from './getClosestMatchingOption.ts';
-import { mergeAllOf, schemaOfBoolean } from './graph/mergePlan.ts';
+import { mergeAllOf, schemaFrom, schemaOfBoolean } from './graph/mergePlan.ts';
 import resolveConstantOptions from './resolveConstantOptions.ts';
-import { conditionHolds, resolveOwnRef } from './retrieveSchema.ts';
+import retrieveSchema, { conditionHolds, resolveOwnRef } from './retrieveSchema.ts';
 
 /** Returns true when a form value is considered empty: null/undefined/'', an empty array, or a plain
  * object whose every own value is itself empty (recursive). Scalars like `0` and `false` are not empty.
@@ -36,6 +45,12 @@ export function isValueEmpty(value: unknown): boolean {
   return false;
 }
 
+/** The filtered data, in the type of the data it was filtered from */
+function dataOf<T>(value: unknown): T | undefined;
+function dataOf(value: unknown): unknown {
+  return value;
+}
+
 /** A recursive, schema-driven filter that walks `schema` and `formData` in lockstep, keeping only
  * values that are described by the schema. Handles `$ref`, `allOf`, `anyOf`, `oneOf`, `if/then/else`,
  * `patternProperties`, `additionalProperties`, `propertyNames`, and `dependencies`. Optional object
@@ -46,13 +61,24 @@ export function isValueEmpty(value: unknown): boolean {
  * @param schema - The schema for which to filter the formData
  * @param [rootSchema] - The root schema, used primarily to look up `$ref`s
  * @param [formData] - The data for the `Form`
+ * @param [fieldState] - The option each field shows, so a field offering `anyOf`/`oneOf` options keeps the data its
+ *        shown option describes. Without it, the option the data matches best
  * @returns - The `formData` after omitting extra data, or `undefined` when `formData` is undefined
  */
 export default function omitExtraData<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(context: SchemaContext<S, F>, schema: S, rootSchema: S = {} as S, formData?: T): T | undefined {
+>(
+  context: SchemaContext<S, F>,
+  schema: S,
+  rootSchema: S = schemaFrom(schema, {}),
+  formData?: T,
+  fieldState?: FormFieldState<S>,
+): T | undefined {
+  /** The path of the child at `key`, which only `fieldState` is asked about, so without one no path is built */
+  const childPath = (path: FieldPathList, key: string | number): FieldPathList => (fieldState ? [...path, key] : path);
+
   /** Type predicate that narrows `value` to `GenericObjectType` — true when `value` is a plain,
    * non-array object (i.e. a JSON object). Used to distinguish JSON objects from arrays and primitives.
    *
@@ -76,9 +102,15 @@ export default function omitExtraData<
    * @param childSchema - The object schema describing which properties are allowed
    * @param source - The source form data object to read values from
    * @param target - The accumulator object to write filtered values into
+   * @param path - The path of the object
    * @returns - `target` after all schema-defined properties have been processed
    */
-  function handleObject(childSchema: S, source: GenericObjectType, target: GenericObjectType): GenericObjectType {
+  function handleObject(
+    childSchema: S,
+    source: GenericObjectType,
+    target: GenericObjectType,
+    path: FieldPathList,
+  ): GenericObjectType {
     const { properties, patternProperties } = childSchema;
     // Read with the precedence `getAdditionalPropertySchema()` reads the two keywords with, so a key the form renders
     // a field for, and the add button seeds, through an `unevaluatedProperties` is one this keeps rather than prunes
@@ -100,7 +132,7 @@ export default function omitExtraData<
      * @param [required=false] - When true the property is never pruned regardless of its filtered value
      */
     function setProperty(key: string, schemaDef: S | boolean, value: unknown, required = false) {
-      const v = omit(schemaDef, value, target[key]);
+      const v = omit(schemaDef, value, childPath(path, key), target[key]);
       if (!required && isObject(v)) {
         // Resolve $ref so we can inspect the effective required list for the inner schema.
         let sd = isSchemaObject<S>(schemaDef) ? schemaDef : ({} as S);
@@ -187,16 +219,17 @@ export default function omitExtraData<
    * @param childSchema - The array schema describing `items` and optionally `additionalItems`
    * @param source - The source array to read elements from
    * @param target - The accumulator array to write filtered elements into
+   * @param path - The path of the array
    * @returns - `target` after all applicable source elements have been written
    */
-  function handleArray(childSchema: S, source: unknown[], target: unknown[]): unknown[] {
+  function handleArray(childSchema: S, source: unknown[], target: unknown[], path: FieldPathList): unknown[] {
     const { items, additionalItems } = childSchema;
     if (Array.isArray(items)) {
       const tupleLength = Math.min(items.length, source.length);
       let i = 0;
       for (; i < tupleLength; i += 1) {
         // oxlint-disable-next-line no-param-reassign
-        target[i] = omit(items[i] as S | boolean, source[i]);
+        target[i] = omit(items[i], source[i], childPath(path, i));
       }
       // Without additionalItems, truncate at the tuple boundary to drop any pre-existing items.
       if (!additionalItems) {
@@ -206,12 +239,12 @@ export default function omitExtraData<
       }
       for (; i < source.length; i += 1) {
         // oxlint-disable-next-line no-param-reassign
-        target[i] = omit(additionalItems as S | boolean, source[i]);
+        target[i] = omit(additionalItems, source[i], childPath(path, i));
       }
     } else {
       for (let i = 0; i < source.length; i += 1) {
         // oxlint-disable-next-line no-param-reassign
-        target[i] = omit(items as S | boolean, source[i]);
+        target[i] = omit(items, source[i], childPath(path, i));
       }
     }
     // Truncate any pre-existing items beyond the source length.
@@ -229,18 +262,20 @@ export default function omitExtraData<
    * @param childSchema - The schema potentially containing `if`, `then`, and `else` keywords
    * @param source - The current form data value, passed to `validator.isValid` and the branch `omit`
    * @param target - The already-filtered value to merge the branch result into
+   * @param path - The path of the value
    * @returns - The result of applying the matched branch, or `target` when no branch applies
    */
-  function handleConditions(childSchema: S, source: unknown, target: unknown): unknown {
+  function handleConditions(childSchema: S, source: unknown, target: unknown, path: FieldPathList): unknown {
     const { if: condition, then, else: otherwise } = childSchema;
     if (condition === undefined) {
       return target;
     }
     const branch = conditionHolds<S, F>(context, condition, source, rootSchema) ? then : otherwise;
-    return branch === undefined ? target : omit(branch as S | boolean, source, target, false);
+    return branch === undefined ? target : omit(branch, source, path, target, false);
   }
 
-  /** Applies the best-matching `oneOf` option to `source`, merging the result into `target`. When
+  /** Applies the `oneOf` option the field shows to `source`, the best-matching one without a `fieldState`, merging
+   * the result into `target`. When
    * `oneOf` is not an array or the schema represents a select widget (enum-driven), `target` is
    * returned unchanged. `additionalProperties: false` is relaxed on each option before scoring so that
    * `getClosestMatchingOption` can validate freely, but the original option schema is used for the
@@ -250,29 +285,43 @@ export default function omitExtraData<
    * @param childSchema - The parent schema containing the `oneOf` keyword
    * @param source - The current form data value used to score each option
    * @param target - The already-filtered value to merge the winning option's result into
+   * @param path - The path of the value
    * @returns - The result of applying the best-matching option, or `target` when no matching applies
    */
-  function handleOneOf(oneOf: S['oneOf'], childSchema: S, source: unknown, target: unknown): unknown {
+  function handleOneOf(
+    oneOf: S['oneOf'],
+    childSchema: S,
+    source: unknown,
+    target: unknown,
+    path: FieldPathList,
+  ): unknown {
     // An `enum` or a list of constants is a select, whose value has no branch to omit extra data by
     if (!Array.isArray(oneOf) || Array.isArray(childSchema.enum) || isConstantOptionList<S>(oneOf)) {
       return target;
     }
-    // `additionalProperties: false` is relaxed for matching only, so the data's extra keys don't rule out the option
-    // that is then applied with it, to omit them
-    const bestIndex = closestOption<unknown, S, F>(
-      context,
-      rootSchema,
-      source,
-      oneOf,
-      0,
-      true,
-      getDiscriminatorFieldFromSchema<S>(childSchema),
-    );
-    const winning: unknown = oneOf[bestIndex];
-    const resolved: S = isSchemaObject<S>(winning)
-      ? resolveOwnRef<S>(winning, rootSchema)
-      : schemaOfBoolean(Boolean(winning), rootSchema);
-    return omit(resolved, source, target, false);
+    const discriminator = getDiscriminatorFieldFromSchema<S>(childSchema);
+    const asOption = (option: unknown): S =>
+      isSchemaObject<S>(option) ? option : schemaOfBoolean(Boolean(option), rootSchema);
+    let winning: unknown;
+    if (fieldState) {
+      // The field picks among its options as it renders them, each retrieved for its data, which can match the data
+      // where the option as written does not, as an `if`/`then` that declares a key does
+      const views = oneOf.map((option) =>
+        retrieveSchema<unknown, S, F>(
+          context,
+          isSchemaObject<S>(option) ? option : schemaFrom(rootSchema, {}),
+          rootSchema,
+          source,
+        ),
+      );
+      winning = oneOf[fieldState.selectedOption(fieldPathFromList(path), views, source, discriminator)];
+    } else {
+      // `additionalProperties: false` is relaxed for matching only, so the data's extra keys don't rule out the option
+      // that is then applied with it, to omit them
+      winning = oneOf[closestOption<unknown, S, F>(context, rootSchema, source, oneOf, 0, true, discriminator)];
+    }
+    // An index naming no option, as -1 does for none shown, keeps nothing the options describe, as a `false` option does
+    return omit(resolveOwnRef<S>(asOption(winning), rootSchema), source, path, target, false);
   }
 
   /** Applies `anyOf` branches from `schema` to `source`, merging results into `target`. When `anyOf`
@@ -283,9 +332,10 @@ export default function omitExtraData<
    * @param childSchema - The schema potentially containing an `anyOf` keyword
    * @param source - The current form data value; empty or undefined triggers all-branch application
    * @param target - The already-filtered value to merge branch results into
+   * @param path - The path of the value
    * @returns - The result after applying the relevant `anyOf` branch(es), or `target` when inapplicable
    */
-  function handleAnyOf(childSchema: S, source: unknown, target: unknown): unknown {
+  function handleAnyOf(childSchema: S, source: unknown, target: unknown, path: FieldPathList): unknown {
     const { anyOf } = childSchema;
     if (!Array.isArray(anyOf)) {
       return target;
@@ -298,11 +348,11 @@ export default function omitExtraData<
     ) {
       let result = target;
       for (const branch of anyOf as (S | boolean)[]) {
-        result = omit(branch, source, result, false);
+        result = omit(branch, source, path, result, false);
       }
       return result;
     }
-    return handleOneOf(anyOf, childSchema, source, target);
+    return handleOneOf(anyOf, childSchema, source, target, path);
   }
 
   /** Applies schema-based `dependencies` from `schema` to `source`, merging each active dependency's
@@ -313,9 +363,10 @@ export default function omitExtraData<
    * @param childSchema - The schema potentially containing a `dependencies` keyword
    * @param source - The current form data value; must be a plain object for dependencies to apply
    * @param target - The already-filtered value to merge dependency results into
+   * @param path - The path of the value
    * @returns - The result after applying all active schema dependencies, or `target` when inapplicable
    */
-  function handleDependencies(childSchema: S, source: unknown, target: unknown): unknown {
+  function handleDependencies(childSchema: S, source: unknown, target: unknown, path: FieldPathList): unknown {
     const { dependencies } = childSchema;
     if (dependencies === undefined || !isObjectValue(source)) {
       return target;
@@ -324,7 +375,7 @@ export default function omitExtraData<
     for (const [key, deps] of Object.entries(dependencies)) {
       // Skip property dependencies (string arrays); only process schema dependencies.
       if (key in source && !Array.isArray(deps)) {
-        result = omit(deps as S | boolean, source, result, false);
+        result = omit(deps, source, path, result, false);
       }
     }
     return result;
@@ -376,16 +427,23 @@ export default function omitExtraData<
    *
    * @param schemaDef - The schema (or boolean shorthand) to filter `source` against
    * @param source - The raw form data value to filter
+   * @param path - The path of the value
    * @param [target] - An optional accumulator carrying results from prior oneOf/anyOf processing
    * @param [useSourceAsFallback=true] - When false a permissive schema (`true`/`{}`) returns `target`
    *   rather than `source`, preventing compositional branches from aliasing the accumulator to `source`
    * @returns - The filtered value, or `undefined` when the schema rejects the value
    */
-  function omit(schemaDef: S | boolean, source: unknown, target?: unknown, useSourceAsFallback = true): unknown {
+  function omit(
+    schemaDef: unknown,
+    source: unknown,
+    path: FieldPathList,
+    target?: unknown,
+    useSourceAsFallback = true,
+  ): unknown {
     if (source === undefined || schemaDef === false) {
       return undefined;
     }
-    if (schemaDef === true || !schemaDef || Object.keys(schemaDef).length === 0) {
+    if (!isSchemaObject<S>(schemaDef) || Object.keys(schemaDef).length === 0) {
       return target ?? (useSourceAsFallback ? source : undefined);
     }
 
@@ -393,7 +451,7 @@ export default function omitExtraData<
     const { $ref: ref, allOf } = localSchema;
 
     if (ref !== undefined) {
-      return omit(resolveOwnRef<S>(localSchema, rootSchema), source, target, useSourceAsFallback);
+      return omit(resolveOwnRef<S>(localSchema, rootSchema), source, path, target, useSourceAsFallback);
     }
     if (allOf) {
       const merged = mergeAllOfOnce(localSchema, allOf);
@@ -413,14 +471,19 @@ export default function omitExtraData<
       if (remainingAllOf) {
         for (let i = 0; i < remainingAllOf.length; i++) {
           // oxlint-disable-next-line no-param-reassign
-          target = omit(remainingAllOf[i] as S | boolean, source, target, false);
+          target = omit(remainingAllOf[i], source, path, target, false);
         }
       }
     }
 
     // The options of a select are read as the constants they name, as the form renders them, `$ref`s included
     localSchema = resolveConstantOptions<S>(localSchema, rootSchema);
-    let filtered = handleAnyOf(localSchema, source, handleOneOf(localSchema.oneOf, localSchema, source, target));
+    let filtered = handleAnyOf(
+      localSchema,
+      source,
+      handleOneOf(localSchema.oneOf, localSchema, source, target, path),
+      path,
+    );
 
     // A select holds one of its constants as a whole, so an `object` or `array` one has no contents to prune. A value of
     // another type a `type` list allows is kept as it is, rather than pruned or dropped as the type the list resolves to
@@ -433,13 +496,13 @@ export default function omitExtraData<
       if (!isObjectValue(source)) {
         return undefined;
       }
-      filtered = handleObject(localSchema, source, isObjectValue(filtered) ? filtered : {});
+      filtered = handleObject(localSchema, source, isObjectValue(filtered) ? filtered : {}, path);
     } else if (type === 'array') {
       if (!Array.isArray(source)) {
         return undefined;
       }
       if (localSchema.items !== undefined) {
-        filtered = handleArray(localSchema, source, Array.isArray(filtered) ? filtered : []);
+        filtered = handleArray(localSchema, source, Array.isArray(filtered) ? filtered : [], path);
       }
     }
 
@@ -447,7 +510,7 @@ export default function omitExtraData<
     // dependency sub-schemas are legitimate extensions of the allowed property set and must not be
     // pruned. Keys added only by winning conditional branches are still removed here so the result
     // honours additionalProperties:false.
-    const afterConditions = handleConditions(localSchema, source, filtered);
+    const afterConditions = handleConditions(localSchema, source, filtered, path);
     if (localSchema.additionalProperties === false && isObjectValue(afterConditions)) {
       const knownKeys = new Set(Object.keys(localSchema.properties ?? {}));
       for (const key of Object.keys(afterConditions)) {
@@ -457,10 +520,10 @@ export default function omitExtraData<
       }
     }
 
-    const result = handleDependencies(localSchema, source, afterConditions);
+    const result = handleDependencies(localSchema, source, afterConditions, path);
 
     return result ?? (useSourceAsFallback ? source : undefined);
   }
 
-  return omit(schema, formData) as T | undefined;
+  return dataOf<T>(omit(schema, formData, []));
 }

@@ -1,4 +1,4 @@
-import { Profiler, useLayoutEffect } from 'react';
+import { Profiler, StrictMode, useLayoutEffect } from 'react';
 import type { RJSFSchema, WidgetProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render } from '@testing-library/react';
@@ -28,6 +28,33 @@ describe('render cost of one update', () => {
     await user.type(input(container, 'root_name'), 'x');
 
     expect(onRender).toHaveBeenCalledTimes(1);
+  });
+
+  it('commits once for a keystroke inside an option in a controlled form', async () => {
+    const withOptions: RJSFSchema = {
+      type: 'object',
+      properties: {
+        pet: {
+          anyOf: [
+            { type: 'object', properties: { a: { type: 'string' } } },
+            { type: 'object', properties: { b: { type: 'string' } } },
+          ],
+        },
+      },
+    };
+    const onRender = vi.fn();
+    const { container } = render(
+      <StrictMode>
+        <Profiler id='form' onRender={onRender}>
+          <AcceptingParent schema={withOptions} initialValue={{ pet: { a: '' } }} />
+        </Profiler>
+      </StrictMode>,
+    );
+    onRender.mockClear();
+
+    await user.type(input(container, 'root_pet_a'), 'xy');
+
+    expect(onRender).toHaveBeenCalledTimes(2);
   });
 
   it('commits once for an unrelated prop change on a self-owned form', () => {
