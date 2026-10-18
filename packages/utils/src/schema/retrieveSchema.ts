@@ -327,7 +327,13 @@ export function resolveOwnRef<S extends StrictRJSFSchema = RJSFSchema>(schema: S
     return known;
   }
   const { graph, seeds } = fieldOf<S>(rootGraph, schema);
-  const resolved = ownRefResolved(graph, seeds[0].node, schema, ref);
+  // A stub merged from several declarations names the `$ref` of one of them, which is resolved from that one's node
+  const declaring = seeds.find(({ node }) => {
+    const seed = graph.node(node);
+    return seed.kind === 'schema' && seed.raw[REF_KEY] === ref;
+  });
+  /* v8 ignore next -- a schema no seed declares the `$ref` of is adopted as a node of its own, which declares it */
+  const resolved = ownRefResolved(graph, (declaring ?? seeds[0]).node, schema, ref);
   ownRefs.set(keys, resolved);
   return resolved;
 }

@@ -8,6 +8,7 @@ import {
   getByPath,
   getRenderedOptionSchema,
   isObject,
+  isSchemaObject,
   PROPERTIES_KEY,
   retrieveSchema,
   RJSF_PROVENANCE_KEY,
@@ -214,6 +215,27 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       expect(resolveOwnRef(option, unreached)).toEqual(expected);
       expect(resolveOwnRef(option, reached)).toEqual(expected);
       expect(retrieveSchema({ validator: testValidator }, option, unreached).properties).toEqual(expected.properties);
+    });
+    it('resolves the $ref of a property two allOf entries declare from the entry holding it', () => {
+      const root: RJSFSchema = {
+        definitions: {
+          D: { title: 'D title', oneOf: [{ $ref: '#/definitions/A' }, { type: 'number' }] },
+          A: { type: 'string' },
+        },
+        type: 'object',
+        allOf: [
+          { properties: { x: { description: 'from entry 1' } } },
+          { properties: { x: true } },
+          { properties: { x: { $ref: '#/definitions/D' } } },
+        ],
+      };
+      const x = retrieveSchema({ validator: testValidator }, root, root, {}).properties?.x;
+      expect(isSchemaObject(x) && resolveOwnRef(x, root)).toEqual({
+        description: 'from entry 1',
+        title: 'D title',
+        oneOf: [{ $ref: '#/definitions/A' }, { type: 'number' }],
+        [RJSF_REF_KEY]: '#/definitions/D',
+      });
     });
     it('throws for a $ref that names no definition', () => {
       expect(() => resolveOwnRef({ $ref: '#/components/schemas/missing' }, { components })).toThrow(
