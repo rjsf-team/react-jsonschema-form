@@ -1299,7 +1299,7 @@ function withKeysMoved(data: unknown, changed: unknown, path: FieldPathList, new
     for (const [key, value] of Object.entries(held)) {
       const newKey = newKeyOf(key);
       if (newKey !== undefined) {
-        properties[newKey] = value;
+        setOwnKey(properties, newKey, value);
       }
     }
     moved = properties;

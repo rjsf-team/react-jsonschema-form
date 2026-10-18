@@ -1914,4 +1914,24 @@ describe('the errors a field raises for the items of an array', () => {
       { property: '.obj.c', message: 'renamed', stack: '.obj.c renamed' },
     ]);
   });
+
+  it('report no error for a property named __proto__ once renaming a sibling leaves the data without it', async () => {
+    const { node, onChange } = createFormComponent({
+      schema: {
+        type: 'object',
+        properties: { obj: { type: 'object', additionalProperties: { type: 'string', minLength: 3 } } },
+      },
+      initialFormData: JSON.parse('{"obj": {"__proto__": "x", "a": "yyyy"}}'),
+    });
+
+    await submitForm(node, user);
+    const keyInput = elementOf(node, '#root_obj_a-key');
+    await user.clear(keyInput);
+    await user.type(keyInput, 'c');
+    await user.tab();
+
+    const [event] = onChange.mock.lastCall ?? [];
+    expect(Object.keys(event?.formData.obj)).toEqual(['c']);
+    expect(event?.errors).toEqual([]);
+  });
 });
