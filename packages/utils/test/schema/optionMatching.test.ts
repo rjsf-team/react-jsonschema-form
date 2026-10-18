@@ -1,5 +1,6 @@
 import type { RJSFSchema } from '../../src/index.ts';
 import { getClosestMatchingOption, getFirstMatchingOption, omitExtraData, retrieveSchema } from '../../src/index.ts';
+import looseSchema from './graph/looseSchema.ts';
 import { miniValidator } from './graph/miniValidator.ts';
 
 describe('matching options through the schema graph', () => {
@@ -163,6 +164,38 @@ describe('matching options through the schema graph', () => {
 
     expect(getClosestMatchingOption(context, rootSchema, inner, options)).toBe(1);
     expect(getClosestMatchingOption(context, rootSchema, formData, outer)).toBe(0);
+  });
+  it('picks for data holding a Date changed in place since the last call what it holds now', () => {
+    const early = new Date(0);
+    const late = new Date(1000);
+    const options: RJSFSchema[] = [
+      { type: 'object', properties: { when: looseSchema({ const: early }) }, required: ['when'] },
+      { type: 'object', properties: { when: looseSchema({ const: late }) }, required: ['when'] },
+    ];
+    const rootSchema: RJSFSchema = { anyOf: options };
+    const context = { validator: miniValidator() };
+    const when = new Date(0);
+    const formData = { when };
+    expect(getClosestMatchingOption(context, rootSchema, formData, options)).toBe(0);
+
+    when.setTime(1000);
+
+    expect(getClosestMatchingOption(context, rootSchema, formData, options)).toBe(1);
+  });
+  it('picks for an array holding a Date changed in place since the last call what it holds now', () => {
+    const options: RJSFSchema[] = [
+      { type: 'array', items: looseSchema({ const: new Date(0) }) },
+      { type: 'array', items: looseSchema({ const: new Date(1000) }) },
+    ];
+    const rootSchema: RJSFSchema = { anyOf: options };
+    const context = { validator: miniValidator() };
+    const when = new Date(0);
+    const formData = [when];
+    expect(getClosestMatchingOption(context, rootSchema, formData, options)).toBe(0);
+
+    when.setTime(1000);
+
+    expect(getClosestMatchingOption(context, rootSchema, formData, options)).toBe(1);
   });
   describe('options sharing a base that declares a key the data holds', () => {
     const pet = {

@@ -139,14 +139,21 @@ interface BestOption {
   readonly score: () => number;
 }
 
+/** A pick `bestOption()` made, with a copy of the data it was made for */
+interface Pick {
+  readonly pick: BestOption;
+  readonly data: unknown;
+}
+
 /** The options picked for data held in an object or array, by validator, merge, root, flags, the option objects
  * themselves, since an option's view scores the data apart from the option it was retrieved from, and the data itself,
  * with a copy of what the data held. Scoring an option list reads the lists nested below it for each candidate, so
  * without this every level of a recursion through options multiplies the matching done below it by the number of
- * candidates (#4990). A pick is reused only while the data still equals the copy: a caller may mutate the data in place
- * between calls, at any depth. Other data scores no nested list and is not kept.
+ * candidates (#4990). A pick is reused only while the data still equals the copy, since a caller may mutate the data in
+ * place between calls at any depth; data holding anything but arrays, plain objects and primitives, such as a `Date`,
+ * can't be copied to compare with and is not kept. Other data scores no nested list and is not kept either.
  */
-const picked = new KeyedMemo<{ pick: BestOption; data: unknown }>();
+const picked = new KeyedMemo<Pick>();
 
 /** Returns the index of the option of `options` closest to `formData`, as `getClosestMatchingOption()` describes,
  * with each option matched as `optionMatches()` matches it under `relax`, and that option's score
@@ -199,19 +206,45 @@ function bestOption<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     return stored.pick;
   }
   const pick = compute();
-  picked.set(keys, { pick, data: copyOfData(formData) });
+  const copy = copyOfData(formData);
+  if (copy) {
+    picked.set(keys, { pick, data: copy.data });
+  }
   return pick;
 }
 
-/** A copy of the arrays and plain objects in `data`, sharing every other value */
-function copyOfData(data: unknown): unknown {
+/** A copy of `data`, which holds arrays, plain objects and primitives only; undefined for data holding any other
+ * object, which could change in place without the copy showing it
+ */
+function copyOfData(data: unknown): { data: unknown } | undefined {
+  if (typeof data !== 'object' || data === null) {
+    return { data };
+  }
   if (Array.isArray(data)) {
-    return data.map(copyOfData);
+    const items: readonly unknown[] = data;
+    const copy: unknown[] = [];
+    for (const item of items) {
+      const copied = copyOfData(item);
+      if (copied === undefined) {
+        return undefined;
+      }
+      copy.push(copied.data);
+    }
+    return { data: copy };
   }
-  if (isPlainObject(data)) {
-    return Object.fromEntries(Object.entries(data).map(([key, value]) => [key, copyOfData(value)]));
+  if (!isPlainObject(data)) {
+    return undefined;
   }
-  return data;
+  const entries: [string, unknown][] = [];
+  for (const [key, value] of Object.entries(data)) {
+    const copied = copyOfData(value);
+    if (copied === undefined) {
+      return undefined;
+    }
+    entries.push([key, copied.data]);
+  }
+  // `fromEntries()` defines each key as the object's own, a `__proto__` included
+  return { data: Object.fromEntries(entries) };
 }
 
 /** Picks the option for `bestOption()`, see `getClosestMatchingOption()` */
