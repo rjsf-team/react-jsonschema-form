@@ -889,6 +889,81 @@ describe('settled snapshot sanitization', () => {
     ]);
   });
 
+  describe('pairs a row a container write changes in place with its own previous value', () => {
+    interface Row {
+      kind?: string;
+      tags?: (string | null)[];
+    }
+    interface PairData {
+      note?: string;
+      rows?: Row[];
+    }
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        note: { type: 'string' },
+        rows: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              kind: { type: 'string', enum: ['x', 'y'] },
+              tags: { type: 'array', items: { type: 'string' } },
+            },
+            allOf: [
+              {
+                if: { properties: { kind: { const: 'x' } } },
+                then: { properties: { tags: { items: { enum: ['a'] } } } },
+              },
+              {
+                if: { properties: { kind: { const: 'y' } } },
+                then: { properties: { tags: { items: { enum: ['b'] } } } },
+              },
+            ],
+          },
+        },
+      },
+    };
+    const initialRows: Row[] = [
+      { kind: 'x', tags: ['a', 'a'] },
+      { kind: 'y', tags: ['b', 'b'] },
+    ];
+
+    it('after a reorder', async () => {
+      const ref = createRef<FormRef<PairData>>();
+      const { container } = render(
+        <Form<PairData> ref={ref} schema={schema} validator={validator} initialFormData={{ rows: initialRows }} />,
+      );
+      await user.click(elementOf(container, `#${buttonId('root_rows_0', 'moveDown')}`));
+      const moved = handleOf(ref).getFormData().rows ?? [];
+
+      // The leading row, the `y` row the reorder moved there, is written as an `x` row keeping its tags
+      act(() => handleOf(ref).setFieldValue('rows', [{ kind: 'x', tags: moved[0].tags }, moved[1]]));
+      await user.type(input(container, 'root_note'), 'n');
+
+      expect(handleOf(ref).getFormData().rows?.[0]).toEqual({ kind: 'x', tags: [] });
+    });
+
+    it('through a root write after the rows lost their pairing', async () => {
+      const ref = createRef<FormRef<PairData>>();
+      const { container } = render(
+        <Form<PairData> ref={ref} schema={schema} validator={validator} initialFormData={{ rows: initialRows }} />,
+      );
+      // A write of another length leaves the rows nothing to pair with, and a remove after it drops their pairing
+      act(() => handleOf(ref).setFieldValue('rows', [...initialRows, { kind: 'x', tags: ['a'] }]));
+      await user.click(elementOf(container, `#${buttonId('root_rows_0', 'remove')}`));
+      const data = handleOf(ref).getFormData();
+      const rows = data.rows ?? [];
+
+      act(() =>
+        handleOf(ref).setFieldValue('', { ...data, rows: [{ kind: 'x', tags: rows[0].tags }, ...rows.slice(1)] }),
+      );
+      await user.type(input(container, 'root_note'), 'n');
+
+      expect(handleOf(ref).getFormData().rows?.[0]).toEqual({ kind: 'x', tags: [] });
+    });
+  });
+
   it('filters a row the parent added instead of pairing it with a surviving row (#5451)', async () => {
     interface Row {
       kind?: string;

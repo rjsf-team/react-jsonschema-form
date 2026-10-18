@@ -585,27 +585,26 @@ function moveSettledArrayAtPath(
 }
 
 /** The pairing view of a value written in place of `own` with no move announced, as `setFieldValue()` writes an array
- * or object: the moved `view` wherever the written value holds what `own` does, since the container writes that moved
- * the view moved those very rows, and the data as it last `settled`, from before those writes, wherever it holds
- * something else, such as a reorder set back (#5451)
+ * or object, together with whether `written` holds what `own` does, decided in the one walk that builds the view: a
+ * container is unchanged when its keys are and every child is, so no subtree is compared again at each level above it.
+ * The moved `view` stays wherever the written value holds what `own` does, since the container writes that moved the
+ * view moved those very rows. An item of an array that holds the data as it last `settled`, from before those writes,
+ * at its index is the reorder set back (#5451), so it pairs with that. Any other value is the one `own` held there,
+ * changed, so it pairs with the view's: the item a reorder moved there is the one it changed. A position the view holds
+ * nothing for, which a move of another length dropped, stays unpaired
  *
  * @param written - The value written
  * @param own - The data the value replaces
  * @param view - The pairing view of `own`
  * @param settled - The data as it last settled
- * @returns - The pairing view of `written`
- */
-function pairingViewOfWrite(written: unknown, own: unknown, view: unknown, settled: unknown): unknown {
-  return writtenView(written, own, view, settled)[0];
-}
-
-/** `pairingViewOfWrite()` with whether `written` holds what `own` does, decided in the one walk that builds the view:
- * a container is unchanged when its keys are and every child is, so no subtree is compared again at each level above
- * it
+ * @returns - The pairing view of `written`, and whether `written` holds what `own` does
  */
 function writtenView(written: unknown, own: unknown, view: unknown, settled: unknown): [unknown, boolean] {
   if (Object.is(written, own)) {
     return [view, true];
+  }
+  if (view === undefined) {
+    return [undefined, deepEquals(written, own)];
   }
   if (
     Array.isArray(written) &&
@@ -615,13 +614,18 @@ function writtenView(written: unknown, own: unknown, view: unknown, settled: unk
     view.length === own.length
   ) {
     let isUnchanged = true;
+    const settledItems: unknown[] = Array.isArray(settled) ? settled : [];
     const items = Array.from(view, (item, index) => {
-      const [itemView, isItemUnchanged] = writtenView(
-        written[index],
-        own[index],
-        item,
-        Array.isArray(settled) ? settled[index] : undefined,
-      );
+      const settledItem = settledItems[index];
+      if (
+        !deepEquals(written[index], own[index]) &&
+        settledItem !== undefined &&
+        deepEquals(written[index], settledItem)
+      ) {
+        isUnchanged = false;
+        return settledItem;
+      }
+      const [itemView, isItemUnchanged] = writtenView(written[index], own[index], item, item);
       isUnchanged &&= isItemUnchanged;
       return itemView;
     });
@@ -641,7 +645,7 @@ function writtenView(written: unknown, own: unknown, view: unknown, settled: unk
     });
     return isUnchanged ? [view, true] : [Object.fromEntries(entries), false];
   }
-  return deepEquals(written, own) ? [view, true] : [settled, false];
+  return [view, deepEquals(written, own)];
 }
 
 /** `validation` after the keys of the array or object at `path` moved, the list by the rule `moveErrorSchemaKeys()`
@@ -1783,10 +1787,10 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
       settledFormData === current.settledFormData
     ) {
       // A container written with no move announced, as `setFieldValue()` puts a reorder back, may replace rows the view
-      // moved, so where it holds something else than the data did the view is replaced by the data as it last settled
+      // moved, so an item it sets back to the data as it last settled pairs with that, see `writtenView()`
       const view = getAt<unknown>(settledFormDataForPairing, path);
       if (view !== undefined) {
-        const viewOfWrite = pairingViewOfWrite(
+        const [viewOfWrite] = writtenView(
           getAt<unknown>(formData, path),
           getAt<unknown>(current.formData, path),
           view,
