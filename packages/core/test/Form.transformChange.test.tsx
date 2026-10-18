@@ -142,6 +142,46 @@ describe('transformChange', () => {
     expect(reported.at(-1)?.errors.map(({ property }) => property)).toEqual(['.first']);
   });
 
+  describe('a rewrite that switches a conditional', () => {
+    interface Switched {
+      kind?: string;
+      note?: string;
+      aOnly?: string;
+      bOnly?: string;
+    }
+    const conditional: RJSFSchema = {
+      type: 'object',
+      properties: { kind: { type: 'string', enum: ['a', 'b'] }, note: { type: 'string' } },
+      if: { properties: { kind: { const: 'a' } } },
+      then: { properties: { aOnly: { type: 'string' } } },
+      else: { properties: { bOnly: { type: 'string' } } },
+    };
+    const initialFormData: Switched = { kind: 'a', note: '', aOnly: 'kept under a' };
+
+    it('drops the values of the branch the field switch leaves', async () => {
+      const ref = createFormRef<Switched>();
+      const { node } = renderForm<Switched>({ ref, schema: conditional, initialFormData });
+
+      await user.selectOptions(elementOf(node, '#root_kind'), 'b');
+
+      expect(handleOf(ref).getFormData()).toEqual({ kind: 'b', note: '' });
+    });
+
+    it('drops the values of the branch it leaves, as the same switch made in the field does', async () => {
+      const ref = createFormRef<Switched>();
+      const { node } = renderForm<Switched>({
+        ref,
+        schema: conditional,
+        initialFormData,
+        transformChange: (next) => next && { ...next, kind: next.note ? 'b' : next.kind },
+      });
+
+      await user.type(input(node, 'root_note'), 'x');
+
+      expect(handleOf(ref).getFormData()).toEqual({ kind: 'b', note: 'x' });
+    });
+  });
+
   it("keeps a cleared field cleared when the rewrite derives another one, under 'useDefaultIfFormDataUndefined' (#5125)", async () => {
     interface Derived {
       a?: string;

@@ -312,6 +312,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       newValue: transformed,
       fieldPath: ROOT_FIELD_PATH,
       keepsOwnErrors: true,
+      editedPath: path,
       // The edit's clear of a field outlives the defaults the rewrite merges in, as it outlives those the edit does (#5125)
       clearedPath: change.newValue === undefined && path.length > 0 ? path : undefined,
     };

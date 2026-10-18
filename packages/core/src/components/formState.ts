@@ -143,6 +143,11 @@ export interface FieldChange<T> {
    * value in the root write too, it stays cleared whatever defaults the root write merges in, as it did under the edit
    */
   clearedPath?: FieldPathList;
+  /** For a root write that stands for an edit, as the data a `transformChange` writes over one does, the path of the
+   * field the edit changed: the write is sanitized for a schema its data switches as the edit would be, with the value
+   * at that path the user's. Any other root write, such as `setFieldValue('', data)`, is taken as written
+   */
+  editedPath?: FieldPathList;
 }
 
 /** What became of a change that moved keys, see `FormDataAccess.sendMove()`: refused by `transformChange`, which leaves
@@ -1767,16 +1772,21 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
     }
     const shouldSanitize =
       current.retrievedSchema !== undefined &&
-      !isRootPath &&
+      (!isRootPath || change.editedPath !== undefined) &&
       !disabled &&
       !readonly &&
       // An object or array is otherwise written by a container, whose own fields raise the changes to its values
-      (isObject(newValue) || Array.isArray(newValue)
+      (!isRootPath && (isObject(newValue) || Array.isArray(newValue))
         ? (schemaUtils: SchemaUtilsType<T, S, F>, retrievedSchema: S, changedData: T) =>
             isWholeValueSelectAt<T, S, F>(schemaUtils, retrievedSchema, path, changedData)
         : true);
     // Only the data and its context are derived here; the errors are reconciled below
-    const derived = deriveFormData(current, inputForDefaults, { shouldSanitize, changedPath: path }, props);
+    const derived = deriveFormData(
+      current,
+      inputForDefaults,
+      { shouldSanitize, changedPath: change.editedPath ?? path },
+      props,
+    );
     formData = derived.formData;
     context = derived.context;
     formDataSchema = derived.formDataSchema;
