@@ -664,6 +664,74 @@ describe('option selection as form state', () => {
     expect(selectOf(node, 'root_1__anyof_select')).toHaveValue('0');
   });
 
+  it('keeps the selections of array items where they are when a parent that declined the reorder changes the array otherwise', async () => {
+    const schema: RJSFSchema = {
+      type: 'array',
+      items: {
+        anyOf: [
+          { title: 'A', type: 'object', properties: { name: { type: 'string' } } },
+          { title: 'B', type: 'object', properties: { name: { type: 'string' }, more: { type: 'string' } } },
+        ],
+      },
+    };
+    const props = { schema, formData: [{ name: 'first' }, { name: 'second' }], onChange: () => undefined };
+    const { node, rerender } = createFormComponent(props);
+    await user.selectOptions(selectOf(node, 'root_0__anyof_select'), 'B');
+    await user.click(node.querySelectorAll('.rjsf-array-item-move-down')[0]);
+
+    rerender({ ...props, formData: [{ name: 'first' }, { name: 'second' }, { name: 'third' }] });
+
+    expect(node.querySelector('#root_0_name')).toHaveValue('first');
+    expect(selectOf(node, 'root_0__anyof_select')).toHaveValue('1');
+    expect(selectOf(node, 'root_1__anyof_select')).toHaveValue('0');
+    expect(selectOf(node, 'root_2__anyof_select')).toHaveValue('0');
+  });
+
+  it('keeps the selections of array items on their items when the parent takes an edit and declines the removal made on top of it', async () => {
+    const schema: RJSFSchema = {
+      type: 'array',
+      items: {
+        anyOf: [
+          { title: 'A', type: 'object', properties: { name: { type: 'string' } } },
+          { title: 'B', type: 'object', properties: { name: { type: 'string' }, more: { type: 'string' } } },
+        ],
+      },
+    };
+    const ref = createFormRef();
+    let takes = Infinity;
+    function Parent() {
+      const [formData, setFormData] = useState<unknown>([{ name: 'first' }, { name: 'second' }]);
+      return (
+        <Form
+          ref={ref}
+          schema={schema}
+          validator={validator}
+          formData={formData}
+          onChange={(event) => {
+            if (takes > 0) {
+              takes -= 1;
+              setFormData(event.formData);
+            }
+          }}
+        />
+      );
+    }
+    const { container } = render(<Parent />);
+    await user.selectOptions(selectOf(container, 'root_1__anyof_select'), 'B');
+    takes = 1;
+
+    // Both before any commit, so the removal is proposed on top of the edit, which the parent takes alone
+    act(() => {
+      handleOf(ref).setFieldValue([1, 'name'], 'edited');
+      container.querySelectorAll<HTMLButtonElement>('.rjsf-array-item-remove')[0].click();
+    });
+
+    expect(container.querySelector('#root_0_name')).toHaveValue('first');
+    expect(container.querySelector('#root_1_name')).toHaveValue('edited');
+    expect(selectOf(container, 'root_0__anyof_select')).toHaveValue('0');
+    expect(selectOf(container, 'root_1__anyof_select')).toHaveValue('1');
+  });
+
   it('moves the selections of array items with the items a parent renders only after a commit without them', async () => {
     const schema: RJSFSchema = {
       type: 'array',
@@ -1154,6 +1222,27 @@ describe('cycle expansion as form state', () => {
     expect(node.querySelector('#root_0_name')).toHaveValue('a');
     expect(node.querySelector('#root_0_child_name')).toBeInTheDocument();
     expect(node.querySelector('#root_1_child-button')).toBeInTheDocument();
+  });
+
+  it('moves an expansion with its array item when the parent takes a reorder of items holding equal data', async () => {
+    function Parent() {
+      const [formData, setFormData] = useState<unknown>([{ name: 'a' }, { name: 'a' }]);
+      return (
+        <Form
+          schema={schema}
+          validator={validator}
+          formData={formData}
+          onChange={(event) => setFormData(event.formData)}
+        />
+      );
+    }
+    const { container } = render(<Parent />);
+    await user.click(elementOf(container, '#root_0_child-button'));
+
+    await user.click(container.querySelectorAll('.rjsf-array-item-move-down')[0]);
+
+    expect(container.querySelector('#root_0_child-button')).toBeInTheDocument();
+    expect(container.querySelector('#root_1_child_name')).toBeInTheDocument();
   });
 
   it('keeps an expansion through a reset', async () => {
