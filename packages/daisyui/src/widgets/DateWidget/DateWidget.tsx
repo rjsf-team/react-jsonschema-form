@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { TranslatableString } from '@rjsf/utils';
 import { format, startOfDay } from 'date-fns';
@@ -148,9 +148,8 @@ export default function DateWidget<
     containerRef.current.style.zIndex = '99999';
   }, [containerRef, triggerRef]);
 
-  // Positions the calendar before the browser paints it, so it never shows where it was last, and again on resize and
-  // scroll
-  useLayoutEffect(() => {
+  // Handle window resize to reposition the calendar
+  useEffect(() => {
     if (!isOpen) {
       return () => {};
     }

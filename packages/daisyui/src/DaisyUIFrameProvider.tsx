@@ -17,19 +17,7 @@
  */
 
 import type { ReactNode } from 'react';
-import { useEffect, useState } from 'react';
-
-const THEME_KEY = 'daisyui-theme';
-const DEFAULT_THEME = 'cupcake';
-
-/** The theme stored by an earlier session, or the default when there is none or the storage cannot be read */
-function readStoredTheme() {
-  try {
-    return localStorage.getItem(THEME_KEY) || DEFAULT_THEME;
-  } catch {
-    return DEFAULT_THEME;
-  }
-}
+import { useEffect } from 'react';
 
 interface DaisyUIFrameProviderProps {
   children: ReactNode;
@@ -43,28 +31,17 @@ interface DaisyUIFrameProviderProps {
  */
 function DaisyUIFrameComponent(props: DaisyUIFrameProviderProps & { document?: Document }) {
   const { children, subtheme = {}, document } = props;
-  // The theme the storage holds, as far as this provider knows: read once, through an initializer, since the storage is
-  // outside React, and from then on the last theme chosen, which the Effect below writes there. Adjusted while
-  // rendering, the way React documents for state that follows a prop, so a `dataTheme` cleared later falls back to the
-  // theme last stored rather than the one stored when the provider mounted
-  const [storedTheme, setStoredTheme] = useState(readStoredTheme);
-  const chosenTheme = subtheme?.dataTheme;
-  if (chosenTheme && chosenTheme !== storedTheme) {
-    setStoredTheme(chosenTheme);
-  }
-  const theme = chosenTheme || storedTheme;
-
-  // Writing the storage is a side effect, so it waits for the commit rather than happening while rendering
-  useEffect(() => {
-    if (!chosenTheme) {
-      return;
-    }
+  const theme = (() => {
     try {
-      localStorage.setItem(THEME_KEY, chosenTheme);
+      if (subtheme?.dataTheme) {
+        localStorage.setItem('daisyui-theme', subtheme.dataTheme);
+        return subtheme.dataTheme;
+      }
+      return localStorage.getItem('daisyui-theme') || 'cupcake';
     } catch {
-      // Storage can be unavailable, as in a sandboxed frame; the chosen theme still applies for this session
+      return 'cupcake';
     }
-  }, [chosenTheme]);
+  })();
 
   useEffect(() => {
     if (document) {

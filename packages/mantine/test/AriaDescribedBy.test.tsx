@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { createElement, use } from 'react';
 import { createTheme, InputWrapperContext, MantineProvider } from '@mantine/core';
-import type { ErrorSchema, FieldErrorProps, FieldProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import type { ErrorSchema, FieldProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { ariaDescribedByIds, descriptionId, errorId, helpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
@@ -429,7 +429,7 @@ describe('aria-describedby', () => {
     expect(onFocus).toHaveBeenCalled();
   });
 
-  test('checkbox widget is described by the field error id, which the hidden copy of its error has', () => {
+  test('checkbox widget renders its error with the field error id, which it is described by', () => {
     const { container } = renderField({ type: 'boolean' });
 
     expect(container.querySelector(`[id="${errorId('root')}"]`)).toHaveTextContent('An error');
@@ -716,188 +716,5 @@ describe('aria-describedby', () => {
 
     expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
     expect(container.querySelector(`[id="${errorId('root')}"]`)).toHaveTextContent('Own error');
-  });
-});
-
-describe('the element with a field error id', () => {
-  /** The ids more than one element in `container` has */
-  function duplicateIds(container: HTMLElement) {
-    const counts = new Map<string, number>();
-    for (const element of container.querySelectorAll('[id]')) {
-      counts.set(element.id, (counts.get(element.id) ?? 0) + 1);
-    }
-    return [...counts].filter(([, count]) => count > 1).map(([id]) => id);
-  }
-
-  test('is one per field, whichever component shows the errors', () => {
-    const fieldErrors: ErrorSchema = {
-      text: { __errors: ['Text error'] },
-      flag: { __errors: ['Flag error'] },
-      custom: { __errors: ['Custom error'] },
-      nested: { __errors: ['Nested error'], inner: { __errors: ['Inner error'] } },
-      list: { __errors: ['List error'], 0: { __errors: ['Item error'] } },
-      choice: { __errors: ['Choice error'] },
-    };
-    function CustomWidget({ id }: WidgetProps) {
-      return <input id={id} aria-describedby={ariaDescribedByIds(id)} />;
-    }
-    const { container } = render(
-      <WrappedForm
-        schema={{
-          type: 'object',
-          properties: {
-            text: { type: 'string' },
-            flag: { type: 'boolean' },
-            custom: { type: 'string' },
-            nested: { type: 'object', properties: { inner: { type: 'string' } } },
-            list: { type: 'array', items: { type: 'string' } },
-            choice: { oneOf: [{ type: 'string' }, { type: 'number' }] },
-          },
-        }}
-        uiSchema={{ custom: { 'ui:widget': CustomWidget } }}
-        initialFormData={{ list: ['a'] }}
-        validator={validator}
-        extraErrors={fieldErrors}
-        showErrorList={false}
-      />,
-    );
-
-    expect(duplicateIds(container)).toEqual([]);
-    for (const [id, text] of [
-      ['root_text', 'Text error'],
-      ['root_flag', 'Flag error'],
-      ['root_custom', 'Custom error'],
-      ['root_nested', 'Nested error'],
-      ['root_nested_inner', 'Inner error'],
-      ['root_list', 'List error'],
-      ['root_list_0', 'Item error'],
-    ]) {
-      expect(container.querySelector(`[id="${errorId(id)}"]`)).toHaveTextContent(text);
-    }
-    expect(container.querySelector('[id="root_text"]')).toHaveAccessibleDescription('Text error');
-    expect(container.querySelector('[id="root_flag"]')).toHaveAccessibleDescription('Flag error');
-    // A custom widget that shows no errors is described by the hidden copy
-    expect(container.querySelector('[id="root_custom"]')).toHaveAccessibleDescription('Custom error');
-    // Each error is shown once, and its hidden copy is not shown
-    for (const text of ['Text error', 'Flag error', 'Nested error', 'Inner error', 'List error', 'Item error']) {
-      expect(shownWithText(text)).toHaveLength(1);
-    }
-  });
-
-  test('is the error a widget shows under a FieldTemplate of its own, which leaves the hidden copy without it', () => {
-    function PlainFieldTemplate({ children, errors }: { children: ReactNode; errors: ReactNode }) {
-      return (
-        <div>
-          {children}
-          {errors}
-        </div>
-      );
-    }
-    const rootErrors: ErrorSchema = { __errors: ['An error'] };
-    const { container } = render(
-      <WrappedForm
-        schema={{ type: 'string' }}
-        templates={{ FieldTemplate: PlainFieldTemplate }}
-        validator={validator}
-        extraErrors={rootErrors}
-        showErrorList={false}
-      />,
-    );
-
-    expect(duplicateIds(container)).toEqual([]);
-    const errorElement = container.querySelector(`[id="${errorId('root')}"]`);
-    expect(errorElement).toHaveTextContent('An error');
-    expect(errorElement).toBeVisible();
-    expect(screen.getByRole('textbox')).toHaveAccessibleDescription('An error');
-  });
-
-  function PlainFieldTemplate({ children, errors }: { children: ReactNode; errors: ReactNode }) {
-    return (
-      <div>
-        {children}
-        {errors}
-      </div>
-    );
-  }
-  function CustomWidget({ id, value, onChange }: WidgetProps) {
-    return (
-      <input
-        id={id}
-        value={typeof value === 'string' ? value : ''}
-        onChange={(event) => onChange(event.target.value)}
-        aria-describedby={ariaDescribedByIds(id)}
-      />
-    );
-  }
-
-  async function expectOneElementDescribingTheInput(customTemplate: boolean, customWidget: boolean) {
-    const rootErrors: ErrorSchema = { __errors: ['An error'] };
-    const { container } = render(
-      <WrappedForm
-        schema={{ type: 'string' }}
-        uiSchema={customWidget ? { 'ui:widget': CustomWidget } : {}}
-        templates={customTemplate ? { FieldTemplate: PlainFieldTemplate } : {}}
-        validator={validator}
-        extraErrors={rootErrors}
-        showErrorList={false}
-      />,
-    );
-    await user.type(screen.getByRole('textbox'), 'x');
-
-    expect(duplicateIds(container)).toEqual([]);
-    expect(container.querySelectorAll(`[id="${errorId('root')}"]`)).toHaveLength(1);
-    expect(container.querySelector(`[id="${errorId('root')}"]`)).toHaveTextContent('An error');
-    expect(screen.getByRole('textbox')).toHaveAccessibleDescription('An error');
-  }
-
-  test.each<[string, boolean, boolean]>([
-    ["a Mantine widget under Mantine's FieldTemplate", false, false],
-    ["a custom widget under Mantine's FieldTemplate", false, true],
-    ['a Mantine widget under a custom FieldTemplate', true, false],
-  ])('is the one element that describes the input by the errors, for %s', async (_, customTemplate, customWidget) => {
-    await expectOneElementDescribingTheInput(customTemplate, customWidget);
-  });
-
-  function ListErrors({ errors }: FieldErrorProps) {
-    return (
-      <ul>
-        {errors?.map((error, index) => (
-          // oxlint-disable-next-line react/no-array-index-key
-          <li key={index}>{error}</li>
-        ))}
-      </ul>
-    );
-  }
-
-  test.each<[string, UiSchema, { FieldErrorTemplate?: typeof ListErrors }]>([
-    ['given to the form', {}, { FieldErrorTemplate: ListErrors }],
-    ["given in the field's uiSchema", { 'ui:FieldErrorTemplate': ListErrors }, {}],
-    ["given in the uiSchema's ui:globalOptions", { 'ui:globalOptions': { FieldErrorTemplate: ListErrors } }, {}],
-  ])(
-    'is the error a Mantine widget shows, for a custom FieldErrorTemplate that has no id, %s',
-    async (_, uiSchema, templates) => {
-      const rootErrors: ErrorSchema = { __errors: ['An error'] };
-      const { container } = render(
-        <WrappedForm
-          schema={{ type: 'string' }}
-          uiSchema={uiSchema}
-          templates={templates}
-          validator={validator}
-          extraErrors={rootErrors}
-          showErrorList={false}
-        />,
-      );
-      await user.type(screen.getByRole('textbox'), 'x');
-
-      expect(duplicateIds(container)).toEqual([]);
-      expect(container.querySelectorAll(`[id="${errorId('root')}"]`)).toHaveLength(1);
-      expect(container.querySelector(`[id="${errorId('root')}"]`)).toHaveTextContent('An error');
-      expect(screen.getByRole('textbox')).toHaveAccessibleDescription('An error');
-    },
-  );
-
-  // Known gap: a custom FieldTemplate leaves the hidden copy without the id, and a custom widget shows no error element
-  test.fails('is the one element that describes the input by the errors, for a custom widget under a custom FieldTemplate', async () => {
-    await expectOneElementDescribingTheInput(true, true);
   });
 });

@@ -1238,7 +1238,7 @@ exports[`array fields > has errors 1`] = `
                 <p
                   class="m_8f816625 mantine-InputWrapper-error mantine-TextInput-error"
                   data-size="sm"
-                  id="root_name-error"
+                  id="root_name__error"
                   style="--input-error-size: calc(var(--mantine-font-size-sm) - calc(0.125rem * var(--mantine-scale)));"
                 >
                   Bad input
@@ -1246,7 +1246,6 @@ exports[`array fields > has errors 1`] = `
               </div>
               <div
                 class=""
-                id="root_name__error"
                 style="color: var(--mantine-color-red-text); display: none;"
               >
                 <ul

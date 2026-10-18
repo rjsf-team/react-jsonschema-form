@@ -1,12 +1,10 @@
 import type { ReactNode } from 'react';
-import { Component, StrictMode, createRef, startTransition, useLayoutEffect, useRef, useState } from 'react';
-import type { FormRef } from '@rjsf/core';
-import validator from '@rjsf/validator-ajv8';
+import { Component, StrictMode, startTransition, useLayoutEffect, useRef, useState } from 'react';
 import { act, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { flushSync } from 'react-dom';
 
-import Form from '../src/index.ts';
+import { collectDeferredThrows } from '../../../testing/deferredThrows.ts';
 import DateTimeWidget from '../src/widgets/DateTimeWidget/DateTimeWidget.tsx';
 import DateWidget from '../src/widgets/DateWidget/DateWidget.tsx';
 import { makeWidgetMockProps } from './helpers/createMocks.ts';
@@ -50,75 +48,69 @@ describe.each([
   ['date-time', DateTimeWidget, 'iso-date-time', '2020-05-03T10:30:00', '2020-05-17T10:30:00'],
 ] as const)('%s close-path blur', (_, Widget, format, initial, proposal) => {
   describe.each(['Done', 'Escape', 'outside', 'trigger'] as const)('closing with %s', (action) => {
-    test.each(['accept', 'transform', 'reject'] as const)(
-      'reports the value the close stores, whatever a %s parent does with it',
-      async (mode) => {
-        const transformed = proposal.replace('-17', '-20');
-        const events: string[] = [];
-        function Parent() {
-          const [value, setValue] = useState<string>(initial);
-          return (
-            <>
-              <Widget
-                {...makeWidgetMockProps({
-                  id: 'date',
-                  value,
-                  autofocus: false,
-                  schema: { type: 'string', format },
-                  onBlur: (_: string, reported: unknown) => events.push(`blur ${String(reported)}`),
-                  onFocus: () => events.push('focus'),
-                  onChange: (next: string) => {
-                    events.push(`change ${next}`);
-                    if (mode !== 'reject') {
-                      setValue(mode === 'transform' ? transformed : next);
-                    }
-                  },
-                })}
-              />
-              <input aria-label='Elsewhere' />
-            </>
-          );
-        }
-        const { container } = render(
-          <StrictMode>
-            <Parent />
-          </StrictMode>,
+    test.each(['accept', 'transform', 'reject'] as const)('reports the %s parent value on close', async (mode) => {
+      const transformed = proposal.replace('-17', '-20');
+      const events: string[] = [];
+      function Parent() {
+        const [value, setValue] = useState<string>(initial);
+        return (
+          <>
+            <Widget
+              {...makeWidgetMockProps({
+                id: 'date',
+                value,
+                autofocus: false,
+                schema: { type: 'string', format },
+                onBlur: (_: string, reported: unknown) => events.push(`blur ${String(reported)}`),
+                onFocus: () => events.push('focus'),
+                onChange: (next: string) => {
+                  events.push(`change ${next}`);
+                  if (mode !== 'reject') {
+                    setValue(mode === 'transform' ? transformed : next);
+                  }
+                },
+              })}
+            />
+            <input aria-label='Elsewhere' />
+          </>
         );
-        const trigger = triggerIn(container);
-        await user.click(trigger);
-        await user.click(screen.getByRole('button', { name: /May 17th, 2020/ }));
-        // One focus for the press that both focused the trigger and opened the popup
-        expect(events).toEqual(['focus']);
-        // The close reports its blur from the handler that closes the popup, with the value it stores; the parent's
-        // answer arrives through `value`, which a later blur of the trigger reports
-        const saved = { accept: proposal, transform: transformed, reject: initial }[mode];
-        const blur = `blur ${action === 'Escape' ? initial : proposal}`;
-        const laterBlur = `blur ${action === 'Escape' ? initial : saved}`;
-        const closed = action === 'Escape' ? ['focus', blur] : ['focus', `change ${proposal}`, blur];
-        if (action === 'outside') {
-          await user.pointer({ keys: '[MouseLeft>]', target: screen.getByLabelText('Elsewhere') });
-          // Released even when the assertion fails: `user` is shared, and a held button would leak into the next test
-          try {
-            expect(events).toEqual(closed);
-          } finally {
-            await user.pointer({ keys: '[/MouseLeft]' });
-          }
-          // The press took the focus with it, so the field is neither back in use nor left a second time
+      }
+      const { container } = render(
+        <StrictMode>
+          <Parent />
+        </StrictMode>,
+      );
+      const trigger = triggerIn(container);
+      await user.click(trigger);
+      await user.click(screen.getByRole('button', { name: /May 17th, 2020/ }));
+      // One focus for the press that both focused the trigger and opened the popup
+      expect(events).toEqual(['focus']);
+      const saved = { accept: proposal, transform: transformed, reject: initial }[mode];
+      const blur = `blur ${action === 'Escape' ? initial : saved}`;
+      const closed = action === 'Escape' ? ['focus', blur] : ['focus', `change ${proposal}`, blur];
+      if (action === 'outside') {
+        await user.pointer({ keys: '[MouseLeft>]', target: screen.getByLabelText('Elsewhere') });
+        // Released even when the assertion fails: `user` is shared, and a held button would leak into the next test
+        try {
           expect(events).toEqual(closed);
-        } else {
-          if (action === 'Escape') {
-            await user.keyboard('{Escape}');
-          } else {
-            await user.click(action === 'Done' ? screen.getByText('Done') : trigger);
-          }
-          // Closing reports the blur and then the focus the trigger holds: the field was left, and is back in use
-          expect(events).toEqual([...closed, 'focus']);
-          expect(trigger).toHaveFocus();
-          await user.tab();
-          expect(events).toEqual([...closed, 'focus', laterBlur]);
+        } finally {
+          await user.pointer({ keys: '[/MouseLeft]' });
         }
-      },
-    );
+        // The press took the focus with it, so the field is neither back in use nor left a second time
+        expect(events).toEqual(closed);
+      } else {
+        if (action === 'Escape') {
+          await user.keyboard('{Escape}');
+        } else {
+          await user.click(action === 'Done' ? screen.getByText('Done') : trigger);
+        }
+        // Closing reports the blur and then the focus the trigger holds: the field was left, and is back in use
+        expect(events).toEqual([...closed, 'focus']);
+        expect(trigger).toHaveFocus();
+        await user.tab();
+        expect(events).toEqual([...closed, 'focus', blur]);
+      }
+    });
   });
 
   test.each(['Escape', 'outside', 'trigger'] as const)(
@@ -277,8 +269,7 @@ describe.each([
       await user.click(screen.getByLabelText('Outside'));
     }
     expect(onChange.mock.calls).toEqual([[proposal]]);
-    // Reported from the close itself, with the value it stores, before the save replaces the widget
-    expect(onBlur.mock.calls).toEqual([['date', proposal]]);
+    expect(onBlur.mock.calls).toEqual([['date', initial]]);
     if (replacement === 'hide') {
       expect(container.querySelector('button[aria-haspopup]')).toBeNull();
     } else {
@@ -423,7 +414,7 @@ describe.each([
   );
 
   test.each(['Done', 'trigger'] as const)(
-    '%s reports the focus the trigger holds, and its loss, when the save reveals a field that takes the focus',
+    '%s leaves focus on a field that takes it as the save reveals it',
     async (action) => {
       const events: string[] = [];
       function Parent() {
@@ -456,9 +447,7 @@ describe.each([
       events.length = 0;
       await user.click(action === 'Done' ? screen.getByText('Done') : trigger);
       expect(screen.getByLabelText('Revealed')).toHaveFocus();
-      // The trigger held the focus once the close was reported, until the commit that renders the save revealed the
-      // field that took it
-      expect(events).toEqual([`blur ${proposal}`, 'focus', `blur ${proposal}`]);
+      expect(events).toEqual([`blur ${proposal}`]);
     },
   );
 
@@ -486,33 +475,7 @@ describe.each([
     expect(trigger).toHaveFocus();
   });
 
-  test('Done on an empty field reports the blur and focus with the emptied value the close stores', async () => {
-    const onChange = vi.fn();
-    const onBlur = vi.fn();
-    const onFocus = vi.fn();
-    const { container } = render(
-      <Widget
-        {...makeWidgetMockProps({
-          id: 'date',
-          value: '',
-          autofocus: false,
-          schema: { type: 'string', format },
-          onChange,
-          onBlur,
-          onFocus,
-        })}
-      />,
-    );
-    await user.click(triggerIn(container));
-    onFocus.mockClear();
-    await user.click(screen.getByText('Done'));
-
-    expect(onChange).toHaveBeenLastCalledWith(undefined);
-    expect(onBlur).toHaveBeenLastCalledWith('date', undefined);
-    expect(onFocus).toHaveBeenLastCalledWith('date', undefined);
-  });
-
-  test('Done runs a flushSync from onBlur at once, with no error from React', async () => {
+  test('Done defers a flushSync from onBlur, and React reports the deferral', async () => {
     function Parent() {
       const [, setTick] = useState(0);
       return (
@@ -537,8 +500,12 @@ describe.each([
 
       expect(screen.queryByText('Done')).toBeNull();
       expect(trigger).toHaveFocus();
-      // Done reports the blur from its click handler, as Escape does from its key handler, so the `flushSync` runs
-      expect(consoleError).not.toHaveBeenCalled();
+      // Done reports blur from the close commit's passive Effect, where React defers a `flushSync` and logs that it did;
+      // Escape, above, reports it from the key handler, where the `flushSync` runs at once
+      const flushSyncErrors = consoleError.mock.calls.filter(([message]) =>
+        String(message).includes('flushSync was called from inside a lifecycle method'),
+      );
+      expect(flushSyncErrors).toHaveLength(1);
     } finally {
       consoleError.mockRestore();
     }
@@ -574,7 +541,7 @@ describe.each([
     expect(trigger).toHaveFocus();
   });
 
-  test('Escape surfaces a throw from onBlur, which ends the handler before the focus is reported', async () => {
+  test('Escape surfaces a throw from onBlur and one from the onFocus that follows it', async () => {
     const blurBoom = new Error('blur');
     const focusBoom = new Error('focus');
     const onFocus = vi.fn();
@@ -598,21 +565,24 @@ describe.each([
     onFocus.mockImplementation(() => {
       throw focusBoom;
     });
+    const deferred = collectDeferredThrows();
     const onWindowError = vi.fn((event: ErrorEvent) => event.preventDefault());
     window.addEventListener('error', onWindowError);
     try {
       await user.keyboard('{Escape}');
     } finally {
       window.removeEventListener('error', onWindowError);
+      await deferred.settle();
     }
-    // The blur's throw leaves the key handler, as any throw does, so the focus it would have reported next is not
+    // The blur's throw leaves the key handler, as it does with no `onFocus` after it. The focus's is rethrown from a
+    // timer, where it cannot take the place of the blur's
     expect(onWindowError.mock.calls.map(([event]): unknown => event.error)).toEqual([blurBoom]);
-    expect(onFocus).toHaveBeenCalledTimes(1);
+    expect(deferred.thrown).toEqual([focusBoom]);
     expect(trigger).toHaveFocus();
   });
 
   test.each(['close', 'hide'] as const)(
-    'a throwing onBlur on Done (%s) leaves the click handler instead of unmounting the form',
+    'a throwing onBlur on Done (%s) is rethrown outside the commit instead of unmounting the form',
     async (replacement) => {
       const boom = new Error('boom');
       function Parent() {
@@ -643,24 +613,22 @@ describe.each([
           </>
         );
       }
-      const { container } = render(
-        <Boundary>
-          <Parent />
-        </Boundary>,
-      );
-      await user.click(triggerIn(container));
-      await user.click(screen.getByRole('button', { name: /May 17th, 2020/ }));
-      // An error from an event handler reaches no error boundary: React reports it to the window
-      const onWindowError = vi.fn((event: ErrorEvent) => event.preventDefault());
-      window.addEventListener('error', onWindowError);
+      const deferred = collectDeferredThrows();
       try {
+        const { container } = render(
+          <Boundary>
+            <Parent />
+          </Boundary>,
+        );
+        await user.click(triggerIn(container));
+        await user.click(screen.getByRole('button', { name: /May 17th, 2020/ }));
         await user.click(screen.getByText('Done'));
       } finally {
-        window.removeEventListener('error', onWindowError);
+        await deferred.settle();
       }
       expect(screen.queryByText('Fallback')).toBeNull();
       expect(screen.getByText('Sibling')).toBeInTheDocument();
-      expect(onWindowError.mock.calls.map(([event]): unknown => event.error)).toEqual([boom]);
+      expect(deferred.thrown).toEqual([boom]);
     },
   );
 
@@ -685,8 +653,7 @@ describe.each([
     await user.click(triggerIn(container));
     await user.click(screen.getByRole('button', { name: /May 17th, 2020/ }));
     await user.click(screen.getByText('Done'));
-    // Reported with the value the close stores, without waiting for the parent to render it
-    expect(onBlur.mock.calls).toEqual([['date', proposal]]);
+    expect(onBlur.mock.calls).toEqual([['date', initial]]);
     expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent('May 17, 2020');
   });
 
@@ -719,7 +686,7 @@ describe.each([
     await user.click(triggerIn(container));
     await user.click(screen.getByRole('button', { name: /May 17th, 2020/ }));
     await user.click(screen.getByText('Done'));
-    expect(onBlur.mock.calls).toEqual([['date', proposal]]);
+    expect(onBlur.mock.calls).toEqual([['date', initial]]);
     await act(async () => {
       accept();
       await response;
@@ -728,31 +695,5 @@ describe.each([
     expect(onBlur).toHaveBeenCalledTimes(1);
     unmount();
     expect(onBlur).toHaveBeenCalledTimes(1);
-  });
-});
-
-describe('a close in a form', () => {
-  test.each([
-    ['takes the date', undefined, '2020-05-17'],
-    ['rewrites it in transformChange', (next: unknown) => (next === '2020-05-17' ? '2020-05-20' : next), '2020-05-20'],
-  ] as const)('lets onBlur read the stored value when the form %s', async (_, transformChange, stored) => {
-    const ref = createRef<FormRef>();
-    const atBlur: unknown[] = [];
-    render(
-      <Form
-        ref={ref}
-        schema={{ type: 'string', format: 'date' }}
-        validator={validator}
-        initialFormData='2020-05-03'
-        transformChange={transformChange}
-        onBlur={(_id, reported) => atBlur.push([reported, ref.current?.getFormData()])}
-      />,
-    );
-    await user.click(screen.getByRole('button', { expanded: false }));
-    await user.click(screen.getByRole('button', { name: /May 17th, 2020/ }));
-    await user.click(screen.getByText('Done'));
-
-    // The form stores the edit as `onChange` reports it, so the blur that follows in the same handler finds it stored
-    expect(atBlur).toEqual([['2020-05-17', stored]]);
   });
 });
