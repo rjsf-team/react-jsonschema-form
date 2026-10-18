@@ -344,7 +344,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     }
     const props = committedProps;
     // Taken by the change it was announced for, so a second change at the path moves nothing again
-    const move = announced?.fieldPath === fieldPath ? announced : undefined;
+    const move = announced?.fieldPath === fieldPath && Object.is(announced.value, newValue) ? announced : undefined;
     if (move) {
       announced = undefined;
       moved = { move, outcome: { kind: 'refused' } };

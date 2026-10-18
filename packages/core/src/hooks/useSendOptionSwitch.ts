@@ -104,6 +104,7 @@ export default function useSendOptionSwitch(fieldPath: FieldPath) {
       const gone = new Set([...Object.keys(oldOption?.properties ?? {}), ...held].filter((key) => !isKept(key)));
       return sendMove(
         {
+          value: newFormData,
           newKeyOf: (key) => (gone.has(key) && !Object.hasOwn(declaredByNew, key) ? undefined : key),
           newOwnKeyOf: (key) => (gone.has(key) ? undefined : key),
           dropsOwnErrors: true,

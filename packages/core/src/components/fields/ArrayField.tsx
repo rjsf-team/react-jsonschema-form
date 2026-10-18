@@ -1157,8 +1157,9 @@ export default function ArrayField<
   const commitRows = useCallback(
     (rows: KeyedFormDataType<T>[], newKeyedFormData: KeyedFormDataType<T>[]) => {
       const newIndexes = new Map(newKeyedFormData.map((row, index) => [row, index]));
-      const outcome = sendMove({ newKeyOf: moveOfItems((index) => newIndexes.get(rows[index])) }, () =>
-        onChange(updateKeyedFormData(newKeyedFormData), fieldPath),
+      const value = updateKeyedFormData(newKeyedFormData);
+      const outcome = sendMove({ value, newKeyOf: moveOfItems((index) => newIndexes.get(rows[index])) }, () =>
+        onChange(value, fieldPath),
       );
       if (outcome === undefined) {
         return;

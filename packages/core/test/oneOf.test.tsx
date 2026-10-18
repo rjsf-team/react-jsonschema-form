@@ -2351,6 +2351,47 @@ describe('oneOf', () => {
       });
     });
   });
+  it('puts the selector on the option the data fits when a custom parent field writes other data in place of a switch', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        choice: {
+          oneOf: [
+            { title: 'A', type: 'object', properties: { a: { type: 'string' } } },
+            { title: 'B', type: 'object', properties: { b: { type: 'string' } }, required: ['b'] },
+          ],
+        },
+      },
+    };
+    // Passes its data through, but keeps `choice` as it was, writing that back at the path in place of what was sent
+    function KeepChoiceField(props: FieldProps<GenericObjectType>) {
+      const { ObjectField } = props.registry.fields;
+      return (
+        <ObjectField
+          {...props}
+          onChange={(value, fieldPath, errorSchema, id) =>
+            fieldPath === 'choice'
+              ? props.onChange(props.formData?.choice, fieldPath, errorSchema, id)
+              : props.onChange(value, fieldPath, errorSchema, id)
+          }
+        />
+      );
+    }
+    const { node, getFormData } = createFormComponent({
+      schema,
+      uiSchema: { 'ui:field': KeepChoiceField },
+      initialFormData: { choice: { a: 'x' } },
+    });
+    const select = elementOf(node, '#root_choice__oneof_select');
+
+    await user.selectOptions(select, 'B');
+
+    expect(getFormData()).toEqual({ choice: { a: 'x' } });
+    // The selector's option values are the option indexes: '0' is A
+    expect(select).toHaveValue('0');
+    expect(node.querySelector('#root_choice_a')).toHaveValue('x');
+  });
+
   describe('Custom Field without ui:fieldReplacesAnyOrOneOf', () => {
     const schema: RJSFSchema = {
       oneOf: [

@@ -729,7 +729,7 @@ export default function ObjectField<
 
         // The errors the form holds under the old name describe the property, so they go to its new name with it
         sentFormData.current = renamedObj;
-        const outcome = sendMove({ newKeyOf: (key) => (key === oldKey ? actualNewKey : key) }, () =>
+        const outcome = sendMove({ value: renamedObj, newKeyOf: (key) => (key === oldKey ? actualNewKey : key) }, () =>
           onChange(renamedObj, fieldPath),
         );
         // A rewrite decided the object's keys itself, so the properties take the order of the data it kept, and the

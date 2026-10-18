@@ -160,6 +160,10 @@ type KeyMove = (key: string) => string | undefined;
 /** A `KeyMove` with the path of the array or object whose keys it moved */
 export interface AnnouncedMove {
   fieldPath: FieldPath;
+  /** The value the field sends with the move. A change at `fieldPath` that brings another value, which a custom parent
+   * field put in its place, is not the change the move describes, so it moves nothing
+   */
+  value: unknown;
   newKeyOf: KeyMove;
   /** Where the fields' own errors under each key went, when not where the validator's did: an option switch drops
    * what was raised under a key the new option declares too, since another widget renders for it, while the
