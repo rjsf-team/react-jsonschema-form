@@ -93,6 +93,25 @@ function indexDependencies(lookup: Record<string, Schema | boolean>): void {
   }
 }
 
+/** Returns each subschema the lookup holds under a pointer holding a `#`, such as one below the property `a#b`, keyed
+ * by that pointer with the `#` spelled `%23`, where the lookup lacks it. The engine keys its lookup by pointers as
+ * `encodeURI()` encodes them, which leaves a `#` as it is, where a `$ref` escapes it as `%23`, as RFC 6901 and the
+ * pointers a form names subschemas by do, so such a `$ref` would not resolve, whether the form made it or the root
+ * holds it.
+ *
+ * @param lookup - The lookup
+ * @returns - The entries to add to it
+ */
+function escapedHashEntries(lookup: Record<string, Schema | boolean>): Record<string, Schema | boolean> {
+  return Object.fromEntries(
+    Object.entries(lookup).flatMap(([uri, schema]) => {
+      const fragmentAt = uri.indexOf('#');
+      const escaped = `${uri.slice(0, fragmentAt + 1)}${uri.slice(fragmentAt + 1).replaceAll('#', '%23')}`;
+      return fragmentAt >= 0 && lookup[escaped] === undefined ? [[escaped, schema]] : [];
+    }),
+  );
+}
+
 /** A `Validator` that resolves `$ref`s through a lookup it is given, since the engine's own lookup is private and its
  * public `addSchema()` can only index a whole schema under its `$id`, not a subschema under its pointer.
  */
@@ -162,6 +181,7 @@ export default function createCfworkerInstance(
     validator.addSchema(structuredClone(rootSchema), rootSchema.$id);
   }
   indexDependencies(lookup);
+  Object.assign(lookup, escapedHashEntries(lookup));
   if (typeof extenderFn === 'function') {
     validator = extenderFn(validator);
   }

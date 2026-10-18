@@ -3,23 +3,13 @@ import type {
   CustomValidator,
   ErrorTransformer,
   FormContextType,
-  GenericObjectType,
   RJSFSchema,
   StrictRJSFSchema,
   UiSchema,
   ValidationData,
   ValidatorType,
 } from '@rjsf/utils';
-import {
-  deepEquals,
-  isObject,
-  logOnce,
-  ID_KEY,
-  REF_KEY,
-  rootSchemaIdOf,
-  schemaKey,
-  withRootIdRefPrefix,
-} from '@rjsf/utils';
+import { deepEquals, logOnce, ID_KEY, rootSchemaIdOf, schemaKey, withRootIdRefPrefix } from '@rjsf/utils';
 
 import createCfworkerInstance from './createCfworkerInstance.ts';
 import type { RawValidationErrorsType } from './processRawValidationErrors.ts';
@@ -60,32 +50,6 @@ export function normalizeFormDataForValidation(data: unknown): unknown {
     );
   }
   return data;
-}
-
-/** Returns the `$ref` with each `%23` in its fragment read back as `#`. @cfworker/json-schema keys the subschemas it
- * looks a `$ref` up in by their pointers as `encodeURI()` encodes them, which leaves a `#` as it is, where the pointers
- * a form names subschemas by escape it, as Ajv needs a `#` that ends a `$ref` to be.
- */
-function cfworkerRef(ref: string): string {
-  const fragment = ref.indexOf('#');
-  return fragment === -1 ? ref : ref.slice(0, fragment + 1) + ref.slice(fragment + 1).replaceAll('%23', '#');
-}
-
-function withCfworkerRefsIn(value: unknown): unknown {
-  if (Array.isArray(value)) {
-    return value.map(withCfworkerRefsIn);
-  }
-  return isObject(value) ? withCfworkerRefs(value) : value;
-}
-
-/** Returns a copy of the `schema` with every `$ref` in it spelled as `cfworkerRef()` spells it */
-function withCfworkerRefs(schema: GenericObjectType): GenericObjectType {
-  return Object.fromEntries(
-    Object.entries(schema).map(([key, value]) => [
-      key,
-      key === REF_KEY && typeof value === 'string' ? cfworkerRef(value) : withCfworkerRefsIn(value),
-    ]),
-  );
 }
 
 /** Returns `schema` carrying the `$id` the engine is handed it under: the `$id` less any fragment, as
@@ -274,7 +238,7 @@ export default class CFWorkerValidator<
     let id: string | undefined;
     try {
       this.handleSchemaUpdate(rootSchema);
-      const schemaWithIdRefPrefix = withCfworkerRefs(withRootIdRefPrefix<S>(schema, rootSchema));
+      const schemaWithIdRefPrefix = withRootIdRefPrefix<S>(schema, rootSchema);
       id = schemaKey(schemaWithIdRefPrefix);
       const validator = this.getOrBuild(id, schemaWithIdRefPrefix);
       return validator.validate(normalizeFormDataForValidation(formData)).valid;

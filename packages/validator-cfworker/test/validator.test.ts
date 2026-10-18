@@ -361,6 +361,18 @@ describe('CFWorkerValidator validating a subschema by its place in the root', ()
     expect(validator.isValid(pointer, 's', rootSchema)).toBe(true);
     expect(validator.isValid(pointer, 5, rootSchema)).toBe(false);
   });
+  it('resolves a $ref the root holds that escapes a # in a property name as %23', () => {
+    const validator = customizeValidator();
+    const rootSchema: RJSFSchema = {
+      definitions: { 'a#b': { type: 'number' } },
+      type: 'object',
+      properties: { x: { $ref: '#/definitions/a%23b' } },
+    };
+    expect(validator.validateFormData({ x: 1 }, rootSchema).errors).toEqual([]);
+    expect(validator.validateFormData({ x: 's' }, rootSchema).errors.map((error) => error.property)).toContain('.x');
+    expect(validator.isValid({ $ref: '#/properties/x' }, 1, rootSchema)).toBe(true);
+    expect(validator.isValid({ $ref: '#/properties/x' }, 's', rootSchema)).toBe(false);
+  });
   it('resolves a $ref with no fragment as it stands', () => {
     const validator = customizeValidator();
     const rootSchema: RJSFSchema = { definitions: { X: { $id: 'http://example.com/x.json', type: 'number' } } };
