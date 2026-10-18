@@ -2874,6 +2874,16 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       });
     });
     describe('stubExistingAdditionalProperties()', () => {
+      it('does not stub a key an option written as a $ref with properties beside it declares through its definition', () => {
+        const root: RJSFSchema = {
+          definitions: { Pet: { type: 'object', properties: { name: { type: 'string' } } } },
+          type: 'object',
+          additionalProperties: { type: 'string' },
+          anyOf: [{ $ref: '#/definitions/Pet', properties: { meow: { type: 'string' } } }],
+        };
+        const name = retrieveSchema({ validator: testValidator }, root, root, { name: 'x' }).properties?.name;
+        expect(isObject(name) && Reflect.get(name, ADDITIONAL_PROPERTY_FLAG)).toBeFalsy();
+      });
       it('deals with undefined formData', () => {
         const schema: RJSFSchema = { type: 'string' };
         expect(stubExistingAdditionalProperties({ validator: testValidator }, schema)).toEqual({
@@ -3197,20 +3207,34 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           },
         });
       });
-      it('has an anyOf option whose own properties shadow the ones its reference names', () => {
+      it('has an anyOf option with properties of its own beside the ones its reference names', () => {
         const schema: RJSFSchema = {
           additionalProperties: { type: 'string' },
           oneOf: [{ $ref: '#/definitions/named', properties: { shown: { type: 'number' } } }],
         };
-        const rootSchema: RJSFSchema = { definitions: { named: { properties: { shadowed: { type: 'boolean' } } } } };
-        const formData = { shown: 1, shadowed: 'hi' };
-        // A reference resolves as `{ ...definition, ...option }`, so a keyword the option declares itself replaces the
-        // definition's rather than joining it: the option renders no field for `shadowed`, which is the object's to
-        // stub rather than a name it can leave to the option
+        const rootSchema: RJSFSchema = { definitions: { named: { properties: { named: { type: 'boolean' } } } } };
+        const formData = { shown: 1, named: true };
+        // Keywords that constrain the data beside a reference are read with the definition as the `allOf` of both, so
+        // the option renders a field for the name its definition declares as well as for its own
         expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, rootSchema, formData)).toEqual({
           ...schema,
-          properties: { shadowed: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true } },
+          properties: {},
         });
+      });
+      it("has an anyOf option whose reference has only annotations beside it, which replace the definition's", () => {
+        const schema: RJSFSchema = {
+          additionalProperties: { type: 'string' },
+          oneOf: [{ $ref: '#/definitions/named', title: 'Named' }],
+        };
+        const rootSchema: RJSFSchema = {
+          definitions: { named: { title: 'Definition', properties: { named: { type: 'boolean' } } } },
+        };
+        expect(
+          stubExistingAdditionalProperties({ validator: testValidator }, schema, rootSchema, {
+            named: true,
+            extra: 'x',
+          }),
+        ).toEqual({ ...schema, properties: { extra: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true } } });
       });
       it('has an anyOf option naming one definition twice, shadowing it only once', () => {
         const schema: RJSFSchema = {
@@ -3235,7 +3259,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           properties: {},
         });
       });
-      it('has an anyOf option whose own condition shadows the one its reference names', () => {
+      it('has an anyOf option with a condition of its own beside the one its reference names', () => {
         const schema: RJSFSchema = {
           additionalProperties: { type: 'string' },
           oneOf: [
@@ -3255,19 +3279,15 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             },
           },
         };
-        // The shadowed condition settles nothing the form renders, so its branch declares no name to leave to the
-        // option -- and it is never put to the validator, which is the only question asked about it anywhere, so a
-        // precompiled validator has no function compiled for it
-        testValidator.setReturnValues({ isValid: [false] });
+        // Both conditions apply, as the `allOf` of the option's keywords and the definition, so the definition's branch
+        // that the data settles declares a name the option renders
+        testValidator.setReturnValues({ isValid: [false, true] });
         expect(
           stubExistingAdditionalProperties({ validator: testValidator }, schema, rootSchema, {
             kind: 'a',
             hidden: 1,
           }),
-        ).toEqual({
-          ...schema,
-          properties: { hidden: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true } },
-        });
+        ).toEqual({ ...schema, properties: {} });
       });
       it('has an anyOf option whose reference names no definition', () => {
         const schema: RJSFSchema = { additionalProperties: true, oneOf: [{ $ref: '#/definitions/missing' }] };

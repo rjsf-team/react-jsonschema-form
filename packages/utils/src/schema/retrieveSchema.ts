@@ -685,16 +685,16 @@ export function getAdditionalPropertyType<S extends StrictRJSFSchema = RJSFSchem
  * schema the reference names. The reference is resolved through the schema graph from where the schema sits in the
  * root, as the form resolves it.
  *
- * Only the keywords the referring schema leaves to it are read off the definition. Resolution reads a reference as
- * `{ ...definition, ...schema }`, so a keyword the referring schema declares itself replaces the
- * definition's rather than joining it: the shadowed one describes nothing the form renders, so counting the names it
- * declares would leave a key with no field at all, and putting a shadowed `if` to the validator would ask it about a
- * condition nothing that resolves the schema ever asks -- which a precompiled validator has no function for.
+ * The definition is read as resolution reads it beside the referring schema's own keywords. Keywords that constrain
+ * the data beside a `$ref` are read with the definition as the `allOf` of both, so the whole definition is read and
+ * the names both declare count. Where the keywords beside the `$ref` are annotations only, they replace the
+ * definition's, so only the keywords the referring schema leaves to it are read off the definition: a shadowed one
+ * describes nothing the form renders, so counting the names it declares would leave a key with no field at all.
  *
  * @param schema - The schema whose reference is to be looked up
  * @param rootSchema - The root schema the reference names a definition of, when there is one to look it up in
  * @param followed - The definitions already read on this walk, which the one `schema` names is added to
- * @returns - The definition the reference names, less the keywords the referring schema shadows, or undefined where
+ * @returns - The definition the reference names, less any keywords the referring schema shadows, or undefined where
  *          there is none to name or it was followed already
  */
 function referencedDefinition<S extends StrictRJSFSchema = RJSFSchema>(
@@ -716,7 +716,8 @@ function referencedDefinition<S extends StrictRJSFSchema = RJSFSchema>(
   }
   followed.add(target);
   try {
-    return withoutKeys(refDefinition<S>(graph, node), ...Object.keys(schema));
+    const definition = refDefinition<S>(graph, node);
+    return conjunctionOf<S>(graph, node) === undefined ? withoutKeys(definition, ...Object.keys(schema)) : definition;
   } catch {
     // A reference that names no definition says nothing about the property, as the subschema holding it does until it
     // is resolved: whatever resolves that subschema to render it reports the broken reference on its own
@@ -1110,20 +1111,25 @@ function dependencySubschemas<S extends StrictRJSFSchema = RJSFSchema, F extends
   if (!isObject(dependent)) {
     return [dependent];
   }
-  const { [ONE_OF_KEY]: ownOneOf, ...dependentWithoutOneOf } = dependent;
+  const ownOneOf = dependent[ONE_OF_KEY];
   // A dependency spelled as a `$ref` holds its `oneOf` behind that reference, and `withDependentSchema()` resolves the
   // dependency before it takes the `oneOf` off, so the branch is settled from the data for that spelling too. Read
   // without following the reference it offers no branches, and a name the matching branch declares would be stubbed
   // beside the field that branch renders it with, which is what the inline spelling no longer does
-  const oneOf = ownOneOf ?? referencedDefinition<S>(dependent, rootSchema, new Set<NodeId>())?.[ONE_OF_KEY];
+  const referenced =
+    ownOneOf === undefined ? referencedDefinition<S>(dependent, rootSchema, new Set<NodeId>()) : undefined;
+  const oneOf = ownOneOf ?? referenced?.[ONE_OF_KEY];
   if (!Array.isArray(oneOf)) {
     return [dependent];
   }
-  // An empty `oneOf` of the dependency's own is how the rest of it is read without those branches: a dependency spelled
-  // as a `$ref` leaves them behind that reference for `referencedDefinition()` to read as options beside the branch
-  // settled here, which strips whatever the referring schema declares itself. Read as options, a name every branch
-  // declares counts as one the form renders even where no single branch qualifies and none of the `oneOf` is merged in
-  const withoutOneOf = { ...dependentWithoutOneOf, [ONE_OF_KEY]: [] as S[] } as unknown as S;
+  // The rest of the dependency is read without those branches, which a dependency spelled as a `$ref` holds behind the
+  // reference: read as options, a name every branch declares would count as one the form renders even where no
+  // single branch qualifies and none of the `oneOf` is merged in. So the definition is read without its `oneOf`, beside
+  // the keywords the dependency declares itself
+  const withoutOneOf =
+    referenced === undefined
+      ? withoutKeys(dependent, ONE_OF_KEY)
+      : { ...withoutKeys(referenced, ONE_OF_KEY), ...withoutKeys(dependent, ONE_OF_KEY, REF_KEY) };
   const matching =
     rootSchema === undefined
       ? []
