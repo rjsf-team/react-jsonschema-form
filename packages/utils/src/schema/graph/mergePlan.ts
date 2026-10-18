@@ -189,9 +189,6 @@ export interface PlanInput<S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   readonly policy?: PlanPolicy<S>;
 }
 
-/** The data an `if` is checked against when the field has none */
-const NO_DATA = Object.freeze({});
-
 const conditionMemo = new KeyedMemo<boolean>();
 /** The plans, a plan whose build read nothing of the data stored for any data: that lets a field whose data is a new
  * object each time, as an object field's is on every edit, reuse its plan
@@ -710,7 +707,9 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     if (memoized !== undefined) {
       return memoized;
     }
-    const holds = this.context.validator.isValid(condition, data ?? NO_DATA, this.graph.rawRoot);
+    // A field with no data is checked as an empty object, a new one each time, which a validator filling defaults in
+    // as it checks, as AJV's `useDefaults` does, may fill
+    const holds = this.context.validator.isValid(condition, data ?? {}, this.graph.rawRoot);
     conditionMemo.setLatest(keys, [data], holds);
     return holds;
   }
