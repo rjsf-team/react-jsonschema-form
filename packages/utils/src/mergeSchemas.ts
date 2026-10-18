@@ -1,6 +1,7 @@
 import { REQUIRED_KEY } from './constants.ts';
 import getSchemaType from './getSchemaType.ts';
 import isObject from './isObject.ts';
+import setOwn from './setOwn.ts';
 import type { GenericObjectType, GenericSymbolObjectType } from './types.ts';
 
 /** Recursively merge deeply nested schemas. The difference between `mergeSchemas` and `mergeObjects` is that
@@ -14,10 +15,13 @@ import type { GenericObjectType, GenericSymbolObjectType } from './types.ts';
 export default function mergeSchemas(obj1: GenericObjectType, obj2: GenericObjectType) {
   const acc = { ...obj1 }; // Prevent mutation of source object.
   const result = Object.keys(obj2).reduce((accumulator, key) => {
-    const left: unknown = obj1[key],
+    // Only an own member of `obj1` takes part, so a JSON-sourced `__proto__` or `toString` key doesn't read an
+    // inherited member
+    const hasLeft = Object.hasOwn(obj1, key);
+    const left: unknown = hasLeft ? obj1[key] : undefined,
       right: unknown = obj2[key];
-    if (key in obj1 && isObject(right)) {
-      accumulator[key] = mergeSchemas(isObject(left) ? left : {}, right);
+    if (hasLeft && isObject(right)) {
+      setOwn(accumulator, key, mergeSchemas(isObject(left) ? left : {}, right));
     } else if (
       (getSchemaType(obj1) === 'object' || getSchemaType(obj2) === 'object') &&
       key === REQUIRED_KEY &&
@@ -25,9 +29,9 @@ export default function mergeSchemas(obj1: GenericObjectType, obj2: GenericObjec
       Array.isArray(right)
     ) {
       // Don't include duplicate values when merging 'required' fields.
-      accumulator[key] = [...new Set([...left, ...right])];
+      setOwn(accumulator, key, [...new Set([...left, ...right])]);
     } else {
-      accumulator[key] = right;
+      setOwn(accumulator, key, right);
     }
     return accumulator;
   }, acc);

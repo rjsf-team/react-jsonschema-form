@@ -27,6 +27,7 @@ import getXxxOfOptions from '../getXxxOfOptions.ts';
 import guessType from '../guessType.ts';
 import isObject, { isSchemaObject } from '../isObject.ts';
 import rendersOwnFieldBesideOption from '../rendersOwnFieldBesideOption.ts';
+import setOwn from '../setOwn.ts';
 import type {
   FormContextType,
   GenericObjectType,
@@ -947,14 +948,7 @@ export function stubExistingAdditionalProperties<
       stub = guessedTypeSchema<S>(formData[key]);
     }
     (stub as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG] = true;
-    // `defineProperty`, since assigning a key called `__proto__` runs the setter `Object.prototype` carries: it would
-    // re-point this clone's prototype at the stub and declare no property, leaving the value with no field at all
-    Object.defineProperty(schema.properties, key, {
-      value: stub,
-      configurable: true,
-      enumerable: true,
-      writable: true,
-    });
+    setOwn(schema.properties, key, stub);
   }
   return schema;
 }

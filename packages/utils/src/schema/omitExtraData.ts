@@ -12,6 +12,7 @@ import getSchemaTypeForValue from '../getSchemaTypeForValue.ts';
 import isConstantOptionList from '../isConstantOptionList.ts';
 import isObject, { isSchemaObject } from '../isObject.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
+import setOwn from '../setOwn.ts';
 import type {
   FieldPathList,
   FormContextType,
@@ -89,6 +90,17 @@ export default function omitExtraData<
   /** The path of the child at `key`, which only `fieldState` is asked about, so without one no path is built */
   const childPath = (path: FieldPathList, key: string | number): FieldPathList => (fieldState ? [...path, key] : path);
 
+  /** Reads `key` off `obj` only when it is an own property, returning `undefined` for a missing or
+   * inherited key, so an `Object.prototype` member is never mistaken for form data.
+   *
+   * @param obj - The object to read from
+   * @param key - The property key to read
+   * @returns - The own value at `key`, or `undefined`
+   */
+  function ownValue(obj: GenericObjectType, key: string): unknown {
+    return Object.hasOwn(obj, key) ? obj[key] : undefined;
+  }
+
   /** Type predicate that narrows `value` to `GenericObjectType` — true when `value` is a plain,
    * non-array object (i.e. a JSON object). Used to distinguish JSON objects from arrays and primitives.
    *
@@ -142,7 +154,7 @@ export default function omitExtraData<
      * @param [required=false] - When true the property is never pruned regardless of its filtered value
      */
     function setProperty(key: string, schemaDef: S | boolean, value: unknown, required = false) {
-      const v = omit(schemaDef, value, childPath(path, key), target[key]);
+      const v = omit(schemaDef, value, childPath(path, key), ownValue(target, key));
       if (!required && isObject(v)) {
         // Resolve $ref so we can inspect the effective required list for the inner schema.
         let sd = isSchemaObject<S>(schemaDef) ? schemaDef : ({} as S);
@@ -161,14 +173,13 @@ export default function omitExtraData<
         }
       }
       if (v !== undefined) {
-        // oxlint-disable-next-line no-param-reassign
-        target[key] = v;
+        setOwn(target, key, v);
       }
     }
 
     if (properties !== undefined) {
       for (const [key, schemaDef] of Object.entries(properties)) {
-        setProperty(key, schemaDef as S | boolean, source[key], requiredSet.has(key));
+        setProperty(key, schemaDef as S | boolean, ownValue(source, key), requiredSet.has(key));
       }
     }
 
@@ -202,6 +213,7 @@ export default function omitExtraData<
       const addlSchema = additionalProperties as S | boolean;
       if (patternPropertiesRest !== undefined) {
         for (const key of patternPropertiesRest) {
+          // `patternPropertiesRest` comes from `Object.entries(source)`, so its keys are always own
           setProperty(key, addlSchema, source[key], requiredSet.has(key));
         }
       } else {
@@ -384,7 +396,7 @@ export default function omitExtraData<
     let result = target;
     for (const [key, deps] of Object.entries(dependencies)) {
       // Skip property dependencies (string arrays); only process schema dependencies.
-      if (key in source && !Array.isArray(deps)) {
+      if (Object.hasOwn(source, key) && !Array.isArray(deps)) {
         result = omit(deps, source, path, result, false);
       }
     }
