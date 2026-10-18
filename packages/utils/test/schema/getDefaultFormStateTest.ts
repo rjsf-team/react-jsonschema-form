@@ -8066,10 +8066,128 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           expect(defaultsOf(schema, formData)).toEqual({ a: expect.objectContaining({ n: null }) });
         });
 
+        it('is filled in for a property that is null only through its own allOf or if/then/else', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            required: ['wrapped', 'plain', 'conditional'],
+            properties: {
+              wrapped: { description: 'x', allOf: [{ $ref: '#/$defs/none' }] },
+              plain: { allOf: [{ type: 'null' }] },
+              conditional: { if: { minLength: 1 }, then: { type: 'null' }, else: { type: 'null' } },
+            },
+            $defs: { none: { type: 'null' } },
+          };
+          expect(defaultsOf(schema)).toEqual({ wrapped: null, plain: null, conditional: null });
+        });
+
+        it("is filled in for an own property the object's allOf makes null", () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              a: {
+                type: 'object',
+                properties: { n: { title: 'N' } },
+                allOf: [{ properties: { n: { type: 'null' } }, required: ['n'] }],
+              },
+            },
+          };
+          expect(defaultsOf(schema)).toEqual({ a: { n: null } });
+        });
+
+        it('is filled in for an array item and an additional property the data holds', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              arr: {
+                type: 'array',
+                items: { type: 'object', properties: { n: { type: 'null' }, s: { type: 'string' } }, required: ['n'] },
+              },
+              extra: { type: 'object', additionalProperties: { type: 'object', properties: { n: { type: 'null' } } } },
+            },
+          };
+          expect(defaultsOf(schema, { arr: [{ s: 'x' }], extra: { k: {} } })).toEqual({
+            arr: [{ s: 'x', n: null }],
+            extra: { k: { n: null } },
+          });
+        });
+
+        it('is filled in for a null schema with a `default: null`, directly and through a `$ref`', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              d: { type: 'null', default: null },
+              o: { type: 'object', properties: { d: { type: 'null', default: null } } },
+              r: { $ref: '#/$defs/nullDefault' },
+            },
+            $defs: { nullDefault: { type: 'null', default: null } },
+          };
+          expect(defaultsOf(schema)).toEqual({ d: null, o: { d: null }, r: null });
+        });
+
+        it('is not added for an optional object the optional data controls render without its fields', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: { o: { type: 'object', properties: { n: { type: 'null' }, s: { type: 'string' } } } },
+          };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator, defaultFormStateBehavior: { emptyObjectFields } },
+              {
+                schema,
+                rootSchema: schema,
+                uiSchema: { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] } },
+              },
+            ),
+          ).toEqual({});
+        });
+
         it('is not looked for in an allOf that brings in no property', () => {
           const schema: RJSFSchema = {
             type: 'object',
             properties: { a: { type: 'object', allOf: [{ minProperties: 0 }] } },
+          };
+          expect(defaultsOf(schema)).toEqual({});
+        });
+
+        it('is filled in for a property an allOf of the root brings in', () => {
+          const schema: RJSFSchema = { type: 'object', allOf: [{ properties: { n: { type: 'null' } } }] };
+          expect(defaultsOf(schema)).toEqual({ n: null });
+        });
+
+        it('is filled in alone among the properties an allOf brings in', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              a: {
+                type: 'object',
+                allOf: [{ properties: { s: { type: 'string', default: 'x' }, n: { type: 'null' } } }],
+              },
+            },
+          };
+          expect(defaultsOf(schema)).toEqual({ a: { n: null } });
+        });
+
+        it('is filled in for a property an allOf brings into an item of a tuple', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              pair: {
+                type: 'array',
+                items: [{ type: 'object', allOf: [{ properties: { n: { type: 'null' } } }] }],
+              },
+            },
+          };
+          expect(defaultsOf(schema, { pair: [{}] })).toEqual({ pair: [{ n: null }] });
+        });
+
+        it('is looked for, and not found, in an allOf that brings in no property of a schema that allows null', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              a: { type: 'object', allOf: [{ minProperties: 0 }] },
+              s: { type: ['string', 'null'] },
+              t: { type: ['string', 'number'] },
+            },
           };
           expect(defaultsOf(schema)).toEqual({});
         });
@@ -8089,6 +8207,33 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
       },
     );
 
+    describe('the null of a null value the data holds as `undefined`', () => {
+      it('is filled in, as for a missing one', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          required: ['n'],
+          properties: {
+            n: { type: 'null' },
+            s: { type: 'string' },
+            a: { type: 'object', properties: { n: { type: 'null' } } },
+          },
+        };
+        expect(
+          getDefaultFormState(
+            { validator: testValidator },
+            { schema, rootSchema: schema, formData: { n: undefined, s: 'a', a: { n: undefined } } },
+          ),
+        ).toEqual({ n: null, s: 'a', a: { n: null } });
+      });
+
+      it('is not filled in for a value of another type', () => {
+        const schema: RJSFSchema = { type: 'object', properties: { s: { type: 'string', default: null } } };
+        expect(
+          getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema, formData: { s: undefined } }),
+        ).toEqual({ s: undefined });
+      });
+    });
+
     describe('the null of an anyOf/oneOf option', () => {
       const defaultsOf = (option: RJSFSchema) => {
         const schema: RJSFSchema = { type: 'object', properties: { p: { oneOf: [option, { type: 'string' }] } } };
@@ -8104,6 +8249,19 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         ['`const: null`', { const: null }],
       ])('is filled in for an option of %s, which renders a field', (_, option) => {
         expect(defaultsOf(option)).toEqual({ p: null });
+      });
+
+      it('is left out for an option that is `type: "null"` once its allOf is merged', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { p: { oneOf: [{ allOf: [{ type: 'null' }] }, { type: 'string' }] } },
+        };
+        expect(
+          getDefaultFormState(
+            { validator: testValidator, defaultFormStateBehavior: { allOf: 'populateDefaults' } },
+            { schema, rootSchema: schema },
+          ),
+        ).toEqual({});
       });
     });
 
