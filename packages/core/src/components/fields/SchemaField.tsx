@@ -571,7 +571,12 @@ function SchemaFieldRender<
   const { FieldTemplate, DescriptionFieldTemplate, FieldHelpTemplate, FieldErrorTemplate } = getTemplates<T, S, F>(
     registry,
     uiOptions,
-    fieldLabelForLog(fieldId, fieldPath),
+    {
+      // The label names the uiSchema entry rather than the field, so an `items` mistake warns once, not once per row;
+      // it is built only when an override is actually invalid
+      entryLabel: () => entryLabelForLog(fieldPath, registry.globalFormOptions),
+      ownUiOptions,
+    },
   );
 
   const deprecatedHandling = getDeprecatedHandling<T, S, F>(schema, uiOptions);

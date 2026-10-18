@@ -167,6 +167,7 @@ import widgetAriaProps from './widgetAriaProps.ts';
 import withIdRefPrefix from './withIdRefPrefix.ts';
 
 export type * from './types.ts';
+export type { TemplateWarnSource } from './getTemplate.ts';
 export * from './enums.ts';
 
 export * from './constants.ts';

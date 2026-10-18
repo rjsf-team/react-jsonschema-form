@@ -1299,10 +1299,14 @@ otherwise. NOTE, since `ButtonTemplates` are not overridden in `uiSchema` only t
 - name: Name - The name of the template to fetch, restricted to the keys of `TemplatesType`
 - registry: Registry&lt;T, S, F> - The `Registry` from which to read the template
 - [uiOptions=\{}]: UIOptionsType&lt;T, S, F> - The `UIOptionsType` from which to read an alternate template
+- [warnSource]: TemplateWarnSource&lt;T, S, F> - Names the field for the invalid-override warning and tells an own
+  option apart from one inherited from `ui:globalOptions`; omitted by callers that only resolve, which stay silent
 
 #### Returns
 
-- TemplatesType&lt;T, S, F>[Name] - The template from either the `uiSchema` or `registry` for the `name`
+- TemplatesType&lt;T, S, F>[Name] - The template from either the `uiSchema` or `registry` for the `name`. An override
+  that is not a component is ignored, warning once per uiSchema entry when a `warnSource` is given, and falls back to
+  a valid `ui:globalOptions` template before the registry's own
 
 ### getTemplates&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
@@ -1315,6 +1319,7 @@ left out. Destructure the templates a component renders from the result, e.g.
 
 - registry: Registry&lt;T, S, F> - The `Registry` from which to read the templates
 - [uiOptions=\{}]: UIOptionsType&lt;T, S, F> - The `UIOptionsType` from which to read alternate templates
+- [warnSource]: TemplateWarnSource&lt;T, S, F> - Passed through to `getTemplate()` for the invalid-override warnings
 
 #### Returns
 

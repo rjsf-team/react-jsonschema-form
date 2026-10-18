@@ -85,18 +85,27 @@ describe('getTemplate', () => {
     getTemplate('FieldTemplate', registry);
     expect(warnSuppression.consoleSpy).not.toHaveBeenCalled();
     const invalidOptions: UIOptionsType = Object.fromEntries([['FieldTemplate', createElement(FakeTemplate)]]);
-    getTemplate('FieldTemplate', registry, invalidOptions);
-    getTemplate('FieldTemplate', registry, invalidOptions);
+    const warnSource = { entryLabel: () => '"root"', ownUiOptions: invalidOptions };
+    getTemplate('FieldTemplate', registry, invalidOptions, warnSource);
+    getTemplate('FieldTemplate', registry, invalidOptions, warnSource);
     expect(warnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
-      'ui:FieldTemplate is a React element rather than a component (pass MyTemplate, not <MyTemplate />), so it is ignored.',
+      'ui:FieldTemplate for "root" is a React element rather than a component (pass MyTemplate, not <MyTemplate />), so it is ignored.',
     );
+  });
+
+  it('resolves an invalid override silently without a warnSource', () => {
+    const invalidOptions: UIOptionsType = Object.fromEntries([['FieldTemplate', createElement(FakeTemplate)]]);
+    expect(getTemplate('FieldTemplate', registry, invalidOptions)).toBe(FakeTemplate);
+    expect(getTemplates(registry, invalidOptions)).toBe(registry.templates);
+    expect(warnSuppression.consoleSpy).not.toHaveBeenCalled();
   });
 
   it.each([createElement(FakeTemplate), { arbitrary: true }, 42, true, '', 0, false, null])(
     'falls back and warns when the override is not a component: %s',
     (override) => {
       const invalidOptions: UIOptionsType = Object.fromEntries([['FieldTemplate', override]]);
-      expect(getTemplate('FieldTemplate', registry, invalidOptions)).toBe(FakeTemplate);
+      const warnSource = { entryLabel: () => '"root"', ownUiOptions: invalidOptions };
+      expect(getTemplate('FieldTemplate', registry, invalidOptions, warnSource)).toBe(FakeTemplate);
       expect(warnSuppression.consoleSpy).toHaveBeenCalledOnce();
       expect(getTemplates(registry, invalidOptions)).toBe(registry.templates);
     },
@@ -118,9 +127,20 @@ describe('getTemplate', () => {
     const customTemplates: Record<string, unknown> = invalidRegistry.templates;
     customTemplates.Invalid = createElement(FakeTemplate);
     const options: UIOptionsType = Object.fromEntries([['FieldTemplate', 'Invalid']]);
-    expect(getTemplate('FieldTemplate', invalidRegistry, options)).toBe(FakeTemplate);
+    const warnSource = { entryLabel: () => '"root"', ownUiOptions: options };
+    expect(getTemplate('FieldTemplate', invalidRegistry, options, warnSource)).toBe(FakeTemplate);
     expect(warnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
-      "ui:FieldTemplate names a registered template ('Invalid') that is a React element rather than a component (pass MyTemplate, not <MyTemplate />), so it is ignored.",
+      'ui:FieldTemplate for "root" names a registered template (\'Invalid\') that is a React element rather than a component (pass MyTemplate, not <MyTemplate />), so it is ignored.',
+    );
+  });
+
+  it('describes a string registry entry as the value it is, not as a name to look up', () => {
+    const invalidRegistry: Registry = { ...registry, templates: { ...registry.templates } };
+    const customTemplates: Record<string, unknown> = invalidRegistry.templates;
+    customTemplates.FieldTemplate = 'Foo';
+    expect(getTemplate('FieldTemplate', invalidRegistry)).toBe('Foo');
+    expect(warnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+      "The registry's FieldTemplate is not a component (got string).",
     );
   });
 
@@ -129,9 +149,10 @@ describe('getTemplate', () => {
     const customTemplates: Record<string, unknown> = invalidRegistry.templates;
     customTemplates.FieldTemplate = createElement(FakeTemplate);
     const options: UIOptionsType = { FieldTemplate: 42 as unknown as UIOptionsType['FieldTemplate'] };
-    getTemplate('FieldTemplate', invalidRegistry, options);
+    const warnSource = { entryLabel: () => '"root"', ownUiOptions: options };
+    getTemplate('FieldTemplate', invalidRegistry, options, warnSource);
     expect(warnSuppression.consoleSpy.mock.calls).toEqual([
-      ['ui:FieldTemplate is not a component (got number), so it is ignored.'],
+      ['ui:FieldTemplate for "root" is not a component (got number), so it is ignored.'],
       [
         "The registry's FieldTemplate is a React element rather than a component (pass MyTemplate, not <MyTemplate />).",
       ],
@@ -139,8 +160,20 @@ describe('getTemplate', () => {
   });
 
   it('names the field in the warning when given its label', () => {
-    getTemplate('FieldTemplate', registry, { FieldTemplate: 'Typo' }, '"root_a" (a)');
-    getTemplates(registry, { ObjectFieldTemplate: 'Typo' }, '"root_b" (b)');
+    const fieldOptions: UIOptionsType = {
+      FieldTemplate: 'Typo' as unknown as UIOptionsType['FieldTemplate'],
+    };
+    getTemplate('FieldTemplate', registry, fieldOptions, {
+      entryLabel: () => '"root_a" (a)',
+      ownUiOptions: fieldOptions,
+    });
+    const objectOptions: UIOptionsType = {
+      ObjectFieldTemplate: 'Typo' as unknown as UIOptionsType['ObjectFieldTemplate'],
+    };
+    getTemplates(registry, objectOptions, {
+      entryLabel: () => '"root_b" (b)',
+      ownUiOptions: objectOptions,
+    });
     expect(warnSuppression.consoleSpy.mock.calls).toEqual([
       ['ui:FieldTemplate for "root_a" (a) names no registered template (\'Typo\'), so it is ignored.'],
       ['ui:ObjectFieldTemplate for "root_b" (b) names no registered template (\'Typo\'), so it is ignored.'],
@@ -148,20 +181,62 @@ describe('getTemplate', () => {
   });
 
   it('says so when the invalid override came from ui:globalOptions', () => {
-    const globalRegistry: Registry = { ...registry, globalUiOptions: { FieldTemplate: 'Typo' } };
-    getTemplate('FieldTemplate', globalRegistry, { FieldTemplate: 'Typo' }, '"root_a" (a)');
+    const globalRegistry: Registry = {
+      ...registry,
+      globalUiOptions: { FieldTemplate: 'Typo' as unknown as UIOptionsType['FieldTemplate'] },
+    };
+    // The merged options carry the global value, while the field's own options do not set it
+    getTemplate('FieldTemplate', globalRegistry, globalRegistry.globalUiOptions, {
+      entryLabel: () => '"root_a" (a)',
+      ownUiOptions: {},
+    });
     expect(warnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
       "ui:globalOptions.FieldTemplate names no registered template ('Typo'), so it is ignored.",
     );
   });
 
+  it('blames the field, not ui:globalOptions, when both set the same invalid value', () => {
+    const globalRegistry: Registry = {
+      ...registry,
+      globalUiOptions: { FieldTemplate: 'Typo' as unknown as UIOptionsType['FieldTemplate'] },
+    };
+    const ownOptions: UIOptionsType = {
+      FieldTemplate: 'Typo' as unknown as UIOptionsType['FieldTemplate'],
+    };
+    getTemplate('FieldTemplate', globalRegistry, ownOptions, {
+      entryLabel: () => '"root_a" (a)',
+      ownUiOptions: ownOptions,
+    });
+    expect(warnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+      'ui:FieldTemplate for "root_a" (a) names no registered template (\'Typo\'), so it is ignored.',
+    );
+  });
+
+  it('falls back to a valid ui:globalOptions template when the field-level override is invalid', () => {
+    const globalRegistry: Registry = {
+      ...registry,
+      globalUiOptions: { FieldTemplate: CustomTemplate },
+    };
+    const ownOptions: UIOptionsType = Object.fromEntries([['FieldTemplate', createElement(FakeTemplate)]]);
+    expect(
+      getTemplate('FieldTemplate', globalRegistry, ownOptions, {
+        entryLabel: () => '"root_a" (a)',
+        ownUiOptions: ownOptions,
+      }),
+    ).toBe(CustomTemplate);
+    expect(warnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+      'ui:FieldTemplate for "root_a" (a) is a React element rather than a component (pass MyTemplate, not <MyTemplate />), so it is ignored.',
+    );
+  });
+
   it('reports separate unknown template names and dedupes the same name', () => {
     ['Typo1', 'Typo2', 'Typo1'].forEach((FieldTemplate) => {
-      getTemplate('FieldTemplate', registry, Object.fromEntries([['FieldTemplate', FieldTemplate]]));
+      const options: UIOptionsType = Object.fromEntries([['FieldTemplate', FieldTemplate]]);
+      getTemplate('FieldTemplate', registry, options, { entryLabel: () => '"root"', ownUiOptions: options });
     });
     expect(warnSuppression.consoleSpy.mock.calls).toEqual([
-      ["ui:FieldTemplate names no registered template ('Typo1'), so it is ignored."],
-      ["ui:FieldTemplate names no registered template ('Typo2'), so it is ignored."],
+      ['ui:FieldTemplate for "root" names no registered template (\'Typo1\'), so it is ignored.'],
+      ['ui:FieldTemplate for "root" names no registered template (\'Typo2\'), so it is ignored.'],
     ]);
   });
 
@@ -202,9 +277,12 @@ describe('getTemplate', () => {
   });
   it('returns the registry template when uiOptions names a template that is not registered', () => {
     KEYS.forEach((name) => {
-      expect(getTemplate<typeof name>(name, registry, { [name]: 'NotRegistered' })).toBe(FakeTemplate);
+      const options: UIOptionsType = { [name]: 'NotRegistered' };
+      expect(
+        getTemplate<typeof name>(name, registry, options, { entryLabel: () => '"root"', ownUiOptions: options }),
+      ).toBe(FakeTemplate);
       expect(warnSuppression.consoleSpy).toHaveBeenCalledWith(
-        `ui:${name} names no registered template ('NotRegistered'), so it is ignored.`,
+        `ui:${name} for "root" names no registered template ('NotRegistered'), so it is ignored.`,
       );
     });
   });
@@ -228,7 +306,7 @@ describe('getTemplates', () => {
   const warnSuppression = setupConsoleWarnSuppression();
   it('does not warn about an ordinary option that shares its name with a custom template', () => {
     const customRegistry: Registry = { ...registry, templates: { ...registry.templates, help: FakeTemplate } };
-    const options: UIOptionsType = { help: 'Enter your name' } as UIOptionsType;
+    const options: UIOptionsType = { help: 'Enter your name' };
     expect(getTemplates(customRegistry, options)).toBe(customRegistry.templates);
     expect(warnSuppression.consoleSpy).not.toHaveBeenCalled();
   });
