@@ -1,4 +1,4 @@
-import { REF_KEY } from '../constants.ts';
+import { ALL_OF_KEY, REF_KEY } from '../constants.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getXxxOfKey from '../getXxxOfKey.ts';
 import guessType from '../guessType.ts';
@@ -77,6 +77,8 @@ function propertyScore<
  * simple. Initially the total score is 0. When `schema.properties` object exists, then each property's form value,
  * read from `formData` with its `key`, is scored against the property's schema, as `propertyScore()` describes, and
  * the scores are added up. A schema without `properties` scores 1 when its `type` is the guessed-type of `formData`.
+ * The score of each `allOf` entry, read through its `$ref`, is added to the schema's own, so options sharing a base
+ * through a `$ref` beside their own keywords or through an `allOf` are told apart by the properties each adds.
  *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param rootSchema - The root JSON schema of the entire form
@@ -89,21 +91,42 @@ export function calculateIndexScore<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(context: SchemaContext<S, F>, rootSchema: S, schema?: S, formData?: unknown): number {
-  if (!schema) {
+  return scopeScore<T, S, F>(context, rootSchema, schema, formData, []);
+}
+
+/** Returns the score `calculateIndexScore()` describes, passing over an `allOf` entry already being scored further out,
+ * which a definition whose `allOf` leads back to itself would otherwise score without end
+ */
+function scopeScore<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  rootSchema: S,
+  schema: S | undefined,
+  formData: unknown,
+  scoring: readonly S[],
+): number {
+  if (!schema || scoring.includes(schema)) {
     return 0;
   }
-  if (isObject(schema.properties)) {
-    return Object.entries(schema.properties).reduce(
-      // An own-property read, so a schema property legally named `toString`, `constructor` or `valueOf` reads the
-      // data's own value rather than the one every object inherits, which would never look like missing data
-      (score, [key, value]) =>
-        isSchemaObject<S>(value)
-          ? score + propertyScore<T, S, F>(context, rootSchema, value, getByPath<T>(formData, key))
-          : score,
-      0,
-    );
-  }
-  return typeof schema.type === 'string' && schema.type === guessType(formData) ? 1 : 0;
+  const own = isObject(schema.properties)
+    ? Object.entries(schema.properties).reduce(
+        // An own-property read, so a schema property legally named `toString`, `constructor` or `valueOf` reads the
+        // data's own value rather than the one every object inherits, which would never look like missing data
+        (score, [key, value]) =>
+          isSchemaObject<S>(value)
+            ? score + propertyScore<T, S, F>(context, rootSchema, value, getByPath<T>(formData, key))
+            : score,
+        0,
+      )
+    : Number(typeof schema.type === 'string' && schema.type === guessType(formData));
+  const entries: unknown = schema[ALL_OF_KEY];
+  return (Array.isArray(entries) ? entries : []).reduce<number>(
+    (score, entry) =>
+      isSchemaObject<S>(entry)
+        ? score +
+          scopeScore<T, S, F>(context, rootSchema, resolveOwnRef<S>(entry, rootSchema), formData, [...scoring, schema])
+        : score,
+    own,
+  );
 }
 
 /** Returns the index of the option of `options` closest to `formData`, as `getClosestMatchingOption()` describes,

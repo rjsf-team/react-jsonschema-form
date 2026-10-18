@@ -117,6 +117,46 @@ describe('matching options through the schema graph', () => {
     const retrieved = retrieveSchema({ validator: miniValidator() }, rootSchema, rootSchema, { x: 1, y: 'y' });
     expect(Object.keys(retrieved.properties ?? {})).toEqual(['y']);
   });
+  describe('options sharing a base that declares a key the data holds', () => {
+    const pet = {
+      type: 'object',
+      properties: { name: { type: 'string' } },
+      required: ['name'],
+    } satisfies RJSFSchema;
+    type Case = [name: string, cat: RJSFSchema, dog: RJSFSchema];
+    it.each<Case>([
+      [
+        'a $ref beside its own properties',
+        { $ref: '#/definitions/Pet', properties: { meows: { type: 'boolean' } }, required: ['meows'] },
+        { $ref: '#/definitions/Pet', properties: { barks: { type: 'boolean' } }, required: ['barks'] },
+      ],
+      [
+        'an allOf of the base and their own properties',
+        { allOf: [{ $ref: '#/definitions/Pet' }, { properties: { meows: { type: 'boolean' } }, required: ['meows'] }] },
+        { allOf: [{ $ref: '#/definitions/Pet' }, { properties: { barks: { type: 'boolean' } }, required: ['barks'] }] },
+      ],
+    ])('takes the option whose own keys the data holds, for options written as %s', (_name, cat, dog) => {
+      const rootSchema: RJSFSchema = {
+        definitions: { Pet: pet },
+        type: 'object',
+        properties: { v: { oneOf: [cat, dog] } },
+      };
+      const validator = miniValidator();
+      const data = { name: 'x', barks: true };
+      expect(getClosestMatchingOption({ validator }, rootSchema, data, [cat, dog])).toBe(1);
+      expect(getClosestMatchingOption({ validator }, rootSchema, data, [cat, dog], 0)).toBe(1);
+      expect(omitExtraData({ validator }, rootSchema, rootSchema, { v: { ...data, junk: 1 } })).toEqual({ v: data });
+    });
+  });
+  it('scores an option by the properties its allOf entries add, passing over a boolean entry', () => {
+    const options: RJSFSchema[] = [
+      { allOf: [{ properties: { b: { type: 'string' } } }] },
+      { allOf: [true, { properties: { a: { type: 'string' } } }, { properties: { c: { type: 'string' } } }] },
+    ];
+    const rootSchema: RJSFSchema = { type: 'object', properties: { v: { anyOf: options } } };
+    const data = { a: 'x', b: 'y', c: 'z' };
+    expect(getClosestMatchingOption({ validator: miniValidator() }, rootSchema, data, options)).toBe(1);
+  });
   it.each([
     [
       'an allOf entry',
