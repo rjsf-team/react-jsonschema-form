@@ -98,6 +98,38 @@ function MyForm(props: Omit<FormProps, 'validator' | 'schema'>) {
 render(<MyForm />, document.getElementById('app'));
 ```
 
+### Precompiled validators with `@rjsf/validator-ata`
+
+`@rjsf/validator-ata` has the same two functions. Compile the schema in a Node script:
+
+```cjs
+const compileSchemaValidators = require('@rjsf/validator-ata/compileSchemaValidators').default;
+const yourSchema = require('path_to/yourSchema.json');
+
+// The third argument takes the same options as customizeValidator(), for example customFormats.
+compileSchemaValidators(yourSchema, 'path_to/yourCompiledSchema.cjs', {
+  customFormats: { 'phone-us': /\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$/ },
+});
+```
+
+Then use it in the app:
+
+```tsx
+import { createPrecompiledValidator, type ValidatorFunctions } from '@rjsf/validator-ata';
+import yourSchema from 'path_to/yourSchema.json'; // The same schema that was precompiled
+import precompiledValidatorFns from 'path_to/yourCompiledSchema.cjs';
+
+const validator = createPrecompiledValidator(precompiledValidatorFns as ValidatorFunctions, yourSchema);
+```
+
+Things to know:
+
+- Custom formats must be a `RegExp` or a pattern string. A function cannot be written into the generated file and is rejected when you compile.
+- The generated file imports nothing, so `ata-validator` is not in your bundle, as long as the app imports only `createPrecompiledValidator` (and types). Importing the default export, `customizeValidator` or `ATAValidator` brings the runtime validator back.
+- The generated file is CommonJS, like the one from `@rjsf/validator-ajv8`. Webpack, Rollup and production Vite builds handle it. Vite's dev server does not convert CommonJS files inside your source folder.
+- The file has no type declarations. With TypeScript, cast it to `ValidatorFunctions` as above and add `declare module '*.cjs';` to a `.d.ts` file, or enable `allowJs`.
+- Run the compile step again when the schema changes.
+
 ### Dynamically pre-compiling validators
 
 For more advanced cases when schema needs to be precompiled on request - `compileSchemaValidatorsCode` can be used.

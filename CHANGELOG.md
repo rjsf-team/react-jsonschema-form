@@ -34,15 +34,18 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed `retrieveSchema()` treating a `$ref` shared by several `dependencies` `oneOf` branches, `allOf` entries, `then`/`else` branches, `anyOf`/`oneOf` options or root properties as a recursion cycle, leaving it unresolved, fixing [#5434](https://github.com/rjsf-team/react-jsonschema-form/issues/5434). Reference resolution now tracks a path-scoped recursion stack, so a `$ref` is a cycle only when it is already being expanded on the current path, and previously expanded schemas keep their source ref on the path through `RJSF_REF_KEY`. Shared references resolve in every branch while recursive schemas still terminate
 - Documented on `Experimental_DefaultFormStateBehavior.allOf` which `allOf` and `if-then-else` defaults `skipDefaults` still provides, related to [#3869](https://github.com/rjsf-team/react-jsonschema-form/issues/3869) ([#5444](https://github.com/rjsf-team/react-jsonschema-form/pull/5444))
 
+## @rjsf/validator-ajv8
+
+- Fixed apps that import only `createPrecompiledValidator` bundling all of AJV anyway: the default export's `customizeValidator()` call is now marked pure, so bundlers drop it ([#5559](https://github.com/rjsf-team/react-jsonschema-form/pull/5559))
+
 ## @rjsf/validator-ata
 
-- Updated `ata-validator` from `^1.23.0` to `^1.40.1` ([#5420](https://github.com/rjsf-team/react-jsonschema-form/pull/5420))
-- Updated `ata-validator` from `^1.40.1` to `^1.55.0`, which fixes a crash in precompiled validators: a one-character value under `minLength: 1`, or an emoji under a `maxLength`, threw `_cpLen is not defined` ([#5559](https://github.com/rjsf-team/react-jsonschema-form/pull/5559))
+- Updated `ata-validator` from `^1.23.0` to `^1.55.0` ([#5420](https://github.com/rjsf-team/react-jsonschema-form/pull/5420), [#5559](https://github.com/rjsf-team/react-jsonschema-form/pull/5559)). 1.55.0 fixes a crash in precompiled validators: a one-character value under `minLength: 1`, or an emoji under a `maxLength`, threw `_cpLen is not defined`
 - Fixed apps that import only `createPrecompiledValidator` bundling all of ata-validator anyway: the default export's `customizeValidator()` call is now marked pure, so bundlers drop it. On a sign-up form the app goes from 295.3 KB to 163.0 KB gzipped ([#5559](https://github.com/rjsf-team/react-jsonschema-form/pull/5559))
-- Documented precompiled validators in the README ([#5559](https://github.com/rjsf-team/react-jsonschema-form/pull/5559))
 
 ## Dev / docs / playground
 
+- Documented precompiled validators for `@rjsf/validator-ata` in `usage/validation.md`, and added size-limit canaries that fail if `createPrecompiledValidator` stops tree-shaking in either validator package ([#5559](https://github.com/rjsf-team/react-jsonschema-form/pull/5559))
 - Upgraded dependencies with minor or patch version bumps across all packages, including `nx`/`@nx/js`, `vite`, `@vitejs/plugin-react`, `@tailwindcss/cli`, `knip` and `lint-staged`, plus the playground's `monaco-editor` from `^0.55.1` to `^0.57.0`. Added `pnpm` overrides that pin `@types/react` and `@types/react-dom` to React 18 so libraries with an optional `@types/react` peer don't typecheck against React 19's types, plus one that holds `jsdom` at `~30.0.1` because 30.1 needs the global `Iterator` that Node 20 lacks. Renamed the vitest configs to `.mts` so Vite's `native` config loader can load them as ESM ([#5420](https://github.com/rjsf-team/react-jsonschema-form/pull/5420))
 - Documented in the `allOf` section of `form-props.md`, and on `Experimental_DefaultFormStateBehavior.allOf`, which `allOf` and `if-then-else` defaults `skipDefaults` still provides, and added tests for those cases, related to [#3869](https://github.com/rjsf-team/react-jsonschema-form/issues/3869) ([#5444](https://github.com/rjsf-team/react-jsonschema-form/pull/5444))
 

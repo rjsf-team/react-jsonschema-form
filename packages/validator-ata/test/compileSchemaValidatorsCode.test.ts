@@ -25,6 +25,27 @@ const schema: RJSFSchema = {
 };
 
 describe('compileSchemaValidatorsCode', () => {
+  test('length checks work in the compiled output (one character, emoji)', () => {
+    // ata-validator before 1.55.0 left a helper out of the standalone bundle, so
+    // a one-character value under minLength: 1 threw `_cpLen is not defined`.
+    const lengthSchema: RJSFSchema = {
+      $id: 'lengths',
+      type: 'object',
+      properties: {
+        name: { type: 'string', minLength: 1, maxLength: 80 },
+        code: { type: 'string', maxLength: 2 },
+      },
+      required: ['name'],
+    };
+    const validator = createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(lengthSchema)), lengthSchema);
+
+    expect(validator.isValid(lengthSchema, { name: 'a' }, lengthSchema)).toBe(true);
+    expect(validator.isValid(lengthSchema, { name: '😀' }, lengthSchema)).toBe(true);
+    expect(validator.isValid(lengthSchema, { name: '' }, lengthSchema)).toBe(false);
+    expect(validator.isValid(lengthSchema, { name: 'a', code: '😀😀' }, lengthSchema)).toBe(true);
+    expect(validator.isValid(lengthSchema, { name: 'a', code: '😀😀😀' }, lengthSchema)).toBe(false);
+  });
+
   test('generates a module with a validator function per schema id', () => {
     const code = compileSchemaValidatorsCode(schema);
     const validateFns = loadModule(code);
