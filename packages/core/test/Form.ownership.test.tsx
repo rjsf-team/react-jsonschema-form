@@ -1873,7 +1873,7 @@ describe('operations in one tick', () => {
       },
     });
 
-    // The submit runs from the DOM event `submit()` dispatches, whose handler's error React reports to `window`
+    // `submit()` throws the validation's error into the click handler, whose error React reports to `window`
     expect(await reportedBy(() => user.click(screen.getByRole('button', { name: 'go' })))).toEqual([new Error('boom')]);
     expect(ref.current).not.toBeNull();
     act(() => handleOf(ref).setFieldValue('a', 'later'));

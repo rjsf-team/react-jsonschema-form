@@ -22,7 +22,8 @@ export interface FormRef<T = unknown> {
    * checks them first, as for a submit button, and an input it rejects blocks the submit. After an edit React has yet
    * to show, the inputs describe data the form no longer holds, so schema validation alone checks the value. An
    * element another `tagName` renders has no `requestSubmit()`, so it gets a submit event dispatched to it, which skips
-   * the browser's constraint validation as well.
+   * the browser's constraint validation as well. An error `onSubmit`, `onError` or a validation callback throws comes
+   * out of this call, as it does from the other methods.
    */
   submit(): void;
   /** Clears the validation errors and resets the data to the props' `formData`, or else `initialFormData`, and the

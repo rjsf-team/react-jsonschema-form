@@ -102,6 +102,9 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   let isDroppedCallWarned = false;
   // The submit event `submit()` last dispatched, which goes no further than this form
   let dispatchedSubmit: Event | undefined;
+  // What a throw from the submit `submit()` is running became, for `submit()` to throw it to its own caller: the
+  // submit runs inside the event it fires, where the browser would report the throw instead
+  let submission: { error?: unknown; isThrown: boolean } | undefined;
   const warnDroppedCall = (method: string) => {
     if (!isDevelopment || isDroppedCallWarned) {
       return;
@@ -378,7 +381,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   };
 
   /** Validates and submits the form's data, with extra data omitted when `omitExtraData` asks for it */
-  const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
+  const submitFromEvent = (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     // The event `submit()` dispatched stands in for this form's own submit, so an enclosing form does not get it too
     if (event.nativeEvent === dispatchedSubmit) {
@@ -398,6 +401,22 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     // There are no errors generated through schema validation, so only the user-provided ones are shown
     const committed = commit(settled((base) => applySubmit(base, props, withExtraDataOmitted(props))));
     props.onSubmit?.(toIChangeEvent(committed, 'submitted'), event);
+  };
+
+  /** `submitFromEvent()`, with a throw from the submit `submit()` is running kept for `submit()` to throw */
+  const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
+    const running = submission;
+    submission = undefined;
+    if (!running) {
+      submitFromEvent(event);
+      return;
+    }
+    try {
+      submitFromEvent(event);
+    } catch (error) {
+      running.error = error;
+      running.isThrown = true;
+    }
   };
 
   const handle: FormRef<T> = {
@@ -420,11 +439,21 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       // Only a `<form>` has `requestSubmit()`, and only inputs that show the stored data describe it, so an element
       // another `tagName` renders, or a form with an edit React has yet to show, gets a submit event dispatched to it
       // instead, which `handleSubmit()` takes without the browser's constraint validation
-      if (formElement instanceof view.HTMLFormElement && current().formData === rendered.formData) {
-        formElement.requestSubmit();
-      } else {
-        dispatchedSubmit = new view.SubmitEvent('submit', { bubbles: true, cancelable: true });
-        formElement.dispatchEvent(dispatchedSubmit);
+      const running: { error?: unknown; isThrown: boolean } = { isThrown: false };
+      submission = running;
+      try {
+        if (formElement instanceof view.HTMLFormElement && current().formData === rendered.formData) {
+          formElement.requestSubmit();
+        } else {
+          dispatchedSubmit = new view.SubmitEvent('submit', { bubbles: true, cancelable: true });
+          formElement.dispatchEvent(dispatchedSubmit);
+        }
+      } finally {
+        // A submit the browser's constraint validation blocked fires no event to take it
+        submission = undefined;
+      }
+      if (running.isThrown) {
+        throw running.error;
       }
     },
 

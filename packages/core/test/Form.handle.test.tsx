@@ -102,6 +102,48 @@ describe('FormRef', () => {
       expect(() => act(() => handle.submit())).not.toThrow();
     });
 
+    it.each<[string, FormProps['tagName']]>([
+      ['a form', undefined],
+      ['an element other than a form', 'div'],
+    ])('throws an error from onSubmit out of submit() for %s, as the other handle methods do', (_, tagName) => {
+      const { handle } = mountWithHandle({
+        schema,
+        initialFormData: { name: 'a' },
+        tagName,
+        onSubmit: () => {
+          throw new Error('from onSubmit');
+        },
+      });
+
+      expect(() => act(() => handle.submit())).toThrow('from onSubmit');
+    });
+
+    it('throws an error from onError out of submit()', () => {
+      const { handle } = mountWithHandle({
+        schema: requiredSchema,
+        initialFormData: {},
+        noHtml5Validate: true,
+        onError: () => {
+          throw new Error('from onError');
+        },
+      });
+
+      expect(() => act(() => handle.submit())).toThrow('from onError');
+    });
+
+    it('throws an error from customValidate out of submit()', () => {
+      const { handle, onSubmit } = mountWithHandle({
+        schema,
+        initialFormData: { name: 'a' },
+        customValidate: () => {
+          throw new Error('from customValidate');
+        },
+      });
+
+      expect(() => act(() => handle.submit())).toThrow('from customValidate');
+      expect(onSubmit).not.toHaveBeenCalled();
+    });
+
     it('submits through a dispatched submit event when tagName renders something other than a form', () => {
       // Only a `<form>` has `requestSubmit()`, so the element gets the submit event the form's handler takes instead
       const { handle, onSubmit } = mountWithHandle({ schema, initialFormData: { name: 'a' }, tagName: 'div' });
