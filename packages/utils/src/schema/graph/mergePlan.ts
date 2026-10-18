@@ -490,7 +490,7 @@ function definitionOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: Nod
     throw new Error(node.message);
   }
   if (node.kind === 'boolean' || node.ref === undefined) {
-    return node.kind === 'boolean' ? schemaFrom(graph.rawRoot, {}) : node.raw;
+    return node.kind === 'boolean' ? booleanSchema(node, graph.rawRoot) : node.raw;
   }
   const target = definitionOf(graph, node.ref);
   const beside = withoutKeys(node.raw, REF_KEY);

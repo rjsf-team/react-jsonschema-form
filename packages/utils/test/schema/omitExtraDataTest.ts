@@ -44,6 +44,15 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
   });
 
   describe('omitExtraData()', () => {
+    it('drops a property whose $ref names a false definition', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        definitions: { Never: false },
+        properties: { gone: { $ref: '#/definitions/Never' }, keep: { type: 'string' } },
+      };
+      const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
+      expect(schemaUtils.omitExtraData(schema, { gone: 'x', keep: 'y' })).toEqual({ keep: 'y' });
+    });
     it('should omit fields not defined in the schema', () => {
       const schema: RJSFSchema = {
         type: 'object',

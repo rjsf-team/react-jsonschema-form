@@ -393,6 +393,11 @@ export default function omitExtraData<
     if (schemaDef === true || !schemaDef || Object.keys(schemaDef).length === 0) {
       return target ?? (useSourceAsFallback ? source : undefined);
     }
+    // The `not` of the empty schema, which a `false` definition reads as behind a `$ref`, holds no value either
+    const { not } = schemaDef;
+    if (not === true || (isObject(not) && Object.keys(not).length === 0)) {
+      return undefined;
+    }
 
     let localSchema = schemaDef;
     const { $ref: ref, allOf } = localSchema;
