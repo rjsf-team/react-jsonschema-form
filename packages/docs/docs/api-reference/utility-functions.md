@@ -2859,7 +2859,7 @@ This is the lookup half of `getOptionUiSchema()`, split out for a caller that ha
 Sets `value` at `path` of `obj`, mutating and returning `obj`.
 A bare string `path` is a single literal key, not a dotted path; use [toPath()](#topath) to split a dotted path string into segments first.
 Missing intermediate containers are created: arrays when the next segment is a valid array index, plain objects otherwise, or always plain objects when `createIntermediateObjects` is true.
-A path containing a `__proto__` segment is refused and `obj` is returned unmodified, preventing prototype pollution. `constructor` and `prototype` are legal JSON Schema property names and are written normally: intermediate containers are read as own properties only, so `['constructor', 'prototype', 'x']` shadows `constructor` with a fresh object instead of reaching `Object.prototype`.
+Every key of a plain object is written as an own property, a `__proto__` segment in any position included, which is defined through [setOwn()](#setown) rather than assigned, so no write reaches the prototype setter. `constructor` and `prototype` are legal JSON Schema property names and are written normally: intermediate containers are read as own properties only, so `['constructor', 'prototype', 'x']` shadows `constructor` with a fresh object instead of reaching `Object.prototype`.
 
 #### Parameters
 

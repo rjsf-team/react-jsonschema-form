@@ -13,6 +13,15 @@ describe('getPropertySchema()', () => {
   it('returns an empty schema when the schema has no properties', () => {
     expect(getPropertySchema({ type: 'string' }, 'foo')).toEqual({});
   });
+  it('returns an empty schema for an undeclared property named like an Object.prototype member', () => {
+    expect(getPropertySchema(SCHEMA, 'toString')).toEqual({});
+    expect(getPropertySchema(SCHEMA, 'constructor')).toEqual({});
+  });
+  it('returns a declared property named like an Object.prototype member', () => {
+    // `as const` keeps the type name a literal, which the value of a `toString` key loses otherwise
+    const schema: RJSFSchema = { properties: { toString: { type: 'string' as const } } };
+    expect(getPropertySchema(schema, 'toString')).toEqual({ type: 'string' });
+  });
   it('returns an empty schema when there is no schema', () => {
     expect(getPropertySchema(undefined, 'foo')).toEqual({});
   });

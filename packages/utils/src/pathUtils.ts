@@ -1,3 +1,4 @@
+import setOwn from './setOwn.ts';
 import type { FieldPathList } from './types.ts';
 
 /** A path into an object: either a list of path segments or a single property key (string or number).
@@ -41,16 +42,6 @@ export function propertyToPath(property?: string): string[] {
 /** Normalizes an `ObjectPath` into a list of path segments, wrapping a single key into a one-element list */
 function normalizePath(path: ObjectPath): FieldPathList {
   return Array.isArray(path) ? path : [path];
-}
-
-/** Determines whether a path segment could mutate the prototype chain. Only `__proto__` can: assigning to it
- * invokes the prototype setter rather than creating an own property. `constructor` and `prototype` are safe
- * here — and are legal JSON Schema property names — because both reads and writes below are own-property-only,
- * so `['constructor', 'prototype', 'polluted']` shadows `constructor` with a fresh object instead of walking
- * into `Object.prototype`. Only writes need this check; reads are already own-property-only
- */
-function isUnsafeSegment(segment: string | number): boolean {
-  return segment === '__proto__';
 }
 
 /** Determines whether a path segment represents a valid array index */
@@ -111,9 +102,10 @@ export function getByPath<R = unknown>(obj: unknown, path: ObjectPath, defaultVa
  * created: arrays when the next segment is a valid array index, plain objects otherwise (or always plain
  * objects when `createIntermediateObjects` is true)
  *
- * A `__proto__` segment is refused in any position — assigning to it would mutate the prototype chain rather
- * than create an own property — and the write is silently skipped. Every other key, `constructor` and
- * `prototype` included, is written as an own property
+ * Every key of a plain object is written as an own property, a `__proto__` segment in any position included, which
+ * `setOwn()` defines rather than assigns, so the prototype setter is never reached. Intermediate containers are read
+ * as own properties only, so `['constructor', 'prototype', 'x']` shadows `constructor` with a fresh object instead of
+ * walking into `Object.prototype`
  *
  * @param obj - The object to modify
  * @param path - The single key or list of path segments at which to set the value
@@ -128,23 +120,15 @@ export function setByPath<O>(obj: O, path: ObjectPath, value: unknown, createInt
   }
   // Fast path for a single constant key, avoiding the segment-list allocation
   if (!Array.isArray(path)) {
-    // Refuse a segment that could mutate the prototype chain (prototype pollution)
-    if (!isUnsafeSegment(path)) {
-      const target: Record<PropertyKey, unknown> = obj;
-      target[path] = value;
-    }
+    setOwn(obj, String(path), value);
     return obj;
   }
   const segments = path;
-  // Refuse paths that could mutate the prototype chain (prototype pollution)
-  if (segments.some(isUnsafeSegment)) {
-    return obj;
-  }
   let current: Record<PropertyKey, unknown> = obj;
   for (let i = 0; i < segments.length; i++) {
     const segment = segments[i];
     if (i === segments.length - 1) {
-      current[segment] = value;
+      setOwn(current, String(segment), value);
     } else {
       // Own properties only, so an inherited member is never traversed into
       const existing = Object.hasOwn(current, segment) ? current[segment] : undefined;
@@ -152,7 +136,7 @@ export function setByPath<O>(obj: O, path: ObjectPath, value: unknown, createInt
         current = existing;
       } else {
         const next = createIntermediateObjects || !isIndex(segments[i + 1]) ? {} : [];
-        current[segment] = next;
+        setOwn(current, String(segment), next);
         /* v8 ignore next -- a fresh {} or [] is always settable; the guard exists only to narrow the type */
         if (isSettable(next)) {
           current = next;
@@ -191,7 +175,7 @@ export function hasByPath(obj: unknown, path: ObjectPath): boolean {
 /** Removes the own property at `path` of `obj`, mutating `obj`
  *
  * Both the parent lookup and the delete are own-property-only, so no segment can reach the prototype chain and
- * no `UNSAFE_SEGMENTS`-style guard is needed: deleting a `__proto__` that is not an own property is a no-op
+ * no guard for a `__proto__` segment is needed: deleting a `__proto__` that is not an own property is a no-op
  *
  * @param obj - The object to modify
  * @param path - The single key or list of path segments at which to remove the property

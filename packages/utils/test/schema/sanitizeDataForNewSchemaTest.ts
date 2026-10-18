@@ -1468,5 +1468,32 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         expect(sanitize(select, oldSelect, [3])).toEqual([3]);
       });
     });
+    describe('with keys named like Object.prototype members', () => {
+      it('seeds the default of a new property named toString, which the data does not hold', () => {
+        const oldSchema: RJSFSchema = { type: 'object', properties: { a: { type: 'string' } } };
+        // `as const` keeps the type name a literal, which the value of a `toString` key loses otherwise
+        const newSchema: RJSFSchema = {
+          type: 'object',
+          properties: { toString: { type: 'string' as const, default: 'x' } },
+        };
+        const result = schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, {}) as Record<string, unknown>;
+        expect(Object.hasOwn(result, 'toString')).toBe(true);
+        expect(result.toString).toBe('x');
+      });
+      it('writes a __proto__ property as an own key without changing the prototype', () => {
+        const oldSchema = JSON.parse(
+          '{"type": "object", "properties": {"__proto__": {"type": "string", "default": "old"}}}',
+        ) as RJSFSchema;
+        const newSchema = JSON.parse(
+          '{"type": "object", "properties": {"__proto__": {"type": "string", "default": "new"}, "nested": {"type": "object", "properties": {"__proto__": {"type": "string", "default": "inner"}}}}}',
+        ) as RJSFSchema;
+        const data = JSON.parse('{"__proto__": "old", "nested": {}}');
+        const result = schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, data) as { nested: object };
+        expect(Object.getPrototypeOf(result)).toBe(Object.prototype);
+        expect(Object.getOwnPropertyDescriptor(result, '__proto__')?.value).toBe('new');
+        expect(Object.getOwnPropertyDescriptor(result.nested, '__proto__')?.value).toBe('inner');
+        expect(Object.getPrototypeOf(result.nested)).toBe(Object.prototype);
+      });
+    });
   });
 }
