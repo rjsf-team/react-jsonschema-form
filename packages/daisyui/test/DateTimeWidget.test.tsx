@@ -1,5 +1,5 @@
 import validator from '@rjsf/validator-ajv8';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import Form from '../src/index.ts';
@@ -310,6 +310,24 @@ describe('DateTimeWidget', () => {
     expect(trigger).toBe(container.querySelector('button[aria-haspopup]'));
     expect(trigger).toHaveTextContent(/Apr 5, 2016/);
     expect(trigger).toHaveAccessibleDescription('');
+  });
+
+  test('opens its picker on Down Arrow, moving focus onto the selected day', async () => {
+    render(
+      <Form
+        schema={{ type: 'string', format: 'date-time', title: 'When' }}
+        initialFormData='2020-05-03T12:00:00'
+        validator={validator}
+      />,
+    );
+
+    await user.tab();
+    await user.keyboard('{ArrowDown}');
+
+    expect(screen.getByRole('combobox', { name: 'When' })).toHaveAttribute('aria-expanded', 'true');
+    const grid = within(screen.getByRole('dialog', { name: 'When' })).getByRole('grid');
+    expect(grid).toContainElement(document.activeElement as HTMLElement);
+    expect(document.activeElement).toHaveTextContent(/^3$/);
   });
 
   test("translates the Done button and the time input's label", async () => {

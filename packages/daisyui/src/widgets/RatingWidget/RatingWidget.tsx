@@ -108,6 +108,10 @@ export default function RatingWidget<
     role: 'radiogroup',
   });
 
+  // The checked star, where Tab into the group lands, as `RadioWidget` gives it its checked radio, else the first
+  const autofocusValue =
+    typeof value === 'number' && Number.isInteger(value - min) && value >= min && value < min + numStars ? value : min;
+
   return (
     <div className='form-control w-full'>
       <div className={`rating gap-1 ${sizeClass}`} {...groupProps}>
@@ -127,7 +131,7 @@ export default function RatingWidget<
               className={`mask ${maskClass} ${getColorClass(index)}`}
               disabled={disabled || readonly}
               required={required}
-              autoFocus={autofocus && index === 0}
+              autoFocus={autofocus && starValue === autofocusValue}
               aria-label={`${starValue} ${shape === 'heart' ? 'heart' : 'star'}${starValue === 1 ? '' : 's'}`}
               {...optionAttributes}
             />

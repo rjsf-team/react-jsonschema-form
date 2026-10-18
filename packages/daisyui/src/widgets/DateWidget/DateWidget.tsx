@@ -177,7 +177,7 @@ export default function DateWidget<
   return (
     <div className='form-control my-4 w-full relative'>
       <div className='w-full'>
-        <DatePickerTrigger<T, S, F>
+        <DatePickerTrigger
           id={id}
           fallbackName={pickerName}
           named={named}

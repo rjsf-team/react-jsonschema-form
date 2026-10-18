@@ -2117,7 +2117,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                         class="dropdown w-full"
                       >
                         <button
-                          aria-controls="root_foo-key__listbox"
+                          aria-controls="_r_r_"
                           aria-expanded="false"
                           aria-haspopup="listbox"
                           class="btn btn-outline w-full text-left flex justify-between items-center "
@@ -2140,7 +2140,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                         </button>
                         <ul
                           class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-                          id="root_foo-key__listbox"
+                          id="_r_r_"
                           role="listbox"
                         >
                           <li
@@ -2148,7 +2148,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                             class="px-4 py-2 hover:bg-base-200 cursor-pointer bg-primary/10"
                             data-value="0"
                             role="option"
-                            tabindex="0"
+                            tabindex="-1"
                           >
                             <div
                               class="flex items-center gap-2"
@@ -2163,7 +2163,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                             class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                             data-value="1"
                             role="option"
-                            tabindex="0"
+                            tabindex="-1"
                           >
                             <div
                               class="flex items-center gap-2"
@@ -2178,7 +2178,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                             class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                             data-value="2"
                             role="option"
-                            tabindex="0"
+                            tabindex="-1"
                           >
                             <div
                               class="flex items-center gap-2"
@@ -3064,7 +3064,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                         class="dropdown w-full"
                       >
                         <button
-                          aria-controls="root_foo-key__listbox"
+                          aria-controls="_r_m_"
                           aria-expanded="false"
                           aria-haspopup="listbox"
                           class="btn btn-outline w-full text-left flex justify-between items-center "
@@ -3087,7 +3087,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                         </button>
                         <ul
                           class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-                          id="root_foo-key__listbox"
+                          id="_r_m_"
                           role="listbox"
                         >
                           <li
@@ -3095,7 +3095,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                             class="px-4 py-2 hover:bg-base-200 cursor-pointer bg-primary/10"
                             data-value="0"
                             role="option"
-                            tabindex="0"
+                            tabindex="-1"
                           >
                             <div
                               class="flex items-center gap-2"
@@ -3110,7 +3110,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                             class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                             data-value="1"
                             role="option"
-                            tabindex="0"
+                            tabindex="-1"
                           >
                             <div
                               class="flex items-center gap-2"
@@ -3125,7 +3125,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                             class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                             data-value="2"
                             role="option"
-                            tabindex="0"
+                            tabindex="-1"
                           >
                             <div
                               class="flex items-center gap-2"
@@ -3296,7 +3296,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                         class="dropdown w-full"
                       >
                         <button
-                          aria-controls="root_foo-key__listbox"
+                          aria-controls="_r_10_"
                           aria-expanded="false"
                           aria-haspopup="listbox"
                           class="btn btn-outline w-full text-left flex justify-between items-center "
@@ -3319,7 +3319,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                         </button>
                         <ul
                           class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-                          id="root_foo-key__listbox"
+                          id="_r_10_"
                           role="listbox"
                         >
                           <li
@@ -3327,7 +3327,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                             class="px-4 py-2 hover:bg-base-200 cursor-pointer bg-primary/10"
                             data-value="0"
                             role="option"
-                            tabindex="0"
+                            tabindex="-1"
                           >
                             <div
                               class="flex items-center gap-2"
@@ -3342,7 +3342,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                             class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                             data-value="1"
                             role="option"
-                            tabindex="0"
+                            tabindex="-1"
                           >
                             <div
                               class="flex items-center gap-2"
@@ -3357,7 +3357,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                             class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                             data-value="2"
                             role="option"
-                            tabindex="0"
+                            tabindex="-1"
                           >
                             <div
                               class="flex items-center gap-2"

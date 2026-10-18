@@ -1,7 +1,8 @@
-import type { MouseEvent, ReactNode, RefObject } from 'react';
+import type { KeyboardEvent, ReactNode, RefObject, SyntheticEvent } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import type { FieldPresentation, FormContextType, Registry, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import type { FieldPresentation, FormContextType, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { getControlAttributes, getControlFallbackName, TranslatableString } from '@rjsf/utils';
 
 /** The name a picker's trigger falls back to where no label names it, which the dialog it opens takes too: the field's
@@ -46,8 +47,8 @@ interface DatePickerTriggerProps {
   autofocus?: boolean;
   /** The ref the popup positions itself against and returns focus to */
   triggerRef: RefObject<HTMLButtonElement | null>;
-  /** Opens the popup, or closes it where a press here is the way out */
-  onClick: (e: MouseEvent) => void;
+  /** Opens the popup, or closes it where a press here is the way out; Down Arrow opens it too */
+  onClick: (e: SyntheticEvent) => void;
   /** Reports focus */
   onFocus: () => void;
   /** Reports blur */
@@ -65,11 +66,7 @@ interface DatePickerTriggerProps {
  *
  * @param props - The value to display and the state to display it in, with the handlers for each way into the popup
  */
-export default function DatePickerTrigger<
-  T = unknown,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = FormContextType,
->({
+export default function DatePickerTrigger({
   id,
   fallbackName,
   named,
@@ -87,8 +84,38 @@ export default function DatePickerTrigger<
   onFocus,
   onBlur,
 }: DatePickerTriggerProps) {
-  const controlAttributes = getControlAttributes<T, S, F>({ id, presentation });
+  const controlAttributes = getControlAttributes({ id, presentation });
   const text = formattedValue || placeholder || fallbackName;
+  // A combobox opens on Down Arrow, or Alt+Down Arrow, as well as on a press, which is the key a user who hears one
+  // reaches for. As in the APG date picker combobox, the key also moves focus into the calendar, onto the day
+  // react-day-picker lets Tab reach, the selected day or else today, rather than leaving it to scroll the page; a day of
+  // a picker the key opens is focused once the popup has rendered. The popup is found in the trigger's root, the shadow
+  // root of a form rendered in one, which the document's own id lookup doesn't reach into
+  const focusDayOnOpen = useRef(false);
+  const focusDay = useCallback(() => {
+    const root = triggerRef.current?.getRootNode();
+    if (root instanceof Document || root instanceof ShadowRoot) {
+      root.getElementById(popupId)?.querySelector<HTMLElement>('[role="grid"] button[tabindex="0"]')?.focus();
+    }
+  }, [popupId, triggerRef]);
+  useEffect(() => {
+    if (isOpen && focusDayOnOpen.current) {
+      focusDayOnOpen.current = false;
+      focusDay();
+    }
+  }, [isOpen, focusDay]);
+  const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
+    if (event.key !== 'ArrowDown' || readonly) {
+      return;
+    }
+    event.preventDefault();
+    if (isOpen) {
+      focusDay();
+    } else {
+      focusDayOnOpen.current = true;
+      onClick(event);
+    }
+  };
 
   return (
     <button
@@ -103,6 +130,7 @@ export default function DatePickerTrigger<
       // a field that cannot be edited is still one a keyboard user reads, and `SelectWidget` keeps its own reachable
       aria-disabled={readonly || undefined}
       onClick={readonly ? undefined : onClick}
+      onKeyDown={handleKeyDown}
       onFocus={onFocus}
       onBlur={onBlur}
       role='combobox'
@@ -114,7 +142,15 @@ export default function DatePickerTrigger<
       {...controlAttributes}
       ref={triggerRef}
     >
-      <span className={formattedValue ? '' : 'text-base-content/50'}>{text}</span>
+      {/* With no date and no placeholder the text is the field's label, or the translated prompt, which on screen stands
+          in for a value but is no value, so it is hidden from the one the combobox holds, leaving that empty as a
+          native date input's is */}
+      <span
+        className={formattedValue ? '' : 'text-base-content/50'}
+        aria-hidden={(!formattedValue && !placeholder) || undefined}
+      >
+        {text}
+      </span>
       <FontAwesomeIcon icon={faCalendar} className='ml-2 h-4 w-4 text-primary' />
     </button>
   );

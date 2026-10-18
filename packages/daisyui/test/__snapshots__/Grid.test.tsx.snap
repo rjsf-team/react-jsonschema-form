@@ -602,7 +602,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 class="dropdown w-full"
                               >
                                 <button
-                                  aria-controls="root_person_address_state__listbox"
+                                  aria-controls="_r_f_"
                                   aria-expanded="false"
                                   aria-haspopup="listbox"
                                   aria-required="true"
@@ -613,6 +613,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   type="button"
                                 >
                                   <span
+                                    aria-hidden="true"
                                     class="truncate"
                                   >
                                     State
@@ -626,7 +627,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 </button>
                                 <ul
                                   class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-                                  id="root_person_address_state__listbox"
+                                  id="_r_f_"
                                   role="listbox"
                                 >
                                   <li
@@ -634,7 +635,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="0"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -649,7 +650,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="1"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -664,7 +665,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="2"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -679,7 +680,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="3"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -694,7 +695,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="4"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -709,7 +710,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="5"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -724,7 +725,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="6"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -739,7 +740,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="7"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -754,7 +755,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="8"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -769,7 +770,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="9"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -784,7 +785,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="10"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -799,7 +800,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="11"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -814,7 +815,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="12"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -829,7 +830,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="13"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -844,7 +845,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="14"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -859,7 +860,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="15"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -874,7 +875,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="16"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -889,7 +890,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="17"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -904,7 +905,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="18"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -919,7 +920,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="19"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -934,7 +935,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="20"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -949,7 +950,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="21"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -964,7 +965,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="22"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -979,7 +980,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="23"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -994,7 +995,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="24"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -1009,7 +1010,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="25"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -1024,7 +1025,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="26"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -1039,7 +1040,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="27"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -1054,7 +1055,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="28"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -1069,7 +1070,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="29"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -1084,7 +1085,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="30"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -1099,7 +1100,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="31"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -1114,7 +1115,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="32"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -1129,7 +1130,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="33"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -1144,7 +1145,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="34"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -1159,7 +1160,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="35"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -1174,7 +1175,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="36"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -1189,7 +1190,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="37"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -1204,7 +1205,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="38"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -1219,7 +1220,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="39"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -1234,7 +1235,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="40"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -1249,7 +1250,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="41"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -1264,7 +1265,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="42"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -1279,7 +1280,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="43"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -1294,7 +1295,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="44"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -1309,7 +1310,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="45"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -1324,7 +1325,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="46"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -1339,7 +1340,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="47"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -1354,7 +1355,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="48"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -1369,7 +1370,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="49"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -1384,7 +1385,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="50"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -1399,7 +1400,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="51"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -1414,7 +1415,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="52"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -1429,7 +1430,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="53"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -1444,7 +1445,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="54"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -1459,7 +1460,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="55"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2228,7 +2229,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 class="dropdown w-full"
                               >
                                 <button
-                                  aria-controls="root_person_address_state__listbox"
+                                  aria-controls="_r_j_"
                                   aria-expanded="false"
                                   aria-haspopup="listbox"
                                   aria-required="true"
@@ -2239,6 +2240,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   type="button"
                                 >
                                   <span
+                                    aria-hidden="true"
                                     class="truncate"
                                   >
                                     State
@@ -2252,7 +2254,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 </button>
                                 <ul
                                   class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-                                  id="root_person_address_state__listbox"
+                                  id="_r_j_"
                                   role="listbox"
                                 >
                                   <li
@@ -2260,7 +2262,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="0"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2275,7 +2277,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="1"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2290,7 +2292,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="2"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2305,7 +2307,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="3"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2320,7 +2322,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="4"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2335,7 +2337,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="5"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2350,7 +2352,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="6"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2365,7 +2367,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="7"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2380,7 +2382,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="8"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2395,7 +2397,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="9"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2410,7 +2412,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="10"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2425,7 +2427,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="11"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2440,7 +2442,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="12"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2455,7 +2457,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="13"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2470,7 +2472,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="14"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2485,7 +2487,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="15"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2500,7 +2502,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="16"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2515,7 +2517,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="17"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2530,7 +2532,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="18"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2545,7 +2547,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="19"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2560,7 +2562,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="20"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2575,7 +2577,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="21"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2590,7 +2592,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="22"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2605,7 +2607,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="23"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2620,7 +2622,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="24"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2635,7 +2637,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="25"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2650,7 +2652,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="26"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2665,7 +2667,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="27"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2680,7 +2682,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="28"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2695,7 +2697,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="29"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2710,7 +2712,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="30"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2725,7 +2727,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="31"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2740,7 +2742,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="32"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2755,7 +2757,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="33"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2770,7 +2772,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="34"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2785,7 +2787,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="35"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2800,7 +2802,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="36"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2815,7 +2817,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="37"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2830,7 +2832,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="38"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2845,7 +2847,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="39"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2860,7 +2862,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="40"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2875,7 +2877,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="41"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2890,7 +2892,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="42"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2905,7 +2907,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="43"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2920,7 +2922,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="44"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2935,7 +2937,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="45"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2950,7 +2952,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="46"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2965,7 +2967,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="47"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2980,7 +2982,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="48"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -2995,7 +2997,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="49"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -3010,7 +3012,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="50"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -3025,7 +3027,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="51"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -3040,7 +3042,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="52"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -3055,7 +3057,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="53"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -3070,7 +3072,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="54"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -3085,7 +3087,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="55"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -3854,7 +3856,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 class="dropdown w-full"
                               >
                                 <button
-                                  aria-controls="root_person_address_state__listbox"
+                                  aria-controls="_r_n_"
                                   aria-expanded="false"
                                   aria-haspopup="listbox"
                                   aria-required="true"
@@ -3865,6 +3867,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   type="button"
                                 >
                                   <span
+                                    aria-hidden="true"
                                     class="truncate"
                                   >
                                     State
@@ -3878,7 +3881,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 </button>
                                 <ul
                                   class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-                                  id="root_person_address_state__listbox"
+                                  id="_r_n_"
                                   role="listbox"
                                 >
                                   <li
@@ -3886,7 +3889,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="0"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -3901,7 +3904,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="1"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -3916,7 +3919,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="2"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -3931,7 +3934,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="3"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -3946,7 +3949,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="4"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -3961,7 +3964,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="5"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -3976,7 +3979,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="6"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -3991,7 +3994,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="7"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4006,7 +4009,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="8"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4021,7 +4024,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="9"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4036,7 +4039,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="10"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4051,7 +4054,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="11"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4066,7 +4069,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="12"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4081,7 +4084,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="13"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4096,7 +4099,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="14"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4111,7 +4114,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="15"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4126,7 +4129,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="16"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4141,7 +4144,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="17"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4156,7 +4159,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="18"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4171,7 +4174,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="19"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4186,7 +4189,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="20"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4201,7 +4204,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="21"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4216,7 +4219,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="22"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4231,7 +4234,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="23"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4246,7 +4249,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="24"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4261,7 +4264,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="25"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4276,7 +4279,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="26"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4291,7 +4294,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="27"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4306,7 +4309,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="28"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4321,7 +4324,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="29"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4336,7 +4339,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="30"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4351,7 +4354,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="31"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4366,7 +4369,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="32"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4381,7 +4384,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="33"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4396,7 +4399,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="34"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4411,7 +4414,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="35"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4426,7 +4429,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="36"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4441,7 +4444,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="37"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4456,7 +4459,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="38"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4471,7 +4474,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="39"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4486,7 +4489,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="40"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4501,7 +4504,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="41"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4516,7 +4519,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="42"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4531,7 +4534,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="43"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4546,7 +4549,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="44"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4561,7 +4564,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="45"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4576,7 +4579,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="46"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4591,7 +4594,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="47"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4606,7 +4609,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="48"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4621,7 +4624,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="49"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4636,7 +4639,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="50"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4651,7 +4654,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="51"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4666,7 +4669,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="52"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4681,7 +4684,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="53"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4696,7 +4699,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="54"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -4711,7 +4714,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="55"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -5480,7 +5483,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 class="dropdown w-full"
                               >
                                 <button
-                                  aria-controls="root_person_address_state__listbox"
+                                  aria-controls="_r_b_"
                                   aria-expanded="false"
                                   aria-haspopup="listbox"
                                   aria-required="true"
@@ -5491,6 +5494,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   type="button"
                                 >
                                   <span
+                                    aria-hidden="true"
                                     class="truncate"
                                   >
                                     State
@@ -5504,7 +5508,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 </button>
                                 <ul
                                   class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-                                  id="root_person_address_state__listbox"
+                                  id="_r_b_"
                                   role="listbox"
                                 >
                                   <li
@@ -5512,7 +5516,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="0"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -5527,7 +5531,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="1"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -5542,7 +5546,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="2"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -5557,7 +5561,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="3"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -5572,7 +5576,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="4"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -5587,7 +5591,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="5"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -5602,7 +5606,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="6"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -5617,7 +5621,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="7"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -5632,7 +5636,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="8"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -5647,7 +5651,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="9"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -5662,7 +5666,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="10"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -5677,7 +5681,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="11"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -5692,7 +5696,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="12"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -5707,7 +5711,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="13"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -5722,7 +5726,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="14"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -5737,7 +5741,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="15"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -5752,7 +5756,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="16"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -5767,7 +5771,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="17"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -5782,7 +5786,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="18"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -5797,7 +5801,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="19"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -5812,7 +5816,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="20"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -5827,7 +5831,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="21"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -5842,7 +5846,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="22"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -5857,7 +5861,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="23"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -5872,7 +5876,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="24"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -5887,7 +5891,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="25"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -5902,7 +5906,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="26"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -5917,7 +5921,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="27"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -5932,7 +5936,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="28"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -5947,7 +5951,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="29"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -5962,7 +5966,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="30"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -5977,7 +5981,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="31"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -5992,7 +5996,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="32"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -6007,7 +6011,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="33"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -6022,7 +6026,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="34"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -6037,7 +6041,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="35"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -6052,7 +6056,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="36"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -6067,7 +6071,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="37"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -6082,7 +6086,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="38"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -6097,7 +6101,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="39"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -6112,7 +6116,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="40"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -6127,7 +6131,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="41"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -6142,7 +6146,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="42"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -6157,7 +6161,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="43"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -6172,7 +6176,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="44"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -6187,7 +6191,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="45"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -6202,7 +6206,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="46"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -6217,7 +6221,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="47"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -6232,7 +6236,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="48"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -6247,7 +6251,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="49"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -6262,7 +6266,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="50"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -6277,7 +6281,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="51"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -6292,7 +6296,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="52"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -6307,7 +6311,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="53"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -6322,7 +6326,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="54"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -6337,7 +6341,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                                     data-value="55"
                                     role="option"
-                                    tabindex="0"
+                                    tabindex="-1"
                                   >
                                     <div
                                       class="flex items-center gap-2"
@@ -7075,7 +7079,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                     class="dropdown w-full"
                   >
                     <button
-                      aria-controls="root_person_address_state__listbox"
+                      aria-controls="_r_7_"
                       aria-expanded="false"
                       aria-haspopup="listbox"
                       aria-required="true"
@@ -7086,6 +7090,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       type="button"
                     >
                       <span
+                        aria-hidden="true"
                         class="truncate"
                       >
                         State
@@ -7099,7 +7104,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                     </button>
                     <ul
                       class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-                      id="root_person_address_state__listbox"
+                      id="_r_7_"
                       role="listbox"
                     >
                       <li
@@ -7107,7 +7112,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="0"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7122,7 +7127,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="1"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7137,7 +7142,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="2"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7152,7 +7157,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="3"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7167,7 +7172,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="4"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7182,7 +7187,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="5"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7197,7 +7202,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="6"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7212,7 +7217,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="7"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7227,7 +7232,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="8"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7242,7 +7247,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="9"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7257,7 +7262,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="10"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7272,7 +7277,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="11"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7287,7 +7292,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="12"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7302,7 +7307,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="13"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7317,7 +7322,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="14"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7332,7 +7337,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="15"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7347,7 +7352,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="16"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7362,7 +7367,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="17"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7377,7 +7382,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="18"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7392,7 +7397,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="19"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7407,7 +7412,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="20"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7422,7 +7427,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="21"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7437,7 +7442,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="22"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7452,7 +7457,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="23"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7467,7 +7472,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="24"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7482,7 +7487,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="25"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7497,7 +7502,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="26"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7512,7 +7517,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="27"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7527,7 +7532,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="28"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7542,7 +7547,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="29"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7557,7 +7562,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="30"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7572,7 +7577,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="31"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7587,7 +7592,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="32"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7602,7 +7607,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="33"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7617,7 +7622,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="34"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7632,7 +7637,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="35"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7647,7 +7652,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="36"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7662,7 +7667,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="37"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7677,7 +7682,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="38"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7692,7 +7697,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="39"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7707,7 +7712,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="40"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7722,7 +7727,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="41"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7737,7 +7742,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="42"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7752,7 +7757,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="43"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7767,7 +7772,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="44"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7782,7 +7787,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="45"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7797,7 +7802,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="46"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7812,7 +7817,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="47"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7827,7 +7832,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="48"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7842,7 +7847,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="49"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7857,7 +7862,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="50"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7872,7 +7877,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="51"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7887,7 +7892,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="52"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7902,7 +7907,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="53"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7917,7 +7922,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="54"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -7932,7 +7937,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="55"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -8538,7 +8543,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     class="dropdown w-full"
                   >
                     <button
-                      aria-controls="root_person_address_state__listbox"
+                      aria-controls="_r_3_"
                       aria-expanded="false"
                       aria-haspopup="listbox"
                       aria-required="true"
@@ -8549,6 +8554,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       type="button"
                     >
                       <span
+                        aria-hidden="true"
                         class="truncate"
                       >
                         State
@@ -8562,7 +8568,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     </button>
                     <ul
                       class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-                      id="root_person_address_state__listbox"
+                      id="_r_3_"
                       role="listbox"
                     >
                       <li
@@ -8570,7 +8576,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="0"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -8585,7 +8591,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="1"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -8600,7 +8606,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="2"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -8615,7 +8621,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="3"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -8630,7 +8636,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="4"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -8645,7 +8651,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="5"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -8660,7 +8666,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="6"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -8675,7 +8681,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="7"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -8690,7 +8696,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="8"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -8705,7 +8711,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="9"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -8720,7 +8726,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="10"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -8735,7 +8741,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="11"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -8750,7 +8756,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="12"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -8765,7 +8771,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="13"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -8780,7 +8786,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="14"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -8795,7 +8801,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="15"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -8810,7 +8816,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="16"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -8825,7 +8831,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="17"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -8840,7 +8846,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="18"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -8855,7 +8861,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="19"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -8870,7 +8876,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="20"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -8885,7 +8891,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="21"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -8900,7 +8906,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="22"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -8915,7 +8921,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="23"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -8930,7 +8936,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="24"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -8945,7 +8951,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="25"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -8960,7 +8966,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="26"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -8975,7 +8981,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="27"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -8990,7 +8996,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="28"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -9005,7 +9011,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="29"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -9020,7 +9026,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="30"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -9035,7 +9041,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="31"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -9050,7 +9056,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="32"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -9065,7 +9071,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="33"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -9080,7 +9086,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="34"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -9095,7 +9101,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="35"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -9110,7 +9116,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="36"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -9125,7 +9131,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="37"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -9140,7 +9146,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="38"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -9155,7 +9161,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="39"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -9170,7 +9176,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="40"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -9185,7 +9191,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="41"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -9200,7 +9206,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="42"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -9215,7 +9221,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="43"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -9230,7 +9236,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="44"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -9245,7 +9251,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="45"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -9260,7 +9266,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="46"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -9275,7 +9281,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="47"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -9290,7 +9296,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="48"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -9305,7 +9311,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="49"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -9320,7 +9326,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="50"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -9335,7 +9341,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="51"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -9350,7 +9356,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="52"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -9365,7 +9371,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="53"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -9380,7 +9386,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="54"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"
@@ -9395,7 +9401,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                         data-value="55"
                         role="option"
-                        tabindex="0"
+                        tabindex="-1"
                       >
                         <div
                           class="flex items-center gap-2"

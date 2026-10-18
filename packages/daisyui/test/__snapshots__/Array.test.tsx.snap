@@ -407,7 +407,7 @@ exports[`array fields > checkboxes 1`] = `
             class="dropdown w-full"
           >
             <button
-              aria-controls="root__listbox"
+              aria-controls="_r_2_"
               aria-expanded="false"
               aria-haspopup="listbox"
               aria-label="Select ..."
@@ -418,6 +418,7 @@ exports[`array fields > checkboxes 1`] = `
               type="button"
             >
               <span
+                aria-hidden="true"
                 class="truncate"
               >
                 Select ...
@@ -432,7 +433,7 @@ exports[`array fields > checkboxes 1`] = `
             <ul
               aria-multiselectable="true"
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-              id="root__listbox"
+              id="_r_2_"
               role="listbox"
             >
               <li
@@ -440,14 +441,16 @@ exports[`array fields > checkboxes 1`] = `
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="0"
                 role="option"
-                tabindex="0"
+                tabindex="-1"
               >
                 <div
                   class="flex items-center gap-2"
                 >
                   <input
-                    class="checkbox checkbox-sm"
+                    aria-hidden="true"
+                    class="checkbox checkbox-sm pointer-events-none"
                     readonly=""
+                    tabindex="-1"
                     type="checkbox"
                   />
                   <span>
@@ -460,14 +463,16 @@ exports[`array fields > checkboxes 1`] = `
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="1"
                 role="option"
-                tabindex="0"
+                tabindex="-1"
               >
                 <div
                   class="flex items-center gap-2"
                 >
                   <input
-                    class="checkbox checkbox-sm"
+                    aria-hidden="true"
+                    class="checkbox checkbox-sm pointer-events-none"
                     readonly=""
+                    tabindex="-1"
                     type="checkbox"
                   />
                   <span>
@@ -480,14 +485,16 @@ exports[`array fields > checkboxes 1`] = `
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="2"
                 role="option"
-                tabindex="0"
+                tabindex="-1"
               >
                 <div
                   class="flex items-center gap-2"
                 >
                   <input
-                    class="checkbox checkbox-sm"
+                    aria-hidden="true"
+                    class="checkbox checkbox-sm pointer-events-none"
                     readonly=""
+                    tabindex="-1"
                     type="checkbox"
                   />
                   <span>
@@ -1578,7 +1585,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
             class="dropdown w-full"
           >
             <button
-              aria-controls="root__listbox"
+              aria-controls="_r_5f_"
               aria-expanded="false"
               aria-haspopup="listbox"
               aria-label="Select ..."
@@ -1589,6 +1596,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
               type="button"
             >
               <span
+                aria-hidden="true"
                 class="truncate"
               >
                 Select ...
@@ -1603,7 +1611,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
             <ul
               aria-multiselectable="true"
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-              id="root__listbox"
+              id="_r_5f_"
               role="listbox"
             >
               <li
@@ -1611,14 +1619,16 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="0"
                 role="option"
-                tabindex="0"
+                tabindex="-1"
               >
                 <div
                   class="flex items-center gap-2"
                 >
                   <input
-                    class="checkbox checkbox-sm"
+                    aria-hidden="true"
+                    class="checkbox checkbox-sm pointer-events-none"
                     readonly=""
+                    tabindex="-1"
                     type="checkbox"
                   />
                   <span>
@@ -1631,14 +1641,16 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="1"
                 role="option"
-                tabindex="0"
+                tabindex="-1"
               >
                 <div
                   class="flex items-center gap-2"
                 >
                   <input
-                    class="checkbox checkbox-sm"
+                    aria-hidden="true"
+                    class="checkbox checkbox-sm pointer-events-none"
                     readonly=""
+                    tabindex="-1"
                     type="checkbox"
                   />
                   <span>
@@ -1651,14 +1663,16 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="2"
                 role="option"
-                tabindex="0"
+                tabindex="-1"
               >
                 <div
                   class="flex items-center gap-2"
                 >
                   <input
-                    class="checkbox checkbox-sm"
+                    aria-hidden="true"
+                    class="checkbox checkbox-sm pointer-events-none"
                     readonly=""
+                    tabindex="-1"
                     type="checkbox"
                   />
                   <span>
@@ -4131,7 +4145,7 @@ exports[`with title and description > checkboxes 1`] = `
             class="dropdown w-full"
           >
             <button
-              aria-controls="root__listbox"
+              aria-controls="_r_n_"
               aria-describedby="root__description"
               aria-expanded="false"
               aria-haspopup="listbox"
@@ -4142,6 +4156,7 @@ exports[`with title and description > checkboxes 1`] = `
               type="button"
             >
               <span
+                aria-hidden="true"
                 class="truncate"
               >
                 Test field
@@ -4156,7 +4171,7 @@ exports[`with title and description > checkboxes 1`] = `
             <ul
               aria-multiselectable="true"
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-              id="root__listbox"
+              id="_r_n_"
               role="listbox"
             >
               <li
@@ -4164,14 +4179,16 @@ exports[`with title and description > checkboxes 1`] = `
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="0"
                 role="option"
-                tabindex="0"
+                tabindex="-1"
               >
                 <div
                   class="flex items-center gap-2"
                 >
                   <input
-                    class="checkbox checkbox-sm"
+                    aria-hidden="true"
+                    class="checkbox checkbox-sm pointer-events-none"
                     readonly=""
+                    tabindex="-1"
                     type="checkbox"
                   />
                   <span>
@@ -4184,14 +4201,16 @@ exports[`with title and description > checkboxes 1`] = `
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="1"
                 role="option"
-                tabindex="0"
+                tabindex="-1"
               >
                 <div
                   class="flex items-center gap-2"
                 >
                   <input
-                    class="checkbox checkbox-sm"
+                    aria-hidden="true"
+                    class="checkbox checkbox-sm pointer-events-none"
                     readonly=""
+                    tabindex="-1"
                     type="checkbox"
                   />
                   <span>
@@ -4204,14 +4223,16 @@ exports[`with title and description > checkboxes 1`] = `
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="2"
                 role="option"
-                tabindex="0"
+                tabindex="-1"
               >
                 <div
                   class="flex items-center gap-2"
                 >
                   <input
-                    class="checkbox checkbox-sm"
+                    aria-hidden="true"
+                    class="checkbox checkbox-sm pointer-events-none"
                     readonly=""
+                    tabindex="-1"
                     type="checkbox"
                   />
                   <span>
@@ -4936,7 +4957,7 @@ exports[`with title and description from both > checkboxes 1`] = `
             class="dropdown w-full"
           >
             <button
-              aria-controls="root__listbox"
+              aria-controls="_r_21_"
               aria-describedby="root__description"
               aria-expanded="false"
               aria-haspopup="listbox"
@@ -4947,6 +4968,7 @@ exports[`with title and description from both > checkboxes 1`] = `
               type="button"
             >
               <span
+                aria-hidden="true"
                 class="truncate"
               >
                 My Field
@@ -4961,7 +4983,7 @@ exports[`with title and description from both > checkboxes 1`] = `
             <ul
               aria-multiselectable="true"
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-              id="root__listbox"
+              id="_r_21_"
               role="listbox"
             >
               <li
@@ -4969,14 +4991,16 @@ exports[`with title and description from both > checkboxes 1`] = `
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="0"
                 role="option"
-                tabindex="0"
+                tabindex="-1"
               >
                 <div
                   class="flex items-center gap-2"
                 >
                   <input
-                    class="checkbox checkbox-sm"
+                    aria-hidden="true"
+                    class="checkbox checkbox-sm pointer-events-none"
                     readonly=""
+                    tabindex="-1"
                     type="checkbox"
                   />
                   <span>
@@ -4989,14 +5013,16 @@ exports[`with title and description from both > checkboxes 1`] = `
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="1"
                 role="option"
-                tabindex="0"
+                tabindex="-1"
               >
                 <div
                   class="flex items-center gap-2"
                 >
                   <input
-                    class="checkbox checkbox-sm"
+                    aria-hidden="true"
+                    class="checkbox checkbox-sm pointer-events-none"
                     readonly=""
+                    tabindex="-1"
                     type="checkbox"
                   />
                   <span>
@@ -5009,14 +5035,16 @@ exports[`with title and description from both > checkboxes 1`] = `
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="2"
                 role="option"
-                tabindex="0"
+                tabindex="-1"
               >
                 <div
                   class="flex items-center gap-2"
                 >
                   <input
-                    class="checkbox checkbox-sm"
+                    aria-hidden="true"
+                    class="checkbox checkbox-sm pointer-events-none"
                     readonly=""
+                    tabindex="-1"
                     type="checkbox"
                   />
                   <span>
@@ -5741,7 +5769,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
             class="dropdown w-full"
           >
             <button
-              aria-controls="root__listbox"
+              aria-controls="_r_1c_"
               aria-describedby="root__description"
               aria-expanded="false"
               aria-haspopup="listbox"
@@ -5752,6 +5780,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
               type="button"
             >
               <span
+                aria-hidden="true"
                 class="truncate"
               >
                 My Field
@@ -5766,7 +5795,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
             <ul
               aria-multiselectable="true"
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-              id="root__listbox"
+              id="_r_1c_"
               role="listbox"
             >
               <li
@@ -5774,14 +5803,16 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="0"
                 role="option"
-                tabindex="0"
+                tabindex="-1"
               >
                 <div
                   class="flex items-center gap-2"
                 >
                   <input
-                    class="checkbox checkbox-sm"
+                    aria-hidden="true"
+                    class="checkbox checkbox-sm pointer-events-none"
                     readonly=""
+                    tabindex="-1"
                     type="checkbox"
                   />
                   <span>
@@ -5794,14 +5825,16 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="1"
                 role="option"
-                tabindex="0"
+                tabindex="-1"
               >
                 <div
                   class="flex items-center gap-2"
                 >
                   <input
-                    class="checkbox checkbox-sm"
+                    aria-hidden="true"
+                    class="checkbox checkbox-sm pointer-events-none"
                     readonly=""
+                    tabindex="-1"
                     type="checkbox"
                   />
                   <span>
@@ -5814,14 +5847,16 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="2"
                 role="option"
-                tabindex="0"
+                tabindex="-1"
               >
                 <div
                   class="flex items-center gap-2"
                 >
                   <input
-                    class="checkbox checkbox-sm"
+                    aria-hidden="true"
+                    class="checkbox checkbox-sm pointer-events-none"
                     readonly=""
+                    tabindex="-1"
                     type="checkbox"
                   />
                   <span>
@@ -6440,7 +6475,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
             class="dropdown w-full"
           >
             <button
-              aria-controls="root__listbox"
+              aria-controls="_r_2m_"
               aria-expanded="false"
               aria-haspopup="listbox"
               aria-label="Test field"
@@ -6451,6 +6486,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
               type="button"
             >
               <span
+                aria-hidden="true"
                 class="truncate"
               >
                 Test field
@@ -6465,7 +6501,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
             <ul
               aria-multiselectable="true"
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-              id="root__listbox"
+              id="_r_2m_"
               role="listbox"
             >
               <li
@@ -6473,14 +6509,16 @@ exports[`with title and description with global label off > checkboxes 1`] = `
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="0"
                 role="option"
-                tabindex="0"
+                tabindex="-1"
               >
                 <div
                   class="flex items-center gap-2"
                 >
                   <input
-                    class="checkbox checkbox-sm"
+                    aria-hidden="true"
+                    class="checkbox checkbox-sm pointer-events-none"
                     readonly=""
+                    tabindex="-1"
                     type="checkbox"
                   />
                   <span>
@@ -6493,14 +6531,16 @@ exports[`with title and description with global label off > checkboxes 1`] = `
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="1"
                 role="option"
-                tabindex="0"
+                tabindex="-1"
               >
                 <div
                   class="flex items-center gap-2"
                 >
                   <input
-                    class="checkbox checkbox-sm"
+                    aria-hidden="true"
+                    class="checkbox checkbox-sm pointer-events-none"
                     readonly=""
+                    tabindex="-1"
                     type="checkbox"
                   />
                   <span>
@@ -6513,14 +6553,16 @@ exports[`with title and description with global label off > checkboxes 1`] = `
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="2"
                 role="option"
-                tabindex="0"
+                tabindex="-1"
               >
                 <div
                   class="flex items-center gap-2"
                 >
                   <input
-                    class="checkbox checkbox-sm"
+                    aria-hidden="true"
+                    class="checkbox checkbox-sm pointer-events-none"
                     readonly=""
+                    tabindex="-1"
                     type="checkbox"
                   />
                   <span>
