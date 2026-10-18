@@ -950,6 +950,33 @@ describe('getDefaultFormState() reading $ref, branches and extra keys as the for
     expect(defaultsOf(chain, undefined, populate)).toEqual({ p: { a: 'x', c: 'c' } });
   });
 
+  it("merges the allOf and the if of the option a field picks as the field's own", () => {
+    const option: RJSFSchema = {
+      if: { properties: { k: { const: 'x' } } },
+      then: { properties: { t: { type: 'string', default: 'T' } } },
+      allOf: [{ properties: { m: { type: 'string', default: 'M' } } }],
+    };
+    const field: RJSFSchema = {
+      type: 'object',
+      properties: { k: { type: 'string', default: 'x' } },
+      anyOf: [option, { properties: { z: { type: 'string' } } }],
+    };
+    expect(defaultsOf(field, { k: 'x' })).toEqual({ k: 'x', t: 'T', m: 'M' });
+    expect(defaultsOf({ type: 'object', properties: { p: field } }, { p: { k: 'x' } })).toEqual({
+      p: { k: 'x', t: 'T', m: 'M' },
+    });
+    expect(
+      defaultsOf(
+        { type: 'object', properties: { p: field } },
+        { p: { k: 'x' } },
+        {
+          emptyObjectFields: 'skipEmptyDefaults',
+          allOf: 'populateDefaults',
+        },
+      ),
+    ).toEqual({ p: { k: 'x', t: 'T', m: 'M' } });
+  });
+
   it("merges a field's allOf for an if any of its declarations holds, whichever is merged first", () => {
     const withIf: RJSFSchema = {
       type: 'object',

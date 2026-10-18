@@ -51,6 +51,7 @@ import buildPlan, {
   asTarget,
   cachedPolicy,
   childSeeds,
+  declaresKeyword,
   ownChains,
   schemaFrom,
   seedsAt,
@@ -1021,9 +1022,14 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
         cutRecursion: false,
       })
     : undefined;
+  // The option is merged into the field, so its own `if` and `allOf` count as the field's, as they did where v7 merged
+  // the option in before reading the field: an `if` merges the `allOf`s under the `'if'` policy, and an `allOf`
+  // merged under `allOf: 'populateDefaults'` takes its `then`/`else` under `skipEmptyDefaults`
+  const optionDeclares = (keyword: string) => declaresKeyword(graph, optionNode, keyword);
   const inherited = {
-    allOf: view.allOf,
-    conditions: view.conditions,
+    allOf: view.allOf === 'if' && optionDeclares(IF_KEY) ? true : view.allOf,
+    conditions:
+      view.conditions || (context.defaultFormStateBehavior?.allOf === 'populateDefaults' && optionDeclares(ALL_OF_KEY)),
     optionPolicy: optionPolicy && { allOf: optionPolicy.allOf, conditions: optionPolicy.conditions },
   };
   // The rule applies to the field with its option merged, since a recursion through an option enters its `$ref` only

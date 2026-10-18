@@ -421,19 +421,23 @@ function ownProviders<S extends StrictRJSFSchema>(
   return providers;
 }
 
-/** Whether the schema the node `id` reads as declares an `if` of its own, along its chain of references, the members
+/** Whether the schema the node `id` reads as declares `keyword` itself, along its chain of references, the members
  * of a `conjunction` counting as its own keywords, since they are the keywords written beside the `$ref`
  */
-function declaresCondition<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId): boolean {
+export function declaresKeyword<S extends StrictRJSFSchema>(
+  graph: SchemaGraph<S>,
+  id: NodeId,
+  keyword: string,
+): boolean {
   const node = graph.node(id);
   if (node.kind !== 'schema') {
     return false;
   }
   const conjunction = asTarget(graph, node);
   if (conjunction !== node) {
-    return graph.subschemas(conjunction.id, ALL_OF_KEY).some(([, member]) => declaresCondition(graph, member));
+    return graph.subschemas(conjunction.id, ALL_OF_KEY).some(([, member]) => declaresKeyword(graph, member, keyword));
   }
-  return Object.hasOwn(node.raw, IF_KEY) || (node.ref !== undefined && declaresCondition(graph, node.ref));
+  return Object.hasOwn(node.raw, keyword) || (node.ref !== undefined && declaresKeyword(graph, node.ref, keyword));
 }
 
 /** The definitions `refDefinition()` read, by graph and node */
@@ -542,7 +546,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     // Decided before any seed is expanded, since it decides how each of them merges its `allOf`
     if (
       (this.policy.allOf === 'if' || this.policy.optionPolicy?.allOf === 'if') &&
-      seeds.some((seed) => declaresCondition(this.graph, seed.node))
+      seeds.some((seed) => declaresKeyword(this.graph, seed.node, IF_KEY))
     ) {
       this.seedHasCondition = true;
       this.mergeAllOf ||= this.policy.allOf === 'if';
@@ -923,7 +927,10 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       return this.expand(id, refPath, 'option');
     }
     const { mergeAllOf, conditions } = this;
-    this.mergeAllOf = optionPolicy.allOf === true || (optionPolicy.allOf === 'if' && this.seedHasCondition);
+    // The option is merged into the field, so an `if` of its own counts as the field's
+    this.mergeAllOf =
+      optionPolicy.allOf === true ||
+      (optionPolicy.allOf === 'if' && (this.seedHasCondition || declaresKeyword(this.graph, id, IF_KEY)));
     this.conditions = optionPolicy.conditions;
     try {
       return this.expand(id, refPath, 'option');
