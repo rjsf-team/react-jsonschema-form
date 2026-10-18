@@ -1,5 +1,4 @@
 import { REF_KEY } from './constants.ts';
-import { isSchemaObject } from './isObject.ts';
 import KeyedMemo from './schema/graph/keyedMemo.ts';
 import { schemaFrom } from './schema/graph/mergePlan.ts';
 import { resolveOwnRef } from './schema/retrieveSchema.ts';
@@ -8,7 +7,13 @@ import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
 /** The `{ $ref }` each reference is resolved through, by root and reference: `resolveOwnRef()` memoizes on the schema
  * holding the reference, so one per reference shares its result, and the parse of it, across calls
  */
-const references = new KeyedMemo<object>();
+const references = new KeyedMemo<StrictRJSFSchema>();
+
+/** The `{ $ref }` for `$ref` in `rootSchema`, the same object on every call */
+function referenceOf<S extends StrictRJSFSchema>(rootSchema: S, $ref: string): S;
+function referenceOf(rootSchema: StrictRJSFSchema, $ref: string): StrictRJSFSchema {
+  return references.get([rootSchema, $ref], () => schemaFrom(rootSchema, { [REF_KEY]: $ref }));
+}
 
 /** The root a `$ref` is looked up in when the caller passes none, which no `$ref` names anything in */
 function emptySchema<S extends StrictRJSFSchema>(): S;
@@ -34,9 +39,5 @@ export default function findSchemaDefinition<S extends StrictRJSFSchema = RJSFSc
   $ref?: string,
   rootSchema: S = emptySchema<S>(),
 ): S {
-  const keys = [rootSchema, $ref ?? ''];
-  const known = references.peek(keys);
-  const reference = isSchemaObject<S>(known) ? known : schemaFrom(rootSchema, { [REF_KEY]: $ref ?? '' });
-  references.set(keys, reference);
-  return resolveOwnRef<S>(reference, rootSchema);
+  return resolveOwnRef<S>(referenceOf(rootSchema, $ref ?? ''), rootSchema);
 }
