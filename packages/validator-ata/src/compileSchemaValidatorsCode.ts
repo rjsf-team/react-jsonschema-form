@@ -6,6 +6,7 @@ import {
   isObject,
   JSON_SCHEMA_DRAFT_2019_09,
   JSON_SCHEMA_DRAFT_2020_12,
+  keywordShape,
   normalizeUri,
   REF_KEY,
   resolveUri,
@@ -28,43 +29,26 @@ function percentDecoded(text: string): string | undefined {
   }
 }
 
-/** The keywords whose values hold subschemas, by the shape of the value: one subschema, an array of them, or a map of
- * names, which are data, to them. Every other keyword, `const`, `enum`, `default` and `examples` among them, holds data
- * a `$ref` key in which is no reference.
+/** Returns the value of the keyword `key` with each subschema it holds, by `keywordShape()`, replaced by what `map`
+ * returns for it. Every other keyword, `const`, `enum`, `default` and `examples` among them, holds data a `$ref` key in
+ * which is no reference.
  */
-const SUBSCHEMA_KEYWORDS = new Set([
-  'items',
-  'additionalItems',
-  'additionalProperties',
-  'contains',
-  'propertyNames',
-  'not',
-  'if',
-  'then',
-  'else',
-  'unevaluatedItems',
-  'unevaluatedProperties',
-  'contentSchema',
-]);
-const SUBSCHEMA_ARRAY_KEYWORDS = new Set(['items', 'prefixItems', ALL_OF_KEY, 'anyOf', 'oneOf']);
-const SUBSCHEMA_MAP_KEYWORDS = new Set([
-  'properties',
-  'patternProperties',
-  'definitions',
-  '$defs',
-  'dependentSchemas',
-  'dependencies',
-]);
-
-/** Returns the value of the keyword `key` with each subschema it holds replaced by what `map` returns for it */
 function mapKeyword(key: string, value: unknown, map: (subschema: unknown) => unknown): unknown {
-  if (SUBSCHEMA_ARRAY_KEYWORDS.has(key) && Array.isArray(value)) {
-    return value.map(map);
+  const shape = keywordShape(key, value);
+  if (Array.isArray(value)) {
+    return shape === 'array' ? value.map(map) : value;
   }
-  if (SUBSCHEMA_MAP_KEYWORDS.has(key) && isObject(value)) {
-    return Object.fromEntries(Object.entries(value).map(([name, subschema]) => [name, map(subschema)]));
+  if (!isObject(value)) {
+    return value;
   }
-  return SUBSCHEMA_KEYWORDS.has(key) ? map(value) : value;
+  switch (shape) {
+    case 'map':
+      return Object.fromEntries(Object.entries(value).map(([name, subschema]) => [name, map(subschema)]));
+    case 'single':
+      return map(value);
+    default:
+      return value;
+  }
 }
 
 /** The keywords no subschema of a compiled document keeps: an `$id`, and the containers of definitions, which only a
@@ -191,13 +175,11 @@ function stepFrom(position: Position, token: string, child: unknown): Position {
   if (position === 'data') {
     return 'data';
   }
-  if (
-    (SUBSCHEMA_ARRAY_KEYWORDS.has(token) && Array.isArray(child)) ||
-    (SUBSCHEMA_MAP_KEYWORDS.has(token) && isObject(child))
-  ) {
+  const shape = keywordShape(token, child);
+  if (shape === 'array' || shape === 'map') {
     return 'list';
   }
-  return SUBSCHEMA_KEYWORDS.has(token) ? 'schema' : 'data';
+  return shape === 'single' ? 'schema' : 'data';
 }
 
 /** Returns the subschema the `$ref` fragment `fragment` names in `resource`, the resource itself for `#`, and the

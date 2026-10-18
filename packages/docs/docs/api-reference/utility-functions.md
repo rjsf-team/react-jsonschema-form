@@ -1779,6 +1779,21 @@ array constant, since `SchemaField` renders a typeless select over such values a
 
 - boolean: True if `schema` is a select whose value is an object or array picked as a whole
 
+### keywordShape()
+
+Classifies one of a schema's own entries by the shape of the subschemas its keyword's value holds: `'map'` for a map of names, which are data, to subschemas, such as `properties`, `'array'` for an array of them, such as `allOf`, `'single'` for one, such as `not`, and `undefined` for a keyword holding data or annotations, such as `const`, `default` or `title`.
+A draft-07 tuple `items` is an array and any other `items` a single subschema.
+It is how the schema graph walks a schema, so a validator package that rewrites a schema's subschemas walks them as the form does.
+
+#### Parameters
+
+- key: string - The keyword
+- value: unknown - The keyword's value
+
+#### Returns
+
+- 'map' | 'array' | 'single' | undefined: The shape of the subschemas the value holds, if any
+
 ### labelValue()
 
 Helper function that will return the value to use for a widget `label` based on `hideLabel`.
