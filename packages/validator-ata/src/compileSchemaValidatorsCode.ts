@@ -17,8 +17,15 @@ import { Validator } from 'ata-validator';
 import { COLOR_FORMAT_REGEX, DATA_URL_FORMAT_REGEX } from './createAtaInstance.ts';
 import type { CustomValidatorOptionsType } from './types.ts';
 
-function decodeToken(token: string): string {
-  return decodeURIComponent(token).replaceAll('~1', '/').replaceAll('~0', '~');
+/** Returns `text` percent-decoded, or undefined where it holds a `%` that starts no escape, which names nothing in the
+ * root, as the schema graph reads such a `$ref`
+ */
+function percentDecoded(text: string): string | undefined {
+  try {
+    return decodeURIComponent(text);
+  } catch {
+    return undefined;
+  }
 }
 
 /** The keywords whose values hold subschemas, by the shape of the value: one subschema, an array of them, or a map of
@@ -170,11 +177,16 @@ function anchored(resource: unknown, name: string, laterDialect: boolean): unkno
  */
 function locate(resource: Resource, fragment: string, laterDialect: boolean): [unknown, Resource] {
   if (fragment !== '#' && !fragment.startsWith('#/')) {
-    return [anchored(resource.schema, decodeURIComponent(fragment.slice(1)), laterDialect), resource];
+    const name = percentDecoded(fragment.slice(1));
+    return [name === undefined ? undefined : anchored(resource.schema, name, laterDialect), resource];
   }
   let node = resource.schema;
   let base = resource;
-  for (const token of fragment.split('/').slice(1).map(decodeToken)) {
+  for (const encoded of fragment.split('/').slice(1)) {
+    const token = percentDecoded(encoded)?.replaceAll('~1', '/').replaceAll('~0', '~');
+    if (token === undefined) {
+      return [undefined, base];
+    }
     if (node !== resource.schema) {
       base = resourceAt(node, base.base, laterDialect) ?? base;
     }

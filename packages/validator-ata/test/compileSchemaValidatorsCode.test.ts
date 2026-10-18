@@ -423,4 +423,16 @@ describe('compileSchemaValidatorsCode', () => {
       expect(validator.validateFormData({ p: 5 }, rootSchema).errors.map((error) => error.property)).toEqual(['.p']);
     },
   );
+  test.each([
+    ['a pointer holding a % that starts no escape', '#/definitions/100%'],
+    ['an anchor holding a % that starts no escape', '#100%'],
+    ['a pointer through a boolean subschema', '#/properties/t/type'],
+  ])('compiles a root holding a $ref that names nothing in it: %s', (_name, ref) => {
+    const rootSchema: RJSFSchema = {
+      definitions: { '100%': { type: 'string' } },
+      type: 'object',
+      properties: { p: { type: 'string', not: { $ref: ref } }, t: true, q: { type: 'number' } },
+    };
+    expect(() => compileSchemaValidatorsCode(rootSchema)).not.toThrow();
+  });
 });
