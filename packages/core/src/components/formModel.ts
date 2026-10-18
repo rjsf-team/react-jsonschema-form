@@ -28,6 +28,7 @@ import {
   applyReset,
   applySubmit,
   applyValidation,
+  copyAlongPath,
   getAt,
   asFieldValue,
   deriveState,
@@ -261,8 +262,14 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   ): { next: FormState<T, S, F>; edited?: FormState<T, S, F> } => {
     const isValidated = isLiveValidated(props);
     const edited = applyChangeToData(base, change, props);
-    const returned = props.transformChange ? props.transformChange(edited.formData, base.formData) : edited.formData;
-    if (Object.is(returned, edited.formData)) {
+    // A key move can leave data equal to the data before it, such as two equal items swapped, which the store hands
+    // back as that data itself. `transformChange` gets a copy of it as `next`, so returning `previous` still refuses it
+    const next =
+      props.transformChange && change.newKeyOf && Object.is(edited.formData, base.formData)
+        ? copyAlongPath(edited.formData, [])
+        : edited.formData;
+    const returned = props.transformChange ? props.transformChange(next, base.formData) : next;
+    if (Object.is(returned, next)) {
       return { next: applyChangeToErrorsOf(edited, base.formData, change, props, isValidated) };
     }
     if (Object.is(returned, base.formData)) {

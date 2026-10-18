@@ -247,6 +247,55 @@ describe('transformChange', () => {
     expect(optionOf(1)).toHaveValue('0');
   });
 
+  it('refuses a reorder of two equal items by returning the data before it, and each row keeps its own state', async () => {
+    const choiceSchema: RJSFSchema = {
+      type: 'array',
+      items: {
+        oneOf: [
+          { title: 'A', type: 'string' },
+          { title: 'B', type: 'string' },
+        ],
+      },
+    };
+    // The reorder leaves data equal to the data before it, which `previous` still refuses
+    const { node } = renderForm<string[]>({
+      schema: choiceSchema,
+      initialFormData: ['x', 'x'],
+      transformChange: (_next, previous) => previous,
+    });
+    const optionOf = (index: number) => elementOf(node, `#root_${index}__oneof_select`);
+    await user.selectOptions(optionOf(0), 'B');
+
+    await user.click(elementOf(node, `#${buttonId('root_0', 'moveDown')}`));
+
+    expect(optionOf(0)).toHaveValue('1');
+    expect(optionOf(1)).toHaveValue('0');
+  });
+
+  it('takes a reorder of two equal items by returning the data after it', async () => {
+    const choiceSchema: RJSFSchema = {
+      type: 'array',
+      items: {
+        oneOf: [
+          { title: 'A', type: 'string' },
+          { title: 'B', type: 'string' },
+        ],
+      },
+    };
+    const { node } = renderForm<string[]>({
+      schema: choiceSchema,
+      initialFormData: ['x', 'x'],
+      transformChange: (next) => next,
+    });
+    const optionOf = (index: number) => elementOf(node, `#root_${index}__oneof_select`);
+    await user.selectOptions(optionOf(0), 'B');
+
+    await user.click(elementOf(node, `#${buttonId('root_0', 'moveDown')}`));
+
+    expect(optionOf(0)).toHaveValue('0');
+    expect(optionOf(1)).toHaveValue('1');
+  });
+
   describe('rewrites an array add or reorder, and no row hands its instance to another item', () => {
     /** Shows its item, and which instance of the widget shows it: the state a row holds, as focus or a draft would be */
     function InstanceWidget({ id, value }: WidgetProps) {

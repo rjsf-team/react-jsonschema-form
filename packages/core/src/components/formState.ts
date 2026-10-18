@@ -1458,7 +1458,7 @@ export const isDevelopment = (() => {
  * @param path - The path whose containers are copied
  * @returns - The copied data, or `data` itself when it holds no containers to copy
  */
-function copyAlongPath<T>(data: T, path: FieldPathList): T {
+export function copyAlongPath<T>(data: T, path: FieldPathList): T {
   if (!isObject(data) && !Array.isArray(data)) {
     return data;
   }
