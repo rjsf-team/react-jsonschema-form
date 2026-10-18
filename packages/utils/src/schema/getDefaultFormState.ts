@@ -350,7 +350,7 @@ function nullFillsOfSkippedBranches<T, S extends StrictRJSFSchema, F extends For
         nullFills,
       });
       if (holdsNull) {
-        fills[key] = computedDefault;
+        setOwn(fills, key, computedDefault);
         onNullFill?.();
       }
     });
@@ -923,16 +923,14 @@ export function getObjectDefaults<
       isObject(objectDefaults) &&
       (holdsNullType(schema) || holdsNullType(rootSchema))
     ) {
-      Object.assign(
-        objectDefaults,
-        nullFillsOfSkippedBranches<T, S, F>(context, schema, {
-          rootSchema,
-          _recurseList,
-          rawFormData: formData,
-          onNullFill,
-          nullFills,
-        }),
-      );
+      const fills = nullFillsOfSkippedBranches<T, S, F>(context, schema, {
+        rootSchema,
+        _recurseList,
+        rawFormData: formData,
+        onNullFill,
+        nullFills,
+      });
+      Object.entries(fills).forEach(([key, fill]) => setOwn(objectDefaults, key, fill));
     }
     if (retrievedSchema.additionalProperties && !initialDefaultsGenerated) {
       // as per spec additionalProperties may be either schema or boolean

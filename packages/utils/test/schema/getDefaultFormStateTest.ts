@@ -8094,6 +8094,16 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           expect(defaultsOf(schema)).toEqual({ a: { n: null } });
         });
 
+        it("is filled in as an own key for a property named __proto__ the object's allOf makes null", () => {
+          const schema: RJSFSchema = JSON.parse(
+            '{"type":"object","properties":{"a":{"type":"object","properties":{"__proto__":{"title":"P"}},"allOf":[{"properties":{"__proto__":{"type":"null"}},"required":["__proto__"]}]}}}',
+          );
+          const result = defaultsOf(schema);
+          const a = isObject(result) ? result.a : undefined;
+          expect(Object.getPrototypeOf(a)).toBe(Object.prototype);
+          expect(Object.getOwnPropertyDescriptor(a, '__proto__')).toMatchObject({ value: null, enumerable: true });
+        });
+
         it('is filled in for an array item and an additional property the data holds', () => {
           const schema: RJSFSchema = {
             type: 'object',
