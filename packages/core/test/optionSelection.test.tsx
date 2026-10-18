@@ -1103,6 +1103,29 @@ describe('omitting extra data', () => {
 
     expect(onSubmit).toHaveBeenLastCalledWith(expect.objectContaining({ formData }), expect.anything());
   });
+  it('keeps the data of a field that shows a false option, which it renders as any value', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        other: { type: 'string' },
+        thing: { oneOf: [false, { title: 'Object', type: 'object', properties: { a: { type: 'string' } } }] },
+      },
+    };
+    const { node, onChange } = createFormComponent({
+      schema,
+      initialFormData: { thing: { a: 1 } },
+      omitExtraData: true,
+      liveOmit: 'onChange',
+    });
+    expect(selectOf(node, 'root_thing__oneof_select')).toHaveValue('0');
+
+    await user.type(elementOf(node, '#root_other'), 'x');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { other: 'x', thing: { a: 1 } } }),
+      'root_other',
+    );
+  });
 });
 
 describe('a condition swapped inside the selected option', () => {
