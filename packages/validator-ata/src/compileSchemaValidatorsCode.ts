@@ -172,25 +172,52 @@ function anchored(resource: unknown, name: string, laterDialect: boolean): unkno
   return visit(resource);
 }
 
+/** Where a step of a JSON pointer leaves it: at a subschema, at the array or map of subschemas a keyword holds, or in
+ * data, which holds no subschema however deep the pointer goes
+ */
+type Position = 'schema' | 'list' | 'data';
+
+/** Returns where the step `token` from a value at `position` leaves a JSON pointer, `child` being the value it reaches */
+function stepFrom(position: Position, token: string, child: unknown): Position {
+  if (position === 'list') {
+    return 'schema';
+  }
+  if (position === 'data') {
+    return 'data';
+  }
+  if (
+    (SUBSCHEMA_ARRAY_KEYWORDS.has(token) && Array.isArray(child)) ||
+    (SUBSCHEMA_MAP_KEYWORDS.has(token) && isObject(child))
+  ) {
+    return 'list';
+  }
+  return SUBSCHEMA_KEYWORDS.has(token) ? 'schema' : 'data';
+}
+
 /** Returns the subschema the `$ref` fragment `fragment` names in `resource`, the resource itself for `#`, and the
- * innermost resource the path to it passes through, which the `$ref`s below the subschema are read against
+ * innermost resource the path to it passes through, which the `$ref`s below the subschema are read against. Only a
+ * subschema on the path starts a resource, as the schema graph reads the root, never an object under a keyword holding
+ * data, such as an OpenAPI `components` map
  */
 function locate(resource: Resource, fragment: string, laterDialect: boolean): [unknown, Resource] {
   if (fragment !== '#' && !fragment.startsWith('#/')) {
     const name = percentDecoded(fragment.slice(1));
     return [name === undefined ? undefined : anchored(resource.schema, name, laterDialect), resource];
   }
-  let node = resource.schema;
+  let node: unknown = resource.schema;
   let base = resource;
+  let position: Position = 'schema';
   for (const encoded of fragment.split('/').slice(1)) {
     const token = percentDecoded(encoded)?.replaceAll('~1', '/').replaceAll('~0', '~');
     if (token === undefined) {
       return [undefined, base];
     }
-    if (node !== resource.schema) {
+    if (position === 'schema' && node !== resource.schema) {
       base = resourceAt(node, base.base, laterDialect) ?? base;
     }
-    node = getByPath(node, [token]);
+    const child: unknown = getByPath(node, [token]);
+    position = stepFrom(position, token, child);
+    node = child;
   }
   return [node, base];
 }

@@ -435,4 +435,19 @@ describe('compileSchemaValidatorsCode', () => {
     };
     expect(() => compileSchemaValidatorsCode(rootSchema)).not.toThrow();
   });
+  test('reads a $ref below an $id under a container no keyword names against the resource around the container', () => {
+    const rootSchema: RJSFSchema = {
+      components: {
+        schemas: {
+          X: { $id: 'http://example.com/y.json', type: 'object', properties: { k: { $ref: '#/definitions/s' } } },
+        },
+      },
+      definitions: { s: { type: 'string' } },
+      type: 'object',
+      properties: { o: { anyOf: [{ $ref: '#/components/schemas/X/properties/k' }, { type: 'boolean' }] } },
+    };
+    const validator = createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(rootSchema)), rootSchema);
+    expect(validator.isValid({ $ref: '#/properties/o/anyOf/0' }, 'x', rootSchema)).toBe(true);
+    expect(validator.isValid({ $ref: '#/properties/o/anyOf/0' }, 5, rootSchema)).toBe(false);
+  });
 });
