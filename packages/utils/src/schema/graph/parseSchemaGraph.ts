@@ -484,11 +484,12 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
    */
   private resolvePendingRefs(): void {
     const hops = new Map<NodeId, NodeId | undefined>();
-    const resolved: Mutable<ObjectNode<S>>[] = [];
-    for (let next = this.pendingRefs.shift(); next !== undefined; next = this.pendingRefs.shift()) {
+    // Resolving a `$ref` can parse a target that holds `$ref`s of its own, which join the queue as it is read: an array
+    // iterator reads them too, where taking each off the front would move every one behind it
+    for (const next of this.pendingRefs) {
       hops.set(next.id, this.resolve(refOf(next.raw), next.baseUri, true));
-      resolved.push(next);
     }
+    const resolved = this.pendingRefs.splice(0);
     for (const node of resolved) {
       const ref = refOf(node.raw);
       const failure = this.chainFailure(ref, node, hops);
