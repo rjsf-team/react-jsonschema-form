@@ -1478,9 +1478,8 @@ function helperView<S extends StrictRJSFSchema, F extends FormContextType>(
 ): DefaultsView<S> {
   const field = callRoot<S>(rootSchema, rawSchema);
   const retrieves = stubsFor(context, field, new Set(Object.keys(rawSchema)));
-  const formData = isObject(rawFormData) ? rawFormData : {};
   return retrieves
-    ? settle<S, F>(context, { ...field, retrieves }, formData, formData)
+    ? settle<S, F>(context, { ...field, retrieves }, rawFormData, rawFormData)
     : ownView(field, rawSchema, rawFormData);
 }
 

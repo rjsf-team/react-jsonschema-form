@@ -1,6 +1,11 @@
 import { createSchemaUtils, getDefaultFormState, isObject } from '../../src/index.ts';
 import type { DefaultFormStateBehavior, RJSFSchema, SchemaContext } from '../../src/index.ts';
-import { computeDefaults, getObjectDefaults } from '../../src/schema/getDefaultFormState.ts';
+import {
+  computeDefaults,
+  getArrayDefaults,
+  getDefaultBasedOnSchemaType,
+  getObjectDefaults,
+} from '../../src/schema/getDefaultFormState.ts';
 import looseSchema from './graph/looseSchema.ts';
 import { miniValidator } from './graph/miniValidator.ts';
 
@@ -948,6 +953,21 @@ describe('getDefaultFormState() reading $ref, branches and extra keys as the for
       properties: { p: { $ref: '#/$defs/M' } },
     };
     expect(defaultsOf(chain, undefined, populate)).toEqual({ p: { a: 'x', c: 'c' } });
+  });
+
+  it("checks an array's if against its own data in the helpers, as computeDefaults() does", () => {
+    const schema: RJSFSchema = {
+      type: 'array',
+      items: { type: 'string', default: 'x' },
+      if: { minItems: 2 },
+      then: { minItems: 3 },
+      else: { minItems: 1 },
+    };
+    const context = { validator };
+    const props = { rootSchema: schema, rawFormData: ['a'] };
+    expect(computeDefaults(context, schema, props)).toEqual(['x']);
+    expect(getDefaultBasedOnSchemaType(context, schema, props)).toEqual(['x']);
+    expect(getArrayDefaults(context, schema, props)).toEqual(['x']);
   });
 
   it('hands computeSkipPopulate the array with its items written as a $ref read as the definition they name', () => {
