@@ -57,10 +57,9 @@ export interface FormProps<
   children?: ReactNode;
   /** The uiSchema for the form */
   uiSchema?: UiSchema<Uninferred<T>, S, F>;
-  /** Another name for `initialFormData`, kept so that a form written for v6 that passes back what `onChange` reported
-   * keeps working, and taken over it when both are passed: the seed of the form's data, read when the form mounts and
-   * when `reset()` is called. Unlike v6, it is only a seed: the form owns its data after that, so passing back what
-   * `onChange` reported changes nothing, and passing another value, such as a record that arrives after mount, is
+  /** Another name for `initialFormData`, taken over it when both are passed: the seed of the form's data, read when
+   * the form mounts and when `reset()` is called. It is only a seed: the form owns its data after that, so passing back
+   * what `onChange` reported changes nothing, and passing another value, such as a record that arrives after mount, is
    * ignored, with a warning in development only. To show other data, remount the form with a `key`, or call
    * `setFieldValue('', data)` on its ref.
    *

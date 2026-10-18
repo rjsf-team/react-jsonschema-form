@@ -1150,7 +1150,7 @@ export default function ArrayField<
    * rows themselves, so the errors go nowhere the items did not. A change `transformChange` refused leaves the items
    * where they were, so the rows go back to `rows`: kept, a refused reorder, which leaves the length as it was, would
    * hand each row's instance, and the state it holds, to another item. Otherwise the form may hold other items than
-   * the change put there: `transformChange` rewrote them, the defaults put one back, or `onChange` set the field back.
+   * the change put there: `transformChange` rewrote them, the defaults put one back, or `setFieldValue()` set the field back.
    * A row then keeps its key only where the form holds the item the change put there, and every other item gets a row
    * of its own
    */
