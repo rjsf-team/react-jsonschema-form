@@ -240,33 +240,55 @@ function compilable(schema: unknown): GenericObjectType {
   return 'not' in object || REF_KEY in object ? object : { ...object, not: { not: {} } };
 }
 
+/** What every document compiled for a root reads of it: the container its documents carry subschemas in, the
+ * dialect it declares, which decides how ata reads the keywords of every subschema they carry, as it does where the
+ * live validator resolves a pointer into the root, and its resources. A root is read once for all the schemas
+ * `getValidationSchemas()` lists for it.
+ */
+interface RootReading {
+  container: '$defs' | 'definitions';
+  dialect: unknown;
+  draft07: boolean;
+  laterDialect: boolean;
+  root: Resource;
+  resources: ReadonlyMap<string, Resource>;
+}
+
+/** Returns the `RootReading` of `rootSchema` */
+function readRoot(rootSchema: object): RootReading {
+  const dialect: unknown = getByPath(rootSchema, [SCHEMA_KEY]);
+  const laterDialect = typeof dialect === 'string' && LATER_DIALECTS.has(dialect.replace(/#$/, ''));
+  return {
+    container: isObject(getByPath(rootSchema, ['$defs'])) ? '$defs' : 'definitions',
+    dialect,
+    draft07: typeof dialect === 'string' && DRAFT_07_IDS.has(dialect),
+    laterDialect,
+    ...resourcesOf(rootSchema, laterDialect),
+  };
+}
+
 /** Returns `schema` as a document ata compiles on its own. ata names no subschema of another document, resolves a
  * `$ref` only to an entry of the `definitions` or `$defs` of the document it compiles, does not percent-decode it,
  * compiles nothing for a document holding both containers, and compiles nothing for one holding a subschema that
- * carries an `$id` of its own. So every subschema of the root the document reaches through a `$ref`, a definition, an
- * anchor or neither, is carried in a single container of the document under a generated name the `$ref` is renamed
- * to, and the containers of the document and of every subschema it carries, which only the renamed `$ref`s could
- * name, are dropped. A `$ref` is read
+ * carries an `$id` of its own.
+ *
+ * So every subschema of the root the document reaches through a `$ref`, a definition, an anchor or neither, is
+ * carried in a single container of the document under a generated name the `$ref` is renamed to. A `$ref` is read
  * against the innermost resource around it, an option with an `$id` of its own included, as the schema graph reads the
- * root's resources. No subschema of the document keeps an `$id`, every `$ref` read against one having been renamed: its
- * document part is resolved against that resource's base URI and
- * names whichever resource of the root has that URI, however it is spelled. One that names nothing there, or one into
- * another document, is
- * left as it is, which leaves ata nothing to compile and the module reporting it when the schema is first validated
- * against. Only the keywords holding subschemas are rewritten, never the data a `const` or a `default` holds.
+ * root's resources: its document part is resolved against that resource's base URI and names whichever resource of the
+ * root has that URI, however it is spelled. One that names nothing there, or one into another document, is left as it
+ * is, which leaves ata nothing to compile and the module reporting it when the schema is first validated against. No
+ * subschema of the document keeps an `$id` or a container, which only the renamed `$ref`s could need. Only the keywords
+ * holding subschemas are rewritten, never the data a `const` or a `default` holds.
  *
  * @param schema - A schema `getValidationSchemas()` lists
- * @param rootSchema - The root it was listed for
+ * @param reading - The `RootReading` of the root it was listed for
  * @returns - The document
  */
-function standalone(schema: GenericObjectType, rootSchema: object): GenericObjectType {
-  const container = isObject(getByPath(rootSchema, ['$defs'])) ? '$defs' : 'definitions';
-  // The dialect the root declares decides how ata reads the keywords of every subschema it carries, as it does where the
-  // live validator resolves a pointer into the root
-  const dialect: unknown = getByPath(rootSchema, [SCHEMA_KEY]);
-  const draft07 = typeof dialect === 'string' && DRAFT_07_IDS.has(dialect);
-  const laterDialect = typeof dialect === 'string' && LATER_DIALECTS.has(dialect.replace(/#$/, ''));
-  const { root, resources } = resourcesOf(rootSchema, laterDialect);
+function standalone(
+  schema: GenericObjectType,
+  { container, dialect, draft07, laterDialect, root, resources }: RootReading,
+): GenericObjectType {
   const names = new Map<unknown, Map<string, string>>();
   const pending: [string, unknown, Resource][] = [];
   let count = 0;
@@ -347,9 +369,10 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
   const { customFormats, ataOptionsOverrides = {} } = options;
   const schemaMaps = getValidationSchemas(schema);
   const keys = Object.keys(schemaMaps);
+  const reading = readRoot(schema);
   const schemas = Object.entries(schemaMaps).map(([key, listed]) => {
     const { [ID_KEY]: _id, ...withoutId } = listed;
-    return { ...standalone(withoutId, schema), [ID_KEY]: key };
+    return { ...standalone(withoutId, reading), [ID_KEY]: key };
   });
 
   // Format checkers are serialized into the standalone module via Function#toString,
