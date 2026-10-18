@@ -325,6 +325,84 @@ describe('form data ownership', () => {
       expect(ignoredFormDataWarnings()).toHaveLength(0);
     });
 
+    it('does not warn for a parent that stores a JSON copy of each edit, once a field is cleared', async () => {
+      function JsonParent() {
+        const [data, setData] = useState<Data>({ a: 'seed' });
+        return (
+          <Form<Data>
+            schema={schema}
+            validator={validator}
+            // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back a JSON copy of what onChange reported as `formData`
+            formData={data}
+            onChange={(event) => setData(JSON.parse(JSON.stringify(event.formData)))}
+          />
+        );
+      }
+      const { container } = render(<JsonParent />);
+
+      await user.clear(input(container, 'root_a'));
+
+      expect(input(container, 'root_a')).toHaveValue('');
+      expect(ignoredFormDataWarnings()).toHaveLength(0);
+    });
+
+    it.each<[string, (update: () => void) => void]>([
+      ['at once', (update) => update()],
+      ['after a timeout', (update) => setTimeout(update, 0)],
+    ])('does not warn for a scalar root whose parent stores what it reported %s', async (_, apply) => {
+      function ScalarParent() {
+        const [data, setData] = useState<string | undefined>('');
+        return (
+          <Form<string>
+            schema={{ type: 'string' }}
+            validator={validator}
+            // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
+            formData={data}
+            onChange={(event) => apply(() => setData(event.formData))}
+          />
+        );
+      }
+      const { container } = render(<ScalarParent />);
+
+      await user.type(input(container, 'root'), 'abc');
+      await act(async () => {
+        await new Promise<void>((resolve) => {
+          setTimeout(resolve, 0);
+        });
+      });
+
+      expect(input(container, 'root')).toHaveValue('abc');
+      expect(ignoredFormDataWarnings()).toHaveLength(0);
+    });
+
+    it('does not warn for a scalar root whose parent puts back a value it reported before', async () => {
+      const ref = createFormRef<string>();
+      function UndoParent() {
+        const [history, setHistory] = useState<(string | undefined)[]>(['']);
+        return (
+          <>
+            <Form<string>
+              ref={ref}
+              schema={{ type: 'string' }}
+              validator={validator}
+              // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern with an undo
+              formData={history[history.length - 1]}
+              onChange={(event) => setHistory((previous) => [...previous, event.formData])}
+            />
+            <button type='button' onClick={() => setHistory((previous) => previous.slice(0, -1))}>
+              undo
+            </button>
+          </>
+        );
+      }
+      const { container } = render(<UndoParent />);
+      await user.type(input(container, 'root'), 'ab');
+
+      await user.click(screen.getByRole('button', { name: 'undo' }));
+
+      expect(ignoredFormDataWarnings()).toHaveLength(0);
+    });
+
     it('does not warn for a formData written inline whose content never changed', async () => {
       function Parent({ tick }: { tick: number }) {
         return (

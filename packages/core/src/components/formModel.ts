@@ -9,7 +9,7 @@ import type {
 } from '@rjsf/utils';
 import {
   callWithDeferredThrow,
-  deepEquals,
+  deepEqualsUndefinedAsMissing,
   propertyToPath,
   ROOT_FIELD_PATH,
   replaceEqualDeep,
@@ -89,15 +89,24 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   // `onChange` reported passes those back, later ones as well as the latest. The seed is not among them: a parent that
   // puts its record back, as a Cancel button does, expects the form to show it
   // oxlint-disable-next-line typescript/no-deprecated -- the form still reads the deprecated alias
-  let lastFormDataProp = initialProps.formData;
+  let lastFormDataProp = isDevelopment ? initialProps.formData : undefined;
+  // A scalar root's values are held by value, which a `WeakSet` cannot hold
   const heldData = new WeakSet<object>();
+  const heldScalars = new Set<unknown>();
   let isIgnoredFormDataWarned = false;
   let isBothSeedsWarned = false;
   const hold = (data: unknown) => {
-    if (isDevelopment && typeof data === 'object' && data !== null) {
+    if (!isDevelopment) {
+      return;
+    }
+    if (typeof data === 'object' && data !== null) {
       heldData.add(data);
+    } else {
+      heldScalars.add(data);
     }
   };
+  const isHeld = (data: unknown) =>
+    typeof data === 'object' && data !== null ? heldData.has(data) : heldScalars.has(data);
   // Development only, once per form: a handle call the form dropped because it was detached. A field's change, blur or
   // focus is dropped silently, since a widget flushing a draft from its Effect cleanup is expected to arrive then
   let isDroppedCallWarned = false;
@@ -574,14 +583,17 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
      * nor a copy of the data it holds. Called after the commit that passed it, in development only
      */
     warnIfFormDataIgnored: (formData: T | undefined) => {
-      // A copy of the last prop, as an inline literal is on every render, changed nothing the parent meant
-      if (Object.is(formData, lastFormDataProp) || deepEquals(formData, lastFormDataProp)) {
+      if (isIgnoredFormDataWarned) {
+        return;
+      }
+      // A copy of the last prop, as an inline literal is on every render, changed nothing the parent meant. A key the
+      // form holds as `undefined` is one a JSON copy leaves out, so it counts as missing
+      if (Object.is(formData, lastFormDataProp) || deepEqualsUndefinedAsMissing(formData, lastFormDataProp)) {
         lastFormDataProp = formData;
         return;
       }
       lastFormDataProp = formData;
-      const isHeld = typeof formData === 'object' && formData !== null && heldData.has(formData);
-      if (isIgnoredFormDataWarned || formData === undefined || isHeld || deepEquals(formData, current().formData)) {
+      if (formData === undefined || isHeld(formData) || deepEqualsUndefinedAsMissing(formData, current().formData)) {
         return;
       }
       isIgnoredFormDataWarned = true;
