@@ -1887,7 +1887,7 @@ export function applyChangeToErrorsOf<T, S extends StrictRJSFSchema, F extends F
 function extraErrorsAlone<T>(extraErrors: ErrorSchema<T> | undefined): ErrorState<T> {
   // Merged into nothing rather than listed as they are, so an array `extraErrors` holds for the items of an array
   // field is keyed by index, as every `ErrorSchema` the form hands out is
-  const { errors, errorSchema } = validationDataMerge<T>({ errors: [], errorSchema: {} }, extraErrors);
+  const { errors, errorSchema } = mergeErrors<T>({ errors: [], errorSchema: {} }, extraErrors);
   return { errors, errorSchema, schemaValidationErrors: [], schemaValidationErrorSchema: {} };
 }
 
