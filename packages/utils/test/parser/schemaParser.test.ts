@@ -127,6 +127,32 @@ describe('getValidationSchemas()', () => {
     }
     expect(schemaMap[schemaKey(SUPER_SCHEMA)]).toEqual({ ...SUPER_SCHEMA, [ID_KEY]: schemaKey(SUPER_SCHEMA) });
   });
+  it.each<[string, RJSFSchema, string]>([
+    [
+      'a true anyOf option',
+      { type: 'object', properties: { p: { anyOf: [true, { type: 'string', title: 'text' }] } } },
+      '#/properties/p/anyOf/1',
+    ],
+    [
+      'a false oneOf option',
+      { type: 'object', properties: { p: { oneOf: [false, { type: 'string', title: 'text' }] } } },
+      '#/properties/p/oneOf/1',
+    ],
+    ['a true option of the root', { anyOf: [true, { type: 'string', title: 'text' }] }, '#/anyOf/1'],
+    [
+      'a true option of a dependency oneOf',
+      {
+        type: 'object',
+        properties: { a: { type: 'string' } },
+        dependencies: {
+          a: { oneOf: [true, { title: 'text', properties: { a: { const: 'x' }, b: { type: 'string' } } }] },
+        },
+      },
+      '#/dependencies/a/oneOf/1',
+    ],
+  ])('lists the other options of a list holding %s', (_, rootSchema, pointer) => {
+    expect(Object.values(getValidationSchemas(rootSchema))).toContainEqual(expect.objectContaining({ $ref: pointer }));
+  });
 
   it('lists each if by pointer, whether or not it has an else (#5453)', () => {
     const schema: RJSFSchema = {

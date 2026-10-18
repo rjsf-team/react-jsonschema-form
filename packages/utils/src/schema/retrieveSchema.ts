@@ -364,12 +364,19 @@ export function resolveOwnRef<S extends StrictRJSFSchema = RJSFSchema>(schema: S
     return known;
   }
   const { graph, seeds } = fieldOf<S>(rootGraph, schema);
-  const definition = refDefinition<S>(graph, seeds[0].node);
+  // A stub merged from several declarations names the `$ref` of one of them, which is resolved from that one's node
+  const declaring = seeds.find(({ node }) => {
+    const seed = graph.node(node);
+    return seed.kind === 'schema' && seed.raw[REF_KEY] === ref;
+  });
+  /* v8 ignore next -- a schema no seed declares the `$ref` of is adopted as a node of its own, which declares it */
+  const id = (declaring ?? seeds[0]).node;
+  const definition = refDefinition<S>(graph, id);
   const siblings = withoutKeys(schema, REF_KEY);
   const resolved: S =
-    conjunctionOf<S>(graph, seeds[0].node) === undefined
+    conjunctionOf<S>(graph, id) === undefined
       ? { ...definition, ...siblings, [RJSF_REF_KEY]: ref }
-      : schemaFrom(schema, { [ALL_OF_KEY]: [siblings, definition], [RJSF_REF_KEY]: ref });
+      : { ...conjoinDefinition(schema, siblings, definition), [RJSF_REF_KEY]: ref };
   ownRefs.set(keys, resolved);
   return resolved;
 }
@@ -902,7 +909,7 @@ function dependencySubschemas<S extends StrictRJSFSchema = RJSFSchema, F extends
   if (!isObject(dependent)) {
     return [dependent];
   }
-  const { [ONE_OF_KEY]: ownOneOf, ...dependentWithoutOneOf } = dependent;
+  const ownOneOf = dependent[ONE_OF_KEY];
   // A dependency spelled as a `$ref` holds its `oneOf` behind that reference, and the merge plan follows that reference
   // before it takes the `oneOf` off, so the branch is settled from the data for that spelling too. Read
   // without following the reference it offers no branches, and a name the matching branch declares would be stubbed

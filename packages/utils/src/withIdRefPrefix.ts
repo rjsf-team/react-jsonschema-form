@@ -82,8 +82,9 @@ export function rootSchemaIdOf<S extends StrictRJSFSchema = RJSFSchema>(rootSche
 }
 
 /** Recursively prefixes every `$ref` local to the root document, one starting with `#`, with the id `rootSchema` is
- * registered under, as `rootSchemaIdOf()` returns it. This is what a validator applies to a schema it validates beside `rootSchema`, so that a `$ref` local to the root resolves
- * against the root whatever the schema holding it is registered as.
+ * registered under, as `rootSchemaIdOf()` returns it, and resolves every relative one against that id where the root
+ * has an `$id`. This is what a validator applies to a schema it validates beside `rootSchema`, so that a `$ref`
+ * written in the root resolves against the root whatever the schema holding it is registered as.
  *
  * @param schemaNode - The object node to which the prefix is added when a REF_KEY is part of it
  * @param rootSchema - The root schema the local `$ref`s name

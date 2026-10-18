@@ -141,9 +141,6 @@ export function isRootPointer(pointer: string): boolean {
   return !pointer.startsWith(EXTERNAL_POINTER) && !pointer.includes(`/${CONJUNCTION_TOKEN}`);
 }
 
-/** The keywords that can stand beside a `$ref` without changing what it resolves to */
-const PURE_REF_KEYS = new Set([REF_KEY, DEFINITIONS_KEY, '$defs', SCHEMA_KEY, '$comment', 'title', 'description']);
-
 /** The keywords that say nothing a value has to meet: those that identify a schema or hold definitions for others, and
  * the annotations, which beside a `$ref` override the target's rather than combining with them. A `$ref` beside
  * nothing else has nothing to be the `allOf` of.

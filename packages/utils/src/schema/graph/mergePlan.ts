@@ -753,10 +753,20 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     if (condition === undefined) {
       return without;
     }
-    const conditionSchema = targetOf(this.graph, condition);
-    const branchKey = this.holds(`if:${condition}`, conditionSchema, this.data) ? THEN_KEY : ELSE_KEY;
-    const branchPart = this.branch(keywords.get(branchKey), branchKey, dependencyKey);
-    return branchPart === undefined ? without : mergeBranch(without, branchPart);
+    const conditionNode = this.graph.node(condition);
+    // A boolean `if` holds or fails whatever the data, which needs no validator to say, nor a precompiled one to have a
+    // function for the schema it reads as
+    const satisfied =
+      conditionNode.kind === 'schema'
+        ? this.holds(`if:${condition}`, targetOf(this.graph, condition), this.data)
+        : conditionNode.kind !== 'boolean' || conditionNode.value;
+    const branchKey = satisfied ? THEN_KEY : ELSE_KEY;
+    const branchProvider = keywords.get(branchKey);
+    const branchNode = branchProvider && this.graph.child(branchProvider.node.id, branchKey);
+    const branchPart = this.branch(branchProvider, branchKey, dependencyKey);
+    return branchPart === undefined || branchNode === undefined
+      ? without
+      : mergeBranch(without, branchPart, 'b', branchNode);
   }
 
   private branch(
@@ -902,7 +912,10 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       return this.expand(id, refPath, 'option');
     }
     const outer = { mergeAllOf: this.mergeAllOf, conditions: this.conditions };
-    this.mergeAllOf = optionPolicy.allOf === true || (optionPolicy.allOf === 'if' && this.seedHasCondition);
+    // The option is merged into the field, so an `if` of its own counts as the field's
+    this.mergeAllOf =
+      optionPolicy.allOf === true ||
+      (optionPolicy.allOf === 'if' && (this.seedHasCondition || declaresKeyword(this.graph, id, IF_KEY)));
     this.conditions = optionPolicy.conditions;
     try {
       return this.expand(id, refPath, 'option');
