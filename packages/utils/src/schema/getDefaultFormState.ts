@@ -1022,9 +1022,9 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
         cutRecursion: false,
       })
     : undefined;
-  // The option is merged into the field, so its own `if` and `allOf` count as the field's, as they did where v7 merged
-  // the option in before reading the field: an `if` merges the `allOf`s under the `'if'` policy, and an `allOf`
-  // merged under `allOf: 'populateDefaults'` takes its `then`/`else` under `skipEmptyDefaults`
+  // The option is merged into the field, so its own `if` and `allOf` count as the field's: an `if` merges the
+  // `allOf`s under the `'if'` policy, and an `allOf` merged under `allOf: 'populateDefaults'` takes its `then`/`else`
+  // under `skipEmptyDefaults`
   const optionDeclares = (keyword: string) => declaresKeyword(graph, optionNode, keyword);
   const inherited = {
     allOf: view.allOf === 'if' && optionDeclares(IF_KEY) ? true : view.allOf,

@@ -48,8 +48,8 @@ export default function schemaHasNestedConditional<S extends StrictRJSFSchema = 
     }
     refs = [...refs, ref];
     try {
-      // Sibling keywords declared alongside `$ref` are kept over the definition's, as the form reads them, so a local
-      // `dependencies`/`if` next to a `$ref` is seen here too, not just ones found on the ref target
+      // The `$ref` is read with the keywords beside it, as the form reads them, so a `dependencies`/`if` beside the
+      // `$ref` is seen here as well as one the definition holds
       resolved = resolveOwnRef<S>(resolved, rootSchema);
     } catch {
       // An unresolvable $ref will already have surfaced elsewhere (e.g. when rendering the field); treat it as

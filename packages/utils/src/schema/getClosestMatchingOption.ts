@@ -71,11 +71,10 @@ function propertyScore<
   if (value.type !== guessType(formValue)) {
     return 0;
   }
-  // If the types match, then we bump the score by one
   if (value.default) {
     // Score a value that matches the default higher and any other value lower. Only a truthy default is
-    // scored, as before: the check doesn't require `readOnly`, so scoring `default: false` would penalize a
-    // user who ticks the box, the same way a truthy default already penalizes one who clears it
+    // scored: the check doesn't require `readOnly`, so scoring `default: false` would penalize a user who ticks
+    // the box, the same way a truthy default already penalizes one who clears it
     return formValue === value.default ? 2 : 0;
   }
   if (value.const !== undefined && formValue !== undefined) {
@@ -155,7 +154,6 @@ export default function getClosestMatchingOption<
   selectedOption = -1,
   discriminatorField?: string,
 ): number {
-  // First resolve each option's own ref
   const resolvedOptions = options.map((option) => resolveOwnRef<S>(option, rootSchema));
 
   const simpleDiscriminatorMatch = getOptionMatchingSimpleDiscriminator(formData, options, discriminatorField);
