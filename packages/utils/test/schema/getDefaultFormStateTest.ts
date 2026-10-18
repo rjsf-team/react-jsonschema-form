@@ -8795,11 +8795,9 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
       });
 
       it('does not read an inherited member of a parent const for a property named like one', () => {
-        const schema: RJSFSchema = {
-          type: 'object',
-          const: { a: 'q' },
-          properties: { a: { type: 'string' }, toString: { type: 'string' } },
-        };
+        const schema: RJSFSchema = JSON.parse(
+          '{"type":"object","const":{"a":"q"},"properties":{"a":{"type":"string"},"toString":{"type":"string"}}}',
+        );
         const result = getDefaultFormState({ validator: testValidator }, { schema, formData: {} });
         expect(Object.hasOwn(result!, 'toString')).toBe(false);
       });

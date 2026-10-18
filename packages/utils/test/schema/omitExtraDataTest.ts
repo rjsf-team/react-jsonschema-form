@@ -1828,10 +1828,9 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
 
     describe('own prototype-named keys', () => {
       it('keeps an own toString string and drops an extra __proto__ key', () => {
-        const schema: RJSFSchema = {
-          type: 'object',
-          properties: { toString: { type: 'string' }, a: { type: 'string' } },
-        };
+        const schema: RJSFSchema = JSON.parse(
+          '{"type":"object","properties":{"toString":{"type":"string"},"a":{"type":"string"}}}',
+        );
         const formData = JSON.parse('{"__proto__":{"x":1},"toString":"t","a":"v"}');
         const result = omitExtraData({ validator: testValidator }, schema, schema, formData);
         expect(Object.getPrototypeOf(result)).toBe(Object.prototype);
@@ -1841,21 +1840,18 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
       });
 
       it('does not read an inherited member as a schema property', () => {
-        const schema: RJSFSchema = {
-          type: 'object',
-          properties: { toString: { type: 'string' }, a: { type: 'string' } },
-        };
+        const schema: RJSFSchema = JSON.parse(
+          '{"type":"object","properties":{"toString":{"type":"string"},"a":{"type":"string"}}}',
+        );
         const result = omitExtraData({ validator: testValidator }, schema, schema, { a: 'v' });
         expect(result).toEqual({ a: 'v' });
         expect(Object.getOwnPropertyDescriptor(result as object, 'toString')).toBeUndefined();
       });
 
       it('does not apply a dependency keyed by an inherited member', () => {
-        const schema: RJSFSchema = {
-          type: 'object',
-          properties: { a: { type: 'string' } },
-          dependencies: { toString: { properties: { b: { type: 'string' } } } },
-        };
+        const schema: RJSFSchema = JSON.parse(
+          '{"type":"object","properties":{"a":{"type":"string"}},"dependencies":{"toString":{"properties":{"b":{"type":"string"}}}}}',
+        );
         const result = omitExtraData({ validator: testValidator }, schema, schema, { a: 'x', b: 'y' });
         expect(result).toEqual({ a: 'x' });
       });

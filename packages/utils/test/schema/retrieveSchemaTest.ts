@@ -2483,22 +2483,17 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       });
 
       it('retrieveSchema() does not apply a dependency named after an inherited member', () => {
-        const schema: RJSFSchema = {
-          type: 'object',
-          properties: { a: { type: 'string' } },
-          dependencies: { toString: { properties: { b: { type: 'string' } } } },
-        };
+        const schema: RJSFSchema = JSON.parse(
+          '{"type":"object","properties":{"a":{"type":"string"}},"dependencies":{"toString":{"properties":{"b":{"type":"string"}}}}}',
+        );
         const result = retrieveSchema({ validator: testValidator }, schema, schema, { a: 'x', toString: 't' });
         expect(Object.keys(result.properties!)).toEqual(['a']);
       });
 
       it('stubExistingAdditionalProperties() stubs a key a wrongly-applied dependency would suppress', () => {
-        const schema: RJSFSchema = {
-          type: 'object',
-          properties: { a: { type: 'string' } },
-          additionalProperties: true,
-          dependencies: { toString: { properties: { b: { type: 'number' } } } },
-        };
+        const schema: RJSFSchema = JSON.parse(
+          '{"type":"object","properties":{"a":{"type":"string"}},"additionalProperties":true,"dependencies":{"toString":{"properties":{"b":{"type":"number"}}}}}',
+        );
         const formData = { a: 'x', toString: 't', b: 1 };
         const result = stubExistingAdditionalProperties({ validator: testValidator }, schema, schema, formData);
         // The `toString` dependency does not apply (the schema declares no own `toString`), so `b` is not
@@ -2507,12 +2502,9 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       });
 
       it('stubExistingAdditionalProperties() stubs a key a oneOf branch matched on an inherited member would suppress', () => {
-        const schema: RJSFSchema = {
-          type: 'object',
-          properties: { a: { type: 'string' }, toString: { type: 'string' } },
-          additionalProperties: true,
-          dependencies: { toString: { oneOf: [{ properties: { b: { type: 'number' } } }] } },
-        };
+        const schema: RJSFSchema = JSON.parse(
+          '{"type":"object","properties":{"a":{"type":"string"},"toString":{"type":"string"}},"additionalProperties":true,"dependencies":{"toString":{"oneOf":[{"properties":{"b":{"type":"number"}}}]}}}',
+        );
         const formData = { a: 'x', toString: 't', b: 1 };
         const result = stubExistingAdditionalProperties({ validator: testValidator }, schema, schema, formData);
         // No branch declares an own `toString`, so none matches and `b` is not declared by the dependency
