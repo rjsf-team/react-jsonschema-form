@@ -193,6 +193,18 @@ describe('shouldRenderOptionalField()', () => {
       ),
     ).toBe(false);
   });
+  test('a nested field offering options written as a $ref takes their type from the definitions they name', () => {
+    const rootSchema: RJSFSchema = {
+      definitions: { A: { type: 'object', properties: { a: { type: 'string' } } }, B: { type: 'object' } },
+      properties: { p: { oneOf: [{ $ref: '#/definitions/A' }, { $ref: '#/definitions/B' }] } },
+    };
+    const globalUiOptions: GlobalUISchemaOptions = { enableOptionalDataFieldForType: ['object'] };
+    const options = rootSchema.properties?.p;
+    expect(
+      typeof options === 'object' && nestedFieldRenders({ ...registry, rootSchema, globalUiOptions }, options),
+    ).toBe(true);
+    expect(typeof options === 'object' && getOptionalDataControlsType(options, rootSchema)).toBe('object');
+  });
   test('a nested field whose schema is the root schema returns true', () => {
     const globalUiOptions: GlobalUISchemaOptions = { enableOptionalDataFieldForType: ['object'] };
     expect(nestedFieldRenders({ ...registry, globalUiOptions }, TEST_ROOT_SCHEMA)).toBe(true);

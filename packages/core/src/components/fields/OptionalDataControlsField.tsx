@@ -73,7 +73,7 @@ export default function OptionalDataControlsField<
         if (newFormData === undefined) {
           // getDefaultFormState() returns undefined for an optional array (and can for an object), so Add has to supply
           // the empty container itself, of the type shouldRenderOptionalField() rendered the controls for
-          newFormData = getOptionalDataControlsType<S>(schema) === 'array' ? [] : {};
+          newFormData = getOptionalDataControlsType<S>(schema, registry.rootSchema) === 'array' ? [] : {};
         }
         onChange(newFormData as T, fieldPath);
       };

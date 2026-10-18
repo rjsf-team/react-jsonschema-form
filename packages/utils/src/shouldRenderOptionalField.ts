@@ -2,7 +2,8 @@ import { ROOT_FIELD_PATH } from './fieldPath.ts';
 import getSchemaType from './getSchemaType.ts';
 import getUiOptions from './getUiOptions.ts';
 import getXxxOfOptions from './getXxxOfOptions.ts';
-import isObject from './isObject.ts';
+import isObject, { isSchemaObject } from './isObject.ts';
+import { resolveOwnRef } from './schema/retrieveSchema.ts';
 import type {
   FieldPath,
   FormContextType,
@@ -29,17 +30,24 @@ export function getSchemaTypesForXxxOf<S extends StrictRJSFSchema = RJSFSchema>(
  * own type.
  *
  * @param schema - The schema for the field
+ * @param [rootSchema] - The root schema an option written as a `$ref` names its definition in, which the option takes
+ *        its type from; without it such an option names no type
  * @returns - The type of the field, the unique list of its `anyOf`/`oneOf` options' types, or `undefined` when neither
  *            names one
  */
 export function getOptionalDataControlsType<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
+  rootSchema?: S,
 ): string | string[] | undefined {
   const xxxOf = getXxxOfOptions<S>(schema);
   if (!xxxOf) {
     return getSchemaType<S>(schema);
   }
-  const optionTypes = getSchemaTypesForXxxOf<S>(xxxOf.options);
+  const options =
+    rootSchema === undefined
+      ? xxxOf.options
+      : xxxOf.options.map((option) => (isSchemaObject<S>(option) ? resolveOwnRef<S>(option, rootSchema) : option));
+  const optionTypes = getSchemaTypesForXxxOf<S>(options);
   return Array.isArray(optionTypes) && optionTypes.length === 0 ? undefined : optionTypes;
 }
 
@@ -51,18 +59,20 @@ export function getOptionalDataControlsType<S extends StrictRJSFSchema = RJSFSch
  *        Data Controls UI on for some type, which by default it does for none
  * @param [uiSchema] - The uiSchema for the field
  * @param [globalUiOptions] - The global UI options, from the `registry`
+ * @param [rootSchema] - The root schema, see `getOptionalDataControlsType()`
  * @returns - True if the Optional Data Controls UI is enabled for the type of the field, otherwise false
  */
 export function isOptionalDataControlsType<T, S extends StrictRJSFSchema, F extends FormContextType>(
   schema: S | (() => S),
   uiSchema?: UiSchema<T, S, F>,
   globalUiOptions?: GlobalUISchemaOptions,
+  rootSchema?: S,
 ): boolean {
   const { enableOptionalDataFieldForType = [] } = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
   if (enableOptionalDataFieldForType.length === 0) {
     return false;
   }
-  const schemaType = getOptionalDataControlsType<S>(typeof schema === 'function' ? schema() : schema);
+  const schemaType = getOptionalDataControlsType<S>(typeof schema === 'function' ? schema() : schema, rootSchema);
   return typeof schemaType === 'string' && enableOptionalDataFieldForType.some((val) => val === schemaType);
 }
 
@@ -92,6 +102,6 @@ export default function shouldRenderOptionalField<
   return (
     fieldPath !== ROOT_FIELD_PATH &&
     !required &&
-    isOptionalDataControlsType<T, S, F>(schema, uiSchema, registry.globalUiOptions)
+    isOptionalDataControlsType<T, S, F>(schema, uiSchema, registry.globalUiOptions, registry.rootSchema)
   );
 }

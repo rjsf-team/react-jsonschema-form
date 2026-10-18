@@ -181,12 +181,14 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       option ? () => getRenderedOptionSchema<S>(resolvedSchema, option) : retrieved,
       branchUiSchema,
       globalUiOptions,
+      rootSchema,
     ) &&
     // An object node also renders its own ObjectField beside the option (see `getFieldComponent()` in `SchemaField`),
     // showing the properties it shares with the option unless the node is a control that hides them as well
     (!xxxOf ||
       !rendersOwnFieldBesideOption<S>(resolvedSchema) ||
-      (!effectiveRequired && isOptionalDataControlsType<T, S, F>(resolvedSchema, uiSchema, globalUiOptions)))
+      (!effectiveRequired &&
+        isOptionalDataControlsType<T, S, F>(resolvedSchema, uiSchema, globalUiOptions, rootSchema)))
   ) {
     return;
   }
