@@ -71,8 +71,9 @@ A key can match any subset of an object's `patternProperties` and a form renders
 An object with more is still compiled, with each pattern alone and all of them together, and the compile warns that a key matching some other subset of them has no compiled validator.
 A form that renders such a key throws `No precompiled validator function was found for the given schema` when it validates it, so a compile that succeeds with that warning is not a guarantee that every sub-schema the form reaches was covered.
 A form likewise applies the subset of an object's schema `dependencies` whose keys the data has filled in, and each `if` with only one of `then` and `else` gives two schemas, one with the branch applied and one without, so each such condition doubles the schemas compiled for it, and with them the size of the compiled output: a `oneOf` option holding an `allOf` of 8 such conditions is compiled for each of their 256 combinations.
-The schemas an `allOf` or an object's `dependencies` combine into, counting a dependency left unapplied as one of them, are compiled for up to 256 combinations.
+The schemas an `allOf` or an object's `dependencies` combine into, counting a dependency left unapplied as one of them, are compiled for up to 256 combinations each.
 Past that, the compile covers the schemas the empty data selects, each other schema alone beside them and the last schema of each together, and warns the same way.
+That limit applies to each `allOf` and each set of `dependencies` on its own, so a schema holding both, or a one-sided `if` beside them, is compiled for the product of what each gives: 8 schema dependencies beside an `allOf` of 4 one-sided conditions and a one-sided `if` of the schema's own give 256 · 16 · 2 = 8192 schemas. The compile warns when one schema expands to more than 256 schemas this way.
 
 ```js
 import { compileSchemaValidators } from '@rjsf/validator-ajv8';

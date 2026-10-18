@@ -31,6 +31,7 @@ import getSchemaOwnTypes from '../getSchemaOwnTypes.ts';
 import getXxxOfKey from '../getXxxOfKey.ts';
 import getXxxOfOptions from '../getXxxOfOptions.ts';
 import guessType from '../guessType.ts';
+import hashForSchema from '../hashForSchema.ts';
 import isObject from '../isObject.ts';
 import isPlainObject from '../isPlainObject.ts';
 import logOnce from '../logOnce.ts';
@@ -143,17 +144,17 @@ export function resolveCondition<
   // `null` is checked as `{}` like `undefined`: object keywords such as `required` ignore non-objects, so a `null`
   // would satisfy `if: { required: ['a'] }` and take `then` for an object with no data
   const conditionValue = context.validator.isValid(expression as S, formData ?? {}, rootSchema);
-  // A missing, `true` or `{}` branch leaves the schema without the condition
+  // A missing, `null`, `true` or `{}` branch leaves the schema without the condition
   const changing = (branch: unknown) =>
-    branch === undefined || branch === true || (isObject(branch) && !Object.keys(branch).length)
+    branch === undefined || branch === null || branch === true || (isObject(branch) && !Object.keys(branch).length)
       ? undefined
       : (branch as S | boolean);
   const selected = changing(conditionValue ? then : otherwise);
-  // Expanding all branches lists each form once, two `false` branches being the one form, and the form the data selects
-  // first: it is the one a form renders for that data, which `combineForms()` keeps once it has to drop combinations
-  const branches = expandAllBranches
-    ? [...new Set([selected, changing(conditionValue ? otherwise : then)])]
-    : [selected];
+  const other = changing(conditionValue ? otherwise : then);
+  // Expanding all branches lists each form once, two deep-equal branches being the one form, and the form the data
+  // selects first: it is the one a form renders for that data, which `combineForms()` keeps once it has to drop
+  // combinations
+  const branches = expandAllBranches && !deepEquals(selected, other) ? [selected, other] : [selected];
   return branches
     .flatMap((branch) =>
       branch === undefined
@@ -190,45 +191,57 @@ export function resolveCondition<
 /** The most forms expanding all branches combines across the lists of one `allOf` or one schema's `dependencies`. Each
  * one is a schema a parse resolves and compiles, and the combinations grow as the product of the lists' lengths
  */
-const MAX_COMBINED_FORMS = 256;
+export const MAX_COMBINED_FORMS = 256;
 
-/** A combination being built past `MAX_COMBINED_FORMS`, with where it stands: `0` while it holds only the first form
- * of each list, which is the one the data selects, `1` once it holds one other form, and below `0` for the one that
- * holds the last form of each list, counting down from `-1` the lists it took other than their first from
+/** Where a combination being built past `MAX_COMBINED_FORMS` stands: `selected` while it holds only the first form of
+ * each list, which is the one the data selects, `other` once it holds one other form, and `last` for the one holding
+ * the last form of each list, with how many lists it took other than their first from
  */
-type Combination<P> = [P, number];
+type Standing = { kind: 'selected' } | { kind: 'other' } | { kind: 'last'; varied: number };
 
-/** Returns the forms a combination standing at `state` takes from the next list of `forms`, and where it stands then.
- * Past `MAX_COMBINED_FORMS` only the forms the data selects together, each other form alone with those, and the last
- * form of each together are combined, so the combinations grow with the lists' lengths rather than their product.
+const SELECTED: Standing = { kind: 'selected' };
+const OTHER: Standing = { kind: 'other' };
+const ALL_LAST: Standing = { kind: 'last', varied: 0 };
+
+/** A combination being built, with where it stands */
+type Combination<P> = [P, Standing];
+
+/** Returns the forms a combination standing at `standing` takes from the next list of `forms`, and where it stands
+ * then. Past `MAX_COMBINED_FORMS` only the forms the data selects together, each other form alone with those, and the
+ * last form of each together are combined, so the combinations grow with the lists' lengths rather than their product.
  *
- * @param state - Where the combination stands, as `Combination` describes
+ * @param standing - Where the combination stands, as `Standing` describes
  * @param forms - The next list of forms, the one the data selects first
  * @param bounded - Whether the combinations are past `MAX_COMBINED_FORMS`, else every form is taken
  * @returns - The forms the combination takes, each with where it stands then
  */
-function nextForms<F>(state: number, forms: F[], bounded: boolean): [F, number][] {
-  if (!bounded || !state) {
-    return forms.map((form, index) => [form, index && 1]);
+function nextForms<F>(standing: Standing, forms: F[], bounded: boolean): [F, Standing][] {
+  if (!bounded || standing.kind === 'selected') {
+    return forms.map((form, index) => [form, index ? OTHER : SELECTED]);
   }
-  return state > 0 ? [[forms[0], 1]] : [[forms[forms.length - 1], forms.length > 1 ? state - 1 : state]];
+  if (standing.kind === 'other') {
+    return [[forms[0], OTHER]];
+  }
+  const varied = forms.length > 1 ? standing.varied + 1 : standing.varied;
+  return [[forms[forms.length - 1], { kind: 'last', varied }]];
 }
 
 /** Returns the combinations `nextForms()` built. The one holding the last form of each list is left out when it took
- * other than the first form from at most one list, being one that is built anyway, and a warning naming `what` was
- * combined is logged when it is kept, since combinations in between were then dropped.
+ * other than the first form from at most one list, since it is then the selected one or one of the others alone, which
+ * are built anyway, and a warning naming `what` was combined is logged when it is kept, since combinations in between
+ * were then dropped.
  *
  * @param combinations - The combinations built
  * @param what - Names what was combined, for the warning
  * @returns - The combinations to expand
  */
 function combined<P>(combinations: Combination<P>[], what: () => string): P[] {
-  const kept = combinations.filter(([, state]) => state >= 0 || state < -2);
-  if (kept.length < combinations.length || !kept.some(([, state]) => state < 0)) {
+  const kept = combinations.filter(([, standing]) => standing.kind !== 'last' || standing.varied > 1);
+  if (kept.length < combinations.length || !kept.some(([, standing]) => standing.kind === 'last')) {
     return kept.map(([combination]) => combination);
   }
   logOnce(
-    `Expanding all branches of ${what()} gives more than the ${MAX_COMBINED_FORMS} combinations that are expanded, so only the forms the data selects together, each other form alone and the last forms together were. A form whose data selects a combination in between has no compiled validator.`,
+    `Expanding all branches of ${what()} gives more than the ${MAX_COMBINED_FORMS} combinations that are expanded, so only the forms the data selects together, each other form alone and the last forms together were. A form whose data selects a combination in between has no compiled validator. Give the object fewer one-sided conditions or schema dependencies, nesting what they describe under its properties if need be.`,
     'warn',
   );
   return kept.map(([combination]) => combination);
@@ -246,12 +259,12 @@ function combineForms<S extends StrictRJSFSchema = RJSFSchema>(lists: S[][], wha
     return getAllPermutationsOfXxxOf<S>(lists);
   }
   let combinations: Combination<S[]>[] = [
-    [[], 0],
-    [[], -1],
+    [[], SELECTED],
+    [[], ALL_LAST],
   ];
   for (const list of lists) {
-    combinations = combinations.flatMap(([combination, state]) =>
-      nextForms(state, list, true).map(([form, next]): Combination<S[]> => [[...combination, form], next]),
+    combinations = combinations.flatMap(([combination, standing]) =>
+      nextForms(standing, list, true).map(([form, next]): Combination<S[]> => [[...combination, form], next]),
     );
   }
   return combined(combinations, what);
@@ -520,9 +533,12 @@ export function resolveSchema<
       ),
     );
     return combineForms<S>(allOfSchemaElements, () => {
-      // Its start and its end, since allOfs written alike start alike, and an allOf past the limit is long
+      // In full when short, and by its start and a hash of the whole when long, so that two allOfs differing only in a
+      // middle entry still log a warning each
       const json = JSON.stringify(schema.allOf);
-      return `the allOf of ${schema.allOf!.length} entries ${json.slice(0, 60)}…${json.slice(-60)}`;
+      const named =
+        json.length <= 120 ? json : `${json.slice(0, 60)}… (hash ${hashForSchema({ allOf: schema.allOf } as S)})`;
+      return `the allOf of ${schema.allOf!.length} entries ${named}`;
     }).map((allOf) => ({ ...schema, allOf }));
   }
   // No $ref or dependencies or allOf attribute was found, returning the original schema.
@@ -1872,7 +1888,7 @@ export function processDependencies<
   // `MAX_COMBINED_FORMS` paths the walk starts again, bounded as `nextForms()` describes
   const walk = (bounded: boolean) => {
     const paths: Combination<S>[] = [];
-    const advance = (schema: S, remaining: GenericObjectType, state: number) => {
+    const advance = (schema: S, remaining: GenericObjectType, standing: Standing) => {
       if (!bounded && paths.length > MAX_COMBINED_FORMS) {
         return;
       }
@@ -1882,7 +1898,7 @@ export function processDependencies<
           (!schema.properties || key in schema.properties),
       );
       if (dependencyKey === undefined) {
-        paths.push([schema, state]);
+        paths.push([schema, standing]);
         return;
       }
       const [remainingDependencies, dependencyValue] = splitKeyElementFromObject(dependencyKey, remaining);
@@ -1902,17 +1918,18 @@ export function processDependencies<
           passCount,
         );
         if (expandAllBranches && !forms.some((form) => deepEquals(form, schema))) {
-          // Listed last, after the forms with it applied, unless the walk is bounded and the data has not filled its
-          // key in, which makes it the form the data selects
-          forms = bounded && getByPath(formData, dependencyKey) === undefined ? [schema, ...forms] : [...forms, schema];
+          // Listed first while the data has not filled its key in, which makes it the form the data selects, and last
+          // otherwise. `combineForms()` keeps each list's first form once it has to drop combinations, and an `allOf`
+          // entry's `dependencies` reach it through this walk too, so this holds whether or not the walk is bounded
+          forms = getByPath(formData, dependencyKey) === undefined ? [schema, ...forms] : [...forms, schema];
         }
       }
-      for (const [form, next] of nextForms(state, forms, bounded)) {
+      for (const [form, next] of nextForms(standing, forms, bounded)) {
         advance(form, remainingDependencies, next);
       }
     };
-    for (const state of bounded ? [0, -1] : [0]) {
-      advance(resolvedSchema, { ...dependencies }, state);
+    for (const standing of bounded ? [SELECTED, ALL_LAST] : [SELECTED]) {
+      advance(resolvedSchema, { ...dependencies }, standing);
     }
     return paths;
   };

@@ -382,6 +382,35 @@ describe('schemaParser()', () => {
     );
     consoleWarnSpy.mockRestore();
   });
+  it('warns when the allOf, dependencies and condition of one schema multiply past the limit together', () => {
+    resetLogOnce();
+    const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
+    const oneSided = (key: string): RJSFSchema => ({
+      if: { required: [`if_${key}`] },
+      then: { properties: { [key]: { type: 'string' } } },
+    });
+    const schemaWith = (dependencyCount: number): RJSFSchema => {
+      const names = Array.from({ length: dependencyCount }, (_, i) => `d${i}`);
+      return {
+        type: 'object',
+        properties: Object.fromEntries(names.map((name) => [name, {}])),
+        dependencies: Object.fromEntries(names.map((name) => [name, { properties: { [`dep_${name}`]: {} } }])),
+        allOf: ['a0', 'a1', 'a2', 'a3'].map(oneSided),
+        ...oneSided('own'),
+      };
+    };
+    // No one stage passes the limit, 256 dependency paths, 16 allOf forms and 2 for the condition, but together
+    // they give 8192 forms
+    schemaParser(schemaWith(8));
+    expect(consoleWarnSpy).toHaveBeenCalledWith(
+      expect.stringMatching(/gives 8192 forms, more than the 256 each allOf/),
+    );
+    consoleWarnSpy.mockClear();
+    resetLogOnce();
+    schemaParser(schemaWith(2));
+    expect(consoleWarnSpy).not.toHaveBeenCalled();
+    consoleWarnSpy.mockRestore();
+  });
   it('reports every object with more patternProperties than can be combined, not just the first', () => {
     const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
     resetLogOnce();

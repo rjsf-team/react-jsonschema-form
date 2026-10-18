@@ -11,10 +11,10 @@ import {
   RJSF_REF_KEY,
   THEN_KEY,
 } from '../constants.ts';
-import { sortedJSONStringify } from '../hashForSchema.ts';
+import hashForSchema, { sortedJSONStringify } from '../hashForSchema.ts';
 import { isSchemaObject } from '../isObject.ts';
 import logOnce from '../logOnce.ts';
-import { resolveAnyOrOneOfSchemas, retrieveSchemaInternal } from '../schema/retrieveSchema.ts';
+import { MAX_COMBINED_FORMS, resolveAnyOrOneOfSchemas, retrieveSchemaInternal } from '../schema/retrieveSchema.ts';
 import type { FormContextType, RJSFSchema, SchemaContext, SchemaParserOptions, StrictRJSFSchema } from '../types.ts';
 import type { SchemaMap } from './ParserValidator.ts';
 import ParserValidator from './ParserValidator.ts';
@@ -110,6 +110,22 @@ function pathForValues<S extends StrictRJSFSchema = RJSFSchema>(schema: S, recur
   return typeof sourceRef === 'string' && !recurseList.includes(sourceRef) ? [...recurseList, sourceRef] : recurseList;
 }
 
+/** Warns when one `schema` expands to more than `MAX_COMBINED_FORMS` forms. The limit bounds the combinations of each
+ * `allOf` and of each object's `dependencies` on its own, and a schema that holds several of them, or a one-sided `if`
+ * beside them, expands to the product of what each gives, every form of which is compiled.
+ *
+ * @param schema - The schema that was expanded
+ * @param formCount - The number of distinct forms it expanded to
+ */
+function warnPastCombinedForms<S extends StrictRJSFSchema = RJSFSchema>(schema: S, formCount: number) {
+  if (formCount > MAX_COMBINED_FORMS) {
+    logOnce(
+      `Expanding all branches of a schema (hash ${hashForSchema(schema)}) gives ${formCount} forms, more than the ${MAX_COMBINED_FORMS} each allOf or set of dependencies is bounded to, since its allOfs, dependencies and one-sided conditions multiply. Each form is compiled, so the compiled output grows with them. Give the object fewer one-sided conditions or schema dependencies, nesting what they describe under its properties if need be.`,
+      'warn',
+    );
+  }
+}
+
 /** Recursive function used to parse the given `schema` belonging to the `rootSchema`. The context's `ParserValidator` is
  * used to capture the sub-schemas that the `isValid()` function is called with. For each schema returned by the
  * `retrieveSchemaInternal()`, the sub-schemas the form renders its value with are parsed, as is each of its
@@ -156,8 +172,10 @@ function parseSchema<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
   // resolution has left it, which is one level deeper each time, and both `parsed` and `resolved` key by content, so
   // nothing repeats and the descent has nothing to stop it
   const schemas = retrieveSchemaInternal<T, S, F>(context, schema, rootSchema, undefined, true, recurseList);
-  schemas.forEach((localSchema) => {
-    const resolvedKey = sortedJSONStringify(localSchema);
+  const resolvedKeys = schemas.map((localSchema) => sortedJSONStringify(localSchema));
+  warnPastCombinedForms<S>(schema, new Set(resolvedKeys).size);
+  schemas.forEach((localSchema, index) => {
+    const resolvedKey = resolvedKeys[index];
     if (!state.resolved.has(resolvedKey)) {
       state.resolved.add(resolvedKey);
       const resolvedRefs = pathForValues<S>(localSchema, recurseList);

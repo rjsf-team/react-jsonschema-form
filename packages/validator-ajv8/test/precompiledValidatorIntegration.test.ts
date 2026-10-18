@@ -274,6 +274,29 @@ describe('precompiled validator integration: oneOf with additionalProperties:fal
       },
     );
   });
+  it('compiles the option for empty data past the limit when an `allOf` entry has `dependencies`', () => {
+    const option: RJSFSchema = {
+      type: 'object',
+      allOf: [
+        { properties: { a: {} }, dependencies: { a: { properties: { dep_a: {} } } } },
+        { properties: { b: {} }, dependencies: { b: { properties: { dep_b: {} } } } },
+        ...Array.from({ length: 9 }, (_, i): RJSFSchema => ({
+          if: { required: [`if_k${i}`] },
+          then: { properties: { [`k${i}`]: { type: 'string' } } },
+        })),
+      ],
+    };
+    const root: RJSFSchema = {
+      type: 'object',
+      oneOf: [option, { type: 'object', properties: { z: { type: 'number' } } }],
+    };
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const validator = buildPrecompiledValidator(root);
+    warn.mockRestore();
+    const retrieved = createSchemaUtils({ validator }, root).retrieveSchema(option, {});
+    // The first render scores and checks the option as empty data selects it, with no dependency or `then` applied
+    expect(validator.isValid(withVariantId(retrieved), {}, root)).toBe(true);
+  });
   describe('an option with an `if` that has no `else`', () => {
     /** Until the data satisfies the `if`, a form renders the option without its `then`, so that schema has to be
      * compiled as well as the one with `then` applied

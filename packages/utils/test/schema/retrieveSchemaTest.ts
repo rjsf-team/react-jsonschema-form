@@ -4541,7 +4541,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           expect(formSet(all)).toEqual(noneEachAll(keys));
           expect(consoleWarnSpy).toHaveBeenCalledWith(
             expect.stringMatching(
-              /the allOf of 9 entries \[\{"if":\{"required":\["if_k0"\]\}.*….*"k8".* gives more than the 256 combinations/,
+              /the allOf of 9 entries \[\{"if":\{"required":\["if_k0"\]\}.*… \(hash [^)]+\) gives more than the 256 combinations.*Give the object fewer one-sided conditions or schema dependencies/,
             ),
           );
         });
@@ -4575,6 +4575,37 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           for (const all of [viaRef, nested]) {
             expect(formSet(all)).toEqual(noneEachAll(keys));
           }
+        });
+        it('names a short allOf in full, and tells apart allOfs differing only in a middle entry', () => {
+          const alike = (middle: string) =>
+            keys.map((key, i) => oneSided(i === 4 ? middle : key, 'then')).concat({ properties: { z: {} } });
+          expand({ type: 'object', allOf: alike('m1') });
+          expand({ type: 'object', allOf: alike('m2') });
+          expect(consoleWarnSpy).toHaveBeenCalledTimes(2);
+          // Four `$ref`s, each to an allOf of four conditions, so 16 ** 4 combinations from JSON short enough to name
+          const definitions = Object.fromEntries(
+            ['a', 'b', 'c', 'd'].map((name) => [
+              name,
+              { allOf: keys.slice(0, 4).map((key) => oneSided(name + key, 'then')) },
+            ]),
+          );
+          const short = Object.keys(definitions).map((name) => ({ $ref: `#/definitions/${name}` }));
+          expand({ type: 'object', allOf: short }, { definitions });
+          expect(consoleWarnSpy).toHaveBeenLastCalledWith(
+            expect.stringContaining(`the allOf of 4 entries ${JSON.stringify(short)} gives`),
+          );
+        });
+        it('keeps the form for empty data when an allOf entry has dependencies', () => {
+          // The dependencies of an entry stay under the limit and are walked unbounded, and the entry still lists the
+          // form with none of them applied first, which is the one a bounded allOf keeps
+          const allOf: RJSFSchema[] = [
+            { properties: { a: {} }, dependencies: { a: { properties: { dep_a: {} } } } },
+            { properties: { b: {} }, dependencies: { b: { properties: { dep_b: {} } } } },
+            ...keys.map((key) => oneSided(key, 'then')),
+          ];
+          const all = expand({ type: 'object', allOf });
+          expect(formSet(all)).toContain('a+b');
+          expect(forms(expand(allOf[0]))).toEqual(['a', 'a+dep_a']);
         });
         it('neither duplicates nor warns when only one entry has more than one form', () => {
           const options = Array.from({ length: 260 }, (_, i) => ({ properties: { [`o${i}`]: { type: 'string' } } }));
@@ -4641,6 +4672,19 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           [['a'], undefined],
           [['a', 'b'], ['c']],
         ]);
+      });
+      it('returns a `null` branch as the schema without the condition, once', () => {
+        const schema = { type: 'object', if: { required: ['a'] }, then: null } as unknown as RJSFSchema;
+        expect(resolveCondition({ validator: testValidator }, schema, schema, true, [])).toEqual([{ type: 'object' }]);
+      });
+      it('returns deep-equal `then` and `else` branches as the one form', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          if: { required: ['a'] },
+          then: { properties: { x: {} } },
+          else: { properties: { x: {} } },
+        };
+        expect(resolveCondition({ validator: testValidator }, schema, schema, true, [])).toHaveLength(1);
       });
       it('returns two `false` branches as the one form', () => {
         const schema: RJSFSchema = { type: 'object', if: { required: ['a'] }, then: false, else: false };
