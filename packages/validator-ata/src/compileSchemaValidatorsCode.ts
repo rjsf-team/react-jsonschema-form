@@ -67,6 +67,12 @@ function mapKeyword(key: string, value: unknown, map: (subschema: unknown) => un
   return SUBSCHEMA_KEYWORDS.has(key) ? map(value) : value;
 }
 
+/** The keywords no subschema of a compiled document keeps: an `$id`, and the containers of definitions, which only a
+ * `$ref` names and ata would follow an alias in, every `$ref` read against them having been renamed to an entry
+ * carried at the top of the document
+ */
+const DROPPED_KEYWORDS = new Set([ID_KEY, 'definitions', '$defs']);
+
 /** The dialects in which an `$id` beside a `$ref` starts a resource, as the schema graph reads them */
 const LATER_DIALECTS = new Set([JSON_SCHEMA_DRAFT_2019_09, JSON_SCHEMA_DRAFT_2020_12]);
 
@@ -239,7 +245,8 @@ function compilable(schema: unknown): GenericObjectType {
  * compiles nothing for a document holding both containers, and compiles nothing for one holding a subschema that
  * carries an `$id` of its own. So every subschema of the root the document reaches through a `$ref`, a definition, an
  * anchor or neither, is carried in a single container of the document under a generated name the `$ref` is renamed
- * to, and the document's own containers, which only the renamed `$ref`s could name, are dropped. A `$ref` is read
+ * to, and the containers of the document and of every subschema it carries, which only the renamed `$ref`s could
+ * name, are dropped. A `$ref` is read
  * against the innermost resource around it, an option with an `$id` of its own included, as the schema graph reads the
  * root's resources. No subschema of the document keeps an `$id`, every `$ref` read against one having been renamed: its
  * document part is resolved against that resource's base URI and
@@ -292,7 +299,7 @@ function standalone(schema: GenericObjectType, rootSchema: object): GenericObjec
     const inner = resource ?? around;
     const copy = Object.fromEntries(
       Object.entries(value).flatMap(([key, child]) =>
-        key === ID_KEY ? [] : [[key, mapKeyword(key, child, (sub) => rewrite(sub, inner))]],
+        DROPPED_KEYWORDS.has(key) ? [] : [[key, mapKeyword(key, child, (sub) => rewrite(sub, inner))]],
       ),
     );
     const ref: unknown = value[REF_KEY];
@@ -313,7 +320,7 @@ function standalone(schema: GenericObjectType, rootSchema: object): GenericObjec
     const allOf: unknown = siblings[ALL_OF_KEY];
     return { ...siblings, [ALL_OF_KEY]: [...(Array.isArray(allOf) ? allOf : []), reference] };
   };
-  const { definitions: _definitions, $defs: _defs, ...document } = compilable(rewrite(schema, root));
+  const document = compilable(rewrite(schema, root));
   const carried: GenericObjectType = {};
   for (let next = pending.pop(); next !== undefined; next = pending.pop()) {
     const [name, value, base] = next;

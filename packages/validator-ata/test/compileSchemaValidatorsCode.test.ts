@@ -450,4 +450,18 @@ describe('compileSchemaValidatorsCode', () => {
     expect(validator.isValid({ $ref: '#/properties/o/anyOf/0' }, 'x', rootSchema)).toBe(true);
     expect(validator.isValid({ $ref: '#/properties/o/anyOf/0' }, 5, rootSchema)).toBe(false);
   });
+  test('compiles a root it carries through $ref: "#" that holds a definition naming another', () => {
+    const rootSchema: RJSFSchema = {
+      definitions: { Name: { $ref: '#/definitions/Str' }, Str: { type: 'string' } },
+      type: 'object',
+      properties: { name: { $ref: '#/definitions/Name' }, children: { type: 'array', items: { $ref: '#' } } },
+    };
+    const validator = createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(rootSchema)), rootSchema);
+    expect(validator.validateFormData({ name: 'a', children: [{ name: 'b' }] }, rootSchema).errors).toEqual([]);
+    expect(
+      validator
+        .validateFormData({ name: 'a', children: [{ name: 5 }] }, rootSchema)
+        .errors.map((error) => error.property),
+    ).toEqual(['.children.0.name']);
+  });
 });
