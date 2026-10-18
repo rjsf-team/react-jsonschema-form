@@ -524,10 +524,12 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
       conjunction: undefined,
       pureRef: false,
     });
-    // The booleans the copy holds are the ones `node` holds, found under its pointer
+    // The booleans the copy holds are the ones `node` holds, found under its pointer by the graph that parsed `node`,
+    // which a graph extending it reuses its pointers from
     for (const [key, value] of Object.entries(siblings.raw)) {
       for (const [tokens, sub] of subschemaEntries(key, value)) {
-        const known = typeof sub === 'boolean' ? this.pointers.get(childPointer(node.pointer, tokens)) : undefined;
+        const known =
+          typeof sub === 'boolean' ? this.graphOf(node.id).byPointer(childPointer(node.pointer, tokens)) : undefined;
         if (known !== undefined) {
           this.pointers.set(childPointer(siblings.pointer, tokens), known);
         }

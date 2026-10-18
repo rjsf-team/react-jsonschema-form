@@ -4842,6 +4842,22 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       });
     });
     describe('retrieveSchema() over the schema graph', () => {
+      it("keeps the then beside a $ref in a copy of a schema adopted from outside the root, whose if the outer schema's shares a pointer with", () => {
+        const root: RJSFSchema = { definitions: { x: { type: 'object', properties: { a: { type: 'string' } } } } };
+        const external: RJSFSchema = {
+          type: 'object',
+          if: true,
+          then: { title: 'outer then' },
+          properties: {
+            inner: { $ref: '#/definitions/x', if: true, then: { properties: { t: { type: 'string' } } } },
+          },
+        };
+        const inner = retrieveSchema({ validator: testValidator }, external, root).properties?.inner;
+        const copy = { ...(isSchemaObject(inner) ? inner : {}), title: 'copy' };
+        expect(
+          Object.keys(retrieveSchema({ validator: testValidator }, copy, root, {}).properties ?? {}).sort(),
+        ).toEqual(['a', 't']);
+      });
       const D = (name: string) => `#/definitions/${name}`;
       const node: RJSFSchema = {
         type: 'object',
