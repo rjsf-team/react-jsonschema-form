@@ -1,4 +1,4 @@
-import { startTransition, StrictMode, useEffect, useLayoutEffect, useState } from 'react';
+import { startTransition, StrictMode, useEffect, useId, useLayoutEffect, useState } from 'react';
 import type {
   ArrayFieldTemplateProps,
   ArrayFieldItemButtonsTemplateProps,
@@ -4839,6 +4839,62 @@ describe('ArrayField', () => {
 
       // The removal starts from the rendered ['a'], not from the refused ['a', undefined]
       expectToHaveBeenCalledWithFormData(onChange, [], 'root');
+    });
+
+    describe('should not hand a row to another item when the form keeps other data than the change sent', () => {
+      /** Shows its item, and which instance of the widget shows it: the state a row holds, as focus or a draft would be */
+      function InstanceWidget({ id, value }: WidgetProps) {
+        return <input id={id} data-instance={useId()} value={value ?? ''} readOnly />;
+      }
+      /** Each item shown, with the instance that shows it */
+      const shown = (node: Element) =>
+        Array.from(node.querySelectorAll<HTMLInputElement>('input[data-instance]'), (row) => [
+          row.value,
+          row.dataset.instance,
+        ]);
+      /** Whether every row that shows an item after an edit was either made for it or showed that same item before */
+      const keepsItsItem = (before: (string | undefined)[][], after: (string | undefined)[][]) => {
+        const itemOf = new Map(before.map(([item, instance]) => [instance, item]));
+        return after.every(([item, instance]) => !itemOf.has(instance) || itemOf.get(instance) === item);
+      };
+
+      it('when the defaults put an item back after a remove', async () => {
+        const { node, getFormData } = createFormComponent({
+          schema: { type: 'array', minItems: 2, items: { type: 'string', default: 'new' } },
+          uiSchema: { items: { 'ui:widget': InstanceWidget } },
+          initialFormData: ['a', 'b'],
+          defaultFormStateBehavior: { arrayMinItems: { populate: 'all', mergeExtraDefaults: true } },
+        });
+        const before = shown(node);
+
+        await user.click(node.querySelectorAll('.rjsf-array-item-remove')[0]);
+
+        expect(getFormData()).toEqual(['b', 'new']);
+        expect(keepsItsItem(before, shown(node))).toBe(true);
+      });
+
+      it('when onChange sets a reorder back', async () => {
+        const ref = createFormRef<string[]>();
+        let previous: string[] | undefined = ['a', 'b'];
+        const { node, getFormData } = createFormComponent({
+          ref,
+          schema: { type: 'array', items: { type: 'string' } },
+          uiSchema: { items: { 'ui:widget': InstanceWidget } },
+          initialFormData: ['a', 'b'],
+          onChange: ({ formData }: IChangeEvent) => {
+            if (Array.isArray(formData) && formData[0] === 'b') {
+              handleOf(ref).setFieldValue('', previous);
+            }
+          },
+        });
+        const before = shown(node);
+
+        await user.click(node.querySelectorAll('.rjsf-array-item-move-down')[0]);
+
+        expect(getFormData()).toEqual(['a', 'b']);
+        expect(keepsItsItem(before, shown(node))).toBe(true);
+        previous = undefined;
+      });
     });
 
     it('should drop a remove a custom parent refused from the rows a later event keys its items by', async () => {

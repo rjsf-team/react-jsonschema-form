@@ -1042,9 +1042,10 @@ const NO_ITEMS: never[] = [];
  *
  * Two sets of rows are kept: `keys`, the rows of the field's latest change, and `confirmed`, the rows of the last data
  * whose length matched them. Data of the latest change's length uses `keys`, and becomes the confirmed rows. Data of
- * the confirmed rows' length uses `confirmed`, as when the consumer answers the change by setting the field back to the
- * data from before it, through `onChange` or `setFieldValue()`. Data whose length matches neither, an external replacement, gives no way to tell which rows
- * survived, so every key is regenerated.
+ * the confirmed rows' length uses `confirmed`, as when a custom parent field keeps the change to itself, so the form's
+ * data stays what it was. Data whose length matches neither, an external replacement, gives no way to tell which rows
+ * survived, so every key is regenerated. Where the form keeps other items than a change sent, the handler rekeys the
+ * rows itself, see `commitRows()`.
  *
  * A handler reads the rows from a ref rather than closing over the render's: a second handler in the same event has to
  * start from the rows the first one sent, which React has yet to render, and a handler closing over the rendered rows
@@ -1068,9 +1069,9 @@ function useKeyedFormData<T = unknown>(formData: T[] = NO_ITEMS): KeyedFormDataS
       setRows({ ...rows, confirmed: rows.keys });
     }
   } else if (rows.confirmed.length === items.length) {
-    // The consumer set the field back to the data from before the change, which matches the confirmed rows;
-    // keeping those stops the rows and the order they were added in from being regenerated. Only lengths are compared,
-    // so data set back to another array of that length keeps the confirmed keys too
+    // A custom parent field kept the change to itself, so the form's data matches the confirmed rows; keeping those
+    // stops the rows and the order they were added in from being regenerated. Only lengths are compared, so data set
+    // to another array of that length keeps the confirmed keys too
     itemKeys = rows.confirmed;
   } else {
     const generation = rows.generation + 1;
@@ -1148,9 +1149,10 @@ export default function ArrayField<
    * them, and saying where each item went, so the form moves the items' errors along. Where that is, is read off the
    * rows themselves, so the errors go nowhere the items did not. A change `transformChange` refused leaves the items
    * where they were, so the rows go back to `rows`: kept, a refused reorder, which leaves the length as it was, would
-   * hand each row's instance, and the state it holds, to another item. A change it rewrote may have put any item
-   * anywhere, so a row keeps its key only where the form kept the item the change put there, and every other item gets
-   * a row of its own
+   * hand each row's instance, and the state it holds, to another item. Otherwise the form may hold other items than
+   * the change put there: `transformChange` rewrote them, the defaults put one back, or `onChange` set the field back.
+   * A row then keeps its key only where the form holds the item the change put there, and every other item gets a row
+   * of its own
    */
   const commitRows = useCallback(
     (rows: KeyedFormDataType<T>[], newKeyedFormData: KeyedFormDataType<T>[]) => {
@@ -1158,26 +1160,34 @@ export default function ArrayField<
       const outcome = sendMove({ newKeyOf: moveOfItems((index) => newIndexes.get(rows[index])) }, () =>
         onChange(updateKeyedFormData(newKeyedFormData), fieldPath),
       );
-      if (outcome?.kind === 'refused') {
-        updateKeyedFormData(rows);
-      } else if (outcome?.kind === 'rewritten') {
-        const items: T[] = Array.isArray(outcome.kept) ? outcome.kept : [];
-        const edited: unknown[] = Array.isArray(outcome.edited) ? outcome.edited : [];
-        const rewritten: KeyedFormDataType<T>[] = [];
-        // By index, as `readRows()` reads them, so a hole is an item with a row of its own
-        for (let index = 0; index < items.length; index++) {
-          const item = items[index];
-          const row = newKeyedFormData[index];
-          const { key, order } =
-            row && index < edited.length && deepEquals(item, edited[index])
-              ? row
-              : newRowId([...newKeyedFormData, ...rewritten]);
-          rewritten.push({ key, order, item });
-        }
-        updateKeyedFormData(rewritten);
+      if (outcome === undefined) {
+        return;
       }
+      if (outcome.kind === 'refused') {
+        updateKeyedFormData(rows);
+        return;
+      }
+      const held = readItems();
+      const items: T[] = Array.isArray(held) ? held : [];
+      const sent: unknown[] =
+        outcome.kind === 'rewritten' && Array.isArray(outcome.edited)
+          ? outcome.edited
+          : keyedToPlainFormData(newKeyedFormData);
+      if (deepEquals(items, sent)) {
+        return;
+      }
+      const kept: KeyedFormDataType<T>[] = [];
+      // By index, as `readRows()` reads them, so a hole is an item with a row of its own
+      for (let index = 0; index < items.length; index++) {
+        const item = items[index];
+        const row = newKeyedFormData[index];
+        const { key, order } =
+          row && index < sent.length && deepEquals(item, sent[index]) ? row : newRowId([...newKeyedFormData, ...kept]);
+        kept.push({ key, order, item });
+      }
+      updateKeyedFormData(kept);
     },
-    [sendMove, onChange, updateKeyedFormData, fieldPath, newRowId],
+    [sendMove, onChange, updateKeyedFormData, fieldPath, newRowId, readItems],
   );
 
   /** Callback handler for when the user clicks on the add or add at index buttons. Creates a new row of keyed form data
