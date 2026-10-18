@@ -20,7 +20,7 @@ import {
 } from '@rjsf/utils';
 
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
-import { createPrecompiledValidator } from '../src/index.ts';
+import { createPrecompiledValidator, customizeValidator } from '../src/index.ts';
 import { evalValidatorCode } from './harness/compileSuperSchema.ts';
 
 /** Compiles `schema` to AJV standalone code in memory and wraps it in an AJV8PrecompiledValidator. */
@@ -308,6 +308,38 @@ describe('precompiled validator integration: oneOf with additionalProperties:fal
       const schemaUtils = createSchemaUtils({ validator }, anonymous);
       const retrieved = schemaUtils.retrieveSchema(anonymous.oneOf![1] as RJSFSchema, { b: 1 });
       expect(validator.isValid(withVariantId(retrieved), { b: 1 }, anonymous)).toBe(true);
+    });
+  });
+
+  describe('an option holding a relative $ref to a resource the root embeds', () => {
+    const rootSchema: RJSFSchema = {
+      $id: 'https://example.com/root.json',
+      definitions: { kinds: { $id: 'kinds.json', definitions: { cat: { const: 'cat' }, dog: { const: 'dog' } } } },
+      type: 'object',
+      properties: {
+        pet: {
+          type: 'object',
+          oneOf: [
+            {
+              properties: { kind: { $ref: 'kinds.json#/definitions/cat' }, meow: { type: 'string', default: 'm' } },
+              required: ['kind'],
+            },
+            {
+              properties: { kind: { $ref: 'kinds.json#/definitions/dog' }, bark: { type: 'string', default: 'b' } },
+              required: ['kind'],
+            },
+          ],
+        },
+      },
+    };
+    it('picks the option the data matches, with the runtime validator and with the precompiled one', () => {
+      const runtime = createSchemaUtils({ validator: customizeValidator() }, rootSchema);
+      const precompiled = createSchemaUtils({ validator: buildPrecompiledValidator(rootSchema) }, rootSchema);
+      for (const schemaUtils of [runtime, precompiled]) {
+        expect(schemaUtils.getDefaultFormState(rootSchema, { pet: { kind: 'dog' } })).toEqual({
+          pet: { kind: 'dog', bark: 'b' },
+        });
+      }
     });
   });
 

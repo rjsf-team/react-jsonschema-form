@@ -65,6 +65,13 @@ describe('withRootIdRefPrefix()', () => {
       allOf: [{ $ref: 'root#' }, true],
     });
   });
+  it("resolves a relative $ref against the root's $id, and leaves it as written for a root without one", () => {
+    const schema: RJSFSchema = { properties: { kind: { $ref: 'kinds.json#/definitions/cat' } } };
+    expect(withRootIdRefPrefix(schema, { $id: 'https://example.com/schemas/root.json' })).toEqual({
+      properties: { kind: { $ref: 'https://example.com/schemas/kinds.json#/definitions/cat' } },
+    });
+    expect(withRootIdRefPrefix(schema, {})).toEqual(schema);
+  });
   it('prefixes a local $ref with ROOT_SCHEMA_PREFIX for a root without an $id', () => {
     expect(withRootIdRefPrefix({ $ref: '#/a' }, {})).toEqual({ $ref: `${ROOT_SCHEMA_PREFIX}#/a` });
   });
