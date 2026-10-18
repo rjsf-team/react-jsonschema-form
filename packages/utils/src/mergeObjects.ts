@@ -1,4 +1,5 @@
 import isObject from './isObject.ts';
+import setOwn from './setOwn.ts';
 import type { GenericObjectType } from './types.ts';
 
 /** Recursively merge deeply nested objects.
@@ -32,12 +33,7 @@ export default function mergeObjects(
         }
         merged = left.concat(toMerge);
       }
-      if (key === '__proto__') {
-        // A plain assignment here would reach the setter and swap the result's prototype for `merged`
-        Object.defineProperty(acc, key, { value: merged, enumerable: true, writable: true, configurable: true });
-      } else {
-        acc[key] = merged;
-      }
+      setOwn(acc, key, merged);
       return acc;
     },
     { ...obj1 },

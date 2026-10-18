@@ -38,6 +38,7 @@ import logOnce from '../logOnce.ts';
 import mergeSchemas from '../mergeSchemas.ts';
 import { getByPath } from '../pathUtils.ts';
 import { declaredRef, enclosingRefPath, mergeBranch, resolvedFromRef, resolvedSchemaOf } from '../refOf.ts';
+import setOwn from '../setOwn.ts';
 import type {
   FormContextType,
   GenericObjectType,
@@ -684,7 +685,7 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
       // in an object property always causes an infinite render loop and must be caught; in anyOf/oneOf mode a $ref
       // already expanded by an earlier option is collapsed on purpose (see the optionsPath handling below), so it
       // must not be marked.
-      updatedProps[key] = resolveAllReferences(
+      const resolvedProperty = resolveAllReferences(
         value as S,
         rootSchema,
         pathList,
@@ -695,6 +696,7 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
         passCount,
         tally,
       );
+      setOwn(updatedProps, key, resolvedProperty);
     }
     resolvedSchema = { ...resolvedSchema, [PROPERTIES_KEY]: updatedProps };
   }
@@ -1003,7 +1005,7 @@ function dependencySubschemas<S extends StrictRJSFSchema = RJSFSchema, F extends
           // resolution reads a reference, so a `properties` the branch declares itself answers on its own
           const branchProperties =
             branch[PROPERTIES_KEY] ?? referencedDefinition<S>(branch, rootSchema, new Set<string>())?.[PROPERTIES_KEY];
-          const conditionPropertySchema = branchProperties?.[dependencyKey];
+          const conditionPropertySchema = getByPath(branchProperties, dependencyKey);
           if (!conditionPropertySchema) {
             return false;
           }
@@ -1068,7 +1070,7 @@ function declaredPropertyNames<S extends StrictRJSFSchema = RJSFSchema, F extend
   const dependencies = schema[DEPENDENCIES_KEY];
   if (isObject(dependencies)) {
     const applying = Object.entries(dependencies).filter(
-      ([key]) => getByPath(formData, key) !== undefined && (!properties || key in properties),
+      ([key]) => getByPath(formData, key) !== undefined && (!properties || Object.hasOwn(properties, key)),
     );
     for (const [key, dependent] of applying) {
       merged.push(...dependencySubschemas<S, F>(context, dependent as S | boolean, key, rootSchema, formData));
@@ -1366,14 +1368,7 @@ export function stubExistingAdditionalProperties<
     }
     // Set our additional property flag so we know it was dynamically added
     (stub as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG] = true;
-    // `defineProperty`, since assigning a key called `__proto__` runs the setter `Object.prototype` carries: it would
-    // re-point this clone's prototype at the stub and declare no property, leaving the value with no field at all
-    Object.defineProperty(schema.properties, key, {
-      value: stub,
-      configurable: true,
-      enumerable: true,
-      writable: true,
-    });
+    setOwn(schema.properties, key, stub);
   }
 
   return schema;
@@ -1916,7 +1911,7 @@ export function processDependencies<
   for (const dependencyKey in dependencies) {
     if (
       (expandAllBranches || getByPath(formData, dependencyKey) !== undefined) &&
-      (!resolvedSchema.properties || dependencyKey in resolvedSchema.properties)
+      (!resolvedSchema.properties || Object.hasOwn(resolvedSchema.properties, dependencyKey))
     ) {
       const [remainingDependencies, dependencyValue] = splitKeyElementFromObject(dependencyKey, dependencies);
       if (Array.isArray(dependencyValue)) {
@@ -2091,7 +2086,7 @@ export function withExactlyOneSubschema<
     if (typeof subschema === 'boolean' || !subschema?.properties) {
       return false;
     }
-    const { [dependencyKey]: conditionPropertySchema } = subschema.properties;
+    const conditionPropertySchema = getByPath(subschema.properties, dependencyKey);
     if (conditionPropertySchema) {
       const conditionSchema: S = {
         type: 'object',
