@@ -235,7 +235,7 @@ const validator = createPrecompiledValidator(precompiledValidator, schema);
 const compileSchemaValidators = require('@rjsf/validator-ata/compileSchemaValidators').default;
 const yourSchema = require('path_to/yourSchema.json');
 
-// The third argument takes customFormats (RegExps or pattern strings) and ataOptionsOverrides.verbose.
+// The third argument takes the options customizeValidator() takes, with the limits listed below.
 compileSchemaValidators(yourSchema, 'path_to/yourCompiledSchema.cjs', {
   customFormats: { 'phone-us': /\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$/ },
 });
@@ -253,7 +253,9 @@ const validator = createPrecompiledValidator(precompiledValidatorFns as Validato
 
 Things to know:
 
-- Only `customFormats` and `ataOptionsOverrides.verbose` apply at compile time. Custom formats must be a `RegExp` or a pattern string: a function cannot be written into the generated file. `additionalMetaSchemas`, `extenderFn` and other `ataOptionsOverrides` keys would make the file validate differently from the runtime validator, so compiling with them throws. Pass `suppressDuplicateFiltering` to `createPrecompiledValidator()`.
+- `customFormats` and `ataOptionsOverrides` apply at compile time. Custom formats must be a `RegExp` or a pattern string: a function cannot be written into the generated file and is rejected.
+- `extenderFn`, `additionalMetaSchemas` and the `ataOptionsOverrides` keys `coerceTypes`, `removeAdditional`, `keywords` and `schemas` cannot be carried into the generated file. They are ignored with a warning, and the file may then reject data the runtime validator accepts.
+- Pass `suppressDuplicateFiltering` to `createPrecompiledValidator()`.
 - The generated file imports nothing, so `ata-validator` is not in your bundle, as long as the app imports only `createPrecompiledValidator` (and types). Importing the default export, `customizeValidator` or `ATAValidator` brings the runtime validator back.
 - The generated file is CommonJS, like the one from `@rjsf/validator-ajv8`. Webpack, Rollup and production Vite builds handle it. Vite's dev server does not convert CommonJS files inside your source folder.
 - The file has no type declarations. With TypeScript, cast it to `ValidatorFunctions` as above and add `declare module '*.cjs';` to a `.d.ts` file, or enable `allowJs`.

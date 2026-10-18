@@ -1,5 +1,6 @@
 import type { RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { schemaParser } from '@rjsf/utils';
+import type { ValidatorOptions } from 'ata-validator';
 import { Validator } from 'ata-validator';
 
 import { COLOR_FORMAT_REGEX, DATA_URL_FORMAT_REGEX } from './createAtaInstance.ts';
@@ -12,11 +13,13 @@ import type { CustomValidatorOptionsType } from './types.ts';
  * `createPrecompiledValidator` consumes, keyed the same way `schemaParser` keys
  * the schemas so the precompiled validator can look each one up.
  *
- * Only `customFormats` (as RegExps or pattern strings) and `ataOptionsOverrides.verbose`
- * apply at compile time. `additionalMetaSchemas`, `extenderFn` and any other
- * `ataOptionsOverrides` key would change what the validator accepts, and the generated
- * module cannot carry them, so they throw rather than being dropped.
- * `suppressDuplicateFiltering` is given to `createPrecompiledValidator()` instead.
+ * `customFormats` (as RegExps or pattern strings) and `ataOptionsOverrides` are passed to
+ * ata, so the module validates as the runtime validator with the same options does. A few
+ * options cannot be carried into a standalone module: `extenderFn`, `additionalMetaSchemas`,
+ * and the `ataOptionsOverrides` keys `coerceTypes`, `removeAdditional`, `keywords` and
+ * `schemas`. Those are left out with a `console.warn`, since the module may then reject
+ * data the runtime validator accepts. `suppressDuplicateFiltering` is given to
+ * `createPrecompiledValidator()` instead.
  *
  * @param schema - The schema to compile
  * @param [options={}] - The `CustomValidatorOptionsType` used to build the validator
@@ -30,16 +33,25 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
   const schemas = Object.values(schemaMaps);
 
   const { customFormats, additionalMetaSchemas, extenderFn, ataOptionsOverrides = {} } = options;
-  const unsupported = [
-    ...(additionalMetaSchemas?.length ? ['additionalMetaSchemas'] : []),
+  const { coerceTypes, removeAdditional, keywords, schemas: extraSchemas } = ataOptionsOverrides;
+  // What the module cannot carry is left out. `engine` only picks how the runtime validator
+  // answers, never what it answers, and a standalone module is generated code by definition.
+  const carried: ValidatorOptions = { ...ataOptionsOverrides };
+  for (const key of ['coerceTypes', 'removeAdditional', 'keywords', 'schemas', 'engine'] as const) {
+    delete carried[key];
+  }
+  const dropped = [
     ...(extenderFn ? ['extenderFn'] : []),
-    ...Object.keys(ataOptionsOverrides)
-      .filter((key) => key !== 'verbose')
-      .map((key) => `ataOptionsOverrides.${key}`),
+    ...(additionalMetaSchemas?.length ? ['additionalMetaSchemas'] : []),
+    ...(coerceTypes ? ['ataOptionsOverrides.coerceTypes'] : []),
+    ...(removeAdditional ? ['ataOptionsOverrides.removeAdditional'] : []),
+    ...(keywords && Object.keys(keywords).length ? ['ataOptionsOverrides.keywords'] : []),
+    ...(extraSchemas && Object.keys(extraSchemas).length ? ['ataOptionsOverrides.schemas'] : []),
   ];
-  if (unsupported.length > 0) {
-    throw new Error(
-      `@rjsf/validator-ata: ${unsupported.join(', ')} cannot be applied to a precompiled validator; the generated module would validate differently from the runtime validator. Only customFormats and ataOptionsOverrides.verbose apply at compile time`,
+  if (dropped.length > 0) {
+    // oxlint-disable-next-line no-console
+    console.warn(
+      `@rjsf/validator-ata: ${dropped.join(', ')} cannot be carried into a precompiled validator and ${dropped.length === 1 ? 'is' : 'are'} ignored; the precompiled validator may reject data the runtime validator accepts`,
     );
   }
 
@@ -77,8 +89,9 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
   }
 
   const bundle = Validator.bundleStandalone(schemas, {
+    verbose: true,
+    ...carried,
     format: 'cjs',
-    verbose: ataOptionsOverrides.verbose !== false,
     formats,
   });
 

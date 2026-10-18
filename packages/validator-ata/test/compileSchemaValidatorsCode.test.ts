@@ -125,18 +125,50 @@ describe('compileSchemaValidatorsCode', () => {
     ).toThrow(/custom format "evenLength" is a function/);
   });
 
-  test('rejects options the generated module cannot carry, instead of dropping them', () => {
-    expect(() => compileSchemaValidatorsCode(schema, { ataOptionsOverrides: { coerceTypes: true } })).toThrow(
-      /ataOptionsOverrides\.coerceTypes cannot be applied to a precompiled validator/,
+  test('passes ataOptionsOverrides through to the compiled output', () => {
+    const emailSchema: RJSFSchema = {
+      $id: 'email',
+      type: 'object',
+      properties: { email: { type: 'string', format: 'email' } },
+    };
+    const strict = loadModule(compileSchemaValidatorsCode(emailSchema));
+    const loose = loadModule(
+      compileSchemaValidatorsCode(emailSchema, { ataOptionsOverrides: { assertFormat: false } }),
     );
-    expect(() => compileSchemaValidatorsCode(schema, { additionalMetaSchemas: [{ $id: 'extra' }] })).toThrow(
-      /additionalMetaSchemas cannot be applied/,
-    );
-    expect(() => compileSchemaValidatorsCode(schema, { extenderFn: (v) => v })).toThrow(/extenderFn cannot be applied/);
-    // The options that do apply still compile.
-    expect(() =>
-      compileSchemaValidatorsCode(schema, { ataOptionsOverrides: { verbose: false }, additionalMetaSchemas: [] }),
-    ).not.toThrow();
+    expect(strict.email({ email: 'nope' })).toBe(false);
+    expect(loose.email({ email: 'nope' })).toBe(true);
+  });
+
+  test('warns about options the generated module cannot carry, and still compiles', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      const code = compileSchemaValidatorsCode(schema, {
+        ataOptionsOverrides: { coerceTypes: true, removeAdditional: true },
+        additionalMetaSchemas: [{ $id: 'extra' }],
+        extenderFn: (v) => v,
+      });
+      expect(typeof loadModule(code).root).toBe('function');
+      expect(warn).toHaveBeenCalledTimes(1);
+      expect(warn.mock.calls[0][0]).toMatch(
+        /extenderFn, additionalMetaSchemas, ataOptionsOverrides\.coerceTypes, ataOptionsOverrides\.removeAdditional cannot be carried/,
+      );
+
+      // Options that only restate defaults, or do not change answers, compile without a warning.
+      warn.mockClear();
+      compileSchemaValidatorsCode(schema, {
+        ataOptionsOverrides: {
+          verbose: true,
+          useDefaults: true,
+          abortEarly: false,
+          coerceTypes: undefined,
+          logger: false,
+        },
+        additionalMetaSchemas: [],
+      });
+      expect(warn).not.toHaveBeenCalled();
+    } finally {
+      warn.mockRestore();
+    }
   });
 
   test('reports per-field errors for schema-valued additionalProperties', () => {
