@@ -18,6 +18,7 @@ import {
   fieldPathToList,
 } from '@rjsf/utils';
 
+import isDevelopment from '../isDevelopment.ts';
 import type { FormProps, FormState } from './Form.tsx';
 import type { FormRef } from './FormRef.ts';
 import type { AnnouncedMove, FieldChange, MoveOutcome } from './formState.ts';
@@ -34,7 +35,6 @@ import {
   deriveState,
   freezeFormData,
   isBlurValidated,
-  isDevelopment,
   isLiveValidated,
   toEventFormData,
   toIChangeEvent,

@@ -29,6 +29,7 @@
     "./lib/describeUnresolvedComponent.js": null,
     "./lib/fieldLabelForLog.js": null,
     "./lib/hasOptionLabels.js": null,
+    "./lib/isDevelopment.js": null,
     "./lib/*.js": "./lib/*.js",
     "./testing": {
       "@rjsf/source": "./src/testing.ts",

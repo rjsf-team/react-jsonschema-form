@@ -1498,6 +1498,29 @@ describe('form data ownership', () => {
         expect(String(passThroughWarnings()[0][0])).toContain('root_list');
       });
 
+      it('warns once for a field remounted with a key, naming it by its path as well as its id', () => {
+        function SortedList(props: FieldProps<string[]>) {
+          const { ArrayField } = props.registry.fields;
+          return <ArrayField {...props} formData={[...(props.formData ?? [])].sort()} />;
+        }
+        const form = (key: number) => (
+          <Form<ListData>
+            key={key}
+            schema={listSchema}
+            uiSchema={{ list: { 'ui:field': SortedList } }}
+            validator={validator}
+            initialFormData={{ list: ['b', 'a'] }}
+          />
+        );
+        const { rerender } = render(form(0));
+
+        rerender(form(1));
+        rerender(form(2));
+
+        expect(passThroughWarnings()).toHaveLength(1);
+        expect(String(passThroughWarnings()[0][0])).toContain('"root_list" (list)');
+      });
+
       it('does not warn for wrappers that pass formData through, or a widget that edits as it mounts', () => {
         function PassingRecord(props: FieldProps) {
           const { ObjectField } = props.registry.fields;
