@@ -310,7 +310,8 @@ export default class AJV8Validator<
       // https://ajv.js.org/guide/managing-schemas.html#pre-adding-all-schemas-vs-adding-on-demand
       const registered = this.ajv.getSchema(schemaId);
       if (registered === undefined) {
-        this.subschemaIds.add(schemaId);
+        // Ajv keys a schema by its `$id` without an empty trailing fragment, so it is removed under that key
+        this.subschemaIds.add(schemaId.replace(/#$/, ''));
       }
       const compiledValidator =
         registered ??

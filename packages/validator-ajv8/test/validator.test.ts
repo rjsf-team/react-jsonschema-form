@@ -3479,14 +3479,17 @@ describe('AJV8Validator resolving a $ref local to the root', () => {
     expect(schemaUtils.getFirstMatchingOption({ v: 'b' }, options)).toBe(0);
     expect(schemaUtils.getClosestMatchingOption({ v: 'b' }, options)).toBe(0);
   });
-  it('compiles a schema with an $id of its own anew under each root it is checked against', () => {
-    const validator = new AJV8Validator({});
-    const rootA: RJSFSchema = { $id: 'http://a.example/root.json', definitions: { x: { type: 'string' } } };
-    const rootB: RJSFSchema = { $id: 'http://b.example/root.json', definitions: { x: { type: 'number' } } };
-    const own: RJSFSchema = { $id: 'http://s.example/sub.json', $ref: '#/definitions/x' };
-    expect(validator.isValid(own, 'str', rootA)).toBe(true);
-    expect(validator.isValid(own, 1, rootB)).toBe(true);
-    expect(validator.isValid(own, 'str', rootB)).toBe(false);
-    expect(validator.isValid(own, 'str', rootA)).toBe(true);
-  });
+  it.each(['http://s.example/sub.json', 'http://s.example/sub.json#'])(
+    'compiles a schema with an $id of its own, %s, anew under each root it is checked against',
+    (id) => {
+      const validator = new AJV8Validator({});
+      const rootA: RJSFSchema = { $id: 'http://a.example/root.json', definitions: { x: { type: 'string' } } };
+      const rootB: RJSFSchema = { $id: 'http://b.example/root.json', definitions: { x: { type: 'number' } } };
+      const own: RJSFSchema = { $id: id, $ref: '#/definitions/x' };
+      expect(validator.isValid(own, 'str', rootA)).toBe(true);
+      expect(validator.isValid(own, 1, rootB)).toBe(true);
+      expect(validator.isValid(own, 'str', rootB)).toBe(false);
+      expect(validator.isValid(own, 'str', rootA)).toBe(true);
+    },
+  );
 });
