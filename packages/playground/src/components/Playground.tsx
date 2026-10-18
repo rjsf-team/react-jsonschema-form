@@ -341,8 +341,9 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
     [setFormData, setShareURL],
   );
 
-  // The form fills in the defaults a new schema, uiSchema or default-state setting brings without calling `onChange`, so
-  // the formData editor, a share link and the raw validation would go on showing the data from before. The form's data
+  // The form fills in the defaults a new schema, uiSchema or default-state setting brings without calling `onChange`, as
+  // it does for the data it is remounted with by a load, an edit in the formData editor or a theme switch, so the
+  // formData editor, a share link and the raw validation would go on showing the data from before. The form's data
   // lives in its own model, outside the playground's state, so it is read once the commit that passes the change is
   // done, the way an Effect synchronizes with an external system; data that `onChange` already reported is kept as it is
   useEffect(() => {
@@ -353,7 +354,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
     const derived = form.getFormData();
     setFormData((previous: unknown) => (deepEquals(previous, derived) ? previous : derived));
     // oxlint-disable-next-line react/exhaustive-effect-dependencies -- the props the form re-derives its data from, after whose commit the Effect re-reads it
-  }, [schema, uiSchema, liveSettings]);
+  }, [schema, uiSchema, liveSettings, loadKey, editKey, theme]);
 
   const onFormDataSubmit = useCallback(
     ({ formData: submittedFormData }: IChangeEvent, event: SubmitEvent<HTMLFormElement>) => {
