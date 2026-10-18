@@ -45,6 +45,16 @@ export function isValueEmpty(value: unknown): boolean {
   return false;
 }
 
+const EMPTY_SCHEMA: StrictRJSFSchema = Object.freeze({});
+
+/** The empty schema a field renders a boolean option as, one object for every call, so that retrieving it reuses the
+ * memos keyed on the schema rather than parsing a new one each time
+ */
+function emptySchema<S extends StrictRJSFSchema>(): S;
+function emptySchema(): StrictRJSFSchema {
+  return EMPTY_SCHEMA;
+}
+
 /** The filtered data, in the type of the data it was filtered from */
 function dataOf<T>(value: unknown): T | undefined;
 function dataOf(value: unknown): unknown {
@@ -309,7 +319,7 @@ export default function omitExtraData<
       const views = oneOf.map((option) =>
         retrieveSchema<unknown, S, F>(
           context,
-          isSchemaObject<S>(option) ? option : schemaFrom(rootSchema, {}),
+          isSchemaObject<S>(option) ? option : emptySchema<S>(),
           rootSchema,
           source,
         ),

@@ -1719,6 +1719,25 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         expect(Object.keys(dependent.properties ?? {})).toEqual(expect.arrayContaining(['a', 'b']));
       });
 
+      it('hands the form state the same view of a boolean option on every call', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { thing: { anyOf: [true, { type: 'object', properties: { a: { type: 'string' } } }] } },
+        };
+        const asked: RJSFSchema[][] = [];
+        const fieldState: FormFieldState = {
+          selectedOption: (_fieldPath, options) => {
+            asked.push(options);
+            return 1;
+          },
+          isExpanded: () => false,
+        };
+        omitExtraData({ validator: testValidator }, schema, schema, { thing: { a: 'x' } }, fieldState);
+        omitExtraData({ validator: testValidator }, schema, schema, { thing: { a: 'y' } }, fieldState);
+        expect(asked).toHaveLength(2);
+        expect(asked[1][0]).toBe(asked[0][0]);
+      });
+
       it('applies all anyOf branches when source is an empty array', () => {
         // An empty array is an empty collection — all branches are applied so defaults flow through.
         // Neither branch declares type:'array' so both return undefined; the outer type:'array'

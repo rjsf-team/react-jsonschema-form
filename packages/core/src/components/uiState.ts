@@ -109,10 +109,14 @@ function heldAfterEdit(selection: OptionSelection, data: unknown, isProposal: bo
   return { ...selection, holdsFor: isProposal ? [...selection.holdsFor, data] : [data] };
 }
 
-/** A `true` option is any value, which a field renders as the empty schema */
+const EMPTY_SCHEMA: StrictRJSFSchema = Object.freeze({});
+
+/** The empty schema a field renders a boolean option as, one object for every render, so that retrieving it reuses the
+ * memos keyed on the schema rather than parsing a new one each time
+ */
 function emptySchema<S extends StrictRJSFSchema>(): S;
 function emptySchema(): StrictRJSFSchema {
-  return {};
+  return EMPTY_SCHEMA;
 }
 
 /** The options of a field whose retrieved schema is `view`, each retrieved for `formData`; undefined where it offers
