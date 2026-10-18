@@ -15,7 +15,7 @@ import { userEvent } from '@testing-library/user-event';
 import { collectDeferredThrows } from '../../../testing/deferredThrows.ts';
 import Form, { FieldTemplate as DefaultFieldTemplate } from '../src/index.ts';
 import type { FormProps, IChangeEvent } from '../src/index.ts';
-import { createFormRef, elementOf, handleOf, input } from './testUtils.tsx';
+import { createFormRef, elementOf, handleOf, input, setupConsoleWarnSuppression } from './testUtils.tsx';
 
 const user = userEvent.setup();
 
@@ -50,6 +50,45 @@ function renderForm<D>(props: Omit<FormProps<D>, 'validator' | 'onChange'>) {
 }
 
 describe('transformChange', () => {
+  const warnings = setupConsoleWarnSuppression();
+  /** The warnings the form gave about a `transformChange` that returned nothing */
+  const returnedNothingWarnings = () =>
+    warnings.consoleSpy.mock.calls.filter(([message]) =>
+      String(message).includes('`transformChange` returned `undefined`'),
+    );
+
+  it('warns once in development when it returns undefined for an edit that left data, as one with a missing return does', async () => {
+    const { node, reported } = renderForm<Person>({
+      schema,
+      initialFormData: seed(),
+      // A rule written with a block body that returns only on the path that refuses
+      transformChange: (next, previous) => (next?.first === 'x' ? previous : undefined),
+    });
+
+    await user.type(input(node, 'root_first'), 'ab');
+
+    expect(reported.at(-1)?.formData).toBeUndefined();
+    expect(returnedNothingWarnings()).toHaveLength(1);
+  });
+
+  it('does not warn when it returns undefined for an edit that left no data', () => {
+    const ref = createFormRef<string>();
+    render(
+      <Form<string>
+        ref={ref}
+        schema={{ type: 'string' }}
+        validator={validator}
+        initialFormData='a'
+        transformChange={(next) => next}
+      />,
+    );
+
+    act(() => handleOf(ref).setFieldValue('', undefined));
+
+    expect(handleOf(ref).getFormData()).toBeUndefined();
+    expect(returnedNothingWarnings()).toHaveLength(0);
+  });
+
   it('refuses an edit by returning the data before it, with no ref call', async () => {
     const transformChange: FormProps<Person>['transformChange'] = (next, previous) =>
       next?.first?.includes('x') ? previous : next;

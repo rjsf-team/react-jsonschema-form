@@ -95,6 +95,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   const heldScalars = new Set<unknown>();
   let isIgnoredFormDataWarned = false;
   let isBothSeedsWarned = false;
+  let isEmptyTransformWarned = false;
   const hold = (data: unknown) => {
     if (!isDevelopment) {
       return;
@@ -278,6 +279,13 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
         ? copyAlongPath(edited.formData, [])
         : edited.formData;
     const returned = props.transformChange ? props.transformChange(next, base.formData) : next;
+    if (isDevelopment && returned === undefined && next !== undefined && !isEmptyTransformWarned) {
+      isEmptyTransformWarned = true;
+      // oxlint-disable-next-line no-console
+      console.warn(
+        'Form: `transformChange` returned `undefined` for an edit that left the form with data, so the form now holds no data. A function body that does not return on every path does this: return `next` to take an edit and `previous` to refuse it.',
+      );
+    }
     if (Object.is(returned, next)) {
       return { next: applyChangeToErrorsOf(edited, base.formData, change, props, isValidated) };
     }
