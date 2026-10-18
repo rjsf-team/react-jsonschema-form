@@ -1,4 +1,4 @@
-import { REF_KEY } from '../constants.ts';
+import { ALL_OF_KEY, REF_KEY } from '../constants.ts';
 import deepEquals from '../deepEquals.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getXxxOfKey from '../getXxxOfKey.ts';
@@ -292,7 +292,8 @@ export function closestOption<S extends StrictRJSFSchema = RJSFSchema, F extends
   relax: boolean,
   discriminatorField?: string,
 ): number {
-  return bestOption<T, S, F>(context, rootSchema, formData, options, selectedOption, relax, discriminatorField).index;
+  return bestOption<unknown, S, F>(context, rootSchema, formData, options, selectedOption, relax, discriminatorField)
+    .index;
 }
 
 /** Determines which of the given `options` provided most closely matches the `formData`. An option whose

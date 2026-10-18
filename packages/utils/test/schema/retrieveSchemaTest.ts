@@ -2804,6 +2804,16 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           name: { type: 'string' },
         });
       });
+      it('does not stub a key a selected option written as a $ref with properties beside it declares through its definition', () => {
+        const root: RJSFSchema = {
+          definitions: { Pet: { type: 'object', properties: { name: { type: 'string' } } } },
+          type: 'object',
+          additionalProperties: { type: 'string' },
+          anyOf: [{ $ref: '#/definitions/Pet', properties: { meow: { type: 'string' } } }],
+        };
+        const name = retrieveSchema({ validator: testValidator }, root, root, { name: 'x' }, false, 0).properties?.name;
+        expect(isObject(name) && Reflect.get(name, ADDITIONAL_PROPERTY_FLAG)).toBeFalsy();
+      });
       it('deals with undefined formData', () => {
         const schema: RJSFSchema = { type: 'string' };
         expect(stubExistingAdditionalProperties({ validator: testValidator }, schema)).toEqual({

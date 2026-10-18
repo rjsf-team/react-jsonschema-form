@@ -228,6 +228,10 @@ function mergesNothing<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, seeds:
  * keyword of its own, is planned from its own keywords, with the ref path and chain of the field it copies: restarting
  * the ref path would let a field that copies its schema at every level recurse without end. Only `expandRefCycle()`
  * restarts them.
+ *
+ * @param graph - The graph of the current root
+ * @param schema - The schema whose field is wanted
+ * @returns - The provenance of the field
  */
 export function fieldOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, schema: S): Provenance<S> {
   const stamped = readProvenance<S>(schema, graph);

@@ -318,7 +318,7 @@ export default function omitExtraData<
     } else {
       // `additionalProperties: false` is relaxed for matching only, so the data's extra keys don't rule out the option
       // that is then applied with it, to omit them
-      winning = oneOf[closestOption<unknown, S, F>(context, rootSchema, source, oneOf, 0, true, discriminator)];
+      winning = oneOf[closestOption<S, F>(context, rootSchema, source, oneOf, 0, true, discriminator)];
     }
     // An index naming no option, as -1 does for none shown, keeps nothing the options describe, as a `false` option does
     return omit(resolveOwnRef<S>(asOption(winning), rootSchema), source, path, target, false);
