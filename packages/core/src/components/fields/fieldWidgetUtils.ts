@@ -43,12 +43,10 @@ export function getArrayFieldMode<
   F extends FormContextType = FormContextType,
 >(schema: S, uiSchema: UiSchema<T, S, F> | undefined, registry: Registry<T, S, F>): ArrayFieldMode {
   const { schemaUtils, globalFormOptions } = registry;
-  const isMissingItems = !(ITEMS_KEY in schema);
-  if (isMissingItems && !globalFormOptions.useFallbackUiForUnsupportedType) {
+  if (!(ITEMS_KEY in schema) && !globalFormOptions.useFallbackUiForUnsupportedType) {
     return 'unsupported';
   }
-  // An items schema with type as undefined triggers FallbackField later on
-  const arraySchema = isMissingItems ? { ...schema, [ITEMS_KEY]: { type: undefined } } : schema;
+  const arraySchema = withFallbackItems<S>(schema);
   if (schemaUtils.isMultiSelect(arraySchema)) {
     return 'multiSelect';
   }
@@ -62,6 +60,16 @@ export function getArrayFieldMode<
     return 'files';
   }
   return 'normal';
+}
+
+/** Gets the schema `ArrayField` renders an array with: one that declares no `items` takes an items schema with no type,
+ * which the fallback UI renders through `FallbackField`
+ *
+ * @param schema - The schema of the array
+ * @returns - The schema, with an untyped `items` where it declares none
+ */
+export function withFallbackItems<S extends StrictRJSFSchema = RJSFSchema>(schema: S): S {
+  return ITEMS_KEY in schema ? schema : { ...schema, [ITEMS_KEY]: { type: undefined } };
 }
 
 /** The widget each widget-rendering mode of `ArrayField` falls back to when the `uiSchema` names none, which
@@ -78,6 +86,7 @@ export const ARRAY_MODE_DEFAULT_WIDGETS: Readonly<Record<'multiSelect' | 'files'
  * @param schema - The schema of the field
  * @param uiSchema - The uiSchema of the field
  * @param registry - The registry, whose `schemaUtils` and `widgets` are read
+ * @param [uiOptions] - The field's ui options, where its caller has read them already
  * @returns - The widget and the `enumOptions`, if the schema is a select
  */
 export function resolveStringFieldWidget<
@@ -88,6 +97,7 @@ export function resolveStringFieldWidget<
   schema: S,
   uiSchema: UiSchema<T, S, F> | undefined,
   registry: Registry<T, S, F>,
+  uiOptions: UIOptionsType<T, S, F> = getUiOptions<T, S, F>(uiSchema),
 ): { widget: Widget<T, S, F> | string; enumOptions: EnumOptionsType<S>[] | undefined } {
   const { defaultWidget, enumOptions } = resolveDefaultWidget<T, S, F>(
     schema,
@@ -95,23 +105,22 @@ export function resolveStringFieldWidget<
     registry.schemaUtils,
     registry.widgets,
   );
-  const { widget = defaultWidget } = getUiOptions<T, S, F>(uiSchema);
+  const { widget = defaultWidget } = uiOptions;
   return { widget, enumOptions };
 }
 
 /** Gets the widget `BooleanField` renders with: its `ui:widget`, `ui:globalOptions` included, or a checkbox for none
  * or a `null` one
  *
- * @param uiSchema - The uiSchema of the field
- * @param registry - The registry, whose `globalUiOptions` are read
+ * @param uiOptions - The field's ui options, read with the registry's `globalUiOptions`
  * @returns - The widget
  */
 export function getBooleanFieldWidget<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(uiSchema: UiSchema<T, S, F> | undefined, registry: Registry<T, S, F>): Widget<T, S, F> | string {
-  return getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions).widget ?? 'checkbox';
+>(uiOptions: UIOptionsType<T, S, F>): Widget<T, S, F> | string {
+  return uiOptions.widget ?? 'checkbox';
 }
 
 /** Gets the single widget `ArrayField` renders an array with, or `undefined` when it renders a list of items or the
@@ -122,7 +131,7 @@ export function getBooleanFieldWidget<
  * @param registry - The registry
  * @returns - The widget, if the array renders as one
  */
-export function getArrayFieldWidget<
+function getArrayFieldWidget<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
@@ -298,10 +307,36 @@ export default function getFieldWidget<
     return resolveStringFieldWidget<T, S, F>(schema, uiSchema, registry).widget;
   }
   if (field === fields.BooleanField) {
-    return getBooleanFieldWidget<T, S, F>(uiSchema, registry);
+    return getBooleanFieldWidget<T, S, F>(getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions));
   }
   if (field === fields.ArrayField) {
     return getArrayFieldWidget<T, S, F>(schema, uiSchema, registry);
   }
   return undefined;
+}
+
+/** Gets a plan's `describedBy` without the ids of parts it leaves to the field below, and its control described by the
+ * parts still left, marked invalid while its errors show, so neither names a part nothing draws here
+ *
+ * @param presentation - The plan
+ * @param ids - The ids of the parts left to the field below
+ * @returns - The plan's `describedBy` and `control`
+ */
+export function withoutDescribers(
+  presentation: FieldPresentation,
+  ids: ReadonlySet<string>,
+): Pick<FieldPresentation, 'describedBy' | 'control'> {
+  const { describedBy, control, errors } = presentation;
+  const shownDescribers = describedBy.filter((id) => !ids.has(id));
+  if (!control) {
+    return { describedBy: shownDescribers, control };
+  }
+  const { 'aria-describedby': _describedBy, 'aria-invalid': _invalid, ...attributes } = control.attributes;
+  return {
+    describedBy: shownDescribers,
+    control: {
+      ...control,
+      attributes: { ...attributes, ...getDescribedControlAttributes(shownDescribers, errors.messages) },
+    },
+  };
 }

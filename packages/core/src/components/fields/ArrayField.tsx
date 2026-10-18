@@ -31,7 +31,6 @@ import {
   fieldPathEndsWithIndex,
   fieldPathToId,
   fieldPathToName,
-  ITEMS_KEY,
   TranslatableString,
 } from '@rjsf/utils';
 
@@ -46,6 +45,7 @@ import {
   getWidgetLabelProps,
   withFallbackItems,
 } from './fieldWidgetUtils.ts';
+import OwnTitleAndDescription from './OwnTitleAndDescription.tsx';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 
 /** A row's stable React `key`, and its `order`: when the row was added, counted across every array */
@@ -180,6 +180,24 @@ interface ArrayAsFieldProps<
   onSelectChange: (value: T) => void;
   /** The HTML name for the widget, generated with the multi-value flag since these widgets accept several values */
   htmlName?: string;
+}
+
+/** Gets the label props an array rendered as one widget hands it: its `ui:title`, else its schema `title`, else its
+ * name, shown as its plan says, or where `getDisplayLabel()` lets it without a plan
+ *
+ * @param props - The array's props
+ * @param [uiTitle] - The array's `ui:title`
+ * @returns - The widget's label props
+ */
+function getArrayWidgetLabelProps<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: ArrayAsFieldProps<T[], S, F>, uiTitle: string | undefined) {
+  const { presentation, schema, uiSchema, name, registry } = props;
+  return getWidgetLabelProps<T, S, F>(presentation, uiTitle ?? schema.title ?? name, () =>
+    displaysLabel(registry, schema, uiSchema),
+  );
 }
 
 /** Renders an array as a set of checkboxes using the 'select' widget
@@ -1280,17 +1298,19 @@ export default function ArrayField<
     const { UnsupportedFieldTemplate } = getTemplates<T[], S, F>(registry, uiOptions);
 
     return vouchForItems(
-      <UnsupportedFieldTemplate
-        schema={schema}
-        uiSchema={uiSchema}
-        id={fieldId}
-        reason={translateString(TranslatableString.MissingItems)}
-        registry={registry}
-      />,
+      <>
+        <OwnTitleAndDescription<T[], S, F> {...props} />
+        <UnsupportedFieldTemplate
+          schema={schema}
+          uiSchema={uiSchema}
+          id={fieldId}
+          reason={translateString(TranslatableString.MissingItems)}
+          registry={registry}
+        />
+      </>,
     );
   }
-  // An items schema with type as undefined triggers FallbackField later on
-  const arraySchema = ITEMS_KEY in schema ? schema : { ...schema, [ITEMS_KEY]: { type: undefined } };
+  const arraySchema = withFallbackItems<S>(schema);
   const arrayAsMultiProps: ArrayAsFieldProps<T[], S, F> = {
     ...props,
     schema: arraySchema,

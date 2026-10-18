@@ -33,8 +33,9 @@ function StringField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
   } = props;
   const { title: schemaTitle } = schema;
   const { widgets } = registry;
-  const { widget, enumOptions } = resolveStringFieldWidget<T, S, F>(schema, uiSchema, registry);
-  const { widget: _widget, placeholder = '', title: uiTitle, ...options } = getUiOptions<T, S, F>(uiSchema);
+  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const { widget, enumOptions } = resolveStringFieldWidget<T, S, F>(schema, uiSchema, registry, uiOptions);
+  const { widget: _widget, placeholder = '', title: uiTitle, ...options } = uiOptions;
   const labelProps = getWidgetLabelProps<T, S, F>(presentation, uiTitle ?? title ?? schemaTitle ?? name, () =>
     displaysLabel(registry, schema, uiSchema),
   );

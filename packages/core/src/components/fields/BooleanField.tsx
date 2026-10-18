@@ -75,6 +75,7 @@ function BooleanField<
   } = props;
   const { title: schemaTitle } = schema;
   const { widgets, translateString, globalUiOptions } = registry;
+  const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
   const {
     widget,
     title: uiTitle,
@@ -84,8 +85,8 @@ function BooleanField<
     enumNames: _enumNames,
     placeholder,
     ...options
-  } = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
-  const { Widget } = resolveWidget<T, S, F>(schema, getBooleanFieldWidget<T, S, F>(uiSchema, registry), widgets);
+  } = uiOptions;
+  const { Widget } = resolveWidget<T, S, F>(schema, getBooleanFieldWidget<T, S, F>(uiOptions), widgets);
   const yes = translateString(TranslatableString.YesLabel);
   const no = translateString(TranslatableString.NoLabel);
   let enumOptions: EnumOptionsType<S>[] | undefined;

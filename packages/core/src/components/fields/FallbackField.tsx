@@ -37,6 +37,7 @@ import {
 import type { JSONSchema7TypeName } from 'json-schema';
 
 import { displaysLabel } from './fieldWidgetUtils.ts';
+import OwnTitleAndDescription from './OwnTitleAndDescription.tsx';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 
 /**
@@ -522,7 +523,9 @@ function FallbackUiField<
 
 /**
  * The `FallbackField` component is used to render a field for unsupported or unknown schema types. If
- * `useFallbackUiForUnsupportedType` is enabled in the `globalUiOptions`, it provides a type selector
+ * `useFallbackUiForUnsupportedType` is enabled in the `globalUiOptions`, it provides a type selector. Otherwise it
+ * renders the unsupported-field template, which has no control for a label to name, under the title and description
+ * its plan has it draw itself
  */
 export default function FallbackField<
   T = unknown,
@@ -538,5 +541,10 @@ export default function FallbackField<
   const reason = props.reason ?? translateString(TranslatableString.UnknownFieldType, [String(schema.type)]);
   const { UnsupportedFieldTemplate } = getTemplates<T, S, F>(registry, getUiOptions<T, S, F>(uiSchema));
 
-  return <UnsupportedFieldTemplate schema={schema} uiSchema={uiSchema} id={id} reason={reason} registry={registry} />;
+  return (
+    <>
+      <OwnTitleAndDescription<T, S, F> {...props} />
+      <UnsupportedFieldTemplate schema={schema} uiSchema={uiSchema} id={id} reason={reason} registry={registry} />
+    </>
+  );
 }

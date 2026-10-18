@@ -166,7 +166,7 @@ export default function useSchemaFieldPresentation<
     required,
     inherited,
   } = inputs;
-  const { fields } = registry;
+  const { fields, globalFormOptions } = registry;
   let plannedField = field;
   let plannedKey = fieldKey;
   if (xxxOfKey !== undefined) {
@@ -178,6 +178,22 @@ export default function useSchemaFieldPresentation<
     () => (field && xxxOfKey === undefined ? getFieldWidget<T, S, F>(field, schema, uiSchema, registry) : undefined),
     [field, xxxOfKey, schema, uiSchema, registry],
   );
+  // Memoized, since a `FallbackField` asks `getDisplayLabel()`
+  const hasControl = useMemo(
+    () =>
+      plannedField !== undefined &&
+      !hidden &&
+      rendersControl<T, S, F>(plannedField, widget, registry, schema, uiSchema),
+    [plannedField, hidden, widget, registry, schema, uiSchema],
+  );
+  const fallbackDrawsNoControl = plannedField === fields.FallbackField && !hidden && !hasControl;
+  const usesFallbackUi = Boolean(globalFormOptions.useFallbackUiForUnsupportedType);
+  const arrayMissesItems = plannedField === fields.ArrayField && !hidden && !(ITEMS_KEY in schema);
+  const rendersUnsupportedTemplate = (fallbackDrawsNoControl || arrayMissesItems) && !usesFallbackUi;
+  // A field with no control of its own to name hands its label and description to the field below it rendering the same
+  // id, which draws them as its heading: the field rendering withheld options, and the fallback UI's field while its
+  // value is one that draws its own heading or label
+  const handsLabelDown = xxxOfKey === undefined ? fallbackDrawsNoControl && usesFallbackUi : hidden;
   const declaration = useMemo(() => {
     if (!plannedField) {
       return undefined;
@@ -188,35 +204,29 @@ export default function useSchemaFieldPresentation<
       fieldKey: plannedKey,
       widget,
     });
+    // The label and the description go to the field below, whatever the field declares, so the label isn't drawn where
+    // it has no control to name, and the description isn't drawn above the heading it describes
+    if (handsLabelDown) {
+      return { ...declared, label: 'template' as const, description: 'template' as const };
+    }
+    // The unsupported-field template has no control for a label to name, so `FallbackField`, or an array with no
+    // `items`, draws its title and description itself, above it, as `NullField` does
+    if (rendersUnsupportedTemplate) {
+      return { ...declared, label: 'self' as const, description: 'self' as const };
+    }
     if (xxxOfKey === undefined) {
       return declared;
-    }
-    // The field rendering the options draws its label only through its selector, so with the selector withheld, as for
-    // an opted-out optional field, there is no label of its own, and the field below keeps the heading it draws
-    if (hidden) {
-      return { ...declared, label: 'template' as const };
     }
     // Options that render no control leave a `for` at the field's id naming nothing, so the label names the selector
     // through `aria-labelledby` alone
     return optionsRenderNoControl<S>(schema, xxxOfKey)
       ? { ...declared, labelledBy: 'aria-labelledby' as const }
       : declared;
-  }, [registry, schema, plannedField, plannedKey, widget, xxxOfKey, hidden]);
+  }, [registry, schema, plannedField, plannedKey, widget, xxxOfKey, handsLabelDown, rendersUnsupportedTemplate]);
   // A control holding `false` left alone, as an unchecked checkbox does, would fail the browser's own check of a native
   // `required` for a value the schema accepts, so it is required, by its attribute and its marker alike, only where the
   // schema demands `true` (#5388)
-  const controlRequired = useMemo(
-    () => required && (!declaration?.uncheckedIsFalse || schemaRequiresTrueValue<S>(schema)),
-    [required, declaration, schema],
-  );
-  // Memoized, since a `FallbackField` asks `getDisplayLabel()`
-  const hasControl = useMemo(
-    () =>
-      plannedField !== undefined &&
-      !hidden &&
-      rendersControl<T, S, F>(plannedField, widget, registry, schema, uiSchema),
-    [plannedField, hidden, widget, registry, schema, uiSchema],
-  );
+  const controlRequired = required && (!declaration?.uncheckedIsFalse || schemaRequiresTrueValue<S>(schema));
   return useMemo(() => {
     if (!declaration) {
       return undefined;
@@ -235,9 +245,9 @@ export default function useSchemaFieldPresentation<
       required: controlRequired,
       inherited,
     });
-    // With the selector withheld, the label has no control to name and the option below draws it as its heading, so the
-    // description goes undrawn here too, for the option to draw beneath that heading rather than the template above it
-    if (xxxOfKey === undefined || !hidden || plan.description.by !== 'template') {
+    // The label has no control to name and the field below draws it as its heading, so the description goes undrawn here
+    // too, for the field below to draw beneath that heading rather than the template above it
+    if (!handsLabelDown || plan.description.by !== 'template') {
       return plan;
     }
     return {
@@ -258,7 +268,6 @@ export default function useSchemaFieldPresentation<
     hasControl,
     controlRequired,
     inherited,
-    xxxOfKey,
-    hidden,
+    handsLabelDown,
   ]);
 }

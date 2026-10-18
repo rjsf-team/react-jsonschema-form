@@ -534,8 +534,11 @@ function getOptionsPresentation(presentation: FieldPresentation, id: string, isC
   if (!isContainer) {
     return getPresentationHandedDown(presentation);
   }
-  if (isContainer) {
-    return { ...presentation, ...parts };
+  const { label, errors, control, describedBy } = presentation;
+  const parts = withoutOwnParts(presentation);
+  if (control === undefined && label.by === 'self') {
+    const attributes = getDescribedControlAttributes(describedBy, errors.messages);
+    return { ...presentation, ...parts, label: { ...label, by: 'above' }, control: { id, attributes } };
   }
   return { ...presentation, ...parts };
 }
@@ -824,7 +827,6 @@ function SchemaFieldRender<
     () => (plannedAsOptions && presentation ? getPresentationBesideOptions(presentation) : presentation),
     [plannedAsOptions, presentation],
   );
-  const renderedComponent = fieldToRender?.FieldComponent;
   const isContainer = renderedComponent === fields.ObjectField || renderedComponent === fields.ArrayField;
   // Keyed on whether the options render rather than on their array, which is retrieved afresh with every change of the
   // data, so a keystroke beside the options hands the selector the same plan

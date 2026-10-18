@@ -27,8 +27,9 @@ import { generateWidgets } from './components/widgets/index.ts';
  * draws only what its entry says, so the `FieldTemplate` draws the rest. The template labels a field whose value a
  * field below renders under the same id, the selected option or the fallback UI's value, so that field's control is
  * named once (#5358). `NullField`, which has no control for a label to name, draws its own title and description, as an
- * object does through the field default. Built fresh on every call, as the rest of the theme is, since a caller may
- * mutate it
+ * object does through the field default. A field rendered through the unsupported-field template draws its own as well,
+ * whatever its field declares, which `SchemaField` decides as it plans it. Built fresh on every call, as the rest of the
+ * theme is, since a caller may mutate it
  */
 function generatePresentation(): ThemePresentation {
   return {

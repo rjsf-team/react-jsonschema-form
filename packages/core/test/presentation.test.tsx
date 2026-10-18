@@ -348,6 +348,22 @@ describe('the plan SchemaField builds', () => {
       const heading = node.querySelector(`#${titleId('root_pets')}`)!;
       expect(heading.compareDocumentPosition(descriptions[0])).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
     });
+
+    it.each([
+      ['an array', arrays],
+      ['an object', objects],
+    ])('hands %s its description where the field declares it draws its own label and description', (_, anyOf) => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { pets: { title: 'Pets', description: 'Some pets', anyOf } } },
+        uiSchema: optional,
+        presentation: { fields: { AnyOfField: { label: 'self', description: 'self' } } },
+      });
+
+      const descriptions = screen.getAllByText('Some pets');
+      expect(descriptions).toHaveLength(1);
+      const heading = node.querySelector(`#${titleId('root_pets')}`)!;
+      expect(heading.compareDocumentPosition(descriptions[0])).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+    });
   });
 
   describe('an untitled anyOf option beneath a field whose own component draws its label', () => {
@@ -618,6 +634,79 @@ describe('an anyOf/oneOf whose options all render a container', () => {
 
     expect(outerTemplatePlans.get('root_pet')?.control?.attributes['aria-labelledby']).toBeUndefined();
   });
+});
+
+describe('a fallback field with no control for a label to name', () => {
+  const val: RJSFSchema = { type: ['object', 'boolean'], title: 'Val', description: 'A value' };
+
+  it.each([
+    ['the template', undefined],
+    ['the field itself', { fields: { FallbackField: { label: 'self' as const } } }],
+  ])(
+    "has the fallback UI's object value draw the heading and the description beneath it, where %s draws the label",
+    (_, presentation) => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { val } },
+        useFallbackUiForUnsupportedType: true,
+        presentation,
+      });
+
+      const heading = node.querySelector(`#${titleId('root_val')}`);
+      expect(heading).toHaveTextContent(/^Val$/);
+      const descriptions = screen.getAllByText('A value');
+      expect(descriptions).toHaveLength(1);
+      const typeSelect = screen.getByRole('combobox');
+      expect(typeSelect.compareDocumentPosition(heading!)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+      expect(heading!.compareDocumentPosition(descriptions[0])).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+    },
+  );
+
+  it('draws the title and description of a field rendered through the unsupported-field template above it', () => {
+    const { node } = createFormComponent({
+      schema: { type: 'object', properties: { foo: { title: 'Foo', description: 'Desc foo' } } },
+    });
+
+    const title = node.querySelector(`#${titleId('root_foo')}`);
+    expect(title).toHaveTextContent(/^Foo$/);
+    const description = screen.getByText('Desc foo');
+    const unsupported = node.querySelector('.unsupported-field')!;
+    expect(title!.compareDocumentPosition(description)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+    expect(description.compareDocumentPosition(unsupported)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+    expect(node.querySelector('label[for="root_foo"]')).toBeNull();
+  });
+
+  it('draws the title and description of an array with no items above the unsupported-field template', () => {
+    const { node } = createFormComponent({
+      schema: { type: 'object', properties: { arr: { type: 'array', title: 'Arr', description: 'Desc arr' } } },
+    });
+
+    const title = node.querySelector(`#${titleId('root_arr')}`);
+    expect(title).toHaveTextContent(/^Arr$/);
+    const description = screen.getByText('Desc arr');
+    const unsupported = node.querySelector('.unsupported-field')!;
+    expect(title!.compareDocumentPosition(description)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+    expect(description.compareDocumentPosition(unsupported)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+  });
+
+  it.each([
+    ['a field default', { fieldDefault: { label: 'template' as const, description: 'template' as const } }],
+    ['the array field', { fields: { ArrayField: { label: 'template' as const, description: 'template' as const } } }],
+  ])(
+    'draws the title and description of an array with no items above the unsupported-field template where %s leaves them to the template',
+    (_, presentation) => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { arr: { type: 'array', title: 'Arr', description: 'Desc arr' } } },
+        presentation,
+      });
+
+      const title = node.querySelector(`#${titleId('root_arr')}`);
+      expect(title).toHaveTextContent(/^Arr$/);
+      const description = screen.getByText('Desc arr');
+      const unsupported = node.querySelector('.unsupported-field')!;
+      expect(title!.compareDocumentPosition(description)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+      expect(description.compareDocumentPosition(unsupported)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+    },
+  );
 });
 
 describe('a ui:field wrapping SchemaField under its own id', () => {
