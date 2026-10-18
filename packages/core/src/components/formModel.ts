@@ -369,7 +369,9 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   };
 
   /** What a blurred field does to the form, after the `Form`'s `onBlur`: any live validation and live omit that the
-   * flags ask for on blur, reported through `onChange` when they changed what an `IChangeEvent` carries.
+   * flags ask for on blur, reported through `onChange` when they changed what an `IChangeEvent` carries. Run through
+   * `callWithDeferredThrow()` as a field's change is, since a field may report the blur from an Effect, where a throw
+   * from a validation callback or `onChange` would unmount the form.
    *
    * @param id - The unique `id` of the field that was blurred
    */
@@ -383,7 +385,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     const committed = commit(settled((base) => applyBlur(base, props)));
     // Only the `IChangeEvent` members count; the validator's own results are not among them
     if ((['formData', 'errors', 'errorSchema'] as const).some((key) => start[key] !== committed[key])) {
-      callWithDeferredThrow(() => props.onChange?.(toIChangeEvent(committed), id));
+      props.onChange?.(toIChangeEvent(committed), id);
     }
   };
 
@@ -613,7 +615,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       const props = committedProps;
       // Before the blur reads the state, so it validates an edit `onBlur` makes instead of reverting it
       callWithDeferredThrow(() => props.onBlur?.(id, data));
-      blur(id);
+      callWithDeferredThrow(() => blur(id));
     },
     handleFocus: (id: string, data: unknown) => {
       if (isDetached) {

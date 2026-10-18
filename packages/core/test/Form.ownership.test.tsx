@@ -2205,4 +2205,32 @@ describe('a throwing callback a field reports from an Effect', () => {
     expect(handleOf(ref).getFormData()).toEqual({ a: 'seed' });
     expect(onChange).not.toHaveBeenCalled();
   });
+
+  it("a customValidate that throws on a widget's layout Effect blur keeps the form mounted", async () => {
+    function BlurOnMountWidget({ id, value, onBlur }: WidgetProps) {
+      useLayoutEffect(() => {
+        onBlur(id, value);
+      }, [id, onBlur, value]);
+      return null;
+    }
+
+    const rethrown = await rethrownFromTimers(async () => {
+      render(
+        <Boundary>
+          <Form<Data>
+            schema={schema}
+            uiSchema={{ a: { 'ui:widget': BlurOnMountWidget } }}
+            validator={validator}
+            initialFormData={{ a: 'seed' }}
+            liveValidate='onBlur'
+            customValidate={boom}
+          />
+        </Boundary>,
+      );
+    });
+
+    expect(rethrown).toEqual([new Error('boom')]);
+    expect(screen.queryByText('Fallback')).toBeNull();
+    expect(document.querySelector('form')).toBeInTheDocument();
+  });
 });
