@@ -23,6 +23,7 @@ import {
   errorSchemaChild,
   getChangedFields,
   getDiscriminatorFieldFromSchema,
+  getSchemaType,
   getUiOptions,
   getXxxOfKey,
   hashObject,
@@ -1129,6 +1130,21 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
         // If we've seen the sanitized data before, we are done
         wasSanitized = !preventInfiniteSanitize.includes(sanitizedFormHash);
         preventInfiniteSanitize.push(sanitizedFormHash);
+        if (!wasSanitized) {
+          // A round that repeats ends on the data its fill makes of what sanitize left, as every other exit does: the
+          // sanitize may have cleared a value only the fill writes, such as the `null` of a property a condition just
+          // retyped to `null`, which it judges against the schema before the change
+          formData = replaceEqualDeep(
+            shareBase,
+            schemaUtils.getDefaultFormState(
+              rootSchema,
+              sanitizedFormData,
+              false,
+              initialDefaultsGenerated,
+              uiSchema,
+            ) as T,
+          );
+        }
       }
       if (!isFormDataSanitized) {
         preventInfiniteSanitize.push(formHash);
@@ -1735,8 +1751,9 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
           const isOneOfOrAnyOfLeaf = leaf && (ONE_OF_KEY in leaf || ANY_OF_KEY in leaf);
           // oneOf/anyOf and unresolved leaves keep `undefined` so mergeDefaults doesn't
           // re-apply a branch default when the user clears the widget.
-          // Plain resolved leaves use plainLeafWasCleared instead (see below).
-          if (!isOneOfOrAnyOfLeaf && leaf !== undefined) {
+          // Plain resolved leaves use plainLeafWasCleared instead (see below). A `null` field has nothing to clear:
+          // `null` is the one value it holds, which the defaults fill back in
+          if (!isOneOfOrAnyOfLeaf && leaf !== undefined && getSchemaType(leaf) !== 'null') {
             plainLeafWasCleared = true;
           }
         }
