@@ -122,6 +122,7 @@ export default function WrapIfAdditionalTemplate<
                   id={`${id}-key`}
                   name={`${id}-key`}
                   onBlur={!readonly ? onKeyRenameBlur : undefined}
+                  readOnly={readonly}
                   style={INPUT_STYLE}
                   type='text'
                 />

@@ -3,6 +3,8 @@ import type { FormContextType, TitleFieldProps, RJSFSchema, StrictRJSFSchema } f
 import { Col, Divider, Row, ConfigProvider } from 'antd';
 import classNames from 'classnames';
 
+import stripTrailingColon from '../stripTrailingColon.ts';
+
 /** The `TitleField` is the template to use to render the title of a field
  *
  * @param props - The `TitleFieldProps` for this component
@@ -17,7 +19,7 @@ export default function TitleField<
 
   let labelChildren = title;
   if (colon && typeof title === 'string' && title.trim() !== '') {
-    labelChildren = title.replace(/[：:]\s*$/, '');
+    labelChildren = stripTrailingColon(title);
   }
 
   const { getPrefixCls } = useContext(ConfigProvider.ConfigContext);

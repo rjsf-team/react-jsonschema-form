@@ -292,12 +292,15 @@ describe('antd specific tests', () => {
     expect(container.querySelector('#root_name')).toHaveAccessibleDescription('Your name');
   });
 
-  test("names a radio group by its label's text, without the icon of the tooltip it describes it by", () => {
-    render(
+  test("names a control by its label's text, without the icon of the tooltip it describes it by", () => {
+    const { container } = render(
       <Form
         schema={{
           type: 'object',
-          properties: { color: { type: 'string', title: 'Color', description: 'Pick one', enum: ['red', 'blue'] } },
+          properties: {
+            name: { type: 'string', title: 'Name', description: 'Your name' },
+            color: { type: 'string', title: 'Color', description: 'Pick one', enum: ['red', 'blue'] },
+          },
         }}
         uiSchema={{ color: { 'ui:widget': 'radio' } }}
         formContext={{ descriptionLocation: 'tooltip' }}
@@ -305,6 +308,8 @@ describe('antd specific tests', () => {
       />,
     );
 
+    // The input is named through its label's `for`, which takes in the whole label, the tooltip's icon included
+    expect(container.querySelector('#root_name')).toHaveAccessibleName('Name');
     expect(screen.getByRole('radiogroup')).toHaveAccessibleName('Color');
   });
 
@@ -441,7 +446,40 @@ describe('antd specific tests', () => {
     );
 
     expect(container.querySelector('#root_foo__anyof_select')).toHaveAccessibleName('Foo');
-    expect(container.querySelector('label[for="root_foo"]')).toHaveAttribute('title', 'Foo:');
+    expect(container.querySelector('#root_foo__label')).toHaveAttribute('title', 'Foo:');
+  });
+
+  test("keeps a label's trailing colon, and antd's no-colon class, where formContext turns colon off", () => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { name: { type: 'string', title: 'Name:' } } }}
+        formContext={{ colon: false }}
+        validator={validator}
+      />,
+    );
+
+    const labelText = container.querySelector('#root_name__label');
+    expect(labelText).toHaveTextContent(/^Name:$/);
+    expect(labelText?.closest('label')).toHaveClass('ant-form-item-no-colon');
+  });
+
+  test("strips the trailing colon from a field's label and from a heading alike, keeping any other last character", () => {
+    const { container } = render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: {
+            name: { type: 'string', title: 'Name|' },
+            pet: { type: 'object', title: 'Pet：', properties: { kind: { type: 'string', title: 'Kind:' } } },
+          },
+        }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('#root_name__label')).toHaveTextContent(/^Name\|$/);
+    expect(container.querySelector('#root_pet__title')).toHaveTextContent(/^Pet$/);
+    expect(container.querySelector('#root_pet_kind__label')).toHaveTextContent(/^Kind$/);
   });
 
   test("names an object's option selector by the object's heading", () => {
@@ -756,7 +794,7 @@ describe("antd widgets carry their field's plan on the element a user focuses", 
       expect(group).toHaveRole(role);
       expect(group).toHaveAccessibleName('Color');
       expect(group?.getAttribute('aria-invalid')).toBe(groupInvalid);
-      expect(container.querySelector('#root_color__label label')).not.toHaveAttribute('for');
+      expect(container.querySelector('#root_color__label')?.closest('label')).not.toHaveAttribute('for');
       for (const option of screen.getAllByRole(item)) {
         expect(option.getAttribute('aria-invalid')).toBe(optionInvalid);
         expect(option).toHaveAccessibleDescription('pick one');
@@ -780,7 +818,36 @@ describe("antd widgets carry their field's plan on the element a user focuses", 
 
     expect(screen.getByRole('slider')).toHaveAccessibleName('Volume');
     expect(screen.getByRole('slider')).not.toHaveAttribute('aria-required');
-    expect(container.querySelector('#root_volume__label label')).not.toHaveAttribute('for');
+    expect(container.querySelector('#root_volume__label')?.closest('label')).not.toHaveAttribute('for');
+  });
+
+  // antd draws a required label's `*` as generated content, which jsdom leaves out of a name but a browser counts, so
+  // the element a control is named by must sit inside the required label rather than be or hold it
+  test.each<[string, RJSFSchema, UiSchema, string]>([
+    ['radio group', { type: 'string', title: 'Color', enum: ['red', 'blue'] }, { 'ui:widget': 'radio' }, 'radiogroup'],
+    [
+      'checkboxes group',
+      { type: 'array', title: 'Color', items: { type: 'string', enum: ['red', 'blue'] }, uniqueItems: true },
+      { 'ui:widget': 'checkboxes' },
+      'group',
+    ],
+    ['range slider', { type: 'integer', title: 'Color', minimum: 0, maximum: 10 }, { 'ui:widget': 'range' }, 'slider'],
+    ['alt-date group', { type: 'string', title: 'Color' }, { 'ui:widget': 'alt-date' }, 'group'],
+  ])("names a required %s by the label's text, outside the label's required mark", (_, color, uiSchema, role) => {
+    render(
+      <Form
+        schema={{ type: 'object', required: ['color'], properties: { color } }}
+        uiSchema={{ color: uiSchema }}
+        validator={validator}
+      />,
+    );
+
+    const control = screen.getByRole(role, { name: 'Color' });
+    const labelText = document.getElementById(control.getAttribute('aria-labelledby') ?? '');
+    expect(labelText).toHaveTextContent('Color');
+    expect(labelText).not.toHaveClass('ant-form-item-required');
+    expect(labelText?.querySelector('.ant-form-item-required')).toBeNull();
+    expect(labelText?.closest('label')).toHaveClass('ant-form-item-required');
   });
 
   test("names a range's slider by the text of the label ui:label: false hides", () => {

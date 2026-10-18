@@ -725,14 +725,17 @@ exports[`array fields > empty errors array 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                              id="root_name__label"
                             >
                               <label
                                 class=""
                                 for="root_name"
-                                title="name"
                               >
-                                name
+                                <span
+                                  id="root_name__label"
+                                  title="name"
+                                >
+                                  name
+                                </span>
                               </label>
                             </div>
                             <div
@@ -1112,14 +1115,17 @@ exports[`array fields > has errors 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                              id="root_name__label"
                             >
                               <label
                                 class=""
                                 for="root_name"
-                                title="name"
                               >
-                                name
+                                <span
+                                  id="root_name__label"
+                                  title="name"
+                                >
+                                  name
+                                </span>
                               </label>
                             </div>
                             <div
@@ -1266,14 +1272,17 @@ exports[`array fields > no errors 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                              id="root_name__label"
                             >
                               <label
                                 class=""
                                 for="root_name"
-                                title="name"
                               >
-                                name
+                                <span
+                                  id="root_name__label"
+                                  title="name"
+                                >
+                                  name
+                                </span>
                               </label>
                             </div>
                             <div
@@ -1411,14 +1420,17 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                 >
                                                   <div
                                                     class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                                    id="root_0_name__label"
                                                   >
                                                     <label
                                                       class=""
                                                       for="root_0_name"
-                                                      title="name"
                                                     >
-                                                      name
+                                                      <span
+                                                        id="root_0_name__label"
+                                                        title="name"
+                                                      >
+                                                        name
+                                                      </span>
                                                     </label>
                                                   </div>
                                                   <div
@@ -1468,14 +1480,17 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                 >
                                                   <div
                                                     class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                                    id="root_0_value__label"
                                                   >
                                                     <label
                                                       class=""
                                                       for="root_0_value"
-                                                      title="value"
                                                     >
-                                                      value
+                                                      <span
+                                                        id="root_0_value__label"
+                                                        title="value"
+                                                      >
+                                                        value
+                                                      </span>
                                                     </label>
                                                   </div>
                                                   <div
@@ -1733,14 +1748,17 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                 >
                                                   <div
                                                     class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                                    id="root_1_name__label"
                                                   >
                                                     <label
                                                       class=""
                                                       for="root_1_name"
-                                                      title="name"
                                                     >
-                                                      name
+                                                      <span
+                                                        id="root_1_name__label"
+                                                        title="name"
+                                                      >
+                                                        name
+                                                      </span>
                                                     </label>
                                                   </div>
                                                   <div
@@ -1790,14 +1808,17 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                 >
                                                   <div
                                                     class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                                    id="root_1_value__label"
                                                   >
                                                     <label
                                                       class=""
                                                       for="root_1_value"
-                                                      title="value"
                                                     >
-                                                      value
+                                                      <span
+                                                        id="root_1_value__label"
+                                                        title="value"
+                                                      >
+                                                        value
+                                                      </span>
                                                     </label>
                                                   </div>
                                                   <div
@@ -4071,14 +4092,17 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                 >
                                                   <div
                                                     class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                                    id="root_0_name__label"
                                                   >
                                                     <label
                                                       class=""
                                                       for="root_0_name"
-                                                      title="name"
                                                     >
-                                                      name
+                                                      <span
+                                                        id="root_0_name__label"
+                                                        title="name"
+                                                      >
+                                                        name
+                                                      </span>
                                                     </label>
                                                   </div>
                                                   <div
@@ -4128,14 +4152,17 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                 >
                                                   <div
                                                     class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                                    id="root_0_value__label"
                                                   >
                                                     <label
                                                       class=""
                                                       for="root_0_value"
-                                                      title="value"
                                                     >
-                                                      value
+                                                      <span
+                                                        id="root_0_value__label"
+                                                        title="value"
+                                                      >
+                                                        value
+                                                      </span>
                                                     </label>
                                                   </div>
                                                   <div
@@ -4393,14 +4420,17 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                 >
                                                   <div
                                                     class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                                    id="root_1_name__label"
                                                   >
                                                     <label
                                                       class=""
                                                       for="root_1_name"
-                                                      title="name"
                                                     >
-                                                      name
+                                                      <span
+                                                        id="root_1_name__label"
+                                                        title="name"
+                                                      >
+                                                        name
+                                                      </span>
                                                     </label>
                                                   </div>
                                                   <div
@@ -4450,14 +4480,17 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                 >
                                                   <div
                                                     class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                                    id="root_1_value__label"
                                                   >
                                                     <label
                                                       class=""
                                                       for="root_1_value"
-                                                      title="value"
                                                     >
-                                                      value
+                                                      <span
+                                                        id="root_1_value__label"
+                                                        title="value"
+                                                      >
+                                                        value
+                                                      </span>
                                                     </label>
                                                   </div>
                                                   <div
@@ -5235,14 +5268,17 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                                                 >
                                                   <div
                                                     class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                                    id="root_0_name__label"
                                                   >
                                                     <label
                                                       class=""
                                                       for="root_0_name"
-                                                      title="name"
                                                     >
-                                                      name
+                                                      <span
+                                                        id="root_0_name__label"
+                                                        title="name"
+                                                      >
+                                                        name
+                                                      </span>
                                                     </label>
                                                   </div>
                                                   <div
@@ -5470,14 +5506,17 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                                                 >
                                                   <div
                                                     class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                                    id="root_1_name__label"
                                                   >
                                                     <label
                                                       class=""
                                                       for="root_1_name"
-                                                      title="name"
                                                     >
-                                                      name
+                                                      <span
+                                                        id="root_1_name__label"
+                                                        title="name"
+                                                      >
+                                                        name
+                                                      </span>
                                                     </label>
                                                   </div>
                                                   <div
@@ -5938,14 +5977,17 @@ exports[`with title and description > array icons 1`] = `
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                  id="root_0__label"
                                 >
                                   <label
                                     class="ant-form-item-required"
                                     for="root_0"
-                                    title="Test item"
                                   >
-                                    Test item
+                                    <span
+                                      id="root_0__label"
+                                      title="Test item"
+                                    >
+                                      Test item
+                                    </span>
                                   </label>
                                 </div>
                                 <div
@@ -6150,14 +6192,17 @@ exports[`with title and description > array icons 1`] = `
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                  id="root_1__label"
                                 >
                                   <label
                                     class="ant-form-item-required"
                                     for="root_1"
-                                    title="Test item"
                                   >
-                                    Test item
+                                    <span
+                                      id="root_1__label"
+                                      title="Test item"
+                                    >
+                                      Test item
+                                    </span>
                                   </label>
                                 </div>
                                 <div
@@ -6442,14 +6487,17 @@ exports[`with title and description > checkboxes 1`] = `
         >
           <div
             class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-            id="root__label"
           >
             <label
               class=""
               for="root"
-              title="Test field"
             >
-              Test field
+              <span
+                id="root__label"
+                title="Test field"
+              >
+                Test field
+              </span>
             </label>
           </div>
           <div
@@ -6625,14 +6673,17 @@ exports[`with title and description > fixed array 1`] = `
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                  id="root_0__label"
                                 >
                                   <label
                                     class="ant-form-item-required"
                                     for="root_0"
-                                    title="Test item"
                                   >
-                                    Test item
+                                    <span
+                                      id="root_0__label"
+                                      title="Test item"
+                                    >
+                                      Test item
+                                    </span>
                                   </label>
                                 </div>
                                 <div
@@ -6702,14 +6753,17 @@ exports[`with title and description > fixed array 1`] = `
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                  id="root_1__label"
                                 >
                                   <label
                                     class="ant-form-item-required"
                                     for="root_1"
-                                    title="Test item"
                                   >
-                                    Test item
+                                    <span
+                                      id="root_1__label"
+                                      title="Test item"
+                                    >
+                                      Test item
+                                    </span>
                                   </label>
                                 </div>
                                 <div
@@ -7065,14 +7119,17 @@ exports[`with title and description from both > array icons 1`] = `
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                  id="root_0__label"
                                 >
                                   <label
                                     class="ant-form-item-required"
                                     for="root_0"
-                                    title="My Item"
                                   >
-                                    My Item
+                                    <span
+                                      id="root_0__label"
+                                      title="My Item"
+                                    >
+                                      My Item
+                                    </span>
                                   </label>
                                 </div>
                                 <div
@@ -7277,14 +7334,17 @@ exports[`with title and description from both > array icons 1`] = `
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                  id="root_1__label"
                                 >
                                   <label
                                     class="ant-form-item-required"
                                     for="root_1"
-                                    title="My Item"
                                   >
-                                    My Item
+                                    <span
+                                      id="root_1__label"
+                                      title="My Item"
+                                    >
+                                      My Item
+                                    </span>
                                   </label>
                                 </div>
                                 <div
@@ -7569,14 +7629,17 @@ exports[`with title and description from both > checkboxes 1`] = `
         >
           <div
             class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-            id="root__label"
           >
             <label
               class=""
               for="root"
-              title="My Field"
             >
-              My Field
+              <span
+                id="root__label"
+                title="My Field"
+              >
+                My Field
+              </span>
             </label>
           </div>
           <div
@@ -7752,14 +7815,17 @@ exports[`with title and description from both > fixed array 1`] = `
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                  id="root_0__label"
                                 >
                                   <label
                                     class="ant-form-item-required"
                                     for="root_0"
-                                    title="My Item"
                                   >
-                                    My Item
+                                    <span
+                                      id="root_0__label"
+                                      title="My Item"
+                                    >
+                                      My Item
+                                    </span>
                                   </label>
                                 </div>
                                 <div
@@ -7829,14 +7895,17 @@ exports[`with title and description from both > fixed array 1`] = `
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                  id="root_1__label"
                                 >
                                   <label
                                     class="ant-form-item-required"
                                     for="root_1"
-                                    title="My Item"
                                   >
-                                    My Item
+                                    <span
+                                      id="root_1__label"
+                                      title="My Item"
+                                    >
+                                      My Item
+                                    </span>
                                   </label>
                                 </div>
                                 <div
@@ -8192,14 +8261,17 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                  id="root_0__label"
                                 >
                                   <label
                                     class="ant-form-item-required"
                                     for="root_0"
-                                    title="My Item"
                                   >
-                                    My Item
+                                    <span
+                                      id="root_0__label"
+                                      title="My Item"
+                                    >
+                                      My Item
+                                    </span>
                                   </label>
                                 </div>
                                 <div
@@ -8404,14 +8476,17 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                  id="root_1__label"
                                 >
                                   <label
                                     class="ant-form-item-required"
                                     for="root_1"
-                                    title="My Item"
                                   >
-                                    My Item
+                                    <span
+                                      id="root_1__label"
+                                      title="My Item"
+                                    >
+                                      My Item
+                                    </span>
                                   </label>
                                 </div>
                                 <div
@@ -8696,14 +8771,17 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
         >
           <div
             class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-            id="root__label"
           >
             <label
               class=""
               for="root"
-              title="My Field"
             >
-              My Field
+              <span
+                id="root__label"
+                title="My Field"
+              >
+                My Field
+              </span>
             </label>
           </div>
           <div
@@ -8879,14 +8957,17 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                  id="root_0__label"
                                 >
                                   <label
                                     class="ant-form-item-required"
                                     for="root_0"
-                                    title="My Item"
                                   >
-                                    My Item
+                                    <span
+                                      id="root_0__label"
+                                      title="My Item"
+                                    >
+                                      My Item
+                                    </span>
                                   </label>
                                 </div>
                                 <div
@@ -8956,14 +9037,17 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                  id="root_1__label"
                                 >
                                   <label
                                     class="ant-form-item-required"
                                     for="root_1"
-                                    title="My Item"
                                   >
-                                    My Item
+                                    <span
+                                      id="root_1__label"
+                                      title="My Item"
+                                    >
+                                      My Item
+                                    </span>
                                   </label>
                                 </div>
                                 <div

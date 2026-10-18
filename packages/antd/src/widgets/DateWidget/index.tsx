@@ -72,6 +72,7 @@ export default function DateWidget<
       onBlur={!readonly ? handleBlur : undefined}
       onChange={!readonly ? handleChange : undefined}
       onFocus={!readonly ? handleFocus : undefined}
+      open={readonly ? false : undefined}
       placeholder={placeholder}
       inputReadOnly={readonly}
       required={required}

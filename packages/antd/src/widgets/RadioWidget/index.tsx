@@ -68,7 +68,9 @@ export default function RadioWidget<
       onChange={!readonly ? handleChange : undefined}
       onBlur={!readonly ? handleBlur : undefined}
       onFocus={!readonly ? handleFocus : undefined}
-      value={selectValue}
+      // Controlled even with no value, so a click on a read-only group, which `readonlyAsDisabled: false` leaves
+      // enabled, checks nothing the form doesn't hold
+      value={selectValue ?? null}
       {...groupAttributes}
     >
       {Array.isArray(enumOptions) &&
@@ -82,7 +84,9 @@ export default function RadioWidget<
             disabled={fieldDisabled || enumOptionsIsDisabled(option.value, enumDisabled) || undefined}
             // oxlint-disable-next-line react/no-array-index-key
             key={i}
-            required={required}
+            // A radio has no read-only state to exempt it from the browser's check, so a read-only one the form leaves
+            // enabled takes no `required`, which would block the submit of a field its user can't answer
+            required={required && !readonly}
             value={domValues[i]}
             {...optionAttributes}
           >

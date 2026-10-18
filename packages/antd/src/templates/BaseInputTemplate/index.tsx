@@ -88,6 +88,7 @@ export default function BaseInputTemplate<
       onChange={!readonly ? handleNumberChange : undefined}
       onFocus={!readonly ? handleFocus : undefined}
       placeholder={placeholder}
+      readOnly={readonly}
       required={required}
       style={INPUT_STYLE}
       changeOnWheel={false}
@@ -108,6 +109,7 @@ export default function BaseInputTemplate<
       onChange={!readonly ? handleTextChange : undefined}
       onFocus={!readonly ? handleFocus : undefined}
       placeholder={placeholder}
+      readOnly={readonly}
       required={required}
       style={INPUT_STYLE}
       list={hasExamples ? examplesId(id) : undefined}
