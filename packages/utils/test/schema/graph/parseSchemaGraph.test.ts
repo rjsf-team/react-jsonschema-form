@@ -574,5 +574,13 @@ describe('parseSchemaGraph()', () => {
         value: true,
       });
     });
+    it('follows a chain into a resource of the graph it extends to the boolean that resource holds, under the pointer it reuses', () => {
+      const first = graph.adopt({ $id: 'http://example.com/a', $defs: { x: false, y: { $ref: '#/$defs/x' } } });
+      const own: RJSFSchema = { $ref: 'http://example.com/a#/$defs/y' };
+      const second = first.graph.adopt({ $defs: { x: own } });
+      const ownNode = objectNode(second.graph, second.graph.byObject(own));
+      expect(ownNode.pointer).toBe(`${EXTERNAL_POINTER}/$defs/x`);
+      expect(second.graph.node(ownNode.ref ?? -1)).toMatchObject({ kind: 'schema', raw: { $ref: '#/$defs/x' } });
+    });
   });
 });

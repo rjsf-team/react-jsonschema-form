@@ -206,6 +206,8 @@ function subschemaEntries(key: string, value: unknown): [string[], unknown][] {
 }
 
 interface WalkStart {
+  /** The node of the resource the walk starts from, whose graph parsed the booleans under it */
+  readonly id: NodeId;
   readonly raw: unknown;
   readonly pointer: string;
   readonly base: string;
@@ -629,7 +631,11 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
       return resource.id;
     }
     if (fragment.startsWith('/')) {
-      return this.walk({ raw: resource.raw, pointer: resource.pointer, base: resource.baseUri }, fragment, create);
+      return this.walk(
+        { id: resource.id, raw: resource.raw, pointer: resource.pointer, base: resource.baseUri },
+        fragment,
+        create,
+      );
     }
     return this.anchor(`${resourceKey(resource.baseUri)}#${fragment}`);
   }
@@ -676,7 +682,9 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
     if (isObject(current)) {
       return this.byObject(current, base);
     }
-    return typeof current === 'boolean' ? this.byPointer(pointer) : undefined;
+    // A boolean has no identity, so it is the node the graph that parsed the resource found under the pointer: a graph
+    // extending that one reuses its pointers for a schema adopted from outside the root
+    return typeof current === 'boolean' ? this.graphOf(start.id).byPointer(pointer) : undefined;
   }
 }
 
