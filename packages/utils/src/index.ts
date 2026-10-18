@@ -173,6 +173,7 @@ import schemaRequiresTrueValue from './schemaRequiresTrueValue.ts';
 import { keywordShape, normalizeUri, resolveUri } from './schemaUri.ts';
 import SelectedOptionDescription from './SelectedOptionDescription.tsx';
 import type { SelectedOptionDescriptionProps } from './SelectedOptionDescription.tsx';
+import setOwn from './setOwn.ts';
 import shouldRenderOptionalField, { getOptionalDataControlsType } from './shouldRenderOptionalField.ts';
 import templateDrawsDescription from './templateDrawsDescription.ts';
 import templateDrawsLabel from './templateDrawsLabel.ts';
@@ -397,6 +398,7 @@ export {
   schemaKey,
   schemaRequiresTrueValue,
   setByPath,
+  setOwn,
   SelectedOptionDescription,
   selectedOptionDescriptionId,
   selectOptionUiSchema,

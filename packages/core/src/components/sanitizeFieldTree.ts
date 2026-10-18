@@ -17,11 +17,11 @@ import {
   isWholeValueSelect,
   rendersOwnFieldBesideOption,
   RJSF_REF_CYCLE_KEY,
+  setOwn,
   toConstant,
 } from '@rjsf/utils';
 
 import type { FieldEdit, KeyMove } from './formState.ts';
-import setOwnKey from './setOwnKey.ts';
 import type { UiState } from './uiState.ts';
 import { asFieldValue, isPathPrefix, optionListKey, retrievedOptionsOf, shownOption } from './uiState.ts';
 
@@ -371,7 +371,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
         if (next === DROP) {
           delete result[key];
         } else {
-          setOwnKey(result, key, next);
+          setOwn(result, key, next);
         }
       }
     }

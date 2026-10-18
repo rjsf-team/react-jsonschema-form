@@ -29,6 +29,7 @@ import {
   isPlainObject,
   mergeObjects,
   replaceEqualDeep,
+  setOwn,
   toErrorList,
   fieldPathToList,
   UI_GLOBAL_OPTIONS_KEY,
@@ -46,7 +47,6 @@ import type { FormProps, FormState } from './Form.tsx';
 import type { EventFormData, IChangeEvent } from './IChangeEvent.ts';
 import type { FieldTree } from './sanitizeFieldTree.ts';
 import sanitizeFieldTree from './sanitizeFieldTree.ts';
-import setOwnKey from './setOwnKey.ts';
 import { createUiState, fieldStateOf, isPathPrefix } from './uiState.ts';
 
 /* The pure half of `Form`: what its state is derived from, and what each operation makes of it.
@@ -432,7 +432,7 @@ function pruneErrorSchema(
       const node = errorSchemaChild(key, value);
       const child = node ? pruneErrorSchema(node, isDropped, [...path, key]) : value;
       if (!isPlainObject(child) || Object.keys(child).length > 0) {
-        setOwnKey(kept, key, child);
+        setOwn(kept, key, child);
       }
     }
   }
@@ -518,7 +518,7 @@ function moveErrorSchemaKeys<T>(errorSchema: ErrorSchema<T>, path: FieldPathList
     const newKey = key === ERRORS_KEY ? key : newKeyOf(key);
     if (newKey !== undefined) {
       // A rename onto a key that holds errors, such as a declared property the data lacks, keeps both
-      setOwnKey(moved, newKey, Object.hasOwn(moved, newKey) ? mergeObjects(moved[newKey], node, true) : node);
+      setOwn(moved, newKey, Object.hasOwn(moved, newKey) ? mergeObjects(moved[newKey], node, true) : node);
     }
   }
   return replaceErrorSchemaNode(errorSchema, path, moved);
@@ -871,7 +871,7 @@ function withKeysMoved(data: unknown, changed: unknown, path: FieldPathList, new
     for (const [key, value] of Object.entries(held)) {
       const newKey = newKeyOf(key);
       if (newKey !== undefined) {
-        setOwnKey(properties, newKey, value);
+        setOwn(properties, newKey, value);
       }
     }
     moved = properties;

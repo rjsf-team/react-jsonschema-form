@@ -2,7 +2,7 @@ import type { GenericObjectType } from './types.ts';
 
 /** Writes `value` at `key` of `obj` as an own, enumerable data property. A plain assignment to a JSON-sourced
  * `__proto__` key would reach the prototype setter and re-point `obj`'s prototype instead of adding the key, so that
- * key goes through `Object.defineProperty`. Internal helper, not exported from the package entry point.
+ * key goes through `Object.defineProperty`.
  *
  * @param obj - The object to write to
  * @param key - The key to write
