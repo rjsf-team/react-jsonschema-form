@@ -1,10 +1,10 @@
 // oxlint-disable no-console
 import type { SubmitEvent } from 'react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
-import type { FormProps, FormRef, IChangeEvent } from '@rjsf/core';
+import type { FormProps, IChangeEvent } from '@rjsf/core';
 import { withTheme } from '@rjsf/core';
 import MarkdownTemplate from '@rjsf/core/markdown';
 import type {
@@ -15,7 +15,7 @@ import type {
   UiSchema,
   ValidatorType,
 } from '@rjsf/utils';
-import { createSchemaUtils, deepEquals, resetLogOnce } from '@rjsf/utils';
+import { createSchemaUtils, resetLogOnce } from '@rjsf/utils';
 
 import { samples } from '../samples/index.ts';
 import type { Sample, UiSchemaForTheme } from '../samples/Sample.ts';
@@ -29,6 +29,7 @@ import OptionsDrawer from './OptionsDrawer.tsx';
 import SampleSelector from './SampleSelector.tsx';
 import SpecialInput from './SpecialInput.tsx';
 import type { ThemesType } from './ThemeSelector.tsx';
+import useFormDataReadBack from './useFormDataReadBack.ts';
 
 export interface PlaygroundProps {
   themes: Record<string, ThemesType>;
@@ -270,7 +271,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
   const [liveSettings, setLiveSettings] = useState<LiveSettings>(initial.liveSettings);
   const [otherFormProps, setOtherFormProps] = useState<Partial<FormProps>>(initial.otherFormProps);
 
-  const playGroundFormRef = useRef<FormRef>(null);
+  const { attachForm, formRef: playGroundFormRef } = useFormDataReadBack(setFormData, schema, uiSchema, liveSettings);
 
   // One themed Form per theme, so switching other settings doesn't remount it. It's returned inside an object
   // because react/static-components can't tell a memoized component from one created during render
@@ -341,21 +342,6 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
     [setFormData, setShareURL],
   );
 
-  // The form fills in the defaults a new schema, uiSchema or default-state setting brings without calling `onChange`, as
-  // it does for the data it is remounted with by a load, an edit in the formData editor or a theme switch, so the
-  // formData editor, a share link and the raw validation would go on showing the data from before. The form's data
-  // lives in its own model, outside the playground's state, so it is read once the commit that passes the change is
-  // done, the way an Effect synchronizes with an external system; data that `onChange` already reported is kept as it is
-  useEffect(() => {
-    const form = playGroundFormRef.current;
-    if (!form) {
-      return;
-    }
-    const derived = form.getFormData();
-    setFormData((previous: unknown) => (deepEquals(previous, derived) ? previous : derived));
-    // oxlint-disable-next-line react/exhaustive-effect-dependencies -- the props the form re-derives its data from, after whose commit the Effect re-reads it
-  }, [schema, uiSchema, liveSettings, loadKey, editKey, theme]);
-
   const onFormDataSubmit = useCallback(
     ({ formData: submittedFormData }: IChangeEvent, event: SubmitEvent<HTMLFormElement>) => {
       console.log('submitted formData', submittedFormData);
@@ -424,7 +410,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
               onBlur={(id: string, value: unknown) => console.log(`Blurred ${id} with value`, value)}
               onFocus={(id: string, value: unknown) => console.log(`Focused ${id} with value`, value)}
               onError={(errorList: RJSFValidationError[]) => console.log('errors', errorList)}
-              ref={playGroundFormRef}
+              ref={attachForm}
             />
           </DemoFrame>
         </ErrorBoundary>
