@@ -56,10 +56,8 @@ export interface CustomValidatorOptionsType {
   suppressDuplicateFiltering?: SuppressDuplicateFilteringType;
 }
 
-/** The simplified `ValidateFunction` shape produced by ata's compiled
- * standalone modules. Kept for symmetry with the AJV validator package and
- * for the upcoming precompiled-validator support; not consumed by the
- * runtime path in this initial release.
+/** The simplified `ValidateFunction` shape of each entry in a module written by
+ * `compileSchemaValidators()`, as `createPrecompiledValidator()` consumes it.
  */
 export interface CompiledValidateFunction {
   errors?: null | ValidationError[];

@@ -26,8 +26,7 @@ const schema: RJSFSchema = {
 
 describe('compileSchemaValidatorsCode', () => {
   test('length checks work in the compiled output (one character, emoji)', () => {
-    // ata-validator before 1.55.0 left a helper out of the standalone bundle, so
-    // a one-character value under minLength: 1 threw `_cpLen is not defined`.
+    // Length keywords count code points through a helper the standalone bundle must include.
     const lengthSchema: RJSFSchema = {
       $id: 'lengths',
       type: 'object',
@@ -124,6 +123,20 @@ describe('compileSchemaValidatorsCode', () => {
         customFormats: { evenLength: (value: string) => value.length % 2 === 0 },
       }),
     ).toThrow(/custom format "evenLength" is a function/);
+  });
+
+  test('rejects options the generated module cannot carry, instead of dropping them', () => {
+    expect(() => compileSchemaValidatorsCode(schema, { ataOptionsOverrides: { coerceTypes: true } })).toThrow(
+      /ataOptionsOverrides\.coerceTypes cannot be applied to a precompiled validator/,
+    );
+    expect(() => compileSchemaValidatorsCode(schema, { additionalMetaSchemas: [{ $id: 'extra' }] })).toThrow(
+      /additionalMetaSchemas cannot be applied/,
+    );
+    expect(() => compileSchemaValidatorsCode(schema, { extenderFn: (v) => v })).toThrow(/extenderFn cannot be applied/);
+    // The options that do apply still compile.
+    expect(() =>
+      compileSchemaValidatorsCode(schema, { ataOptionsOverrides: { verbose: false }, additionalMetaSchemas: [] }),
+    ).not.toThrow();
   });
 
   test('reports per-field errors for schema-valued additionalProperties', () => {

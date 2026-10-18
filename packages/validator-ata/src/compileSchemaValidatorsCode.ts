@@ -12,6 +12,12 @@ import type { CustomValidatorOptionsType } from './types.ts';
  * `createPrecompiledValidator` consumes, keyed the same way `schemaParser` keys
  * the schemas so the precompiled validator can look each one up.
  *
+ * Only `customFormats` (as RegExps or pattern strings) and `ataOptionsOverrides.verbose`
+ * apply at compile time. `additionalMetaSchemas`, `extenderFn` and any other
+ * `ataOptionsOverrides` key would change what the validator accepts, and the generated
+ * module cannot carry them, so they throw rather than being dropped.
+ * `suppressDuplicateFiltering` is given to `createPrecompiledValidator()` instead.
+ *
  * @param schema - The schema to compile
  * @param [options={}] - The `CustomValidatorOptionsType` used to build the validator
  */
@@ -23,7 +29,19 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
   const keys = Object.keys(schemaMaps);
   const schemas = Object.values(schemaMaps);
 
-  const { customFormats, ataOptionsOverrides = {} } = options;
+  const { customFormats, additionalMetaSchemas, extenderFn, ataOptionsOverrides = {} } = options;
+  const unsupported = [
+    ...(additionalMetaSchemas?.length ? ['additionalMetaSchemas'] : []),
+    ...(extenderFn ? ['extenderFn'] : []),
+    ...Object.keys(ataOptionsOverrides)
+      .filter((key) => key !== 'verbose')
+      .map((key) => `ataOptionsOverrides.${key}`),
+  ];
+  if (unsupported.length > 0) {
+    throw new Error(
+      `@rjsf/validator-ata: ${unsupported.join(', ')} cannot be applied to a precompiled validator; the generated module would validate differently from the runtime validator. Only customFormats and ataOptionsOverrides.verbose apply at compile time`,
+    );
+  }
 
   // Format checkers are serialized into the standalone module via Function#toString,
   // so they must carry no closure references or build-time instrumentation (a plain
