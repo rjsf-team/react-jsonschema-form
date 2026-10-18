@@ -128,10 +128,34 @@ export function simpleDiscriminatorMatch<S extends StrictRJSFSchema = RJSFSchema
   return undefined;
 }
 
-/** Returns whether `option` matches `formData`. With a `discriminatorField` the option names a property for, only that
- * property is checked, against the data's value for it. Otherwise the data has to hold a key the option declares, see
- * `holdsDeclaredKey()`, and validate against the option as scored, see `scoringTarget()`. A boolean option matches
- * whatever it says.
+/** Returns whether some declaration of `discriminatorField` that `declaredProperties()` finds in the option can reject
+ * `value`: one that is `false`, or one `statedValues()` does not find to accept every value of its `type`. Declarations
+ * that all accept the value, such as a base's `{ type: 'string' }` and an option's `true`, cannot tell options apart, and
+ * neither can a value the data does not hold yet
+ *
+ * @param option - The option's node
+ * @param discriminatorField - The name of the property the options are told apart by
+ * @param value - The data's value for the property
+ * @returns - Whether the discriminator can tell the option from the others
+ */
+function discriminates<S extends StrictRJSFSchema = RJSFSchema>(
+  { graph, node }: AdoptedSchema<S>,
+  discriminatorField: string,
+  value: unknown,
+): boolean {
+  if (value === undefined) {
+    return false;
+  }
+  return declaredProperties(graph, node, discriminatorField).some((id) => {
+    const declaration = graph.node(id);
+    return declaration.kind === 'boolean' ? !declaration.value : statedValues<S>(declaration, value)?.length !== 0;
+  });
+}
+
+/** Returns whether `option` matches `formData`. With a `discriminatorField` the option names a property for, and whose
+ * declarations of it can tell it from the others, see `discriminates()`, only that property is checked, against the
+ * data's value for it. Otherwise the data has to hold a key the option declares, see `holdsDeclaredKey()`, and
+ * validate against the option as scored, see `scoringTarget()`. A boolean option matches whatever it says.
  *
  * @param context - The `SchemaContext` whose `validator` checks the option
  * @param formData - The data being matched
@@ -152,9 +176,10 @@ export function optionMatches<S extends StrictRJSFSchema = RJSFSchema, F extends
   }
   const { graph, node } = option;
   if (discriminatorField) {
+    const value = getByPath(formData, discriminatorField);
     const discriminator = declaredPropertyTarget(graph, node, discriminatorField);
-    if (discriminator !== undefined) {
-      return context.validator.isValid(discriminator, getByPath(formData, discriminatorField), graph.rawRoot);
+    if (discriminator !== undefined && discriminates<S>(option, discriminatorField, value)) {
+      return context.validator.isValid(discriminator, value, graph.rawRoot);
     }
   }
   return (

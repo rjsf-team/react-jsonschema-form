@@ -117,4 +117,60 @@ describe('matching options through the schema graph', () => {
     const retrieved = retrieveSchema({ validator: miniValidator() }, rootSchema, rootSchema, { x: 1, y: 'y' });
     expect(Object.keys(retrieved.properties ?? {})).toEqual(['y']);
   });
+  it.each([
+    [
+      'an allOf entry',
+      (kind: string, key: string): RJSFSchema => ({
+        allOf: [{ properties: { kind: { const: kind } } }],
+        properties: { [key]: {} },
+      }),
+    ],
+    [
+      'its then',
+      (kind: string, key: string): RJSFSchema => ({
+        if: true,
+        then: { properties: { kind: { const: kind } } },
+        properties: { [key]: {} },
+      }),
+    ],
+  ])('matches by its keys data without the discriminator when the options declare it in %s', (_name, option) => {
+    const options = [option('a', 'x'), option('b', 'y')];
+    const field: RJSFSchema = { discriminator: { propertyName: 'kind' }, oneOf: options };
+    const rootSchema: RJSFSchema = { type: 'object', properties: { v: field } };
+    const validator = miniValidator();
+    expect(getFirstMatchingOption({ validator }, { y: 1 }, options, rootSchema, 'kind')).toBe(1);
+    expect(getClosestMatchingOption({ validator }, rootSchema, { y: 1 }, options, -1, 'kind')).toBe(1);
+    expect(omitExtraData({ validator }, rootSchema, rootSchema, { v: { y: 1 } })).toEqual({ v: { y: 1 } });
+  });
+  describe('options whose every declaration of the discriminator accepts the value', () => {
+    const options: RJSFSchema[] = [{ $ref: '#/definitions/Cat' }, { $ref: '#/definitions/Dog' }];
+    const pet: RJSFSchema = { discriminator: { propertyName: 'petType' }, oneOf: options };
+    const rootOf = (own: (key: string, other: string) => RJSFSchema): RJSFSchema => ({
+      definitions: {
+        Pet: { type: 'object', properties: { petType: { type: 'string' } } },
+        Cat: { allOf: [{ $ref: '#/definitions/Pet' }], ...own('hunts', 'barks') },
+        Dog: { allOf: [{ $ref: '#/definitions/Pet' }], ...own('barks', 'hunts') },
+      },
+      type: 'object',
+      properties: { pet },
+    });
+    const data = { petType: 'Dog', barks: true };
+    it('matches by the whole option, which rejects the keys of the other', () => {
+      const rootSchema = rootOf((key, other) => ({
+        properties: { petType: true, [key]: { type: 'boolean' }, [other]: false },
+      }));
+      const validator = miniValidator();
+      expect(getFirstMatchingOption({ validator }, data, options, rootSchema, 'petType')).toBe(1);
+      expect(getFirstMatchingOption({ validator }, data, options, rootSchema)).toBe(1);
+    });
+    it('scores the options by their keys where both match', () => {
+      const rootSchema = rootOf((key) => ({
+        properties: { petType: true, [key]: { type: 'boolean' } },
+        required: [key],
+      }));
+      const validator = miniValidator();
+      expect(getClosestMatchingOption({ validator }, rootSchema, data, options, 0, 'petType')).toBe(1);
+      expect(omitExtraData({ validator }, rootSchema, rootSchema, { pet: data })).toEqual({ pet: data });
+    });
+  });
 });

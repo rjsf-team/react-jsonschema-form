@@ -257,13 +257,13 @@ export default function getFirstMatchingOptionTest(testValidator: TestValidatorT
       expect(getFirstMatchingOption({ validator: testValidator }, null, options, schema, 'code')).toEqual(0);
     });
 
-    it('should check the discriminator property with the validator when the data holds no value for it', () => {
+    it('should match each option as a whole when the data holds no value for the discriminator property', () => {
       const { validated, validator } = recordingValidator();
-      const foo: RJSFSchema = { type: 'object', properties: { code: { enum: ['foo_coding'] } } };
-      const bar: RJSFSchema = { type: 'object', properties: { code: { enum: ['bar_coding'] } } };
+      const foo: RJSFSchema = { type: 'object', properties: { code: { enum: ['foo_coding'] }, foo: {} } };
+      const bar: RJSFSchema = { type: 'object', properties: { code: { enum: ['bar_coding'] }, bar: {} } };
       const schema: RJSFSchema = { discriminator: { propertyName: 'code' }, oneOf: [foo, bar] };
-      expect(getFirstMatchingOption({ validator }, { other: 1 }, [foo, bar], schema, 'code')).toEqual(0);
-      expect(validated).toEqual([{ $ref: '#/oneOf/0/properties/code' }, { $ref: '#/oneOf/1/properties/code' }]);
+      expect(getFirstMatchingOption({ validator }, { bar: 1 }, [foo, bar], schema, 'code')).toEqual(0);
+      expect(validated).toEqual([{ $ref: '#/oneOf/1' }]);
     });
 
     it('should check an option declaring no discriminator property as a whole', () => {
