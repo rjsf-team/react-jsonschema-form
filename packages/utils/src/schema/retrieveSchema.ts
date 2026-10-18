@@ -148,24 +148,26 @@ export function resolveCondition<
   const changing = (branch: unknown) =>
     branch === undefined || branch === null || branch === true || (isObject(branch) && !Object.keys(branch).length)
       ? undefined
-      : (branch as S | boolean);
-  const selected = changing(conditionValue ? then : otherwise);
-  const other = changing(conditionValue ? otherwise : then);
+      : branch;
+  // Each branch with the key it sits under, kept beside it rather than worked out from its value, which `then` and
+  // `else` can share
+  const selected: [unknown, string] = conditionValue ? [changing(then), THEN_KEY] : [changing(otherwise), ELSE_KEY];
+  const other: [unknown, string] = conditionValue ? [changing(otherwise), ELSE_KEY] : [changing(then), THEN_KEY];
   // Expanding all branches lists each form once, two deep-equal branches being the one form, and the form the data
   // selects first: it is the one a form renders for that data, which `combineForms()` keeps once it has to drop
   // combinations
-  const branches = expandAllBranches && !deepEquals(selected, other) ? [selected, other] : [selected];
+  const branches = expandAllBranches && !deepEquals(selected[0], other[0]) ? [selected, other] : [selected];
   return branches
-    .flatMap((branch) =>
+    .flatMap(([branch, key]) =>
       branch === undefined
         ? [rest as S]
         : retrieveSchemaInternal<T, S, F>(
             context,
-            normalizeBooleanSchema<S>(branch),
+            normalizeBooleanSchema<S>(branch as S | boolean),
             rootSchema,
             formData,
             expandAllBranches,
-            enclosingRefPath<S>(schema, recurseList, branch === then ? THEN_KEY : ELSE_KEY),
+            enclosingRefPath<S>(schema, recurseList, key),
             undefined,
             preserveDependencies,
             passCount > 0 ? 1 : 0,
@@ -237,13 +239,14 @@ function nextForms<F>(standing: Standing, forms: F[], bounded: boolean): [F, Sta
  */
 function combined<P>(combinations: Combination<P>[], what: () => string): P[] {
   const kept = combinations.filter(([, standing]) => standing.kind !== 'last' || standing.varied > 1);
-  if (kept.length < combinations.length || !kept.some(([, standing]) => standing.kind === 'last')) {
-    return kept.map(([combination]) => combination);
+  // The one combination holding the last form of each list is kept only when the combinations were bounded and it is
+  // none of the others, which is when combinations in between were dropped
+  if (kept.some(([, standing]) => standing.kind === 'last')) {
+    logOnce(
+      `Expanding all branches of ${what()} gives more than the ${MAX_COMBINED_FORMS} combinations that are expanded, so only the forms the data selects together, each other form alone and the last forms together were. A form whose data selects a combination in between has no compiled validator. Give the object fewer one-sided conditions or schema dependencies, nesting what they describe under its properties if need be.`,
+      'warn',
+    );
   }
-  logOnce(
-    `Expanding all branches of ${what()} gives more than the ${MAX_COMBINED_FORMS} combinations that are expanded, so only the forms the data selects together, each other form alone and the last forms together were. A form whose data selects a combination in between has no compiled validator. Give the object fewer one-sided conditions or schema dependencies, nesting what they describe under its properties if need be.`,
-    'warn',
-  );
   return kept.map(([combination]) => combination);
 }
 
@@ -1917,12 +1920,14 @@ export function processDependencies<
           formData,
           passCount,
         );
-        if (expandAllBranches && !forms.some((form) => deepEquals(form, schema))) {
-          // Listed first while the data has not filled its key in, which makes it the form the data selects, and last
-          // otherwise. `combineForms()` keeps each list's first form once it has to drop combinations, and an `allOf`
-          // entry's `dependencies` reach it through this walk too, so this holds whether or not the walk is bounded
-          forms = getByPath(formData, dependencyKey) === undefined ? [schema, ...forms] : [...forms, schema];
-        }
+      }
+      // Expanding all branches leaves every dependency unapplied as well, a property dependency as much as a schema
+      // one, since a form renders the schema without it until its key is filled in. Listed first while the data has
+      // not filled the key in, which makes it the form the data selects, and last otherwise. `combineForms()` keeps
+      // each list's first form once it has to drop combinations, and an `allOf` entry's `dependencies` reach it
+      // through this walk too, so this holds whether or not the walk is bounded
+      if (expandAllBranches && !forms.some((form) => deepEquals(form, schema))) {
+        forms = getByPath(formData, dependencyKey) === undefined ? [schema, ...forms] : [...forms, schema];
       }
       for (const [form, next] of nextForms(standing, forms, bounded)) {
         advance(form, remainingDependencies, next);
@@ -1937,7 +1942,12 @@ export function processDependencies<
   if (paths.length > MAX_COMBINED_FORMS) {
     paths = walk(true);
   }
-  return combined(paths, () => `the dependencies on ${Object.keys({ ...dependencies }).join(', ')}`);
+  // Named by a hash as well as the keys, so that two schemas depending on the same keys log a warning each
+  return combined(
+    paths,
+    () =>
+      `the dependencies on ${Object.keys({ ...dependencies }).join(', ')} (hash ${hashForSchema({ dependencies } as S)})`,
+  );
 }
 
 /** Updates a schema with additionally required properties added

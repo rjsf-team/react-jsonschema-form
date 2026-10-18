@@ -111,8 +111,11 @@ function pathForValues<S extends StrictRJSFSchema = RJSFSchema>(schema: S, recur
 }
 
 /** Warns when one `schema` expands to more than `MAX_COMBINED_FORMS` forms. The limit bounds the combinations of each
- * `allOf` and of each object's `dependencies` on its own, and a schema that holds several of them, or a one-sided `if`
- * beside them, expands to the product of what each gives, every form of which is compiled.
+ * `allOf` and of each object's `dependencies` on its own, and a schema that holds several of them, or a condition
+ * beside them, expands to the product of what each gives, every form of which is compiled. The message says how many
+ * forms there are, not which keyword they came from: two-sided conditions and a `oneOf` inside a dependency count as
+ * much as the forms one-sided conditions and unapplied dependencies add. A schema the parse derives on the way, one of
+ * the forms of another, can warn beside the one it came from.
  *
  * @param schema - The schema that was expanded
  * @param formCount - The number of distinct forms it expanded to
@@ -120,7 +123,7 @@ function pathForValues<S extends StrictRJSFSchema = RJSFSchema>(schema: S, recur
 function warnPastCombinedForms<S extends StrictRJSFSchema = RJSFSchema>(schema: S, formCount: number) {
   if (formCount > MAX_COMBINED_FORMS) {
     logOnce(
-      `Expanding all branches of a schema (hash ${hashForSchema(schema)}) gives ${formCount} forms, more than the ${MAX_COMBINED_FORMS} each allOf or set of dependencies is bounded to, and each is compiled. Give the object fewer one-sided conditions or schema dependencies, nesting what they describe under its properties if need be.`,
+      `Expanding all branches of a schema (hash ${hashForSchema(schema)}) gives ${formCount} forms, more than the ${MAX_COMBINED_FORMS} each allOf or set of dependencies is bounded to, and each is compiled.`,
       'warn',
     );
   }

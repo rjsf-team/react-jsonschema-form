@@ -297,6 +297,19 @@ describe('precompiled validator integration: oneOf with additionalProperties:fal
     // The first render scores and checks the option as empty data selects it, with no dependency or `then` applied
     expect(validator.isValid(withVariantId(retrieved), {}, root)).toBe(true);
   });
+  it.each([[{ a: ['b'] }], [{ a: ['b'], b: { properties: { c: {} } } }]] as RJSFSchema['dependencies'][][])(
+    'compiles the option for empty data when it has a property dependency %j',
+    (dependencies) => {
+      const option: RJSFSchema = { type: 'object', properties: { a: {}, b: {} }, dependencies };
+      const root: RJSFSchema = {
+        type: 'object',
+        oneOf: [option, { type: 'object', properties: { z: { type: 'number' } } }],
+      };
+      const validator = buildPrecompiledValidator(root);
+      const retrieved = createSchemaUtils({ validator }, root).retrieveSchema(option, {});
+      expect(validator.isValid(withVariantId(retrieved), {}, root)).toBe(true);
+    },
+  );
   describe('an option with an `if` that has no `else`', () => {
     /** Until the data satisfies the `if`, a form renders the option without its `then`, so that schema has to be
      * compiled as well as the one with `then` applied

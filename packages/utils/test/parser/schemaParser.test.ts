@@ -554,7 +554,9 @@ describe('schemaParser()', () => {
     };
     schemaParser(rootSchema);
     expect(consoleWarnSpy).toHaveBeenCalledWith(
-      expect.stringMatching(/the dependencies on k0, .*k8 gives more than the 256 combinations that are expanded/),
+      expect.stringMatching(
+        /the dependencies on k0, .*k8 \(hash [^)]+\) gives more than the 256 combinations that are expanded/,
+      ),
     );
     expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('k0, k1'));
     consoleWarnSpy.mockRestore();

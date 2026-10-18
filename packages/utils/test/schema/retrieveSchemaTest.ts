@@ -4638,7 +4638,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             ),
           );
           expect(consoleWarnSpy).toHaveBeenCalledWith(
-            expect.stringMatching(/the dependencies on k0, k1, .*k8 gives more than the 256/),
+            expect.stringMatching(/the dependencies on k0, k1, .*k8 \(hash [^)]+\) gives more than the 256/),
           );
         });
         it('bounds the subsets of the dependencies together with the conditions inside them', () => {
@@ -4653,7 +4653,14 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             [...eight, ...eight.flatMap((key) => [`p_${key}`, `t_${key}`])].sort().join('+'),
           ].sort();
           expect(formSet(all)).toEqual(expected);
-          expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringMatching(/the dependencies on k0, .*k7 gives more/));
+          expect(consoleWarnSpy).toHaveBeenCalledWith(
+            expect.stringMatching(/the dependencies on k0, .*k7 \(hash [^)]+\) gives more/),
+          );
+        });
+        it('tells apart schemas depending on the same keys in the warning', () => {
+          expand(withDependencies(keys, conditional));
+          expand(withDependencies(keys, dependent));
+          expect(consoleWarnSpy).toHaveBeenCalledTimes(2);
         });
         it('expands every subset of the dependencies while there are few enough of them', () => {
           const three = keys.slice(0, 3);
@@ -4661,6 +4668,15 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           expect(expand(withDependencies(three, dependent))).toHaveLength(27);
           expect(consoleWarnSpy).not.toHaveBeenCalled();
         });
+      });
+      it('leaves a property dependency unapplied too, as the form for empty data', () => {
+        const required = (schema: RJSFSchema) => expand(schema).map((form) => form.required);
+        const properties = { a: {}, b: {} };
+        expect(required({ type: 'object', properties, dependencies: { a: ['b'] } })).toEqual([undefined, ['b']]);
+        // Beside a schema dependency, the form with neither applied is among them as well
+        expect(
+          required({ type: 'object', properties, dependencies: { a: ['b'], b: { properties: { c: {} } } } }),
+        ).toContain(undefined);
       });
       it('re-checks a dependency skipped before another one declared its key', () => {
         const schema: RJSFSchema = {
@@ -4670,6 +4686,8 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         };
         expect(expand(schema).map(({ properties, required }) => [Object.keys(properties!), required])).toEqual([
           [['a'], undefined],
+          // `b`'s property dependency left unapplied, as a form renders it until `b` is filled in
+          [['a', 'b'], undefined],
           [['a', 'b'], ['c']],
         ]);
       });
