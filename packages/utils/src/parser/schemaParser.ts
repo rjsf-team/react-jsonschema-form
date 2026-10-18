@@ -120,7 +120,7 @@ function pathForValues<S extends StrictRJSFSchema = RJSFSchema>(schema: S, recur
 function warnPastCombinedForms<S extends StrictRJSFSchema = RJSFSchema>(schema: S, formCount: number) {
   if (formCount > MAX_COMBINED_FORMS) {
     logOnce(
-      `Expanding all branches of a schema (hash ${hashForSchema(schema)}) gives ${formCount} forms, more than the ${MAX_COMBINED_FORMS} each allOf or set of dependencies is bounded to, since its allOfs, dependencies and one-sided conditions multiply. Each form is compiled, so the compiled output grows with them. Give the object fewer one-sided conditions or schema dependencies, nesting what they describe under its properties if need be.`,
+      `Expanding all branches of a schema (hash ${hashForSchema(schema)}) gives ${formCount} forms, more than the ${MAX_COMBINED_FORMS} each allOf or set of dependencies is bounded to, and each is compiled. Give the object fewer one-sided conditions or schema dependencies, nesting what they describe under its properties if need be.`,
       'warn',
     );
   }
