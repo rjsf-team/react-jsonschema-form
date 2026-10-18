@@ -302,9 +302,10 @@ export function nodeOfSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: S,
 
 /** Returns the schema a validator checks `schema` with as the subschema it stands for: a `{ $ref }` naming its place in
  * `rootSchema`, which the validator resolves against the root it is handed, or, for a schema with no place there, the
- * schema itself under an `$id` derived from its own, see `withVariantId()`. A schema `retrieveSchema()` handed out
- * stands for the subschema it was resolved from, so it is checked as JSON Schema reads that subschema rather than as
- * the form merged it.
+ * schema itself under an `$id` derived from its own, see `withVariantId()`, which a validator reads a `$ref` that is
+ * only a fragment against the root under, as it reads every one it is handed. A schema `retrieveSchema()` handed out
+ * from one subschema stands for it, so it is checked as JSON Schema reads that subschema rather than as the form merged
+ * it; one merged from several is checked as merged.
  *
  * @param schema - The schema to check data against
  * @param rootSchema - The root schema it belongs to
