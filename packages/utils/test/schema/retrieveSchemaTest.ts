@@ -4367,7 +4367,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       const withThen = { type: 'object', properties: { a: { type: 'string' }, extra: { type: 'string' } } };
       const withElse = { type: 'object', properties: { a: { type: 'string' }, other: { type: 'number' } } };
       beforeEach(() => {
-        // As a real validator answers for the empty data a parse expands with: none of these `if`s hold for it, so the
+        // As a parse's validator answers. These `if`s put `a` in `required`, so empty data doesn't satisfy them and the
         // form a condition lists first is the one without `then`, or the one with `else` applied
         testValidator.setReturnValues({ isValid: Array(5000).fill(false) });
       });
@@ -4412,6 +4412,18 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         expect(resolveCondition({ validator: testValidator }, thenFalse, thenFalse, true, [])).toEqual([
           withElse,
           { ...unconditioned, not: {} },
+        ]);
+      });
+      it('lists `then` first when empty data satisfies the `if`, whatever the validator answers', () => {
+        const schema: RJSFSchema = { ...base, if: { properties: { a: { const: 'x' } } }, then: thenBranch };
+        expect(resolveCondition({ validator: testValidator }, schema, schema, true, [])).toEqual([
+          withThen,
+          unconditioned,
+        ]);
+        const ifFalse: RJSFSchema = { ...base, if: false, then: thenBranch };
+        expect(resolveCondition({ validator: testValidator }, ifFalse, ifFalse, true, [])).toEqual([
+          unconditioned,
+          withThen,
         ]);
       });
       it('returns only the schema without the condition when neither branch changes it', () => {

@@ -402,6 +402,34 @@ describe('precompiled validator integration: oneOf with additionalProperties:fal
       [{}, { k0: 'x' }, { k5: 'x' }],
     ],
     [
+      'more one-sided conditions in an `allOf` than are combined, some of them with an `if` empty data satisfies',
+      {
+        type: 'object',
+        allOf: Array.from({ length: 9 }, (_, i) => ({
+          if:
+            i < 5
+              ? { properties: { [`k${i}`]: { const: 'x' } } }
+              : { properties: { [`k${i}`]: { const: 'x' } }, required: [`k${i}`] },
+          then: { properties: { [`v${i}`]: { type: 'string' } } },
+        })),
+      },
+      [{}, { k0: 'x' }, { k5: 'x' }],
+    ],
+    [
+      'one-sided conditions in an `allOf`, some of them with an `if` empty data satisfies',
+      {
+        type: 'object',
+        allOf: Array.from({ length: 4 }, (_, i) => ({
+          if:
+            i < 2
+              ? { properties: { [`k${i}`]: { const: 'x' } } }
+              : { properties: { [`k${i}`]: { const: 'x' } }, required: [`k${i}`] },
+          then: { properties: { [`v${i}`]: { type: 'string' } } },
+        })),
+      },
+      [{}, { k0: 'q' }, { k2: 'x' }],
+    ],
+    [
       'more one-sided conditions in its `dependencies` than are combined',
       {
         type: 'object',

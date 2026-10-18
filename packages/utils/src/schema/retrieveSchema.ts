@@ -111,8 +111,8 @@ function normalizeBooleanSchema<S extends StrictRJSFSchema = RJSFSchema>(schema:
 /** Resolves a conditional block (if/else/then) by removing the condition and merging the appropriate conditional branch
  * with the rest of the schema. If `expandAllBranches` is true, then the `retrieveSchemaInteral()` results for both
  * conditions will be returned: a `false` branch as `{ not: {} }`, and a missing, `true` or `{}` one as the schema
- * without the condition, which is what a form renders until the data selects the other branch. The one the `formData`
- * selects is listed first.
+ * without the condition, which is what a form renders until the data selects the other branch. The one empty data
+ * selects is listed first, as the `if` alone tells it: `then` unless the `if` is `false` or puts a key in `required`.
  *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param schema - The schema for which resolving a condition is desired
@@ -144,6 +144,11 @@ export function resolveCondition<
   // `null` is checked as `{}` like `undefined`: object keywords such as `required` ignore non-objects, so a `null`
   // would satisfy `if: { required: ['a'] }` and take `then` for an object with no data
   const conditionValue = context.validator.isValid(expression as S, formData ?? {}, rootSchema);
+  // Expanding all branches is a parse, whose validator only records the `if`, so the branch empty data selects is
+  // judged from the `if` itself: `then`, unless the `if` is `false` or puts a key in `required`
+  const selectsThen = expandAllBranches
+    ? expression !== false && !(isObject(expression) && (expression as S).required?.length)
+    : conditionValue;
   // A missing, `null`, `true` or `{}` branch leaves the schema without the condition
   const changing = (branch: unknown) =>
     branch === undefined || branch === null || branch === true || (isObject(branch) && !Object.keys(branch).length)
@@ -151,10 +156,10 @@ export function resolveCondition<
       : branch;
   // Each branch with the key it sits under, kept beside it rather than worked out from its value, which `then` and
   // `else` can share
-  const selected: [unknown, string] = conditionValue ? [changing(then), THEN_KEY] : [changing(otherwise), ELSE_KEY];
-  const other: [unknown, string] = conditionValue ? [changing(otherwise), ELSE_KEY] : [changing(then), THEN_KEY];
-  // Expanding all branches lists each form once, two deep-equal branches being the one form, and the form the data
-  // selects first: it is the one a form renders for that data, which `combineForms()` keeps once it has to drop
+  const selected: [unknown, string] = selectsThen ? [changing(then), THEN_KEY] : [changing(otherwise), ELSE_KEY];
+  const other: [unknown, string] = selectsThen ? [changing(otherwise), ELSE_KEY] : [changing(then), THEN_KEY];
+  // Expanding all branches lists each form once, two deep-equal branches being the one form, and the form empty data
+  // selects first: it is the one a form renders on its first render, which `combineForms()` keeps once it has to drop
   // combinations
   const branches = expandAllBranches && !deepEquals(selected[0], other[0]) ? [selected, other] : [selected];
   return branches
@@ -1857,7 +1862,7 @@ export function resolveDependencies<
 
 /** Processes all the `dependencies` into the list of `resolvedSchema`s as needed. Passes the `expandAllBranches` flag
  * down to the `withDependentSchema()` helper calls. Expanding all branches also returns the schema with each subset of
- * its schema dependencies left unapplied, bounded as `nextForms()` describes.
+ * its dependencies left unapplied, bounded as `nextForms()` describes.
  *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param dependencies - The set of dependencies that needs to be processed
@@ -1886,7 +1891,7 @@ export function processDependencies<
   passCount = 0,
 ): S[] {
   // Each path applies the first dependency its schema has the key of, then the rest, re-checking the ones skipped
-  // since an applied dependency can declare their keys. Expanding all branches also leaves each schema dependency
+  // since an applied dependency can declare their keys. Expanding all branches also leaves each dependency
   // unapplied, as a form does until its key is filled in, which makes every subset of them a path. Past
   // `MAX_COMBINED_FORMS` paths the walk starts again, bounded as `nextForms()` describes
   const walk = (bounded: boolean) => {
