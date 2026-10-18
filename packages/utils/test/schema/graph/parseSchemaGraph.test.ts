@@ -158,11 +158,16 @@ describe('parseSchemaGraph()', () => {
         definitions: {
           a: { type: 'string' },
           pure: { $ref: '#/definitions/a', title: 'T', description: 'D', $comment: 'c' },
-          impure: { $ref: '#/definitions/a', default: 'x' },
+          annotated: { $ref: '#/definitions/a', default: 'x', examples: ['y'], readOnly: true, deprecated: true },
+          impure: { $ref: '#/definitions/a', minLength: 1 },
+          rebased: { $ref: '#/definitions/a', $id: 'https://example.com/rebased.json' },
         },
       });
       expect(at(graph, '/definitions/pure').pureRef).toBe(true);
+      // Annotations beside a `$ref` override the target's, which leaves it reading as its target
+      expect(at(graph, '/definitions/annotated').pureRef).toBe(true);
       expect(at(graph, '/definitions/impure').pureRef).toBe(false);
+      expect(at(graph, '/definitions/rebased').pureRef).toBe(false);
       expect(at(graph, '/definitions/a').pureRef).toBe(false);
     });
   });

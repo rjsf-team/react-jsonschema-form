@@ -124,9 +124,6 @@ export interface AdoptedSchema<S extends StrictRJSFSchema = RJSFSchema> {
  */
 export const EXTERNAL_POINTER = '~external';
 
-/** The keywords that can stand beside a `$ref` without changing what it resolves to */
-const PURE_REF_KEYS = new Set([REF_KEY, DEFINITIONS_KEY, '$defs', SCHEMA_KEY, '$comment', 'title', 'description']);
-
 /** The keywords that say nothing a value has to meet: those that identify a schema or hold definitions for others, and
  * the annotations, which beside a `$ref` override the target's rather than combining with them. A `$ref` beside
  * nothing else has nothing to be the `allOf` of.
@@ -147,6 +144,12 @@ const NON_CONSTRAINING_KEYS = new Set([
   'readOnly',
   'writeOnly',
 ]);
+
+/** The keywords that can stand beside a `$ref` without changing what it resolves to, for the recursion rule to read it
+ * as its target: every keyword that says nothing a value has to meet but `$id`, which moves the base the `$ref`
+ * resolves against
+ */
+const PURE_REF_KEYS = new Set([...NON_CONSTRAINING_KEYS].filter((key) => key !== ID_KEY));
 
 function escapeToken(token: string): string {
   return token.replaceAll('~', '~0').replaceAll('/', '~1');

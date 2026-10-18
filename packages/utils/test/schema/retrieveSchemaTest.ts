@@ -4862,6 +4862,28 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       });
     });
     describe('retrieveSchema() over the schema graph', () => {
+      it.each<[string, RJSFSchema]>([
+        ['nothing', {}],
+        ['a title', { title: 'Node' }],
+        ['readOnly', { readOnly: false }],
+        ['a default', { default: {} }],
+        ['examples', { examples: [{}] }],
+        ['deprecated', { deprecated: false }],
+      ])(
+        'collapses a recursion through an alias chain at the same field whatever the alias has beside it: %s',
+        (_, beside) => {
+          const rootSchema: RJSFSchema = {
+            definitions: {
+              node: { type: 'object', properties: { n: { type: 'string' }, c: { $ref: '#/definitions/A1' } } },
+              A1: { $ref: '#/definitions/A2' },
+              A2: { $ref: '#/definitions/node', ...beside },
+            },
+            $ref: '#/definitions/node',
+          };
+          const c = retrieveSchema({ validator: testValidator }, rootSchema, rootSchema).properties?.c;
+          expect(isObject(c) && Reflect.get(c, RJSF_REF_CYCLE_KEY)).toBeTruthy();
+        },
+      );
       it("keeps the then beside a $ref in a copy of a schema adopted from outside the root, whose if the outer schema's shares a pointer with", () => {
         const root: RJSFSchema = { definitions: { x: { type: 'object', properties: { a: { type: 'string' } } } } };
         const external: RJSFSchema = {
