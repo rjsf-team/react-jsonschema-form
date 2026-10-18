@@ -40,7 +40,8 @@ interface OptionSelection<T> {
   formData: T | undefined;
   id: string;
   /** The data the user's last option switch sent, and what the form stored for it when it took the switch as sent, so
-   * an accepted switch keeps the explicit choice and one refused or rewritten is re-matched to the data the form kept
+   * an accepted switch keeps the explicit choice and a rewritten one is re-matched to the data the form kept. A switch
+   * the form refused is not recorded, since it changed nothing
    */
   switched: { formData: T | undefined; taken?: { kept: unknown } } | undefined;
 }
@@ -76,8 +77,8 @@ function optionForData<
     ) {
       return selectedOption;
     }
-    // The data is not what the switch sent, which is what a `transformChange` or an `onChange` that refuses or
-    // rewrites it looks like, or a custom parent of the field that kept the data it had: the chosen option stays while
+    // The data is not what the switch sent, which is what a `transformChange` that rewrites it looks like, or a parent
+    // of the field other than a form that refused it, rewrote it or kept the data it had: the chosen option stays while
     // the data the form kept still fits it, so a form whose data matches several options keeps the explicit choice,
     // and one whose data does not is put on the option that describes it
     const chosen = selectedOption >= 0 ? options[selectedOption] : undefined;
@@ -272,6 +273,10 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
         newFormData,
         () => onChange(newFormData, fieldPath, undefined, fieldId),
       );
+      // A switch the form refused changed nothing, so the option shown stays, even where the data fits the one picked
+      if (outcome?.kind === 'refused') {
+        return;
+      }
       setSelection((current) => ({
         ...current,
         selectedOption: intOption,

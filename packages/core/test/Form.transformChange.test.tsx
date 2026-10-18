@@ -520,6 +520,37 @@ describe('transformChange', () => {
       expect(reported.filter(({ formData }) => formData.status?.by !== 'me')).toEqual([]);
     });
 
+    it('refused, leaves the selector on the option it showed when the data fits the refused option too', async () => {
+      // No option requires a property, so the data fits both and only the refusal says which option stays
+      const looseSchema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          status: {
+            [keyword]: [
+              { title: 'Approved', type: 'object', properties: { by: { type: 'string' } } },
+              { title: 'Rejected', type: 'object', properties: { reason: { type: 'string' } } },
+            ],
+          },
+        },
+      };
+      const transformChange = vi.fn<NonNullable<FormProps<Decision>['transformChange']>>((_next, previous) => previous);
+      const ref = createFormRef<Decision>();
+      const { node } = renderForm<Decision>({
+        ref,
+        schema: looseSchema,
+        initialFormData: { status: {} },
+        transformChange,
+      });
+
+      await user.selectOptions(selector(node), 'Rejected');
+
+      expect(transformChange).toHaveBeenCalled();
+      expect(selector(node)).toHaveValue('0');
+      expect(node.querySelector('#root_status_by')).toBeInTheDocument();
+      expect(node.querySelector('#root_status_reason')).not.toBeInTheDocument();
+      expect(handleOf(ref).getFormData()).toEqual({ status: {} });
+    });
+
     it.each([
       { rewrite: { by: 'you' }, option: '0', field: 'by', value: 'you', gone: 'reason' },
       { rewrite: { until: 'later' }, option: '2', field: 'until', value: 'later', gone: 'reason' },
