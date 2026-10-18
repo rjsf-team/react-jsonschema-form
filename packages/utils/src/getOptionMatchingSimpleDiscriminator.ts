@@ -1,10 +1,14 @@
+import { isStubbedProperty } from './additionalPropertiesUtils.ts';
 import getPropertySchema from './getPropertySchema.ts';
 import { getByPath } from './pathUtils.ts';
 import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
 
 /** Compares the value of `discriminatorField` within `formData` against the value of `discriminatorField` within schema for each `option`.
  * Returns index of first `option` whose discriminator matches formData. Returns `undefined` if there is no match.
- * This function does not work with discriminators of `"type": "object"` and `"type": "array"`
+ * This function does not work with discriminators of `"type": "object"` and `"type": "array"`. A discriminator the
+ * option doesn't declare, but that `retrieveSchema()` stubbed into its `properties` for the key of the data, is skipped:
+ * a stub keeps the `const` or `enum` of the keyword that takes the key but drops its `not`, so it says nothing about
+ * whether the option fits
  *
  * @param formData - The current formData, if any, used to figure out a match
  * @param options - The list of options to find a matching options from
@@ -28,7 +32,7 @@ export default function getOptionMatchingSimpleDiscriminator<T = unknown, S exte
       const option = options[i];
       const discriminator = getPropertySchema<S>(option, discriminatorField);
 
-      if (discriminator.type !== 'object' && discriminator.type !== 'array') {
+      if (!isStubbedProperty(discriminator) && discriminator.type !== 'object' && discriminator.type !== 'array') {
         if (discriminator.const === value) {
           return i;
         }

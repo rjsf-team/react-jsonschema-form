@@ -387,6 +387,16 @@ describe('an option whose patternProperties or additionalProperties take keys fr
       [1, 1],
       [1, 1],
     ]);
+    // An option that declares no names of its own fails for such data too, as the `anyOf` of the stubbed names did
+    const mapOnly: RJSFSchema[] = [options[0], { type: 'object', additionalProperties: true }];
+    const [precompiledMap, liveMap] = picks(mapOnly, { z: undefined });
+    expect(precompiledMap[0]).toBe(0);
+    expect(liveMap[0]).toBe(0);
+    expect(precompiledMap[1]).toBe(liveMap[1]);
+    expect(picks(mapOnly, { z: 'set' })).toEqual([
+      [1, 1],
+      [1, 1],
+    ]);
   });
   it('scores an option with a `required` by the schema the parse records for a key it takes', () => {
     const options: RJSFSchema[] = [
@@ -419,6 +429,36 @@ describe('an option whose patternProperties or additionalProperties take keys fr
       [0, 0],
       [0, 0],
     ]);
+  });
+  it('does not take a stubbed discriminator as a simple discriminator match either', () => {
+    // Option 1's stub for `kind` keeps the `enum` of its `additionalProperties` but drops the `not` that rejects 'a'
+    const options: RJSFSchema[] = [
+      { type: 'object', properties: { kind: { const: 'b' } } },
+      { type: 'object', properties: { x: {} }, additionalProperties: { enum: ['a', 'b'], not: { const: 'a' } } },
+      { type: 'object', properties: { kind: { type: 'string' } } },
+    ];
+    const [precompiled, live] = picks(options, { kind: 'a' }, 'kind');
+    expect(precompiled[0]).toBe(2);
+    expect(live[0]).toBe(2);
+  });
+  it('scores and checks an option without the stubs retrieved into a property a pattern also matches', () => {
+    const options: RJSFSchema[] = [
+      {
+        type: 'object',
+        properties: { s_cfg: { type: 'object' } },
+        patternProperties: { '^s_': { type: 'object', additionalProperties: { type: 'string' } } },
+      },
+      { type: 'number' },
+    ];
+    const data = { s_cfg: { inner: 'x' } };
+    expect(picks(options, data)).toEqual([
+      [0, 0],
+      [0, 0],
+    ]);
+    const root = rootFor(options);
+    const validator = buildPrecompiledValidator(root);
+    const retrieved = createSchemaUtils({ validator }, root).retrieveSchema(options[0], data);
+    expect(validator.isValid(declineCheckSchema(retrieved), data, root)).toBe(true);
   });
   it('checks a retrieved option that carries an `$id` as MultiSchemaField does when a switch is declined', () => {
     const options: RJSFSchema[] = [

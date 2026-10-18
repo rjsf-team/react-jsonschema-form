@@ -80,6 +80,16 @@ describe('scoring an option with keys of the data stubbed into it', () => {
       anyOf: [{ required: ['id'] }],
     });
   });
+  it('scores an option with no names of its own by one matching nothing while every stubbed key holds undefined', () => {
+    const { schemas, validator } = recordingValidator();
+    const mapOnly: RJSFSchema = { type: 'object', additionalProperties: true };
+    const retrieved: RJSFSchema = { ...mapOnly, properties: { z: stub({ type: 'string' }) } };
+    getFirstMatchingOption({ validator }, { z: undefined }, [retrieved, { type: 'number' }], {});
+    // v7's `anyOf` of the stubbed names failed for such data, where the option with an empty `properties` matches it
+    expect(schemas[0]).toEqual({ not: {} });
+    getFirstMatchingOption({ validator }, { z: 'set' }, [retrieved, { type: 'number' }], {});
+    expect(schemas[1]).toEqual(scoringSchemaWithDataKeys({ ...mapOnly, properties: {} }));
+  });
   it('derives each form once per retrieved option', () => {
     const { schemas, validator } = recordingValidator();
     const retrieved: RJSFSchema = {

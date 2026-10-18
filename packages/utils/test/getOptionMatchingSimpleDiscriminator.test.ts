@@ -1,3 +1,4 @@
+import { ADDITIONAL_PROPERTY_FLAG } from '../src/constants.ts';
 import getOptionMatchingSimpleDiscriminator from '../src/getOptionMatchingSimpleDiscriminator.ts';
 
 describe('getOptionMatchingSimpleDiscriminator()', () => {
@@ -77,5 +78,20 @@ describe('getOptionMatchingSimpleDiscriminator()', () => {
         ),
       ).toEqual(undefined);
     });
+  });
+
+  test('skips a discriminator that is only a stub retrieveSchema() put in for the key of the data', () => {
+    const stub = { enum: ['a', 'b'], [ADDITIONAL_PROPERTY_FLAG]: true };
+    expect(
+      getOptionMatchingSimpleDiscriminator(
+        { kind: 'a' },
+        [
+          { type: 'object', properties: { kind: { const: 'b' } } },
+          { type: 'object', properties: { x: {}, kind: stub } },
+          { type: 'object', properties: { kind: { enum: ['a'] } } },
+        ],
+        'kind',
+      ),
+    ).toEqual(2);
   });
 });

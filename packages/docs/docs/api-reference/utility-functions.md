@@ -1121,7 +1121,7 @@ The type of an `anyOf`/`oneOf` schema whose options name no type of their own is
 
 Compares the value of `discriminatorField` within `formData` against the value of `discriminatorField` within schema for each `option`. Returns index of first `option` whose discriminator matches formData. Returns `undefined` if there is no match.
 
-This function does not work with discriminators of `"type": "object"` and `"type": "array"`
+This function does not work with discriminators of `"type": "object"` and `"type": "array"`. A discriminator the option doesn't declare, but that `retrieveSchema()` stubbed into its `properties` for the key of the data, is skipped.
 
 #### Parameters
 
@@ -2709,7 +2709,7 @@ A suffix already present is replaced rather than appended to, so deriving from a
 
 ### withoutStubbedProperties&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
-Returns a schema without the properties `retrieveSchema()` stubbed into it for the keys of the form data that its `patternProperties` or `additionalProperties` take, or `undefined` when it has none.
+Returns a schema without the properties `retrieveSchema()` stubbed into it for the keys of the form data that its `patternProperties` or `additionalProperties` take, at any depth of its `properties`, or `undefined` when it has none. A declared property that a `patternProperties` pattern also matches is retrieved against the data it holds, which stubs that data's keys into it, so those are dropped too.
 The result is not equivalent to the stubbed schema: a stub carries a guessed type, `{ type: 'null' }` for a key the schema forbids, and drops subschema keywords such as `not`, so it can accept a value the keyword that takes the key rejects.
 Option scoring and `MultiSchemaField`'s decline check ([`declineCheckSchema()`](#declinecheckschema)) validate an option in this form, so every validator, live or precompiled, answers for the schema as written; the stubs only render the keys.
 

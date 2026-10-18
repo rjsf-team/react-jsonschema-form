@@ -105,18 +105,16 @@ function scoringSchema<S extends StrictRJSFSchema = RJSFSchema>(option: S, formD
   if (memoized) {
     return memoized as S;
   }
-  let stubbed = stubbedScoringSchemas.get(option);
-  if (!stubbed) {
+  if (!stubbedScoringSchemas.has(option)) {
     const unstubbed = withoutStubbedProperties<S>(option);
     if (!unstubbed) {
       const scored = augmentedForScoring<S>(option);
       scoringSchemas.set(option, scored);
       return scored;
     }
-    stubbed = { unstubbed, scored: new Map() };
-    stubbedScoringSchemas.set(option, stubbed);
+    stubbedScoringSchemas.set(option, { unstubbed });
   }
-  return stubbedScoringSchema<S>(option, stubbed, formData);
+  return stubbedScoringSchema<S>(option, formData);
 }
 
 /** The scoring schema for an option that describes no keys at all. `normalizeBooleanSchema()` reads a `false`
@@ -181,12 +179,14 @@ function augmentedForScoring<S extends StrictRJSFSchema = RJSFSchema>(option: S)
 }
 
 /** An option that `retrieveSchema()` stubbed keys of the form data into without those stubs, and the two schemas it
- * can be scored by: one for data holding a value for a stubbed key, one for data that doesn't
+ * can be scored by, each derived the first time it is needed
  */
 interface StubbedScoring {
   unstubbed: StrictRJSFSchema;
-  /** The schema derived so far for data that does (`true`) and doesn't (`false`) hold a value for a stubbed key */
-  scored: Map<boolean, StrictRJSFSchema>;
+  /** The schema for data holding a defined value for a stubbed key */
+  withDataKeys?: StrictRJSFSchema;
+  /** The schema for data holding none */
+  withoutDataKeys?: StrictRJSFSchema;
 }
 
 /** The `StubbedScoring` of each option that has stubs, memoized by the retrieved option, as `scoringSchemas` is */
@@ -200,30 +200,54 @@ const stubbedScoringSchemas = new WeakMap<StrictRJSFSchema, StubbedScoring>();
  * A stubbed key satisfies the `anyOf` of the option's names that scoring asserts only while it holds a defined value,
  * since `required` treats `undefined` as missing. That is checked here, in JS, so the schema scored still depends on
  * the option alone: data holding a defined value for a stubbed key is scored by the option without the `anyOf`, and
- * other data by the option without stubs, as any other option is.
+ * other data by the option without stubs, as any other option is. An option that declares no names of its own is
+ * then left with only the stubbed ones, which object data holding none of them fails, as v7's `anyOf` of them did.
  *
- * @param option - The retrieved option, with its stubbed properties
- * @param memo - The option without its stubbed properties, and the schemas derived from it so far
+ * @param option - The retrieved option, with its stubbed properties, whose `StubbedScoring` is memoized
  * @param formData - The data being scored
  * @returns - The schema to score the option by
  */
-function stubbedScoringSchema<S extends StrictRJSFSchema = RJSFSchema>(
-  option: S,
-  memo: StubbedScoring,
-  formData: unknown,
-): S {
+function stubbedScoringSchema<S extends StrictRJSFSchema = RJSFSchema>(option: S, formData: unknown): S {
+  const memo = stubbedScoringSchemas.get(option)!;
   const properties = option[PROPERTIES_KEY] as Record<string, unknown>;
   const data = isObject(formData) ? (formData as Record<string, unknown>) : undefined;
   const holdsStubbedKey =
     data !== undefined &&
     Object.keys(properties).some((key) => isStubbedProperty(properties[key]) && data[key] !== undefined);
-  let scored = memo.scored.get(holdsStubbedKey);
-  if (scored === undefined) {
-    const unstubbed = memo.unstubbed as S;
-    scored = holdsStubbedKey ? scoringSchemaWithDataKeys<S>(unstubbed) : augmentedForScoring<S>(unstubbed);
-    memo.scored.set(holdsStubbedKey, scored);
+  const unstubbed = memo.unstubbed as S;
+  if (holdsStubbedKey) {
+    memo.withDataKeys ??= scoringSchemaWithDataKeys<S>(unstubbed);
+    return memo.withDataKeys as S;
   }
-  return scored as S;
+  // The stubbed keys hold `undefined` here, so of the names v7 asserted only the declared ones can be met. With none
+  // declared, v7's `anyOf` of the stubbed names failed for object data, rather than the option matching every object
+  // as one with an empty `properties` does
+  if (data !== undefined && !hasDeclaredNames(unstubbed)) {
+    return MATCHES_NOTHING as S;
+  }
+  memo.withoutDataKeys ??= augmentedForScoring<S>(unstubbed);
+  return memo.withoutDataKeys as S;
+}
+
+/** Returns whether the `option` declares any property names of its own in `properties`.
+ *
+ * @param option - The option, without the properties `retrieveSchema()` stubbed into it
+ * @returns - True when its `properties` names at least one key
+ */
+function hasDeclaredNames<S extends StrictRJSFSchema = RJSFSchema>(option: S): boolean {
+  const properties = option[PROPERTIES_KEY];
+  return isObject(properties) && Object.keys(properties).length > 0;
+}
+
+/** Returns the schema an object option is scored by while object data holds keys its `patternProperties` or
+ * `additionalProperties` take, all of them `undefined`, when the option declares no names of its own: one that matches
+ * nothing. `schemaParser()` records it for such an option, so that a precompiled validator has it compiled.
+ *
+ * @param option - A retrieved object option, without the properties stubbed into it
+ * @returns - The schema matching nothing when the option declares no names, or undefined when it declares some
+ */
+export function scoringSchemaWithUndefinedDataKeys<S extends StrictRJSFSchema = RJSFSchema>(option: S): S | undefined {
+  return hasDeclaredNames<S>(option) ? undefined : (MATCHES_NOTHING as S);
 }
 
 /** Returns the schema an object option is scored by while the data holds a defined value for a key its

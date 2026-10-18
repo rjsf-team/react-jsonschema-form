@@ -168,6 +168,23 @@ describe('withoutStubbedProperties()', () => {
     expect(Object.keys(unstubbed.properties)).toEqual(['__proto__']);
     expect(Object.getPrototypeOf(unstubbed.properties)).toBe(Object.prototype);
   });
+  it('drops the stubs retrieveSchema() put into a declared property for the keys of the data it holds', () => {
+    const nested: RJSFSchema = {
+      type: 'object',
+      properties: { inner: stub({ type: 'string' }) },
+      additionalProperties: { type: 'string' },
+    };
+    const schema: RJSFSchema = { type: 'object', properties: { s_cfg: nested, plain: { type: 'number' } } };
+    expect(withoutStubbedProperties(schema)).toEqual({
+      type: 'object',
+      properties: {
+        s_cfg: { type: 'object', properties: {}, additionalProperties: { type: 'string' } },
+        plain: { type: 'number' },
+      },
+    });
+    // A property without stubs at any depth is kept as the same object
+    expect(withoutStubbedProperties(schema)!.properties!.plain).toBe(schema.properties!.plain);
+  });
 });
 
 describe('isStubbedProperty()', () => {

@@ -139,7 +139,8 @@ export function isStubbedProperty(property: unknown): boolean {
 }
 
 /** Returns the `schema` without the properties `retrieveSchema()` stubbed into it for the keys of the form data that
- * its `patternProperties` or `additionalProperties` take, or undefined when it has none. A retrieved object schema
+ * its `patternProperties` or `additionalProperties` take, at any depth of its `properties`, or undefined when it has
+ * none. A retrieved object schema
  * names every such key the user has typed, so its content, and with it its hash, depends on the data, where the
  * schemas a precompiled validator holds come from the schema alone.
  *
@@ -159,18 +160,24 @@ export function withoutStubbedProperties<S extends StrictRJSFSchema = RJSFSchema
   }
   const keys = Object.keys(properties);
   const kept = keys.filter((key) => !isStubbedProperty(properties[key]));
-  if (kept.length === keys.length) {
+  // A declared property that a `patternProperties` pattern also matches is retrieved against the data it holds, which
+  // stubs that data's keys into it in turn, so each kept property is stripped of its own stubs as well
+  const strippedKept = kept.map((key) => {
+    const property = properties[key];
+    return isObject(property) ? withoutStubbedProperties<S>(property as S) : undefined;
+  });
+  if (kept.length === keys.length && strippedKept.every((stripped) => stripped === undefined)) {
     return undefined;
   }
   const keptProperties: NonNullable<S['properties']> = {};
-  for (const key of kept) {
+  kept.forEach((key, index) => {
     // `defineProperty`, as `stubExistingAdditionalProperties()` does, so a property called `__proto__` stays a property
     Object.defineProperty(keptProperties, key, {
-      value: properties[key],
+      value: strippedKept[index] ?? properties[key],
       configurable: true,
       enumerable: true,
       writable: true,
     });
-  }
+  });
   return { ...schema, properties: keptProperties };
 }
