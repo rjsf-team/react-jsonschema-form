@@ -950,6 +950,24 @@ describe('getDefaultFormState() reading $ref, branches and extra keys as the for
     expect(defaultsOf(chain, undefined, populate)).toEqual({ p: { a: 'x', c: 'c' } });
   });
 
+  it('hands computeSkipPopulate the array with its items written as a $ref read as the definition they name', () => {
+    const schema: RJSFSchema = {
+      definitions: { num: { type: 'number' } },
+      type: 'object',
+      properties: {
+        strings: { type: 'array', items: { type: 'string' }, minItems: 1 },
+        numbers: { type: 'array', items: { $ref: '#/definitions/num' }, minItems: 1 },
+      },
+      required: ['strings', 'numbers'],
+    };
+    const computeSkipPopulate = (_context: unknown, array: RJSFSchema) =>
+      isObject(array.items) && !Array.isArray(array.items) && array.items.type === 'number';
+    expect(defaultsOf(schema, undefined, { arrayMinItems: { computeSkipPopulate } })).toEqual({
+      strings: [undefined],
+      numbers: [],
+    });
+  });
+
   it("merges the allOf and the if of the option a field picks as the field's own", () => {
     const option: RJSFSchema = {
       if: { properties: { k: { const: 'x' } } },

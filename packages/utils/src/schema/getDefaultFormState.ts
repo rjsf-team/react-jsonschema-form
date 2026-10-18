@@ -1251,6 +1251,15 @@ function getItemUiSchemaForIndex<
   return getStaticItemsUiSchema<T, S, F>(uiSchema, idx);
 }
 
+/** Returns the array schema `schema` with an `items` written as a `$ref` read as the definition it names, which is
+ * what a `computeSkipPopulate()` reading the items' keywords expects to be handed
+ */
+function withItemsResolved<S extends StrictRJSFSchema>(schema: S, rootSchema: S): S {
+  const { items } = schema;
+  const resolved = isSchemaObject<S>(items) ? resolveOwnRef<S>(items, rootSchema) : items;
+  return resolved === items ? schema : { ...schema, items: resolved };
+}
+
 /** Computes the default value for arrays.
  *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
@@ -1358,7 +1367,7 @@ function arrayDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>
   if (
     !schema.minItems ||
     isMultiSelect<T, S, F>(context, schema, rootSchema) ||
-    computeSkipPopulate<S, F>(context, schema, rootSchema) ||
+    computeSkipPopulate<S, F>(context, withItemsResolved(schema, rootSchema), rootSchema) ||
     schema.minItems <= defaultsLength
   ) {
     // we don't want undefined defaults unless it is both not required or not required as root
