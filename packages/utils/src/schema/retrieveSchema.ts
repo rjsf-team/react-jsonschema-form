@@ -27,6 +27,7 @@ import getXxxOfOptions from '../getXxxOfOptions.ts';
 import guessType from '../guessType.ts';
 import isObject, { isSchemaObject } from '../isObject.ts';
 import rendersOwnFieldBesideOption from '../rendersOwnFieldBesideOption.ts';
+import setOwn from '../setOwn.ts';
 import type {
   FormContextType,
   GenericObjectType,
@@ -872,7 +873,7 @@ function withOptionExtraKeys<S extends StrictRJSFSchema = RJSFSchema>(schema: S,
   if (optionPatterns !== undefined) {
     const patterns: GenericObjectType = { ...schema.patternProperties };
     for (const [pattern, subSchema] of Object.entries(optionPatterns)) {
-      patterns[pattern] = conjoin(patterns[pattern], subSchema);
+      setOwn(patterns, pattern, conjoin(Object.hasOwn(patterns, pattern) ? patterns[pattern] : undefined, subSchema));
     }
     joined[PATTERN_PROPERTIES_KEY] = patterns;
   }
@@ -947,14 +948,7 @@ export function stubExistingAdditionalProperties<
       stub = guessedTypeSchema<S>(formData[key]);
     }
     (stub as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG] = true;
-    // `defineProperty`, since assigning a key called `__proto__` runs the setter `Object.prototype` carries: it would
-    // re-point this clone's prototype at the stub and declare no property, leaving the value with no field at all
-    Object.defineProperty(schema.properties, key, {
-      value: stub,
-      configurable: true,
-      enumerable: true,
-      writable: true,
-    });
+    setOwn(schema.properties, key, stub);
   }
   return schema;
 }

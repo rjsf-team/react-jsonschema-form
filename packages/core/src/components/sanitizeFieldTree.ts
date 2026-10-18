@@ -21,6 +21,7 @@ import {
 } from '@rjsf/utils';
 
 import type { FieldEdit, KeyMove } from './formState.ts';
+import setOwnKey from './setOwnKey.ts';
 import type { UiState } from './uiState.ts';
 import { asFieldValue, isPathPrefix, optionListKey, retrievedOptionsOf, shownOption } from './uiState.ts';
 
@@ -327,8 +328,8 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
             newRaw: newChild,
             oldValue: previousValue,
             newValue: newValue[key],
-            oldInherited: isPlainObject(oldOwnDefault) ? oldOwnDefault[key] : undefined,
-            newInherited: isPlainObject(newOwnDefault) ? newOwnDefault[key] : undefined,
+            oldInherited: isPlainObject(oldOwnDefault) ? getByPath(oldOwnDefault, key) : undefined,
+            newInherited: isPlainObject(newOwnDefault) ? getByPath(newOwnDefault, key) : undefined,
             isItem: false,
             hasOld: previousValue !== undefined,
           },
@@ -344,7 +345,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
         if (next === DROP) {
           delete result[key];
         } else {
-          result[key] = next;
+          setOwnKey(result, key, next);
         }
       }
     }
