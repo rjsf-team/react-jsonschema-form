@@ -9022,5 +9022,80 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         ).toEqual({ home: { country: 'US' } });
       });
     });
+
+    describe('own prototype-named properties', () => {
+      it('keeps an additionalProperties key named like an Object.prototype member', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { a: { type: 'string' } },
+          additionalProperties: { type: 'string' },
+        };
+        const result = getDefaultFormState(
+          { validator: testValidator },
+          { schema: { ...schema, default: JSON.parse('{"constructor":"c","valueOf":"v"}') }, formData: { a: 'x' } },
+        );
+        expect(Object.getOwnPropertyDescriptor(result, 'constructor')?.value).toBe('c');
+        expect(Object.getOwnPropertyDescriptor(result, 'valueOf')?.value).toBe('v');
+      });
+
+      it('keeps extra form data through the public entry point', () => {
+        const schema: RJSFSchema = { type: 'object', properties: { a: { type: 'string' } } };
+        expect(
+          getDefaultFormState({ validator: testValidator }, { schema, formData: { toString: 'abc', b: 1 } }),
+        ).toEqual({
+          toString: 'abc',
+          b: 1,
+        });
+      });
+
+      it('does not turn an inherited toString into own data during allOf matching', () => {
+        const schema: RJSFSchema = JSON.parse(
+          '{"type":"object","properties":{"toString":{"allOf":[{"type":"string"}]},"a":{"type":"string","default":"x"}}}',
+        );
+        const result = getDefaultFormState(
+          { validator: testValidator, defaultFormStateBehavior: { allOf: 'populateDefaults' } },
+          { schema, formData: { a: 'y' } },
+        );
+        expect(result).toEqual({ a: 'y' });
+        expect(Object.hasOwn(result!, 'toString')).toBe(false);
+      });
+
+      it.each([{}, JSON.parse('{"__proto__":{"y":"u"}}')])(
+        'retains __proto__ schema defaults with data %s',
+        (formData) => {
+          const schema: RJSFSchema = JSON.parse(
+            '{"type":"object","properties":{"__proto__":{"type":"object","properties":{"x":{"default":"dx"}}}}}',
+          );
+          const result = getDefaultFormState({ validator: testValidator }, { schema, formData });
+          expect(Object.hasOwn(result, '__proto__')).toBe(true);
+          expect(Object.getPrototypeOf(result)).toBe(Object.prototype);
+          expect(Object.getOwnPropertyDescriptor(result, '__proto__')?.value).toEqual({
+            x: 'dx',
+            ...(Object.getOwnPropertyDescriptor(formData, '__proto__')?.value ?? {}),
+          });
+        },
+      );
+
+      it('seeds object defaults beside a property declared as false', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { x: false },
+          additionalProperties: { type: 'string' },
+          default: { y: 'd' },
+        };
+        expect(getDefaultFormState({ validator: testValidator }, { schema, formData: { x: 1 } })).toEqual({
+          x: 1,
+          y: 'd',
+        });
+      });
+
+      it('does not read an inherited member of a parent const for a property named like one', () => {
+        const schema: RJSFSchema = JSON.parse(
+          '{"type":"object","const":{"a":"q"},"properties":{"a":{"type":"string"},"toString":{"type":"string"}}}',
+        );
+        const result = getDefaultFormState({ validator: testValidator }, { schema, formData: {} });
+        expect(Object.hasOwn(result!, 'toString')).toBe(false);
+      });
+    });
   });
 }
