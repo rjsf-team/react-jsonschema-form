@@ -842,8 +842,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       allOf: true,
       cutRecursion: true,
     }).build([{ node: option, refPath }]);
-    const properties: unknown = resolved.schema.properties;
-    return isObject(properties) ? properties[key] : undefined;
+    return getByPath(resolved.schema.properties, key);
   }
 
   /** Applies the one option of a dependency's `oneOf` whose `properties[key]` the data satisfies, less that property;

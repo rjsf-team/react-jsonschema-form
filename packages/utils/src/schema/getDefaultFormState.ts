@@ -891,7 +891,7 @@ function copiedValue(value: unknown, copies: WeakMap<object, unknown>): unknown 
   const copy: GenericObjectType = {};
   copies.set(value, copy);
   for (const [key, entry] of Object.entries(value)) {
-    copy[key] = copiedValue(entry, copies);
+    setOwn(copy, key, copiedValue(entry, copies));
   }
   return copy;
 }

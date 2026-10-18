@@ -8968,6 +8968,25 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         const result = getDefaultFormState({ validator: testValidator }, { schema, formData: {} });
         expect(Object.hasOwn(result!, 'toString')).toBe(false);
       });
+
+      it('copies a __proto__ key of a default as an own key', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { p: { default: JSON.parse('{"__proto__":{"x":1}}') } },
+        };
+        const result = getDefaultFormState({ validator: testValidator }, { schema });
+        expect(result).toEqual(JSON.parse('{"p":{"__proto__":{"x":1}}}'));
+        expect(Object.getPrototypeOf(Object.getOwnPropertyDescriptor(result, 'p')?.value)).toBe(Object.prototype);
+      });
+
+      it('matches no property named __proto__ that the data holds no own value for', () => {
+        const schema: RJSFSchema = JSON.parse(
+          '{"type":"object","properties":{"__proto__":{"type":"object","allOf":[{}],"properties":{"x":{"type":"string"}}}}}',
+        );
+        const result = ensureFormDataMatchingSchema({ validator: testValidator }, schema, schema, { a: 'y' });
+        expect(Object.getPrototypeOf(result)).toBe(Object.prototype);
+        expect(result).toEqual({ a: 'y' });
+      });
     });
   });
 }

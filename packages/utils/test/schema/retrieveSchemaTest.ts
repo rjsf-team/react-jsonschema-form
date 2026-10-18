@@ -2628,6 +2628,16 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         // No branch declares an own `toString`, so none matches and `b` is not declared by the dependency
         expect(Object.keys(result.properties!)).toEqual(['a', 'toString', 'b']);
       });
+
+      it('retrieveSchema() matches no dependency oneOf option written as a $ref on an inherited member', () => {
+        const schema: RJSFSchema = JSON.parse(
+          '{"type":"object","definitions":{"b":{"properties":{"b":{"type":"number"}}}},"properties":{"toString":{"type":"string"}},"dependencies":{"toString":{"oneOf":[{"$ref":"#/definitions/b"}]}}}',
+        );
+        // Every condition holds, so the option would be merged in were the inherited `toString` read as its condition
+        const validator = { ...testValidator, isValid: () => true };
+        const result = retrieveSchema({ validator }, schema, schema, { toString: 't' });
+        expect(Object.keys(result.properties ?? {})).toEqual(['toString']);
+      });
     });
     describe('withPatternProperties()', () => {
       it('validates schemas with conditions inside patternProperties', () => {
