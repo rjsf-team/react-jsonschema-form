@@ -873,7 +873,7 @@ function withOptionExtraKeys<S extends StrictRJSFSchema = RJSFSchema>(schema: S,
   if (optionPatterns !== undefined) {
     const patterns: GenericObjectType = { ...schema.patternProperties };
     for (const [pattern, subSchema] of Object.entries(optionPatterns)) {
-      patterns[pattern] = conjoin(patterns[pattern], subSchema);
+      setOwn(patterns, pattern, conjoin(Object.hasOwn(patterns, pattern) ? patterns[pattern] : undefined, subSchema));
     }
     joined[PATTERN_PROPERTIES_KEY] = patterns;
   }

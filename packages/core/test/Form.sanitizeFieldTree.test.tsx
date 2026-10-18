@@ -1,6 +1,6 @@
 import { createRef, useEffect, useState } from 'react';
 import type { RJSFSchema } from '@rjsf/utils';
-import { buttonId } from '@rjsf/utils';
+import { buttonId, getByPath } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -1278,5 +1278,27 @@ describe('sanitize as a diff of the field trees before and after a change', () =
 
       expect(events[events.length - 1].formData).toEqual({ color: 'b', unrelated: 'x' });
     });
+
+    it.each(['__proto__', 'toString'])(
+      'keeps the value of a property named %s when the default its parent declared for it goes',
+      (key) => {
+        const schemaWithDefault = (parentDefault: string) => {
+          const schema: RJSFSchema = JSON.parse(
+            `{"type":"object","properties":{"p":{"type":"object","default":${parentDefault},"properties":{"${key}":{"type":"object","properties":{"x":{"type":"string"}}},"y":{"type":"string"}}}}}`,
+          );
+          return schema;
+        };
+        const initialFormData: unknown = JSON.parse(`{"p":{"${key}":{"x":"d"},"y":"z"}}`);
+        const ref = createRef<FormRef>();
+        const props = { validator, initialFormData };
+        const { rerender } = render(<Form ref={ref} schema={schemaWithDefault(`{"${key}":{"x":"d"}}`)} {...props} />);
+
+        rerender(<Form ref={ref} schema={schemaWithDefault('{}')} {...props} />);
+
+        const p: unknown = getByPath(ref.current?.getFormData(), 'p');
+        expect(p).toEqual(JSON.parse(`{"${key}":{"x":"d"},"y":"z"}`));
+        expect(Object.getPrototypeOf(p)).toBe(Object.prototype);
+      },
+    );
   });
 });

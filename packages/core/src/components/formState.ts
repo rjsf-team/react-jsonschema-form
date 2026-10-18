@@ -44,6 +44,7 @@ import type { FormProps, FormState } from './Form.tsx';
 import type { EventFormData, IChangeEvent } from './IChangeEvent.ts';
 import type { FieldTree } from './sanitizeFieldTree.ts';
 import sanitizeFieldTree from './sanitizeFieldTree.ts';
+import setOwnKey from './setOwnKey.ts';
 import { asFieldValue, createUiState, fieldStateOf, isPathPrefix } from './uiState.ts';
 
 /* The pure half of `Form`: what its state is derived from, and what each operation makes of it.
@@ -367,19 +368,6 @@ function runLiveValidation<T, S extends StrictRJSFSchema, F extends FormContextT
   const { errors: schemaValidationErrors, errorSchema: schemaValidationErrorSchema } = schemaValidation;
   const mergedErrors = mergeErrors(schemaValidation, props.extraErrors, customErrors);
   return { ...mergedErrors, schemaValidationErrors, schemaValidationErrorSchema };
-}
-
-/** Sets `value` under `key` as an own data property of the object `acc` being built. A JSON-sourced `__proto__` key is
- * a field name like any other, and a plain assignment would reach the setter and swap `acc`'s prototype for `value`.
- * Only that key is defined, since the prune walks the validator's whole `ErrorSchema` and a definition costs more than
- * an assignment
- */
-function setOwnKey(acc: Record<string, unknown>, key: string, value: unknown) {
-  if (key === '__proto__') {
-    Object.defineProperty(acc, key, { value, enumerable: true, writable: true, configurable: true });
-  } else {
-    acc[key] = value;
-  }
 }
 
 /** A copy of `errorSchema` without the `__errors` of the nodes `isDropped` names, and without the nodes that hold

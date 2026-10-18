@@ -2389,6 +2389,15 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         expect(Object.keys(result.properties!)).toEqual(['a', 'toString', 'b']);
       });
 
+      it('stubExistingAdditionalProperties() joins the option patterns named like Object.prototype members as own keys', () => {
+        const optionPatterns = '{"__proto__":{"type":"string"},"toString":{"type":"number"}}';
+        const schema: RJSFSchema = { type: 'object', additionalProperties: true };
+        const option: RJSFSchema = JSON.parse(`{"patternProperties":${optionPatterns}}`);
+        const result = stubExistingAdditionalProperties({ validator: testValidator }, schema, schema, {}, option);
+        expect(result.patternProperties).toEqual(JSON.parse(optionPatterns));
+        expect(Object.getPrototypeOf(result.patternProperties)).toBe(Object.prototype);
+      });
+
       it('retrieveSchema() matches no dependency oneOf option written as a $ref on an inherited member', () => {
         const schema: RJSFSchema = JSON.parse(
           '{"type":"object","definitions":{"b":{"properties":{"b":{"type":"number"}}}},"properties":{"toString":{"type":"string"}},"dependencies":{"toString":{"oneOf":[{"$ref":"#/definitions/b"}]}}}',
