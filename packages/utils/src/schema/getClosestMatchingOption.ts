@@ -155,6 +155,12 @@ interface Pick {
  */
 const picked = new KeyedMemo<Pick>();
 
+/** The picks found to hold for their data during the outermost `bestOption()` call running, which reuses them without
+ * comparing again: nothing mutates the data while a call scores it, and scoring asks for the same nested picks once per
+ * candidate. Undefined between calls
+ */
+let checkedPicks: WeakSet<Pick> | undefined;
+
 /** Returns the index of the option of `options` closest to `formData`, as `getClosestMatchingOption()` describes,
  * with each option matched as `optionMatches()` matches it under `relax`, and that option's score
  *
@@ -201,16 +207,28 @@ function bestOption<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     ...options,
     formData,
   ];
-  const stored = picked.peek(keys);
-  if (stored && deepEquals(stored.data, formData)) {
-    return stored.pick;
+  const isOutermost = checkedPicks === undefined;
+  const checked = checkedPicks ?? new WeakSet<Pick>();
+  checkedPicks = checked;
+  try {
+    const stored = picked.peek(keys);
+    if (stored && (checked.has(stored) || deepEquals(stored.data, formData))) {
+      checked.add(stored);
+      return stored.pick;
+    }
+    const pick = compute();
+    const copy = copyOfData(formData);
+    if (copy) {
+      const made = { pick, data: copy.data };
+      picked.set(keys, made);
+      checked.add(made);
+    }
+    return pick;
+  } finally {
+    if (isOutermost) {
+      checkedPicks = undefined;
+    }
   }
-  const pick = compute();
-  const copy = copyOfData(formData);
-  if (copy) {
-    picked.set(keys, { pick, data: copy.data });
-  }
-  return pick;
 }
 
 /** A copy of `data`, which holds arrays, plain objects and primitives only; undefined for data holding any other
