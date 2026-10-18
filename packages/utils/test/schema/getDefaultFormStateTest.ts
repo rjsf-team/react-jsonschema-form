@@ -8781,6 +8781,19 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         },
       );
 
+      it('seeds object defaults beside a property declared as false', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { x: false },
+          additionalProperties: { type: 'string' },
+          default: { y: 'd' },
+        };
+        expect(getDefaultFormState({ validator: testValidator }, { schema, formData: { x: 1 } })).toEqual({
+          x: 1,
+          y: 'd',
+        });
+      });
+
       it('does not read an inherited member of a parent const for a property named like one', () => {
         const schema: RJSFSchema = {
           type: 'object',
