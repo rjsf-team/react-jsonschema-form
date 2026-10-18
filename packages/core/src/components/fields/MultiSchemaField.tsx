@@ -283,7 +283,6 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
         label={title ?? name}
         hideLabel={!displayLabel}
         readonly={readonly}
-        required={required}
       />
     ) : undefined;
 
