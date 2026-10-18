@@ -406,4 +406,21 @@ describe('compileSchemaValidatorsCode', () => {
     expect(validator.isValid({ $ref: '#/properties/v/anyOf/0' }, 'xyz', rootSchema)).toBe(true);
     expect(validator.isValid({ $ref: '#/properties/v/anyOf/0' }, 5, rootSchema)).toBe(false);
   });
+  test.each([
+    ['declaring draft-07', { $schema: 'http://json-schema.org/draft-07/schema#' }],
+    ['declaring no dialect', {}],
+  ])(
+    'reads a $ref beside an $id under a root %s against the resource around them, as the form does',
+    (_name, dialect) => {
+      const rootSchema: RJSFSchema = {
+        ...dialect,
+        definitions: { a: { type: 'string' } },
+        type: 'object',
+        properties: { p: { $id: 'http://example.com/x.json', $ref: '#/definitions/a' } },
+      };
+      const validator = createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(rootSchema)), rootSchema);
+      expect(validator.validateFormData({ p: 'x' }, rootSchema).errors).toEqual([]);
+      expect(validator.validateFormData({ p: 5 }, rootSchema).errors.map((error) => error.property)).toEqual(['.p']);
+    },
+  );
 });
