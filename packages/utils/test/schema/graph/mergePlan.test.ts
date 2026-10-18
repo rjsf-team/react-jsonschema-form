@@ -239,6 +239,52 @@ describe('buildPlan()', () => {
       expect(Reflect.get(plan.schema, ADDITIONAL_PROPERTY_FLAG)).toBe(true);
       expect(Reflect.get(plan.schema, RJSF_REF_KEY)).toBe(D('A'));
     });
+    it("conjoins the then of an allOf entry with the field's own declaration, as the entry is conjoined", () => {
+      const plan = planOf({
+        type: 'object',
+        properties: {
+          plan: { type: 'string', enum: ['basic'], title: 'Own', default: 'own' },
+          seats: { type: 'integer', minimum: 5 },
+        },
+        allOf: [
+          {
+            properties: { seats: { title: 'Entry' } },
+            if: { required: [] },
+            then: {
+              properties: {
+                plan: { enum: ['basic', 'pro'], title: 'Then', default: 'then' },
+                seats: { minimum: 1, title: 'Then' },
+              },
+            },
+          },
+        ],
+      });
+      const child = (key: string) =>
+        keywordsOf(
+          buildPlan({
+            context: { validator: miniValidator() },
+            graph: plan.graph,
+            seeds: seedsAt(plan, 'properties', key),
+          }),
+        );
+      expect(child('plan')).toEqual({ type: 'string', enum: ['basic'], title: 'Own', default: 'own' });
+      // Within the entry its then is merged over the entry's own keywords, and the result is conjoined with the field's
+      expect(child('seats')).toEqual({ type: 'integer', minimum: 5, title: 'Then' });
+    });
+    it("merges a field's own then over its seeds before conjoining the allOf entries declaring it", () => {
+      const plan = planOf({
+        type: 'object',
+        properties: { p: { type: 'string', title: 'own', enum: ['a', 'b'] } },
+        patternProperties: { '^p': { minLength: 1 } },
+        if: { required: [] },
+        then: { properties: { p: { title: 'then' } } },
+        allOf: [{ properties: { p: { enum: ['b', 'c'], title: 'entry' } } }],
+      });
+      const { seeds } = childSeeds(plan, 'p');
+      expect(seeds).toHaveLength(4);
+      const child = buildPlan({ context: { validator: miniValidator() }, graph: plan.graph, seeds });
+      expect(keywordsOf(child)).toEqual({ type: 'string', title: 'then', enum: ['b'], minLength: 1 });
+    });
     it('reads a merge with a false entry as the empty schema', () => {
       const customMergeAllOf = (merged: RJSFSchema): RJSFSchema => merged;
       expect(
