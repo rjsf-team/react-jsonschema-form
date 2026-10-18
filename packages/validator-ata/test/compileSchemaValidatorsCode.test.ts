@@ -153,6 +153,20 @@ describe('compileSchemaValidatorsCode', () => {
         /extenderFn, additionalMetaSchemas, ataOptionsOverrides\.coerceTypes, ataOptionsOverrides\.removeAdditional cannot be carried/,
       );
 
+      warn.mockClear();
+      compileSchemaValidatorsCode(schema, {
+        ataOptionsOverrides: { keywords: { even: () => true }, schemas: [{ $id: 'extra' }] },
+      });
+      expect(warn.mock.calls[0][0]).toMatch(
+        /ataOptionsOverrides\.keywords, ataOptionsOverrides\.schemas cannot be carried into a precompiled validator and are ignored/,
+      );
+
+      warn.mockClear();
+      compileSchemaValidatorsCode(schema, { ataOptionsOverrides: { removeAdditional: true } });
+      expect(warn.mock.calls[0][0]).toMatch(
+        /ataOptionsOverrides\.removeAdditional cannot be carried .* and is ignored/,
+      );
+
       // Options that only restate defaults, or do not change answers, compile without a warning.
       warn.mockClear();
       compileSchemaValidatorsCode(schema, {
@@ -162,6 +176,8 @@ describe('compileSchemaValidatorsCode', () => {
           abortEarly: false,
           coerceTypes: undefined,
           logger: false,
+          keywords: {},
+          schemas: {},
         },
         additionalMetaSchemas: [],
       });
