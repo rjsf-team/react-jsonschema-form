@@ -4,6 +4,10 @@ import type { TestValidatorType } from './types.ts';
 
 export default function isSelectTest(testValidator: TestValidatorType) {
   describe('isSelect()', () => {
+    it('reads options written as a $ref as no select when it has no root schema to look them up in', () => {
+      const schema: RJSFSchema = { oneOf: [{ $ref: '#/definitions/A' }, { $ref: '#/definitions/B' }] };
+      expect(isSelect({ validator: testValidator }, schema)).toBe(false);
+    });
     it('should be false if items is undefined', () => {
       const schema: RJSFSchema = {};
       expect(isSelect({ validator: testValidator }, schema)).toBe(false);

@@ -14,7 +14,8 @@ export default function isSelect<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(context: SchemaContext<S, F>, theSchema: S, rootSchema: S = {} as S) {
+>(context: SchemaContext<S, F>, theSchema: S, rootSchema?: S) {
   const schema = retrieveSchema<T, S, F>(context, theSchema, rootSchema);
-  return isConstantSelect<S>(resolveConstantOptions<S>(schema, rootSchema), true);
+  // Without a root schema an option written as a `$ref` names nothing to look up, so it is no constant
+  return isConstantSelect<S>(rootSchema === undefined ? schema : resolveConstantOptions<S>(schema, rootSchema), true);
 }
