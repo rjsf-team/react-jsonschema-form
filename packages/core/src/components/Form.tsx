@@ -260,7 +260,7 @@ export interface FormState<
    */
   formData?: T;
   /** Whether there is data to live-validate when a prop changes: the props seeded the form with data, rather than
-   * leaving it to the schema's defaults
+   * leaving it to the schema's defaults, or it has been edited since it mounted or was last reset
    */
   isDataPassed: boolean;
   /** The current list of errors for the form, includes `extraErrors` */

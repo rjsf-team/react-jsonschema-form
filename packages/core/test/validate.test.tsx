@@ -6,7 +6,7 @@ import type { Mock } from 'vitest';
 
 import type { FormProps } from '../src/index.ts';
 import type { NoValFormProps } from './testUtils.tsx';
-import { createFormComponent, submitForm } from './testUtils.tsx';
+import { createFormComponent, elementOf, errorListMessages, submitForm } from './testUtils.tsx';
 
 const user = userEvent.setup();
 
@@ -185,6 +185,26 @@ describe('Validation', () => {
           }),
           'root',
         );
+      });
+
+      it.each<[string, RJSFSchema]>([
+        ['a schema change', { type: 'string', minLength: 3, title: 'Name' }],
+        ['a customValidate change', { type: 'string', minLength: 3 }],
+      ])('keeps live validating an edit in a form with no seed across %s', async (change, nextSchema) => {
+        const schema: RJSFSchema = { type: 'string', minLength: 3 };
+        const { node, rerender } = createFormComponent({ schema, liveValidate: 'onChange' });
+        await user.type(elementOf(node, 'input'), 'x');
+        const tooShort = 'must NOT have fewer than 3 characters';
+        expect(errorListMessages(node)).toEqual([tooShort]);
+
+        rerender({
+          schema: nextSchema,
+          liveValidate: 'onChange',
+          customValidate: change === 'a customValidate change' ? (_, errors) => errors : undefined,
+        });
+
+        // The schema's title names the field in the message
+        expect(errorListMessages(node)).toEqual([expect.stringContaining(tooShort)]);
       });
 
       it('re-validates when the customValidate prop changes', () => {

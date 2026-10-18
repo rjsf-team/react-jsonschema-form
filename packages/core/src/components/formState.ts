@@ -1837,6 +1837,8 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
     settledFormData,
     settledFormDataForPairing,
     settledRetrievedSchema,
+    // An edit is data the user made, whose errors they have earned, so a prop change live-validates it from now on
+    isDataPassed: true,
   };
 }
 
@@ -1903,12 +1905,14 @@ export function applyReset<T, S extends StrictRJSFSchema, F extends FormContextT
   current: FormState<T, S, F>,
   props: FormProps<T, S, F>,
 ): FormState<T, S, F> {
+  const seed = seedOf(props);
   const { formData, context, formDataSchema, settledFormData, settledFormDataForPairing, settledRetrievedSchema } =
-    deriveFormData(current, seedOf(props), { isReset: true }, props);
+    deriveFormData(current, seed, { isReset: true }, props);
   return {
     ...current,
     ...context,
     formData,
+    isDataPassed: seed !== undefined,
     formDataSchema,
     settledFormData,
     settledFormDataForPairing,
