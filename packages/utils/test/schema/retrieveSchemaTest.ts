@@ -2590,6 +2590,45 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         ]);
       });
     });
+    describe('prototype-named dependency keys', () => {
+      it('withExactlyOneSubschema() ignores an inherited member of a branch properties', () => {
+        const schema: RJSFSchema = { type: 'object' };
+        const oneOf: RJSFSchema['oneOf'] = [{ properties: { foo: { type: 'string' } } }];
+        const isValid = vi.fn(() => true);
+        const validator = { ...testValidator, isValid } as typeof testValidator;
+        expect(withExactlyOneSubschema({ validator }, schema, schema, 'toString', oneOf, false, [])).toEqual([schema]);
+        expect(isValid).not.toHaveBeenCalled();
+      });
+
+      it('retrieveSchema() does not apply a dependency named after an inherited member', () => {
+        const schema: RJSFSchema = JSON.parse(
+          '{"type":"object","properties":{"a":{"type":"string"}},"dependencies":{"toString":{"properties":{"b":{"type":"string"}}}}}',
+        );
+        const result = retrieveSchema({ validator: testValidator }, schema, schema, { a: 'x', toString: 't' });
+        expect(Object.keys(result.properties!)).toEqual(['a']);
+      });
+
+      it('stubExistingAdditionalProperties() stubs a key a wrongly-applied dependency would suppress', () => {
+        const schema: RJSFSchema = JSON.parse(
+          '{"type":"object","properties":{"a":{"type":"string"}},"additionalProperties":true,"dependencies":{"toString":{"properties":{"b":{"type":"number"}}}}}',
+        );
+        const formData = { a: 'x', toString: 't', b: 1 };
+        const result = stubExistingAdditionalProperties({ validator: testValidator }, schema, schema, formData);
+        // The `toString` dependency does not apply (the schema declares no own `toString`), so `b` is not
+        // declared by it and is stubbed like the data's own `toString` key
+        expect(Object.keys(result.properties!)).toEqual(['a', 'toString', 'b']);
+      });
+
+      it('stubExistingAdditionalProperties() stubs a key a oneOf branch matched on an inherited member would suppress', () => {
+        const schema: RJSFSchema = JSON.parse(
+          '{"type":"object","properties":{"a":{"type":"string"},"toString":{"type":"string"}},"additionalProperties":true,"dependencies":{"toString":{"oneOf":[{"properties":{"b":{"type":"number"}}}]}}}',
+        );
+        const formData = { a: 'x', toString: 't', b: 1 };
+        const result = stubExistingAdditionalProperties({ validator: testValidator }, schema, schema, formData);
+        // No branch declares an own `toString`, so none matches and `b` is not declared by the dependency
+        expect(Object.keys(result.properties!)).toEqual(['a', 'toString', 'b']);
+      });
+    });
     describe('withPatternProperties()', () => {
       it('validates schemas with conditions inside patternProperties', () => {
         const schema: RJSFSchema = {
