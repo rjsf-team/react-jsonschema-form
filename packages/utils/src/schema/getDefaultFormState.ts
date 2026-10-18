@@ -369,6 +369,11 @@ interface NullFills {
    * once the defaults are merged into the data: the field of a `null` schema holds `null` whatever it was given
    */
   overUndefined: Map<object, Map<string, unknown>>;
+  /** Set below an optional object the Optional Data Controls render while it has no value: none of its fields render
+   * until the user adds it, so none of their `null`s is filled in, and the object stays out of the defaults as one with
+   * no `null` schema in it would
+   */
+  isCollapsed?: boolean;
 }
 
 /** Whether `schema` names the `null` type anywhere in it, through its definitions included, which only then can hold a
@@ -692,7 +697,11 @@ export function computeDefaults<
       (holdsNullType(schema) || holdsNullType(rootSchema))
         ? retrieveSchema<T, S, F>(context, schema, rootSchema, rawFormData)
         : schema;
-    if (!(isRenderedOption && rendered.type === 'null') && getSchemaType<S>(rendered) === 'null') {
+    if (
+      !nullFills?.isCollapsed &&
+      !(isRenderedOption && rendered.type === 'null') &&
+      getSchemaType<S>(rendered) === 'null'
+    ) {
       defaultsWithFormData = null;
       onNullFill?.();
     }
@@ -851,11 +860,24 @@ export function getObjectDefaults<
         );
         const propertyFormData = getByPath<T>(formData, key);
         const isPropertyRequired = retrievedSchema.required?.includes(key);
+        // An optional object the Optional Data Controls render while it has no value renders none of its fields, so
+        // the `null` of none of them is filled in until the user adds it
+        const isCollapsed =
+          nullFills !== undefined &&
+          !nullFills.isCollapsed &&
+          !isPropertyRequired &&
+          propertyFormData === undefined &&
+          holdsNullType(rootSchema) &&
+          isOptionalDataControlsType<T, S, F>(
+            () => retrieveSchema<T, S, F>(context, propertySchema, rootSchema, undefined),
+            propertyUiSchema,
+            nullFills.globalUiOptions,
+          );
         const computedDefault = computeDefaults<T, S, F>(context, propertySchema, {
           onNullFill: () => {
             holdsNull = true;
           },
-          nullFills,
+          nullFills: isCollapsed ? { ...nullFills, isCollapsed } : nullFills,
           rootSchema,
           _recurseList: childRecurseList,
           includeUndefinedValues: includeUndefinedValues === true,
@@ -867,20 +889,6 @@ export function getObjectDefaults<
           uiSchema: propertyUiSchema,
           uiSchemaDefinitions,
         });
-        // An optional object the Optional Data Controls render while it has no value renders none of its fields, so
-        // the `null` of none of them is filled in until the user adds it
-        if (
-          holdsNull &&
-          !isPropertyRequired &&
-          propertyFormData === undefined &&
-          isOptionalDataControlsType<T, S, F>(
-            () => retrieveSchema<T, S, F>(context, propertySchema, rootSchema, undefined),
-            propertyUiSchema,
-            nullFills?.globalUiOptions,
-          )
-        ) {
-          holdsNull = false;
-        }
         if (holdsNull && isObject(rawFormData) && Object.hasOwn(rawFormData, key) && propertyFormData === undefined) {
           const overUndefined = nullFills?.overUndefined.get(rawFormData) ?? new Map<string, unknown>();
           overUndefined.set(key, computedDefault);

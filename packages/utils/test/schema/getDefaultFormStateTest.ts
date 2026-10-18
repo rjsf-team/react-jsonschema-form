@@ -8207,6 +8207,53 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
       },
     );
 
+    describe.each(['populateAllDefaults', 'populateRequiredDefaults', 'skipEmptyDefaults', 'skipDefaults'] as const)(
+      'an optional object the optional data controls render collapsed, under emptyObjectFields: %s',
+      (emptyObjectFields) => {
+        const collapsedDefaultsOf = (schema: RJSFSchema) =>
+          getDefaultFormState(
+            { validator: testValidator, defaultFormStateBehavior: { emptyObjectFields } },
+            {
+              schema,
+              rootSchema: schema,
+              uiSchema: { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] } },
+            },
+          );
+
+        it('is left out with the null schema it holds, as it would be without one', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              opt: { type: 'object', required: ['s'], properties: { s: { type: 'string' }, n: { type: 'null' } } },
+            },
+          };
+          expect(collapsedDefaultsOf(schema)).toEqual({});
+        });
+
+        it('fills in no null in an optional object inside it', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              opt: {
+                type: 'object',
+                properties: { inner: { type: 'object', properties: { n: { type: 'null' } } } },
+              },
+            },
+          };
+          expect(collapsedDefaultsOf(schema)).toEqual({});
+        });
+
+        it('still fills in the null of a required one, which renders its fields', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            required: ['req'],
+            properties: { req: { type: 'object', properties: { n: { type: 'null' } } } },
+          };
+          expect(collapsedDefaultsOf(schema)).toEqual({ req: { n: null } });
+        });
+      },
+    );
+
     describe('the null of a null value the data holds as `undefined`', () => {
       it('is filled in, as for a missing one', () => {
         const schema: RJSFSchema = {

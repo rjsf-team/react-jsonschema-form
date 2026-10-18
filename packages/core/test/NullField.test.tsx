@@ -115,6 +115,32 @@ describe('NullField', () => {
     });
   });
 
+  describe.each<NonNullable<DefaultFormStateBehavior['emptyObjectFields']>>([
+    'populateAllDefaults',
+    'populateRequiredDefaults',
+    'skipEmptyDefaults',
+    'skipDefaults',
+  ])('under emptyObjectFields: %s', (emptyObjectFields) => {
+    it('leaves an optional object the Optional Data Controls show collapsed out, a null schema in it included', async () => {
+      const { node, onSubmit, onError } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            opt: { type: 'object', required: ['s'], properties: { s: { type: 'string' }, n: { type: 'null' } } },
+          },
+        },
+        uiSchema: { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] } },
+        defaultFormStateBehavior: { emptyObjectFields },
+      });
+
+      expect(node.querySelector('#root_opt_s')).not.toBeInTheDocument();
+      await submitForm(node, user);
+
+      expect(onError).not.toHaveBeenCalled();
+      expectToHaveBeenCalledWithFormData(onSubmit, {}, true);
+    });
+  });
+
   describe('a value it is handed as undefined', () => {
     const schema: RJSFSchema = {
       type: 'object',
