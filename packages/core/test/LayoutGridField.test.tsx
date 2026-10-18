@@ -982,6 +982,33 @@ describe('LayoutGridField', () => {
       );
     });
   });
+  describe('getSchemaDetailsForField(), array items written as a $ref', () => {
+    test('reads the options of an array item through the $ref of its items', () => {
+      const pet: RJSFSchema = {
+        discriminator: { propertyName: 'kind' },
+        readOnly: true,
+        oneOf: [
+          { type: 'object', properties: { kind: { type: 'string', const: 'cat' } } },
+          { type: 'object', properties: { kind: { type: 'string', const: 'dog' } } },
+        ],
+      };
+      const schema: RJSFSchema = {
+        type: 'object',
+        definitions: { Pet: pet },
+        properties: { pets: { type: 'array', items: { $ref: '#/definitions/Pet' } } },
+      };
+      const details = getSchemaDetailsForField(
+        getTestRegistry(schema),
+        'pets.0',
+        schema,
+        { pets: [{ kind: 'dog' }] },
+        FIELD_PATH,
+      );
+      expect(details.optionsInfo).toEqual({ options: expect.any(Array), hasDiscriminator: true });
+      expect(details.optionsInfo?.options).toHaveLength(2);
+      expect(details.isReadonly).toBe(true);
+    });
+  });
   describe('getSchemaDetailsForField(), blank schema', () => {
     beforeAll(() => {
       retrieveSchemaSpy = vi.spyOn(registry.schemaUtils, 'retrieveSchema');
@@ -1228,7 +1255,8 @@ describe('LayoutGridField', () => {
         fieldPath: fieldPathFromPaths(paths, FIELD_PATH),
         optionsInfo: undefined,
       });
-      expect(retrieveSchemaSpy).toHaveBeenCalledTimes(2);
+      // The array leaf is retrieved too, for items written as a `$ref`
+      expect(retrieveSchemaSpy).toHaveBeenCalledTimes(3);
     });
     test('returns schema, isRequired: false, isReadonly: undefined, options: undefined when 2d array schema is requested', () => {
       const paths = ['example', 0, 1];
@@ -1241,7 +1269,7 @@ describe('LayoutGridField', () => {
         fieldPath: fieldPathFromPaths(paths, FIELD_PATH),
         optionsInfo: undefined,
       });
-      expect(retrieveSchemaSpy).toHaveBeenCalledTimes(3);
+      expect(retrieveSchemaSpy).toHaveBeenCalledTimes(4);
     });
   });
   describe('getCustomRenderComponent()', () => {
