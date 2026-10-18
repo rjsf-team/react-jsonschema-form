@@ -34,6 +34,7 @@ import mergeSchemas from '../mergeSchemas.ts';
 import optionsList from '../optionsList.ts';
 import { getByPath } from '../pathUtils.ts';
 import resolveUiSchema from '../resolveUiSchema.ts';
+import setOwn from '../setOwn.ts';
 import toConstant from '../toConstant.ts';
 import type {
   DefaultFormStateBehavior,
@@ -214,7 +215,7 @@ function maybeAddDefaultToObject<T = unknown>(
   if (includeUndefinedValues === true || isConst) {
     // If includeUndefinedValues is explicitly true
     // Or if the schema has a const property defined, then we should always return the computedDefault since it's coming from the const.
-    acc[key] = computedDefault;
+    setOwn(acc, key, computedDefault);
   } else if (includeUndefinedValues === 'excludeObjectChildren') {
     // Fix for Issue #4709: When in 'excludeObjectChildren' mode, don't set primitive fields to empty objects
     // Only add the computed default if it's not an empty object placeholder for a primitive field
@@ -223,7 +224,7 @@ function maybeAddDefaultToObject<T = unknown>(
       !isObject(computedDefault) ||
       Object.keys(computedDefault).length > 0
     ) {
-      acc[key] = computedDefault;
+      setOwn(acc, key, computedDefault);
     }
     // If computedDefault is an empty object {}, don't add it - let the field stay undefined
   } else if (emptyObjectFields !== 'skipDefaults') {
@@ -235,7 +236,7 @@ function maybeAddDefaultToObject<T = unknown>(
       // If emptyObjectFields 'skipEmptyDefaults' store computedDefault if it's a non-empty object(e.g. not {})
       if (emptyObjectFields === 'skipEmptyDefaults') {
         if (Object.keys(computedDefault).length > 0) {
-          acc[key] = computedDefault;
+          setOwn(acc, key, computedDefault);
         }
       } // Else store computedDefault if it's a non-empty object(e.g. not {}) and satisfies certain conditions
       // Condition 1: If computedDefault is not empty or if the key is a required field
@@ -244,7 +245,7 @@ function maybeAddDefaultToObject<T = unknown>(
         (Object.keys(computedDefault).length > 0 || requiredFields.includes(key)) &&
         (isSelfOrParentRequired || emptyObjectFields !== 'populateRequiredDefaults')
       ) {
-        acc[key] = computedDefault;
+        setOwn(acc, key, computedDefault);
       }
     } else if (
       // Store computedDefault if it's a defined primitive (e.g., true) and satisfies certain conditions
@@ -256,7 +257,7 @@ function maybeAddDefaultToObject<T = unknown>(
         emptyObjectFields === 'skipEmptyDefaults' ||
         (isSelfOrParentRequired && requiredFields.includes(key)))
     ) {
-      acc[key] = computedDefault;
+      setOwn(acc, key, computedDefault);
     }
   }
 }
@@ -890,7 +891,7 @@ function copiedValue(value: unknown, copies: WeakMap<object, unknown>): unknown 
   const copy: GenericObjectType = {};
   copies.set(value, copy);
   for (const [key, entry] of Object.entries(value)) {
-    copy[key] = copiedValue(entry, copies);
+    setOwn(copy, key, copiedValue(entry, copies));
   }
   return copy;
 }
@@ -1150,7 +1151,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
       : propertySchema;
     // Check if the parent schema has a const property defined AND we are supporting const as defaults, then we
     // should always return the computedDefault since it's coming from the const.
-    const hasParentConst = isObject(parentConst) && Reflect.get(parentConst, key) !== undefined;
+    const hasParentConst = getByPath(parentConst, key) !== undefined;
     const hasConst =
       ((isObject(readProperty) && CONST_KEY in readProperty) || hasParentConst) &&
       defaultFormStateBehavior?.constAsDefaults !== 'never' &&
@@ -1192,7 +1193,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     const keys = new Set<string>();
     const formDataRequired: string[] = [];
     Object.keys(formData)
-      .filter((key) => !schema.properties || !schema.properties[key])
+      .filter((key) => !schema.properties || !Object.hasOwn(schema.properties, key))
       .forEach((key) => {
         keys.add(key);
         formDataRequired.push(key);
@@ -1202,7 +1203,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     // re-add stale entries that no longer exist in formData.
     if (isObject(defaults) && formDataRequired.length === 0) {
       Object.keys(defaults)
-        .filter((key) => !schema.properties || !schema.properties[key])
+        .filter((key) => !schema.properties || !Object.hasOwn(schema.properties, key))
         .forEach((key) => keys.add(key));
     }
     keys.forEach((key) => {
@@ -1618,8 +1619,15 @@ export function ensureFormDataMatchingSchema<
       const readProperty = isSchemaObject<S>(propertySchema)
         ? resolveOwnRef<S>(propertySchema, rootSchema)
         : propertySchema;
-      if (key in matched && (shouldRetrieveAllOf || (isObject(readProperty) && ALL_OF_KEY in readProperty))) {
-        matched[key] = ensureFormDataMatchingSchema<unknown, S, F>(context, readProperty, rootSchema, matched[key]);
+      if (
+        Object.hasOwn(matched, key) &&
+        (shouldRetrieveAllOf || (isObject(readProperty) && ALL_OF_KEY in readProperty))
+      ) {
+        setOwn(
+          matched,
+          key,
+          ensureFormDataMatchingSchema<unknown, S, F>(context, readProperty, rootSchema, matched[key]),
+        );
       }
     }
     validFormData = matched;

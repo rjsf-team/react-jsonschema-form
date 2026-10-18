@@ -28,6 +28,7 @@ import getXxxOfOptions from '../getXxxOfOptions.ts';
 import guessType from '../guessType.ts';
 import isObject, { isSchemaObject } from '../isObject.ts';
 import { getByPath } from '../pathUtils.ts';
+import setOwn from '../setOwn.ts';
 import type {
   FormContextType,
   GenericObjectType,
@@ -997,7 +998,7 @@ function declaredPropertyNames<S extends StrictRJSFSchema = RJSFSchema, F extend
   const dependencies = schema[DEPENDENCIES_KEY];
   if (isObject(dependencies)) {
     const applying = Object.entries(dependencies).filter(
-      ([key]) => getByPath(formData, key) !== undefined && (!properties || key in properties),
+      ([key]) => getByPath(formData, key) !== undefined && (!properties || Object.hasOwn(properties, key)),
     );
     for (const [key, dependent] of applying) {
       merged.push(...dependencySubschemas<S, F>(context, dependent as S | boolean, key, rootSchema, formData));
@@ -1280,14 +1281,7 @@ export function stubExistingAdditionalProperties<
     }
     // Set our additional property flag so we know it was dynamically added
     (stub as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG] = true;
-    // `defineProperty`, since assigning a key called `__proto__` runs the setter `Object.prototype` carries: it would
-    // re-point this clone's prototype at the stub and declare no property, leaving the value with no field at all
-    Object.defineProperty(schema.properties, key, {
-      value: stub,
-      configurable: true,
-      enumerable: true,
-      writable: true,
-    });
+    setOwn(schema.properties, key, stub);
   }
 
   return schema;
