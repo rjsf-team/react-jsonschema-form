@@ -542,8 +542,16 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
   }
 
   build(seeds: readonly Seed[]): MergePlan<S> {
+    // Decided before any seed is expanded, since it decides how each of them merges its `allOf`
+    if (
+      (this.policy.allOf === 'if' || this.policy.optionPolicy?.allOf === 'if') &&
+      seeds.some((seed) => declaresCondition(this.graph, seed.node))
+    ) {
+      this.seedHasCondition = true;
+      this.mergeAllOf ||= this.policy.allOf === 'if';
+    }
     const expanded = seeds.flatMap((seed) => {
-      const part = this.expand(seed.node, seed.refPath, 'seed', true);
+      const part = this.expand(seed.node, seed.refPath, 'seed');
       if (part === undefined) {
         return [];
       }
@@ -617,13 +625,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     });
   }
 
-  private expand(
-    id: NodeId,
-    refPath: RefPath,
-    edge: PlanEdge,
-    top: boolean,
-    dependencyKey?: string,
-  ): Part<S> | undefined {
+  private expand(id: NodeId, refPath: RefPath, edge: PlanEdge, dependencyKey?: string): Part<S> | undefined {
     if (!this.enter(id, edge, refPath)) {
       return undefined;
     }
@@ -632,14 +634,6 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       return { schema: booleanSchema(node, this.graph.rawRoot), chains: [] };
     }
     const keywords = this.flatten(asTarget(this.graph, node), refPath);
-    if (
-      top &&
-      (this.policy.allOf === 'if' || this.policy.optionPolicy?.allOf === 'if') &&
-      (keywords.has(IF_KEY) || declaresCondition(this.graph, id))
-    ) {
-      this.seedHasCondition = true;
-      this.mergeAllOf ||= this.policy.allOf === 'if';
-    }
     const schema = keywordSchema(node.raw, keywords);
     const ref: unknown = Reflect.get(node.raw, REF_KEY);
     if (typeof ref === 'string') {
@@ -670,7 +664,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       return part;
     }
     const members = this.graph.subschemas(provider.node.id, ALL_OF_KEY).flatMap(([, member]) => {
-      const expanded = this.expand(member, provider.refPath, 'allOf', false, dependencyKey);
+      const expanded = this.expand(member, provider.refPath, 'allOf', dependencyKey);
       return expanded === undefined ? [] : [scopedPart(expanded, `a${member}`)];
     });
     return this.conjoin({ ...part, schema: withoutKeys(part.schema, ALL_OF_KEY) }, members);
@@ -769,7 +763,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
   private expandBranch(id: NodeId, refPath: RefPath, edge: PlanEdge, dependencyKey?: string): Part<S> | undefined {
     this.branchDepth += 1;
     try {
-      return this.expand(id, refPath, edge, false, dependencyKey);
+      return this.expand(id, refPath, edge, dependencyKey);
     } finally {
       this.branchDepth -= 1;
     }
@@ -927,13 +921,13 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
   private expandOption(id: NodeId, refPath: RefPath): Part<S> | undefined {
     const { optionPolicy } = this.policy;
     if (optionPolicy === undefined) {
-      return this.expand(id, refPath, 'option', false);
+      return this.expand(id, refPath, 'option');
     }
     const { mergeAllOf, conditions } = this;
     this.mergeAllOf = optionPolicy.allOf === true || (optionPolicy.allOf === 'if' && this.seedHasCondition);
     this.conditions = optionPolicy.conditions;
     try {
-      return this.expand(id, refPath, 'option', false);
+      return this.expand(id, refPath, 'option');
     } finally {
       this.mergeAllOf = mergeAllOf;
       this.conditions = conditions;

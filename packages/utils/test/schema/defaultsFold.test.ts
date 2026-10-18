@@ -950,6 +950,28 @@ describe('getDefaultFormState() reading $ref, branches and extra keys as the for
     expect(defaultsOf(chain, undefined, populate)).toEqual({ p: { a: 'x', c: 'c' } });
   });
 
+  it("merges a field's allOf for an if any of its declarations holds, whichever is merged first", () => {
+    const withIf: RJSFSchema = {
+      type: 'object',
+      properties: { q: { type: 'string' } },
+      if: { required: ['zzz'] },
+      then: {},
+      else: {},
+    };
+    const withAllOf: RJSFSchema = { allOf: [{ properties: { r: { type: 'string', default: 'R' } } }] };
+    const declaredBy = (own: RJSFSchema, branch: RJSFSchema): RJSFSchema => ({
+      type: 'object',
+      properties: { p: own },
+      if: { required: [] },
+      then: { properties: { p: branch } },
+    });
+    expect(defaultsOf(declaredBy(withIf, withAllOf), {})).toEqual({ p: { r: 'R' } });
+    expect(defaultsOf(declaredBy({ ...withIf, ...withAllOf }, { if: { required: ['zzz'] } }), {})).toEqual({
+      p: { r: 'R' },
+    });
+    expect(defaultsOf(declaredBy({ type: 'object', ...withAllOf }, withIf), {})).toEqual({ p: { r: 'R' } });
+  });
+
   it('gives a property the default of the option an allOf entry chooses over an earlier entry, nested as at the root, under populateDefaults', () => {
     const object: RJSFSchema = {
       type: 'object',
