@@ -259,7 +259,7 @@ export default function omitExtraData<
     }
     // `additionalProperties: false` is relaxed for matching only, so the data's extra keys don't rule out the option
     // that is then applied with it, to omit them
-    const bestIndex = closestOption<unknown, S, F>(
+    const bestIndex = closestOption<S, F>(
       context,
       rootSchema,
       source,

@@ -85,9 +85,7 @@ const pointers = new KeyedMemo<object | null>();
 export function pointerTo<S extends StrictRJSFSchema = RJSFSchema>(graph: SchemaGraph<S>, id: NodeId): S | undefined {
   const pointer = pointers.get([graph, id], () => {
     const node = graph.node(id);
-    return node.kind === 'schema' && isRootPointer(node.pointer)
-      ? schemaFrom(graph.rawRoot, { [REF_KEY]: refTo(node.pointer) })
-      : null;
+    return node.kind === 'schema' && isRootPointer(node.pointer) ? { [REF_KEY]: refTo(node.pointer) } : null;
   });
   return isSchemaObject<S>(pointer) ? pointer : undefined;
 }
@@ -191,7 +189,7 @@ export function declaredPropertyTarget<S extends StrictRJSFSchema = RJSFSchema>(
     if (targets.length < 2) {
       return targets[0] ?? null;
     }
-    return schemaFrom(graph.rawRoot, { [ALL_OF_KEY]: targets });
+    return { [ALL_OF_KEY]: targets };
   });
   return isSchemaObject<S>(target) ? target : undefined;
 }
@@ -216,9 +214,7 @@ export function dependencyCondition<S extends StrictRJSFSchema = RJSFSchema>(
 ): S | undefined {
   const condition = dependencyConditions.get([graph, option, key], () => {
     const property = declaredPropertyTarget(graph, option, key);
-    return property === undefined
-      ? null
-      : schemaFrom(graph.rawRoot, { type: 'object', properties: { [key]: property } });
+    return property === undefined ? null : { type: 'object', properties: { [key]: property } };
   });
   return isSchemaObject<S>(condition) ? condition : undefined;
 }

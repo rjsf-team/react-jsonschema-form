@@ -141,14 +141,10 @@ function scopeScore<T, S extends StrictRJSFSchema, F extends FormContextType>(
  * @param [discriminatorField] - The name of the property the options are told apart by
  * @returns - The index of the closest option, or the `selectedOption` if no option is closer
  */
-export function closestOption<
-  T = unknown,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = FormContextType,
->(
+export function closestOption<S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
   context: SchemaContext<S, F>,
   rootSchema: S,
-  formData: T | undefined,
+  formData: unknown,
   options: readonly unknown[],
   selectedOption: number,
   relax: boolean,
@@ -233,5 +229,5 @@ export default function getClosestMatchingOption<
   selectedOption = -1,
   discriminatorField?: string,
 ): number {
-  return closestOption<T, S, F>(context, rootSchema, formData, options, selectedOption, false, discriminatorField);
+  return closestOption<S, F>(context, rootSchema, formData, options, selectedOption, false, discriminatorField);
 }
