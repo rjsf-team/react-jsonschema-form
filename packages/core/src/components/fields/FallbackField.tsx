@@ -47,8 +47,8 @@ function getFallbackTypes<S extends StrictRJSFSchema = RJSFSchema>(schema: S): J
 /**
  * Get the type the selection starts on when the form data gives nothing to match: for a schema listing its types, the
  * type of the field its widget renders, and otherwise the first type the schema offers that can hold a value. Starting
- * on `null` would have `NullField` write a `null` into the form data for a field the user has not touched. A schema
- * that offers nothing but `null` starts there all the same, since it is the only value that schema allows.
+ * on `null` would show a `null` for a field the user has not touched, which the data does not hold. A schema that
+ * offers nothing but `null` starts there all the same, since it is the only value that schema allows.
  * @param schema - The schema being rendered by the fallback UI.
  * @param types - The types the selection offers.
  * @param [widget] - The `ui:widget` for the field, if any

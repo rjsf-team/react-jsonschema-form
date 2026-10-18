@@ -123,7 +123,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     isDroppedCallWarned = true;
     // oxlint-disable-next-line no-console
     console.warn(
-      `Form: \`${method}()\` was called on a form that is hidden by \`<Activity>\` or has unmounted, and was dropped. React asks that hidden content be treated as unmounted, so the form takes calls again once it is shown. See https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#a-form-inside-a-hidden-activity`,
+      `Form: \`${method}()\` was called on a form that is hidden by \`<Activity>\` or a \`<Suspense>\` fallback, or has unmounted, and was dropped. React asks that hidden content be treated as unmounted, so the form takes calls again once it is shown. See https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#a-form-inside-a-hidden-activity`,
     );
   };
 

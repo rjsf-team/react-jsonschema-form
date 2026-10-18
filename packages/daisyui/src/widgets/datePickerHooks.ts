@@ -286,10 +286,11 @@ export function useDatePicker<V>({
 
   /** Report the blur a close causes, and then the focus the trigger holds, which is how the consumer hears that the
    * field was left and is now back in use: the trigger kept the focus through the close, or was handed it by one. Both
-   * are reported from the handler that closes the popup, with the value the close leaves the field holding, which the
-   * form has already stored by then; a throwing `onBlur` leaves the focus unreported, as any throw ends a handler
+   * are reported from the handler that closes the popup, with the value the close sent, which the form stores unless
+   * its `transformChange` refuses or rewrites it; a blur of the trigger after that reports what the field shows. A
+   * throwing `onBlur` leaves the focus unreported, as any throw ends a handler
    *
-   * @param reported - The value the close leaves the field holding
+   * @param reported - The value the close sent
    */
   const reportClose = useCallback(
     (reported: unknown) => {
