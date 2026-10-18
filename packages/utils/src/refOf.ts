@@ -1,3 +1,4 @@
+import { withoutStubsDeclaredElsewhere } from './additionalPropertiesUtils.ts';
 import {
   ALL_OF_KEY,
   DEPENDENCIES_KEY,
@@ -84,14 +85,16 @@ function setOrDelete(target: object, marker: symbol, value: unknown) {
  * from. `mergeSchemas()` copies the branch's markers over them, and a branch that was a `$ref` would leave the merged
  * schema named after the branch's definition: the next branch would then be resolved on that definition's path
  * rather than on the schema's own. A schema that was not resolved from a reference takes the branch's markers, since
- * a branch that is the `$ref` back to an enclosing definition is how such a schema is known to be inside it.
+ * a branch that is the `$ref` back to an enclosing definition is how such a schema is known to be inside it. A stub
+ * either side holds for a key the other declares is left out of the merge, as `withoutStubsDeclaredElsewhere()` says.
  *
  * @param schema - The schema the branch belongs to
  * @param branch - The resolved branch to merge into it
  * @returns - The merged schema, marked as `schema` is when it is marked at all
  */
 export function mergeBranch<S extends StrictRJSFSchema = RJSFSchema>(schema: S, branch: GenericObjectType): S {
-  const merged = mergeSchemas(schema, branch) as S;
+  const [own, other] = withoutStubsDeclaredElsewhere([schema, branch as S]);
+  const merged = mergeSchemas(own, other) as S;
   const ownRef = resolvedFromRef<S>(schema);
   if (ownRef !== undefined) {
     Reflect.set(merged, RJSF_REF_KEY, ownRef);

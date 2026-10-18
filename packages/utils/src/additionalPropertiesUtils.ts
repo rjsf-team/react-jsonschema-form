@@ -138,6 +138,34 @@ export function isStubbedProperty(property: unknown): boolean {
   return isObject(property) && Boolean((property as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG]);
 }
 
+/** Returns the `schemas` about to be merged into one without the properties `retrieveSchema()` stubbed into one of them
+ * for a key another of them declares. Each is retrieved against the data before the merge, so one that takes extra keys
+ * stubs a key a sibling declares, and the merged property would carry the stub's flag and be taken for a stub.
+ *
+ * @param schemas - The schemas, each retrieved against the form data, that are merged into one
+ * @returns - The `schemas`, each without its stubs for a key another of them declares
+ */
+export function withoutStubsDeclaredElsewhere<S extends StrictRJSFSchema = RJSFSchema>(schemas: S[]): S[] {
+  const declared = new Set(
+    schemas.flatMap((schema) => {
+      const properties = schema?.properties;
+      return isObject(properties) ? Object.keys(properties).filter((key) => !isStubbedProperty(properties[key])) : [];
+    }),
+  );
+  return schemas.map((schema) => {
+    const properties = schema?.properties;
+    const stubbed = isObject(properties)
+      ? Object.keys(properties).filter((key) => declared.has(key) && isStubbedProperty(properties[key]))
+      : [];
+    if (!stubbed.length) {
+      return schema;
+    }
+    const kept = { ...properties };
+    stubbed.forEach((key) => delete kept[key]);
+    return { ...schema, properties: kept };
+  });
+}
+
 /** Returns the `schema` without the properties `retrieveSchema()` stubbed into it for the keys of the form data that
  * its `patternProperties` or `additionalProperties` take, at any depth of its `properties`, or undefined when it has
  * none. A retrieved object schema

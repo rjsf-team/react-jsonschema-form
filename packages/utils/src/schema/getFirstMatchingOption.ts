@@ -201,7 +201,7 @@ const stubbedScoringSchemas = new WeakMap<StrictRJSFSchema, StubbedScoring>();
  * since `required` treats `undefined` as missing. That is checked here, in JS, so the schema scored still depends on
  * the option alone: data holding a defined value for a stubbed key is scored by the option without the `anyOf`, and
  * other data by the option without stubs, as any other option is. An option that declares no names of its own is
- * then left with only the stubbed ones, which object data holding none of them fails, as v7's `anyOf` of them did.
+ * then left with only the stubbed ones, which object data holding none of them can't meet, so it matches no such data.
  *
  * @param option - The retrieved option, with its stubbed properties, whose `StubbedScoring` is memoized
  * @param formData - The data being scored
@@ -219,11 +219,11 @@ function stubbedScoringSchema<S extends StrictRJSFSchema = RJSFSchema>(option: S
     memo.withDataKeys ??= scoringSchemaWithDataKeys<S>(unstubbed);
     return memo.withDataKeys as S;
   }
-  // The stubbed keys hold `undefined` here, so of the names v7 asserted only the declared ones can be met. With none
-  // declared, v7's `anyOf` of the stubbed names failed for object data, rather than the option matching every object
-  // as one with an empty `properties` does
-  if (data !== undefined && !hasDeclaredNames(unstubbed)) {
-    return MATCHES_NOTHING as S;
+  // A stubbed key holding `undefined` can't meet the `anyOf` of the option's names, so an option that declares none
+  // matches no object data
+  const matchesNothing = data === undefined ? undefined : scoringSchemaWithUndefinedDataKeys<S>(unstubbed);
+  if (matchesNothing) {
+    return matchesNothing;
   }
   memo.withoutDataKeys ??= augmentedForScoring<S>(unstubbed);
   return memo.withoutDataKeys as S;

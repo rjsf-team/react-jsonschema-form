@@ -5,6 +5,7 @@ import {
   getMatchingPatternProperties,
   isStubbedProperty,
   withoutStubbedProperties,
+  withoutStubsDeclaredElsewhere,
 } from '../src/additionalPropertiesUtils.ts';
 import { ADDITIONAL_PROPERTY_FLAG } from '../src/constants.ts';
 import type { RJSFSchema } from '../src/index.ts';
@@ -193,5 +194,28 @@ describe('isStubbedProperty()', () => {
   });
   it.each([[{ type: 'string' }], [true], [undefined], [null]])('is false for %j', (property) => {
     expect(isStubbedProperty(property)).toBe(false);
+  });
+});
+
+describe('withoutStubsDeclaredElsewhere()', () => {
+  const stub = { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true } as RJSFSchema;
+  it('drops a stub one schema holds for a key another declares, and keeps the other stubs', () => {
+    const declaring: RJSFSchema = { properties: { id: { type: 'string', maxLength: 2 } } };
+    const stubbing: RJSFSchema = { patternProperties: { '^s_': {} }, properties: { id: stub, s_x: stub } };
+    expect(withoutStubsDeclaredElsewhere([declaring, stubbing])).toEqual([
+      declaring,
+      { patternProperties: { '^s_': {} }, properties: { s_x: stub } },
+    ]);
+  });
+  it('returns the schemas as they are when no stub is for a declared key', () => {
+    const schemas: RJSFSchema[] = [{ properties: { a: {} } }, { properties: { b: stub } }, { type: 'object' }];
+    const result = withoutStubsDeclaredElsewhere(schemas);
+    result.forEach((schema, index) => expect(schema).toBe(schemas[index]));
+  });
+  it('passes a boolean schema through', () => {
+    expect(withoutStubsDeclaredElsewhere([true as unknown as RJSFSchema, { properties: { a: stub } }])).toEqual([
+      true,
+      { properties: { a: stub } },
+    ]);
   });
 });

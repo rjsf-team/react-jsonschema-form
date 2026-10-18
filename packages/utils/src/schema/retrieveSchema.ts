@@ -4,6 +4,7 @@ import {
   getAdditionalPropertySchema,
   getMatchingPatternProperties,
   isStubbedProperty,
+  withoutStubsDeclaredElsewhere,
 } from '../additionalPropertiesUtils.ts';
 import { combinationsUpTo } from '../combinationsOf.ts';
 import {
@@ -489,7 +490,7 @@ export function resolveSchema<
     const allPermutations = getAllPermutationsOfXxxOf<S>(allOfSchemaElements);
     return allPermutations.map((permutation) => ({
       ...schema,
-      allOf: permutation,
+      allOf: withoutStubsDeclaredElsewhere<S>(permutation),
     }));
   }
   // No $ref or dependencies or allOf attribute was found, returning the original schema.
@@ -1686,8 +1687,8 @@ export function resolveAnyOrOneOfSchemas<
       // retrieved with that key stubbed into its `properties`. Scoring and the decline check strip the stubs again,
       // which leaves the option retrieved here: checked as above and, while the key holds a defined value, scored
       // without the `anyOf` of its names that the key satisfies and without its `required`. While every such key
-      // holds `undefined`, an option declaring no names of its own is scored by a schema that matches nothing, as the
-      // `anyOf` of the stubbed names did in v7, so that one is recorded for it too.
+      // holds `undefined`, an option declaring no names of its own is scored by a schema that matches nothing, since
+      // such a key can't meet the `anyOf` of the option's names, so that one is recorded for it too.
       // The relaxed options scored below get neither form: relaxing is for scoring the options as the schema declares
       // them, which `omitExtraData()` does, and no caller relaxes an option retrieved with stubs. Recording them would
       // compile another schema for every option `additionalProperties: false` forbids extra keys in

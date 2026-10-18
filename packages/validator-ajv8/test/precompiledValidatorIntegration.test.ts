@@ -502,6 +502,66 @@ describe('an option whose patternProperties or additionalProperties take keys fr
       [expected, expected],
     ]);
   });
+  /** Whether the first option, retrieved against `data`, passes the check `MultiSchemaField` runs when a switch is
+   * declined, answered by the precompiled and the live validator
+   */
+  function declineChecks(options: RJSFSchema[], data: unknown, discriminator?: string) {
+    const root = rootFor(options, discriminator);
+    return [buildPrecompiledValidator(root), customizeValidator()].map((validator) => {
+      const retrieved = createSchemaUtils({ validator }, root).retrieveSchema(options[0], data);
+      return validator.isValid(declineCheckSchema(retrieved), data, root);
+    });
+  }
+  it.each([
+    [
+      'an `allOf` entry',
+      {
+        allOf: [
+          { type: 'object', properties: { id: { type: 'string', maxLength: 2 } } },
+          { patternProperties: { '^s_': { type: 'string' } } },
+        ],
+      },
+      { id: 'abc', s_x: 'v' },
+    ],
+    [
+      'the rest of a schema whose `then` takes extra keys',
+      {
+        type: 'object',
+        properties: { id: { type: 'string', maxLength: 2 } },
+        if: { required: ['id'] },
+        then: { additionalProperties: { type: 'string' } },
+      },
+      { id: 'abcdef', k: 'v' },
+    ],
+  ] as [string, RJSFSchema, object][])(
+    'keeps a property declared by %s, rather than taking it as a stub another part stubbed',
+    (_, first, data) => {
+      // The declared `id` is too long, so option 0 fails and option 1 is picked
+      const options: RJSFSchema[] = [first, { type: 'object', properties: { id: { type: 'string' } } }];
+      expect(picks(options, data)).toEqual([
+        [1, 1],
+        [1, 1],
+      ]);
+      expect(declineChecks(options, data)).toEqual([false, false]);
+    },
+  );
+  it('takes a discriminator declared in one `allOf` entry as declared when another entry takes extra keys', () => {
+    const base: RJSFSchema = {
+      type: 'object',
+      properties: { name: { type: 'string' } },
+      additionalProperties: { type: 'string' },
+    };
+    const options: RJSFSchema[] = [
+      { allOf: [base, { properties: { kind: { const: 'a' } } }] },
+      { allOf: [base, { properties: { kind: { const: 'b' } } }] },
+    ];
+    const data = { kind: 'b', name: 'x' };
+    expect(picks(options, data, 'kind')).toEqual([
+      [1, 1],
+      [1, 1],
+    ]);
+    expect(declineChecks(options, data, 'kind')).toEqual([false, false]);
+  });
   it('throws for a stubbed schema handed to it as it stands, as for any schema the parse never saw', () => {
     const options: RJSFSchema[] = [
       { type: 'object', properties: { id: { type: 'string' } }, patternProperties: { '^s_': { type: 'string' } } },
