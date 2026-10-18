@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type {
   EnumValue,
   RJSFSchema,
@@ -11,14 +12,15 @@ import type {
   ObjectFieldTemplateProps,
   UiSchema,
 } from '@rjsf/utils';
-import { isPlainObject, UI_GLOBAL_OPTIONS_KEY } from '@rjsf/utils';
-import { act, screen } from '@testing-library/react';
+import { isObject, isPlainObject, noop, ROOT_FIELD_PATH, UI_GLOBAL_OPTIONS_KEY } from '@rjsf/utils';
+import { act, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import ObjectField from '../src/components/fields/ObjectField.tsx';
 import SchemaField from '../src/components/fields/SchemaField.tsx';
 import type { IChangeEvent } from '../src/index.ts';
 import MarkdownTemplate from '../src/markdown.tsx';
+import { getTestRegistry } from '../src/testing.ts';
 import {
   createFormComponent,
   createFormRef,
@@ -1137,6 +1139,47 @@ describe('ObjectField', () => {
 
       expectToHaveBeenCalledWithFormData(onChange, { abc: 0, newKey: undefined }, 'root');
       expect(node.querySelector('#root_abc')).toHaveValue('0');
+    });
+
+    it('should re-seed an untouched new property when it is renamed, outside a Form whose parent stores each change', async () => {
+      const schema: RJSFSchema = { type: 'object', patternProperties: { '^[a-z]+$': { type: 'number' } } };
+      const registry = getTestRegistry(schema);
+      const reported: unknown[] = [];
+      function Parent() {
+        const [data, setData] = useState<GenericObjectType>({});
+        return (
+          <ObjectField
+            schema={schema}
+            id='root'
+            name=''
+            fieldPath={ROOT_FIELD_PATH}
+            formData={data}
+            errorSchema={{}}
+            registry={registry}
+            onBlur={noop}
+            onFocus={noop}
+            disabled={false}
+            readonly={false}
+            autofocus={false}
+            required={false}
+            onChange={(value) => {
+              reported.push(value);
+              if (isObject(value)) {
+                setData(value);
+              }
+            }}
+          />
+        );
+      }
+      const { container } = render(<Parent />);
+
+      await user.click(elementOf(container, '.rjsf-object-property-expand button'));
+      const keyInput = elementOf(container, '#root_newKey-key');
+      await user.clear(keyInput);
+      await user.type(keyInput, 'abc');
+      await user.tab();
+
+      expect(reported.at(-1)).toEqual({ abc: 0 });
     });
 
     it('should keep a value the user entered when the renamed key is described by another schema', async () => {

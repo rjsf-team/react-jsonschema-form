@@ -382,14 +382,16 @@ export default function ObjectField<
   const uiSchema: UiSchema<T, S, F> = rawUiSchema ?? EMPTY_UI_SCHEMA;
   const { fields, schemaUtils, translateString, globalUiOptions, rootSchema, uiSchemaDefinitions } = registry;
   const { OptionalDataControlsField } = fields;
-  // The data a handler reads outside a `Form`, where there is no current data to read instead. Installed from a layout
-  // Effect, which React runs children first, so a handler a property calls from its own layout Effect in the same
-  // commit reads the data of the commit before
-  const renderedFormData = useRef(formData);
+  // The data a handler reads outside a `Form`, where there is no current data to read instead: what the last commit
+  // rendered, or what a handler has sent since, so that what it does after sending reads the data it sent. Installed
+  // from a layout Effect of every commit, which React runs children first, so a handler a property calls from its own
+  // layout Effect in the same commit reads the data of the commit before, and data a parent never stored does not
+  // outlive the render that shows it did not
+  const sentFormData = useRef(formData);
   useLayoutEffect(() => {
-    renderedFormData.current = formData;
-  }, [formData]);
-  const readRenderedData = useCallback(() => renderedFormData.current, []);
+    sentFormData.current = formData;
+  });
+  const readRenderedData = useCallback(() => sentFormData.current, []);
   const readData = useReadFieldData(fieldPath, readRenderedData);
   const sendMove = useSendMove(fieldPath);
   useWarnIfFormDataNotPassedThrough('ObjectField', id, fieldPath, formData);
@@ -681,6 +683,7 @@ export default function ObjectField<
         : previous,
     );
     setAdditionalPropertyOrder((order) => [...order, newKey]);
+    sentFormData.current = newFormData;
     onChange(newFormData, fieldPath);
     forgetChangedSeeds(newKey);
   }, [readData, onChange, fieldPath, getAvailableKey, schema, resolvedSchema, seedForKey, forgetChangedSeeds]);
@@ -725,6 +728,7 @@ export default function ObjectField<
         const renamedObj = Object.assign({}, ...keyValues);
 
         // The errors the form holds under the old name describe the property, so they go to its new name with it
+        sentFormData.current = renamedObj;
         const outcome = sendMove({ newKeyOf: (key) => (key === oldKey ? actualNewKey : key) }, () =>
           onChange(renamedObj, fieldPath),
         );
