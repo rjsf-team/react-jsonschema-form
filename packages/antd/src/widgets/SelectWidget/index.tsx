@@ -124,7 +124,7 @@ export default function SelectWidget<
       <Select
         open={open}
         autoFocus={autofocus}
-        disabled={disabled || (readonlyAsDisabled && readonly)}
+        disabled={disabled || (readonlyAsDisabled && readonly) || undefined}
         getPopupContainer={getPopupContainer}
         id={id}
         mode={multiple ? 'multiple' : undefined}

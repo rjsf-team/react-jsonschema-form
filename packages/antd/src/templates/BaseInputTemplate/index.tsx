@@ -79,7 +79,7 @@ export default function BaseInputTemplate<
   const hasExamples = exampleSuggestions.length > 0;
   const input = isNumeric ? (
     <InputNumber
-      disabled={disabled || (readonlyAsDisabled && readonly)}
+      disabled={disabled || (readonlyAsDisabled && readonly) || undefined}
       id={id}
       name={htmlName || id}
       onBlur={!readonly ? handleBlur : undefined}
@@ -99,7 +99,7 @@ export default function BaseInputTemplate<
     />
   ) : (
     <Input
-      disabled={disabled || (readonlyAsDisabled && readonly)}
+      disabled={disabled || (readonlyAsDisabled && readonly) || undefined}
       id={id}
       name={htmlName || id}
       onBlur={!readonly ? handleBlur : undefined}

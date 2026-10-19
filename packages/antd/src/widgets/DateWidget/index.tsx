@@ -62,7 +62,7 @@ export default function DateWidget<
 
   return (
     <DatePicker
-      disabled={disabled || (readonlyAsDisabled && readonly)}
+      disabled={disabled || (readonlyAsDisabled && readonly) || undefined}
       getPopupContainer={getPopupContainer}
       id={id}
       name={id}

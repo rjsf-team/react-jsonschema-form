@@ -104,7 +104,7 @@ export default function WrapIfAdditionalTemplate<
                   value={keyName}
                   propertyNamesEnum={propertyNamesEnum}
                   onKeyRename={onKeyRename}
-                  disabled={disabled || (readonlyAsDisabled && readonly)}
+                  disabled={disabled || (readonlyAsDisabled && readonly) || undefined}
                   readonly={readonly}
                   required={required}
                   registry={registry}
@@ -114,7 +114,7 @@ export default function WrapIfAdditionalTemplate<
                   key={keyName}
                   className='form-control'
                   defaultValue={keyName}
-                  disabled={disabled || (readonlyAsDisabled && readonly)}
+                  disabled={disabled || (readonlyAsDisabled && readonly) || undefined}
                   id={`${id}-key`}
                   name={`${id}-key`}
                   onBlur={!readonly ? onKeyRenameBlur : undefined}

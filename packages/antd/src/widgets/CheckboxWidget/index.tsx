@@ -51,7 +51,7 @@ export default function CheckboxWidget<
     <Checkbox
       autoFocus={autofocus}
       checked={typeof value === 'undefined' ? false : value}
-      disabled={disabled || (readonlyAsDisabled && readonly)}
+      disabled={disabled || (readonlyAsDisabled && readonly) || undefined}
       id={id}
       name={htmlName || id}
       required={required}

@@ -27,7 +27,7 @@ export default function PasswordWidget<
 
   return (
     <Input.Password
-      disabled={disabled || (readonlyAsDisabled && readonly)}
+      disabled={disabled || (readonlyAsDisabled && readonly) || undefined}
       id={id}
       name={id}
       onBlur={!readonly ? handleBlur : undefined}

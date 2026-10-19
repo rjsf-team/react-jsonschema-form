@@ -46,7 +46,7 @@ export default function TextareaWidget<
 
   return (
     <Input.TextArea
-      disabled={disabled || (readonlyAsDisabled && readonly)}
+      disabled={disabled || (readonlyAsDisabled && readonly) || undefined}
       id={id}
       name={htmlName || id}
       onBlur={!readonly ? handleBlur : undefined}

@@ -35,7 +35,7 @@ export default function RangeWidget<
   return (
     <Slider
       autoFocus={autofocus}
-      disabled={disabled || (readonlyAsDisabled && readonly)}
+      disabled={disabled || (readonlyAsDisabled && readonly) || undefined}
       id={id}
       max={max}
       min={min}
