@@ -23,7 +23,7 @@ import { screen, within } from '@testing-library/react';
 
 import { generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
 import type { NoValFormProps } from './testUtils.tsx';
-import { createFormComponent } from './testUtils.tsx';
+import { createFormComponent, setupConsoleWarnSuppression } from './testUtils.tsx';
 
 const { FieldTemplate: CoreFieldTemplate } = generateTemplates();
 const {
@@ -102,12 +102,20 @@ describe('the plan SchemaField builds', () => {
     expect(templatePlans.get('root_foo')?.label.by).toBe('self');
   });
 
-  it('plans a field named by its key in ui:field as one its type picked', () => {
-    const { templatePlans } = renderPlans(
-      { type: 'object', properties: { foo: { type: 'string', title: 'Foo' } } },
-      { uiSchema: { foo: { 'ui:field': 'StringField' } } },
-    );
-    expect(templatePlans.get('root_foo')?.label.by).toBe('template');
+  describe('a field named by its key, however ui:field is spelled', () => {
+    setupConsoleWarnSuppression();
+
+    it.each<[string, UiSchema]>([
+      ['its key in ui:field', { 'ui:field': 'StringField' }],
+      ['its key in ui:options.field', { 'ui:options': { field: 'StringField' } }],
+      ['a ui:field that names no field', { 'ui:field': 'StringFeild' }],
+    ])('plans a field named by %s as one its type picked', (_, fooUiSchema) => {
+      const { templatePlans } = renderPlans(
+        { type: 'object', properties: { foo: { type: 'string', title: 'Foo' } } },
+        { uiSchema: { foo: fooUiSchema } },
+      );
+      expect(templatePlans.get('root_foo')?.label.by).toBe('template');
+    });
   });
 
   it('hands the selected option of a oneOf the plan of its field, whose template label names the control', () => {
@@ -902,6 +910,28 @@ describe('a fallback field with no control for a label to name', () => {
       expect(description.compareDocumentPosition(unsupported)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
     },
   );
+});
+
+describe("the fallback UI's label, however its ui:field is spelled (#5389)", () => {
+  setupConsoleWarnSuppression();
+
+  it.each<[string, UiSchema]>([
+    ['no ui:field', {}],
+    ['a ui:field naming FallbackField', { 'ui:field': 'FallbackField' }],
+    ['a ui:field naming nothing', { 'ui:field': 'Nope' }],
+    ['a ui:options.field naming nothing', { 'ui:options': { field: 'Nope' } }],
+  ])("is drawn once, by the field's template above the type selector, under %s", (_, valUiSchema) => {
+    const { node } = createFormComponent({
+      schema: { type: 'object', properties: { val: { type: ['string', 'number'], title: 'Val' } } },
+      uiSchema: { val: valUiSchema },
+      useFallbackUiForUnsupportedType: true,
+    });
+
+    const labels = node.querySelectorAll('label[for="root_val"]');
+    expect(labels).toHaveLength(1);
+    const typeSelect = screen.getByRole('combobox', { name: 'Type' });
+    expect(labels[0].compareDocumentPosition(typeSelect)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+  });
 });
 
 describe('a ui:field wrapping SchemaField under its own id', () => {

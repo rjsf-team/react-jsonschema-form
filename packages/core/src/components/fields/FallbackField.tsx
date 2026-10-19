@@ -28,6 +28,7 @@ import {
   toFieldPath,
   fieldPathToId,
   TranslatableString,
+  UI_FIELD_KEY,
   UI_OPTIONS_KEY,
   UI_WIDGET_KEY,
   uiBooleanOption,
@@ -447,7 +448,10 @@ function FallbackUiField<
     () =>
       presentation
         ? presentation.control !== undefined && isLabelledByTemplate(presentation)
-        : displaysLabel<T, S, F>({ schemaUtils, globalUiOptions }, schema, uiSchema),
+        : displaysLabel<T, S, F>({ schemaUtils, globalUiOptions }, schema, {
+            ...uiSchema,
+            [UI_FIELD_KEY]: undefined,
+          } as UiSchema<T, S, F>),
     [presentation, schemaUtils, schema, uiSchema, globalUiOptions],
   );
   const valueSchema = useMemo(

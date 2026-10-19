@@ -598,6 +598,24 @@ describe('SchemaField', () => {
         );
       });
 
+      it('labels a field whose own ui:field is ignored for the ui:globalOptions.field as it labels its sibling', () => {
+        const uiSchema: UiSchema = JSON.parse(
+          '{ "ui:globalOptions": { "field": "StringField" }, "ui:field": null, "b": { "ui:field": "Nope" } }',
+        );
+
+        const { node } = createFormComponent({
+          schema: { type: 'object', properties: { a: { type: 'string' }, b: { type: 'string' } } },
+          uiSchema,
+        });
+
+        expect(node.querySelector('label[for="root_a"]')).toHaveTextContent(/^a$/);
+        expect(node.querySelector('label[for="root_b"]')).toHaveTextContent(/^b$/);
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          `ui:field for "root_b" (b) names no registered field ('Nope'), so it is ignored and the field is ` +
+            'rendered as though no ui:field were given.',
+        );
+      });
+
       it('warns that a value that is neither a name nor a component is ignored', () => {
         const { node } = createFormComponent({
           schema: stringSchema,
