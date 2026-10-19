@@ -990,17 +990,21 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
     (offered) => offered.keyword === key && offered.options.length === options.length && offered.list === options,
   );
   if (choice === undefined) {
-    // The options are not a list the plan met as it stands, such as the cross product a merge makes of two lists or
-    // one a `customMergeAllOf` copied, so the option is read as written and the field computed from it. It is still
-    // the same field, reached the same way: it keeps its edge, and the longest ref path the lists it merges were
-    // offered under, or a recursion through the option would start afresh at every level
+    // The options are not a list the plan met as it stands, such as the cross product a merge makes of two lists, one
+    // a `customMergeAllOf` copied or one a `dependencies` entry brings, which the plan merges without offering. So the
+    // option is read as written and the field computed from it. It is still the same field, reached the same way: it
+    // keeps its edge, and the longest ref path a node of its plan holding such a list was entered with, or a recursion
+    // through the option would start afresh at every level
     const option = schemaFrom(rootSchema, options[index]);
     const rendered = rendersOwnField
       ? mergeSchemas(remaining, option)
       : withDefaultOf(remaining, getRenderedOptionSchema<S>(remaining, resolveOwnRef<S>(option, rootSchema)));
     const adopted = graph.adopt(schemaFrom(rootSchema, rendered));
-    const offeredAt = view.choices
-      .filter((offered) => offered.keyword === key)
+    const offeredAt = view.entries
+      .filter(({ node: id }) => {
+        const node = graph.node(id);
+        return node.kind === 'schema' && Array.isArray(Reflect.get(node.raw, key));
+      })
       .reduce<RefPath>((longest, { refPath }) => (refPath.length > longest.length ? refPath : longest), []);
     const optionField: DefaultsField<S> = {
       ...field,

@@ -396,6 +396,39 @@ describe('getDefaultFormState() on recursive schemas', () => {
         { customMergeAllOf: copyingMerge },
         { next: { a: 'x' }, a: 'x' },
       ],
+      [
+        'a list a dependency brings, written in place',
+        {
+          definitions: {
+            node: {
+              type: 'object',
+              properties: { name: { type: 'string', default: 'n' } },
+              dependencies: { name: { anyOf: [{ properties: { next: { $ref: D('node') } } }, optB] } },
+            },
+          },
+          $ref: D('node'),
+        },
+        undefined,
+        {},
+        { name: 'n', next: { name: 'n' } },
+      ],
+      [
+        'a list a dependency brings through a $ref',
+        {
+          definitions: {
+            node: {
+              type: 'object',
+              properties: { name: { type: 'string', default: 'n' } },
+              dependencies: { name: { $ref: D('options') } },
+            },
+            options: { anyOf: [{ properties: { next: { $ref: D('node') } } }, optB] },
+          },
+          $ref: D('node'),
+        },
+        undefined,
+        {},
+        { name: 'n', next: { name: 'n' } },
+      ],
     ])(
       'terminates on %s, expanding the recursion once as through a list the plan met',
       (_, schema, behavior, context, expected) => {
