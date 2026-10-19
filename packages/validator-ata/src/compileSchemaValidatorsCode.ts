@@ -32,13 +32,16 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
   const schemas = Object.values(schemaMaps);
 
   const { customFormats, additionalMetaSchemas, extenderFn, ataOptionsOverrides = {} } = options;
-  const { coerceTypes, removeAdditional, keywords, schemas: extraSchemas } = ataOptionsOverrides;
   // What the module cannot carry is left out. `engine` only picks how the runtime validator
   // answers, never what it answers, and a standalone module is generated code by definition.
-  const carried: ValidatorOptions = { ...ataOptionsOverrides };
-  for (const key of ['coerceTypes', 'removeAdditional', 'keywords', 'schemas', 'engine'] as const) {
-    delete carried[key];
-  }
+  const {
+    coerceTypes,
+    removeAdditional,
+    keywords,
+    schemas: extraSchemas,
+    engine: _engine,
+    ...carried
+  } = ataOptionsOverrides;
   const dropped = [
     ...(extenderFn ? ['extenderFn'] : []),
     ...(additionalMetaSchemas?.length ? ['additionalMetaSchemas'] : []),
