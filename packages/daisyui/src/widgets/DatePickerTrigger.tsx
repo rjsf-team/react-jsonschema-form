@@ -1,7 +1,7 @@
 import type { MouseEvent, RefObject } from 'react';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import type { FormContextType, Registry, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import type { FieldPresentation, FormContextType, Registry, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { TranslatableString, triggerValueId } from '@rjsf/utils';
 
 import { getTriggerDescribedBy } from '../utils.ts';
@@ -19,6 +19,8 @@ interface DatePickerTriggerProps<
   name?: string;
   /** Whether the label is hidden, in which case the template renders none */
   hideLabel?: boolean;
+  /** The field's plan, which says whether a label names this button */
+  presentation?: FieldPresentation;
   /** The field's placeholder, displayed where it holds no date */
   placeholder?: string;
   /** The date the picker is holding, formatted for display, `undefined` where it holds none */
@@ -59,6 +61,7 @@ export default function DatePickerTrigger<
   label,
   name,
   hideLabel,
+  presentation,
   placeholder,
   formattedValue,
   isOpen,
@@ -70,7 +73,7 @@ export default function DatePickerTrigger<
   onBlur,
   registry,
 }: DatePickerTriggerProps<T, S, F>) {
-  const describedBy = getTriggerDescribedBy({ id, label, name, hideLabel, hasValue: !!formattedValue });
+  const describedBy = getTriggerDescribedBy({ id, label, name, hideLabel, presentation, hasValue: !!formattedValue });
   const text = formattedValue || placeholder || label || registry.translateString(TranslatableString.AriaDateLabel);
 
   return (

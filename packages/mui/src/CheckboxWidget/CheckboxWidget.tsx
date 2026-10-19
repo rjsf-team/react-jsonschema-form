@@ -3,7 +3,13 @@ import Checkbox from '@mui/material/Checkbox';
 import type { FormControlLabelProps } from '@mui/material/FormControlLabel';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, descriptionId, getTemplates, labelValue, schemaRequiresTrueValue } from '@rjsf/utils';
+import {
+  getControlDescribedBy,
+  getTemplates,
+  getWidgetDescription,
+  labelValue,
+  schemaRequiresTrueValue,
+} from '@rjsf/utils';
 
 import { getMuiProps } from '../util.ts';
 
@@ -42,6 +48,7 @@ export default function CheckboxWidget<
     onBlur,
     onFocus,
     registry,
+    presentation,
     options,
     uiSchema,
     required,
@@ -55,16 +62,16 @@ export default function CheckboxWidget<
   const handleChange: NonNullable<CheckboxProps['onChange']> = (_, checked) => onChange(checked);
   const handleBlur: React.FocusEventHandler<HTMLButtonElement> = () => onBlur(id, value);
   const handleFocus: React.FocusEventHandler<HTMLButtonElement> = () => onFocus(id, value);
-  const description = options.description ?? schema.description;
+  const description = getWidgetDescription<T, S, F>(props);
 
   const { rjsfSlotProps: muiSlotProps, ...otherMuiProps } = getMuiProps<T, S, F, CheckboxWidgetMuiProps>(options);
 
   return (
     <>
-      {!hideLabel && description && (
+      {description && (
         <DescriptionFieldTemplate
-          id={descriptionId(id)}
-          description={description}
+          id={description.id}
+          description={description.text}
           schema={schema}
           uiSchema={uiSchema}
           registry={registry}
@@ -85,7 +92,7 @@ export default function CheckboxWidget<
             onChange={handleChange}
             onBlur={handleBlur}
             onFocus={handleFocus}
-            aria-describedby={ariaDescribedByIds(id)}
+            aria-describedby={getControlDescribedBy<T, S, F>({ id, presentation })}
             {...muiSlotProps?.checkbox}
           />
         }

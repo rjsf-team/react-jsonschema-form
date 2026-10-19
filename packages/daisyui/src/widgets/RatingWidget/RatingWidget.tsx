@@ -29,6 +29,7 @@ export default function RatingWidget<
   label,
   name,
   hideLabel,
+  presentation,
   required,
   disabled,
   readonly,
@@ -101,7 +102,7 @@ export default function RatingWidget<
     <div className='form-control w-full'>
       <div
         className={`rating gap-1 ${sizeClass}`}
-        {...getGroupProps({ id, label, name, hideLabel, role: 'radiogroup' })}
+        {...getGroupProps({ id, label, name, hideLabel, presentation, role: 'radiogroup' })}
       >
         {[...Array(numStars)].map((_, index) => {
           const starValue = min + index;

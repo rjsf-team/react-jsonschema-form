@@ -35,6 +35,7 @@ export default function FieldTemplate<
     style,
     disabled,
     displayLabel,
+    presentation,
     hidden,
     label,
     keyName,
@@ -62,7 +63,9 @@ export default function FieldTemplate<
     return <div style={{ display: 'none' }}>{children}</div>;
   }
 
-  const isCheckbox = uiOptions.widget === 'checkbox';
+  // The plan's description already says whether a checkbox draws its own; the guess by the `checkbox` alias is left
+  // for a template rendered without one, so a description the plan gives the template isn't dropped
+  const leavesPartsToCheckbox = !presentation && uiOptions.widget === 'checkbox';
 
   const { rjsfSlotProps: muiSlotProps, ...otherMuiProps } = getMuiProps<T, S, F, FieldTemplateMuiProps>(uiOptions);
 
@@ -75,6 +78,7 @@ export default function FieldTemplate<
       label={label}
       keyName={keyName}
       displayLabel={displayLabel}
+      presentation={presentation}
       rawDescription={rawDescription}
       onKeyRename={onKeyRename}
       onKeyRenameBlur={onKeyRenameBlur}
@@ -95,7 +99,7 @@ export default function FieldTemplate<
         className={otherMuiProps.className}
       >
         {children}
-        {displayLabel && !isCheckbox && rawDescription ? (
+        {!leavesPartsToCheckbox && rawDescription ? (
           <Typography variant='caption' color='textSecondary' {...muiSlotProps?.fieldTypography}>
             {description}
           </Typography>

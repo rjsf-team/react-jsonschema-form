@@ -10,6 +10,7 @@ export default function FieldTemplate<
   id,
   children,
   displayLabel,
+  presentation,
   rawErrors,
   hideError,
   errors,
@@ -38,7 +39,9 @@ export default function FieldTemplate<
   if (hidden) {
     return <div className='hidden'>{children}</div>;
   }
-  const isCheckbox = uiOptions.widget === 'checkbox';
+  // The plan's `displayLabel` and description already say what a checkbox draws itself; the guess by the `checkbox`
+  // alias is left for a template rendered without one, so a part the plan gives the template isn't dropped
+  const leavesPartsToCheckbox = !presentation && uiOptions.widget === 'checkbox';
 
   return (
     <WrapIfAdditionalTemplate
@@ -49,6 +52,7 @@ export default function FieldTemplate<
       label={label}
       keyName={keyName}
       displayLabel={displayLabel}
+      presentation={presentation}
       rawDescription={rawDescription}
       onKeyRename={onKeyRename}
       onKeyRenameBlur={onKeyRenameBlur}
@@ -61,14 +65,14 @@ export default function FieldTemplate<
       registry={registry}
     >
       <Form.Group>
-        {displayLabel && !isCheckbox && (
-          <Form.Label htmlFor={id} className={hasError ? 'text-danger' : ''}>
+        {displayLabel && !leavesPartsToCheckbox && (
+          <Form.Label htmlFor={id} id={presentation?.label.id} className={hasError ? 'text-danger' : ''}>
             {label}
             {required ? '*' : null}
           </Form.Label>
         )}
         {children}
-        {displayLabel && rawDescription && !isCheckbox && (
+        {rawDescription && !leavesPartsToCheckbox && (
           <Form.Text className={hasError ? 'text-danger' : 'text-muted'}>{description}</Form.Text>
         )}
         {errors}

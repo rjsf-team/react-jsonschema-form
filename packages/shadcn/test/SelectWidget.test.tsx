@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import type { RJSFSchema } from '@rjsf/utils';
 import { TranslatableString } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
@@ -550,9 +551,9 @@ describe('multiple SelectWidget accessible name', () => {
     expect(screen.getByRole('combobox')).toHaveAccessibleName('Select ...');
   });
 
-  test('falls back to a fixed translated name for an explicit blank ui:title', () => {
+  test('is named by the label the template shows, which an explicit blank ui:title falls through to the title', () => {
     render(<Form schema={colorsSchema} uiSchema={{ colors: { 'ui:title': '' } }} validator={validator} />);
-    expect(screen.getByRole('combobox')).toHaveAccessibleName('Select ...');
+    expect(screen.getByRole('combobox')).toHaveAccessibleName('Colors');
   });
 
   test('prefers ui:placeholder for the name and the visible placeholder of an untitled root field', () => {
@@ -677,5 +678,25 @@ describe('SelectWidget whose button the field label names', () => {
     const button = renderLabelled({ label: '', name: '', required: true }, '*');
 
     expect(button).toHaveAccessibleDescription(expect.stringContaining('Red'));
+  });
+});
+
+describe('an anyOf option selector', () => {
+  test("is named by the label its field's template draws", () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        foo: {
+          title: 'Foo',
+          anyOf: [
+            { title: 'Text', type: 'string' },
+            { title: 'Number', type: 'number' },
+          ],
+        },
+      },
+    };
+    const { container } = render(<Form schema={schema} validator={validator} />);
+
+    expect(container.querySelector('#root_foo__anyof_select')).toHaveAccessibleName('Foo');
   });
 });

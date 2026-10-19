@@ -89,7 +89,20 @@ export default function DateWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { id, value, label, name, hideLabel, placeholder, options, disabled, readonly, schema, registry } = props;
+  const {
+    id,
+    value,
+    label,
+    name,
+    hideLabel,
+    presentation,
+    placeholder,
+    options,
+    disabled,
+    readonly,
+    schema,
+    registry,
+  } = props;
   const initialDate = useMemo(() => parseDateValue(value), [value]);
   const formatDate = useDateFormatter<S>(schema, 'date');
   const {
@@ -178,6 +191,7 @@ export default function DateWidget<
           label={label}
           name={name}
           hideLabel={hideLabel}
+          presentation={presentation}
           placeholder={placeholder}
           formattedValue={formattedValue}
           isOpen={isOpen}

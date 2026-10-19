@@ -80,6 +80,7 @@ export default function BaseInputTemplate<
     InputLabelProps,
     InputProps,
     slotProps,
+    presentation, // remove this from textFieldProps
     ...textFieldProps
   } = props;
   const { ClearButton } = registry.templates.ButtonTemplates;

@@ -1,6 +1,6 @@
 import type { FocusEvent } from 'react';
 import type { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
-import { ariaDescribedByIds, descriptionId, getTemplates, schemaRequiresTrueValue } from '@rjsf/utils';
+import { getControlDescribedBy, getTemplates, getWidgetDescription, schemaRequiresTrueValue } from '@rjsf/utils';
 import { Form } from 'react-bootstrap';
 
 export default function CheckboxWidget<
@@ -23,6 +23,7 @@ export default function CheckboxWidget<
     onBlur,
     onFocus,
     registry,
+    presentation,
     uiSchema,
     required,
   } = props;
@@ -36,13 +37,16 @@ export default function CheckboxWidget<
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target?.checked);
   const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target?.checked);
 
-  const description = options.description || schema.description;
+  const description = getWidgetDescription<T, S, F>(props);
   return (
-    <Form.Group className={disabled || readonly ? 'disabled' : ''} aria-describedby={ariaDescribedByIds(id)}>
-      {!hideLabel && description && (
+    <Form.Group
+      className={disabled || readonly ? 'disabled' : ''}
+      aria-describedby={getControlDescribedBy<T, S, F>({ id, presentation })}
+    >
+      {description && (
         <DescriptionFieldTemplate
-          id={descriptionId(id)}
-          description={description}
+          id={description.id}
+          description={description.text}
           schema={schema}
           uiSchema={uiSchema}
           registry={registry}

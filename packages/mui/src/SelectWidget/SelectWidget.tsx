@@ -143,6 +143,9 @@ export default function SelectWidget<
             shrink: !isEmpty,
           },
           select: {
+            // MUI names the combobox by the `labelId` of its select, and gives an `aria-labelledby` among its
+            // `inputProps` to the hidden native input instead, so a label the plan names it by goes there
+            ...(ariaProps['aria-labelledby'] && { labelId: ariaProps['aria-labelledby'] }),
             ...muiSlotProps?.select,
             multiple,
           },

@@ -877,7 +877,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                           style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-pointer-events: none;"
                                         >
                                           <input
-                                            aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                                             aria-expanded="false"
                                             aria-haspopup="listbox"
                                             autocomplete="off"
@@ -2101,7 +2100,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-pointer-events: none;"
                                 >
                                   <input
-                                    aria-describedby="root_employment_location_state__error root_employment_location_state__description root_employment_location_state__help"
                                     aria-expanded="false"
                                     aria-haspopup="listbox"
                                     autocomplete="off"
@@ -3781,7 +3779,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                           style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-pointer-events: none;"
                                         >
                                           <input
-                                            aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                                             aria-expanded="false"
                                             aria-haspopup="listbox"
                                             autocomplete="off"
@@ -5049,7 +5046,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-pointer-events: none;"
                                 >
                                   <input
-                                    aria-describedby="root_employment_location_state__error root_employment_location_state__description root_employment_location_state__help"
                                     aria-expanded="false"
                                     aria-haspopup="listbox"
                                     autocomplete="off"
@@ -6729,7 +6725,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                           style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-pointer-events: none;"
                                         >
                                           <input
-                                            aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                                             aria-expanded="false"
                                             aria-haspopup="listbox"
                                             autocomplete="off"
@@ -8725,7 +8720,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                           style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-pointer-events: none;"
                                         >
                                           <input
-                                            aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                                             aria-expanded="false"
                                             aria-haspopup="listbox"
                                             autocomplete="off"
@@ -9949,7 +9943,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-pointer-events: none;"
                                 >
                                   <input
-                                    aria-describedby="root_employment_location_state__error root_employment_location_state__description root_employment_location_state__help"
                                     aria-expanded="false"
                                     aria-haspopup="listbox"
                                     autocomplete="off"
@@ -11507,7 +11500,6 @@ exports[`Three even column grid > renders person and address in three columns, n
                     style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-pointer-events: none;"
                   >
                     <input
-                      aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                       aria-expanded="false"
                       aria-haspopup="listbox"
                       autocomplete="off"
@@ -13066,7 +13058,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-pointer-events: none;"
                   >
                     <input
-                      aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                       aria-expanded="false"
                       aria-haspopup="listbox"
                       autocomplete="off"

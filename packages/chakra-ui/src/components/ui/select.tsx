@@ -28,7 +28,9 @@ interface SelectTriggerProps extends ChakraSelect.ControlProps {
  * @param [props.clearable] - Whether the trigger is clearable.
  * @param [props.children] - The content to display inside the trigger.
  * @param [props.aria-label] - The accessible name given to the trigger itself, rather than to its control.
+ * @param [props.aria-labelledby] - The ids naming the trigger itself, rather than its control.
  * @param [props.aria-describedby] - The ids describing the trigger itself, rather than its control.
+ * @param [props.aria-invalid] - Whether the trigger itself is marked invalid, rather than its control.
  * @returns The rendered select trigger component.
  */
 export const SelectTrigger = ({
@@ -36,11 +38,20 @@ export const SelectTrigger = ({
   clearable,
   ref,
   'aria-label': ariaLabel,
+  'aria-labelledby': ariaLabelledBy,
   'aria-describedby': ariaDescribedBy,
+  'aria-invalid': ariaInvalid,
   ...rest
 }: SelectTriggerProps) => (
   <ChakraSelect.Control {...rest}>
-    <ChakraSelect.Trigger ref={ref} aria-label={ariaLabel} aria-describedby={ariaDescribedBy}>
+    <ChakraSelect.Trigger
+      ref={ref}
+      aria-label={ariaLabel}
+      aria-describedby={ariaDescribedBy}
+      // Passed only when given, since an undefined one would drop the field label Chakra points the trigger at
+      {...(ariaLabelledBy && { 'aria-labelledby': ariaLabelledBy })}
+      {...(ariaInvalid && { 'aria-invalid': ariaInvalid })}
+    >
       {children}
     </ChakraSelect.Trigger>
     <ChakraSelect.IndicatorGroup>

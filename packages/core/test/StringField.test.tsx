@@ -178,7 +178,7 @@ describe('StringField', () => {
       const input = node.querySelector('.rjsf-field input');
       expect(node.querySelector('.rjsf-field datalist')).toBeNull();
       expect(input).not.toHaveAttribute('list');
-      expect(input?.getAttribute('aria-describedby')).not.toContain('__examples');
+      expect(input).not.toHaveAttribute('aria-describedby');
     });
 
     it('should not suggest an undefined example as the string "undefined"', () => {

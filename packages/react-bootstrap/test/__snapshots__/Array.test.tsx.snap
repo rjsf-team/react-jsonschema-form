@@ -110,12 +110,6 @@ exports[`array fields > array icons 1`] = `
                         class="rjsf-field rjsf-field-string"
                       >
                         <div>
-                          <label
-                            class="form-label"
-                            for="root_0"
-                          >
-                            *
-                          </label>
                           <input
                             aria-describedby="root_0__error root_0__description root_0__help"
                             class="form-control"
@@ -237,12 +231,6 @@ exports[`array fields > array icons 1`] = `
                         class="rjsf-field rjsf-field-string"
                       >
                         <div>
-                          <label
-                            class="form-label"
-                            for="root_1"
-                          >
-                            *
-                          </label>
                           <input
                             aria-describedby="root_1__error root_1__description root_1__help"
                             class="form-control"
@@ -423,12 +411,7 @@ exports[`array fields > checkboxes 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <div>
-        <label
-          class="form-label"
-          for="root"
-        />
         <select
-          aria-describedby="root__error root__description root__help"
           class="form-select"
           id="root"
           multiple=""
@@ -491,6 +474,7 @@ exports[`array fields > empty errors array 1`] = `
                   <label
                     class="form-label"
                     for="root_name"
+                    id="root_name__label"
                   >
                     name
                   </label>
@@ -552,12 +536,6 @@ exports[`array fields > fixed array 1`] = `
                         class="rjsf-field rjsf-field-string"
                       >
                         <div>
-                          <label
-                            class="form-label"
-                            for="root_0"
-                          >
-                            *
-                          </label>
                           <input
                             aria-describedby="root_0__error root_0__description root_0__help"
                             class="form-control"
@@ -587,12 +565,6 @@ exports[`array fields > fixed array 1`] = `
                         class="rjsf-field rjsf-field-number"
                       >
                         <div>
-                          <label
-                            class="form-label"
-                            for="root_1"
-                          >
-                            *
-                          </label>
                           <input
                             aria-describedby="root_1__error root_1__description root_1__help"
                             class="form-control"
@@ -683,6 +655,7 @@ exports[`array fields > has errors 1`] = `
                   <label
                     class="text-danger form-label"
                     for="root_name"
+                    id="root_name__label"
                   >
                     name
                   </label>
@@ -755,6 +728,7 @@ exports[`array fields > no errors 1`] = `
                   <label
                     class="form-label"
                     for="root_name"
+                    id="root_name__label"
                   >
                     name
                   </label>
@@ -834,6 +808,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                     <label
                                       class="form-label"
                                       for="root_0_name"
+                                      id="root_0_name__label"
                                     >
                                       name
                                     </label>
@@ -865,6 +840,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                     <label
                                       class="form-label"
                                       for="root_0_value"
+                                      id="root_0_value__label"
                                     >
                                       value
                                     </label>
@@ -988,6 +964,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                     <label
                                       class="form-label"
                                       for="root_1_name"
+                                      id="root_1_name__label"
                                     >
                                       name
                                     </label>
@@ -1019,6 +996,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                     <label
                                       class="form-label"
                                       for="root_1_value"
+                                      id="root_1_value__label"
                                     >
                                       value
                                     </label>
@@ -1204,12 +1182,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                         class="rjsf-field rjsf-field-string"
                       >
                         <div>
-                          <label
-                            class="form-label"
-                            for="root_0"
-                          >
-                            *
-                          </label>
                           <input
                             aria-describedby="root_0__error root_0__description root_0__help"
                             class="form-control"
@@ -1305,12 +1277,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                         class="rjsf-field rjsf-field-string"
                       >
                         <div>
-                          <label
-                            class="form-label"
-                            for="root_1"
-                          >
-                            *
-                          </label>
                           <input
                             aria-describedby="root_1__error root_1__description root_1__help"
                             class="form-control"
@@ -1465,12 +1431,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
       class="rjsf-field rjsf-field-array"
     >
       <div>
-        <label
-          class="form-label"
-          for="root"
-        />
         <select
-          aria-describedby="root__error root__description root__help"
           class="form-select"
           id="root"
           multiple=""
@@ -1536,12 +1497,6 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                         class="rjsf-field rjsf-field-string"
                       >
                         <div>
-                          <label
-                            class="form-label"
-                            for="root_0"
-                          >
-                            *
-                          </label>
                           <input
                             aria-describedby="root_0__error root_0__description root_0__help"
                             class="form-control"
@@ -1571,12 +1526,6 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                         class="rjsf-field rjsf-field-number"
                       >
                         <div>
-                          <label
-                            class="form-label"
-                            for="root_1"
-                          >
-                            *
-                          </label>
                           <input
                             aria-describedby="root_1__error root_1__description root_1__help"
                             class="form-control"
@@ -1610,7 +1559,6 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                       >
                         <div>
                           <div
-                            aria-describedby="root_2__error root_2__description root_2__help"
                             class=""
                           >
                             <div
@@ -1702,12 +1650,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                           class="rjsf-field rjsf-field-string"
                                         >
                                           <div>
-                                            <label
-                                              class="form-label"
-                                              for="root_0_0"
-                                            >
-                                              *
-                                            </label>
                                             <input
                                               aria-describedby="root_0_0__error root_0_0__description root_0_0__help"
                                               class="form-control"
@@ -1803,12 +1745,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                           class="rjsf-field rjsf-field-string"
                                         >
                                           <div>
-                                            <label
-                                              class="form-label"
-                                              for="root_0_1"
-                                            >
-                                              *
-                                            </label>
                                             <input
                                               aria-describedby="root_0_1__error root_0_1__description root_0_1__help"
                                               class="form-control"
@@ -2046,12 +1982,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                           class="rjsf-field rjsf-field-string"
                                         >
                                           <div>
-                                            <label
-                                              class="form-label"
-                                              for="root_1_0"
-                                            >
-                                              *
-                                            </label>
                                             <input
                                               aria-describedby="root_1_0__error root_1_0__description root_1_0__help"
                                               class="form-control"
@@ -2147,12 +2077,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                           class="rjsf-field rjsf-field-string"
                                         >
                                           <div>
-                                            <label
-                                              class="form-label"
-                                              for="root_1_1"
-                                            >
-                                              *
-                                            </label>
                                             <input
                                               aria-describedby="root_1_1__error root_1_1__description root_1_1__help"
                                               class="form-control"
@@ -2467,6 +2391,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                     <label
                                       class="form-label"
                                       for="root_0_name"
+                                      id="root_0_name__label"
                                     >
                                       name
                                     </label>
@@ -2498,6 +2423,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                     <label
                                       class="form-label"
                                       for="root_0_value"
+                                      id="root_0_value__label"
                                     >
                                       value
                                     </label>
@@ -2621,6 +2547,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                     <label
                                       class="form-label"
                                       for="root_1_name"
+                                      id="root_1_name__label"
                                     >
                                       name
                                     </label>
@@ -2652,6 +2579,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                     <label
                                       class="form-label"
                                       for="root_1_value"
+                                      id="root_1_value__label"
                                     >
                                       value
                                     </label>
@@ -2837,12 +2765,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                         class="rjsf-field rjsf-field-string"
                       >
                         <div>
-                          <label
-                            class="form-label"
-                            for="root_0"
-                          >
-                            *
-                          </label>
                           <input
                             aria-describedby="root_0__error root_0__description root_0__help"
                             class="form-control"
@@ -2938,12 +2860,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                         class="rjsf-field rjsf-field-string"
                       >
                         <div>
-                          <label
-                            class="form-label"
-                            for="root_1"
-                          >
-                            *
-                          </label>
                           <input
                             aria-describedby="root_1__error root_1__description root_1__help"
                             class="form-control"
@@ -3137,6 +3053,7 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                                     <label
                                       class="form-label"
                                       for="root_0_name"
+                                      id="root_0_name__label"
                                     >
                                       name
                                     </label>
@@ -3283,6 +3200,7 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                                     <label
                                       class="form-label"
                                       for="root_1_name"
+                                      id="root_1_name__label"
                                     >
                                       name
                                     </label>
@@ -3614,6 +3532,7 @@ exports[`with title and description > array icons 1`] = `
                           <label
                             class="form-label"
                             for="root_0"
+                            id="root_0__label"
                           >
                             Test item*
                           </label>
@@ -3753,6 +3672,7 @@ exports[`with title and description > array icons 1`] = `
                           <label
                             class="form-label"
                             for="root_1"
+                            id="root_1__label"
                           >
                             Test item*
                           </label>
@@ -3951,11 +3871,12 @@ exports[`with title and description > checkboxes 1`] = `
         <label
           class="form-label"
           for="root"
+          id="root__label"
         >
           Test field
         </label>
         <select
-          aria-describedby="root__error root__description root__help"
+          aria-describedby="root__description"
           class="form-select"
           id="root"
           multiple=""
@@ -4056,6 +3977,7 @@ exports[`with title and description > fixed array 1`] = `
                           <label
                             class="form-label"
                             for="root_0"
+                            id="root_0__label"
                           >
                             Test item*
                           </label>
@@ -4103,6 +4025,7 @@ exports[`with title and description > fixed array 1`] = `
                           <label
                             class="form-label"
                             for="root_1"
+                            id="root_1__label"
                           >
                             Test item*
                           </label>
@@ -4310,6 +4233,7 @@ exports[`with title and description from both > array icons 1`] = `
                           <label
                             class="form-label"
                             for="root_0"
+                            id="root_0__label"
                           >
                             My Item*
                           </label>
@@ -4449,6 +4373,7 @@ exports[`with title and description from both > array icons 1`] = `
                           <label
                             class="form-label"
                             for="root_1"
+                            id="root_1__label"
                           >
                             My Item*
                           </label>
@@ -4647,11 +4572,12 @@ exports[`with title and description from both > checkboxes 1`] = `
         <label
           class="form-label"
           for="root"
+          id="root__label"
         >
           My Field
         </label>
         <select
-          aria-describedby="root__error root__description root__help"
+          aria-describedby="root__description"
           class="form-select"
           id="root"
           multiple=""
@@ -4752,6 +4678,7 @@ exports[`with title and description from both > fixed array 1`] = `
                           <label
                             class="form-label"
                             for="root_0"
+                            id="root_0__label"
                           >
                             My Item*
                           </label>
@@ -4799,6 +4726,7 @@ exports[`with title and description from both > fixed array 1`] = `
                           <label
                             class="form-label"
                             for="root_1"
+                            id="root_1__label"
                           >
                             My Item*
                           </label>
@@ -5006,6 +4934,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                           <label
                             class="form-label"
                             for="root_0"
+                            id="root_0__label"
                           >
                             My Item*
                           </label>
@@ -5145,6 +5074,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                           <label
                             class="form-label"
                             for="root_1"
+                            id="root_1__label"
                           >
                             My Item*
                           </label>
@@ -5343,11 +5273,12 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
         <label
           class="form-label"
           for="root"
+          id="root__label"
         >
           My Field
         </label>
         <select
-          aria-describedby="root__error root__description root__help"
+          aria-describedby="root__description"
           class="form-select"
           id="root"
           multiple=""
@@ -5448,6 +5379,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                           <label
                             class="form-label"
                             for="root_0"
+                            id="root_0__label"
                           >
                             My Item*
                           </label>
@@ -5495,6 +5427,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                           <label
                             class="form-label"
                             for="root_1"
+                            id="root_1__label"
                           >
                             My Item*
                           </label>
@@ -5961,7 +5894,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
     >
       <div>
         <select
-          aria-describedby="root__error root__description root__help"
+          aria-label="Test field"
           class="form-select"
           id="root"
           multiple=""

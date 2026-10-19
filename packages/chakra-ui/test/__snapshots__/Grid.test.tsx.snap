@@ -2000,7 +2000,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                       >
                                         <button
                                           aria-controls="select:root_person_address_state:content"
-                                          aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                                           aria-expanded="false"
                                           aria-haspopup="listbox"
                                           aria-invalid="false"
@@ -4525,7 +4524,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 >
                                   <button
                                     aria-controls="select:root_employment_location_state:content"
-                                    aria-describedby="root_employment_location_state__error root_employment_location_state__description root_employment_location_state__help"
                                     aria-expanded="false"
                                     aria-haspopup="listbox"
                                     aria-invalid="false"
@@ -8303,7 +8301,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                       >
                                         <button
                                           aria-controls="select:root_person_address_state:content"
-                                          aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                                           aria-expanded="false"
                                           aria-haspopup="listbox"
                                           aria-invalid="false"
@@ -10875,7 +10872,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 >
                                   <button
                                     aria-controls="select:root_employment_location_state:content"
-                                    aria-describedby="root_employment_location_state__error root_employment_location_state__description root_employment_location_state__help"
                                     aria-expanded="false"
                                     aria-haspopup="listbox"
                                     aria-invalid="false"
@@ -14698,7 +14694,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                       >
                                         <button
                                           aria-controls="select:root_person_address_state:content"
-                                          aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                                           aria-expanded="false"
                                           aria-haspopup="listbox"
                                           aria-invalid="false"
@@ -18789,7 +18784,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                       >
                                         <button
                                           aria-controls="select:root_person_address_state:content"
-                                          aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                                           aria-expanded="false"
                                           aria-haspopup="listbox"
                                           aria-invalid="false"
@@ -21314,7 +21308,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 >
                                   <button
                                     aria-controls="select:root_employment_location_state:content"
-                                    aria-describedby="root_employment_location_state__error root_employment_location_state__description root_employment_location_state__help"
                                     aria-expanded="false"
                                     aria-haspopup="listbox"
                                     aria-invalid="false"
@@ -24914,7 +24907,6 @@ exports[`Three even column grid > renders person and address in three columns, n
                           >
                             <button
                               aria-controls="select:root_person_address_state:content"
-                              aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                               aria-expanded="false"
                               aria-haspopup="listbox"
                               aria-invalid="false"
@@ -28512,7 +28504,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
                           >
                             <button
                               aria-controls="select:root_person_address_state:content"
-                              aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                               aria-expanded="false"
                               aria-haspopup="listbox"
                               aria-invalid="false"

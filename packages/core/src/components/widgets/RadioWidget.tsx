@@ -2,11 +2,11 @@ import type { FocusEvent } from 'react';
 import { useCallback } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
   enumOptionsIsDisabled,
   enumOptionValueDecoder,
   enumOptionsDomValues,
   enumOptionsIsSelected,
+  getGroupAttributes,
   getOptionValueFormat,
   optionId,
 } from '@rjsf/utils';
@@ -32,6 +32,7 @@ function RadioWidget<
   onChange,
   id,
   htmlName,
+  presentation,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, inline, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
@@ -49,8 +50,12 @@ function RadioWidget<
     [onFocus, enumOptions, emptyValue, id, optionValueFormat],
   );
 
+  const { group: groupAttributes, option: optionAttributes } = getGroupAttributes<T, S, F>(
+    { id, presentation },
+    'radiogroup',
+  );
   return (
-    <div className='field-radio-group' id={id} role='radiogroup'>
+    <div className='field-radio-group' id={id} {...groupAttributes}>
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, i) => {
           const checked = enumOptionsIsSelected<S>(option.value, value, false);
@@ -73,7 +78,7 @@ function RadioWidget<
                 onChange={handleChange}
                 onBlur={handleBlur}
                 onFocus={handleFocus}
-                aria-describedby={ariaDescribedByIds(id)}
+                {...optionAttributes}
               />
               <span>{option.label}</span>
             </span>

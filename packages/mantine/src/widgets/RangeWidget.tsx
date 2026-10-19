@@ -12,7 +12,7 @@ import type {
 } from '@mantine/core';
 import { Slider, Input, useProps } from '@mantine/core';
 import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, rangeSpec, titleId } from '@rjsf/utils';
+import { getControlDescribedBy, rangeSpec, titleId } from '@rjsf/utils';
 
 import type { OwnKeys } from '../utils.tsx';
 import { cleanupOptions, useFieldWrapperProps, useHiddenTitle, useShownSuccessId } from '../utils.tsx';
@@ -64,6 +64,8 @@ const sliderExcludedKeys = new Set(Object.keys(sliderExcludedKeyRecord));
 
 interface FieldSliderProps extends Omit<SliderProps, 'thumbProps'> {
   id: string;
+  /** The ids its field's plan describes the thumb by */
+  describedBy?: string;
   // Mantine's `Thumb` also reads a `thumbLabel` from it, which `SliderProps` doesn't type
   thumbProps?: GenericObjectType;
   successId: string;
@@ -75,7 +77,16 @@ interface FieldSliderProps extends Omit<SliderProps, 'thumbProps'> {
  * message of the `Input.Wrapper` it is rendered in while Mantine renders it. Every other prop, including the ref and
  * handlers a single-child `inputContainer` such as `Tooltip` adds, is passed on to the `Slider`.
  */
-function FieldSlider({ id, successId, invalid, titled, thumbProps, thumbLabel, ...props }: FieldSliderProps) {
+function FieldSlider({
+  id,
+  describedBy,
+  successId,
+  invalid,
+  titled,
+  thumbProps,
+  thumbLabel,
+  ...props
+}: FieldSliderProps) {
   const shownSuccessId = useShownSuccessId(successId);
   return (
     <Slider
@@ -84,9 +95,8 @@ function FieldSlider({ id, successId, invalid, titled, thumbProps, thumbLabel, .
       {...props}
       thumbProps={{
         ...thumbProps,
-        'aria-describedby': [ariaDescribedByIds(id), shownSuccessId, thumbProps?.['aria-describedby']]
-          .filter(Boolean)
-          .join(' '),
+        'aria-describedby':
+          [describedBy, shownSuccessId, thumbProps?.['aria-describedby']].filter(Boolean).join(' ') || undefined,
         'aria-invalid': thumbProps?.['aria-invalid'] ?? (invalid || undefined),
         // Mantine names the thumb by `thumbLabel` through `aria-label`, which `aria-labelledby` would override in turn.
         // A `thumbLabel` key in `thumbProps` replaces it, even when `undefined`, since Mantine spreads `thumbProps` last.
@@ -110,14 +120,28 @@ export default function RangeWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { id, htmlName, value, disabled, readonly, autofocus, label, options, onChange, onBlur, onFocus, schema } =
-    props;
+  const {
+    id,
+    htmlName,
+    value,
+    disabled,
+    readonly,
+    autofocus,
+    label,
+    hideLabel,
+    options,
+    onChange,
+    onBlur,
+    onFocus,
+    schema,
+    presentation,
+  } = props;
 
   const themeProps = cleanupOptions(options, sliderExcludedKeys);
   const { min, max, step } = rangeSpec(schema);
   const { wrapperProps, inputWrapperOrder, invalid, successId } = useFieldWrapperProps(props);
   // The slider is named by `titleId(id)`, so the title is kept, hidden, when Mantine doesn't render it
-  const hiddenTitle = useHiddenTitle(id, label, props.hideLabel, inputWrapperOrder);
+  const hiddenTitle = useHiddenTitle(id, label, hideLabel, inputWrapperOrder);
   const { thumbProps, thumbLabel } = useProps<GenericObjectType>(
     'Slider',
     {},
@@ -151,6 +175,7 @@ export default function RangeWidget<
       <Input.Wrapper {...wrapperProps}>
         <FieldSlider
           id={id}
+          describedBy={getControlDescribedBy<T, S, F>({ id, presentation })}
           name={htmlName || id}
           value={value}
           max={max}

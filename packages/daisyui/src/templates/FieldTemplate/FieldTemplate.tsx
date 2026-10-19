@@ -104,6 +104,7 @@ export default function FieldTemplate<
     onChange,
     fieldPath,
     style,
+    presentation,
     ...divProps
   } = props;
 
@@ -114,7 +115,10 @@ export default function FieldTemplate<
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   // The checkbox and the toggle render their own label after the input, and their own description, so this template
   // renders neither for them
-  const widgetRendersLabel = widgetRendersOwnLabel<T, S, F>(schema, uiOptions.widget, registry.widgets);
+  // The plan's `displayLabel` already says whether the widget draws the label; the guess is left for a template rendered
+  // without one
+  const widgetRendersLabel =
+    !presentation && widgetRendersOwnLabel<T, S, F>(schema, uiOptions.widget, registry.widgets);
   const daisy = getDaisy<T, S, F>({ uiSchema });
   const { WrapIfAdditionalTemplate } = getTemplates<T, S, F>(registry, uiOptions);
 
@@ -127,6 +131,7 @@ export default function FieldTemplate<
       label={label}
       keyName={keyName}
       displayLabel={displayLabel}
+      presentation={presentation}
       onKeyRename={onKeyRename}
       onKeyRenameBlur={onKeyRenameBlur}
       onRemoveProperty={onRemoveProperty}
@@ -155,7 +160,7 @@ export default function FieldTemplate<
           </label>
         )}
         {children}
-        {displayLabel && !widgetRendersLabel && description ? description : null}
+        {!widgetRendersLabel && description ? description : null}
         {errors}
         {help}
       </div>
