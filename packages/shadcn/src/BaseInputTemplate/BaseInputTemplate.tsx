@@ -3,12 +3,12 @@ import { useCallback } from 'react';
 import { SchemaExamples } from '@rjsf/core';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
   examplesId,
+  getControlAttributes,
   getExampleSuggestions,
   getInputProps,
   getNumericInputTitle,
-  hasVisibleErrors,
+  hasWidgetErrors,
 } from '@rjsf/utils';
 
 import { Input } from '../components/ui/input.tsx';
@@ -24,29 +24,29 @@ export default function BaseInputTemplate<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({
-  id,
-  htmlName,
-  placeholder,
-  required,
-  readonly,
-  disabled,
-  type,
-  value,
-  onChange,
-  onChangeOverride,
-  onBlur,
-  onFocus,
-  autofocus,
-  options,
-  schema,
-  rawErrors,
-  hideError,
-  children,
-  extraProps,
-  className,
-  registry,
-}: BaseInputTemplateProps<T, S, F>) {
+>(props: BaseInputTemplateProps<T, S, F>) {
+  const {
+    id,
+    htmlName,
+    placeholder,
+    required,
+    readonly,
+    disabled,
+    type,
+    value,
+    onChange,
+    onChangeOverride,
+    onBlur,
+    onFocus,
+    autofocus,
+    options,
+    schema,
+    children,
+    extraProps,
+    className,
+    registry,
+    presentation,
+  } = props;
   const { ClearButton } = registry.templates.ButtonTemplates;
   const derivedInputProps = getInputProps<T, S, F>(schema, type, options);
   // `pattern` and `inputMode` are the two derived props a caller can also mean to set, so `extraProps` keeps either one
@@ -85,10 +85,7 @@ export default function BaseInputTemplate<
         required={required}
         disabled={disabled}
         readOnly={readonly}
-        className={cn(
-          { 'border-destructive focus-visible:ring-0': hasVisibleErrors({ rawErrors, hideError }) },
-          className,
-        )}
+        className={cn({ 'border-destructive': hasWidgetErrors<T, S, F>(props) }, className)}
         list={hasExamples ? examplesId(id) : undefined}
         title={callerPattern ? undefined : getNumericInputTitle(derivedInputProps, registry.translateString)}
         {...inputProps}
@@ -96,7 +93,7 @@ export default function BaseInputTemplate<
         onChange={onChangeOverride ?? handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
-        aria-describedby={ariaDescribedByIds(id, hasExamples)}
+        {...getControlAttributes<T, S, F>({ id, presentation }, hasExamples ? [examplesId(id)] : [])}
       />
       {options.allowClearTextInputs && !readonly && !disabled && value && (
         <ClearButton onClick={handleClear} registry={registry} />

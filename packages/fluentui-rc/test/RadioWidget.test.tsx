@@ -19,6 +19,7 @@ function makeWidgetMockProps(props: Partial<WidgetProps> = {}): WidgetProps {
     onBlur: () => undefined,
     onFocus: () => undefined,
     multiple: false,
+    // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
     rawErrors: [],
     value: undefined,
     options: {},

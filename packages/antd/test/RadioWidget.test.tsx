@@ -36,6 +36,23 @@ describe('RadioWidget', () => {
     await user.click(screen.getByRole('radio', { name: 'foo' }));
 
     expect(onChange).not.toHaveBeenCalled();
+    expect(screen.getByRole('radio', { name: 'foo' })).not.toBeChecked();
+  });
+
+  it("doesn't block the submit of a required, empty ui:readonly field when readonlyAsDisabled is off", () => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', required: ['x'], properties: { x: { ...schema, title: 'X' } } }}
+        uiSchema={{ x: { 'ui:widget': 'radio', 'ui:readonly': true } }}
+        formContext={{ readonlyAsDisabled: false }}
+        validator={validator}
+      />,
+    );
+
+    for (const radio of screen.getAllByRole('radio')) {
+      expect(radio).not.toBeRequired();
+    }
+    expect(container.querySelector('form')!.checkValidity()).toBe(true);
   });
 
   it('disables every option under a ConfigProvider with componentDisabled', async () => {

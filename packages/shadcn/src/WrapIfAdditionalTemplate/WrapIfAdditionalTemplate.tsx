@@ -1,5 +1,11 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WrapIfAdditionalTemplateProps } from '@rjsf/utils';
-import { AdditionalPropertyKeySelect, ADDITIONAL_PROPERTY_FLAG, buttonId, TranslatableString } from '@rjsf/utils';
+import {
+  ADDITIONAL_PROPERTY_FLAG,
+  AdditionalPropertyKeySelect,
+  buttonId,
+  hasAdditionalKeyLabel,
+  TranslatableString,
+} from '@rjsf/utils';
 
 import { Input } from '../components/ui/input.tsx';
 import { Separator } from '../components/ui/separator.tsx';
@@ -13,26 +19,28 @@ export default function WrapIfAdditionalTemplate<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({
-  classNames,
-  style,
-  children,
-  disabled,
-  id,
-  label,
-  keyName,
-  displayLabel,
-  onRemoveProperty,
-  onKeyRename,
-  onKeyRenameBlur,
-  propertyNamesEnum,
-  rawDescription,
-  readonly,
-  required,
-  schema,
-  uiSchema,
-  registry,
-}: WrapIfAdditionalTemplateProps<T, S, F>) {
+>(props: WrapIfAdditionalTemplateProps<T, S, F>) {
+  const {
+    classNames,
+    style,
+    children,
+    disabled,
+    id,
+    label,
+    keyName,
+    onRemoveProperty,
+    onKeyRename,
+    onKeyRenameBlur,
+    propertyNamesEnum,
+    rawDescription,
+    readonly,
+    required,
+    schema,
+    uiSchema,
+    registry,
+  } = props;
+  // The key is labelled wherever the value's label is drawn, by the template or the value's own component
+  const hasKeyLabel = hasAdditionalKeyLabel<T, S, F>(props);
   const { templates, translateString } = registry;
   // Button templates are not overridden in the uiSchema
   const { RemoveButton } = templates.ButtonTemplates;
@@ -48,7 +56,7 @@ export default function WrapIfAdditionalTemplate<
   }
 
   const marginDesc = rawDescription ? -28 : 0;
-  const margin = displayLabel ? 22 + marginDesc : 0;
+  const margin = hasKeyLabel ? 22 + marginDesc : 0;
   const keyId = `${id}-key`;
 
   return (
@@ -56,7 +64,7 @@ export default function WrapIfAdditionalTemplate<
       <div className={`grid grid-cols-12 col-span-12 items-center gap-2 ${classNames ?? ''}`.trim()} style={style}>
         <div className='grid gap-2 col-span-5'>
           <div className='flex flex-col gap-2'>
-            {displayLabel && (
+            {hasKeyLabel && (
               <label htmlFor={keyId} className='text-sm font-medium text-muted-foreground leading-none'>
                 {keyLabel}
               </label>
@@ -67,6 +75,7 @@ export default function WrapIfAdditionalTemplate<
                   id={keyId}
                   label={keyLabel}
                   hideLabel
+                  labelledByTemplate={hasKeyLabel}
                   value={keyName}
                   propertyNamesEnum={propertyNamesEnum}
                   onKeyRename={onKeyRename}
@@ -78,6 +87,7 @@ export default function WrapIfAdditionalTemplate<
               ) : (
                 <Input
                   key={keyName}
+                  aria-label={hasKeyLabel ? undefined : keyLabel}
                   required={required}
                   defaultValue={keyName}
                   disabled={disabled || readonly}

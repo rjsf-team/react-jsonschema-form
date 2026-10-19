@@ -1,5 +1,11 @@
 import type { Registry, UIOptionsType } from '../src/index.ts';
-import { createSchemaUtils, englishStringTranslator, getTemplate, getTemplates } from '../src/index.ts';
+import {
+  createSchemaUtils,
+  englishStringTranslator,
+  getTemplate,
+  getTemplates,
+  mergeThemePresentation,
+} from '../src/index.ts';
 import getTestValidator from './testUtils/getTestValidator.ts';
 import { GLOBAL_FORM_OPTIONS } from './testUtils/testData.ts';
 
@@ -46,6 +52,7 @@ const registry: Registry = {
   },
   fields: {},
   widgets: {},
+  presentation: mergeThemePresentation(),
   globalFormOptions: GLOBAL_FORM_OPTIONS,
 };
 

@@ -24,6 +24,7 @@ function makeProps(props: Partial<WidgetProps> = {}): WidgetProps {
     disabled: false,
     readonly: false,
     multiple: false,
+    // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
     rawErrors: [],
     onChange: () => undefined,
     onBlur: () => undefined,
@@ -62,6 +63,7 @@ describe('AltDateWidget', () => {
 
   test('hides description when hideLabel is true', () => {
     const { queryByText } = renderWidget({
+      // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated prop a component without a plan reads
       hideLabel: true,
       options: {
         description: 'Test description',
@@ -96,6 +98,7 @@ describe('AltDateWidget', () => {
   });
 
   test('marks each part invalid, without repeating the errors, when the field has errors', () => {
+    // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated prop a component without a plan reads
     const { getAllByRole, getAllByText } = renderWidget({ rawErrors: ['An error'] });
 
     for (const part of getAllByRole('combobox')) {
@@ -116,6 +119,7 @@ describe('AltDateWidget', () => {
     ['styles each part as successful while the success message is shown', [], true],
     ['leaves the parts unstyled while the field has errors', ['An error'], false],
   ])('%s', (_, rawErrors, styled) => {
+    // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated prop a component without a plan reads
     const { getAllByRole } = renderWidget({ options: { success: 'Looks good' }, rawErrors });
 
     for (const part of getAllByRole('combobox')) {

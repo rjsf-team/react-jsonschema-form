@@ -2,9 +2,9 @@ import type { ReactElement, ChangeEvent, FocusEvent } from 'react';
 import { useCallback } from 'react';
 import { Textarea } from '@mantine/core';
 import type { StrictRJSFSchema, RJSFSchema, FormContextType, WidgetProps } from '@rjsf/utils';
-import { labelValue } from '@rjsf/utils';
+import { labelValue, widgetDrawsLabel } from '@rjsf/utils';
 
-import { cleanupOptions, getDescriptionProps, useAriaDescribedByProps, useVisibleErrors } from '../utils.tsx';
+import { cleanupOptions, getDescriptionProps, getWidgetError, useInputAriaProps } from '../utils.tsx';
 
 /** The `TextareaWidget` is a widget for rendering input fields as textarea.
  *
@@ -25,12 +25,12 @@ export default function TextareaWidget<
     readonly,
     autofocus,
     label,
-    hideLabel,
     options,
     onChange,
     onBlur,
     onFocus,
   } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
 
   const themeProps = cleanupOptions(options);
   const emptyValue = options?.emptyValue;
@@ -60,8 +60,8 @@ export default function TextareaWidget<
     [onFocus, id],
   );
 
-  const ariaDescribedByProps = useAriaDescribedByProps('Textarea', id, options);
-  const error = useVisibleErrors(props);
+  const ariaDescribedByProps = useInputAriaProps('Textarea', props);
+  const error = getWidgetError<T, S, F>(props);
 
   return (
     <Textarea

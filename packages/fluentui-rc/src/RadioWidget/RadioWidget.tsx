@@ -3,13 +3,13 @@ import type { RadioGroupProps } from '@fluentui/react-components';
 import { Label, Radio, RadioGroup } from '@fluentui/react-components';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
+  enumOptionsAutofocusIndex,
   enumOptionsIsDisabled,
   enumOptionValueDecoder,
   enumOptionSelectedValue,
   enumOptionsDomValues,
+  getGroupLabelling,
   getOptionValueFormat,
-  labelValue,
   optionId,
 } from '@rjsf/utils';
 
@@ -22,20 +22,9 @@ export default function RadioWidget<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({
-  id,
-  htmlName,
-  options,
-  value,
-  required,
-  disabled,
-  readonly,
-  label,
-  hideLabel,
-  onChange,
-  onBlur,
-  onFocus,
-}: WidgetProps<T, S, F>) {
+>(props: WidgetProps<T, S, F>) {
+  const { id, htmlName, options, value, required, disabled, readonly, autofocus, label, onChange, onBlur, onFocus } =
+    props;
   const { enumOptions, enumDisabled, emptyValue, inline } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
@@ -50,23 +39,31 @@ export default function RadioWidget<
   // Compared against the options' own values, which are encoded in the `optionValueFormat` rather than always indexes
   const selectedValue: string | undefined = enumOptionSelectedValue(value, enumOptions, false, optionValueFormat);
 
+  const {
+    drawsLabel,
+    labelId,
+    group: groupAttributes,
+    option: optionAttributes,
+  } = getGroupLabelling<T, S, F>(props, 'radiogroup');
+
+  const autofocusIndex = enumOptionsAutofocusIndex<S>(enumOptions, enumDisabled, autofocus, value);
   return (
     <>
-      {labelValue(
-        <Label required={required} htmlFor={id}>
-          {label || undefined}
-        </Label>,
-        hideLabel,
+      {drawsLabel && (
+        <Label id={labelId} required={required}>
+          {label}
+        </Label>
       )}
       <RadioGroup
         id={id}
         name={htmlName || id}
+        required={required}
         layout={inline ? 'horizontal' : 'vertical'}
         value={selectedValue}
         onChange={handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
-        aria-describedby={ariaDescribedByIds(id)}
+        {...groupAttributes}
       >
         {Array.isArray(enumOptions) &&
           enumOptions.map((option, index) => {
@@ -74,11 +71,13 @@ export default function RadioWidget<
             return (
               <Radio
                 id={optionId(id, index)}
+                autoFocus={index === autofocusIndex}
                 label={option.label}
                 value={domValues[index]}
                 // oxlint-disable-next-line react/no-array-index-key
                 key={index}
                 disabled={disabled || itemDisabled || readonly}
+                {...optionAttributes}
               />
             );
           })}

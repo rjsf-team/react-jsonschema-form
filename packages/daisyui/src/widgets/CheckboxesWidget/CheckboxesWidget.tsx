@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import type { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
 import {
+  enumOptionsAutofocusIndex,
   enumOptionsDeselectValue,
   enumOptionsDomValues,
   enumOptionsIsDisabled,
@@ -9,9 +10,10 @@ import {
   getOptionValueFormat,
   optionId,
   useOptionFocusHandlers,
+  widgetDrawsLabel,
 } from '@rjsf/utils';
 
-import { getGroupProps, getOptionClassNames } from '../../utils.ts';
+import { getGroupAndOptionProps, getOptionClassNames } from '../../utils.ts';
 
 /** The `CheckboxesWidget` component renders a set of checkboxes for multiple choice selection
  * with DaisyUI styling.
@@ -31,20 +33,22 @@ export default function CheckboxesWidget<
   T,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({
-  id,
-  htmlName,
-  name,
-  disabled,
-  options,
-  value,
-  label,
-  hideLabel,
-  readonly,
-  onChange,
-  onFocus,
-  onBlur,
-}: WidgetProps<T, S, F>) {
+>(props: WidgetProps<T, S, F>) {
+  const {
+    id,
+    htmlName,
+    disabled,
+    options,
+    value,
+    label,
+    presentation,
+    readonly,
+    autofocus,
+    onChange,
+    onFocus,
+    onBlur,
+  } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const { enumOptions, enumDisabled } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
@@ -71,10 +75,19 @@ export default function CheckboxesWidget<
 
   const { focusHandlers, blurHandlers } = useOptionFocusHandlers<T, S, F>({ id, options, onFocus, onBlur });
 
+  const { group: groupProps, option: optionAttributes } = getGroupAndOptionProps({
+    id,
+    label,
+    hideLabel,
+    presentation,
+    role: 'group',
+  });
+
+  const autofocusIndex = enumOptionsAutofocusIndex<S>(enumOptions, enumDisabled, autofocus);
   return (
     <div className='form-control'>
       {/* Use a vertical layout with proper spacing */}
-      <div className='flex flex-col gap-2 mt-1' {...getGroupProps({ id, label, name, hideLabel, role: 'group' })}>
+      <div className='flex flex-col gap-2 mt-1' {...groupProps}>
         {enumOptions?.map((option, index) => {
           const optionDisabled = disabled || readonly || enumOptionsIsDisabled(option.value, enumDisabled);
           const classNames = getOptionClassNames(optionDisabled);
@@ -92,10 +105,12 @@ export default function CheckboxesWidget<
                 value={domValues[index]}
                 checked={enumOptionsIsSelected<S>(option.value, selected)}
                 disabled={optionDisabled}
+                autoFocus={index === autofocusIndex}
                 data-index={index}
                 onChange={handleChange}
                 onFocus={focusHandlers[index]}
                 onBlur={blurHandlers[index]}
+                {...optionAttributes}
               />
               <span className={classNames.text}>{option.label}</span>
             </label>

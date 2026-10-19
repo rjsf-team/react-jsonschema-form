@@ -1,7 +1,7 @@
 import type { ChangeEvent, FocusEvent } from 'react';
 import { Label, Textarea, makeStyles } from '@fluentui/react-components';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, labelValue } from '@rjsf/utils';
+import { getControlAttributes, labelValue, widgetDrawsLabelText } from '@rjsf/utils';
 
 const useStyles = makeStyles({
   label: {
@@ -29,14 +29,16 @@ export default function TextareaWidget<
     disabled,
     value,
     label,
-    hideLabel,
     onChange,
     onChangeOverride,
     onBlur,
     onFocus,
     autofocus,
     options,
+    presentation,
   } = props;
+  // A label holding only a required field's `*` would name the textarea "star", so one is drawn only with text
+  const hideLabel = !widgetDrawsLabelText<T, S, F>(props);
   const classes = useStyles();
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLTextAreaElement>) =>
     onChange(newValue === '' ? options.emptyValue : newValue);
@@ -67,7 +69,7 @@ export default function TextareaWidget<
         onChange={onChangeOverride || handleChange}
         onFocus={handleFocus}
         onBlur={handleBlur}
-        aria-describedby={ariaDescribedByIds(id)}
+        {...getControlAttributes<T, S, F>({ id, presentation })}
         rows={rows}
       />
     </>

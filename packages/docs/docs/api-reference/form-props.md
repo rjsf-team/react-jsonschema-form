@@ -195,10 +195,31 @@ render(
 
 Optional enumerated flag controlling how empty defaults are populated when `allOf` schemas are provided, defaulting to `skipDefaults`:
 
-| Flag Value         | Description                                                                                  |
-| ------------------ | -------------------------------------------------------------------------------------------- |
-| `skipDefaults`     | Skip parsing defaults from `allOf` schemas                                                   |
-| `populateDefaults` | Generate default values for properties in the `allOf` schema including `if-then-else` syntax |
+| Flag Value         | Description                                                                                                               |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------- |
+| `skipDefaults`     | Skip parsing defaults from `allOf` schemas nested inside the schema defaults are computed from, with the exceptions below |
+| `populateDefaults` | Generate default values for properties in the `allOf` schema including `if-then-else` syntax                              |
+
+`skipDefaults` only skips the `allOf` schemas nested inside the schema that defaults are computed from, not that schema's own `allOf`.
+Which schema that is depends on what the form is doing:
+
+- When the form computes defaults from the root schema, a root-level `allOf` provides its defaults with either value.
+- Some actions compute defaults from a subschema as if it were the root, such as adding an array item or optional data, or switching a `oneOf` or `anyOf` option, so that subschema's own `allOf` provides its defaults with either value. When switching options, though, the `if` of an `if-then-else` in the new option's `allOf` is checked against the data of the option being left, so under `skipDefaults` its `then` default is filled in only when that data matches the `if`.
+- The option picked on the initial render is not computed as if it were the root, even when its `oneOf` or `anyOf` is in the root schema, so under `skipDefaults` its `allOf` is left out until the user switches away from that option and back.
+
+The branch of an `if-then-else` is picked from the form data, not from the computed defaults, except in a `dependencies` entry, as the last item below says:
+
+- When the `if` lists a property in `required` and only a default provides that property, the `then` default is left out until the form data holds the value, for instance on the initial render.
+- Without `required`, a missing property still satisfies the `if`'s `properties`, so such an `if` passes with no data, and its `then` default is filled in even when the `if` does not match the defaulted value.
+- With one `allOf` entry per `enum` value and no form data, the default `allOf` merger merges the `then` defaults of all the entries, and the first entry that defaults a property wins. A `customMergeAllOf` that throws on the conflicting `default`s drops the whole `allOf` instead.
+
+An `allOf` in an object property or in an array's `items` is skipped as a whole, plain property defaults included, so it usually needs `populateDefaults` to provide its defaults.
+This is specific to `allOf`:
+
+- An `if-then-else` placed directly in a nested object schema is resolved with either value, unless `emptyObjectFields` is `skipEmptyDefaults`. For example, under `skipDefaults`, `items: { type: 'object', if, then }` fills in the `then` default, while `items: { type: 'object', allOf: [{ if, then }] }` does not.
+- Adding a direct `if` to that `items` schema resolves its whole `allOf` too, unless `emptyObjectFields` is `skipEmptyDefaults`.
+- A `customMergeAllOf` built on a deep merger, such as `createDeepAllOfMerge` from `@x0k/json-schema-merge`, changes none of this. It may also flatten the `allOf` of the properties inside the `allOf` it merges, but each property's defaults are computed from the property as the schema declares it, so a property's `allOf` is skipped under `skipDefaults` as any other nested `allOf` is.
+- A `dependencies` entry in a nested object schema is resolved once its property has a value, its `allOf` and `if-then-else` included, even when `emptyObjectFields` is `skipEmptyDefaults`. A default counts as that value, and the entry's `if` is checked against it, so an `if` that lists the property in `required` passes with no form data, while one that does not match the default fails. For example, under `skipDefaults`, `items: { type: 'object', properties: { animal: { default: 'Cat' } }, dependencies: { animal: { allOf: [{ if, then }] } } }` fills in the `then` default. A root `dependencies` entry counts a default too, whatever else the form data holds.
 
 ```tsx
 import { Form } from '@rjsf/core';
@@ -334,6 +355,8 @@ An explicit schema `default`, a parent default and an existing `formData` value 
 #### Example
 
 In the following example, `agree` is required but has no `default`. By default it would start as `false`, so [`getFormData()`](../advanced-customization/internals.md#read-form-data-programmatically) would return `{ agree: false }` before the user touched it. With `requiredBooleanDefault` set to `skip`, the data stays `{}` until the user answers, and validation reports `agree` as missing until then. This is the behavior to choose when a boolean question is rendered with an explicit "unanswered" state, for example a `- - -` / Yes / No select, rather than a checkbox.
+A checkbox under `skip` is not marked required, by its `*` or a native `required`: it has no unanswered state to show, and a native `required` would block the `false` a user gives by checking and then unchecking it, so validation alone reports it missing.
+The same holds wherever [`emptyObjectFields`](#emptyobjectfields) leaves a required boolean unset: under `skipDefaults`, and under `populateRequiredDefaults` where the object holding it is optional.
 
 ```tsx
 import { Form } from '@rjsf/core';
@@ -679,6 +702,26 @@ render(<Form schema={schema} validator={validator} onSubmit={onSubmit} />, docum
 ```
 
 > Note: If there are fields in the `formData` that are not represented in the schema, they will be retained by default. If you would like to remove those extra values on form submission, you may need to set the `omitExtraData` and/or `liveOmit` props.
+
+## presentation
+
+A `ThemePresentation` declaring which parts of a field (its label, description, errors and help) the fields and widgets you register draw themselves, under the keys you register them by, plus a `default` for every part its own entry for a widget leaves out, which overrides the theme's and `@rjsf/core`'s declarations of those parts, and a `fieldDefault` for every part a field's merged entry leaves out.
+It is layered part by part over the theme's declarations, which are layered over `@rjsf/core`'s, and the merged result is `registry.presentation`.
+See [Custom Themes](../advanced-customization/custom-themes.md#presentation) for more information.
+
+```tsx
+import { Form } from '@rjsf/core';
+import { ThemePresentation } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+// MyLabelledWidget draws its own label, so the FieldTemplate draws none for it
+const presentation: ThemePresentation = { widgets: { MyLabelledWidget: { label: 'self' } } };
+
+render(
+  <Form schema={schema} validator={validator} widgets={{ MyLabelledWidget }} presentation={presentation} />,
+  document.getElementById('app'),
+);
+```
 
 ## schema
 

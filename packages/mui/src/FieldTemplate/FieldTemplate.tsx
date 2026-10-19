@@ -1,9 +1,19 @@
 import type { FormControlProps } from '@mui/material/FormControl';
 import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
 import type { TypographyProps } from '@mui/material/Typography';
 import Typography from '@mui/material/Typography';
 import type { FieldTemplateProps, FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getTemplates, getUiOptions, hasVisibleErrors } from '@rjsf/utils';
+import {
+  getTemplates,
+  getUiOptions,
+  hasTemplateErrors,
+  templateDrawsDescription,
+  templateDrawsLabel,
+  templateDrawsPlannedLabel,
+  templateLabelFor,
+  templateMarksRequired,
+} from '@rjsf/utils';
 
 import { getMuiProps } from '../util.ts';
 
@@ -34,7 +44,7 @@ export default function FieldTemplate<
     classNames,
     style,
     disabled,
-    displayLabel,
+    presentation,
     hidden,
     label,
     keyName,
@@ -44,8 +54,6 @@ export default function FieldTemplate<
     propertyNamesEnum,
     readonly,
     required,
-    rawErrors,
-    hideError,
     errors,
     help,
     description,
@@ -54,15 +62,19 @@ export default function FieldTemplate<
     uiSchema,
     registry,
   } = props;
+  const displayLabel = templateDrawsLabel<T, S, F>(props);
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const hasError = hasVisibleErrors({ rawErrors, hideError });
+  const hasError = hasTemplateErrors<T, S, F>(props);
   const { WrapIfAdditionalTemplate } = getTemplates<T, S, F>(registry, uiOptions);
 
   if (hidden) {
     return <div style={{ display: 'none' }}>{children}</div>;
   }
 
-  const isCheckbox = uiOptions.widget === 'checkbox';
+  // The plan's description already says whether a checkbox draws its own; the guess by the `checkbox` alias is left
+  // for a template rendered without one, so a description the plan gives the template isn't dropped
+  const leavesPartsToCheckbox = !presentation && uiOptions.widget === 'checkbox';
+  const drawsLabel = templateDrawsPlannedLabel<T, S, F>(props);
 
   const { rjsfSlotProps: muiSlotProps, ...otherMuiProps } = getMuiProps<T, S, F, FieldTemplateMuiProps>(uiOptions);
 
@@ -74,7 +86,9 @@ export default function FieldTemplate<
       id={id}
       label={label}
       keyName={keyName}
+      // oxlint-disable-next-line typescript/no-deprecated -- handed on to a `WrapIfAdditionalTemplate` rendered without a plan, which labels the key by it
       displayLabel={displayLabel}
+      presentation={presentation}
       rawDescription={rawDescription}
       onKeyRename={onKeyRename}
       onKeyRenameBlur={onKeyRenameBlur}
@@ -94,8 +108,17 @@ export default function FieldTemplate<
         sx={otherMuiProps.sx}
         className={otherMuiProps.className}
       >
+        {drawsLabel && (
+          <FormLabel
+            id={presentation?.label.id}
+            htmlFor={templateLabelFor<T, S, F>(props)}
+            required={templateMarksRequired<T, S, F>(props)}
+          >
+            {label}
+          </FormLabel>
+        )}
         {children}
-        {displayLabel && !isCheckbox && rawDescription ? (
+        {!leavesPartsToCheckbox && templateDrawsDescription<T, S, F>(props) && rawDescription ? (
           <Typography variant='caption' color='textSecondary' {...muiSlotProps?.fieldTypography}>
             {description}
           </Typography>

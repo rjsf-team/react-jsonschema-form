@@ -15,7 +15,7 @@ import type {
   WidgetProps,
   FormValidation,
 } from '@rjsf/utils';
-import { englishStringTranslator, getVisibleErrors, noop, TranslatableString } from '@rjsf/utils';
+import { englishStringTranslator, fieldLabelId, getVisibleErrors, noop, TranslatableString } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -209,6 +209,7 @@ const mockFileReader = {
 } as unknown as FileReader;
 
 describe('ArrayField', () => {
+  // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated prop a component without a plan reads
   const CustomComponent = (props: WidgetProps) => <div id='custom'>{props.rawErrors}</div>;
 
   const CustomSelectComponent = (props: WidgetProps) => (
@@ -353,7 +354,7 @@ describe('ArrayField', () => {
       const legend = node.querySelector('fieldset > legend');
 
       expect(legend).toHaveTextContent('my list');
-      expect(legend).toHaveAttribute('id', 'root__title');
+      expect(legend).toContainElement(node.querySelector('#root__title'));
     });
 
     it('should render a description', () => {
@@ -1854,7 +1855,7 @@ describe('ArrayField', () => {
       const { node } = createFormComponent({ schema });
       const legend = node.querySelector('fieldset > legend');
       expect(legend).toHaveTextContent('List of fixed items');
-      expect(legend).toHaveAttribute('id', 'root__title');
+      expect(legend).toContainElement(node.querySelector('#root__title'));
     });
 
     it('should render field widgets', () => {
@@ -3045,17 +3046,38 @@ describe('ArrayField', () => {
       });
       expect(node.querySelector('#title-test')).toBeNull();
     });
+
+    it.each([
+      ['schema title', {}, 'Tags'],
+      ['ui:title', { additionalProperties: { 'ui:title': 'Labels' } }, 'Labels'],
+    ])(
+      'heads an additionalProperties array by its %s rather than the key its key input shows',
+      (_, uiSchema, heading) => {
+        const { node } = createFormComponent({
+          schema: { type: 'object', additionalProperties: { type: 'array', title: 'Tags', items: { type: 'string' } } },
+          uiSchema,
+          initialFormData: { myKey: ['a'] },
+        });
+        expect(node.querySelector('#root_myKey__title')).toHaveTextContent(heading);
+      },
+    );
   });
 
   describe('Tests for item title', () => {
     describe('Should show indexed title for widgets when necessary', () => {
-      const widgetTestData: { widgetName: string; itemSchema: RJSFSchema; itemUiSchema?: UiSchema }[] = [
+      const widgetTestData: {
+        widgetName: string;
+        itemSchema: RJSFSchema;
+        itemUiSchema?: UiSchema;
+        labelFor?: string | null;
+      }[] = [
         {
           widgetName: 'AltDateWidget',
           itemSchema: {
             type: 'string',
             format: 'alt-date',
           },
+          labelFor: null,
         },
         {
           widgetName: 'AltDateTimeWidget',
@@ -3063,6 +3085,7 @@ describe('ArrayField', () => {
             type: 'string',
             format: 'alt-datetime',
           },
+          labelFor: null,
         },
         {
           widgetName: 'CheckboxesWidget',
@@ -3131,6 +3154,7 @@ describe('ArrayField', () => {
           itemUiSchema: {
             'ui:widget': 'radio',
           },
+          labelFor: null,
         },
         {
           widgetName: 'RangeWidget',
@@ -3238,7 +3262,7 @@ describe('ArrayField', () => {
 
       it.each(widgetTestData)(
         "Should show indexed title for the `$widgetName` widget if no title is mentioned in it's UI Schema",
-        async ({ itemSchema, itemUiSchema }) => {
+        async ({ itemSchema, itemUiSchema, labelFor = 'root_0' }) => {
           const schema: RJSFSchema = {
             type: 'array',
             title: 'Array',
@@ -3256,13 +3280,17 @@ describe('ArrayField', () => {
 
           await user.click(node.querySelector('.rjsf-array-item-add button')!);
 
-          expect(node.querySelector('label[for="root_0"]')).toHaveTextContent('Array-1');
+          // By the label's id, since a group's label has no `for`; the id is on the label's text
+          const widgetLabel = node.querySelector(`#${fieldLabelId('root_0')}`)?.closest('label');
+
+          expect(widgetLabel).toHaveTextContent('Array-1');
+          expect(widgetLabel?.getAttribute('for')).toBe(labelFor);
         },
       );
 
       it.each(widgetTestData)(
         "Should not show indexed title for the `$widgetName` widget if title is mentioned in it's UI Schema",
-        async ({ itemSchema, itemUiSchema }) => {
+        async ({ itemSchema, itemUiSchema, labelFor = 'root_0' }) => {
           const schema: RJSFSchema = {
             type: 'array',
             title: 'Array',
@@ -3283,10 +3311,11 @@ describe('ArrayField', () => {
 
           await user.click(node.querySelector('.rjsf-array-item-add button')!);
 
-          const widgetLabelText = node.querySelector('label[for="root_0"]');
+          const widgetLabelText = node.querySelector(`#${fieldLabelId('root_0')}`)?.closest('label');
 
           expect(widgetLabelText).not.toHaveTextContent('Array-1');
           expect(widgetLabelText).toHaveTextContent('Item Title');
+          expect(widgetLabelText?.getAttribute('for')).toBe(labelFor);
         },
       );
     });
@@ -3383,7 +3412,7 @@ describe('ArrayField', () => {
 
           await user.click(node.querySelector('.rjsf-array-item-add button')!);
 
-          expect(node.querySelector('legend#root_0__title')).toHaveTextContent('Array-1');
+          expect(node.querySelector('legend #root_0__title')).toHaveTextContent('Array-1');
         },
       );
 
@@ -3405,7 +3434,7 @@ describe('ArrayField', () => {
 
           await user.click(node.querySelector('.rjsf-array-item-add button')!);
 
-          const legendText = node.querySelector('legend#root_0__title');
+          const legendText = node.querySelector('legend #root_0__title');
 
           expect(legendText).toHaveTextContent('Item Field Title');
           expect(legendText).not.toHaveTextContent('Array-1');
@@ -5182,6 +5211,90 @@ describe('ArrayField', () => {
       // Each row keeps its key and its error: rows, keys and errors all come from the same proposal
       expect(rowKeys(container)).toEqual([keysBefore[2], keysBefore[0]]);
       expect(log.events.at(-1)?.errorSchema).toEqual({ 0: { __errors: ['must NOT have fewer than 2 characters'] } });
+    });
+  });
+
+  describe('the heading and the optional data control beside it', () => {
+    const optionalArrays: UiSchema = { 'ui:globalOptions': { enableOptionalDataFieldForType: ['array'] } };
+    /** Renders the array without a plan, as a caller outside `SchemaField` does */
+    function NoPlanArrayField(props: FieldProps<unknown[]>) {
+      return <ArrayField {...props} presentation={undefined} />;
+    }
+
+    it('keeps the control of an array option whose heading a field above draws', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            tags: {
+              title: 'Tags',
+              anyOf: [
+                { type: 'array', items: { type: 'string' }, maxItems: 3 },
+                { type: 'array', items: { type: 'string' }, minItems: 1 },
+              ],
+            },
+          },
+        },
+        uiSchema: optionalArrays,
+        formData: { tags: ['a'] },
+      });
+
+      expect(node.querySelector('#root_tags__title')).not.toBeInTheDocument();
+      expect(node.querySelector('#root_tags__optionalRemove')).toBeInTheDocument();
+    });
+
+    it("keeps an option's heading and control where ui:globalOptions turns labels off and its field's ui:label turns them on", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            tags: {
+              anyOf: [
+                { type: 'array', title: 'Tags', items: { type: 'string' } },
+                { type: 'number', title: 'Count' },
+              ],
+            },
+          },
+        },
+        uiSchema: {
+          'ui:globalOptions': { label: false, enableOptionalDataFieldForType: ['array'] },
+          tags: { 'ui:label': true, anyOf: [{}, {}] },
+        },
+      });
+
+      expect(node.querySelector('#root_tags__title')).toHaveTextContent('Tags');
+      expect(node.querySelector('#root_tags__optionalAdd')).toBeInTheDocument();
+    });
+
+    it('draws the ui:title of an array rendered without a plan', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { tags: { type: 'array', title: 'Tags', items: { type: 'string' } } } },
+        uiSchema: { tags: { 'ui:field': NoPlanArrayField, 'ui:title': 'Labels' } },
+      });
+
+      expect(node.querySelector('#root_tags__title')).toHaveTextContent(/^Labels$/);
+    });
+
+    it('keeps the control of an array rendered without a plan whose ui:label turns its heading off', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { tags: { type: 'array', title: 'Tags', items: { type: 'string' } } } },
+        uiSchema: { ...optionalArrays, tags: { 'ui:field': NoPlanArrayField, 'ui:label': false } },
+        formData: { tags: ['a'] },
+      });
+
+      expect(node.querySelector('#root_tags__title')).not.toBeInTheDocument();
+      expect(node.querySelector('#root_tags__optionalRemove')).toBeInTheDocument();
+    });
+
+    it('keeps the control of an array rendered without a plan whose JSON ui:label is null', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { tags: { type: 'array', title: 'Tags', items: { type: 'string' } } } },
+        uiSchema: { ...optionalArrays, tags: { 'ui:field': NoPlanArrayField, 'ui:label': null } },
+        formData: { tags: ['a'] },
+      });
+
+      expect(node.querySelector('#root_tags__title')).not.toBeInTheDocument();
+      expect(node.querySelector('#root_tags__optionalRemove')).toBeInTheDocument();
     });
   });
 });

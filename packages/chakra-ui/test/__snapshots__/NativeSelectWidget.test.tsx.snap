@@ -273,7 +273,7 @@ exports[`NativeSelectWidget > select field multiple choice 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <fieldset
-        aria-labelledby="fieldset::_r_3_::legend"
+        aria-labelledby=""
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -285,18 +285,18 @@ exports[`NativeSelectWidget > select field multiple choice 1`] = `
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_4_"
+            id="field::root"
             role="group"
           >
             <div
               class="chakra-native-select__root emotion-3"
             >
               <select
-                aria-describedby="root__error root__description root__help"
                 class="chakra-native-select__field emotion-4"
                 data-part="select"
                 data-scope="field"
                 id="root"
+                name="root"
               >
                 <option
                   value="0"
@@ -626,7 +626,7 @@ exports[`NativeSelectWidget > select field multiple choice with labels 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <fieldset
-        aria-labelledby="fieldset::_r_5_::legend"
+        aria-labelledby=""
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -638,18 +638,18 @@ exports[`NativeSelectWidget > select field multiple choice with labels 1`] = `
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_6_"
+            id="field::root"
             role="group"
           >
             <div
               class="chakra-native-select__root emotion-3"
             >
               <select
-                aria-describedby="root__error root__description root__help"
                 class="chakra-native-select__field emotion-4"
                 data-part="select"
                 data-scope="field"
                 id="root"
+                name="root"
               >
                 <option
                   value="0"
@@ -1006,7 +1006,7 @@ exports[`NativeSelectWidget > select field with enum 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset::_r_0_::legend"
+        aria-labelledby=""
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -1022,7 +1022,7 @@ exports[`NativeSelectWidget > select field with enum 1`] = `
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset::_r_1_::legend"
+                  aria-labelledby=""
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -1034,15 +1034,15 @@ exports[`NativeSelectWidget > select field with enum 1`] = `
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field::_r_2_"
+                      id="field::root_color"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-6"
                         data-part="label"
                         data-scope="field"
-                        for="_r_2_"
-                        id="field::_r_2_::label"
+                        for="root_color"
+                        id="field::root_color::label"
                       >
                         color
                       </label>
@@ -1050,11 +1050,11 @@ exports[`NativeSelectWidget > select field with enum 1`] = `
                         class="chakra-native-select__root emotion-7"
                       >
                         <select
-                          aria-describedby="root_color__error root_color__description root_color__help"
                           class="chakra-native-select__field emotion-8"
                           data-part="select"
                           data-scope="field"
                           id="root_color"
+                          name="root_color"
                         >
                           <option
                             disabled=""

@@ -1,11 +1,12 @@
 import type { FocusEvent } from 'react';
 import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
   enumOptionSelectedValue,
+  enumOptionsAutofocusIndex,
   enumOptionsIsDisabled,
   enumOptionValueDecoder,
   enumOptionsDomValues,
+  getGroupAttributes,
   getOptionValueFormat,
   optionId,
 } from '@rjsf/utils';
@@ -32,7 +33,9 @@ export default function RadioWidget<
   onFocus,
   options,
   readonly,
+  required,
   value,
+  presentation,
 }: WidgetProps<T, S, F>) {
   const { formContext } = registry;
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
@@ -52,7 +55,12 @@ export default function RadioWidget<
     onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
 
   const selectValue = enumOptionSelectedValue(value, enumOptions, false, optionValueFormat, emptyValue);
+  const { group: groupAttributes, option: optionAttributes } = getGroupAttributes<T, S, F>(
+    { id, presentation },
+    'radiogroup',
+  );
 
+  const autofocusIndex = enumOptionsAutofocusIndex<S>(enumOptions, enumDisabled, autofocus, value);
   return (
     <Radio.Group
       id={id}
@@ -60,21 +68,27 @@ export default function RadioWidget<
       onChange={!readonly ? handleChange : undefined}
       onBlur={!readonly ? handleBlur : undefined}
       onFocus={!readonly ? handleFocus : undefined}
-      value={selectValue}
-      aria-describedby={ariaDescribedByIds(id)}
+      // Controlled even with no value, so a click on a read-only group, which `readonlyAsDisabled: false` leaves
+      // enabled, checks nothing the form doesn't hold
+      value={selectValue ?? null}
+      {...groupAttributes}
     >
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, i) => (
           <Radio
             id={optionId(id, i)}
             name={htmlName || id}
-            autoFocus={i === 0 ? autofocus : false}
+            autoFocus={i === autofocusIndex}
             // `undefined` rather than `false` for an enabled option, since antd reads its `DisabledContext` only when
             // the radio leaves `disabled` unset
             disabled={fieldDisabled || enumOptionsIsDisabled(option.value, enumDisabled) || undefined}
             // oxlint-disable-next-line react/no-array-index-key
             key={i}
+            // A radio has no read-only state to exempt it from the browser's check, so a read-only one the form leaves
+            // enabled takes no `required`, which would block the submit of a field its user can't answer
+            required={required && !readonly}
             value={domValues[i]}
+            {...optionAttributes}
           >
             {option.label}
           </Radio>

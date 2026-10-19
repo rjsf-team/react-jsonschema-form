@@ -8,7 +8,7 @@ import type {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { ariaDescribedByIds, examplesId, getExampleSuggestions, getInputProps } from '@rjsf/utils';
+import { examplesId, getControlAttributes, getExampleSuggestions, getInputProps } from '@rjsf/utils';
 import { Input, InputNumber } from 'antd';
 
 const INPUT_STYLE = {
@@ -42,6 +42,7 @@ export default function BaseInputTemplate<
     schema,
     value,
     type,
+    presentation,
   } = props;
   const { formContext } = registry;
   // InputNumber doesn't use a native <input type="number"> directly - it wraps it and controls the stepping behavior
@@ -77,6 +78,7 @@ export default function BaseInputTemplate<
 
   const exampleSuggestions = getExampleSuggestions<S>(schema);
   const hasExamples = exampleSuggestions.length > 0;
+  const controlAttributes = getControlAttributes<T, S, F>({ id, presentation }, hasExamples ? [examplesId(id)] : []);
   const input = isNumeric ? (
     <InputNumber
       disabled={disabled || (readonlyAsDisabled && readonly)}
@@ -86,6 +88,7 @@ export default function BaseInputTemplate<
       onChange={!readonly ? handleNumberChange : undefined}
       onFocus={!readonly ? handleFocus : undefined}
       placeholder={placeholder}
+      readOnly={readonly}
       required={required}
       style={INPUT_STYLE}
       changeOnWheel={false}
@@ -95,7 +98,7 @@ export default function BaseInputTemplate<
       max={typeof max === 'number' ? max : undefined}
       type={undefined}
       value={value}
-      aria-describedby={ariaDescribedByIds(id, hasExamples)}
+      {...controlAttributes}
     />
   ) : (
     <Input
@@ -106,12 +109,13 @@ export default function BaseInputTemplate<
       onChange={!readonly ? handleTextChange : undefined}
       onFocus={!readonly ? handleFocus : undefined}
       placeholder={placeholder}
+      readOnly={readonly}
       required={required}
       style={INPUT_STYLE}
       list={hasExamples ? examplesId(id) : undefined}
       {...inputProps}
       value={value}
-      aria-describedby={ariaDescribedByIds(id, hasExamples)}
+      {...controlAttributes}
     />
   );
 

@@ -3,14 +3,14 @@ import { Label, Checkbox } from '@fluentui/react-components';
 import { Flex } from '@fluentui/react-migration-v0-v9';
 import type { FormContextType, WidgetProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
+  enumOptionsAutofocusIndex,
   enumOptionsDeselectValue,
   enumOptionsDomValues,
   enumOptionsIsDisabled,
   enumOptionsIsSelected,
   enumOptionsSelectValue,
+  getGroupLabelling,
   getOptionValueFormat,
-  labelValue,
   optionId,
   useOptionFocusHandlers,
 } from '@rjsf/utils';
@@ -24,21 +24,9 @@ export default function CheckboxesWidget<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({
-  label,
-  hideLabel,
-  id,
-  htmlName,
-  disabled,
-  options,
-  value,
-  autofocus,
-  readonly,
-  required,
-  onChange,
-  onBlur,
-  onFocus,
-}: WidgetProps<T, S, F>) {
+>(props: WidgetProps<T, S, F>) {
+  const { label, id, htmlName, disabled, options, value, autofocus, readonly, required, onChange, onBlur, onFocus } =
+    props;
   const { enumOptions, enumDisabled, inline } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
@@ -55,16 +43,23 @@ export default function CheckboxesWidget<
     };
 
   const { focusHandlers, blurHandlers } = useOptionFocusHandlers<T, S, F>({ id, options, onFocus, onBlur });
+  const {
+    drawsLabel,
+    labelId,
+    group: groupAttributes,
+    option: optionAttributes,
+  } = getGroupLabelling<T, S, F>(props, 'group');
 
+  const autofocusIndex = enumOptionsAutofocusIndex<S>(enumOptions, enumDisabled, autofocus);
   return (
     <>
-      {labelValue(
-        <Label required={required} htmlFor={id}>
-          {label || undefined}
-        </Label>,
-        hideLabel,
+      {drawsLabel && (
+        <Label id={labelId} required={required}>
+          {label}
+        </Label>
       )}
-      <Flex column={!inline}>
+      {/* The group carries the field's id and each checkbox its option's, as core's do */}
+      <Flex column={!inline} id={id} {...groupAttributes}>
         {Array.isArray(enumOptions) &&
           enumOptions.map((option, index: number) => {
             const checked = enumOptionsIsSelected<S>(option.value, checkboxesValues);
@@ -79,11 +74,11 @@ export default function CheckboxesWidget<
                 checked={checked}
                 value={domValues[index]}
                 disabled={disabled || itemDisabled || readonly}
-                autoFocus={autofocus && index === 0}
+                autoFocus={index === autofocusIndex}
                 onChange={handleChange(index)}
                 onBlur={blurHandlers[index]}
                 onFocus={focusHandlers[index]}
-                aria-describedby={ariaDescribedByIds(id)}
+                {...optionAttributes}
               />
             );
           })}
