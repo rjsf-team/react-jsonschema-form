@@ -210,6 +210,31 @@ describe('the plan SchemaField builds', () => {
     expect(renders.get('root_foo')).toBe(before);
   });
 
+  it.each([
+    ['shows', false, ['is wrong']],
+    ['hides', true, []],
+  ] satisfies [string, boolean, string[]][])(
+    '%s the errors in the plan a ui:field is handed while ui:hideError is %s, keeping them in its rawErrors',
+    (_, hideError, messages) => {
+      const recordFieldProps = vi.fn<(props: FieldProps) => void>();
+      function MyField(props: FieldProps) {
+        recordFieldProps(props);
+        const { id } = props;
+        return <input id={id} />;
+      }
+      createFormComponent({
+        schema: { type: 'object', properties: { foo: { type: 'string' } } },
+        uiSchema: { foo: { 'ui:field': MyField, 'ui:hideError': hideError } },
+        extraErrors: { foo: { __errors: ['is wrong'] } },
+      });
+      // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
+      const { presentation, rawErrors } = recordFieldProps.mock.lastCall![0];
+      expect(presentation?.errors.messages).toEqual(messages);
+      expect(presentation?.control?.attributes['aria-invalid']).toBe(hideError ? undefined : true);
+      expect(rawErrors).toEqual(['is wrong']);
+    },
+  );
+
   describe("an anyOf field's option selector", () => {
     const schema: RJSFSchema = {
       type: 'object',
@@ -340,6 +365,21 @@ describe('the plan SchemaField builds', () => {
       const selector = selectorProps.find((props) => props.id === 'root_foo__anyof_select')!;
       // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
       expect(selector.hideLabel).toBe(true);
+    });
+
+    it.each([
+      ['is', false],
+      ['is not', true],
+    ])("%s invalid, or described by the field's errors, while ui:hideError is %s", (_, hideError) => {
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: { foo: { 'ui:hideError': hideError } },
+        extraErrors: { foo: { __errors: ['is wrong'] } },
+      });
+      const selector = node.querySelector('#root_foo__anyof_select')!;
+      const describedBy = selector.getAttribute('aria-describedby')?.split(' ') ?? [];
+      expect(selector.getAttribute('aria-invalid')).toBe(hideError ? null : 'true');
+      expect(describedBy.includes(errorId('root_foo'))).toBe(!hideError);
     });
   });
 

@@ -32,7 +32,6 @@ import {
   getPropertySchema,
   getUiOptions,
   getXxxOfKey,
-  hasVisibleErrors,
   noop,
   omitConsumedStyling,
   TranslatableString,
@@ -319,7 +318,6 @@ export default function LayoutMultiSchemaField<
 
   // filtering the options based on the type of widget because `selectField` does not recognize the `convertOther` prop
   const widgetOptions = { enumOptions, ...uiOptions };
-  const hasErrors = hasVisibleErrors({ rawErrors, hideError: hideFieldError });
   const { help: ownHelp, description: uiDescription } = uiOptions;
   const hidden = widget === 'hidden' || deprecatedHandling === 'hide';
   const showLabel = uiBooleanOption(uiOptions.label) ?? true;
@@ -340,6 +338,7 @@ export default function LayoutMultiSchemaField<
     hasControl: !hidden,
     required,
   });
+  const hasErrors = presentation.errors.messages.length > 0;
   const { description: templateDescription, help, errors: templateErrors } = getTemplateParts(presentation);
   const description = templateDescription?.text ?? '';
   const errors = templateErrors && (

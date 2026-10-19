@@ -795,7 +795,12 @@ export interface FieldProps<
   required?: boolean;
   /** The unique name of the field, usually derived from the name of the property in the JSONSchema */
   name: string;
-  /** An array of strings listing all generated error messages from encountered errors for this field */
+  /** An array of strings listing the field's own error messages, which its `errorSchema` doesn't hold. It carries them
+   * whatever `hideError` says, so that a field can render them its own way
+   * @deprecated Kept through v7 for a field rendered without a plan: read `presentation.errors.messages`, which has
+   *   `ui:hideError` applied, drawing them only where `presentation.errors.by` is `'self'`, since the template draws
+   *   them under `'template'`, and `presentation.errors.messages.length > 0` for an error state
+   */
   rawErrors?: string[];
   /** The plan `SchemaField` built for the field: who draws its label, description, help and errors, under which ids,
    * and the attributes its control carries. Set on the field `SchemaField` renders, not on the `SchemaField` itself,
@@ -1252,8 +1257,11 @@ export type ContainerFieldTemplateProps<
   /** A boolean value stating if the field is hiding its errors */
   hideError?: boolean;
   /** An array of strings listing the field's own errors, which its `errorSchema` doesn't hold. Unlike
-   * `FieldTemplateProps.rawErrors`, it carries them whatever `hideError` says, as a widget's does, so a template
-   * rendering an error state from it must pair the two through `hasVisibleErrors({ rawErrors, hideError })`
+   * `FieldTemplateProps.rawErrors`, it carries them whatever `hideError` says, as a widget's does
+   * @deprecated Kept through v7 for a template rendered without a plan: read `presentation.errors.messages`, which
+   *   has `ui:hideError` applied, drawing them only where `presentation.errors.by` is `'self'`, since the
+   *   `FieldTemplate` draws them under `'template'`, and `hasTemplateErrors()`, which falls back to this, for an error
+   *   state
    */
   rawErrors?: string[];
   /** A string value containing the title for the array */
@@ -1265,7 +1273,8 @@ export type ContainerFieldTemplateProps<
   /** The optional data control node to render within the ObjectFieldTemplate that controls */
   optionalDataControl?: ReactNode;
   /** The plan `SchemaField` built for the field: whether its heading and description are the container's to draw, and
-   * under which ids
+   * under which ids, and its own errors, `errors.messages`, with `ui:hideError` applied, which the container draws only
+   * where `errors.by` is `'self'`, under `errors.id`
    */
   presentation?: FieldPresentation;
 };

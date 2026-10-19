@@ -46,7 +46,7 @@ import {
 import useFieldView from '../../hooks/useFieldView.ts';
 import { ADDITIONAL_PROPERTY_KEY_REMOVE, EMPTY_UI_SCHEMA } from '../constants.ts';
 import RichDescription from '../RichDescription.tsx';
-import { getContainerHeading, isAdditionalPropertySchema } from './fieldWidgetUtils.ts';
+import { getContainerErrorProps, getContainerHeading, isAdditionalPropertySchema } from './fieldWidgetUtils.ts';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 
 /** Returns a flag indicating whether the `name` field is required in the object schema
@@ -368,6 +368,7 @@ export default function ObjectField<
     disabled,
     readonly,
     hideError,
+    // oxlint-disable-next-line typescript/no-deprecated -- handed on to its template, for one that doesn't read `presentation`
     rawErrors,
     onBlur,
     onFocus,
@@ -830,7 +831,7 @@ export default function ObjectField<
     disabled,
     required,
     hideError,
-    rawErrors,
+    ...getContainerErrorProps<T, S, F>(rawErrors),
     id,
     uiSchema,
     errorSchema,

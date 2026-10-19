@@ -34,7 +34,6 @@ import {
   getXxxOfKey,
   GUESSED_TYPE_FLAG,
   guessType,
-  hasVisibleErrors,
   isComponentType,
   isConstant,
   isConstantOptionList,
@@ -58,7 +57,12 @@ import {
 import describeUnresolvedComponent from '../../describeUnresolvedComponent.ts';
 import fieldLabelForLog, { entryLabelForLog } from '../../fieldLabelForLog.ts';
 import hasOptionLabels from '../../hasOptionLabels.ts';
-import { getDeprecatedTemplateProps, getTemplateParts, withoutDescribers } from './fieldWidgetUtils.ts';
+import {
+  getDeprecatedTemplateProps,
+  getFieldErrorProps,
+  getTemplateParts,
+  withoutDescribers,
+} from './fieldWidgetUtils.ts';
 import PresentationContext, { useInheritedPresentation } from './PresentationContext.ts';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 import useSchemaFieldPresentation from './useSchemaFieldPresentation.ts';
@@ -936,7 +940,7 @@ function SchemaFieldRender<
       autofocus={autofocus}
       errorSchema={fieldErrorSchema as ErrorSchema}
       // The `XxxOfField` hands the field's own errors to the selected option and its selector
-      rawErrors={XxxOfField ? undefined : __errors}
+      {...getFieldErrorProps<T, S, F>(XxxOfField ? undefined : __errors)}
       presentation={fieldComponentPresentation}
     />
   );
@@ -952,7 +956,8 @@ function SchemaFieldRender<
   const { description: templateDescription, help, errors: templateErrors } = getTemplateParts(presentation);
   const description = templateDescription?.text ?? '';
 
-  const hasErrors = hasVisibleErrors({ rawErrors: __errors, hideError });
+  // From its own errors rather than its plan's, which beneath a field above rendering the same id are that field's
+  const hasErrors = !hideError && (__errors?.length ?? 0) > 0;
 
   const helpComponent = (
     <FieldHelpTemplate

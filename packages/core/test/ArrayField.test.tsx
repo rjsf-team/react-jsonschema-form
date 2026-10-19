@@ -1766,6 +1766,7 @@ describe('ArrayField', () => {
       const CustomTemplate = (props: ArrayFieldTemplateProps) => (
         <div id='custom'>
           {props.items}
+          {/* oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated prop a component without a plan reads */}
           <div id='custom-error'>{props.rawErrors && props.rawErrors.join(', ')}</div>
         </div>
       );
@@ -3569,11 +3570,13 @@ describe('ArrayField', () => {
       expect(inputsNoError).toHaveLength(0);
     });
     describe('ArrayFieldTemplate', () => {
+      // Reads the deprecated `rawErrors` with `hideError`, as a template rendered without a plan does
       function ErrorListingArrayFieldTemplate(props: ArrayFieldTemplateProps) {
         return (
           <div>
             {props.items}
             <ul className='array-template-errors'>
+              {/* oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated helper a component without a plan reads */}
               {getVisibleErrors(props).map((error) => (
                 <li key={error}>{error}</li>
               ))}
@@ -3619,6 +3622,39 @@ describe('ArrayField', () => {
         expect(node.querySelectorAll('.array-template-errors li')).toHaveLength(0);
       });
 
+      it.each([
+        ['a list', false, { type: 'array', items: { type: 'string' } }, 1],
+        ['a list', true, { type: 'array', items: { type: 'string' } }, 0],
+        ['a fixed items list', false, { type: 'array', items: [{ type: 'string' }] }, 1],
+        ['a fixed items list', true, { type: 'array', items: [{ type: 'string' }] }, 0],
+      ] satisfies [string, boolean, RJSFSchema, number][])(
+        "lists the errors of %s from its plan's messages while ui:hideError is %s",
+        (_, hideError, foo, expectedErrors) => {
+          function PlanErrorsArrayFieldTemplate({ items, presentation }: ArrayFieldTemplateProps) {
+            return (
+              <div>
+                {items}
+                <ul className='array-template-errors'>
+                  {presentation?.errors.messages.map((error) => (
+                    <li key={error}>{error}</li>
+                  ))}
+                </ul>
+              </div>
+            );
+          }
+          const { node } = createFormComponent({
+            schema: { type: 'object', properties: { foo } },
+            uiSchema: { foo: { 'ui:hideError': hideError } },
+            initialFormData: { foo: ['a'] },
+            extraErrors: { foo: { __errors: ['array error'] } },
+            templates: { ArrayFieldTemplate: PlanErrorsArrayFieldTemplate },
+            showErrorList: false,
+          });
+
+          expect(node.querySelectorAll('.array-template-errors li')).toHaveLength(expectedErrors);
+        },
+      );
+
       // `errorSchema` is what a template renders the errors `ui:hideError` withholds from, so it has to arrive for
       // both array shapes, not just the fixed one
       it.each([
@@ -3646,6 +3682,60 @@ describe('ArrayField', () => {
 
         expect(recordTemplateProps.mock.lastCall?.[0]?.errorSchema?.[0]?.__errors).toEqual(['item error']);
       });
+    });
+
+    describe('an array rendered by a single widget', () => {
+      const ARIA_INVALID_CASES: [boolean, true | undefined][] = [
+        [false, true],
+        [true, undefined],
+      ];
+      function createRecordingWidget() {
+        const recordWidgetProps = vi.fn<(props: WidgetProps) => void>();
+        function RecordingWidget(props: WidgetProps) {
+          recordWidgetProps(props);
+          const { id } = props;
+          return <input id={id} />;
+        }
+        return { RecordingWidget, recordWidgetProps };
+      }
+
+      it.each(ARIA_INVALID_CASES)(
+        "hands a custom ui:widget a plan whose control's aria-invalid follows ui:hideError: %s",
+        (hideError, ariaInvalid) => {
+          const { RecordingWidget, recordWidgetProps } = createRecordingWidget();
+          createFormComponent({
+            schema: { type: 'object', properties: { foo: { type: 'array', items: { type: 'string' } } } },
+            uiSchema: { foo: { 'ui:hideError': hideError, 'ui:widget': RecordingWidget } },
+            extraErrors: { foo: { __errors: ['array error'] } },
+            showErrorList: false,
+          });
+
+          const widgetProps = recordWidgetProps.mock.lastCall?.[0];
+          expect(widgetProps?.id).toBe('root_foo');
+          expect(widgetProps?.presentation?.control?.attributes['aria-invalid']).toBe(ariaInvalid);
+        },
+      );
+
+      it.each(ARIA_INVALID_CASES)(
+        "hands the files widget a plan whose control's aria-invalid follows ui:hideError: %s",
+        (hideError, ariaInvalid) => {
+          const { RecordingWidget, recordWidgetProps } = createRecordingWidget();
+          createFormComponent({
+            schema: {
+              type: 'object',
+              properties: { foo: { type: 'array', items: { type: 'string', format: 'data-url' } } },
+            },
+            uiSchema: { foo: { 'ui:hideError': hideError } },
+            widgets: { FileWidget: RecordingWidget },
+            extraErrors: { foo: { __errors: ['array error'] } },
+            showErrorList: false,
+          });
+
+          const widgetProps = recordWidgetProps.mock.lastCall?.[0];
+          expect(widgetProps?.id).toBe('root_foo');
+          expect(widgetProps?.presentation?.control?.attributes['aria-invalid']).toBe(ariaInvalid);
+        },
+      );
     });
   });
   describe('FormContext gets passed', () => {

@@ -150,6 +150,7 @@ describe('ObjectField', () => {
     );
 
     it('should pass its own errors down to a custom ObjectFieldTemplate as rawErrors', async () => {
+      // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated prop a component without a plan reads
       function RawErrorsObjectFieldTemplate({ rawErrors }: ObjectFieldTemplateProps) {
         return <div id='custom'>{rawErrors}</div>;
       }
@@ -161,6 +162,33 @@ describe('ObjectField', () => {
       await submitForm(node, user);
 
       expect(node.querySelector('#custom')).toHaveTextContent('must NOT have fewer than 1 properties');
+    });
+
+    it.each([
+      [false, 1],
+      [true, 0],
+    ])("lists its own errors from its plan's messages while ui:hideError is %s", (hideError, expectedErrors) => {
+      function PlanErrorsObjectFieldTemplate({ properties, presentation }: ObjectFieldTemplateProps) {
+        return (
+          <div>
+            {properties.map((property) => property.content)}
+            <ul className='object-template-errors'>
+              {presentation?.errors.messages.map((error) => (
+                <li key={error}>{error}</li>
+              ))}
+            </ul>
+          </div>
+        );
+      }
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { foo: { type: 'object', properties: { bar: { type: 'string' } } } } },
+        uiSchema: { foo: { 'ui:hideError': hideError } },
+        extraErrors: { foo: { __errors: ['object error'] } },
+        templates: { ObjectFieldTemplate: PlanErrorsObjectFieldTemplate },
+        showErrorList: false,
+      });
+
+      expect(node.querySelectorAll('.object-template-errors li')).toHaveLength(expectedErrors);
     });
 
     it('should render a default property label', () => {

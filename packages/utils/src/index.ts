@@ -323,6 +323,7 @@ export {
   getTestIds,
   getUiOptions,
   getUnionTypes,
+  // oxlint-disable-next-line typescript/no-deprecated -- deprecated, and kept exported through v7
   getVisibleErrors,
   getWidget,
   getWidgetDescription,
@@ -334,6 +335,7 @@ export {
   hasAdditionalKeyLabel,
   hasByPath,
   hasTemplateErrors,
+  // oxlint-disable-next-line typescript/no-deprecated -- deprecated, and kept exported through v7
   hasVisibleErrors,
   hasWidget,
   hasWidgetErrors,

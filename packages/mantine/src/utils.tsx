@@ -209,6 +209,7 @@ export function getWidgetErrors<
   if (presentation) {
     return presentation.errors.by === 'self' ? presentation.errors.messages : [];
   }
+  // oxlint-disable-next-line typescript/no-deprecated -- the fallback for a widget or template rendered without a plan
   return getVisibleErrors(props);
 }
 
