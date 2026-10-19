@@ -197,12 +197,12 @@ The following props are passed to custom widget components:
 - `uiSchema`: The uiSchema for this widget;
 - `value`: The current value for this widget;
 - `placeholder`: The placeholder for the widget, if any;
-- `required`: The required status of this widget;
+- `required`: The required status of this widget. A widget its theme declares `uncheckedIsFalse`, as `@rjsf/core` declares `CheckboxWidget`, is required only where the schema demands `true` when its field renders a `boolean`, since left alone it then holds the `false` `getDefaultFormState()` seeds a required `boolean` with, which the schema accepts. Rendered as another type, as a `type` list's string field renders a switch, it answers nothing unchecked, so it is required as any other widget is;
 - `disabled`: A boolean value stating if the widget is disabled;
 - `readonly`: A boolean value stating if the widget is read-only;
 - `autofocus`: A boolean value stating if the widget should autofocus;
 - `label`: The computed label for this widget, as a string
-- `hideLabel`: A boolean value, if true, will cause the label to be hidden. This is useful for nested fields where you don't want to clutter the UI. Customized via `label` in the `UiSchema`;
+- `hideLabel`: A boolean value, if true, tells the widget not to draw its label, because the field's plan has the template, or a field above rendering the same id, draw it, or `label` in the `UiSchema` turns it off. A widget that draws its own description should take it from [`getWidgetDescription()`](../api-reference/utility-functions.md#getwidgetdescription) rather than decide from `hideLabel`. Deprecated, and kept through v7 for a widget rendered without a plan: read `presentation.label.by === 'self'`, or [`widgetDrawsLabel()`](../api-reference/utility-functions.md#widgetdrawslabel), which falls back to `hideLabel` without a plan, instead;
 - `multiple`: A boolean value stating if the widget can accept multiple values;
 - `onChange`: The value change event handler; call it with the new value every time it changes;
 - `onKeyChange`: The key change event handler (only called for fields with `additionalProperties`); pass the new value every time it changes;
@@ -210,7 +210,8 @@ The following props are passed to custom widget components:
 - `onFocus`: The input focus event handler; call it with the widget id and value;
 - `options`: A map of options passed as a prop to the component (see [Custom widget options](#custom-widget-options)).
 - `options.enumOptions`: For enum fields, this property contains the list of options for the enum as an array of \{ label, value } objects. If the enum is defined using the oneOf/anyOf syntax, the entire schema object for each option is appended onto the \{ schema, label, value } object.
-- `rawErrors`: An array of strings listing all generated error messages from encountered errors for this widget. It carries them whatever `hideError` says, so that a widget can render them its own way; derive an error state from [`getVisibleErrors()`](../api-reference/utility-functions.md#getvisibleerrors) (or its boolean form `hasVisibleErrors()`) rather than from `rawErrors` alone.
+- `rawErrors`: An array of strings listing all generated error messages from encountered errors for this widget. It carries them whatever `hideError` says, so that a widget can render them its own way. Deprecated, and kept through v7 for a widget rendered without a plan: read [`hasWidgetErrors()`](../api-reference/utility-functions.md#haswidgeterrors), which follows the `aria-invalid` the plan gives `presentation.control`, for the widget's error state instead;
+- `presentation`: The plan of the field the widget renders the value of, handed on by a field that leaves its parts to the widget: whether the widget draws the label and description itself, and the attributes its control carries. Undefined for a widget rendered without a `SchemaField` above it, or by a field that draws its parts itself. See [`resolveFieldPresentation()`](../api-reference/utility-functions.md#resolvefieldpresentation).
 - `hideError`: A boolean value stating if the widget is hiding its errors, set by the [`ui:hideError`](../api-reference/uiSchema.md#hideerror) uiSchema directive.
 - `registry`: A [registry](#the-registry-object) object (read next).
 
@@ -382,6 +383,20 @@ render(
 
 > Note: Registered fields can be reused across the entire schema.
 
+A custom field draws its own label and description: the `FieldTemplate` around it draws neither, whether it is named by `ui:field`, `ui:options.field` or a schema's `$id`.
+A field that wants the template to draw them, as `geo` above would to show its title, declares so under the key it is registered by, through the `Form`'s or the theme's [`presentation`](../api-reference/form-props.md#presentation).
+Declare a template label under the field's own key rather than through `fieldDefault`: that also reaches objects and arrays, which have no control for the template's label to name, so they would draw no heading at all:
+
+```tsx
+<Form
+  schema={schema}
+  uiSchema={uiSchema}
+  validator={validator}
+  fields={fields}
+  presentation={{ fields: { geo: { label: 'template', description: 'template' } } }}
+/>
+```
+
 ### Field props
 
 A field component will always be passed the following props:
@@ -399,6 +414,7 @@ A field component will always be passed the following props:
 - `autofocus`: A boolean value stating if the field should autofocus;
 - `name`: The unique name of the field, usually derived from the name of the property in the JSONSchema
 - `rawErrors`: An array of strings listing all generated error messages from encountered errors for this field. It carries them whatever `hideError` says, so derive an error state from [`getVisibleErrors()`](../api-reference/utility-functions.md#getvisibleerrors) (or its boolean form `hasVisibleErrors()`) rather than from `rawErrors` alone. It is unset for a field rendered beside a `oneOf`/`anyOf` option selector, which is given the errors instead
+- `presentation`: The plan `SchemaField` built for the field: who draws its label, description, help and errors, under which ids, and the attributes its control carries. Its `'self'` is the field's, so pass it to a widget the field renders only when the field leaves its parts to that widget, as one declaring `WIDGET_FIELD_PRESENTATION` does; a widget reads `'self'` as its own, so a field that draws its label and spreads its props into a widget would see the label drawn twice. See [`resolveFieldPresentation()`](../api-reference/utility-functions.md#resolvefieldpresentation).
 - `hideError`: A boolean value stating if the field is hiding its errors, set by the [`ui:hideError`](../api-reference/uiSchema.md#hideerror) uiSchema directive
 - `onChange`: The field change event handler; called with the updated field value, the `FieldPath` of the value (the root of the form is `''`), an optional ErrorSchema holding the errors the field itself raises (not the `errorSchema` prop) and the optional id of the field being changed
 - `onBlur`: The input blur event handler; call it with the field id and value;
@@ -553,7 +569,7 @@ render(<Form schema={schema} validator={validator} fields={fields} />, document.
 ```
 
 A `$id` names the field the way [`ui:field`](../api-reference/uiSchema.md#uifield) does, after the field's own `ui:field` and `ui:globalOptions.field`: the field renders beside an `anyOf`/`oneOf` option selector, or in place of the options with `ui:fieldReplacesAnyOrOneOf`.
-A named field is applied once per data path, so one that renders `registry.fields.SchemaField` for its own data gets the default field for the schema there, whatever the `uiSchema` it passes names, as the bare field, inside the label, description, help, extra-key row and option selector the field's own `SchemaField` renders, so each renders once. The label of a field named by `ui:field` is left to it, so the `FieldTemplate` renders none; a theme whose widgets draw their own label, such as mui, still labels the default field's input. Naming `SchemaField` or `FallbackField` names no custom field: `SchemaField` renders as though no field were named, and `FallbackField` as it does when the schema's type picks it.
+A named field is applied once per data path, so one that renders `registry.fields.SchemaField` for its own data gets the default field for the schema there, whatever the `uiSchema` it passes names. That field draws the label, description and help the named field's [`presentation`](../api-reference/form-props.md#presentation) plan hands down to it, and the extra key's input and remove button and the option selector stay with the field's own `SchemaField`, so each renders once. Naming `SchemaField` or `FallbackField` names no custom field: `SchemaField` renders as though no field were named, and `FallbackField` as it does when the schema's type picks it.
 
 ### Wrapping an existing field to customize it
 
@@ -584,3 +600,6 @@ function MyObjectField(props: FieldProps) {
   return <ObjectField {...props} onChange={onChangeHandler} />;
 }
 ```
+
+A wrapper registered under the key of the field it wraps, as `fields={{ ObjectField: MyObjectField }}`, keeps that key's [`presentation`](../api-reference/form-props.md#presentation) declaration, so it is labelled as the field it wraps.
+One registered under a key of its own, or given as `ui:field` directly, is a custom field, which draws its own label: a wrapper around `StringField` in a theme whose template draws the label declares `{ label: 'template', description: 'template' }` under its key, so the field it renders is labelled as before.

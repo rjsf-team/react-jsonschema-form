@@ -9,9 +9,12 @@ import {
   fieldLabelId,
   helpId,
   optionalControlsId,
+  optionDescriptionId,
+  optionHelpId,
+  optionLabelId,
   optionId,
+  selectedOptionDescriptionId,
   titleId,
-  triggerValueId,
 } from '../src/index.ts';
 
 const SIMPLE_ID = 'simpleID';
@@ -34,9 +37,6 @@ describe('idGenerators', () => {
   });
   it('field label id is generated for simple id', () => {
     expect(fieldLabelId(SIMPLE_ID)).toEqual(`${SIMPLE_ID}__label`);
-  });
-  it('trigger value id is generated for simple id', () => {
-    expect(triggerValueId(SIMPLE_ID)).toEqual(`${SIMPLE_ID}__value`);
   });
   it('date element id is generated for simple id', () => {
     expect(dateElementId(SIMPLE_ID, 'year')).toEqual(`${SIMPLE_ID}_year`);
@@ -69,5 +69,23 @@ describe('idGenerators', () => {
   });
   it('optional controls ids of a Remove element are generated for simple id', () => {
     expect(optionalControlsId(SIMPLE_ID, 'Remove')).toEqual(`${SIMPLE_ID}__optionalRemove`);
+  });
+  it('option description id is generated for simple id', () => {
+    expect(optionDescriptionId(SIMPLE_ID)).toEqual(`${SIMPLE_ID}__optionDescription`);
+  });
+  it('option label id is generated for simple id, and numbered past the first nesting level', () => {
+    expect(optionLabelId(SIMPLE_ID)).toEqual(`${SIMPLE_ID}__optionLabel`);
+    expect(optionLabelId(SIMPLE_ID, 2)).toEqual(`${SIMPLE_ID}__optionLabel2`);
+  });
+  it('option help id is generated for simple id', () => {
+    expect(optionHelpId(SIMPLE_ID)).toEqual(`${SIMPLE_ID}__optionHelp`);
+  });
+  it('option description and help ids are numbered past the first nesting level', () => {
+    expect(optionDescriptionId(SIMPLE_ID, 1)).toEqual(`${SIMPLE_ID}__optionDescription`);
+    expect(optionDescriptionId(SIMPLE_ID, 2)).toEqual(`${SIMPLE_ID}__optionDescription2`);
+    expect(optionHelpId(SIMPLE_ID, 3)).toEqual(`${SIMPLE_ID}__optionHelp3`);
+  });
+  it('selected option description id is generated for simple id', () => {
+    expect(selectedOptionDescriptionId(SIMPLE_ID)).toEqual(`${SIMPLE_ID}__selectedOptionDescription`);
   });
 });

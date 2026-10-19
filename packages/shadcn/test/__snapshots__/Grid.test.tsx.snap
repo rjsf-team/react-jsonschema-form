@@ -28,10 +28,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <div
                     class="my-1 flex flex-col gap-0.5"
-                    id="root_person__title"
                   >
                     <h5>
-                      Person Info
+                      <span
+                        id="root_person__title"
+                      >
+                        Person Info
+                      </span>
                     </h5>
                     <div
                       class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
@@ -62,13 +65,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_person_name_first"
                   >
-                    First Name*
+                    <span
+                      id="root_person_name_first__label"
+                    >
+                      First Name
+                    </span>
+                    *
                   </label>
                   <div
                     class="p-0.5"
                   >
                     <input
-                      aria-describedby="root_person_name_first__error root_person_name_first__description root_person_name_first__help"
                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                       data-slot="input"
                       id="root_person_name_first"
@@ -95,13 +102,16 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_person_name_middle"
                   >
-                    Middle
+                    <span
+                      id="root_person_name_middle__label"
+                    >
+                      Middle
+                    </span>
                   </label>
                   <div
                     class="p-0.5"
                   >
                     <input
-                      aria-describedby="root_person_name_middle__error root_person_name_middle__description root_person_name_middle__help"
                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                       data-slot="input"
                       id="root_person_name_middle"
@@ -127,13 +137,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_person_name_last"
                   >
-                    Last Name*
+                    <span
+                      id="root_person_name_last__label"
+                    >
+                      Last Name
+                    </span>
+                    *
                   </label>
                   <div
                     class="p-0.5"
                   >
                     <input
-                      aria-describedby="root_person_name_last__error root_person_name_last__description root_person_name_last__help"
                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                       data-slot="input"
                       id="root_person_name_last"
@@ -164,13 +178,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_person_birth_date"
                   >
-                    Date of Birth*
+                    <span
+                      id="root_person_birth_date__label"
+                    >
+                      Date of Birth
+                    </span>
+                    *
                   </label>
                   <div
                     class="p-0.5"
                   >
                     <input
-                      aria-describedby="root_person_birth_date__error root_person_birth_date__description root_person_birth_date__help"
                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                       data-slot="input"
                       id="root_person_birth_date"
@@ -195,20 +213,26 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    for="root_person_race"
                   >
-                    Race*
+                    <span
+                      id="root_person_race__label"
+                    >
+                      Race
+                    </span>
+                    *
                   </label>
                   <div
+                    aria-labelledby="root_person_race__label"
                     class="flex flex-col gap-2"
+                    id="root_person_race"
+                    role="group"
                   >
                     <div
                       class="flex items-center gap-2"
                     >
                       <button
                         aria-checked="false"
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
-                        aria-required="true"
+                        aria-describedby="root_person_race__description"
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
@@ -220,7 +244,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         aria-hidden="true"
                         name="root_person_race"
-                        required=""
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
@@ -239,8 +262,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <button
                         aria-checked="false"
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
-                        aria-required="true"
+                        aria-describedby="root_person_race__description"
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
@@ -252,7 +274,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         aria-hidden="true"
                         name="root_person_race"
-                        required=""
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
@@ -271,8 +292,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <button
                         aria-checked="false"
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
-                        aria-required="true"
+                        aria-describedby="root_person_race__description"
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
@@ -284,7 +304,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         aria-hidden="true"
                         name="root_person_race"
-                        required=""
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
@@ -303,8 +322,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <button
                         aria-checked="false"
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
-                        aria-required="true"
+                        aria-describedby="root_person_race__description"
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
@@ -316,7 +334,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         aria-hidden="true"
                         name="root_person_race"
-                        required=""
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
@@ -335,8 +352,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <button
                         aria-checked="false"
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
-                        aria-required="true"
+                        aria-describedby="root_person_race__description"
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
@@ -348,7 +364,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         aria-hidden="true"
                         name="root_person_race"
-                        required=""
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
@@ -363,7 +378,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </label>
                     </div>
                   </div>
-                  <span
+                  <div
                     class="text-xs font-medium text-muted-foreground"
                   >
                     <div>
@@ -374,7 +389,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         (Check all that apply)
                       </div>
                     </div>
-                  </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -407,13 +422,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             for="root_person_address_line_1"
                           >
-                            Address*
+                            <span
+                              id="root_person_address_line_1__label"
+                            >
+                              Address
+                            </span>
+                            *
                           </label>
                           <div
                             class="p-0.5"
                           >
                             <input
-                              aria-describedby="root_person_address_line_1__error root_person_address_line_1__description root_person_address_line_1__help"
                               class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                               data-slot="input"
                               id="root_person_address_line_1"
@@ -440,13 +459,16 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             for="root_person_address_line_2"
                           >
-                            Address 2
+                            <span
+                              id="root_person_address_line_2__label"
+                            >
+                              Address 2
+                            </span>
                           </label>
                           <div
                             class="p-0.5"
                           >
                             <input
-                              aria-describedby="root_person_address_line_2__error root_person_address_line_2__description root_person_address_line_2__help"
                               class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                               data-slot="input"
                               id="root_person_address_line_2"
@@ -472,13 +494,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             for="root_person_address_city"
                           >
-                            City*
+                            <span
+                              id="root_person_address_city__label"
+                            >
+                              City
+                            </span>
+                            *
                           </label>
                           <div
                             class="p-0.5"
                           >
                             <input
-                              aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                               class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                               data-slot="input"
                               id="root_person_address_city"
@@ -508,7 +534,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                               for="root_person_address_state"
                             >
-                              State*
+                              <span
+                                id="root_person_address_state__label"
+                              >
+                                State
+                              </span>
+                              *
                             </label>
                             <div
                               class="p-0.5"
@@ -522,16 +553,18 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               >
                                 <label
                                   cmdk-label=""
-                                  for="radix-_r_h_"
-                                  id="radix-_r_g_"
+                                  for="radix-_r_m_"
+                                  id="radix-_r_l_"
                                   style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                                 />
                                 <button
-                                  aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
+                                  aria-controls="_r_j_"
                                   aria-expanded="false"
                                   aria-haspopup="listbox"
+                                  aria-required="true"
                                   class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                                   id="root_person_address_state"
+                                  role="combobox"
                                   type="button"
                                 >
                                   <span
@@ -559,6 +592,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 </button>
                                 <div
                                   class="relative"
+                                  id="_r_j_"
                                 />
                               </div>
                             </div>
@@ -578,13 +612,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                               for="root_person_address_postal_code"
                             >
-                              ZIP Code*
+                              <span
+                                id="root_person_address_postal_code__label"
+                              >
+                                ZIP Code
+                              </span>
+                              *
                             </label>
                             <div
                               class="p-0.5"
                             >
                               <input
-                                aria-describedby="root_person_address_postal_code__error root_person_address_postal_code__description root_person_address_postal_code__help"
                                 class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                                 data-slot="input"
                                 id="root_person_address_postal_code"
@@ -614,21 +652,25 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    for="root_employment"
                   >
-                    Employment
+                    <span
+                      id="root_employment__label"
+                    >
+                      Employment
+                    </span>
                   </label>
                   <div
                     class="mb-0"
                   >
                     <div
-                      aria-describedby="root_employment__error root_employment__description root_employment__help"
+                      aria-labelledby="root_employment__label"
                       aria-orientation="horizontal"
                       aria-required="false"
                       class="gap-3 flex flex-wrap"
                       data-orientation="horizontal"
                       data-slot="radio-group"
                       dir="ltr"
+                      id="root_employment"
                       role="radiogroup"
                       style="outline: none;"
                       tabindex="0"
@@ -678,6 +720,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <input
                           aria-hidden="true"
                           checked=""
+                          name="root_employment"
                           style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                           tabindex="-1"
                           type="radio"
@@ -709,6 +752,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         />
                         <input
                           aria-hidden="true"
+                          name="root_employment"
                           style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                           tabindex="-1"
                           type="radio"
@@ -740,6 +784,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         />
                         <input
                           aria-hidden="true"
+                          name="root_employment"
                           style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                           tabindex="-1"
                           type="radio"
@@ -771,13 +816,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_employment_business"
                   >
-                    Company Name*
+                    <span
+                      id="root_employment_business__label"
+                    >
+                      Company Name
+                    </span>
+                    *
                   </label>
                   <div
                     class="p-0.5"
                   >
                     <input
-                      aria-describedby="root_employment_business__error root_employment_business__description root_employment_business__help"
                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                       data-slot="input"
                       id="root_employment_business"
@@ -804,13 +853,16 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_employment_title"
                   >
-                    Job Title
+                    <span
+                      id="root_employment_title__label"
+                    >
+                      Job Title
+                    </span>
                   </label>
                   <div
                     class="p-0.5"
                   >
                     <input
-                      aria-describedby="root_employment_title__error root_employment_title__description root_employment_title__help"
                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                       data-slot="input"
                       id="root_employment_title"
@@ -836,13 +888,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_employment_location_city"
                   >
-                    City*
+                    <span
+                      id="root_employment_location_city__label"
+                    >
+                      City
+                    </span>
+                    *
                   </label>
                   <div
                     class="p-0.5"
                   >
                     <input
-                      aria-describedby="root_employment_location_city__error root_employment_location_city__description root_employment_location_city__help"
                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                       data-slot="input"
                       id="root_employment_location_city"
@@ -869,7 +925,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_employment_location_state"
                   >
-                    State*
+                    <span
+                      id="root_employment_location_state__label"
+                    >
+                      State
+                    </span>
+                    *
                   </label>
                   <div
                     class="p-0.5"
@@ -883,16 +944,18 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <label
                         cmdk-label=""
-                        for="radix-_r_n_"
-                        id="radix-_r_m_"
+                        for="radix-_r_t_"
+                        id="radix-_r_s_"
                         style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                       />
                       <button
-                        aria-describedby="root_employment_location_state__error root_employment_location_state__description root_employment_location_state__help"
+                        aria-controls="_r_q_"
                         aria-expanded="false"
                         aria-haspopup="listbox"
+                        aria-required="true"
                         class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                         id="root_employment_location_state"
+                        role="combobox"
                         type="button"
                       >
                         <span
@@ -920,6 +983,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </button>
                       <div
                         class="relative"
+                        id="_r_q_"
                       />
                     </div>
                   </div>
@@ -971,10 +1035,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <div
                     class="my-1 flex flex-col gap-0.5"
-                    id="root_person__title"
                   >
                     <h5>
-                      Person Info
+                      <span
+                        id="root_person__title"
+                      >
+                        Person Info
+                      </span>
                     </h5>
                     <div
                       class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
@@ -1005,13 +1072,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_person_name_first"
                   >
-                    First Name*
+                    <span
+                      id="root_person_name_first__label"
+                    >
+                      First Name
+                    </span>
+                    *
                   </label>
                   <div
                     class="p-0.5"
                   >
                     <input
-                      aria-describedby="root_person_name_first__error root_person_name_first__description root_person_name_first__help"
                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                       data-slot="input"
                       id="root_person_name_first"
@@ -1038,13 +1109,16 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_person_name_middle"
                   >
-                    Middle
+                    <span
+                      id="root_person_name_middle__label"
+                    >
+                      Middle
+                    </span>
                   </label>
                   <div
                     class="p-0.5"
                   >
                     <input
-                      aria-describedby="root_person_name_middle__error root_person_name_middle__description root_person_name_middle__help"
                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                       data-slot="input"
                       id="root_person_name_middle"
@@ -1070,13 +1144,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_person_name_last"
                   >
-                    Last Name*
+                    <span
+                      id="root_person_name_last__label"
+                    >
+                      Last Name
+                    </span>
+                    *
                   </label>
                   <div
                     class="p-0.5"
                   >
                     <input
-                      aria-describedby="root_person_name_last__error root_person_name_last__description root_person_name_last__help"
                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                       data-slot="input"
                       id="root_person_name_last"
@@ -1107,13 +1185,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_person_birth_date"
                   >
-                    Date of Birth*
+                    <span
+                      id="root_person_birth_date__label"
+                    >
+                      Date of Birth
+                    </span>
+                    *
                   </label>
                   <div
                     class="p-0.5"
                   >
                     <input
-                      aria-describedby="root_person_birth_date__error root_person_birth_date__description root_person_birth_date__help"
                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                       data-slot="input"
                       id="root_person_birth_date"
@@ -1138,20 +1220,26 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    for="root_person_race"
                   >
-                    Race*
+                    <span
+                      id="root_person_race__label"
+                    >
+                      Race
+                    </span>
+                    *
                   </label>
                   <div
+                    aria-labelledby="root_person_race__label"
                     class="flex flex-col gap-2"
+                    id="root_person_race"
+                    role="group"
                   >
                     <div
                       class="flex items-center gap-2"
                     >
                       <button
                         aria-checked="false"
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
-                        aria-required="true"
+                        aria-describedby="root_person_race__description"
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
@@ -1163,7 +1251,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         aria-hidden="true"
                         name="root_person_race"
-                        required=""
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
@@ -1182,8 +1269,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <button
                         aria-checked="false"
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
-                        aria-required="true"
+                        aria-describedby="root_person_race__description"
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
@@ -1195,7 +1281,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         aria-hidden="true"
                         name="root_person_race"
-                        required=""
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
@@ -1214,8 +1299,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <button
                         aria-checked="false"
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
-                        aria-required="true"
+                        aria-describedby="root_person_race__description"
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
@@ -1227,7 +1311,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         aria-hidden="true"
                         name="root_person_race"
-                        required=""
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
@@ -1246,8 +1329,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <button
                         aria-checked="false"
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
-                        aria-required="true"
+                        aria-describedby="root_person_race__description"
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
@@ -1259,7 +1341,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         aria-hidden="true"
                         name="root_person_race"
-                        required=""
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
@@ -1278,8 +1359,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <button
                         aria-checked="false"
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
-                        aria-required="true"
+                        aria-describedby="root_person_race__description"
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
@@ -1291,7 +1371,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         aria-hidden="true"
                         name="root_person_race"
-                        required=""
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
@@ -1306,7 +1385,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </label>
                     </div>
                   </div>
-                  <span
+                  <div
                     class="text-xs font-medium text-muted-foreground"
                   >
                     <div>
@@ -1317,7 +1396,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         (Check all that apply)
                       </div>
                     </div>
-                  </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1350,13 +1429,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             for="root_person_address_line_1"
                           >
-                            Address*
+                            <span
+                              id="root_person_address_line_1__label"
+                            >
+                              Address
+                            </span>
+                            *
                           </label>
                           <div
                             class="p-0.5"
                           >
                             <input
-                              aria-describedby="root_person_address_line_1__error root_person_address_line_1__description root_person_address_line_1__help"
                               class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                               data-slot="input"
                               id="root_person_address_line_1"
@@ -1383,13 +1466,16 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             for="root_person_address_line_2"
                           >
-                            Address 2
+                            <span
+                              id="root_person_address_line_2__label"
+                            >
+                              Address 2
+                            </span>
                           </label>
                           <div
                             class="p-0.5"
                           >
                             <input
-                              aria-describedby="root_person_address_line_2__error root_person_address_line_2__description root_person_address_line_2__help"
                               class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                               data-slot="input"
                               id="root_person_address_line_2"
@@ -1415,13 +1501,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             for="root_person_address_city"
                           >
-                            City*
+                            <span
+                              id="root_person_address_city__label"
+                            >
+                              City
+                            </span>
+                            *
                           </label>
                           <div
                             class="p-0.5"
                           >
                             <input
-                              aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                               class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                               data-slot="input"
                               id="root_person_address_city"
@@ -1451,7 +1541,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                               for="root_person_address_state"
                             >
-                              State*
+                              <span
+                                id="root_person_address_state__label"
+                              >
+                                State
+                              </span>
+                              *
                             </label>
                             <div
                               class="p-0.5"
@@ -1465,16 +1560,18 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               >
                                 <label
                                   cmdk-label=""
-                                  for="radix-_r_q_"
-                                  id="radix-_r_p_"
+                                  for="radix-_r_11_"
+                                  id="radix-_r_10_"
                                   style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                                 />
                                 <button
-                                  aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
+                                  aria-controls="_r_u_"
                                   aria-expanded="false"
                                   aria-haspopup="listbox"
+                                  aria-required="true"
                                   class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                                   id="root_person_address_state"
+                                  role="combobox"
                                   type="button"
                                 >
                                   <span
@@ -1502,6 +1599,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 </button>
                                 <div
                                   class="relative"
+                                  id="_r_u_"
                                 />
                               </div>
                             </div>
@@ -1521,13 +1619,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                               for="root_person_address_postal_code"
                             >
-                              ZIP Code*
+                              <span
+                                id="root_person_address_postal_code__label"
+                              >
+                                ZIP Code
+                              </span>
+                              *
                             </label>
                             <div
                               class="p-0.5"
                             >
                               <input
-                                aria-describedby="root_person_address_postal_code__error root_person_address_postal_code__description root_person_address_postal_code__help"
                                 class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                                 data-slot="input"
                                 id="root_person_address_postal_code"
@@ -1557,21 +1659,25 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    for="root_employment"
                   >
-                    Employment
+                    <span
+                      id="root_employment__label"
+                    >
+                      Employment
+                    </span>
                   </label>
                   <div
                     class="mb-0"
                   >
                     <div
-                      aria-describedby="root_employment__error root_employment__description root_employment__help"
+                      aria-labelledby="root_employment__label"
                       aria-orientation="horizontal"
                       aria-required="false"
                       class="gap-3 flex flex-wrap"
                       data-orientation="horizontal"
                       data-slot="radio-group"
                       dir="ltr"
+                      id="root_employment"
                       role="radiogroup"
                       style="outline: none;"
                       tabindex="0"
@@ -1594,6 +1700,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         />
                         <input
                           aria-hidden="true"
+                          name="root_employment"
                           style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                           tabindex="-1"
                           type="radio"
@@ -1652,6 +1759,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <input
                           aria-hidden="true"
                           checked=""
+                          name="root_employment"
                           style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                           tabindex="-1"
                           type="radio"
@@ -1683,6 +1791,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         />
                         <input
                           aria-hidden="true"
+                          name="root_employment"
                           style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                           tabindex="-1"
                           type="radio"
@@ -1714,13 +1823,16 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_employment_district"
                   >
-                    District Name
+                    <span
+                      id="root_employment_district__label"
+                    >
+                      District Name
+                    </span>
                   </label>
                   <div
                     class="p-0.5"
                   >
                     <input
-                      aria-describedby="root_employment_district__error root_employment_district__description root_employment_district__help"
                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                       data-slot="input"
                       id="root_employment_district"
@@ -1746,13 +1858,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_employment_school"
                   >
-                    School Name*
+                    <span
+                      id="root_employment_school__label"
+                    >
+                      School Name
+                    </span>
+                    *
                   </label>
                   <div
                     class="p-0.5"
                   >
                     <input
-                      aria-describedby="root_employment_school__error root_employment_school__description root_employment_school__help"
                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                       data-slot="input"
                       id="root_employment_school"
@@ -1779,13 +1895,16 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_employment_title"
                   >
-                    Job Title
+                    <span
+                      id="root_employment_title__label"
+                    >
+                      Job Title
+                    </span>
                   </label>
                   <div
                     class="p-0.5"
                   >
                     <input
-                      aria-describedby="root_employment_title__error root_employment_title__description root_employment_title__help"
                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                       data-slot="input"
                       id="root_employment_title"
@@ -1811,13 +1930,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_employment_location_city"
                   >
-                    City*
+                    <span
+                      id="root_employment_location_city__label"
+                    >
+                      City
+                    </span>
+                    *
                   </label>
                   <div
                     class="p-0.5"
                   >
                     <input
-                      aria-describedby="root_employment_location_city__error root_employment_location_city__description root_employment_location_city__help"
                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                       data-slot="input"
                       id="root_employment_location_city"
@@ -1844,7 +1967,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_employment_location_state"
                   >
-                    State*
+                    <span
+                      id="root_employment_location_state__label"
+                    >
+                      State
+                    </span>
+                    *
                   </label>
                   <div
                     class="p-0.5"
@@ -1858,16 +1986,18 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <label
                         cmdk-label=""
-                        for="radix-_r_10_"
-                        id="radix-_r_v_"
+                        for="radix-_r_18_"
+                        id="radix-_r_17_"
                         style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                       />
                       <button
-                        aria-describedby="root_employment_location_state__error root_employment_location_state__description root_employment_location_state__help"
+                        aria-controls="_r_15_"
                         aria-expanded="false"
                         aria-haspopup="listbox"
+                        aria-required="true"
                         class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                         id="root_employment_location_state"
+                        role="combobox"
                         type="button"
                       >
                         <span
@@ -1895,6 +2025,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </button>
                       <div
                         class="relative"
+                        id="_r_15_"
                       />
                     </div>
                   </div>
@@ -1946,10 +2077,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <div
                     class="my-1 flex flex-col gap-0.5"
-                    id="root_person__title"
                   >
                     <h5>
-                      Person Info
+                      <span
+                        id="root_person__title"
+                      >
+                        Person Info
+                      </span>
                     </h5>
                     <div
                       class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
@@ -1980,13 +2114,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_person_name_first"
                   >
-                    First Name*
+                    <span
+                      id="root_person_name_first__label"
+                    >
+                      First Name
+                    </span>
+                    *
                   </label>
                   <div
                     class="p-0.5"
                   >
                     <input
-                      aria-describedby="root_person_name_first__error root_person_name_first__description root_person_name_first__help"
                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                       data-slot="input"
                       id="root_person_name_first"
@@ -2013,13 +2151,16 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_person_name_middle"
                   >
-                    Middle
+                    <span
+                      id="root_person_name_middle__label"
+                    >
+                      Middle
+                    </span>
                   </label>
                   <div
                     class="p-0.5"
                   >
                     <input
-                      aria-describedby="root_person_name_middle__error root_person_name_middle__description root_person_name_middle__help"
                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                       data-slot="input"
                       id="root_person_name_middle"
@@ -2045,13 +2186,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_person_name_last"
                   >
-                    Last Name*
+                    <span
+                      id="root_person_name_last__label"
+                    >
+                      Last Name
+                    </span>
+                    *
                   </label>
                   <div
                     class="p-0.5"
                   >
                     <input
-                      aria-describedby="root_person_name_last__error root_person_name_last__description root_person_name_last__help"
                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                       data-slot="input"
                       id="root_person_name_last"
@@ -2082,13 +2227,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_person_birth_date"
                   >
-                    Date of Birth*
+                    <span
+                      id="root_person_birth_date__label"
+                    >
+                      Date of Birth
+                    </span>
+                    *
                   </label>
                   <div
                     class="p-0.5"
                   >
                     <input
-                      aria-describedby="root_person_birth_date__error root_person_birth_date__description root_person_birth_date__help"
                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                       data-slot="input"
                       id="root_person_birth_date"
@@ -2113,20 +2262,26 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    for="root_person_race"
                   >
-                    Race*
+                    <span
+                      id="root_person_race__label"
+                    >
+                      Race
+                    </span>
+                    *
                   </label>
                   <div
+                    aria-labelledby="root_person_race__label"
                     class="flex flex-col gap-2"
+                    id="root_person_race"
+                    role="group"
                   >
                     <div
                       class="flex items-center gap-2"
                     >
                       <button
                         aria-checked="false"
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
-                        aria-required="true"
+                        aria-describedby="root_person_race__description"
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
@@ -2138,7 +2293,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         aria-hidden="true"
                         name="root_person_race"
-                        required=""
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
@@ -2157,8 +2311,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <button
                         aria-checked="false"
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
-                        aria-required="true"
+                        aria-describedby="root_person_race__description"
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
@@ -2170,7 +2323,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         aria-hidden="true"
                         name="root_person_race"
-                        required=""
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
@@ -2189,8 +2341,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <button
                         aria-checked="false"
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
-                        aria-required="true"
+                        aria-describedby="root_person_race__description"
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
@@ -2202,7 +2353,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         aria-hidden="true"
                         name="root_person_race"
-                        required=""
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
@@ -2221,8 +2371,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <button
                         aria-checked="false"
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
-                        aria-required="true"
+                        aria-describedby="root_person_race__description"
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
@@ -2234,7 +2383,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         aria-hidden="true"
                         name="root_person_race"
-                        required=""
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
@@ -2253,8 +2401,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <button
                         aria-checked="false"
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
-                        aria-required="true"
+                        aria-describedby="root_person_race__description"
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
@@ -2266,7 +2413,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         aria-hidden="true"
                         name="root_person_race"
-                        required=""
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
@@ -2281,7 +2427,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </label>
                     </div>
                   </div>
-                  <span
+                  <div
                     class="text-xs font-medium text-muted-foreground"
                   >
                     <div>
@@ -2292,7 +2438,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         (Check all that apply)
                       </div>
                     </div>
-                  </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -2325,13 +2471,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             for="root_person_address_line_1"
                           >
-                            Address*
+                            <span
+                              id="root_person_address_line_1__label"
+                            >
+                              Address
+                            </span>
+                            *
                           </label>
                           <div
                             class="p-0.5"
                           >
                             <input
-                              aria-describedby="root_person_address_line_1__error root_person_address_line_1__description root_person_address_line_1__help"
                               class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                               data-slot="input"
                               id="root_person_address_line_1"
@@ -2358,13 +2508,16 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             for="root_person_address_line_2"
                           >
-                            Address 2
+                            <span
+                              id="root_person_address_line_2__label"
+                            >
+                              Address 2
+                            </span>
                           </label>
                           <div
                             class="p-0.5"
                           >
                             <input
-                              aria-describedby="root_person_address_line_2__error root_person_address_line_2__description root_person_address_line_2__help"
                               class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                               data-slot="input"
                               id="root_person_address_line_2"
@@ -2390,13 +2543,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             for="root_person_address_city"
                           >
-                            City*
+                            <span
+                              id="root_person_address_city__label"
+                            >
+                              City
+                            </span>
+                            *
                           </label>
                           <div
                             class="p-0.5"
                           >
                             <input
-                              aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                               class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                               data-slot="input"
                               id="root_person_address_city"
@@ -2426,7 +2583,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                               for="root_person_address_state"
                             >
-                              State*
+                              <span
+                                id="root_person_address_state__label"
+                              >
+                                State
+                              </span>
+                              *
                             </label>
                             <div
                               class="p-0.5"
@@ -2440,16 +2602,18 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               >
                                 <label
                                   cmdk-label=""
-                                  for="radix-_r_13_"
-                                  id="radix-_r_12_"
+                                  for="radix-_r_1c_"
+                                  id="radix-_r_1b_"
                                   style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                                 />
                                 <button
-                                  aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
+                                  aria-controls="_r_19_"
                                   aria-expanded="false"
                                   aria-haspopup="listbox"
+                                  aria-required="true"
                                   class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                                   id="root_person_address_state"
+                                  role="combobox"
                                   type="button"
                                 >
                                   <span
@@ -2477,6 +2641,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 </button>
                                 <div
                                   class="relative"
+                                  id="_r_19_"
                                 />
                               </div>
                             </div>
@@ -2496,13 +2661,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                               for="root_person_address_postal_code"
                             >
-                              ZIP Code*
+                              <span
+                                id="root_person_address_postal_code__label"
+                              >
+                                ZIP Code
+                              </span>
+                              *
                             </label>
                             <div
                               class="p-0.5"
                             >
                               <input
-                                aria-describedby="root_person_address_postal_code__error root_person_address_postal_code__description root_person_address_postal_code__help"
                                 class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                                 data-slot="input"
                                 id="root_person_address_postal_code"
@@ -2532,21 +2701,25 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    for="root_employment"
                   >
-                    Employment
+                    <span
+                      id="root_employment__label"
+                    >
+                      Employment
+                    </span>
                   </label>
                   <div
                     class="mb-0"
                   >
                     <div
-                      aria-describedby="root_employment__error root_employment__description root_employment__help"
+                      aria-labelledby="root_employment__label"
                       aria-orientation="horizontal"
                       aria-required="false"
                       class="gap-3 flex flex-wrap"
                       data-orientation="horizontal"
                       data-slot="radio-group"
                       dir="ltr"
+                      id="root_employment"
                       role="radiogroup"
                       style="outline: none;"
                       tabindex="0"
@@ -2569,6 +2742,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         />
                         <input
                           aria-hidden="true"
+                          name="root_employment"
                           style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                           tabindex="-1"
                           type="radio"
@@ -2600,6 +2774,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         />
                         <input
                           aria-hidden="true"
+                          name="root_employment"
                           style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                           tabindex="-1"
                           type="radio"
@@ -2658,6 +2833,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <input
                           aria-hidden="true"
                           checked=""
+                          name="root_employment"
                           style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                           tabindex="-1"
                           type="radio"
@@ -2689,13 +2865,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_employment_description"
                   >
-                    Describe your job*
+                    <span
+                      id="root_employment_description__label"
+                    >
+                      Describe your job
+                    </span>
+                    *
                   </label>
                   <div
                     class="flex p-0.5"
                   >
                     <textarea
-                      aria-describedby="root_employment_description__error root_employment_description__description root_employment_description__help"
                       class="border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 flex min-h-16 w-full rounded-md border bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                       data-slot="textarea"
                       id="root_employment_description"
@@ -2753,10 +2933,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <div
                     class="my-1 flex flex-col gap-0.5"
-                    id="root_person__title"
                   >
                     <h5>
-                      Person Info
+                      <span
+                        id="root_person__title"
+                      >
+                        Person Info
+                      </span>
                     </h5>
                     <div
                       class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
@@ -2787,13 +2970,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_person_name_first"
                   >
-                    First Name*
+                    <span
+                      id="root_person_name_first__label"
+                    >
+                      First Name
+                    </span>
+                    *
                   </label>
                   <div
                     class="p-0.5"
                   >
                     <input
-                      aria-describedby="root_person_name_first__error root_person_name_first__description root_person_name_first__help"
                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                       data-slot="input"
                       id="root_person_name_first"
@@ -2820,13 +3007,16 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_person_name_middle"
                   >
-                    Middle
+                    <span
+                      id="root_person_name_middle__label"
+                    >
+                      Middle
+                    </span>
                   </label>
                   <div
                     class="p-0.5"
                   >
                     <input
-                      aria-describedby="root_person_name_middle__error root_person_name_middle__description root_person_name_middle__help"
                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                       data-slot="input"
                       id="root_person_name_middle"
@@ -2852,13 +3042,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_person_name_last"
                   >
-                    Last Name*
+                    <span
+                      id="root_person_name_last__label"
+                    >
+                      Last Name
+                    </span>
+                    *
                   </label>
                   <div
                     class="p-0.5"
                   >
                     <input
-                      aria-describedby="root_person_name_last__error root_person_name_last__description root_person_name_last__help"
                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                       data-slot="input"
                       id="root_person_name_last"
@@ -2889,13 +3083,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_person_birth_date"
                   >
-                    Date of Birth*
+                    <span
+                      id="root_person_birth_date__label"
+                    >
+                      Date of Birth
+                    </span>
+                    *
                   </label>
                   <div
                     class="p-0.5"
                   >
                     <input
-                      aria-describedby="root_person_birth_date__error root_person_birth_date__description root_person_birth_date__help"
                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                       data-slot="input"
                       id="root_person_birth_date"
@@ -2920,20 +3118,26 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    for="root_person_race"
                   >
-                    Race*
+                    <span
+                      id="root_person_race__label"
+                    >
+                      Race
+                    </span>
+                    *
                   </label>
                   <div
+                    aria-labelledby="root_person_race__label"
                     class="flex flex-col gap-2"
+                    id="root_person_race"
+                    role="group"
                   >
                     <div
                       class="flex items-center gap-2"
                     >
                       <button
                         aria-checked="false"
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
-                        aria-required="true"
+                        aria-describedby="root_person_race__description"
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
@@ -2945,7 +3149,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         aria-hidden="true"
                         name="root_person_race"
-                        required=""
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
@@ -2964,8 +3167,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <button
                         aria-checked="false"
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
-                        aria-required="true"
+                        aria-describedby="root_person_race__description"
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
@@ -2977,7 +3179,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         aria-hidden="true"
                         name="root_person_race"
-                        required=""
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
@@ -2996,8 +3197,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <button
                         aria-checked="false"
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
-                        aria-required="true"
+                        aria-describedby="root_person_race__description"
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
@@ -3009,7 +3209,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         aria-hidden="true"
                         name="root_person_race"
-                        required=""
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
@@ -3028,8 +3227,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <button
                         aria-checked="false"
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
-                        aria-required="true"
+                        aria-describedby="root_person_race__description"
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
@@ -3041,7 +3239,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         aria-hidden="true"
                         name="root_person_race"
-                        required=""
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
@@ -3060,8 +3257,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <button
                         aria-checked="false"
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
-                        aria-required="true"
+                        aria-describedby="root_person_race__description"
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
@@ -3073,7 +3269,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         aria-hidden="true"
                         name="root_person_race"
-                        required=""
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
@@ -3088,7 +3283,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </label>
                     </div>
                   </div>
-                  <span
+                  <div
                     class="text-xs font-medium text-muted-foreground"
                   >
                     <div>
@@ -3099,7 +3294,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         (Check all that apply)
                       </div>
                     </div>
-                  </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -3132,13 +3327,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             for="root_person_address_line_1"
                           >
-                            Address*
+                            <span
+                              id="root_person_address_line_1__label"
+                            >
+                              Address
+                            </span>
+                            *
                           </label>
                           <div
                             class="p-0.5"
                           >
                             <input
-                              aria-describedby="root_person_address_line_1__error root_person_address_line_1__description root_person_address_line_1__help"
                               class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                               data-slot="input"
                               id="root_person_address_line_1"
@@ -3165,13 +3364,16 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             for="root_person_address_line_2"
                           >
-                            Address 2
+                            <span
+                              id="root_person_address_line_2__label"
+                            >
+                              Address 2
+                            </span>
                           </label>
                           <div
                             class="p-0.5"
                           >
                             <input
-                              aria-describedby="root_person_address_line_2__error root_person_address_line_2__description root_person_address_line_2__help"
                               class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                               data-slot="input"
                               id="root_person_address_line_2"
@@ -3197,13 +3399,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             for="root_person_address_city"
                           >
-                            City*
+                            <span
+                              id="root_person_address_city__label"
+                            >
+                              City
+                            </span>
+                            *
                           </label>
                           <div
                             class="p-0.5"
                           >
                             <input
-                              aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                               class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                               data-slot="input"
                               id="root_person_address_city"
@@ -3233,7 +3439,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                               for="root_person_address_state"
                             >
-                              State*
+                              <span
+                                id="root_person_address_state__label"
+                              >
+                                State
+                              </span>
+                              *
                             </label>
                             <div
                               class="p-0.5"
@@ -3247,16 +3458,18 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               >
                                 <label
                                   cmdk-label=""
-                                  for="radix-_r_8_"
-                                  id="radix-_r_7_"
+                                  for="radix-_r_b_"
+                                  id="radix-_r_a_"
                                   style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                                 />
                                 <button
-                                  aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
+                                  aria-controls="_r_8_"
                                   aria-expanded="false"
                                   aria-haspopup="listbox"
+                                  aria-required="true"
                                   class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                                   id="root_person_address_state"
+                                  role="combobox"
                                   type="button"
                                 >
                                   <span
@@ -3284,6 +3497,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 </button>
                                 <div
                                   class="relative"
+                                  id="_r_8_"
                                 />
                               </div>
                             </div>
@@ -3303,13 +3517,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                               for="root_person_address_postal_code"
                             >
-                              ZIP Code*
+                              <span
+                                id="root_person_address_postal_code__label"
+                              >
+                                ZIP Code
+                              </span>
+                              *
                             </label>
                             <div
                               class="p-0.5"
                             >
                               <input
-                                aria-describedby="root_person_address_postal_code__error root_person_address_postal_code__description root_person_address_postal_code__help"
                                 class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                                 data-slot="input"
                                 id="root_person_address_postal_code"
@@ -3339,21 +3557,25 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    for="root_employment"
                   >
-                    Employment
+                    <span
+                      id="root_employment__label"
+                    >
+                      Employment
+                    </span>
                   </label>
                   <div
                     class="mb-0"
                   >
                     <div
-                      aria-describedby="root_employment__error root_employment__description root_employment__help"
+                      aria-labelledby="root_employment__label"
                       aria-orientation="horizontal"
                       aria-required="false"
                       class="gap-3 flex flex-wrap"
                       data-orientation="horizontal"
                       data-slot="radio-group"
                       dir="ltr"
+                      id="root_employment"
                       role="radiogroup"
                       style="outline: none;"
                       tabindex="0"
@@ -3403,6 +3625,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <input
                           aria-hidden="true"
                           checked=""
+                          name="root_employment"
                           style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                           tabindex="-1"
                           type="radio"
@@ -3434,6 +3657,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         />
                         <input
                           aria-hidden="true"
+                          name="root_employment"
                           style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                           tabindex="-1"
                           type="radio"
@@ -3465,6 +3689,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         />
                         <input
                           aria-hidden="true"
+                          name="root_employment"
                           style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                           tabindex="-1"
                           type="radio"
@@ -3496,13 +3721,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_employment_business"
                   >
-                    Company Name*
+                    <span
+                      id="root_employment_business__label"
+                    >
+                      Company Name
+                    </span>
+                    *
                   </label>
                   <div
                     class="p-0.5"
                   >
                     <input
-                      aria-describedby="root_employment_business__error root_employment_business__description root_employment_business__help"
                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                       data-slot="input"
                       id="root_employment_business"
@@ -3529,13 +3758,16 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_employment_title"
                   >
-                    Job Title
+                    <span
+                      id="root_employment_title__label"
+                    >
+                      Job Title
+                    </span>
                   </label>
                   <div
                     class="p-0.5"
                   >
                     <input
-                      aria-describedby="root_employment_title__error root_employment_title__description root_employment_title__help"
                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                       data-slot="input"
                       id="root_employment_title"
@@ -3561,13 +3793,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_employment_location_city"
                   >
-                    City*
+                    <span
+                      id="root_employment_location_city__label"
+                    >
+                      City
+                    </span>
+                    *
                   </label>
                   <div
                     class="p-0.5"
                   >
                     <input
-                      aria-describedby="root_employment_location_city__error root_employment_location_city__description root_employment_location_city__help"
                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                       data-slot="input"
                       id="root_employment_location_city"
@@ -3594,7 +3830,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_employment_location_state"
                   >
-                    State*
+                    <span
+                      id="root_employment_location_state__label"
+                    >
+                      State
+                    </span>
+                    *
                   </label>
                   <div
                     class="p-0.5"
@@ -3608,16 +3849,18 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <label
                         cmdk-label=""
-                        for="radix-_r_e_"
-                        id="radix-_r_d_"
+                        for="radix-_r_i_"
+                        id="radix-_r_h_"
                         style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                       />
                       <button
-                        aria-describedby="root_employment_location_state__error root_employment_location_state__description root_employment_location_state__help"
+                        aria-controls="_r_f_"
                         aria-expanded="false"
                         aria-haspopup="listbox"
+                        aria-required="true"
                         class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                         id="root_employment_location_state"
+                        role="combobox"
                         type="button"
                       >
                         <span
@@ -3645,6 +3888,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </button>
                       <div
                         class="relative"
+                        id="_r_f_"
                       />
                     </div>
                   </div>
@@ -3693,10 +3937,13 @@ exports[`Three even column grid > renders person and address in three columns, n
               >
                 <div
                   class="my-1 flex flex-col gap-0.5"
-                  id="root_person__title"
                 >
                   <h5>
-                    Person Info
+                    <span
+                      id="root_person__title"
+                    >
+                      Person Info
+                    </span>
                   </h5>
                   <div
                     class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
@@ -3723,13 +3970,17 @@ exports[`Three even column grid > renders person and address in three columns, n
                   class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                   for="root_person_name_first"
                 >
-                  First Name*
+                  <span
+                    id="root_person_name_first__label"
+                  >
+                    First Name
+                  </span>
+                  *
                 </label>
                 <div
                   class="p-0.5"
                 >
                   <input
-                    aria-describedby="root_person_name_first__error root_person_name_first__description root_person_name_first__help"
                     class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                     data-slot="input"
                     id="root_person_name_first"
@@ -3756,13 +4007,16 @@ exports[`Three even column grid > renders person and address in three columns, n
                   class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                   for="root_person_name_middle"
                 >
-                  Middle
+                  <span
+                    id="root_person_name_middle__label"
+                  >
+                    Middle
+                  </span>
                 </label>
                 <div
                   class="p-0.5"
                 >
                   <input
-                    aria-describedby="root_person_name_middle__error root_person_name_middle__description root_person_name_middle__help"
                     class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                     data-slot="input"
                     id="root_person_name_middle"
@@ -3788,13 +4042,17 @@ exports[`Three even column grid > renders person and address in three columns, n
                   class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                   for="root_person_name_last"
                 >
-                  Last Name*
+                  <span
+                    id="root_person_name_last__label"
+                  >
+                    Last Name
+                  </span>
+                  *
                 </label>
                 <div
                   class="p-0.5"
                 >
                   <input
-                    aria-describedby="root_person_name_last__error root_person_name_last__description root_person_name_last__help"
                     class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                     data-slot="input"
                     id="root_person_name_last"
@@ -3821,13 +4079,17 @@ exports[`Three even column grid > renders person and address in three columns, n
                   class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                   for="root_person_birth_date"
                 >
-                  Date of Birth*
+                  <span
+                    id="root_person_birth_date__label"
+                  >
+                    Date of Birth
+                  </span>
+                  *
                 </label>
                 <div
                   class="p-0.5"
                 >
                   <input
-                    aria-describedby="root_person_birth_date__error root_person_birth_date__description root_person_birth_date__help"
                     class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                     data-slot="input"
                     id="root_person_birth_date"
@@ -3852,20 +4114,26 @@ exports[`Three even column grid > renders person and address in three columns, n
               >
                 <label
                   class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  for="root_person_race"
                 >
-                  Race*
+                  <span
+                    id="root_person_race__label"
+                  >
+                    Race
+                  </span>
+                  *
                 </label>
                 <div
+                  aria-labelledby="root_person_race__label"
                   class="flex flex-col gap-2"
+                  id="root_person_race"
+                  role="group"
                 >
                   <div
                     class="flex items-center gap-2"
                   >
                     <button
                       aria-checked="false"
-                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
-                      aria-required="true"
+                      aria-describedby="root_person_race__description"
                       class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                       data-slot="checkbox"
                       data-state="unchecked"
@@ -3877,7 +4145,6 @@ exports[`Three even column grid > renders person and address in three columns, n
                     <input
                       aria-hidden="true"
                       name="root_person_race"
-                      required=""
                       style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                       tabindex="-1"
                       type="checkbox"
@@ -3896,8 +4163,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                   >
                     <button
                       aria-checked="false"
-                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
-                      aria-required="true"
+                      aria-describedby="root_person_race__description"
                       class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                       data-slot="checkbox"
                       data-state="unchecked"
@@ -3909,7 +4175,6 @@ exports[`Three even column grid > renders person and address in three columns, n
                     <input
                       aria-hidden="true"
                       name="root_person_race"
-                      required=""
                       style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                       tabindex="-1"
                       type="checkbox"
@@ -3928,8 +4193,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                   >
                     <button
                       aria-checked="false"
-                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
-                      aria-required="true"
+                      aria-describedby="root_person_race__description"
                       class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                       data-slot="checkbox"
                       data-state="unchecked"
@@ -3941,7 +4205,6 @@ exports[`Three even column grid > renders person and address in three columns, n
                     <input
                       aria-hidden="true"
                       name="root_person_race"
-                      required=""
                       style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                       tabindex="-1"
                       type="checkbox"
@@ -3960,8 +4223,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                   >
                     <button
                       aria-checked="false"
-                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
-                      aria-required="true"
+                      aria-describedby="root_person_race__description"
                       class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                       data-slot="checkbox"
                       data-state="unchecked"
@@ -3973,7 +4235,6 @@ exports[`Three even column grid > renders person and address in three columns, n
                     <input
                       aria-hidden="true"
                       name="root_person_race"
-                      required=""
                       style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                       tabindex="-1"
                       type="checkbox"
@@ -3992,8 +4253,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                   >
                     <button
                       aria-checked="false"
-                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
-                      aria-required="true"
+                      aria-describedby="root_person_race__description"
                       class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                       data-slot="checkbox"
                       data-state="unchecked"
@@ -4005,7 +4265,6 @@ exports[`Three even column grid > renders person and address in three columns, n
                     <input
                       aria-hidden="true"
                       name="root_person_race"
-                      required=""
                       style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                       tabindex="-1"
                       type="checkbox"
@@ -4020,7 +4279,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                     </label>
                   </div>
                 </div>
-                <span
+                <div
                   class="text-xs font-medium text-muted-foreground"
                 >
                   <div>
@@ -4031,7 +4290,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       (Check all that apply)
                     </div>
                   </div>
-                </span>
+                </div>
               </div>
             </div>
           </div>
@@ -4048,13 +4307,17 @@ exports[`Three even column grid > renders person and address in three columns, n
                   class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                   for="root_person_address_line_1"
                 >
-                  Address*
+                  <span
+                    id="root_person_address_line_1__label"
+                  >
+                    Address
+                  </span>
+                  *
                 </label>
                 <div
                   class="p-0.5"
                 >
                   <input
-                    aria-describedby="root_person_address_line_1__error root_person_address_line_1__description root_person_address_line_1__help"
                     class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                     data-slot="input"
                     id="root_person_address_line_1"
@@ -4081,13 +4344,16 @@ exports[`Three even column grid > renders person and address in three columns, n
                   class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                   for="root_person_address_line_2"
                 >
-                  Address 2
+                  <span
+                    id="root_person_address_line_2__label"
+                  >
+                    Address 2
+                  </span>
                 </label>
                 <div
                   class="p-0.5"
                 >
                   <input
-                    aria-describedby="root_person_address_line_2__error root_person_address_line_2__description root_person_address_line_2__help"
                     class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                     data-slot="input"
                     id="root_person_address_line_2"
@@ -4113,13 +4379,17 @@ exports[`Three even column grid > renders person and address in three columns, n
                   class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                   for="root_person_address_city"
                 >
-                  City*
+                  <span
+                    id="root_person_address_city__label"
+                  >
+                    City
+                  </span>
+                  *
                 </label>
                 <div
                   class="p-0.5"
                 >
                   <input
-                    aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                     class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                     data-slot="input"
                     id="root_person_address_city"
@@ -4146,7 +4416,12 @@ exports[`Three even column grid > renders person and address in three columns, n
                   class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                   for="root_person_address_state"
                 >
-                  State*
+                  <span
+                    id="root_person_address_state__label"
+                  >
+                    State
+                  </span>
+                  *
                 </label>
                 <div
                   class="p-0.5"
@@ -4160,16 +4435,18 @@ exports[`Three even column grid > renders person and address in three columns, n
                   >
                     <label
                       cmdk-label=""
-                      for="radix-_r_5_"
-                      id="radix-_r_4_"
+                      for="radix-_r_7_"
+                      id="radix-_r_6_"
                       style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                     />
                     <button
-                      aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
+                      aria-controls="_r_4_"
                       aria-expanded="false"
                       aria-haspopup="listbox"
+                      aria-required="true"
                       class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                       id="root_person_address_state"
+                      role="combobox"
                       type="button"
                     >
                       <span
@@ -4197,6 +4474,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                     </button>
                     <div
                       class="relative"
+                      id="_r_4_"
                     />
                   </div>
                 </div>
@@ -4247,10 +4525,13 @@ exports[`Two even column grid > renders person and address in two columns, no em
               >
                 <div
                   class="my-1 flex flex-col gap-0.5"
-                  id="root_person__title"
                 >
                   <h5>
-                    Person Info
+                    <span
+                      id="root_person__title"
+                    >
+                      Person Info
+                    </span>
                   </h5>
                   <div
                     class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
@@ -4277,13 +4558,17 @@ exports[`Two even column grid > renders person and address in two columns, no em
                   class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                   for="root_person_name_first"
                 >
-                  First Name*
+                  <span
+                    id="root_person_name_first__label"
+                  >
+                    First Name
+                  </span>
+                  *
                 </label>
                 <div
                   class="p-0.5"
                 >
                   <input
-                    aria-describedby="root_person_name_first__error root_person_name_first__description root_person_name_first__help"
                     class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                     data-slot="input"
                     id="root_person_name_first"
@@ -4310,13 +4595,16 @@ exports[`Two even column grid > renders person and address in two columns, no em
                   class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                   for="root_person_name_middle"
                 >
-                  Middle
+                  <span
+                    id="root_person_name_middle__label"
+                  >
+                    Middle
+                  </span>
                 </label>
                 <div
                   class="p-0.5"
                 >
                   <input
-                    aria-describedby="root_person_name_middle__error root_person_name_middle__description root_person_name_middle__help"
                     class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                     data-slot="input"
                     id="root_person_name_middle"
@@ -4342,13 +4630,17 @@ exports[`Two even column grid > renders person and address in two columns, no em
                   class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                   for="root_person_name_first"
                 >
-                  First Name*
+                  <span
+                    id="root_person_name_first__label"
+                  >
+                    First Name
+                  </span>
+                  *
                 </label>
                 <div
                   class="p-0.5"
                 >
                   <input
-                    aria-describedby="root_person_name_first__error root_person_name_first__description root_person_name_first__help"
                     class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                     data-slot="input"
                     id="root_person_name_first"
@@ -4375,13 +4667,17 @@ exports[`Two even column grid > renders person and address in two columns, no em
                   class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                   for="root_person_birth_date"
                 >
-                  Date of Birth*
+                  <span
+                    id="root_person_birth_date__label"
+                  >
+                    Date of Birth
+                  </span>
+                  *
                 </label>
                 <div
                   class="p-0.5"
                 >
                   <input
-                    aria-describedby="root_person_birth_date__error root_person_birth_date__description root_person_birth_date__help"
                     class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                     data-slot="input"
                     id="root_person_birth_date"
@@ -4406,20 +4702,26 @@ exports[`Two even column grid > renders person and address in two columns, no em
               >
                 <label
                   class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  for="root_person_race"
                 >
-                  Race*
+                  <span
+                    id="root_person_race__label"
+                  >
+                    Race
+                  </span>
+                  *
                 </label>
                 <div
+                  aria-labelledby="root_person_race__label"
                   class="flex flex-col gap-2"
+                  id="root_person_race"
+                  role="group"
                 >
                   <div
                     class="flex items-center gap-2"
                   >
                     <button
                       aria-checked="false"
-                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
-                      aria-required="true"
+                      aria-describedby="root_person_race__description"
                       class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                       data-slot="checkbox"
                       data-state="unchecked"
@@ -4431,7 +4733,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     <input
                       aria-hidden="true"
                       name="root_person_race"
-                      required=""
                       style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                       tabindex="-1"
                       type="checkbox"
@@ -4450,8 +4751,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                   >
                     <button
                       aria-checked="false"
-                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
-                      aria-required="true"
+                      aria-describedby="root_person_race__description"
                       class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                       data-slot="checkbox"
                       data-state="unchecked"
@@ -4463,7 +4763,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     <input
                       aria-hidden="true"
                       name="root_person_race"
-                      required=""
                       style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                       tabindex="-1"
                       type="checkbox"
@@ -4482,8 +4781,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                   >
                     <button
                       aria-checked="false"
-                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
-                      aria-required="true"
+                      aria-describedby="root_person_race__description"
                       class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                       data-slot="checkbox"
                       data-state="unchecked"
@@ -4495,7 +4793,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     <input
                       aria-hidden="true"
                       name="root_person_race"
-                      required=""
                       style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                       tabindex="-1"
                       type="checkbox"
@@ -4514,8 +4811,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                   >
                     <button
                       aria-checked="false"
-                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
-                      aria-required="true"
+                      aria-describedby="root_person_race__description"
                       class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                       data-slot="checkbox"
                       data-state="unchecked"
@@ -4527,7 +4823,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     <input
                       aria-hidden="true"
                       name="root_person_race"
-                      required=""
                       style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                       tabindex="-1"
                       type="checkbox"
@@ -4546,8 +4841,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                   >
                     <button
                       aria-checked="false"
-                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
-                      aria-required="true"
+                      aria-describedby="root_person_race__description"
                       class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                       data-slot="checkbox"
                       data-state="unchecked"
@@ -4559,7 +4853,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     <input
                       aria-hidden="true"
                       name="root_person_race"
-                      required=""
                       style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                       tabindex="-1"
                       type="checkbox"
@@ -4574,7 +4867,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     </label>
                   </div>
                 </div>
-                <span
+                <div
                   class="text-xs font-medium text-muted-foreground"
                 >
                   <div>
@@ -4585,7 +4878,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       (Check all that apply)
                     </div>
                   </div>
-                </span>
+                </div>
               </div>
             </div>
           </div>
@@ -4602,13 +4895,17 @@ exports[`Two even column grid > renders person and address in two columns, no em
                   class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                   for="root_person_address_line_1"
                 >
-                  Address*
+                  <span
+                    id="root_person_address_line_1__label"
+                  >
+                    Address
+                  </span>
+                  *
                 </label>
                 <div
                   class="p-0.5"
                 >
                   <input
-                    aria-describedby="root_person_address_line_1__error root_person_address_line_1__description root_person_address_line_1__help"
                     class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                     data-slot="input"
                     id="root_person_address_line_1"
@@ -4635,13 +4932,16 @@ exports[`Two even column grid > renders person and address in two columns, no em
                   class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                   for="root_person_address_line_2"
                 >
-                  Address 2
+                  <span
+                    id="root_person_address_line_2__label"
+                  >
+                    Address 2
+                  </span>
                 </label>
                 <div
                   class="p-0.5"
                 >
                   <input
-                    aria-describedby="root_person_address_line_2__error root_person_address_line_2__description root_person_address_line_2__help"
                     class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                     data-slot="input"
                     id="root_person_address_line_2"
@@ -4667,13 +4967,17 @@ exports[`Two even column grid > renders person and address in two columns, no em
                   class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                   for="root_person_address_city"
                 >
-                  City*
+                  <span
+                    id="root_person_address_city__label"
+                  >
+                    City
+                  </span>
+                  *
                 </label>
                 <div
                   class="p-0.5"
                 >
                   <input
-                    aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                     class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                     data-slot="input"
                     id="root_person_address_city"
@@ -4700,7 +5004,12 @@ exports[`Two even column grid > renders person and address in two columns, no em
                   class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                   for="root_person_address_state"
                 >
-                  State*
+                  <span
+                    id="root_person_address_state__label"
+                  >
+                    State
+                  </span>
+                  *
                 </label>
                 <div
                   class="p-0.5"
@@ -4714,16 +5023,18 @@ exports[`Two even column grid > renders person and address in two columns, no em
                   >
                     <label
                       cmdk-label=""
-                      for="radix-_r_2_"
-                      id="radix-_r_1_"
+                      for="radix-_r_3_"
+                      id="radix-_r_2_"
                       style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                     />
                     <button
-                      aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
+                      aria-controls="_r_0_"
                       aria-expanded="false"
                       aria-haspopup="listbox"
+                      aria-required="true"
                       class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                       id="root_person_address_state"
+                      role="combobox"
                       type="button"
                     >
                       <span
@@ -4751,6 +5062,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     </button>
                     <div
                       class="relative"
+                      id="_r_0_"
                     />
                   </div>
                 </div>

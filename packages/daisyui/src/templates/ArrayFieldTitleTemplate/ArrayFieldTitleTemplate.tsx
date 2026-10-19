@@ -1,8 +1,11 @@
 import type { ArrayFieldTitleProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
-import { getUiOptions, titleId } from '@rjsf/utils';
+import { titleId } from '@rjsf/utils';
+
+import RequiredMarker from '../../RequiredMarker.tsx';
 
 /** The `ArrayFieldTitleTemplate` component renders the title for an array field
- * using DaisyUI styling with large bold text, with the title element id derived from the field `id`.
+ * using DaisyUI styling with large bold text, its text carrying the title id derived from the field `id`, and a `*`
+ * beside it for a required array.
  *
  * @param props - The `ArrayFieldTitleProps` for the component
  */
@@ -11,15 +14,17 @@ export default function ArrayFieldTitleTemplate<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: ArrayFieldTitleProps<T, S, F>) {
-  const { id, title, uiSchema, registry, optionalDataControl } = props;
-  const options = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);
-  const { label: displayLabel = true } = options;
-  if (!title || !displayLabel) {
+  const { id, title, required, optionalDataControl } = props;
+  // `ArrayField` already blanks `title` where `ui:label: false` turns the heading off, and `ArrayFieldTemplate` lays out
+  // the optional data control in this heading from `title` alone, so reading `ui:label` again here could drop it
+  if (!title) {
     return null;
   }
+  // The id is on the title's text alone, as `TitleField`'s is, not on its required marker
   let heading = (
-    <h3 id={titleId(id)} className='text-2xl font-bold'>
-      {title}
+    <h3 className='text-2xl font-bold'>
+      <span id={titleId(id)}>{title}</span>
+      {required && <RequiredMarker />}
     </h3>
   );
   if (optionalDataControl) {

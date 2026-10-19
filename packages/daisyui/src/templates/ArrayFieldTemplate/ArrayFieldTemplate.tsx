@@ -1,6 +1,13 @@
 import React, { useCallback } from 'react';
 import type { ArrayFieldTemplateProps, RJSFSchema, FormContextType } from '@rjsf/utils';
-import { getTemplates, getUiOptions, TranslatableString, buttonId } from '@rjsf/utils';
+import {
+  getArrayDescription,
+  getTemplates,
+  getUiOptions,
+  TranslatableString,
+  buttonId,
+  titleDrawsOptionalDataControl,
+} from '@rjsf/utils';
 
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
  *
@@ -33,12 +40,14 @@ export default function ArrayFieldTemplate<
     required,
     schema,
     title,
+    presentation,
     uiSchema,
   } = props;
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const { ArrayFieldDescriptionTemplate, ArrayFieldTitleTemplate } = getTemplates<T, S, F>(registry, uiOptions);
-  const showOptionalDataControlInTitle = !readonly && !disabled;
+  const shownDescription = getArrayDescription<T, S, F>(props);
+  const showOptionalDataControlInTitle = titleDrawsOptionalDataControl<T, S, F>(props);
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
@@ -61,7 +70,7 @@ export default function ArrayFieldTemplate<
     <div className={`array-field-template ${className}`}>
       <ArrayFieldTitleTemplate
         id={id}
-        title={uiOptions.title || title}
+        title={title}
         schema={schema}
         uiSchema={uiSchema}
         required={required}
@@ -70,17 +79,20 @@ export default function ArrayFieldTemplate<
       />
       <ArrayFieldDescriptionTemplate
         id={id}
-        description={uiOptions.description || schema.description}
+        description={shownDescription}
         schema={schema}
         uiSchema={uiSchema}
         registry={registry}
+        presentation={presentation}
       />
       <div className='flex flex-col gap-4'>
         {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
         <div className='rjsf-array-item-list'>
           {items}
           {items && items.length === 0 && canAdd && (
-            <div className='text-center italic text-base-content/70'>{TranslatableString.EmptyArray}</div>
+            <div className='text-center italic text-base-content/70'>
+              {registry.translateString(TranslatableString.EmptyArray)}
+            </div>
           )}
         </div>
         {canAdd && (

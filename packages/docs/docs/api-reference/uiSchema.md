@@ -174,8 +174,8 @@ See [Custom Widgets and Fields](../advanced-customization/custom-widgets-fields.
 
 A field's own `ui:field` comes first, then `ui:globalOptions.field`, then a field registered under the schema's [`$id`](../advanced-customization/custom-widgets-fields.md#custom-field-by-id).
 The field they name is applied once per data path: a `SchemaField` the named field renders for its own data, and the selected `anyOf`/`oneOf` option, render as though no field were named, the option's own `ui:field` or `$id` included.
-The field's own `SchemaField` renders the label, description, help, extra-key row and `anyOf`/`oneOf` option selector around the named field, and the `SchemaField` the named field renders is the bare field, without a `FieldTemplate` or options, so each renders once.
-A `ui:field` leaves the label to the field it names, so the field's own `FieldTemplate` renders none around a custom field that renders `SchemaField`. Whether the bare field draws one depends on the theme: a theme whose widgets draw their own label, such as mui, mantine, chakra-ui or fluentui-rc, still labels the bare field's input, and one whose `FieldTemplate` draws the label, such as core, renders none unless the custom field draws it.
+The field's own `SchemaField` renders the extra key's input and remove button and the `anyOf`/`oneOf` option selector around the named field, and a `SchemaField` the named field renders for its own data renders none of them again.
+It draws the label, description and help the named field's [plan](form-props.md#presentation) hands down to it, so each renders once: a custom field draws its own label and description unless its `presentation` declaration leaves them to the template, and one that renders `SchemaField` for its own data leaves them to that field.
 `SchemaField` and `FallbackField` are not custom fields, whichever of the three ways names them: `SchemaField` renders exactly as though no field were named, and `FallbackField` renders as it does for a schema whose type sends it there, labelled as though no field were named.
 
 ### `ui:fieldReplacesAnyOrOneOf`

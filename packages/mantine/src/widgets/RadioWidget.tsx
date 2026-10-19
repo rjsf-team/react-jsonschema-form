@@ -4,6 +4,7 @@ import { Radio, Flex } from '@mantine/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   enumOptionSelectedValue,
+  enumOptionsAutofocusIndex,
   enumOptionsIsDisabled,
   enumOptionValueDecoder,
   enumOptionsDomValues,
@@ -63,6 +64,7 @@ export default function RadioWidget<
 
   const { groupProps, optionProps } = useGroupAriaProps('RadioGroup', props);
 
+  const autofocusIndex = enumOptionsAutofocusIndex<S>(enumOptions, enumDisabled, autofocus, value);
   return (
     <Radio.Group
       id={id}
@@ -87,7 +89,7 @@ export default function RadioWidget<
                   value={domValues[i]}
                   label={option.label}
                   disabled={fieldDisabled || enumOptionsIsDisabled(option.value, enumDisabled)}
-                  autoFocus={i === 0 && autofocus}
+                  autoFocus={i === autofocusIndex}
                   onBlur={handleBlur}
                   onFocus={handleFocus}
                   {...describedOptionProps}

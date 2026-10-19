@@ -128,6 +128,8 @@ describe('anyOf', () => {
     expect(node.querySelector('select')).toHaveAttribute('id', 'root__anyof_select');
     expect(node.querySelectorAll('span.required')).toHaveLength(1);
     expect(node.querySelectorAll('#root_XxxOf__description')).toHaveLength(1);
+    // The object renders beside the selected option under an id of its own, so nothing else claims the field's
+    expect(node.querySelectorAll('#root__description')).toHaveLength(0);
     expect(node.querySelectorAll('#root_baz')).toHaveLength(1);
   });
 
@@ -1680,7 +1682,7 @@ describe('anyOf', () => {
       // Also verify the uiSchema was passed down to the underlying widget by confirming the lable (in the legend)
       // matches the selected option's title
       expect($select).toHaveValue('0');
-      const inputLabel = node.querySelector('legend#root__title');
+      const inputLabel = node.querySelector('legend #root__title');
       expect(inputLabel?.innerHTML).toEqual($select?.options[0].text);
     });
 
@@ -1728,11 +1730,11 @@ describe('anyOf', () => {
 
       const $select = node.querySelector('select');
 
-      // Also verify the base uiSchema was passed down to the underlying widget by confirming the label (in the legend)
-      // matches the selected option's title
+      // The base uiSchema's title labels the field, through its template, and the selected option keeps its own heading,
+      // which says something else
       expect($select).toHaveValue('0');
-      const inputLabel = node.querySelector('legend#root__title');
-      expect(inputLabel?.innerHTML).toEqual('My Title');
+      expect(node.querySelector('#root__label')?.closest('label')).toHaveTextContent('My Title');
+      expect(node.querySelector('legend #root__title')).toHaveTextContent('Foo');
     });
 
     it('should correctly infer the selected option based on value', () => {
@@ -1991,7 +1993,7 @@ describe('anyOf', () => {
       const selects = node.querySelectorAll('select');
       expect(selects).toHaveLength(1);
     });
-    it("should render the field's description once with a template that renders every description it is handed", () => {
+    it("should render the field's description once where its declaration leaves it to a template that renders every description it is handed", () => {
       const FieldTemplate = ({ id, rawDescription, children }: FieldTemplateProps) => (
         <div>
           {rawDescription && <div id={descriptionId(id)}>{rawDescription}</div>}
@@ -2007,14 +2009,48 @@ describe('anyOf', () => {
             { title: 'B', maxLength: 3 },
           ],
         },
-        uiSchema,
+        uiSchema: { 'ui:field': 'Custom' },
+        fields: { Custom: uiSchema['ui:field'] },
+        presentation: { fields: { Custom: { description: 'template' } } },
         templates: { FieldTemplate },
       });
 
-      // The option's field renders the description its template is handed, so the template of the field holding the
-      // options rendering it as well would repeat the DOM id that `aria-describedby` points at
+      // The selected option renders at the same id, so its template rendering the description as well as the one of
+      // the field holding the options would repeat the DOM id that `aria-describedby` points at
       expect(screen.getAllByText('DESCRIPTION')).toHaveLength(1);
       expect(node.querySelectorAll('[id="root__description"]')).toHaveLength(1);
+    });
+  });
+
+  describe('the selected option rendered for the same id as its field', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        region: { anyOf: [{ title: 'None', type: 'null' }, { $ref: '#/$defs/europe' }] },
+      },
+      $defs: {
+        europe: {
+          title: 'Europe',
+          description: 'A country in Europe',
+          anyOf: [
+            { const: 'FR', title: 'France' },
+            { const: 'DE', title: 'Germany' },
+          ],
+        },
+      },
+    };
+
+    it('labels the control once, and describes the option under the id its control is described by', () => {
+      const { node } = createFormComponent({ schema, formData: { region: 'DE' } });
+
+      expect(node.querySelectorAll('label[for="root_region"]')).toHaveLength(1);
+      // The field's label names the option's control and, through `aria-labelledby`, the option selector
+      expect(screen.getAllByLabelText('region')).toEqual([
+        node.querySelector('select#root_region__anyof_select'),
+        node.querySelector('select#root_region'),
+      ]);
+      expect(screen.getAllByText('A country in Europe')).toHaveLength(1);
+      expect(node.querySelector('#root_region__description')).toHaveTextContent('A country in Europe');
     });
   });
 

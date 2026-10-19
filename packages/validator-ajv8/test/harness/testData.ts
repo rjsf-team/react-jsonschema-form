@@ -1,5 +1,6 @@
 import { noop } from '@rjsf/utils';
 import type { Ajv } from 'ajv';
+import draft06 from 'ajv/lib/refs/json-schema-draft-06.json' with { type: 'json' };
 
 import type { CustomValidatorOptionsType } from '../../src/index.ts';
 
@@ -16,7 +17,7 @@ export function expectWarn<T>(fn: () => T, ...expectedWarning: unknown[]): T {
 }
 
 export const CUSTOM_OPTIONS: CustomValidatorOptionsType = {
-  additionalMetaSchemas: [require('ajv/lib/refs/json-schema-draft-06.json')],
+  additionalMetaSchemas: [draft06],
   customFormats: {
     'phone-us': /\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$/,
     'area-code': /\d{3}/,

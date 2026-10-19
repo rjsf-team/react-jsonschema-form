@@ -4,7 +4,9 @@ import type {
   ErrorSchema,
   Field,
   FieldPath,
+  FieldPresentation,
   GlobalFormOptions,
+  PartPresentation,
   FieldProps,
   FieldTemplateProps,
   FormContextType,
@@ -19,12 +21,13 @@ import type {
 import {
   ADDITIONAL_PROPERTY_FLAG,
   ANY_OF_KEY,
-  descriptionId,
   fieldPathToId,
   fieldPathToList,
   getDeprecatedHandling,
+  getDescribedControlAttributes,
   getDiscriminatorFieldFromSchema,
   getFieldClassNames,
+  getFieldLabel,
   getFieldTypeForWidget,
   getSchemaOwnTypes,
   getSchemaType,
@@ -41,6 +44,7 @@ import {
   isConstantOptionList,
   isConstantSelect,
   isFormDataAvailable,
+  isLabelledByTemplate,
   logOnce,
   omitConsumedStyling,
   rendersOwnFieldBesideOption,
@@ -50,7 +54,6 @@ import {
   shouldRenderOptionalField,
   toConstant,
   toFieldPath,
-  TranslatableString,
   UI_FIELD_KEY,
   UI_OPTIONS_KEY,
   UI_WIDGET_KEY,
@@ -64,12 +67,14 @@ import { useShownOption } from '../../hooks/useOptionSelection.ts';
 import useUiState from '../../hooks/useUiState.ts';
 import { retrievedOptionsOf } from '../uiState.ts';
 import UiStateContext from '../UiStateContext.ts';
+import { getDeprecatedTemplateProps, getTemplateParts, withoutDescribers } from './fieldWidgetUtils.ts';
 import { isSchemaFieldOwn, lookUpUiField, withoutNamedField } from './namedField.ts';
 import NamedFieldContext from './NamedFieldContext.ts';
 import type { NamedFieldPath } from './NamedFieldContext.ts';
-import optionRendersFieldLabel from './optionRendersFieldLabel.ts';
+import PresentationContext, { useInheritedPresentation } from './PresentationContext.ts';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 import ShownOptionContext from './ShownOptionContext.ts';
+import useSchemaFieldPresentation from './useSchemaFieldPresentation.ts';
 
 /** The map of component type to FieldName */
 const COMPONENT_TYPES: Record<string, string> = {
@@ -176,6 +181,10 @@ interface NamedFieldResolution<
 > {
   /** The field `getFieldComponent()` renders in place of the one for the schema's type, if one is named */
   namedField?: Field<T, S, F>;
+  /** The registry key it was named by, when it was named by one rather than given as the component, which the field is
+   * planned by
+   */
+  namedFieldKey?: string;
   /** The warning for each `ui:field`, `ui:globalOptions.field` or `$id` that was given but names no field */
   ignored: readonly string[];
 }
@@ -215,7 +224,8 @@ function ignoredMessage(entry: string, value: unknown, resolved: unknown, render
  * @param fields - The registered fields
  * @param fieldPath - The field's path, which names its own `ui:field` entry in the warning
  * @param globalFormOptions - The form's options, which name the entry the same way
- * @returns - The field to render, if any, and the warning for each `ui:field` or `$id` that was ignored
+ * @returns - The field to render, if any, the registry key it was named by, and the warning for each `ui:field` or `$id`
+ *   that was ignored
  */
 function resolveNamedField<
   T = unknown,
@@ -234,7 +244,7 @@ function resolveNamedField<
   if (ownField) {
     const resolved = lookUpUiField<T, S, F>(ownField, fields);
     if (isComponentType<FieldProps<T, S, F>>(resolved)) {
-      return { namedField: resolved, ignored };
+      return { namedField: resolved, namedFieldKey: typeof ownField === 'string' ? ownField : undefined, ignored };
     }
     ignored.push(
       ignoredMessage(
@@ -248,7 +258,11 @@ function resolveNamedField<
   if (globalField && (ownField || !Object.hasOwn(ownUiOptions, 'field'))) {
     const resolved = lookUpUiField<T, S, F>(globalField, fields);
     if (isComponentType<FieldProps<T, S, F>>(resolved)) {
-      return { namedField: resolved, ignored };
+      return {
+        namedField: resolved,
+        namedFieldKey: typeof globalField === 'string' ? globalField : undefined,
+        ignored,
+      };
     }
     ignored.push(
       ignoredMessage(
@@ -262,7 +276,7 @@ function resolveNamedField<
   if (schemaId) {
     const resolved = lookUpUiField<T, S, F>(schemaId, fields);
     if (isComponentType<FieldProps<T, S, F>>(resolved)) {
-      return { namedField: resolved, ignored };
+      return { namedField: resolved, namedFieldKey: schemaId, ignored };
     }
     if (resolved != null) {
       ignored.push(
@@ -278,6 +292,23 @@ function resolveNamedField<
   return { ignored };
 }
 
+/** Gets the schema the template of a field rendered by the named field above is handed, as a wrapper renders
+ * `SchemaField` for its own data: that field's template frames it, and has drawn the input and remove button of an
+ * extra key, so the flag asking for them is left off. The field's label and other parts are drawn as the plan handed
+ * down from above says
+ *
+ * @param schema - The field's schema
+ * @returns - The schema without `ADDITIONAL_PROPERTY_FLAG`, or `schema` itself where it has none
+ */
+function withoutAdditionalFlag<S extends StrictRJSFSchema = RJSFSchema>(schema: S): S {
+  if (!(ADDITIONAL_PROPERTY_FLAG in schema)) {
+    return schema;
+  }
+  const framed = { ...schema };
+  Reflect.deleteProperty(framed, ADDITIONAL_PROPERTY_FLAG);
+  return framed;
+}
+
 const RenderNothing = () => null;
 
 /** Computes and returns which `Field` implementation to return in order to render the field represented by the
@@ -288,17 +319,19 @@ const RenderNothing = () => null;
  * @param uiOptions - The UI Options that may affect the component decision
  * @param ownWidget - The field's own `ui:widget`, without `ui:globalOptions`, which picks a type list's field
  * @param namedField - The field `resolveNamedField()` resolved, if one is named
+ * @param namedFieldKey - The registry key that field was named by, if it was named by one
  * @param registry - The registry from which fields and templates are obtained
  * @param xxxOfKey - The keyword the `schema`'s options are read from, if it has any
  * @param isSelectSchema - Whether the `schema` is an `enum` or a `oneOf`/`anyOf` that represents a select
  * @param hasConstantOptions - Whether that select offers at least one option, see `isConstantSelect()`
- * @returns - The `Field` component that renders the actual field data, whether that component is a named field written
- *            for the schema, which `FallbackField` is not, whether it renders the `schema`'s `anyOf`/`oneOf` options
- *            itself, and whether the `schema` has options for `SchemaFieldRender` to render an option selector of. The
- *            last two flags are decided here so that this function and `SchemaFieldRender` read the same answers, and
- *            `SchemaFieldRender` reads them together: when the fallback UI has the schema it renders those options
- *            itself, within the value field for the type it has pinned, so the selector it would render is left
- *            unrendered even though the schema calls for one
+ * @returns - The `Field` component that renders the actual field data, whether that component renders the `schema`'s
+ *            `anyOf`/`oneOf` options itself, and whether the `schema` has options for `SchemaFieldRender` to render an
+ *            option selector of. Both flags are decided here so that this function and `SchemaFieldRender` read the
+ *            same answers, and `SchemaFieldRender` reads them together: when the fallback UI has the schema it renders
+ *            those options itself, within the value field for the type it has pinned, so the selector it would render
+ *            is left unrendered even though the schema calls for one. Also whether that component is a named field
+ *            written for the schema, which `FallbackField` is not, the component that renders the field, even when it
+ *            is withheld for the options, and the registry key that named it, which the field is planned by
  */
 function getFieldComponent<
   T = unknown,
@@ -309,6 +342,7 @@ function getFieldComponent<
   uiOptions: UIOptionsType<T, S, F>,
   ownWidget: UIOptionsType<T, S, F>['widget'],
   namedField: Field<T, S, F> | undefined,
+  namedFieldKey: string | undefined,
   registry: Registry<T, S, F>,
   xxxOfKey: typeof ANY_OF_KEY | typeof ONE_OF_KEY | undefined,
   isSelectSchema: boolean,
@@ -318,6 +352,9 @@ function getFieldComponent<
   rendersNamedField: boolean;
   rendersOptionsItself: boolean;
   rendersOptionSelector: boolean;
+  plannedAsOptions: boolean;
+  fieldKey: string | undefined;
+  handsDownOwnParts: boolean;
 } {
   const { widget } = uiOptions;
   const { fields, globalFormOptions } = registry;
@@ -374,8 +411,12 @@ function getFieldComponent<
    * field, or the field the type settled on a name for, or the fallback UI for a name no field is registered under — an
    * unrecognized `type`, or no type at all
    */
-  const FieldComponent =
-    namedField ?? (Object.hasOwn(fields, componentName) ? fields[componentName] : fields.FallbackField);
+  const isRegisteredName = Object.hasOwn(fields, componentName);
+  const FieldComponent = namedField ?? (isRegisteredName ? fields[componentName] : fields.FallbackField);
+  let fieldKey = namedFieldKey;
+  if (!namedField) {
+    fieldKey = isRegisteredName ? componentName : 'FallbackField';
+  }
   /** Whether the component is this very field, whatever named it — the type having no field of its own, the opt-in
    * diverting a union, or a `ui:field` or `$id`. What it renders depends on the opt-in; that it is not a field written
    * for the schema does not
@@ -434,14 +475,140 @@ function getFieldComponent<
   // asymmetry #5390 is about
   const yieldsToOptions =
     rendersOptionSelector && !rendersOptionsItself && (namedField === undefined || isFallbackField);
+  /** A named field written for the schema, which never yields to the options */
+  const rendersNamedField = namedField !== undefined && !isFallbackField;
 
+  const isWithheld = yieldsToOptions && FieldComponent !== fields.ObjectField;
+  // An object with no properties of its own besides its options, a pure union, renders an empty field beside them, so
+  // like a withheld field it is planned as the field that renders its options, whose template labels it
+  const isPureUnion =
+    yieldsToOptions && !schema.properties && !schema.additionalProperties && !schema.patternProperties;
+  const plannedAsOptions = isWithheld || isPureUnion;
+  /** A field the form's author supplies, through a `ui:field` or a `$id`, may render `SchemaField` under its own id
+   * without drawing the parts it was planned to draw itself, as a wrapper adding markup around the field does, so it
+   * hands those parts down to the field below rather than keeping them. The fallback UI and the option fields relay
+   * the plan to a field below that way and draw those parts themselves, and `ObjectField` and `ArrayField`, which a
+   * `ui:field` can name too, draw their heading and description themselves, which the option beside them compares its
+   * own with
+   */
+  const handsDownOwnParts =
+    rendersNamedField &&
+    FieldComponent !== fields.AnyOfField &&
+    FieldComponent !== fields.OneOfField &&
+    FieldComponent !== fields.ObjectField &&
+    FieldComponent !== fields.ArrayField;
   return {
-    FieldComponent: yieldsToOptions && FieldComponent !== fields.ObjectField ? RenderNothing : FieldComponent,
-    rendersNamedField: namedField !== undefined && !isFallbackField && !yieldsToOptions,
+    FieldComponent: isWithheld ? RenderNothing : FieldComponent,
+    rendersNamedField,
     // `yieldsToOptions` requires `!rendersOptionsItself`, so the flags read the same whether or not the field is withheld
     rendersOptionsItself,
     rendersOptionSelector,
+    plannedAsOptions,
+    fieldKey,
+    handsDownOwnParts,
   };
+}
+
+/** Gets the plan the field component of a pure union is handed: it renders beside the options of the field the plan
+ * was built for, which draws each of its parts, so every part drawn at all is drawn above it and it has no control of
+ * its own
+ *
+ * @param presentation - The plan of the field rendering the options
+ * @returns - The plan of the field component rendered beside them
+ */
+function getPresentationBesideOptions(presentation: FieldPresentation): FieldPresentation {
+  const { label, description, help, errors, describedBy, showLabel } = presentation;
+  const above = <P extends PartPresentation>(part: P): P => (part.by === 'none' ? part : { ...part, by: 'above' });
+  return {
+    label: above(label),
+    description: above(description),
+    help: above(help),
+    errors: above(errors),
+    describedBy,
+    showLabel,
+    inherited: presentation,
+  };
+}
+
+/** Gets a part of a field's plan with the field's own drawing of it taken away, so nothing draws a part the field was
+ * planned to draw itself
+ *
+ * @param part - The part of the plan
+ * @returns - The part, `none` where the field was to draw it
+ */
+function withoutOwnDrawing<P extends PartPresentation>(part: P): P {
+  return part.by === 'self' ? { ...part, by: 'none' } : part;
+}
+
+/** Gets a field's label, description, help and errors with the field's own drawing of each taken away
+ *
+ * @param presentation - The field's plan
+ * @returns - The four parts, each `none` where the field was to draw it
+ */
+function withoutOwnParts({ label, description, help, errors }: FieldPresentation) {
+  return {
+    label: withoutOwnDrawing(label),
+    description: withoutOwnDrawing(description),
+    help: withoutOwnDrawing(help),
+    errors: withoutOwnDrawing(errors),
+  };
+}
+
+/** Gets the plan a field the form's author supplies hands the field below it rendering the same id: the label,
+ * description and help it was planned to draw itself are left to that field, which draws them, so a wrapper drawing
+ * none of them doesn't leave its description drawn nowhere and named by its control's `aria-describedby`. The parts its
+ * template draws stay above. Errors it was planned to draw itself are drawn by none, since a field below takes the
+ * errors of the field above as drawn there, and its control is described by none of the ids of the parts handed down
+ *
+ * @param presentation - The plan of the field the author supplies
+ * @returns - The plan the field below inherits
+ */
+function getPresentationHandedDown(presentation: FieldPresentation): FieldPresentation {
+  const { label, description, help, errors } = presentation;
+  const ownIds = new Set(
+    [label, description, help, errors].filter((part) => part.by === 'self').map((part) => part.id),
+  );
+  if (ownIds.size === 0) {
+    return presentation;
+  }
+  return { ...presentation, ...withoutOwnParts(presentation), ...withoutDescribers(presentation, ownIds) };
+}
+
+/** Gets the plan the field rendering a field component's options is handed when that component is not planned as it:
+ * the parts the component draws itself are its own, such as a custom field's label or an object's heading, so the
+ * options' selector draws none of them. A container's heading, which renders under the label id its plan gives it,
+ * names the selector as a template's label would, and its description and errors describe it, marking it invalid while
+ * they show. A custom field, or a layout grid, may render none of the ids its own parts take, so neither its label
+ * nor the ids of the parts it draws itself name or describe the selector, or the option below that inherits this plan.
+ * Only the control's attributes reach the selector, which takes an id of its own
+ *
+ * @param presentation - The plan of the field component the options render beside
+ * @param id - The id of the field
+ * @param isContainer - Whether that component is core's `ObjectField` or `ArrayField`, which draw their heading under
+ *   the plan's label id
+ * @returns - The plan of the field rendering the options
+ */
+function getOptionsPresentation(presentation: FieldPresentation, id: string, isContainer: boolean): FieldPresentation {
+  if (!isContainer) {
+    return getPresentationHandedDown(presentation);
+  }
+  const { label, errors, control, describedBy } = presentation;
+  const parts = withoutOwnParts(presentation);
+  if (control === undefined && label.by === 'self') {
+    const attributes = getDescribedControlAttributes(describedBy, errors.messages);
+    return { ...presentation, ...parts, label: { ...label, by: 'above' }, control: { id, attributes } };
+  }
+  return { ...presentation, ...parts };
+}
+
+/** Whether a field's label goes undrawn only because its template has no control for it to name, as an `anyOf`/`oneOf`
+ * field's does while an optional data control keeps its option selector off screen
+ *
+ * @param plan - The field's plan
+ * @returns - True when the field's label has text that `ui:label` shows but nothing draws for want of a control
+ */
+function isLabelUndrawnForLackOfControl({ label, control, showLabel }: FieldPresentation): boolean {
+  return label.by === 'none' && control === undefined && showLabel && label.text !== '';
 }
 
 /** The `SchemaFieldRender` component is the work-horse of react-jsonschema-form, determining what kind of real field to
@@ -576,6 +743,7 @@ function SchemaFieldRender<
       uiOptions,
       ownUiOptions.widget,
       namedField,
+      uiField?.namedFieldKey,
       registry,
       xxxOfKey,
       isSelectSchema,
@@ -665,6 +833,152 @@ function SchemaFieldRender<
   // Outside a `Form` the outermost field's store is the one of the whole tree, so the fields below share its selections
   const withUiState = (node: ReactElement): ReactElement =>
     ownsUiState ? <UiStateContext value={uiState}>{node}</UiStateContext> : node;
+
+  const deprecatedHandling = getDeprecatedHandling<T, S, F>(schema, uiOptions);
+  // ui:required is deliberately resolved from this field's own uiSchema only (no globalUiOptions fallback): unlike
+  // most ui:options, it has to be seen by getUiRequiredErrorSchema() too, which resolves a field's own uiSchema
+  // uiSchema, so a form-wide default here would make the required indicator and schema validation disagree
+  const { required: fieldUiRequired, initialValue: fieldInitialValue, emptyValue: fieldEmptyValue } = ownUiOptions;
+  const uiRequired = uiBooleanOption(fieldUiRequired);
+  const effectiveRequired = uiRequired ?? required;
+  // `ui:hideError` is resolved as the field's own, then the one the field above resolved to, then `ui:globalOptions`, so
+  // a parent's reaches its children even where a global one is set (#5490)
+  const hideError =
+    uiBooleanOption(ownUiOptions.hideError) ?? props.hideError ?? uiBooleanOption(globalUiOptions?.hideError);
+  const hidden = uiOptions.widget === 'hidden' || deprecatedHandling === 'hide';
+  const inheritedPresentation = useInheritedPresentation(fieldId);
+  // The property name and the title a parent hands down label the field above, which a selected option or the fallback
+  // UI's value renders the value of, so a field below with no title of its own isn't labelled by them a second time
+  // where a label outside the field above already shows them: its template's, or one drawn above it, a container's
+  // heading included. A label the field above draws itself, such as a selector's, names another control, so the field
+  // below keeps them for its own title
+  const labelledAbove = inheritedPresentation !== undefined && isLabelledByTemplate(inheritedPresentation.plan);
+  const labelSources = {
+    name: labelledAbove ? undefined : name,
+    title: labelledAbove ? undefined : props.title,
+    unresolvedSchema: props.schema,
+    wasPropertyKeyModified,
+  };
+  const ownLabel = getFieldLabel<T, S, F>(schema, uiOptions, registry.translateString, labelSources);
+  const title = schema.deprecated
+    ? getFieldLabel<T, S, F>({ ...schema, deprecated: false }, uiOptions, registry.translateString, labelSources)
+    : ownLabel;
+  // A field below titled as the field above says what that field's label says, so it takes that label, Deprecated
+  // marker included, and its heading is recognised as the same one rather than kept for differing by the marker. A
+  // field below with no title of its own takes it too, rather than the property name, whatever draws it: a label the
+  // field above draws itself, as a selector's, names the selector, not this control, and a template label with no
+  // control to name, as while an optional field's option selector isn't on screen, isn't drawn, so it is the field
+  // below's heading
+  let label = ownLabel;
+  if (inheritedPresentation) {
+    const untitled = !getFieldLabel<T, S, F>(schema, uiOptions, registry.translateString, {
+      ...labelSources,
+      name: undefined,
+    });
+    if (inheritedPresentation.title === title || untitled) {
+      label = inheritedPresentation.plan.label.text;
+    }
+  }
+  // When the option selector is an optional data control AND it does not have form data, the control is not on screen
+  // yet. This is decided here rather than with the `XxxOfField` below because the fallback UI renders that same selector
+  // for the type it has pinned, and the value field it renders it within is already labelled `false`, which leaves this
+  // the only field either label can come from
+  const isOptedOut =
+    fieldToRender !== undefined &&
+    fieldToRender.rendersOptionSelector &&
+    shouldRenderOptionalField<T, S, F>(registry, schema, effectiveRequired, uiSchema, fieldPath) &&
+    !isFormDataAvailable<T>(formData);
+  const schemaDescription = props.schema.description || schema.description || '';
+  // A description a field below declares of its own, as a selected option does, says more about it than a form-wide
+  // `ui:globalOptions.description`, so it wins over that, though not over its own `ui:description`. The fallback UI's
+  // value carries its field's own description, which is not its own
+  const ownSchemaDescription =
+    inheritedPresentation && schemaDescription !== inheritedPresentation.schemaDescription ? schemaDescription : '';
+  // The description of a field above with no control to draw its parts by is left undrawn there, as its label is, so a
+  // field below with none of its own draws it under the heading it takes from that label
+  const descriptionUndrawnAbove =
+    inheritedPresentation &&
+    isLabelUndrawnForLackOfControl(inheritedPresentation.plan) &&
+    inheritedPresentation.plan.description.by === 'none'
+      ? inheritedPresentation.plan.description.text
+      : '';
+  const fieldDescription =
+    ownUiOptions.description ||
+    ownSchemaDescription ||
+    descriptionUndrawnAbove ||
+    uiOptions.description ||
+    schemaDescription;
+  // `ui:label` is resolved as `hideError` is: the field's own, then the one the field above rendering this id resolved
+  // to, then `ui:globalOptions`, since an option given a `uiSchema` of its own doesn't carry the field's
+  const showLabel =
+    uiBooleanOption(ownUiOptions.label) ??
+    inheritedPresentation?.plan.showLabel ??
+    uiBooleanOption(globalUiOptions?.label) ??
+    true;
+  // When the options render, the field component renders beside them under the id a child named `XxxOf` would have,
+  // to avoid DOM id duplication with the rendering of the same data address by the `XxxOfField`. The `fieldPath`
+  // stays the truthful data address either way
+  const fieldComponentId = xxxOfOptions ? fieldPathToId(toFieldPath('XxxOf', fieldPath), globalFormOptions) : fieldId;
+  const plannedAsOptions = fieldToRender?.plannedAsOptions;
+  const renderedComponent = fieldToRender?.FieldComponent;
+  const presentation = useSchemaFieldPresentation<T, S, F>({
+    id: fieldId,
+    // The parts the field draws itself render under its own id, unless it is planned as the field rendering the options
+    componentId: plannedAsOptions ? undefined : fieldComponentId,
+    registry,
+    schema,
+    uiSchema: fieldUiSchema,
+    field: renderedComponent,
+    fieldKey: fieldToRender?.fieldKey,
+    xxxOfKey: plannedAsOptions ? xxxOfKey : undefined,
+    label,
+    showLabel,
+    description: fieldDescription,
+    help: uiOptions.help,
+    errors: errorSchema?.__errors,
+    hideError,
+    hidden: hidden || isOptedOut,
+    required: effectiveRequired,
+    inherited: inheritedPresentation?.plan,
+  });
+  // What the field below rendering this same id inherits: the option field, the fallback UI's value field, or the field
+  // a custom field wrapping `SchemaField` renders
+  const handsDownOwnParts = fieldToRender?.handsDownOwnParts;
+  const presentationBelow = useMemo(
+    () =>
+      presentation && {
+        id: fieldId,
+        plan: handsDownOwnParts ? getPresentationHandedDown(presentation) : presentation,
+        title,
+        schemaDescription,
+      },
+    [fieldId, presentation, handsDownOwnParts, title, schemaDescription],
+  );
+  const fieldComponentPresentation = useMemo(
+    () => (plannedAsOptions && presentation ? getPresentationBesideOptions(presentation) : presentation),
+    [plannedAsOptions, presentation],
+  );
+  const isContainer = renderedComponent === fields.ObjectField || renderedComponent === fields.ArrayField;
+  // Keyed on whether the options render rather than on their array, which is retrieved afresh with every change of the
+  // data, so a keystroke beside the options hands the selector the same plan
+  const rendersOptions = xxxOfOptions !== undefined;
+  const optionsPresentation = useMemo(
+    () =>
+      rendersOptions && !plannedAsOptions && presentation
+        ? getOptionsPresentation(presentation, fieldId, isContainer)
+        : presentation,
+    [rendersOptions, plannedAsOptions, presentation, fieldId, isContainer],
+  );
+  // The option below a custom field inherits the plan its options are handed, which describes it by none of the ids the
+  // custom field may not render; below a container it inherits the field's own, whose heading it compares its own with
+  const optionsBelow = useMemo(
+    () =>
+      presentationBelow && optionsPresentation && !isContainer && optionsPresentation !== presentation
+        ? { ...presentationBelow, plan: optionsPresentation }
+        : presentationBelow,
+    [presentationBelow, optionsPresentation, isContainer, presentation],
+  );
+
   // Stop $ref cycles: `retrieveSchema()` hands out a property whose $ref leads back round a recursion with this flag,
   // which is when the field is left unresolved above. The check must come after all hook calls to satisfy React's
   // rules of hooks.
@@ -675,23 +989,15 @@ function SchemaFieldRender<
       </RawFormDataContext>,
     );
   }
-  const { FieldComponent, rendersOptionSelector } = fieldToRender;
+  const { FieldComponent } = fieldToRender;
 
   const { FieldTemplate, DescriptionFieldTemplate, FieldHelpTemplate, FieldErrorTemplate } = getTemplates<T, S, F>(
     registry,
     uiOptions,
   );
 
-  const deprecatedHandling = getDeprecatedHandling<T, S, F>(schema, uiOptions);
-
   const disabled = Boolean(uiOptions.disabled ?? props.disabled) || deprecatedHandling === 'disable';
   const readonly = Boolean(uiOptions.readonly ?? (props.readonly || props.schema.readOnly || schema.readOnly));
-  // ui:required is deliberately resolved from this field's own uiSchema only (no globalUiOptions fallback): unlike
-  // most ui:options, it has to be seen by getUiRequiredErrorSchema() too, which resolves a field's own uiSchema
-  // uiSchema, so a form-wide default here would make the required indicator and schema validation disagree
-  const { required: fieldUiRequired, initialValue: fieldInitialValue, emptyValue: fieldEmptyValue } = ownUiOptions;
-  const uiRequired = uiBooleanOption(fieldUiRequired);
-  const effectiveRequired = uiRequired ?? required;
   if (
     uiRequired === false &&
     required &&
@@ -710,17 +1016,13 @@ function SchemaFieldRender<
         'will still fail if it is left empty.',
     );
   }
-  // Set hideError to the value provided in the uiSchema, otherwise stick with the prop to propagate to children
-  const hideError = uiBooleanOption(uiOptions.hideError) ?? props.hideError;
   const autofocus = Boolean(uiOptions.autofocus ?? props.autofocus);
   if (Object.keys(schema).length === 0) {
     return null;
   }
   // Falling back to the field for the schema is kept over throwing, but a caller who asked for their own field would
   // otherwise have no sign it was dropped.
-  // The message describes the intended fallback. Until #5389 is fixed, `getDisplayLabel()` still hides the label for
-  // any top-level `ui:field` that is set, resolved or not, so that field's label is missing; that is #5389's to fix,
-  // not this message's.
+  // The message describes the fallback the field renders, which its plan labels as it labels that field anywhere else.
   // A `ui:globalOptions.field` reaches every field that sets none of its own, each with its own label, so it is warned
   // about once for the form rather than once per field. An `items` entry reaches every item of its array the same way,
   // so a field's own `ui:field` is named with the item's index left out, and every item the entry reaches shares one
@@ -729,37 +1031,14 @@ function SchemaFieldRender<
     logOnce(message);
   }
 
-  const isLabelled = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
-  let displayLabel = isLabelled;
-
   let XxxOfField: Field<T, S, F> | undefined;
-  // When rendering the `XxxOfField` the main component needs a different id, since the `XxxOfField` renders the
-  // selected option for the same data address. The `fieldPath` stays the truthful data address either way.
-  let fieldComponentId = fieldId;
-  // When the option selector is an optional data control AND it does not have form data, hide the label: it names a
-  // control that is not on screen yet. This is decided here rather than with the `XxxOfField` below because the
-  // fallback UI renders that same selector for the type it has pinned, and the value field it renders it within is
-  // already labelled `false`, which leaves this the only field either label can come from
-  if (rendersOptionSelector) {
-    const isOptionalRender = shouldRenderOptionalField<T, S, F>(
-      registry,
-      schema,
-      effectiveRequired,
-      uiSchema,
-      fieldPath,
-    );
-    displayLabel = displayLabel && (!isOptionalRender || isFormDataAvailable<T>(formData));
-  }
   if (xxxOfOptions) {
     XxxOfField = xxxOfKey === ANY_OF_KEY ? _AnyOfField : _OneOfField;
-    // The main FieldComponent gets the id a child named `XxxOf` would have, to avoid DOM id duplication with the
-    // rendering of the same data address by the `XxxOfField`
-    fieldComponentId = fieldPathToId(toFieldPath('XxxOf', fieldPath), globalFormOptions);
   }
 
   const { __errors: ownErrorSchemaErrors, ...fieldErrorSchema } = errorSchema ?? {};
   // The `SchemaField` that named the field hands it the field's own errors as `rawErrors`, taken out of its
-  // `errorSchema`, and that is how a named field passes them on to the bare field it renders
+  // `errorSchema`, and that is how a named field passes them on to the field it renders
   const __errors = framedAbove ? props.rawErrors : ownErrorSchemaErrors;
 
   const fieldComponent = (
@@ -775,43 +1054,26 @@ function SchemaFieldRender<
       hideError={hideError}
       autofocus={autofocus}
       errorSchema={fieldErrorSchema as ErrorSchema}
-      // The `XxxOfField` renders the field's own errors whenever it renders, which is also why `FieldErrorTemplate`
-      // is skipped then
+      // The `XxxOfField` hands the field's own errors to the selected option and its selector
       rawErrors={XxxOfField ? undefined : __errors}
+      presentation={fieldComponentPresentation}
     />
   );
-  // Always wrapped, since switching between a wrapped and a bare field component remounts it and everything below it
+  // Always wrapped, since switching between a wrapped and a bare field component remounts it and everything below it.
+  // A container's properties and items render under ids of their own, so they inherit nothing from it, and are handed
+  // no plan whose every change would re-render each of them past its `memo`
   const field = (
     <NamedFieldContext value={namedFieldPath}>
       <ShownOptionContext value={fieldShownOption}>
-        <RawFormDataContext value={readsFormData ? FieldComponent : undefined}>{fieldComponent}</RawFormDataContext>
+        <PresentationContext value={isContainer ? undefined : presentationBelow}>
+          <RawFormDataContext value={readsFormData ? FieldComponent : undefined}>{fieldComponent}</RawFormDataContext>
+        </PresentationContext>
       </ShownOptionContext>
     </NamedFieldContext>
   );
 
-  // If this schema has a title defined, but the user has set a new key/label, retain their input.
-  let label;
-  if (wasPropertyKeyModified) {
-    label = name;
-  } else {
-    label =
-      ADDITIONAL_PROPERTY_FLAG in schema
-        ? name
-        : uiOptions.title || props.schema.title || schema.title || props.title || name;
-  }
-
-  if (deprecatedHandling === 'label') {
-    label = registry.translateString(TranslatableString.DeprecatedLabel, [label]);
-  }
-
-  // The field of the selected option renders a description in that case, its own or, where it declares none, this
-  // field's, so the template, which may render the description of a field it leaves unlabelled, is handed none
-  const description =
-    XxxOfField && optionRendersFieldLabel<S>(schema, uiOptions.label, isLabelled)
-      ? ''
-      : uiOptions.description || props.schema.description || schema.description || '';
-  const { help } = uiOptions;
-  const hidden = uiOptions.widget === 'hidden' || deprecatedHandling === 'hide';
+  const { description: templateDescription, help, errors: templateErrors } = getTemplateParts(presentation);
+  const description = templateDescription?.text ?? '';
 
   const hasErrors = hasVisibleErrors({ rawErrors: __errors, hideError });
 
@@ -823,36 +1085,35 @@ function SchemaFieldRender<
       uiSchema={uiSchema}
       hasErrors={hasErrors}
       registry={registry}
+      presentation={presentation}
     />
   );
-  // AnyOf/OneOf errors are handled by the child schema, so they are skipped whenever one is rendering. A select is
-  // already excluded because it is what stops `XxxOfField` from being assigned in the first place
-  const errorsComponent =
-    hideError || XxxOfField ? undefined : (
-      <FieldErrorTemplate
-        errors={__errors}
-        errorSchema={errorSchema}
-        id={fieldId}
-        schema={schema}
-        uiSchema={uiSchema}
-        registry={registry}
-      />
-    );
+  // The field above a selected option draws its errors right after the option, so they don't vanish with no option
+  const errorsComponent = templateErrors && (
+    <FieldErrorTemplate
+      errors={[...templateErrors]}
+      errorSchema={errorSchema}
+      id={fieldId}
+      schema={schema}
+      uiSchema={uiSchema}
+      registry={registry}
+    />
+  );
   const fieldProps: Omit<FieldTemplateProps<T, S, F>, 'children'> = {
-    description: (
+    description: templateDescription?.text ? (
       <DescriptionFieldTemplate
-        id={descriptionId(fieldId)}
-        description={description}
+        id={templateDescription.id}
+        description={templateDescription.text}
         schema={schema}
         uiSchema={uiSchema}
         registry={registry}
       />
-    ),
+    ) : undefined,
     rawDescription: description,
     help: helpComponent,
     rawHelp: help,
     errors: errorsComponent,
-    rawErrors: hideError ? undefined : __errors,
+    ...getDeprecatedTemplateProps<T, S, F>(presentation, __errors, hideError),
     errorSchema,
     fieldPath,
     id: fieldId,
@@ -868,11 +1129,11 @@ function SchemaFieldRender<
     disabled,
     readonly,
     hideError,
-    displayLabel,
+    presentation,
     classNames: getFieldClassNames<S>(schema, hasErrors, uiOptions.classNames),
     style: uiOptions.style,
     formData,
-    schema,
+    schema: framedAbove ? withoutAdditionalFlag<S>(schema) : schema,
     uiSchema,
     registry,
   };
@@ -880,40 +1141,42 @@ function SchemaFieldRender<
   // The field component and the option field are each vouched for directly: a custom template may pass on a view of
   // the data. The named-field context is provided whether or not a field is named here, since adding or removing a
   // provider would remount everything below it
-  const content = (
-    <>
-      {field}
-      {XxxOfField && (
-        <NamedFieldContext value={ownNamedFieldPath}>
-          <ShownOptionContext value={shownOption}>
-            <RawFormDataContext value={readsFormData ? XxxOfField : undefined}>
-              <XxxOfField
-                name={name}
-                disabled={disabled}
-                readonly={readonly}
-                hideError={hideError}
-                errorSchema={errorSchema}
-                formData={formData}
-                fieldPath={fieldPath}
-                id={fieldId}
-                onBlur={props.onBlur}
-                onChange={handleOptionFieldChange}
-                onFocus={props.onFocus}
-                options={xxxOfOptions}
-                registry={registry}
-                required={effectiveRequired}
-                schema={schema}
-                uiSchema={uiSchema}
-              />
-            </RawFormDataContext>
-          </ShownOptionContext>
-        </NamedFieldContext>
-      )}
-    </>
-  );
   return withUiState(
     <RawFormDataContext value={undefined}>
-      {framedAbove ? content : <FieldTemplate {...fieldProps}>{content}</FieldTemplate>}
+      <FieldTemplate {...fieldProps}>
+        <>
+          {field}
+          {XxxOfField && (
+            <NamedFieldContext value={ownNamedFieldPath}>
+              <ShownOptionContext value={shownOption}>
+                <PresentationContext value={optionsBelow}>
+                  <RawFormDataContext value={readsFormData ? XxxOfField : undefined}>
+                    <XxxOfField
+                      name={name}
+                      disabled={disabled}
+                      readonly={readonly}
+                      hideError={hideError}
+                      errorSchema={errorSchema}
+                      formData={formData}
+                      fieldPath={fieldPath}
+                      id={fieldId}
+                      onBlur={props.onBlur}
+                      onChange={handleOptionFieldChange}
+                      onFocus={props.onFocus}
+                      options={xxxOfOptions}
+                      registry={registry}
+                      required={effectiveRequired}
+                      schema={schema}
+                      uiSchema={uiSchema}
+                      presentation={optionsPresentation}
+                    />
+                  </RawFormDataContext>
+                </PresentationContext>
+              </ShownOptionContext>
+            </NamedFieldContext>
+          )}
+        </>
+      </FieldTemplate>
     </RawFormDataContext>,
   );
 }

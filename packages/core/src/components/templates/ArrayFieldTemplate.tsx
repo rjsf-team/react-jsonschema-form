@@ -1,5 +1,5 @@
 import type { ArrayFieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getTemplates, getUiOptions, buttonId } from '@rjsf/utils';
+import { getArrayDescription, getTemplates, getUiOptions, buttonId, titleDrawsOptionalDataControl } from '@rjsf/utils';
 
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
  *
@@ -24,11 +24,13 @@ export default function ArrayFieldTemplate<
     required,
     schema,
     title,
+    presentation,
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const { ArrayFieldDescriptionTemplate, ArrayFieldTitleTemplate } = getTemplates<T, S, F>(registry, uiOptions);
+  const showOptionalDataControlInTitle = titleDrawsOptionalDataControl<T, S, F>(props);
+  const shownDescription = getArrayDescription<T, S, F>(props);
   // Button templates are not overridden in the uiSchema
-  const showOptionalDataControlInTitle = !readonly && !disabled;
   const {
     ButtonTemplates: { AddButton },
   } = registry.templates;
@@ -36,7 +38,7 @@ export default function ArrayFieldTemplate<
     <fieldset className={className} id={id}>
       <ArrayFieldTitleTemplate
         id={id}
-        title={uiOptions.title || title}
+        title={title}
         required={required}
         schema={schema}
         uiSchema={uiSchema}
@@ -45,10 +47,11 @@ export default function ArrayFieldTemplate<
       />
       <ArrayFieldDescriptionTemplate
         id={id}
-        description={uiOptions.description || schema.description}
+        description={shownDescription}
         schema={schema}
         uiSchema={uiSchema}
         registry={registry}
+        presentation={presentation}
       />
       {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
       <div className='row array-item-list'>{items}</div>

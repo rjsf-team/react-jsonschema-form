@@ -70,9 +70,9 @@ export interface PrecompiledValidatorOptionsType<S extends StrictRJSFSchema = RJ
   customMergeAllOf?: CustomMergeAllOf<S>;
 }
 
-/** The simplified `ValidateFunction` shape produced by ata's compiled
- * standalone modules, which `ATAPrecompiledValidator` calls. Its call is checked bivariantly, as the AJV package's is,
- * so a hand-written validator may declare the `data` it was written for rather than having to accept `unknown`.
+/** The simplified `ValidateFunction` shape of each entry in a module written by `compileSchemaValidators()`, as
+ * `createPrecompiledValidator()` consumes it. Its call is checked bivariantly, as the AJV package's is, so a
+ * hand-written validator may declare the `data` it was written for rather than having to accept `unknown`.
  */
 export interface CompiledValidateFunction extends Bivariant<[data: unknown], boolean> {
   errors?: null | ValidationError[];

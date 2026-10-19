@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import type {
   BoxProps,
   FormHelperTextProps,
@@ -77,4 +78,67 @@ export function computeSxProps<
     return [sxProps, sx].flat();
   }
   return { ...sxProps, ...sx };
+}
+
+/** The props a form author may give a MUI slot: an object, or MUI's `(ownerState) => props` */
+export type MuiSlotProps<P extends object, O> = P | ((ownerState: O) => P);
+
+/** Gives a MUI slot `props` beneath those a form author gives it through `rjsfSlotProps`, which may be an object or
+ * MUI's `(ownerState) => props`. The author's own choice for that element is applied last, so it wins
+ *
+ * @param props - The props the widget gives the slot
+ * @param [slotProps] - The props the form author gives the slot
+ * @returns - The merged slot props, in the form the author gave theirs
+ */
+export function withSlotProps<P extends object, O>(
+  props: Partial<P>,
+  slotProps?: MuiSlotProps<P, O>,
+): MuiSlotProps<P, O> {
+  if (typeof slotProps === 'function') {
+    return (ownerState: O) => ({ ...props, ...slotProps(ownerState) });
+  }
+  return { ...props, ...slotProps } as P;
+}
+
+/** Gives the `input` slot of a MUI control's `slotProps` the `props` a widget puts on the element a user focuses,
+ * beneath the form author's own `input` slot, and keeps the author's other slots as they are
+ *
+ * @param props - The props the widget gives the `input` slot
+ * @param [slotProps] - The `slotProps` the form author gives the control
+ * @returns - The control's `slotProps`
+ */
+export function withInputSlot<S extends { input?: MuiSlotProps<object, never> }>(props: object, slotProps?: S): S {
+  return { ...slotProps, input: withSlotProps(props, slotProps?.input) } as S;
+}
+
+/** Resolves the props a form author gives a MUI slot, which may be MUI's `(ownerState) => props`, for an owner state
+ *
+ * @param slotProps - The props the form author gives the slot
+ * @param ownerState - The owner state MUI resolves the slot's props for
+ * @returns - The slot's props as an object
+ */
+export function resolveSlotProps<P extends object, O>(slotProps: MuiSlotProps<P, O> | undefined, ownerState: O) {
+  return typeof slotProps === 'function' ? slotProps(ownerState) : slotProps;
+}
+
+/** Adds the id of the helper text MUI's `TextField` renders for its `helperText` to the `aria-describedby` a widget
+ * gives the `TextField`'s control. That attribute replaces the one MUI links its helper text by, and the field's plan
+ * knows only the parts RJSF draws, not this one MUI draws
+ *
+ * @param attributes - The attributes the widget gives its control
+ * @param id - The `TextField`'s id, from which MUI builds its helper text's id: an `id` in `ui:options.mui`, which
+ *   replaces the field's, else the field's
+ * @param helperText - The `helperText` the `TextField` is given
+ * @returns - The attributes, described by the helper text too where one renders
+ */
+export function describeByHelperText<A extends { 'aria-describedby'?: string }>(
+  attributes: A,
+  id: string,
+  helperText: ReactNode,
+): A {
+  if (!helperText) {
+    return attributes;
+  }
+  const describedBy = [attributes['aria-describedby'], `${id}-helper-text`].filter(Boolean).join(' ');
+  return { ...attributes, 'aria-describedby': describedBy };
 }

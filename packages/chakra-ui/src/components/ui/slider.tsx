@@ -4,6 +4,7 @@ import { Slider as ChakraSlider, HStack } from '@chakra-ui/react';
 export interface SliderProps extends ComponentProps<typeof ChakraSlider.Root> {
   marks?: (number | { value: number; label: React.ReactNode })[];
   showValue?: boolean;
+  thumbProps?: Omit<ComponentProps<typeof ChakraSlider.Thumb>, 'index'>;
 }
 
 interface SliderMarksProps {
@@ -47,9 +48,10 @@ const SliderMarks = ({ marks, ref }: SliderMarksProps) => {
  * @param [props.marks] - The marks to display on the slider.
  * @param [props.label] - The label for the slider.
  * @param [props.showValue] - Whether to show the current value of the slider.
+ * @param [props.thumbProps] - Additional props for each thumb, the element a user focuses.
  * @returns The rendered slider component.
  */
-export const Slider = ({ marks: marksProp, showValue, ref, ...rest }: SliderProps) => {
+export const Slider = ({ marks: marksProp, showValue, thumbProps, ref, ...rest }: SliderProps) => {
   const value = rest.defaultValue ?? rest.value;
 
   const marks = marksProp?.map((mark) => {
@@ -72,7 +74,7 @@ export const Slider = ({ marks: marksProp, showValue, ref, ...rest }: SliderProp
         <ChakraSlider.Track>
           <ChakraSlider.Range />
         </ChakraSlider.Track>
-        <SliderThumbs value={value} />
+        <SliderThumbs value={value} thumbProps={thumbProps} />
         <SliderMarks marks={marks} />
       </ChakraSlider.Control>
     </ChakraSlider.Root>
@@ -84,15 +86,16 @@ export const Slider = ({ marks: marksProp, showValue, ref, ...rest }: SliderProp
  *
  * @param props - The properties for the slider thumbs component.
  * @param [props.value] - The values for the thumbs.
+ * @param [props.thumbProps] - Additional props for each thumb.
  * @returns The rendered slider thumbs component.
  */
-function SliderThumbs(props: { value?: number[] }) {
-  const { value } = props;
+function SliderThumbs(props: { value?: number[]; thumbProps?: SliderProps['thumbProps'] }) {
+  const { value, thumbProps } = props;
   return (
     <>
       {value?.map((_, index) => (
         // oxlint-disable-next-line react/no-array-index-key
-        <ChakraSlider.Thumb key={index} index={index}>
+        <ChakraSlider.Thumb key={index} {...thumbProps} index={index}>
           <ChakraSlider.HiddenInput />
         </ChakraSlider.Thumb>
       ))}

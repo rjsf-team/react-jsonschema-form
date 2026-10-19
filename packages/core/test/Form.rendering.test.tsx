@@ -180,6 +180,32 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       },
     } as RJSFSchema;
 
+    it.each([
+      ['an object', 'object', { a: 'q' }],
+      ['an array', 'array', ['q']],
+      ['a boolean', 'boolean', true],
+      ['a number', 'number', 3],
+    ] as const)('renders the field title once for %s value', (_, type, value) => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            x: {
+              title: 'XTitle',
+              type: ['string', type],
+              ...(type === 'array' ? { items: { type: 'string' } } : {}),
+              ...(type === 'object' ? { additionalProperties: { type: 'string' } } : {}),
+            },
+          },
+        },
+        formData: { x: value },
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      expect(screen.getAllByText('XTitle')).toHaveLength(1);
+      expect(node.querySelectorAll('label[for="root_x"]')).toHaveLength(1);
+    });
+
     it('renders the first type when useFallbackUiForUnsupportedType is false', () => {
       const { node } = createFormComponent({ schema: multiTypeSchema });
 
@@ -2335,6 +2361,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         description,
         rawDescription,
         errors,
+        // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
         rawErrors,
         children,
       } = props;

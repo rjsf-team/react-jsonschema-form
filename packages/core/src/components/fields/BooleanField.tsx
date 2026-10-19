@@ -25,6 +25,7 @@ import {
 
 import fieldLabelForLog from '../../fieldLabelForLog.ts';
 import hasOptionLabels from '../../hasOptionLabels.ts';
+import { getBooleanFieldWidget, getWidgetErrorProps, getWidgetLabelProps } from './fieldWidgetUtils.ts';
 
 /** Whether `ui:enumOrder` would reorder or drop any of the constant `options` if it applied to them
  *
@@ -70,9 +71,11 @@ function BooleanField<
     onFocus,
     onBlur,
     rawErrors,
+    presentation,
   } = props;
   const { title: schemaTitle } = schema;
   const { widgets, translateString, globalUiOptions } = registry;
+  const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
   const {
     widget,
     title: uiTitle,
@@ -82,12 +85,16 @@ function BooleanField<
     enumNames: _enumNames,
     placeholder,
     ...options
-  } = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
-  const { Widget } = resolveWidget<T, S, F>(schema, widget ?? 'checkbox', widgets);
+  } = uiOptions;
+  const { Widget } = resolveWidget<T, S, F>(schema, getBooleanFieldWidget<T, S, F>(uiOptions), widgets);
   const yes = translateString(TranslatableString.YesLabel);
   const no = translateString(TranslatableString.NoLabel);
   let enumOptions: EnumOptionsType<S>[] | undefined;
-  const label = uiTitle ?? schemaTitle ?? title ?? name;
+  const labelProps = getWidgetLabelProps<T, S, F>(
+    presentation,
+    uiTitle ?? schemaTitle ?? title ?? name,
+    () => displayLabel,
+  );
   // Only a select and radios are known to list the options, so only they can drop a label or an order. A checkbox, a
   // hidden field or a custom widget such as a toggle may show no option labels, which would make the warnings noise
   const showsOptions = Widget === widgets.SelectWidget || Widget === widgets.RadioWidget;
@@ -190,17 +197,19 @@ function BooleanField<
       onChange={onWidgetChange}
       onFocus={onFocus}
       onBlur={onBlur}
-      label={label}
-      hideLabel={!displayLabel}
+      {...labelProps}
       value={formData}
-      required={required}
+      // The plan's, which a checkbox the schema lets be `false` is not, so a widget written for any theme submits it
+      // unchecked (#5388). Its control's own, since a label drawn above carries the marker of the field it labels
+      required={presentation?.control ? presentation.control.attributes.required === true : required}
       disabled={disabled}
       readonly={readonly}
       hideError={hideError}
       registry={registry}
       autofocus={autofocus}
       placeholder={placeholder}
-      rawErrors={rawErrors}
+      {...getWidgetErrorProps<T, S, F>(rawErrors)}
+      presentation={presentation}
       htmlName={fieldPathToName(fieldPath, registry.globalFormOptions)}
     />
   );

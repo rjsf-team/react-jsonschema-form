@@ -6,7 +6,14 @@ import type {
   UiSchemaDefinitions,
   ValidatorType,
 } from '../src/index.ts';
-import { RJSF_REF_KEY, createSchemaUtils, noop, resolveUiSchema, retrieveSchema } from '../src/index.ts';
+import {
+  createSchemaUtils,
+  mergeThemePresentation,
+  noop,
+  resolveUiSchema,
+  retrieveSchema,
+  RJSF_REF_KEY,
+} from '../src/index.ts';
 import looseSchema from './schema/graph/looseSchema.ts';
 import getTestValidator from './testUtils/getTestValidator.ts';
 
@@ -24,6 +31,7 @@ const baseRegistry: Registry = {
   translateString: () => '',
   fields: {},
   widgets: {},
+  presentation: mergeThemePresentation(),
   templates: {} as TemplatesType,
   globalFormOptions: { idPrefix: 'root', idSeparator: '_', useFallbackUiForUnsupportedType: false },
 };
