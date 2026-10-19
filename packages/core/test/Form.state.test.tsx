@@ -493,4 +493,32 @@ describeRepeated('Form common: form state updates', (createFormComponent) => {
       );
     });
   });
+
+  describe('root oneOf with a conditional in one option (#5567)', () => {
+    it('keeps what is typed into the selected option', async () => {
+      const schema: RJSFSchema = {
+        oneOf: [
+          { title: 'A', type: 'object', properties: { animal: { type: 'string' } } },
+          {
+            title: 'B',
+            type: 'object',
+            properties: { animal: { type: 'string' } },
+            allOf: [
+              {
+                if: { properties: { animal: { const: 'Cat' } } },
+                then: { properties: { food: { type: 'string', default: 'meat' } } },
+              },
+            ],
+          },
+        ],
+      };
+      const { node, onChange } = createFormComponent({ ref: createRef(), schema });
+
+      const input = node.querySelector<HTMLInputElement>('input[type=text]')!;
+      await user.type(input, 'Fi');
+
+      expect(node.querySelector<HTMLInputElement>('input[type=text]')!.value).toBe('Fi');
+      expectToHaveBeenCalledWithFormData(onChange, { animal: 'Fi' }, 'root_animal');
+    });
+  });
 });

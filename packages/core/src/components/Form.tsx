@@ -56,6 +56,8 @@ import {
   schemaHasNestedConditional,
   ANY_OF_KEY,
   ONE_OF_KEY,
+  PROPERTIES_KEY,
+  getSchemaType,
 } from '@rjsf/utils';
 
 import getDefaultRegistry from '../getDefaultRegistry.ts';
@@ -750,6 +752,9 @@ export default class Form<
       if (
         shouldSanitize &&
         !preventInfiniteSanitize.includes(formHash) &&
+        // A root schema without `properties` (such as a `oneOf` not resolved to an option) can only be sanitized
+        // into `undefined`, which would wipe what the user typed into the selected option
+        (computedRetrievedSchema[PROPERTIES_KEY] || getSchemaType(computedRetrievedSchema) === 'array') &&
         (hasNestedConditionalSchema || !deepEquals(computedRetrievedSchema, state.retrievedSchema))
       ) {
         // Sanitize the form data if shouldSanitize is true, we haven't already processed this same formData AND
