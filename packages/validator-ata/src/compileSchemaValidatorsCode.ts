@@ -1,6 +1,5 @@
 import type { RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { schemaParser } from '@rjsf/utils';
-import type { ValidatorOptions } from 'ata-validator';
 import { Validator } from 'ata-validator';
 
 import { ATA_CONFIG, COLOR_FORMAT_REGEX, DATA_URL_FORMAT_REGEX } from './createAtaInstance.ts';
