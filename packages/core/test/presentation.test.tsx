@@ -600,6 +600,38 @@ describe('the plan SchemaField builds', () => {
     );
   });
 
+  const describedOptions = [
+    { const: 'r', title: 'Red', description: 'Warm' },
+    { const: 'b', title: 'Blue' },
+  ];
+  test.each<[string, RJSFSchema, UiSchema, boolean]>([
+    ['label shown', { title: 'Color', type: 'string', oneOf: describedOptions }, {}, true],
+    [
+      "the field's own ui:label false",
+      { title: 'Color', type: 'string', oneOf: describedOptions },
+      { 'ui:label': false },
+      false,
+    ],
+    [
+      'ui:label false on the anyOf field above',
+      { title: 'Color', anyOf: [{ type: 'string', oneOf: describedOptions }, { type: 'number' }] },
+      { 'ui:label': false, anyOf: [{}, {}] },
+      false,
+    ],
+  ])(
+    "shows a selected option's description exactly where it describes the select (%s)",
+    (_, color, uiSchema, shown) => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { color } },
+        uiSchema: { color: uiSchema },
+        initialFormData: { color: 'r' },
+      });
+
+      expect(screen.queryAllByText('Warm')).toHaveLength(shown ? 1 : 0);
+      expect(node.querySelector('#root_color')).toHaveAccessibleDescription(shown ? 'Warm' : '');
+    },
+  );
+
   describe('a deprecated array whose option has its title', () => {
     const schema: RJSFSchema = {
       type: 'object',

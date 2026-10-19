@@ -11,6 +11,7 @@ import { userEvent } from '@testing-library/user-event';
 
 import CheckboxWidget from '../src/CheckboxWidget/index.ts';
 import { generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
+import NativeSelectWidget from '../src/NativeSelectWidget/NativeSelectWidget.tsx';
 import WrappedForm from './WrappedForm.tsx';
 
 const user = userEvent.setup();
@@ -1315,4 +1316,45 @@ describe('chakra-ui CheckboxWidget required attribute', () => {
 
     expect(container.querySelector('input[type=checkbox]')).not.toHaveAttribute('required');
   });
+});
+
+describe.each([
+  ['SelectWidget', {}],
+  ['NativeSelectWidget', { SelectWidget: NativeSelectWidget }],
+])("chakra-ui %s's selected option description", (_, widgets) => {
+  const describedOptions = [
+    { const: 'r', title: 'Red', description: 'Warm' },
+    { const: 'b', title: 'Blue' },
+  ];
+  test.each<[string, RJSFSchema, UiSchema, boolean]>([
+    ['label shown', { title: 'Color', type: 'string', oneOf: describedOptions }, {}, true],
+    [
+      "the field's own ui:label false",
+      { title: 'Color', type: 'string', oneOf: describedOptions },
+      { 'ui:label': false },
+      false,
+    ],
+    [
+      'ui:label false on the anyOf field above',
+      { title: 'Color', anyOf: [{ type: 'string', oneOf: describedOptions }, { type: 'number' }] },
+      { 'ui:label': false, anyOf: [{}, {}] },
+      false,
+    ],
+  ])(
+    "shows a selected option's description exactly where it describes the select (%s)",
+    (_case, color, uiSchema, shown) => {
+      const { container } = render(
+        <WrappedForm
+          schema={{ type: 'object', properties: { color } }}
+          uiSchema={{ color: uiSchema }}
+          initialFormData={{ color: 'r' }}
+          widgets={widgets}
+          validator={validator}
+        />,
+      );
+
+      expect(screen.queryAllByText('Warm')).toHaveLength(shown ? 1 : 0);
+      expect(container.querySelector('#root_color')).toHaveAccessibleDescription(shown ? 'Warm' : '');
+    },
+  );
 });
