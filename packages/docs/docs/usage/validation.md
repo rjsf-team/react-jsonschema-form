@@ -35,7 +35,7 @@ It is expected that this function will be used in a manner similar to the follow
 import compileSchemaValidators from '@rjsf/validator-ajv8/compileSchemaValidators';
 import yourSchema from 'path_to/yourSchema.js'; // If your schema is a js file
 
-compileSchemaValidators(yourSchema, 'path_to/yourCompiledSchema.js');
+compileSchemaValidators(yourSchema, 'path_to/yourCompiledSchema.cjs');
 ```
 
 If you are currently using the `customizeValidator()` function to provide `additionalMetaSchemas`, `customFormats`,
@@ -43,7 +43,7 @@ If you are currently using the `customizeValidator()` function to provide `addit
 `compileSchemaValidators()` function in a manner similar to:
 
 ```js
-import { compileSchemaValidators } from '@rjsf/validator-ajv8';
+import compileSchemaValidators from '@rjsf/validator-ajv8/compileSchemaValidators';
 import yourSchema from 'path_to/yourSchema.json' with { type: 'json' }; // If your schema is a json file
 import draft06 from 'ajv/lib/refs/json-schema-draft-06.json' with { type: 'json' };
 
@@ -59,7 +59,7 @@ const options = {
   },
 };
 
-compileSchemaValidators(yourSchema, 'path_to/yourCompiledSchema.js', options);
+compileSchemaValidators(yourSchema, 'path_to/yourCompiledSchema.cjs', options);
 ```
 
 If your `Form` is given a `customMergeAllOf`, put it in those same options so the precompiled validator functions cover the sub-schemas it merges.
@@ -73,10 +73,10 @@ A form that renders such a key throws `No precompiled validator function was fou
 An object may likewise have at most 8 schema `dependencies` for every subset of them to be compiled, since a form applies the subset whose keys the data has filled in; an object with more is compiled with each dependency alone and all of them together, and warns the same way.
 
 ```js
-import { compileSchemaValidators } from '@rjsf/validator-ajv8';
+import compileSchemaValidators from '@rjsf/validator-ajv8/compileSchemaValidators';
 import { customMergeAllOf } from 'path_to/yourCustomMergeAllOf.js';
 
-compileSchemaValidators(yourSchema, 'path_to/yourCompiledSchema.js', { ...options, customMergeAllOf });
+compileSchemaValidators(yourSchema, 'path_to/yourCompiledSchema.cjs', { ...options, customMergeAllOf });
 ```
 
 Give the same `customMergeAllOf` to [`createPrecompiledValidator()`](#using-the-precompiled-validator) as well, since the validator resolves the root schema it is handed with it.
@@ -93,7 +93,7 @@ node compileYourSchema.js
 
 ### Using the precompiled validator
 
-After you have completed step 1 having generated your precompiled schema functions into the `yourCompiledSchema.js` output file (or whatever you called it), then you need to create a `ValidatorType` implementation from it to use in the `Form`.
+After you have completed step 1 having generated your precompiled schema functions into the `yourCompiledSchema.cjs` output file (or whatever you called it), then you need to create a `ValidatorType` implementation from it to use in the `Form`.
 The `@rjsf/validator-ajv8` package exports the `createPrecompiledValidator()` function for this.
 Here is an example of how to use your precompiled validator with your `Form`:
 
@@ -103,7 +103,7 @@ import { createPrecompiledValidator, ValidatorFunctions } from '@rjsf/validator-
 import Form, { FormProps } from '@rjsf/core'; // Or whatever theme you use
 
 import yourSchema from 'path_to/yourSchema'; // This needs to be the same file that was precompiled
-import * as precompiledValidatorFns from 'path_to/yourCompiledSchema';
+import * as precompiledValidatorFns from 'path_to/yourCompiledSchema.cjs';
 
 function MyForm(props: Omit<FormProps, 'validator' | 'schema'>) {
   // Memoize the validator to avoid rerenders
@@ -831,7 +831,7 @@ For a precompiled validator, pass the value in the options object `createPrecomp
 
 ```tsx
 import { createPrecompiledValidator } from '@rjsf/validator-ajv8';
-import * as precompiledValidatorFns from 'path_to/yourCompiledSchema';
+import * as precompiledValidatorFns from 'path_to/yourCompiledSchema.cjs';
 import yourSchema from 'path_to/yourSchema';
 
 const validator = createPrecompiledValidator(precompiledValidatorFns, yourSchema, { suppressDuplicateFiltering: 'all' });
