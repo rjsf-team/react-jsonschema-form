@@ -647,7 +647,9 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       part = this.applyOption(part, ONE_OF_KEY, keywords.get(ONE_OF_KEY), dependencies);
     }
     part = this.applyDependencies(part, keywords.get(DEPENDENCIES_KEY), keywords.get(PROPERTIES_KEY));
-    if (this.conditions) {
+    // A dependency's `if` belongs to the entry its data qualified, so it is applied whatever the policy, as the entry's
+    // `allOf` is merged
+    if (this.conditions || dependencyKey !== undefined) {
       part = this.applyCondition(part, keywords, dependencyKey);
     }
     part = this.applyAllOf(part, keywords.get(ALL_OF_KEY), dependencyKey);
@@ -719,7 +721,8 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
   }
 
   /** Applies the `then` or `else` the `if` chooses on the field's own data, `{}` standing in for none. Inside a
-   * dependency, the branch's own `oneOf` is applied as the dependency's is.
+   * dependency, the `if` is checked against the data the dependency qualified on, and the branch's own `oneOf` is
+   * applied, as the dependency's are.
    */
   private applyCondition(
     part: Part<S>,
@@ -740,7 +743,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     // function for the schema it reads as
     const satisfied =
       conditionNode.kind === 'schema'
-        ? this.holds(`if:${condition}`, conditionNode.raw, this.data)
+        ? this.holds(`if:${condition}`, conditionNode.raw, dependencyKey === undefined ? this.data : this.depData)
         : conditionNode.kind !== 'boolean' || conditionNode.value;
     const branchKey = satisfied ? THEN_KEY : ELSE_KEY;
     const branchProvider = keywords.get(branchKey);
