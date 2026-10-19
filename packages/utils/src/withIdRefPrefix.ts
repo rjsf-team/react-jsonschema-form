@@ -70,14 +70,15 @@ function prefixRefs<S extends StrictRJSFSchema = RJSFSchema>(
 
 /** Returns the id a validator registers `rootSchema` under, and so the prefix `withRootIdRefPrefix()` gives the local
  * `$ref`s it rewrites: the root's own `$id` less any fragment, which names a place in the document rather than the
- * document a pointer is read in, or `ROOT_SCHEMA_PREFIX` where that leaves nothing, as for no `$id`, an empty one or
- * one that is only a fragment, such as `#root`
+ * document a pointer is read in, or `ROOT_SCHEMA_PREFIX` where that leaves nothing, as for no `$id`, an empty one, one
+ * that is only a fragment, such as `#root`, or one that is not a string, which an untyped caller may hand over
  *
  * @param rootSchema - The root schema
  * @returns - The id the root is registered under
  */
 export function rootSchemaIdOf<S extends StrictRJSFSchema = RJSFSchema>(rootSchema: S): string {
-  const [document] = (rootSchema[ID_KEY] ?? '').split('#', 1);
+  const id: unknown = rootSchema[ID_KEY];
+  const [document] = typeof id === 'string' ? id.split('#', 1) : [];
   return document || ROOT_SCHEMA_PREFIX;
 }
 
