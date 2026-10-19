@@ -1,6 +1,15 @@
-import { Field, Text } from '@fluentui/react-components';
+import { Field, Label, Text } from '@fluentui/react-components';
 import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getTemplates, getUiOptions, hasTemplateErrors, templateDrawsLabel } from '@rjsf/utils';
+import {
+  getTemplates,
+  getUiOptions,
+  hasTemplateErrors,
+  templateDrawsDescription,
+  templateDrawsLabel,
+  templateDrawsPlannedLabel,
+  templateLabelFor,
+  templateMarksRequired,
+} from '@rjsf/utils';
 
 /** The `FieldTemplate` component is the template used by `SchemaField` to render any field. It renders the field
  * content, (label, description, children, errors and help) inside of a `WrapIfAdditional` component.
@@ -47,6 +56,7 @@ export default function FieldTemplate<
   // The plan's description already says whether a checkbox draws its own; the guess by the `checkbox` alias is left
   // for a template rendered without one, so a description the plan gives the template isn't dropped
   const leavesPartsToCheckbox = !presentation && uiOptions.widget === 'checkbox';
+  const drawsLabel = templateDrawsPlannedLabel<T, S, F>(props);
   return (
     <WrapIfAdditionalTemplate
       classNames={classNames}
@@ -69,9 +79,21 @@ export default function FieldTemplate<
       uiSchema={uiSchema}
       registry={registry}
     >
-      <Field validationState={hasError ? 'error' : undefined} required={required}>
+      {/* No `required`, which Fluent hands every control inside the `Field` as its own: each widget marks itself as the
+          plan says, so a checkbox of a required group, or a control holding `false` unchecked, isn't made required */}
+      <Field validationState={hasError ? 'error' : undefined}>
+        {drawsLabel && (
+          <Label
+            id={presentation?.label.id}
+            htmlFor={templateLabelFor<T, S, F>(props)}
+            required={templateMarksRequired<T, S, F>(props)}
+            disabled={disabled}
+          >
+            {label}
+          </Label>
+        )}
         {children}
-        {rawDescription && !leavesPartsToCheckbox ? (
+        {templateDrawsDescription<T, S, F>(props) && rawDescription && !leavesPartsToCheckbox ? (
           <Text as='p' block style={{ marginTop: 0, marginBottom: 0 }}>
             {description}
           </Text>
