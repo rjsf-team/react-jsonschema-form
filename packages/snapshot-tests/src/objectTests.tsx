@@ -431,4 +431,39 @@ export function objectTests(Form: ComponentType<FormProps>) {
       });
     });
   });
+
+  describe('an anyOf object option with a description of its own', () => {
+    // Last in the suite, as each render advances the `useId` counter and would renumber the snapshots after it. The
+    // field's template draws its description, so the selected object option's own one needs the id its plan gives it
+    test('gives the field and the option each a description id of their own', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          tags: {
+            description: 'Some tags',
+            anyOf: [
+              { type: 'object', description: 'Other desc', properties: { name: { type: 'string' } } },
+              { type: 'null' },
+            ],
+          },
+        },
+      };
+      const { container } = render(<Form schema={schema} formData={{ tags: { name: 'a' } }} validator={validator} />);
+
+      // The ids RJSF gives, not those a library generates for its own parts. A theme's widget may list every part's id
+      // whether or not it renders, so only the `tags` field's own description ids are required to exist
+      const ids = Array.from(container.querySelectorAll('[id^="root"]'), (element) => element.id);
+      expect(ids).toEqual([...new Set(ids)]);
+      expect(container).toHaveTextContent('Some tags');
+      expect(container).toHaveTextContent('Other desc');
+      const describedBy = Array.from(container.querySelectorAll('[aria-describedby]'), (element) =>
+        element.getAttribute('aria-describedby')!.split(' '),
+      ).flat();
+      const descriptionIds = describedBy.filter((id) => /^root_tags__\w*description\d*$/i.test(id));
+      expect(descriptionIds).not.toHaveLength(0);
+      for (const id of descriptionIds) {
+        expect(document.getElementById(id), id).not.toBeNull();
+      }
+    });
+  });
 }

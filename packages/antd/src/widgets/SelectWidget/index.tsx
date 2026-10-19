@@ -18,6 +18,7 @@ import {
   SelectedOptionDescription,
   useSelectFocusHandlers,
   widgetAriaProps,
+  widgetDrawsLabel,
 } from '@rjsf/utils';
 import type { SelectProps } from 'antd';
 import { Select } from 'antd';
@@ -50,10 +51,13 @@ export default function SelectWidget<
     options,
     placeholder,
     readonly,
+    required,
     value,
     schema,
     uiSchema,
+    presentation,
   } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const [open, setOpen] = useState(false);
   const { formContext } = registry;
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
@@ -139,6 +143,7 @@ export default function SelectWidget<
         onOpenChange={setOpen}
         showSearch={{ filterOption }}
         {...widgetAriaProps(props)}
+        aria-required={required || undefined}
         options={selectOptions}
       />
       <SelectedOptionDescription
@@ -148,6 +153,8 @@ export default function SelectWidget<
         registry={registry}
         uiSchema={uiSchema}
         value={value}
+        hideLabel={hideLabel}
+        presentation={presentation}
       />
     </>
   );

@@ -1,5 +1,6 @@
 import { Suspense, forwardRef, lazy, memo } from 'react';
 import type {
+  ErrorSchema,
   Field,
   FieldProps,
   GenericObjectType,
@@ -12,7 +13,14 @@ import type {
   FieldTemplateProps,
   WidgetProps,
 } from '@rjsf/utils';
-import { DEFAULT_ID_PREFIX, DEFAULT_ID_SEPARATOR, createSchemaUtils, englishStringTranslator } from '@rjsf/utils';
+import {
+  DEFAULT_ID_PREFIX,
+  DEFAULT_ID_SEPARATOR,
+  createSchemaUtils,
+  englishStringTranslator,
+  errorId,
+  mergeThemePresentation,
+} from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -53,6 +61,7 @@ describe('SchemaField', () => {
         fields: defaultRegistry.fields,
         templates: defaultRegistry.templates,
         widgets: defaultRegistry.widgets,
+        presentation: mergeThemePresentation(defaultRegistry.presentation),
         rootSchema: schema,
         formContext: {},
         schemaUtils,
@@ -94,6 +103,7 @@ describe('SchemaField', () => {
         fields: defaultRegistry.fields,
         templates: defaultRegistry.templates,
         widgets: defaultRegistry.widgets,
+        presentation: mergeThemePresentation(defaultRegistry.presentation),
         rootSchema: schema,
         formContext: {},
         schemaUtils,
@@ -474,6 +484,8 @@ describe('SchemaField', () => {
         });
 
         expect(node.querySelector('input#root_val')).toBeInTheDocument();
+        // Labelled as the default field is anywhere else
+        expect(node.querySelector('label[for="root_val"]')).toBeInTheDocument();
         expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
           `ui:field for "root_val" (val) names no registered field ('Stringfield'), so it is ignored and the field is ` +
             'rendered as though no ui:field were given.',
@@ -953,6 +965,7 @@ describe('SchemaField', () => {
     });
 
     describe('Custom error rendering', () => {
+      // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated prop a component without a plan reads
       const customStringWidget = (props: WidgetProps) => <div className='custom-text-widget'>{props.rawErrors}</div>;
 
       it('should pass rawErrors down to custom widgets', async () => {
@@ -1004,6 +1017,7 @@ describe('SchemaField', () => {
       });
 
       describe('Custom error rendering', () => {
+        // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated prop a component without a plan reads
         const customStringWidget = (props: WidgetProps) => <div className='custom-text-widget'>{props.rawErrors}</div>;
 
         it('should pass rawErrors down to custom widgets and render them', async () => {
@@ -1022,6 +1036,7 @@ describe('SchemaField', () => {
         });
 
         it('should withhold rawErrors from a custom FieldTemplate while leaving them in its errorSchema', async () => {
+          // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
           const customFieldTemplate = ({ children, rawErrors, errorSchema }: FieldTemplateProps) => (
             <div>
               {children}
@@ -1105,6 +1120,45 @@ describe('SchemaField', () => {
         const matches = node.querySelectorAll(':scope .form-group .form-group .text-danger');
         expect(matches).toHaveLength(1);
         expect(matches[0]).toHaveTextContent('test');
+      });
+    });
+
+    describe("resolved as the field's own, then its parent's, then the global one", () => {
+      const nestedSchema: RJSFSchema = {
+        type: 'object',
+        properties: { foo: { type: 'string' }, bar: { type: 'string' } },
+      };
+      const extraErrors = { foo: { __errors: ['foo is wrong'] }, bar: { __errors: ['bar is wrong'] } } as ErrorSchema;
+
+      it("hides a child's errors by its parent's ui:hideError over a global one", () => {
+        const { node } = createFormComponent({
+          schema: nestedSchema,
+          uiSchema: { 'ui:globalOptions': { hideError: false }, 'ui:hideError': true },
+          extraErrors,
+        });
+
+        expect(node.querySelector(`#${errorId('root_foo')}`)).not.toBeInTheDocument();
+      });
+
+      it("shows a child's errors by its own ui:hideError over its parent's", () => {
+        const { node } = createFormComponent({
+          schema: nestedSchema,
+          uiSchema: { 'ui:hideError': true, bar: { 'ui:hideError': false } },
+          extraErrors,
+        });
+
+        expect(node.querySelector(`#${errorId('root_foo')}`)).not.toBeInTheDocument();
+        expect(node.querySelector(`#${errorId('root_bar')}`)).toHaveTextContent('bar is wrong');
+      });
+
+      it('falls back to the global one where no field sets its own', () => {
+        const { node } = createFormComponent({
+          schema: nestedSchema,
+          uiSchema: { 'ui:globalOptions': { hideError: true } },
+          extraErrors,
+        });
+
+        expect(node.querySelector(`#${errorId('root_foo')}`)).not.toBeInTheDocument();
       });
     });
   });

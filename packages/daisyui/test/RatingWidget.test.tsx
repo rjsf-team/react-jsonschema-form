@@ -107,4 +107,12 @@ describe('RatingWidget', () => {
 
     expect(onChange).not.toHaveBeenCalled();
   });
+
+  test('names its radios by htmlName where the form generates one', () => {
+    const { container } = render(<RatingWidget {...makeWidgetMockProps({ htmlName: 'root[stars]' })} />);
+
+    const radios = container.querySelectorAll('input[type="radio"]');
+    expect(radios.length).toBeGreaterThan(0);
+    radios.forEach((radio) => expect(radio).toHaveAttribute('name', 'root[stars]'));
+  });
 });

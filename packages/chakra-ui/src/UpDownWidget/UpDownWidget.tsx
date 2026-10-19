@@ -1,7 +1,7 @@
 import type { FocusEvent } from 'react';
 import type { NumberInputValueChangeDetails } from '@chakra-ui/react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, hasVisibleErrors, labelValue } from '@rjsf/utils';
+import { getControlAttributes, hasWidgetErrors, labelValue, widgetDrawsLabelText } from '@rjsf/utils';
 
 import { Field } from '../components/ui/field.tsx';
 import { NumberInputRoot } from '../components/ui/number-input.tsx';
@@ -12,7 +12,21 @@ export default function UpDownWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { id, readonly, disabled, label, hideLabel, value, onChange, onBlur, onFocus, required } = props;
+  const {
+    id,
+    htmlName,
+    readonly,
+    disabled,
+    autofocus,
+    label,
+    value,
+    onChange,
+    onBlur,
+    onFocus,
+    required,
+    presentation,
+  } = props;
+  const drawsLabel = widgetDrawsLabelText<T, S, F>(props);
 
   const handleChange = ({ value: newValue }: NumberInputValueChangeDetails) => onChange(newValue);
   // The handlers sit on the root, so the target may be an increment/decrement trigger rather than the input
@@ -28,8 +42,9 @@ export default function UpDownWidget<
       disabled={disabled || readonly}
       required={required}
       readOnly={readonly}
-      invalid={hasVisibleErrors(props)}
-      label={labelValue(label, hideLabel || !label)}
+      invalid={hasWidgetErrors<T, S, F>(props)}
+      label={labelValue(label, !drawsLabel)}
+      id={id}
       {...chakraProps}
     >
       <NumberInputRoot
@@ -39,9 +54,9 @@ export default function UpDownWidget<
         onValueChange={handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
-        aria-describedby={ariaDescribedByIds(id)}
+        inputProps={{ ...getControlAttributes<T, S, F>({ id, presentation }), autoFocus: autofocus }}
         id={id}
-        name={id}
+        name={htmlName || id}
       />
     </Field>
   );

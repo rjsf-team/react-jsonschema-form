@@ -220,9 +220,9 @@ describe.each([
         baseElement: frameDocument.body,
       },
     );
-    await frameUser.click(view.getByRole('button', { expanded: false }));
+    await frameUser.click(view.getByRole('combobox', { expanded: false }));
     await frameUser.click(view.getByRole('button', { name: /May 17th, 2020/ }));
-    await frameUser.click(view.getByRole('button', { expanded: true }));
+    await frameUser.click(view.getByRole('combobox', { expanded: true }));
     expect(view.queryByText('Done')).toBeNull();
     expect(onChange.mock.calls).toEqual([[proposal]]);
   });
@@ -744,7 +744,7 @@ describe('a close in a form', () => {
         onBlur={(_id, reported) => atBlur.push([reported, ref.current?.getFormData()])}
       />,
     );
-    await user.click(screen.getByRole('button', { expanded: false }));
+    await user.click(screen.getByRole('combobox', { expanded: false }));
     await user.click(screen.getByRole('button', { name: /May 17th, 2020/ }));
     await user.click(screen.getByText('Done'));
 

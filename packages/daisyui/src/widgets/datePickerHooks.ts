@@ -1,5 +1,5 @@
-import type { MouseEvent } from 'react';
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import type { MouseEvent, SyntheticEvent } from 'react';
+import { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { format, isSameMonth, isValid, parseISO } from 'date-fns';
 
@@ -226,6 +226,9 @@ export function useDatePicker<V>({
   }));
   const containerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  // The popup's own id, which the trigger controls while it is open. Generated rather than built from the field's id,
+  // which no suffix keeps clear of another field's: a property named `_popup` beside the root would share it
+  const popupId = useId();
 
   // Derived during render, so a new value costs no second render
   const draft = useMemo(() => draftFor(savedDraft, basis), [basis, savedDraft]);
@@ -389,10 +392,10 @@ export function useDatePicker<V>({
 
   /** Open the popup, or close it where a press on the trigger is the way out
    *
-   * @param e - The press on the trigger
+   * @param e - The press on the trigger, or the Down Arrow that opens it
    */
   const togglePicker = useCallback(
-    (e: MouseEvent) => {
+    (e: SyntheticEvent) => {
       e.stopPropagation();
       if (isOpen) {
         // The one way out of the popup that is a press on the trigger itself, or on the label pointing at it, which
@@ -437,6 +440,7 @@ export function useDatePicker<V>({
 
   return {
     isOpen,
+    popupId,
     month: draft.month,
     displayedDate,
     containerRef,

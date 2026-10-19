@@ -36,9 +36,12 @@ export default function MultiSchemaFieldTemplate<
 
   return (
     <Box sx={{ mb: 2 }} {...muiSlotProps?.multiBox}>
-      <FormControl fullWidth sx={{ mb: 2 }} {...muiSlotProps?.multiFormControl}>
-        {selector}
-      </FormControl>
+      {/* No row is laid out for a selector the field doesn't render, as while an optional field has no data (#5401) */}
+      {selector ? (
+        <FormControl fullWidth sx={{ mb: 2 }} {...muiSlotProps?.multiFormControl}>
+          {selector}
+        </FormControl>
+      ) : null}
       {optionSchemaField}
     </Box>
   );

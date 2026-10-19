@@ -10,11 +10,12 @@ import type {
   WrapIfAdditionalTemplateProps,
 } from '@rjsf/utils';
 import {
-  AdditionalPropertyKeySelect,
   ADDITIONAL_PROPERTY_FLAG,
+  AdditionalPropertyKeySelect,
   buttonId,
-  TranslatableString,
   getUiOptions,
+  hasAdditionalKeyLabel,
+  TranslatableString,
 } from '@rjsf/utils';
 
 import { computeSxProps, getMuiProps } from '../util.ts';
@@ -51,7 +52,6 @@ export default function WrapIfAdditionalTemplate<
     id,
     label,
     keyName,
-    displayLabel,
     onKeyRename,
     onKeyRenameBlur,
     onRemoveProperty,
@@ -62,6 +62,8 @@ export default function WrapIfAdditionalTemplate<
     uiSchema,
     registry,
   } = props;
+  // The key is labelled wherever the value's label is drawn, by the template or the value's own component
+  const hasKeyLabel = hasAdditionalKeyLabel<T, S, F>(props);
   const { templates, translateString } = registry;
   // Button templates are not overridden in the uiSchema
   const { RemoveButton } = templates.ButtonTemplates;
@@ -108,7 +110,7 @@ export default function WrapIfAdditionalTemplate<
           <AdditionalPropertyKeySelect<T, S, F>
             id={`${id}-key`}
             label={keyLabel}
-            hideLabel={!displayLabel}
+            hideLabel={!hasKeyLabel}
             value={keyName}
             propertyNamesEnum={propertyNamesEnum}
             onKeyRename={onKeyRename}
@@ -122,7 +124,9 @@ export default function WrapIfAdditionalTemplate<
             key={keyName}
             fullWidth
             required={required}
-            label={displayLabel ? keyLabel : undefined}
+            label={hasKeyLabel ? keyLabel : undefined}
+            // Where `ui:label: false` leaves the key unlabelled, its label's text names it, as core's key input is named
+            slotProps={{ htmlInput: { 'aria-label': hasKeyLabel ? undefined : keyLabel } }}
             defaultValue={keyName}
             disabled={disabled || readonly}
             id={`${id}-key`}

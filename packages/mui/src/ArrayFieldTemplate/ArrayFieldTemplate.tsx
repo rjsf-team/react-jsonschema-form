@@ -11,7 +11,7 @@ import type {
   StrictRJSFSchema,
   GenericObjectType,
 } from '@rjsf/utils';
-import { getTemplates, getUiOptions, buttonId } from '@rjsf/utils';
+import { getArrayDescription, getTemplates, getUiOptions, buttonId, titleDrawsOptionalDataControl } from '@rjsf/utils';
 
 import { computeSxProps, getMuiProps } from '../util.ts';
 
@@ -54,10 +54,12 @@ export default function ArrayFieldTemplate<
     required,
     schema,
     title,
+    presentation,
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const { ArrayFieldDescriptionTemplate, ArrayFieldTitleTemplate } = getTemplates<T, S, F>(registry, uiOptions);
-  const showOptionalDataControlInTitle = !readonly && !disabled;
+  const shownDescription = getArrayDescription<T, S, F>(props);
+  const showOptionalDataControlInTitle = titleDrawsOptionalDataControl<T, S, F>(props);
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
@@ -78,7 +80,7 @@ export default function ArrayFieldTemplate<
       <Box {...arrayBox} sx={computeSxProps<BoxProps>({ p: 2 }, arrayBox)}>
         <ArrayFieldTitleTemplate
           id={id}
-          title={uiOptions.title || title}
+          title={title}
           schema={schema}
           uiSchema={uiSchema}
           required={required}
@@ -87,10 +89,11 @@ export default function ArrayFieldTemplate<
         />
         <ArrayFieldDescriptionTemplate
           id={id}
-          description={uiOptions.description || schema.description}
+          description={shownDescription}
           schema={schema}
           uiSchema={uiSchema}
           registry={registry}
+          presentation={presentation}
         />
         {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
         {items}

@@ -8,6 +8,7 @@ The formContext antd object accepts `descriptionLocation`, `readonlyAsDisabled` 
 
 `descriptionLocation` can be `'below' | 'tooltip'`, the default is `'below'` which places the description below the form item.
 You can set it to `tooltip` that put the description inside the tooltip.
+antd draws a tooltip only beside a label, so a field whose template draws no label, such as a checkbox, still shows its description below.
 Note that you should have antd 4.7+ to use `'tooltip'`.
 
 Setting `{readonlyAsDisabled: false}` on the formContext will make the antd theme treat readOnly fields as disabled.
