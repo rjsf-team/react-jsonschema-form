@@ -536,8 +536,9 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
     stubsExtraKeys ? stubExistingAdditionalProperties<unknown, S, F>(context, merged, graph.rawRoot, data) : merged,
     field,
   );
+  const resolvedOptions = resolveOptions && OPTION_KEYWORDS.some((keyword) => Array.isArray(merged[keyword]));
   // A view whose own plan read the data, or whose options or extra keys were resolved for it, holds for that data alone
-  if (!plan.readsData && !resolveOptions && !stubsExtraKeys) {
+  if (!plan.readsData && !resolvedOptions && !stubsExtraKeys) {
     views.set(viewKey, { view, holds });
   }
   return view;
