@@ -17,6 +17,7 @@ import {
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionsDomValues,
+  getControlAriaLabel,
   getOptionValueFormat,
   groupEnumOptions,
   hasWidgetErrors,
@@ -27,9 +28,10 @@ import {
   useSelectFocusHandlers,
   widgetAriaProps,
   widgetDrawsLabel,
+  widgetDrawsLabelText,
 } from '@rjsf/utils';
 
-import { getMuiProps } from '../util.ts';
+import { describeByHelperText, getMuiProps, withSlotProps } from '../util.ts';
 
 /** Properties available for the `rjsfSlotProps` target of the SelectWidget. */
 export interface SelectWidgetMuiProps extends GenericObjectType {
@@ -105,12 +107,15 @@ export default function SelectWidget<
   const { InputLabelProps, SelectProps, autocomplete, ...textFieldRemainingProps } = textFieldProps;
   // MUI's select gives its `inputProps` to the element with the `combobox` role, rather than to the field's root. An
   // `htmlInput` given through `rjsfSlotProps` is the form author's own choice for that element, so it is applied last
-  const ariaProps = widgetAriaProps(props);
-  const htmlInput = muiSlotProps?.htmlInput;
-  const htmlInputWithAria =
-    typeof htmlInput === 'function'
-      ? (ownerState: Parameters<typeof htmlInput>[0]) => ({ ...ariaProps, ...htmlInput(ownerState) })
-      : { ...ariaProps, ...htmlInput };
+  const textFieldOverrides = { ...otherMuiProps, ...textFieldRemainingProps } as TextFieldProps;
+  const ariaProps = describeByHelperText(
+    widgetAriaProps(props),
+    textFieldOverrides.id ?? id,
+    textFieldOverrides.helperText,
+  );
+  // The combobox shows its value, not a name, so where no label names it, it is named by the field's label, its
+  // placeholder or the translated prompt
+  const ariaLabel = getControlAriaLabel<T, S, F>(props, ariaProps['aria-label'], widgetDrawsLabelText<T, S, F>(props));
   const showPlaceholderOption = !isMultiple && schema.default === undefined;
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, isMultiple);
 
@@ -138,7 +143,7 @@ export default function SelectWidget<
         onChange={handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
-        {...({ ...otherMuiProps, ...textFieldRemainingProps } as TextFieldProps)}
+        {...textFieldOverrides}
         select // Apply this and the following props after the potential overrides defined in textFieldProps
         slotProps={{
           ...muiSlotProps,
@@ -153,7 +158,7 @@ export default function SelectWidget<
             ...muiSlotProps?.select,
             multiple,
           },
-          htmlInput: htmlInputWithAria,
+          htmlInput: withSlotProps({ ...ariaProps, 'aria-label': ariaLabel }, muiSlotProps?.htmlInput),
         }}
       >
         {showPlaceholderOption && <MenuItem value=''>{placeholder}</MenuItem>}

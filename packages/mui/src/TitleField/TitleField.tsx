@@ -30,7 +30,9 @@ export interface TitleFieldMuiProps extends GenericObjectType {
   };
 }
 
-/** The `TitleField` is the template to use to render the title of a field
+/** The `TitleField` is the template to use to render the title of a field. Its `id` goes on the title's text alone, as
+ * an option selector beside a container's options is named by it, and the required marker and the optional data
+ * control aren't part of that name
  *
  * @param props - The `TitleFieldProps` for this component
  */
@@ -39,7 +41,7 @@ export default function TitleField<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: TitleFieldProps<T, S, F>) {
-  const { id, title, optionalDataControl, uiSchema } = props;
+  const { id, title, required, optionalDataControl, uiSchema } = props;
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const {
@@ -55,7 +57,9 @@ export default function TitleField<
 
   let heading = (
     <Typography variant='h5' {...titleTypography}>
-      {title}
+      <span id={id}>{title}</span>
+      {/* Spaced by a thin space, as MUI's `FormLabel` spaces its own required marker */}
+      {required && <span aria-hidden>{'\u2009*'}</span>}
     </Typography>
   );
   if (optionalDataControl) {
@@ -74,7 +78,7 @@ export default function TitleField<
     );
   }
   return (
-    <Box id={id} {...titleBox} sx={computeSxProps<BoxProps>({ mb: 1, mt: 1 }, titleBox)}>
+    <Box {...titleBox} sx={computeSxProps<BoxProps>({ mb: 1, mt: 1 }, titleBox)}>
       {heading}
       <Divider {...titleDivider} />
     </Box>

@@ -125,6 +125,8 @@ export default function WrapIfAdditionalTemplate<
             fullWidth
             required={required}
             label={hasKeyLabel ? keyLabel : undefined}
+            // Where `ui:label: false` leaves the key unlabelled, its label's text names it, as core's key input is named
+            slotProps={{ htmlInput: { 'aria-label': hasKeyLabel ? undefined : keyLabel } }}
             defaultValue={keyName}
             disabled={disabled || readonly}
             id={`${id}-key`}
