@@ -78,7 +78,8 @@ function propertyScore<
  * read from `formData` with its `key`, is scored against the property's schema, as `propertyScore()` describes, and
  * the scores are added up. A schema without `properties` scores 1 when its `type` is the guessed-type of `formData`.
  * The score of each `allOf` entry, read through its `$ref`, is added to the schema's own, so options sharing a base
- * through a `$ref` beside their own keywords or through an `allOf` are told apart by the properties each adds.
+ * through a `$ref` beside their own keywords or through an `allOf` are told apart by the properties each adds. An
+ * entry that is a `$ref` scores 0 where the `formData` is `undefined` or `null`, as a property's `$ref` does.
  *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param rootSchema - The root JSON schema of the entire form
@@ -119,14 +120,18 @@ function scopeScore<T, S extends StrictRJSFSchema, F extends FormContextType>(
       )
     : Number(typeof schema.type === 'string' && schema.type === guessType(formData));
   const entries: unknown = schema[ALL_OF_KEY];
-  return (Array.isArray(entries) ? entries : []).reduce<number>(
-    (score, entry) =>
-      isSchemaObject<S>(entry)
-        ? score +
-          scopeScore<T, S, F>(context, rootSchema, resolveOwnRef<S>(entry, rootSchema), formData, [...scoring, schema])
-        : score,
-    own,
-  );
+  return (Array.isArray(entries) ? entries : []).reduce<number>((score, entry) => {
+    // An entry's `$ref` is followed only for data to score, as a property's own `$ref` is: a property typed `object`
+    // is scored from a fresh `calculateIndexScore()` for its value, so for a recursive definition reached through the
+    // entry, only the data, consumed a key at a time, bounds the descent
+    if (!isSchemaObject<S>(entry) || (typeof entry[REF_KEY] === 'string' && formData == null)) {
+      return score;
+    }
+    return (
+      score +
+      scopeScore<T, S, F>(context, rootSchema, resolveOwnRef<S>(entry, rootSchema), formData, [...scoring, schema])
+    );
+  }, own);
 }
 
 /** Returns the index of the option of `options` closest to `formData`, as `getClosestMatchingOption()` describes,
