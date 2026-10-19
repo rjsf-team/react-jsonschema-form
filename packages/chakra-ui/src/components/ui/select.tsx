@@ -19,6 +19,10 @@ const SelectClearTrigger = ({ ref, ...props }: ComponentProps<typeof ChakraSelec
 interface SelectTriggerProps extends ChakraSelect.ControlProps {
   clearable?: boolean;
   ref?: Ref<HTMLButtonElement>;
+  /** Focuses the trigger as it mounts: React acts on `autoFocus` only for a form control, which the trigger, a
+   * `<button>`, is, and the select's root isn't
+   */
+  autoFocus?: boolean;
 }
 
 /**
@@ -26,6 +30,7 @@ interface SelectTriggerProps extends ChakraSelect.ControlProps {
  *
  * @param props - The properties for the select trigger component.
  * @param [props.clearable] - Whether the trigger is clearable.
+ * @param [props.autoFocus] - Whether the trigger takes focus as it mounts.
  * @param [props.children] - The content to display inside the trigger.
  * @param [props.aria-label] - The accessible name given to the trigger itself, rather than to its control.
  * @param [props.aria-labelledby] - The ids naming the trigger itself, rather than its control.
@@ -37,6 +42,7 @@ export const SelectTrigger = ({
   children,
   clearable,
   ref,
+  autoFocus,
   'aria-label': ariaLabel,
   'aria-labelledby': ariaLabelledBy,
   'aria-describedby': ariaDescribedBy,
@@ -46,10 +52,11 @@ export const SelectTrigger = ({
   <ChakraSelect.Control {...rest}>
     <ChakraSelect.Trigger
       ref={ref}
+      autoFocus={autoFocus}
       aria-label={ariaLabel}
       aria-describedby={ariaDescribedBy}
-      // Passed only when given, since an undefined one would drop the field label Chakra points the trigger at
-      {...(ariaLabelledBy && { 'aria-labelledby': ariaLabelledBy })}
+      // Ark keeps the field label it points the trigger at for an undefined one; an empty one points it at nothing
+      aria-labelledby={ariaLabelledBy}
       {...(ariaInvalid && { 'aria-invalid': ariaInvalid })}
     >
       {children}
@@ -142,15 +149,21 @@ export const SelectValueText = ({ children, ref, ...rest }: SelectValueTextProps
  */
 export function SelectRoot<T extends CollectionItem>({
   ref,
+  hiddenSelectLabelledBy,
   ...props
-}: ChakraSelect.RootProps<T> & { ref?: Ref<HTMLDivElement> }) {
+}: ChakraSelect.RootProps<T> & {
+  ref?: Ref<HTMLDivElement>;
+  /** The hidden native select's `aria-labelledby`. Ark points it at the root's label id whether or not that label
+   * renders, so a select that draws no label passes an empty one */
+  hiddenSelectLabelledBy?: string;
+}) {
   return (
     <ChakraSelect.Root {...props} ref={ref} positioning={{ sameWidth: true, ...props.positioning }}>
       {props.asChild ? (
         props.children
       ) : (
         <>
-          <ChakraSelect.HiddenSelect />
+          <ChakraSelect.HiddenSelect aria-labelledby={hiddenSelectLabelledBy} />
           {props.children}
         </>
       )}

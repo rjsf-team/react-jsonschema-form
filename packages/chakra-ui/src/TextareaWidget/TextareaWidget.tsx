@@ -1,7 +1,7 @@
 import type { ChangeEvent, FocusEvent } from 'react';
 import { Textarea } from '@chakra-ui/react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, hasWidgetErrors, labelValue, widgetDrawsLabel } from '@rjsf/utils';
+import { getControlAttributes, hasWidgetErrors, labelValue, widgetDrawsLabelText } from '@rjsf/utils';
 
 import { Field } from '../components/ui/field.tsx';
 import { getChakra } from '../utils.ts';
@@ -25,8 +25,9 @@ export default function TextareaWidget<
     onChange,
     options,
     required,
+    presentation,
   } = props;
-  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
+  const drawsLabel = widgetDrawsLabelText<T, S, F>(props);
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLTextAreaElement>) =>
     onChange(newValue === '' ? options.emptyValue : newValue);
   const handleBlur = ({ target }: FocusEvent<HTMLTextAreaElement>) => onBlur(id, target?.value);
@@ -41,7 +42,8 @@ export default function TextareaWidget<
       required={required}
       readOnly={readonly}
       invalid={hasWidgetErrors<T, S, F>(props)}
-      label={labelValue(label, hideLabel || !label)}
+      label={labelValue(label, !drawsLabel)}
+      id={id}
       {...chakraProps}
     >
       <Textarea
@@ -54,7 +56,7 @@ export default function TextareaWidget<
         onBlur={handleBlur}
         onFocus={handleFocus}
         rows={options.rows}
-        aria-describedby={ariaDescribedByIds(id)}
+        {...getControlAttributes<T, S, F>({ id, presentation })}
       />
     </Field>
   );

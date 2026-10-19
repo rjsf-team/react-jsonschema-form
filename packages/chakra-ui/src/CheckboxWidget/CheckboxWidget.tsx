@@ -3,17 +3,18 @@ import type { CheckboxCheckedChangeDetails } from '@chakra-ui/react';
 import { Field as ChakraField, Text } from '@chakra-ui/react';
 import type { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
 import {
-  getControlDescribedBy,
+  getControlAttributes,
   getTemplates,
   getUiOptions,
   getWidgetDescription,
+  hasWidgetErrors,
   schemaRequiresTrueValue,
-  widgetDrawsLabel,
+  widgetDrawsLabelText,
 } from '@rjsf/utils';
 
 import { Checkbox } from '../components/ui/checkbox.tsx';
 import { Field } from '../components/ui/field.tsx';
-import { getChakra, isInputElement } from '../utils.ts';
+import { getChakra, isInputElement, labelledByOrNone } from '../utils.ts';
 
 export default function CheckboxWidget<
   T = unknown,
@@ -26,6 +27,7 @@ export default function CheckboxWidget<
     value,
     disabled,
     readonly,
+    autofocus,
     onChange,
     onBlur,
     onFocus,
@@ -37,7 +39,7 @@ export default function CheckboxWidget<
     schema,
     required,
   } = props;
-  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
+  const drawsLabel = widgetDrawsLabelText<T, S, F>(props);
   const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
   // The plan says which description this widget draws; without a plan, a template rendering the `checkbox` alias draws
   // the description itself
@@ -52,9 +54,10 @@ export default function CheckboxWidget<
     onFocus(id, isInputElement(target) ? target.checked : undefined);
 
   const chakraProps = getChakra(options);
+  const controlAttributes = getControlAttributes<T, S, F>({ id, presentation });
 
   return (
-    <Field mb={1} required={trueValueRequired} {...chakraProps}>
+    <Field mb={1} required={trueValueRequired} invalid={hasWidgetErrors<T, S, F>(props)} id={id} {...chakraProps}>
       {description && (
         <DescriptionFieldTemplate
           id={description.id}
@@ -72,9 +75,14 @@ export default function CheckboxWidget<
         onCheckedChange={handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
-        aria-describedby={getControlDescribedBy<T, S, F>({ id, presentation })}
+        // Ark points the input at the label it draws inside the checkbox, so with none drawn it is pointed at nothing
+        inputProps={{
+          ...controlAttributes,
+          'aria-labelledby': labelledByOrNone(controlAttributes['aria-labelledby'], drawsLabel),
+          autoFocus: autofocus,
+        }}
       >
-        {!hideLabel && label ? (
+        {drawsLabel ? (
           <Text>
             {label}
             {trueValueRequired && <ChakraField.RequiredIndicator />}

@@ -7,21 +7,23 @@ import {
   enumOptionValueDecoder,
   enumOptionsDomValues,
   flattenGroupedOptions,
+  getControlAriaLabel,
+  getLabelId,
   getOptionValueFormat,
   groupEnumOptions,
-  hasVisibleErrors,
+  hasWidgetErrors,
   isEnumOptionsGroup,
   labelValue,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
   useSelectFocusHandlers,
   widgetAriaProps,
-  widgetDrawsLabel,
+  widgetDrawsLabelText,
 } from '@rjsf/utils';
 
 import { Field } from '../components/ui/field.tsx';
 import { SelectRoot, SelectTrigger, SelectValueText } from '../components/ui/select.tsx';
-import { getChakra } from '../utils.ts';
+import { getChakra, labelledByOrNone } from '../utils.ts';
 
 export default function SelectWidget<
   T = unknown,
@@ -43,7 +45,13 @@ export default function SelectWidget<
     onChange,
     schema,
   } = props;
-  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
+  const drawsLabel = widgetDrawsLabelText<T, S, F>(props);
+  const labelId = getLabelId<T, S, F>(props);
+  const ariaProps = widgetAriaProps(props);
+  const labelledBy = labelledByOrNone(ariaProps['aria-labelledby'], drawsLabel);
+  // A trigger shows its value, not a name, so where no label names it, it is named by the field's label, its placeholder
+  // or the translated prompt
+  const ariaLabel = getControlAriaLabel<T, S, F>(props, ariaProps['aria-label'], drawsLabel);
   const { enumOptions, enumDisabled, emptyValue, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = useMemo(
@@ -92,6 +100,7 @@ export default function SelectWidget<
   );
 
   const containerRef = useRef(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
   const chakraProps = getChakra(options);
 
   function renderItem(option: IndexedEnumOptionType<S>) {
@@ -111,8 +120,14 @@ export default function SelectWidget<
       disabled={disabled || readonly}
       required={required}
       readOnly={readonly}
-      invalid={hasVisibleErrors(props)}
-      label={labelValue(label, hideLabel || !label)}
+      invalid={hasWidgetErrors<T, S, F>(props)}
+      label={labelValue(label, !drawsLabel)}
+      // A `for` naming the trigger would make a click on the label click the trigger, which opens the listbox, so the
+      // label has none, names the trigger through `aria-labelledby` and, as zag's select label does, only focuses it
+      labelNamesNoControl
+      onLabelClick={() => triggerRef.current?.focus()}
+      id={id}
+      ids={{ label: labelId }}
       position='relative'
       {...chakraProps}
     >
@@ -120,23 +135,30 @@ export default function SelectWidget<
       <SelectRoot
         collection={selectOptions}
         id={id}
+        // The trigger, which a user focuses, carries the field's id, so `focusOnFirstError` reaches it, and Ark points
+        // it at the label's id. Ark's own ids replace the field's, so the label's is restated
+        ids={{ trigger: id, label: labelId }}
+        hiddenSelectLabelledBy={labelledBy}
         name={htmlName || id}
         multiple={isMultiple}
         closeOnSelect={!isMultiple}
         onBlur={handleBlur}
         onValueChange={isMultiple ? handleMultiChange : handleSingleChange}
         onFocus={handleFocus}
-        autoFocus={autofocus}
         value={formValue}
         positioning={{ placement: 'bottom' }}
       >
-        <ChakraSelect.Control>
-          <SelectTrigger {...widgetAriaProps(props)}>
-            <SelectValueText placeholder={placeholder} />
-          </SelectTrigger>
-        </ChakraSelect.Control>
+        <SelectTrigger
+          ref={triggerRef}
+          autoFocus={autofocus}
+          {...ariaProps}
+          aria-label={ariaLabel}
+          aria-labelledby={labelledBy}
+        >
+          <SelectValueText placeholder={placeholder} />
+        </SelectTrigger>
         <ChakraSelect.Positioner minWidth='100% !important' zIndex='2 !important' top='calc(100% + 5px) !important'>
-          <ChakraSelect.Content>
+          <ChakraSelect.Content aria-labelledby={labelledBy} aria-label={ariaLabel}>
             {groupedOptions.map((option) =>
               isEnumOptionsGroup<S>(option) ? (
                 <ChakraSelect.ItemGroup key={`optgroup-${option.label}`}>

@@ -1,6 +1,14 @@
 import { Grid, GridItem } from '@chakra-ui/react';
 import type { FormContextType, ObjectFieldTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { buttonId, canExpand, descriptionId, getTemplates, getUiOptions, titleId } from '@rjsf/utils';
+import {
+  buttonId,
+  canExpand,
+  descriptionId,
+  getTemplates,
+  getUiOptions,
+  titleDrawsOptionalDataControl,
+  titleId,
+} from '@rjsf/utils';
 
 export default function ObjectFieldTemplate<
   T = unknown,
@@ -25,7 +33,7 @@ export default function ObjectFieldTemplate<
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const { TitleFieldTemplate, DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, uiOptions);
-  const showOptionalDataControlInTitle = !readonly && !disabled;
+  const showOptionalDataControlInTitle = titleDrawsOptionalDataControl<T, S, F>(props);
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
@@ -54,7 +62,9 @@ export default function ObjectFieldTemplate<
         />
       )}
       <Grid gap={description ? 2 : 4} mb={4}>
-        {!showOptionalDataControlInTitle ? <GridItem>{optionalDataControl}</GridItem> : undefined}
+        {!showOptionalDataControlInTitle && optionalDataControl ? (
+          <GridItem>{optionalDataControl}</GridItem>
+        ) : undefined}
         {properties.map((element) =>
           element.hidden ? element.content : <GridItem key={element.name}>{element.content}</GridItem>,
         )}

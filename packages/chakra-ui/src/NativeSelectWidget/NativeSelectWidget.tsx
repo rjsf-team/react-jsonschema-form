@@ -3,16 +3,16 @@ import { useMemo } from 'react';
 import { NativeSelect } from '@chakra-ui/react';
 import type { FormContextType, IndexedEnumOptionType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
   enumOptionsIndexForValue,
   enumOptionsValueForIndex,
   groupEnumOptions,
-  hasVisibleErrors,
+  hasWidgetErrors,
   isEnumOptionsGroup,
   labelValue,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
-  widgetDrawsLabel,
+  widgetAriaProps,
+  widgetDrawsLabelText,
 } from '@rjsf/utils';
 
 import { Field } from '../components/ui/field.tsx';
@@ -35,6 +35,7 @@ export default function NativeSelectWidget<
 >(props: WidgetProps<T, S, F>) {
   const {
     id,
+    htmlName,
     options,
     label,
     placeholder,
@@ -49,7 +50,7 @@ export default function NativeSelectWidget<
     onFocus,
     schema,
   } = props;
-  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
+  const drawsLabel = widgetDrawsLabelText<T, S, F>(props);
   const { enumOptions, enumDisabled, emptyValue, optgroups } = options;
 
   const handleChange = ({ target }: ChangeEvent<HTMLSelectElement>) =>
@@ -88,20 +89,22 @@ export default function NativeSelectWidget<
       disabled={disabled || readonly}
       required={required}
       readOnly={readonly}
-      invalid={hasVisibleErrors(props)}
-      label={labelValue(label, hideLabel || !label)}
+      invalid={hasWidgetErrors<T, S, F>(props)}
+      label={labelValue(label, !drawsLabel)}
+      id={id}
       {...chakraProps}
     >
       <SelectedOptionDescription {...props} />
       <NativeSelect.Root>
         <NativeSelect.Field
           id={id}
+          name={htmlName || id}
           onBlur={handleBlur}
           onChange={handleChange}
           onFocus={handleFocus}
           autoFocus={autofocus}
           value={formValue}
-          aria-describedby={ariaDescribedByIds(id)}
+          {...widgetAriaProps(props)}
         >
           {showPlaceholderOption ? (
             <option value='' disabled hidden>
