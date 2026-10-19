@@ -1,6 +1,6 @@
 import type { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { ConfigProvider } from 'antd';
 
 import Form from '../src/index.ts';
@@ -37,20 +37,20 @@ describe('antd DisabledContext', () => {
   it('disables every widget of an enabled field under a ConfigProvider with componentDisabled (#5506)', () => {
     const container = renderForm(true);
 
-    expect(screen.getByRole('textbox', { name: 'Text' })).toBeDisabled();
-    expect(screen.getByRole('spinbutton', { name: 'Number' })).toBeDisabled();
+    expect(container.querySelector('#root_text')).toBeDisabled();
+    expect(container.querySelector('#root_number')).toBeDisabled();
     expect(container.querySelector('#root_password')).toBeDisabled();
-    expect(screen.getByRole('textbox', { name: 'Textarea' })).toBeDisabled();
-    expect(screen.getByRole('combobox', { name: 'Select' })).toBeDisabled();
-    expect(screen.getByRole('checkbox', { name: 'Checkbox' })).toBeDisabled();
+    expect(container.querySelector('#root_textarea')).toBeDisabled();
+    expect(container.querySelector('#root_select')).toBeDisabled();
+    expect(container.querySelector('#root_checkbox')).toBeDisabled();
     expect(container.querySelector('#root_range .ant-slider-disabled, #root_range.ant-slider-disabled')).not.toBeNull();
   });
 
   it('leaves the same fields enabled without the context', () => {
-    renderForm(false);
+    const container = renderForm(false);
 
-    expect(screen.getByRole('textbox', { name: 'Text' })).toBeEnabled();
-    expect(screen.getByRole('spinbutton', { name: 'Number' })).toBeEnabled();
-    expect(screen.getByRole('checkbox', { name: 'Checkbox' })).toBeEnabled();
+    expect(container.querySelector('#root_text')).toBeEnabled();
+    expect(container.querySelector('#root_number')).toBeEnabled();
+    expect(container.querySelector('#root_checkbox')).toBeEnabled();
   });
 });
