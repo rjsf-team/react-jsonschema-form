@@ -24,10 +24,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 <div>
                   <div
                     class="my-1"
-                    id="root_person__title"
                   >
                     <h5>
-                      Person Info
+                      <span
+                        id="root_person__title"
+                      >
+                        Person Info
+                      </span>
                     </h5>
                     <hr
                       class="border-0 bg-secondary mt-0"
@@ -51,12 +54,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="form-label"
                     for="root_person_name_first"
-                    id="root_person_name_first__label"
                   >
-                    First Name*
+                    <span
+                      id="root_person_name_first__label"
+                    >
+                      First Name
+                    </span>
+                    *
                   </label>
                   <input
-                    aria-describedby="root_person_name_first__error root_person_name_first__description root_person_name_first__help"
                     class="form-control"
                     id="root_person_name_first"
                     name="root_person_name_first"
@@ -78,12 +84,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="form-label"
                     for="root_person_name_middle"
-                    id="root_person_name_middle__label"
                   >
-                    Middle
+                    <span
+                      id="root_person_name_middle__label"
+                    >
+                      Middle
+                    </span>
                   </label>
                   <input
-                    aria-describedby="root_person_name_middle__error root_person_name_middle__description root_person_name_middle__help"
                     class="form-control"
                     id="root_person_name_middle"
                     name="root_person_name_middle"
@@ -104,12 +112,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="form-label"
                     for="root_person_name_last"
-                    id="root_person_name_last__label"
                   >
-                    Last Name*
+                    <span
+                      id="root_person_name_last__label"
+                    >
+                      Last Name
+                    </span>
+                    *
                   </label>
                   <input
-                    aria-describedby="root_person_name_last__error root_person_name_last__description root_person_name_last__help"
                     class="form-control"
                     id="root_person_name_last"
                     name="root_person_name_last"
@@ -135,12 +146,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="form-label"
                     for="root_person_birth_date"
-                    id="root_person_birth_date__label"
                   >
-                    Date of Birth*
+                    <span
+                      id="root_person_birth_date__label"
+                    >
+                      Date of Birth
+                    </span>
+                    *
                   </label>
                   <input
-                    aria-describedby="root_person_birth_date__error root_person_birth_date__description root_person_birth_date__help"
                     class="form-control"
                     id="root_person_birth_date"
                     name="root_person_birth_date"
@@ -161,21 +175,27 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 <div>
                   <label
                     class="form-label"
-                    for="root_person_race"
-                    id="root_person_race__label"
                   >
-                    Race*
+                    <span
+                      id="root_person_race__label"
+                    >
+                      Race
+                    </span>
+                    *
                   </label>
-                  <div>
+                  <div
+                    aria-labelledby="root_person_race__label"
+                    id="root_person_race"
+                    role="group"
+                  >
                     <div
                       class="bg-transparent border-0 form-check"
                     >
                       <input
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-describedby="root_person_race__description"
                         class="form-check-input"
                         id="root_person_race-0"
                         name="root_person_race"
-                        required=""
                         type="checkbox"
                         value="0"
                       />
@@ -191,11 +211,10 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="bg-transparent border-0 form-check"
                     >
                       <input
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-describedby="root_person_race__description"
                         class="form-check-input"
                         id="root_person_race-1"
                         name="root_person_race"
-                        required=""
                         type="checkbox"
                         value="1"
                       />
@@ -211,11 +230,10 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="bg-transparent border-0 form-check"
                     >
                       <input
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-describedby="root_person_race__description"
                         class="form-check-input"
                         id="root_person_race-2"
                         name="root_person_race"
-                        required=""
                         type="checkbox"
                         value="2"
                       />
@@ -231,11 +249,10 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="bg-transparent border-0 form-check"
                     >
                       <input
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-describedby="root_person_race__description"
                         class="form-check-input"
                         id="root_person_race-3"
                         name="root_person_race"
-                        required=""
                         type="checkbox"
                         value="3"
                       />
@@ -251,11 +268,10 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="bg-transparent border-0 form-check"
                     >
                       <input
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-describedby="root_person_race__description"
                         class="form-check-input"
                         id="root_person_race-4"
                         name="root_person_race"
-                        required=""
                         type="checkbox"
                         value="4"
                       />
@@ -268,7 +284,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </label>
                     </div>
                   </div>
-                  <small
+                  <div
                     class="text-muted form-text"
                   >
                     <div>
@@ -279,7 +295,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         (Check all that apply)
                       </div>
                     </div>
-                  </small>
+                  </div>
                 </div>
               </div>
             </div>
@@ -307,12 +323,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           <label
                             class="form-label"
                             for="root_person_address_line_1"
-                            id="root_person_address_line_1__label"
                           >
-                            Address*
+                            <span
+                              id="root_person_address_line_1__label"
+                            >
+                              Address
+                            </span>
+                            *
                           </label>
                           <input
-                            aria-describedby="root_person_address_line_1__error root_person_address_line_1__description root_person_address_line_1__help"
                             class="form-control"
                             id="root_person_address_line_1"
                             name="root_person_address_line_1"
@@ -334,12 +353,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           <label
                             class="form-label"
                             for="root_person_address_line_2"
-                            id="root_person_address_line_2__label"
                           >
-                            Address 2
+                            <span
+                              id="root_person_address_line_2__label"
+                            >
+                              Address 2
+                            </span>
                           </label>
                           <input
-                            aria-describedby="root_person_address_line_2__error root_person_address_line_2__description root_person_address_line_2__help"
                             class="form-control"
                             id="root_person_address_line_2"
                             name="root_person_address_line_2"
@@ -360,12 +381,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           <label
                             class="form-label"
                             for="root_person_address_city"
-                            id="root_person_address_city__label"
                           >
-                            City*
+                            <span
+                              id="root_person_address_city__label"
+                            >
+                              City
+                            </span>
+                            *
                           </label>
                           <input
-                            aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                             class="form-control"
                             id="root_person_address_city"
                             name="root_person_address_city"
@@ -391,9 +415,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             <label
                               class="form-label"
                               for="root_person_address_state"
-                              id="root_person_address_state__label"
                             >
-                              State*
+                              <span
+                                id="root_person_address_state__label"
+                              >
+                                State
+                              </span>
+                              *
                             </label>
                             <select
                               class="form-select"
@@ -698,12 +726,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             <label
                               class="form-label"
                               for="root_person_address_postal_code"
-                              id="root_person_address_postal_code__label"
                             >
-                              ZIP Code*
+                              <span
+                                id="root_person_address_postal_code__label"
+                              >
+                                ZIP Code
+                              </span>
+                              *
                             </label>
                             <input
-                              aria-describedby="root_person_address_postal_code__error root_person_address_postal_code__description root_person_address_postal_code__help"
                               class="form-control"
                               id="root_person_address_postal_code"
                               name="root_person_address_postal_code"
@@ -736,19 +767,23 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <div>
                       <label
                         class="form-label"
-                        for="root_employment"
-                        id="root_employment__label"
                       >
-                        Employment
+                        <span
+                          id="root_employment__label"
+                        >
+                          Employment
+                        </span>
                       </label>
                       <div
+                        aria-labelledby="root_employment__label"
                         class="mb-0"
+                        id="root_employment"
+                        role="radiogroup"
                       >
                         <div
                           class="form-check form-check-inline"
                         >
                           <input
-                            aria-describedby="root_employment__error root_employment__description root_employment__help"
                             checked=""
                             class="form-check-input"
                             id="root_employment-0"
@@ -768,7 +803,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           class="form-check form-check-inline"
                         >
                           <input
-                            aria-describedby="root_employment__error root_employment__description root_employment__help"
                             class="form-check-input"
                             id="root_employment-1"
                             name="root_employment"
@@ -787,7 +821,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           class="form-check form-check-inline"
                         >
                           <input
-                            aria-describedby="root_employment__error root_employment__description root_employment__help"
                             class="form-check-input"
                             id="root_employment-2"
                             name="root_employment"
@@ -816,12 +849,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="form-label"
                         for="root_employment_business"
-                        id="root_employment_business__label"
                       >
-                        Company Name*
+                        <span
+                          id="root_employment_business__label"
+                        >
+                          Company Name
+                        </span>
+                        *
                       </label>
                       <input
-                        aria-describedby="root_employment_business__error root_employment_business__description root_employment_business__help"
                         class="form-control"
                         id="root_employment_business"
                         name="root_employment_business"
@@ -843,12 +879,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="form-label"
                         for="root_employment_title"
-                        id="root_employment_title__label"
                       >
-                        Job Title
+                        <span
+                          id="root_employment_title__label"
+                        >
+                          Job Title
+                        </span>
                       </label>
                       <input
-                        aria-describedby="root_employment_title__error root_employment_title__description root_employment_title__help"
                         class="form-control"
                         id="root_employment_title"
                         name="root_employment_title"
@@ -869,12 +907,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="form-label"
                         for="root_employment_location_city"
-                        id="root_employment_location_city__label"
                       >
-                        City*
+                        <span
+                          id="root_employment_location_city__label"
+                        >
+                          City
+                        </span>
+                        *
                       </label>
                       <input
-                        aria-describedby="root_employment_location_city__error root_employment_location_city__description root_employment_location_city__help"
                         class="form-control"
                         id="root_employment_location_city"
                         name="root_employment_location_city"
@@ -896,9 +937,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="form-label"
                         for="root_employment_location_state"
-                        id="root_employment_location_state__label"
                       >
-                        State*
+                        <span
+                          id="root_employment_location_state__label"
+                        >
+                          State
+                        </span>
+                        *
                       </label>
                       <select
                         class="form-select"
@@ -1235,10 +1280,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 <div>
                   <div
                     class="my-1"
-                    id="root_person__title"
                   >
                     <h5>
-                      Person Info
+                      <span
+                        id="root_person__title"
+                      >
+                        Person Info
+                      </span>
                     </h5>
                     <hr
                       class="border-0 bg-secondary mt-0"
@@ -1262,12 +1310,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="form-label"
                     for="root_person_name_first"
-                    id="root_person_name_first__label"
                   >
-                    First Name*
+                    <span
+                      id="root_person_name_first__label"
+                    >
+                      First Name
+                    </span>
+                    *
                   </label>
                   <input
-                    aria-describedby="root_person_name_first__error root_person_name_first__description root_person_name_first__help"
                     class="form-control"
                     id="root_person_name_first"
                     name="root_person_name_first"
@@ -1289,12 +1340,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="form-label"
                     for="root_person_name_middle"
-                    id="root_person_name_middle__label"
                   >
-                    Middle
+                    <span
+                      id="root_person_name_middle__label"
+                    >
+                      Middle
+                    </span>
                   </label>
                   <input
-                    aria-describedby="root_person_name_middle__error root_person_name_middle__description root_person_name_middle__help"
                     class="form-control"
                     id="root_person_name_middle"
                     name="root_person_name_middle"
@@ -1315,12 +1368,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="form-label"
                     for="root_person_name_last"
-                    id="root_person_name_last__label"
                   >
-                    Last Name*
+                    <span
+                      id="root_person_name_last__label"
+                    >
+                      Last Name
+                    </span>
+                    *
                   </label>
                   <input
-                    aria-describedby="root_person_name_last__error root_person_name_last__description root_person_name_last__help"
                     class="form-control"
                     id="root_person_name_last"
                     name="root_person_name_last"
@@ -1346,12 +1402,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="form-label"
                     for="root_person_birth_date"
-                    id="root_person_birth_date__label"
                   >
-                    Date of Birth*
+                    <span
+                      id="root_person_birth_date__label"
+                    >
+                      Date of Birth
+                    </span>
+                    *
                   </label>
                   <input
-                    aria-describedby="root_person_birth_date__error root_person_birth_date__description root_person_birth_date__help"
                     class="form-control"
                     id="root_person_birth_date"
                     name="root_person_birth_date"
@@ -1372,21 +1431,27 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 <div>
                   <label
                     class="form-label"
-                    for="root_person_race"
-                    id="root_person_race__label"
                   >
-                    Race*
+                    <span
+                      id="root_person_race__label"
+                    >
+                      Race
+                    </span>
+                    *
                   </label>
-                  <div>
+                  <div
+                    aria-labelledby="root_person_race__label"
+                    id="root_person_race"
+                    role="group"
+                  >
                     <div
                       class="bg-transparent border-0 form-check"
                     >
                       <input
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-describedby="root_person_race__description"
                         class="form-check-input"
                         id="root_person_race-0"
                         name="root_person_race"
-                        required=""
                         type="checkbox"
                         value="0"
                       />
@@ -1402,11 +1467,10 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="bg-transparent border-0 form-check"
                     >
                       <input
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-describedby="root_person_race__description"
                         class="form-check-input"
                         id="root_person_race-1"
                         name="root_person_race"
-                        required=""
                         type="checkbox"
                         value="1"
                       />
@@ -1422,11 +1486,10 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="bg-transparent border-0 form-check"
                     >
                       <input
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-describedby="root_person_race__description"
                         class="form-check-input"
                         id="root_person_race-2"
                         name="root_person_race"
-                        required=""
                         type="checkbox"
                         value="2"
                       />
@@ -1442,11 +1505,10 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="bg-transparent border-0 form-check"
                     >
                       <input
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-describedby="root_person_race__description"
                         class="form-check-input"
                         id="root_person_race-3"
                         name="root_person_race"
-                        required=""
                         type="checkbox"
                         value="3"
                       />
@@ -1462,11 +1524,10 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="bg-transparent border-0 form-check"
                     >
                       <input
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-describedby="root_person_race__description"
                         class="form-check-input"
                         id="root_person_race-4"
                         name="root_person_race"
-                        required=""
                         type="checkbox"
                         value="4"
                       />
@@ -1479,7 +1540,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </label>
                     </div>
                   </div>
-                  <small
+                  <div
                     class="text-muted form-text"
                   >
                     <div>
@@ -1490,7 +1551,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         (Check all that apply)
                       </div>
                     </div>
-                  </small>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1518,12 +1579,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           <label
                             class="form-label"
                             for="root_person_address_line_1"
-                            id="root_person_address_line_1__label"
                           >
-                            Address*
+                            <span
+                              id="root_person_address_line_1__label"
+                            >
+                              Address
+                            </span>
+                            *
                           </label>
                           <input
-                            aria-describedby="root_person_address_line_1__error root_person_address_line_1__description root_person_address_line_1__help"
                             class="form-control"
                             id="root_person_address_line_1"
                             name="root_person_address_line_1"
@@ -1545,12 +1609,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           <label
                             class="form-label"
                             for="root_person_address_line_2"
-                            id="root_person_address_line_2__label"
                           >
-                            Address 2
+                            <span
+                              id="root_person_address_line_2__label"
+                            >
+                              Address 2
+                            </span>
                           </label>
                           <input
-                            aria-describedby="root_person_address_line_2__error root_person_address_line_2__description root_person_address_line_2__help"
                             class="form-control"
                             id="root_person_address_line_2"
                             name="root_person_address_line_2"
@@ -1571,12 +1637,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           <label
                             class="form-label"
                             for="root_person_address_city"
-                            id="root_person_address_city__label"
                           >
-                            City*
+                            <span
+                              id="root_person_address_city__label"
+                            >
+                              City
+                            </span>
+                            *
                           </label>
                           <input
-                            aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                             class="form-control"
                             id="root_person_address_city"
                             name="root_person_address_city"
@@ -1602,9 +1671,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             <label
                               class="form-label"
                               for="root_person_address_state"
-                              id="root_person_address_state__label"
                             >
-                              State*
+                              <span
+                                id="root_person_address_state__label"
+                              >
+                                State
+                              </span>
+                              *
                             </label>
                             <select
                               class="form-select"
@@ -1909,12 +1982,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             <label
                               class="form-label"
                               for="root_person_address_postal_code"
-                              id="root_person_address_postal_code__label"
                             >
-                              ZIP Code*
+                              <span
+                                id="root_person_address_postal_code__label"
+                              >
+                                ZIP Code
+                              </span>
+                              *
                             </label>
                             <input
-                              aria-describedby="root_person_address_postal_code__error root_person_address_postal_code__description root_person_address_postal_code__help"
                               class="form-control"
                               id="root_person_address_postal_code"
                               name="root_person_address_postal_code"
@@ -1947,19 +2023,23 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <div>
                       <label
                         class="form-label"
-                        for="root_employment"
-                        id="root_employment__label"
                       >
-                        Employment
+                        <span
+                          id="root_employment__label"
+                        >
+                          Employment
+                        </span>
                       </label>
                       <div
+                        aria-labelledby="root_employment__label"
                         class="mb-0"
+                        id="root_employment"
+                        role="radiogroup"
                       >
                         <div
                           class="form-check form-check-inline"
                         >
                           <input
-                            aria-describedby="root_employment__error root_employment__description root_employment__help"
                             class="form-check-input"
                             id="root_employment-0"
                             name="root_employment"
@@ -1978,7 +2058,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           class="form-check form-check-inline"
                         >
                           <input
-                            aria-describedby="root_employment__error root_employment__description root_employment__help"
                             checked=""
                             class="form-check-input"
                             id="root_employment-1"
@@ -1998,7 +2077,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           class="form-check form-check-inline"
                         >
                           <input
-                            aria-describedby="root_employment__error root_employment__description root_employment__help"
                             class="form-check-input"
                             id="root_employment-2"
                             name="root_employment"
@@ -2027,12 +2105,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="form-label"
                         for="root_employment_district"
-                        id="root_employment_district__label"
                       >
-                        District Name
+                        <span
+                          id="root_employment_district__label"
+                        >
+                          District Name
+                        </span>
                       </label>
                       <input
-                        aria-describedby="root_employment_district__error root_employment_district__description root_employment_district__help"
                         class="form-control"
                         id="root_employment_district"
                         name="root_employment_district"
@@ -2053,12 +2133,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="form-label"
                         for="root_employment_school"
-                        id="root_employment_school__label"
                       >
-                        School Name*
+                        <span
+                          id="root_employment_school__label"
+                        >
+                          School Name
+                        </span>
+                        *
                       </label>
                       <input
-                        aria-describedby="root_employment_school__error root_employment_school__description root_employment_school__help"
                         class="form-control"
                         id="root_employment_school"
                         name="root_employment_school"
@@ -2080,12 +2163,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="form-label"
                         for="root_employment_title"
-                        id="root_employment_title__label"
                       >
-                        Job Title
+                        <span
+                          id="root_employment_title__label"
+                        >
+                          Job Title
+                        </span>
                       </label>
                       <input
-                        aria-describedby="root_employment_title__error root_employment_title__description root_employment_title__help"
                         class="form-control"
                         id="root_employment_title"
                         name="root_employment_title"
@@ -2106,12 +2191,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="form-label"
                         for="root_employment_location_city"
-                        id="root_employment_location_city__label"
                       >
-                        City*
+                        <span
+                          id="root_employment_location_city__label"
+                        >
+                          City
+                        </span>
+                        *
                       </label>
                       <input
-                        aria-describedby="root_employment_location_city__error root_employment_location_city__description root_employment_location_city__help"
                         class="form-control"
                         id="root_employment_location_city"
                         name="root_employment_location_city"
@@ -2133,9 +2221,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="form-label"
                         for="root_employment_location_state"
-                        id="root_employment_location_state__label"
                       >
-                        State*
+                        <span
+                          id="root_employment_location_state__label"
+                        >
+                          State
+                        </span>
+                        *
                       </label>
                       <select
                         class="form-select"
@@ -2472,10 +2564,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 <div>
                   <div
                     class="my-1"
-                    id="root_person__title"
                   >
                     <h5>
-                      Person Info
+                      <span
+                        id="root_person__title"
+                      >
+                        Person Info
+                      </span>
                     </h5>
                     <hr
                       class="border-0 bg-secondary mt-0"
@@ -2499,12 +2594,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="form-label"
                     for="root_person_name_first"
-                    id="root_person_name_first__label"
                   >
-                    First Name*
+                    <span
+                      id="root_person_name_first__label"
+                    >
+                      First Name
+                    </span>
+                    *
                   </label>
                   <input
-                    aria-describedby="root_person_name_first__error root_person_name_first__description root_person_name_first__help"
                     class="form-control"
                     id="root_person_name_first"
                     name="root_person_name_first"
@@ -2526,12 +2624,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="form-label"
                     for="root_person_name_middle"
-                    id="root_person_name_middle__label"
                   >
-                    Middle
+                    <span
+                      id="root_person_name_middle__label"
+                    >
+                      Middle
+                    </span>
                   </label>
                   <input
-                    aria-describedby="root_person_name_middle__error root_person_name_middle__description root_person_name_middle__help"
                     class="form-control"
                     id="root_person_name_middle"
                     name="root_person_name_middle"
@@ -2552,12 +2652,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="form-label"
                     for="root_person_name_last"
-                    id="root_person_name_last__label"
                   >
-                    Last Name*
+                    <span
+                      id="root_person_name_last__label"
+                    >
+                      Last Name
+                    </span>
+                    *
                   </label>
                   <input
-                    aria-describedby="root_person_name_last__error root_person_name_last__description root_person_name_last__help"
                     class="form-control"
                     id="root_person_name_last"
                     name="root_person_name_last"
@@ -2583,12 +2686,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="form-label"
                     for="root_person_birth_date"
-                    id="root_person_birth_date__label"
                   >
-                    Date of Birth*
+                    <span
+                      id="root_person_birth_date__label"
+                    >
+                      Date of Birth
+                    </span>
+                    *
                   </label>
                   <input
-                    aria-describedby="root_person_birth_date__error root_person_birth_date__description root_person_birth_date__help"
                     class="form-control"
                     id="root_person_birth_date"
                     name="root_person_birth_date"
@@ -2609,21 +2715,27 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 <div>
                   <label
                     class="form-label"
-                    for="root_person_race"
-                    id="root_person_race__label"
                   >
-                    Race*
+                    <span
+                      id="root_person_race__label"
+                    >
+                      Race
+                    </span>
+                    *
                   </label>
-                  <div>
+                  <div
+                    aria-labelledby="root_person_race__label"
+                    id="root_person_race"
+                    role="group"
+                  >
                     <div
                       class="bg-transparent border-0 form-check"
                     >
                       <input
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-describedby="root_person_race__description"
                         class="form-check-input"
                         id="root_person_race-0"
                         name="root_person_race"
-                        required=""
                         type="checkbox"
                         value="0"
                       />
@@ -2639,11 +2751,10 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="bg-transparent border-0 form-check"
                     >
                       <input
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-describedby="root_person_race__description"
                         class="form-check-input"
                         id="root_person_race-1"
                         name="root_person_race"
-                        required=""
                         type="checkbox"
                         value="1"
                       />
@@ -2659,11 +2770,10 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="bg-transparent border-0 form-check"
                     >
                       <input
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-describedby="root_person_race__description"
                         class="form-check-input"
                         id="root_person_race-2"
                         name="root_person_race"
-                        required=""
                         type="checkbox"
                         value="2"
                       />
@@ -2679,11 +2789,10 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="bg-transparent border-0 form-check"
                     >
                       <input
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-describedby="root_person_race__description"
                         class="form-check-input"
                         id="root_person_race-3"
                         name="root_person_race"
-                        required=""
                         type="checkbox"
                         value="3"
                       />
@@ -2699,11 +2808,10 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="bg-transparent border-0 form-check"
                     >
                       <input
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-describedby="root_person_race__description"
                         class="form-check-input"
                         id="root_person_race-4"
                         name="root_person_race"
-                        required=""
                         type="checkbox"
                         value="4"
                       />
@@ -2716,7 +2824,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </label>
                     </div>
                   </div>
-                  <small
+                  <div
                     class="text-muted form-text"
                   >
                     <div>
@@ -2727,7 +2835,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         (Check all that apply)
                       </div>
                     </div>
-                  </small>
+                  </div>
                 </div>
               </div>
             </div>
@@ -2755,12 +2863,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           <label
                             class="form-label"
                             for="root_person_address_line_1"
-                            id="root_person_address_line_1__label"
                           >
-                            Address*
+                            <span
+                              id="root_person_address_line_1__label"
+                            >
+                              Address
+                            </span>
+                            *
                           </label>
                           <input
-                            aria-describedby="root_person_address_line_1__error root_person_address_line_1__description root_person_address_line_1__help"
                             class="form-control"
                             id="root_person_address_line_1"
                             name="root_person_address_line_1"
@@ -2782,12 +2893,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           <label
                             class="form-label"
                             for="root_person_address_line_2"
-                            id="root_person_address_line_2__label"
                           >
-                            Address 2
+                            <span
+                              id="root_person_address_line_2__label"
+                            >
+                              Address 2
+                            </span>
                           </label>
                           <input
-                            aria-describedby="root_person_address_line_2__error root_person_address_line_2__description root_person_address_line_2__help"
                             class="form-control"
                             id="root_person_address_line_2"
                             name="root_person_address_line_2"
@@ -2808,12 +2921,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           <label
                             class="form-label"
                             for="root_person_address_city"
-                            id="root_person_address_city__label"
                           >
-                            City*
+                            <span
+                              id="root_person_address_city__label"
+                            >
+                              City
+                            </span>
+                            *
                           </label>
                           <input
-                            aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                             class="form-control"
                             id="root_person_address_city"
                             name="root_person_address_city"
@@ -2839,9 +2955,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             <label
                               class="form-label"
                               for="root_person_address_state"
-                              id="root_person_address_state__label"
                             >
-                              State*
+                              <span
+                                id="root_person_address_state__label"
+                              >
+                                State
+                              </span>
+                              *
                             </label>
                             <select
                               class="form-select"
@@ -3146,12 +3266,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             <label
                               class="form-label"
                               for="root_person_address_postal_code"
-                              id="root_person_address_postal_code__label"
                             >
-                              ZIP Code*
+                              <span
+                                id="root_person_address_postal_code__label"
+                              >
+                                ZIP Code
+                              </span>
+                              *
                             </label>
                             <input
-                              aria-describedby="root_person_address_postal_code__error root_person_address_postal_code__description root_person_address_postal_code__help"
                               class="form-control"
                               id="root_person_address_postal_code"
                               name="root_person_address_postal_code"
@@ -3184,19 +3307,23 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <div>
                       <label
                         class="form-label"
-                        for="root_employment"
-                        id="root_employment__label"
                       >
-                        Employment
+                        <span
+                          id="root_employment__label"
+                        >
+                          Employment
+                        </span>
                       </label>
                       <div
+                        aria-labelledby="root_employment__label"
                         class="mb-0"
+                        id="root_employment"
+                        role="radiogroup"
                       >
                         <div
                           class="form-check form-check-inline"
                         >
                           <input
-                            aria-describedby="root_employment__error root_employment__description root_employment__help"
                             class="form-check-input"
                             id="root_employment-0"
                             name="root_employment"
@@ -3215,7 +3342,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           class="form-check form-check-inline"
                         >
                           <input
-                            aria-describedby="root_employment__error root_employment__description root_employment__help"
                             class="form-check-input"
                             id="root_employment-1"
                             name="root_employment"
@@ -3234,7 +3360,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           class="form-check form-check-inline"
                         >
                           <input
-                            aria-describedby="root_employment__error root_employment__description root_employment__help"
                             checked=""
                             class="form-check-input"
                             id="root_employment-2"
@@ -3264,15 +3389,18 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="form-label"
                         for="root_employment_description"
-                        id="root_employment_description__label"
                       >
-                        Describe your job*
+                        <span
+                          id="root_employment_description__label"
+                        >
+                          Describe your job
+                        </span>
+                        *
                       </label>
                       <div
                         class="input-group"
                       >
                         <textarea
-                          aria-describedby="root_employment_description__error root_employment_description__description root_employment_description__help"
                           class="form-control"
                           id="root_employment_description"
                           name="root_employment_description"
@@ -3326,10 +3454,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 <div>
                   <div
                     class="my-1"
-                    id="root_person__title"
                   >
                     <h5>
-                      Person Info
+                      <span
+                        id="root_person__title"
+                      >
+                        Person Info
+                      </span>
                     </h5>
                     <hr
                       class="border-0 bg-secondary mt-0"
@@ -3353,12 +3484,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="form-label"
                     for="root_person_name_first"
-                    id="root_person_name_first__label"
                   >
-                    First Name*
+                    <span
+                      id="root_person_name_first__label"
+                    >
+                      First Name
+                    </span>
+                    *
                   </label>
                   <input
-                    aria-describedby="root_person_name_first__error root_person_name_first__description root_person_name_first__help"
                     class="form-control"
                     id="root_person_name_first"
                     name="root_person_name_first"
@@ -3380,12 +3514,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="form-label"
                     for="root_person_name_middle"
-                    id="root_person_name_middle__label"
                   >
-                    Middle
+                    <span
+                      id="root_person_name_middle__label"
+                    >
+                      Middle
+                    </span>
                   </label>
                   <input
-                    aria-describedby="root_person_name_middle__error root_person_name_middle__description root_person_name_middle__help"
                     class="form-control"
                     id="root_person_name_middle"
                     name="root_person_name_middle"
@@ -3406,12 +3542,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="form-label"
                     for="root_person_name_last"
-                    id="root_person_name_last__label"
                   >
-                    Last Name*
+                    <span
+                      id="root_person_name_last__label"
+                    >
+                      Last Name
+                    </span>
+                    *
                   </label>
                   <input
-                    aria-describedby="root_person_name_last__error root_person_name_last__description root_person_name_last__help"
                     class="form-control"
                     id="root_person_name_last"
                     name="root_person_name_last"
@@ -3437,12 +3576,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <label
                     class="form-label"
                     for="root_person_birth_date"
-                    id="root_person_birth_date__label"
                   >
-                    Date of Birth*
+                    <span
+                      id="root_person_birth_date__label"
+                    >
+                      Date of Birth
+                    </span>
+                    *
                   </label>
                   <input
-                    aria-describedby="root_person_birth_date__error root_person_birth_date__description root_person_birth_date__help"
                     class="form-control"
                     id="root_person_birth_date"
                     name="root_person_birth_date"
@@ -3463,21 +3605,27 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 <div>
                   <label
                     class="form-label"
-                    for="root_person_race"
-                    id="root_person_race__label"
                   >
-                    Race*
+                    <span
+                      id="root_person_race__label"
+                    >
+                      Race
+                    </span>
+                    *
                   </label>
-                  <div>
+                  <div
+                    aria-labelledby="root_person_race__label"
+                    id="root_person_race"
+                    role="group"
+                  >
                     <div
                       class="bg-transparent border-0 form-check"
                     >
                       <input
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-describedby="root_person_race__description"
                         class="form-check-input"
                         id="root_person_race-0"
                         name="root_person_race"
-                        required=""
                         type="checkbox"
                         value="0"
                       />
@@ -3493,11 +3641,10 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="bg-transparent border-0 form-check"
                     >
                       <input
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-describedby="root_person_race__description"
                         class="form-check-input"
                         id="root_person_race-1"
                         name="root_person_race"
-                        required=""
                         type="checkbox"
                         value="1"
                       />
@@ -3513,11 +3660,10 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="bg-transparent border-0 form-check"
                     >
                       <input
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-describedby="root_person_race__description"
                         class="form-check-input"
                         id="root_person_race-2"
                         name="root_person_race"
-                        required=""
                         type="checkbox"
                         value="2"
                       />
@@ -3533,11 +3679,10 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="bg-transparent border-0 form-check"
                     >
                       <input
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-describedby="root_person_race__description"
                         class="form-check-input"
                         id="root_person_race-3"
                         name="root_person_race"
-                        required=""
                         type="checkbox"
                         value="3"
                       />
@@ -3553,11 +3698,10 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="bg-transparent border-0 form-check"
                     >
                       <input
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                        aria-describedby="root_person_race__description"
                         class="form-check-input"
                         id="root_person_race-4"
                         name="root_person_race"
-                        required=""
                         type="checkbox"
                         value="4"
                       />
@@ -3570,7 +3714,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </label>
                     </div>
                   </div>
-                  <small
+                  <div
                     class="text-muted form-text"
                   >
                     <div>
@@ -3581,7 +3725,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         (Check all that apply)
                       </div>
                     </div>
-                  </small>
+                  </div>
                 </div>
               </div>
             </div>
@@ -3609,12 +3753,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           <label
                             class="form-label"
                             for="root_person_address_line_1"
-                            id="root_person_address_line_1__label"
                           >
-                            Address*
+                            <span
+                              id="root_person_address_line_1__label"
+                            >
+                              Address
+                            </span>
+                            *
                           </label>
                           <input
-                            aria-describedby="root_person_address_line_1__error root_person_address_line_1__description root_person_address_line_1__help"
                             class="form-control"
                             id="root_person_address_line_1"
                             name="root_person_address_line_1"
@@ -3636,12 +3783,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           <label
                             class="form-label"
                             for="root_person_address_line_2"
-                            id="root_person_address_line_2__label"
                           >
-                            Address 2
+                            <span
+                              id="root_person_address_line_2__label"
+                            >
+                              Address 2
+                            </span>
                           </label>
                           <input
-                            aria-describedby="root_person_address_line_2__error root_person_address_line_2__description root_person_address_line_2__help"
                             class="form-control"
                             id="root_person_address_line_2"
                             name="root_person_address_line_2"
@@ -3662,12 +3811,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           <label
                             class="form-label"
                             for="root_person_address_city"
-                            id="root_person_address_city__label"
                           >
-                            City*
+                            <span
+                              id="root_person_address_city__label"
+                            >
+                              City
+                            </span>
+                            *
                           </label>
                           <input
-                            aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                             class="form-control"
                             id="root_person_address_city"
                             name="root_person_address_city"
@@ -3693,9 +3845,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             <label
                               class="form-label"
                               for="root_person_address_state"
-                              id="root_person_address_state__label"
                             >
-                              State*
+                              <span
+                                id="root_person_address_state__label"
+                              >
+                                State
+                              </span>
+                              *
                             </label>
                             <select
                               class="form-select"
@@ -4000,12 +4156,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             <label
                               class="form-label"
                               for="root_person_address_postal_code"
-                              id="root_person_address_postal_code__label"
                             >
-                              ZIP Code*
+                              <span
+                                id="root_person_address_postal_code__label"
+                              >
+                                ZIP Code
+                              </span>
+                              *
                             </label>
                             <input
-                              aria-describedby="root_person_address_postal_code__error root_person_address_postal_code__description root_person_address_postal_code__help"
                               class="form-control"
                               id="root_person_address_postal_code"
                               name="root_person_address_postal_code"
@@ -4038,19 +4197,23 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <div>
                       <label
                         class="form-label"
-                        for="root_employment"
-                        id="root_employment__label"
                       >
-                        Employment
+                        <span
+                          id="root_employment__label"
+                        >
+                          Employment
+                        </span>
                       </label>
                       <div
+                        aria-labelledby="root_employment__label"
                         class="mb-0"
+                        id="root_employment"
+                        role="radiogroup"
                       >
                         <div
                           class="form-check form-check-inline"
                         >
                           <input
-                            aria-describedby="root_employment__error root_employment__description root_employment__help"
                             checked=""
                             class="form-check-input"
                             id="root_employment-0"
@@ -4070,7 +4233,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           class="form-check form-check-inline"
                         >
                           <input
-                            aria-describedby="root_employment__error root_employment__description root_employment__help"
                             class="form-check-input"
                             id="root_employment-1"
                             name="root_employment"
@@ -4089,7 +4251,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           class="form-check form-check-inline"
                         >
                           <input
-                            aria-describedby="root_employment__error root_employment__description root_employment__help"
                             class="form-check-input"
                             id="root_employment-2"
                             name="root_employment"
@@ -4118,12 +4279,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="form-label"
                         for="root_employment_business"
-                        id="root_employment_business__label"
                       >
-                        Company Name*
+                        <span
+                          id="root_employment_business__label"
+                        >
+                          Company Name
+                        </span>
+                        *
                       </label>
                       <input
-                        aria-describedby="root_employment_business__error root_employment_business__description root_employment_business__help"
                         class="form-control"
                         id="root_employment_business"
                         name="root_employment_business"
@@ -4145,12 +4309,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="form-label"
                         for="root_employment_title"
-                        id="root_employment_title__label"
                       >
-                        Job Title
+                        <span
+                          id="root_employment_title__label"
+                        >
+                          Job Title
+                        </span>
                       </label>
                       <input
-                        aria-describedby="root_employment_title__error root_employment_title__description root_employment_title__help"
                         class="form-control"
                         id="root_employment_title"
                         name="root_employment_title"
@@ -4171,12 +4337,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="form-label"
                         for="root_employment_location_city"
-                        id="root_employment_location_city__label"
                       >
-                        City*
+                        <span
+                          id="root_employment_location_city__label"
+                        >
+                          City
+                        </span>
+                        *
                       </label>
                       <input
-                        aria-describedby="root_employment_location_city__error root_employment_location_city__description root_employment_location_city__help"
                         class="form-control"
                         id="root_employment_location_city"
                         name="root_employment_location_city"
@@ -4198,9 +4367,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="form-label"
                         for="root_employment_location_state"
-                        id="root_employment_location_state__label"
                       >
-                        State*
+                        <span
+                          id="root_employment_location_state__label"
+                        >
+                          State
+                        </span>
+                        *
                       </label>
                       <select
                         class="form-select"
@@ -4534,10 +4707,13 @@ exports[`Three even column grid > renders person and address in three columns, n
               <div>
                 <div
                   class="my-1"
-                  id="root_person__title"
                 >
                   <h5>
-                    Person Info
+                    <span
+                      id="root_person__title"
+                    >
+                      Person Info
+                    </span>
                   </h5>
                   <hr
                     class="border-0 bg-secondary mt-0"
@@ -4557,12 +4733,15 @@ exports[`Three even column grid > renders person and address in three columns, n
                 <label
                   class="form-label"
                   for="root_person_name_first"
-                  id="root_person_name_first__label"
                 >
-                  First Name*
+                  <span
+                    id="root_person_name_first__label"
+                  >
+                    First Name
+                  </span>
+                  *
                 </label>
                 <input
-                  aria-describedby="root_person_name_first__error root_person_name_first__description root_person_name_first__help"
                   class="form-control"
                   id="root_person_name_first"
                   name="root_person_name_first"
@@ -4584,12 +4763,14 @@ exports[`Three even column grid > renders person and address in three columns, n
                 <label
                   class="form-label"
                   for="root_person_name_middle"
-                  id="root_person_name_middle__label"
                 >
-                  Middle
+                  <span
+                    id="root_person_name_middle__label"
+                  >
+                    Middle
+                  </span>
                 </label>
                 <input
-                  aria-describedby="root_person_name_middle__error root_person_name_middle__description root_person_name_middle__help"
                   class="form-control"
                   id="root_person_name_middle"
                   name="root_person_name_middle"
@@ -4610,12 +4791,15 @@ exports[`Three even column grid > renders person and address in three columns, n
                 <label
                   class="form-label"
                   for="root_person_name_last"
-                  id="root_person_name_last__label"
                 >
-                  Last Name*
+                  <span
+                    id="root_person_name_last__label"
+                  >
+                    Last Name
+                  </span>
+                  *
                 </label>
                 <input
-                  aria-describedby="root_person_name_last__error root_person_name_last__description root_person_name_last__help"
                   class="form-control"
                   id="root_person_name_last"
                   name="root_person_name_last"
@@ -4637,12 +4821,15 @@ exports[`Three even column grid > renders person and address in three columns, n
                 <label
                   class="form-label"
                   for="root_person_birth_date"
-                  id="root_person_birth_date__label"
                 >
-                  Date of Birth*
+                  <span
+                    id="root_person_birth_date__label"
+                  >
+                    Date of Birth
+                  </span>
+                  *
                 </label>
                 <input
-                  aria-describedby="root_person_birth_date__error root_person_birth_date__description root_person_birth_date__help"
                   class="form-control"
                   id="root_person_birth_date"
                   name="root_person_birth_date"
@@ -4663,21 +4850,27 @@ exports[`Three even column grid > renders person and address in three columns, n
               <div>
                 <label
                   class="form-label"
-                  for="root_person_race"
-                  id="root_person_race__label"
                 >
-                  Race*
+                  <span
+                    id="root_person_race__label"
+                  >
+                    Race
+                  </span>
+                  *
                 </label>
-                <div>
+                <div
+                  aria-labelledby="root_person_race__label"
+                  id="root_person_race"
+                  role="group"
+                >
                   <div
                     class="bg-transparent border-0 form-check"
                   >
                     <input
-                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                      aria-describedby="root_person_race__description"
                       class="form-check-input"
                       id="root_person_race-0"
                       name="root_person_race"
-                      required=""
                       type="checkbox"
                       value="0"
                     />
@@ -4693,11 +4886,10 @@ exports[`Three even column grid > renders person and address in three columns, n
                     class="bg-transparent border-0 form-check"
                   >
                     <input
-                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                      aria-describedby="root_person_race__description"
                       class="form-check-input"
                       id="root_person_race-1"
                       name="root_person_race"
-                      required=""
                       type="checkbox"
                       value="1"
                     />
@@ -4713,11 +4905,10 @@ exports[`Three even column grid > renders person and address in three columns, n
                     class="bg-transparent border-0 form-check"
                   >
                     <input
-                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                      aria-describedby="root_person_race__description"
                       class="form-check-input"
                       id="root_person_race-2"
                       name="root_person_race"
-                      required=""
                       type="checkbox"
                       value="2"
                     />
@@ -4733,11 +4924,10 @@ exports[`Three even column grid > renders person and address in three columns, n
                     class="bg-transparent border-0 form-check"
                   >
                     <input
-                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                      aria-describedby="root_person_race__description"
                       class="form-check-input"
                       id="root_person_race-3"
                       name="root_person_race"
-                      required=""
                       type="checkbox"
                       value="3"
                     />
@@ -4753,11 +4943,10 @@ exports[`Three even column grid > renders person and address in three columns, n
                     class="bg-transparent border-0 form-check"
                   >
                     <input
-                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                      aria-describedby="root_person_race__description"
                       class="form-check-input"
                       id="root_person_race-4"
                       name="root_person_race"
-                      required=""
                       type="checkbox"
                       value="4"
                     />
@@ -4770,7 +4959,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                     </label>
                   </div>
                 </div>
-                <small
+                <div
                   class="text-muted form-text"
                 >
                   <div>
@@ -4781,7 +4970,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       (Check all that apply)
                     </div>
                   </div>
-                </small>
+                </div>
               </div>
             </div>
           </div>
@@ -4795,12 +4984,15 @@ exports[`Three even column grid > renders person and address in three columns, n
                 <label
                   class="form-label"
                   for="root_person_address_line_1"
-                  id="root_person_address_line_1__label"
                 >
-                  Address*
+                  <span
+                    id="root_person_address_line_1__label"
+                  >
+                    Address
+                  </span>
+                  *
                 </label>
                 <input
-                  aria-describedby="root_person_address_line_1__error root_person_address_line_1__description root_person_address_line_1__help"
                   class="form-control"
                   id="root_person_address_line_1"
                   name="root_person_address_line_1"
@@ -4822,12 +5014,14 @@ exports[`Three even column grid > renders person and address in three columns, n
                 <label
                   class="form-label"
                   for="root_person_address_line_2"
-                  id="root_person_address_line_2__label"
                 >
-                  Address 2
+                  <span
+                    id="root_person_address_line_2__label"
+                  >
+                    Address 2
+                  </span>
                 </label>
                 <input
-                  aria-describedby="root_person_address_line_2__error root_person_address_line_2__description root_person_address_line_2__help"
                   class="form-control"
                   id="root_person_address_line_2"
                   name="root_person_address_line_2"
@@ -4848,12 +5042,15 @@ exports[`Three even column grid > renders person and address in three columns, n
                 <label
                   class="form-label"
                   for="root_person_address_city"
-                  id="root_person_address_city__label"
                 >
-                  City*
+                  <span
+                    id="root_person_address_city__label"
+                  >
+                    City
+                  </span>
+                  *
                 </label>
                 <input
-                  aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                   class="form-control"
                   id="root_person_address_city"
                   name="root_person_address_city"
@@ -4875,9 +5072,13 @@ exports[`Three even column grid > renders person and address in three columns, n
                 <label
                   class="form-label"
                   for="root_person_address_state"
-                  id="root_person_address_state__label"
                 >
-                  State*
+                  <span
+                    id="root_person_address_state__label"
+                  >
+                    State
+                  </span>
+                  *
                 </label>
                 <select
                   class="form-select"
@@ -5211,10 +5412,13 @@ exports[`Two even column grid > renders person and address in two columns, no em
               <div>
                 <div
                   class="my-1"
-                  id="root_person__title"
                 >
                   <h5>
-                    Person Info
+                    <span
+                      id="root_person__title"
+                    >
+                      Person Info
+                    </span>
                   </h5>
                   <hr
                     class="border-0 bg-secondary mt-0"
@@ -5234,12 +5438,15 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 <label
                   class="form-label"
                   for="root_person_name_first"
-                  id="root_person_name_first__label"
                 >
-                  First Name*
+                  <span
+                    id="root_person_name_first__label"
+                  >
+                    First Name
+                  </span>
+                  *
                 </label>
                 <input
-                  aria-describedby="root_person_name_first__error root_person_name_first__description root_person_name_first__help"
                   class="form-control"
                   id="root_person_name_first"
                   name="root_person_name_first"
@@ -5261,12 +5468,14 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 <label
                   class="form-label"
                   for="root_person_name_middle"
-                  id="root_person_name_middle__label"
                 >
-                  Middle
+                  <span
+                    id="root_person_name_middle__label"
+                  >
+                    Middle
+                  </span>
                 </label>
                 <input
-                  aria-describedby="root_person_name_middle__error root_person_name_middle__description root_person_name_middle__help"
                   class="form-control"
                   id="root_person_name_middle"
                   name="root_person_name_middle"
@@ -5287,12 +5496,15 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 <label
                   class="form-label"
                   for="root_person_name_first"
-                  id="root_person_name_first__label"
                 >
-                  First Name*
+                  <span
+                    id="root_person_name_first__label"
+                  >
+                    First Name
+                  </span>
+                  *
                 </label>
                 <input
-                  aria-describedby="root_person_name_first__error root_person_name_first__description root_person_name_first__help"
                   class="form-control"
                   id="root_person_name_first"
                   name="root_person_name_first"
@@ -5314,12 +5526,15 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 <label
                   class="form-label"
                   for="root_person_birth_date"
-                  id="root_person_birth_date__label"
                 >
-                  Date of Birth*
+                  <span
+                    id="root_person_birth_date__label"
+                  >
+                    Date of Birth
+                  </span>
+                  *
                 </label>
                 <input
-                  aria-describedby="root_person_birth_date__error root_person_birth_date__description root_person_birth_date__help"
                   class="form-control"
                   id="root_person_birth_date"
                   name="root_person_birth_date"
@@ -5340,21 +5555,27 @@ exports[`Two even column grid > renders person and address in two columns, no em
               <div>
                 <label
                   class="form-label"
-                  for="root_person_race"
-                  id="root_person_race__label"
                 >
-                  Race*
+                  <span
+                    id="root_person_race__label"
+                  >
+                    Race
+                  </span>
+                  *
                 </label>
-                <div>
+                <div
+                  aria-labelledby="root_person_race__label"
+                  id="root_person_race"
+                  role="group"
+                >
                   <div
                     class="bg-transparent border-0 form-check"
                   >
                     <input
-                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                      aria-describedby="root_person_race__description"
                       class="form-check-input"
                       id="root_person_race-0"
                       name="root_person_race"
-                      required=""
                       type="checkbox"
                       value="0"
                     />
@@ -5370,11 +5591,10 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     class="bg-transparent border-0 form-check"
                   >
                     <input
-                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                      aria-describedby="root_person_race__description"
                       class="form-check-input"
                       id="root_person_race-1"
                       name="root_person_race"
-                      required=""
                       type="checkbox"
                       value="1"
                     />
@@ -5390,11 +5610,10 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     class="bg-transparent border-0 form-check"
                   >
                     <input
-                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                      aria-describedby="root_person_race__description"
                       class="form-check-input"
                       id="root_person_race-2"
                       name="root_person_race"
-                      required=""
                       type="checkbox"
                       value="2"
                     />
@@ -5410,11 +5629,10 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     class="bg-transparent border-0 form-check"
                   >
                     <input
-                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                      aria-describedby="root_person_race__description"
                       class="form-check-input"
                       id="root_person_race-3"
                       name="root_person_race"
-                      required=""
                       type="checkbox"
                       value="3"
                     />
@@ -5430,11 +5648,10 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     class="bg-transparent border-0 form-check"
                   >
                     <input
-                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
+                      aria-describedby="root_person_race__description"
                       class="form-check-input"
                       id="root_person_race-4"
                       name="root_person_race"
-                      required=""
                       type="checkbox"
                       value="4"
                     />
@@ -5447,7 +5664,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     </label>
                   </div>
                 </div>
-                <small
+                <div
                   class="text-muted form-text"
                 >
                   <div>
@@ -5458,7 +5675,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       (Check all that apply)
                     </div>
                   </div>
-                </small>
+                </div>
               </div>
             </div>
           </div>
@@ -5472,12 +5689,15 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 <label
                   class="form-label"
                   for="root_person_address_line_1"
-                  id="root_person_address_line_1__label"
                 >
-                  Address*
+                  <span
+                    id="root_person_address_line_1__label"
+                  >
+                    Address
+                  </span>
+                  *
                 </label>
                 <input
-                  aria-describedby="root_person_address_line_1__error root_person_address_line_1__description root_person_address_line_1__help"
                   class="form-control"
                   id="root_person_address_line_1"
                   name="root_person_address_line_1"
@@ -5499,12 +5719,14 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 <label
                   class="form-label"
                   for="root_person_address_line_2"
-                  id="root_person_address_line_2__label"
                 >
-                  Address 2
+                  <span
+                    id="root_person_address_line_2__label"
+                  >
+                    Address 2
+                  </span>
                 </label>
                 <input
-                  aria-describedby="root_person_address_line_2__error root_person_address_line_2__description root_person_address_line_2__help"
                   class="form-control"
                   id="root_person_address_line_2"
                   name="root_person_address_line_2"
@@ -5525,12 +5747,15 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 <label
                   class="form-label"
                   for="root_person_address_city"
-                  id="root_person_address_city__label"
                 >
-                  City*
+                  <span
+                    id="root_person_address_city__label"
+                  >
+                    City
+                  </span>
+                  *
                 </label>
                 <input
-                  aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                   class="form-control"
                   id="root_person_address_city"
                   name="root_person_address_city"
@@ -5552,9 +5777,13 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 <label
                   class="form-label"
                   for="root_person_address_state"
-                  id="root_person_address_state__label"
                 >
-                  State*
+                  <span
+                    id="root_person_address_state__label"
+                  >
+                    State
+                  </span>
+                  *
                 </label>
                 <select
                   class="form-select"

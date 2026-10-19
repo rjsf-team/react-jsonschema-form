@@ -5,7 +5,7 @@ import { makeWidgetMockProps } from './helpers/createMocks.ts';
 
 describe('TextareaWidget', () => {
   test('simple without errors', () => {
-    const { asFragment } = render(<TextareaWidget {...makeWidgetMockProps({})} />);
+    const { asFragment } = render(<TextareaWidget {...makeWidgetMockProps()} />);
     expect(asFragment()).toMatchSnapshot();
   });
   test('simple with errors', () => {

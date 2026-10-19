@@ -1,26 +1,28 @@
 import type { ChangeEvent, FocusEvent } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds } from '@rjsf/utils';
+import { getControlAttributes, hasWidgetErrors } from '@rjsf/utils';
 import { FormControl, InputGroup } from 'react-bootstrap';
 
 export default function TextareaWidget<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({
-  id,
-  htmlName,
-  placeholder,
-  value,
-  required,
-  disabled,
-  autofocus,
-  readonly,
-  onBlur,
-  onFocus,
-  onChange,
-  options,
-}: WidgetProps<T, S, F>) {
+>(props: WidgetProps<T, S, F>) {
+  const {
+    id,
+    htmlName,
+    placeholder,
+    value,
+    required,
+    disabled,
+    autofocus,
+    readonly,
+    onBlur,
+    onFocus,
+    onChange,
+    options,
+    presentation,
+  } = props;
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLTextAreaElement>) =>
     onChange(newValue === '' ? options.emptyValue : newValue);
   const handleBlur = ({ target }: FocusEvent<HTMLTextAreaElement>) => onBlur(id, target?.value);
@@ -39,10 +41,11 @@ export default function TextareaWidget<
         required={required}
         autoFocus={autofocus}
         rows={options.rows ?? 5}
+        isInvalid={hasWidgetErrors<T, S, F>(props)}
         onChange={handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
-        aria-describedby={ariaDescribedByIds(id)}
+        {...getControlAttributes<T, S, F>({ id, presentation })}
       />
     </InputGroup>
   );

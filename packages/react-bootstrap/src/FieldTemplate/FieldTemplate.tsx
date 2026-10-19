@@ -1,5 +1,13 @@
 import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getTemplates, getUiOptions, hasTemplateErrors, templateDrawsLabel } from '@rjsf/utils';
+import {
+  getTemplates,
+  getUiOptions,
+  hasTemplateErrors,
+  templateDrawsDescription,
+  templateDrawsLabel,
+  templateLabelFor,
+  templateMarksRequired,
+} from '@rjsf/utils';
 import { Form } from 'react-bootstrap';
 
 export default function FieldTemplate<
@@ -66,14 +74,18 @@ export default function FieldTemplate<
     >
       <Form.Group>
         {displayLabel && !leavesPartsToCheckbox && (
-          <Form.Label htmlFor={id} id={presentation?.label.id} className={hasError ? 'text-danger' : ''}>
-            {label}
-            {required ? '*' : null}
+          <Form.Label htmlFor={templateLabelFor<T, S, F>(props)} className={hasError ? 'text-danger' : ''}>
+            {/* The label's id goes on its text alone, as a group or an option selector is named through it, and the
+                `*` isn't part of that name; a control its `for` names takes the whole label */}
+            {presentation ? <span id={presentation.label.id}>{label}</span> : label}
+            {templateMarksRequired<T, S, F>(props) ? '*' : null}
           </Form.Label>
         )}
         {children}
-        {rawDescription && !leavesPartsToCheckbox && (
-          <Form.Text className={hasError ? 'text-danger' : 'text-muted'}>{description}</Form.Text>
+        {templateDrawsDescription<T, S, F>(props) && rawDescription && !leavesPartsToCheckbox && (
+          <Form.Text as='div' className={hasError ? 'text-danger' : 'text-muted'}>
+            {description}
+          </Form.Text>
         )}
         {errors}
         {help}

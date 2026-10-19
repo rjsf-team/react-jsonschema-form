@@ -111,7 +111,6 @@ exports[`array fields > array icons 1`] = `
                       >
                         <div>
                           <input
-                            aria-describedby="root_0__error root_0__description root_0__help"
                             class="form-control"
                             id="root_0"
                             name="root_0"
@@ -232,7 +231,6 @@ exports[`array fields > array icons 1`] = `
                       >
                         <div>
                           <input
-                            aria-describedby="root_1__error root_1__description root_1__help"
                             class="form-control"
                             id="root_1"
                             name="root_1"
@@ -474,12 +472,14 @@ exports[`array fields > empty errors array 1`] = `
                   <label
                     class="form-label"
                     for="root_name"
-                    id="root_name__label"
                   >
-                    name
+                    <span
+                      id="root_name__label"
+                    >
+                      name
+                    </span>
                   </label>
                   <input
-                    aria-describedby="root_name__error root_name__description root_name__help"
                     class="form-control"
                     id="root_name"
                     name="root_name"
@@ -537,7 +537,6 @@ exports[`array fields > fixed array 1`] = `
                       >
                         <div>
                           <input
-                            aria-describedby="root_0__error root_0__description root_0__help"
                             class="form-control"
                             id="root_0"
                             name="root_0"
@@ -566,7 +565,6 @@ exports[`array fields > fixed array 1`] = `
                       >
                         <div>
                           <input
-                            aria-describedby="root_1__error root_1__description root_1__help"
                             class="form-control"
                             id="root_1"
                             inputmode="decimal"
@@ -655,13 +653,17 @@ exports[`array fields > has errors 1`] = `
                   <label
                     class="text-danger form-label"
                     for="root_name"
-                    id="root_name__label"
                   >
-                    name
+                    <span
+                      id="root_name__label"
+                    >
+                      name
+                    </span>
                   </label>
                   <input
-                    aria-describedby="root_name__error root_name__description root_name__help"
-                    class="is-invalid form-control"
+                    aria-describedby="root_name__error"
+                    aria-invalid="true"
+                    class="form-control is-invalid"
                     id="root_name"
                     name="root_name"
                     placeholder=""
@@ -728,12 +730,14 @@ exports[`array fields > no errors 1`] = `
                   <label
                     class="form-label"
                     for="root_name"
-                    id="root_name__label"
                   >
-                    name
+                    <span
+                      id="root_name__label"
+                    >
+                      name
+                    </span>
                   </label>
                   <input
-                    aria-describedby="root_name__error root_name__description root_name__help"
                     class="form-control"
                     id="root_name"
                     name="root_name"
@@ -808,12 +812,14 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                     <label
                                       class="form-label"
                                       for="root_0_name"
-                                      id="root_0_name__label"
                                     >
-                                      name
+                                      <span
+                                        id="root_0_name__label"
+                                      >
+                                        name
+                                      </span>
                                     </label>
                                     <input
-                                      aria-describedby="root_0_name__error root_0_name__description root_0_name__help"
                                       class="form-control"
                                       id="root_0_name"
                                       name="root[0][name]"
@@ -840,12 +846,14 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                     <label
                                       class="form-label"
                                       for="root_0_value"
-                                      id="root_0_value__label"
                                     >
-                                      value
+                                      <span
+                                        id="root_0_value__label"
+                                      >
+                                        value
+                                      </span>
                                     </label>
                                     <input
-                                      aria-describedby="root_0_value__error root_0_value__description root_0_value__help"
                                       class="form-control"
                                       id="root_0_value"
                                       inputmode="decimal"
@@ -964,12 +972,14 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                     <label
                                       class="form-label"
                                       for="root_1_name"
-                                      id="root_1_name__label"
                                     >
-                                      name
+                                      <span
+                                        id="root_1_name__label"
+                                      >
+                                        name
+                                      </span>
                                     </label>
                                     <input
-                                      aria-describedby="root_1_name__error root_1_name__description root_1_name__help"
                                       class="form-control"
                                       id="root_1_name"
                                       name="root[1][name]"
@@ -996,12 +1006,14 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                     <label
                                       class="form-label"
                                       for="root_1_value"
-                                      id="root_1_value__label"
                                     >
-                                      value
+                                      <span
+                                        id="root_1_value__label"
+                                      >
+                                        value
+                                      </span>
                                     </label>
                                     <input
-                                      aria-describedby="root_1_value__error root_1_value__description root_1_value__help"
                                       class="form-control"
                                       id="root_1_value"
                                       inputmode="decimal"
@@ -1183,7 +1195,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                       >
                         <div>
                           <input
-                            aria-describedby="root_0__error root_0__description root_0__help"
                             class="form-control"
                             id="root_0"
                             name="root[0]"
@@ -1278,7 +1289,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                       >
                         <div>
                           <input
-                            aria-describedby="root_1__error root_1__description root_1__help"
                             class="form-control"
                             id="root_1"
                             name="root[1]"
@@ -1498,7 +1508,6 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                       >
                         <div>
                           <input
-                            aria-describedby="root_0__error root_0__description root_0__help"
                             class="form-control"
                             id="root_0"
                             name="root[0]"
@@ -1527,7 +1536,6 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                       >
                         <div>
                           <input
-                            aria-describedby="root_1__error root_1__description root_1__help"
                             class="form-control"
                             id="root_1"
                             inputmode="decimal"
@@ -1651,7 +1659,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                         >
                                           <div>
                                             <input
-                                              aria-describedby="root_0_0__error root_0_0__description root_0_0__help"
                                               class="form-control"
                                               id="root_0_0"
                                               name="root[0][0]"
@@ -1746,7 +1753,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                         >
                                           <div>
                                             <input
-                                              aria-describedby="root_0_1__error root_0_1__description root_0_1__help"
                                               class="form-control"
                                               id="root_0_1"
                                               name="root[0][1]"
@@ -1983,7 +1989,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                         >
                                           <div>
                                             <input
-                                              aria-describedby="root_1_0__error root_1_0__description root_1_0__help"
                                               class="form-control"
                                               id="root_1_0"
                                               name="root[1][0]"
@@ -2078,7 +2083,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                         >
                                           <div>
                                             <input
-                                              aria-describedby="root_1_1__error root_1_1__description root_1_1__help"
                                               class="form-control"
                                               id="root_1_1"
                                               name="root[1][1]"
@@ -2391,12 +2395,14 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                     <label
                                       class="form-label"
                                       for="root_0_name"
-                                      id="root_0_name__label"
                                     >
-                                      name
+                                      <span
+                                        id="root_0_name__label"
+                                      >
+                                        name
+                                      </span>
                                     </label>
                                     <input
-                                      aria-describedby="root_0_name__error root_0_name__description root_0_name__help"
                                       class="form-control"
                                       id="root_0_name"
                                       name="root.0.name"
@@ -2423,12 +2429,14 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                     <label
                                       class="form-label"
                                       for="root_0_value"
-                                      id="root_0_value__label"
                                     >
-                                      value
+                                      <span
+                                        id="root_0_value__label"
+                                      >
+                                        value
+                                      </span>
                                     </label>
                                     <input
-                                      aria-describedby="root_0_value__error root_0_value__description root_0_value__help"
                                       class="form-control"
                                       id="root_0_value"
                                       inputmode="decimal"
@@ -2547,12 +2555,14 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                     <label
                                       class="form-label"
                                       for="root_1_name"
-                                      id="root_1_name__label"
                                     >
-                                      name
+                                      <span
+                                        id="root_1_name__label"
+                                      >
+                                        name
+                                      </span>
                                     </label>
                                     <input
-                                      aria-describedby="root_1_name__error root_1_name__description root_1_name__help"
                                       class="form-control"
                                       id="root_1_name"
                                       name="root.1.name"
@@ -2579,12 +2589,14 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                     <label
                                       class="form-label"
                                       for="root_1_value"
-                                      id="root_1_value__label"
                                     >
-                                      value
+                                      <span
+                                        id="root_1_value__label"
+                                      >
+                                        value
+                                      </span>
                                     </label>
                                     <input
-                                      aria-describedby="root_1_value__error root_1_value__description root_1_value__help"
                                       class="form-control"
                                       id="root_1_value"
                                       inputmode="decimal"
@@ -2766,7 +2778,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                       >
                         <div>
                           <input
-                            aria-describedby="root_0__error root_0__description root_0__help"
                             class="form-control"
                             id="root_0"
                             name="root.0"
@@ -2861,7 +2872,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                       >
                         <div>
                           <input
-                            aria-describedby="root_1__error root_1__description root_1__help"
                             class="form-control"
                             id="root_1"
                             name="root.1"
@@ -3053,12 +3063,14 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                                     <label
                                       class="form-label"
                                       for="root_0_name"
-                                      id="root_0_name__label"
                                     >
-                                      name
+                                      <span
+                                        id="root_0_name__label"
+                                      >
+                                        name
+                                      </span>
                                     </label>
                                     <input
-                                      aria-describedby="root_0_name__error root_0_name__description root_0_name__help"
                                       class="form-control"
                                       id="root_0_name"
                                       name="root_0_name"
@@ -3200,12 +3212,14 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                                     <label
                                       class="form-label"
                                       for="root_1_name"
-                                      id="root_1_name__label"
                                     >
-                                      name
+                                      <span
+                                        id="root_1_name__label"
+                                      >
+                                        name
+                                      </span>
                                     </label>
                                     <input
-                                      aria-describedby="root_1_name__error root_1_name__description root_1_name__help"
                                       class="form-control"
                                       id="root_1_name"
                                       name="root_1_name"
@@ -3397,10 +3411,13 @@ exports[`with title and description > array 1`] = `
             >
               <div
                 class="my-1"
-                id="root__title"
               >
                 <h5>
-                  Test field
+                  <span
+                    id="root__title"
+                  >
+                    Test field
+                  </span>
                 </h5>
                 <hr
                   class="border-0 bg-secondary mt-0"
@@ -3497,10 +3514,13 @@ exports[`with title and description > array icons 1`] = `
             >
               <div
                 class="my-1"
-                id="root__title"
               >
                 <h5>
-                  Test field
+                  <span
+                    id="root__title"
+                  >
+                    Test field
+                  </span>
                 </h5>
                 <hr
                   class="border-0 bg-secondary mt-0"
@@ -3532,12 +3552,16 @@ exports[`with title and description > array icons 1`] = `
                           <label
                             class="form-label"
                             for="root_0"
-                            id="root_0__label"
                           >
-                            Test item*
+                            <span
+                              id="root_0__label"
+                            >
+                              Test item
+                            </span>
+                            *
                           </label>
                           <input
-                            aria-describedby="root_0__error root_0__description root_0__help"
+                            aria-describedby="root_0__description"
                             class="form-control"
                             id="root_0"
                             name="root_0"
@@ -3546,7 +3570,7 @@ exports[`with title and description > array icons 1`] = `
                             type="text"
                             value="a"
                           />
-                          <small
+                          <div
                             class="text-muted form-text"
                           >
                             <div>
@@ -3557,7 +3581,7 @@ exports[`with title and description > array icons 1`] = `
                                 a test item description
                               </div>
                             </div>
-                          </small>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -3672,12 +3696,16 @@ exports[`with title and description > array icons 1`] = `
                           <label
                             class="form-label"
                             for="root_1"
-                            id="root_1__label"
                           >
-                            Test item*
+                            <span
+                              id="root_1__label"
+                            >
+                              Test item
+                            </span>
+                            *
                           </label>
                           <input
-                            aria-describedby="root_1__error root_1__description root_1__help"
+                            aria-describedby="root_1__description"
                             class="form-control"
                             id="root_1"
                             name="root_1"
@@ -3686,7 +3714,7 @@ exports[`with title and description > array icons 1`] = `
                             type="text"
                             value="b"
                           />
-                          <small
+                          <div
                             class="text-muted form-text"
                           >
                             <div>
@@ -3697,7 +3725,7 @@ exports[`with title and description > array icons 1`] = `
                                 a test item description
                               </div>
                             </div>
-                          </small>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -3871,9 +3899,12 @@ exports[`with title and description > checkboxes 1`] = `
         <label
           class="form-label"
           for="root"
-          id="root__label"
         >
-          Test field
+          <span
+            id="root__label"
+          >
+            Test field
+          </span>
         </label>
         <select
           aria-describedby="root__description"
@@ -3898,7 +3929,7 @@ exports[`with title and description > checkboxes 1`] = `
             c
           </option>
         </select>
-        <small
+        <div
           class="text-muted form-text"
         >
           <div>
@@ -3909,7 +3940,7 @@ exports[`with title and description > checkboxes 1`] = `
               a test description
             </div>
           </div>
-        </small>
+        </div>
       </div>
     </div>
     <div>
@@ -3942,10 +3973,13 @@ exports[`with title and description > fixed array 1`] = `
             >
               <div
                 class="my-1"
-                id="root__title"
               >
                 <h5>
-                  Test field
+                  <span
+                    id="root__title"
+                  >
+                    Test field
+                  </span>
                 </h5>
                 <hr
                   class="border-0 bg-secondary mt-0"
@@ -3977,12 +4011,16 @@ exports[`with title and description > fixed array 1`] = `
                           <label
                             class="form-label"
                             for="root_0"
-                            id="root_0__label"
                           >
-                            Test item*
+                            <span
+                              id="root_0__label"
+                            >
+                              Test item
+                            </span>
+                            *
                           </label>
                           <input
-                            aria-describedby="root_0__error root_0__description root_0__help"
+                            aria-describedby="root_0__description"
                             class="form-control"
                             id="root_0"
                             name="root_0"
@@ -3991,7 +4029,7 @@ exports[`with title and description > fixed array 1`] = `
                             type="text"
                             value=""
                           />
-                          <small
+                          <div
                             class="text-muted form-text"
                           >
                             <div>
@@ -4002,7 +4040,7 @@ exports[`with title and description > fixed array 1`] = `
                                 a test item description
                               </div>
                             </div>
-                          </small>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -4025,12 +4063,16 @@ exports[`with title and description > fixed array 1`] = `
                           <label
                             class="form-label"
                             for="root_1"
-                            id="root_1__label"
                           >
-                            Test item*
+                            <span
+                              id="root_1__label"
+                            >
+                              Test item
+                            </span>
+                            *
                           </label>
                           <input
-                            aria-describedby="root_1__error root_1__description root_1__help"
+                            aria-describedby="root_1__description"
                             class="form-control"
                             id="root_1"
                             inputmode="decimal"
@@ -4042,7 +4084,7 @@ exports[`with title and description > fixed array 1`] = `
                             type="text"
                             value=""
                           />
-                          <small
+                          <div
                             class="text-muted form-text"
                           >
                             <div>
@@ -4053,7 +4095,7 @@ exports[`with title and description > fixed array 1`] = `
                                 a test item description
                               </div>
                             </div>
-                          </small>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -4098,10 +4140,13 @@ exports[`with title and description from both > array 1`] = `
             >
               <div
                 class="my-1"
-                id="root__title"
               >
                 <h5>
-                  My Field
+                  <span
+                    id="root__title"
+                  >
+                    My Field
+                  </span>
                 </h5>
                 <hr
                   class="border-0 bg-secondary mt-0"
@@ -4198,10 +4243,13 @@ exports[`with title and description from both > array icons 1`] = `
             >
               <div
                 class="my-1"
-                id="root__title"
               >
                 <h5>
-                  My Field
+                  <span
+                    id="root__title"
+                  >
+                    My Field
+                  </span>
                 </h5>
                 <hr
                   class="border-0 bg-secondary mt-0"
@@ -4233,12 +4281,16 @@ exports[`with title and description from both > array icons 1`] = `
                           <label
                             class="form-label"
                             for="root_0"
-                            id="root_0__label"
                           >
-                            My Item*
+                            <span
+                              id="root_0__label"
+                            >
+                              My Item
+                            </span>
+                            *
                           </label>
                           <input
-                            aria-describedby="root_0__error root_0__description root_0__help"
+                            aria-describedby="root_0__description"
                             class="form-control"
                             id="root_0"
                             name="root_0"
@@ -4247,7 +4299,7 @@ exports[`with title and description from both > array icons 1`] = `
                             type="text"
                             value="a"
                           />
-                          <small
+                          <div
                             class="text-muted form-text"
                           >
                             <div>
@@ -4258,7 +4310,7 @@ exports[`with title and description from both > array icons 1`] = `
                                 a fancier item description
                               </div>
                             </div>
-                          </small>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -4373,12 +4425,16 @@ exports[`with title and description from both > array icons 1`] = `
                           <label
                             class="form-label"
                             for="root_1"
-                            id="root_1__label"
                           >
-                            My Item*
+                            <span
+                              id="root_1__label"
+                            >
+                              My Item
+                            </span>
+                            *
                           </label>
                           <input
-                            aria-describedby="root_1__error root_1__description root_1__help"
+                            aria-describedby="root_1__description"
                             class="form-control"
                             id="root_1"
                             name="root_1"
@@ -4387,7 +4443,7 @@ exports[`with title and description from both > array icons 1`] = `
                             type="text"
                             value="b"
                           />
-                          <small
+                          <div
                             class="text-muted form-text"
                           >
                             <div>
@@ -4398,7 +4454,7 @@ exports[`with title and description from both > array icons 1`] = `
                                 a fancier item description
                               </div>
                             </div>
-                          </small>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -4572,9 +4628,12 @@ exports[`with title and description from both > checkboxes 1`] = `
         <label
           class="form-label"
           for="root"
-          id="root__label"
         >
-          My Field
+          <span
+            id="root__label"
+          >
+            My Field
+          </span>
         </label>
         <select
           aria-describedby="root__description"
@@ -4599,7 +4658,7 @@ exports[`with title and description from both > checkboxes 1`] = `
             c
           </option>
         </select>
-        <small
+        <div
           class="text-muted form-text"
         >
           <div>
@@ -4610,7 +4669,7 @@ exports[`with title and description from both > checkboxes 1`] = `
               a fancier description
             </div>
           </div>
-        </small>
+        </div>
       </div>
     </div>
     <div>
@@ -4643,10 +4702,13 @@ exports[`with title and description from both > fixed array 1`] = `
             >
               <div
                 class="my-1"
-                id="root__title"
               >
                 <h5>
-                  My Field
+                  <span
+                    id="root__title"
+                  >
+                    My Field
+                  </span>
                 </h5>
                 <hr
                   class="border-0 bg-secondary mt-0"
@@ -4678,12 +4740,16 @@ exports[`with title and description from both > fixed array 1`] = `
                           <label
                             class="form-label"
                             for="root_0"
-                            id="root_0__label"
                           >
-                            My Item*
+                            <span
+                              id="root_0__label"
+                            >
+                              My Item
+                            </span>
+                            *
                           </label>
                           <input
-                            aria-describedby="root_0__error root_0__description root_0__help"
+                            aria-describedby="root_0__description"
                             class="form-control"
                             id="root_0"
                             name="root_0"
@@ -4692,7 +4758,7 @@ exports[`with title and description from both > fixed array 1`] = `
                             type="text"
                             value=""
                           />
-                          <small
+                          <div
                             class="text-muted form-text"
                           >
                             <div>
@@ -4703,7 +4769,7 @@ exports[`with title and description from both > fixed array 1`] = `
                                 a fancier item description
                               </div>
                             </div>
-                          </small>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -4726,12 +4792,16 @@ exports[`with title and description from both > fixed array 1`] = `
                           <label
                             class="form-label"
                             for="root_1"
-                            id="root_1__label"
                           >
-                            My Item*
+                            <span
+                              id="root_1__label"
+                            >
+                              My Item
+                            </span>
+                            *
                           </label>
                           <input
-                            aria-describedby="root_1__error root_1__description root_1__help"
+                            aria-describedby="root_1__description"
                             class="form-control"
                             id="root_1"
                             inputmode="decimal"
@@ -4743,7 +4813,7 @@ exports[`with title and description from both > fixed array 1`] = `
                             type="text"
                             value=""
                           />
-                          <small
+                          <div
                             class="text-muted form-text"
                           >
                             <div>
@@ -4754,7 +4824,7 @@ exports[`with title and description from both > fixed array 1`] = `
                                 a fancier item description
                               </div>
                             </div>
-                          </small>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -4799,10 +4869,13 @@ exports[`with title and description from uiSchema > array 1`] = `
             >
               <div
                 class="my-1"
-                id="root__title"
               >
                 <h5>
-                  My Field
+                  <span
+                    id="root__title"
+                  >
+                    My Field
+                  </span>
                 </h5>
                 <hr
                   class="border-0 bg-secondary mt-0"
@@ -4899,10 +4972,13 @@ exports[`with title and description from uiSchema > array icons 1`] = `
             >
               <div
                 class="my-1"
-                id="root__title"
               >
                 <h5>
-                  My Field
+                  <span
+                    id="root__title"
+                  >
+                    My Field
+                  </span>
                 </h5>
                 <hr
                   class="border-0 bg-secondary mt-0"
@@ -4934,12 +5010,16 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                           <label
                             class="form-label"
                             for="root_0"
-                            id="root_0__label"
                           >
-                            My Item*
+                            <span
+                              id="root_0__label"
+                            >
+                              My Item
+                            </span>
+                            *
                           </label>
                           <input
-                            aria-describedby="root_0__error root_0__description root_0__help"
+                            aria-describedby="root_0__description"
                             class="form-control"
                             id="root_0"
                             name="root_0"
@@ -4948,7 +5028,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                             type="text"
                             value="a"
                           />
-                          <small
+                          <div
                             class="text-muted form-text"
                           >
                             <div>
@@ -4959,7 +5039,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                                 a fancier item description
                               </div>
                             </div>
-                          </small>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -5074,12 +5154,16 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                           <label
                             class="form-label"
                             for="root_1"
-                            id="root_1__label"
                           >
-                            My Item*
+                            <span
+                              id="root_1__label"
+                            >
+                              My Item
+                            </span>
+                            *
                           </label>
                           <input
-                            aria-describedby="root_1__error root_1__description root_1__help"
+                            aria-describedby="root_1__description"
                             class="form-control"
                             id="root_1"
                             name="root_1"
@@ -5088,7 +5172,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                             type="text"
                             value="b"
                           />
-                          <small
+                          <div
                             class="text-muted form-text"
                           >
                             <div>
@@ -5099,7 +5183,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                                 a fancier item description
                               </div>
                             </div>
-                          </small>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -5273,9 +5357,12 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
         <label
           class="form-label"
           for="root"
-          id="root__label"
         >
-          My Field
+          <span
+            id="root__label"
+          >
+            My Field
+          </span>
         </label>
         <select
           aria-describedby="root__description"
@@ -5300,7 +5387,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
             c
           </option>
         </select>
-        <small
+        <div
           class="text-muted form-text"
         >
           <div>
@@ -5311,7 +5398,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
               a fancier description
             </div>
           </div>
-        </small>
+        </div>
       </div>
     </div>
     <div>
@@ -5344,10 +5431,13 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
             >
               <div
                 class="my-1"
-                id="root__title"
               >
                 <h5>
-                  My Field
+                  <span
+                    id="root__title"
+                  >
+                    My Field
+                  </span>
                 </h5>
                 <hr
                   class="border-0 bg-secondary mt-0"
@@ -5379,12 +5469,16 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                           <label
                             class="form-label"
                             for="root_0"
-                            id="root_0__label"
                           >
-                            My Item*
+                            <span
+                              id="root_0__label"
+                            >
+                              My Item
+                            </span>
+                            *
                           </label>
                           <input
-                            aria-describedby="root_0__error root_0__description root_0__help"
+                            aria-describedby="root_0__description"
                             class="form-control"
                             id="root_0"
                             name="root_0"
@@ -5393,7 +5487,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                             type="text"
                             value=""
                           />
-                          <small
+                          <div
                             class="text-muted form-text"
                           >
                             <div>
@@ -5404,7 +5498,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                                 a fancier item description
                               </div>
                             </div>
-                          </small>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -5427,12 +5521,16 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                           <label
                             class="form-label"
                             for="root_1"
-                            id="root_1__label"
                           >
-                            My Item*
+                            <span
+                              id="root_1__label"
+                            >
+                              My Item
+                            </span>
+                            *
                           </label>
                           <input
-                            aria-describedby="root_1__error root_1__description root_1__help"
+                            aria-describedby="root_1__description"
                             class="form-control"
                             id="root_1"
                             inputmode="decimal"
@@ -5444,7 +5542,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                             type="text"
                             value=""
                           />
-                          <small
+                          <div
                             class="text-muted form-text"
                           >
                             <div>
@@ -5455,7 +5553,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                                 a fancier item description
                               </div>
                             </div>
-                          </small>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -5593,7 +5691,7 @@ exports[`with title and description with global label off > array icons 1`] = `
                       >
                         <div>
                           <input
-                            aria-describedby="root_0__error root_0__description root_0__help"
+                            aria-label="Test item"
                             class="form-control"
                             id="root_0"
                             name="root_0"
@@ -5714,7 +5812,7 @@ exports[`with title and description with global label off > array icons 1`] = `
                       >
                         <div>
                           <input
-                            aria-describedby="root_1__error root_1__description root_1__help"
+                            aria-label="Test item"
                             class="form-control"
                             id="root_1"
                             name="root_1"
@@ -5961,7 +6059,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
                       >
                         <div>
                           <input
-                            aria-describedby="root_0__error root_0__description root_0__help"
+                            aria-label="Test item"
                             class="form-control"
                             id="root_0"
                             name="root_0"
@@ -5990,7 +6088,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
                       >
                         <div>
                           <input
-                            aria-describedby="root_1__error root_1__description root_1__help"
+                            aria-label="Test item"
                             class="form-control"
                             id="root_1"
                             inputmode="decimal"
