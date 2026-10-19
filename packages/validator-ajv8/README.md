@@ -76,8 +76,8 @@ yarn add @rjsf/validator-ajv8
 ## Usage
 
 ```tsx
-import { RJSFSchema } from 'packages/utils/dist/index';
-import Form from 'packages/core/dist/index';
+import { RJSFSchema } from '@rjsf/utils';
+import Form from '@rjsf/core';
 import validator from '@rjsf/validator-ajv8';
 
 const schema: RJSFSchema = {

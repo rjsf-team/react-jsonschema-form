@@ -38,6 +38,10 @@ import yourSchema from 'path_to/yourSchema.js'; // If your schema is a js file
 compileSchemaValidators(yourSchema, 'path_to/yourCompiledSchema.cjs');
 ```
 
+The examples name the output `.cjs` because it is CommonJS, which a `.js` file cannot hold in an app whose package.json sets `"type": "module"`.
+In an app whose package.json doesn't set it, a `.js` name works too, and it is the one to use with a toolchain that loads only `.js` and `.mjs` files as code.
+Create React App 5 is one: it turns an imported `.cjs` file into the URL of a static asset, so `createPrecompiledValidator()` throws `No precompiled validator function was found for the given schema`.
+
 If you are currently using the `customizeValidator()` function to provide `additionalMetaSchemas`, `customFormats`,
 `ajvOptionsOverrides` and/or `ajvFormatOptions` then you can pass those in as the optional third parameter to the
 `compileSchemaValidators()` function in a manner similar to:
@@ -114,6 +118,12 @@ function MyForm(props: Omit<FormProps, 'validator' | 'schema'>) {
 
 render(<MyForm />, document.getElementById('app'));
 ```
+
+Things to know about the generated file:
+
+- It is not always self-contained: depending on the keywords the schema uses, it `require()`s helpers from `ajv`, and from `ajv-formats` when the schema uses one of its formats. Those are resolved from the folder the file is kept in, so the app must list `ajv` (and `ajv-formats`) as its own dependencies. Depending on `@rjsf/validator-ajv8` alone is not enough when they are not hoisted, as under pnpm's default layout.
+- It is CommonJS. Webpack and Vite 8 production builds handle it, and so does Rollup with `@rollup/plugin-commonjs`. Production builds before Vite 8 convert CommonJS only under `node_modules` unless `build.commonjsOptions.include` also matches the file. Vite's dev server does not convert CommonJS files inside your source folder. Either way the page throws `exports is not defined` when it loads the file.
+- It has no type declarations, so under `strict` TypeScript reports `TS7016: Could not find a declaration file` for the import. Add `declare module '*.cjs';` to a `.d.ts` file, or enable `allowJs`.
 
 ### Dynamically pre-compiling validators
 
@@ -278,8 +288,7 @@ Things to know:
 - If your `Form` is given a `customMergeAllOf`, pass it to both the compile step and `createPrecompiledValidator()`, as with `@rjsf/validator-ajv8`.
 - Pass `suppressDuplicateFiltering` to `createPrecompiledValidator()`. Passing it to the compile step has no effect and logs a warning.
 - The generated file imports nothing, so `ata-validator` is not in your bundle, as long as the app imports only `createPrecompiledValidator` (and types). Importing the default export, `customizeValidator` or `ATAValidator` brings the runtime validator back.
-- The generated file is CommonJS, like the one from `@rjsf/validator-ajv8`. Webpack, Rollup and production Vite builds handle it. Vite's dev server does not convert CommonJS files inside your source folder.
-- The file has no type declarations. With TypeScript, cast it to `ValidatorFunctions` as above and add `declare module '*.cjs';` to a `.d.ts` file, or enable `allowJs`.
+- The generated file is CommonJS with no type declarations, like the one from `@rjsf/validator-ajv8`, so the bundler and TypeScript notes under [Using the precompiled validator](#using-the-precompiled-validator) apply to it too, except that where it is not converted the page throws `module is not defined` instead. With TypeScript, also cast it to `ValidatorFunctions` as above.
 - Run the compile step again when the schema changes.
 - To get the code as a string instead of a file, use `compileSchemaValidatorsCode(schema, options)` from `@rjsf/validator-ata/compileSchemaValidators`. The code imports nothing, so unlike the ajv8 example above it needs no runtime dependencies replaced.
 
