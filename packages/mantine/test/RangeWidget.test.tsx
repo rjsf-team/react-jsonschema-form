@@ -25,6 +25,7 @@ function renderWidget(props: Partial<WidgetProps> = {}) {
         disabled={false}
         readonly={false}
         multiple={false}
+        // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
         rawErrors={[]}
         onChange={() => undefined}
         onBlur={() => undefined}
@@ -37,6 +38,7 @@ function renderWidget(props: Partial<WidgetProps> = {}) {
 
 describe('RangeWidget', () => {
   test('marks the thumb invalid when the field has errors', () => {
+    // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated prop a component without a plan reads
     renderWidget({ rawErrors: ['An error'] });
 
     expect(screen.getByRole('slider')).toHaveAttribute('aria-invalid', 'true');
@@ -75,6 +77,7 @@ describe('RangeWidget', () => {
   });
 
   test('renders no success message while the field has errors, and describes the thumb by the errors', () => {
+    // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated prop a component without a plan reads
     const { container } = renderWidget({ options: { success: 'Looks good' }, rawErrors: ['An error'] });
 
     expect(container.querySelector('[id="root-success"]')).not.toBeInTheDocument();

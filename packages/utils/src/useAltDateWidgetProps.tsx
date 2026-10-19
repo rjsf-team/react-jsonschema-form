@@ -7,10 +7,18 @@ import dateElementLabel, { dateElementAriaLabel } from './dateElementLabel.ts';
 import dateRangeOptions from './dateRangeOptions.ts';
 import type { DateElementFormat, DateElementProp } from './getDateElementProps.ts';
 import getDateElementProps from './getDateElementProps.ts';
+import getNestedControlPresentation from './getNestedControlPresentation.ts';
 import { ariaDescribedByIds, dateElementId } from './idGenerators.ts';
 import parseDateString from './parseDateString.ts';
 import toDateString from './toDateString.ts';
-import type { DateObject, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from './types.ts';
+import type {
+  DateObject,
+  FieldPresentation,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from './types.ts';
 
 /** Function that checks to see if a `DateObject` is ready for the onChange callback to be triggered
  *
@@ -50,13 +58,19 @@ export type DateElementProps<
   type: DateElementProp['type'];
   /** The range for the date element */
   range: DateElementProp['range'];
+  /** The plan of the field, whose parts that render describe each date element, and whose errors mark it
+   * `aria-invalid` while they show
+   */
+  presentation?: FieldPresentation;
 };
 
 /** The `DateElement` component renders one of the 6 date element selectors for an `AltDateWidget`, using the `select`
  * widget from the registry. Each selector is a control in its own right, with the id `dateElementId(rootId, type)` as
  * its id and name and no visible label of its own, so it hands the `SelectWidget` the translated name of its element
- * as its placeholder, an `aria-label` built from the field's `label`, such as `When, year`, and an `aria-describedby`
- * pointing at the field's description, help and errors, which `widgetAriaProps()` has the `SelectWidget` forward.
+ * as its placeholder and an `aria-label` built from the field's `label`, such as `When, year`. Given its field's plan,
+ * it hands it a plan of its own, through which `widgetAriaProps()` describes it by the field's parts that render and
+ * marks it `aria-invalid` while the field's errors show, without the field's `aria-labelledby`, which would outrank its
+ * own name. Without one, it describes it by `ariaDescribedByIds(rootId)`.
  *
  * @param props - The `DateElementProps` for the date element
  */
@@ -80,12 +94,18 @@ export function DateElement<
     onFocus,
     label,
     elementLabel: translatedElementLabel,
+    presentation,
   } = props;
   const id = dateElementId(rootId, type);
   const { widgets, translateString } = registry;
   const { SelectWidget } = widgets;
   const onChange = useCallback((newValue: any) => select(type as keyof DateObject, newValue), [select, type]);
   const elementLabel = translatedElementLabel ?? dateElementLabel(type, translateString);
+  const ariaLabel = dateElementAriaLabel(elementLabel, translateString, label);
+  const elementPresentation = useMemo(
+    () => presentation && getNestedControlPresentation({ id, label: ariaLabel, field: presentation }),
+    [id, ariaLabel, presentation],
+  );
   return (
     <SelectWidget
       schema={{ type: 'integer' } as S}
@@ -103,8 +123,9 @@ export function DateElement<
       onFocus={onFocus}
       registry={registry}
       label=''
-      aria-label={dateElementAriaLabel(elementLabel, translateString, label)}
-      aria-describedby={ariaDescribedByIds(rootId)}
+      aria-label={ariaLabel}
+      aria-describedby={presentation ? undefined : ariaDescribedByIds(rootId)}
+      presentation={elementPresentation}
     />
   );
 }

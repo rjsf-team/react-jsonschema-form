@@ -1,3 +1,4 @@
+/* oxlint-disable typescript/no-deprecated -- this file tests the deprecated `getDisplayLabel()` */
 import type { GenericObjectType, RJSFSchema } from '../../src/index.ts';
 import { ADDITIONAL_PROPERTY_FLAG, createSchemaUtils, getDisplayLabel } from '../../src/index.ts';
 import type { TestValidatorType } from './types.ts';

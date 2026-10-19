@@ -4,13 +4,14 @@ import { Input } from '@chakra-ui/react';
 import { SchemaExamples } from '@rjsf/core';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
   examplesId,
+  getControlAttributes,
   getExampleSuggestions,
   getInputProps,
   getNumericInputTitle,
-  hasVisibleErrors,
+  hasWidgetErrors,
   labelValue,
+  widgetDrawsLabelText,
 } from '@rjsf/utils';
 
 import { Field } from '../components/ui/field.tsx';
@@ -27,7 +28,6 @@ export default function BaseInputTemplate<
     type,
     value,
     label,
-    hideLabel,
     schema,
     onChange,
     onChangeOverride,
@@ -40,7 +40,9 @@ export default function BaseInputTemplate<
     placeholder,
     disabled,
     registry,
+    presentation,
   } = props;
+  const drawsLabel = widgetDrawsLabelText<T, S, F>(props);
   const inputProps = getInputProps<T, S, F>(schema, type, options);
   const { ClearButton } = registry.templates.ButtonTemplates;
 
@@ -67,8 +69,9 @@ export default function BaseInputTemplate<
       disabled={disabled || readonly}
       required={required}
       readOnly={readonly}
-      invalid={hasVisibleErrors(props)}
-      label={labelValue(label, hideLabel || !label)}
+      invalid={hasWidgetErrors<T, S, F>(props)}
+      label={labelValue(label, !drawsLabel)}
+      id={id}
       {...chakraProps}
     >
       <Input
@@ -83,7 +86,7 @@ export default function BaseInputTemplate<
         title={getNumericInputTitle(inputProps, registry.translateString)}
         {...inputProps}
         list={hasExamples ? examplesId(id) : undefined}
-        aria-describedby={ariaDescribedByIds(id, hasExamples)}
+        {...getControlAttributes<T, S, F>({ id, presentation }, hasExamples ? [examplesId(id)] : [])}
       />
       {options.allowClearTextInputs && !readonly && !disabled && value && (
         <ClearButton registry={registry} onClick={onClear} />

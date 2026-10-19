@@ -132,6 +132,57 @@ function withOwned<T, S extends StrictRJSFSchema, F extends FormContextType>(
   return base.isControlled ? withMembers<FormState<T, S, F>>(IS_OWNED_BY_FORM, base, result) : result;
 }
 
+/** Whether `element` takes focus, as a form control or an element with a `tabindex` does. A hidden input, an element
+ * the `hidden` attribute hides, a disabled control and an `<a>` with no `href` report a `tabIndex` of 0 all the same,
+ * yet `focus()` leaves them unfocused
+ */
+function isFocusable(element: Node | null | undefined): element is HTMLElement {
+  return (
+    element instanceof HTMLElement &&
+    element.tabIndex >= 0 &&
+    !element.matches(':disabled, input[type="hidden"], [hidden], [hidden] *, a:not([href]):not([tabindex])')
+  );
+}
+
+/** The first of `elements` that `matches`, stopping there rather than copying the whole list to search it
+ *
+ * @param elements - The elements to search, in document order
+ * @param matches - Whether an element is the one sought
+ * @returns - The first matching element, if any
+ */
+function findElement<E extends Element>(elements: NodeListOf<E>, matches: (element: E) => boolean): E | undefined {
+  for (const element of elements) {
+    if (matches(element)) {
+      return element;
+    }
+  }
+  return undefined;
+}
+
+/** Gets the element an error leads focus to where neither the element carrying its field's id nor a form control named
+ * after the field takes focus: the first focusable element inside a widget's wrapper carrying the id, such as a slider's
+ * root around its thumb, but none inside a container's `<fieldset>`, since an object's or an array's own error is about
+ * none of the controls in it; and where no element carries the id, the first native input or button standing in for
+ * one whose id starts with the field's, as radio buttons' and checkboxes' do
+ *
+ * @param formElement - The form searched
+ * @param exact - The element carrying the field's id, if any
+ * @param elementId - The field's id
+ * @returns - The element to focus, if any
+ */
+function focusableForId(formElement: Element, exact: Element | undefined, elementId: string): Element | undefined {
+  if (exact instanceof HTMLFieldSetElement) {
+    return undefined;
+  }
+  if (exact) {
+    return findElement(exact.querySelectorAll('*'), isFocusable);
+  }
+  return findElement(
+    formElement.querySelectorAll('input[id], button[id]'),
+    (element) => element.id.startsWith(elementId) && isFocusable(element),
+  );
+}
+
 /** Reports to the consumer for the model, and knows whether the form is attached. Its layout Effects are disconnected
  * while an `<Activity>` hides it as well as once it has unmounted, and have yet to connect when it is first rendered,
  * which inside a hidden `<Activity>` they do only once it is shown. Operations still apply then, but what they would
@@ -322,11 +373,20 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     if (!formElement) {
       return;
     }
+    // A focusable element carrying the id comes first, since one that isn't a form control, such as a slider's thumb, can
+    // share the id's name with a hidden input; a group's wrapper carrying it isn't focusable, so its controls are found.
+    // A form control named after the field is taken only where it takes focus, since a checkbox that isn't a form
+    // control, such as shadcn's, keeps its value in a hidden input named after the field too. A wrapper that isn't
+    // focusable and names no focusable form control, such as a slider's root around its thumb or a group of such
+    // checkboxes, leads to the focusable element inside it, as `focusableForId()` finds it. Its fallback, an id starting
+    // with the field's, also matches a sibling's id, such as `root_nameSuffix` for `root_name`, so a field whose own
+    // control can't take focus, being disabled or hidden, leaves focus where it is rather than sending it to another
+    // field. The search stays inside the form, which another form on the page rendering the same ids would defeat through
+    // `getElementById()`, and compares ids as strings, so a property name holding a selector's syntax needs no escaping
+    const exact = findElement(formElement.querySelectorAll('[id]'), (element) => element.id === elementId);
     const named = formElement instanceof HTMLFormElement ? formElement.elements.namedItem(elementId) : null;
-    // if not an exact match, try finding a focusable element starting with the element id (like radio buttons or
-    // checkboxes); some themes (e.g. shadcn) use button elements instead of native inputs for radio groups
-    const found = named ?? formElement.querySelector(`input[id^="${elementId}"], button[id^="${elementId}"]`);
-    const field = found instanceof RadioNodeList ? found.item(0) : found;
+    const namedControls = named instanceof RadioNodeList ? Array.from(named) : [named];
+    const field = [exact, ...namedControls].find(isFocusable) ?? focusableForId(formElement, exact, elementId);
     if (field instanceof HTMLElement) {
       field.focus();
     }

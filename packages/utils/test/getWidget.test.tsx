@@ -3,8 +3,16 @@ import type { ForwardedRef } from 'react';
 import { createContext, forwardRef, memo } from 'react';
 import { render } from '@testing-library/react';
 
+import { getWidgetKey } from '../src/getWidget.tsx';
 import type { Registry, RJSFSchema, WidgetProps, Widget } from '../src/index.ts';
-import { getFieldTypeForWidget, getWidget, getWidgetType, resolveWidget, ROOT_FIELD_PATH } from '../src/index.ts';
+import {
+  getFieldTypeForUiSchema,
+  getFieldTypeForWidget,
+  getWidget,
+  getWidgetType,
+  resolveWidget,
+  ROOT_FIELD_PATH,
+} from '../src/index.ts';
 
 const subschema: RJSFSchema = {
   type: 'boolean',
@@ -79,6 +87,7 @@ const widgetProps: WidgetProps = {
   multiple: false,
   label: '',
   placeholder: '',
+  // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
   rawErrors: [],
   registry: {} as Registry,
 };
@@ -338,6 +347,37 @@ describe('getWidgetType()', () => {
   });
 });
 
+describe('getWidgetKey()', () => {
+  it('should return a registered name as its own key', () => {
+    expect(getWidgetKey({ type: 'string' }, 'MyWidget', { MyWidget: TestRefWidget })).toBe('MyWidget');
+  });
+
+  it('should return a registered name over the alias it spells', () => {
+    expect(getWidgetKey({ type: 'string' }, 'text', { text: TestRefWidget })).toBe('text');
+  });
+
+  it("should return the key an alias stands for on the schema's type", () => {
+    expect(getWidgetKey({ type: 'string' }, 'textarea')).toBe('TextareaWidget');
+    expect(getWidgetKey({ type: 'boolean' }, 'checkbox')).toBe('CheckboxWidget');
+    expect(getWidgetKey({ type: 'array', items: { type: 'string' } }, 'files')).toBe('FileWidget');
+  });
+
+  it('should return the key an alias stands for on another type a type list names', () => {
+    expect(getWidgetKey({ type: ['null', 'number', 'string'] }, 'textarea')).toBe('TextareaWidget');
+  });
+
+  it('should return undefined where getWidget() throws', () => {
+    expect(getWidgetKey({ type: 'string' }, 'updown')).toBeUndefined();
+    expect(getWidgetKey({ type: 'string' }, 'Unregistered')).toBeUndefined();
+    expect(getWidgetKey({}, 'text')).toBeUndefined();
+    expect(getWidgetKey({ type: 'string' }, 'constructor')).toBeUndefined();
+  });
+
+  it('should not return a registered name for a widget that is not registered', () => {
+    expect(getWidgetKey({ type: 'string' }, 'TextWidget')).toBeUndefined();
+  });
+});
+
 describe('getFieldTypeForWidget()', () => {
   it.each<[RJSFSchema, unknown, string | undefined]>([
     [{ type: 'number' }, 'textarea', 'number'],
@@ -359,6 +399,18 @@ describe('getFieldTypeForWidget()', () => {
     [{}, 'text', undefined],
   ])('should return the type of the field rendering %j with the widget %s', (schema, widget, expected) => {
     expect(getFieldTypeForWidget(schema, widget)).toBe(expected);
+  });
+});
+
+describe('getFieldTypeForUiSchema()', () => {
+  const schema: RJSFSchema = { type: ['null', 'number', 'string'] };
+  it("should return the type of the field rendering the field's own ui:widget", () => {
+    expect(getFieldTypeForUiSchema(schema, { 'ui:widget': 'textarea' })).toBe('string');
+    expect(getFieldTypeForUiSchema(schema, { 'ui:options': { widget: 'textarea' } })).toBe('string');
+  });
+  it('should resolve the schema type without a uiSchema, or ignoring ui:globalOptions', () => {
+    expect(getFieldTypeForUiSchema(schema)).toBe('number');
+    expect(getFieldTypeForUiSchema(schema, { 'ui:globalOptions': { widget: 'textarea' } })).toBe('number');
   });
 });
 

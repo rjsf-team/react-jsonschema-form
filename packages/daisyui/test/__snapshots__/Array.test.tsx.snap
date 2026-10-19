@@ -61,13 +61,6 @@ exports[`array fields > array 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -118,7 +111,6 @@ exports[`array fields > array icons 1`] = `
                         style="position: relative;"
                       >
                         <input
-                          aria-describedby="root_0__error root_0__description root_0__help"
                           class="input input-bordered w-full"
                           id="root_0"
                           name="root_0"
@@ -128,13 +120,6 @@ exports[`array fields > array icons 1`] = `
                           value="a"
                         />
                       </div>
-                    </div>
-                    <div
-                      class="rjsf-field-error-template text-red-600"
-                    >
-                      <ul
-                        class="list-disc list-inside"
-                      />
                     </div>
                   </div>
                 </div>
@@ -248,7 +233,6 @@ exports[`array fields > array icons 1`] = `
                         style="position: relative;"
                       >
                         <input
-                          aria-describedby="root_1__error root_1__description root_1__help"
                           class="input input-bordered w-full"
                           id="root_1"
                           name="root_1"
@@ -258,13 +242,6 @@ exports[`array fields > array icons 1`] = `
                           value="b"
                         />
                       </div>
-                    </div>
-                    <div
-                      class="rjsf-field-error-template text-red-600"
-                    >
-                      <ul
-                        class="list-disc list-inside"
-                      />
                     </div>
                   </div>
                 </div>
@@ -398,13 +375,6 @@ exports[`array fields > array icons 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -437,15 +407,19 @@ exports[`array fields > checkboxes 1`] = `
             class="dropdown w-full"
           >
             <button
-              aria-describedby="root__error root__description root__help"
+              aria-controls="_r_2_"
+              aria-expanded="false"
+              aria-haspopup="listbox"
+              aria-label="Select ..."
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
+              role="combobox"
               tabindex="0"
               type="button"
             >
               <span
+                aria-hidden="true"
                 class="truncate"
-                id="root__value"
               >
                 Select ...
               </span>
@@ -457,7 +431,9 @@ exports[`array fields > checkboxes 1`] = `
               </span>
             </button>
             <ul
+              aria-multiselectable="true"
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+              id="_r_2_"
               role="listbox"
             >
               <li
@@ -465,14 +441,16 @@ exports[`array fields > checkboxes 1`] = `
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="0"
                 role="option"
-                tabindex="0"
+                tabindex="-1"
               >
                 <div
                   class="flex items-center gap-2"
                 >
                   <input
-                    class="checkbox checkbox-sm"
+                    aria-hidden="true"
+                    class="checkbox checkbox-sm pointer-events-none"
                     readonly=""
+                    tabindex="-1"
                     type="checkbox"
                   />
                   <span>
@@ -485,14 +463,16 @@ exports[`array fields > checkboxes 1`] = `
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="1"
                 role="option"
-                tabindex="0"
+                tabindex="-1"
               >
                 <div
                   class="flex items-center gap-2"
                 >
                   <input
-                    class="checkbox checkbox-sm"
+                    aria-hidden="true"
+                    class="checkbox checkbox-sm pointer-events-none"
                     readonly=""
+                    tabindex="-1"
                     type="checkbox"
                   />
                   <span>
@@ -505,14 +485,16 @@ exports[`array fields > checkboxes 1`] = `
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="2"
                 role="option"
-                tabindex="0"
+                tabindex="-1"
               >
                 <div
                   class="flex items-center gap-2"
                 >
                   <input
-                    class="checkbox checkbox-sm"
+                    aria-hidden="true"
+                    class="checkbox checkbox-sm pointer-events-none"
                     readonly=""
+                    tabindex="-1"
                     type="checkbox"
                   />
                   <span>
@@ -522,13 +504,6 @@ exports[`array fields > checkboxes 1`] = `
               </li>
             </ul>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -573,12 +548,15 @@ exports[`array fields > empty errors array 1`] = `
                   <label
                     class="label"
                     for="root_name"
-                    id="root_name__label"
                   >
                     <span
                       class="label-text font-medium"
                     >
-                      name
+                      <span
+                        id="root_name__label"
+                      >
+                        name
+                      </span>
                     </span>
                   </label>
                   <div
@@ -588,7 +566,6 @@ exports[`array fields > empty errors array 1`] = `
                       style="position: relative;"
                     >
                       <input
-                        aria-describedby="root_name__error root_name__description root_name__help"
                         class="input input-bordered w-full"
                         id="root_name"
                         name="root_name"
@@ -598,24 +575,10 @@ exports[`array fields > empty errors array 1`] = `
                       />
                     </div>
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -667,7 +630,6 @@ exports[`array fields > fixed array 1`] = `
                         style="position: relative;"
                       >
                         <input
-                          aria-describedby="root_0__error root_0__description root_0__help"
                           class="input input-bordered w-full"
                           id="root_0"
                           name="root_0"
@@ -677,13 +639,6 @@ exports[`array fields > fixed array 1`] = `
                           value=""
                         />
                       </div>
-                    </div>
-                    <div
-                      class="rjsf-field-error-template text-red-600"
-                    >
-                      <ul
-                        class="list-disc list-inside"
-                      />
                     </div>
                   </div>
                 </div>
@@ -704,7 +659,6 @@ exports[`array fields > fixed array 1`] = `
                         style="position: relative;"
                       >
                         <input
-                          aria-describedby="root_1__error root_1__description root_1__help"
                           class="input input-bordered w-full"
                           id="root_1"
                           inputmode="decimal"
@@ -718,25 +672,11 @@ exports[`array fields > fixed array 1`] = `
                         />
                       </div>
                     </div>
-                    <div
-                      class="rjsf-field-error-template text-red-600"
-                    >
-                      <ul
-                        class="list-disc list-inside"
-                      />
-                    </div>
                   </div>
                 </div>
               </fieldset>
             </div>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -792,12 +732,15 @@ exports[`array fields > has errors 1`] = `
                   <label
                     class="label"
                     for="root_name"
-                    id="root_name__label"
                   >
                     <span
                       class="label-text font-medium"
                     >
-                      name
+                      <span
+                        id="root_name__label"
+                      >
+                        name
+                      </span>
                     </span>
                   </label>
                   <div
@@ -807,7 +750,8 @@ exports[`array fields > has errors 1`] = `
                       style="position: relative;"
                     >
                       <input
-                        aria-describedby="root_name__error root_name__description root_name__help"
+                        aria-describedby="root_name__error"
+                        aria-invalid="true"
                         class="input input-bordered w-full"
                         id="root_name"
                         name="root_name"
@@ -819,10 +763,10 @@ exports[`array fields > has errors 1`] = `
                   </div>
                   <div
                     class="rjsf-field-error-template text-red-600"
+                    id="root_name__error"
                   >
                     <ul
                       class="list-disc list-inside"
-                      id="root_name__error"
                     >
                       <li>
                         Bad input
@@ -833,13 +777,6 @@ exports[`array fields > has errors 1`] = `
               </div>
             </div>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -884,12 +821,15 @@ exports[`array fields > no errors 1`] = `
                   <label
                     class="label"
                     for="root_name"
-                    id="root_name__label"
                   >
                     <span
                       class="label-text font-medium"
                     >
-                      name
+                      <span
+                        id="root_name__label"
+                      >
+                        name
+                      </span>
                     </span>
                   </label>
                   <div
@@ -899,7 +839,6 @@ exports[`array fields > no errors 1`] = `
                       style="position: relative;"
                     >
                       <input
-                        aria-describedby="root_name__error root_name__description root_name__help"
                         class="input input-bordered w-full"
                         id="root_name"
                         name="root_name"
@@ -909,24 +848,10 @@ exports[`array fields > no errors 1`] = `
                       />
                     </div>
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -989,12 +914,15 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               <label
                                 class="label"
                                 for="root_0_name"
-                                id="root_0_name__label"
                               >
                                 <span
                                   class="label-text font-medium"
                                 >
-                                  name
+                                  <span
+                                    id="root_0_name__label"
+                                  >
+                                    name
+                                  </span>
                                 </span>
                               </label>
                               <div
@@ -1004,7 +932,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                   style="position: relative;"
                                 >
                                   <input
-                                    aria-describedby="root_0_name__error root_0_name__description root_0_name__help"
                                     class="input input-bordered w-full"
                                     id="root_0_name"
                                     name="root[0][name]"
@@ -1013,13 +940,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                     value="Item 1"
                                   />
                                 </div>
-                              </div>
-                              <div
-                                class="rjsf-field-error-template text-red-600"
-                              >
-                                <ul
-                                  class="list-disc list-inside"
-                                />
                               </div>
                             </div>
                           </div>
@@ -1036,12 +956,15 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               <label
                                 class="label"
                                 for="root_0_value"
-                                id="root_0_value__label"
                               >
                                 <span
                                   class="label-text font-medium"
                                 >
-                                  value
+                                  <span
+                                    id="root_0_value__label"
+                                  >
+                                    value
+                                  </span>
                                 </span>
                               </label>
                               <div
@@ -1051,7 +974,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                   style="position: relative;"
                                 >
                                   <input
-                                    aria-describedby="root_0_value__error root_0_value__description root_0_value__help"
                                     class="input input-bordered w-full"
                                     id="root_0_value"
                                     inputmode="decimal"
@@ -1064,24 +986,10 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                   />
                                 </div>
                               </div>
-                              <div
-                                class="rjsf-field-error-template text-red-600"
-                              >
-                                <ul
-                                  class="list-disc list-inside"
-                                />
-                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div
-                      class="rjsf-field-error-template text-red-600"
-                    >
-                      <ul
-                        class="list-disc list-inside"
-                      />
                     </div>
                   </div>
                 </div>
@@ -1185,12 +1093,15 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               <label
                                 class="label"
                                 for="root_1_name"
-                                id="root_1_name__label"
                               >
                                 <span
                                   class="label-text font-medium"
                                 >
-                                  name
+                                  <span
+                                    id="root_1_name__label"
+                                  >
+                                    name
+                                  </span>
                                 </span>
                               </label>
                               <div
@@ -1200,7 +1111,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                   style="position: relative;"
                                 >
                                   <input
-                                    aria-describedby="root_1_name__error root_1_name__description root_1_name__help"
                                     class="input input-bordered w-full"
                                     id="root_1_name"
                                     name="root[1][name]"
@@ -1209,13 +1119,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                     value="Item 2"
                                   />
                                 </div>
-                              </div>
-                              <div
-                                class="rjsf-field-error-template text-red-600"
-                              >
-                                <ul
-                                  class="list-disc list-inside"
-                                />
                               </div>
                             </div>
                           </div>
@@ -1232,12 +1135,15 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               <label
                                 class="label"
                                 for="root_1_value"
-                                id="root_1_value__label"
                               >
                                 <span
                                   class="label-text font-medium"
                                 >
-                                  value
+                                  <span
+                                    id="root_1_value__label"
+                                  >
+                                    value
+                                  </span>
                                 </span>
                               </label>
                               <div
@@ -1247,7 +1153,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                   style="position: relative;"
                                 >
                                   <input
-                                    aria-describedby="root_1_value__error root_1_value__description root_1_value__help"
                                     class="input input-bordered w-full"
                                     id="root_1_value"
                                     inputmode="decimal"
@@ -1260,24 +1165,10 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                   />
                                 </div>
                               </div>
-                              <div
-                                class="rjsf-field-error-template text-red-600"
-                              >
-                                <ul
-                                  class="list-disc list-inside"
-                                />
-                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div
-                      class="rjsf-field-error-template text-red-600"
-                    >
-                      <ul
-                        class="list-disc list-inside"
-                      />
                     </div>
                   </div>
                 </div>
@@ -1390,13 +1281,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -1447,7 +1331,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                         style="position: relative;"
                       >
                         <input
-                          aria-describedby="root_0__error root_0__description root_0__help"
                           class="input input-bordered w-full"
                           id="root_0"
                           name="root[0]"
@@ -1457,13 +1340,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                           value="foo"
                         />
                       </div>
-                    </div>
-                    <div
-                      class="rjsf-field-error-template text-red-600"
-                    >
-                      <ul
-                        class="list-disc list-inside"
-                      />
                     </div>
                   </div>
                 </div>
@@ -1556,7 +1432,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                         style="position: relative;"
                       >
                         <input
-                          aria-describedby="root_1__error root_1__description root_1__help"
                           class="input input-bordered w-full"
                           id="root_1"
                           name="root[1]"
@@ -1566,13 +1441,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                           value="bar"
                         />
                       </div>
-                    </div>
-                    <div
-                      class="rjsf-field-error-template text-red-600"
-                    >
-                      <ul
-                        class="list-disc list-inside"
-                      />
                     </div>
                   </div>
                 </div>
@@ -1685,13 +1553,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -1724,15 +1585,19 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
             class="dropdown w-full"
           >
             <button
-              aria-describedby="root__error root__description root__help"
+              aria-controls="_r_5f_"
+              aria-expanded="false"
+              aria-haspopup="listbox"
+              aria-label="Select ..."
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
+              role="combobox"
               tabindex="0"
               type="button"
             >
               <span
+                aria-hidden="true"
                 class="truncate"
-                id="root__value"
               >
                 Select ...
               </span>
@@ -1744,7 +1609,9 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
               </span>
             </button>
             <ul
+              aria-multiselectable="true"
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+              id="_r_5f_"
               role="listbox"
             >
               <li
@@ -1752,14 +1619,16 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="0"
                 role="option"
-                tabindex="0"
+                tabindex="-1"
               >
                 <div
                   class="flex items-center gap-2"
                 >
                   <input
-                    class="checkbox checkbox-sm"
+                    aria-hidden="true"
+                    class="checkbox checkbox-sm pointer-events-none"
                     readonly=""
+                    tabindex="-1"
                     type="checkbox"
                   />
                   <span>
@@ -1772,14 +1641,16 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="1"
                 role="option"
-                tabindex="0"
+                tabindex="-1"
               >
                 <div
                   class="flex items-center gap-2"
                 >
                   <input
-                    class="checkbox checkbox-sm"
+                    aria-hidden="true"
+                    class="checkbox checkbox-sm pointer-events-none"
                     readonly=""
+                    tabindex="-1"
                     type="checkbox"
                   />
                   <span>
@@ -1792,14 +1663,16 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="2"
                 role="option"
-                tabindex="0"
+                tabindex="-1"
               >
                 <div
                   class="flex items-center gap-2"
                 >
                   <input
-                    class="checkbox checkbox-sm"
+                    aria-hidden="true"
+                    class="checkbox checkbox-sm pointer-events-none"
                     readonly=""
+                    tabindex="-1"
                     type="checkbox"
                   />
                   <span>
@@ -1809,13 +1682,6 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
               </li>
             </ul>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -1867,7 +1733,6 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                         style="position: relative;"
                       >
                         <input
-                          aria-describedby="root_0__error root_0__description root_0__help"
                           class="input input-bordered w-full"
                           id="root_0"
                           name="root[0]"
@@ -1877,13 +1742,6 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                           value="text"
                         />
                       </div>
-                    </div>
-                    <div
-                      class="rjsf-field-error-template text-red-600"
-                    >
-                      <ul
-                        class="list-disc list-inside"
-                      />
                     </div>
                   </div>
                 </div>
@@ -1904,7 +1762,6 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                         style="position: relative;"
                       >
                         <input
-                          aria-describedby="root_1__error root_1__description root_1__help"
                           class="input input-bordered w-full"
                           id="root_1"
                           inputmode="decimal"
@@ -1917,13 +1774,6 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                           value="42"
                         />
                       </div>
-                    </div>
-                    <div
-                      class="rjsf-field-error-template text-red-600"
-                    >
-                      <ul
-                        class="list-disc list-inside"
-                      />
                     </div>
                   </div>
                 </div>
@@ -1941,7 +1791,6 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                       class="form-control"
                     >
                       <input
-                        aria-describedby="root_2__error root_2__description root_2__help"
                         checked=""
                         class="checkbox"
                         id="root_2"
@@ -1949,25 +1798,11 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                         type="checkbox"
                       />
                     </div>
-                    <div
-                      class="rjsf-field-error-template text-red-600"
-                    >
-                      <ul
-                        class="list-disc list-inside"
-                      />
-                    </div>
                   </div>
                 </div>
               </fieldset>
             </div>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -2037,7 +1872,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                     style="position: relative;"
                                   >
                                     <input
-                                      aria-describedby="root_0_0__error root_0_0__description root_0_0__help"
                                       class="input input-bordered w-full"
                                       id="root_0_0"
                                       name="root[0][0]"
@@ -2047,13 +1881,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                       value="a"
                                     />
                                   </div>
-                                </div>
-                                <div
-                                  class="rjsf-field-error-template text-red-600"
-                                >
-                                  <ul
-                                    class="list-disc list-inside"
-                                  />
                                 </div>
                               </div>
                             </div>
@@ -2146,7 +1973,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                     style="position: relative;"
                                   >
                                     <input
-                                      aria-describedby="root_0_1__error root_0_1__description root_0_1__help"
                                       class="input input-bordered w-full"
                                       id="root_0_1"
                                       name="root[0][1]"
@@ -2156,13 +1982,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                       value="b"
                                     />
                                   </div>
-                                </div>
-                                <div
-                                  class="rjsf-field-error-template text-red-600"
-                                >
-                                  <ul
-                                    class="list-disc list-inside"
-                                  />
                                 </div>
                               </div>
                             </div>
@@ -2275,13 +2094,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                         </div>
                       </div>
                     </div>
-                    <div
-                      class="rjsf-field-error-template text-red-600"
-                    >
-                      <ul
-                        class="list-disc list-inside"
-                      />
-                    </div>
                   </div>
                 </div>
                 <div
@@ -2391,7 +2203,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                     style="position: relative;"
                                   >
                                     <input
-                                      aria-describedby="root_1_0__error root_1_0__description root_1_0__help"
                                       class="input input-bordered w-full"
                                       id="root_1_0"
                                       name="root[1][0]"
@@ -2401,13 +2212,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                       value="c"
                                     />
                                   </div>
-                                </div>
-                                <div
-                                  class="rjsf-field-error-template text-red-600"
-                                >
-                                  <ul
-                                    class="list-disc list-inside"
-                                  />
                                 </div>
                               </div>
                             </div>
@@ -2500,7 +2304,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                     style="position: relative;"
                                   >
                                     <input
-                                      aria-describedby="root_1_1__error root_1_1__description root_1_1__help"
                                       class="input input-bordered w-full"
                                       id="root_1_1"
                                       name="root[1][1]"
@@ -2510,13 +2313,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                       value="d"
                                     />
                                   </div>
-                                </div>
-                                <div
-                                  class="rjsf-field-error-template text-red-600"
-                                >
-                                  <ul
-                                    class="list-disc list-inside"
-                                  />
                                 </div>
                               </div>
                             </div>
@@ -2629,13 +2425,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                         </div>
                       </div>
                     </div>
-                    <div
-                      class="rjsf-field-error-template text-red-600"
-                    >
-                      <ul
-                        class="list-disc list-inside"
-                      />
-                    </div>
                   </div>
                 </div>
                 <div
@@ -2747,13 +2536,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -2815,12 +2597,15 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               <label
                                 class="label"
                                 for="root_0_name"
-                                id="root_0_name__label"
                               >
                                 <span
                                   class="label-text font-medium"
                                 >
-                                  name
+                                  <span
+                                    id="root_0_name__label"
+                                  >
+                                    name
+                                  </span>
                                 </span>
                               </label>
                               <div
@@ -2830,7 +2615,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                   style="position: relative;"
                                 >
                                   <input
-                                    aria-describedby="root_0_name__error root_0_name__description root_0_name__help"
                                     class="input input-bordered w-full"
                                     id="root_0_name"
                                     name="root.0.name"
@@ -2839,13 +2623,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                     value="Item 1"
                                   />
                                 </div>
-                              </div>
-                              <div
-                                class="rjsf-field-error-template text-red-600"
-                              >
-                                <ul
-                                  class="list-disc list-inside"
-                                />
                               </div>
                             </div>
                           </div>
@@ -2862,12 +2639,15 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               <label
                                 class="label"
                                 for="root_0_value"
-                                id="root_0_value__label"
                               >
                                 <span
                                   class="label-text font-medium"
                                 >
-                                  value
+                                  <span
+                                    id="root_0_value__label"
+                                  >
+                                    value
+                                  </span>
                                 </span>
                               </label>
                               <div
@@ -2877,7 +2657,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                   style="position: relative;"
                                 >
                                   <input
-                                    aria-describedby="root_0_value__error root_0_value__description root_0_value__help"
                                     class="input input-bordered w-full"
                                     id="root_0_value"
                                     inputmode="decimal"
@@ -2890,24 +2669,10 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                   />
                                 </div>
                               </div>
-                              <div
-                                class="rjsf-field-error-template text-red-600"
-                              >
-                                <ul
-                                  class="list-disc list-inside"
-                                />
-                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div
-                      class="rjsf-field-error-template text-red-600"
-                    >
-                      <ul
-                        class="list-disc list-inside"
-                      />
                     </div>
                   </div>
                 </div>
@@ -3011,12 +2776,15 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               <label
                                 class="label"
                                 for="root_1_name"
-                                id="root_1_name__label"
                               >
                                 <span
                                   class="label-text font-medium"
                                 >
-                                  name
+                                  <span
+                                    id="root_1_name__label"
+                                  >
+                                    name
+                                  </span>
                                 </span>
                               </label>
                               <div
@@ -3026,7 +2794,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                   style="position: relative;"
                                 >
                                   <input
-                                    aria-describedby="root_1_name__error root_1_name__description root_1_name__help"
                                     class="input input-bordered w-full"
                                     id="root_1_name"
                                     name="root.1.name"
@@ -3035,13 +2802,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                     value="Item 2"
                                   />
                                 </div>
-                              </div>
-                              <div
-                                class="rjsf-field-error-template text-red-600"
-                              >
-                                <ul
-                                  class="list-disc list-inside"
-                                />
                               </div>
                             </div>
                           </div>
@@ -3058,12 +2818,15 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               <label
                                 class="label"
                                 for="root_1_value"
-                                id="root_1_value__label"
                               >
                                 <span
                                   class="label-text font-medium"
                                 >
-                                  value
+                                  <span
+                                    id="root_1_value__label"
+                                  >
+                                    value
+                                  </span>
                                 </span>
                               </label>
                               <div
@@ -3073,7 +2836,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                   style="position: relative;"
                                 >
                                   <input
-                                    aria-describedby="root_1_value__error root_1_value__description root_1_value__help"
                                     class="input input-bordered w-full"
                                     id="root_1_value"
                                     inputmode="decimal"
@@ -3086,24 +2848,10 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                   />
                                 </div>
                               </div>
-                              <div
-                                class="rjsf-field-error-template text-red-600"
-                              >
-                                <ul
-                                  class="list-disc list-inside"
-                                />
-                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div
-                      class="rjsf-field-error-template text-red-600"
-                    >
-                      <ul
-                        class="list-disc list-inside"
-                      />
                     </div>
                   </div>
                 </div>
@@ -3216,13 +2964,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -3273,7 +3014,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                         style="position: relative;"
                       >
                         <input
-                          aria-describedby="root_0__error root_0__description root_0__help"
                           class="input input-bordered w-full"
                           id="root_0"
                           name="root.0"
@@ -3283,13 +3023,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                           value="foo"
                         />
                       </div>
-                    </div>
-                    <div
-                      class="rjsf-field-error-template text-red-600"
-                    >
-                      <ul
-                        class="list-disc list-inside"
-                      />
                     </div>
                   </div>
                 </div>
@@ -3382,7 +3115,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                         style="position: relative;"
                       >
                         <input
-                          aria-describedby="root_1__error root_1__description root_1__help"
                           class="input input-bordered w-full"
                           id="root_1"
                           name="root.1"
@@ -3392,13 +3124,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                           value="bar"
                         />
                       </div>
-                    </div>
-                    <div
-                      class="rjsf-field-error-template text-red-600"
-                    >
-                      <ul
-                        class="list-disc list-inside"
-                      />
                     </div>
                   </div>
                 </div>
@@ -3511,13 +3236,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -3579,12 +3297,15 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                               <label
                                 class="label"
                                 for="root_0_name"
-                                id="root_0_name__label"
                               >
                                 <span
                                   class="label-text font-medium"
                                 >
-                                  name
+                                  <span
+                                    id="root_0_name__label"
+                                  >
+                                    name
+                                  </span>
                                 </span>
                               </label>
                               <div
@@ -3594,7 +3315,6 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                                   style="position: relative;"
                                 >
                                   <input
-                                    aria-describedby="root_0_name__error root_0_name__description root_0_name__help"
                                     class="input input-bordered w-full"
                                     id="root_0_name"
                                     name="root_0_name"
@@ -3604,24 +3324,10 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                                   />
                                 </div>
                               </div>
-                              <div
-                                class="rjsf-field-error-template text-red-600"
-                              >
-                                <ul
-                                  class="list-disc list-inside"
-                                />
-                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div
-                      class="rjsf-field-error-template text-red-600"
-                    >
-                      <ul
-                        class="list-disc list-inside"
-                      />
                     </div>
                   </div>
                 </div>
@@ -3746,12 +3452,15 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                               <label
                                 class="label"
                                 for="root_1_name"
-                                id="root_1_name__label"
                               >
                                 <span
                                   class="label-text font-medium"
                                 >
-                                  name
+                                  <span
+                                    id="root_1_name__label"
+                                  >
+                                    name
+                                  </span>
                                 </span>
                               </label>
                               <div
@@ -3761,7 +3470,6 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                                   style="position: relative;"
                                 >
                                   <input
-                                    aria-describedby="root_1_name__error root_1_name__description root_1_name__help"
                                     class="input input-bordered w-full"
                                     id="root_1_name"
                                     name="root_1_name"
@@ -3771,24 +3479,10 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                                   />
                                 </div>
                               </div>
-                              <div
-                                class="rjsf-field-error-template text-red-600"
-                              >
-                                <ul
-                                  class="list-disc list-inside"
-                                />
-                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div
-                      class="rjsf-field-error-template text-red-600"
-                    >
-                      <ul
-                        class="list-disc list-inside"
-                      />
                     </div>
                   </div>
                 </div>
@@ -3922,13 +3616,6 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -3959,9 +3646,12 @@ exports[`with title and description > array 1`] = `
         >
           <h3
             class="text-2xl font-bold"
-            id="root__title"
           >
-            Test field
+            <span
+              id="root__title"
+            >
+              Test field
+            </span>
           </h3>
           <div>
             <div
@@ -4017,13 +3707,6 @@ exports[`with title and description > array 1`] = `
               </div>
             </div>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -4055,9 +3738,12 @@ exports[`with title and description > array icons 1`] = `
         >
           <h3
             class="text-2xl font-bold"
-            id="root__title"
           >
-            Test field
+            <span
+              id="root__title"
+            >
+              Test field
+            </span>
           </h3>
           <div>
             <div
@@ -4085,12 +3771,15 @@ exports[`with title and description > array icons 1`] = `
                     <label
                       class="label"
                       for="root_0"
-                      id="root_0__label"
                     >
                       <span
                         class="label-text font-medium"
                       >
-                        Test item
+                        <span
+                          id="root_0__label"
+                        >
+                          Test item
+                        </span>
                         <span
                           class="text-error ml-1"
                         >
@@ -4105,7 +3794,7 @@ exports[`with title and description > array icons 1`] = `
                         style="position: relative;"
                       >
                         <input
-                          aria-describedby="root_0__error root_0__description root_0__help"
+                          aria-describedby="root_0__description"
                           class="input input-bordered w-full"
                           id="root_0"
                           name="root_0"
@@ -4125,13 +3814,6 @@ exports[`with title and description > array icons 1`] = `
                       >
                         a test item description
                       </div>
-                    </div>
-                    <div
-                      class="rjsf-field-error-template text-red-600"
-                    >
-                      <ul
-                        class="list-disc list-inside"
-                      />
                     </div>
                   </div>
                 </div>
@@ -4241,12 +3923,15 @@ exports[`with title and description > array icons 1`] = `
                     <label
                       class="label"
                       for="root_1"
-                      id="root_1__label"
                     >
                       <span
                         class="label-text font-medium"
                       >
-                        Test item
+                        <span
+                          id="root_1__label"
+                        >
+                          Test item
+                        </span>
                         <span
                           class="text-error ml-1"
                         >
@@ -4261,7 +3946,7 @@ exports[`with title and description > array icons 1`] = `
                         style="position: relative;"
                       >
                         <input
-                          aria-describedby="root_1__error root_1__description root_1__help"
+                          aria-describedby="root_1__description"
                           class="input input-bordered w-full"
                           id="root_1"
                           name="root_1"
@@ -4281,13 +3966,6 @@ exports[`with title and description > array icons 1`] = `
                       >
                         a test item description
                       </div>
-                    </div>
-                    <div
-                      class="rjsf-field-error-template text-red-600"
-                    >
-                      <ul
-                        class="list-disc list-inside"
-                      />
                     </div>
                   </div>
                 </div>
@@ -4421,13 +4099,6 @@ exports[`with title and description > array icons 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -4456,12 +4127,15 @@ exports[`with title and description > checkboxes 1`] = `
         <label
           class="label"
           for="root"
-          id="root__label"
         >
           <span
             class="label-text font-medium"
           >
-            Test field
+            <span
+              id="root__label"
+            >
+              Test field
+            </span>
           </span>
         </label>
         <div
@@ -4471,15 +4145,19 @@ exports[`with title and description > checkboxes 1`] = `
             class="dropdown w-full"
           >
             <button
-              aria-describedby="root__error root__description root__help"
+              aria-controls="_r_n_"
+              aria-describedby="root__description"
+              aria-expanded="false"
+              aria-haspopup="listbox"
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
+              role="combobox"
               tabindex="0"
               type="button"
             >
               <span
+                aria-hidden="true"
                 class="truncate"
-                id="root__value"
               >
                 Test field
               </span>
@@ -4491,7 +4169,9 @@ exports[`with title and description > checkboxes 1`] = `
               </span>
             </button>
             <ul
+              aria-multiselectable="true"
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+              id="_r_n_"
               role="listbox"
             >
               <li
@@ -4499,14 +4179,16 @@ exports[`with title and description > checkboxes 1`] = `
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="0"
                 role="option"
-                tabindex="0"
+                tabindex="-1"
               >
                 <div
                   class="flex items-center gap-2"
                 >
                   <input
-                    class="checkbox checkbox-sm"
+                    aria-hidden="true"
+                    class="checkbox checkbox-sm pointer-events-none"
                     readonly=""
+                    tabindex="-1"
                     type="checkbox"
                   />
                   <span>
@@ -4519,14 +4201,16 @@ exports[`with title and description > checkboxes 1`] = `
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="1"
                 role="option"
-                tabindex="0"
+                tabindex="-1"
               >
                 <div
                   class="flex items-center gap-2"
                 >
                   <input
-                    class="checkbox checkbox-sm"
+                    aria-hidden="true"
+                    class="checkbox checkbox-sm pointer-events-none"
                     readonly=""
+                    tabindex="-1"
                     type="checkbox"
                   />
                   <span>
@@ -4539,14 +4223,16 @@ exports[`with title and description > checkboxes 1`] = `
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="2"
                 role="option"
-                tabindex="0"
+                tabindex="-1"
               >
                 <div
                   class="flex items-center gap-2"
                 >
                   <input
-                    class="checkbox checkbox-sm"
+                    aria-hidden="true"
+                    class="checkbox checkbox-sm pointer-events-none"
                     readonly=""
+                    tabindex="-1"
                     type="checkbox"
                   />
                   <span>
@@ -4566,13 +4252,6 @@ exports[`with title and description > checkboxes 1`] = `
           >
             a test description
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -4604,9 +4283,12 @@ exports[`with title and description > fixed array 1`] = `
         >
           <h3
             class="text-2xl font-bold"
-            id="root__title"
           >
-            Test field
+            <span
+              id="root__title"
+            >
+              Test field
+            </span>
           </h3>
           <div>
             <div
@@ -4634,12 +4316,15 @@ exports[`with title and description > fixed array 1`] = `
                     <label
                       class="label"
                       for="root_0"
-                      id="root_0__label"
                     >
                       <span
                         class="label-text font-medium"
                       >
-                        Test item
+                        <span
+                          id="root_0__label"
+                        >
+                          Test item
+                        </span>
                         <span
                           class="text-error ml-1"
                         >
@@ -4654,7 +4339,7 @@ exports[`with title and description > fixed array 1`] = `
                         style="position: relative;"
                       >
                         <input
-                          aria-describedby="root_0__error root_0__description root_0__help"
+                          aria-describedby="root_0__description"
                           class="input input-bordered w-full"
                           id="root_0"
                           name="root_0"
@@ -4675,13 +4360,6 @@ exports[`with title and description > fixed array 1`] = `
                         a test item description
                       </div>
                     </div>
-                    <div
-                      class="rjsf-field-error-template text-red-600"
-                    >
-                      <ul
-                        class="list-disc list-inside"
-                      />
-                    </div>
                   </div>
                 </div>
               </fieldset>
@@ -4697,12 +4375,15 @@ exports[`with title and description > fixed array 1`] = `
                     <label
                       class="label"
                       for="root_1"
-                      id="root_1__label"
                     >
                       <span
                         class="label-text font-medium"
                       >
-                        Test item
+                        <span
+                          id="root_1__label"
+                        >
+                          Test item
+                        </span>
                         <span
                           class="text-error ml-1"
                         >
@@ -4717,7 +4398,7 @@ exports[`with title and description > fixed array 1`] = `
                         style="position: relative;"
                       >
                         <input
-                          aria-describedby="root_1__error root_1__description root_1__help"
+                          aria-describedby="root_1__description"
                           class="input input-bordered w-full"
                           id="root_1"
                           inputmode="decimal"
@@ -4741,25 +4422,11 @@ exports[`with title and description > fixed array 1`] = `
                         a test item description
                       </div>
                     </div>
-                    <div
-                      class="rjsf-field-error-template text-red-600"
-                    >
-                      <ul
-                        class="list-disc list-inside"
-                      />
-                    </div>
                   </div>
                 </div>
               </fieldset>
             </div>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -4791,9 +4458,12 @@ exports[`with title and description from both > array 1`] = `
         >
           <h3
             class="text-2xl font-bold"
-            id="root__title"
           >
-            My Field
+            <span
+              id="root__title"
+            >
+              My Field
+            </span>
           </h3>
           <div>
             <div
@@ -4849,13 +4519,6 @@ exports[`with title and description from both > array 1`] = `
               </div>
             </div>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -4887,9 +4550,12 @@ exports[`with title and description from both > array icons 1`] = `
         >
           <h3
             class="text-2xl font-bold"
-            id="root__title"
           >
-            My Field
+            <span
+              id="root__title"
+            >
+              My Field
+            </span>
           </h3>
           <div>
             <div
@@ -4917,12 +4583,15 @@ exports[`with title and description from both > array icons 1`] = `
                     <label
                       class="label"
                       for="root_0"
-                      id="root_0__label"
                     >
                       <span
                         class="label-text font-medium"
                       >
-                        My Item
+                        <span
+                          id="root_0__label"
+                        >
+                          My Item
+                        </span>
                         <span
                           class="text-error ml-1"
                         >
@@ -4937,7 +4606,7 @@ exports[`with title and description from both > array icons 1`] = `
                         style="position: relative;"
                       >
                         <input
-                          aria-describedby="root_0__error root_0__description root_0__help"
+                          aria-describedby="root_0__description"
                           class="input input-bordered w-full"
                           id="root_0"
                           name="root_0"
@@ -4957,13 +4626,6 @@ exports[`with title and description from both > array icons 1`] = `
                       >
                         a fancier item description
                       </div>
-                    </div>
-                    <div
-                      class="rjsf-field-error-template text-red-600"
-                    >
-                      <ul
-                        class="list-disc list-inside"
-                      />
                     </div>
                   </div>
                 </div>
@@ -5073,12 +4735,15 @@ exports[`with title and description from both > array icons 1`] = `
                     <label
                       class="label"
                       for="root_1"
-                      id="root_1__label"
                     >
                       <span
                         class="label-text font-medium"
                       >
-                        My Item
+                        <span
+                          id="root_1__label"
+                        >
+                          My Item
+                        </span>
                         <span
                           class="text-error ml-1"
                         >
@@ -5093,7 +4758,7 @@ exports[`with title and description from both > array icons 1`] = `
                         style="position: relative;"
                       >
                         <input
-                          aria-describedby="root_1__error root_1__description root_1__help"
+                          aria-describedby="root_1__description"
                           class="input input-bordered w-full"
                           id="root_1"
                           name="root_1"
@@ -5113,13 +4778,6 @@ exports[`with title and description from both > array icons 1`] = `
                       >
                         a fancier item description
                       </div>
-                    </div>
-                    <div
-                      class="rjsf-field-error-template text-red-600"
-                    >
-                      <ul
-                        class="list-disc list-inside"
-                      />
                     </div>
                   </div>
                 </div>
@@ -5253,13 +4911,6 @@ exports[`with title and description from both > array icons 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -5288,12 +4939,15 @@ exports[`with title and description from both > checkboxes 1`] = `
         <label
           class="label"
           for="root"
-          id="root__label"
         >
           <span
             class="label-text font-medium"
           >
-            My Field
+            <span
+              id="root__label"
+            >
+              My Field
+            </span>
           </span>
         </label>
         <div
@@ -5303,15 +4957,19 @@ exports[`with title and description from both > checkboxes 1`] = `
             class="dropdown w-full"
           >
             <button
-              aria-describedby="root__error root__description root__help"
+              aria-controls="_r_21_"
+              aria-describedby="root__description"
+              aria-expanded="false"
+              aria-haspopup="listbox"
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
+              role="combobox"
               tabindex="0"
               type="button"
             >
               <span
+                aria-hidden="true"
                 class="truncate"
-                id="root__value"
               >
                 My Field
               </span>
@@ -5323,7 +4981,9 @@ exports[`with title and description from both > checkboxes 1`] = `
               </span>
             </button>
             <ul
+              aria-multiselectable="true"
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+              id="_r_21_"
               role="listbox"
             >
               <li
@@ -5331,14 +4991,16 @@ exports[`with title and description from both > checkboxes 1`] = `
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="0"
                 role="option"
-                tabindex="0"
+                tabindex="-1"
               >
                 <div
                   class="flex items-center gap-2"
                 >
                   <input
-                    class="checkbox checkbox-sm"
+                    aria-hidden="true"
+                    class="checkbox checkbox-sm pointer-events-none"
                     readonly=""
+                    tabindex="-1"
                     type="checkbox"
                   />
                   <span>
@@ -5351,14 +5013,16 @@ exports[`with title and description from both > checkboxes 1`] = `
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="1"
                 role="option"
-                tabindex="0"
+                tabindex="-1"
               >
                 <div
                   class="flex items-center gap-2"
                 >
                   <input
-                    class="checkbox checkbox-sm"
+                    aria-hidden="true"
+                    class="checkbox checkbox-sm pointer-events-none"
                     readonly=""
+                    tabindex="-1"
                     type="checkbox"
                   />
                   <span>
@@ -5371,14 +5035,16 @@ exports[`with title and description from both > checkboxes 1`] = `
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="2"
                 role="option"
-                tabindex="0"
+                tabindex="-1"
               >
                 <div
                   class="flex items-center gap-2"
                 >
                   <input
-                    class="checkbox checkbox-sm"
+                    aria-hidden="true"
+                    class="checkbox checkbox-sm pointer-events-none"
                     readonly=""
+                    tabindex="-1"
                     type="checkbox"
                   />
                   <span>
@@ -5398,13 +5064,6 @@ exports[`with title and description from both > checkboxes 1`] = `
           >
             a fancier description
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -5436,9 +5095,12 @@ exports[`with title and description from both > fixed array 1`] = `
         >
           <h3
             class="text-2xl font-bold"
-            id="root__title"
           >
-            My Field
+            <span
+              id="root__title"
+            >
+              My Field
+            </span>
           </h3>
           <div>
             <div
@@ -5466,12 +5128,15 @@ exports[`with title and description from both > fixed array 1`] = `
                     <label
                       class="label"
                       for="root_0"
-                      id="root_0__label"
                     >
                       <span
                         class="label-text font-medium"
                       >
-                        My Item
+                        <span
+                          id="root_0__label"
+                        >
+                          My Item
+                        </span>
                         <span
                           class="text-error ml-1"
                         >
@@ -5486,7 +5151,7 @@ exports[`with title and description from both > fixed array 1`] = `
                         style="position: relative;"
                       >
                         <input
-                          aria-describedby="root_0__error root_0__description root_0__help"
+                          aria-describedby="root_0__description"
                           class="input input-bordered w-full"
                           id="root_0"
                           name="root_0"
@@ -5507,13 +5172,6 @@ exports[`with title and description from both > fixed array 1`] = `
                         a fancier item description
                       </div>
                     </div>
-                    <div
-                      class="rjsf-field-error-template text-red-600"
-                    >
-                      <ul
-                        class="list-disc list-inside"
-                      />
-                    </div>
                   </div>
                 </div>
               </fieldset>
@@ -5529,12 +5187,15 @@ exports[`with title and description from both > fixed array 1`] = `
                     <label
                       class="label"
                       for="root_1"
-                      id="root_1__label"
                     >
                       <span
                         class="label-text font-medium"
                       >
-                        My Item
+                        <span
+                          id="root_1__label"
+                        >
+                          My Item
+                        </span>
                         <span
                           class="text-error ml-1"
                         >
@@ -5549,7 +5210,7 @@ exports[`with title and description from both > fixed array 1`] = `
                         style="position: relative;"
                       >
                         <input
-                          aria-describedby="root_1__error root_1__description root_1__help"
+                          aria-describedby="root_1__description"
                           class="input input-bordered w-full"
                           id="root_1"
                           inputmode="decimal"
@@ -5573,25 +5234,11 @@ exports[`with title and description from both > fixed array 1`] = `
                         a fancier item description
                       </div>
                     </div>
-                    <div
-                      class="rjsf-field-error-template text-red-600"
-                    >
-                      <ul
-                        class="list-disc list-inside"
-                      />
-                    </div>
                   </div>
                 </div>
               </fieldset>
             </div>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -5623,9 +5270,12 @@ exports[`with title and description from uiSchema > array 1`] = `
         >
           <h3
             class="text-2xl font-bold"
-            id="root__title"
           >
-            My Field
+            <span
+              id="root__title"
+            >
+              My Field
+            </span>
           </h3>
           <div>
             <div
@@ -5682,13 +5332,6 @@ exports[`with title and description from uiSchema > array 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -5719,9 +5362,12 @@ exports[`with title and description from uiSchema > array icons 1`] = `
         >
           <h3
             class="text-2xl font-bold"
-            id="root__title"
           >
-            My Field
+            <span
+              id="root__title"
+            >
+              My Field
+            </span>
           </h3>
           <div>
             <div
@@ -5749,12 +5395,15 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                     <label
                       class="label"
                       for="root_0"
-                      id="root_0__label"
                     >
                       <span
                         class="label-text font-medium"
                       >
-                        My Item
+                        <span
+                          id="root_0__label"
+                        >
+                          My Item
+                        </span>
                         <span
                           class="text-error ml-1"
                         >
@@ -5769,7 +5418,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                         style="position: relative;"
                       >
                         <input
-                          aria-describedby="root_0__error root_0__description root_0__help"
+                          aria-describedby="root_0__description"
                           class="input input-bordered w-full"
                           id="root_0"
                           name="root_0"
@@ -5789,13 +5438,6 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                       >
                         a fancier item description
                       </div>
-                    </div>
-                    <div
-                      class="rjsf-field-error-template text-red-600"
-                    >
-                      <ul
-                        class="list-disc list-inside"
-                      />
                     </div>
                   </div>
                 </div>
@@ -5905,12 +5547,15 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                     <label
                       class="label"
                       for="root_1"
-                      id="root_1__label"
                     >
                       <span
                         class="label-text font-medium"
                       >
-                        My Item
+                        <span
+                          id="root_1__label"
+                        >
+                          My Item
+                        </span>
                         <span
                           class="text-error ml-1"
                         >
@@ -5925,7 +5570,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                         style="position: relative;"
                       >
                         <input
-                          aria-describedby="root_1__error root_1__description root_1__help"
+                          aria-describedby="root_1__description"
                           class="input input-bordered w-full"
                           id="root_1"
                           name="root_1"
@@ -5945,13 +5590,6 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                       >
                         a fancier item description
                       </div>
-                    </div>
-                    <div
-                      class="rjsf-field-error-template text-red-600"
-                    >
-                      <ul
-                        class="list-disc list-inside"
-                      />
                     </div>
                   </div>
                 </div>
@@ -6085,13 +5723,6 @@ exports[`with title and description from uiSchema > array icons 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -6120,12 +5751,15 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
         <label
           class="label"
           for="root"
-          id="root__label"
         >
           <span
             class="label-text font-medium"
           >
-            My Field
+            <span
+              id="root__label"
+            >
+              My Field
+            </span>
           </span>
         </label>
         <div
@@ -6135,15 +5769,19 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
             class="dropdown w-full"
           >
             <button
-              aria-describedby="root__error root__description root__help"
+              aria-controls="_r_1c_"
+              aria-describedby="root__description"
+              aria-expanded="false"
+              aria-haspopup="listbox"
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
+              role="combobox"
               tabindex="0"
               type="button"
             >
               <span
+                aria-hidden="true"
                 class="truncate"
-                id="root__value"
               >
                 My Field
               </span>
@@ -6155,7 +5793,9 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
               </span>
             </button>
             <ul
+              aria-multiselectable="true"
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+              id="_r_1c_"
               role="listbox"
             >
               <li
@@ -6163,14 +5803,16 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="0"
                 role="option"
-                tabindex="0"
+                tabindex="-1"
               >
                 <div
                   class="flex items-center gap-2"
                 >
                   <input
-                    class="checkbox checkbox-sm"
+                    aria-hidden="true"
+                    class="checkbox checkbox-sm pointer-events-none"
                     readonly=""
+                    tabindex="-1"
                     type="checkbox"
                   />
                   <span>
@@ -6183,14 +5825,16 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="1"
                 role="option"
-                tabindex="0"
+                tabindex="-1"
               >
                 <div
                   class="flex items-center gap-2"
                 >
                   <input
-                    class="checkbox checkbox-sm"
+                    aria-hidden="true"
+                    class="checkbox checkbox-sm pointer-events-none"
                     readonly=""
+                    tabindex="-1"
                     type="checkbox"
                   />
                   <span>
@@ -6203,14 +5847,16 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="2"
                 role="option"
-                tabindex="0"
+                tabindex="-1"
               >
                 <div
                   class="flex items-center gap-2"
                 >
                   <input
-                    class="checkbox checkbox-sm"
+                    aria-hidden="true"
+                    class="checkbox checkbox-sm pointer-events-none"
                     readonly=""
+                    tabindex="-1"
                     type="checkbox"
                   />
                   <span>
@@ -6230,13 +5876,6 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
           >
             a fancier description
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -6268,9 +5907,12 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
         >
           <h3
             class="text-2xl font-bold"
-            id="root__title"
           >
-            My Field
+            <span
+              id="root__title"
+            >
+              My Field
+            </span>
           </h3>
           <div>
             <div
@@ -6298,12 +5940,15 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                     <label
                       class="label"
                       for="root_0"
-                      id="root_0__label"
                     >
                       <span
                         class="label-text font-medium"
                       >
-                        My Item
+                        <span
+                          id="root_0__label"
+                        >
+                          My Item
+                        </span>
                         <span
                           class="text-error ml-1"
                         >
@@ -6318,7 +5963,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                         style="position: relative;"
                       >
                         <input
-                          aria-describedby="root_0__error root_0__description root_0__help"
+                          aria-describedby="root_0__description"
                           class="input input-bordered w-full"
                           id="root_0"
                           name="root_0"
@@ -6339,13 +5984,6 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                         a fancier item description
                       </div>
                     </div>
-                    <div
-                      class="rjsf-field-error-template text-red-600"
-                    >
-                      <ul
-                        class="list-disc list-inside"
-                      />
-                    </div>
                   </div>
                 </div>
               </fieldset>
@@ -6361,12 +5999,15 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                     <label
                       class="label"
                       for="root_1"
-                      id="root_1__label"
                     >
                       <span
                         class="label-text font-medium"
                       >
-                        My Item
+                        <span
+                          id="root_1__label"
+                        >
+                          My Item
+                        </span>
                         <span
                           class="text-error ml-1"
                         >
@@ -6381,7 +6022,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                         style="position: relative;"
                       >
                         <input
-                          aria-describedby="root_1__error root_1__description root_1__help"
+                          aria-describedby="root_1__description"
                           class="input input-bordered w-full"
                           id="root_1"
                           inputmode="decimal"
@@ -6405,25 +6046,11 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                         a fancier item description
                       </div>
                     </div>
-                    <div
-                      class="rjsf-field-error-template text-red-600"
-                    >
-                      <ul
-                        class="list-disc list-inside"
-                      />
-                    </div>
                   </div>
                 </div>
               </fieldset>
             </div>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -6500,13 +6127,6 @@ exports[`with title and description with global label off > array 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -6557,7 +6177,7 @@ exports[`with title and description with global label off > array icons 1`] = `
                         style="position: relative;"
                       >
                         <input
-                          aria-describedby="root_0__error root_0__description root_0__help"
+                          aria-label="Test item"
                           class="input input-bordered w-full"
                           id="root_0"
                           name="root_0"
@@ -6567,13 +6187,6 @@ exports[`with title and description with global label off > array icons 1`] = `
                           value="a"
                         />
                       </div>
-                    </div>
-                    <div
-                      class="rjsf-field-error-template text-red-600"
-                    >
-                      <ul
-                        class="list-disc list-inside"
-                      />
                     </div>
                   </div>
                 </div>
@@ -6687,7 +6300,7 @@ exports[`with title and description with global label off > array icons 1`] = `
                         style="position: relative;"
                       >
                         <input
-                          aria-describedby="root_1__error root_1__description root_1__help"
+                          aria-label="Test item"
                           class="input input-bordered w-full"
                           id="root_1"
                           name="root_1"
@@ -6697,13 +6310,6 @@ exports[`with title and description with global label off > array icons 1`] = `
                           value="b"
                         />
                       </div>
-                    </div>
-                    <div
-                      class="rjsf-field-error-template text-red-600"
-                    >
-                      <ul
-                        class="list-disc list-inside"
-                      />
                     </div>
                   </div>
                 </div>
@@ -6837,13 +6443,6 @@ exports[`with title and description with global label off > array icons 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -6876,15 +6475,19 @@ exports[`with title and description with global label off > checkboxes 1`] = `
             class="dropdown w-full"
           >
             <button
-              aria-describedby="root__error root__description root__help"
+              aria-controls="_r_2m_"
+              aria-expanded="false"
+              aria-haspopup="listbox"
+              aria-label="Test field"
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
+              role="combobox"
               tabindex="0"
               type="button"
             >
               <span
+                aria-hidden="true"
                 class="truncate"
-                id="root__value"
               >
                 Test field
               </span>
@@ -6896,7 +6499,9 @@ exports[`with title and description with global label off > checkboxes 1`] = `
               </span>
             </button>
             <ul
+              aria-multiselectable="true"
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+              id="_r_2m_"
               role="listbox"
             >
               <li
@@ -6904,14 +6509,16 @@ exports[`with title and description with global label off > checkboxes 1`] = `
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="0"
                 role="option"
-                tabindex="0"
+                tabindex="-1"
               >
                 <div
                   class="flex items-center gap-2"
                 >
                   <input
-                    class="checkbox checkbox-sm"
+                    aria-hidden="true"
+                    class="checkbox checkbox-sm pointer-events-none"
                     readonly=""
+                    tabindex="-1"
                     type="checkbox"
                   />
                   <span>
@@ -6924,14 +6531,16 @@ exports[`with title and description with global label off > checkboxes 1`] = `
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="1"
                 role="option"
-                tabindex="0"
+                tabindex="-1"
               >
                 <div
                   class="flex items-center gap-2"
                 >
                   <input
-                    class="checkbox checkbox-sm"
+                    aria-hidden="true"
+                    class="checkbox checkbox-sm pointer-events-none"
                     readonly=""
+                    tabindex="-1"
                     type="checkbox"
                   />
                   <span>
@@ -6944,14 +6553,16 @@ exports[`with title and description with global label off > checkboxes 1`] = `
                 class="px-4 py-2 hover:bg-base-200 cursor-pointer "
                 data-value="2"
                 role="option"
-                tabindex="0"
+                tabindex="-1"
               >
                 <div
                   class="flex items-center gap-2"
                 >
                   <input
-                    class="checkbox checkbox-sm"
+                    aria-hidden="true"
+                    class="checkbox checkbox-sm pointer-events-none"
                     readonly=""
+                    tabindex="-1"
                     type="checkbox"
                   />
                   <span>
@@ -6961,13 +6572,6 @@ exports[`with title and description with global label off > checkboxes 1`] = `
               </li>
             </ul>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -7019,7 +6623,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
                         style="position: relative;"
                       >
                         <input
-                          aria-describedby="root_0__error root_0__description root_0__help"
+                          aria-label="Test item"
                           class="input input-bordered w-full"
                           id="root_0"
                           name="root_0"
@@ -7029,13 +6633,6 @@ exports[`with title and description with global label off > fixed array 1`] = `
                           value=""
                         />
                       </div>
-                    </div>
-                    <div
-                      class="rjsf-field-error-template text-red-600"
-                    >
-                      <ul
-                        class="list-disc list-inside"
-                      />
                     </div>
                   </div>
                 </div>
@@ -7056,7 +6653,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
                         style="position: relative;"
                       >
                         <input
-                          aria-describedby="root_1__error root_1__description root_1__help"
+                          aria-label="Test item"
                           class="input input-bordered w-full"
                           id="root_1"
                           inputmode="decimal"
@@ -7070,25 +6667,11 @@ exports[`with title and description with global label off > fixed array 1`] = `
                         />
                       </div>
                     </div>
-                    <div
-                      class="rjsf-field-error-template text-red-600"
-                    >
-                      <ul
-                        class="list-disc list-inside"
-                      />
-                    </div>
                   </div>
                 </div>
               </fieldset>
             </div>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>

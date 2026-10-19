@@ -1,6 +1,12 @@
 import { Grid, GridItem, Input } from '@chakra-ui/react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WrapIfAdditionalTemplateProps } from '@rjsf/utils';
-import { AdditionalPropertyKeySelect, ADDITIONAL_PROPERTY_FLAG, buttonId, TranslatableString } from '@rjsf/utils';
+import {
+  ADDITIONAL_PROPERTY_FLAG,
+  AdditionalPropertyKeySelect,
+  buttonId,
+  hasAdditionalKeyLabel,
+  TranslatableString,
+} from '@rjsf/utils';
 
 import { Field } from '../components/ui/field.tsx';
 
@@ -14,7 +20,6 @@ export default function WrapIfAdditionalTemplate<
     classNames,
     style,
     disabled,
-    displayLabel,
     id,
     label,
     keyName,
@@ -29,10 +34,12 @@ export default function WrapIfAdditionalTemplate<
     schema,
     uiSchema,
   } = props;
+  // The key is labelled wherever the value's label is drawn, by the template or the value's own component
+  const hasKeyLabel = hasAdditionalKeyLabel<T, S, F>(props);
   const { templates, translateString } = registry;
   // Button templates are not overridden in the uiSchema
   const { RemoveButton } = templates.ButtonTemplates;
-  const keyLabel = displayLabel ? translateString(TranslatableString.KeyLabel, [label]) : undefined;
+  const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
   const hasDescription = !!rawDescription;
   const margin = hasDescription ? 58 : 22;
@@ -57,7 +64,8 @@ export default function WrapIfAdditionalTemplate<
         {propertyNamesEnum ? (
           <AdditionalPropertyKeySelect<T, S, F>
             id={`${id}-key`}
-            label={keyLabel ?? ''}
+            label={keyLabel}
+            hideLabel={!hasKeyLabel}
             value={keyName}
             propertyNamesEnum={propertyNamesEnum}
             onKeyRename={onKeyRename}
@@ -67,7 +75,7 @@ export default function WrapIfAdditionalTemplate<
             registry={registry}
           />
         ) : (
-          <Field required={required} label={keyLabel}>
+          <Field required={required} label={hasKeyLabel ? keyLabel : undefined} id={`${id}-key`}>
             <Input
               key={keyName}
               defaultValue={keyName}
@@ -77,12 +85,13 @@ export default function WrapIfAdditionalTemplate<
               onBlur={!readonly ? onKeyRenameBlur : undefined}
               type='text'
               mb={1}
+              aria-label={hasKeyLabel ? undefined : keyLabel}
             />
           </Field>
         )}
       </GridItem>
       <GridItem colSpan={5}>{children}</GridItem>
-      <GridItem justifySelf='flex-end' style={{ marginTop: displayLabel ? `${margin}px` : undefined }}>
+      <GridItem justifySelf='flex-end' style={{ marginTop: hasKeyLabel ? `${margin}px` : undefined }}>
         <RemoveButton
           id={buttonId(id, 'remove')}
           className='rjsf-object-property-remove'

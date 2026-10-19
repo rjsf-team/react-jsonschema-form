@@ -6,11 +6,12 @@ import type {
   WrapIfAdditionalTemplateProps,
 } from '@rjsf/utils';
 import {
-  AdditionalPropertyKeySelect,
   ADDITIONAL_PROPERTY_FLAG,
-  UI_OPTIONS_KEY,
-  TranslatableString,
+  AdditionalPropertyKeySelect,
   buttonId,
+  hasAdditionalKeyLabel,
+  TranslatableString,
+  UI_OPTIONS_KEY,
 } from '@rjsf/utils';
 import { Col, Row, Form, Input } from 'antd';
 
@@ -36,7 +37,6 @@ export default function WrapIfAdditionalTemplate<
     classNames,
     style,
     disabled,
-    displayLabel,
     id,
     label,
     keyName,
@@ -50,6 +50,8 @@ export default function WrapIfAdditionalTemplate<
     schema,
     uiSchema,
   } = props;
+  // The key is labelled wherever the value's label is drawn, by the template or the value's own component
+  const hasKeyLabel = hasAdditionalKeyLabel<T, S, F>(props);
   const {
     colon,
     labelCol = VERTICAL_LABEL_COL,
@@ -90,7 +92,7 @@ export default function WrapIfAdditionalTemplate<
               className='form-group'
               hasFeedback
               htmlFor={`${id}-key`}
-              label={displayLabel ? keyLabel : undefined}
+              label={hasKeyLabel ? keyLabel : undefined}
               labelCol={labelCol}
               required={required}
               style={wrapperStyle}
@@ -101,6 +103,7 @@ export default function WrapIfAdditionalTemplate<
                   id={`${id}-key`}
                   label={keyLabel}
                   hideLabel
+                  labelledByTemplate={hasKeyLabel}
                   value={keyName}
                   propertyNamesEnum={propertyNamesEnum}
                   onKeyRename={onKeyRename}
@@ -112,12 +115,14 @@ export default function WrapIfAdditionalTemplate<
               ) : (
                 <Input
                   key={keyName}
+                  aria-label={hasKeyLabel ? undefined : keyLabel}
                   className='form-control'
                   defaultValue={keyName}
                   disabled={disabled || (readonlyAsDisabled && readonly)}
                   id={`${id}-key`}
                   name={`${id}-key`}
                   onBlur={!readonly ? onKeyRenameBlur : undefined}
+                  readOnly={readonly}
                   style={INPUT_STYLE}
                   type='text'
                 />
@@ -128,7 +133,7 @@ export default function WrapIfAdditionalTemplate<
         <Col className='form-additional' flex='1'>
           {children}
         </Col>
-        <Col flex='120px' style={{ marginTop: displayLabel ? '40px' : undefined }}>
+        <Col flex='120px' style={{ marginTop: hasKeyLabel ? '40px' : undefined }}>
           <RemoveButton
             id={buttonId(id, 'remove')}
             className='rjsf-object-property-remove'
