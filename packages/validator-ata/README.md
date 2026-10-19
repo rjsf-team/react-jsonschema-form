@@ -37,10 +37,10 @@ ata is a JSON Schema validator that targets Draft 2020-12 (98.5% spec compliance
 ## Installation
 
 ```bash
-npm install @rjsf/validator-ata ata-validator
+npm install @rjsf/validator-ata
 ```
 
-`ata-validator` is a peer of this package; install it alongside.
+`ata-validator` is a dependency of this package and is installed with it.
 
 ## Usage
 
@@ -81,7 +81,7 @@ A `Localizer` may be supplied as the second argument. ata error objects use the 
 
 The `ValidatorType` contract is identical, and the shared `@rjsf/utils` schema test suite passes against this validator with the deltas below. Behavior outside of this list mirrors `validator-ajv8`.
 
-- **Precompiled validators** are not yet wired through. The `compileSchemaValidators` and `createPrecompiledValidator` entrypoints exposed by `validator-ajv8` are slated for a follow-up release that adapts ata's `bundleStandalone` codegen to the RJSF-expected `ValidatorFunctions` shape.
+- **Precompiled validators** are supported. See [Precompiled validators](https://rjsf-team.github.io/react-jsonschema-form/docs/usage/validation#precompiled-validators-with-rjsfvalidator-ata) in the docs.
 - **`ajvOptionsOverrides`, `ajvFormatOptions`, `AjvClass`** have no equivalents and are intentionally not accepted. `ataOptionsOverrides` replaces the first; built-in formats are always installed and don't require an opt-in flag.
 - **`isValid` and `rawValidation` deep-clone `formData` before passing it to ata**. ata's default-applier writes `default` values into the input object during validation, while AJV treats validation as a pure operation. The clone preserves the AJV contract RJSF expects when probing data through repeated `isValid` calls (oneOf/anyOf option resolution).
 - **Custom-keyword extensions** (e.g. `ajv-errors`, `ajv-merge-patch`) have no ata-side counterpart yet. Schemas using these keywords will validate (ata silently ignores unknown keywords) but the extension semantics are not applied.

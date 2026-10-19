@@ -24,8 +24,18 @@ const PACKAGES = {
     own: '27 kB',
     canaries: [{ label: 'getUiOptions', import: '{ getUiOptions }', limit: '1 kB' }],
   },
-  '@rjsf/validator-ajv8': { installed: '39 kB', own: '3 kB', nodeOnly: ['./compileSchemaValidators'] },
-  '@rjsf/validator-ata': { nodeOnly: ['./compileSchemaValidators'] },
+  '@rjsf/validator-ajv8': {
+    installed: '39 kB',
+    own: '3 kB',
+    canaries: [{ label: 'createPrecompiledValidator', import: '{ createPrecompiledValidator }', limit: '2 kB' }],
+    nodeOnly: ['./compileSchemaValidators'],
+  },
+  // A precompiled app imports only createPrecompiledValidator; the validator
+  // runtime (ata-validator) must not come with it.
+  '@rjsf/validator-ata': {
+    canaries: [{ label: 'createPrecompiledValidator', import: '{ createPrecompiledValidator }', limit: '2 kB' }],
+    nodeOnly: ['./compileSchemaValidators'],
+  },
 };
 
 /**
