@@ -100,7 +100,7 @@ describe('getTemplate', () => {
     expect(warnSuppression.consoleSpy).not.toHaveBeenCalled();
   });
 
-  it.each([createElement(FakeTemplate), { arbitrary: true }, 42, true, '', 0, false, null])(
+  it.each([createElement(FakeTemplate), { arbitrary: true }, 42, true, '', 0, false])(
     'falls back and warns when the override is not a component: %s',
     (override) => {
       const invalidOptions: UIOptionsType = Object.fromEntries([['FieldTemplate', override]]);
@@ -110,6 +110,14 @@ describe('getTemplate', () => {
       expect(getTemplates(registry, invalidOptions)).toBe(registry.templates);
     },
   );
+
+  it('renders the registry template silently for an explicit own null, even over a ui:globalOptions template', () => {
+    const globalRegistry: Registry = { ...registry, globalUiOptions: { FieldTemplate: CustomTemplate } };
+    const ownOptions: UIOptionsType = Object.fromEntries([['FieldTemplate', null]]);
+    const warnSource = { entryLabel: () => '"root"', ownUiOptions: ownOptions };
+    expect(getTemplate('FieldTemplate', globalRegistry, ownOptions, warnSource)).toBe(FakeTemplate);
+    expect(warnSuppression.consoleSpy).not.toHaveBeenCalled();
+  });
 
   it.each([memo(FakeTemplate), forwardRef(FakeTemplate), lazy(async () => ({ default: FakeTemplate }))])(
     'accepts an object component override: %s',
@@ -280,13 +288,13 @@ describe('getTemplate', () => {
     };
     warnFor({});
     warnFor(createElement(FakeTemplate));
-    warnFor(null);
+    warnFor(42);
     warnFor('object');
     warnFor({});
     expect(warnSuppression.consoleSpy).toHaveBeenCalledTimes(4);
     expect(warnSuppression.consoleSpy.mock.calls[0][0]).toContain('got object');
     expect(warnSuppression.consoleSpy.mock.calls[1][0]).toContain('React element');
-    expect(warnSuppression.consoleSpy.mock.calls[2][0]).toContain('got null');
+    expect(warnSuppression.consoleSpy.mock.calls[2][0]).toContain('got number');
     expect(warnSuppression.consoleSpy.mock.calls[3][0]).toContain("'object'");
   });
 

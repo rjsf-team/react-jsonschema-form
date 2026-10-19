@@ -363,6 +363,21 @@ Implements a deep equals that treats all functions as equivalent and tracks circ
 
 - boolean: True if the `a` and `b` are deeply equal, false otherwise
 
+### describeUnresolvedComponent()
+
+Describes a value given in place of a component, either directly or as a name to look one up by, that did not resolve to anything `isComponentType()` accepts, for a warning that it was ignored. Every option that takes a component or a name uses it, so their warnings read alike. A React element, such as `<MyField />`, is called out on its own, whether given directly or found under a name, and `null` is called out as `null`, since "got object" would not say what to change.
+
+#### Parameters
+
+- given: unknown - The value given for the option, a component or a name to look one up by
+- resolved: unknown - What `given` resolved to: the value found under it when it is a name, otherwise `given` itself
+- lookup: string - What a name is looked up among, in the singular and read after `a` or `no`, e.g. `registered field`
+- exampleName: string - The component name the message uses to show what to pass instead of an element
+
+#### Returns
+
+- string: What the value was, phrased to follow the name of the option it was given for, e.g. `is not a component (got string)` or `names no registered field ('Typo')`
+
 ### descriptionId()
 
 Return a consistent `id` for the field description element.
@@ -1300,13 +1315,18 @@ otherwise. NOTE, since `ButtonTemplates` are not overridden in `uiSchema` only t
 - registry: Registry&lt;T, S, F> - The `Registry` from which to read the template
 - [uiOptions=\{}]: UIOptionsType&lt;T, S, F> - The `UIOptionsType` from which to read an alternate template
 - [warnSource]: TemplateWarnSource&lt;T, S, F> - Names the field for the invalid-override warning and tells an own
-  option apart from one inherited from `ui:globalOptions`; omitted by callers that only resolve, which stay silent
+  option apart from one inherited from `ui:globalOptions`; omitted by callers that only resolve, which stay silent.
+  It has two fields:
+  - entryLabel: () => string - Builds the label of the uiSchema entry the field is rendered from, so one entry warns
+    once however many rows render it; called only when an override is invalid
+  - ownUiOptions: UIOptionsType&lt;T, S, F> - The field's own UI options before `ui:globalOptions` is merged in
 
 #### Returns
 
 - TemplatesType&lt;T, S, F>[Name] - The template from either the `uiSchema` or `registry` for the `name`. An override
   that is not a component is ignored, warning once per uiSchema entry when a `warnSource` is given, and falls back to
-  a valid `ui:globalOptions` template before the registry's own
+  a valid `ui:globalOptions` template before the registry's own. An explicit own `null` is not a mistake: it opts the
+  field out of any override, `ui:globalOptions` included, and the registry's own template renders without a warning
 
 ### getTemplates&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 

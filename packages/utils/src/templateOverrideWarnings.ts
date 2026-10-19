@@ -98,12 +98,11 @@ export function warnOnInvalidOverride<
   // The merged options spread the field's own entries last, so a key the field set itself is its own mistake even
   // when it repeats the global value
   const fromGlobal = !Object.hasOwn(warnSource.ownUiOptions, name) && Object.hasOwn(globalOverrides, name);
-  // The key keeps the distinctions the message makes (a string's text, an element, null, the type) so a changed value
+  // The key keeps the distinctions the message makes (a string's text, an element, the type) so a changed value
   // logs again, and is remembered alongside `logOnce()`'s own messages so `resetLogOnce()` clears it and it is capped the
   // same way, while the message is still built only the first time
   const source = fromGlobal ? 'global' : warnSource.entryLabel();
-  const valueTag = typeof override === 'string' ? override : '';
-  const key = [name, source, typeof override, valueTag, isValidElement(override), override === null].join('\u0000');
+  const key = `${name}\0${source}\0${typeof override}\0${typeof override === 'string' && override}\0${isValidElement(override)}`;
   if (!rememberLogged(key)) {
     return;
   }

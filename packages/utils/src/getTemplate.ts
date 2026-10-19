@@ -25,7 +25,8 @@ export interface TemplateWarnSource<
  * An override that is not a component is ignored, warning when a `warnSource` is given: a string naming no registered
  * template, a React element, or any other non-component value falls back to a valid `ui:globalOptions` template before
  * the registry's own, as `resolveUiField()` does for `ui:field`. A registry template that is not a component is warned
- * about once per registry.
+ * about once per registry. An explicit own `null` is not a mistake: it opts the field out of any override,
+ * `ui:globalOptions` included, so the registry's own template renders without a warning.
  *
  * @param name - The name of the template to fetch, restricted to the keys of `TemplatesType`
  * @param registry - The `Registry` from which to read the template
@@ -51,8 +52,9 @@ export default function getTemplate<
   }
   const customTemplates: Record<string, unknown> = templates;
   const uiOverrides: Record<string, unknown> = uiOptions;
-  const override = uiOverrides[name];
-  // No override: the registry's own template renders. The check on it is cached per registry, so this common path
+  const override = uiOverrides[name] ?? undefined;
+  // No override, or an explicit own `null` that opts out of any override (including `ui:globalOptions`, as a falsy own
+  // `ui:field` does): the registry's own template renders. The check on it is cached per registry, so this common path
   // does not re-validate a static registry on every render of every field and widget.
   if (override === undefined) {
     warnOnInvalidRegistryTemplate(name, customTemplates);
