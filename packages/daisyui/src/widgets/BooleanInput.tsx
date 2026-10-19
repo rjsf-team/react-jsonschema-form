@@ -8,6 +8,7 @@ import {
   getUiOptions,
   getWidgetDescription,
   schemaRequiresTrueValue,
+  widgetDrawsLabel,
 } from '@rjsf/utils';
 
 interface BooleanInputProps<
@@ -33,29 +34,30 @@ export default function BooleanInput<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({
-  id,
-  htmlName,
-  value,
-  label,
-  hideLabel,
-  presentation,
-  required,
-  disabled,
-  readonly,
-  autofocus,
-  onChange,
-  onFocus,
-  onBlur,
-  options,
-  schema,
-  uiSchema,
-  registry,
-  inputClassName,
-  labelClassName,
-}: BooleanInputProps<T, S, F>) {
+>(props: BooleanInputProps<T, S, F>) {
+  const {
+    id,
+    htmlName,
+    value,
+    label,
+    presentation,
+    required,
+    disabled,
+    readonly,
+    autofocus,
+    onChange,
+    onFocus,
+    onBlur,
+    options,
+    schema,
+    uiSchema,
+    registry,
+    inputClassName,
+    labelClassName,
+  } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
-  const description = getWidgetDescription<T, S, F>({ id, options, schema, hideLabel, presentation });
+  const description = getWidgetDescription<T, S, F>(props);
   const trueValueRequired = schemaRequiresTrueValue(schema) && required;
   // A checkbox already answers a boolean whose schema accepts `false`, so a required one of those is marked no more
   // than a field the user has already filled in. That is any field `BooleanField` renders, which seeds it with that

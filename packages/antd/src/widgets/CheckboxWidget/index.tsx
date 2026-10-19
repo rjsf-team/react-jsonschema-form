@@ -1,6 +1,6 @@
 import type { FocusEvent } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps, GenericObjectType } from '@rjsf/utils';
-import { getControlDescribedBy, schemaRequiresTrueValue } from '@rjsf/utils';
+import { getControlDescribedBy, schemaRequiresTrueValue, widgetDrawsLabel } from '@rjsf/utils';
 import type { CheckboxProps } from 'antd';
 import { Checkbox, theme } from 'antd';
 
@@ -21,7 +21,6 @@ export default function CheckboxWidget<
     id,
     htmlName,
     label,
-    hideLabel,
     onBlur,
     onChange,
     onFocus,
@@ -31,6 +30,7 @@ export default function CheckboxWidget<
     schema,
     presentation,
   } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const { formContext } = registry;
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
   const { token } = theme.useToken();

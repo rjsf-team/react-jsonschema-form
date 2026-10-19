@@ -12,29 +12,28 @@ export default function WrapIfAdditionalTemplate<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({
-  classNames,
-  style,
-  children,
-  disabled,
-  id,
-  label,
-  keyName,
-  displayLabel,
-  presentation,
-  onRemoveProperty,
-  onKeyRename,
-  onKeyRenameBlur,
-  propertyNamesEnum,
-  rawDescription,
-  readonly,
-  required,
-  schema,
-  uiSchema,
-  registry,
-}: WrapIfAdditionalTemplateProps<T, S, F>) {
+>(props: WrapIfAdditionalTemplateProps<T, S, F>) {
+  const {
+    classNames,
+    style,
+    children,
+    disabled,
+    id,
+    label,
+    keyName,
+    onRemoveProperty,
+    onKeyRename,
+    onKeyRenameBlur,
+    propertyNamesEnum,
+    rawDescription,
+    readonly,
+    required,
+    schema,
+    uiSchema,
+    registry,
+  } = props;
   // The key is labelled wherever the value's label is drawn, by the template or the value's own component
-  const hasKeyLabel = hasAdditionalKeyLabel<T, S, F>({ displayLabel, presentation });
+  const hasKeyLabel = hasAdditionalKeyLabel<T, S, F>(props);
   const { templates, translateString } = registry;
   // Button templates are not overridden in the uiSchema
   const { RemoveButton } = templates.ButtonTemplates;

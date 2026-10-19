@@ -1,6 +1,7 @@
 import type { FocusEvent } from 'react';
-import { useCallback } from 'react';
+import { useCallback, useLayoutEffect, useRef } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { getGroupAttributes } from '@rjsf/utils';
 
 /** The `RatingWidget` component renders a star or heart rating input
  *
@@ -11,6 +12,7 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from 
  * - Handles required, disabled, and readonly states
  * - Provides focus and blur event handling for accessibility
  * - Uses Unicode characters for better visual representation
+ * - Renders its stars as a `radiogroup`, named and described by its field's plan, as `RadioWidget` is
  *
  * @param props - The `WidgetProps` for this component
  */
@@ -24,18 +26,37 @@ export default function RatingWidget<
   required,
   disabled,
   readonly,
+  autofocus = false,
   onChange,
   onFocus,
   onBlur,
   schema,
   options,
   htmlName,
+  presentation,
 }: WidgetProps<T, S, F>) {
   const { stars = 5, shape = 'star' } = options;
+  const { group: groupAttributes, option: optionAttributes } = getGroupAttributes<T, S, F>(
+    { id, presentation },
+    'radiogroup',
+  );
 
   // Use schema.maximum if provided, otherwise use stars option (limited to 1-5)
   const numStars = schema.maximum ? Math.min(schema.maximum, 5) : Math.min(Math.max(stars as number, 1), 5);
   const min = schema.minimum ?? 0;
+  // The checked star, as `RadioWidget` gives it its checked radio, else the first
+  const autofocusIndex = Math.max(Array.from({ length: numStars }, (_, index) => min + index).indexOf(value), 0);
+  // React acts on `autoFocus` only for a form control, which a star isn't, so the star takes focus as it mounts, in the
+  // same commit phase as `autoFocus` would give it, and not when `ui:autofocus` turns on later. A disabled or read-only
+  // rating takes none, as its stars are out of the tab order
+  const autofocusStar = useRef<HTMLSpanElement>(null);
+  const focusOnMount = useRef(autofocus && !disabled && !readonly);
+  useLayoutEffect(() => {
+    if (focusOnMount.current) {
+      focusOnMount.current = false;
+      autofocusStar.current?.focus();
+    }
+  }, []);
 
   /** Handles clicking on a star to set the rating */
   const handleStarClick = useCallback(
@@ -81,7 +102,10 @@ export default function RatingWidget<
 
   return (
     <div
+      id={id}
       className='rating-widget'
+      {...groupAttributes}
+      aria-required={required || undefined}
       style={{
         display: 'inline-flex',
         fontSize: '1.5rem',
@@ -96,6 +120,7 @@ export default function RatingWidget<
           <span
             // oxlint-disable-next-line react/no-array-index-key
             key={index}
+            ref={index === autofocusIndex ? autofocusStar : undefined}
             onClick={() => handleStarClick(starValue)}
             onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleStarClick(starValue)}
             onFocus={handleFocus}
@@ -105,6 +130,7 @@ export default function RatingWidget<
             role='radio'
             aria-checked={starValue === value}
             aria-label={`${starValue} ${shape === 'heart' ? 'heart' : 'star'}${starValue === 1 ? '' : 's'}`}
+            {...optionAttributes}
             style={{
               color: isFilled ? '#FFD700' : '#ccc',
               padding: '0 0.2rem',
@@ -118,7 +144,6 @@ export default function RatingWidget<
       })}
       <input
         type='hidden'
-        id={id}
         name={htmlName || id}
         value={value || ''}
         required={required}

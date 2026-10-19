@@ -5,6 +5,7 @@ import {
   getWidgetDescription,
   labelValue,
   schemaRequiresTrueValue,
+  widgetDrawsLabel,
 } from '@rjsf/utils';
 
 import { Checkbox } from '../components/ui/checkbox.tsx';
@@ -27,7 +28,6 @@ export default function CheckboxWidget<
     disabled,
     readonly,
     label,
-    hideLabel,
     schema,
     autofocus,
     options,
@@ -40,6 +40,7 @@ export default function CheckboxWidget<
     className,
     required,
   } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   // Because an unchecked checkbox will cause html5 validation to fail, only add
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords

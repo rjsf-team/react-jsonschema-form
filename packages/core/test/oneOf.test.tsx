@@ -1857,7 +1857,7 @@ describe('oneOf', () => {
       // Also verify the uiSchema was passed down to the underlying widget by confirming the lable (in the legend)
       // matches the selected option's title
       expect($select).toHaveValue('0');
-      const inputLabel = node.querySelector('legend#root__title');
+      const inputLabel = node.querySelector('legend #root__title');
       expect(inputLabel?.innerHTML).toEqual($select?.options[0].text);
     });
 
@@ -1907,8 +1907,8 @@ describe('oneOf', () => {
       // The base uiSchema's title labels the field, through its template, and the selected option keeps its own heading,
       // which says something else
       expect($select).toHaveValue('0');
-      expect(node.querySelector('label#root__label')).toHaveTextContent('My Title');
-      expect(node.querySelector('legend#root__title')).toHaveTextContent('Foo');
+      expect(node.querySelector('#root__label')?.closest('label')).toHaveTextContent('My Title');
+      expect(node.querySelector('legend #root__title')).toHaveTextContent('Foo');
       consoleWarnSpy.mockRestore();
     });
 
@@ -2986,6 +2986,7 @@ describe('oneOf', () => {
       // `getDisplayLabel()` hides the label of a `boolean` that has no `ui:widget`, so the inferred `select` is the
       // only reason this field still has one. A theme's FieldTemplate is where that label gets rendered, because the
       // select widget has none of its own
+      // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
       const FieldTemplate = ({ displayLabel, label, children }: FieldTemplateProps) => (
         <div>
           {displayLabel && <span className='shown-label'>{label}</span>}
@@ -3044,6 +3045,7 @@ describe('oneOf', () => {
     it('should keep the label when the caller spells the widget as a ui:option', () => {
       // `getDisplayLabel()` only reads `ui:widget`, so a widget named the other way has to reach it as that key or a
       // boolean loses the title that inferring the widget exists to preserve
+      // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
       const FieldTemplate = ({ displayLabel, label, children }: FieldTemplateProps) => (
         <div>
           {displayLabel && <span className='shown-label'>{label}</span>}
@@ -4472,7 +4474,7 @@ describe('oneOf', () => {
         },
       });
 
-      expect(node.querySelector('label#root_opt__label')).toHaveTextContent('Parent title');
+      expect(node.querySelector('#root_opt__label')?.closest('label')).toHaveTextContent('Parent title');
       expect(node.querySelector('legend')).toHaveTextContent('Short list');
       expect(screen.getAllByText('Parent description')).toHaveLength(1);
       expect(node.querySelector('#root_opt__optionDescription')).toHaveTextContent('Option description');

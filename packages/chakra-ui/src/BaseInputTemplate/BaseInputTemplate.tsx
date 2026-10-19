@@ -11,6 +11,7 @@ import {
   getNumericInputTitle,
   hasVisibleErrors,
   labelValue,
+  widgetDrawsLabel,
 } from '@rjsf/utils';
 
 import { Field } from '../components/ui/field.tsx';
@@ -27,7 +28,6 @@ export default function BaseInputTemplate<
     type,
     value,
     label,
-    hideLabel,
     schema,
     onChange,
     onChangeOverride,
@@ -41,6 +41,7 @@ export default function BaseInputTemplate<
     disabled,
     registry,
   } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const inputProps = getInputProps<T, S, F>(schema, type, options);
   const { ClearButton } = registry.templates.ButtonTemplates;
 

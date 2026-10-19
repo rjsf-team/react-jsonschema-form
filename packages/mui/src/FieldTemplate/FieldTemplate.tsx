@@ -3,7 +3,7 @@ import FormControl from '@mui/material/FormControl';
 import type { TypographyProps } from '@mui/material/Typography';
 import Typography from '@mui/material/Typography';
 import type { FieldTemplateProps, FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getTemplates, getUiOptions, hasVisibleErrors } from '@rjsf/utils';
+import { getTemplates, getUiOptions, hasTemplateErrors, templateDrawsLabel } from '@rjsf/utils';
 
 import { getMuiProps } from '../util.ts';
 
@@ -34,7 +34,6 @@ export default function FieldTemplate<
     classNames,
     style,
     disabled,
-    displayLabel,
     presentation,
     hidden,
     label,
@@ -45,8 +44,6 @@ export default function FieldTemplate<
     propertyNamesEnum,
     readonly,
     required,
-    rawErrors,
-    hideError,
     errors,
     help,
     description,
@@ -55,8 +52,9 @@ export default function FieldTemplate<
     uiSchema,
     registry,
   } = props;
+  const displayLabel = templateDrawsLabel<T, S, F>(props);
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const hasError = hasVisibleErrors({ rawErrors, hideError });
+  const hasError = hasTemplateErrors<T, S, F>(props);
   const { WrapIfAdditionalTemplate } = getTemplates<T, S, F>(registry, uiOptions);
 
   if (hidden) {
@@ -77,6 +75,7 @@ export default function FieldTemplate<
       id={id}
       label={label}
       keyName={keyName}
+      // oxlint-disable-next-line typescript/no-deprecated -- handed on to a `WrapIfAdditionalTemplate` rendered without a plan, which labels the key by it
       displayLabel={displayLabel}
       presentation={presentation}
       rawDescription={rawDescription}

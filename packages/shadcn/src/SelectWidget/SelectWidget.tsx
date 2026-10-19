@@ -14,7 +14,7 @@ import {
   flattenGroupedOptions,
   getOptionValueFormat,
   groupEnumOptions,
-  hasVisibleErrors,
+  hasWidgetErrors,
   isEnumOptionsGroup,
   isLabelledByTemplate,
   logUnsupportedDefaultForEnum,
@@ -22,6 +22,7 @@ import {
   TranslatableString,
   useSelectFocusHandlers,
   widgetAriaProps,
+  widgetDrawsLabel,
 } from '@rjsf/utils';
 
 import { FancyMultiSelect } from '../components/ui/fancy-multi-select.tsx';
@@ -76,15 +77,13 @@ export default function SelectWidget<
     onBlur,
     onFocus,
     placeholder,
-    rawErrors,
-    hideError,
     className,
     registry,
     uiSchema,
     label,
-    hideLabel,
     presentation,
   } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const { enumOptions, enumDisabled, emptyValue: optEmptyValue, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
@@ -119,7 +118,7 @@ export default function SelectWidget<
     'aria-describedby': ariaDescribedby,
   } = widgetAriaProps(props);
 
-  const cnClassName = cn({ 'border-destructive': hasVisibleErrors({ rawErrors, hideError }) }, className);
+  const cnClassName = cn({ 'border-destructive': hasWidgetErrors<T, S, F>(props) }, className);
 
   const placeholderText = placeholder || registry.translateString(TranslatableString.SelectPlaceholder);
 

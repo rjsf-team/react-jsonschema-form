@@ -1,6 +1,6 @@
 import { Field, Text } from '@fluentui/react-components';
 import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getTemplates, getUiOptions, hasVisibleErrors } from '@rjsf/utils';
+import { getTemplates, getUiOptions, hasTemplateErrors, templateDrawsLabel } from '@rjsf/utils';
 
 /** The `FieldTemplate` component is the template used by `SchemaField` to render any field. It renders the field
  * content, (label, description, children, errors and help) inside of a `WrapIfAdditional` component.
@@ -18,7 +18,6 @@ export default function FieldTemplate<
     classNames,
     style,
     disabled,
-    displayLabel,
     presentation,
     hidden,
     label,
@@ -29,8 +28,6 @@ export default function FieldTemplate<
     propertyNamesEnum,
     readonly,
     required,
-    rawErrors,
-    hideError,
     errors,
     help,
     description,
@@ -39,8 +36,9 @@ export default function FieldTemplate<
     uiSchema,
     registry,
   } = props;
+  const displayLabel = templateDrawsLabel<T, S, F>(props);
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const hasError = hasVisibleErrors({ rawErrors, hideError });
+  const hasError = hasTemplateErrors<T, S, F>(props);
   const { WrapIfAdditionalTemplate } = getTemplates<T, S, F>(registry, uiOptions);
 
   if (hidden) {
@@ -57,6 +55,7 @@ export default function FieldTemplate<
       id={id}
       label={label}
       keyName={keyName}
+      // oxlint-disable-next-line typescript/no-deprecated -- handed on to a `WrapIfAdditionalTemplate` rendered without a plan, which labels the key by it
       displayLabel={displayLabel}
       presentation={presentation}
       rawDescription={rawDescription}

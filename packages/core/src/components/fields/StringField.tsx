@@ -2,7 +2,12 @@ import { useCallback } from 'react';
 import type { FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema, ErrorSchema } from '@rjsf/utils';
 import { fieldPathToName, getUiOptions, resolveWidget } from '@rjsf/utils';
 
-import { displaysLabel, getWidgetLabelProps, resolveStringFieldWidget } from './fieldWidgetUtils.ts';
+import {
+  displaysLabel,
+  getWidgetErrorProps,
+  getWidgetLabelProps,
+  resolveStringFieldWidget,
+} from './fieldWidgetUtils.ts';
 
 /** The `StringField` component is used to render a schema field that represents a string type
  *
@@ -63,7 +68,7 @@ function StringField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
       autofocus={autofocus}
       registry={registry}
       placeholder={placeholder}
-      rawErrors={rawErrors}
+      {...getWidgetErrorProps<T, S, F>(rawErrors)}
       presentation={presentation}
       htmlName={fieldPathToName(fieldPath, registry.globalFormOptions)}
     />

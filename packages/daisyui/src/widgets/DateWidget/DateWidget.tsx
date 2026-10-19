@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { TranslatableString } from '@rjsf/utils';
+import { TranslatableString, widgetDrawsLabel } from '@rjsf/utils';
 import { format, startOfDay } from 'date-fns';
 
 import DatePickerCalendar, { CALENDAR_MIN_WIDTH } from '../DatePickerCalendar.tsx';
@@ -89,20 +89,8 @@ export default function DateWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const {
-    id,
-    value,
-    label,
-    name,
-    hideLabel,
-    presentation,
-    placeholder,
-    options,
-    disabled,
-    readonly,
-    schema,
-    registry,
-  } = props;
+  const { id, value, label, name, presentation, placeholder, options, disabled, readonly, schema, registry } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const initialDate = useMemo(() => parseDateValue(value), [value]);
   const formatDate = useDateFormatter<S>(schema, 'date');
   const {

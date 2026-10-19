@@ -1,6 +1,12 @@
 import type { FocusEvent } from 'react';
 import type { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
-import { getControlDescribedBy, getTemplates, getWidgetDescription, schemaRequiresTrueValue } from '@rjsf/utils';
+import {
+  getControlDescribedBy,
+  getTemplates,
+  getWidgetDescription,
+  schemaRequiresTrueValue,
+  widgetDrawsLabel,
+} from '@rjsf/utils';
 import { Form } from 'react-bootstrap';
 
 export default function CheckboxWidget<
@@ -15,7 +21,6 @@ export default function CheckboxWidget<
     disabled,
     readonly,
     label,
-    hideLabel,
     schema,
     autofocus,
     options,
@@ -27,6 +32,7 @@ export default function CheckboxWidget<
     uiSchema,
     required,
   } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   // Because an unchecked checkbox will cause html5 validation to fail, only add
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords

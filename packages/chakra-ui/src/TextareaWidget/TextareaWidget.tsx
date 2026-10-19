@@ -1,7 +1,7 @@
 import type { ChangeEvent, FocusEvent } from 'react';
 import { Textarea } from '@chakra-ui/react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, hasVisibleErrors, labelValue } from '@rjsf/utils';
+import { ariaDescribedByIds, hasWidgetErrors, labelValue, widgetDrawsLabel } from '@rjsf/utils';
 
 import { Field } from '../components/ui/field.tsx';
 import { getChakra } from '../utils.ts';
@@ -10,24 +10,23 @@ export default function TextareaWidget<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({
-  id,
-  htmlName,
-  placeholder,
-  value,
-  label,
-  hideLabel,
-  disabled,
-  autofocus,
-  readonly,
-  onBlur,
-  onFocus,
-  onChange,
-  options,
-  required,
-  rawErrors,
-  hideError,
-}: WidgetProps<T, S, F>) {
+>(props: WidgetProps<T, S, F>) {
+  const {
+    id,
+    htmlName,
+    placeholder,
+    value,
+    label,
+    disabled,
+    autofocus,
+    readonly,
+    onBlur,
+    onFocus,
+    onChange,
+    options,
+    required,
+  } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLTextAreaElement>) =>
     onChange(newValue === '' ? options.emptyValue : newValue);
   const handleBlur = ({ target }: FocusEvent<HTMLTextAreaElement>) => onBlur(id, target?.value);
@@ -41,7 +40,7 @@ export default function TextareaWidget<
       disabled={disabled || readonly}
       required={required}
       readOnly={readonly}
-      invalid={hasVisibleErrors({ rawErrors, hideError })}
+      invalid={hasWidgetErrors<T, S, F>(props)}
       label={labelValue(label, hideLabel || !label)}
       {...chakraProps}
     >

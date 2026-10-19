@@ -8,13 +8,14 @@ import {
   enumOptionValueDecoder,
   getOptionValueFormat,
   groupEnumOptions,
-  hasVisibleErrors,
+  hasWidgetErrors,
   isEnumOptionsGroup,
   labelValue,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
   useSelectFocusHandlers,
   widgetAriaProps,
+  widgetDrawsLabel,
 } from '@rjsf/utils';
 
 function getValue(data: OptionOnSelectData, multiple: boolean) {
@@ -40,15 +41,12 @@ function SelectWidget<
     className,
     options,
     label,
-    hideLabel,
     value,
     required,
     disabled,
     readonly,
     multiple = false,
     autofocus = false,
-    rawErrors,
-    hideError,
     onChange,
     onBlur,
     onFocus,
@@ -58,6 +56,7 @@ function SelectWidget<
     uiSchema,
     presentation,
   } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
@@ -93,7 +92,7 @@ function SelectWidget<
       // An empty label element would still name the dropdown, by nothing, over an `aria-label` it is given. A required
       // field keeps it, since the label is where the required mark is shown
       label={labelValue(label, hideLabel || (!label && !required))}
-      validationState={hasVisibleErrors({ rawErrors, hideError }) ? 'error' : undefined}
+      validationState={hasWidgetErrors<T, S, F>(props) ? 'error' : undefined}
       required={required}
     >
       <Dropdown

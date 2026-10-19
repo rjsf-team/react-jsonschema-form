@@ -1,5 +1,5 @@
 import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getTemplates, getUiOptions, hasVisibleErrors } from '@rjsf/utils';
+import { getTemplates, getUiOptions, hasTemplateErrors, templateDrawsLabel } from '@rjsf/utils';
 
 import { cn } from '../lib/utils.ts';
 
@@ -12,40 +12,39 @@ export default function FieldTemplate<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({
-  id,
-  children,
-  displayLabel,
-  presentation,
-  rawErrors,
-  hideError,
-  errors,
-  help,
-  description,
-  rawDescription,
-  classNames,
-  style,
-  disabled,
-  label,
-  keyName,
-  hidden,
-  onKeyRename,
-  onKeyRenameBlur,
-  onRemoveProperty,
-  propertyNamesEnum,
-  readonly,
-  required,
-  schema,
-  uiSchema,
-  registry,
-}: FieldTemplateProps<T, S, F>) {
+>(props: FieldTemplateProps<T, S, F>) {
+  const {
+    id,
+    children,
+    presentation,
+    errors,
+    help,
+    description,
+    rawDescription,
+    classNames,
+    style,
+    disabled,
+    label,
+    keyName,
+    hidden,
+    onKeyRename,
+    onKeyRenameBlur,
+    onRemoveProperty,
+    propertyNamesEnum,
+    readonly,
+    required,
+    schema,
+    uiSchema,
+    registry,
+  } = props;
+  const displayLabel = templateDrawsLabel<T, S, F>(props);
   const uiOptions = getUiOptions(uiSchema);
-  const hasError = hasVisibleErrors({ rawErrors, hideError });
+  const hasError = hasTemplateErrors<T, S, F>(props);
   const { WrapIfAdditionalTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   if (hidden) {
     return <div className='hidden'>{children}</div>;
   }
-  // The plan's `displayLabel` and description already say what a checkbox draws itself; the guess by the `checkbox`
+  // The plan's label and description already say what a checkbox draws itself; the guess by the `checkbox`
   // alias is left for a template rendered without one, so a part the plan gives the template isn't dropped
   const leavesPartsToCheckbox = !presentation && uiOptions.widget === 'checkbox';
   return (
@@ -56,6 +55,7 @@ export default function FieldTemplate<
       id={id}
       label={label}
       keyName={keyName}
+      // oxlint-disable-next-line typescript/no-deprecated -- handed on to a `WrapIfAdditionalTemplate` rendered without a plan, which labels the key by it
       displayLabel={displayLabel}
       presentation={presentation}
       onKeyRename={onKeyRename}

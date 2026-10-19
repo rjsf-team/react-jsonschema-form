@@ -18,6 +18,7 @@ import {
   SelectedOptionDescription,
   useSelectFocusHandlers,
   widgetAriaProps,
+  widgetDrawsLabel,
 } from '@rjsf/utils';
 import type { SelectProps } from 'antd';
 import { Select } from 'antd';
@@ -53,9 +54,9 @@ export default function SelectWidget<
     value,
     schema,
     uiSchema,
-    hideLabel,
     presentation,
   } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const [open, setOpen] = useState(false);
   const { formContext } = registry;
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;

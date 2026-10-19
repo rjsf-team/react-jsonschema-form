@@ -9,7 +9,7 @@ import type {
   WidgetProps,
 } from '@rjsf/utils';
 import { errorId, fieldLabelId, helpId, optionHelpId, selectedOptionDescriptionId, titleId } from '@rjsf/utils';
-import { screen } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 
 import { generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
 import { createFormComponent } from './testUtils.tsx';
@@ -218,6 +218,13 @@ describe('the plan SchemaField builds', () => {
       },
     };
 
+    it("is named through aria-labelledby by a label whose for names the option's control, which carries the field's id", () => {
+      const { node } = createFormComponent({ schema });
+      expect(node.querySelector(`#${fieldLabelId('root_foo')}`)?.closest('label')).toHaveAttribute('for', 'root_foo');
+      expect(node.querySelector('input#root_foo')).toHaveAccessibleName('Foo');
+      expect(node.querySelector('#root_foo__anyof_select')).toHaveAccessibleName('Foo');
+    });
+
     it("is named by the label the field's template draws, and described by the parts that render", () => {
       const { node } = createFormComponent({
         schema,
@@ -259,6 +266,7 @@ describe('the plan SchemaField builds', () => {
       });
       const selector = selectorProps.find((props) => props.id === 'root_foo__anyof_select')!;
       expect(node.querySelector('#custom')).toHaveTextContent('Foo');
+      // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
       expect(selector.hideLabel).toBe(true);
       expect(selector.presentation?.label.by).toBe('none');
       expect(selector.presentation?.description.by).toBe('none');
@@ -294,6 +302,7 @@ describe('the plan SchemaField builds', () => {
         presentation: { fields: { AnyOfField: { label: 'self' } } },
       });
       const selector = selectorProps.find((props) => props.id === 'root_foo__anyof_select')!;
+      // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
       expect(selector.hideLabel).toBe(true);
     });
   });
@@ -402,6 +411,22 @@ describe('the plan SchemaField builds', () => {
 
       expect(node.querySelector('#root__anyof_select')).toHaveAttribute('aria-labelledby', titleId('root_XxxOf'));
       expect(node.querySelector('#root__anyof_select')).toHaveAccessibleName('Pet');
+    });
+
+    it.each([
+      ['required marker', ['pet'], 'span.required'],
+      ['optional data control', [], 'button'],
+    ])("names their selector by the heading's text alone, without its %s", (_, required, extra) => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { pet: schema }, required },
+        uiSchema: { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] } },
+        formData: { pet: { name: 'Rex' } },
+      });
+
+      const title = node.querySelector('#root_pet_XxxOf__title');
+      expect(title?.closest('legend')?.querySelector(extra)).toBeInTheDocument();
+      expect(title?.querySelector(extra)).toBeNull();
+      expect(node.querySelector('#root_pet__anyof_select')).toHaveAccessibleName('Pet');
     });
 
     it("marks their selector invalid while the object's errors show", () => {
@@ -555,6 +580,7 @@ describe('the plan SchemaField builds', () => {
       });
 
       const selector = selectorProps.find((props) => props.id === 'root_opt__anyof_select')!;
+      // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
       expect(selector.hideLabel).toBe(false);
       expect(selector.label).toBe('Parent title');
       expect(selector.presentation?.description).toMatchObject({ by: 'self', text: 'Parent description' });
@@ -601,6 +627,12 @@ describe('an anyOf/oneOf whose options all render a container', () => {
 
     expect(outerTemplatePlans.get('root_pet')?.control?.attributes['aria-labelledby']).toBe(fieldLabelId('root_pet'));
     expect(screen.getByRole('combobox')).toHaveAccessibleName('Pet');
+  });
+
+  it("draws that label with no for in core's FieldTemplate", () => {
+    const { node } = createFormComponent({ schema: { type: 'object', properties: { pet } } });
+
+    expect(node.querySelector(`#${fieldLabelId('root_pet')}`)?.closest('label')).not.toHaveAttribute('for');
   });
 
   it('keeps the for where an option renders a control under the field id', () => {
@@ -795,6 +827,18 @@ describe('a field a $id names that yields to its anyOf options', () => {
 });
 
 describe('a widget rendering a group of controls', () => {
+  it.each<[string, RJSFSchema]>([
+    ['radio', { type: 'string', title: 'Foo', enum: ['a', 'b'] }],
+    ['checkboxes', { type: 'array', title: 'Foo', items: { enum: ['a', 'b'] }, uniqueItems: true }],
+  ])("draws a %s group's label with no for, which would name the group's wrapper", (widget, foo) => {
+    const { node } = createFormComponent({
+      schema: { type: 'object', properties: { foo } },
+      uiSchema: { foo: { 'ui:widget': widget } },
+    });
+    expect(node.querySelector(`#${fieldLabelId('root_foo')}`)?.closest('label')).not.toHaveAttribute('for');
+    expect(node.querySelector('#root_foo')).toHaveAccessibleName('Foo');
+  });
+
   it('names its radiogroup by the label and marks the radiogroup invalid rather than its radios', () => {
     const { node } = createFormComponent({
       schema: { type: 'object', properties: { foo: { type: 'string', title: 'Foo', enum: ['a', 'b'] } } },
@@ -812,6 +856,75 @@ describe('a widget rendering a group of controls', () => {
       expect(radio.getAttribute('aria-describedby')!.split(' ')).toContain(errorId('root_foo'));
     });
   });
+
+  it('names a rating radiogroup by the label and marks the radiogroup invalid rather than its stars', () => {
+    const { node } = createFormComponent({
+      schema: { type: 'object', properties: { foo: { type: 'integer', title: 'Foo', maximum: 3 } } },
+      uiSchema: { foo: { 'ui:widget': 'RatingWidget' } },
+      extraErrors: { foo: { __errors: ['is wrong'] } },
+    });
+    const group = screen.getByRole('radiogroup', { name: 'Foo' });
+    expect(group).toHaveAttribute('aria-invalid', 'true');
+    expect(node.querySelector(`#${fieldLabelId('root_foo')}`)?.closest('label')).not.toHaveAttribute('for');
+    const stars = within(group).getAllByRole('radio');
+    expect(stars).toHaveLength(3);
+    stars.forEach((star) => {
+      expect(star).not.toHaveAttribute('aria-invalid');
+      expect(star.getAttribute('aria-describedby')!.split(' ')).toContain(errorId('root_foo'));
+    });
+  });
+
+  it.each<[string, RJSFSchema, UiSchema, string]>([
+    ['radio group', { type: 'string', enum: ['a', 'b'] }, { 'ui:widget': 'radio' }, 'radiogroup'],
+    ['option selector', { anyOf: [{ type: 'string' }, { type: 'number' }] }, {}, 'combobox'],
+  ])("names a required field's %s by its label's text, without the required marker", (_, foo, fooUi, role) => {
+    createFormComponent({
+      schema: { type: 'object', required: ['foo'], properties: { foo: { title: 'Foo', ...foo } } },
+      uiSchema: { foo: fooUi },
+    });
+    expect(screen.getByRole(role, { name: 'Foo' })).toBeInTheDocument();
+  });
+
+  it('marks a required rating radiogroup aria-required, as its stars take no required of their own', () => {
+    createFormComponent({
+      schema: { type: 'object', required: ['foo'], properties: { foo: { type: 'integer', title: 'Foo' } } },
+      uiSchema: { foo: { 'ui:widget': 'RatingWidget' } },
+    });
+    expect(screen.getByRole('radiogroup')).toHaveAttribute('aria-required', 'true');
+  });
+
+  it('names a rating radiogroup by the label text ui:label false hides', () => {
+    createFormComponent({
+      schema: { type: 'object', properties: { foo: { type: 'integer', title: 'Foo' } } },
+      uiSchema: { foo: { 'ui:widget': 'RatingWidget', 'ui:label': false } },
+    });
+    expect(screen.getByRole('radiogroup')).toHaveAccessibleName('Foo');
+  });
+
+  it.each<[string, number | undefined, string]>([
+    ['its checked star', 3, '3 stars'],
+    ['its first star where none is checked', undefined, '0 stars'],
+    ['its first star where its value matches no star', 7, '0 stars'],
+  ])('autofocuses %s under ui:autofocus', (_, value, name) => {
+    createFormComponent({
+      schema: { type: 'object', properties: { foo: { type: 'integer', title: 'Foo' } } },
+      uiSchema: { foo: { 'ui:widget': 'RatingWidget', 'ui:autofocus': true } },
+      formData: value === undefined ? {} : { foo: value },
+    });
+    expect(screen.getByRole('radio', { name })).toHaveFocus();
+  });
+
+  it.each(['ui:readonly', 'ui:disabled'])(
+    'takes no ui:autofocus under %s, as its stars are out of the tab order',
+    (key) => {
+      createFormComponent({
+        schema: { type: 'object', properties: { foo: { type: 'integer', title: 'Foo' } } },
+        uiSchema: { foo: { 'ui:widget': 'RatingWidget', 'ui:autofocus': true, [key]: true } },
+        formData: { foo: 3 },
+      });
+      expect(document.body).toHaveFocus();
+    },
+  );
 
   it('names its group by the label and marks each checkbox invalid rather than the group', () => {
     const { node } = createFormComponent({
@@ -832,5 +945,56 @@ describe('a widget rendering a group of controls', () => {
       expect(checkbox).toHaveAttribute('aria-invalid', 'true');
       expect(checkbox.getAttribute('aria-describedby')!.split(' ')).toContain(errorId('root_foo'));
     });
+  });
+});
+
+describe('an alt-date field', () => {
+  it.each(['alt-date', 'alt-datetime'])(
+    "names the %s parts' group by the template label, which draws no for",
+    (widget) => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { when: { type: 'string', title: 'When' } } },
+        uiSchema: { when: { 'ui:widget': widget } },
+      });
+
+      expect(node.querySelector(`#${fieldLabelId('root_when')}`)?.closest('label')).not.toHaveAttribute('for');
+      expect(screen.getByRole('group', { name: 'When' })).toHaveAttribute('id', 'root_when');
+    },
+  );
+
+  it('keeps its parts the items of a list inside the group, rather than giving the list the role', () => {
+    createFormComponent({
+      schema: { type: 'object', properties: { when: { type: 'string', title: 'When' } } },
+      uiSchema: { when: { 'ui:widget': 'alt-date' } },
+    });
+
+    const list = within(screen.getByRole('group', { name: 'When' })).getByRole('list');
+    expect(within(list).getAllByRole('listitem').length).toBeGreaterThan(0);
+  });
+
+  it("describes each part by the field's parts that render, and marks it invalid while its errors show", () => {
+    const { node } = createFormComponent({
+      schema: { type: 'object', properties: { when: { type: 'string', title: 'When', description: 'The day' } } },
+      uiSchema: { when: { 'ui:widget': 'alt-date' } },
+      extraErrors: { when: { __errors: ['is wrong'] } },
+    });
+    const year = screen.getByRole('combobox', { name: 'When, year' });
+
+    expect(year).toHaveAttribute('aria-describedby', `${errorId('root_when')} root_when__description`);
+    expect(year).toHaveAttribute('aria-invalid', 'true');
+    expect(year).not.toHaveAttribute('aria-labelledby');
+    year
+      .getAttribute('aria-describedby')!
+      .split(' ')
+      .forEach((id) => expect(node.querySelector(`#${id}`)).not.toBeNull());
+  });
+
+  it('describes each part by none of the ids that render nothing', () => {
+    createFormComponent({
+      schema: { type: 'object', properties: { when: { type: 'string', title: 'When' } } },
+      uiSchema: { when: { 'ui:widget': 'alt-date' } },
+    });
+
+    expect(screen.getByRole('combobox', { name: 'When, year' })).not.toHaveAttribute('aria-describedby');
   });
 });

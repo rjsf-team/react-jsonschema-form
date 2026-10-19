@@ -237,6 +237,7 @@ describe('DateTimeWidget', () => {
         {...makeWidgetMockProps({
           value: '',
           label: 'When',
+          // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated prop a component without a plan reads
           hideLabel: true,
           placeholder: '',
           schema: { type: 'string' as const, format: 'date-time' },

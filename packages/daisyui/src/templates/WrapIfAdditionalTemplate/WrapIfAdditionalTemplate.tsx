@@ -25,6 +25,7 @@ export default function WrapIfAdditionalTemplate<
     id,
     label,
     keyName,
+    // oxlint-disable-next-line typescript/no-deprecated -- kept out of the props this spreads onto the element
     displayLabel,
     presentation,
     readonly,
@@ -40,7 +41,7 @@ export default function WrapIfAdditionalTemplate<
     ...rest
   } = props;
   // The key is labelled wherever the value's label is drawn, by the template or the value's own component
-  const hasKeyLabel = hasAdditionalKeyLabel<T, S, F>({ displayLabel, presentation });
+  const hasKeyLabel = hasAdditionalKeyLabel<T, S, F>(props);
 
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
   const { templates, translateString } = registry;

@@ -1680,7 +1680,7 @@ describe('anyOf', () => {
       // Also verify the uiSchema was passed down to the underlying widget by confirming the lable (in the legend)
       // matches the selected option's title
       expect($select).toHaveValue('0');
-      const inputLabel = node.querySelector('legend#root__title');
+      const inputLabel = node.querySelector('legend #root__title');
       expect(inputLabel?.innerHTML).toEqual($select?.options[0].text);
     });
 
@@ -1731,8 +1731,8 @@ describe('anyOf', () => {
       // The base uiSchema's title labels the field, through its template, and the selected option keeps its own heading,
       // which says something else
       expect($select).toHaveValue('0');
-      expect(node.querySelector('label#root__label')).toHaveTextContent('My Title');
-      expect(node.querySelector('legend#root__title')).toHaveTextContent('Foo');
+      expect(node.querySelector('#root__label')?.closest('label')).toHaveTextContent('My Title');
+      expect(node.querySelector('legend #root__title')).toHaveTextContent('Foo');
     });
 
     it('should correctly infer the selected option based on value', () => {

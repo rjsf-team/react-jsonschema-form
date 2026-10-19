@@ -15,7 +15,7 @@ import type {
   WidgetProps,
   FormValidation,
 } from '@rjsf/utils';
-import { englishStringTranslator, getVisibleErrors, noop, TranslatableString } from '@rjsf/utils';
+import { englishStringTranslator, fieldLabelId, getVisibleErrors, noop, TranslatableString } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -209,6 +209,7 @@ const mockFileReader = {
 } as unknown as FileReader;
 
 describe('ArrayField', () => {
+  // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated prop a component without a plan reads
   const CustomComponent = (props: WidgetProps) => <div id='custom'>{props.rawErrors}</div>;
 
   const CustomSelectComponent = (props: WidgetProps) => (
@@ -353,7 +354,7 @@ describe('ArrayField', () => {
       const legend = node.querySelector('fieldset > legend');
 
       expect(legend).toHaveTextContent('my list');
-      expect(legend).toHaveAttribute('id', 'root__title');
+      expect(legend).toContainElement(node.querySelector('#root__title'));
     });
 
     it('should render a description', () => {
@@ -1833,7 +1834,7 @@ describe('ArrayField', () => {
       const { node } = createFormComponent({ schema });
       const legend = node.querySelector('fieldset > legend');
       expect(legend).toHaveTextContent('List of fixed items');
-      expect(legend).toHaveAttribute('id', 'root__title');
+      expect(legend).toContainElement(node.querySelector('#root__title'));
     });
 
     it('should render field widgets', () => {
@@ -3043,13 +3044,19 @@ describe('ArrayField', () => {
 
   describe('Tests for item title', () => {
     describe('Should show indexed title for widgets when necessary', () => {
-      const widgetTestData: { widgetName: string; itemSchema: RJSFSchema; itemUiSchema?: UiSchema }[] = [
+      const widgetTestData: {
+        widgetName: string;
+        itemSchema: RJSFSchema;
+        itemUiSchema?: UiSchema;
+        labelFor?: string | null;
+      }[] = [
         {
           widgetName: 'AltDateWidget',
           itemSchema: {
             type: 'string',
             format: 'alt-date',
           },
+          labelFor: null,
         },
         {
           widgetName: 'AltDateTimeWidget',
@@ -3057,6 +3064,7 @@ describe('ArrayField', () => {
             type: 'string',
             format: 'alt-datetime',
           },
+          labelFor: null,
         },
         {
           widgetName: 'CheckboxesWidget',
@@ -3125,6 +3133,7 @@ describe('ArrayField', () => {
           itemUiSchema: {
             'ui:widget': 'radio',
           },
+          labelFor: null,
         },
         {
           widgetName: 'RangeWidget',
@@ -3232,7 +3241,7 @@ describe('ArrayField', () => {
 
       it.each(widgetTestData)(
         "Should show indexed title for the `$widgetName` widget if no title is mentioned in it's UI Schema",
-        async ({ itemSchema, itemUiSchema }) => {
+        async ({ itemSchema, itemUiSchema, labelFor = 'root_0' }) => {
           const schema: RJSFSchema = {
             type: 'array',
             title: 'Array',
@@ -3250,13 +3259,17 @@ describe('ArrayField', () => {
 
           await user.click(node.querySelector('.rjsf-array-item-add button')!);
 
-          expect(node.querySelector('label[for="root_0"]')).toHaveTextContent('Array-1');
+          // By the label's id, since a group's label has no `for`; the id is on the label's text
+          const widgetLabel = node.querySelector(`#${fieldLabelId('root_0')}`)?.closest('label');
+
+          expect(widgetLabel).toHaveTextContent('Array-1');
+          expect(widgetLabel?.getAttribute('for')).toBe(labelFor);
         },
       );
 
       it.each(widgetTestData)(
         "Should not show indexed title for the `$widgetName` widget if title is mentioned in it's UI Schema",
-        async ({ itemSchema, itemUiSchema }) => {
+        async ({ itemSchema, itemUiSchema, labelFor = 'root_0' }) => {
           const schema: RJSFSchema = {
             type: 'array',
             title: 'Array',
@@ -3277,10 +3290,11 @@ describe('ArrayField', () => {
 
           await user.click(node.querySelector('.rjsf-array-item-add button')!);
 
-          const widgetLabelText = node.querySelector('label[for="root_0"]');
+          const widgetLabelText = node.querySelector(`#${fieldLabelId('root_0')}`)?.closest('label');
 
           expect(widgetLabelText).not.toHaveTextContent('Array-1');
           expect(widgetLabelText).toHaveTextContent('Item Title');
+          expect(widgetLabelText?.getAttribute('for')).toBe(labelFor);
         },
       );
     });
@@ -3377,7 +3391,7 @@ describe('ArrayField', () => {
 
           await user.click(node.querySelector('.rjsf-array-item-add button')!);
 
-          expect(node.querySelector('legend#root_0__title')).toHaveTextContent('Array-1');
+          expect(node.querySelector('legend #root_0__title')).toHaveTextContent('Array-1');
         },
       );
 
@@ -3399,7 +3413,7 @@ describe('ArrayField', () => {
 
           await user.click(node.querySelector('.rjsf-array-item-add button')!);
 
-          const legendText = node.querySelector('legend#root_0__title');
+          const legendText = node.querySelector('legend #root_0__title');
 
           expect(legendText).toHaveTextContent('Item Field Title');
           expect(legendText).not.toHaveTextContent('Array-1');

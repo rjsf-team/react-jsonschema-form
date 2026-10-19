@@ -1,3 +1,4 @@
+/* oxlint-disable typescript/no-deprecated -- this file tests the helpers' fallbacks to the deprecated props */
 import type { FieldPresentation, Registry, ResolvedPresentationDeclaration } from '../src/index.ts';
 import {
   englishStringTranslator,

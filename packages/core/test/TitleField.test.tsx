@@ -24,8 +24,8 @@ describe('TitleField', () => {
     expect(node.tagName).toEqual('LEGEND');
   });
 
-  it('should have the expected id', () => {
-    expect(node).toHaveAttribute('id', 'sample_id');
+  it('should put the expected id on the title text alone', () => {
+    expect(node.querySelector('#sample_id')).toHaveTextContent(/^Field title$/);
   });
 
   it('should include only title, when field is not required', () => {

@@ -17,6 +17,7 @@ describe('getWidgetDescription()', () => {
       text: 'Ui text',
       id: 'root_done__description',
     });
+    // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated prop a component without a plan reads
     expect(getWidgetDescription({ ...props, hideLabel: true })).toBeUndefined();
     expect(getWidgetDescription({ ...props, options: { description: '' } })).toEqual({
       text: 'Schema text',
@@ -32,6 +33,7 @@ describe('getWidgetDescription()', () => {
       description: 'Plan text',
       inherited: resolveFieldPresentation({ id: 'root_done', declaration: SELF, label: 'Done', description: 'Above' }),
     });
+    // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated prop a component without a plan reads
     expect(getWidgetDescription({ ...props, hideLabel: true, presentation })).toEqual({
       text: 'Plan text',
       id: 'root_done__optionDescription',

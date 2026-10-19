@@ -997,6 +997,8 @@ export type FieldTemplateProps<
   /** An array of strings listing the generated error messages this field is displaying, `undefined` while
    * `ui:hideError` is in effect, so that a template styling itself from it alone stays out of the error state.
    * To render the withheld errors yourself, read them from `errorSchema`
+   * @deprecated Kept through v7 for a template rendered without a plan: read `presentation.errors.messages`, or
+   *   `hasTemplateErrors()`, which falls back to this
    */
   rawErrors?: string[];
   /** The tree of errors for this field and its children, carrying every error whatever `hideError` says, for a
@@ -1023,6 +1025,8 @@ export type FieldTemplateProps<
   disabled: boolean;
   /** A boolean value stating if the template renders the label: true only where the field's `presentation` says the
    * template draws it, so it is false where the widget draws its own label and where `ui:label: false` turns it off
+   * @deprecated Kept through v7 for a template rendered without a plan: read `presentation.label.by`, or
+   *   `templateDrawsLabel()`, which falls back to this
    */
   displayLabel?: boolean;
   /** The plan `SchemaField` built for the field: who draws its label, description, help and errors, under which ids,
@@ -1444,11 +1448,16 @@ export interface WidgetProps<
   label: string;
   /** A boolean value, if true, tells the widget not to draw its label: its field's `presentation` has the template, or a
    * field above rendering the same id, draw it, or `label` in the `UiSchema` turns it off
+   * @deprecated Kept through v7 for a widget rendered without a plan: read `presentation.label.by`, or
+   *   `widgetDrawsLabel()`, which falls back to this
    */
   hideLabel?: boolean;
   /** A boolean value stating if the widget can accept multiple values */
   multiple?: boolean;
-  /** An array of strings listing all generated error messages from encountered errors for this widget */
+  /** An array of strings listing all generated error messages from encountered errors for this widget
+   * @deprecated Kept through v7 for a widget rendered without a plan: read `presentation.control`'s `aria-invalid`, or
+   *   `hasWidgetErrors()`, which falls back to this
+   */
   rawErrors?: string[];
   /** The plan of the field the widget renders the value of, handed on by a field that leaves its parts to the widget:
    * whether the widget draws the label and description itself, and the attributes its control carries. Undefined for a
@@ -2158,6 +2167,7 @@ export interface SchemaUtilsType<
    * @param [uiSchema] - The UI schema from which to derive potentially displayable information
    * @param [globalOptions={}] - The Global UI Schema from which to get any fallback `xxx` options
    * @returns - True if the label should be displayed or false if it should not
+   * @deprecated Kept through v7 for a field rendered without a plan, which says what draws its label
    */
   getDisplayLabel(schema: S, uiSchema?: UiSchema<T, S, F>, globalOptions?: GlobalUISchemaOptions): boolean;
   /** Determines which of the given `options` provided most closely matches the `formData`.
