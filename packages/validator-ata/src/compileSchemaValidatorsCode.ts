@@ -89,7 +89,7 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
   }
 
   const bundle = Validator.bundleStandalone(schemas, {
-    verbose: true,
+    ...ATA_CONFIG,
     ...carried,
     format: 'cjs',
     formats,
