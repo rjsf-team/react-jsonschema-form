@@ -252,9 +252,9 @@ const validator = createPrecompiledValidator(precompiledValidator, schema);
 
 `@rjsf/validator-ata` has the same two functions. Compile the schema in a Node script:
 
-```cjs
-const compileSchemaValidators = require('@rjsf/validator-ata/compileSchemaValidators').default;
-const yourSchema = require('path_to/yourSchema.json');
+```js
+import compileSchemaValidators from '@rjsf/validator-ata/compileSchemaValidators';
+import yourSchema from 'path_to/yourSchema.json' with { type: 'json' };
 
 // The third argument takes the options customizeValidator() takes, with the limits listed below.
 compileSchemaValidators(yourSchema, 'path_to/yourCompiledSchema.cjs', {
@@ -276,7 +276,7 @@ Things to know:
 
 - `customFormats` and `ataOptionsOverrides` apply at compile time. Custom formats must be a `RegExp` or a pattern string: a function cannot be written into the generated file and is rejected.
 - `additionalMetaSchemas` and `ataOptionsOverrides.schemas` that have an `$id` are compiled into the generated file, so a custom meta-schema named in `$schema` applies there too. The official json-schema.org meta-schemas are left out, since ata already knows them. Entries without an `$id` are ignored with a warning: ata requires one, so `customizeValidator()` throws for them.
-- `extenderFn` and the `ataOptionsOverrides` keys `coerceTypes`, `removeAdditional` and `keywords` cannot be carried into the generated file. They are ignored with a warning (once per process), and the generated file and the runtime validator may then disagree, in either direction: a dropped keyword lets data through that the runtime validator rejects, and a dropped `coerceTypes` rejects data it accepts.
+- `extenderFn` and the `ataOptionsOverrides` keys `coerceTypes`, `removeAdditional` and `keywords` cannot be carried into the generated file. They are ignored with a warning, logged once like the form's own warnings, and the generated file and the runtime validator may then disagree, in either direction: a dropped keyword lets data through that the runtime validator rejects, and a dropped `coerceTypes` rejects data it accepts.
 - The generated file never fills in `default` values. The runtime validator does (`useDefaults` is on by default in ata), so for a required field that is missing but has a `default`, the runtime validator fills it in and accepts, while the generated file rejects. The form fills in defaults itself (`getDefaultFormState`), so this shows only for data that does not come from the form.
 - If your `Form` is given a `customMergeAllOf`, pass it to both the compile step and `createPrecompiledValidator()`, as with `@rjsf/validator-ajv8`.
 - Pass `suppressDuplicateFiltering` to `createPrecompiledValidator()`. Passing it to the compile step has no effect and logs a warning.
