@@ -98,20 +98,17 @@ The `@rjsf/validator-ajv8` package exports the `createPrecompiledValidator()` fu
 Here is an example of how to use your precompiled validator with your `Form`:
 
 ```tsx
-import { useMemo } from 'react';
 import { createPrecompiledValidator } from '@rjsf/validator-ajv8';
 import Form, { FormProps } from '@rjsf/core'; // Or whatever theme you use
 
-import yourSchema from 'path_to/yourSchema'; // This needs to be the same file that was precompiled
+import yourSchema from 'path_to/yourSchema.json' with { type: 'json' }; // This needs to be the same file that was precompiled
 import * as precompiledValidatorFns from 'path_to/yourCompiledSchema.cjs';
 
-function MyForm(props: Omit<FormProps, 'validator' | 'schema'>) {
-  // Memoize the validator to avoid rerenders
-  const validator = useMemo(
-    () => createPrecompiledValidator(precompiledValidatorFns, yourSchema),
-    [precompiledValidatorFns, yourSchema],
-  );
+// Neither the compiled functions nor the schema change at runtime, so one validator, created when the module loads,
+// serves every render
+const validator = createPrecompiledValidator(precompiledValidatorFns, yourSchema);
 
+function MyForm(props: Omit<FormProps, 'validator' | 'schema'>) {
   return <Form {...props} schema={yourSchema} validator={validator} />;
 }
 
@@ -528,9 +525,29 @@ To support additional meta schemas, you can create and pass to the `Form` compon
 
 ### additionalMetaSchemas
 
-The `additionalMetaSchemas` prop allows you to validate the form data against one (or more than one) JSON Schema meta schema, for example, JSON Schema draft-06.
+The `additionalMetaSchemas` option of `customizeValidator()` adds one or more JSON Schema meta schemas to the validator, such as JSON Schema draft-06.
+A meta schema describes schemas, not form data: the validator checks your schema against the meta schema its `$schema` names, and reports a schema that breaks it as `schema is invalid: ...`.
+Without the meta schema its `$schema` names, every validation of the form reports `no schema with key or ref "http://json-schema.org/draft-06/schema#"` instead of validating the data.
 
-Ajv 8 doesn't ship a draft-04 meta schema to pass there, so this example gets draft-04 support from the Ajv class of `ajv-draft-04` instead, and the `schema` passed as props to `Form` component is validated against draft-04.
+In this example the schema names draft-06, so the validator is given the draft-06 meta schema that Ajv 8 ships:
+
+```tsx
+import Form from '@rjsf/core';
+import { RJSFSchema } from '@rjsf/utils';
+import { customizeValidator } from '@rjsf/validator-ajv8';
+import metaSchemaDraft06 from 'ajv/lib/refs/json-schema-draft-06.json' with { type: 'json' };
+
+const validator = customizeValidator({ additionalMetaSchemas: [metaSchemaDraft06] });
+
+const schema: RJSFSchema = {
+  $schema: 'http://json-schema.org/draft-06/schema#',
+  type: 'string',
+};
+
+render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+```
+
+Ajv 8 doesn't ship a draft-04 meta schema to pass this way. For draft-04, build the validator with the Ajv class of `ajv-draft-04` instead:
 
 ```tsx
 import { Form } from '@rjsf/core';
@@ -832,7 +849,7 @@ For a precompiled validator, pass the value in the options object `createPrecomp
 ```tsx
 import { createPrecompiledValidator } from '@rjsf/validator-ajv8';
 import * as precompiledValidatorFns from 'path_to/yourCompiledSchema.cjs';
-import yourSchema from 'path_to/yourSchema';
+import yourSchema from 'path_to/yourSchema.json' with { type: 'json' };
 
 const validator = createPrecompiledValidator(precompiledValidatorFns, yourSchema, { suppressDuplicateFiltering: 'all' });
 ```
