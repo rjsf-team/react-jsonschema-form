@@ -6742,7 +6742,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ).toEqual([{ animal: 'Cat' }]);
         });
 
-        it("should populate a property's allOf conditional defaults once a deep custom merger merges the root's allOf", () => {
+        it("should skip a property's allOf conditional defaults even where a deep custom merger merges the root's allOf", () => {
           const deepAllOfMerge: CustomMergeAllOf = (schema) => {
             const merged = shallowAllOfMerge(schema) as RJSFSchema;
             const properties = Object.fromEntries(
@@ -6763,7 +6763,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               },
               { schema: rootAllOfSchema, formData, rootSchema: rootAllOfSchema },
             ),
-          ).toEqual({ animalInfo: { animal: 'Cat', food: 'meat' } });
+          ).toEqual(formData);
           expect(
             getDefaultFormState(
               {
@@ -6774,23 +6774,34 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               { schema: animalInfoObjectSchema, formData, rootSchema: animalInfoObjectSchema },
             ),
           ).toEqual(formData);
-        });
-
-        it("should populate a property's allOf conditional defaults with @x0k/json-schema-merge's createDeepAllOfMerge", () => {
           expect(
             getDefaultFormState(
               {
                 validator: testValidator,
-                defaultFormStateBehavior: { allOf: 'skipDefaults' },
-                customMergeAllOf: createDeepAllOfMerge(shallowAllOfMerge) as CustomMergeAllOf,
+                defaultFormStateBehavior: { allOf: 'populateDefaults' },
+                customMergeAllOf: deepAllOfMerge,
               },
-              { schema: rootAllOfSchema, formData: { animalInfo: { animal: 'Cat' } }, rootSchema: rootAllOfSchema },
+              { schema: rootAllOfSchema, formData, rootSchema: rootAllOfSchema },
             ),
           ).toEqual({ animalInfo: { animal: 'Cat', food: 'meat' } });
         });
 
+        it("should skip a property's allOf conditional defaults with @x0k/json-schema-merge's createDeepAllOfMerge", () => {
+          const getDefaults = (allOf: DefaultFormStateBehavior['allOf']) =>
+            getDefaultFormState(
+              {
+                validator: testValidator,
+                defaultFormStateBehavior: { allOf },
+                customMergeAllOf: createDeepAllOfMerge(shallowAllOfMerge) as CustomMergeAllOf,
+              },
+              { schema: rootAllOfSchema, formData: { animalInfo: { animal: 'Cat' } }, rootSchema: rootAllOfSchema },
+            );
+          expect(getDefaults('skipDefaults')).toEqual({ animalInfo: { animal: 'Cat' } });
+          expect(getDefaults('populateDefaults')).toEqual({ animalInfo: { animal: 'Cat', food: 'meat' } });
+        });
+
         it.each(nestedPlacements)(
-          "should populate a property's allOf conditional defaults with createDeepAllOfMerge in $where whose schema also has a direct if",
+          "should skip a property's allOf conditional defaults with createDeepAllOfMerge in $where whose schema also has a direct if",
           ({ wrap, wrapData }) => {
             const deepMerge = createDeepAllOfMerge(shallowAllOfMerge) as CustomMergeAllOf;
             const directIfSchema = wrap({ ...rootAllOfSchema, if: { properties: { x: { const: 1 } } }, then: {} });
@@ -6801,7 +6812,8 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
                 { validator: testValidator, defaultFormStateBehavior: behavior, customMergeAllOf: deepMerge },
                 { schema, formData, rootSchema: schema },
               );
-            expect(getDefaults(directIfSchema, { allOf: 'skipDefaults' })).toEqual(
+            expect(getDefaults(directIfSchema, { allOf: 'skipDefaults' })).toEqual(formData);
+            expect(getDefaults(directIfSchema, { allOf: 'populateDefaults' })).toEqual(
               wrapData({ animalInfo: { animal: 'Cat', food: 'meat' } }),
             );
             expect(getDefaults(allOfSchema, { allOf: 'skipDefaults' })).toEqual(formData);
@@ -7658,6 +7670,23 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           value: 5,
           ...(variant === 'allOf' ? { fromAllOf: 'A' } : {}),
         });
+      });
+      it('should count a default as the value of a root dependencies entry whatever else the form data holds, as a nested entry does', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { animal: { type: 'string', default: 'Cat' }, other: { type: 'string' } },
+          dependencies: { animal: { properties: { food: { type: 'string', default: 'meat' } } } },
+        };
+        const nested: RJSFSchema = { type: 'object', properties: { n: schema } };
+        expect(
+          getDefaultFormState({ validator: testValidator }, { schema, formData: { other: 'x' }, rootSchema: schema }),
+        ).toEqual({ animal: 'Cat', other: 'x', food: 'meat' });
+        expect(
+          getDefaultFormState(
+            { validator: testValidator },
+            { schema: nested, formData: { n: { other: 'x' } }, rootSchema: nested },
+          ),
+        ).toEqual({ n: { animal: 'Cat', other: 'x', food: 'meat' } });
       });
       it('should populate dependency defaults when formData is an empty object', () => {
         testValidator.setReturnValues({ isValid: [true] });
