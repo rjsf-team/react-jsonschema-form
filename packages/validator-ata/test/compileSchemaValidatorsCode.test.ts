@@ -139,19 +139,25 @@ describe('compileSchemaValidatorsCode', () => {
     expect(loose.email({ email: 'nope' })).toBe(true);
   });
 
-  test('warns once about options the generated module cannot carry, and still compiles', () => {
+  test('warns once about options the generated module cannot carry, and still compiles', async () => {
+    // A fresh copy of the module, so a warning an earlier test happened to log is not already marked as shown.
+    vi.resetModules();
+    const { compileSchemaValidatorsCode } = await import('../src/compileSchemaValidatorsCode.ts');
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     try {
       const options = {
         ataOptionsOverrides: { coerceTypes: true, removeAdditional: true },
-        additionalMetaSchemas: [{ type: 'string' }],
+        additionalMetaSchemas: [{ type: 'string' }, { $id: '', type: 'string' }],
         extenderFn: (v: any) => v,
       };
       const code = compileSchemaValidatorsCode(schema, options);
       expect(typeof loadModule(code).root).toBe('function');
-      expect(warn).toHaveBeenCalledTimes(1);
+      expect(warn).toHaveBeenCalledTimes(2);
       expect(warn.mock.calls[0][0]).toMatch(
-        /extenderFn, extra schemas without an \$id, ataOptionsOverrides\.coerceTypes, ataOptionsOverrides\.removeAdditional cannot be carried into a precompiled validator and are ignored; the precompiled and runtime validators may disagree/,
+        /entries without an \$id are ignored; ata requires an \$id, so customizeValidator\(\) throws for them/,
+      );
+      expect(warn.mock.calls[1][0]).toMatch(
+        /extenderFn, ataOptionsOverrides\.coerceTypes, ataOptionsOverrides\.removeAdditional cannot be carried into a precompiled validator and are ignored; the precompiled and runtime validators may disagree/,
       );
 
       // Compiling again with the same options, as a server compiling per request does, stays quiet.
@@ -218,6 +224,36 @@ describe('compileSchemaValidatorsCode', () => {
       expect(fns.loose({ n: 1 })).toBe(true);
     }
     expect(without.loose({ n: 1 })).toBe(false);
+  });
+
+  test('compiles a record entry under its key and its own $id, as the runtime validator registers both', () => {
+    // Without the validation vocabulary, `minimum` is not checked, so { n: 1 } is valid.
+    const meta = {
+      $id: 'https://example.com/declared',
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $vocabulary: { 'https://json-schema.org/draft/2020-12/vocab/applicator': true },
+    };
+    const loose = (dialect: string): RJSFSchema => ({
+      $id: 'loose',
+      $schema: dialect,
+      type: 'object',
+      properties: { n: { type: 'number', minimum: 5 } },
+    });
+    const options = { ataOptionsOverrides: { schemas: { 'https://example.com/key': meta } } };
+    for (const dialect of ['https://example.com/key', 'https://example.com/declared']) {
+      expect(loadModule(compileSchemaValidatorsCode(loose(dialect), options)).loose({ n: 1 })).toBe(true);
+    }
+  });
+
+  test('leaves official meta-schemas out of the module, since ata already knows them', () => {
+    const draft07 = {
+      $id: 'http://json-schema.org/draft-07/schema#',
+      $schema: 'http://json-schema.org/draft-07/schema#',
+      type: ['object', 'boolean'],
+    };
+    expect(compileSchemaValidatorsCode(schema, { additionalMetaSchemas: [draft07] })).toBe(
+      compileSchemaValidatorsCode(schema),
+    );
   });
 
   test('does not fill in defaults, unlike the runtime validator', () => {

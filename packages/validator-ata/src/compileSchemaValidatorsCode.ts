@@ -18,6 +18,12 @@ function warnOnce(message: string) {
   }
 }
 
+/** The `$id` ata registers a schema under: a non-empty string that is not just a fragment. */
+function declaredId(schema: object) {
+  const id = (schema as { $id?: unknown }).$id;
+  return typeof id === 'string' && id !== '' && !id.startsWith('#') ? id : undefined;
+}
+
 /** Compiles a schema into a precompiled validator module. ata's
  * `bundleStandalone` emits `module.exports = [fn, ...]`, one validator per
  * schema in order, where each `fn(data)` returns `{ valid, errors }`. This wraps
@@ -27,9 +33,11 @@ function warnOnce(message: string) {
  *
  * `customFormats` (as RegExps or pattern strings) and `ataOptionsOverrides` are passed to
  * ata. `additionalMetaSchemas` and `ataOptionsOverrides.schemas` that have an `$id` are
- * compiled into the module, so a custom meta-schema named in `$schema` applies there too.
- * A few options cannot be carried into a standalone module: `extenderFn`, extra schemas
- * without an `$id`, and the `ataOptionsOverrides` keys `coerceTypes`, `removeAdditional` and `keywords`. Those are left
+ * compiled into the module, so a custom meta-schema named in `$schema` applies there too;
+ * the official json-schema.org meta-schemas are left out, since ata already knows them.
+ * Extra schemas without an `$id` are left out with a `console.warn`, as ata requires one.
+ * A few options cannot be carried into a standalone module: `extenderFn` and the
+ * `ataOptionsOverrides` keys `coerceTypes`, `removeAdditional` and `keywords`. Those are left
  * out with a `console.warn`, once per process, since the module and the runtime validator may
  * then disagree in either direction. The module also never fills in `default` values, so
  * where the runtime validator would fill a missing required field from its default, the module
@@ -59,16 +67,26 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
   } = ataOptionsOverrides;
   // Extra schemas with an `$id` go into the bundle after the form's own schemas, so a custom
   // meta-schema or a `$ref` between them resolves there too. They get no entry in the exported map.
+  // ata registers a record entry under its key and under its own `$id`, so both are compiled.
   const extras = [
     ...additionalMetaSchemas,
     ...(Array.isArray(extraSchemas)
       ? extraSchemas
-      : Object.entries(extraSchemas).map(([id, extra]) => ({ $id: id, ...extra }))),
+      : Object.entries(extraSchemas).flatMap(([id, extra]) => {
+          const ownId = declaredId(extra);
+          return ownId && ownId !== id ? [{ ...extra, $id: id }, extra] : [{ ...extra, $id: id }];
+        })),
   ];
-  const withId = extras.filter((extra) => typeof (extra as { $id?: unknown }).$id === 'string');
+  const withId = extras.filter((extra) => declaredId(extra) !== undefined);
+  // ata already knows the official meta-schemas, so bundling one only adds dead code (about 90 KB for draft-07's).
+  const bundled = withId.filter((extra) => !/^https?:\/\/json-schema\.org\//.test((extra as { $id: string }).$id));
+  if (withId.length < extras.length) {
+    warnOnce(
+      '@rjsf/validator-ata: additionalMetaSchemas and ataOptionsOverrides.schemas entries without an $id are ignored; ata requires an $id, so customizeValidator() throws for them',
+    );
+  }
   const dropped = [
     ...(extenderFn ? ['extenderFn'] : []),
-    ...(withId.length < extras.length ? ['extra schemas without an $id'] : []),
     ...(coerceTypes ? ['ataOptionsOverrides.coerceTypes'] : []),
     ...(removeAdditional ? ['ataOptionsOverrides.removeAdditional'] : []),
     ...(keywords && Object.keys(keywords).length ? ['ataOptionsOverrides.keywords'] : []),
@@ -117,7 +135,7 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
     formats[name] = new Function('value', `return ${re.toString()}.test(value)`) as (value: string) => boolean;
   }
 
-  const bundle = Validator.bundleStandalone([...schemas, ...withId], {
+  const bundle = Validator.bundleStandalone([...schemas, ...bundled], {
     ...ATA_CONFIG,
     ...carried,
     format: 'cjs',
