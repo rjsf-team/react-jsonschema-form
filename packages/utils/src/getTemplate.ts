@@ -70,6 +70,7 @@ export default function getTemplate<
     // registry entry accepts, so this is the one place the found component is asserted to be the template type
     return template as TemplatesType<T, S, F>[Name];
   }
+  // Only the declared templates warn: a custom template can share its name with an ordinary option such as `help`
   if (warnSource && isTemplateName(name)) {
     warnOnInvalidOverride(name, override, template, registry, warnSource);
   }

@@ -2,7 +2,7 @@ import { createElement, forwardRef, lazy, memo } from 'react';
 
 import { setupConsoleWarnSuppression } from '../../../testing/consoleSuppression.ts';
 import type { Registry, UIOptionsType } from '../src/index.ts';
-import { createSchemaUtils, englishStringTranslator, getTemplate, getTemplates } from '../src/index.ts';
+import { createSchemaUtils, englishStringTranslator, getTemplate, getTemplates, resetLogOnce } from '../src/index.ts';
 import getTestValidator from './testUtils/getTestValidator.ts';
 import { GLOBAL_FORM_OPTIONS } from './testUtils/testData.ts';
 
@@ -259,6 +259,45 @@ describe('getTemplate', () => {
     expect(warnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
       "ui:globalOptions.FieldTemplate names no registered template ('Typo'), so it is ignored.",
     );
+  });
+
+  it('warns again after resetLogOnce(), as the playground does on each sample load', () => {
+    const invalidOptions: UIOptionsType = Object.fromEntries([['FieldTemplate', createElement(FakeTemplate)]]);
+    const warnSource = { entryLabel: () => '"root_name"', ownUiOptions: invalidOptions };
+    getTemplate('FieldTemplate', registry, invalidOptions, warnSource);
+    getTemplate('FieldTemplate', registry, invalidOptions, warnSource);
+    expect(warnSuppression.consoleSpy).toHaveBeenCalledOnce();
+    resetLogOnce();
+    getTemplate('FieldTemplate', registry, invalidOptions, warnSource);
+    expect(warnSuppression.consoleSpy).toHaveBeenCalledTimes(2);
+  });
+
+  it('warns for each kind of invalid value an entry is edited to, and tells a string from an object', () => {
+    const warnSource = (options: UIOptionsType) => ({ entryLabel: () => '"root"', ownUiOptions: options });
+    const warnFor = (value: unknown) => {
+      const options: UIOptionsType = Object.fromEntries([['FieldTemplate', value]]);
+      getTemplate('FieldTemplate', registry, options, warnSource(options));
+    };
+    warnFor({});
+    warnFor(createElement(FakeTemplate));
+    warnFor(null);
+    warnFor('object');
+    warnFor({});
+    expect(warnSuppression.consoleSpy).toHaveBeenCalledTimes(4);
+    expect(warnSuppression.consoleSpy.mock.calls[0][0]).toContain('got object');
+    expect(warnSuppression.consoleSpy.mock.calls[1][0]).toContain('React element');
+    expect(warnSuppression.consoleSpy.mock.calls[2][0]).toContain('got null');
+    expect(warnSuppression.consoleSpy.mock.calls[3][0]).toContain("'object'");
+  });
+
+  it('stays silent about a custom-named registry entry that is not a component', () => {
+    const customRegistry: Registry = { ...registry, templates: { ...registry.templates, myThing: {} } };
+    const options: UIOptionsType = { myThing: {} };
+    const warnSource = { entryLabel: () => '"root"', ownUiOptions: options };
+    expect(getTemplate('myThing', customRegistry)).toEqual({});
+    expect(getTemplate('myThing', customRegistry, options)).toEqual({});
+    expect(getTemplate('myThing', customRegistry, options, warnSource)).toEqual({});
+    expect(warnSuppression.consoleSpy).not.toHaveBeenCalled();
   });
 
   it('falls back to a valid ui:globalOptions template when the field-level override is invalid', () => {

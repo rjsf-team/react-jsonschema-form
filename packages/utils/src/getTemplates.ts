@@ -29,7 +29,6 @@ export default function getTemplates<
   let templates: TemplatesType<T, S, F> | undefined;
   for (const name in uiOptions) {
     if (Object.hasOwn(uiOptions, name) && Object.hasOwn(registry.templates, name)) {
-      // Only the declared templates warn: a custom template can share its name with an ordinary option such as `help`
       const template = getTemplate(name, registry, uiOptions, warnSource);
       if (template !== registry.templates[name]) {
         templates ??= { ...registry.templates };

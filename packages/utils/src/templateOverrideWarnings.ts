@@ -1,6 +1,9 @@
+import { isValidElement } from 'react';
+
 import describeUnresolvedComponent from './describeUnresolvedComponent.ts';
 import type { TemplateWarnSource } from './getTemplate.ts';
 import isComponentType from './isComponentType.ts';
+import { rememberLogged } from './loggedMessages.ts';
 import logOnce from './logOnce.ts';
 import type { FormContextType, TemplatesType, Registry, StrictRJSFSchema, RJSFSchema } from './types.ts';
 
@@ -46,23 +49,15 @@ export function isTemplateName(name: string): boolean {
   return Object.hasOwn(TEMPLATE_NAMES, name);
 }
 
-/** The override warnings already logged, keyed by name, source, entry and value kind so a misconfigured field's
- * message - and its `describeUnresolvedComponent()` description - is built once rather than on every render, where
- * `logOnce()` would only drop the repeat. */
-const loggedOverrideWarnings = new Set<string>();
-
-/** Forgets every override warning already logged, so each is logged again the next time it is seen. Tests need it so
- * each one sees its own warnings; `logOnce()`'s own `resetLogOnce()` serves the same purpose for its messages. */
-export function resetLoggedOverrideWarnings() {
-  loggedOverrideWarnings.clear();
-}
-
 /** `isComponentType()` results for each registry's `templates` object. The registry is static for the form's
  * lifetime, so its templates are checked once each rather than on every override-free render. */
 const registryTemplateChecks = new WeakMap<Record<string, unknown>, Map<string, boolean>>();
 
 /** Logs once when the registry's own `name` template is not a component, checking each registry template at most once */
 export function warnOnInvalidRegistryTemplate(name: string, customTemplates: Record<string, unknown>): void {
+  if (!isTemplateName(name)) {
+    return;
+  }
   let perName = registryTemplateChecks.get(customTemplates);
   if (perName === undefined) {
     perName = new Map();
@@ -103,22 +98,17 @@ export function warnOnInvalidOverride<
   // The merged options spread the field's own entries last, so a key the field set itself is its own mistake even
   // when it repeats the global value
   const fromGlobal = !Object.hasOwn(warnSource.ownUiOptions, name) && Object.hasOwn(globalOverrides, name);
-  // The value's own words matter only to the message, so the key keeps just enough of it to tell a changed value apart
-  const valueTag = typeof override === 'string' ? override : typeof override;
-  if (fromGlobal) {
-    if (loggedOverrideWarnings.has(`${name}|${valueTag}|global`)) {
-      return;
-    }
-    loggedOverrideWarnings.add(`${name}|${valueTag}|global`);
-    const description = describeUnresolvedComponent(override, template, 'registered template', 'MyTemplate');
-    logOnce(`ui:globalOptions.${name} ${description}, so it is ignored.`);
+  // The key keeps the distinctions the message makes (a string's text, an element, null, the type) so a changed value
+  // logs again, and is remembered alongside `logOnce()`'s own messages so `resetLogOnce()` clears it and it is capped the
+  // same way, while the message is still built only the first time
+  const source = fromGlobal ? 'global' : warnSource.entryLabel();
+  const valueTag = typeof override === 'string' ? override : '';
+  const key = [name, source, typeof override, valueTag, isValidElement(override), override === null].join('\u0000');
+  if (!rememberLogged(key)) {
     return;
   }
-  const label = warnSource.entryLabel();
-  if (loggedOverrideWarnings.has(`${name}|${valueTag}|${label}`)) {
-    return;
-  }
-  loggedOverrideWarnings.add(`${name}|${valueTag}|${label}`);
   const description = describeUnresolvedComponent(override, template, 'registered template', 'MyTemplate');
-  logOnce(`ui:${name} for ${label} ${description}, so it is ignored.`);
+  const target = fromGlobal ? `ui:globalOptions.${name}` : `ui:${name} for ${source}`;
+  // oxlint-disable-next-line no-console
+  console.warn(`${target} ${description}, so it is ignored.`);
 }
