@@ -3,9 +3,16 @@ import { useCallback } from 'react';
 import { TextInput, NumberInput } from '@mantine/core';
 import { SchemaExamples } from '@rjsf/core';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema } from '@rjsf/utils';
-import { examplesId, getExampleSuggestions, getInputProps, labelValue, widgetDrawsLabel } from '@rjsf/utils';
+import {
+  examplesId,
+  getControlAttributes,
+  getExampleSuggestions,
+  getInputProps,
+  labelValue,
+  widgetDrawsLabel,
+} from '@rjsf/utils';
 
-import { cleanupOptions, getDescriptionProps, useAriaDescribedByProps, useVisibleErrors } from '../utils.tsx';
+import { cleanupOptions, getDescriptionProps, getWidgetError, useInputAriaProps } from '../utils.tsx';
 
 /** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
  * It is used as the template for rendering many of the <input> based widgets that differ by `type` and callbacks only.
@@ -89,7 +96,7 @@ export default function BaseInputTemplate<
     onBlur: !readonly ? handleBlur : undefined,
     onFocus: !readonly ? handleFocus : undefined,
     placeholder,
-    error: useVisibleErrors(props),
+    error: getWidgetError<T, S, F>(props),
     list: hasExamples ? examplesId(id) : undefined,
   };
 
@@ -99,9 +106,11 @@ export default function BaseInputTemplate<
   // to receive, so a widget that supplies one gets the plain input every other theme renders for a numeric field.
   const isNumeric = !onChangeOverride && (inputProps.type === 'number' || inputProps.type === 'integer');
 
-  const ariaDescribedByProps = useAriaDescribedByProps(isNumeric ? 'NumberInput' : 'TextInput', id, options, {
-    includeExamples: hasExamples,
-  });
+  const ariaDescribedByProps = useInputAriaProps<T, S, F>(
+    isNumeric ? 'NumberInput' : 'TextInput',
+    props,
+    getControlAttributes<T, S, F>(props, hasExamples ? [examplesId(id)] : []),
+  );
 
   const input = isNumeric ? (
     <NumberInput

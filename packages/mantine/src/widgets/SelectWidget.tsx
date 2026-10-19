@@ -17,7 +17,7 @@ import {
   widgetDrawsLabel,
 } from '@rjsf/utils';
 
-import { cleanupOptions, getDescriptionProps, useAriaDescribedByProps, useVisibleErrors } from '../utils.tsx';
+import { cleanupOptions, getDescriptionProps, getWidgetError, useInputAriaProps } from '../utils.tsx';
 
 /** Mantine's default filter keeps a group in the dropdown even when the search matched none of its options, which
  * leaves a bare heading behind, so the groups it emptied are dropped here.
@@ -90,15 +90,11 @@ export default function SelectWidget<
   }, [enumDisabled, enumOptions, optgroups, domValues]);
 
   // Mantine describes the input through its `InputWrapper` context rather than by an `aria-describedby` prop
-  const {
-    'aria-label': ariaLabel,
-    'aria-labelledby': labelledBy,
-    'aria-describedby': describedBy,
-  } = widgetAriaProps(props);
-  // A plan describing the select by nothing gives no ids, which isn't a call for the default ones
-  const ariaDescribedByProps = useAriaDescribedByProps(multiple ? 'MultiSelect' : 'Select', id, options, {
-    describedBy: describedBy ?? '',
-  });
+  const ariaDescribedByProps = useInputAriaProps<T, S, F>(
+    multiple ? 'MultiSelect' : 'Select',
+    props,
+    widgetAriaProps<T, S, F>(props),
+  );
 
   const sharedProps = {
     id,
@@ -112,15 +108,13 @@ export default function SelectWidget<
     placeholder,
     disabled: disabled || readonly,
     required,
-    error: useVisibleErrors(props),
+    error: getWidgetError<T, S, F>(props),
     searchable: true,
     filter: optionsFilter,
     comboboxProps: { withinPortal: false },
     ...themeProps,
     ...ariaDescribedByProps,
     ...getDescriptionProps(props),
-    ...(ariaLabel && { 'aria-label': ariaLabel }),
-    ...(labelledBy && { 'aria-labelledby': labelledBy }),
   };
 
   return (
@@ -129,6 +123,9 @@ export default function SelectWidget<
       {multiple ? (
         <MultiSelect
           {...sharedProps}
+          // Its search input, the element a user focuses, takes no `required`, which goes to the hidden input holding
+          // the values, so it says it as a native select's attribute would
+          aria-required={required || undefined}
           value={enumOptionSelectedValue(value, enumOptions, true, optionValueFormat, [])}
         />
       ) : (

@@ -6,7 +6,7 @@ import { getDateTimeLocalValue, labelValue, widgetDrawsLabel } from '@rjsf/utils
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat.js';
 
-import { cleanupOptions, getDescriptionProps, useAriaDescribedByProps, useVisibleErrors } from '../../utils.tsx';
+import { cleanupOptions, getDescriptionProps, getWidgetError, useInputAriaProps } from '../../utils.tsx';
 
 // This plugin is needed to support the parsing of date and time values in the `DateWidget` and `DateTimeWidget`
 dayjs.extend(customParseFormat);
@@ -102,8 +102,8 @@ export default function DateTimeInput<
       ? offsetValueParser(localValue)
       : dateParser(localValue, valueFormat as string);
 
-  const ariaDescribedByProps = useAriaDescribedByProps('DateInput', id, options);
-  const error = useVisibleErrors(props);
+  const ariaDescribedByProps = useInputAriaProps('DateInput', props);
+  const error = getWidgetError<T, S, F>(props);
 
   return (
     <DateInput

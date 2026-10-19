@@ -8,7 +8,7 @@ import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import Form from '../src/index.ts';
-import { errorLines } from '../src/utils.tsx';
+import { errorLines, renderErrors } from '../src/utils.tsx';
 import WrappedForm from './WrappedForm.tsx';
 
 const user = userEvent.setup();
@@ -27,7 +27,7 @@ function renderField(schema: RJSFSchema, uiSchema: UiSchema = {}) {
   );
 }
 
-/** The elements with the text that aren't inside a hidden element, such as `FieldErrorTemplate`'s hidden copy */
+/** The elements with the text that aren't inside a hidden element */
 function shownWithText(text: string) {
   return screen.queryAllByText(text).filter((element) => !element.closest('[style*="display: none"]'));
 }
@@ -57,7 +57,7 @@ function renderThemed(
   );
 }
 
-// The rendered description, error and help, each read once, which a hidden copy of the errors fails
+// The rendered description, error and help, each read once, which a second copy of the errors fails
 const describedOnceByDescriptionErrorAndHelp =
   /^(?=.*A description)(?=.*Some help)(?=.*An error)(?!.*An error.*An error)(?!.*A description.*A description)/;
 
@@ -78,31 +78,101 @@ function expectDescribedByFieldIds(schema: RJSFSchema, uiSchema?: UiSchema, desc
   }
 }
 
+const widgetCases: [string, RJSFSchema, UiSchema?, number?][] = [
+  ['text', { type: 'string' }],
+  ['number', { type: 'number' }],
+  ['textarea', { type: 'string' }, { 'ui:widget': 'textarea' }],
+  ['password', { type: 'string' }, { 'ui:widget': 'password' }],
+  ['select', enumSchema],
+  ['multi-select', { type: 'array', items: enumSchema, uniqueItems: true }],
+  ['checkboxes', { type: 'array', items: enumSchema, uniqueItems: true }, { 'ui:widget': 'checkboxes' }, 2],
+  ['radio', enumSchema, { 'ui:widget': 'radio' }, 2],
+  ['range', { type: 'integer' }, { 'ui:widget': 'range' }],
+  ['checkbox', { type: 'boolean' }],
+  ['color', { type: 'string', format: 'color' }],
+  ['file', { type: 'string', format: 'data-url' }],
+  ['time', { type: 'string', format: 'time' }],
+  ['date', { type: 'string', format: 'date' }],
+  ['date-time', { type: 'string', format: 'date-time' }],
+  ['alt-date', { type: 'string' }, { 'ui:widget': 'alt-date' }, 3],
+  ['alt-datetime', { type: 'string' }, { 'ui:widget': 'alt-datetime' }, 6],
+];
+
+/** Checks that every id a `for`, an `aria-labelledby` or an `aria-describedby` in `container` names belongs to an element
+ * there
+ */
+function expectReferencesResolve(container: HTMLElement) {
+  container.querySelectorAll('label[for]').forEach((label) => {
+    expect(container.querySelector(`[id="${label.getAttribute('for')}"]`)).toBeInTheDocument();
+  });
+  container.querySelectorAll('[aria-labelledby], [aria-describedby]').forEach((element) => {
+    [element.getAttribute('aria-labelledby'), element.getAttribute('aria-describedby')]
+      .join(' ')
+      .split(/\s+/)
+      .filter(Boolean)
+      .forEach((referencedId) => expect(container.querySelector(`[id="${referencedId}"]`)).toBeInTheDocument());
+  });
+}
+
 describe('aria-describedby', () => {
-  test.each<[string, RJSFSchema, UiSchema?, number?]>([
-    ['text', { type: 'string' }],
-    ['number', { type: 'number' }],
-    ['textarea', { type: 'string' }, { 'ui:widget': 'textarea' }],
-    ['password', { type: 'string' }, { 'ui:widget': 'password' }],
-    ['select', enumSchema],
-    ['multi-select', { type: 'array', items: enumSchema, uniqueItems: true }],
-    ['checkboxes', { type: 'array', items: enumSchema, uniqueItems: true }, { 'ui:widget': 'checkboxes' }, 2],
-    ['radio', enumSchema, { 'ui:widget': 'radio' }, 2],
-    ['range', { type: 'integer' }, { 'ui:widget': 'range' }],
-    ['checkbox', { type: 'boolean' }],
-    ['color', { type: 'string', format: 'color' }],
-    ['file', { type: 'string', format: 'data-url' }],
-    ['time', { type: 'string', format: 'time' }],
-    ['date', { type: 'string', format: 'date' }],
-    ['date-time', { type: 'string', format: 'date-time' }],
-    ['alt-date', { type: 'string' }, { 'ui:widget': 'alt-date' }, 3],
-    ['alt-datetime', { type: 'string' }, { 'ui:widget': 'alt-datetime' }, 6],
-  ])(
+  test.each(widgetCases)(
     '%s widget describes its input by the field description, error and help',
     (_, schema, uiSchema, describedCount) => {
       expectDescribedByFieldIds(schema, uiSchema, describedCount);
     },
   );
+
+  test.each(widgetCases)(
+    '%s widget is described only by the parts of its field that render, and marked invalid by its plan',
+    (_, schema, uiSchema, describedCount = 1) => {
+      const { container } = render(
+        <WrappedForm
+          schema={schema}
+          uiSchema={uiSchema}
+          validator={validator}
+          extraErrors={extraErrors}
+          showErrorList={false}
+        />,
+      );
+
+      const described = container.querySelectorAll('[aria-describedby]');
+      expect(described).toHaveLength(describedCount);
+      for (const control of described) {
+        expect(control).toHaveAttribute('aria-describedby', errorId('root'));
+        expect(control).toHaveAttribute('aria-invalid', 'true');
+      }
+      expectReferencesResolve(container);
+    },
+  );
+
+  test('checkboxes widget with no options shows its errors in its group, named by its label', () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{
+          type: 'array',
+          title: 'Colors',
+          description: 'Pick some',
+          items: { type: 'string', enum: [] },
+          uniqueItems: true,
+        }}
+        uiSchema={{ 'ui:widget': 'checkboxes' }}
+        validator={validator}
+        extraErrors={extraErrors}
+        showErrorList={false}
+      />,
+    );
+
+    // The group's wrapper draws its label and description beside the errors, so they say which field the errors are for
+    expect(screen.getByRole('group', { name: 'Colors' })).toBeInTheDocument();
+    const wrapper = container.querySelector('#root');
+    expect(wrapper).toContainElement(screen.getByText('Colors'));
+    expect(wrapper).toContainElement(screen.getByText('Pick some'));
+    const errors = container.querySelectorAll(`[id="${errorId('root')}"]`);
+    expect(errors).toHaveLength(1);
+    expect(wrapper).toContainElement(errors[0] as HTMLElement);
+    expect(errors[0]).toHaveTextContent('An error');
+    expectReferencesResolve(container);
+  });
 
   test('oneOf selector is described by the error Mantine renders for it', async () => {
     const { container } = render(
@@ -173,7 +243,7 @@ describe('aria-describedby', () => {
       const { container } = renderThemed({ [name]: { defaultProps: { inputContainer } } }, { type: 'string' });
 
       expect(screen.getByTestId('theme-container')).toContainElement(screen.getByRole('textbox'));
-      expect(describedByValues(container)).toEqual([ariaDescribedByIds('root')]);
+      expect(describedByValues(container)).toEqual([descriptionId('root')]);
     });
 
     test('set on InputWrapper still renders when ui:options sets wrapperProps.inputContainer to undefined', () => {
@@ -184,7 +254,7 @@ describe('aria-describedby', () => {
       );
 
       expect(screen.getByTestId('theme-container')).toContainElement(screen.getByRole('textbox'));
-      expect(describedByValues(container)).toEqual([ariaDescribedByIds('root')]);
+      expect(describedByValues(container)).toEqual([descriptionId('root')]);
     });
 
     test('set in wrapperProps still renders inside the aria-describedby override, with the other wrapperProps', () => {
@@ -195,7 +265,7 @@ describe('aria-describedby', () => {
 
       expect(screen.getByTestId('theme-container')).toContainElement(screen.getByRole('textbox'));
       expect(container.querySelector('[data-wrapper="theme"]')).toBeInTheDocument();
-      expect(describedByValues(container)).toEqual([ariaDescribedByIds('root')]);
+      expect(describedByValues(container)).toEqual([descriptionId('root')]);
     });
 
     test('set on CheckboxGroup still renders inside the group aria override', () => {
@@ -316,28 +386,28 @@ describe('aria-describedby', () => {
       );
 
       expect(container.querySelector(`[id="${successId}"]`)).toHaveTextContent('Looks good');
-      expect(describedByValues(container)).toEqual([`${ariaDescribedByIds('root')} ${successId}`]);
+      expect(describedByValues(container)).toEqual([`${descriptionId('root')} ${successId}`]);
     });
 
-    // The select takes its describers from the field's plan, which lists only the parts that render: the description
+    // Each widget takes its describers from the field's plan, which lists only the parts that render: the description
     // every schema here is given
-    test.each<[string, RJSFSchema, UiSchema, string]>([
-      ['text', { type: 'string' }, {}, ariaDescribedByIds('root')],
-      ['textarea', { type: 'string' }, { 'ui:widget': 'textarea' }, ariaDescribedByIds('root')],
-      ['password', { type: 'string' }, { 'ui:widget': 'password' }, ariaDescribedByIds('root')],
-      ['select', enumSchema, {}, 'root__description'],
-      ['color', { type: 'string', format: 'color' }, {}, ariaDescribedByIds('root')],
-      ['file', { type: 'string', format: 'data-url' }, {}, ariaDescribedByIds('root')],
-      ['time', { type: 'string', format: 'time' }, {}, ariaDescribedByIds('root')],
-      ['date', { type: 'string', format: 'date' }, {}, ariaDescribedByIds('root')],
-    ])('still describes the %s widget when wrapperProps has an id', (_, schema, uiSchema, describedBy) => {
+    test.each<[string, RJSFSchema, UiSchema]>([
+      ['text', { type: 'string' }, {}],
+      ['textarea', { type: 'string' }, { 'ui:widget': 'textarea' }],
+      ['password', { type: 'string' }, { 'ui:widget': 'password' }],
+      ['select', enumSchema, {}],
+      ['color', { type: 'string', format: 'color' }, {}],
+      ['file', { type: 'string', format: 'data-url' }, {}],
+      ['time', { type: 'string', format: 'time' }, {}],
+      ['date', { type: 'string', format: 'date' }, {}],
+    ])('still describes the %s widget when wrapperProps has an id', (_, schema, uiSchema) => {
       const { container } = renderThemed({}, schema, {
         ...uiSchema,
         'ui:options': { success: 'Looks good', wrapperProps: { id: 'wrapped' } },
       });
 
       expect(container.querySelector('[id="root-success"]')).toHaveTextContent('Looks good');
-      expect(describedByValues(container)).toEqual([`${describedBy} root-success`]);
+      expect(describedByValues(container)).toEqual([`${descriptionId('root')} root-success`]);
     });
 
     test.each([
@@ -358,7 +428,7 @@ describe('aria-describedby', () => {
           successId ? [successId] : [],
         );
         expect(describedByValues(container)).toEqual(
-          Array(3).fill([ariaDescribedByIds('root'), successId].filter(Boolean).join(' ')),
+          Array(3).fill([descriptionId('root'), successId].filter(Boolean).join(' ')),
         );
       },
     );
@@ -374,7 +444,7 @@ describe('aria-describedby', () => {
 
       expect(screen.getByRole(groupRole)).not.toHaveAttribute('aria-describedby');
       for (const option of screen.getAllByRole(optionRole)) {
-        expect(option).toHaveAttribute('aria-describedby', `${ariaDescribedByIds('root')} root-success`);
+        expect(option).toHaveAttribute('aria-describedby', `${descriptionId('root')} root-success`);
       }
     });
 
@@ -387,7 +457,7 @@ describe('aria-describedby', () => {
       );
 
       for (const option of screen.getAllByRole('radio')) {
-        expect(option).toHaveAttribute('aria-describedby', ariaDescribedByIds('root'));
+        expect(option).toHaveAttribute('aria-describedby', `${errorId('root')} ${descriptionId('root')}`);
       }
     });
   });
@@ -532,10 +602,10 @@ describe('aria-describedby', () => {
       expect(errors).toHaveLength(1);
       expect(errors[0]).toHaveTextContent(message);
     }
-    // A custom widget that doesn't render its errors is described by `FieldErrorTemplate`'s hidden copy of them
+    // A custom widget leaves its errors to the template, whose `FieldErrorTemplate` shows them
     expect(container.querySelectorAll(`[id="${errorId('root_custom')}"]`)).toHaveLength(1);
     expect(container.querySelector('#root_custom')).toHaveAccessibleDescription(/Custom error/);
-    expect(screen.getByText('Custom error')).not.toBeVisible();
+    expect(screen.getByText('Custom error')).toBeVisible();
   });
 
   test.each([
@@ -551,7 +621,7 @@ describe('aria-describedby', () => {
       },
     ],
   ] as [string, RJSFSchema][])(
-    'renders the errors of a field with a %s once, through its option selector',
+    'renders the errors of a field with a %s once, below its options, describing its option selector',
     (_, schema) => {
       render(
         <WrappedForm
@@ -571,7 +641,7 @@ describe('aria-describedby', () => {
     ['string', { type: 'string' }, 'textbox'],
     ['boolean', { type: 'boolean' }, 'checkbox'],
   ] as [string, RJSFSchema, string][])(
-    'renders the errors of a field with a oneOf of a %s once, through its option selector',
+    'renders the errors of a field with a oneOf of a %s once, below its option, marking selector and option invalid',
     (_, option, role) => {
       render(
         <WrappedForm
@@ -583,8 +653,10 @@ describe('aria-describedby', () => {
       );
 
       expect(shownWithText('Own error')).toHaveLength(1);
-      expect(screen.getByRole('combobox')).toHaveAccessibleDescription(/Own error/);
-      expect(screen.getByRole(role)).not.toHaveAttribute('aria-invalid');
+      for (const control of [screen.getByRole('combobox'), screen.getByRole(role)]) {
+        expect(control).toHaveAccessibleDescription(/Own error/);
+        expect(control).toHaveAttribute('aria-invalid', 'true');
+      }
     },
   );
 
@@ -609,23 +681,27 @@ describe('aria-describedby', () => {
   test.each([
     ['a custom ui:field', { type: 'string' }, { 'ui:field': ({ id }: FieldProps) => <input id={id} /> }],
     ['a field of an unsupported type', { type: 'bogus' }, {}],
-  ] as [string, RJSFSchema, UiSchema][])('keeps the errors of %s in their hidden copy, once', (_, schema, uiSchema) => {
-    const { container } = render(
-      <WrappedForm
-        schema={{ type: 'object', properties: { x: schema } }}
-        uiSchema={{ x: uiSchema }}
-        validator={validator}
-        extraErrors={{ x: { __errors: ['X error'] } } as ErrorSchema}
-        showErrorList={false}
-      />,
-    );
+  ] as [string, RJSFSchema, UiSchema][])(
+    'shows the errors of %s once, through FieldErrorTemplate',
+    (_, schema, uiSchema) => {
+      const { container } = render(
+        <WrappedForm
+          schema={{ type: 'object', properties: { x: schema } }}
+          uiSchema={{ x: uiSchema }}
+          validator={validator}
+          extraErrors={{ x: { __errors: ['X error'] } } as ErrorSchema}
+          showErrorList={false}
+        />,
+      );
 
-    const copies = container.querySelectorAll(`[id="${errorId('root_x')}"]`);
-    expect(copies).toHaveLength(1);
-    expect(copies[0]).toHaveTextContent('X error');
-  });
+      const errors = container.querySelectorAll(`[id="${errorId('root_x')}"]`);
+      expect(errors).toHaveLength(1);
+      expect(errors[0]).toHaveTextContent('X error');
+      expect(errors[0]).toBeVisible();
+    },
+  );
 
-  test("describes a widget that leaves 'error' out of inputWrapperOrder by the hidden copy of its errors", () => {
+  test("shows the errors of a widget that leaves 'error' out of inputWrapperOrder through FieldErrorTemplate", () => {
     render(
       <WrappedForm
         schema={{ type: 'string' }}
@@ -636,9 +712,44 @@ describe('aria-describedby', () => {
       />,
     );
 
-    expect(screen.getByText('An error')).not.toBeVisible();
+    expect(shownWithText('An error')).toHaveLength(1);
+    expect(screen.getByText('An error')).toBeVisible();
     expect(screen.getByRole('textbox')).toHaveAccessibleDescription('An error');
   });
+
+  // Each widget hands on the errors its wrapper leaves out its own way: an input through `useInputAriaProps()`, a group
+  // through `useGroupAriaProps()`, and a range or alt-date beside its wrapper through `useFieldWrapperProps()`
+  test.each<[string, RJSFSchema, UiSchema, number]>([
+    ['a text input', { type: 'string' }, {}, 1],
+    ['a radio group', enumSchema, { 'ui:widget': 'radio' }, 2],
+    ['a checkboxes group', checkboxesSchema, { 'ui:widget': 'checkboxes' }, 2],
+    ['a range', { type: 'number' }, { 'ui:widget': 'range' }, 1],
+    ['an alt-date', { type: 'string', format: 'date' }, { 'ui:widget': 'alt-date' }, 3],
+  ])(
+    "shows the errors of %s once where inputWrapperOrder leaves out 'error'",
+    (_, schema, uiSchema, describedCount) => {
+      const { container } = render(
+        <WrappedForm
+          schema={schema}
+          uiSchema={{ ...uiSchema, 'ui:options': { inputWrapperOrder: ['label', 'description', 'input'] } }}
+          validator={validator}
+          extraErrors={extraErrors}
+          showErrorList={false}
+        />,
+      );
+
+      const errors = container.querySelectorAll(`[id="${errorId('root')}"]`);
+      expect(errors).toHaveLength(1);
+      expect(errors[0]).toHaveTextContent('An error');
+      expect(errors[0]).toBeVisible();
+      const described = container.querySelectorAll('[aria-describedby]');
+      expect(described).toHaveLength(describedCount);
+      for (const control of described) {
+        expect(control).toHaveAttribute('aria-describedby', errorId('root'));
+      }
+      expectReferencesResolve(container);
+    },
+  );
 
   test('renders the errors of fields inside the option a selector picked', () => {
     const { container } = render(
@@ -656,11 +767,14 @@ describe('aria-describedby', () => {
     expect(container.querySelector(`[id="${errorId('root_list')}"]`)).toHaveTextContent('List error');
   });
 
-  test('leaves the errors of an object with a custom ui:field to that field', () => {
+  test('leaves the errors of an object with a custom ui:field to that field where its declaration says it draws them', () => {
+    const OwnErrorsField = ({ presentation }: FieldProps) => <div>{presentation?.errors.messages.join()}</div>;
     render(
       <WrappedForm
         schema={{ type: 'object', properties: { x: { type: 'string' } } }}
-        uiSchema={{ 'ui:field': ({ rawErrors }: FieldProps) => <div>{rawErrors?.join()}</div> }}
+        uiSchema={{ 'ui:field': 'OwnErrorsField' }}
+        fields={{ OwnErrorsField }}
+        presentation={{ fields: { OwnErrorsField: { errors: 'self' } } }}
         validator={validator}
         extraErrors={{ __errors: ['Own error'] } as ErrorSchema}
         showErrorList={false}
@@ -678,6 +792,21 @@ describe('aria-describedby', () => {
 
     expect(container).toHaveTextContent('First error Second error');
     expect(container.querySelectorAll('br')).toHaveLength(1);
+    expect(consoleError).not.toHaveBeenCalled();
+    consoleError.mockRestore();
+  });
+
+  test('renders errors given as block elements inside its error element, without invalid nesting', () => {
+    const consoleError = vi.spyOn(console, 'error');
+    const { container } = render(
+      <MantineProvider>
+        {renderErrors('root', [createElement('div', { key: 'block' }, 'Block error')])}
+      </MantineProvider>,
+    );
+
+    const error = container.querySelector(`[id="${errorId('root')}"]`);
+    expect(error?.tagName).toBe('DIV');
+    expect(error).toContainElement(screen.getByText('Block error'));
     expect(consoleError).not.toHaveBeenCalled();
     consoleError.mockRestore();
   });
