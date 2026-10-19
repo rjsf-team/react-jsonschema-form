@@ -115,6 +115,30 @@ describe('a pure anyOf union', () => {
   });
 });
 
+describe("a titled anyOf field's option selector", () => {
+  const schema: RJSFSchema = {
+    type: 'object',
+    properties: { pick: { title: 'Pick', anyOf: [{ type: 'string', enum: ['a', 'b'] }, { type: 'number' }] } },
+  };
+
+  it("is a select named by its field's title", () => {
+    const { container } = render(<Form schema={schema} validator={validator} />);
+
+    expect(container.querySelector('#root_pick__anyof_select')).toHaveAccessibleName('Pick');
+    expectReferencesResolve(container);
+  });
+
+  it("is a radio group named by its field's label under ui:widget radio", () => {
+    const { container } = render(
+      <Form schema={schema} uiSchema={{ pick: { 'ui:widget': 'radio' } }} validator={validator} />,
+    );
+
+    const firstOption = container.querySelector('#root_pick__anyof_select-0')!;
+    expect(firstOption.closest('[role="radiogroup"]')).toHaveAccessibleName('Pick');
+    expectReferencesResolve(container);
+  });
+});
+
 describe('the fallback UI', () => {
   it('names the value control with the field title, and describes it once', () => {
     const { container } = render(

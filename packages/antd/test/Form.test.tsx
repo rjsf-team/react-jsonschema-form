@@ -585,6 +585,23 @@ describe('antd specific tests', () => {
     expect(heading?.closest('label')).toHaveClass('ant-form-item-required');
     expect(container.querySelector('input#root_pet__anyof_select')).toHaveAccessibleName('Pet');
   });
+  test("names a radio anyOf option selector's group by its field's label", () => {
+    const { container } = render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: { pick: { title: 'Pick', anyOf: [{ type: 'string', enum: ['a', 'b'] }, { type: 'number' }] } },
+        }}
+        uiSchema={{ pick: { 'ui:widget': 'radio' } }}
+        validator={validator}
+      />,
+    );
+
+    const firstOption = container.querySelector('#root_pick__anyof_select-0')!;
+    expect(firstOption.closest('[role="radiogroup"]')).toHaveAccessibleName('Pick');
+    expectReferencesResolve(container);
+  });
+
   test('draws the label of a checkbox whose presentation gives it to the template once, from the template', () => {
     render(
       <Form

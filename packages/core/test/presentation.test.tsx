@@ -245,6 +245,35 @@ describe('the plan SchemaField builds', () => {
       describedBy.forEach((describer) => expect(node.querySelector(`#${describer}`)).toBeInTheDocument());
     });
 
+    // The schema of #5399, whose first option is an enum, so the option's own control is a select or radiogroup too
+    const pick: RJSFSchema = {
+      type: 'object',
+      properties: { pick: { title: 'Pick', anyOf: [{ type: 'string', enum: ['a', 'b'] }, { type: 'number' }] } },
+    };
+
+    it("is a radiogroup named through aria-labelledby by the field's label under ui:widget radio", () => {
+      const { node } = createFormComponent({ schema: pick, uiSchema: { pick: { 'ui:widget': 'radio' } } });
+      // The option's own enum takes the field's ui:widget too, so it renders a second radiogroup beside the selector's
+      const group = node.querySelector('#root_pick__anyof_select');
+      expect(screen.getAllByRole('radiogroup', { name: 'Pick' })).toContain(group);
+      expect(group).toHaveAttribute('aria-labelledby', fieldLabelId('root_pick'));
+      expect(node.querySelector(`#${fieldLabelId('root_pick')}`)).toHaveTextContent('Pick');
+    });
+
+    it("hands its widget the field's title as a label drawn above it", () => {
+      const selectorProps: WidgetProps[] = [];
+      function SelectWidget(props: WidgetProps) {
+        selectorProps.push(props);
+        return <CoreSelectWidget {...props} />;
+      }
+      createFormComponent({ schema: pick, widgets: { SelectWidget } });
+      const selector = selectorProps.find((props) => props.id === 'root_pick__anyof_select')!;
+      expect(selector.label).toBe('Pick');
+      // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
+      expect(selector.hideLabel).toBe(true);
+      expect(selector.presentation?.label).toMatchObject({ by: 'above', id: fieldLabelId('root_pick') });
+    });
+
     it("gives an option's own help an id of its own beside the field's", () => {
       const { node } = createFormComponent({
         schema,

@@ -606,6 +606,23 @@ describe('shadcn templates', () => {
     expect(container.querySelector('#root_pet__anyof_select')).toHaveAccessibleName('Pet');
   });
 
+  test("names a radio anyOf option selector's group by its field's label", () => {
+    const { container } = render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: { pick: { title: 'Pick', anyOf: [{ type: 'string', enum: ['a', 'b'] }, { type: 'number' }] } },
+        }}
+        uiSchema={{ pick: { 'ui:widget': 'radio' } }}
+        validator={validator}
+      />,
+    );
+
+    const firstOption = container.querySelector('#root_pick__anyof_select-0')!;
+    expect(firstOption.closest('[role="radiogroup"]')).toHaveAccessibleName('Pick');
+    expectReferencesResolve(container);
+  });
+
   test("keeps an optional object's data control where ui:label turns its heading off", () => {
     const { container } = render(
       <Form

@@ -297,6 +297,28 @@ describe('react-bootstrap templates', () => {
     expect(container.querySelector('select#root_pet__anyof_select')).toHaveAccessibleName('Pet');
   });
 
+  const pick: RJSFSchema = {
+    type: 'object',
+    properties: { pick: { title: 'Pick', anyOf: [{ type: 'string', enum: ['a', 'b'] }, { type: 'number' }] } },
+  };
+
+  test("names an anyOf option selector by its field's label", () => {
+    const { container } = render(<Form schema={pick} validator={validator} />);
+
+    expect(container.querySelector('select#root_pick__anyof_select')).toHaveAccessibleName('Pick');
+    expectReferencesResolve(container);
+  });
+
+  test("names a radio anyOf option selector's group by its field's label", () => {
+    const { container } = render(
+      <Form schema={pick} uiSchema={{ pick: { 'ui:widget': 'radio' } }} validator={validator} />,
+    );
+
+    const firstOption = container.querySelector('#root_pick__anyof_select-0')!;
+    expect(firstOption.closest('[role="radiogroup"]')).toHaveAccessibleName('Pick');
+    expectReferencesResolve(container);
+  });
+
   test("keeps an optional object's data control where ui:label turns its heading off", () => {
     const { container } = render(
       <Form

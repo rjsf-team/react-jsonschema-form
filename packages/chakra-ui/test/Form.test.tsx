@@ -176,6 +176,40 @@ describe('chakra-ui SelectWidget', () => {
     expect(screen.getByRole('combobox')).toHaveAccessibleName('Pet');
   });
 
+  test("names an anyOf option selector's trigger by its field's label", () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          properties: { pick: { title: 'Pick', anyOf: [{ type: 'string', enum: ['a', 'b'] }, { type: 'number' }] } },
+        }}
+        validator={validator}
+      />,
+    );
+
+    const trigger = container.querySelector('#root_pick__anyof_select');
+    // The option's own enum is a second combobox the field's label names
+    expect(screen.getAllByRole('combobox', { name: 'Pick' })).toContain(trigger);
+    expectReferencesResolve(container);
+  });
+
+  test("names a radio anyOf option selector's group by its field's label", () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          properties: { pick: { title: 'Pick', anyOf: [{ type: 'string', enum: ['a', 'b'] }, { type: 'number' }] } },
+        }}
+        uiSchema={{ pick: { 'ui:widget': 'radio' } }}
+        validator={validator}
+      />,
+    );
+
+    const firstOption = container.querySelector('#root_pick__anyof_select-0')!;
+    expect(firstOption.closest('[role="radiogroup"]')).toHaveAccessibleName('Pick');
+    expectReferencesResolve(container);
+  });
+
   test("names an object's option selector by the heading's text alone, without its optional data control", () => {
     render(
       <WrappedForm
