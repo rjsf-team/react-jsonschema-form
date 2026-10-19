@@ -116,8 +116,7 @@ or, using a more complex example using a custom with additional meta schema
 import { RJSFSchema } from '@rjsf/utils';
 import Form from '@rjsf/core';
 import { customizeValidator } from '@rjsf/validator-ajv8';
-
-const metaSchemaDraft06 = require('ajv/lib/refs/json-schema-draft-06.json');
+import metaSchemaDraft06 from 'ajv/lib/refs/json-schema-draft-06.json' with { type: 'json' };
 
 const validator = customizeValidator({
   additionalMetaSchemas: [metaSchemaDraft06],
@@ -179,8 +178,7 @@ Finally, you can combine both additional meta schemas, custom formats, custom va
 import { RJSFSchema } from '@rjsf/utils';
 import Form from '@rjsf/core';
 import { customizeValidator } from '@rjsf/validator-ajv8';
-
-const metaSchemaDraft06 = require('ajv/lib/refs/json-schema-draft-06.json');
+import metaSchemaDraft06 from 'ajv/lib/refs/json-schema-draft-06.json' with { type: 'json' };
 
 const customFormats = {
   'phone-us': /\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$/,

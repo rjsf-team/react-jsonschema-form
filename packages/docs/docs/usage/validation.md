@@ -529,11 +529,6 @@ To support additional meta schemas, you can create and pass to the `Form` compon
 ### additionalMetaSchemas
 
 The `additionalMetaSchemas` prop allows you to validate the form data against one (or more than one) JSON Schema meta schema, for example, JSON Schema draft-04.
-You can import a meta schema as follows:
-
-```tsx
-const metaSchemaDraft04 = require('ajv/lib/refs/json-schema-draft-04.json');
-```
 
 In this example `schema` passed as props to `Form` component can be validated against draft-07 (default) and by draft-04 (added), depending on the value of `$schema` attribute.
 
