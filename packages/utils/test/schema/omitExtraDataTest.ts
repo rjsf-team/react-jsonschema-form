@@ -997,6 +997,20 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         });
       });
 
+      it('keeps the fields beside a $ref to a definition that merges itself in through its allOf', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          definitions: {
+            node: { type: 'object', properties: { name: { type: 'string' } }, allOf: [{ $ref: '#/definitions/node' }] },
+          },
+          properties: { d: { $ref: '#/definitions/node', properties: { sib: { type: 'string' } } } },
+        };
+        const formData = { d: { name: 'x', sib: 'y', extra: 'gone' } };
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({
+          d: { name: 'x', sib: 'y' },
+        });
+      });
+
       it.each(['https://json-schema.org/draft/2019-09/schema', 'https://json-schema.org/draft/2020-12/schema'])(
         "under %s, keeps the fields of both a field's own $ref and the keywords beside it, as the form renders them",
         ($schema) => {

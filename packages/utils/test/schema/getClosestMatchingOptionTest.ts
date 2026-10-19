@@ -44,6 +44,17 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
     it('returns 0 when formData is empty object', () => {
       expect(calculateIndexScore({ validator: testValidator }, oneOfSchema, firstOption, {})).toEqual(0);
     });
+    it('scores a $ref property beside keywords of its own once, when the definition merges itself in through its allOf', () => {
+      const rootSchema: RJSFSchema = {
+        definitions: {
+          node: { type: 'object', properties: { name: { type: 'string' } }, allOf: [{ $ref: '#/definitions/node' }] },
+        },
+      };
+      const option: RJSFSchema = {
+        properties: { d: { $ref: '#/definitions/node', properties: { sib: { type: 'string' } } } },
+      };
+      expect(calculateIndexScore({ validator: testValidator }, rootSchema, option, { d: { name: 'x' } })).toEqual(2);
+    });
     it('returns 2 for first option in oneOf schema, scoring its $ref property as the definition it names', () => {
       expect(calculateIndexScore({ validator: testValidator }, oneOfSchema, firstOption, ONE_OF_SCHEMA_DATA)).toEqual(
         2,

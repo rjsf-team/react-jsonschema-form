@@ -470,8 +470,19 @@ export function refDefinition<S extends StrictRJSFSchema = RJSFSchema>(graph: Sc
  * @returns - The merged schema, or the `allOf` of both where they cannot be merged
  */
 export function conjoinDefinition<S extends StrictRJSFSchema>(template: S, beside: S, definition: S): S {
+  // The merge would flatten an `allOf` either side holds into the result and hoist the `$ref` of one of its entries onto
+  // it, a reference no reader of the definition expects to follow again, so each side's own `allOf` stays one, unmerged,
+  // as it does on a definition read without keywords beside its `$ref`
+  const nested = [beside, definition].flatMap((side) => {
+    const entries: unknown = side[ALL_OF_KEY];
+    return Array.isArray(entries) ? entries : [];
+  });
   try {
-    return schemaFrom(template, shallowAllOfMerge({ [ALL_OF_KEY]: [beside, definition] }));
+    const merged = schemaFrom(
+      template,
+      shallowAllOfMerge({ [ALL_OF_KEY]: [withoutKeys(beside, ALL_OF_KEY), withoutKeys(definition, ALL_OF_KEY)] }),
+    );
+    return nested.length === 0 ? merged : schemaFrom(template, { ...merged, [ALL_OF_KEY]: nested });
   } catch (error) {
     logOnce('could not merge subschemas in allOf:\n', 'warn', error);
     return schemaFrom(template, { [ALL_OF_KEY]: [beside, definition] });
