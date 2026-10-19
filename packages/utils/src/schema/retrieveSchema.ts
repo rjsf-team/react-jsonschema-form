@@ -61,7 +61,7 @@ import buildPlan, {
 } from './graph/mergePlan.ts';
 import type { MergePlan, OptionRequest, PlanPolicy, Seed } from './graph/mergePlan.ts';
 import parseSchemaGraph from './graph/parseSchemaGraph.ts';
-import type { NodeId, ObjectNode, SchemaGraph } from './graph/parseSchemaGraph.ts';
+import type { AdoptedSchema, NodeId, ObjectNode, SchemaGraph } from './graph/parseSchemaGraph.ts';
 import { childProvenance, extendChain, readProvenance, rootProvenance, stamp } from './graph/provenance.ts';
 import type { GuardChain, Provenance } from './graph/provenance.ts';
 import { childField, collapses, ownRefTargets, restartSeeds } from './graph/recursionRule.ts';
@@ -245,19 +245,22 @@ export function fieldOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, schem
 
 /** The node of the option `option` a plan's merged `keyword` list holds at `index`: the one a chain providing the list
  * holds there, which is the one parsed under the base of the resource that provider is in, since one object reached in
- * two resources is a node in each
+ * two resources is a node in each. An option no node holds, such as one of the cross product a merge makes of two
+ * lists, is adopted, so that it is still handed out as an option of the field offering it, keeping the field's guard
+ * chain: handed out as a schema of its own, a recursion through it would start afresh at every level.
  */
 function optionNode<S extends StrictRJSFSchema>(
   plan: MergePlan<S>,
   keyword: string,
   index: number,
   option: S,
-): NodeId | undefined {
+): AdoptedSchema<S> {
   const provided = seedsAt(plan, keyword, String(index)).find((seed) => {
     const node = plan.graph.node(seed.node);
     return node.kind === 'schema' && node.raw === option;
   });
-  return provided?.node ?? plan.graph.byObject(option);
+  const node = provided?.node ?? plan.graph.byObject(option);
+  return node === undefined ? plan.graph.adopt(option) : { graph: plan.graph, node };
 }
 
 /** The policy views are planned with: every `allOf` is merged, and an option only where the schema offering it has
@@ -508,16 +511,19 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
         merged,
         keyword,
         options.map((option, index) => {
-          const node =
-            isSchemaObject<S>(option) && !isDecided(option) ? optionNode(plan, keyword, index, option) : undefined;
-          if (node === undefined) {
+          if (!isSchemaObject<S>(option) || isDecided(option)) {
             return option;
           }
-          const provenance = childProvenance(field, {
-            seeds: [{ node, refPath: [] }],
-            chain: optionChain,
-            optionOf: { setKey: plan.setKey, set: plan.set },
-          });
+          const adopted = optionNode(plan, keyword, index, option);
+          const provenance = childProvenance(
+            field,
+            {
+              seeds: [{ node: adopted.node, refPath: [] }],
+              chain: optionChain,
+              optionOf: { setKey: plan.setKey, set: plan.set },
+            },
+            adopted.graph,
+          );
           return resolveOptions
             ? buildView(context, root, provenance, data, false)
             : stubOf(graph.rawRoot, option, provenance);
