@@ -1,22 +1,9 @@
 import type { RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { schemaParser } from '@rjsf/utils';
+import { logOnce, schemaParser } from '@rjsf/utils';
 import { Validator } from 'ata-validator';
 
 import { ATA_CONFIG, COLOR_FORMAT_REGEX, DATA_URL_FORMAT_REGEX } from './createAtaInstance.ts';
 import type { CompileValidatorOptionsType } from './types.ts';
-
-const warned = new Set<string>();
-
-/** Logs each distinct warning once per process, so compiling on every request does not
- * repeat it.
- */
-function warnOnce(message: string) {
-  if (!warned.has(message)) {
-    warned.add(message);
-    // oxlint-disable-next-line no-console
-    console.warn(message);
-  }
-}
 
 /** The `$id` ata registers a schema under: a non-empty string that is not just a fragment. */
 function declaredId(schema: object) {
@@ -38,7 +25,7 @@ function declaredId(schema: object) {
  * Extra schemas without an `$id` are left out with a `console.warn`, as ata requires one.
  * A few options cannot be carried into a standalone module: `extenderFn` and the
  * `ataOptionsOverrides` keys `coerceTypes`, `removeAdditional` and `keywords`. Those are left
- * out with a `console.warn`, once per process, since the module and the runtime validator may
+ * out with a `console.warn`, logged once through `logOnce()`, since the module and the runtime validator may
  * then disagree in either direction. The module also never fills in `default` values, so
  * where the runtime validator would fill a missing required field from its default, the module
  * rejects it. `suppressDuplicateFiltering` is given to `createPrecompiledValidator()` instead.
@@ -83,7 +70,7 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
   // ata already knows the official meta-schemas, so bundling one only adds dead code (about 90 KB for draft-07's).
   const bundled = withId.filter((extra) => !/^https?:\/\/json-schema\.org\//.test((extra as { $id: string }).$id));
   if (withId.length < extras.length) {
-    warnOnce(
+    logOnce(
       '@rjsf/validator-ata: additionalMetaSchemas and ataOptionsOverrides.schemas entries without an $id are ignored; ata requires an $id, so customizeValidator() throws for them',
     );
   }
@@ -94,12 +81,12 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
     ...(keywords && Object.keys(keywords).length ? ['ataOptionsOverrides.keywords'] : []),
   ];
   if (dropped.length > 0) {
-    warnOnce(
+    logOnce(
       `@rjsf/validator-ata: ${dropped.join(', ')} cannot be carried into a precompiled validator and ${dropped.length === 1 ? 'is' : 'are'} ignored; the precompiled and runtime validators may disagree`,
     );
   }
   if (options.suppressDuplicateFiltering !== undefined) {
-    warnOnce(
+    logOnce(
       '@rjsf/validator-ata: suppressDuplicateFiltering has no effect at compile time; pass it to createPrecompiledValidator() instead',
     );
   }

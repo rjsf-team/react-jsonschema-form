@@ -134,10 +134,7 @@ describe('compileSchemaValidatorsCode', () => {
     expect(loose.email({ email: 'nope' })).toBe(true);
   });
 
-  test('warns once about options the generated module cannot carry, and still compiles', async () => {
-    // A fresh copy of the module, so a warning an earlier test happened to log is not already marked as shown.
-    vi.resetModules();
-    const { compileSchemaValidatorsCode } = await import('../src/compileSchemaValidatorsCode.ts');
+  test('warns once about options the generated module cannot carry, and still compiles', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     try {
       const options = {
