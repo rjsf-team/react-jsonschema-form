@@ -460,6 +460,17 @@ export function refDefinition<S extends StrictRJSFSchema = RJSFSchema>(graph: Sc
     : schemaFrom(graph.rawRoot, {});
 }
 
+/** Returns the `allOf` entries `schemas` hold themselves, which merging the schemas as the `allOf` of them leaves as they
+ * stand: the shallow merge would flatten them into its result and hoist the `$ref` of an entry onto it, merging an
+ * `allOf` that is not the one being merged and leaving a reference no reader of the result follows again
+ */
+function ownAllOf(schemas: readonly object[]): unknown[] {
+  return schemas.flatMap((schema): unknown[] => {
+    const entries: unknown = Reflect.get(schema, ALL_OF_KEY);
+    return Array.isArray(entries) ? entries : [];
+  });
+}
+
 /** Returns the keywords `beside` a `$ref` and the `definition` it names merged as the `allOf` of both, as the form
  * merges them. Two that cannot be merged, such as a `type` beside the `$ref` that the definition's `type` shares no
  * value with, stay the `allOf` of both, which a validator reads the same way, rather than failing every reader.
@@ -470,13 +481,7 @@ export function refDefinition<S extends StrictRJSFSchema = RJSFSchema>(graph: Sc
  * @returns - The merged schema, or the `allOf` of both where they cannot be merged
  */
 export function conjoinDefinition<S extends StrictRJSFSchema>(template: S, beside: S, definition: S): S {
-  // The merge would flatten an `allOf` either side holds into the result and hoist the `$ref` of one of its entries onto
-  // it, a reference no reader of the definition expects to follow again, so each side's own `allOf` stays one, unmerged,
-  // as it does on a definition read without keywords beside its `$ref`
-  const nested = [beside, definition].flatMap((side) => {
-    const entries: unknown = side[ALL_OF_KEY];
-    return Array.isArray(entries) ? entries : [];
-  });
+  const nested = ownAllOf([beside, definition]);
   try {
     const merged = schemaFrom(
       template,
@@ -692,7 +697,15 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       return part;
     }
     const schemas = [part.schema, ...members.map((member) => member.schema)];
-    const merged = this.mergeAll({ ...part.schema, [ALL_OF_KEY]: schemas.slice(1) });
+    // An `allOf` a member still holds is one the policy left unmerged
+    const nested = ownAllOf(schemas);
+    const merged = this.mergeAll({
+      ...withoutKeys(part.schema, ALL_OF_KEY),
+      [ALL_OF_KEY]: schemas.slice(1).map((schema) => withoutKeys(schema, ALL_OF_KEY)),
+    });
+    if (nested.length > 0) {
+      Reflect.set(merged, ALL_OF_KEY, nested);
+    }
     for (const [symbol, value] of symbolsOf(schemas)) {
       Reflect.set(merged, symbol, value);
     }

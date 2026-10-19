@@ -60,6 +60,41 @@ describe('getDefaultFormState() as one fold over the merge plan', () => {
     ).toEqual({ field: { b: 'from A' } });
   });
 
+  it.each<[string, RJSFSchema, unknown]>([
+    [
+      'the definition a $ref with keywords beside it names',
+      {
+        definitions: {
+          D: {
+            type: 'object',
+            properties: { d: { type: 'string', default: 'd' } },
+            allOf: [{ properties: { n: { type: 'string', default: 'n' } } }],
+          },
+        },
+        type: 'object',
+        properties: {
+          plain: { $ref: '#/definitions/D' },
+          beside: { $ref: '#/definitions/D', properties: { s: { type: 'string', default: 's' } } },
+        },
+      },
+      { plain: { d: 'd' }, beside: { s: 's', d: 'd' } },
+    ],
+    [
+      'a property merged with the pattern its name matches',
+      {
+        type: 'object',
+        properties: {
+          cx: { type: 'object', allOf: [{ properties: { n: { type: 'string', default: 'n' } } }] },
+          dx: { type: 'object', allOf: [{ properties: { n: { type: 'string', default: 'n' } } }] },
+        },
+        patternProperties: { '^c': { title: 'C' } },
+      },
+      {},
+    ],
+  ])("skips the allOf of %s under allOf: 'skipDefaults', as any other property's", (_, schema, expected) => {
+    expect(getDefaultFormState({ validator }, { schema, rootSchema: schema })).toEqual(expected);
+  });
+
   describe('options a customMergeAllOf rewrote', () => {
     // The merge hands back a copy of the options, which no node of the schema declares
     const customMergeAllOf = (schema: RJSFSchema): RJSFSchema => {
