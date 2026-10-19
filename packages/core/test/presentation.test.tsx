@@ -13,6 +13,7 @@ import { errorId, fieldLabelId, helpId, optionHelpId, selectedOptionDescriptionI
 import { screen, within } from '@testing-library/react';
 
 import { generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
+import type { NoValFormProps } from './testUtils.tsx';
 import { createFormComponent } from './testUtils.tsx';
 
 const { FieldTemplate: CoreFieldTemplate } = generateTemplates();
@@ -1031,6 +1032,39 @@ describe('an alt-date field', () => {
     });
 
     expect(screen.getByRole('combobox', { name: 'When, year' })).not.toHaveAttribute('aria-describedby');
+  });
+
+  it.each<{ name: string; label: string; props: NoValFormProps }>([
+    {
+      name: 'an additional property, by its key rather than its schema title',
+      label: 'start',
+      props: {
+        schema: { type: 'object', additionalProperties: { type: 'string', format: 'date', title: 'Date' } },
+        uiSchema: { additionalProperties: { 'ui:widget': 'alt-date' } },
+        initialFormData: { start: '2020-05-03' },
+      },
+    },
+    {
+      name: "a property titled '', by its name",
+      label: 'start',
+      props: {
+        schema: { type: 'object', properties: { start: { type: 'string', title: '' } } },
+        uiSchema: { start: { 'ui:widget': 'alt-date' } },
+      },
+    },
+    {
+      name: 'a deprecated property, with the marker',
+      label: 'Old date (deprecated)',
+      props: {
+        schema: { type: 'object', properties: { start: { type: 'string', title: 'Old date', deprecated: true } } },
+        uiSchema: { start: { 'ui:widget': 'alt-date' } },
+      },
+    },
+  ])('names each part of $name as its template labels the field', ({ label, props }) => {
+    const { node } = createFormComponent(props);
+
+    expect(node.querySelector(`#${fieldLabelId('root_start')}`)?.textContent).toBe(label);
+    expect(screen.getByRole('combobox', { name: `${label}, year` })).toBeInTheDocument();
   });
 });
 
