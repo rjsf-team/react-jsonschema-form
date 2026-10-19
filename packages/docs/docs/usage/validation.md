@@ -99,7 +99,7 @@ Here is an example of how to use your precompiled validator with your `Form`:
 
 ```tsx
 import { useMemo } from 'react';
-import { createPrecompiledValidator, ValidatorFunctions } from '@rjsf/validator-ajv8';
+import { createPrecompiledValidator } from '@rjsf/validator-ajv8';
 import Form, { FormProps } from '@rjsf/core'; // Or whatever theme you use
 
 import yourSchema from 'path_to/yourSchema'; // This needs to be the same file that was precompiled
@@ -109,10 +109,10 @@ function MyForm(props: Omit<FormProps, 'validator' | 'schema'>) {
   // Memoize the validator to avoid rerenders
   const validator = useMemo(
     () => createPrecompiledValidator(precompiledValidatorFns, yourSchema),
-    [validatorFns, yourSchema],
+    [precompiledValidatorFns, yourSchema],
   );
 
-  return <Form schema={yourSchema} validator={validator} />;
+  return <Form {...props} schema={yourSchema} validator={validator} />;
 }
 
 render(<MyForm />, document.getElementById('app'));
@@ -266,7 +266,7 @@ Then use it in the app:
 
 ```tsx
 import { createPrecompiledValidator, type ValidatorFunctions } from '@rjsf/validator-ata';
-import yourSchema from 'path_to/yourSchema.json'; // The same schema that was precompiled
+import yourSchema from 'path_to/yourSchema.json' with { type: 'json' }; // The same schema that was precompiled
 import precompiledValidatorFns from 'path_to/yourCompiledSchema.cjs';
 
 const validator = createPrecompiledValidator(precompiledValidatorFns as ValidatorFunctions, yourSchema);
@@ -528,9 +528,9 @@ To support additional meta schemas, you can create and pass to the `Form` compon
 
 ### additionalMetaSchemas
 
-The `additionalMetaSchemas` prop allows you to validate the form data against one (or more than one) JSON Schema meta schema, for example, JSON Schema draft-04.
+The `additionalMetaSchemas` prop allows you to validate the form data against one (or more than one) JSON Schema meta schema, for example, JSON Schema draft-06.
 
-In this example `schema` passed as props to `Form` component can be validated against draft-07 (default) and by draft-04 (added), depending on the value of `$schema` attribute.
+Ajv 8 doesn't ship a draft-04 meta schema to pass there, so this example gets draft-04 support from the Ajv class of `ajv-draft-04` instead, and the `schema` passed as props to `Form` component is validated against draft-04.
 
 ```tsx
 import { Form } from '@rjsf/core';
