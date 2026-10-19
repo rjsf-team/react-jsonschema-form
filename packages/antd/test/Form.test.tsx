@@ -1,3 +1,4 @@
+import { getTestRegistry } from '@rjsf/core/testing';
 import { formTests, themeTests } from '@rjsf/snapshot-tests';
 import type { ErrorSchema, FormValidation, RJSFSchema, UiSchema } from '@rjsf/utils';
 import { errorId, fieldLabelId, helpId, optionHelpId } from '@rjsf/utils';
@@ -7,6 +8,7 @@ import { userEvent } from '@testing-library/user-event';
 import { ConfigProvider, theme } from 'antd';
 
 import Form, { generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
+import CheckboxWidget from '../src/widgets/CheckboxWidget/index.tsx';
 
 const user = userEvent.setup();
 
@@ -967,5 +969,65 @@ describe('antd read-only fields under readonlyAsDisabled: false', () => {
     expect(keyInput).toHaveAttribute('readonly');
     expect(keyInput).not.toBeDisabled();
     expect(keyInput).toHaveValue('first');
+  });
+});
+
+// HTML5 constraint validation fails an unchecked required box and blocks the submit before RJSF sees it, with nothing on
+// the screen to say why, so only a boolean the schema demands be true carries the attribute (#5388)
+describe('antd CheckboxWidget required attribute', () => {
+  const agree: RJSFSchema = { type: 'boolean', title: 'Agree' };
+  const formSchema = (field: RJSFSchema): RJSFSchema => ({
+    type: 'object',
+    required: ['agree'],
+    properties: { agree: field },
+  });
+
+  test('submits a required boolean left unchecked, whose false the schema accepts', async () => {
+    const onSubmit = vi.fn();
+    const onError = vi.fn();
+    const { container } = render(
+      <Form schema={formSchema(agree)} validator={validator} onSubmit={onSubmit} onError={onError} />,
+    );
+
+    expect(container.querySelector('input[type=checkbox]')).not.toHaveAttribute('required');
+
+    await user.click(screen.getByRole('button', { name: 'Submit' }));
+
+    expect(onError).not.toHaveBeenCalled();
+    expect(onSubmit).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { agree: false } }),
+      expect.anything(),
+    );
+  });
+
+  test('keeps the attribute on a required boolean that has to be true', () => {
+    const { container } = render(<Form schema={formSchema({ ...agree, const: true })} validator={validator} />);
+
+    expect(container.querySelector('input[type=checkbox]')).toHaveAttribute('required');
+  });
+
+  // Rendered without a plan, as outside SchemaField, the widget gets its parent's `required` as is
+  test('leaves the attribute off a required boolean whose false the schema accepts, rendered without a plan', () => {
+    const { container } = render(
+      <CheckboxWidget
+        id='root'
+        name='root'
+        schema={agree}
+        uiSchema={{}}
+        value={false}
+        required
+        disabled={false}
+        readonly={false}
+        autofocus={false}
+        label='Agree'
+        options={{}}
+        onChange={vi.fn()}
+        onBlur={vi.fn()}
+        onFocus={vi.fn()}
+        registry={getTestRegistry(agree)}
+      />,
+    );
+
+    expect(container.querySelector('input[type=checkbox]')).not.toHaveAttribute('required');
   });
 });

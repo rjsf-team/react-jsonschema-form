@@ -61,6 +61,15 @@ describe('CheckboxWidget', () => {
 
       expect(checkbox).toHaveAttribute('required');
     });
+
+    // Rendered without a plan, as outside SchemaField, the widget gets its parent's `required` as is
+    test('leaves the attribute off a required boolean whose false the schema accepts, rendered without a plan', () => {
+      const { container } = render(
+        <CheckboxWidget {...makeWidgetMockProps({ schema: agree, value: false, required: true })} />,
+      );
+
+      expect(container.querySelector('input[type=checkbox]')).not.toHaveAttribute('required');
+    });
   });
 
   // A required boolean starts at `false`, an answer the schema accepts, and so does a type list naming `boolean` whose

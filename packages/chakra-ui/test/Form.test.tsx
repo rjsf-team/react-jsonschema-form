@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react';
 import { Activity, useState } from 'react';
+import { ChakraProvider, defaultSystem } from '@chakra-ui/react';
+import { getTestRegistry } from '@rjsf/core/testing';
 import { formTests, themeTests } from '@rjsf/snapshot-tests';
 import type { FormValidation, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { bracketNameGenerator, errorId, helpId, optionHelpId } from '@rjsf/utils';
@@ -7,6 +9,7 @@ import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
+import CheckboxWidget from '../src/CheckboxWidget/index.ts';
 import { generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
 import WrappedForm from './WrappedForm.tsx';
 
@@ -1089,5 +1092,67 @@ describe('chakra-ui WrapIfAdditionalTemplate', () => {
 
     expect(container.querySelector('#root_foo-key')).toHaveAccessibleName('foo Key');
     expect(screen.queryByText('foo Key')).toBeNull();
+  });
+});
+
+// HTML5 constraint validation fails an unchecked required box and blocks the submit before RJSF sees it, with nothing on
+// the screen to say why, so only a boolean the schema demands be true carries the attribute (#5388)
+describe('chakra-ui CheckboxWidget required attribute', () => {
+  const agree: RJSFSchema = { type: 'boolean', title: 'Agree' };
+  const formSchema = (field: RJSFSchema): RJSFSchema => ({
+    type: 'object',
+    required: ['agree'],
+    properties: { agree: field },
+  });
+
+  test('submits a required boolean left unchecked, whose false the schema accepts', async () => {
+    const onSubmit = vi.fn();
+    const onError = vi.fn();
+    const { container } = render(
+      <WrappedForm schema={formSchema(agree)} validator={validator} onSubmit={onSubmit} onError={onError} />,
+    );
+
+    expect(container.querySelector('input[type=checkbox]')).not.toHaveAttribute('required');
+
+    await user.click(screen.getByRole('button', { name: 'Submit' }));
+
+    expect(onError).not.toHaveBeenCalled();
+    expect(onSubmit).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { agree: false } }),
+      expect.anything(),
+    );
+  });
+
+  test('keeps the attribute on a required boolean that has to be true', () => {
+    const { container } = render(<WrappedForm schema={formSchema({ ...agree, const: true })} validator={validator} />);
+
+    expect(container.querySelector('input[type=checkbox]')).toHaveAttribute('required');
+  });
+
+  // Rendered without a plan, as outside SchemaField, the widget gets its parent's `required` as is
+  test('leaves the attribute off a required boolean whose false the schema accepts, rendered without a plan', () => {
+    const { container } = render(
+      <ChakraProvider value={defaultSystem}>
+        <CheckboxWidget
+          id='root'
+          name='root'
+          schema={agree}
+          uiSchema={{}}
+          value={false}
+          required
+          disabled={false}
+          readonly={false}
+          autofocus={false}
+          label='Agree'
+          options={{}}
+          onChange={vi.fn()}
+          onBlur={vi.fn()}
+          onFocus={vi.fn()}
+          registry={getTestRegistry(agree)}
+        />
+      </ChakraProvider>,
+    );
+
+    expect(container.querySelector('input[type=checkbox]')).not.toHaveAttribute('required');
   });
 });
