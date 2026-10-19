@@ -3,7 +3,7 @@ import { schemaParser } from '@rjsf/utils';
 import type { ValidatorOptions } from 'ata-validator';
 import { Validator } from 'ata-validator';
 
-import { COLOR_FORMAT_REGEX, DATA_URL_FORMAT_REGEX } from './createAtaInstance.ts';
+import { ATA_CONFIG, COLOR_FORMAT_REGEX, DATA_URL_FORMAT_REGEX } from './createAtaInstance.ts';
 import type { CustomValidatorOptionsType } from './types.ts';
 
 /** Compiles a schema into a precompiled validator module. ata's
