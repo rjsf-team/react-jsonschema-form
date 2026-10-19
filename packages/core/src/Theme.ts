@@ -10,6 +10,7 @@ import {
   DEFAULT_ID_PREFIX,
   DEFAULT_ID_SEPARATOR,
   englishStringTranslator,
+  mergeThemePresentation,
   UI_DEFINITIONS_KEY,
   UI_GLOBAL_OPTIONS_KEY,
 } from '@rjsf/utils';
@@ -81,6 +82,7 @@ export function buildRegistry<
       },
     },
     widgets: { ...widgets, ...props.widgets },
+    presentation: mergeThemePresentation(),
     rootSchema: schema,
     // `F` may be narrower than `{}`, but an omitted formContext is an empty object
     formContext: props.formContext ?? ({} as F),

@@ -2901,7 +2901,6 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                           style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-pointer-events: none;"
                         >
                           <input
-                            aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             autocomplete="off"
@@ -4393,7 +4392,6 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                           style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-pointer-events: none;"
                         >
                           <input
-                            aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             autocomplete="off"
@@ -4782,7 +4780,6 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                           style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-pointer-events: none;"
                         >
                           <input
-                            aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             autocomplete="off"

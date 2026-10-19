@@ -150,7 +150,8 @@ interface GetTriggerDescribedBy {
  * @param hasValue - Whether the button is displaying a value rather than falling back to the label
  * @param [named] - Whether the button is named by something other than that label, such as an `aria-label` its caller
  *   passed, which replaces its contents the same way
- * @param [describedBy=ariaDescribedByIds(id)] - The ids describing the field, which follow the value element
+ * @param [describedBy=ariaDescribedByIds(id)] - The ids describing the field, which follow the value element; an empty
+ *   string describes it by none
  * @returns - The button's `aria-describedby`, naming the value element only where something names the button
  */
 export function getTriggerDescribedBy({
@@ -162,8 +163,6 @@ export function getTriggerDescribedBy({
   named = false,
   describedBy = ariaDescribedByIds(id),
 }: GetTriggerDescribedBy) {
-  if (!hasValue || !(named || hasLabelToReference({ label, name, hideLabel }))) {
-    return describedBy;
-  }
-  return `${triggerValueId(id)} ${describedBy}`;
+  const describesValue = hasValue && (named || hasLabelToReference({ label, name, hideLabel }));
+  return [describesValue ? triggerValueId(id) : '', describedBy].filter(Boolean).join(' ') || undefined;
 }

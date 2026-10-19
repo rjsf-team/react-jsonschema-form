@@ -42,6 +42,64 @@ export function helpId(id: string) {
   return idGenerator(id, 'help');
 }
 
+/** Generates the `id` of an option's own description, help or label, numbered from the second on, so an option showing
+ * its own text beneath another that shows its own renders under an id of its own
+ *
+ * @param id - The id of the field
+ * @param suffix - The suffix of the first option's id
+ * @param depth - How many fields above rendering the same `id` show text, or draw a label, of their own
+ */
+function optionIdGenerator(id: string, suffix: string, depth: number) {
+  return idGenerator(id, depth > 1 ? `${suffix}${depth}` : suffix);
+}
+
+/** Return a consistent `id` for the description a selected `anyOf`/`oneOf` option or the fallback UI's value field
+ * renders of its own, beneath a field that renders a different description under `descriptionId()` for the same `id`
+ *
+ * @param id - The id of the field
+ * @param [depth=1] - How many fields above rendering the same `id` show a description of their own: 2 beneath a
+ *        field and an option that each show one, which takes `optionDescription2`
+ * @returns - The consistent id for the option's own description element from the given `id` and `depth`
+ */
+export function optionDescriptionId(id: string, depth = 1) {
+  return optionIdGenerator(id, 'optionDescription', depth);
+}
+
+/** Return a consistent `id` for the label a selected `anyOf`/`oneOf` option or the fallback UI's value field draws of
+ * its own, beneath a field whose own component already draws a label under the id it would take, such as the option
+ * selector drawing an `anyOf` field's label beside an option whose widget draws its own
+ *
+ * @param id - The id of the field
+ * @param [depth=1] - How many fields above rendering the same `id` draw a label: 2 beneath a field and an option that
+ *        each draw one, which takes `optionLabel2`
+ * @returns - The consistent id for the option's own label element from the given `id` and `depth`
+ */
+export function optionLabelId(id: string, depth = 1) {
+  return optionIdGenerator(id, 'optionLabel', depth);
+}
+
+/** Return a consistent `id` for the help a selected `anyOf`/`oneOf` option or the fallback UI's value field renders of
+ * its own, beneath a field that renders a different help under `helpId()` for the same `id`
+ *
+ * @param id - The id of the field
+ * @param [depth=1] - How many fields above rendering the same `id` show a help of their own: 2 beneath a
+ *        field and an option that each show one, which takes `optionHelp2`
+ * @returns - The consistent id for the option's own help element from the given `id` and `depth`
+ */
+export function optionHelpId(id: string, depth = 1) {
+  return optionIdGenerator(id, 'optionHelp', depth);
+}
+
+/** Return a consistent `id` for the description of the option a select widget has selected, which describes that
+ * option rather than the field, so it can't share the field's `descriptionId()`
+ *
+ * @param id - The id of the field
+ * @returns - The consistent id for the selected option's description element from the given `id`
+ */
+export function selectedOptionDescriptionId(id: string) {
+  return idGenerator(id, 'selectedOptionDescription');
+}
+
 /** Return a consistent `id` for the field title element
  *
  * @param id - The id of the field

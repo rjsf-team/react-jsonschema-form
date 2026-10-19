@@ -91,7 +91,7 @@ export default function SelectWidget<
   // Mantine describes the input through its `InputWrapper` context rather than by an `aria-describedby` prop
   const { 'aria-label': ariaLabel, 'aria-describedby': describedBy } = widgetAriaProps(props);
   const ariaDescribedByProps = useAriaDescribedByProps(multiple ? 'MultiSelect' : 'Select', id, options, {
-    describedBy,
+    describedBy: describedBy ?? '',
   });
 
   const sharedProps = {

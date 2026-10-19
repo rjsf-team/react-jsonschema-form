@@ -12,7 +12,13 @@ import type {
   FieldTemplateProps,
   WidgetProps,
 } from '@rjsf/utils';
-import { DEFAULT_ID_PREFIX, DEFAULT_ID_SEPARATOR, createSchemaUtils, englishStringTranslator } from '@rjsf/utils';
+import {
+  DEFAULT_ID_PREFIX,
+  DEFAULT_ID_SEPARATOR,
+  createSchemaUtils,
+  englishStringTranslator,
+  mergeThemePresentation,
+} from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -53,6 +59,7 @@ describe('SchemaField', () => {
         fields: defaultRegistry.fields,
         templates: defaultRegistry.templates,
         widgets: defaultRegistry.widgets,
+        presentation: mergeThemePresentation(),
         rootSchema: schema,
         formContext: {},
         schemaUtils,
@@ -94,6 +101,7 @@ describe('SchemaField', () => {
         fields: defaultRegistry.fields,
         templates: defaultRegistry.templates,
         widgets: defaultRegistry.widgets,
+        presentation: mergeThemePresentation(),
         rootSchema: schema,
         formContext: {},
         schemaUtils,
