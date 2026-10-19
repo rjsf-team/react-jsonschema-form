@@ -76,7 +76,7 @@ The `ui:definitions` property allows you to define reusable UI customizations fo
 The keys in `ui:definitions` must match the exact `$ref` path used in the schema (e.g., `#/definitions/address` or `#/$defs/node`).
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -278,7 +278,7 @@ It can also be enabled globally by setting the `allowClearTextInputs` option to 
 uiSchema directive.
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -378,7 +378,7 @@ const uiSchema: UiSchema = {
 It can also be set globally by specifying the `deprecatedHandling` option in the `ui:globalOptions` uiSchema directive, which applies the chosen behavior to every deprecated field in the form.
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -413,7 +413,7 @@ whose core default is plain text, so a renderer has to be registered as well —
 needs `markdown-to-jsx` installed.
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import MarkdownTemplate from '@rjsf/core/markdown';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
@@ -432,7 +432,7 @@ It can also be enabled globally by setting the `enableMarkdownInDescription` opt
 uiSchema directive.
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import MarkdownTemplate from '@rjsf/core/markdown';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
@@ -457,7 +457,7 @@ a field. Like `ui:enableMarkdownInDescription`, it renders through the registere
 [`MarkdownTemplate`](../advanced-customization/custom-templates.md#markdowntemplate) and needs a renderer registered.
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import MarkdownTemplate from '@rjsf/core/markdown';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
@@ -477,7 +477,7 @@ It can also be enabled globally by setting the `enableMarkdownInHelp` option to 
 uiSchema directive.
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import MarkdownTemplate from '@rjsf/core/markdown';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
@@ -737,7 +737,7 @@ Field labels are rendered by default.
 Labels may be omitted on a per-field by setting the `label` option to `false` in the `ui:options` uiSchema directive.
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -754,7 +754,7 @@ render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, docum
 They can also be omitted globally by setting the `label` option to `false` in the `ui:globalOptions` uiSchema directive.
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -797,7 +797,7 @@ A consequence worth knowing when writing tests: in `@rjsf/mui`, and only there, 
 A group whose options the search rules out disappears along with them instead of leaving its label behind.
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -828,7 +828,7 @@ Controls how enum-backed widgets (`select`, `radio`, `checkboxes`) encode option
 The form data passed to `onChange` is always the typed enum value; this option only affects the DOM-level encoding. Can be specified in `ui:globalOptions` to apply to all enum-backed fields, or per-field in `ui:options`.
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -867,7 +867,7 @@ This property allows you to reorder the properties that are shown for a particul
 You can add placeholder text to an input by using the `ui:placeholder` uiSchema directive:
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -882,7 +882,7 @@ render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, docum
 Fields using `enum` can also use `ui:placeholder`. The value will be used as the text for the empty option in the select widget.
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -943,7 +943,7 @@ A known limitation under `oneOf`/`anyOf`: which branch is "selected" is picked b
 You can set the initial height of a textarea widget by specifying `rows` option.
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 

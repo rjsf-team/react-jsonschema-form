@@ -52,7 +52,7 @@ If you are working with a simple, unchanging JSON Schema and you have defined a 
 ```tsx
 import { RJSFSchema } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 
 interface FormData {
   foo?: string;
@@ -83,7 +83,7 @@ If you are using something like the [Ajv utility types for schemas](https://ajv.
 import { JSONSchemaType } from 'ajv';
 import { RJSFSchema } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 
 interface FormData {
   foo?: string;
@@ -120,7 +120,7 @@ If you have a type for this data, you can override this generic as follows:
 ```tsx
 import { RJSFSchema } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 
 interface FormContext {
   myCustomWidgetData: object;
