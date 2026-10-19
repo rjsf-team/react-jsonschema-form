@@ -1,5 +1,13 @@
 import type { FormContextType, ObjectFieldTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { buttonId, canExpand, descriptionId, getTemplates, getUiOptions, titleId } from '@rjsf/utils';
+import {
+  buttonId,
+  canExpand,
+  descriptionId,
+  getTemplates,
+  getUiOptions,
+  titleDrawsOptionalDataControl,
+  titleId,
+} from '@rjsf/utils';
 
 /** The `ObjectFieldTemplate` is the template to use to render all the inner properties of an object along with the
  * title and description if available. If the object is expandable, then an `AddButton` is also rendered after all
@@ -11,25 +19,26 @@ export default function ObjectFieldTemplate<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({
-  description,
-  title,
-  properties,
-  required,
-  uiSchema,
-  presentation,
-  id,
-  schema,
-  formData,
-  optionalDataControl,
-  onAddProperty,
-  disabled,
-  readonly,
-  registry,
-}: ObjectFieldTemplateProps<T, S, F>) {
+>(props: ObjectFieldTemplateProps<T, S, F>) {
+  const {
+    description,
+    title,
+    properties,
+    required,
+    uiSchema,
+    presentation,
+    id,
+    schema,
+    formData,
+    optionalDataControl,
+    onAddProperty,
+    disabled,
+    readonly,
+    registry,
+  } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const { TitleFieldTemplate, DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, uiOptions);
-  const showOptionalDataControlInTitle = !readonly && !disabled;
+  const showOptionalDataControlInTitle = titleDrawsOptionalDataControl<T, S, F>(props);
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
