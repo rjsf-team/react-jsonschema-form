@@ -1,5 +1,5 @@
 import type { Registry, WidgetAriaPropsInput } from '../src/index.ts';
-import { ariaDescribedByIds, widgetAriaProps } from '../src/index.ts';
+import { ariaDescribedByIds, resolveFieldPresentation, widgetAriaProps } from '../src/index.ts';
 
 const describedOptions = {
   enumOptions: [
@@ -26,8 +26,74 @@ describe('widgetAriaProps()', () => {
   it('names the widget as its caller asked', () => {
     expect(widgetAriaProps({ ...colorProps, 'aria-label': 'When, year' })['aria-label']).toBe('When, year');
   });
+  it('names the widget by the label text its plan hides, unless its caller names it', () => {
+    const presentation = resolveFieldPresentation({
+      id: 'root_color',
+      declaration: {
+        label: 'template',
+        description: 'template',
+        errors: 'template',
+        help: 'template',
+        labelledBy: 'for',
+      },
+      label: 'Color',
+      showLabel: false,
+    });
+    const props = { ...colorProps, 'aria-describedby': undefined, presentation };
+    expect(widgetAriaProps(props)['aria-label']).toBe('Color');
+    expect(widgetAriaProps({ ...props, 'aria-label': 'Paint' })['aria-label']).toBe('Paint');
+    expect(widgetAriaProps({ ...props, 'aria-label': '' })['aria-label']).toBe('Color');
+  });
   it("follows the caller's ids with the description of the selected option", () => {
     expect(widgetAriaProps(colorProps)['aria-describedby']).toBe('ext root_color__description');
+  });
+  it('describes the widget without a plan by nothing when its caller passes no ids, rather than by ids no element has', () => {
+    expect(widgetAriaProps({ ...colorProps, 'aria-describedby': '', value: 'b' })).toEqual({
+      'aria-label': undefined,
+      'aria-describedby': undefined,
+    });
+  });
+  it('describes the widget without a plan by the selected option alone when its caller passes no ids', () => {
+    expect(widgetAriaProps({ ...colorProps, 'aria-describedby': '' })['aria-describedby']).toBe(
+      'root_color__description',
+    );
+  });
+  it('lists the description of the selected option once when its caller already passed it', () => {
+    expect(
+      widgetAriaProps({ ...colorProps, 'aria-describedby': 'ext root_color__description' })['aria-describedby'],
+    ).toBe('ext root_color__description');
+  });
+  describe('with the plan of its field', () => {
+    const presentation = resolveFieldPresentation({
+      id: 'root_color',
+      declaration: {
+        label: 'template',
+        description: 'template',
+        errors: 'template',
+        help: 'template',
+        labelledBy: 'for',
+      },
+      label: 'Color',
+      help: 'Pick one',
+      errors: ['is required'],
+    });
+    it('gives the control the attributes of its plan, followed by the description of the selected option', () => {
+      expect(widgetAriaProps({ ...colorProps, 'aria-describedby': undefined, presentation })).toEqual({
+        'aria-label': undefined,
+        'aria-describedby': 'root_color__error root_color__help root_color__selectedOptionDescription',
+        'aria-invalid': true,
+      });
+    });
+    it("adds the caller's ids to the plan's, keeping the rest of the plan's attributes", () => {
+      expect(widgetAriaProps({ ...colorProps, presentation, value: 'b' })).toEqual({
+        'aria-label': undefined,
+        'aria-describedby': 'root_color__error root_color__help ext',
+        'aria-invalid': true,
+      });
+      expect(widgetAriaProps({ ...colorProps, presentation })['aria-describedby']).toBe(
+        'root_color__error root_color__help ext root_color__selectedOptionDescription',
+      );
+    });
   });
   it.each([
     ['is multiple', { multiple: true, value: ['r'] }],

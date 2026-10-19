@@ -6,7 +6,7 @@ import type {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { getTemplates, getUiOptions, buttonId } from '@rjsf/utils';
+import { getTemplates, getUiOptions, buttonId, titleDrawsOptionalDataControl } from '@rjsf/utils';
 import { Col, Row, ConfigProvider } from 'antd';
 import classNames from 'classnames';
 
@@ -36,7 +36,7 @@ export default function ArrayFieldTemplate<
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const { ArrayFieldTitleTemplate } = getTemplates<T, S, F>(registry, uiOptions);
-  const showOptionalDataControlInTitle = !readonly && !disabled;
+  const showOptionalDataControlInTitle = titleDrawsOptionalDataControl<T, S, F>(props);
   const { formContext } = registry;
   // Button templates are not overridden in the uiSchema
   const {
@@ -56,12 +56,12 @@ export default function ArrayFieldTemplate<
   return (
     <fieldset className={className} id={id}>
       <Row gutter={rowGutter}>
-        {(uiOptions.title || title) && (
+        {title && (
           <Col className={labelColClassName} span={24}>
             <ArrayFieldTitleTemplate
               id={id}
               required={required}
-              title={uiOptions.title || title}
+              title={title}
               schema={schema}
               uiSchema={uiSchema}
               registry={registry}

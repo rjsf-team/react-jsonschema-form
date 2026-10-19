@@ -1,7 +1,7 @@
 import type { ChangeEvent, FocusEvent } from 'react';
 import { useCallback } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds } from '@rjsf/utils';
+import { getControlAttributes } from '@rjsf/utils';
 
 /** The `TextareaWidget` is a widget for rendering input fields as textarea.
  *
@@ -24,6 +24,7 @@ function TextareaWidget<
   onBlur,
   onFocus,
   htmlName,
+  presentation,
 }: WidgetProps<T, S, F>) {
   const handleChange = useCallback(
     ({ target: { value: newValue } }: ChangeEvent<HTMLTextAreaElement>) =>
@@ -56,7 +57,7 @@ function TextareaWidget<
       onBlur={handleBlur}
       onFocus={handleFocus}
       onChange={handleChange}
-      aria-describedby={ariaDescribedByIds(id)}
+      {...getControlAttributes<T, S, F>({ id, presentation })}
     />
   );
 }

@@ -1,5 +1,5 @@
 import validator from '@rjsf/validator-ajv8';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import CheckboxesWidget from '../src/CheckboxesWidget/index.ts';
@@ -66,4 +66,27 @@ describe('CheckboxesWidget focus and blur', () => {
       ]);
     },
   );
+});
+
+describe('CheckboxesWidget required', () => {
+  // A `required` on each checkbox would make the browser demand every option be checked, rather than the field be set
+  test('leaves a required field submittable once one of its options is checked', async () => {
+    const { container } = render(
+      <Form
+        schema={{
+          type: 'object',
+          required: ['colors'],
+          properties: {
+            colors: { type: 'array', items: { type: 'string', enum: ['red', 'blue'] }, uniqueItems: true },
+          },
+        }}
+        uiSchema={{ colors: { 'ui:widget': 'checkboxes' } }}
+        validator={validator}
+      />,
+    );
+
+    await user.click(screen.getByRole('checkbox', { name: 'red' }));
+
+    expect(container.querySelector('form')).toBeValid();
+  });
 });

@@ -26,6 +26,7 @@ export {
   findSelectedOptionInXxxOf,
   getAdditionalPropertyType,
   getDefaultFormState,
+  // oxlint-disable-next-line typescript/no-deprecated -- deprecated, and kept exported through v7
   getDisplayLabel,
   getClosestMatchingOption,
   getFirstMatchingOption,

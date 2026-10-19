@@ -2,13 +2,16 @@ import type { ChangeEvent } from 'react';
 import { useCallback } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
-  descriptionId,
+  getControlAttributes,
   getFieldTypeForWidget,
   getTemplates,
   getUiOptions,
+  getWidgetDescription,
   schemaRequiresTrueValue,
+  widgetDrawsLabel,
 } from '@rjsf/utils';
+
+import RequiredMarker from '../RequiredMarker.tsx';
 
 interface BooleanInputProps<
   T = unknown,
@@ -33,37 +36,42 @@ export default function BooleanInput<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({
-  id,
-  htmlName,
-  value,
-  label,
-  hideLabel,
-  required,
-  disabled,
-  readonly,
-  autofocus,
-  onChange,
-  onFocus,
-  onBlur,
-  options,
-  schema,
-  uiSchema,
-  registry,
-  inputClassName,
-  labelClassName,
-}: BooleanInputProps<T, S, F>) {
+>(props: BooleanInputProps<T, S, F>) {
+  const {
+    id,
+    htmlName,
+    value,
+    label,
+    presentation,
+    required,
+    disabled,
+    readonly,
+    autofocus,
+    onChange,
+    onFocus,
+    onBlur,
+    options,
+    schema,
+    uiSchema,
+    registry,
+    inputClassName,
+    labelClassName,
+  } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
-  const description = options.description || schema.description;
+  const description = getWidgetDescription<T, S, F>(props);
   const trueValueRequired = schemaRequiresTrueValue(schema) && required;
-  // A checkbox already answers a boolean whose schema accepts `false`, so a required one of those is marked no more
-  // than a field the user has already filled in. That is any field `BooleanField` renders, which seeds it with that
-  // `false`, including a `type` list whose widget it renders. On any other field an unchecked box answers nothing, and
-  // this widget's own label is the only one rendered, so the marker has nowhere else to come from. `SchemaField` picks
-  // the field by the field's own `ui:widget` alone, so the `ui:globalOptions` one is left out here too
+  // The plan's marker, which `@rjsf/core` works out the same way. Without a plan, a checkbox already answers a boolean
+  // whose schema accepts `false`, so a required one of those is marked no more than a field the user has already filled
+  // in. That is any field `BooleanField` renders, which seeds it with that `false`, including a `type` list whose widget
+  // it renders. On any other field an unchecked box answers nothing, and this widget's own label is the only one
+  // rendered, so the marker has nowhere else to come from. `SchemaField` picks the field by the field's own `ui:widget`
+  // alone, so the `ui:globalOptions` one is left out here too
   const { widget } = getUiOptions<T, S, F>(uiSchema);
   const isBooleanField = getFieldTypeForWidget<S>(schema, widget) === 'boolean';
-  const marksRequired = required && (trueValueRequired || !isBooleanField);
+  const marksRequired = presentation
+    ? presentation.label.requiredMarker
+    : required && (trueValueRequired || !isBooleanField);
 
   /** Handle change events
    *
@@ -108,16 +116,16 @@ export default function BooleanInput<
       onFocus={handleFocus}
       onBlur={handleBlur}
       className={inputClassName}
-      aria-describedby={ariaDescribedByIds(id)}
+      {...getControlAttributes<T, S, F>({ id, presentation })}
     />
   );
 
   return (
     <div className='form-control'>
-      {!hideLabel && description && (
+      {description && (
         <DescriptionFieldTemplate
-          id={descriptionId(id)}
-          description={description}
+          id={description.id}
+          description={description.text}
           schema={schema}
           uiSchema={uiSchema}
           registry={registry}
@@ -131,7 +139,7 @@ export default function BooleanInput<
           <span className='mr-2'>{input}</span>
           <span className='label-text'>
             {label}
-            {marksRequired && <span className='text-error ml-1'>*</span>}
+            {marksRequired && <RequiredMarker />}
           </span>
         </label>
       )}

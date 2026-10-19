@@ -2,7 +2,7 @@ import type { FocusEvent } from 'react';
 import type { SliderProps } from '@fluentui/react-components';
 import { Label, Slider } from '@fluentui/react-components';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, labelValue, rangeSpec } from '@rjsf/utils';
+import { getControlAttributes, labelValue, rangeSpec, widgetDrawsLabelText } from '@rjsf/utils';
 
 /** The `RangeWidget` component uses the `BaseInputTemplate` changing the type to `range` and wrapping the result
  * in a div, with the value along side it.
@@ -14,8 +14,32 @@ export default function RangeWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { value, readonly, disabled, onBlur, onFocus, schema, onChange, required, label, hideLabel, id } = props;
-  const sliderProps = { value, label, id, name: id, ...rangeSpec<S>(schema) };
+  const {
+    value,
+    readonly,
+    disabled,
+    autofocus,
+    onBlur,
+    onFocus,
+    schema,
+    onChange,
+    required,
+    label,
+    id,
+    htmlName,
+    presentation,
+  } = props;
+  // A label holding only a required field's `*` would name the slider "star", so one is drawn only with text
+  const hideLabel = !widgetDrawsLabelText<T, S, F>(props);
+  const sliderProps = {
+    value,
+    label,
+    id,
+    name: htmlName || id,
+    required,
+    autoFocus: autofocus,
+    ...rangeSpec<S>(schema),
+  };
 
   const handleChange: NonNullable<SliderProps['onChange']> = (_, data) => onChange(data.value);
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target?.value);
@@ -25,7 +49,7 @@ export default function RangeWidget<
     <>
       {labelValue(
         <Label required={required} htmlFor={id}>
-          {label || undefined}
+          {label}
         </Label>,
         hideLabel,
       )}
@@ -35,7 +59,7 @@ export default function RangeWidget<
         onBlur={handleBlur}
         onFocus={handleFocus}
         {...sliderProps}
-        aria-describedby={ariaDescribedByIds(id)}
+        {...getControlAttributes<T, S, F>({ id, presentation })}
       />
     </>
   );

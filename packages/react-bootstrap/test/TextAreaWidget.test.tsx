@@ -5,11 +5,12 @@ import { makeWidgetMockProps } from './helpers/createMocks.ts';
 
 describe('TextareaWidget', () => {
   test('simple without errors', () => {
-    const { asFragment } = render(<TextareaWidget {...makeWidgetMockProps({})} />);
+    const { asFragment } = render(<TextareaWidget {...makeWidgetMockProps()} />);
     expect(asFragment()).toMatchSnapshot();
   });
   test('simple with errors', () => {
     const { asFragment } = render(
+      // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated prop a component without a plan reads
       <TextareaWidget {...makeWidgetMockProps({ rawErrors: ['Invalid 1', 'Invalid 2'] })} />,
     );
     expect(asFragment()).toMatchSnapshot();

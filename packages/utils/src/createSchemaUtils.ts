@@ -188,6 +188,7 @@ class SchemaUtils<
    * @returns - True if the label should be displayed or false if it should not
    */
   getDisplayLabel(schema: S, uiSchema?: UiSchema<T, S, F>, globalOptions?: GlobalUISchemaOptions) {
+    // oxlint-disable-next-line typescript/no-deprecated -- the deprecated method answers as the deprecated function does through v7
     return getDisplayLabel<T, S, F>(this.context, schema, uiSchema, this.rootSchema, globalOptions);
   }
 

@@ -16,16 +16,26 @@ const ROOT = join(__dirname, '..', '..');
  */
 const PACKAGES = {
   '@rjsf/core': {
-    installed: '34 kB',
-    canaries: [{ label: 'Form', import: 'Form', limit: '34 kB' }],
+    installed: '37 kB',
+    canaries: [{ label: 'Form', import: 'Form', limit: '37 kB' }],
   },
   '@rjsf/utils': {
-    installed: '41 kB',
-    own: '35 kB',
+    installed: '43 kB',
+    own: '37 kB',
     canaries: [{ label: 'getUiOptions', import: '{ getUiOptions }', limit: '1 kB' }],
   },
-  '@rjsf/validator-ajv8': { installed: '39 kB', own: '3 kB', nodeOnly: ['./compileSchemaValidators'] },
-  '@rjsf/validator-ata': { nodeOnly: ['./compileSchemaValidators'] },
+  '@rjsf/validator-ajv8': {
+    installed: '39 kB',
+    own: '3 kB',
+    canaries: [{ label: 'createPrecompiledValidator', import: '{ createPrecompiledValidator }', limit: '2 kB' }],
+    nodeOnly: ['./compileSchemaValidators'],
+  },
+  // A precompiled app imports only createPrecompiledValidator; the validator
+  // runtime (ata-validator) must not come with it.
+  '@rjsf/validator-ata': {
+    canaries: [{ label: 'createPrecompiledValidator', import: '{ createPrecompiledValidator }', limit: '2 kB' }],
+    nodeOnly: ['./compileSchemaValidators'],
+  },
 };
 
 /**

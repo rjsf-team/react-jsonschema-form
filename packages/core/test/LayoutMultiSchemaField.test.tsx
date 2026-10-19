@@ -5,6 +5,7 @@ import type {
   FieldTemplateProps,
   GenericObjectType,
   RJSFSchema,
+  ThemePresentation,
   WidgetProps,
 } from '@rjsf/utils';
 import {
@@ -239,7 +240,7 @@ describe('LayoutMultiSchemaField', () => {
   /** Renders the field with a `FieldTemplate` and a selector widget that record the props they were handed, which is
    * how the props this field builds for itself -- rather than receiving through `SchemaField` -- are asserted on
    */
-  function renderRecording(overrideProps: Partial<FieldProps> = {}) {
+  function renderRecording(overrideProps: Partial<FieldProps> = {}, presentation?: ThemePresentation) {
     const recordTemplateProps = vi.fn<(props: FieldTemplateProps) => void>();
     const recordWidgetProps = vi.fn<(props: WidgetProps) => void>();
     function RecordingFieldTemplate(props: FieldTemplateProps) {
@@ -260,6 +261,9 @@ describe('LayoutMultiSchemaField', () => {
           {},
           { FieldErrorTemplate: FakeFieldErrorTemplate, FieldTemplate: RecordingFieldTemplate },
           { SelectWidget: WrappedSelectWidget, RadioWidget: RecordingRadioWidget },
+          undefined,
+          undefined,
+          presentation,
         )}
       />,
     );
@@ -782,6 +786,7 @@ describe('LayoutMultiSchemaField', () => {
   ] satisfies [string, boolean, string[]][])('%s', (_, hidden, expectedVisibleErrors) => {
     const { templateProps } = renderRecording({ errorSchema: NESTED_ERROR_SCHEMA, hideError: hidden });
 
+    // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
     expect(templateProps?.rawErrors).toEqual(hidden ? undefined : ['first error', 'second error']);
     expect(templateProps?.hideError).toBe(hidden);
     expect(getVisibleErrors(templateProps!)).toEqual(expectedVisibleErrors);
@@ -865,6 +870,98 @@ describe('LayoutMultiSchemaField', () => {
       );
     });
   });
+  describe('the plan it builds for itself', () => {
+    test('hands its template and its widget one plan, whose template label names the widget', () => {
+      const { templateProps, widgetProps } = renderRecording();
+
+      expect(templateProps?.presentation).toBeDefined();
+      expect(widgetProps?.presentation).toBe(templateProps?.presentation);
+      // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
+      expect(templateProps?.displayLabel).toBe(true);
+      // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
+      expect(widgetProps?.hideLabel).toBe(true);
+    });
+    test('hands its template the same plan across a render that changes nothing it reads', () => {
+      const recordTemplateProps = vi.fn<(props: FieldTemplateProps) => void>();
+      function RecordingFieldTemplate(props: FieldTemplateProps) {
+        recordTemplateProps(props);
+        return <FakeFieldTemplate {...props} />;
+      }
+      const props = getProps();
+      const registry = getTestRegistry(
+        props.schema,
+        {},
+        { FieldErrorTemplate: FakeFieldErrorTemplate, FieldTemplate: RecordingFieldTemplate },
+        { SelectWidget: WrappedSelectWidget, RadioWidget: WrappedRadioWidget },
+      );
+      const { rerender } = render(<LayoutMultiSchemaField {...props} registry={registry} />);
+      rerender(<LayoutMultiSchemaField {...props} registry={registry} />);
+
+      const plans = recordTemplateProps.mock.calls.map(([templateProps]) => templateProps.presentation);
+      expect(plans.length).toBeGreaterThan(1);
+      expect(plans.at(-1)).toBe(plans[0]);
+    });
+    test('hands its template the same plan across renders when its selector names no type', () => {
+      const recordTemplateProps = vi.fn<(props: FieldTemplateProps) => void>();
+      function RecordingFieldTemplate(props: FieldTemplateProps) {
+        recordTemplateProps(props);
+        return <FakeFieldTemplate {...props} />;
+      }
+      const options: RJSFSchema[] = SIMPLE_ONEOF_SCHEMAS.map((option) => ({
+        ...option,
+        properties: { answer: { default: (option.properties!.answer as RJSFSchema).default } },
+      }));
+      const schema: RJSFSchema = { ...SIMPLE_ONEOF, oneOf: options };
+      const props = getProps({ schema, options });
+      const registry = getTestRegistry(
+        schema,
+        {},
+        { FieldErrorTemplate: FakeFieldErrorTemplate, FieldTemplate: RecordingFieldTemplate },
+        { SelectWidget: WrappedSelectWidget, RadioWidget: WrappedRadioWidget },
+      );
+      const { rerender } = render(<LayoutMultiSchemaField {...props} registry={registry} />);
+      rerender(<LayoutMultiSchemaField {...props} registry={registry} />);
+
+      const plans = recordTemplateProps.mock.calls.map(([templateProps]) => templateProps.presentation);
+      expect(plans.length).toBeGreaterThan(1);
+      expect(plans.at(-1)).toBe(plans[0]);
+    });
+    test('hands its template the same plan across a change of data when its selector names no type', () => {
+      const recordTemplateProps = vi.fn<(props: FieldTemplateProps) => void>();
+      function RecordingFieldTemplate(props: FieldTemplateProps) {
+        recordTemplateProps(props);
+        return <FakeFieldTemplate {...props} />;
+      }
+      const options: RJSFSchema[] = SIMPLE_ONEOF_SCHEMAS.map((option) => ({
+        ...option,
+        properties: { answer: { default: (option.properties!.answer as RJSFSchema).default } },
+      }));
+      const schema: RJSFSchema = { ...SIMPLE_ONEOF, oneOf: options };
+      const props = getProps({ schema, options, formData: { answer: '1' } });
+      const registry = getTestRegistry(
+        schema,
+        {},
+        { FieldErrorTemplate: FakeFieldErrorTemplate, FieldTemplate: RecordingFieldTemplate },
+        { SelectWidget: WrappedSelectWidget, RadioWidget: WrappedRadioWidget },
+      );
+      const { rerender } = render(<LayoutMultiSchemaField {...props} registry={registry} />);
+      rerender(<LayoutMultiSchemaField {...props} formData={{ answer: '1', note: 'x' }} registry={registry} />);
+
+      const plans = recordTemplateProps.mock.calls.map(([templateProps]) => templateProps.presentation);
+      expect(plans.length).toBeGreaterThan(1);
+      expect(plans.at(-1)).toBe(plans[0]);
+    });
+    test('has a widget a theme declares as drawing its label draw it, with the template drawing none', () => {
+      const { templateProps, widgetProps } = renderRecording({}, { widgets: { RadioWidget: { label: 'self' } } });
+
+      // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
+      expect(templateProps?.displayLabel).toBe(false);
+      // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
+      expect(widgetProps?.hideLabel).toBe(false);
+      expect(widgetProps?.presentation?.label.by).toBe('self');
+    });
+  });
+
   // `SchemaField` sets all of these, and this field renders the same `FieldTemplate`, which has no other source for
   // them: whatever it leaves unset is a prop a template is told nothing about for this one field
   describe('the remaining FieldTemplate props', () => {
@@ -898,6 +995,15 @@ describe('LayoutMultiSchemaField', () => {
       expect(screen.getByText('from the uiSchema')).toBeInTheDocument();
       expect(screen.queryByText('from the schema')).not.toBeInTheDocument();
     });
+    test('hands its FieldTemplate no description where ui:label false turns the label off', () => {
+      const { templateProps } = renderRecording({
+        schema: { ...SIMPLE_ONEOF, description: 'from the schema' },
+        uiSchema: { 'ui:label': false },
+      });
+
+      expect(templateProps?.rawDescription).toBe('');
+      expect(screen.queryByText('from the schema')).not.toBeInTheDocument();
+    });
     test('tells its FieldTemplate the field is hidden for a ui:widget of hidden', () => {
       const { templateProps } = renderRecording({ uiSchema: { [UI_WIDGET_KEY]: 'hidden' } });
 
@@ -915,8 +1021,8 @@ describe('LayoutMultiSchemaField', () => {
       expect(templateProps?.label).toBe('Simple (deprecated)');
       expect(templateProps?.hidden).toBe(false);
       expect(templateProps?.disabled).toBe(false);
-      // Only the template's label is decorated, as in `SchemaField`: the widget's label names its own control
-      expect(widgetProps?.label).toBe('Simple');
+      // The widget's label is the plan's, marker included, as in `SchemaField`
+      expect(widgetProps?.label).toBe('Simple (deprecated)');
     });
     // There is no label for the marker to decorate, and a template rendering the decorated one would show a label
     // reading only "(deprecated)" naming nothing

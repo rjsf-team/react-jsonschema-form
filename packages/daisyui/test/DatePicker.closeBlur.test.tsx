@@ -212,9 +212,9 @@ describe.each([
         baseElement: frameDocument.body,
       },
     );
-    await frameUser.click(view.getByRole('button', { expanded: false }));
+    await frameUser.click(view.getByRole('combobox', { expanded: false }));
     await frameUser.click(view.getByRole('button', { name: /May 17th, 2020/ }));
-    await frameUser.click(view.getByRole('button', { expanded: true }));
+    await frameUser.click(view.getByRole('combobox', { expanded: true }));
     expect(view.queryByText('Done')).toBeNull();
     expect(onChange.mock.calls).toEqual([[proposal]]);
   });

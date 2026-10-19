@@ -1,7 +1,10 @@
-import type { WidgetProps } from './types.ts';
-
 /** The subset of props a widget or template needs in order to decide which of its errors to surface */
-export type VisibleErrorsProps = Pick<WidgetProps, 'rawErrors' | 'hideError'>;
+export interface VisibleErrorsProps {
+  /** The error messages, carried whatever `hideError` says */
+  rawErrors?: string[];
+  /** Whether `ui:hideError` hides them */
+  hideError?: boolean;
+}
 
 /** Returns the list of errors that a widget or template should surface in its own UI, which is empty whenever
  * `ui:hideError` is in effect. Components rendering an error state (a red outline, an invalid flag, inline error

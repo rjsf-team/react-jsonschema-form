@@ -1,7 +1,7 @@
 'use client';
 
 import type { FocusEvent, FocusEventHandler, KeyboardEvent, ReactElement } from 'react';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { deepEquals, enumOptionValueLabel } from '@rjsf/utils';
 import { Command as CommandPrimitive } from 'cmdk';
 import { X } from 'lucide-react';
@@ -32,6 +32,8 @@ interface FancyMultiSelectProps {
   autoFocus?: boolean;
   /** ID of the element that describes this select */
   ariaDescribedby?: string;
+  /** Whether the select is invalid, which the combobox input says through `aria-invalid` */
+  ariaInvalid?: boolean;
   /** Visible placeholder text for the search input */
   placeholder?: string;
   /** Whether a selection is required, exposed as `aria-required` on the combobox input */
@@ -65,6 +67,7 @@ export function FancyMultiSelect({
   autoFocus = false,
   disabled = false,
   ariaDescribedby,
+  ariaInvalid,
   placeholder,
   required,
   onFocus,
@@ -111,6 +114,19 @@ export function FancyMultiSelect({
     [selectedItems, onValueChange, disabled],
   );
 
+  // The focus `autoFocus` gives the input as it mounts opens no list, which would cover the fields below before the user
+  // does anything, so the list opens on the user's own focus, click, typing or Down Arrow. React focuses it while
+  // committing the mount, before this effect runs
+  const focusedOnMount = useRef(autoFocus);
+  useEffect(() => {
+    focusedOnMount.current = false;
+  }, []);
+  const openList = useCallback(() => {
+    if (!disabled && !focusedOnMount.current) {
+      setOpen(true);
+    }
+  }, [disabled]);
+
   const handleKeyDown = useCallback(
     (e: KeyboardEvent<HTMLDivElement>) => {
       if (disabled || inputRef.current?.value !== '') {
@@ -122,9 +138,12 @@ export function FancyMultiSelect({
         onValueChange?.(newSelected.map((item) => item.index));
       } else if (e.key === 'Escape') {
         inputRef.current.blur();
+      } else if (e.key === 'ArrowDown') {
+        // The input `autoFocus` focuses as it mounts opens no list, so Down Arrow opens it, as on a closed combobox
+        openList();
       }
     },
-    [selectedItems, onValueChange, disabled],
+    [selectedItems, onValueChange, disabled, openList],
   );
 
   const handleSelect = useCallback(
@@ -141,12 +160,22 @@ export function FancyMultiSelect({
 
   const handleFocus = useCallback(
     (e: FocusEvent<HTMLDivElement>) => {
-      if (!disabled) {
-        setOpen(true);
-      }
+      openList();
       onFocus?.(e);
     },
-    [disabled, onFocus],
+    [openList, onFocus],
+  );
+
+  // The list opens on focus anywhere in the select, a remove button's included, which the input's blur doesn't follow, so
+  // it closes as focus leaves the select
+  const handleBlur = useCallback(
+    (e: FocusEvent<HTMLDivElement>) => {
+      if (!e.currentTarget.contains(e.relatedTarget)) {
+        setOpen(false);
+      }
+      onBlur?.(e);
+    },
+    [onBlur],
   );
 
   function renderItem(item: FancySelectItem) {
@@ -182,9 +211,8 @@ export function FancyMultiSelect({
       label={label}
       onKeyDown={handleKeyDown}
       className={cn('overflow-visible bg-transparent', className)}
-      autoFocus={autoFocus}
       aria-disabled={disabled}
-      onBlur={onBlur}
+      onBlur={handleBlur}
       onFocus={handleFocus}
     >
       <div
@@ -221,13 +249,18 @@ export function FancyMultiSelect({
           <CommandPrimitive.Input
             ref={inputRef}
             value={inputValue}
-            onValueChange={setInputValue}
+            onValueChange={(newValue) => {
+              setInputValue(newValue);
+              openList();
+            }}
             onBlur={() => setOpen(false)}
-            onFocus={() => !disabled && setOpen(true)}
+            onClick={openList}
             placeholder={placeholder}
             className='rtl:mr-2 ltr:ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1'
             disabled={disabled}
+            autoFocus={autoFocus}
             aria-describedby={ariaDescribedby}
+            aria-invalid={ariaInvalid || undefined}
             aria-required={required || undefined}
           />
         </div>
