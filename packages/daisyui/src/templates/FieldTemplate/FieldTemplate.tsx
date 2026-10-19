@@ -9,13 +9,17 @@ import type {
 } from '@rjsf/utils';
 import {
   DEFAULT_BOOLEAN_WIDGET,
-  fieldLabelId,
+  getLabelId,
   getTemplates,
   getUiOptions,
   getWidgetType,
+  templateDrawsDescription,
   templateDrawsLabel,
+  templateLabelFor,
+  templateMarksRequired,
 } from '@rjsf/utils';
 
+import RequiredMarker from '../../RequiredMarker.tsx';
 import { getDaisy } from '../../utils.ts';
 
 const CHECKBOX_ALIAS: WidgetAliasFor<'boolean'> = 'checkbox';
@@ -162,15 +166,17 @@ export default function FieldTemplate<
         style={daisy.style}
       >
         {templateDrawsLabel<T, S, F>(props) && !widgetRendersLabel && !!label && (
-          <label id={fieldLabelId(id)} htmlFor={id} className='label'>
+          <label htmlFor={templateLabelFor<T, S, F>(props)} className='label'>
             <span className='label-text font-medium'>
-              {label}
-              {required && <span className='text-error ml-1'>*</span>}
+              {/* The label's id goes on its text alone, as a group or an option selector is named through it, and the
+                  `*` isn't part of that name; a control its `for` names takes the whole label */}
+              <span id={getLabelId<T, S, F>(props)}>{label}</span>
+              {templateMarksRequired<T, S, F>(props) && <RequiredMarker />}
             </span>
           </label>
         )}
         {children}
-        {!widgetRendersLabel && description ? description : null}
+        {!widgetRendersLabel && templateDrawsDescription<T, S, F>(props) && description ? description : null}
         {errors}
         {help}
       </div>

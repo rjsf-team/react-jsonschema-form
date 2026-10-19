@@ -34,7 +34,6 @@ export default function AltDateWidget<
     autofocus = false,
     options,
     id,
-    name,
     label,
     presentation,
     registry,
@@ -46,7 +45,7 @@ export default function AltDateWidget<
   const { elements, handleChange, handleClear, handleSetNow } = useAltDateWidgetProps(props);
 
   return (
-    <div className='space-y-3' {...getGroupProps({ id, label, name, hideLabel, presentation, role: 'group' })}>
+    <div className='space-y-3' {...getGroupProps({ id, label, hideLabel, presentation, role: 'group' })}>
       <div className='grid grid-cols-3 gap-2'>
         {elements.map((elemProps, i) => {
           const elementLabel = dateElementLabel(elemProps.type, translateString);
@@ -73,6 +72,7 @@ export default function AltDateWidget<
                 onBlur={onBlur}
                 onFocus={onFocus}
                 autofocus={autofocus && i === 0}
+                presentation={presentation}
               />
             </div>
           );
