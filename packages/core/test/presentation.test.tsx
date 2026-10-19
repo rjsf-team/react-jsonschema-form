@@ -6,6 +6,7 @@ import type {
   ObjectFieldTemplateProps,
   RJSFSchema,
   UiSchema,
+  Widget,
   WidgetProps,
 } from '@rjsf/utils';
 import { errorId, fieldLabelId, helpId, optionHelpId, selectedOptionDescriptionId, titleId } from '@rjsf/utils';
@@ -15,7 +16,12 @@ import { generateTemplates, generateTheme, generateWidgets } from '../src/index.
 import { createFormComponent } from './testUtils.tsx';
 
 const { FieldTemplate: CoreFieldTemplate } = generateTemplates();
-const { TextWidget: CoreTextWidget, SelectWidget: CoreSelectWidget } = generateWidgets();
+const {
+  TextWidget: CoreTextWidget,
+  SelectWidget: CoreSelectWidget,
+  CheckboxWidget: CoreCheckboxWidget,
+  FileWidget: CoreFileWidget,
+} = generateWidgets();
 const { ArrayFieldTemplate: CoreArrayFieldTemplate, ObjectFieldTemplate: CoreObjectFieldTemplate } =
   generateTemplates();
 
@@ -997,4 +1003,60 @@ describe('an alt-date field', () => {
 
     expect(screen.getByRole('combobox', { name: 'When, year' })).not.toHaveAttribute('aria-describedby');
   });
+});
+
+describe('the label a field hands its widget', () => {
+  function ArrayWidget({ id }: WidgetProps) {
+    return <div id={id} />;
+  }
+
+  /** Renders `foo` with a `FieldTemplate` and the widget under `widgetKey` recording the label each is handed */
+  function renderLabels(foo: RJSFSchema, widgetKey: string, InnerWidget: Widget, fooUi: UiSchema = {}) {
+    const labels = new Map<'template' | 'widget', string>();
+    function FieldTemplate(templateProps: FieldTemplateProps) {
+      if (templateProps.id === 'root_foo') {
+        labels.set('template', templateProps.label);
+      }
+      return <CoreFieldTemplate {...templateProps} />;
+    }
+    function RecordingWidget(widgetProps: WidgetProps) {
+      labels.set('widget', widgetProps.label);
+      return <InnerWidget {...widgetProps} />;
+    }
+    createFormComponent({
+      schema: { type: 'object', properties: { foo } },
+      uiSchema: { foo: fooUi },
+      templates: { FieldTemplate },
+      widgets: { [widgetKey]: RecordingWidget },
+    });
+    return Object.fromEntries(labels);
+  }
+
+  // An empty `title` falls through to the property name, so the template is handed a label. A widget is handed the
+  // same one, which is how one that names its own control or group can tell the template drew a label for it
+  it.each<[string, RJSFSchema, string, Widget, UiSchema?]>([
+    ['string', { type: 'string' }, 'TextWidget', CoreTextWidget],
+    ['number', { type: 'number' }, 'TextWidget', CoreTextWidget],
+    ['boolean', { type: 'boolean' }, 'CheckboxWidget', CoreCheckboxWidget],
+    [
+      'multi-select array',
+      { type: 'array', items: { enum: ['a', 'b'] }, uniqueItems: true },
+      'SelectWidget',
+      CoreSelectWidget,
+    ],
+    ['files array', { type: 'array', items: { type: 'string', format: 'data-url' } }, 'FileWidget', CoreFileWidget],
+    [
+      'custom-widget array',
+      { type: 'array', items: { type: 'string' } },
+      'ArrayWidget',
+      ArrayWidget,
+      { 'ui:widget': 'ArrayWidget' },
+    ],
+  ])(
+    "hands a %s field's widget the property name its template shows for an empty title",
+    (_, foo, widgetKey, InnerWidget, fooUi) => {
+      const labels = renderLabels({ ...foo, title: '' }, widgetKey, InnerWidget, fooUi);
+      expect(labels).toEqual({ template: 'foo', widget: 'foo' });
+    },
+  );
 });
