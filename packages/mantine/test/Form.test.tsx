@@ -1,7 +1,7 @@
 import { MantineProvider, Switch } from '@mantine/core';
 import { getTestRegistry } from '@rjsf/core/testing';
 import { formTests, themeTests } from '@rjsf/snapshot-tests';
-import type { RJSFSchema, WidgetProps } from '@rjsf/utils';
+import type { RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
@@ -222,6 +222,78 @@ describe('mantine FieldTemplate', () => {
     expect(container.querySelector('#root_r__label')).not.toHaveAttribute('for');
     expect(screen.getByRole('radiogroup')).toHaveAccessibleName('Rate');
     expect(screen.getAllByRole('radio')[0]).toHaveAccessibleDescription('How good');
+  });
+});
+
+describe('mantine widgets are named by their label with the Deprecated marker', () => {
+  const widgets: [string, RJSFSchema, UiSchema, string][] = [
+    ['text input', { type: 'string' }, {}, 'textbox'],
+    ['textarea', { type: 'string' }, { 'ui:widget': 'textarea' }, 'textbox'],
+    ['number input', { type: 'number' }, {}, 'textbox'],
+    ['slider', { type: 'number' }, { 'ui:widget': 'range' }, 'slider'],
+    ['checkbox', { type: 'boolean' }, {}, 'checkbox'],
+    ['select', { type: 'string', enum: ['a', 'b'] }, {}, 'combobox'],
+  ];
+
+  test.each(widgets)('names a deprecated %s by its label with the Deprecated marker', (_, x, ui, role) => {
+    render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { x: { ...x, title: 'X', deprecated: true } } }}
+        uiSchema={{ x: ui }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole(role, { name: 'X (deprecated)' })).toHaveAttribute('id', 'root_x');
+  });
+
+  // The element that takes the group's role carries no id, so only its name is checked
+  test.each<[string, RJSFSchema, string]>([
+    ['radio', { type: 'string', enum: ['a', 'b'] }, 'radiogroup'],
+    ['checkboxes', { type: 'array', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true }, 'group'],
+  ])('names a deprecated %s group by its label with the Deprecated marker', (widget, x, role) => {
+    render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { x: { ...x, title: 'X', deprecated: true } } }}
+        uiSchema={{ x: { 'ui:widget': widget } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole(role, { name: 'X (deprecated)' })).toBeInTheDocument();
+  });
+});
+
+describe("mantine marks a deprecated field's label, as core does", () => {
+  test('names an untitled deprecated property by its key with the Deprecated marker', () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { foo: { type: 'string', deprecated: true } } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('textbox', { name: 'foo (deprecated)' })).toHaveAttribute('id', 'root_foo');
+    expect(container.innerHTML).not.toContain('(deprecated) (deprecated)');
+  });
+
+  test("draws a deprecated object's and array's heading with the Deprecated marker", () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          properties: {
+            obj: { type: 'object', title: 'Obj', deprecated: true, properties: { a: { type: 'string' } } },
+            list: { type: 'array', title: 'List', deprecated: true, items: { type: 'string' } },
+          },
+        }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('heading', { name: 'Obj (deprecated)' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'List (deprecated)' })).toBeInTheDocument();
+    expect(container.innerHTML).not.toContain('(deprecated) (deprecated)');
   });
 });
 

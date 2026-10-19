@@ -534,6 +534,18 @@ describe("chakra-ui widgets are named by their label and carry their field's id 
     expectReferencesResolve(container);
   });
 
+  test.each(widgets)('names a deprecated %s by its label with the Deprecated marker', (_, x, ui, role) => {
+    render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { x: { ...x, title: 'X', deprecated: true } } }}
+        uiSchema={{ x: ui }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole(role, { name: 'X (deprecated)' })).toHaveAttribute('id', 'root_x');
+  });
+
   test.each(widgets)(
     'moves focus to a %s with errors when focusOnFirstError is set',
     async (_, x, ui, _role, focusedId) => {
@@ -633,6 +645,39 @@ describe("chakra-ui widgets are named by their label and carry their field's id 
     );
 
     expect(screen.getByRole('textbox', { name: 'foo Key' })).toHaveAttribute('id', 'root_foo-key');
+  });
+});
+
+describe("chakra-ui marks a deprecated field's label, as core does", () => {
+  test('names an untitled deprecated property by its key with the Deprecated marker', () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { foo: { type: 'string', deprecated: true } } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('textbox', { name: 'foo (deprecated)' })).toHaveAttribute('id', 'root_foo');
+    expect(container.innerHTML).not.toContain('(deprecated) (deprecated)');
+  });
+
+  test("draws a deprecated object's and array's heading with the Deprecated marker", () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          properties: {
+            obj: { type: 'object', title: 'Obj', deprecated: true, properties: { a: { type: 'string' } } },
+            list: { type: 'array', title: 'List', deprecated: true, items: { type: 'string' } },
+          },
+        }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('heading', { name: 'Obj (deprecated)' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'List (deprecated)' })).toBeInTheDocument();
+    expect(container.innerHTML).not.toContain('(deprecated) (deprecated)');
   });
 });
 
