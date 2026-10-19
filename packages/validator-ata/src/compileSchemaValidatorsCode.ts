@@ -25,10 +25,11 @@ function declaredId(schema: object) {
  * Extra schemas without an `$id` are left out with a `console.warn`, as ata requires one.
  * A few options cannot be carried into a standalone module: `extenderFn` and the
  * `ataOptionsOverrides` keys `coerceTypes`, `removeAdditional` and `keywords`. Those are left
- * out with a `console.warn`, logged once through `logOnce()`, since the module and the runtime validator may
- * then disagree in either direction. The module also never fills in `default` values, so
- * where the runtime validator would fill a missing required field from its default, the module
- * rejects it. `suppressDuplicateFiltering` is given to `createPrecompiledValidator()` instead.
+ * out with a `console.warn`, logged once through `logOnce()`, since the module and the runtime
+ * validator may then disagree in either direction. The module also never fills in `default`
+ * values, so where the runtime validator would fill a missing required field from its default,
+ * the module rejects it. `suppressDuplicateFiltering` is given to `createPrecompiledValidator()`
+ * instead.
  *
  * @param schema - The schema to compile
  * @param [options={}] - The `CompileValidatorOptionsType` to compile with: the options used to build the validator, plus
