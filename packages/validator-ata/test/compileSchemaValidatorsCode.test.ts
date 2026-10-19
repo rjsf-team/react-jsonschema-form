@@ -139,40 +139,40 @@ describe('compileSchemaValidatorsCode', () => {
     expect(loose.email({ email: 'nope' })).toBe(true);
   });
 
-  test('warns about options the generated module cannot carry, and still compiles', () => {
+  test('warns once about options the generated module cannot carry, and still compiles', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     try {
-      const code = compileSchemaValidatorsCode(schema, {
+      const options = {
         ataOptionsOverrides: { coerceTypes: true, removeAdditional: true },
-        additionalMetaSchemas: [{ $id: 'extra' }],
-        extenderFn: (v) => v,
-      });
+        additionalMetaSchemas: [{ type: 'string' }],
+        extenderFn: (v: any) => v,
+      };
+      const code = compileSchemaValidatorsCode(schema, options);
       expect(typeof loadModule(code).root).toBe('function');
       expect(warn).toHaveBeenCalledTimes(1);
       expect(warn.mock.calls[0][0]).toMatch(
-        /extenderFn, additionalMetaSchemas, ataOptionsOverrides\.coerceTypes, ataOptionsOverrides\.removeAdditional cannot be carried/,
+        /extenderFn, extra schemas without an \$id, ataOptionsOverrides\.coerceTypes, ataOptionsOverrides\.removeAdditional cannot be carried into a precompiled validator and are ignored; the precompiled and runtime validators may disagree/,
       );
+
+      // Compiling again with the same options, as a server compiling per request does, stays quiet.
+      warn.mockClear();
+      compileSchemaValidatorsCode(schema, options);
+      expect(warn).not.toHaveBeenCalled();
+
+      compileSchemaValidatorsCode(schema, { ataOptionsOverrides: { keywords: { even: () => true } } });
+      expect(warn.mock.calls[0][0]).toMatch(/ataOptionsOverrides\.keywords cannot be carried .* and is ignored/);
 
       warn.mockClear();
-      compileSchemaValidatorsCode(schema, {
-        ataOptionsOverrides: { keywords: { even: () => true }, schemas: [{ $id: 'extra' }] },
-      });
+      compileSchemaValidatorsCode(schema, { suppressDuplicateFiltering: 'all' });
       expect(warn.mock.calls[0][0]).toMatch(
-        /ataOptionsOverrides\.keywords, ataOptionsOverrides\.schemas cannot be carried into a precompiled validator and are ignored/,
+        /suppressDuplicateFiltering .* pass it to createPrecompiledValidator\(\) instead/,
       );
 
-      warn.mockClear();
-      compileSchemaValidatorsCode(schema, { ataOptionsOverrides: { removeAdditional: true } });
-      expect(warn.mock.calls[0][0]).toMatch(
-        /ataOptionsOverrides\.removeAdditional cannot be carried .* and is ignored/,
-      );
-
-      // Options that only restate defaults, or do not change answers, compile without a warning.
+      // Options that only restate defaults compile without a warning.
       warn.mockClear();
       compileSchemaValidatorsCode(schema, {
         ataOptionsOverrides: {
           verbose: true,
-          useDefaults: true,
           abortEarly: false,
           coerceTypes: undefined,
           logger: false,
@@ -185,6 +185,53 @@ describe('compileSchemaValidatorsCode', () => {
     } finally {
       warn.mockRestore();
     }
+  });
+
+  test('compiles extra schemas with an $id into the module, so a custom meta-schema applies', () => {
+    // A meta-schema with no validation vocabulary turns off `minimum` and `type`, so the
+    // runtime validator accepts { n: 1 }. The module must agree, which needs the meta-schema.
+    const meta = {
+      $id: 'https://example.com/meta',
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $vocabulary: {
+        'https://json-schema.org/draft/2020-12/vocab/core': true,
+        'https://json-schema.org/draft/2020-12/vocab/applicator': true,
+      },
+    };
+    const metaSchema: RJSFSchema = {
+      $id: 'loose',
+      $schema: 'https://example.com/meta',
+      type: 'object',
+      properties: { n: { type: 'number', minimum: 5 } },
+    };
+    const { $id: _id, ...unnamed } = meta;
+    const fromMeta = loadModule(compileSchemaValidatorsCode(metaSchema, { additionalMetaSchemas: [meta] }));
+    const fromRecord = loadModule(
+      compileSchemaValidatorsCode(metaSchema, {
+        ataOptionsOverrides: { schemas: { 'https://example.com/meta': unnamed } },
+      }),
+    );
+    const fromList = loadModule(compileSchemaValidatorsCode(metaSchema, { ataOptionsOverrides: { schemas: [meta] } }));
+    const without = loadModule(compileSchemaValidatorsCode(metaSchema));
+    for (const fns of [fromMeta, fromRecord, fromList]) {
+      expect(Object.keys(fns)).toEqual(['loose']);
+      expect(fns.loose({ n: 1 })).toBe(true);
+    }
+    expect(without.loose({ n: 1 })).toBe(false);
+  });
+
+  test('does not fill in defaults, unlike the runtime validator', () => {
+    // Documented difference: a missing required field with a default is rejected here,
+    // where the runtime validator fills it in first and accepts.
+    const defaultsSchema: RJSFSchema = {
+      $id: 'defaults',
+      type: 'object',
+      properties: { a: { type: 'string', default: 'hi' } },
+      required: ['a'],
+    };
+    const fns = loadModule(compileSchemaValidatorsCode(defaultsSchema));
+    expect(fns.defaults({})).toBe(false);
+    expect(fns.defaults({ a: 'hi' })).toBe(true);
   });
 
   test('reports per-field errors for schema-valued additionalProperties', () => {

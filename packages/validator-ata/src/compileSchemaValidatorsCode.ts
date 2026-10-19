@@ -5,6 +5,19 @@ import { Validator } from 'ata-validator';
 import { ATA_CONFIG, COLOR_FORMAT_REGEX, DATA_URL_FORMAT_REGEX } from './createAtaInstance.ts';
 import type { CustomValidatorOptionsType } from './types.ts';
 
+const warned = new Set<string>();
+
+/** Logs each distinct warning once per process, so compiling on every request does not
+ * repeat it.
+ */
+function warnOnce(message: string) {
+  if (!warned.has(message)) {
+    warned.add(message);
+    // oxlint-disable-next-line no-console
+    console.warn(message);
+  }
+}
+
 /** Compiles a schema into a precompiled validator module. ata's
  * `bundleStandalone` emits `module.exports = [fn, ...]`, one validator per
  * schema in order, where each `fn(data)` returns `{ valid, errors }`. This wraps
@@ -13,12 +26,14 @@ import type { CustomValidatorOptionsType } from './types.ts';
  * the schemas so the precompiled validator can look each one up.
  *
  * `customFormats` (as RegExps or pattern strings) and `ataOptionsOverrides` are passed to
- * ata, so the module validates as the runtime validator with the same options does. A few
- * options cannot be carried into a standalone module: `extenderFn`, `additionalMetaSchemas`,
- * and the `ataOptionsOverrides` keys `coerceTypes`, `removeAdditional`, `keywords` and
- * `schemas`. Those are left out with a `console.warn`, since the module may then reject
- * data the runtime validator accepts. `suppressDuplicateFiltering` is given to
- * `createPrecompiledValidator()` instead.
+ * ata. `additionalMetaSchemas` and `ataOptionsOverrides.schemas` that have an `$id` are
+ * compiled into the module, so a custom meta-schema named in `$schema` applies there too.
+ * A few options cannot be carried into a standalone module: `extenderFn`, extra schemas
+ * without an `$id`, and the `ataOptionsOverrides` keys `coerceTypes`, `removeAdditional` and `keywords`. Those are left
+ * out with a `console.warn`, once per process, since the module and the runtime validator may
+ * then disagree in either direction. The module also never fills in `default` values, so
+ * where the runtime validator would fill a missing required field from its default, the module
+ * rejects it. `suppressDuplicateFiltering` is given to `createPrecompiledValidator()` instead.
  *
  * @param schema - The schema to compile
  * @param [options={}] - The `CustomValidatorOptionsType` used to build the validator
@@ -31,29 +46,41 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
   const keys = Object.keys(schemaMaps);
   const schemas = Object.values(schemaMaps);
 
-  const { customFormats, additionalMetaSchemas, extenderFn, ataOptionsOverrides = {} } = options;
+  const { customFormats, additionalMetaSchemas = [], extenderFn, ataOptionsOverrides = {} } = options;
   // What the module cannot carry is left out. `engine` only picks how the runtime validator
   // answers, never what it answers, and a standalone module is generated code by definition.
   const {
     coerceTypes,
     removeAdditional,
     keywords,
-    schemas: extraSchemas,
+    schemas: extraSchemas = {},
     engine: _engine,
     ...carried
   } = ataOptionsOverrides;
+  // Extra schemas with an `$id` go into the bundle after the form's own schemas, so a custom
+  // meta-schema or a `$ref` between them resolves there too. They get no entry in the exported map.
+  const extras = [
+    ...additionalMetaSchemas,
+    ...(Array.isArray(extraSchemas)
+      ? extraSchemas
+      : Object.entries(extraSchemas).map(([id, extra]) => ({ $id: id, ...extra }))),
+  ];
+  const withId = extras.filter((extra) => typeof (extra as { $id?: unknown }).$id === 'string');
   const dropped = [
     ...(extenderFn ? ['extenderFn'] : []),
-    ...(additionalMetaSchemas?.length ? ['additionalMetaSchemas'] : []),
+    ...(withId.length < extras.length ? ['extra schemas without an $id'] : []),
     ...(coerceTypes ? ['ataOptionsOverrides.coerceTypes'] : []),
     ...(removeAdditional ? ['ataOptionsOverrides.removeAdditional'] : []),
     ...(keywords && Object.keys(keywords).length ? ['ataOptionsOverrides.keywords'] : []),
-    ...(extraSchemas && Object.keys(extraSchemas).length ? ['ataOptionsOverrides.schemas'] : []),
   ];
   if (dropped.length > 0) {
-    // oxlint-disable-next-line no-console
-    console.warn(
-      `@rjsf/validator-ata: ${dropped.join(', ')} cannot be carried into a precompiled validator and ${dropped.length === 1 ? 'is' : 'are'} ignored; the precompiled validator may reject data the runtime validator accepts`,
+    warnOnce(
+      `@rjsf/validator-ata: ${dropped.join(', ')} cannot be carried into a precompiled validator and ${dropped.length === 1 ? 'is' : 'are'} ignored; the precompiled and runtime validators may disagree`,
+    );
+  }
+  if (options.suppressDuplicateFiltering !== undefined) {
+    warnOnce(
+      '@rjsf/validator-ata: suppressDuplicateFiltering has no effect at compile time; pass it to createPrecompiledValidator() instead',
     );
   }
 
@@ -90,7 +117,7 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
     formats[name] = new Function('value', `return ${re.toString()}.test(value)`) as (value: string) => boolean;
   }
 
-  const bundle = Validator.bundleStandalone(schemas, {
+  const bundle = Validator.bundleStandalone([...schemas, ...withId], {
     ...ATA_CONFIG,
     ...carried,
     format: 'cjs',

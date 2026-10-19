@@ -254,8 +254,10 @@ const validator = createPrecompiledValidator(precompiledValidatorFns as Validato
 Things to know:
 
 - `customFormats` and `ataOptionsOverrides` apply at compile time. Custom formats must be a `RegExp` or a pattern string: a function cannot be written into the generated file and is rejected.
-- `extenderFn`, `additionalMetaSchemas` and the `ataOptionsOverrides` keys `coerceTypes`, `removeAdditional`, `keywords` and `schemas` cannot be carried into the generated file. They are ignored with a warning, and the file may then reject data the runtime validator accepts.
-- Pass `suppressDuplicateFiltering` to `createPrecompiledValidator()`.
+- `additionalMetaSchemas` and `ataOptionsOverrides.schemas` that have an `$id` are compiled into the generated file, so a custom meta-schema named in `$schema` applies there too.
+- `extenderFn`, extra schemas without an `$id` and the `ataOptionsOverrides` keys `coerceTypes`, `removeAdditional` and `keywords` cannot be carried into the generated file. They are ignored with a warning (once per process), and the generated file and the runtime validator may then disagree, in either direction: a dropped keyword lets data through that the runtime validator rejects, and a dropped `coerceTypes` rejects data it accepts.
+- The generated file never fills in `default` values. The runtime validator does (`useDefaults` is on by default in ata), so for a required field that is missing but has a `default`, the runtime validator fills it in and accepts, while the generated file rejects. The form fills in defaults itself (`getDefaultFormState`), so this shows only for data that does not come from the form.
+- Pass `suppressDuplicateFiltering` to `createPrecompiledValidator()`. Passing it to the compile step has no effect and logs a warning.
 - The generated file imports nothing, so `ata-validator` is not in your bundle, as long as the app imports only `createPrecompiledValidator` (and types). Importing the default export, `customizeValidator` or `ATAValidator` brings the runtime validator back.
 - The generated file is CommonJS, like the one from `@rjsf/validator-ajv8`. Webpack, Rollup and production Vite builds handle it. Vite's dev server does not convert CommonJS files inside your source folder.
 - The file has no type declarations. With TypeScript, cast it to `ValidatorFunctions` as above and add `declare module '*.cjs';` to a `.d.ts` file, or enable `allowJs`.
