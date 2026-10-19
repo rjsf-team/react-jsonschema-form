@@ -256,6 +256,24 @@ describe('compileSchemaValidatorsCode', () => {
     );
   });
 
+  test('compiles a json-schema.org meta-schema that ata does not ship, as the runtime validator uses it', () => {
+    // A future draft is still just an extra schema to ata, so the module must carry it to agree.
+    const next = {
+      $id: 'https://json-schema.org/draft/next/schema',
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $vocabulary: { 'https://json-schema.org/draft/2020-12/vocab/applicator': true },
+    };
+    const loose: RJSFSchema = {
+      $id: 'loose',
+      $schema: 'https://json-schema.org/draft/next/schema',
+      type: 'object',
+      properties: { n: { type: 'number', minimum: 5 } },
+    };
+    expect(loadModule(compileSchemaValidatorsCode(loose, { additionalMetaSchemas: [next] })).loose({ n: 1 })).toBe(
+      true,
+    );
+  });
+
   test('does not fill in defaults, unlike the runtime validator', () => {
     // Documented difference: a missing required field with a default is rejected here,
     // where the runtime validator fills it in first and accepts.

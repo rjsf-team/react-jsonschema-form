@@ -18,6 +18,12 @@ function warnOnce(message: string) {
   }
 }
 
+/** The meta-schemas ata ships, in the forms it resolves them by: http or https, with or without
+ * a trailing `#`. Any other json-schema.org `$id`, such as a draft ata does not know yet, is
+ * compiled into the module like a custom meta-schema. */
+const SHIPPED_META_SCHEMA =
+  /^https?:\/\/json-schema\.org\/(?:draft-0[467]\/schema|draft\/2019-09\/(?:schema|meta\/(?:core|applicator|validation|meta-data|format|content))|draft\/2020-12\/(?:schema|meta\/(?:core|applicator|validation|meta-data|format-annotation|content|unevaluated)))#?$/;
+
 /** The `$id` ata registers a schema under: a non-empty string that is not just a fragment. */
 function declaredId(schema: object) {
   const id = (schema as { $id?: unknown }).$id;
@@ -34,7 +40,7 @@ function declaredId(schema: object) {
  * `customFormats` (as RegExps or pattern strings) and `ataOptionsOverrides` are passed to
  * ata. `additionalMetaSchemas` and `ataOptionsOverrides.schemas` that have an `$id` are
  * compiled into the module, so a custom meta-schema named in `$schema` applies there too;
- * the official json-schema.org meta-schemas are left out, since ata already knows them.
+ * the official meta-schemas ata ships (draft-04 to 2020-12) are left out, since ata already knows them.
  * Extra schemas without an `$id` are left out with a `console.warn`, as ata requires one.
  * A few options cannot be carried into a standalone module: `extenderFn` and the
  * `ataOptionsOverrides` keys `coerceTypes`, `removeAdditional` and `keywords`. Those are left
@@ -79,7 +85,7 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
   ];
   const withId = extras.filter((extra) => declaredId(extra) !== undefined);
   // ata already knows the official meta-schemas, so bundling one only adds dead code (about 90 KB for draft-07's).
-  const bundled = withId.filter((extra) => !/^https?:\/\/json-schema\.org\//.test((extra as { $id: string }).$id));
+  const bundled = withId.filter((extra) => !SHIPPED_META_SCHEMA.test((extra as { $id: string }).$id));
   if (withId.length < extras.length) {
     warnOnce(
       '@rjsf/validator-ata: additionalMetaSchemas and ataOptionsOverrides.schemas entries without an $id are ignored; ata requires an $id, so customizeValidator() throws for them',
