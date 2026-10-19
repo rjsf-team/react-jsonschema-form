@@ -3,6 +3,8 @@ import type { FormContextType, TitleFieldProps, RJSFSchema, StrictRJSFSchema } f
 import { Col, Divider, Row, ConfigProvider } from 'antd';
 import classNames from 'classnames';
 
+import stripTrailingColon from '../stripTrailingColon.ts';
+
 /** The `TitleField` is the template to use to render the title of a field
  *
  * @param props - The `TitleFieldProps` for this component
@@ -17,7 +19,7 @@ export default function TitleField<
 
   let labelChildren = title;
   if (colon && typeof title === 'string' && title.trim() !== '') {
-    labelChildren = title.replace(/[：:]\s*$/, '');
+    labelChildren = stripTrailingColon(title);
   }
 
   const { getPrefixCls } = useContext(ConfigProvider.ConfigContext);
@@ -26,11 +28,12 @@ export default function TitleField<
     [`${prefixCls}-item-required`]: required,
     [`${prefixCls}-item-no-colon`]: !colon,
   });
-  // The heading carries its `titleId()`, which the control a container's heading names, such as its option selector,
-  // points `aria-labelledby` at
+  // The heading's text carries its `titleId()`, which the control a container's heading names, such as its option
+  // selector, points `aria-labelledby` at. It sits inside the label, whose required class draws antd's `*` as generated
+  // content, which a browser counts in the name of whatever the label's id names
   let heading = title ? (
-    <label id={id} className={labelClassName} title={typeof title === 'string' ? title : ''}>
-      {labelChildren}
+    <label className={labelClassName} title={typeof title === 'string' ? title : ''}>
+      <span id={id}>{labelChildren}</span>
     </label>
   ) : null;
   if (optionalDataControl) {

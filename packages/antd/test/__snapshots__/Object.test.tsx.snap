@@ -65,10 +65,13 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                       >
                                         <label
                                           class=""
-                                          id="root_person__title"
                                           title="person"
                                         >
-                                          person
+                                          <span
+                                            id="root_person__title"
+                                          >
+                                            person
+                                          </span>
                                         </label>
                                         <div
                                           class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -91,14 +94,17 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                             >
                                               <div
                                                 class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                                id="root_person_name__label"
                                               >
                                                 <label
                                                   class=""
                                                   for="root_person_name"
-                                                  title="name"
                                                 >
-                                                  name
+                                                  <span
+                                                    id="root_person_name__label"
+                                                    title="name"
+                                                  >
+                                                    name
+                                                  </span>
                                                 </label>
                                               </div>
                                               <div
@@ -115,7 +121,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                                       style="width: 100%;"
                                                     >
                                                       <input
-                                                        aria-describedby="root_person_name__error root_person_name__description root_person_name__help"
                                                         class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                         id="root_person_name"
                                                         name="root[person][name]"
@@ -169,10 +174,13 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                                         >
                                                           <label
                                                             class=""
-                                                            id="root_person_address__title"
                                                             title="address"
                                                           >
-                                                            address
+                                                            <span
+                                                              id="root_person_address__title"
+                                                            >
+                                                              address
+                                                            </span>
                                                           </label>
                                                           <div
                                                             class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -195,14 +203,17 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                                               >
                                                                 <div
                                                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                                                  id="root_person_address_street__label"
                                                                 >
                                                                   <label
                                                                     class=""
                                                                     for="root_person_address_street"
-                                                                    title="street"
                                                                   >
-                                                                    street
+                                                                    <span
+                                                                      id="root_person_address_street__label"
+                                                                      title="street"
+                                                                    >
+                                                                      street
+                                                                    </span>
                                                                   </label>
                                                                 </div>
                                                                 <div
@@ -219,7 +230,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                                                         style="width: 100%;"
                                                                       >
                                                                         <input
-                                                                          aria-describedby="root_person_address_street__error root_person_address_street__description root_person_address_street__help"
                                                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                                           id="root_person_address_street"
                                                                           name="root[person][address][street]"
@@ -253,14 +263,17 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                                               >
                                                                 <div
                                                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                                                  id="root_person_address_city__label"
                                                                 >
                                                                   <label
                                                                     class=""
                                                                     for="root_person_address_city"
-                                                                    title="city"
                                                                   >
-                                                                    city
+                                                                    <span
+                                                                      id="root_person_address_city__label"
+                                                                      title="city"
+                                                                    >
+                                                                      city
+                                                                    </span>
                                                                   </label>
                                                                 </div>
                                                                 <div
@@ -277,7 +290,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                                                         style="width: 100%;"
                                                                       >
                                                                         <input
-                                                                          aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                                                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                                           id="root_person_address_city"
                                                                           name="root[person][address][city]"
@@ -311,14 +323,17 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                                               >
                                                                 <div
                                                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                                                  id="root_person_address_country__label"
                                                                 >
                                                                   <label
                                                                     class=""
                                                                     for="root_person_address_country"
-                                                                    title="country"
                                                                   >
-                                                                    country
+                                                                    <span
+                                                                      id="root_person_address_country__label"
+                                                                      title="country"
+                                                                    >
+                                                                      country
+                                                                    </span>
                                                                   </label>
                                                                 </div>
                                                                 <div
@@ -335,7 +350,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                                                         style="width: 100%;"
                                                                       >
                                                                         <input
-                                                                          aria-describedby="root_person_address_country__error root_person_address_country__description root_person_address_country__help"
                                                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                                           id="root_person_address_country"
                                                                           name="root[person][address][country]"
@@ -437,14 +451,17 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                              id="root_name__label"
                             >
                               <label
                                 class=""
                                 for="root_name"
-                                title="name"
                               >
-                                name
+                                <span
+                                  id="root_name__label"
+                                  title="name"
+                                >
+                                  name
+                                </span>
                               </label>
                             </div>
                             <div
@@ -461,7 +478,6 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                                     style="width: 100%;"
                                   >
                                     <input
-                                      aria-describedby="root_name__error root_name__description root_name__help"
                                       class="ant-input css-dev-only-do-not-override-oc1rc0"
                                       id="root_name"
                                       name="root[name]"
@@ -558,14 +574,17 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                  id="root_customField__label"
                                 >
                                   <label
                                     class=""
                                     for="root_customField"
-                                    title="customField"
                                   >
-                                    customField
+                                    <span
+                                      id="root_customField__label"
+                                      title="customField"
+                                    >
+                                      customField
+                                    </span>
                                   </label>
                                 </div>
                                 <div
@@ -582,7 +601,6 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                                         style="width: 100%;"
                                       >
                                         <input
-                                          aria-describedby="root_customField__error root_customField__description root_customField__help"
                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                           id="root_customField"
                                           name="root[customField]"
@@ -752,14 +770,17 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                              id="root_name__label"
                             >
                               <label
                                 class=""
                                 for="root_name"
-                                title="name"
                               >
-                                name
+                                <span
+                                  id="root_name__label"
+                                  title="name"
+                                >
+                                  name
+                                </span>
                               </label>
                             </div>
                             <div
@@ -776,7 +797,6 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                                     style="width: 100%;"
                                   >
                                     <input
-                                      aria-describedby="root_name__error root_name__description root_name__help"
                                       class="ant-input css-dev-only-do-not-override-oc1rc0"
                                       id="root_name"
                                       name="root[name]"
@@ -810,14 +830,17 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                              id="root_age__label"
                             >
                               <label
                                 class=""
                                 for="root_age"
-                                title="age"
                               >
-                                age
+                                <span
+                                  id="root_age__label"
+                                  title="age"
+                                >
+                                  age
+                                </span>
                               </label>
                             </div>
                             <div
@@ -834,7 +857,6 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                                     style="width: 100%;"
                                   >
                                     <input
-                                      aria-describedby="root_age__error root_age__description root_age__help"
                                       aria-valuenow="30"
                                       autocomplete="off"
                                       class="ant-input-number-input"
@@ -999,10 +1021,13 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                                       >
                                         <label
                                           class=""
-                                          id="root_tags__title"
                                           title="tags"
                                         >
-                                          tags
+                                          <span
+                                            id="root_tags__title"
+                                          >
+                                            tags
+                                          </span>
                                         </label>
                                         <div
                                           class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -1033,14 +1058,17 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                                                 >
                                                   <div
                                                     class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                                    id="root_tags_0__label"
                                                   >
                                                     <label
                                                       class="ant-form-item-required"
                                                       for="root_tags_0"
-                                                      title="tags-1"
                                                     >
-                                                      tags-1
+                                                      <span
+                                                        id="root_tags_0__label"
+                                                        title="tags-1"
+                                                      >
+                                                        tags-1
+                                                      </span>
                                                     </label>
                                                   </div>
                                                   <div
@@ -1057,7 +1085,6 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                                                           style="width: 100%;"
                                                         >
                                                           <input
-                                                            aria-describedby="root_tags_0__error root_tags_0__description root_tags_0__help"
                                                             class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                             id="root_tags_0"
                                                             name="root[tags][0]"
@@ -1201,14 +1228,17 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                                                 >
                                                   <div
                                                     class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                                    id="root_tags_1__label"
                                                   >
                                                     <label
                                                       class="ant-form-item-required"
                                                       for="root_tags_1"
-                                                      title="tags-2"
                                                     >
-                                                      tags-2
+                                                      <span
+                                                        id="root_tags_1__label"
+                                                        title="tags-2"
+                                                      >
+                                                        tags-2
+                                                      </span>
                                                     </label>
                                                   </div>
                                                   <div
@@ -1225,7 +1255,6 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                                                           style="width: 100%;"
                                                         >
                                                           <input
-                                                            aria-describedby="root_tags_1__error root_tags_1__description root_tags_1__help"
                                                             class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                             id="root_tags_1"
                                                             name="root[tags][1]"
@@ -1474,14 +1503,17 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                              id="root_firstName__label"
                             >
                               <label
                                 class=""
                                 for="root_firstName"
-                                title="firstName"
                               >
-                                firstName
+                                <span
+                                  id="root_firstName__label"
+                                  title="firstName"
+                                >
+                                  firstName
+                                </span>
                               </label>
                             </div>
                             <div
@@ -1498,7 +1530,6 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                                     style="width: 100%;"
                                   >
                                     <input
-                                      aria-describedby="root_firstName__error root_firstName__description root_firstName__help"
                                       class="ant-input css-dev-only-do-not-override-oc1rc0"
                                       id="root_firstName"
                                       name="root[firstName]"
@@ -1532,14 +1563,17 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                              id="root_lastName__label"
                             >
                               <label
                                 class=""
                                 for="root_lastName"
-                                title="lastName"
                               >
-                                lastName
+                                <span
+                                  id="root_lastName__label"
+                                  title="lastName"
+                                >
+                                  lastName
+                                </span>
                               </label>
                             </div>
                             <div
@@ -1556,7 +1590,6 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                                     style="width: 100%;"
                                   >
                                     <input
-                                      aria-describedby="root_lastName__error root_lastName__description root_lastName__help"
                                       class="ant-input css-dev-only-do-not-override-oc1rc0"
                                       id="root_lastName"
                                       name="root[lastName]"
@@ -1590,14 +1623,17 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                              id="root_age__label"
                             >
                               <label
                                 class=""
                                 for="root_age"
-                                title="age"
                               >
-                                age
+                                <span
+                                  id="root_age__label"
+                                  title="age"
+                                >
+                                  age
+                                </span>
                               </label>
                             </div>
                             <div
@@ -1614,7 +1650,6 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                                     style="width: 100%;"
                                   >
                                     <input
-                                      aria-describedby="root_age__error root_age__description root_age__help"
                                       autocomplete="off"
                                       class="ant-input-number-input"
                                       id="root_age"
@@ -1778,10 +1813,13 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                       >
                                         <label
                                           class=""
-                                          id="root_person__title"
                                           title="person"
                                         >
-                                          person
+                                          <span
+                                            id="root_person__title"
+                                          >
+                                            person
+                                          </span>
                                         </label>
                                         <div
                                           class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -1804,14 +1842,17 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                             >
                                               <div
                                                 class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                                id="root_person_name__label"
                                               >
                                                 <label
                                                   class=""
                                                   for="root_person_name"
-                                                  title="name"
                                                 >
-                                                  name
+                                                  <span
+                                                    id="root_person_name__label"
+                                                    title="name"
+                                                  >
+                                                    name
+                                                  </span>
                                                 </label>
                                               </div>
                                               <div
@@ -1828,7 +1869,6 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                                       style="width: 100%;"
                                                     >
                                                       <input
-                                                        aria-describedby="root_person_name__error root_person_name__description root_person_name__help"
                                                         class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                         id="root_person_name"
                                                         name="root.person.name"
@@ -1882,10 +1922,13 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                                         >
                                                           <label
                                                             class=""
-                                                            id="root_person_address__title"
                                                             title="address"
                                                           >
-                                                            address
+                                                            <span
+                                                              id="root_person_address__title"
+                                                            >
+                                                              address
+                                                            </span>
                                                           </label>
                                                           <div
                                                             class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -1908,14 +1951,17 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                                               >
                                                                 <div
                                                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                                                  id="root_person_address_street__label"
                                                                 >
                                                                   <label
                                                                     class=""
                                                                     for="root_person_address_street"
-                                                                    title="street"
                                                                   >
-                                                                    street
+                                                                    <span
+                                                                      id="root_person_address_street__label"
+                                                                      title="street"
+                                                                    >
+                                                                      street
+                                                                    </span>
                                                                   </label>
                                                                 </div>
                                                                 <div
@@ -1932,7 +1978,6 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                                                         style="width: 100%;"
                                                                       >
                                                                         <input
-                                                                          aria-describedby="root_person_address_street__error root_person_address_street__description root_person_address_street__help"
                                                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                                           id="root_person_address_street"
                                                                           name="root.person.address.street"
@@ -1966,14 +2011,17 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                                               >
                                                                 <div
                                                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                                                  id="root_person_address_city__label"
                                                                 >
                                                                   <label
                                                                     class=""
                                                                     for="root_person_address_city"
-                                                                    title="city"
                                                                   >
-                                                                    city
+                                                                    <span
+                                                                      id="root_person_address_city__label"
+                                                                      title="city"
+                                                                    >
+                                                                      city
+                                                                    </span>
                                                                   </label>
                                                                 </div>
                                                                 <div
@@ -1990,7 +2038,6 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                                                         style="width: 100%;"
                                                                       >
                                                                         <input
-                                                                          aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                                                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                                           id="root_person_address_city"
                                                                           name="root.person.address.city"
@@ -2092,14 +2139,17 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                              id="root_name__label"
                             >
                               <label
                                 class=""
                                 for="root_name"
-                                title="name"
                               >
-                                name
+                                <span
+                                  id="root_name__label"
+                                  title="name"
+                                >
+                                  name
+                                </span>
                               </label>
                             </div>
                             <div
@@ -2116,7 +2166,6 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                                     style="width: 100%;"
                                   >
                                     <input
-                                      aria-describedby="root_name__error root_name__description root_name__help"
                                       class="ant-input css-dev-only-do-not-override-oc1rc0"
                                       id="root_name"
                                       name="root.name"
@@ -2150,14 +2199,17 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                              id="root_count__label"
                             >
                               <label
                                 class=""
                                 for="root_count"
-                                title="count"
                               >
-                                count
+                                <span
+                                  id="root_count__label"
+                                  title="count"
+                                >
+                                  count
+                                </span>
                               </label>
                             </div>
                             <div
@@ -2174,7 +2226,6 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                                     style="width: 100%;"
                                   >
                                     <input
-                                      aria-describedby="root_count__error root_count__description root_count__help"
                                       aria-valuenow="5"
                                       autocomplete="off"
                                       class="ant-input-number-input"
@@ -2290,10 +2341,13 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                                       >
                                         <label
                                           class=""
-                                          id="root_items__title"
                                           title="items"
                                         >
-                                          items
+                                          <span
+                                            id="root_items__title"
+                                          >
+                                            items
+                                          </span>
                                         </label>
                                         <div
                                           class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -2324,14 +2378,17 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                                                 >
                                                   <div
                                                     class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                                    id="root_items_0__label"
                                                   >
                                                     <label
                                                       class="ant-form-item-required"
                                                       for="root_items_0"
-                                                      title="items-1"
                                                     >
-                                                      items-1
+                                                      <span
+                                                        id="root_items_0__label"
+                                                        title="items-1"
+                                                      >
+                                                        items-1
+                                                      </span>
                                                     </label>
                                                   </div>
                                                   <div
@@ -2348,7 +2405,6 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                                                           style="width: 100%;"
                                                         >
                                                           <input
-                                                            aria-describedby="root_items_0__error root_items_0__description root_items_0__help"
                                                             class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                             id="root_items_0"
                                                             name="root.items.0"
@@ -2492,14 +2548,17 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                                                 >
                                                   <div
                                                     class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                                    id="root_items_1__label"
                                                   >
                                                     <label
                                                       class="ant-form-item-required"
                                                       for="root_items_1"
-                                                      title="items-2"
                                                     >
-                                                      items-2
+                                                      <span
+                                                        id="root_items_1__label"
+                                                        title="items-2"
+                                                      >
+                                                        items-2
+                                                      </span>
                                                     </label>
                                                   </div>
                                                   <div
@@ -2516,7 +2575,6 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                                                           style="width: 100%;"
                                                         >
                                                           <input
-                                                            aria-describedby="root_items_1__error root_items_1__description root_items_1__help"
                                                             class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                             id="root_items_1"
                                                             name="root.items.1"
@@ -2765,14 +2823,17 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                              id="root_firstName__label"
                             >
                               <label
                                 class=""
                                 for="root_firstName"
-                                title="firstName"
                               >
-                                firstName
+                                <span
+                                  id="root_firstName__label"
+                                  title="firstName"
+                                >
+                                  firstName
+                                </span>
                               </label>
                             </div>
                             <div
@@ -2789,7 +2850,6 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                                     style="width: 100%;"
                                   >
                                     <input
-                                      aria-describedby="root_firstName__error root_firstName__description root_firstName__help"
                                       class="ant-input css-dev-only-do-not-override-oc1rc0"
                                       id="root_firstName"
                                       name="root.firstName"
@@ -2823,14 +2883,17 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                              id="root_lastName__label"
                             >
                               <label
                                 class=""
                                 for="root_lastName"
-                                title="lastName"
                               >
-                                lastName
+                                <span
+                                  id="root_lastName__label"
+                                  title="lastName"
+                                >
+                                  lastName
+                                </span>
                               </label>
                             </div>
                             <div
@@ -2847,7 +2910,6 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                                     style="width: 100%;"
                                   >
                                     <input
-                                      aria-describedby="root_lastName__error root_lastName__description root_lastName__help"
                                       class="ant-input css-dev-only-do-not-override-oc1rc0"
                                       id="root_lastName"
                                       name="root.lastName"
@@ -2881,14 +2943,17 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                              id="root_age__label"
                             >
                               <label
                                 class=""
                                 for="root_age"
-                                title="age"
                               >
-                                age
+                                <span
+                                  id="root_age__label"
+                                  title="age"
+                                >
+                                  age
+                                </span>
                               </label>
                             </div>
                             <div
@@ -2905,7 +2970,6 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                                     style="width: 100%;"
                                   >
                                     <input
-                                      aria-describedby="root_age__error root_age__description root_age__help"
                                       autocomplete="off"
                                       class="ant-input-number-input"
                                       id="root_age"
@@ -3112,14 +3176,17 @@ exports[`object fields > additionalProperties 1`] = `
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                  id="root_foo__label"
                                 >
                                   <label
                                     class=""
                                     for="root_foo"
-                                    title="foo"
                                   >
-                                    foo
+                                    <span
+                                      id="root_foo__label"
+                                      title="foo"
+                                    >
+                                      foo
+                                    </span>
                                   </label>
                                 </div>
                                 <div
@@ -3136,7 +3203,6 @@ exports[`object fields > additionalProperties 1`] = `
                                         style="width: 100%;"
                                       >
                                         <input
-                                          aria-describedby="root_foo__error root_foo__description root_foo__help"
                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                           id="root_foo"
                                           name="root_foo"
@@ -3400,14 +3466,17 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                  id="root_foo__label"
                                 >
                                   <label
                                     class=""
                                     for="root_foo"
-                                    title="foo"
                                   >
-                                    foo
+                                    <span
+                                      id="root_foo__label"
+                                      title="foo"
+                                    >
+                                      foo
+                                    </span>
                                   </label>
                                 </div>
                                 <div
@@ -3424,7 +3493,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                                         style="width: 100%;"
                                       >
                                         <input
-                                          aria-describedby="root_foo__error root_foo__description root_foo__help"
+                                          aria-describedby="root_foo__description"
                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                           id="root_foo"
                                           name="root_foo"
@@ -3691,10 +3760,13 @@ exports[`object fields > additionalProperties, array type 1`] = `
                                           >
                                             <label
                                               class=""
-                                              id="root_foo__title"
                                               title="foo"
                                             >
-                                              foo
+                                              <span
+                                                id="root_foo__title"
+                                              >
+                                                foo
+                                              </span>
                                             </label>
                                             <div
                                               class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -3978,14 +4050,17 @@ exports[`object fields > additionalProperties, description 1`] = `
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                  id="root_foo__label"
                                 >
                                   <label
                                     class=""
                                     for="root_foo"
-                                    title="foo"
                                   >
-                                    foo
+                                    <span
+                                      id="root_foo__label"
+                                      title="foo"
+                                    >
+                                      foo
+                                    </span>
                                   </label>
                                 </div>
                                 <div
@@ -4002,7 +4077,7 @@ exports[`object fields > additionalProperties, description 1`] = `
                                         style="width: 100%;"
                                       >
                                         <input
-                                          aria-describedby="root_foo__error root_foo__description root_foo__help"
+                                          aria-describedby="root_foo__description"
                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                           id="root_foo"
                                           name="root_foo"
@@ -4248,14 +4323,17 @@ exports[`object fields > additionalProperties, label off 1`] = `
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                  id="root_foo__label"
                                 >
                                   <label
                                     class=""
                                     for="root_foo"
-                                    title="foo"
                                   >
-                                    foo
+                                    <span
+                                      id="root_foo__label"
+                                      title="foo"
+                                    >
+                                      foo
+                                    </span>
                                   </label>
                                 </div>
                                 <div
@@ -4272,7 +4350,6 @@ exports[`object fields > additionalProperties, label off 1`] = `
                                         style="width: 100%;"
                                       >
                                         <input
-                                          aria-describedby="root_foo__error root_foo__description root_foo__help"
                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                           id="root_foo"
                                           name="root_foo"
@@ -4525,10 +4602,13 @@ exports[`object fields > additionalProperties, object type 1`] = `
                                           >
                                             <label
                                               class=""
-                                              id="root_foo__title"
                                               title="foo"
                                             >
-                                              foo
+                                              <span
+                                                id="root_foo__title"
+                                              >
+                                                foo
+                                              </span>
                                             </label>
                                             <div
                                               class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -4551,14 +4631,17 @@ exports[`object fields > additionalProperties, object type 1`] = `
                                                 >
                                                   <div
                                                     class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                                    id="root_foo_foo__label"
                                                   >
                                                     <label
                                                       class=""
                                                       for="root_foo_foo"
-                                                      title="foo"
                                                     >
-                                                      foo
+                                                      <span
+                                                        id="root_foo_foo__label"
+                                                        title="foo"
+                                                      >
+                                                        foo
+                                                      </span>
                                                     </label>
                                                   </div>
                                                   <div
@@ -4575,7 +4658,6 @@ exports[`object fields > additionalProperties, object type 1`] = `
                                                           style="width: 100%;"
                                                         >
                                                           <input
-                                                            aria-describedby="root_foo_foo__error root_foo_foo__description root_foo_foo__help"
                                                             class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                             id="root_foo_foo"
                                                             name="root_foo_foo"
@@ -4848,14 +4930,17 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                  id="root_foo__label"
                                 >
                                   <label
                                     class=""
                                     for="root_foo"
-                                    title="foo"
                                   >
-                                    foo
+                                    <span
+                                      id="root_foo__label"
+                                      title="foo"
+                                    >
+                                      foo
+                                    </span>
                                   </label>
                                 </div>
                                 <div
@@ -4872,7 +4957,6 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                                         style="width: 100%;"
                                       >
                                         <input
-                                          aria-describedby="root_foo__error root_foo__description root_foo__help"
                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                           id="root_foo"
                                           name="root_foo"
@@ -5136,14 +5220,17 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                  id="root_foo__label"
                                 >
                                   <label
                                     class=""
                                     for="root_foo"
-                                    title="foo (deprecated)"
                                   >
-                                    foo (deprecated)
+                                    <span
+                                      id="root_foo__label"
+                                      title="foo (deprecated)"
+                                    >
+                                      foo (deprecated)
+                                    </span>
                                   </label>
                                 </div>
                                 <div
@@ -5160,7 +5247,6 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                                         style="width: 100%;"
                                       >
                                         <input
-                                          aria-describedby="root_foo__error root_foo__description root_foo__help"
                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                           id="root_foo"
                                           name="root_foo"
@@ -5330,14 +5416,17 @@ exports[`object fields > object 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                              id="root_a__label"
                             >
                               <label
                                 class=""
                                 for="root_a"
-                                title="A"
                               >
-                                A
+                                <span
+                                  id="root_a__label"
+                                  title="A"
+                                >
+                                  A
+                                </span>
                               </label>
                             </div>
                             <div
@@ -5354,7 +5443,6 @@ exports[`object fields > object 1`] = `
                                     style="width: 100%;"
                                   >
                                     <input
-                                      aria-describedby="root_a__error root_a__description root_a__help"
                                       class="ant-input css-dev-only-do-not-override-oc1rc0"
                                       id="root_a"
                                       name="root_a"
@@ -5388,14 +5476,17 @@ exports[`object fields > object 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                              id="root_b__label"
                             >
                               <label
                                 class=""
                                 for="root_b"
-                                title="B"
                               >
-                                B
+                                <span
+                                  id="root_b__label"
+                                  title="B"
+                                >
+                                  B
+                                </span>
                               </label>
                             </div>
                             <div
@@ -5412,7 +5503,6 @@ exports[`object fields > object 1`] = `
                                     style="width: 100%;"
                                   >
                                     <input
-                                      aria-describedby="root_b__error root_b__description root_b__help"
                                       autocomplete="off"
                                       class="ant-input-number-input"
                                       id="root_b"
@@ -5619,14 +5709,17 @@ exports[`object fields > show add button and fields if additionalProperties is t
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                  id="root_additionalProperty__label"
                                 >
                                   <label
                                     class=""
                                     for="root_additionalProperty"
-                                    title="additionalProperty"
                                   >
-                                    additionalProperty
+                                    <span
+                                      id="root_additionalProperty__label"
+                                      title="additionalProperty"
+                                    >
+                                      additionalProperty
+                                    </span>
                                   </label>
                                 </div>
                                 <div
@@ -5643,7 +5736,6 @@ exports[`object fields > show add button and fields if additionalProperties is t
                                         style="width: 100%;"
                                       >
                                         <input
-                                          aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                           id="root_additionalProperty"
                                           name="root_additionalProperty"
@@ -5804,10 +5896,13 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                     >
                       <label
                         class=""
-                        id="root__title"
                         title="Test field"
                       >
-                        Test field
+                        <span
+                          id="root__title"
+                        >
+                          Test field
+                        </span>
                       </label>
                       <div
                         class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -5893,14 +5988,17 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                  id="root_foo__label"
                                 >
                                   <label
                                     class=""
                                     for="root_foo"
-                                    title="foo"
                                   >
-                                    foo
+                                    <span
+                                      id="root_foo__label"
+                                      title="foo"
+                                    >
+                                      foo
+                                    </span>
                                   </label>
                                 </div>
                                 <div
@@ -5917,7 +6015,6 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                                         style="width: 100%;"
                                       >
                                         <input
-                                          aria-describedby="root_foo__error root_foo__description root_foo__help"
                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                           id="root_foo"
                                           name="root_foo"
@@ -6091,10 +6188,13 @@ exports[`object fields > with title and description > object 1`] = `
                     >
                       <label
                         class=""
-                        id="root__title"
                         title="Test field"
                       >
-                        Test field
+                        <span
+                          id="root__title"
+                        >
+                          Test field
+                        </span>
                       </label>
                       <div
                         class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -6117,14 +6217,17 @@ exports[`object fields > with title and description > object 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                              id="root_a__label"
                             >
                               <label
                                 class=""
                                 for="root_a"
-                                title="A"
                               >
-                                A
+                                <span
+                                  id="root_a__label"
+                                  title="A"
+                                >
+                                  A
+                                </span>
                               </label>
                             </div>
                             <div
@@ -6141,7 +6244,7 @@ exports[`object fields > with title and description > object 1`] = `
                                     style="width: 100%;"
                                   >
                                     <input
-                                      aria-describedby="root_a__error root_a__description root_a__help"
+                                      aria-describedby="root_a__description"
                                       class="ant-input css-dev-only-do-not-override-oc1rc0"
                                       id="root_a"
                                       name="root_a"
@@ -6188,14 +6291,17 @@ exports[`object fields > with title and description > object 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                              id="root_b__label"
                             >
                               <label
                                 class=""
                                 for="root_b"
-                                title="B"
                               >
-                                B
+                                <span
+                                  id="root_b__label"
+                                  title="B"
+                                >
+                                  B
+                                </span>
                               </label>
                             </div>
                             <div
@@ -6212,7 +6318,7 @@ exports[`object fields > with title and description > object 1`] = `
                                     style="width: 100%;"
                                   >
                                     <input
-                                      aria-describedby="root_b__error root_b__description root_b__help"
+                                      aria-describedby="root_b__description"
                                       autocomplete="off"
                                       class="ant-input-number-input"
                                       id="root_b"
@@ -6373,10 +6479,13 @@ exports[`object fields > with title and description > show add button and fields
                     >
                       <label
                         class=""
-                        id="root__title"
                         title="Test field"
                       >
-                        Test field
+                        <span
+                          id="root__title"
+                        >
+                          Test field
+                        </span>
                       </label>
                       <div
                         class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -6462,14 +6571,17 @@ exports[`object fields > with title and description > show add button and fields
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                  id="root_additionalProperty__label"
                                 >
                                   <label
                                     class=""
                                     for="root_additionalProperty"
-                                    title="additionalProperty"
                                   >
-                                    additionalProperty
+                                    <span
+                                      id="root_additionalProperty__label"
+                                      title="additionalProperty"
+                                    >
+                                      additionalProperty
+                                    </span>
                                   </label>
                                 </div>
                                 <div
@@ -6486,7 +6598,6 @@ exports[`object fields > with title and description > show add button and fields
                                         style="width: 100%;"
                                       >
                                         <input
-                                          aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                           id="root_additionalProperty"
                                           name="root_additionalProperty"
@@ -6660,10 +6771,13 @@ exports[`object fields > with title and description from both > additionalProper
                     >
                       <label
                         class=""
-                        id="root__title"
                         title="My Field"
                       >
-                        My Field
+                        <span
+                          id="root__title"
+                        >
+                          My Field
+                        </span>
                       </label>
                       <div
                         class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -6749,14 +6863,17 @@ exports[`object fields > with title and description from both > additionalProper
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                  id="root_foo__label"
                                 >
                                   <label
                                     class=""
                                     for="root_foo"
-                                    title="foo"
                                   >
-                                    foo
+                                    <span
+                                      id="root_foo__label"
+                                      title="foo"
+                                    >
+                                      foo
+                                    </span>
                                   </label>
                                 </div>
                                 <div
@@ -6773,7 +6890,6 @@ exports[`object fields > with title and description from both > additionalProper
                                         style="width: 100%;"
                                       >
                                         <input
-                                          aria-describedby="root_foo__error root_foo__description root_foo__help"
                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                           id="root_foo"
                                           name="root_foo"
@@ -6947,10 +7063,13 @@ exports[`object fields > with title and description from both > object 1`] = `
                     >
                       <label
                         class=""
-                        id="root__title"
                         title="My Field"
                       >
-                        My Field
+                        <span
+                          id="root__title"
+                        >
+                          My Field
+                        </span>
                       </label>
                       <div
                         class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -6973,14 +7092,17 @@ exports[`object fields > with title and description from both > object 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                              id="root_a__label"
                             >
                               <label
                                 class=""
                                 for="root_a"
-                                title="My Item A"
                               >
-                                My Item A
+                                <span
+                                  id="root_a__label"
+                                  title="My Item A"
+                                >
+                                  My Item A
+                                </span>
                               </label>
                             </div>
                             <div
@@ -6997,7 +7119,7 @@ exports[`object fields > with title and description from both > object 1`] = `
                                     style="width: 100%;"
                                   >
                                     <input
-                                      aria-describedby="root_a__error root_a__description root_a__help"
+                                      aria-describedby="root_a__description"
                                       class="ant-input css-dev-only-do-not-override-oc1rc0"
                                       id="root_a"
                                       name="root_a"
@@ -7044,14 +7166,17 @@ exports[`object fields > with title and description from both > object 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                              id="root_b__label"
                             >
                               <label
                                 class=""
                                 for="root_b"
-                                title="My Item B"
                               >
-                                My Item B
+                                <span
+                                  id="root_b__label"
+                                  title="My Item B"
+                                >
+                                  My Item B
+                                </span>
                               </label>
                             </div>
                             <div
@@ -7068,7 +7193,7 @@ exports[`object fields > with title and description from both > object 1`] = `
                                     style="width: 100%;"
                                   >
                                     <input
-                                      aria-describedby="root_b__error root_b__description root_b__help"
+                                      aria-describedby="root_b__description"
                                       autocomplete="off"
                                       class="ant-input-number-input"
                                       id="root_b"
@@ -7229,10 +7354,13 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                     >
                       <label
                         class=""
-                        id="root__title"
                         title="My Field"
                       >
-                        My Field
+                        <span
+                          id="root__title"
+                        >
+                          My Field
+                        </span>
                       </label>
                       <div
                         class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -7318,14 +7446,17 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                  id="root_foo__label"
                                 >
                                   <label
                                     class=""
                                     for="root_foo"
-                                    title="foo"
                                   >
-                                    foo
+                                    <span
+                                      id="root_foo__label"
+                                      title="foo"
+                                    >
+                                      foo
+                                    </span>
                                   </label>
                                 </div>
                                 <div
@@ -7342,7 +7473,6 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                                         style="width: 100%;"
                                       >
                                         <input
-                                          aria-describedby="root_foo__error root_foo__description root_foo__help"
                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                           id="root_foo"
                                           name="root_foo"
@@ -7516,10 +7646,13 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                     >
                       <label
                         class=""
-                        id="root__title"
                         title="My Field"
                       >
-                        My Field
+                        <span
+                          id="root__title"
+                        >
+                          My Field
+                        </span>
                       </label>
                       <div
                         class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -7542,14 +7675,17 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                              id="root_a__label"
                             >
                               <label
                                 class=""
                                 for="root_a"
-                                title="My Item A"
                               >
-                                My Item A
+                                <span
+                                  id="root_a__label"
+                                  title="My Item A"
+                                >
+                                  My Item A
+                                </span>
                               </label>
                             </div>
                             <div
@@ -7566,7 +7702,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                                     style="width: 100%;"
                                   >
                                     <input
-                                      aria-describedby="root_a__error root_a__description root_a__help"
+                                      aria-describedby="root_a__description"
                                       class="ant-input css-dev-only-do-not-override-oc1rc0"
                                       id="root_a"
                                       name="root_a"
@@ -7613,14 +7749,17 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                              id="root_b__label"
                             >
                               <label
                                 class=""
                                 for="root_b"
-                                title="My Item B"
                               >
-                                My Item B
+                                <span
+                                  id="root_b__label"
+                                  title="My Item B"
+                                >
+                                  My Item B
+                                </span>
                               </label>
                             </div>
                             <div
@@ -7637,7 +7776,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                                     style="width: 100%;"
                                   >
                                     <input
-                                      aria-describedby="root_b__error root_b__description root_b__help"
+                                      aria-describedby="root_b__description"
                                       autocomplete="off"
                                       class="ant-input-number-input"
                                       id="root_b"
@@ -7798,10 +7937,13 @@ exports[`object fields > with title and description from uiSchema > show add but
                     >
                       <label
                         class=""
-                        id="root__title"
                         title="My Field"
                       >
-                        My Field
+                        <span
+                          id="root__title"
+                        >
+                          My Field
+                        </span>
                       </label>
                       <div
                         class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -7887,14 +8029,17 @@ exports[`object fields > with title and description from uiSchema > show add but
                               >
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                  id="root_additionalProperty__label"
                                 >
                                   <label
                                     class=""
                                     for="root_additionalProperty"
-                                    title="additionalProperty"
                                   >
-                                    additionalProperty
+                                    <span
+                                      id="root_additionalProperty__label"
+                                      title="additionalProperty"
+                                    >
+                                      additionalProperty
+                                    </span>
                                   </label>
                                 </div>
                                 <div
@@ -7911,7 +8056,6 @@ exports[`object fields > with title and description from uiSchema > show add but
                                         style="width: 100%;"
                                       >
                                         <input
-                                          aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                           id="root_additionalProperty"
                                           name="root_additionalProperty"
@@ -8117,6 +8261,7 @@ exports[`object fields > with title and description with global label off > addi
                                           style="width: 100%;"
                                         >
                                           <input
+                                            aria-label="foo Key"
                                             class="ant-input css-dev-only-do-not-override-oc1rc0"
                                             id="root_foo-key"
                                             name="root_foo-key"
@@ -8158,7 +8303,7 @@ exports[`object fields > with title and description with global label off > addi
                                         style="width: 100%;"
                                       >
                                         <input
-                                          aria-describedby="root_foo__error root_foo__description root_foo__help"
+                                          aria-label="foo"
                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                           id="root_foo"
                                           name="root_foo"
@@ -8340,7 +8485,7 @@ exports[`object fields > with title and description with global label off > obje
                                     style="width: 100%;"
                                   >
                                     <input
-                                      aria-describedby="root_a__error root_a__description root_a__help"
+                                      aria-label="A"
                                       class="ant-input css-dev-only-do-not-override-oc1rc0"
                                       id="root_a"
                                       name="root_a"
@@ -8386,7 +8531,7 @@ exports[`object fields > with title and description with global label off > obje
                                     style="width: 100%;"
                                   >
                                     <input
-                                      aria-describedby="root_b__error root_b__description root_b__help"
+                                      aria-label="B"
                                       autocomplete="off"
                                       class="ant-input-number-input"
                                       id="root_b"
@@ -8553,6 +8698,7 @@ exports[`object fields > with title and description with global label off > show
                                           style="width: 100%;"
                                         >
                                           <input
+                                            aria-label="additionalProperty Key"
                                             class="ant-input css-dev-only-do-not-override-oc1rc0"
                                             id="root_additionalProperty-key"
                                             name="root_additionalProperty-key"
@@ -8594,7 +8740,7 @@ exports[`object fields > with title and description with global label off > show
                                         style="width: 100%;"
                                       >
                                         <input
-                                          aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
+                                          aria-label="additionalProperty"
                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                           id="root_additionalProperty"
                                           name="root_additionalProperty"

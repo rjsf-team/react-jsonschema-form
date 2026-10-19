@@ -19,6 +19,7 @@ import {
   resolveUiSchema,
   titleId,
   buttonId,
+  titleDrawsOptionalDataControl,
 } from '@rjsf/utils';
 import { Col, Row, ConfigProvider } from 'antd';
 import type { RowProps } from 'antd';
@@ -82,7 +83,7 @@ export default function ObjectFieldTemplate<
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const { TitleFieldTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   const { formContext } = registry;
-  const showOptionalDataControlInTitle = !readonly && !disabled;
+  const showOptionalDataControlInTitle = titleDrawsOptionalDataControl<T, S, F>(props);
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
@@ -163,7 +164,9 @@ export default function ObjectFieldTemplate<
             />
           </Col>
         )}
-        {!showOptionalDataControlInTitle ? <Col span={24}>{optionalDataControl}</Col> : undefined}
+        {!showOptionalDataControlInTitle && optionalDataControl ? (
+          <Col span={24}>{optionalDataControl}</Col>
+        ) : undefined}
         {visibleProperties.map((element) => (
           <Col key={element.name} span={calculateColSpan(element)}>
             {element.content}

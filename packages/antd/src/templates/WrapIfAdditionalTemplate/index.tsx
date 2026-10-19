@@ -115,12 +115,14 @@ export default function WrapIfAdditionalTemplate<
               ) : (
                 <Input
                   key={keyName}
+                  aria-label={hasKeyLabel ? undefined : keyLabel}
                   className='form-control'
                   defaultValue={keyName}
                   disabled={disabled || (readonlyAsDisabled && readonly)}
                   id={`${id}-key`}
                   name={`${id}-key`}
                   onBlur={!readonly ? onKeyRenameBlur : undefined}
+                  readOnly={readonly}
                   style={INPUT_STYLE}
                   type='text'
                 />
