@@ -1117,9 +1117,9 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
       });
 
       it('hands customMergeAllOf the same resolved entries the form resolved with, so it agrees with what rendered', () => {
-        // `resolveSchema()` runs each `allOf` entry through `retrieveSchemaInternal()` before the parent is merged, so
-        // a merger that rejects an unresolved `$ref` succeeds while rendering. Omission has to hand it the same input,
-        // or it takes the merge-failure fallback and deletes data the user can see and edit
+        // The merge plan follows each `allOf` entry's `$ref` before it merges the entry into the parent, so a merger
+        // that rejects an unresolved `$ref` succeeds while rendering. Omission has to hand it the same input, or it
+        // takes the merge-failure fallback and deletes data the user can see and edit
         const schema: RJSFSchema = {
           type: 'object',
           definitions: { a: { type: 'object', properties: { x: { type: 'string' } } } },
