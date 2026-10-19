@@ -3,9 +3,16 @@ import Checkbox from '@mui/material/Checkbox';
 import type { FormControlLabelProps } from '@mui/material/FormControlLabel';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, descriptionId, getTemplates, labelValue, schemaRequiresTrueValue } from '@rjsf/utils';
+import {
+  getControlAttributes,
+  getTemplates,
+  getWidgetDescription,
+  labelValue,
+  schemaRequiresTrueValue,
+  widgetDrawsLabel,
+} from '@rjsf/utils';
 
-import { getMuiProps } from '../util.ts';
+import { getMuiProps, withInputSlot } from '../util.ts';
 
 /** Properties available for the `rjsfSlotProps` target of the CheckboxWidget. */
 export interface CheckboxWidgetMuiProps extends GenericObjectType {
@@ -36,16 +43,17 @@ export default function CheckboxWidget<
     disabled,
     readonly,
     label,
-    hideLabel,
     autofocus,
     onChange,
     onBlur,
     onFocus,
     registry,
+    presentation,
     options,
     uiSchema,
     required,
   } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
   // Because an unchecked checkbox will cause html5 validation to fail, only add
   // the "required" attribute if the field value must be "true", due to the
@@ -55,16 +63,16 @@ export default function CheckboxWidget<
   const handleChange: NonNullable<CheckboxProps['onChange']> = (_, checked) => onChange(checked);
   const handleBlur: React.FocusEventHandler<HTMLButtonElement> = () => onBlur(id, value);
   const handleFocus: React.FocusEventHandler<HTMLButtonElement> = () => onFocus(id, value);
-  const description = options.description ?? schema.description;
+  const description = getWidgetDescription<T, S, F>(props);
 
   const { rjsfSlotProps: muiSlotProps, ...otherMuiProps } = getMuiProps<T, S, F, CheckboxWidgetMuiProps>(options);
 
   return (
     <>
-      {!hideLabel && description && (
+      {description && (
         <DescriptionFieldTemplate
-          id={descriptionId(id)}
-          description={description}
+          id={description.id}
+          description={description.text}
           schema={schema}
           uiSchema={uiSchema}
           registry={registry}
@@ -85,8 +93,12 @@ export default function CheckboxWidget<
             onChange={handleChange}
             onBlur={handleBlur}
             onFocus={handleFocus}
-            aria-describedby={ariaDescribedByIds(id)}
             {...muiSlotProps?.checkbox}
+            // The `<input>` carrying the field's id takes its plan, rather than the `<span>` around it
+            slotProps={withInputSlot(
+              getControlAttributes<T, S, F>({ id, presentation }),
+              muiSlotProps?.checkbox?.slotProps,
+            )}
           />
         }
         label={labelValue(label, hideLabel, false)}

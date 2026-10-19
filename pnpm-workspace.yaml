@@ -25,3 +25,11 @@ virtualStoreType: global
 
 minimumReleaseAgeExclude:
   - vite@8.3.2
+  - ata-validator@1.56.0
+  - '@ata-validator/native-darwin-arm64@1.56.0'
+  - '@ata-validator/native-darwin-x64@1.56.0'
+  - '@ata-validator/native-linux-arm64-gnu@1.56.0'
+  - '@ata-validator/native-linux-arm64-musl@1.56.0'
+  - '@ata-validator/native-linux-x64-gnu@1.56.0'
+  - '@ata-validator/native-linux-x64-musl@1.56.0'
+  - '@ata-validator/native-win32-x64@1.56.0'

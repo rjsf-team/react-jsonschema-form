@@ -7,8 +7,19 @@ import type {
   Widget,
   WidgetAliasFor,
 } from '@rjsf/utils';
-import { DEFAULT_BOOLEAN_WIDGET, fieldLabelId, getTemplates, getUiOptions, getWidgetType } from '@rjsf/utils';
+import {
+  DEFAULT_BOOLEAN_WIDGET,
+  getLabelId,
+  getTemplates,
+  getUiOptions,
+  getWidgetType,
+  templateDrawsDescription,
+  templateDrawsLabel,
+  templateLabelFor,
+  templateMarksRequired,
+} from '@rjsf/utils';
 
+import RequiredMarker from '../../RequiredMarker.tsx';
 import { getDaisy } from '../../utils.ts';
 
 const CHECKBOX_ALIAS: WidgetAliasFor<'boolean'> = 'checkbox';
@@ -83,6 +94,7 @@ export default function FieldTemplate<
     formData,
     help,
     hideError,
+    // oxlint-disable-next-line typescript/no-deprecated -- kept out of the props this spreads onto the element
     displayLabel,
     onKeyRename,
     onKeyRenameBlur,
@@ -96,6 +108,7 @@ export default function FieldTemplate<
     registry,
     // Destructure props we don't want to pass to div
     description,
+    // oxlint-disable-next-line typescript/no-deprecated -- kept out of the props this spreads onto the element
     rawErrors,
     errorSchema,
     rawHelp,
@@ -104,6 +117,7 @@ export default function FieldTemplate<
     onChange,
     fieldPath,
     style,
+    presentation,
     ...divProps
   } = props;
 
@@ -114,7 +128,10 @@ export default function FieldTemplate<
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   // The checkbox and the toggle render their own label after the input, and their own description, so this template
   // renders neither for them
-  const widgetRendersLabel = widgetRendersOwnLabel<T, S, F>(schema, uiOptions.widget, registry.widgets);
+  // The plan already says whether the widget draws the label; the guess is left for a template rendered
+  // without one
+  const widgetRendersLabel =
+    !presentation && widgetRendersOwnLabel<T, S, F>(schema, uiOptions.widget, registry.widgets);
   const daisy = getDaisy<T, S, F>({ uiSchema });
   const { WrapIfAdditionalTemplate } = getTemplates<T, S, F>(registry, uiOptions);
 
@@ -126,7 +143,9 @@ export default function FieldTemplate<
       id={id}
       label={label}
       keyName={keyName}
+      // oxlint-disable-next-line typescript/no-deprecated -- handed on to a `WrapIfAdditionalTemplate` rendered without a plan, which labels the key by it
       displayLabel={displayLabel}
+      presentation={presentation}
       onKeyRename={onKeyRename}
       onKeyRenameBlur={onKeyRenameBlur}
       onRemoveProperty={onRemoveProperty}
@@ -146,16 +165,18 @@ export default function FieldTemplate<
         {...divProps}
         style={daisy.style}
       >
-        {displayLabel && !widgetRendersLabel && !!label && (
-          <label id={fieldLabelId(id)} htmlFor={id} className='label'>
+        {templateDrawsLabel<T, S, F>(props) && !widgetRendersLabel && !!label && (
+          <label htmlFor={templateLabelFor<T, S, F>(props)} className='label'>
             <span className='label-text font-medium'>
-              {label}
-              {required && <span className='text-error ml-1'>*</span>}
+              {/* The label's id goes on its text alone, as a group or an option selector is named through it, and the
+                  `*` isn't part of that name; a control its `for` names takes the whole label */}
+              <span id={getLabelId<T, S, F>(props)}>{label}</span>
+              {templateMarksRequired<T, S, F>(props) && <RequiredMarker />}
             </span>
           </label>
         )}
         {children}
-        {displayLabel && !widgetRendersLabel && description ? description : null}
+        {!widgetRendersLabel && templateDrawsDescription<T, S, F>(props) && description ? description : null}
         {errors}
         {help}
       </div>

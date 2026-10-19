@@ -28,4 +28,15 @@ describe('BaseInputTemplate', () => {
 
     expect(container.querySelector('input')).toHaveAttribute('title', 'Enter a whole number');
   });
+
+  test("keeps Input's focus ring on an invalid input, so it still shows when it takes keyboard focus", () => {
+    const { container } = render(
+      // oxlint-disable-next-line typescript/no-deprecated -- a template rendered without a plan reads the deprecated prop
+      <BaseInputTemplate {...makeWidgetMockProps({ rawErrors: ['too short'] })} />,
+    );
+
+    const input = container.querySelector('input')!;
+    expect(input).toHaveClass('border-destructive', 'focus-visible:ring-[3px]');
+    expect(input).not.toHaveClass('focus-visible:ring-0');
+  });
 });

@@ -31,7 +31,7 @@ export function generateTheme<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(): Pick<Registry<T, S, F>, 'fields' | 'widgets' | 'templates'> {
+>(): Pick<Registry<T, S, F>, 'fields' | 'widgets' | 'templates'> & { presentation: ThemePresentation } {
   // ... function implementation
 }
 ```

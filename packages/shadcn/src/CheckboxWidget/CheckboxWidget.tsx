@@ -1,8 +1,17 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, descriptionId, getTemplates, labelValue, schemaRequiresTrueValue } from '@rjsf/utils';
+import {
+  getControlAttributes,
+  getTemplates,
+  getWidgetDescription,
+  hasWidgetErrors,
+  labelValue,
+  schemaRequiresTrueValue,
+  widgetDrawsLabel,
+} from '@rjsf/utils';
 
 import { Checkbox } from '../components/ui/checkbox.tsx';
 import { Label } from '../components/ui/label.tsx';
+import { cn } from '../lib/utils.ts';
 
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.
  *  It is typically used to represent a boolean.
@@ -21,7 +30,6 @@ export default function CheckboxWidget<
     disabled,
     readonly,
     label,
-    hideLabel,
     schema,
     autofocus,
     options,
@@ -29,10 +37,12 @@ export default function CheckboxWidget<
     onBlur,
     onFocus,
     registry,
+    presentation,
     uiSchema,
     className,
     required,
   } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   // Because an unchecked checkbox will cause html5 validation to fail, only add
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords
@@ -43,16 +53,13 @@ export default function CheckboxWidget<
   const handleBlur = () => onBlur(id, value);
   const handleFocus = () => onFocus(id, value);
 
-  const description = options.description || schema.description;
+  const description = getWidgetDescription<T, S, F>(props);
   return (
-    <div
-      className={`relative ${disabled || readonly ? 'cursor-not-allowed opacity-50' : ''}`}
-      aria-describedby={ariaDescribedByIds(id)}
-    >
-      {!hideLabel && description && (
+    <div className={`relative ${disabled || readonly ? 'cursor-not-allowed opacity-50' : ''}`}>
+      {description && (
         <DescriptionFieldTemplate
-          id={descriptionId(id)}
-          description={description}
+          id={description.id}
+          description={description.text}
           schema={schema}
           uiSchema={uiSchema}
           registry={registry}
@@ -63,13 +70,14 @@ export default function CheckboxWidget<
           id={id}
           name={htmlName || id}
           checked={typeof value === 'undefined' ? false : Boolean(value)}
-          required={required}
+          required={trueValueRequired || undefined}
           disabled={disabled || readonly}
           autoFocus={autofocus}
           onCheckedChange={handleChange}
           onBlur={handleBlur}
           onFocus={handleFocus}
-          className={className}
+          {...getControlAttributes<T, S, F>({ id, presentation })}
+          className={cn({ 'border-destructive': hasWidgetErrors<T, S, F>(props) }, className)}
         />
         <Label className='leading-tight' htmlFor={id}>
           {labelValue(label, hideLabel || !label)}

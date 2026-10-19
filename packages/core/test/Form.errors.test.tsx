@@ -6,6 +6,7 @@ import type {
   FormValidation,
   RJSFSchema,
   RJSFValidationError,
+  WidgetProps,
 } from '@rjsf/utils';
 import { noop } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
@@ -401,6 +402,256 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         expect(callArg.length).toBe(1);
         expect(callArg[0].message).toBe('must NOT have fewer than 8 characters');
         expect(focusSpy).toHaveBeenCalledTimes(1);
+      });
+
+      it('focuses the element carrying the field id ahead of a hidden input named after the field', async () => {
+        // As a slider library renders its thumb, keeping the value in a hidden input named after the field
+        const SliderWidget = ({ id }: WidgetProps) => (
+          <>
+            <div role='slider' tabIndex={0} id={id} aria-label='Value' aria-valuenow={0} />
+            <input hidden name={id} readOnly value='' />
+          </>
+        );
+        const { node } = createFormComponent({
+          schema: { type: 'number', minimum: 5 },
+          uiSchema: { 'ui:widget': 'SliderWidget' },
+          widgets: { SliderWidget },
+          initialFormData: 1,
+          focusOnFirstError: true,
+        });
+
+        await submitForm(node, user);
+
+        expect(screen.getByRole('slider')).toHaveFocus();
+      });
+
+      it('focuses the focusable element inside a wrapper carrying the field id that names no form control', async () => {
+        // As a slider library renders its handle inside a root carrying the id, with no input named after the field
+        const SliderWidget = ({ id }: WidgetProps) => (
+          <div id={id}>
+            <div role='slider' tabIndex={0} aria-label='Value' aria-valuenow={0} />
+          </div>
+        );
+        const { node } = createFormComponent({
+          schema: { type: 'number', minimum: 5 },
+          uiSchema: { 'ui:widget': 'SliderWidget' },
+          widgets: { SliderWidget },
+          initialFormData: 1,
+          focusOnFirstError: true,
+        });
+
+        await submitForm(node, user);
+
+        expect(screen.getByRole('slider')).toHaveFocus();
+      });
+
+      it("focuses nothing inside an empty array's fieldset for its own minItems error", async () => {
+        const { node } = createFormComponent({
+          schema: { type: 'array', items: { type: 'string' }, minItems: 1 },
+          initialFormData: [],
+          focusOnFirstError: true,
+        });
+
+        // Submitting without clicking the button, which would take focus itself, so focus left in place stays on the body
+        await submitForm(node, user, true);
+
+        expect(screen.getByRole('button', { name: 'Add' })).not.toHaveFocus();
+        expect(document.body).toHaveFocus();
+      });
+
+      it("focuses nothing inside an optional object's fieldset for its own minProperties error", async () => {
+        const { node } = createFormComponent({
+          schema: {
+            type: 'object',
+            properties: {
+              pet: {
+                type: 'object',
+                minProperties: 2,
+                properties: { name: { type: 'string' }, age: { type: 'number' } },
+              },
+            },
+          },
+          uiSchema: { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] } },
+          initialFormData: { pet: { name: 'Rex' } },
+          focusOnFirstError: true,
+        });
+
+        // Submitting without clicking the button, which would take focus itself, so focus left in place stays on the body
+        await submitForm(node, user, true);
+
+        expect(node.querySelector('#root_pet__optionalRemove')).not.toHaveFocus();
+        expect(document.body).toHaveFocus();
+      });
+
+      it("focuses a group's first focusable control ahead of the unfocusable inputs named after the field", async () => {
+        // As a checkbox library renders each checkbox as a button, keeping its value in an input named after the field
+        const ChecksWidget = ({ id }: WidgetProps) => (
+          <div id={id} role='group' aria-label='Checks'>
+            {['a', 'b'].map((value, index) => (
+              <span key={value}>
+                <button type='button' role='checkbox' aria-checked='false' id={`${id}-${index}`} aria-label={value} />
+                <input type='checkbox' aria-hidden tabIndex={-1} name={id} value={value} readOnly />
+              </span>
+            ))}
+          </div>
+        );
+        const { node } = createFormComponent({
+          schema: { type: 'array', items: { type: 'string', enum: ['a', 'b'] }, minItems: 1, uniqueItems: true },
+          uiSchema: { 'ui:widget': 'ChecksWidget' },
+          widgets: { ChecksWidget },
+          initialFormData: [],
+          focusOnFirstError: true,
+        });
+
+        await submitForm(node, user);
+
+        expect(screen.getByRole('checkbox', { name: 'a' })).toHaveFocus();
+      });
+
+      it('passes over a hidden input, a disabled control and a link with no href inside a wrapper carrying the field id', async () => {
+        // Each reports a tabIndex of 0 yet can't take focus
+        const SliderWidget = ({ id }: WidgetProps) => (
+          <div id={id}>
+            <input type='hidden' name='slider-value' value='' />
+            <button type='button' disabled>
+              Reset
+            </button>
+            {/* oxlint-disable-next-line jsx-a11y/anchor-is-valid -- a link with no href is what the lookup passes over */}
+            <a>Help</a>
+            <div role='slider' tabIndex={0} aria-label='Value' aria-valuenow={0} />
+          </div>
+        );
+        const { node } = createFormComponent({
+          schema: { type: 'number', minimum: 5 },
+          uiSchema: { 'ui:widget': 'SliderWidget' },
+          widgets: { SliderWidget },
+          initialFormData: 1,
+          focusOnFirstError: true,
+        });
+
+        await submitForm(node, user);
+
+        expect(screen.getByRole('slider')).toHaveFocus();
+      });
+
+      it('passes over an input named after the field that the hidden attribute hides', async () => {
+        // As zag's slider, under Ark and Chakra, keeps its value in a text input with the `hidden` attribute
+        const SliderWidget = ({ id }: WidgetProps) => (
+          <div id={id}>
+            <input type='text' hidden name={id} readOnly value='' />
+            <div role='slider' tabIndex={0} aria-label='Value' aria-valuenow={0} />
+          </div>
+        );
+        const { node } = createFormComponent({
+          schema: { type: 'number', minimum: 5 },
+          uiSchema: { 'ui:widget': 'SliderWidget' },
+          widgets: { SliderWidget },
+          initialFormData: 1,
+          focusOnFirstError: true,
+        });
+
+        await submitForm(node, user);
+
+        expect(screen.getByRole('slider')).toHaveFocus();
+      });
+
+      it("focuses the first star of a RatingWidget's radiogroup", async () => {
+        const { node } = createFormComponent({
+          schema: { type: 'integer', minimum: 3, maximum: 5 },
+          uiSchema: { 'ui:widget': 'RatingWidget' },
+          initialFormData: 1,
+          focusOnFirstError: true,
+        });
+
+        await submitForm(node, user);
+
+        expect(screen.getAllByRole('radio')[0]).toHaveFocus();
+      });
+
+      it.each(['alt-date', 'alt-datetime'])("focuses the first part of an %s's group", async (widget) => {
+        const { node } = createFormComponent({
+          schema: { type: 'string', minLength: 100 },
+          uiSchema: { 'ui:widget': widget },
+          initialFormData: '2020-01-01',
+          focusOnFirstError: true,
+        });
+
+        await submitForm(node, user);
+
+        expect(screen.getAllByRole('combobox')[0]).toHaveFocus();
+      });
+
+      it('passes over an unfocusable input whose id starts with the field id for a focusable one after it', async () => {
+        const ChoiceWidget = ({ id }: WidgetProps) => (
+          <div>
+            <input type='hidden' id={`${id}-value`} value='' />
+            <button type='button' id={`${id}-0`}>
+              Choose
+            </button>
+          </div>
+        );
+        const { node } = createFormComponent({
+          schema: { type: 'number', minimum: 5 },
+          uiSchema: { 'ui:widget': 'ChoiceWidget' },
+          widgets: { ChoiceWidget },
+          initialFormData: 1,
+          focusOnFirstError: true,
+        });
+
+        await submitForm(node, user);
+
+        expect(screen.getByRole('button', { name: 'Choose' })).toHaveFocus();
+      });
+
+      it.each([
+        ['disabled', { 'ui:disabled': true }],
+        ['hidden', { 'ui:widget': 'hidden' }],
+      ])(
+        'leaves focus off a sibling whose id starts with the id of a %s field it cannot focus',
+        async (_, nameUiSchema) => {
+          const { node } = createFormComponent({
+            schema: {
+              type: 'object',
+              required: ['name'],
+              properties: { name: { type: 'string' }, nameSuffix: { type: 'string' } },
+            },
+            uiSchema: { name: nameUiSchema },
+            focusOnFirstError: true,
+          });
+
+          await submitForm(node, user);
+
+          expect(node.querySelector('#root_nameSuffix')).not.toHaveFocus();
+        },
+      );
+
+      it('focuses the field in a DOM with no CSS namespace', async () => {
+        vi.stubGlobal('CSS', undefined);
+        try {
+          const { node } = createFormComponent({
+            schema: { type: 'string', minLength: 5 },
+            initialFormData: 'a',
+            focusOnFirstError: true,
+          });
+
+          await submitForm(node, user);
+
+          expect(node.querySelector('#root')).toHaveFocus();
+        } finally {
+          vi.unstubAllGlobals();
+        }
+      });
+
+      it('focuses the field whose property name holds characters a CSS selector would read as syntax', async () => {
+        const { node } = createFormComponent({
+          schema: { type: 'object', properties: { 'say "hi"\\': { type: 'string', minLength: 5 } } },
+          initialFormData: { 'say "hi"\\': 'a' },
+          focusOnFirstError: true,
+        });
+
+        await submitForm(node, user);
+
+        expect(screen.getByRole('textbox')).toHaveFocus();
       });
 
       it('should call the onError handler and call the provided focusOnFirstError callback function', async () => {

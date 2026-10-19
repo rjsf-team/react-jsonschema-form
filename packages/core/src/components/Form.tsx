@@ -22,6 +22,7 @@ import type {
   RJSFValidationError,
   SchemaUtilsType,
   TemplatesType,
+  ThemePresentation,
   UiSchema,
   ValidatorType,
   DefaultFormStateBehavior,
@@ -106,6 +107,10 @@ export interface FormProps<
   };
   /** The dictionary of registered widgets in the form */
   widgets?: RegistryWidgetsType<Uninferred<T>, S, F>;
+  /** Which parts of a field the registered fields and widgets draw themselves, layered over the theme's declarations,
+   * which are layered over `core`'s
+   */
+  presentation?: ThemePresentation;
   // Callbacks
   /** If you plan on being notified every time the form data are updated, you can pass an `onChange` handler, which will
    * receive the same args as `onSubmit` any time a value is updated in the form. Can also return the `id` of the field

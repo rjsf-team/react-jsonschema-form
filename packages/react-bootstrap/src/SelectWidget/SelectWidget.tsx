@@ -7,11 +7,12 @@ import {
   flattenGroupedOptions,
   getOptionValueFormat,
   groupEnumOptions,
-  hasVisibleErrors,
+  hasWidgetErrors,
   isEnumOptionsGroup,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
   widgetAriaProps,
+  widgetDrawsLabel,
 } from '@rjsf/utils';
 import { FormSelect } from 'react-bootstrap';
 
@@ -35,11 +36,11 @@ export default function SelectWidget<
     onBlur,
     onFocus,
     placeholder,
-    rawErrors,
-    hideError,
     registry,
     uiSchema,
+    presentation,
   } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const { enumOptions, enumDisabled, emptyValue: optEmptyValue, optgroups } = options;
 
   const emptyValue = multiple ? [] : '';
@@ -85,7 +86,7 @@ export default function SelectWidget<
         multiple={multiple}
         disabled={disabled || readonly}
         autoFocus={autofocus}
-        className={hasVisibleErrors({ rawErrors, hideError }) ? 'is-invalid' : ''}
+        isInvalid={hasWidgetErrors<T, S, F>(props)}
         onBlur={
           onBlur &&
           ((event: FocusEvent<HTMLSelectElement>) => {
@@ -124,6 +125,8 @@ export default function SelectWidget<
         registry={registry}
         uiSchema={uiSchema}
         value={value}
+        hideLabel={hideLabel}
+        presentation={presentation}
       />
     </>
   );

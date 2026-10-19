@@ -22,6 +22,7 @@ function makeProps(props: Partial<WidgetProps> = {}): WidgetProps {
     disabled: false,
     readonly: false,
     multiple: false,
+    // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
     rawErrors: [],
     uiSchema,
     onChange: () => undefined,
@@ -61,6 +62,7 @@ describe('PasswordWidget', () => {
 
   test('hides description when hideLabel is true', () => {
     const { queryByText } = renderWidget({
+      // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated prop a component without a plan reads
       hideLabel: true,
       options: {
         description: 'Test description',
@@ -74,6 +76,7 @@ describe('PasswordWidget', () => {
     ['leaves the input unmarked without errors', [], {}, false],
     ['leaves the input unmarked while its errors are hidden', ['An error'], { hideError: true }, false],
   ])('%s', (_, rawErrors, extraProps, invalid) => {
+    // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated prop a component without a plan reads
     const { container } = renderWidget({ rawErrors, ...extraProps });
 
     const input = container.querySelector('input[type="password"]');

@@ -486,12 +486,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
               >
                 <div
                   class="MuiBox-root emotion-4"
-                  id="root_person__title"
                 >
                   <h5
                     class="MuiTypography-root MuiTypography-h5 emotion-5"
                   >
-                    person
+                    <span
+                      id="root_person__title"
+                    >
+                      person
+                    </span>
                   </h5>
                   <hr
                     class="MuiDivider-root MuiDivider-fullWidth emotion-6"
@@ -510,7 +513,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
                         class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                       >
                         <div
-                          aria-describedby="root_person_name__error root_person_name__description root_person_name__help"
                           class="MuiFormControl-root MuiTextField-root emotion-10"
                         >
                           <label
@@ -561,12 +563,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
                       >
                         <div
                           class="MuiBox-root emotion-4"
-                          id="root_person_address__title"
                         >
                           <h5
                             class="MuiTypography-root MuiTypography-h5 emotion-5"
                           >
-                            address
+                            <span
+                              id="root_person_address__title"
+                            >
+                              address
+                            </span>
                           </h5>
                           <hr
                             class="MuiDivider-root MuiDivider-fullWidth emotion-6"
@@ -585,7 +590,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
                                 class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                               >
                                 <div
-                                  aria-describedby="root_person_address_street__error root_person_address_street__description root_person_address_street__help"
                                   class="MuiFormControl-root MuiTextField-root emotion-10"
                                 >
                                   <label
@@ -635,7 +639,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
                                 class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                               >
                                 <div
-                                  aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                                   class="MuiFormControl-root MuiTextField-root emotion-10"
                                 >
                                   <label
@@ -685,7 +688,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
                                 class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                               >
                                 <div
-                                  aria-describedby="root_person_address_country__error root_person_address_country__description root_person_address_country__help"
                                   class="MuiFormControl-root MuiTextField-root emotion-10"
                                 >
                                   <label
@@ -1599,7 +1601,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                 class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
               >
                 <div
-                  aria-describedby="root_name__error root_name__description root_name__help"
                   class="MuiFormControl-root MuiTextField-root emotion-4"
                 >
                   <label
@@ -1692,7 +1693,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                   class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                 >
                   <div
-                    aria-describedby="root_customField__error root_customField__description root_customField__help"
                     class="MuiFormControl-root MuiTextField-root emotion-4"
                   >
                     <label
@@ -2885,7 +2885,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                 class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
               >
                 <div
-                  aria-describedby="root_name__error root_name__description root_name__help"
                   class="MuiFormControl-root MuiTextField-root emotion-4"
                 >
                   <label
@@ -2935,7 +2934,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                 class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
               >
                 <div
-                  aria-describedby="root_age__error root_age__description root_age__help"
                   class="MuiFormControl-root MuiTextField-root emotion-4"
                 >
                   <label
@@ -2991,7 +2989,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                   class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-20"
                 >
                   <span
-                    aria-describedby="root_active__error root_active__description root_active__help"
                     class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium Mui-checked MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-21"
                   >
                     <input
@@ -3041,12 +3038,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                   >
                     <div
                       class="MuiBox-root emotion-29"
-                      id="root_tags__title"
                     >
                       <h5
                         class="MuiTypography-root MuiTypography-h5 emotion-30"
                       >
-                        tags
+                        <span
+                          id="root_tags__title"
+                        >
+                          tags
+                        </span>
                       </h5>
                       <hr
                         class="MuiDivider-root MuiDivider-fullWidth emotion-31"
@@ -3075,7 +3075,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                                   class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                                 >
                                   <div
-                                    aria-describedby="root_tags_0__error root_tags_0__description root_tags_0__help"
                                     class="MuiFormControl-root MuiTextField-root emotion-4"
                                   >
                                     <label
@@ -3211,7 +3210,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                                   class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                                 >
                                   <div
-                                    aria-describedby="root_tags_1__error root_tags_1__description root_tags_1__help"
                                     class="MuiFormControl-root MuiTextField-root emotion-4"
                                   >
                                     <label
@@ -3838,7 +3836,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                 class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
               >
                 <div
-                  aria-describedby="root_firstName__error root_firstName__description root_firstName__help"
                   class="MuiFormControl-root MuiTextField-root emotion-4"
                 >
                   <label
@@ -3888,7 +3885,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                 class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
               >
                 <div
-                  aria-describedby="root_lastName__error root_lastName__description root_lastName__help"
                   class="MuiFormControl-root MuiTextField-root emotion-4"
                 >
                   <label
@@ -3938,7 +3934,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                 class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
               >
                 <div
-                  aria-describedby="root_age__error root_age__description root_age__help"
                   class="MuiFormControl-root MuiTextField-root emotion-4"
                 >
                   <label
@@ -4485,12 +4480,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
               >
                 <div
                   class="MuiBox-root emotion-4"
-                  id="root_person__title"
                 >
                   <h5
                     class="MuiTypography-root MuiTypography-h5 emotion-5"
                   >
-                    person
+                    <span
+                      id="root_person__title"
+                    >
+                      person
+                    </span>
                   </h5>
                   <hr
                     class="MuiDivider-root MuiDivider-fullWidth emotion-6"
@@ -4509,7 +4507,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
                         class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                       >
                         <div
-                          aria-describedby="root_person_name__error root_person_name__description root_person_name__help"
                           class="MuiFormControl-root MuiTextField-root emotion-10"
                         >
                           <label
@@ -4560,12 +4557,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
                       >
                         <div
                           class="MuiBox-root emotion-4"
-                          id="root_person_address__title"
                         >
                           <h5
                             class="MuiTypography-root MuiTypography-h5 emotion-5"
                           >
-                            address
+                            <span
+                              id="root_person_address__title"
+                            >
+                              address
+                            </span>
                           </h5>
                           <hr
                             class="MuiDivider-root MuiDivider-fullWidth emotion-6"
@@ -4584,7 +4584,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
                                 class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                               >
                                 <div
-                                  aria-describedby="root_person_address_street__error root_person_address_street__description root_person_address_street__help"
                                   class="MuiFormControl-root MuiTextField-root emotion-10"
                                 >
                                   <label
@@ -4634,7 +4633,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
                                 class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                               >
                                 <div
-                                  aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                                   class="MuiFormControl-root MuiTextField-root emotion-10"
                                 >
                                   <label
@@ -5664,7 +5662,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                 class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
               >
                 <div
-                  aria-describedby="root_name__error root_name__description root_name__help"
                   class="MuiFormControl-root MuiTextField-root emotion-4"
                 >
                   <label
@@ -5714,7 +5711,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                 class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
               >
                 <div
-                  aria-describedby="root_count__error root_count__description root_count__help"
                   class="MuiFormControl-root MuiTextField-root emotion-4"
                 >
                   <label
@@ -5775,12 +5771,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                   >
                     <div
                       class="MuiBox-root emotion-22"
-                      id="root_items__title"
                     >
                       <h5
                         class="MuiTypography-root MuiTypography-h5 emotion-23"
                       >
-                        items
+                        <span
+                          id="root_items__title"
+                        >
+                          items
+                        </span>
                       </h5>
                       <hr
                         class="MuiDivider-root MuiDivider-fullWidth emotion-24"
@@ -5809,7 +5808,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                                   class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                                 >
                                   <div
-                                    aria-describedby="root_items_0__error root_items_0__description root_items_0__help"
                                     class="MuiFormControl-root MuiTextField-root emotion-4"
                                   >
                                     <label
@@ -5945,7 +5943,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                                   class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                                 >
                                   <div
-                                    aria-describedby="root_items_1__error root_items_1__description root_items_1__help"
                                     class="MuiFormControl-root MuiTextField-root emotion-4"
                                   >
                                     <label
@@ -6572,7 +6569,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                 class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
               >
                 <div
-                  aria-describedby="root_firstName__error root_firstName__description root_firstName__help"
                   class="MuiFormControl-root MuiTextField-root emotion-4"
                 >
                   <label
@@ -6622,7 +6618,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                 class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
               >
                 <div
-                  aria-describedby="root_lastName__error root_lastName__description root_lastName__help"
                   class="MuiFormControl-root MuiTextField-root emotion-4"
                 >
                   <label
@@ -6672,7 +6667,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                 class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
               >
                 <div
-                  aria-describedby="root_age__error root_age__description root_age__help"
                   class="MuiFormControl-root MuiTextField-root emotion-4"
                 >
                   <label
@@ -7624,7 +7618,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
                   class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                 >
                   <div
-                    aria-describedby="root_foo__error root_foo__description root_foo__help"
                     class="MuiFormControl-root MuiTextField-root emotion-13"
                   >
                     <label
@@ -8739,7 +8732,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                     class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiSelect-root emotion-7"
                   >
                     <div
-                      aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
                       aria-expanded="false"
                       aria-haspopup="listbox"
                       aria-labelledby="root_foo-key-label"
@@ -8792,7 +8784,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                   class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                 >
                   <div
-                    aria-describedby="root_foo__error root_foo__description root_foo__help"
                     class="MuiFormControl-root MuiTextField-root emotion-5"
                   >
                     <label
@@ -8807,6 +8798,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                       class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-7"
                     >
                       <input
+                        aria-describedby="root_foo__description"
                         aria-invalid="false"
                         class="MuiInputBase-input MuiOutlinedInput-input emotion-18"
                         id="root_foo"
@@ -9785,12 +9777,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
                     >
                       <div
                         class="MuiBox-root emotion-15"
-                        id="root_foo__title"
                       >
                         <h5
                           class="MuiTypography-root MuiTypography-h5 emotion-16"
                         >
-                          foo
+                          <span
+                            id="root_foo__title"
+                          >
+                            foo
+                          </span>
                         </h5>
                         <hr
                           class="MuiDivider-root MuiDivider-fullWidth emotion-17"
@@ -10813,7 +10808,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
                   class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                 >
                   <div
-                    aria-describedby="root_foo__error root_foo__description root_foo__help"
                     class="MuiFormControl-root MuiTextField-root emotion-13"
                   >
                     <label
@@ -10828,6 +10822,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
                       class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-15"
                     >
                       <input
+                        aria-describedby="root_foo__description"
                         aria-invalid="false"
                         class="MuiInputBase-input MuiOutlinedInput-input emotion-8"
                         id="root_foo"
@@ -11824,7 +11819,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
                   class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                 >
                   <div
-                    aria-describedby="root_foo__error root_foo__description root_foo__help"
                     class="MuiFormControl-root MuiTextField-root emotion-13"
                   >
                     <label
@@ -12919,12 +12913,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
                 >
                   <div
                     class="MuiBox-root emotion-13"
-                    id="root_foo__title"
                   >
                     <h5
                       class="MuiTypography-root MuiTypography-h5 emotion-14"
                     >
-                      foo
+                      <span
+                        id="root_foo__title"
+                      >
+                        foo
+                      </span>
                     </h5>
                     <hr
                       class="MuiDivider-root MuiDivider-fullWidth emotion-15"
@@ -12943,7 +12940,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
                           class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                         >
                           <div
-                            aria-describedby="root_foo_foo__error root_foo_foo__description root_foo_foo__help"
                             class="MuiFormControl-root MuiTextField-root emotion-19"
                           >
                             <label
@@ -14042,7 +14038,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                     class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiSelect-root emotion-7"
                   >
                     <div
-                      aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
                       aria-expanded="false"
                       aria-haspopup="listbox"
                       aria-labelledby="root_foo-key-label"
@@ -14095,7 +14090,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                   class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                 >
                   <div
-                    aria-describedby="root_foo__error root_foo__description root_foo__help"
                     class="MuiFormControl-root MuiTextField-root emotion-5"
                   >
                     <label
@@ -15190,7 +15184,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                     class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiSelect-root emotion-7"
                   >
                     <div
-                      aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
                       aria-expanded="false"
                       aria-haspopup="listbox"
                       aria-labelledby="root_foo-key-label"
@@ -15243,7 +15236,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                   class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                 >
                   <div
-                    aria-describedby="root_foo__error root_foo__description root_foo__help"
                     class="MuiFormControl-root MuiTextField-root emotion-5"
                   >
                     <label
@@ -15252,7 +15244,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                       for="root_foo"
                       id="root_foo-label"
                     >
-                      foo
+                      foo (deprecated)
                     </label>
                     <div
                       class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-7"
@@ -15274,7 +15266,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                           class="emotion-12"
                         >
                           <span>
-                            foo
+                            foo (deprecated)
                           </span>
                         </legend>
                       </fieldset>
@@ -15813,7 +15805,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                 class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
               >
                 <div
-                  aria-describedby="root_a__error root_a__description root_a__help"
                   class="MuiFormControl-root MuiTextField-root emotion-4"
                 >
                   <label
@@ -15863,7 +15854,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                 class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
               >
                 <div
-                  aria-describedby="root_b__error root_b__description root_b__help"
                   class="MuiFormControl-root MuiTextField-root emotion-4"
                 >
                   <label
@@ -16815,7 +16805,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
                   class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                 >
                   <div
-                    aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
                     class="MuiFormControl-root MuiTextField-root emotion-13"
                   >
                     <label
@@ -17797,12 +17786,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
       >
         <div
           class="MuiBox-root emotion-1"
-          id="root__title"
         >
           <h5
             class="MuiTypography-root MuiTypography-h5 emotion-2"
           >
-            Test field
+            <span
+              id="root__title"
+            >
+              Test field
+            </span>
           </h5>
           <hr
             class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -17870,7 +17862,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                   class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                 >
                   <div
-                    aria-describedby="root_foo__error root_foo__description root_foo__help"
                     class="MuiFormControl-root MuiTextField-root emotion-17"
                   >
                     <label
@@ -18474,12 +18465,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
       >
         <div
           class="MuiBox-root emotion-1"
-          id="root__title"
         >
           <h5
             class="MuiTypography-root MuiTypography-h5 emotion-2"
           >
-            Test field
+            <span
+              id="root__title"
+            >
+              Test field
+            </span>
           </h5>
           <hr
             class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -18504,7 +18498,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
               >
                 <div
-                  aria-describedby="root_a__error root_a__description root_a__help"
                   class="MuiFormControl-root MuiTextField-root emotion-8"
                 >
                   <label
@@ -18519,6 +18512,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                     class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-10"
                   >
                     <input
+                      aria-describedby="root_a__description"
                       aria-invalid="false"
                       class="MuiInputBase-input MuiOutlinedInput-input emotion-11"
                       id="root_a"
@@ -18564,7 +18558,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
               >
                 <div
-                  aria-describedby="root_b__error root_b__description root_b__help"
                   class="MuiFormControl-root MuiTextField-root emotion-8"
                 >
                   <label
@@ -18579,6 +18572,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                     class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-10"
                   >
                     <input
+                      aria-describedby="root_b__description"
                       aria-invalid="false"
                       class="MuiInputBase-input MuiOutlinedInput-input emotion-11"
                       id="root_b"
@@ -19507,12 +19501,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
       >
         <div
           class="MuiBox-root emotion-1"
-          id="root__title"
         >
           <h5
             class="MuiTypography-root MuiTypography-h5 emotion-2"
           >
-            Test field
+            <span
+              id="root__title"
+            >
+              Test field
+            </span>
           </h5>
           <hr
             class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -19580,7 +19577,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                   class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                 >
                   <div
-                    aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
                     class="MuiFormControl-root MuiTextField-root emotion-17"
                   >
                     <label
@@ -20562,12 +20558,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
       >
         <div
           class="MuiBox-root emotion-1"
-          id="root__title"
         >
           <h5
             class="MuiTypography-root MuiTypography-h5 emotion-2"
           >
-            My Field
+            <span
+              id="root__title"
+            >
+              My Field
+            </span>
           </h5>
           <hr
             class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -20635,7 +20634,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                   class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                 >
                   <div
-                    aria-describedby="root_foo__error root_foo__description root_foo__help"
                     class="MuiFormControl-root MuiTextField-root emotion-17"
                   >
                     <label
@@ -21239,12 +21237,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
       >
         <div
           class="MuiBox-root emotion-1"
-          id="root__title"
         >
           <h5
             class="MuiTypography-root MuiTypography-h5 emotion-2"
           >
-            My Field
+            <span
+              id="root__title"
+            >
+              My Field
+            </span>
           </h5>
           <hr
             class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -21269,7 +21270,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
               >
                 <div
-                  aria-describedby="root_a__error root_a__description root_a__help"
                   class="MuiFormControl-root MuiTextField-root emotion-8"
                 >
                   <label
@@ -21284,6 +21284,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                     class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-10"
                   >
                     <input
+                      aria-describedby="root_a__description"
                       aria-invalid="false"
                       class="MuiInputBase-input MuiOutlinedInput-input emotion-11"
                       id="root_a"
@@ -21329,7 +21330,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
               >
                 <div
-                  aria-describedby="root_b__error root_b__description root_b__help"
                   class="MuiFormControl-root MuiTextField-root emotion-8"
                 >
                   <label
@@ -21344,6 +21344,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                     class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-10"
                   >
                     <input
+                      aria-describedby="root_b__description"
                       aria-invalid="false"
                       class="MuiInputBase-input MuiOutlinedInput-input emotion-11"
                       id="root_b"
@@ -22272,12 +22273,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
       >
         <div
           class="MuiBox-root emotion-1"
-          id="root__title"
         >
           <h5
             class="MuiTypography-root MuiTypography-h5 emotion-2"
           >
-            My Field
+            <span
+              id="root__title"
+            >
+              My Field
+            </span>
           </h5>
           <hr
             class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -22345,7 +22349,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                   class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                 >
                   <div
-                    aria-describedby="root_foo__error root_foo__description root_foo__help"
                     class="MuiFormControl-root MuiTextField-root emotion-17"
                   >
                     <label
@@ -22949,12 +22952,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
       >
         <div
           class="MuiBox-root emotion-1"
-          id="root__title"
         >
           <h5
             class="MuiTypography-root MuiTypography-h5 emotion-2"
           >
-            My Field
+            <span
+              id="root__title"
+            >
+              My Field
+            </span>
           </h5>
           <hr
             class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -22979,7 +22985,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
               >
                 <div
-                  aria-describedby="root_a__error root_a__description root_a__help"
                   class="MuiFormControl-root MuiTextField-root emotion-8"
                 >
                   <label
@@ -22994,6 +22999,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                     class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-10"
                   >
                     <input
+                      aria-describedby="root_a__description"
                       aria-invalid="false"
                       class="MuiInputBase-input MuiOutlinedInput-input emotion-11"
                       id="root_a"
@@ -23039,7 +23045,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
               >
                 <div
-                  aria-describedby="root_b__error root_b__description root_b__help"
                   class="MuiFormControl-root MuiTextField-root emotion-8"
                 >
                   <label
@@ -23054,6 +23059,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                     class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-10"
                   >
                     <input
+                      aria-describedby="root_b__description"
                       aria-invalid="false"
                       class="MuiInputBase-input MuiOutlinedInput-input emotion-11"
                       id="root_b"
@@ -23982,12 +23988,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
       >
         <div
           class="MuiBox-root emotion-1"
-          id="root__title"
         >
           <h5
             class="MuiTypography-root MuiTypography-h5 emotion-2"
           >
-            My Field
+            <span
+              id="root__title"
+            >
+              My Field
+            </span>
           </h5>
           <hr
             class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -24055,7 +24064,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                   class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                 >
                   <div
-                    aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
                     class="MuiFormControl-root MuiTextField-root emotion-17"
                   >
                     <label
@@ -24943,6 +24951,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                   >
                     <input
                       aria-invalid="false"
+                      aria-label="foo Key"
                       class="MuiInputBase-input MuiOutlinedInput-input emotion-7"
                       id="root_foo-key"
                       name="root_foo-key"
@@ -24974,7 +24983,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                   class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                 >
                   <div
-                    aria-describedby="root_foo__error root_foo__description root_foo__help"
                     class="MuiFormControl-root MuiTextField-root emotion-12"
                   >
                     <div
@@ -24982,6 +24990,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                     >
                       <input
                         aria-invalid="false"
+                        aria-label="foo"
                         class="MuiInputBase-input MuiOutlinedInput-input emotion-7"
                         id="root_foo"
                         name="root_foo"
@@ -25481,7 +25490,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
                 class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
               >
                 <div
-                  aria-describedby="root_a__error root_a__description root_a__help"
                   class="MuiFormControl-root MuiTextField-root emotion-4"
                 >
                   <div
@@ -25489,6 +25497,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
                   >
                     <input
                       aria-invalid="false"
+                      aria-label="A"
                       class="MuiInputBase-input MuiOutlinedInput-input emotion-6"
                       id="root_a"
                       name="root_a"
@@ -25526,7 +25535,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
                 class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
               >
                 <div
-                  aria-describedby="root_b__error root_b__description root_b__help"
                   class="MuiFormControl-root MuiTextField-root emotion-4"
                 >
                   <div
@@ -25534,6 +25542,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
                   >
                     <input
                       aria-invalid="false"
+                      aria-label="B"
                       class="MuiInputBase-input MuiOutlinedInput-input emotion-6"
                       id="root_b"
                       inputmode="decimal"
@@ -26360,6 +26369,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                   >
                     <input
                       aria-invalid="false"
+                      aria-label="additionalProperty Key"
                       class="MuiInputBase-input MuiOutlinedInput-input emotion-7"
                       id="root_additionalProperty-key"
                       name="root_additionalProperty-key"
@@ -26391,7 +26401,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                   class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                 >
                   <div
-                    aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
                     class="MuiFormControl-root MuiTextField-root emotion-12"
                   >
                     <div
@@ -26399,6 +26408,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                     >
                       <input
                         aria-invalid="false"
+                        aria-label="additionalProperty"
                         class="MuiInputBase-input MuiOutlinedInput-input emotion-7"
                         id="root_additionalProperty"
                         name="root_additionalProperty"

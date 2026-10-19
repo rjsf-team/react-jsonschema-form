@@ -3,9 +3,9 @@ import { useCallback } from 'react';
 import type { ColorInputProps } from '@mantine/core';
 import { ColorInput } from '@mantine/core';
 import type { DateElementFormat, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { labelValue } from '@rjsf/utils';
+import { labelValue, widgetDrawsLabel } from '@rjsf/utils';
 
-import { cleanupOptions, getDescriptionProps, useAriaDescribedByProps, useVisibleErrors } from '../utils.tsx';
+import { cleanupOptions, getDescriptionProps, getWidgetError, useInputAriaProps } from '../utils.tsx';
 
 // A record, not a list, so that an order the alt-date widgets gain fails typecheck until it is listed here. Only those
 // orders are left out, so that a format a later Mantine release adds to `ColorInput` still reaches it.
@@ -39,12 +39,12 @@ export default function ColorWidget<
     readonly,
     autofocus,
     label,
-    hideLabel,
     options,
     onChange,
     onBlur,
     onFocus,
   } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
 
   const themeProps = cleanupOptions(options);
 
@@ -73,8 +73,8 @@ export default function ColorWidget<
     [onFocus, id],
   );
 
-  const ariaDescribedByProps = useAriaDescribedByProps('ColorInput', id, options);
-  const error = useVisibleErrors(props);
+  const ariaDescribedByProps = useInputAriaProps('ColorInput', props);
+  const error = getWidgetError<T, S, F>(props);
 
   return (
     <ColorInput

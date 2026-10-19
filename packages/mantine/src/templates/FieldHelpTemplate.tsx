@@ -3,7 +3,8 @@ import { RichHelp } from '@rjsf/core';
 import type { FieldHelpProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { helpId } from '@rjsf/utils';
 
-/** The `FieldHelpTemplate` component renders any help desired for a field
+/** The `FieldHelpTemplate` component renders any help desired for a field, in a block element, since `RichHelp` can
+ * render markdown blocks
  *
  * @param props - The `FieldHelpProps` to be rendered
  */
@@ -12,14 +13,14 @@ export default function FieldHelpTemplate<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: FieldHelpProps<T, S, F>) {
-  const { id, help, uiSchema, registry } = props;
+  const { id, help, uiSchema, registry, presentation } = props;
 
   if (!help) {
     return null;
   }
 
   return (
-    <Text id={helpId(id)} size='sm' my='xs' c='dimmed'>
+    <Text component='div' id={presentation?.help.id ?? helpId(id)} size='sm' my='xs' c='dimmed'>
       <RichHelp help={help} registry={registry} uiSchema={uiSchema} />
     </Text>
   );

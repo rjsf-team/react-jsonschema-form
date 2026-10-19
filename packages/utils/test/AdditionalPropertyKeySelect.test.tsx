@@ -3,14 +3,15 @@ import { render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import type { AdditionalPropertyKeySelectProps, Registry, RJSFSchema, WidgetProps } from '../src/index.ts';
-import { AdditionalPropertyKeySelect } from '../src/index.ts';
+import { AdditionalPropertyKeySelect, widgetAriaProps } from '../src/index.ts';
 
-function SelectWidget({ id, label, options, value, disabled, readonly, required, onChange }: WidgetProps) {
+function SelectWidget(props: WidgetProps) {
+  const { id, options, value, disabled, readonly, required, onChange } = props;
   const { enumDisabled = [] } = options;
   return (
     <select
       id={id}
-      aria-label={label}
+      {...widgetAriaProps(props)}
       value={value}
       disabled={disabled || readonly}
       required={required}
@@ -51,9 +52,50 @@ describe('AdditionalPropertyKeySelect', () => {
     const { container } = render(<AdditionalPropertyKeySelect {...baseProps} />);
     const select = container.querySelector<HTMLSelectElement>('#root_a-key')!;
 
-    expect(select.getAttribute('aria-label')).toBe('a Key');
     expect([...select.options].map((option) => option.textContent)).toEqual(['a', 'b']);
     expect(select).toHaveValue('a');
+  });
+
+  it('describes the select by none of the ids a widget rendered without a plan falls back to, which no element has', () => {
+    const { container } = render(<AdditionalPropertyKeySelect {...baseProps} />);
+
+    expect(container.querySelector('#root_a-key')).not.toHaveAttribute('aria-describedby');
+  });
+
+  it("names the select by the key's label where neither it nor its template draws that label", () => {
+    const { container } = render(<AdditionalPropertyKeySelect {...baseProps} hideLabel />);
+
+    expect(container.querySelector('#root_a-key')).toHaveAttribute('aria-label', 'a Key');
+  });
+
+  it("leaves the select named by the key's label its template draws beside it, with no aria-label over it", () => {
+    const { container } = render(
+      <>
+        <label htmlFor='root_a-key'>a Key</label>
+        <AdditionalPropertyKeySelect {...baseProps} hideLabel labelledByTemplate />
+      </>,
+    );
+    const select = container.querySelector('#root_a-key');
+
+    expect(select).not.toHaveAttribute('aria-label');
+    expect(select).toHaveAccessibleName('a Key');
+  });
+
+  it("plans the select to draw the key's label itself where it doesn't leave it off, so names it by nothing else", () => {
+    const Spy = vi.fn(SelectWidget);
+    const { container } = render(
+      <AdditionalPropertyKeySelect
+        {...baseProps}
+        required
+        registry={{ widgets: { SelectWidget: Spy } } as unknown as Registry}
+      />,
+    );
+
+    expect(container.querySelector('#root_a-key')).not.toHaveAttribute('aria-label');
+    expect(Spy.mock.lastCall![0].presentation).toMatchObject({
+      label: { by: 'self', text: 'a Key', requiredMarker: true },
+      control: { id: 'root_a-key', attributes: { required: true } },
+    });
   });
 
   it('renames the key to the selected name', async () => {

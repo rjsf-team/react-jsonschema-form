@@ -8,19 +8,19 @@ import FormGroup from '@mui/material/FormGroup';
 import FormLabel from '@mui/material/FormLabel';
 import type { FormContextType, GenericObjectType, WidgetProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
+  enumOptionsAutofocusIndex,
   enumOptionsDeselectValue,
   enumOptionsDomValues,
   enumOptionsIsDisabled,
   enumOptionsIsSelected,
   enumOptionsSelectValue,
+  getGroupLabelling,
   getOptionValueFormat,
-  labelValue,
   optionId,
   useOptionFocusHandlers,
 } from '@rjsf/utils';
 
-import { getMuiProps } from '../util.ts';
+import { getMuiProps, withInputSlot } from '../util.ts';
 
 /** Properties available for the `rjsfSlotProps` target of the CheckboxesWidget. */
 export interface CheckboxesWidgetMuiProps extends GenericObjectType {
@@ -45,21 +45,8 @@ export default function CheckboxesWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const {
-    label,
-    hideLabel,
-    id,
-    htmlName,
-    disabled,
-    options,
-    value,
-    autofocus,
-    readonly,
-    required,
-    onChange,
-    onBlur,
-    onFocus,
-  } = props;
+  const { label, id, htmlName, disabled, options, value, autofocus, readonly, required, onChange, onBlur, onFocus } =
+    props;
   const { enumOptions, enumDisabled, inline } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
@@ -77,34 +64,47 @@ export default function CheckboxesWidget<
 
   const { focusHandlers, blurHandlers } = useOptionFocusHandlers<T, S, F>({ id, options, onFocus, onBlur });
 
-  const { rjsfSlotProps: muiSlotProps, ...otherMuiProps } = getMuiProps<T, S, F, CheckboxesWidgetMuiProps>(options);
+  const {
+    drawsLabel,
+    labelId,
+    group: groupAttributes,
+    option: optionAttributes,
+  } = getGroupLabelling<T, S, F>(props, 'group');
 
+  const { rjsfSlotProps: muiSlotProps, ...otherMuiProps } = getMuiProps<T, S, F, CheckboxesWidgetMuiProps>(options);
+  // A `required` the form author gives the `Checkbox` goes on its `<input>`, as `RadioWidget`'s does, rather than on the
+  // `Checkbox`, whose `FormControlLabel` would mark each option's label `*`
+  const { required: authorRequired, ...checkboxProps } = muiSlotProps?.checkbox ?? {};
+  const checkboxSlotProps = withInputSlot({ ...optionAttributes, required: authorRequired }, checkboxProps.slotProps);
+
+  const autofocusIndex = enumOptionsAutofocusIndex<S>(enumOptions, enumDisabled, autofocus);
   return (
     <>
-      {labelValue(
-        <FormLabel required={required} htmlFor={id}>
-          {label || undefined}
-        </FormLabel>,
-        hideLabel,
+      {/* No `for`, which can't name the group's wrapper: the group points its `aria-labelledby` at the label instead */}
+      {drawsLabel && (
+        <FormLabel id={labelId} required={required}>
+          {label}
+        </FormLabel>
       )}
-      <FormGroup {...otherMuiProps} {...muiSlotProps?.formGroup} id={id} row={!!inline}>
+      {/* The plan's group attributes go beneath the form author's, as the plan's control attributes do on each checkbox */}
+      <FormGroup {...groupAttributes} {...otherMuiProps} {...muiSlotProps?.formGroup} id={id} row={!!inline}>
         {Array.isArray(enumOptions) &&
           enumOptions.map((option, index: number) => {
             const checked = enumOptionsIsSelected<S>(option.value, checkboxesValues);
             const itemDisabled = enumOptionsIsDisabled(option.value, enumDisabled);
             const checkbox = (
               <Checkbox
-                {...muiSlotProps?.checkbox}
+                {...checkboxProps}
                 id={optionId(id, index)}
                 name={htmlName || id}
                 checked={checked}
                 value={domValues[index]}
                 disabled={disabled || itemDisabled || readonly}
-                autoFocus={autofocus && index === 0}
+                autoFocus={checkboxProps.autoFocus ?? index === autofocusIndex}
                 onChange={handleChange(index)}
                 onBlur={blurHandlers[index]}
                 onFocus={focusHandlers[index]}
-                aria-describedby={ariaDescribedByIds(id)}
+                slotProps={checkboxSlotProps}
               />
             );
             return (

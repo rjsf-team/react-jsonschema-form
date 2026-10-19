@@ -1,6 +1,6 @@
 import type { ChangeEvent, FocusEvent } from 'react';
 import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds } from '@rjsf/utils';
+import { getControlAttributes } from '@rjsf/utils';
 import { Input } from 'antd';
 
 const INPUT_STYLE = {
@@ -19,6 +19,7 @@ export default function TextareaWidget<
   disabled,
   registry,
   id,
+  presentation,
   htmlName,
   onBlur,
   onChange,
@@ -26,6 +27,7 @@ export default function TextareaWidget<
   options,
   placeholder,
   readonly,
+  required,
   value,
 }: WidgetProps<T, S, F>) {
   const { formContext } = registry;
@@ -53,11 +55,13 @@ export default function TextareaWidget<
       onChange={!readonly ? handleChange : undefined}
       onFocus={!readonly ? handleFocus : undefined}
       placeholder={placeholder}
+      readOnly={readonly}
+      required={required}
       rows={options.rows ?? 4}
       style={INPUT_STYLE}
       value={value}
       {...extraProps}
-      aria-describedby={ariaDescribedByIds(id)}
+      {...getControlAttributes<T, S, F>({ id, presentation })}
     />
   );
 }

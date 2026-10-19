@@ -1,6 +1,15 @@
-import { Field, Text } from '@fluentui/react-components';
+import { Field, Label, Text } from '@fluentui/react-components';
 import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getTemplates, getUiOptions, hasVisibleErrors } from '@rjsf/utils';
+import {
+  getTemplates,
+  getUiOptions,
+  hasTemplateErrors,
+  templateDrawsDescription,
+  templateDrawsLabel,
+  templateDrawsPlannedLabel,
+  templateLabelFor,
+  templateMarksRequired,
+} from '@rjsf/utils';
 
 /** The `FieldTemplate` component is the template used by `SchemaField` to render any field. It renders the field
  * content, (label, description, children, errors and help) inside of a `WrapIfAdditional` component.
@@ -18,7 +27,7 @@ export default function FieldTemplate<
     classNames,
     style,
     disabled,
-    displayLabel,
+    presentation,
     hidden,
     label,
     keyName,
@@ -28,8 +37,6 @@ export default function FieldTemplate<
     propertyNamesEnum,
     readonly,
     required,
-    rawErrors,
-    hideError,
     errors,
     help,
     description,
@@ -38,14 +45,18 @@ export default function FieldTemplate<
     uiSchema,
     registry,
   } = props;
+  const displayLabel = templateDrawsLabel<T, S, F>(props);
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const hasError = hasVisibleErrors({ rawErrors, hideError });
+  const hasError = hasTemplateErrors<T, S, F>(props);
   const { WrapIfAdditionalTemplate } = getTemplates<T, S, F>(registry, uiOptions);
 
   if (hidden) {
     return <div style={{ display: 'none' }}>{children}</div>;
   }
-  const isCheckbox = uiOptions.widget === 'checkbox';
+  // The plan's description already says whether a checkbox draws its own; the guess by the `checkbox` alias is left
+  // for a template rendered without one, so a description the plan gives the template isn't dropped
+  const leavesPartsToCheckbox = !presentation && uiOptions.widget === 'checkbox';
+  const drawsLabel = templateDrawsPlannedLabel<T, S, F>(props);
   return (
     <WrapIfAdditionalTemplate
       classNames={classNames}
@@ -54,7 +65,9 @@ export default function FieldTemplate<
       id={id}
       label={label}
       keyName={keyName}
+      // oxlint-disable-next-line typescript/no-deprecated -- handed on to a `WrapIfAdditionalTemplate` rendered without a plan, which labels the key by it
       displayLabel={displayLabel}
+      presentation={presentation}
       rawDescription={rawDescription}
       onKeyRename={onKeyRename}
       onKeyRenameBlur={onKeyRenameBlur}
@@ -66,9 +79,21 @@ export default function FieldTemplate<
       uiSchema={uiSchema}
       registry={registry}
     >
-      <Field validationState={hasError ? 'error' : undefined} required={required}>
+      {/* No `required`, which Fluent hands every control inside the `Field` as its own: each widget marks itself as the
+          plan says, so a checkbox of a required group, or a control holding `false` unchecked, isn't made required */}
+      <Field validationState={hasError ? 'error' : undefined}>
+        {drawsLabel && (
+          <Label
+            id={presentation?.label.id}
+            htmlFor={templateLabelFor<T, S, F>(props)}
+            required={templateMarksRequired<T, S, F>(props)}
+            disabled={disabled}
+          >
+            {label}
+          </Label>
+        )}
         {children}
-        {displayLabel && rawDescription && !isCheckbox ? (
+        {templateDrawsDescription<T, S, F>(props) && rawDescription && !leavesPartsToCheckbox ? (
           <Text as='p' block style={{ marginTop: 0, marginBottom: 0 }}>
             {description}
           </Text>

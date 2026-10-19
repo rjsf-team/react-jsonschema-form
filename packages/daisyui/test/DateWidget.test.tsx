@@ -1,5 +1,6 @@
+import { englishStringTranslator, TranslatableString } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import Form from '../src/index.ts';
@@ -420,6 +421,15 @@ describe('DateWidget', () => {
     expect(disabled.querySelector('button[aria-haspopup]')).toBeDisabled();
   });
 
+  test.each([
+    [true, 'true'],
+    [false, null],
+  ])('says through aria-required whether the field is required, where required is %s', (required, ariaRequired) => {
+    render(<DateWidget {...makeWidgetMockProps({ value: '2020-05-03', schema, required, autofocus: false })} />);
+
+    expect(screen.getByRole('combobox').getAttribute('aria-required')).toBe(ariaRequired);
+  });
+
   // The trigger's name comes partly from the label `FieldTemplate` renders, so these go through a `Form`
   describe('the trigger it renders', () => {
     const dateSchema = { type: 'object' as const, properties: { birthday: { ...schema, title: 'Birthday' } } };
@@ -427,21 +437,90 @@ describe('DateWidget', () => {
     test('is named by the label once when no date is selected', () => {
       render(<Form schema={dateSchema} validator={validator} />);
 
-      expect(screen.getByRole('button', { name: 'Birthday' })).toHaveAccessibleName('Birthday');
+      expect(screen.getByRole('combobox', { name: 'Birthday' })).toHaveAccessibleName('Birthday');
     });
 
-    // The label names the button through `htmlFor`, which replaces the button's own contents, so the day it displays
-    // would otherwise never be announced
-    test('describes itself with the selected date, which its name replaces', () => {
+    // On screen the label stands in for the date it doesn't hold, which is no value
+    test('holds no value while no date is selected and no placeholder shows', () => {
+      render(<Form schema={dateSchema} validator={validator} />);
+
+      const trigger = screen.getByRole('combobox', { name: 'Birthday' });
+      expect(within(trigger).getByText('Birthday')).toHaveAttribute('aria-hidden', 'true');
+    });
+
+    test.each(['{ArrowDown}', '{Alt>}{ArrowDown}{/Alt}'])(
+      'opens its picker on %s, as a combobox does, moving focus onto the selected day',
+      async (keys) => {
+        render(<Form schema={dateSchema} initialFormData={{ birthday: '2020-05-03' }} validator={validator} />);
+
+        await user.tab();
+        await user.keyboard(keys);
+
+        expect(screen.getByRole('combobox', { name: 'Birthday' })).toHaveAttribute('aria-expanded', 'true');
+        const grid = within(screen.getByRole('dialog', { name: 'Birthday' })).getByRole('grid');
+        expect(grid).toContainElement(document.activeElement as HTMLElement);
+        expect(document.activeElement).toHaveTextContent(/^3$/);
+      },
+    );
+
+    test('moves focus into its open picker on Down Arrow, rather than leaving the key to scroll the page', async () => {
+      render(<Form schema={dateSchema} initialFormData={{ birthday: '2020-05-03' }} validator={validator} />);
+      const trigger = screen.getByRole('combobox', { name: 'Birthday' });
+
+      await user.click(trigger);
+      expect(trigger).toHaveFocus();
+      let prevented: boolean | undefined;
+      const record = (event: KeyboardEvent) => {
+        prevented = event.defaultPrevented;
+      };
+      document.addEventListener('keydown', record);
+      await user.keyboard('{ArrowDown}');
+      document.removeEventListener('keydown', record);
+
+      expect(prevented).toBe(true);
+      const grid = within(screen.getByRole('dialog', { name: 'Birthday' })).getByRole('grid');
+      expect(grid).toContainElement(document.activeElement as HTMLElement);
+      expect(document.activeElement).toHaveTextContent(/^3$/);
+    });
+
+    test('moves focus into its open picker on Down Arrow in a form rendered in a shadow root', async () => {
+      const host = document.body.appendChild(document.createElement('div'));
+      onTestFinished(() => host.remove());
+      const shadowRoot = host.attachShadow({ mode: 'open' });
+      const container = shadowRoot.appendChild(document.createElement('div'));
+      render(<Form schema={dateSchema} initialFormData={{ birthday: '2020-05-03' }} validator={validator} />, {
+        container,
+      });
+      const trigger = within(container).getByRole('combobox', { name: 'Birthday' });
+
+      await user.click(trigger);
+      await user.keyboard('{ArrowDown}');
+
+      expect(within(container).getByRole('grid')).toContainElement(shadowRoot.activeElement as HTMLElement);
+      expect(shadowRoot.activeElement).toHaveTextContent(/^3$/);
+    });
+
+    test('opens no picker on Down Arrow where the field is read-only', async () => {
+      render(<Form schema={dateSchema} uiSchema={{ birthday: { 'ui:readonly': true } }} validator={validator} />);
+
+      await user.tab();
+      await user.keyboard('{ArrowDown}');
+
+      expect(screen.getByRole('combobox', { name: 'Birthday' })).toHaveAttribute('aria-expanded', 'false');
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
+
+    // The label names the combobox through `htmlFor`, and the day it displays is its value
+    test('holds the selected date as its value', () => {
       render(<Form schema={dateSchema} initialFormData={{ birthday: '2020-05-03' }} validator={validator} />);
 
-      const trigger = screen.getByRole('button', { name: 'Birthday' });
-      expect(trigger).toHaveAccessibleName('Birthday');
-      expect(trigger).toHaveAccessibleDescription('May 3, 2020');
+      const trigger = screen.getByRole('combobox', { name: 'Birthday' });
+      expect(trigger).toHaveTextContent('May 3, 2020');
+      expect(trigger).toHaveAccessibleDescription('');
     });
 
     // Naming the trigger by reference instead would point at an id only this theme's `FieldTemplate` renders, leaving
-    // the button named by its own contents — the date alone — under any other one
+    // it unnamed under any other one
     test('is named by the label of a replacement FieldTemplate', () => {
       render(
         <Form
@@ -459,18 +538,18 @@ describe('DateWidget', () => {
         />,
       );
 
-      expect(screen.getByRole('button', { name: 'Birthday' })).toHaveAccessibleDescription('May 3, 2020');
+      expect(screen.getByRole('combobox', { name: 'Birthday' })).toHaveTextContent('May 3, 2020');
     });
 
-    // There is no label element to point at, so the trigger's contents are its whole name. Rendering nothing would
-    // leave a control that is both blank and unnamed
-    test('falls back to the label for its text, and so its name, where the label is hidden', () => {
+    // There is no label element to point at, so the field's label names it, and is its text, which would otherwise be
+    // blank
+    test('falls back to the label for its text and its name where the label is hidden', () => {
       render(
         <Form schema={dateSchema} uiSchema={{ birthday: { 'ui:options': { label: false } } }} validator={validator} />,
       );
 
       expect(screen.queryByText('Birthday', { selector: 'label span' })).not.toBeInTheDocument();
-      expect(screen.getByRole('button', { name: 'Birthday' })).toHaveTextContent('Birthday');
+      expect(screen.getByRole('combobox', { name: 'Birthday' })).toHaveTextContent('Birthday');
     });
 
     // `<label for>` only associates with a labelable element, so a trigger that is not a real control is named by
@@ -509,20 +588,50 @@ describe('DateWidget', () => {
       expect(onChange.mock.calls[0][0].formData).toEqual({ birthday: '2020-05-17' });
     });
 
-    // With no label element the trigger's contents are its own name, so referencing them as well would have the date
-    // announced twice — once as the name and once as the description
-    test('does not describe itself with its own name where there is no label', () => {
+    test('is named by its placeholder where it has no label', () => {
+      const { container } = render(
+        <Form schema={schema} uiSchema={{ 'ui:placeholder': 'Pick a day' }} validator={validator} />,
+      );
+
+      expect(container.querySelector('button[aria-haspopup]')).toHaveAccessibleName('Pick a day');
+    });
+
+    // With no label, and no title to name it by, the translated prompt names it, and the date is its value
+    test('is named by the translated prompt where nothing else names it', () => {
       const { container } = render(<Form schema={schema} initialFormData='2020-05-03' validator={validator} />);
 
       const trigger = container.querySelector('button[aria-haspopup]')!;
-      expect(trigger).toHaveAccessibleName('May 3, 2020');
-      expect(trigger.getAttribute('aria-describedby')).not.toContain('__value');
+      expect(trigger).toHaveAccessibleName(englishStringTranslator(TranslatableString.AriaDateLabel));
+      expect(trigger).toHaveTextContent('May 3, 2020');
+      // Nothing else describes it either, so it carries no `aria-describedby` at all
+      expect(trigger).not.toHaveAttribute('aria-describedby');
+    });
+
+    test('is marked invalid and described by its errors while they show', () => {
+      render(<Form schema={dateSchema} validator={validator} extraErrors={{ birthday: { __errors: ['Too late'] } }} />);
+
+      const trigger = screen.getByRole('combobox', { name: 'Birthday' });
+      expect(trigger).toHaveAttribute('aria-invalid', 'true');
+      expect(trigger).toHaveAccessibleDescription('Too late');
+    });
+
+    test('controls the dialog it opens, which is named by its field', async () => {
+      render(<Form schema={dateSchema} validator={validator} />);
+
+      const trigger = screen.getByRole('combobox', { name: 'Birthday' });
+      expect(trigger).toHaveAttribute('aria-haspopup', 'dialog');
+      expect(trigger).not.toHaveAttribute('aria-controls');
+
+      await user.click(trigger);
+
+      expect(trigger).toHaveAttribute('aria-expanded', 'true');
+      expect(trigger).toHaveAttribute('aria-controls', screen.getByRole('dialog', { name: 'Birthday' }).id);
     });
 
     test('shows the label rather than the schema title, which ui:title overrides', () => {
       render(<Form schema={dateSchema} uiSchema={{ birthday: { 'ui:title': 'DOB' } }} validator={validator} />);
 
-      expect(screen.getByRole('button', { name: 'DOB' })).toBeInTheDocument();
+      expect(screen.getByRole('combobox', { name: 'DOB' })).toBeInTheDocument();
     });
   });
 

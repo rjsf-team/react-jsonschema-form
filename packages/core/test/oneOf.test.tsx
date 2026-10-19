@@ -9,7 +9,7 @@ import type {
   UiSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { noop } from '@rjsf/utils';
+import { noop, optionDescriptionId } from '@rjsf/utils';
 import { act, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
@@ -73,6 +73,8 @@ describe('oneOf', () => {
     expect(node.querySelector('select')).toHaveAttribute('id', 'root__oneof_select');
     expect(node.querySelectorAll('span.required')).toHaveLength(1);
     expect(node.querySelectorAll('#root_XxxOf__description')).toHaveLength(1);
+    // The object renders beside the selected option under an id of its own, so nothing else claims the field's
+    expect(node.querySelectorAll('#root__description')).toHaveLength(0);
     expect(node.querySelectorAll('#root_baz')).toHaveLength(1);
   });
 
@@ -1861,7 +1863,7 @@ describe('oneOf', () => {
       // Also verify the uiSchema was passed down to the underlying widget by confirming the lable (in the legend)
       // matches the selected option's title
       expect($select).toHaveValue('0');
-      const inputLabel = node.querySelector('legend#root__title');
+      const inputLabel = node.querySelector('legend #root__title');
       expect(inputLabel?.innerHTML).toEqual($select?.options[0].text);
     });
 
@@ -1908,11 +1910,11 @@ describe('oneOf', () => {
 
       const $select = node.querySelector('select');
 
-      // Also verify the base uiSchema was passed down to the underlying widget by confirming the label (in the legend)
-      // matches the selected option's title
+      // The base uiSchema's title labels the field, through its template, and the selected option keeps its own heading,
+      // which says something else
       expect($select).toHaveValue('0');
-      const inputLabel = node.querySelector('legend#root__title');
-      expect(inputLabel?.innerHTML).toEqual('My Title');
+      expect(node.querySelector('#root__label')?.closest('label')).toHaveTextContent('My Title');
+      expect(node.querySelector('legend #root__title')).toHaveTextContent('Foo');
       consoleWarnSpy.mockRestore();
     });
 
@@ -2418,6 +2420,318 @@ describe('oneOf', () => {
     });
   });
 
+  describe('the selected option rendered for the same id as its field', () => {
+    const europe: RJSFSchema = {
+      title: 'Europe',
+      oneOf: [
+        { const: 'FR', title: 'France' },
+        { const: 'DE', title: 'Germany' },
+      ],
+    };
+    const regionSchema = (europeSchema: RJSFSchema): RJSFSchema => ({
+      type: 'object',
+      properties: {
+        region: { oneOf: [{ title: 'None', type: 'null' }, { $ref: '#/$defs/europe' }] },
+      },
+      $defs: { europe: europeSchema },
+    });
+    const schema = regionSchema(europe);
+    const formData = { region: 'DE' };
+    const CustomField = () => <div className='custom-field'>Custom field</div>;
+
+    it('labels the control once, with the field label', () => {
+      const { node } = createFormComponent({ schema, initialFormData: formData });
+
+      expect(node.querySelectorAll('label[for="root_region"]')).toHaveLength(1);
+      // The field's label names the option's control and, through `aria-labelledby`, the option selector
+      expect(screen.getAllByLabelText('region')).toEqual([
+        node.querySelector('select#root_region__oneof_select'),
+        node.querySelector('select#root_region'),
+      ]);
+      expect(screen.queryByLabelText('Europe')).toBeNull();
+    });
+
+    it('labels the control once, with the field label, when the field names FallbackField as its ui:field', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { x: { oneOf: [{ type: 'string', title: 'Text' }, { type: 'number' }] } },
+        },
+        uiSchema: { x: { 'ui:field': 'FallbackField' } },
+        initialFormData: { x: 'a' },
+      });
+
+      expect(node.querySelectorAll('label[for="root_x"]')).toHaveLength(1);
+      expect(screen.getAllByLabelText('x')).toEqual([
+        node.querySelector('select#root_x__oneof_select'),
+        node.querySelector('input#root_x'),
+      ]);
+      expect(screen.queryByLabelText('Text')).toBeNull();
+    });
+
+    it('renders the field help once', () => {
+      const { node } = createFormComponent({
+        schema,
+        initialFormData: formData,
+        uiSchema: { region: { 'ui:help': 'pick a region' } },
+      });
+
+      expect(node.querySelectorAll('#root_region__help')).toHaveLength(1);
+      expect(screen.getAllByText('pick a region')).toHaveLength(1);
+    });
+
+    it('renders a ui:globalOptions help once for an option with a uiSchema of its own', () => {
+      const { node } = createFormComponent({
+        schema,
+        initialFormData: formData,
+        uiSchema: { 'ui:globalOptions': { help: 'global help' }, region: { oneOf: [{}, {}] } },
+      });
+
+      expect(node.querySelectorAll('#root_region__help')).toHaveLength(1);
+    });
+
+    it('renders the help an option declares for itself', () => {
+      createFormComponent({
+        schema,
+        initialFormData: formData,
+        uiSchema: { region: { oneOf: [{}, { 'ui:help': 'option help' }] } },
+      });
+
+      expect(screen.getByText('option help')).toBeInTheDocument();
+    });
+
+    it('describes the option once, under the id its control is described by', () => {
+      const { node } = createFormComponent({
+        schema: regionSchema({ ...europe, description: 'A country in Europe' }),
+        initialFormData: formData,
+      });
+
+      expect(screen.getAllByText('A country in Europe')).toHaveLength(1);
+      expect(node.querySelector('#root_region__description')).toHaveTextContent('A country in Europe');
+      expect(node.querySelector('select#root_region')).toHaveAttribute(
+        'aria-describedby',
+        expect.stringContaining('root_region__description'),
+      );
+    });
+
+    it("describes the option under an id of its own beneath the field's description", () => {
+      const { node } = createFormComponent({
+        schema: regionSchema({ ...europe, description: 'A country in Europe' }),
+        uiSchema: { region: { 'ui:description': 'Where you live' } },
+        initialFormData: formData,
+      });
+
+      expect(screen.getAllByText('Where you live')).toHaveLength(1);
+      expect(screen.getAllByText('A country in Europe')).toHaveLength(1);
+      expect(node.querySelectorAll('#root_region__description')).toHaveLength(1);
+      expect(node.querySelector('#root_region__description')).toHaveTextContent('Where you live');
+      expect(node.querySelector(`#${optionDescriptionId('root_region')}`)).toHaveTextContent('A country in Europe');
+      expect(node.querySelector('select#root_region')).toHaveAttribute(
+        'aria-describedby',
+        expect.stringContaining(optionDescriptionId('root_region')),
+      );
+    });
+
+    it("describes a checkbox option under an id of its own beneath the field's description", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            x: {
+              description: 'Field desc',
+              oneOf: [
+                { type: 'boolean', description: 'Opt desc' },
+                { type: 'string', title: 'Text' },
+              ],
+            },
+          },
+        },
+        initialFormData: { x: true },
+      });
+
+      expect(screen.getAllByText('Opt desc')).toHaveLength(1);
+      expect(node.querySelectorAll('#root_x__description')).toHaveLength(1);
+      expect(node.querySelector('#root_x__description')).toHaveTextContent('Field desc');
+      expect(node.querySelector(`#${optionDescriptionId('root_x')}`)).toHaveTextContent('Opt desc');
+    });
+
+    it('leaves a checkbox option its own description when the field has none', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            x: {
+              oneOf: [
+                { type: 'boolean', description: 'Opt desc' },
+                { type: 'string', title: 'Text' },
+              ],
+            },
+          },
+        },
+        initialFormData: { x: true },
+      });
+
+      expect(screen.getAllByText('Opt desc')).toHaveLength(1);
+      expect(node.querySelector('#root_x__description')).toHaveTextContent('Opt desc');
+    });
+
+    it.each([
+      ['has no description', {}],
+      ['has a description', { 'ui:description': 'Where you live' }],
+    ])('hides the description of an option whose ui:label is false when the field %s', (_, fieldUiSchema) => {
+      createFormComponent({
+        schema: regionSchema({ ...europe, description: 'A country in Europe' }),
+        uiSchema: { region: { ...fieldUiSchema, oneOf: [{}, { 'ui:label': false }] } },
+        initialFormData: formData,
+      });
+
+      expect(screen.queryByText('A country in Europe')).toBeNull();
+    });
+
+    it('renders no second description under the field description id for a fallback value described apart', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            x: {
+              title: 'X',
+              description: 'Field desc',
+              type: ['string', 'number'],
+              if: { type: 'string' },
+              then: { description: 'Value desc' },
+            },
+          },
+        },
+        initialFormData: { x: 'a' },
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      expect(node.querySelectorAll('#root_x__description')).toHaveLength(1);
+      expect(node.querySelector('#root_x__description')).toHaveTextContent('Field desc');
+    });
+
+    it('describes an option whose constants render as a select', () => {
+      createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            region: {
+              oneOf: [
+                { title: 'None', type: 'null' },
+                {
+                  type: 'boolean',
+                  description: 'Yes or no',
+                  oneOf: [
+                    { const: true, title: 'Yes' },
+                    { const: false, title: 'No' },
+                  ],
+                },
+              ],
+            },
+          },
+        },
+        initialFormData: { region: true },
+      });
+
+      expect(screen.getAllByText('Yes or no')).toHaveLength(1);
+    });
+
+    it('describes the option with its own description under a ui:globalOptions description', () => {
+      createFormComponent({
+        schema: regionSchema({ ...europe, description: 'A country in Europe' }),
+        uiSchema: { 'ui:globalOptions': { description: 'Every field' } },
+        initialFormData: formData,
+      });
+
+      expect(screen.getAllByText('A country in Europe')).toHaveLength(1);
+    });
+
+    it("keeps a fallback value from repeating its field's description over a ui:globalOptions description", () => {
+      createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { x: { title: 'X', description: 'Field desc', type: ['string', 'number'] } },
+        },
+        uiSchema: { 'ui:globalOptions': { description: 'Every field' } },
+        initialFormData: { x: 'a' },
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      expect(screen.queryByText('Field desc')).toBeNull();
+    });
+
+    it('describes the option with the ui:description it declares for itself', () => {
+      const { node } = createFormComponent({
+        schema,
+        initialFormData: formData,
+        uiSchema: { region: { oneOf: [{}, { 'ui:description': 'Pick a European country' }] } },
+      });
+
+      expect(node.querySelector('#root_region__description')).toHaveTextContent('Pick a European country');
+    });
+
+    it('renders the field ui:description once', () => {
+      createFormComponent({
+        schema,
+        initialFormData: formData,
+        uiSchema: { region: { 'ui:description': 'Where you live' } },
+      });
+
+      expect(screen.getAllByText('Where you live')).toHaveLength(1);
+    });
+
+    it('keeps the title and description of an object option', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          oneOf: [
+            { title: 'Option A', description: 'The first option', properties: { a: { type: 'string' } } },
+            { title: 'Option B', properties: { b: { type: 'number' } } },
+          ],
+        },
+      });
+
+      expect(node.querySelector('#root__title')).toHaveTextContent('Option A');
+      expect(node.querySelector('#root__description')).toHaveTextContent('The first option');
+    });
+
+    it('labels a control once when the fallback UI renders the options of a field allowing several types', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            x: {
+              title: 'X',
+              type: ['string', 'number'],
+              oneOf: [{ title: 'Text', description: 'Some text', minLength: 1 }, { title: 'Num' }],
+            },
+          },
+        },
+        uiSchema: { x: { oneOf: [{}, {}] } },
+        initialFormData: { x: 'a' },
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      expect(node.querySelectorAll('label[for="root_x"]')).toHaveLength(1);
+      expect(screen.getAllByLabelText('X')).toEqual([
+        node.querySelector('select#root_x__oneof_select'),
+        node.querySelector('input#root_x'),
+      ]);
+      expect(screen.getAllByText('Some text')).toHaveLength(1);
+      expect(node.querySelector('#root_x__description')).toHaveTextContent('Some text');
+    });
+
+    it('renders a ui:field an option declares for itself', () => {
+      const { node } = createFormComponent({
+        schema: { oneOf: [{ type: 'number' }, { type: 'string' }] },
+        uiSchema: { oneOf: [{ 'ui:field': CustomField }, {}] },
+      });
+
+      expect(node.querySelectorAll('.custom-field')).toHaveLength(1);
+      expect(node.querySelector('input#root')).toBeNull();
+    });
+  });
+
   describe('Custom Field with ui:fieldReplacesAnyOrOneOf', () => {
     const schema: RJSFSchema = {
       oneOf: [
@@ -2723,6 +3037,7 @@ describe('oneOf', () => {
       // `getDisplayLabel()` hides the label of a `boolean` that has no `ui:widget`, so the inferred `select` is the
       // only reason this field still has one. A theme's FieldTemplate is where that label gets rendered, because the
       // select widget has none of its own
+      // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
       const FieldTemplate = ({ displayLabel, label, children }: FieldTemplateProps) => (
         <div>
           {displayLabel && <span className='shown-label'>{label}</span>}
@@ -2781,6 +3096,7 @@ describe('oneOf', () => {
     it('should keep the label when the caller spells the widget as a ui:option', () => {
       // `getDisplayLabel()` only reads `ui:widget`, so a widget named the other way has to reach it as that key or a
       // boolean loses the title that inferring the widget exists to preserve
+      // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
       const FieldTemplate = ({ displayLabel, label, children }: FieldTemplateProps) => (
         <div>
           {displayLabel && <span className='shown-label'>{label}</span>}
@@ -3362,7 +3678,12 @@ describe('oneOf', () => {
           { const: false, title: 'Disabled' },
         ],
       };
-      const { node, onChange } = createFormComponent({ schema, uiSchema: { 'ui:options': { field: MyField } } });
+      // A custom field draws its own label unless declared otherwise; this one leaves it to the template
+      const { node, onChange } = createFormComponent({
+        schema,
+        uiSchema: { 'ui:options': { field: MyField } },
+        presentation: { fieldDefault: { label: 'template' } },
+      });
 
       const select = node.querySelector<HTMLSelectElement>('select#root');
       expect(select).toBeInTheDocument();
@@ -3438,7 +3759,12 @@ describe('oneOf', () => {
           { const: false, title: 'Off' },
         ],
       };
-      const { node } = createFormComponent({ schema, fields: { MyToggle } });
+      // A custom field draws its own label unless declared otherwise; this one leaves it to the template
+      const { node } = createFormComponent({
+        schema,
+        fields: { MyToggle },
+        presentation: { fields: { MyToggle: { label: 'template' } } },
+      });
 
       expect(uiWidgets.length).toBeGreaterThan(0);
       expect(uiWidgets.every((widget) => widget === 'select')).toBe(true);
@@ -4164,15 +4490,15 @@ describe('oneOf', () => {
         },
       ],
     ])(
-      "should render %s's own title over its option's, which the selector names, and its description only under an option declaring none",
+      "should render %s's own title and description through the field's template, and its option's description beneath them",
       async (_, opt) => {
         const { node } = createFormComponent({
           schema: wrap({ ...opt, title: 'Parent title', description: 'Parent description' }),
         });
 
         expect(screen.getAllByText('Parent title')).toHaveLength(1);
-        expect(screen.getAllByText('Option description')).toHaveLength(1);
-        expect(screen.queryByText('Parent description')).not.toBeInTheDocument();
+        expect(screen.getAllByText('Parent description')).toHaveLength(1);
+        expect(node.querySelector('#root_opt__optionDescription')).toHaveTextContent('Option description');
         expect(screen.getByRole('option', { name: 'Short list' })).toBeInTheDocument();
 
         await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_opt__anyof_select')!, 'Long list');
@@ -4182,7 +4508,7 @@ describe('oneOf', () => {
       },
     );
 
-    it("should render an unlabelled field's own title over its option's ui:title, and the option's own ui:description", () => {
+    it("should render an unlabelled field's own title through its template, and its option's ui:title and ui:description beneath it", () => {
       const schema = wrap({
         type: 'array',
         title: 'Parent title',
@@ -4199,13 +4525,13 @@ describe('oneOf', () => {
         },
       });
 
-      expect(node.querySelector('legend')).toHaveTextContent('Parent title');
-      expect(screen.getAllByText('Option description')).toHaveLength(1);
-      expect(screen.queryByText('Parent description')).not.toBeInTheDocument();
-      expect(screen.getByRole('option', { name: 'Short list' })).toBeInTheDocument();
+      expect(node.querySelector('#root_opt__label')?.closest('label')).toHaveTextContent('Parent title');
+      expect(node.querySelector('legend')).toHaveTextContent('Short list');
+      expect(screen.getAllByText('Parent description')).toHaveLength(1);
+      expect(node.querySelector('#root_opt__optionDescription')).toHaveTextContent('Option description');
     });
 
-    it("should render an option's own description over the ui:description of a field whose uiSchema it is handed", async () => {
+    it("should render an option's own description beneath the ui:description of a field whose uiSchema it is handed", async () => {
       const schema = wrap({
         type: 'array',
         title: 'Parent title',
@@ -4217,8 +4543,8 @@ describe('oneOf', () => {
       });
       const { node } = createFormComponent({ schema, uiSchema: { opt: { 'ui:description': 'Field description' } } });
 
-      expect(screen.getAllByText('Option description')).toHaveLength(1);
-      expect(screen.queryByText('Field description')).not.toBeInTheDocument();
+      expect(screen.getAllByText('Field description')).toHaveLength(1);
+      expect(node.querySelector('#root_opt__optionDescription')).toHaveTextContent('Option description');
 
       await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_opt__anyof_select')!, 'Long list');
 

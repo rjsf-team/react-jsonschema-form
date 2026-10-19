@@ -25,15 +25,25 @@ describe('NullField', () => {
       expect(node.querySelectorAll('.rjsf-field')).toHaveLength(1);
     });
 
-    it('should render a null field with a label', () => {
+    it('should render the title and description of a null field itself, with no label naming a control', () => {
       const { node } = createFormComponent({
         schema: {
           type: 'null',
           title: 'foo',
+          description: 'Describes foo',
         },
       });
 
-      expect(node.querySelector('.rjsf-field label')).toHaveTextContent('foo');
+      expect(node.querySelector('#root__title')).toHaveTextContent('foo');
+      expect(node.querySelector('#root__description')).toHaveTextContent('Describes foo');
+      expect(node.querySelector('.rjsf-field label')).not.toBeInTheDocument();
+    });
+
+    it('should render nothing of its own for a null field with no title or description', () => {
+      const { node } = createFormComponent({ schema: { type: 'null' } });
+
+      expect(node.querySelector('#root__title')).not.toBeInTheDocument();
+      expect(node.querySelector('#root__description')).not.toBeInTheDocument();
     });
 
     it('should assign a default value', () => {

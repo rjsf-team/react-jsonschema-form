@@ -1,5 +1,5 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps, GenericObjectType } from '@rjsf/utils';
-import { ariaDescribedByIds, getDateTimeLocalValue } from '@rjsf/utils';
+import { getControlAttributes, getDateTimeLocalValue } from '@rjsf/utils';
 import { DatePicker } from 'antd';
 import dayjs from 'dayjs';
 import type { Dayjs } from 'dayjs';
@@ -29,14 +29,17 @@ export default function DateWidget<
   disabled,
   registry,
   id,
+  htmlName,
   onBlur,
   onChange,
   onFocus,
   placeholder,
   readonly,
+  required,
   value,
   showTime = false,
   schema,
+  presentation,
 }: DateWidgetProps<T, S, F>) {
   const { formContext } = registry;
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
@@ -65,15 +68,18 @@ export default function DateWidget<
       disabled={disabled || (readonlyAsDisabled && readonly)}
       getPopupContainer={getPopupContainer}
       id={id}
-      name={id}
+      name={htmlName || id}
       onBlur={!readonly ? handleBlur : undefined}
       onChange={!readonly ? handleChange : undefined}
       onFocus={!readonly ? handleFocus : undefined}
+      open={readonly ? false : undefined}
       placeholder={placeholder}
+      inputReadOnly={readonly}
+      required={required}
       showTime={showTime}
       style={DATE_PICKER_STYLE}
       value={localValue ? dayjs(localValue) : undefined}
-      aria-describedby={ariaDescribedByIds(id)}
+      {...getControlAttributes<T, S, F>({ id, presentation })}
     />
   );
 }

@@ -35,15 +35,19 @@ It is expected that this function will be used in a manner similar to the follow
 import compileSchemaValidators from '@rjsf/validator-ajv8/compileSchemaValidators';
 import yourSchema from 'path_to/yourSchema.js'; // If your schema is a js file
 
-compileSchemaValidators(yourSchema, 'path_to/yourCompiledSchema.js');
+compileSchemaValidators(yourSchema, 'path_to/yourCompiledSchema.cjs');
 ```
+
+The examples name the output `.cjs` because it is CommonJS, which a `.js` file cannot hold in an app whose package.json sets `"type": "module"`.
+In an app whose package.json doesn't set it, a `.js` name works too, and it is the one to use with a toolchain that loads only `.js` and `.mjs` files as code.
+Create React App 5 is one: it turns an imported `.cjs` file into the URL of a static asset, so `createPrecompiledValidator()` throws `No precompiled validator function was found for the given schema`.
 
 If you are currently using the `customizeValidator()` function to provide `additionalMetaSchemas`, `customFormats`,
 `ajvOptionsOverrides` and/or `ajvFormatOptions` then you can pass those in as the optional third parameter to the
 `compileSchemaValidators()` function in a manner similar to:
 
 ```js
-import { compileSchemaValidators } from '@rjsf/validator-ajv8';
+import compileSchemaValidators from '@rjsf/validator-ajv8/compileSchemaValidators';
 import yourSchema from 'path_to/yourSchema.json' with { type: 'json' }; // If your schema is a json file
 import draft06 from 'ajv/lib/refs/json-schema-draft-06.json' with { type: 'json' };
 
@@ -59,7 +63,7 @@ const options = {
   },
 };
 
-compileSchemaValidators(yourSchema, 'path_to/yourCompiledSchema.js', options);
+compileSchemaValidators(yourSchema, 'path_to/yourCompiledSchema.cjs', options);
 ```
 
 If your `Form` is given a `customMergeAllOf`, put it in those same options so the precompiled validator functions cover the sub-schemas it merges.
@@ -73,10 +77,10 @@ A form that renders such a key throws `No precompiled validator function was fou
 An object may likewise have at most 8 schema `dependencies` for every subset of them to be compiled, since a form applies the subset whose keys the data has filled in; an object with more is compiled with each dependency alone and all of them together, and warns the same way.
 
 ```js
-import { compileSchemaValidators } from '@rjsf/validator-ajv8';
+import compileSchemaValidators from '@rjsf/validator-ajv8/compileSchemaValidators';
 import { customMergeAllOf } from 'path_to/yourCustomMergeAllOf.js';
 
-compileSchemaValidators(yourSchema, 'path_to/yourCompiledSchema.js', { ...options, customMergeAllOf });
+compileSchemaValidators(yourSchema, 'path_to/yourCompiledSchema.cjs', { ...options, customMergeAllOf });
 ```
 
 Give the same `customMergeAllOf` to [`createPrecompiledValidator()`](#using-the-precompiled-validator) as well, since the validator resolves the root schema it is handed with it.
@@ -93,30 +97,33 @@ node compileYourSchema.js
 
 ### Using the precompiled validator
 
-After you have completed step 1 having generated your precompiled schema functions into the `yourCompiledSchema.js` output file (or whatever you called it), then you need to create a `ValidatorType` implementation from it to use in the `Form`.
+After you have completed step 1 having generated your precompiled schema functions into the `yourCompiledSchema.cjs` output file (or whatever you called it), then you need to create a `ValidatorType` implementation from it to use in the `Form`.
 The `@rjsf/validator-ajv8` package exports the `createPrecompiledValidator()` function for this.
 Here is an example of how to use your precompiled validator with your `Form`:
 
 ```tsx
-import { useMemo } from 'react';
-import { createPrecompiledValidator, ValidatorFunctions } from '@rjsf/validator-ajv8';
+import { createPrecompiledValidator } from '@rjsf/validator-ajv8';
 import Form, { FormProps } from '@rjsf/core'; // Or whatever theme you use
 
-import yourSchema from 'path_to/yourSchema'; // This needs to be the same file that was precompiled
-import * as precompiledValidatorFns from 'path_to/yourCompiledSchema';
+import yourSchema from 'path_to/yourSchema.json' with { type: 'json' }; // This needs to be the same file that was precompiled
+import * as precompiledValidatorFns from 'path_to/yourCompiledSchema.cjs';
+
+// Neither the compiled functions nor the schema change at runtime, so one validator, created when the module loads,
+// serves every render
+const validator = createPrecompiledValidator(precompiledValidatorFns, yourSchema);
 
 function MyForm(props: Omit<FormProps, 'validator' | 'schema'>) {
-  // Memoize the validator to avoid rerenders
-  const validator = useMemo(
-    () => createPrecompiledValidator(precompiledValidatorFns, yourSchema),
-    [validatorFns, yourSchema],
-  );
-
-  return <Form schema={yourSchema} validator={validator} />;
+  return <Form {...props} schema={yourSchema} validator={validator} />;
 }
 
 render(<MyForm />, document.getElementById('app'));
 ```
+
+Things to know about the generated file:
+
+- It is not always self-contained: depending on the keywords the schema uses, it `require()`s helpers from `ajv`, and from `ajv-formats` when the schema uses one of its formats. Those are resolved from the folder the file is kept in, so the app must list `ajv` (and `ajv-formats`) as its own dependencies. Depending on `@rjsf/validator-ajv8` alone is not enough when they are not hoisted, as under pnpm's default layout.
+- It is CommonJS. Webpack and Vite 8 production builds handle it, and so does Rollup with `@rollup/plugin-commonjs`. Production builds before Vite 8 convert CommonJS only under `node_modules` unless `build.commonjsOptions.include` also matches the file. Vite's dev server does not convert CommonJS files inside your source folder. Either way the page throws `exports is not defined` when it loads the file.
+- It has no type declarations, so under `strict` TypeScript reports `TS7016: Could not find a declaration file` for the import. Add `declare module '*.cjs';` to a `.d.ts` file, or enable `allowJs`.
 
 ### Dynamically pre-compiling validators
 
@@ -247,6 +254,43 @@ if (!precompiledValidator) {
 }
 const validator = createPrecompiledValidator(precompiledValidator, schema);
 ```
+
+### Precompiled validators with `@rjsf/validator-ata`
+
+`@rjsf/validator-ata` has the same two functions. Compile the schema in a Node script:
+
+```js
+import compileSchemaValidators from '@rjsf/validator-ata/compileSchemaValidators';
+import yourSchema from 'path_to/yourSchema.json' with { type: 'json' };
+
+// The third argument takes the options customizeValidator() takes, with the limits listed below.
+compileSchemaValidators(yourSchema, 'path_to/yourCompiledSchema.cjs', {
+  customFormats: { 'phone-us': /\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$/ },
+});
+```
+
+Then use it in the app:
+
+```tsx
+import { createPrecompiledValidator, type ValidatorFunctions } from '@rjsf/validator-ata';
+import yourSchema from 'path_to/yourSchema.json' with { type: 'json' }; // The same schema that was precompiled
+import precompiledValidatorFns from 'path_to/yourCompiledSchema.cjs';
+
+const validator = createPrecompiledValidator(precompiledValidatorFns as ValidatorFunctions, yourSchema);
+```
+
+Things to know:
+
+- `customFormats` and `ataOptionsOverrides` apply at compile time. Custom formats must be a `RegExp` or a pattern string: a function cannot be written into the generated file and is rejected.
+- `additionalMetaSchemas` and `ataOptionsOverrides.schemas` that have an `$id` are compiled into the generated file, so a custom meta-schema named in `$schema` applies there too. The official json-schema.org meta-schemas are left out, since ata already knows them. Entries without an `$id` are ignored with a warning: ata requires one, so `customizeValidator()` throws for them.
+- `extenderFn` and the `ataOptionsOverrides` keys `coerceTypes`, `removeAdditional` and `keywords` cannot be carried into the generated file. They are ignored with a warning, logged once like the form's own warnings, and the generated file and the runtime validator may then disagree, in either direction: a dropped keyword lets data through that the runtime validator rejects, and a dropped `coerceTypes` rejects data it accepts.
+- The generated file never fills in `default` values. The runtime validator does (`useDefaults` is on by default in ata), so for a required field that is missing but has a `default`, the runtime validator fills it in and accepts, while the generated file rejects. The form fills in defaults itself (`getDefaultFormState`), so this shows only for data that does not come from the form.
+- If your `Form` is given a `customMergeAllOf`, pass it to both the compile step and `createPrecompiledValidator()`, as with `@rjsf/validator-ajv8`.
+- Pass `suppressDuplicateFiltering` to `createPrecompiledValidator()`. Passing it to the compile step has no effect and logs a warning.
+- The generated file imports nothing, so `ata-validator` is not in your bundle, as long as the app imports only `createPrecompiledValidator` (and types). Importing the default export, `customizeValidator` or `ATAValidator` brings the runtime validator back.
+- The generated file is CommonJS with no type declarations, like the one from `@rjsf/validator-ajv8`, so the bundler and TypeScript notes under [Using the precompiled validator](#using-the-precompiled-validator) apply to it too, except that where it is not converted the page throws `module is not defined` instead. With TypeScript, also cast it to `ValidatorFunctions` as above.
+- Run the compile step again when the schema changes.
+- To get the code as a string instead of a file, use `compileSchemaValidatorsCode(schema, options)` from `@rjsf/validator-ata/compileSchemaValidators`. The code imports nothing, so unlike the ajv8 example above it needs no runtime dependencies replaced.
 
 ## Live validation
 
@@ -490,14 +534,29 @@ To support additional meta schemas, you can create and pass to the `Form` compon
 
 ### additionalMetaSchemas
 
-The `additionalMetaSchemas` prop allows you to validate the form data against one (or more than one) JSON Schema meta schema, for example, JSON Schema draft-04.
-You can import a meta schema as follows:
+The `additionalMetaSchemas` option of `customizeValidator()` adds one or more JSON Schema meta schemas to the validator, such as JSON Schema draft-06.
+A meta schema describes schemas, not form data: the validator checks your schema against the meta schema its `$schema` names, and reports a schema that breaks it as `schema is invalid: ...`.
+Without the meta schema its `$schema` names, every validation of the form reports `no schema with key or ref "http://json-schema.org/draft-06/schema#"` instead of validating the data.
+
+In this example the schema names draft-06, so the validator is given the draft-06 meta schema that Ajv 8 ships:
 
 ```tsx
-const metaSchemaDraft04 = require('ajv/lib/refs/json-schema-draft-04.json');
+import Form from '@rjsf/core';
+import { RJSFSchema } from '@rjsf/utils';
+import { customizeValidator } from '@rjsf/validator-ajv8';
+import metaSchemaDraft06 from 'ajv/lib/refs/json-schema-draft-06.json' with { type: 'json' };
+
+const validator = customizeValidator({ additionalMetaSchemas: [metaSchemaDraft06] });
+
+const schema: RJSFSchema = {
+  $schema: 'http://json-schema.org/draft-06/schema#',
+  type: 'string',
+};
+
+render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
 
-In this example `schema` passed as props to `Form` component can be validated against draft-07 (default) and by draft-04 (added), depending on the value of `$schema` attribute.
+Ajv 8 doesn't ship a draft-04 meta schema to pass this way. For draft-04, build the validator with the Ajv class of `ajv-draft-04` instead:
 
 ```tsx
 import { Form } from '@rjsf/core';
@@ -798,8 +857,8 @@ For a precompiled validator, pass the value in the options object `createPrecomp
 
 ```tsx
 import { createPrecompiledValidator } from '@rjsf/validator-ajv8';
-import * as precompiledValidatorFns from 'path_to/yourCompiledSchema';
-import yourSchema from 'path_to/yourSchema';
+import * as precompiledValidatorFns from 'path_to/yourCompiledSchema.cjs';
+import yourSchema from 'path_to/yourSchema.json' with { type: 'json' };
 
 const validator = createPrecompiledValidator(precompiledValidatorFns, yourSchema, { suppressDuplicateFiltering: 'all' });
 ```

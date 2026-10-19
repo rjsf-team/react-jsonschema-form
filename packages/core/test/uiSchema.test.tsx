@@ -741,6 +741,32 @@ describe('uiSchema', () => {
           { 'ui:autofocus': true },
         );
       });
+
+      it('should focus on the first radio a user can choose when the first is disabled', () => {
+        shouldFocus(
+          { type: 'string', enum: ['red', 'green', 'blue'] },
+          { 'ui:widget': 'radio', 'ui:autofocus': true, 'ui:enumDisabled': ['red'] },
+          'input[value="1"]',
+        );
+      });
+
+      it('should focus on the checked radio, where Tab into the group lands', () => {
+        shouldFocus(
+          { type: 'string', enum: ['red', 'green', 'blue'] },
+          { 'ui:widget': 'radio', 'ui:autofocus': true },
+          'input[value="2"]',
+          'blue',
+        );
+      });
+
+      it('should focus on the first radio a user can choose when the checked one is disabled', () => {
+        shouldFocus(
+          { type: 'string', enum: ['red', 'green', 'blue'] },
+          { 'ui:widget': 'radio', 'ui:autofocus': true, 'ui:enumDisabled': ['blue'] },
+          'input[value="0"]',
+          'blue',
+        );
+      });
     });
 
     describe('object', () => {
@@ -840,6 +866,14 @@ describe('uiSchema', () => {
           },
           'input',
           ['bar'],
+        );
+      });
+
+      it('should focus on the first checkbox a user can choose when the first is disabled', () => {
+        shouldFocus(
+          { type: 'array', items: { type: 'string', enum: ['foo', 'bar', 'baz'] }, uniqueItems: true },
+          { 'ui:widget': 'checkboxes', 'ui:autofocus': true, 'ui:enumDisabled': ['foo'] },
+          'input[value="1"]',
         );
       });
     });
@@ -1257,6 +1291,38 @@ describe('uiSchema', () => {
         });
 
         expect(node.querySelector('[type=range]')).toHaveValue('13.14');
+      });
+
+      it('should render through the BaseInputTemplate its uiSchema names', () => {
+        const CustomRangeInput = () => <span className='custom-range-input' />;
+        const { node } = createFormComponent({
+          schema,
+          uiSchema: { foo: { 'ui:widget': 'range', 'ui:BaseInputTemplate': CustomRangeInput } },
+        });
+
+        expect(node.querySelector('.custom-range-input')).toBeInTheDocument();
+        expect(node.querySelectorAll('[type=range]')).toHaveLength(0);
+      });
+
+      // A browser ignores `readonly` on a range input, so a read-only range is disabled to keep it from being dragged
+      it('should disable a read-only range', () => {
+        const { node } = createFormComponent({
+          schema,
+          uiSchema: { foo: { 'ui:widget': 'range', 'ui:readonly': true } },
+        });
+
+        expect(node.querySelector('[type=range]')).toBeDisabled();
+      });
+
+      // A range input can't show an empty value, so clearing it would leave the slider at its midpoint
+      it('should draw no allowClearTextInputs clear button', () => {
+        const { node } = createFormComponent({
+          schema,
+          uiSchema: { foo: { 'ui:widget': 'range', 'ui:allowClearTextInputs': true } },
+          initialFormData: { foo: 13.14 },
+        });
+
+        expect(node.querySelector('button.btn-clear')).not.toBeInTheDocument();
       });
 
       it('should call onChange handler when value is updated', () => {

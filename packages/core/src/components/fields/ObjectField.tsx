@@ -8,7 +8,6 @@ import type {
   FormContextType,
   GenericObjectType,
   Registry,
-  RJSFMarkedSchema,
   RJSFSchema,
   StrictRJSFSchema,
   UiSchema,
@@ -19,7 +18,6 @@ import {
   hasByPath,
   setByPath,
   ADDITIONAL_PROPERTIES_KEY,
-  ADDITIONAL_PROPERTY_FLAG,
   allowsAdditionalProperties,
   deepEquals,
   getAdditionalPropertySchema,
@@ -51,6 +49,7 @@ import useSendMove from '../../hooks/useSendMove.ts';
 import useWarnIfFormDataNotPassedThrough from '../../hooks/useWarnIfFormDataNotPassedThrough.ts';
 import { ADDITIONAL_PROPERTY_KEY_REMOVE, EMPTY_UI_SCHEMA } from '../constants.ts';
 import RichDescription from '../RichDescription.tsx';
+import { getContainerHeading, isAdditionalPropertySchema } from './fieldWidgetUtils.ts';
 
 /** Returns a flag indicating whether the `name` field is required in the object schema
  *
@@ -114,10 +113,6 @@ function getSeedType<S extends StrictRJSFSchema = RJSFSchema>(subSchema: S, root
   }
   const [firstOption] = getXxxOfOptions<S>(subSchema)?.options ?? [];
   return isObject(firstOption) ? getAdditionalPropertyType<S>(firstOption, rootSchema) : undefined;
-}
-
-function isAdditionalPropertySchema(schema: unknown) {
-  return Boolean((schema as RJSFMarkedSchema)?.[ADDITIONAL_PROPERTY_FLAG]);
 }
 
 /** Returns whether the object declares `key` in its own `properties`, which is what decides whose schema and whose
@@ -378,6 +373,7 @@ export default function ObjectField<
     onChange,
     registry,
     title,
+    presentation,
   } = props;
   const uiSchema: UiSchema<T, S, F> = rawUiSchema ?? EMPTY_UI_SCHEMA;
   const { fields, schemaUtils, translateString, globalUiOptions, rootSchema, uiSchemaDefinitions } = registry;
@@ -831,11 +827,18 @@ export default function ObjectField<
     <OptionalDataControlsField {...props} schema={schema} />
   ) : undefined;
 
-  // getDisplayLabel() always returns false for object types, so just check the `uiOptions.label`
+  // The plan says whether the heading and description are the object's to draw, so an option repeating its field's
+  // title draws no second heading
   const showLabel = uiBooleanOption(uiOptions.label) ?? true;
+  const shownTitle = getContainerHeading<T, S, F>(presentation, schema, uiOptions, templateTitle);
+  let shownDescription = showLabel ? description : undefined;
+  if (presentation) {
+    shownDescription = presentation.description.by === 'self' ? presentation.description.text : undefined;
+  }
   const templateProps = {
-    title: showLabel ? templateTitle : '',
-    description: showLabel ? description : undefined,
+    title: shownTitle,
+    description: shownDescription,
+    presentation,
     properties: orderedProperties.map((propertyName) => {
       // Read off the schema this render resolved rather than through `uiSchemaForKey()`, which answers for the
       // callbacks from the schema the last render committed: `declaresProperty()` is the question both of them put

@@ -20,7 +20,9 @@ function makeProps(props: Partial<WidgetProps> = {}): WidgetProps {
     readonly: false,
     autofocus: false,
     label: 'DateTime',
+    // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated prop a component without a plan reads
     hideLabel: false,
+    // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
     rawErrors: [],
     options: {},
     schema,
@@ -102,6 +104,7 @@ describe('DateTimeWidget', () => {
 
   test('hides description when hideLabel is true', () => {
     const { queryByText } = renderWidget({
+      // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated prop a component without a plan reads
       hideLabel: true,
       options: {
         description: 'Test description',

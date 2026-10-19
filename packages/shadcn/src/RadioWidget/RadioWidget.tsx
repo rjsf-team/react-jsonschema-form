@@ -1,12 +1,14 @@
 import type { FocusEvent } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
   enumOptionSelectedValue,
+  enumOptionsAutofocusIndex,
   enumOptionsIsDisabled,
   enumOptionValueDecoder,
   enumOptionsDomValues,
+  getGroupAttributes,
   getOptionValueFormat,
+  hasWidgetErrors,
   optionId,
 } from '@rjsf/utils';
 
@@ -23,33 +25,57 @@ export default function RadioWidget<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({ id, options, value, required, disabled, readonly, onChange, onBlur, onFocus, className }: WidgetProps<T, S, F>) {
+>(props: WidgetProps<T, S, F>) {
+  const {
+    id,
+    htmlName,
+    options,
+    value,
+    required,
+    disabled,
+    readonly,
+    autofocus,
+    onChange,
+    onBlur,
+    onFocus,
+    className,
+    presentation,
+  } = props;
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
 
   const handleChange = (enumValue: string) =>
     onChange(enumOptionValueDecoder<S>(enumValue, enumOptions, optionValueFormat, emptyValue));
-  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
+  // On each radio rather than the group: Radix's group takes focus itself to pass it on to a radio, as when it is
+  // tabbed into or focusOnFirstError focuses the field's id, which it carries, so it would report a focus and blur
+  // of no value first
+  const handleBlur = ({ target }: FocusEvent<HTMLButtonElement>) =>
     onBlur(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
-  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
+  const handleFocus = ({ target }: FocusEvent<HTMLButtonElement>) =>
     onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
 
   const inline = Boolean(options?.inline);
   const selectValue = enumOptionSelectedValue(value, enumOptions, false, optionValueFormat, '');
+  const radioClassName = cn({ 'border-destructive': hasWidgetErrors<T, S, F>(props) });
+  const { group: groupAttributes, option: optionAttributes } = getGroupAttributes<T, S, F>(
+    { id, presentation },
+    'radiogroup',
+  );
 
+  const autofocusIndex = enumOptionsAutofocusIndex<S>(enumOptions, enumDisabled, autofocus, value);
   return (
     <div className='mb-0'>
       <RadioGroup
+        id={id}
+        name={htmlName || id}
+        {...groupAttributes}
         value={selectValue}
         required={required}
         disabled={disabled || readonly}
         onValueChange={(e: string) => {
           handleChange(e);
         }}
-        onBlur={handleBlur}
-        onFocus={handleFocus}
-        aria-describedby={ariaDescribedByIds(id)}
         orientation={inline ? 'horizontal' : 'vertical'}
         className={cn('flex flex-wrap', { 'flex-col': !inline }, className)}
       >
@@ -58,7 +84,16 @@ export default function RadioWidget<
             const optionDisabled = disabled || readonly || enumOptionsIsDisabled(option.value, enumDisabled);
             return (
               <div className='flex items-center gap-2' key={optionId(id, index)}>
-                <RadioGroupItem value={domValues[index]} id={optionId(id, index)} disabled={optionDisabled} />
+                <RadioGroupItem
+                  value={domValues[index]}
+                  id={optionId(id, index)}
+                  disabled={optionDisabled}
+                  autoFocus={index === autofocusIndex}
+                  onBlur={handleBlur}
+                  onFocus={handleFocus}
+                  className={radioClassName}
+                  {...optionAttributes}
+                />
                 <Label className='leading-tight' htmlFor={optionId(id, index)}>
                   {option.label}
                 </Label>

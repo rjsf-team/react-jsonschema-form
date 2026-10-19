@@ -3,6 +3,7 @@ import { Checkbox, Flex } from '@mantine/core';
 import type { FormContextType, WidgetProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
   enumOptionSelectedValue,
+  enumOptionsAutofocusIndex,
   enumOptionsIsDisabled,
   enumOptionValueDecoder,
   enumOptionsDomValues,
@@ -47,7 +48,10 @@ export default function CheckboxesWidget<
 
   const { groupProps, optionProps } = useGroupAriaProps('CheckboxGroup', props);
 
-  return Array.isArray(enumOptions) && enumOptions.length > 0 ? (
+  const autofocusIndex = enumOptionsAutofocusIndex<S>(enumOptions, enumDisabled, autofocus);
+  // A group with no options is still drawn, so its errors keep the label and description that say which field they
+  // belong to
+  return (
     <Checkbox.Group
       id={id}
       value={selectedValues}
@@ -61,7 +65,7 @@ export default function CheckboxesWidget<
       <Flex mt='xs' direction={inline ? 'row' : 'column'} gap='xs' wrap='wrap'>
         <GroupOptions optionProps={optionProps}>
           {(describedOptionProps) =>
-            enumOptions.map((option, i) => (
+            enumOptions?.map((option, i) => (
               <Checkbox
                 // oxlint-disable-next-line react/no-array-index-key
                 key={i}
@@ -70,7 +74,7 @@ export default function CheckboxesWidget<
                 value={domValues[i]}
                 label={option.label}
                 disabled={fieldDisabled || enumOptionsIsDisabled(option.value, enumDisabled)}
-                autoFocus={i === 0 && autofocus}
+                autoFocus={i === autofocusIndex}
                 onBlur={blurHandlers[i]}
                 onFocus={focusHandlers[i]}
                 {...describedOptionProps}
@@ -80,5 +84,5 @@ export default function CheckboxesWidget<
         </GroupOptions>
       </Flex>
     </Checkbox.Group>
-  ) : null;
+  );
 }

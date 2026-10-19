@@ -1,5 +1,7 @@
 import type { ReactElement } from 'react';
+import { useMemo } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { mergeThemePresentation } from '@rjsf/utils';
 
 import type { FormProps } from './components/Form.tsx';
 import Form from './components/Form.tsx';
@@ -11,7 +13,7 @@ export type ThemeProps<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
-> = Pick<FormProps<T, S, F>, 'fields' | 'templates' | 'widgets'>;
+> = Pick<FormProps<T, S, F>, 'fields' | 'templates' | 'widgets' | 'presentation'>;
 
 /** The `Form` returned by `withTheme()`. It stays generic over the form data like `Form` itself, so `T` is inferred
  * from `formData` or named per use (`<ThemedForm<MyData> />`) instead of being fixed when the theme is applied; a theme
@@ -39,6 +41,7 @@ export default function withTheme<
     fields: propFields,
     widgets: propWidgets,
     templates: propTemplates,
+    presentation: propPresentation,
     ref,
     ...directProps
   }: FormProps<TT, S, F>) {
@@ -54,7 +57,22 @@ export default function withTheme<
         ...propTemplates?.ButtonTemplates,
       },
     };
+    // Merging is associative, so the registry layering core beneath this gives what core ← theme ← props would.
+    // Memoised, as merging builds new objects that the registry would otherwise compare deeply on every render
+    const presentation = useMemo(
+      () => mergeThemePresentation(theme?.presentation, propPresentation),
+      [theme, propPresentation],
+    );
 
-    return <Form<TT, S, F> {...directProps} fields={fields} widgets={widgets} templates={templates} ref={ref} />;
+    return (
+      <Form<TT, S, F>
+        {...directProps}
+        fields={fields}
+        widgets={widgets}
+        templates={templates}
+        presentation={presentation}
+        ref={ref}
+      />
+    );
   };
 }

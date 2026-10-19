@@ -1,5 +1,6 @@
 import { Component } from 'react';
-import type { RJSFSchema } from '@rjsf/utils';
+import type { FieldProps, Registry, RJSFSchema, ThemePresentation } from '@rjsf/utils';
+import { WIDGET_FIELD_PRESENTATION } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -305,6 +306,41 @@ describe('withTheme', () => {
       });
       expect(node.querySelectorAll('.with-theme-button-template')).toHaveLength(0);
       expect(node.querySelectorAll('.user-button-template')).toHaveLength(1);
+    });
+  });
+
+  describe('With presentation', () => {
+    it('layers the props over the theme over core, part by part', () => {
+      let registry: Registry | undefined;
+      const fields = {
+        StringField(props: FieldProps) {
+          registry = props.registry;
+          return null;
+        },
+      };
+      const theme: ThemeProps = {
+        fields,
+        presentation: {
+          default: { label: 'self', errors: 'self' },
+          widgets: { RadioWidget: { description: 'self' } },
+        },
+      };
+      const presentation: ThemePresentation = { widgets: { RadioWidget: { label: 'template' } } };
+      createComponent(WrapperClassComponent(theme), { schema: { type: 'string' }, presentation, validator });
+      expect(registry?.presentation.widgets.RadioWidget).toEqual({
+        label: 'template',
+        description: 'self',
+        errors: 'self',
+        labelledBy: 'aria-labelledby',
+      });
+      expect(registry?.presentation.widgets.CheckboxWidget).toEqual({
+        label: 'self',
+        description: 'self',
+        errors: 'self',
+        uncheckedIsFalse: true,
+      });
+      expect(registry?.presentation.fields.StringField).toEqual(WIDGET_FIELD_PRESENTATION);
+      expect(registry?.presentation.default).toEqual({ label: 'self', errors: 'self' });
     });
   });
 

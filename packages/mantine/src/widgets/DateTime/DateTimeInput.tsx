@@ -2,11 +2,11 @@ import { useCallback, useMemo } from 'react';
 import { DateInput } from '@mantine/dates';
 import type { DateStringValue } from '@mantine/dates';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { getDateTimeLocalValue, labelValue } from '@rjsf/utils';
+import { getDateTimeLocalValue, labelValue, widgetDrawsLabel } from '@rjsf/utils';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat.js';
 
-import { cleanupOptions, getDescriptionProps, useAriaDescribedByProps, useVisibleErrors } from '../../utils.tsx';
+import { cleanupOptions, getDescriptionProps, getWidgetError, useInputAriaProps } from '../../utils.tsx';
 
 // This plugin is needed to support the parsing of date and time values in the `DateWidget` and `DateTimeWidget`
 dayjs.extend(customParseFormat);
@@ -65,7 +65,6 @@ export default function DateTimeInput<
     readonly,
     autofocus,
     label,
-    hideLabel,
     options,
     onChange,
     onBlur,
@@ -74,6 +73,7 @@ export default function DateTimeInput<
     displayFormat,
     schema,
   } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
 
   const { requiresOffset, localValue } = useMemo(() => getDateTimeLocalValue(schema, value), [schema, value]);
   const themeProps = cleanupOptions(options);
@@ -102,8 +102,8 @@ export default function DateTimeInput<
       ? offsetValueParser(localValue)
       : dateParser(localValue, valueFormat as string);
 
-  const ariaDescribedByProps = useAriaDescribedByProps('DateInput', id, options);
-  const error = useVisibleErrors(props);
+  const ariaDescribedByProps = useInputAriaProps('DateInput', props);
+  const error = getWidgetError<T, S, F>(props);
 
   return (
     <DateInput

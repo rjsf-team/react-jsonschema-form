@@ -17,18 +17,21 @@ import {
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionsDomValues,
+  getControlAriaLabel,
   getOptionValueFormat,
   groupEnumOptions,
-  hasVisibleErrors,
+  hasWidgetErrors,
   isEnumOptionsGroup,
   labelValue,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
   useSelectFocusHandlers,
   widgetAriaProps,
+  widgetDrawsLabel,
+  widgetDrawsLabelText,
 } from '@rjsf/utils';
 
-import { getMuiProps } from '../util.ts';
+import { describeByHelperText, getMuiProps, withSlotProps } from '../util.ts';
 
 /** Properties available for the `rjsfSlotProps` target of the SelectWidget. */
 export interface SelectWidgetMuiProps extends GenericObjectType {
@@ -60,7 +63,8 @@ export default function SelectWidget<
     htmlName,
     options,
     label,
-    hideLabel,
+    // oxlint-disable-next-line typescript/no-deprecated -- kept out of the props this spreads onto the element
+    hideLabel: _hideLabel,
     required,
     disabled,
     placeholder,
@@ -72,15 +76,18 @@ export default function SelectWidget<
     onBlur,
     onFocus,
     errorSchema,
-    rawErrors,
+    // oxlint-disable-next-line typescript/no-deprecated -- kept out of the props this spreads onto the element
+    rawErrors: _rawErrors,
     registry,
     uiSchema,
-    hideError,
+    hideError: _hideError,
     // Given to the combobox below, so kept off the field's root, where `textFieldProps` are spread
     'aria-label': _ariaLabel,
     'aria-describedby': _ariaDescribedBy,
+    presentation: _presentation,
     ...textFieldProps
   } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
@@ -100,12 +107,15 @@ export default function SelectWidget<
   const { InputLabelProps, SelectProps, autocomplete, ...textFieldRemainingProps } = textFieldProps;
   // MUI's select gives its `inputProps` to the element with the `combobox` role, rather than to the field's root. An
   // `htmlInput` given through `rjsfSlotProps` is the form author's own choice for that element, so it is applied last
-  const ariaProps = widgetAriaProps(props);
-  const htmlInput = muiSlotProps?.htmlInput;
-  const htmlInputWithAria =
-    typeof htmlInput === 'function'
-      ? (ownerState: Parameters<typeof htmlInput>[0]) => ({ ...ariaProps, ...htmlInput(ownerState) })
-      : { ...ariaProps, ...htmlInput };
+  const textFieldOverrides = { ...otherMuiProps, ...textFieldRemainingProps } as TextFieldProps;
+  const ariaProps = describeByHelperText(
+    widgetAriaProps(props),
+    textFieldOverrides.id ?? id,
+    textFieldOverrides.helperText,
+  );
+  // The combobox shows its value, not a name, so where no label names it, it is named by the field's label, its
+  // placeholder or the translated prompt
+  const ariaLabel = getControlAriaLabel<T, S, F>(props, ariaProps['aria-label'], widgetDrawsLabelText<T, S, F>(props));
   const showPlaceholderOption = !isMultiple && schema.default === undefined;
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, isMultiple);
 
@@ -129,11 +139,11 @@ export default function SelectWidget<
         autoFocus={autofocus}
         autoComplete={autocomplete}
         placeholder={placeholder}
-        error={hasVisibleErrors({ rawErrors, hideError })}
+        error={hasWidgetErrors<T, S, F>(props)}
         onChange={handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
-        {...({ ...otherMuiProps, ...textFieldRemainingProps } as TextFieldProps)}
+        {...textFieldOverrides}
         select // Apply this and the following props after the potential overrides defined in textFieldProps
         slotProps={{
           ...muiSlotProps,
@@ -142,10 +152,13 @@ export default function SelectWidget<
             shrink: !isEmpty,
           },
           select: {
+            // MUI names the combobox by the `labelId` of its select, and gives an `aria-labelledby` among its
+            // `inputProps` to the hidden native input instead, so a label the plan names it by goes there
+            ...(ariaProps['aria-labelledby'] && { labelId: ariaProps['aria-labelledby'] }),
             ...muiSlotProps?.select,
             multiple,
           },
-          htmlInput: htmlInputWithAria,
+          htmlInput: withSlotProps({ ...ariaProps, 'aria-label': ariaLabel }, muiSlotProps?.htmlInput),
         }}
       >
         {showPlaceholderOption && <MenuItem value=''>{placeholder}</MenuItem>}
