@@ -1490,4 +1490,19 @@ export function formTests(Form: ComponentType<FormProps>) {
       });
     },
   );
+  // Last, because React's generated ids count up through the file: a case added earlier renumbers the cases after it
+  describe('single fields', () => {
+    test('select widget with selected oneOf option description beside the field description', async () => {
+      const schema: RJSFSchema = {
+        type: 'string',
+        description: 'Pick a plan',
+        oneOf: [
+          { const: 'foo', title: 'Foo', description: 'Foo description' },
+          { const: 'bar', title: 'Bar', description: 'Bar description' },
+        ],
+      };
+      const { asFragment } = render(<Form schema={schema} initialFormData='foo' validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
+    });
+  });
 }
