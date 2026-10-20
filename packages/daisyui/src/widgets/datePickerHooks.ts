@@ -311,9 +311,17 @@ export function useDatePicker<V>({
    */
   const closePicker = useCallback(
     (isPressElsewhere = false) => {
-      isOpenNow.current = false;
       setIsOpen(false);
-      const committed = commitDate();
+      let committed: unknown;
+      // The popup counts as open until the save is made, so a blur that an `onChange` moving the focus on causes is
+      // left to this close, which reports it with the value it stores rather than the one the trigger rendered with
+      try {
+        committed = commitDate();
+      } catch (error) {
+        isOpenNow.current = false;
+        throw error;
+      }
+      isOpenNow.current = false;
       if (!isPressElsewhere || !hasFocus(triggerRef.current)) {
         reportClose(committed);
       }

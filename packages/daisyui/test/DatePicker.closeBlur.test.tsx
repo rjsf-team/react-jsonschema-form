@@ -340,6 +340,48 @@ describe.each([
     },
   );
 
+  test.each(['Done', 'trigger'] as const)(
+    '%s reports the blur of an onChange that moves the focus on with the value the close stores',
+    async (action) => {
+      const events: string[] = [];
+      function Parent() {
+        const [value, setValue] = useState<string>(initial);
+        return (
+          <>
+            <Widget
+              {...makeWidgetMockProps({
+                id: 'date',
+                value,
+                autofocus: false,
+                schema: { type: 'string', format },
+                onChange: (next: string) => {
+                  events.push(`change ${next}`);
+                  setValue(next);
+                  screen.getByLabelText('Next').focus();
+                },
+                onBlur: (_: string, reported: unknown) => events.push(`blur ${String(reported)}`),
+                onFocus: () => events.push('focus'),
+              })}
+            />
+            <input aria-label='Next' />
+          </>
+        );
+      }
+      const { container } = render(
+        <StrictMode>
+          <Parent />
+        </StrictMode>,
+      );
+      const trigger = triggerIn(container);
+      await user.click(trigger);
+      await user.click(screen.getByRole('button', { name: /May 17th, 2020/ }));
+      events.length = 0;
+      await user.click(action === 'Done' ? screen.getByText('Done') : trigger);
+      expect(screen.getByLabelText('Next')).toHaveFocus();
+      expect(events).toEqual([`change ${proposal}`, `blur ${proposal}`]);
+    },
+  );
+
   test.each(['Done', 'Escape'] as const)('%s leaves focus where onBlur moved it', async (action) => {
     const events: string[] = [];
     function Parent() {
@@ -663,6 +705,43 @@ describe.each([
       expect(onWindowError.mock.calls.map(([event]): unknown => event.error)).toEqual([boom]);
     },
   );
+
+  test('a throwing onChange on Done leaves the trigger reporting its own blur', async () => {
+    const boom = new Error('boom');
+    const onBlur = vi.fn();
+    const { container } = render(
+      <Widget
+        {...makeWidgetMockProps({
+          id: 'date',
+          value: initial,
+          autofocus: false,
+          schema: { type: 'string', format },
+          onBlur,
+          onChange: () => {
+            throw boom;
+          },
+        })}
+      />,
+    );
+    const trigger = triggerIn(container);
+    await user.click(trigger);
+    await user.click(screen.getByRole('button', { name: /May 17th, 2020/ }));
+    const onWindowError = vi.fn((event: ErrorEvent) => event.preventDefault());
+    window.addEventListener('error', onWindowError);
+    try {
+      await user.click(screen.getByText('Done'));
+    } finally {
+      window.removeEventListener('error', onWindowError);
+    }
+    expect(onWindowError.mock.calls.map(([event]): unknown => event.error)).toEqual([boom]);
+    expect(screen.queryByText('Done')).toBeNull();
+    expect(trigger).toHaveFocus();
+    expect(onBlur).not.toHaveBeenCalled();
+
+    await user.tab();
+
+    expect(onBlur.mock.calls).toEqual([['date', initial]]);
+  });
 
   test('does not wait for a parent transition', async () => {
     const onBlur = vi.fn();
