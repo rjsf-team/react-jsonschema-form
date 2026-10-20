@@ -152,8 +152,8 @@ export default function DateWidget<
     containerRef.current.style.zIndex = '99999';
   }, [containerRef, triggerRef]);
 
-  // Positions the calendar before the browser paints it, so it never shows where it was last, and again on resize and
-  // scroll
+  // A layout Effect, so the popup each opening mounts is in place before the browser first paints it; it then follows
+  // the trigger on resize and scroll
   useLayoutEffect(() => {
     if (!isOpen) {
       return () => {};
