@@ -55,6 +55,7 @@ import getDecimalSeparator from './getDecimalSeparator.ts';
 import getDeprecatedHandling from './getDeprecatedHandling.ts';
 import getDescribedControlAttributes from './getDescribedControlAttributes.ts';
 import getDiscriminatorFieldFromSchema from './getDiscriminatorFieldFromSchema.ts';
+import getErrorsToDraw from './getErrorsToDraw.ts';
 import getExampleSuggestions from './getExampleSuggestions.ts';
 import getFieldClassNames from './getFieldClassNames.ts';
 import type { FieldLabelSources } from './getFieldLabel.ts';
@@ -229,6 +230,7 @@ export type {
   UseOptionFocusHandlersResult,
   UseSelectFocusHandlersResult,
   UseTimeWidgetPropsResult,
+  // oxlint-disable-next-line typescript/no-deprecated -- deprecated, and kept exported through v7
   VisibleErrorsProps,
   WidgetAliasFor,
   WidgetAriaPropsInput,
@@ -290,6 +292,7 @@ export {
   getDeprecatedHandling,
   getDescribedControlAttributes,
   getDiscriminatorFieldFromSchema,
+  getErrorsToDraw,
   getExampleSuggestions,
   getFieldClassNames,
   getFieldLabel,
@@ -324,6 +327,7 @@ export {
   getTestIds,
   getUiOptions,
   getUnionTypes,
+  // oxlint-disable-next-line typescript/no-deprecated -- deprecated, and kept exported through v7
   getVisibleErrors,
   getWidget,
   getWidgetDescription,
@@ -335,6 +339,7 @@ export {
   hasAdditionalKeyLabel,
   hasByPath,
   hasTemplateErrors,
+  // oxlint-disable-next-line typescript/no-deprecated -- deprecated, and kept exported through v7
   hasVisibleErrors,
   hasWidget,
   hasWidgetErrors,
