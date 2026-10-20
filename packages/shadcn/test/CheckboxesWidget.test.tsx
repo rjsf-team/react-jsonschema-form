@@ -19,6 +19,7 @@ describe('CheckboxesWidget', () => {
         })}
       />,
     );
+    expect(screen.getByRole('checkbox')).not.toHaveClass('border-destructive');
     expect(asFragment()).toMatchSnapshot();
   });
   test('inline', () => {
@@ -32,6 +33,7 @@ describe('CheckboxesWidget', () => {
         })}
       />,
     );
+    expect(screen.getByRole('checkbox')).not.toHaveClass('border-destructive');
     expect(asFragment()).toMatchSnapshot();
   });
 });
