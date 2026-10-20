@@ -140,12 +140,16 @@ export interface UseAltDateWidgetResult {
   handleClear: (event: MouseEvent) => void;
   /** The callback that will set the `AltDateWidget` to NOW when a button is clicked */
   handleSetNow: (event: MouseEvent) => void;
+  /** True when the widget is disabled or read-only, in which case `handleClear` and `handleSetNow` do nothing, so the
+   * buttons that call them are rendered disabled
+   */
+  buttonsDisabled: boolean;
 }
 
 /** Hook which encapsulates the logic needed to render an `AltDateWidget` with optional `time` elements. It contains
  * the `state` of the current date(/time) selections in the widget. It returns a `UseAltDateWidgetResult` object
- * that contains the `elements: DateElementProp[]` and three callbacks needed to change one of the rendered `elements`,
- * and to handle the clicking of the `clear` and `setNow` buttons.
+ * that contains the `elements: DateElementProp[]`, three callbacks needed to change one of the rendered `elements`
+ * and to handle the clicking of the `clear` and `setNow` buttons, and the `buttonsDisabled` flag for those buttons.
  *
  * @param props - The `WidgetProps` for the `AltDateWidget`
  */
@@ -162,6 +166,7 @@ export default function useAltDateWidgetProps<
   // parent that rejects it or stores it later shows the value it holds
   const [draft, setDraft] = useState<{ basis: DateObject; state: DateObject }>();
   const state = draft?.basis === parsed ? draft.state : parsed;
+  const buttonsDisabled = disabled || readonly;
 
   const handleChange = useCallback(
     (property: keyof DateObject, newValue?: string) => {
@@ -183,26 +188,26 @@ export default function useAltDateWidgetProps<
   const handleClear = useCallback(
     (event: MouseEvent) => {
       event.preventDefault();
-      if (disabled || readonly) {
+      if (buttonsDisabled) {
         return;
       }
       setDraft(undefined);
       onChange(undefined);
     },
-    [disabled, readonly, onChange],
+    [buttonsDisabled, onChange],
   );
 
   const handleSetNow = useCallback(
     (event: MouseEvent) => {
       event.preventDefault();
-      if (disabled || readonly) {
+      if (buttonsDisabled) {
         return;
       }
       const nextState = parseDateString(new Date().toJSON(), time);
       setDraft(undefined);
       onChange(toDateString(nextState, time));
     },
-    [disabled, readonly, time, onChange],
+    [buttonsDisabled, time, onChange],
   );
 
   const elements = useMemo(
@@ -215,5 +220,5 @@ export default function useAltDateWidgetProps<
       ),
     [state, time, options.yearsRange, options.format],
   );
-  return { elements, handleChange, handleClear, handleSetNow };
+  return { elements, handleChange, handleClear, handleSetNow, buttonsDisabled };
 }

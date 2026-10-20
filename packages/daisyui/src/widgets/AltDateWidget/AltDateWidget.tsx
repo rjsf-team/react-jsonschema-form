@@ -42,7 +42,7 @@ export default function AltDateWidget<
   } = props;
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const { translateString } = registry;
-  const { elements, handleChange, handleClear, handleSetNow } = useAltDateWidgetProps(props);
+  const { elements, handleChange, handleClear, handleSetNow, buttonsDisabled } = useAltDateWidgetProps(props);
 
   return (
     <div className='space-y-3' {...getGroupProps({ id, label, hideLabel, presentation, role: 'group' })}>
@@ -80,22 +80,12 @@ export default function AltDateWidget<
       </div>
       <div className='flex justify-start space-x-2'>
         {(options.hideNowButton !== undefined ? !options.hideNowButton : true) && (
-          <button
-            type='button'
-            className='btn btn-sm btn-primary'
-            onClick={handleSetNow}
-            disabled={disabled || readonly}
-          >
+          <button type='button' className='btn btn-sm btn-primary' onClick={handleSetNow} disabled={buttonsDisabled}>
             {translateString(TranslatableString.NowLabel)}
           </button>
         )}
         {(options.hideClearButton !== undefined ? !options.hideClearButton : true) && (
-          <button
-            type='button'
-            className='btn btn-sm btn-secondary'
-            onClick={handleClear}
-            disabled={disabled || readonly}
-          >
+          <button type='button' className='btn btn-sm btn-secondary' onClick={handleClear} disabled={buttonsDisabled}>
             {translateString(TranslatableString.ClearLabel)}
           </button>
         )}

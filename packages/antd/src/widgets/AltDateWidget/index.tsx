@@ -21,7 +21,7 @@ export default function AltDateWidget<
   } = props;
   const { formContext, translateString } = registry;
   const { rowGutter = 24 } = formContext as GenericObjectType;
-  const { elements, handleChange, handleClear, handleSetNow } = useAltDateWidgetProps(props);
+  const { elements, handleChange, handleClear, handleSetNow, buttonsDisabled } = useAltDateWidgetProps(props);
   // The date parts are a group carrying the field's id, as core's are, named by the template's label, which a `for`
   // can't reach since no part carries that id
   const { group } = getGroupAttributes<T, S, F>({ id, presentation }, 'group');
@@ -50,21 +50,14 @@ export default function AltDateWidget<
       })}
       {!options.hideNowButton && (
         <Col flex='88px'>
-          <Button block className='btn-now' onClick={handleSetNow} type='primary' disabled={disabled || readonly}>
+          <Button block className='btn-now' onClick={handleSetNow} type='primary' disabled={buttonsDisabled}>
             {translateString(TranslatableString.NowLabel)}
           </Button>
         </Col>
       )}
       {!options.hideClearButton && (
         <Col flex='88px'>
-          <Button
-            block
-            className='btn-clear'
-            danger
-            onClick={handleClear}
-            type='primary'
-            disabled={disabled || readonly}
-          >
+          <Button block className='btn-clear' danger onClick={handleClear} type='primary' disabled={buttonsDisabled}>
             {translateString(TranslatableString.ClearLabel)}
           </Button>
         </Col>

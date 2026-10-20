@@ -36,7 +36,8 @@ function getPart(name: string) {
 }
 
 /** Pins the accessible name and description of each select an `AltDateWidget` renders, which no theme's `SelectWidget`
- * receives as a label, in every theme.
+ * receives as a label, and that its Now and Clear buttons are disabled while the form is disabled or read-only, in every
+ * theme.
  *
  * These live in their own file rather than alongside `formTests()` because every render advances React's `useId`
  * counter for the rest of the module, so running them there would renumber the ids in that suite's snapshots across
@@ -148,6 +149,26 @@ export function altDateTests(Form: ComponentType<FormProps>) {
             expect(element).not.toHaveAttribute('aria-invalid', 'true');
           }),
         );
+      });
+    });
+  });
+
+  describe('alt-date Now and Clear buttons', () => {
+    test('are enabled by default', () => {
+      render(<Form schema={bareSchema} uiSchema={bareUiSchema} validator={validator} />);
+      ['Now', 'Clear'].forEach((name) => {
+        const buttons = screen.getAllByRole('button', { name });
+        expect(buttons).toHaveLength(2);
+        buttons.forEach((button) => expect(button).toBeEnabled());
+      });
+    });
+
+    test.each(['disabled', 'readonly'])('are disabled when the form is %s', (flag) => {
+      render(<Form schema={bareSchema} uiSchema={bareUiSchema} validator={validator} {...{ [flag]: true }} />);
+      ['Now', 'Clear'].forEach((name) => {
+        const buttons = screen.getAllByRole('button', { name });
+        expect(buttons).toHaveLength(2);
+        buttons.forEach((button) => expect(button).toBeDisabled());
       });
     });
   });

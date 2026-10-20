@@ -3171,8 +3171,9 @@ What sits under `__errors` is a leaf, as every other walk of an `ErrorSchema` re
 
 Hook which encapsulates the logic needed to render an `AltDateWidget` with optional `time` elements. It contains
 the `state` of the current date(/time) selections in the widget. It returns a `UseAltDateWidgetResult` object
-that contains the `elements: DateElementProp[]` and three callbacks needed to change one of the rendered `elements`,
-and to handle the clicking of the `clear` and `setNow` buttons.
+that contains the `elements: DateElementProp[]`, three callbacks needed to change one of the rendered `elements`
+and to handle the clicking of the `clear` and `setNow` buttons, and `buttonsDisabled`, which is true when the widget is
+disabled or read-only, so those buttons can be rendered disabled.
 
 #### Parameters
 

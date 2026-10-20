@@ -149,7 +149,7 @@ export default function AltDateWidget<
 >(props: WidgetProps<T, S, F>) {
   const { id, disabled, readonly, autofocus, required, label, options, registry, onBlur, onFocus } = props;
   const { translateString } = registry;
-  const { elements, handleChange, handleClear, handleSetNow } = useAltDateWidgetProps(props);
+  const { elements, handleChange, handleClear, handleSetNow, buttonsDisabled } = useAltDateWidgetProps(props);
   const { wrapperProps, invalid, successId, slotlessErrors } = useFieldWrapperProps(props, true);
   const { inputContainer, wrapperProps: fieldWrapperProps } = options;
   // Each part renders the field's `inputContainer` in its own wrapper, rather than the field's wrapper around them all,
@@ -189,12 +189,12 @@ export default function AltDateWidget<
           />
           <Group wrap='nowrap' gap={3}>
             {!options.hideNowButton && (
-              <Button variant='subtle' size='xs' disabled={disabled || readonly} onClick={handleSetNow}>
+              <Button variant='subtle' size='xs' disabled={buttonsDisabled} onClick={handleSetNow}>
                 {translateString(TranslatableString.NowLabel)}
               </Button>
             )}
             {!options.hideClearButton && (
-              <Button variant='subtle' size='xs' disabled={disabled || readonly} onClick={handleClear}>
+              <Button variant='subtle' size='xs' disabled={buttonsDisabled} onClick={handleClear}>
                 {translateString(TranslatableString.ClearLabel)}
               </Button>
             )}

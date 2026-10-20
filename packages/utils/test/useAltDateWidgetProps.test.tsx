@@ -139,6 +139,7 @@ describe('useAltDateWidgetProps()', () => {
     expect(handleChange).toBeInstanceOf(Function);
     expect(handleClear).toBeInstanceOf(Function);
     expect(handleSetNow).toBeInstanceOf(Function);
+    expect(result.current.buttonsDisabled).toBe(false);
     // Simulate clicking the setNow button
     const simulatedEvent = {
       preventDefault: vi.fn(),
@@ -158,6 +159,7 @@ describe('useAltDateWidgetProps()', () => {
     expect(handleChange).toBeInstanceOf(Function);
     expect(handleClear).toBeInstanceOf(Function);
     expect(handleSetNow).toBeInstanceOf(Function);
+    expect(result.current.buttonsDisabled).toBe(false);
     // Simulate clicking the setNow button
     const simulatedEvent = {
       preventDefault: vi.fn(),
@@ -380,6 +382,7 @@ describe('useAltDateWidgetProps()', () => {
     expect(handleChange).toBeInstanceOf(Function);
     expect(handleClear).toBeInstanceOf(Function);
     expect(handleSetNow).toBeInstanceOf(Function);
+    expect(result.current.buttonsDisabled).toBe(true);
     // Simulate clicking the setNow button
     const simulatedEvent = {
       preventDefault: vi.fn(),
@@ -401,6 +404,7 @@ describe('useAltDateWidgetProps()', () => {
     expect(handleChange).toBeInstanceOf(Function);
     expect(handleClear).toBeInstanceOf(Function);
     expect(handleSetNow).toBeInstanceOf(Function);
+    expect(result.current.buttonsDisabled).toBe(true);
     // Simulate clicking the setNow button
     const simulatedEvent = {
       preventDefault: vi.fn(),
