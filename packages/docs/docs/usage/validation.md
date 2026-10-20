@@ -672,6 +672,9 @@ The copy holds arrays and plain objects copied key by key and any other object c
 `validateFormData()` and `rawValidation()` validate the data they are handed, so those changes reach it.
 Under the other options nothing is copied.
 
+A keyword added through `extenderFn` or `validator.ajv` that writes into the data, such as `ajv-keywords`' `transform`, doesn't make `isValid()` copy the data, though `isValid()` must not change it.
+Such a keyword needs `useDefaults`, `coerceTypes` or `removeAdditional` set, so that `isValid()` validates a copy (each of them also changes what Ajv accepts), or else a copy of its own, such as a `ValidatorType` that wraps this one and hands its `isValid()` a copy of the data.
+
 ## Using the raw Ajv instance
 
 The `customizeValidator()` function returns the `AJV8Validator` implementation class, which has an internal raw `ajv` instance within it.
@@ -686,6 +689,8 @@ ajvKeywords(validator.ajv, ['your-keyword']);
 
 // use your update validator with a `Form`
 ```
+
+A keyword that writes into the data, such as `transform`, needs `isValid()` to validate a copy; see [ajvOptionsOverrides](#ajvoptionsoverrides).
 
 ## Ajv8 validator
 

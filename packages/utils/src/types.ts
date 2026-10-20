@@ -2077,7 +2077,8 @@ export interface ValidatorType<S extends StrictRJSFSchema = RJSFSchema, F extend
    * It must not change the `formData`, at any depth: the form checks the same data against many conditions and
    * options, and `getClosestMatchingOption()` reuses what it found for data it already checked during the same call
    * without looking at the data again. An engine that fills defaults in, coerces values or removes properties as it
-   * validates, as Ajv does with `useDefaults`, `coerceTypes` or `removeAdditional`, has to be handed a copy.
+   * validates, as Ajv does with `useDefaults`, `coerceTypes` or `removeAdditional` or with a keyword that writes into
+   * the data, such as ajv-keywords' `transform`, has to be handed a copy.
    *
    * @param schema - The schema against which to validate the form data, often a `$ref` local to the `rootSchema`
    * @param formData - The form data to validate
