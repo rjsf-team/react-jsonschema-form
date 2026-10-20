@@ -1151,8 +1151,11 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
         if (!wasSanitized) {
           // A round that repeats ends on the data its fill makes of what sanitize left, as every other exit does: the
           // sanitize may have cleared a value only the fill writes, such as the `null` of a property a condition just
-          // retyped to `null`, which it judges against the schema before the change
+          // retyped to `null`, which it judges against the schema before the change. The schema is resolved for that
+          // data too, as every other exit's is, since the round can repeat data an earlier pass held, which is not the
+          // data this pass resolved its schema for
           formData = fillDefaults(sanitizedFormData);
+          retrievedSchema = resolveRetrievedSchema(current, schemaUtils, formData);
         }
       }
       if (!isFormDataSanitized) {
