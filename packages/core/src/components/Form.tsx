@@ -337,8 +337,10 @@ type ValidationProps<T, S extends StrictRJSFSchema, F extends FormContextType> =
  * layout Effect, a widget's or an earlier sibling's, starts from the props of the commit that runs it. It walks the tree
  * in order as it does, and runs the layout cleanups of what the commit removes on the way, so being first inside the
  * form element also has this run before the cleanup of any field the commit removes, which flushes a draft from it
- * under the new props too. Hidden content renders, and runs its insertion Effects, so the model keeps up while an
- * `<Activity>` hides the form
+ * under the new props too. Only a removed child of an element the walk reaches after this one: React runs the
+ * cleanups of an element's removed children before it walks the children that stay, so everything the form renders
+ * besides this and the `Attachment` sits in a fragment after them, which adds nothing to the DOM. Hidden content
+ * renders, and runs its insertion Effects, so the model keeps up while an `<Activity>` hides the form
  */
 function Handoff({ handOff }: { handOff: () => void }) {
   useInsertionEffect(handOff);
@@ -470,25 +472,27 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       >
         <Handoff handOff={handOff} />
         <Attachment attach={model.attached} />
-        {showErrorList === 'top' && renderErrors()}
-        <SchemaFieldComponent
-          name=''
-          schema={schema}
-          uiSchema={uiSchema}
-          errorSchema={errorSchema}
-          fieldPath={ROOT_FIELD_PATH}
-          id={registry.globalFormOptions.idPrefix}
-          formData={formData}
-          onChange={model.handleChange}
-          onBlur={model.handleBlur}
-          onFocus={model.handleFocus}
-          registry={registry}
-          disabled={disabled}
-          readonly={readonly}
-        />
+        <>
+          {showErrorList === 'top' && renderErrors()}
+          <SchemaFieldComponent
+            name=''
+            schema={schema}
+            uiSchema={uiSchema}
+            errorSchema={errorSchema}
+            fieldPath={ROOT_FIELD_PATH}
+            id={registry.globalFormOptions.idPrefix}
+            formData={formData}
+            onChange={model.handleChange}
+            onBlur={model.handleBlur}
+            onFocus={model.handleFocus}
+            registry={registry}
+            disabled={disabled}
+            readonly={readonly}
+          />
 
-        {children || submitButton}
-        {showErrorList === 'bottom' && renderErrors()}
+          {children || submitButton}
+          {showErrorList === 'bottom' && renderErrors()}
+        </>
       </FormTag>
     </FormDataContext>
   );

@@ -7,6 +7,7 @@ import { act, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import { collectDeferredThrows } from '../../../testing/deferredThrows.ts';
+import SchemaField from '../src/components/fields/SchemaField.tsx';
 import type { FormRef, IChangeEvent } from '../src/index.ts';
 import Form from '../src/index.ts';
 import type { ParentLog } from './testUtils.tsx';
@@ -1315,6 +1316,40 @@ describe('form data ownership', () => {
         <Form<Versioned>
           schema={version === 1 ? schema : { type: 'object', properties: { a: { type: 'string' } } }}
           uiSchema={{ b: { 'ui:widget': FlushingWidget } }}
+          validator={validator}
+          initialFormData={{ a: 'a' }}
+          onChange={(event) => reported.push([version, event.formData])}
+        />
+      );
+      const { rerender } = render(tree(1));
+
+      rerender(tree(2));
+
+      expect(reported).toEqual([[2, { a: 'a', b: 'flushed' }]]);
+    });
+
+    it("a replaced root field's layout cleanup reports through the props of the commit that replaces it", () => {
+      interface Versioned {
+        a?: string;
+        b?: string;
+      }
+      function FlushingWidget({ onChange }: WidgetProps) {
+        useLayoutEffect(() => () => onChange('flushed'), [onChange]);
+        return null;
+      }
+      // Two root fields that render alike, so switching between them replaces a direct child of the form element
+      function FirstSchemaField(props: FieldProps) {
+        return <SchemaField {...props} />;
+      }
+      function SecondSchemaField(props: FieldProps) {
+        return <SchemaField {...props} />;
+      }
+      const reported: [number, Versioned][] = [];
+      const tree = (version: number) => (
+        <Form<Versioned>
+          schema={schema}
+          uiSchema={{ b: { 'ui:widget': FlushingWidget } }}
+          fields={{ SchemaField: version === 1 ? FirstSchemaField : SecondSchemaField }}
           validator={validator}
           initialFormData={{ a: 'a' }}
           onChange={(event) => reported.push([version, event.formData])}
