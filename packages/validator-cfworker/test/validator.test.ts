@@ -12,6 +12,7 @@ import { ROOT_SCHEMA_PREFIX, getValidationTarget } from '@rjsf/utils';
 import nestedResourceTests from '../../utils/test/testUtils/nestedResourceTests.ts';
 import pointerValidationTests, {
   absoluteRefValidationTests,
+  sharedObjectValidationTests,
 } from '../../utils/test/testUtils/pointerValidationTests.ts';
 import createCfworkerInstance, { installFormats } from '../src/createCfworkerInstance.ts';
 import customizeValidator from '../src/customizeValidator.ts';
@@ -457,6 +458,7 @@ describe('CFWorkerValidator validating a subschema by its place in the root', ()
 
 pointerValidationTests(() => customizeValidator());
 absoluteRefValidationTests(() => customizeValidator());
+sharedObjectValidationTests(() => customizeValidator());
 
 describe('CFWorkerValidator', () => {
   nestedResourceTests((rootSchema) =>

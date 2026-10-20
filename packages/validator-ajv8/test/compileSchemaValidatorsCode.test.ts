@@ -5,6 +5,7 @@ import uri from 'ajv/dist/runtime/uri.js';
 
 import nestedResourceTests from '../../utils/test/testUtils/nestedResourceTests.ts';
 import pointerValidationTests, {
+  sharedObjectValidationTests,
   sharedSubschemaValidationTests,
 } from '../../utils/test/testUtils/pointerValidationTests.ts';
 import precompiledCoverageTests from '../../utils/test/testUtils/precompiledCoverageTests.ts';
@@ -105,8 +106,11 @@ describe('compileSchemaValidatorsCode()', () => {
   pointerValidationTests((rootSchema) =>
     createPrecompiledValidator(evalValidatorCode(compileSchemaValidatorsCode(rootSchema)), rootSchema),
   );
-  sharedSubschemaValidationTests((rootSchema) =>
-    createPrecompiledValidator(evalValidatorCode(compileSchemaValidatorsCode(rootSchema)), rootSchema),
+  sharedObjectValidationTests((compiledFrom, runWith) =>
+    createPrecompiledValidator(evalValidatorCode(compileSchemaValidatorsCode(compiledFrom)), runWith),
+  );
+  sharedSubschemaValidationTests((compiledFrom, runWith) =>
+    createPrecompiledValidator(evalValidatorCode(compileSchemaValidatorsCode(compiledFrom)), runWith),
   );
   nestedResourceTests((rootSchema) => {
     const options = String(rootSchema.$schema).includes('2020-12') ? { AjvClass: Ajv2020 } : {};
