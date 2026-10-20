@@ -391,6 +391,7 @@ should change the heading of the (upcoming) version to include a major version b
 - `DateWidget` positions its calendar popup from a layout Effect rather than a passive one, so the popup, which each opening mounts afresh, is in place before the browser first paints it ([#5563](https://github.com/rjsf-team/react-jsonschema-form/pull/5563))
 - `DaisyUIFrameProvider` stores a chosen `dataTheme` from an Effect, not while rendering, and reads the stored theme as an external store, so it shows a theme another provider, `ThemeProvider`'s `setTheme()` or another tab stores as soon as it is stored, and reads no storage while a theme is chosen. `ThemeProvider` reads the stored theme the same way, so `useTheme()` follows a theme a `DaisyUIFrameProvider` or another tab stores, where it kept the one stored when it mounted ([#5563](https://github.com/rjsf-team/react-jsonschema-form/pull/5563))
 - `useTheme()` outside a `ThemeProvider` names `cupcake`, the theme `DaisyUIFrameProvider` and `ThemeProvider` show where none is stored, rather than `night`, which nothing shows ([#5563](https://github.com/rjsf-team/react-jsonschema-form/pull/5563))
+- `DateWidget`'s calendar popup follows its trigger when an element around the field scrolls, such as a scrolling panel or dialog the form is in, where it stayed put and followed only a scroll of the page ([#5563](https://github.com/rjsf-team/react-jsonschema-form/pull/5563))
 
 ## @rjsf/fluentui-rc
 

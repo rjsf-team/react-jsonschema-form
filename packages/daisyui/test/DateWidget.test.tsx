@@ -1,6 +1,6 @@
 import { englishStringTranslator, TranslatableString } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { render, screen, within } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import Form from '../src/index.ts';
@@ -631,6 +631,21 @@ describe('DateWidget', () => {
   });
 
   describe('the calendar it places', () => {
+    /** A trigger 20px high whose bottom edge is `bottom` pixels down the viewport */
+    function triggerRect(bottom: number): DOMRect {
+      return {
+        x: 10,
+        y: bottom - 20,
+        width: 90,
+        height: 20,
+        top: bottom - 20,
+        right: 100,
+        bottom,
+        left: 10,
+        toJSON() {},
+      };
+    }
+
     test('is in place before the day a key opens it onto takes the focus', async () => {
       render(<DateWidget {...makeWidgetMockProps({ value: '2020-05-03', schema, autofocus: false })} />);
       let topAtDayFocus: string | undefined;
@@ -647,6 +662,27 @@ describe('DateWidget', () => {
 
       // jsdom measures the trigger as an empty box at the top of the viewport, so the calendar goes 5px below it
       expect(topAtDayFocus).toBe('5px');
+    });
+
+    test('follows the trigger when an element around the field scrolls', async () => {
+      render(
+        <div data-testid='panel'>
+          <DateWidget {...makeWidgetMockProps({ value: '2020-05-03', schema, autofocus: false })} />
+        </div>,
+      );
+      const trigger = screen.getByRole('combobox');
+      let bottom = 50;
+      vi.spyOn(trigger, 'getBoundingClientRect').mockImplementation(() => triggerRect(bottom));
+      await user.click(trigger);
+      const popup = screen.getByText('Done').closest<HTMLElement>('.date-picker-popup');
+      expect(popup).toHaveStyle({ top: '55px' });
+
+      bottom = 10;
+      // user-event has no scrolling. A browser dispatches a scroll at the element that scrolled, without bubbling, as
+      // `fireEvent.scroll` does
+      fireEvent.scroll(screen.getByTestId('panel'));
+
+      expect(popup).toHaveStyle({ top: '15px' });
     });
   });
 
