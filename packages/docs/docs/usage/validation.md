@@ -74,6 +74,9 @@ An `$id` of the empty string names nothing, so a schema carrying one is looked u
 A schema that a merge makes has no place in the root schema and has no compiled function: an `anyOf`/`oneOf` option a `customMergeAllOf` rewrites, or one made by merging the `oneOf`s of two `patternProperties` that match the same key, throws `No precompiled validator function was found for the given schema` when the form scores it.
 Regenerate the precompiled code whenever you upgrade RJSF, since what is compiled can change between releases.
 
+Compiled with `useDefaults`, `coerceTypes` or `removeAdditional`, each function in the generated file is marked `changesData`, and the precompiled validator's `isValid()` hands such a function a copy of the data, as the validator `customizeValidator()` returns does (see [ajvOptionsOverrides](#ajvoptionsoverrides)), except that data it can't copy makes `isValid()` throw.
+A hand-written function that changes the data it validates can set `changesData: true` on itself to be handed a copy too.
+
 Give the form's `customMergeAllOf` to [`createPrecompiledValidator()`](#using-the-precompiled-validator), since the validator resolves the root schema it is handed with it.
 
 It is highly recommended to create a `compileYourSchema.js` file (or what ever name you want) with code similar to what is shown above and then, using node, run the code as follows:
@@ -660,6 +663,12 @@ const validator = customizeValidator({ ajvOptionsOverrides });
 
 render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
+
+Ajv's `useDefaults`, `coerceTypes` and `removeAdditional` options change the data Ajv validates: it fills in defaults, converts values to the type the schema names and deletes properties the schema doesn't allow.
+Under any of them, `isValid()`, which the form calls to check each condition and option against the data, validates a copy of the data, so those checks never change the form's data.
+The copy holds arrays and plain objects copied key by key and any other object copied with `structuredClone()`, so a class instance is checked as a plain object of its own properties, and data holding an object that can't be copied, such as a class instance holding a function, fails the check with a warning.
+`validateFormData()` and `rawValidation()` validate the data they are handed, so those changes reach it.
+Under the other options nothing is copied.
 
 ## Using the raw Ajv instance
 

@@ -13,6 +13,7 @@ import type { ErrorObject, ValidateFunction, Ajv } from 'ajv';
 
 import ajvRootSchemaId, { withAjvRootIdRefPrefix } from './ajvRootSchemaId.ts';
 import createAjvInstance from './createAjvInstance.ts';
+import { changesData, copyForValidation } from './dataForValidation.ts';
 import type { RawValidationErrorsType } from './processRawValidationErrors.ts';
 import processRawValidationErrors from './processRawValidationErrors.ts';
 import type { CustomValidatorOptionsType, Localizer, SuppressDuplicateFilteringType } from './types.ts';
@@ -300,7 +301,8 @@ export default class AJV8Validator<
 
   /** Validates data against a schema, returning true if the data is valid, or
    * false otherwise. If the schema is invalid, then this function will return
-   * false.
+   * false. Where the Ajv options change the data validated (`useDefaults`, `coerceTypes` or `removeAdditional`), a
+   * copy of the `formData` is validated, so the `formData` itself never changes.
    *
    * @param schema - The schema against which to validate the form data
    * @param formData - The form data to validate
@@ -330,8 +332,7 @@ export default class AJV8Validator<
         this.ajv.addSchema(schemaWithIdRefPrefix, schemaId).getSchema(schemaId) ??
         this.ajv.compile(schemaWithIdRefPrefix);
       compiled = true;
-      const result = compiledValidator(formData);
-      return result;
+      return compiledValidator(changesData(this.ajv.opts) ? copyForValidation(formData) : formData);
     } catch (e) {
       // The schema is named so two schemas that fail with the same error text aren't deduped into one warning, and
       // `compiled` distinguishes a schema that wouldn't compile from one that did and then threw on the form data,
