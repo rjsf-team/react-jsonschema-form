@@ -202,6 +202,31 @@ describe('NullField', () => {
       expect(getFormData()).toEqual({ outer: { s: 'x' } });
       expect(node.querySelector('#root_outer_opt__optionalAdd')).toBeInTheDocument();
     });
+
+    it('is left out of the data an option switch writes, as it is of the option the form mounts with', async () => {
+      const { node, getFormData } = createFormComponent({
+        schema: {
+          type: 'object',
+          required: ['choice'],
+          properties: {
+            choice: {
+              oneOf: [
+                { title: 'A', type: 'object', properties: { a: { type: 'string' } } },
+                { ...holder, title: 'B' },
+              ],
+            },
+          },
+        },
+        uiSchema,
+        initialFormData: { choice: { a: 'x' } },
+      });
+
+      await user.selectOptions(elementOf(node, '#root_choice__oneof_select'), 'B');
+
+      // The switch carries the new option's object over empty, which the controls show as holding nothing
+      expect(getFormData()).toEqual({ choice: { opt: {} } });
+      expect(node.querySelector('#root_choice_opt__optionalAdd')).toBeInTheDocument();
+    });
   });
 
   describe('a value it is handed as undefined', () => {

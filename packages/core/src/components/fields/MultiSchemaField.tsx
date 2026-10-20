@@ -257,6 +257,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
         newOptionUiSchema,
         oldOptionUiSchema: optionUiSchema,
         uiSchemaDefinitions,
+        globalUiOptions,
       });
 
       const outcome = sendOptionSwitch(
@@ -299,6 +300,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
       renderedOption,
       uiSchema,
       uiSchemaDefinitions,
+      globalUiOptions,
     ],
   );
 

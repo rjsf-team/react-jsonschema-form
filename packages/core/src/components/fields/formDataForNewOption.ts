@@ -1,6 +1,7 @@
 import type {
   FormContextType,
   GenericObjectType,
+  GlobalUISchemaOptions,
   RJSFSchema,
   SchemaUtilsType,
   StrictRJSFSchema,
@@ -17,6 +18,7 @@ import {
 } from '@rjsf/utils';
 
 import { declaresOwnValue, declaresValueFor } from '../declaresValue.ts';
+import { withGlobalUiOptions } from './fieldWidgetUtils.ts';
 
 /** Returns `option` carrying the `required` that `parentSchema` declares, which is what decides whether the form
  * populates a key at all under a `defaultFormStateBehavior` keyed off `required`. A schema's defaults
@@ -69,11 +71,14 @@ function optionDeclaresValueFor<
   return declaresValueFor<S>(option, key, schemaUtils.retrieveSchema(getPropertySchema<S>(option, key)));
 }
 
-/** The uiSchemas the defaults of the two options are computed with, named so the old and new cannot be swapped */
+/** The uiSchemas the defaults of the two options are computed with, named so the old and new cannot be swapped, and
+ * the form's global UI options, which say where the Optional Data Controls leave an optional object out of the defaults
+ */
 interface OptionUiSchemas<T, S extends StrictRJSFSchema, F extends FormContextType> {
   newOptionUiSchema?: UiSchema<T, S, F>;
   oldOptionUiSchema?: UiSchema<T, S, F>;
   uiSchemaDefinitions?: UiSchemaDefinitions<S, F>;
+  globalUiOptions?: GlobalUISchemaOptions;
 }
 
 /** Computes the form data to carry across a switch from `oldOption` to `newOption` of a `oneOf`/`anyOf`.
@@ -124,7 +129,8 @@ interface OptionUiSchemas<T, S extends StrictRJSFSchema, F extends FormContextTy
  *        before its defaults are computed, and which each option inherits from as it is rendered before the data is
  *        sanitized against it
  * @param [uiSchemas] - Each option's own uiSchema, so its `ui:initialValue`/`ui:emptyValue` apply to the defaults
- *        computed for it, and the registry's `ui:definitions`, which an option's uiSchema never carries itself
+ *        computed for it, and the registry's `ui:definitions` and global UI options, which an option's uiSchema never
+ *        carries itself
  * @returns - The form data for `newOption`, or undefined when it holds nothing, as when the selection is cleared
  */
 export default function formDataForNewOption<
@@ -139,7 +145,10 @@ export default function formDataForNewOption<
   parentSchema?: S,
   uiSchemas: OptionUiSchemas<T, S, F> = {},
 ): T | undefined {
-  const { newOptionUiSchema, oldOptionUiSchema, uiSchemaDefinitions } = uiSchemas;
+  const { uiSchemaDefinitions, globalUiOptions } = uiSchemas;
+  // The defaults leave out an optional object the Optional Data Controls show without its fields, as the form's own do
+  const newOptionUiSchema = withGlobalUiOptions<T, S, F>(uiSchemas.newOptionUiSchema, globalUiOptions);
+  const oldOptionUiSchema = withGlobalUiOptions<T, S, F>(uiSchemas.oldOptionUiSchema, globalUiOptions);
   let newFormData: T | undefined = schemaUtils.sanitizeDataForNewSchema(
     renderedOption<S>(parentSchema, newOption),
     renderedOption<S>(parentSchema, oldOption),
@@ -207,7 +216,10 @@ export default function formDataForNewOption<
         return false;
       }
       const fieldWithOldOption = { ...parentSchema, [xxxOfKey]: [oldOption] } as S;
-      const fieldUiSchema: GenericObjectType | undefined = oldOptionUiSchema && { [xxxOfKey]: [oldOptionUiSchema] };
+      const ownFieldUiSchema: GenericObjectType | undefined = uiSchemas.oldOptionUiSchema && {
+        [xxxOfKey]: [uiSchemas.oldOptionUiSchema],
+      };
+      const fieldUiSchema = withGlobalUiOptions<T, S, F>(ownFieldUiSchema, globalUiOptions);
       const defaultsAsSeeded = (value: unknown) =>
         schemaUtils.getDefaultFormState(
           fieldWithOldOption,
