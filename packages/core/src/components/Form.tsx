@@ -213,8 +213,9 @@ export interface FormProps<
    * derives on its own, the defaults for a new schema, the live omit a blur runs and a `reset()`, is stored without it,
    * and the last two are reported through `onChange`. It runs before the form stores the result, validates it and
    * reports it.
-   * It must be pure, since the form may call it again for the same edit, and should return `next`'s unchanged subtrees
-   * as they are, so their fields do not render again. `undefined` leaves the form with no data, and what it returns is
+   * It must be pure, since the form may call it again for the same edit, and must not mutate `next` or `previous`,
+   * which are frozen in development; it should return `next`'s unchanged subtrees as they are, so their fields do not
+   * render again. `undefined` leaves the form with no data, and what it returns is
    * filled in with the schema's defaults like any data the form holds.
    */
   transformChange?: (next: Uninferred<T> | undefined, previous: Uninferred<T> | undefined) => Uninferred<T> | undefined;

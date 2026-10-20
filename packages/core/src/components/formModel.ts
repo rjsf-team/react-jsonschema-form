@@ -347,6 +347,12 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       props.transformChange && change.newKeyOf && Object.is(edited.formData, base.formData)
         ? copyAlongPath(edited.formData, [])
         : edited.formData;
+    if (isDevelopment && props.transformChange) {
+      // A transform that mutates its arguments writes into data the form holds, which the fields compare by identity,
+      // or into the edit's data after its defaults and sanitize were worked out, so in development a mutation throws
+      freezeFormData(base.formData);
+      freezeFormData(next);
+    }
     const returned = props.transformChange ? props.transformChange(next, base.formData) : next;
     if (isDevelopment && returned === undefined && next !== undefined && !isEmptyTransformWarned) {
       isEmptyTransformWarned = true;

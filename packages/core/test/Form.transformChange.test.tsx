@@ -124,6 +124,47 @@ describe('transformChange', () => {
     expect(input(node, 'root_second')).toHaveValue('ABC');
   });
 
+  describe('in development, gets data it cannot mutate', () => {
+    it.each<[string, NonNullable<FormProps<Person>['transformChange']>]>([
+      [
+        'next',
+        (next) => {
+          if (next) {
+            // oxlint-disable-next-line no-param-reassign -- the mutation is what the form has to refuse
+            next.first = 'mutated';
+          }
+          return next;
+        },
+      ],
+      [
+        'a subtree next shares with the data before the edit',
+        (next) => {
+          if (next?.nested) {
+            // oxlint-disable-next-line no-param-reassign -- the mutation is what the form has to refuse
+            next.nested.inner = 'mutated';
+          }
+          return next;
+        },
+      ],
+      [
+        'previous',
+        (next, previous) => {
+          if (previous) {
+            // oxlint-disable-next-line no-param-reassign -- the mutation is what the form has to refuse
+            previous.first = 'mutated';
+          }
+          return next;
+        },
+      ],
+    ])('so a mutation of %s throws, and the form keeps its data', (_, transformChange) => {
+      const ref = createFormRef<Person>();
+      renderForm<Person>({ ref, schema, initialFormData: seed(), transformChange });
+
+      expect(() => act(() => handleOf(ref).setFieldValue('second', 'b'))).toThrow(TypeError);
+      expect(handleOf(ref).getFormData()).toEqual(seed());
+    });
+  });
+
   it('validates the data it leaves, not the edit it replaced', async () => {
     const lengthSchema: RJSFSchema = { type: 'object', properties: { first: { type: 'string', minLength: 3 } } };
     const transformChange: FormProps<Person>['transformChange'] = (next) =>
