@@ -1,4 +1,4 @@
-import { createContext, use } from 'react';
+import { createContext, use, useMemo } from 'react';
 import type { FieldPath } from '@rjsf/utils';
 
 /** The `anyOf`/`oneOf` options `SchemaField` renders for the field at `fieldPath`, and the one it shows, see
@@ -20,12 +20,15 @@ interface ShownOption {
  */
 const ShownOptionContext = createContext<ShownOption | undefined>(undefined);
 
-/** The option `SchemaField` shows beside the field at `fieldPath`, undefined where it shows none. A field rendered
- * below a component that is not `SchemaField` finds the option of a field at another path, so the path is checked
+/** The option `SchemaField` shows beside the field at `fieldPath`, with its index among the options, undefined where
+ * it shows none. A field rendered below a component that is not `SchemaField` finds the option of a field at another
+ * path, so the path is checked
  */
-export function useShownOptionBeside(fieldPath: FieldPath): unknown {
+export function useShownOptionBeside(fieldPath: FieldPath): { option: unknown; index: number } | undefined {
   const shown = use(ShownOptionContext);
-  return shown?.fieldPath === fieldPath && shown.selectedOption >= 0 ? shown.options[shown.selectedOption] : undefined;
+  const index = shown?.fieldPath === fieldPath ? shown.selectedOption : -1;
+  const option = index >= 0 ? shown?.options[index] : undefined;
+  return useMemo(() => (option === undefined ? undefined : { option, index }), [option, index]);
 }
 
 export default ShownOptionContext;

@@ -129,6 +129,31 @@ describe('option selection as form state', () => {
     expect(node.querySelector('#root_count-key')).toBeNull();
   });
 
+  it("seeds a key renamed onto a name the selected option declares from that option's entry of the uiSchema's option list", async () => {
+    const count: RJSFSchema = { type: 'number', enum: [0, 1, 2] };
+    const schema: RJSFSchema = {
+      type: 'object',
+      additionalProperties: { type: 'string' },
+      anyOf: [
+        { title: 'A', properties: { count } },
+        { title: 'B', properties: { count, b: { type: 'string' } } },
+      ],
+    };
+    const optionUiSchema: UiSchema = { count: { 'ui:enumDisabled': [0] } };
+    const uiSchema: UiSchema = { anyOf: [optionUiSchema, optionUiSchema] };
+    const { node, onChange } = createFormComponent({ schema, uiSchema, initialFormData: {} });
+    await user.click(elementOf(node, '.rjsf-object-property-expand button'));
+    const keyInput = elementOf(node, '#root_newKey-key');
+
+    await user.clear(keyInput);
+    await user.type(keyInput, 'count');
+    await user.tab();
+
+    // The select the option renders disables `0`, so the seed is the first value it offers
+    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { count: 1 } }), 'root');
+    expect(getSelectedOptionValue(selectOf(node, 'root_count'))).toBe('1');
+  });
+
   it('seeds a renamed key from the extra-key keyword when a ui:field replaces the options (#5461)', async () => {
     const schema: RJSFSchema = {
       type: 'object',

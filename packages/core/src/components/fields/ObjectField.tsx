@@ -26,9 +26,11 @@ import {
   getFreePropertyNames,
   getMatchingPatternProperties,
   getFieldTypeForWidget,
+  getOptionUiSchema,
   getTemplates,
   getPropertySchema,
   getUiOptions,
+  getXxxOfKey,
   getXxxOfOptions,
   isConstantSelect,
   isFormDataAvailable,
@@ -506,19 +508,36 @@ export default function ObjectField<
     [uiOptions],
   );
 
-  /** Returns the properties that declare `key`: the object's own, or else those of the `anyOf`/`oneOf` option
-   * `SchemaField` shows beside them, which renders the key in its own field and leaves it unstubbed here; undefined
-   * where neither does
+  /** Returns the properties that declare `key`, with the `uiSchema` their fields are rendered with: the object's own,
+   * or else those of the `anyOf`/`oneOf` option `SchemaField` shows beside them, which renders the key in its own
+   * field, with the option's entry of the `uiSchema`'s option list as `MultiSchemaField` hands it over, and leaves the
+   * key unstubbed here; undefined where neither does
    */
-  const propertiesDeclaring = useCallback((key: string): NonNullable<S['properties']> | undefined => {
-    const properties = schemaRef.current.properties ?? {};
-    if (declaresProperty<S>(properties, key)) {
-      return properties;
-    }
-    const option = shownOptionRef.current;
-    const optionProperties = isSchemaObject<S>(option) ? option.properties : undefined;
-    return optionProperties && declaresProperty<S>(optionProperties, key) ? optionProperties : undefined;
-  }, []);
+  const declarationOf = useCallback(
+    (
+      key: string,
+    ): { properties: NonNullable<S['properties']>; uiSchema: UiSchema<T, S, F> | undefined } | undefined => {
+      const currentSchema = schemaRef.current;
+      const properties = currentSchema.properties ?? {};
+      if (declaresProperty<S>(properties, key)) {
+        return { properties, uiSchema };
+      }
+      const shown = shownOptionRef.current;
+      if (shown === undefined || !isSchemaObject<S>(shown.option)) {
+        return undefined;
+      }
+      const optionProperties = shown.option.properties;
+      if (!optionProperties || !declaresProperty<S>(optionProperties, key)) {
+        return undefined;
+      }
+      const xxxOfKey = getXxxOfKey<S>(currentSchema);
+      return {
+        properties: optionProperties,
+        uiSchema: xxxOfKey ? getOptionUiSchema<T, S, F>(uiSchema, xxxOfKey, shown.index) : uiSchema,
+      };
+    },
+    [uiSchema],
+  );
 
   /** Returns the schema the object says describes `key`: the one it, or the option it shows, declares under that name,
    * where one does, and otherwise what `getAdditionalPropertySchema()` says of a name its `properties` don't name. The
@@ -526,30 +545,35 @@ export default function ObjectField<
    * the declared property's -- reading the keywords for the undeclared names instead would seed a value that field
    * cannot show.
    *
-   * `propertiesDeclaring()` is what tells the two apart, as it does for the `uiSchema` entry below, so they cannot
-   * disagree about whose name it is.
+   * `declarationOf()` is what tells the two apart, as it does for the `uiSchema` entry below, so they cannot disagree
+   * about whose name it is.
    */
   const schemaForKey = useCallback(
     (key: string): S | boolean => {
-      const declared = propertiesDeclaring(key)?.[key];
+      const declared = declarationOf(key)?.properties[key];
       if (typeof declared === 'boolean' || isSchemaObject<S>(declared)) {
         return declared;
       }
       return getAdditionalPropertySchema<S>(schemaRef.current, key);
     },
-    [propertiesDeclaring],
+    [declarationOf],
   );
 
-  /** Returns the `uiSchema` entry the field for `key` is rendered with: the one under that name where the object or the
-   * option it shows declares it, and the `additionalProperties` entry otherwise, read the same way the property's
-   * `SchemaField` is handed its own below. A rename onto a declared name brings up the declared property's field, which
-   * reads the entry under that name, so seeding from the `additionalProperties` entry instead would hand that field a
-   * `ui:initialValue` written for a different schema.
+  /** Returns the `uiSchema` entry the field for `key` is rendered with: the one under that name in the `uiSchema` of
+   * the object or of the option it shows, whichever declares it, and the `additionalProperties` entry otherwise, read
+   * the same way the property's `SchemaField` is handed its own below. A rename onto a declared name brings up the
+   * declared property's field, which reads the entry under that name, so seeding from the `additionalProperties` entry
+   * instead would hand that field a `ui:initialValue` written for a different schema.
    */
   const uiSchemaForKey = useCallback(
-    (key: string) =>
-      getByPath<UiSchema<T, S, F> | undefined>(uiSchema, propertiesDeclaring(key) ? key : ADDITIONAL_PROPERTIES_KEY),
-    [uiSchema, propertiesDeclaring],
+    (key: string) => {
+      const declaration = declarationOf(key);
+      return getByPath<UiSchema<T, S, F> | undefined>(
+        declaration ? declaration.uiSchema : uiSchema,
+        declaration ? key : ADDITIONAL_PROPERTIES_KEY,
+      );
+    },
+    [uiSchema, declarationOf],
   );
 
   /** Returns the value a property added or renamed to `key` starts out holding, read from the very schema the object
