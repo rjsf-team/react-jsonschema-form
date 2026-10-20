@@ -1,5 +1,6 @@
 import type {
   ArrayFieldTemplateProps,
+  FieldHelpProps,
   FieldPresentation,
   FieldProps,
   FieldTemplateProps,
@@ -9,7 +10,15 @@ import type {
   Widget,
   WidgetProps,
 } from '@rjsf/utils';
-import { errorId, fieldLabelId, helpId, optionHelpId, selectedOptionDescriptionId, titleId } from '@rjsf/utils';
+import {
+  errorId,
+  fieldLabelId,
+  hasTemplateErrors,
+  helpId,
+  optionHelpId,
+  selectedOptionDescriptionId,
+  titleId,
+} from '@rjsf/utils';
 import { screen, within } from '@testing-library/react';
 
 import { generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
@@ -210,6 +219,31 @@ describe('the plan SchemaField builds', () => {
     expect(renders.get('root_foo')).toBe(before);
   });
 
+  it.each([
+    ['shows', false, ['is wrong']],
+    ['hides', true, []],
+  ] satisfies [string, boolean, string[]][])(
+    '%s the errors in the plan a ui:field is handed while ui:hideError is %s, keeping them in its rawErrors',
+    (_, hideError, messages) => {
+      const recordFieldProps = vi.fn<(props: FieldProps) => void>();
+      function MyField(props: FieldProps) {
+        recordFieldProps(props);
+        const { id } = props;
+        return <input id={id} />;
+      }
+      createFormComponent({
+        schema: { type: 'object', properties: { foo: { type: 'string' } } },
+        uiSchema: { foo: { 'ui:field': MyField, 'ui:hideError': hideError } },
+        extraErrors: { foo: { __errors: ['is wrong'] } },
+      });
+      // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
+      const { presentation, rawErrors } = recordFieldProps.mock.lastCall![0];
+      expect(presentation?.errors.messages).toEqual(messages);
+      expect(presentation?.control?.attributes['aria-invalid']).toBe(hideError ? undefined : true);
+      expect(rawErrors).toEqual(['is wrong']);
+    },
+  );
+
   describe("an anyOf field's option selector", () => {
     const schema: RJSFSchema = {
       type: 'object',
@@ -341,7 +375,61 @@ describe('the plan SchemaField builds', () => {
       // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
       expect(selector.hideLabel).toBe(true);
     });
+
+    it.each([
+      ['is', false],
+      ['is not', true],
+    ])("%s invalid, or described by the field's errors, while ui:hideError is %s", (_, hideError) => {
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: { foo: { 'ui:hideError': hideError } },
+        extraErrors: { foo: { __errors: ['is wrong'] } },
+      });
+      const selector = node.querySelector('#root_foo__anyof_select')!;
+      const describedBy = selector.getAttribute('aria-describedby')?.split(' ') ?? [];
+      expect(selector.getAttribute('aria-invalid')).toBe(hideError ? null : 'true');
+      expect(describedBy.includes(errorId('root_foo'))).toBe(!hideError);
+    });
   });
+
+  // The class and the help's error state follow the option's own errors and `ui:hideError`, as the deprecated
+  // `rawErrors` its template is handed do, while its plan, which `hasTemplateErrors()` reads, takes the errors as the
+  // field above shows them
+  it.each([
+    ['shows', true, false],
+    ['hides', false, true],
+  ])(
+    "styles an anyOf option's template by whether the option %s the errors, whatever the field above does",
+    (_, aboveHides, optionHides) => {
+      const optionTemplates: FieldTemplateProps[] = [];
+      function FieldTemplate(templateProps: FieldTemplateProps) {
+        if (templateProps.presentation?.inherited) {
+          optionTemplates.push(templateProps);
+        }
+        return <CoreFieldTemplate {...templateProps} />;
+      }
+      const optionHelps: FieldHelpProps[] = [];
+      function FieldHelpTemplate(helpProps: FieldHelpProps) {
+        if (helpProps.presentation?.inherited) {
+          optionHelps.push(helpProps);
+        }
+        return null;
+      }
+      createFormComponent({
+        schema: { type: 'object', properties: { foo: { anyOf: [{ type: 'string' }, { type: 'number' }] } } },
+        uiSchema: { foo: { 'ui:hideError': aboveHides, anyOf: [{ 'ui:hideError': optionHides }, {}] } },
+        extraErrors: { foo: { __errors: ['is wrong'] } },
+        templates: { FieldTemplate, FieldHelpTemplate },
+      });
+      const option = optionTemplates.at(-1)!;
+      expect(option.id).toBe('root_foo');
+      expect(option.classNames?.split(' ').includes('rjsf-field-error')).toBe(!optionHides);
+      expect(optionHelps.at(-1)?.hasErrors).toBe(!optionHides);
+      // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop the class agrees with
+      expect(option.rawErrors).toEqual(optionHides ? undefined : ['is wrong']);
+      expect(hasTemplateErrors(option)).toBe(!aboveHides);
+    },
+  );
 
   // No selector renders before an optional field has data, so the field's template label has no control to name
   describe("an optional anyOf field's option before the field has data", () => {

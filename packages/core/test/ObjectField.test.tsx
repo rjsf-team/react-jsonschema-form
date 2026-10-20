@@ -9,6 +9,7 @@ import type {
   GenericObjectType,
   FormValidation,
   ObjectFieldTemplateProps,
+  PartPlacement,
   UiSchema,
 } from '@rjsf/utils';
 import { fieldLabelId, UI_GLOBAL_OPTIONS_KEY } from '@rjsf/utils';
@@ -150,6 +151,7 @@ describe('ObjectField', () => {
     );
 
     it('should pass its own errors down to a custom ObjectFieldTemplate as rawErrors', async () => {
+      // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated prop a component without a plan reads
       function RawErrorsObjectFieldTemplate({ rawErrors }: ObjectFieldTemplateProps) {
         return <div id='custom'>{rawErrors}</div>;
       }
@@ -162,6 +164,32 @@ describe('ObjectField', () => {
 
       expect(node.querySelector('#custom')).toHaveTextContent('must NOT have fewer than 1 properties');
     });
+
+    // Under core's declaration the `FieldTemplate` draws the object's errors, so a template drawing them too would draw
+    // them twice: it reads them from its plan only where `errors.by` is `'self'`
+    it.each([
+      [false, ['object error'], 'template'],
+      [true, [], 'none'],
+    ] satisfies [boolean, string[], PartPlacement][])(
+      'hands its template a plan leaving its own errors to the FieldTemplate while ui:hideError is %s',
+      (hideError, messages, by) => {
+        const recordTemplateProps = vi.fn<(props: ObjectFieldTemplateProps) => void>();
+        function RecordingObjectFieldTemplate(props: ObjectFieldTemplateProps) {
+          recordTemplateProps(props);
+          return <div>{props.properties.map((property) => property.content)}</div>;
+        }
+        createFormComponent({
+          schema: { type: 'object', properties: { foo: { type: 'object', properties: { bar: { type: 'string' } } } } },
+          uiSchema: { foo: { 'ui:hideError': hideError } },
+          extraErrors: { foo: { __errors: ['object error'] } },
+          templates: { ObjectFieldTemplate: RecordingObjectFieldTemplate },
+          showErrorList: false,
+        });
+
+        const fooTemplate = recordTemplateProps.mock.calls.findLast(([props]) => props.id === 'root_foo');
+        expect(fooTemplate?.[0].presentation?.errors).toMatchObject({ messages, by });
+      },
+    );
 
     it('should render a default property label', () => {
       const { node } = createFormComponent({ schema });
