@@ -1,5 +1,12 @@
-import { RJSF_REF_CYCLE_KEY, getDefaultFormState, isObject, retrieveSchema } from '../../src/index.ts';
+import {
+  RJSF_REF_CYCLE_KEY,
+  findSelectedOptionInXxxOf,
+  getDefaultFormState,
+  isObject,
+  retrieveSchema,
+} from '../../src/index.ts';
 import type { RJSFSchema } from '../../src/index.ts';
+import parseSchemaGraph from '../../src/schema/graph/parseSchemaGraph.ts';
 import { miniValidator } from './graph/miniValidator.ts';
 
 function wideSchema(): RJSFSchema {
@@ -84,5 +91,20 @@ describe('the cost of an edit to a wide object', () => {
     const first = validator.calls;
     getDefaultFormState({ validator }, { schema: root, rootSchema: root, formData: { f0: 'b' } });
     expect(validator.calls).toBe(first);
+  });
+  it('parses no schema anew to find the option a selector picks among options that lack the selector', () => {
+    const context = { validator: miniValidator() };
+    const selected: RJSFSchema = { type: 'object', properties: { kind: { const: 'hit' } } };
+    const root: RJSFSchema = {
+      type: 'object',
+      properties: { p: { oneOf: [{ type: 'object', properties: { other: { type: 'string' } } }, selected] } },
+    };
+    const graph = parseSchemaGraph(root);
+    const adopt = vi.spyOn(graph, 'adopt');
+    const p = root.properties?.p;
+    expect(isObject(p) && findSelectedOptionInXxxOf(context, root, p, 'kind', 'oneOf', { kind: 'hit' })).toEqual(
+      selected,
+    );
+    expect(adopt.mock.results.map(({ value }) => value.graph === graph)).not.toContain(false);
   });
 });
