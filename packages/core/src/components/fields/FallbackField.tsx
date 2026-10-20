@@ -450,7 +450,7 @@ function FallbackUiField<
         ? presentation.control !== undefined && isLabelledByTemplate(presentation)
         : displaysLabel<T, S, F>({ schemaUtils, globalUiOptions }, schema, {
             ...uiSchema,
-            [UI_FIELD_KEY]: undefined,
+            [UI_FIELD_KEY]: getUiOptions<T, S, F>(uiSchema, globalUiOptions).field,
           } as UiSchema<T, S, F>),
     [presentation, schemaUtils, schema, uiSchema, globalUiOptions],
   );

@@ -2,6 +2,8 @@ export { altDateTests } from './altDateTests.tsx';
 
 export { arrayTests } from './arrayTests.tsx';
 
+export { checkboxLabelTests } from './checkboxLabelTests.tsx';
+
 export { deprecatedLabelTests } from './deprecatedLabelTests.tsx';
 
 export { formTests } from './formTests.tsx';

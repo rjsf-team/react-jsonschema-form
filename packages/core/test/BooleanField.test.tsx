@@ -1,6 +1,6 @@
-import type { FieldProps, RegistryWidgetsType, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import type { FieldProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { fieldLabelId } from '@rjsf/utils';
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import CheckboxWidget from '../src/components/widgets/CheckboxWidget.tsx';
@@ -1599,34 +1599,6 @@ describe('BooleanField', () => {
       });
 
       expect(node.querySelector('select')).toHaveAttribute('id', 'root');
-    });
-  });
-
-  describe('a checkbox named by any spelling of ui:widget (#5389)', () => {
-    const CheckboxWrapper = (props: WidgetProps) => <CheckboxWidget {...props} />;
-    const schema: RJSFSchema = {
-      type: 'object',
-      properties: { agree: { type: 'boolean', title: 'Agree', description: 'I accept the terms' } },
-    };
-
-    it.each<[string, UiSchema, RegistryWidgetsType?]>([
-      ['the checkbox alias', { 'ui:widget': 'checkbox' }],
-      ['the CheckboxWidget key', { 'ui:widget': 'CheckboxWidget' }],
-      ['the CheckboxWidget key through ui:options.widget', { 'ui:options': { widget: 'CheckboxWidget' } }],
-      ['the registered widget passed as a component', { 'ui:widget': CheckboxWidget }],
-      [
-        'a wrapper registered under the CheckboxWidget key',
-        { 'ui:widget': 'CheckboxWidget' },
-        { CheckboxWidget: CheckboxWrapper },
-      ],
-      ['an unregistered wrapper passed as a component', { 'ui:widget': CheckboxWrapper }],
-    ])('draws the label and the description once, named by %s', (_, agreeUiSchema, widgets) => {
-      const { node } = createFormComponent({ schema, uiSchema: { agree: agreeUiSchema }, widgets });
-
-      expect(screen.getAllByText('Agree')).toHaveLength(1);
-      expect(screen.getAllByText('I accept the terms')).toHaveLength(1);
-      expect(screen.getByRole('checkbox', { name: 'Agree' })).toBeInTheDocument();
-      expect(node.querySelectorAll('#root_agree__description')).toHaveLength(1);
     });
   });
 });

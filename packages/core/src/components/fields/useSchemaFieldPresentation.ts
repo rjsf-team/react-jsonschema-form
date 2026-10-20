@@ -135,8 +135,10 @@ function rendersControl<
   if (field === fields.FallbackField) {
     // The fallback UI labels its value from outside by the same call it makes to decide that, and otherwise leaves the
     // value field to draw its own heading or label. That call takes any `ui:field` for a custom field drawing its own
-    // label, but this field is already the one it resolved to, which a `ui:field` naming nothing renders too, so both
-    // calls clear the key and its spelling doesn't move the label. The call still matches `ui:widget` by name (#5581)
+    // label, but this field is already the one it resolved to, which a `ui:field` naming nothing renders too, so this
+    // call clears the key and its spelling doesn't move the label. `FallbackField`'s own call passes any field named in
+    // `ui:field`, `ui:options.field` or `ui:globalOptions.field` as the key, since only a caller's own field renders it
+    // without a plan, and that field draws no label of its own. The call still matches `ui:widget` by name (#5581)
     return (
       Boolean(globalFormOptions.useFallbackUiForUnsupportedType) &&
       displaysLabel<T, S, F>(registry, schema, { ...uiSchema, [UI_FIELD_KEY]: undefined })

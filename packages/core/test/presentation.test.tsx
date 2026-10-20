@@ -932,6 +932,32 @@ describe("the fallback UI's label, however its ui:field is spelled (#5389)", () 
     const typeSelect = screen.getByRole('combobox', { name: 'Type' });
     expect(labels[0].compareDocumentPosition(typeSelect)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
   });
+
+  // Without a plan, the field named is the caller's own rather than this one, and that field draws no label of its own,
+  // so the value field below the type selector draws it, however the field is named
+  function OwnFallback(props: FieldProps) {
+    const { FallbackField } = props.registry.fields;
+    const { presentation: _presentation, ...rest } = props;
+    return <FallbackField {...rest} />;
+  }
+
+  it.each<[string, UiSchema]>([
+    ['ui:field', { val: { 'ui:field': 'OwnFallback' } }],
+    ['ui:options.field', { val: { 'ui:options': { field: 'OwnFallback' } } }],
+    ['ui:globalOptions.field', { 'ui:globalOptions': { field: 'OwnFallback' } }],
+  ])('is drawn once, by the value field, under a %s that renders FallbackField without a plan', (_, uiSchema) => {
+    const { node } = createFormComponent({
+      schema: { type: 'object', properties: { val: { type: ['string', 'number'], title: 'Val' } } },
+      uiSchema,
+      fields: { OwnFallback },
+      useFallbackUiForUnsupportedType: true,
+    });
+
+    const typeSelect = screen.getByRole('combobox', { name: 'Type' });
+    const value = screen.getByRole('textbox', { name: 'Val' });
+    expect(node.querySelectorAll('label[for="root_val"]')).toHaveLength(1);
+    expect(typeSelect.compareDocumentPosition(value)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+  });
 });
 
 describe('a ui:field wrapping SchemaField under its own id', () => {

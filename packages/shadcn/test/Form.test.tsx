@@ -1,5 +1,5 @@
-import { formTests, themeTests } from '@rjsf/snapshot-tests';
-import type { FormValidation, RegistryWidgetsType, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import { checkboxLabelTests, formTests, themeTests } from '@rjsf/snapshot-tests';
+import type { FormValidation, RJSFSchema, UiSchema } from '@rjsf/utils';
 import { bracketNameGenerator, errorId, fieldLabelId, helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen, waitFor } from '@testing-library/react';
@@ -915,32 +915,4 @@ describe("shadcn marks a deprecated field's label, as core does", () => {
   });
 });
 
-describe('a checkbox named by any spelling of ui:widget (#5389)', () => {
-  const CheckboxWrapper = (props: WidgetProps) => <CheckboxWidget {...props} />;
-  const schema: RJSFSchema = {
-    type: 'object',
-    properties: { agree: { type: 'boolean', title: 'Agree', description: 'I accept the terms' } },
-  };
-
-  test.each<[string, UiSchema, RegistryWidgetsType?]>([
-    ['the checkbox alias', { 'ui:widget': 'checkbox' }],
-    ['the CheckboxWidget key', { 'ui:widget': 'CheckboxWidget' }],
-    ['the CheckboxWidget key through ui:options.widget', { 'ui:options': { widget: 'CheckboxWidget' } }],
-    ['the registered widget passed as a component', { 'ui:widget': CheckboxWidget }],
-    [
-      'a wrapper registered under the CheckboxWidget key',
-      { 'ui:widget': 'CheckboxWidget' },
-      { CheckboxWidget: CheckboxWrapper },
-    ],
-    ['an unregistered wrapper passed as a component', { 'ui:widget': CheckboxWrapper }],
-  ])('draws the label and the description once, named by %s', (_, agreeUiSchema, widgets) => {
-    const { container } = render(
-      <Form schema={schema} uiSchema={{ agree: agreeUiSchema }} widgets={widgets} validator={validator} />,
-    );
-
-    expect(screen.getAllByText('Agree')).toHaveLength(1);
-    expect(screen.getAllByText('I accept the terms')).toHaveLength(1);
-    expect(screen.getByRole('checkbox', { name: 'Agree' })).toBeInTheDocument();
-    expect(container.querySelectorAll('#root_agree__description')).toHaveLength(1);
-  });
-});
+checkboxLabelTests(Form, { generateTemplates, generateWidgets });
