@@ -240,6 +240,18 @@ describe('daisyui FieldTemplate', () => {
     expect(screen.getByRole('radiogroup', { name: 'Color' })).toBeInTheDocument();
   });
 
+  test.each(['alt-date', 'alt-datetime'])("names the %s parts' group by the template's label", (widget) => {
+    render(
+      <Form
+        schema={{ type: 'object', properties: { when: { type: 'string', title: 'When' } } }}
+        uiSchema={{ when: { 'ui:widget': widget } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('group', { name: 'When' })).toHaveAttribute('id', 'root_when');
+  });
+
   test("names the additional property key's input by its label where ui:label: false hides it", () => {
     render(
       <Form
