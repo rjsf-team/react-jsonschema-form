@@ -11,7 +11,7 @@ import type {
   ObjectFieldTemplateProps,
   UiSchema,
 } from '@rjsf/utils';
-import { UI_GLOBAL_OPTIONS_KEY } from '@rjsf/utils';
+import { fieldLabelId, UI_GLOBAL_OPTIONS_KEY } from '@rjsf/utils';
 import { act, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
@@ -1033,6 +1033,28 @@ describe('ObjectField', () => {
       await user.tab();
 
       expectToHaveBeenCalledWithFormData(onChange, { newFirst: 1, first: undefined }, 'root');
+    });
+
+    // Renamed onto a declared property, the entry is no longer an additional property, so the rename alone is what
+    // labels it by its key rather than by that property's title
+    it("should label a renamed key's field and its widget's parts by the new key", async () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { end: { type: 'string', format: 'date', title: 'End date' } },
+          additionalProperties: { type: 'string', format: 'date', title: 'Date' },
+        },
+        uiSchema: { end: { 'ui:widget': 'alt-date' }, additionalProperties: { 'ui:widget': 'alt-date' } },
+        initialFormData: { start: '2020-05-03' },
+      });
+
+      const textNode = node.querySelector('#root_start-key')!;
+      await user.clear(textNode);
+      await user.type(textNode, 'end');
+      await user.tab();
+
+      expect(node.querySelector(`#${fieldLabelId('root_end')}`)?.textContent).toBe('end');
+      expect(screen.getByRole('combobox', { name: 'end, year' })).toBeInTheDocument();
     });
 
     it('should retain and display user-input data if key-value pair has a title present in the schema when renaming key', async () => {

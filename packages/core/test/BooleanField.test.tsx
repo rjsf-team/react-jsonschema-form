@@ -1,4 +1,5 @@
 import type { FieldProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import { fieldLabelId } from '@rjsf/utils';
 import { render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
@@ -1512,6 +1513,18 @@ describe('BooleanField', () => {
       };
       const { node } = createFormComponent({ schema, widgets, uiSchema });
       expect(node.querySelector('#label-')).not.toBeNull();
+    });
+
+    it("should pass an additional property's key to widget, as its template shows", () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', additionalProperties: { type: 'boolean', title: 'Flag' } },
+        widgets,
+        uiSchema: { additionalProperties: { 'ui:widget': 'Widget' } },
+        initialFormData: { start: true },
+      });
+
+      expect(node.querySelector(`#${fieldLabelId('root_start')}`)?.textContent).toBe('start');
+      expect(node.querySelector('#label-start')).not.toBeNull();
     });
   });
 

@@ -1376,6 +1376,18 @@ describe('ArrayField', () => {
         expect(matches[0]).toHaveTextContent(schema.title!);
       });
 
+      it("should pass an additional property's key as the label to custom widgets, as its template shows", () => {
+        const LabelComponent = ({ label }: WidgetProps) => <div data-label={label} />;
+        const { node } = createFormComponent({
+          schema: { type: 'object', additionalProperties: schema },
+          widgets: { SelectWidget: LabelComponent },
+          initialFormData: { start: ['foo'] },
+        });
+
+        expect(node.querySelector(`#${fieldLabelId('root_start')}`)?.textContent).toBe('start');
+        expect(node.querySelector('[data-label]')).toHaveAttribute('data-label', 'start');
+      });
+
       it('should pass uiSchema to multiselect', () => {
         const { node } = createFormComponent({
           schema,
