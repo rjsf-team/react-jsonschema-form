@@ -494,19 +494,77 @@ describeRepeated('Form common: form state updates', (createFormComponent) => {
     });
   });
 
-  describe('root oneOf with a conditional in one option (#5567)', () => {
-    it('keeps what is typed into the selected option', async () => {
+  describe('oneOf/anyOf with a conditional in one option (#5567)', () => {
+    // The schema from #5567, with `food` as an enum
+    const optionA: RJSFSchema = { title: 'A', type: 'object', properties: { animal: { type: 'string' } } };
+    const optionB: RJSFSchema = {
+      title: 'B',
+      type: 'object',
+      properties: { animal: { type: 'string' } },
+      allOf: [
+        {
+          if: { properties: { animal: { const: 'Cat' } } },
+          then: { properties: { food: { enum: ['meat', 'fish'], default: 'meat' } } },
+        },
+      ],
+    };
+
+    it.each(['oneOf', 'anyOf'])('keeps what is typed into the default option of a root %s', async (key) => {
+      const { node, onChange } = createFormComponent({ ref: createRef(), schema: { [key]: [optionA, optionB] } });
+
+      await user.type(node.querySelector<HTMLInputElement>('#root_animal')!, 'Fi');
+
+      expect(node.querySelector<HTMLInputElement>('#root_animal')!.value).toBe('Fi');
+      expectToHaveBeenCalledWithFormData(onChange, { animal: 'Fi' }, 'root_animal');
+    });
+
+    it('keeps what is typed into the option selected in the dropdown and clears what its conditional added', async () => {
+      const { node, onChange } = createFormComponent({ ref: createRef(), schema: { oneOf: [optionA, optionB] } });
+      const select = node.querySelector<HTMLSelectElement>('#root__oneof_select')!;
+
+      // B's `if` holds while there is no `animal`, so selecting B fills in `food`, which only B declares. Once `animal`
+      // is typed the data fits A and B alike, and B is known to be the selected option from the data it had before
+      await user.selectOptions(select, 'B');
+      await user.type(node.querySelector<HTMLInputElement>('#root_animal')!, 'Cats');
+
+      expect(node.querySelector<HTMLInputElement>('#root_animal')!.value).toBe('Cats');
+      expect(select.value).toBe('1');
+      expectToHaveBeenCalledWithFormData(onChange, { animal: 'Cats' }, 'root_animal');
+    });
+
+    it('applies the conditional of the selected option when the form data identifies the option', async () => {
       const schema: RJSFSchema = {
         oneOf: [
-          { title: 'A', type: 'object', properties: { animal: { type: 'string' } } },
+          { ...optionA, properties: { kind: { const: 'A' }, ...optionA.properties } },
+          { ...optionB, properties: { kind: { const: 'B' }, ...optionB.properties } },
+        ],
+      };
+      const { node, onChange } = createFormComponent({ ref: createRef(), schema });
+
+      await user.selectOptions(node.querySelector('#root__oneof_select')!, 'B');
+      await user.type(node.querySelector<HTMLInputElement>('#root_animal')!, 'Ca');
+      expectToHaveBeenCalledWithFormData(onChange, { kind: 'B', animal: 'Ca' }, 'root_animal');
+
+      await user.type(node.querySelector<HTMLInputElement>('#root_animal')!, 't');
+      expectToHaveBeenCalledWithFormData(onChange, { kind: 'B', animal: 'Cat', food: 'meat' }, 'root_animal');
+
+      await user.type(node.querySelector<HTMLInputElement>('#root_animal')!, 's');
+      expect(node.querySelector<HTMLInputElement>('#root_animal')!.value).toBe('Cats');
+      expectToHaveBeenCalledWithFormData(onChange, { kind: 'B', animal: 'Cats' }, 'root_animal');
+    });
+
+    it('keeps a number typed into the selected option when no option scores above zero', async () => {
+      const schema: RJSFSchema = {
+        oneOf: [
+          { title: 'A', type: 'object', properties: { age: { type: 'integer' } } },
           {
             title: 'B',
             type: 'object',
-            properties: { animal: { type: 'string' } },
+            properties: { age: { type: 'integer' } },
             allOf: [
               {
-                if: { properties: { animal: { const: 'Cat' } } },
-                then: { properties: { food: { type: 'string', default: 'meat' } } },
+                if: { properties: { age: { const: 3 } }, required: ['age'] },
+                then: { properties: { note: { type: 'string' } } },
               },
             ],
           },
@@ -514,11 +572,21 @@ describeRepeated('Form common: form state updates', (createFormComponent) => {
       };
       const { node, onChange } = createFormComponent({ ref: createRef(), schema });
 
-      const input = node.querySelector<HTMLInputElement>('input[type=text]')!;
-      await user.type(input, 'Fi');
+      await user.selectOptions(node.querySelector('#root__oneof_select')!, 'B');
+      await user.type(node.querySelector<HTMLInputElement>('#root_age')!, '42');
 
-      expect(node.querySelector<HTMLInputElement>('input[type=text]')!.value).toBe('Fi');
-      expectToHaveBeenCalledWithFormData(onChange, { animal: 'Fi' }, 'root_animal');
+      expect(node.querySelector<HTMLInputElement>('#root_age')!.value).toBe('42');
+      expectToHaveBeenCalledWithFormData(onChange, { age: 42 }, 'root_age');
+    });
+
+    it('keeps an array item whose items schema is an object oneOf', async () => {
+      const schema: RJSFSchema = { type: 'array', items: { type: 'object', oneOf: [optionA, optionB] } };
+      const { node, onChange } = createFormComponent({ ref: createRef(), schema, formData: [{}] });
+
+      await user.type(node.querySelector<HTMLInputElement>('#root_0_animal')!, 'Fi');
+
+      expect(node.querySelector<HTMLInputElement>('#root_0_animal')!.value).toBe('Fi');
+      expectToHaveBeenCalledWithFormData(onChange, [{ animal: 'Fi' }], 'root_0_animal');
     });
   });
 });

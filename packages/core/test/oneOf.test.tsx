@@ -2554,4 +2554,33 @@ describe('oneOf', () => {
 
     expect(select).toHaveValue('1');
   });
+
+  it('keeps data of the selected option that a conditional of another option would clear (#5567)', async () => {
+    // B always declares `food`, A only while `animal` is "Cat". Without a `type`, `food` adds to neither score, so the
+    // data never tells which of the two is selected and must not be sanitized as if A were
+    const food: RJSFSchema = { enum: ['meat', 'fish'] };
+    const schema: RJSFSchema = {
+      oneOf: [
+        {
+          title: 'A',
+          type: 'object',
+          properties: { animal: { type: 'string' } },
+          allOf: [{ if: { properties: { animal: { const: 'Cat' } } }, then: { properties: { food } } }],
+        },
+        { title: 'B', type: 'object', properties: { animal: { type: 'string' }, food } },
+      ],
+    };
+    const { node, onChange } = createFormComponent({ schema });
+
+    await user.selectOptions(node.querySelector('#root__oneof_select')!, 'B');
+    await user.type(node.querySelector<HTMLInputElement>('#root_animal')!, 'Cat');
+    await user.selectOptions(node.querySelector('#root_food')!, 'fish');
+    await user.type(node.querySelector<HTMLInputElement>('#root_animal')!, 's');
+
+    expect(node.querySelector('#root__oneof_select')).toHaveValue('1');
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { animal: 'Cats', food: 'fish' } }),
+      'root_animal',
+    );
+  });
 });

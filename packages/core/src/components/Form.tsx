@@ -56,8 +56,6 @@ import {
   schemaHasNestedConditional,
   ANY_OF_KEY,
   ONE_OF_KEY,
-  PROPERTIES_KEY,
-  getSchemaType,
 } from '@rjsf/utils';
 
 import getDefaultRegistry from '../getDefaultRegistry.ts';
@@ -744,25 +742,24 @@ export default class Form<
         false,
         state.initialDefaultsGenerated,
       ) as T;
-      // Only hash when sanitizing, wrapping `formData` in an object to deal with a scalar/undefined value
-      const formHash = shouldSanitize ? hashObject({ formData }) : '';
       computedRetrievedSchema = this.updateRetrievedSchema(
         retrievedSchema ?? schemaUtils.retrieveSchema(rootSchema, formData),
       );
-      if (
-        shouldSanitize &&
-        !preventInfiniteSanitize.includes(formHash) &&
-        // A root schema without `properties` (such as a `oneOf` not resolved to an option) can only be sanitized
-        // into `undefined`, which would wipe what the user typed into the selected option
-        (computedRetrievedSchema[PROPERTIES_KEY] || getSchemaType(computedRetrievedSchema) === 'array') &&
-        (hasNestedConditionalSchema || !deepEquals(computedRetrievedSchema, state.retrievedSchema))
-      ) {
-        // Sanitize the form data if shouldSanitize is true, we haven't already processed this same formData AND
-        // either the retrieved schema changed or the schema has a nested conditional that the check above can't see
+      // Sanitizing is needed when shouldSanitize is true AND either the retrieved schema changed or the schema has a
+      // nested conditional that the schema comparison can't see
+      const mightSanitize =
+        shouldSanitize && (hasNestedConditionalSchema || !deepEquals(computedRetrievedSchema, state.retrievedSchema));
+      // Only hash when sanitizing, wrapping `formData` in an object to deal with a scalar/undefined value
+      const formHash = mightSanitize ? hashObject({ formData }) : '';
+      if (mightSanitize && !preventInfiniteSanitize.includes(formHash)) {
+        // Sanitize the form data if it might be needed and we haven't already processed this same formData. The old
+        // formData tells which option of a root `oneOf`/`anyOf` stays selected when the new data fits several, and
+        // resolves that option as it was, so a conditional inside it clears the data of its previous branch
         const sanitizedFormData = schemaUtils.sanitizeDataForNewSchema(
           computedRetrievedSchema,
           state.retrievedSchema,
           formData,
+          state.formData,
         );
         wasSanitized = !deepEquals(sanitizedFormData, formData);
         if (wasSanitized) {

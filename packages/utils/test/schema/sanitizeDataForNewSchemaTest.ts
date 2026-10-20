@@ -24,6 +24,105 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
     it('returns undefined when the new schema does not contain a "property" object', () => {
       expect(sanitizeDataForNewSchema(testValidator, oneOfSchema, {}, {})).toBeUndefined();
     });
+    describe('a oneOf/anyOf without properties that is the same in the old and new schema (#5567)', () => {
+      // Option B declares `food` only while `animal` is "Cat"
+      const ifCatThenFood: RJSFSchema = {
+        if: { properties: { animal: { const: 'Cat' } } },
+        then: { properties: { food: { type: 'string' } } },
+      };
+      const optionA: RJSFSchema = { type: 'object', properties: { animal: { type: 'string' } } };
+      const optionB: RJSFSchema = { type: 'object', properties: { animal: { type: 'string' } }, ...ifCatThenFood };
+      // The `kind` const singles out an option for both the scoring and the validator
+      const kindA: RJSFSchema = {
+        type: 'object',
+        properties: { kind: { type: 'string', const: 'A' }, animal: { type: 'string' } },
+      };
+      const kindB: RJSFSchema = {
+        type: 'object',
+        properties: { kind: { type: 'string', const: 'B' }, animal: { type: 'string' } },
+        ...ifCatThenFood,
+      };
+      const oldData = { kind: 'B', animal: 'Cat', food: 'meat' };
+      const data = { kind: 'B', animal: 'Cats', food: 'meat' };
+      it.each(['oneOf', 'anyOf'])(
+        'clears what a conditional in the %s option the data identifies declared only for the old data',
+        (key) => {
+          const schema: RJSFSchema = { [key]: [kindA, kindB] };
+          // Option B's `if` does not match the new data
+          testValidator.setReturnValues({ isValid: [false] });
+          expect(sanitizeDataForNewSchema(testValidator, schema, schema, schema, data, undefined, oldData)).toEqual({
+            kind: 'B',
+            animal: 'Cats',
+            food: undefined,
+          });
+        },
+      );
+      it('resolves the option the data identifies against the data when no old data is given', () => {
+        const schema: RJSFSchema = { oneOf: [kindA, kindB] };
+        testValidator.setReturnValues({ isValid: [false] });
+        expect(sanitizeDataForNewSchema(testValidator, schema, schema, schema, data)).toEqual(data);
+      });
+      it('falls back to the option the old data singled out when the data accepts two options equally', () => {
+        // `{ animal: 'Cats' }` fits A and B alike, while B scores higher than A for the old data through its `food`
+        const schema: RJSFSchema = { oneOf: [optionA, optionB] };
+        testValidator.setReturnValues({ isValid: [false] });
+        expect(
+          sanitizeDataForNewSchema(testValidator, schema, schema, schema, { animal: 'Cats', food: 'meat' }, undefined, {
+            animal: 'Cat',
+            food: 'meat',
+          }),
+        ).toEqual({ animal: 'Cats', food: undefined });
+      });
+      it('returns the data as is when neither the data nor the old data singles out an option', () => {
+        // A `food` without a `type` adds nothing to B's score, so A and B tie for the old data as well
+        const schema: RJSFSchema = {
+          oneOf: [
+            optionA,
+            {
+              ...optionB,
+              then: { properties: { food: { enum: ['meat', 'fish'], default: 'meat' } } },
+            },
+          ],
+        };
+        const tiedData = { animal: 'Cats', food: 'meat' };
+        testValidator.setReturnValues({ isValid: [false] });
+        expect(
+          sanitizeDataForNewSchema(testValidator, schema, schema, schema, tiedData, undefined, {
+            animal: 'Cat',
+            food: 'meat',
+          }),
+        ).toBe(tiedData);
+      });
+      it('returns the data as is when no option scores above zero', () => {
+        // `getClosestMatchingOption()` scores an `integer` property 0 against a number, so both options score 0
+        const schema: RJSFSchema = {
+          oneOf: [
+            { type: 'object', properties: { age: { type: 'integer' } } },
+            {
+              type: 'object',
+              properties: { age: { type: 'integer' } },
+              if: { properties: { age: { const: 3 } }, required: ['age'] },
+              then: { properties: { note: { type: 'string' } } },
+            },
+          ],
+        };
+        const ageData = { age: 42 };
+        testValidator.setReturnValues({ isValid: [false] });
+        expect(sanitizeDataForNewSchema(testValidator, schema, schema, schema, ageData, undefined, {})).toBe(ageData);
+      });
+      it('keeps each item of an array whose items schema is such a oneOf', () => {
+        const schema: RJSFSchema = { type: 'array', items: { type: 'object', oneOf: [optionA, optionB] } };
+        testValidator.setReturnValues({ isValid: [false] });
+        expect(sanitizeDataForNewSchema(testValidator, schema, schema, schema, [{ animal: 'Fi' }])).toEqual([
+          { animal: 'Fi' },
+        ]);
+      });
+      it('still returns undefined when the old schema does not have the same options', () => {
+        const schema: RJSFSchema = { oneOf: [kindA, kindB] };
+        expect(sanitizeDataForNewSchema(testValidator, schema, schema, { oneOf: [kindA] }, data)).toBeUndefined();
+        expect(sanitizeDataForNewSchema(testValidator, schema, schema, undefined, data)).toBeUndefined();
+      });
+    });
     it('returns input formData when the old schema is not an object', () => {
       const newSchema = schemaUtils.retrieveSchema(SECOND_ONE_OF, oneOfSchema);
       expect(sanitizeDataForNewSchema(testValidator, oneOfSchema, newSchema, undefined, oneOfData)).toEqual(oneOfData);
