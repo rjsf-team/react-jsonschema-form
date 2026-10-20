@@ -1,12 +1,14 @@
 import Switch from '@mui/material/Switch';
 import { withTheme } from '@rjsf/core';
+import { getTestRegistry } from '@rjsf/core/testing';
 import { formTests, themeTests } from '@rjsf/snapshot-tests';
 import type { FieldProps, FormValidation, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
-import { errorId, helpId, optionHelpId } from '@rjsf/utils';
+import { errorId, fieldLabelId, helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
+import CheckboxWidget from '../src/CheckboxWidget/index.ts';
 import Form, { Theme, generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
 
 const user = userEvent.setup();
@@ -110,6 +112,31 @@ describe('a pure anyOf union', () => {
 
     expect(screen.getAllByText('Foo')).toHaveLength(1);
     expect(container.querySelector('#root_foo__anyof_select-label')).not.toBeInTheDocument();
+  });
+});
+
+describe("a titled anyOf field's option selector", () => {
+  const schema: RJSFSchema = {
+    type: 'object',
+    properties: { pick: { title: 'Pick', anyOf: [{ type: 'string', enum: ['a', 'b'] }, { type: 'number' }] } },
+  };
+
+  it("is a select named by its field's title", () => {
+    const { container } = render(<Form schema={schema} validator={validator} />);
+
+    expect(container.querySelector('#root_pick__anyof_select')).toHaveAccessibleName('Pick');
+    expectReferencesResolve(container);
+  });
+
+  it("is a radio group named by its field's label under ui:widget radio", () => {
+    const { container } = render(
+      <Form schema={schema} uiSchema={{ pick: { 'ui:widget': 'radio' } }} validator={validator} />,
+    );
+
+    const radioGroup = container.querySelector('#root_pick__anyof_select-0')!.closest('[role="radiogroup"]');
+    expect(radioGroup).toHaveAccessibleName('Pick');
+    expect(radioGroup).toHaveAttribute('aria-labelledby', fieldLabelId('root_pick'));
+    expectReferencesResolve(container);
   });
 });
 
@@ -690,6 +717,7 @@ describe('mui labels the core widgets that draw no label of their own', () => {
     container.querySelectorAll('label[for]').forEach((labelFor) => {
       expect(container.querySelector(`[id="${labelFor.getAttribute('for')}"]`)).toBeInTheDocument();
     });
+    expect(screen.getByRole('group', { name: 'When' })).toHaveAttribute('id', 'root_when');
   });
 });
 
@@ -812,5 +840,71 @@ describe('mui focuses its groups as core does', () => {
     );
 
     expect(screen.getAllByRole('radio')[2]).toHaveFocus();
+  });
+});
+
+// HTML5 constraint validation fails an unchecked required box and blocks the submit before RJSF sees it, so neither
+// onSubmit nor onError runs and the browser asks the user to check a box the schema lets them leave unchecked. Only a
+// required boolean the schema demands be true carries the attribute (#5388)
+describe('mui CheckboxWidget required attribute', () => {
+  const agree: RJSFSchema = { type: 'boolean', title: 'Agree' };
+  const formSchema = (field: RJSFSchema): RJSFSchema => ({
+    type: 'object',
+    required: ['agree'],
+    properties: { agree: field },
+  });
+
+  test('submits a required boolean left unchecked, whose false the schema accepts', async () => {
+    const onSubmit = vi.fn();
+    const onError = vi.fn();
+    const { container } = render(
+      <Form schema={formSchema(agree)} validator={validator} onSubmit={onSubmit} onError={onError} />,
+    );
+
+    expect(container.querySelector('input[type=checkbox]')).not.toHaveAttribute('required');
+
+    await user.click(screen.getByRole('button', { name: 'Submit' }));
+
+    expect(onError).not.toHaveBeenCalled();
+    expect(onSubmit).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { agree: false } }),
+      expect.anything(),
+    );
+  });
+
+  test('keeps the attribute on a required boolean that has to be true', () => {
+    const { container } = render(<Form schema={formSchema({ ...agree, const: true })} validator={validator} />);
+
+    expect(container.querySelector('input[type=checkbox]')).toHaveAttribute('required');
+  });
+
+  // Rendered without a plan, as outside SchemaField, the widget gets its parent's `required` as is, so the attribute
+  // has to follow both it and the schema: a required box whose `false` the schema accepts, and an optional one that
+  // has to be true but is left unanswered, each hold data the schema accepts, which the browser would refuse
+  test.each<[string, RJSFSchema, boolean, boolean | undefined]>([
+    ['a required boolean whose false the schema accepts', agree, true, false],
+    ['an optional boolean that has to be true', { ...agree, const: true }, false, undefined],
+  ])('leaves the attribute off %s, rendered without a plan', (_, schema, required, value) => {
+    const { container } = render(
+      <CheckboxWidget
+        id='root'
+        name='root'
+        schema={schema}
+        uiSchema={{}}
+        value={value}
+        required={required}
+        disabled={false}
+        readonly={false}
+        autofocus={false}
+        label='Agree'
+        options={{}}
+        onChange={vi.fn()}
+        onBlur={vi.fn()}
+        onFocus={vi.fn()}
+        registry={getTestRegistry(schema)}
+      />,
+    );
+
+    expect(container.querySelector('input[type=checkbox]')).not.toHaveAttribute('required');
   });
 });

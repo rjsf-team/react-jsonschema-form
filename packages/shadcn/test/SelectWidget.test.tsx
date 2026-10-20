@@ -23,8 +23,6 @@ describe('SelectWidget', () => {
             autofocus: false,
             disabled: false,
             readonly: false,
-            // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
-            rawErrors: [],
             value: undefined,
             placeholder: 'Select a country',
             options: {
@@ -64,8 +62,6 @@ describe('SelectWidget', () => {
             autofocus: false,
             disabled: true,
             readonly: false,
-            // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
-            rawErrors: [],
             value: undefined,
             placeholder: 'Select a country',
             options: {
@@ -99,8 +95,6 @@ describe('SelectWidget', () => {
           autofocus: false,
           disabled: false,
           readonly: false,
-          // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
-          rawErrors: [],
           value: undefined,
           placeholder: 'Select a vehicle',
           options: {
@@ -147,8 +141,6 @@ describe('SelectWidget', () => {
           disabled: false,
           readonly: false,
           multiple: true,
-          // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
-          rawErrors: [],
           value: [],
           options: {
             enumOptions: [
@@ -192,8 +184,6 @@ describe('SelectWidget', () => {
           autofocus: false,
           disabled: false,
           readonly: false,
-          // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
-          rawErrors: [],
           value: undefined,
           options: {
             enumOptions: [
@@ -228,8 +218,6 @@ describe('SelectWidget', () => {
           autofocus: false,
           disabled: false,
           readonly: false,
-          // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
-          rawErrors: [],
           value: undefined,
           options: {
             enumOptions: [
@@ -260,8 +248,6 @@ describe('SelectWidget', () => {
           autofocus: false,
           disabled: false,
           readonly: false,
-          // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
-          rawErrors: [],
           value: undefined,
           onChange: onValueChange,
           options: {
@@ -295,8 +281,6 @@ describe('SelectWidget', () => {
           disabled: false,
           readonly: false,
           multiple: true,
-          // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
-          rawErrors: [],
           value: [],
           options: {
             enumOptions: [
@@ -330,8 +314,6 @@ describe('SelectWidget', () => {
           disabled: false,
           readonly: false,
           multiple: true,
-          // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
-          rawErrors: [],
           value: [],
           onChange,
           options: {
@@ -372,8 +354,6 @@ describe('SelectWidget', () => {
           disabled: false,
           readonly: false,
           multiple: true,
-          // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
-          rawErrors: [],
           value: [],
           options: {
             enumOptions: [
@@ -403,8 +383,6 @@ describe('SelectWidget', () => {
             disabled: false,
             readonly: false,
             multiple: true,
-            // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
-            rawErrors: [],
             value,
             onChange: (next) => {
               seen.push(next);
@@ -446,8 +424,6 @@ describe('SelectWidget', () => {
             autofocus: false,
             disabled: false,
             readonly: false,
-            // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
-            rawErrors: [],
             // Decoded as a DOM value, `1` would be read as the index of the option whose value is `0`
             value: 1,
             onFocus,
@@ -484,8 +460,6 @@ describe('SelectWidget', () => {
             disabled: false,
             readonly: false,
             multiple: true,
-            // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
-            rawErrors: [],
             value,
             onChange: (next) => {
               seen.push(next);
@@ -954,7 +928,7 @@ describe("the single select's combobox while its listbox is open", () => {
       expect(combobox).toHaveAttribute('aria-controls', screen.getByRole('listbox').id);
 
       await user.keyboard('{Enter}');
-      expect(onChange).toHaveBeenLastCalledWith('green');
+      expect(onChange).toHaveBeenCalledExactlyOnceWith('green');
       expect(combobox).toHaveAttribute('aria-expanded', 'false');
       expect(combobox).not.toHaveAttribute('aria-activedescendant');
 
@@ -1152,7 +1126,13 @@ describe("the single select's combobox while its listbox is open", () => {
       expect(highlightedOption()).toHaveTextContent(name);
     });
 
-    test('highlights and chooses an option whose value cmdk trims', async () => {
+    // Space chooses the item the select matches to cmdk's trimmed highlight, while Enter is left to cmdk, which chooses
+    // through the option's `onSelect`, once the select finds the option cmdk renders for that highlight, so each key
+    // takes its own path
+    test.each([
+      ['Space', ' '],
+      ['Enter', '{Enter}'],
+    ])('highlights and chooses an option whose value cmdk trims on %s', async (_, key) => {
       const user = userEvent.setup();
       const { combobox, onChange } = renderSelect({
         value: undefined,
@@ -1168,9 +1148,9 @@ describe("the single select's combobox while its listbox is open", () => {
       await user.tab();
       await user.keyboard('{Enter}');
       expect(combobox).toHaveAttribute('aria-activedescendant', highlightedOption()!.id);
-      await user.keyboard(' ');
+      await user.keyboard(key);
 
-      expect(onChange).toHaveBeenLastCalledWith(' s');
+      expect(onChange).toHaveBeenCalledExactlyOnceWith(' s');
       expect(combobox).toHaveAttribute('aria-expanded', 'false');
     });
 
@@ -1194,7 +1174,7 @@ describe("the single select's combobox while its listbox is open", () => {
       await user.keyboard('{ArrowDown}');
       await user.keyboard(' ');
 
-      expect(onChange).toHaveBeenLastCalledWith('green');
+      expect(onChange).toHaveBeenCalledExactlyOnceWith('green');
       expect(combobox).toHaveAttribute('aria-expanded', 'false');
     });
 

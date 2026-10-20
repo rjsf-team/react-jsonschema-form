@@ -43,7 +43,9 @@ import {
   ARRAY_MODE_DEFAULT_WIDGETS,
   displaysLabel,
   getArrayFieldMode,
+  getContainerErrorProps,
   getContainerHeading,
+  getFieldErrorProps,
   getWidgetErrorProps,
   getWidgetLabelProps,
   storedValue,
@@ -255,6 +257,7 @@ function ArrayAsMultiSelect<
     onBlur,
     onFocus,
     registry,
+    // oxlint-disable-next-line typescript/no-deprecated -- handed on to its widget, for one that doesn't read `presentation`
     rawErrors,
     presentation,
     hideError,
@@ -326,6 +329,7 @@ function ArrayAsCustomWidget<
     onFocus,
     formData: items = [],
     registry,
+    // oxlint-disable-next-line typescript/no-deprecated -- handed on to its widget, for one that doesn't read `presentation`
     rawErrors,
     presentation,
     name,
@@ -383,6 +387,7 @@ function ArrayAsFiles<
     onFocus,
     registry,
     formData: items = [],
+    // oxlint-disable-next-line typescript/no-deprecated -- handed on to its widget, for one that doesn't read `presentation`
     rawErrors,
     presentation,
     hideError,
@@ -768,7 +773,7 @@ function ArrayFieldItemInner<
         readonly={readonly}
         hideError={hideError}
         autofocus={autofocus}
-        rawErrors={rawErrors}
+        {...getFieldErrorProps<T, S, F>(rawErrors)}
       />
     ),
     buttonsProps: {
@@ -850,6 +855,7 @@ function NormalArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
     registry,
     onBlur,
     onFocus,
+    // oxlint-disable-next-line typescript/no-deprecated -- handed on to its template and items, for those that don't read `presentation`
     rawErrors,
     onChange,
     keyedFormData,
@@ -935,7 +941,7 @@ function NormalArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
     title: getContainerHeading<T[], S, F>(presentation, schema, uiOptions, uiOptions.title || fieldTitle),
     formData,
     errorSchema,
-    rawErrors,
+    ...getContainerErrorProps<T[], S, F>(rawErrors),
     registry,
     optionalDataControl,
   };
@@ -966,6 +972,7 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     registry,
     onBlur,
     onFocus,
+    // oxlint-disable-next-line typescript/no-deprecated -- handed on to its template and items, for those that don't read `presentation`
     rawErrors,
     keyedFormData,
     onChange,
@@ -1069,7 +1076,7 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     uiSchema,
     title: getContainerHeading<T[], S, F>(presentation, schema, uiOptions, uiOptions.title || fieldTitle),
     errorSchema,
-    rawErrors,
+    ...getContainerErrorProps<T[], S, F>(rawErrors),
     optionalDataControl,
   };
 

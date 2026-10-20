@@ -107,8 +107,9 @@ export default function BooleanInput<
       // whatever the user clicked even where the form rejected the change
       checked={!!value}
       // Only where `false` is not an answer the schema accepts, as `schemaRequiresTrueValue()` decides: HTML5
-      // constraint validation fails an unchecked required box, which would block the form with nothing on the screen
-      // to say why for every optional-in-effect boolean a parent merely lists as required
+      // constraint validation fails an unchecked required box, so the browser would stop the submit with its own prompt,
+      // before RJSF validates or calls `onSubmit` or `onError`, for every optional-in-effect boolean a parent merely
+      // lists as required
       required={trueValueRequired}
       disabled={disabled || readonly}
       autoFocus={autofocus}

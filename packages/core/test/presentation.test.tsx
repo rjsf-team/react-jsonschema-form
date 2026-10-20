@@ -1,21 +1,37 @@
 import type {
   ArrayFieldTemplateProps,
+  FieldHelpProps,
   FieldPresentation,
   FieldProps,
   FieldTemplateProps,
   ObjectFieldTemplateProps,
   RJSFSchema,
   UiSchema,
+  Widget,
   WidgetProps,
 } from '@rjsf/utils';
-import { errorId, fieldLabelId, helpId, optionHelpId, selectedOptionDescriptionId, titleId } from '@rjsf/utils';
+import {
+  errorId,
+  fieldLabelId,
+  hasTemplateErrors,
+  helpId,
+  optionHelpId,
+  selectedOptionDescriptionId,
+  titleId,
+} from '@rjsf/utils';
 import { screen, within } from '@testing-library/react';
 
 import { generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
+import type { NoValFormProps } from './testUtils.tsx';
 import { createFormComponent } from './testUtils.tsx';
 
 const { FieldTemplate: CoreFieldTemplate } = generateTemplates();
-const { TextWidget: CoreTextWidget, SelectWidget: CoreSelectWidget } = generateWidgets();
+const {
+  TextWidget: CoreTextWidget,
+  SelectWidget: CoreSelectWidget,
+  CheckboxWidget: CoreCheckboxWidget,
+  FileWidget: CoreFileWidget,
+} = generateWidgets();
 const { ArrayFieldTemplate: CoreArrayFieldTemplate, ObjectFieldTemplate: CoreObjectFieldTemplate } =
   generateTemplates();
 
@@ -203,6 +219,31 @@ describe('the plan SchemaField builds', () => {
     expect(renders.get('root_foo')).toBe(before);
   });
 
+  it.each([
+    ['shows', false, ['is wrong']],
+    ['hides', true, []],
+  ] satisfies [string, boolean, string[]][])(
+    '%s the errors in the plan a ui:field is handed while ui:hideError is %s, keeping them in its rawErrors',
+    (_, hideError, messages) => {
+      const recordFieldProps = vi.fn<(props: FieldProps) => void>();
+      function MyField(props: FieldProps) {
+        recordFieldProps(props);
+        const { id } = props;
+        return <input id={id} />;
+      }
+      createFormComponent({
+        schema: { type: 'object', properties: { foo: { type: 'string' } } },
+        uiSchema: { foo: { 'ui:field': MyField, 'ui:hideError': hideError } },
+        extraErrors: { foo: { __errors: ['is wrong'] } },
+      });
+      // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
+      const { presentation, rawErrors } = recordFieldProps.mock.lastCall![0];
+      expect(presentation?.errors.messages).toEqual(messages);
+      expect(presentation?.control?.attributes['aria-invalid']).toBe(hideError ? undefined : true);
+      expect(rawErrors).toEqual(['is wrong']);
+    },
+  );
+
   describe("an anyOf field's option selector", () => {
     const schema: RJSFSchema = {
       type: 'object',
@@ -237,6 +278,35 @@ describe('the plan SchemaField builds', () => {
       const describedBy = selector.getAttribute('aria-describedby')!.split(' ');
       expect(describedBy).toEqual(['root_foo__error', 'root_foo__description']);
       describedBy.forEach((describer) => expect(node.querySelector(`#${describer}`)).toBeInTheDocument());
+    });
+
+    // The schema of #5399, whose first option is an enum, so the option's own control is a select or radiogroup too
+    const pick: RJSFSchema = {
+      type: 'object',
+      properties: { pick: { title: 'Pick', anyOf: [{ type: 'string', enum: ['a', 'b'] }, { type: 'number' }] } },
+    };
+
+    it("is a radiogroup named through aria-labelledby by the field's label under ui:widget radio", () => {
+      const { node } = createFormComponent({ schema: pick, uiSchema: { pick: { 'ui:widget': 'radio' } } });
+      // The option's own enum takes the field's ui:widget too, so it renders a second radiogroup beside the selector's
+      const group = node.querySelector('#root_pick__anyof_select');
+      expect(screen.getAllByRole('radiogroup', { name: 'Pick' })).toContain(group);
+      expect(group).toHaveAttribute('aria-labelledby', fieldLabelId('root_pick'));
+      expect(node.querySelector(`#${fieldLabelId('root_pick')}`)).toHaveTextContent('Pick');
+    });
+
+    it("hands its widget the field's title as a label drawn above it", () => {
+      const selectorProps: WidgetProps[] = [];
+      function SelectWidget(props: WidgetProps) {
+        selectorProps.push(props);
+        return <CoreSelectWidget {...props} />;
+      }
+      createFormComponent({ schema: pick, widgets: { SelectWidget } });
+      const selector = selectorProps.find((props) => props.id === 'root_pick__anyof_select')!;
+      expect(selector.label).toBe('Pick');
+      // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
+      expect(selector.hideLabel).toBe(true);
+      expect(selector.presentation?.label).toMatchObject({ by: 'above', id: fieldLabelId('root_pick') });
     });
 
     it("gives an option's own help an id of its own beside the field's", () => {
@@ -305,7 +375,61 @@ describe('the plan SchemaField builds', () => {
       // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
       expect(selector.hideLabel).toBe(true);
     });
+
+    it.each([
+      ['is', false],
+      ['is not', true],
+    ])("%s invalid, or described by the field's errors, while ui:hideError is %s", (_, hideError) => {
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: { foo: { 'ui:hideError': hideError } },
+        extraErrors: { foo: { __errors: ['is wrong'] } },
+      });
+      const selector = node.querySelector('#root_foo__anyof_select')!;
+      const describedBy = selector.getAttribute('aria-describedby')?.split(' ') ?? [];
+      expect(selector.getAttribute('aria-invalid')).toBe(hideError ? null : 'true');
+      expect(describedBy.includes(errorId('root_foo'))).toBe(!hideError);
+    });
   });
+
+  // The class and the help's error state follow the option's own errors and `ui:hideError`, as the deprecated
+  // `rawErrors` its template is handed do, while its plan, which `hasTemplateErrors()` reads, takes the errors as the
+  // field above shows them
+  it.each([
+    ['shows', true, false],
+    ['hides', false, true],
+  ])(
+    "styles an anyOf option's template by whether the option %s the errors, whatever the field above does",
+    (_, aboveHides, optionHides) => {
+      const optionTemplates: FieldTemplateProps[] = [];
+      function FieldTemplate(templateProps: FieldTemplateProps) {
+        if (templateProps.presentation?.inherited) {
+          optionTemplates.push(templateProps);
+        }
+        return <CoreFieldTemplate {...templateProps} />;
+      }
+      const optionHelps: FieldHelpProps[] = [];
+      function FieldHelpTemplate(helpProps: FieldHelpProps) {
+        if (helpProps.presentation?.inherited) {
+          optionHelps.push(helpProps);
+        }
+        return null;
+      }
+      createFormComponent({
+        schema: { type: 'object', properties: { foo: { anyOf: [{ type: 'string' }, { type: 'number' }] } } },
+        uiSchema: { foo: { 'ui:hideError': aboveHides, anyOf: [{ 'ui:hideError': optionHides }, {}] } },
+        extraErrors: { foo: { __errors: ['is wrong'] } },
+        templates: { FieldTemplate, FieldHelpTemplate },
+      });
+      const option = optionTemplates.at(-1)!;
+      expect(option.id).toBe('root_foo');
+      expect(option.classNames?.split(' ').includes('rjsf-field-error')).toBe(!optionHides);
+      expect(optionHelps.at(-1)?.hasErrors).toBe(!optionHides);
+      // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop the class agrees with
+      expect(option.rawErrors).toEqual(optionHides ? undefined : ['is wrong']);
+      expect(hasTemplateErrors(option)).toBe(!aboveHides);
+    },
+  );
 
   // No selector renders before an optional field has data, so the field's template label has no control to name
   describe("an optional anyOf field's option before the field has data", () => {
@@ -613,7 +737,7 @@ describe('the plan SchemaField builds', () => {
   });
 });
 
-describe('an anyOf/oneOf whose options all render a container', () => {
+describe('an anyOf/oneOf whose options are all objects, arrays or nulls', () => {
   const pet: RJSFSchema = {
     title: 'Pet',
     oneOf: [
@@ -635,7 +759,7 @@ describe('an anyOf/oneOf whose options all render a container', () => {
     expect(node.querySelector(`#${fieldLabelId('root_pet')}`)?.closest('label')).not.toHaveAttribute('for');
   });
 
-  it('keeps the for where an option renders a control under the field id', () => {
+  it('keeps the for where an option of another type renders a control under the field id', () => {
     const { outerTemplatePlans } = renderPlans({
       type: 'object',
       properties: { pet: { ...pet, oneOf: [...pet.oneOf!, { title: 'Name', type: 'string' }] } },
@@ -655,6 +779,45 @@ describe('an anyOf/oneOf whose options all render a container', () => {
     const { outerTemplatePlans } = renderPlans({ type: 'object', properties: { pet: petSchema } });
 
     expect(outerTemplatePlans.get('root_pet')?.control?.attributes['aria-labelledby']).toBe(fieldLabelId('root_pet'));
+  });
+
+  it('names a multi-select array option by the field label through aria-labelledby', () => {
+    createFormComponent({
+      schema: {
+        type: 'object',
+        properties: {
+          pet: {
+            ...pet,
+            oneOf: [
+              { title: 'Breeds', type: 'array', uniqueItems: true, items: { enum: ['Lab', 'Pug'] } },
+              pet.oneOf![0],
+            ],
+          },
+        },
+      },
+    });
+
+    const select = screen.getByRole('listbox');
+    expect(select).toHaveAttribute('aria-labelledby', fieldLabelId('root_pet'));
+    expect(select).toHaveAccessibleName('Pet');
+  });
+
+  it('names a file array option by the field label through aria-labelledby', () => {
+    const { node } = createFormComponent({
+      schema: {
+        type: 'object',
+        properties: {
+          pet: {
+            ...pet,
+            oneOf: [{ title: 'Photos', type: 'array', items: { type: 'string', format: 'data-url' } }, pet.oneOf![0]],
+          },
+        },
+      },
+    });
+
+    const input = node.querySelector('input[type="file"]');
+    expect(input).toHaveAttribute('aria-labelledby', fieldLabelId('root_pet'));
+    expect(input).toHaveAccessibleName('Pet');
   });
 
   it('keeps the for where an option is a $ref it does not resolve', () => {
@@ -997,4 +1160,93 @@ describe('an alt-date field', () => {
 
     expect(screen.getByRole('combobox', { name: 'When, year' })).not.toHaveAttribute('aria-describedby');
   });
+
+  it.each<{ name: string; label: string; props: NoValFormProps }>([
+    {
+      name: 'an additional property, by its key rather than its schema title',
+      label: 'start',
+      props: {
+        schema: { type: 'object', additionalProperties: { type: 'string', format: 'date', title: 'Date' } },
+        uiSchema: { additionalProperties: { 'ui:widget': 'alt-date' } },
+        initialFormData: { start: '2020-05-03' },
+      },
+    },
+    {
+      name: "a property titled '', by its name",
+      label: 'start',
+      props: {
+        schema: { type: 'object', properties: { start: { type: 'string', title: '' } } },
+        uiSchema: { start: { 'ui:widget': 'alt-date' } },
+      },
+    },
+    {
+      name: 'a deprecated property, with the marker',
+      label: 'Old date (deprecated)',
+      props: {
+        schema: { type: 'object', properties: { start: { type: 'string', title: 'Old date', deprecated: true } } },
+        uiSchema: { start: { 'ui:widget': 'alt-date' } },
+      },
+    },
+  ])('names each part of $name as its template labels the field', ({ label, props }) => {
+    const { node } = createFormComponent(props);
+
+    expect(node.querySelector(`#${fieldLabelId('root_start')}`)?.textContent).toBe(label);
+    expect(screen.getByRole('combobox', { name: `${label}, year` })).toBeInTheDocument();
+  });
+});
+
+describe('the label a field hands its widget', () => {
+  function ArrayWidget({ id }: WidgetProps) {
+    return <div id={id} />;
+  }
+
+  /** Renders `foo` with a `FieldTemplate` and the widget under `widgetKey` recording the label each is handed */
+  function renderLabels(foo: RJSFSchema, widgetKey: string, InnerWidget: Widget, fooUi: UiSchema = {}) {
+    const labels = new Map<'template' | 'widget', string>();
+    function FieldTemplate(templateProps: FieldTemplateProps) {
+      if (templateProps.id === 'root_foo') {
+        labels.set('template', templateProps.label);
+      }
+      return <CoreFieldTemplate {...templateProps} />;
+    }
+    function RecordingWidget(widgetProps: WidgetProps) {
+      labels.set('widget', widgetProps.label);
+      return <InnerWidget {...widgetProps} />;
+    }
+    createFormComponent({
+      schema: { type: 'object', properties: { foo } },
+      uiSchema: { foo: fooUi },
+      templates: { FieldTemplate },
+      widgets: { [widgetKey]: RecordingWidget },
+    });
+    return Object.fromEntries(labels);
+  }
+
+  // An empty `title` falls through to the property name, so the template is handed a label. A widget is handed the
+  // same label, whoever draws it
+  it.each<[string, RJSFSchema, string, Widget, UiSchema?]>([
+    ['string', { type: 'string' }, 'TextWidget', CoreTextWidget],
+    ['number', { type: 'number' }, 'TextWidget', CoreTextWidget],
+    ['boolean', { type: 'boolean' }, 'CheckboxWidget', CoreCheckboxWidget],
+    [
+      'multi-select array',
+      { type: 'array', items: { enum: ['a', 'b'] }, uniqueItems: true },
+      'SelectWidget',
+      CoreSelectWidget,
+    ],
+    ['files array', { type: 'array', items: { type: 'string', format: 'data-url' } }, 'FileWidget', CoreFileWidget],
+    [
+      'custom-widget array',
+      { type: 'array', items: { type: 'string' } },
+      'ArrayWidget',
+      ArrayWidget,
+      { 'ui:widget': 'ArrayWidget' },
+    ],
+  ])(
+    "hands a %s field's widget the property name its template is handed for an empty title",
+    (_, foo, widgetKey, InnerWidget, fooUi) => {
+      const labels = renderLabels({ ...foo, title: '' }, widgetKey, InnerWidget, fooUi);
+      expect(labels).toEqual({ template: 'foo', widget: 'foo' });
+    },
+  );
 });

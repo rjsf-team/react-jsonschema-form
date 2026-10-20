@@ -1,24 +1,32 @@
 import type { ComponentType } from 'react';
 import type { FormProps } from '@rjsf/core';
 import type { ErrorSchema, RJSFSchema, UiSchema } from '@rjsf/utils';
-import { englishStringTranslator, TranslatableString } from '@rjsf/utils';
+import { englishStringTranslator, errorId, TranslatableString } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 
 const DATE_PARTS = ['year', 'month', 'day'];
 const TIME_PARTS = ['hour', 'minute', 'second'];
 
+const when: RJSFSchema = { type: 'string', title: 'When', format: 'date' };
+const at: RJSFSchema = { type: 'string', title: 'At', format: 'date-time' };
+const bareSchema: RJSFSchema = { type: 'object', properties: { when, at } };
+const bareUiSchema: UiSchema = {
+  when: { 'ui:widget': 'alt-date', 'ui:options': { yearsRange: [2020, 2024] } },
+  at: { 'ui:widget': 'alt-datetime', 'ui:options': { yearsRange: [2020, 2024] } },
+};
 const schema: RJSFSchema = {
   type: 'object',
   properties: {
-    when: { type: 'string', title: 'When', format: 'date', description: 'The day it starts' },
-    at: { type: 'string', title: 'At', format: 'date-time', description: 'The moment it ends' },
+    when: { ...when, description: 'The day it starts' },
+    at: { ...at, description: 'The moment it ends' },
   },
 };
 const uiSchema: UiSchema = {
-  when: { 'ui:widget': 'alt-date', 'ui:help': 'Any day will do', 'ui:options': { yearsRange: [2020, 2024] } },
-  at: { 'ui:widget': 'alt-datetime', 'ui:help': 'Any time will do', 'ui:options': { yearsRange: [2020, 2024] } },
+  when: { ...bareUiSchema.when, 'ui:help': 'Any day will do' },
+  at: { ...bareUiSchema.at, 'ui:help': 'Any time will do' },
 };
+const extraErrors = { when: { __errors: ['Too early'] }, at: { __errors: ['Too late'] } } as ErrorSchema;
 
 /** The control each theme names is a `combobox`, except where it is a `button` opening a listbox. The name is matched
  * exactly, so a translation containing characters a pattern would treat specially is compared as written
@@ -72,7 +80,6 @@ export function altDateTests(Form: ComponentType<FormProps>) {
     });
 
     describe("describes each part by its field's description, help and errors", () => {
-      const extraErrors = { when: { __errors: ['Too early'] }, at: { __errors: ['Too late'] } } as ErrorSchema;
       const fields: [string, string[], string[]][] = [
         ['When', DATE_PARTS, ['The day it starts', 'Any day will do', 'Too early']],
         ['At', [...DATE_PARTS, ...TIME_PARTS], ['The moment it ends', 'Any time will do', 'Too late']],
@@ -92,6 +99,55 @@ export function altDateTests(Form: ComponentType<FormProps>) {
         render(<Form schema={schema} uiSchema={uiSchema} validator={validator} extraErrors={extraErrors} />);
         const ids = (getPart('When, year').getAttribute('aria-describedby') ?? '').split(' ');
         expect(ids.filter((id) => !document.getElementById(id))).toEqual([]);
+      });
+    });
+
+    // With no description or help, a part described by `ariaDescribedByIds()` rather than its field's plan still
+    // announces the error, so only the exact ids and `aria-invalid` tell the plan's describers from that fallback's
+    describe('with no description or help', () => {
+      const fields: [string, string, string[], string][] = [
+        ['When', 'root_when', DATE_PARTS, 'Too early'],
+        ['At', 'root_at', [...DATE_PARTS, ...TIME_PARTS], 'Too late'],
+      ];
+
+      // The `for` check is scoped to the fields' ids, since a theme's own components may draw a hidden label of their
+      // own whose `for` isn't the form's to keep
+      test("draws no label whose for names the field's id, which no date part carries", () => {
+        const { container } = render(<Form schema={bareSchema} uiSchema={bareUiSchema} validator={validator} />);
+        fields.forEach(([label, id]) => {
+          const drawn = screen.getByText(label).closest('label');
+          expect(drawn).toBeInstanceOf(HTMLLabelElement);
+          expect(drawn).not.toHaveAttribute('for');
+          expect(document.querySelector(`label[for="${id}"]`)).toBeNull();
+        });
+        const labelledBy = [...container.querySelectorAll('[aria-labelledby]')].flatMap((element) =>
+          (element.getAttribute('aria-labelledby') ?? '').split(/\s+/).filter(Boolean),
+        );
+        expect(labelledBy.filter((id) => !document.getElementById(id))).toEqual([]);
+      });
+
+      test('describes each part by the error alone and marks it invalid while errors show', () => {
+        render(<Form schema={bareSchema} uiSchema={bareUiSchema} validator={validator} extraErrors={extraErrors} />);
+        fields.forEach(([label, id, parts, error]) =>
+          parts.forEach((part) => {
+            const element = getPart(`${label}, ${part}`);
+            expect(element).toHaveAttribute('aria-describedby', errorId(id));
+            expect(element).toHaveAccessibleDescription(error);
+            expect(element).toHaveAttribute('aria-invalid', 'true');
+          }),
+        );
+      });
+
+      // chakra-ui marks a valid control `aria-invalid="false"`, which is as good as none
+      test('describes no part and marks none invalid with nothing to show', () => {
+        render(<Form schema={bareSchema} uiSchema={bareUiSchema} validator={validator} />);
+        fields.forEach(([label, , parts]) =>
+          parts.forEach((part) => {
+            const element = getPart(`${label}, ${part}`);
+            expect(element).not.toHaveAttribute('aria-describedby');
+            expect(element).not.toHaveAttribute('aria-invalid', 'true');
+          }),
+        );
       });
     });
   });

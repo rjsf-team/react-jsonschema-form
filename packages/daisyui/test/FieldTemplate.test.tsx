@@ -352,8 +352,8 @@ describe('FieldTemplate', () => {
     });
   });
 
-  // A group is named by pointing at the label element, so its accessible name is whatever the label displays. The
-  // `label` a widget is handed is computed separately and differs from the template's in both cases below
+  // A group is named by pointing at the label element, so its accessible name is whatever the label displays, including
+  // where that isn't the schema title as written
   describe('naming a group from the label the user can see', () => {
     test('uses the key, not the schema title, for an additionalProperties entry', () => {
       const { container } = render(
@@ -584,8 +584,7 @@ describe('FieldTemplate', () => {
     });
   });
 
-  // `SchemaField` falls back to the property name for the label it hands the template, so the template renders one,
-  // while the `label` a widget is handed keeps the empty `title` it was given
+  // An empty `title` falls through to the property name, so the field still has a label for its controls to be named by
   describe("a field whose title is ''", () => {
     test('names a group of controls with the label the template renders from the property name', () => {
       render(
