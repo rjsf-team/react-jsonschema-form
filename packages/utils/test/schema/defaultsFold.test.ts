@@ -1126,7 +1126,10 @@ describe('getDefaultFormState() reading $ref, branches and extra keys as the for
     const rootOf = (property: RJSFSchema, s: RJSFSchema, resource: RJSFSchema, homonym?: RJSFSchema): RJSFSchema => ({
       $schema: draft2020,
       $id: 'https://example.com/root.json',
-      $defs: { ...(homonym === undefined ? {} : { s: homonym }), res: { $id: 'res.json', $defs: { s }, ...resource } },
+      $defs: {
+        ...(homonym === undefined ? {} : { s: homonym }),
+        res: { $id: 'res.json', ...resource, $defs: { s, ...resource.$defs } },
+      },
       type: 'object',
       properties: { p: property },
     });
@@ -1140,6 +1143,46 @@ describe('getDefaultFormState() reading $ref, branches and extra keys as the for
       );
       expect(defaultsOf(schema, undefined, { emptyObjectFields: 'skipEmptyDefaults' })).toEqual({ p: { k: 'c' } });
     });
+    it.each<[string, unknown]>([
+      ['the value it names', { p: { k: 'c' } }],
+      ['no value for it', { p: {} }],
+    ])("reads a property's $ref in the resource for data holding %s", (_, formData) => {
+      const schema = rootOf(
+        { $ref: 'res.json', properties: { k: { title: 'K' } } },
+        { const: 'c' },
+        { type: 'object', properties: { k: { $ref: '#/$defs/s' } } },
+      );
+      expect(defaultsOf(schema, formData)).toEqual({ p: { k: 'c' } });
+    });
+    it.each<[string, RJSFSchema, unknown, unknown, DefaultFormStateBehavior | undefined]>([
+      [
+        'a $ref to it, data it names',
+        { $ref: 'res.json#/$defs/o', properties: { k: { title: 'K' } } },
+        { p: { k: 'c' } },
+        { p: { k: 'c' } },
+        undefined,
+      ],
+      [
+        'a $ref to it, data it does not name',
+        { $ref: 'res.json#/$defs/o', properties: { k: { title: 'K' } } },
+        { p: { k: 'x' } },
+        { p: { k: 'x' } },
+        undefined,
+      ],
+      [
+        'an allOf entry naming it, populated',
+        { allOf: [{ $ref: 'res.json#/$defs/o' }, { properties: { k: { title: 'K' } } }] },
+        { p: {} },
+        { p: { k: 'c' } },
+        populate,
+      ],
+    ])(
+      "reads a property's $ref in the resource for a definition the resource holds, by %s",
+      (_, property, formData, defaults, behavior) => {
+        const resource: RJSFSchema = { $defs: { o: { type: 'object', properties: { k: { $ref: '#/$defs/s' } } } } };
+        expect(defaultsOf(rootOf(property, { const: 'c' }, resource), formData, behavior)).toEqual(defaults);
+      },
+    );
     it.each<[string, RJSFSchema, unknown]>([
       ['filled up to minItems', { minItems: 1 }, { p: ['r'] }],
       ['a multi-select, left unfilled', { minItems: 1, uniqueItems: true }, {}],
