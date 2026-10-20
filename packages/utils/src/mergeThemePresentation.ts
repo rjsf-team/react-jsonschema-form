@@ -7,7 +7,15 @@ import type {
 } from './types.ts';
 
 /** Everything a declaration declares, each layered on its own */
-const DECLARED = ['label', 'description', 'errors', 'help', 'labelledBy', 'uncheckedIsFalse'] as const;
+const DECLARED = [
+  'label',
+  'description',
+  'errors',
+  'help',
+  'labelledBy',
+  'labelPlacement',
+  'uncheckedIsFalse',
+] as const;
 
 /** Layers `declarations` over one another, each later one replacing a part an earlier one declares. A part declared
  * `undefined` is left to the layers beneath it, so spreading an options object can't erase one, and a part none of

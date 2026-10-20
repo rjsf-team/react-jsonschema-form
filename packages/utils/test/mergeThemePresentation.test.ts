@@ -62,6 +62,22 @@ describe('mergeThemePresentation()', () => {
     });
   });
 
+  it("layers labelPlacement as it layers a part, so an entry declaring 'beside' keeps it over its layer's default", () => {
+    const theme = {
+      default: { label: 'self', labelPlacement: 'above' },
+      widgets: { CheckboxWidget: { labelPlacement: 'beside' } },
+    } as const;
+    expect(mergeThemePresentation(core, theme)).toStrictEqual({
+      default: { label: 'self', labelPlacement: 'above' },
+      widgets: {
+        CheckboxWidget: { label: 'self', description: 'self', labelPlacement: 'beside' },
+        RadioWidget: { label: 'self', labelledBy: 'aria-labelledby', labelPlacement: 'above' },
+      },
+      fields: {},
+      fieldDefault: {},
+    });
+  });
+
   it("overrides the parts it declares under a key a lower layer declares, keeping the lower layer's other parts", () => {
     const props = { default: { description: 'template' } } as const;
     expect(mergeThemePresentation(core, props)).toStrictEqual({

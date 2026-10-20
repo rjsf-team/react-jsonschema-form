@@ -450,6 +450,68 @@ describe('getPresentationDeclaration()', () => {
     });
   });
 
+  describe('labelPlacement', () => {
+    const widgets = {
+      ...presentation.widgets,
+      TextWidget: { label: 'self', labelPlacement: 'above' },
+      RadioWidget: { labelledBy: 'aria-labelledby', labelPlacement: 'above' },
+    } as const;
+    const fields = {
+      ...presentation.fields,
+      Selector: { label: 'self', labelPlacement: 'above' },
+      BooleanField: { ...WIDGET_FIELD_PRESENTATION, labelPlacement: 'above' },
+    } as const;
+    const placed = { ...source, presentation: { ...presentation, widgets, fields } };
+
+    it('takes it from the widget a field leaves its label to', () => {
+      expect(
+        getPresentationDeclaration(placed, {
+          schema: { type: 'string' },
+          field: StringField,
+          fieldKey: 'StringField',
+          widget: 'TextWidget',
+        }),
+      ).toEqual({ ...TEMPLATE, label: 'self', labelPlacement: 'above' });
+    });
+
+    it("takes it from the field's own entry when the field draws its label itself", () => {
+      expect(
+        getPresentationDeclaration(placed, { schema: { type: 'object' }, field: ObjectField, fieldKey: 'Selector' }),
+      ).toEqual({ ...FIELD_DEFAULT, labelPlacement: 'above' });
+    });
+
+    it('takes it from the fieldDefault for a field leaving its label to a widget it does not render', () => {
+      expect(
+        getPresentationDeclaration(
+          { ...source, presentation: { ...presentation, fieldDefault: { labelPlacement: 'above' } } },
+          { schema: { type: 'array' }, field: ArrayField, fieldKey: 'ArrayField' },
+        ),
+      ).toEqual({ ...FIELD_DEFAULT, labelPlacement: 'above' });
+    });
+
+    it("ignores the field's own entry when the widget it leaves its label to draws it", () => {
+      expect(
+        getPresentationDeclaration(placed, {
+          schema: { type: 'boolean' },
+          field: StringField,
+          fieldKey: 'BooleanField',
+          widget: 'CheckboxWidget',
+        }),
+      ).toEqual({ ...TEMPLATE, label: 'self', description: 'self' });
+    });
+
+    it('is left out where the template draws the label', () => {
+      expect(
+        getPresentationDeclaration(placed, {
+          schema: { type: 'string' },
+          field: StringField,
+          fieldKey: 'StringField',
+          widget: 'RadioWidget',
+        }),
+      ).toEqual({ ...TEMPLATE, labelledBy: 'aria-labelledby' });
+    });
+  });
+
   it('looks a field key up as an own property', () => {
     expect(
       getPresentationDeclaration(source, {
