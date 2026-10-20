@@ -263,6 +263,213 @@ describe('precompiled validator integration: oneOf with additionalProperties:fal
       },
     );
   });
+  it('compiles the option for empty data past the limit when an `allOf` entry has `dependencies`', () => {
+    const option: RJSFSchema = {
+      type: 'object',
+      allOf: [
+        { properties: { a: {} }, dependencies: { a: { properties: { dep_a: {} } } } },
+        { properties: { b: {} }, dependencies: { b: { properties: { dep_b: {} } } } },
+        ...Array.from({ length: 9 }, (_, i): RJSFSchema => ({
+          if: { required: [`if_k${i}`] },
+          then: { properties: { [`k${i}`]: { type: 'string' } } },
+        })),
+      ],
+    };
+    const root: RJSFSchema = {
+      type: 'object',
+      oneOf: [option, { type: 'object', properties: { z: { type: 'number' } } }],
+    };
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const validator = buildPrecompiledValidator(root);
+    // The validation schemas are read off the schema graph, whose list grows with the conditions rather than with
+    // their combinations, so there is no limit to warn about
+    expect(warn).not.toHaveBeenCalled();
+    warn.mockRestore();
+    const retrieved = createSchemaUtils({ validator }, root).retrieveSchema(option, {});
+    // The first render scores and checks the option as empty data selects it, with no dependency or `then` applied
+    expect(validator.isValid(getValidationTarget(retrieved, root), {}, root)).toBe(true);
+  });
+  it.each<[RJSFSchema['dependencies']]>([[{ a: ['b'] }], [{ a: ['b'], b: { properties: { c: {} } } }]])(
+    'compiles the option for empty data when it has a property dependency %j',
+    (dependencies) => {
+      const option: RJSFSchema = { type: 'object', properties: { a: {}, b: {} }, dependencies };
+      const root: RJSFSchema = {
+        type: 'object',
+        oneOf: [option, { type: 'object', properties: { z: { type: 'number' } } }],
+      };
+      const validator = buildPrecompiledValidator(root);
+      const retrieved = createSchemaUtils({ validator }, root).retrieveSchema(option, {});
+      expect(validator.isValid(getValidationTarget(retrieved, root), {}, root)).toBe(true);
+    },
+  );
+  describe('an option with an `if` that has no `else`', () => {
+    /** Until the data satisfies the `if`, a form renders the option without its `then`, so that schema has to be
+     * compiled as well as the one with `then` applied
+     */
+    const options: RJSFSchema[] = [
+      {
+        type: 'object',
+        properties: { a: { type: 'string' } },
+        if: { properties: { a: { const: 'x' } }, required: ['a'] },
+        then: { properties: { extra: { type: 'string' } } },
+      },
+      { type: 'object', properties: { z: { type: 'number' } } },
+    ];
+    const CONDITIONAL_ONEOF_SCHEMA: RJSFSchema = { type: 'object', oneOf: options };
+
+    it.each([[{}], [{ a: 'q' }], [{ a: 'x' }]])('scores the option it retrieved for %s', (formData) => {
+      const validator = buildPrecompiledValidator(CONDITIONAL_ONEOF_SCHEMA);
+      const schemaUtils = createSchemaUtils({ validator }, CONDITIONAL_ONEOF_SCHEMA);
+      const chosen = getClosestMatchingOption({ validator }, CONDITIONAL_ONEOF_SCHEMA, formData, options, 0);
+      const retrieved = schemaUtils.retrieveSchema(options[chosen], formData);
+      // the option the data selects has a compiled validator even when the `if` doesn't hold
+      expect(
+        validator.isValid(getValidationTarget(retrieved, CONDITIONAL_ONEOF_SCHEMA), formData, CONDITIONAL_ONEOF_SCHEMA),
+      ).toBe(true);
+    });
+  });
+  describe.each<[string, RJSFSchema, object[]]>([
+    [
+      'an own `then` merged over the rest before an `allOf`',
+      {
+        type: 'object',
+        properties: { a: { type: 'string', maxLength: 10, title: 'A' } },
+        if: { properties: { b: { const: 'x' } }, required: ['b'] },
+        then: { properties: { a: { maxLength: 20, title: 'A2' } } },
+        allOf: [{ properties: { b: { type: 'string' } } }],
+      },
+      [{}, { b: 'x' }, { b: 'q' }],
+    ],
+    [
+      'an `else: false`',
+      {
+        type: 'object',
+        properties: { a: { type: 'string' } },
+        if: { properties: { a: { const: 'x' } }, required: ['a'] },
+        then: { properties: { extra: { type: 'string' } } },
+        else: false,
+      },
+      [{ a: 'x' }, { a: 'q' }],
+    ],
+    [
+      'a `then: false` next to an `else`',
+      {
+        type: 'object',
+        properties: { a: { type: 'string' } },
+        if: { properties: { a: { const: 'x' } }, required: ['a'] },
+        then: false,
+        else: { properties: { other: { type: 'number' } } },
+      },
+      [{ a: 'x' }, { a: 'q' }],
+    ],
+    [
+      'a one-sided `if` next to `dependencies` in an `allOf` entry',
+      {
+        type: 'object',
+        allOf: [
+          {
+            title: 'base',
+            properties: { p: { type: 'string' }, q: { type: 'string' }, r: { type: 'string' } },
+            dependencies: { p: { title: 'fromDep', required: ['r'] } },
+            if: { properties: { p: { const: 'x' } }, required: ['p'] },
+            then: { title: 'fromThen', required: ['q'] },
+          },
+        ],
+      },
+      [
+        { p: 'x', q: 'a', r: 'b' },
+        { p: 'y', r: 'b' },
+      ],
+    ],
+    [
+      'more one-sided conditions in an `allOf` than are combined, some of them `else`-only',
+      {
+        type: 'object',
+        allOf: Array.from({ length: 9 }, (_, i) => ({
+          if: { properties: { [`k${i}`]: { const: 'x' } }, required: [`k${i}`] },
+          [i < 5 ? 'then' : 'else']: { properties: { [`v${i}`]: { type: 'string' } } },
+        })),
+      },
+      [{}, { k0: 'x' }, { k5: 'x' }],
+    ],
+    [
+      'more one-sided conditions in an `allOf` than are combined, some of them with an `if` empty data satisfies',
+      {
+        type: 'object',
+        allOf: Array.from({ length: 9 }, (_, i) => ({
+          if:
+            i < 5
+              ? { properties: { [`k${i}`]: { const: 'x' } } }
+              : { properties: { [`k${i}`]: { const: 'x' } }, required: [`k${i}`] },
+          then: { properties: { [`v${i}`]: { type: 'string' } } },
+        })),
+      },
+      [{}, { k0: 'x' }, { k5: 'x' }],
+    ],
+    [
+      'one-sided conditions in an `allOf`, some of them with an `if` empty data satisfies',
+      {
+        type: 'object',
+        allOf: Array.from({ length: 4 }, (_, i) => ({
+          if:
+            i < 2
+              ? { properties: { [`k${i}`]: { const: 'x' } } }
+              : { properties: { [`k${i}`]: { const: 'x' } }, required: [`k${i}`] },
+          then: { properties: { [`v${i}`]: { type: 'string' } } },
+        })),
+      },
+      [{}, { k0: 'q' }, { k2: 'x' }],
+    ],
+    [
+      'more one-sided conditions in its `dependencies` than are combined',
+      {
+        type: 'object',
+        properties: Object.fromEntries(Array.from({ length: 9 }, (_, i) => [`k${i}`, { type: 'string' }])),
+        dependencies: Object.fromEntries(
+          Array.from({ length: 9 }, (_, i) => [
+            `k${i}`,
+            {
+              if: { properties: { [`k${i}`]: { const: 'x' } }, required: [`k${i}`] },
+              then: { properties: { [`v${i}`]: { type: 'string' } } },
+            },
+          ]),
+        ),
+      },
+      [{}, { k0: 'x' }, { k3: 'x' }, { k8: 'q' }],
+    ],
+    [
+      'more schema dependencies holding a condition than are combined',
+      {
+        type: 'object',
+        properties: Object.fromEntries(Array.from({ length: 8 }, (_, i) => [`k${i}`, { type: 'string' }])),
+        dependencies: Object.fromEntries(
+          Array.from({ length: 8 }, (_, i) => [
+            `k${i}`,
+            {
+              properties: { [`p${i}`]: { type: 'string' } },
+              if: { properties: { [`k${i}`]: { const: 'x' } }, required: [`k${i}`] },
+              then: { properties: { [`v${i}`]: { type: 'string' } } },
+            },
+          ]),
+        ),
+      },
+      [{}, { k0: 'q' }, { k0: 'x' }],
+    ],
+  ])('an option with %s', (_, option, formDatas) => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      oneOf: [option, { type: 'object', properties: { z: { type: 'number' } }, required: ['z'] }],
+    };
+    it.each(formDatas.map((formData) => [formData]))(
+      'has a compiled validator for the form it retrieves for %s',
+      (formData) => {
+        const validator = buildPrecompiledValidator(schema);
+        const schemaUtils = createSchemaUtils({ validator }, schema);
+        const retrieved = schemaUtils.retrieveSchema(option, formData);
+        expect(() => validator.isValid(getValidationTarget(retrieved, schema), formData, schema)).not.toThrow();
+      },
+    );
+  });
   describe('a retrieved option validated by its place in the root', () => {
     /** The options carry an `$id`, which is what a validator keys the function it compiles by, so a retrieved option
      * validated under it would be answered by the function compiled for the option as declared
