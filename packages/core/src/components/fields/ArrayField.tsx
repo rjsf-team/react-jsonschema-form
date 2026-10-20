@@ -50,6 +50,7 @@ import {
   getWidgetLabelProps,
   storedValue,
   withFallbackItems,
+  withGlobalUiOptions,
 } from './fieldWidgetUtils.ts';
 import OwnTitleAndDescription from './OwnTitleAndDescription.tsx';
 
@@ -183,7 +184,7 @@ function getNewFormDataRow<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(registry: Registry<T[], S, F>, schema: S, index: number, uiSchema?: UiSchema<T[], S, F>): T {
-  const { schemaUtils, globalFormOptions, uiSchemaDefinitions } = registry;
+  const { schemaUtils, globalFormOptions, globalUiOptions, uiSchemaDefinitions } = registry;
   let itemSchema = schema.items as S;
   // Cast this (and the uiSchema below) as T/T[] to work around schema utils being for T/T[] caused by the
   // FieldProps<T[], S, F> call on the class
@@ -204,7 +205,7 @@ function getNewFormDataRow<
     undefined,
     false,
     undefined,
-    itemUiSchema,
+    withGlobalUiOptions<T[], S, F>(itemUiSchema, globalUiOptions),
     uiSchemaDefinitions,
   ) as unknown as T;
 }

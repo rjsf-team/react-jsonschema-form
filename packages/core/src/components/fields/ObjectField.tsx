@@ -54,6 +54,7 @@ import {
   getContainerHeading,
   isAdditionalPropertySchema,
   storedValue,
+  withGlobalUiOptions,
 } from './fieldWidgetUtils.ts';
 
 /** Returns a flag indicating whether the `name` field is required in the object schema
@@ -635,7 +636,7 @@ export default function ObjectField<
         resolvedKeySchema.default as T,
         undefined,
         undefined,
-        keyUiSchema,
+        withGlobalUiOptions<T, S, F>(keyUiSchema, globalUiOptions),
         uiSchemaDefinitions,
       ) as RJSFSchema['default'];
       const newValue = resolvedKeySchema.const !== undefined ? resolvedKeySchema.const : defaultValue;
@@ -644,7 +645,7 @@ export default function ObjectField<
       }
       return firstOption ? firstOption.value : getDefaultValue<T, S, F>(translateString, type);
     },
-    [rootSchema, schemaForKey, schemaUtils, translateString, uiSchemaForKey, uiSchemaDefinitions],
+    [rootSchema, schemaForKey, schemaUtils, translateString, uiSchemaForKey, uiSchemaDefinitions, globalUiOptions],
   );
 
   /** Handles the adding of a new additional property on the given `schema`. Calls the `onChange` callback once the new

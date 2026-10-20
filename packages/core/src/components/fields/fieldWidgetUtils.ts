@@ -7,6 +7,7 @@ import type {
   FieldProps,
   FieldTemplateProps,
   FormContextType,
+  GlobalUISchemaOptions,
   Registry,
   RJSFMarkedSchema,
   RJSFSchema,
@@ -25,6 +26,7 @@ import {
   isFixedItems,
   ITEMS_KEY,
   resolveDefaultWidget,
+  UI_GLOBAL_OPTIONS_KEY,
   uiBooleanOption,
 } from '@rjsf/utils';
 
@@ -308,6 +310,27 @@ export function storedValue(value: unknown, fieldPath: FieldPath, isAdditionalPr
     return null;
   }
   return isAdditionalProperty ? '' : undefined;
+}
+
+/** `uiSchema` with the form's global UI options, for a `getDefaultFormState()` call on part of the schema, which reads
+ * them off the uiSchema it is handed: a field's own entry does not carry the root's. They say where the Optional Data
+ * Controls show an optional object without its fields, whose `null` fills the defaults leave out, so data a control adds
+ * leaves such an object out as the data the form mounts with does
+ *
+ * @param uiSchema - The uiSchema of the part of the schema
+ * @param globalUiOptions - The form's global UI options, from the `registry`
+ * @returns - The uiSchema to compute the defaults with
+ */
+export function withGlobalUiOptions<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  uiSchema: UiSchema<T, S, F> | undefined,
+  globalUiOptions: GlobalUISchemaOptions | undefined,
+): UiSchema<T, S, F> | undefined {
+  if (!globalUiOptions) {
+    return uiSchema;
+  }
+  return uiSchema
+    ? { ...uiSchema, [UI_GLOBAL_OPTIONS_KEY]: globalUiOptions }
+    : { [UI_GLOBAL_OPTIONS_KEY]: globalUiOptions };
 }
 
 /** Gets the heading an object or array draws itself. Under its plan: none where the plan gives its label to someone

@@ -1,4 +1,4 @@
-import type { DefaultFormStateBehavior, RJSFSchema } from '@rjsf/utils';
+import type { DefaultFormStateBehavior, RJSFSchema, UiSchema } from '@rjsf/utils';
 import { act } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
@@ -148,6 +148,59 @@ describe('NullField', () => {
 
       expect(onError).not.toHaveBeenCalled();
       expectToHaveBeenCalledWithFormData(onSubmit, {}, true);
+    });
+  });
+
+  describe('in data a control adds, an optional object the Optional Data Controls show collapsed', () => {
+    const uiSchema: UiSchema = { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] } };
+    // Holds a `null` schema, which would have the object filled in, and shown with its fields, were it not collapsed
+    const holder: RJSFSchema = {
+      type: 'object',
+      properties: { opt: { type: 'object', properties: { n: { type: 'null' } } } },
+    };
+
+    it('is left out of an item the add button adds, as it is of an item the form mounts with', async () => {
+      const { node, getFormData } = createFormComponent({
+        schema: { type: 'array', items: holder },
+        uiSchema,
+        initialFormData: [{}],
+      });
+
+      await user.click(elementOf(node, '.rjsf-array-item-add button'));
+
+      expect(getFormData()).toEqual([{}, {}]);
+      expect(node.querySelector('#root_1_opt__optionalAdd')).toBeInTheDocument();
+    });
+
+    it('is left out of an additional property the add button adds', async () => {
+      const { node, getFormData } = createFormComponent({
+        schema: { type: 'object', additionalProperties: holder },
+        uiSchema,
+        initialFormData: {},
+      });
+
+      await user.click(elementOf(node, '.rjsf-object-property-expand button'));
+
+      expect(getFormData()).toEqual({ newKey: {} });
+    });
+
+    it('is left out of an optional object its own control adds', async () => {
+      // A default of its own, so the object the control adds has a value to show it by; the form leaves it out of the
+      // object until then
+      const outer: RJSFSchema = {
+        ...holder,
+        properties: { ...holder.properties, s: { type: 'string', default: 'x' } },
+      };
+      const { node, getFormData } = createFormComponent({
+        schema: { type: 'object', properties: { outer } },
+        uiSchema,
+        defaultFormStateBehavior: { emptyObjectFields: 'populateRequiredDefaults' },
+      });
+
+      await user.click(elementOf(node, '#root_outer__optionalAdd'));
+
+      expect(getFormData()).toEqual({ outer: { s: 'x' } });
+      expect(node.querySelector('#root_outer_opt__optionalAdd')).toBeInTheDocument();
     });
   });
 
