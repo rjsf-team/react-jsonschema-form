@@ -8615,6 +8615,28 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           };
           expect(collapsedDefaultsOf(schema)).toEqual({ req: { n: null } });
         });
+
+        it('is left out when the `ui:definitions` entry of the definition it references asks for the controls', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            definitions: { Opt: { type: 'object', properties: { n: { type: 'null' } } } },
+            properties: { opt: { $ref: '#/definitions/Opt' } },
+          };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator, defaultFormStateBehavior: { emptyObjectFields } },
+              {
+                schema,
+                rootSchema: schema,
+                uiSchema: {
+                  'ui:definitions': {
+                    '#/definitions/Opt': { 'ui:options': { enableOptionalDataFieldForType: ['object'] } },
+                  },
+                },
+              },
+            ),
+          ).toEqual({});
+        });
       },
     );
 

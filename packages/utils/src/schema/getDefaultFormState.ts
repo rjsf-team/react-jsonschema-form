@@ -863,7 +863,9 @@ export function getObjectDefaults<
         const propertyFormData = getByPath<T>(formData, key);
         const isPropertyRequired = retrievedSchema.required?.includes(key);
         // An optional object the Optional Data Controls render while it has no value renders none of its fields, so
-        // the `null` of none of them is filled in until the user adds it
+        // the `null` of none of them is filled in until the user adds it. Asked of the uiSchema the field renders with,
+        // the `ui:definitions` entry of a definition the property references merged in, as `computeDefaults()` merges
+        // it for the property's own node
         const isCollapsed =
           nullFills !== undefined &&
           !nullFills.isCollapsed &&
@@ -872,7 +874,9 @@ export function getObjectDefaults<
           holdsNullType(rootSchema) &&
           isOptionalDataControlsType<T, S, F>(
             () => retrieveSchema<T, S, F>(context, propertySchema, rootSchema, undefined),
-            propertyUiSchema,
+            uiSchemaDefinitions
+              ? resolveUiSchema<T, S, F>(propertySchema, propertyUiSchema, { rootSchema, uiSchemaDefinitions })
+              : propertyUiSchema,
             nullFills.globalUiOptions,
           );
         const computedDefault = computeDefaults<T, S, F>(context, propertySchema, {
