@@ -1,6 +1,12 @@
 import { createSchemaUtils } from '../../src/index.ts';
 import type { RJSFSchema } from '../../src/index.ts';
-import { retrieveSchemaInternal, withDependentProperties } from '../../src/schema/retrieveSchema.ts';
+import parseSchemaGraph from '../../src/schema/graph/parseSchemaGraph.ts';
+import {
+  resolveMergedOwnRef,
+  resolveOwnRef,
+  retrieveSchemaInternal,
+  withDependentProperties,
+} from '../../src/schema/retrieveSchema.ts';
 import { miniValidator } from './graph/miniValidator.ts';
 
 describe('the branch resolution schemaParser() enumerates with', () => {
@@ -59,5 +65,15 @@ describe('the option retrieveSchema() merges beside dependencies', () => {
     };
     expect(propertyKeys('pa')).toEqual(['k', 'one', 'd']);
     expect(propertyKeys('pb')).toEqual(['k', 'two', 'd']);
+  });
+});
+
+describe('resolveMergedOwnRef()', () => {
+  it('resolves a $ref none of the seeds declares as resolveOwnRef() resolves it', () => {
+    const rootSchema: RJSFSchema = { definitions: { a: { type: 'string', title: 'A' } } };
+    const schema: RJSFSchema = { $ref: '#/definitions/a', description: 'D' };
+    const resolved = resolveMergedOwnRef(parseSchemaGraph(rootSchema), [], schema);
+    expect(resolved).toBe(resolveOwnRef(schema, rootSchema));
+    expect(resolved).toMatchObject({ type: 'string', title: 'A', description: 'D' });
   });
 });

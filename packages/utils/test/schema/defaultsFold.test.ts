@@ -1120,6 +1120,42 @@ describe('getDefaultFormState() reading $ref, branches and extra keys as the for
       o: { c: 'opt' },
     });
   });
+
+  describe('a subschema keywords beside a $ref declare again, merged with the one a resource of its own declares', () => {
+    // The resource's `#/$defs/s` names its own definition, which the root names nothing by, or another one by `homonym`
+    const rootOf = (property: RJSFSchema, s: RJSFSchema, resource: RJSFSchema, homonym?: RJSFSchema): RJSFSchema => ({
+      $schema: draft2020,
+      $id: 'https://example.com/root.json',
+      $defs: { ...(homonym === undefined ? {} : { s: homonym }), res: { $id: 'res.json', $defs: { s }, ...resource } },
+      type: 'object',
+      properties: { p: property },
+    });
+    const select: RJSFSchema = { type: 'string', default: 'r', enum: ['r', 'q'] };
+    const list: RJSFSchema = { type: 'array', items: { $ref: '#/$defs/s' } };
+    it("reads a property's $ref in the resource", () => {
+      const schema = rootOf(
+        { $ref: 'res.json', properties: { k: { title: 'K' } } },
+        { const: 'c' },
+        { type: 'object', properties: { k: { $ref: '#/$defs/s' } } },
+      );
+      expect(defaultsOf(schema, undefined, { emptyObjectFields: 'skipEmptyDefaults' })).toEqual({ p: { k: 'c' } });
+    });
+    it.each<[string, RJSFSchema, unknown]>([
+      ['filled up to minItems', { minItems: 1 }, { p: ['r'] }],
+      ['a multi-select, left unfilled', { minItems: 1, uniqueItems: true }, {}],
+    ])("reads the items' $ref in the resource for an array %s", (_, beside, defaults) => {
+      expect(defaultsOf(rootOf({ $ref: 'res.json', items: { title: 'I' }, ...beside }, select, list))).toEqual(
+        defaults,
+      );
+    });
+    it("reads the items' $ref in the resource rather than the root's definition of the same name", () => {
+      const schema = rootOf({ $ref: 'res.json', items: { title: 'I' }, minItems: 1, uniqueItems: true }, select, list, {
+        type: 'string',
+        default: 'root',
+      });
+      expect(defaultsOf(schema)).toEqual({});
+    });
+  });
 });
 
 describe('getDefaultFormState() termination and cost', { timeout: 30_000 }, () => {

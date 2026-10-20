@@ -310,8 +310,9 @@ export function dependencyOption<S extends StrictRJSFSchema, F extends FormConte
   return getFirstMatchingOption({ validator }, data, resolved, graph.rawRoot, discriminator);
 }
 
-/** The schemas `resolveOwnRef()` made, by graph, `customMergeAllOf` and the schema holding the reference, and those
- * `resolveNodeOwnRef()` made, by graph, `customMergeAllOf` and node
+/** The schemas `resolveOwnRef()` made, by graph, `customMergeAllOf` and the schema holding the reference, those
+ * `resolveNodeOwnRef()` made, by graph, `customMergeAllOf` and node, and those `resolveMergedOwnRef()` made, by graph,
+ * `customMergeAllOf`, the node declaring the reference and the schema holding it
  */
 const ownRefs = new KeyedMemo<object>();
 
@@ -368,17 +369,61 @@ export function ownRefResolves<S extends StrictRJSFSchema = RJSFSchema>(schema: 
   return declared.kind === 'schema' && declared.ref !== undefined && graph.node(declared.ref).kind !== 'invalid';
 }
 
+/** Returns the own `$ref` of `schema`, a schema merged from the subschemas `seeds` seed, resolved as `resolveOwnRef()`
+ * resolves it, from the seed declaring it. The merge is an object no graph holds, which `resolveOwnRef()` would read as
+ * a call root, its `$ref` resolved against the root, where one written in a resource of its own resolves against that
+ * resource. A `$ref` none of the seeds declares is resolved as `resolveOwnRef()` resolves it.
+ *
+ * @param graph - The graph holding the seeds
+ * @param seeds - The seeds of the field `schema` is the merged schema of
+ * @param schema - The merged schema whose own `$ref` is to be resolved
+ * @param [customMergeAllOf] - The merge of the context the form renders with, if it has one
+ * @returns - The schema with its own reference resolved, or the schema itself when it holds none
+ * @throws - An error for a reference that resolves to nothing or a chain of references that loops
+ */
+export function resolveMergedOwnRef<S extends StrictRJSFSchema = RJSFSchema>(
+  graph: SchemaGraph<S>,
+  seeds: readonly Seed[],
+  schema: S,
+  customMergeAllOf?: CustomMergeAllOf<S>,
+): S {
+  const ref = schema[REF_KEY];
+  if (typeof ref !== 'string') {
+    return schema;
+  }
+  const declaring = declaringSeed(graph, seeds, ref);
+  if (declaring === undefined) {
+    return resolveOwnRef<S>(schema, graph.rawRoot, customMergeAllOf);
+  }
+  const keys = [graph, customMergeAllOf, declaring.node, schema];
+  const known = ownRefs.peek(keys);
+  if (isSchemaObject<S>(known)) {
+    return known;
+  }
+  const resolved = ownRefResolved(graph, declaring.node, schema, ref, customMergeAllOf);
+  ownRefs.set(keys, resolved);
+  return resolved;
+}
+
+/** The seed declaring `ref`, the own `$ref` of a schema merged from several declarations */
+function declaringSeed<S extends StrictRJSFSchema>(
+  graph: SchemaGraph<S>,
+  seeds: readonly Seed[],
+  ref: string,
+): Seed | undefined {
+  return seeds.find(({ node }) => {
+    const seed = graph.node(node);
+    return seed.kind === 'schema' && seed.raw[REF_KEY] === ref;
+  });
+}
+
 /** Returns the node the own `$ref` of `schema` is read from: a stub merged from several declarations names the `$ref`
  * of one of them, which is read from that one's node
  */
 function ownRefNode<S extends StrictRJSFSchema>(rootGraph: SchemaGraph<S>, schema: S, ref: string): AdoptedSchema<S> {
   const { graph, seeds } = fieldOf<S>(rootGraph, schema);
-  const declaring = seeds.find(({ node }) => {
-    const seed = graph.node(node);
-    return seed.kind === 'schema' && seed.raw[REF_KEY] === ref;
-  });
   /* v8 ignore next -- a schema no seed declares the `$ref` of is adopted as a node of its own, which declares it */
-  return { graph, node: (declaring ?? seeds[0]).node };
+  return { graph, node: (declaringSeed(graph, seeds, ref) ?? seeds[0]).node };
 }
 
 /** Returns the own `$ref` of the node `node` resolved, as `resolveOwnRef()` resolves a schema's, from the node itself
