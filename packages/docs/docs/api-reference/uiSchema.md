@@ -182,10 +182,10 @@ It draws the label, description and help the named field's [plan](form-props.md#
 
 By default, any field that is rendered for an `anyOf`/`oneOf` schema will be wrapped inside the `AnyOfField` or `OneOfField` component.
 This default behavior may be undesirable if your custom field already handles behavior related to choosing one or more subschemas contained in the `anyOf`/`oneOf` schema.
-By providing a `true` value for this flag in association with a custom `ui:field`, or a field named by the schema's `$id`, the wrapped components will be omitted, so just one instance of the custom field will be rendered.
+By providing a `true` value for this flag in association with a custom `ui:field`, or a field named by `ui:globalOptions.field` or by the schema's `$id`, the wrapped components will be omitted, so just one instance of the custom field will be rendered.
 If the flag is omitted or set to `false`, your custom field is rendered beside the `AnyOfField`/`OneOfField`, whose selected option renders the default field for its schema rather than the custom one again.
 
-The flag needs a `ui:field`, or a `$id`, that resolves to a field.
+The flag needs a `ui:field`, a `ui:globalOptions.field` or a `$id` that resolves to a field.
 A name no field is registered under names nothing for the `anyOf`/`oneOf` to give way to, so the options are rendered as though the flag were absent: dropping them would leave an object union with no way to reach the `properties` of any option while the validator still required them.
 A `ui:field` naming `SchemaField` names no custom field, so the options are rendered as without one, and a `ui:field` naming `FallbackField` does not take them away either, whatever [`useFallbackUiForUnsupportedType`](./form-props.md#usefallbackuiforunsupportedtype) says.
 With that prop on, the [fallback UI](../json-schema/single.md#multiple-types) renders the options itself, against the schema whose type its selector has pinned.
