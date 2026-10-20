@@ -178,7 +178,10 @@ export interface AnnouncedMove {
    * field put in its place, is not the change the move describes, so it moves nothing
    */
   value: unknown;
-  newKeyOf: KeyMove;
+  /** Where each key went. A change that moves no key, such as a property's removal, leaves it out: it is announced only
+   * so the field learns what became of it
+   */
+  newKeyOf?: KeyMove;
   /** Where the fields' own errors under each key went, when not where the validator's did: an option switch drops
    * what was raised under a key the new option declares too, since another widget renders for it, while the
    * validator's errors there describe a constraint the new option may well share

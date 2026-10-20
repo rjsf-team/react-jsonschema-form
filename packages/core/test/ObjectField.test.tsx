@@ -1536,6 +1536,40 @@ describe('ObjectField', () => {
       ]);
     });
 
+    it('should render a property added again after its removal last when a parent field stores the removal later', async () => {
+      // Passes every change on a microtask later, as a parent field that debounces `onChange` does, so the form still
+      // holds the removed property when the removal is sent
+      function DeferringField(props: FieldProps<GenericObjectType>) {
+        const { ObjectField: ObjectFieldComponent } = props.registry.fields;
+        return (
+          <ObjectFieldComponent
+            {...props}
+            onChange={(value, fieldPath, errorSchema, id) =>
+              queueMicrotask(() => props.onChange(value, fieldPath, errorSchema, id))
+            }
+          />
+        );
+      }
+      const ref = createFormRef<GenericObjectType>();
+      const { node } = createFormComponent({
+        ref,
+        schema: { type: 'object', additionalProperties: { type: 'string' } },
+        uiSchema: { 'ui:field': DeferringField },
+      });
+      const addButton = () => elementOf(node, '.rjsf-object-property-expand button');
+      await user.click(addButton());
+      await user.click(addButton());
+
+      await user.click(node.querySelectorAll('.rjsf-object-property-remove')[0]);
+      await user.click(addButton());
+
+      expect(Object.keys(handleOf(ref).getFormData() ?? {})).toEqual(['newKey-1', 'newKey']);
+      expect([...node.querySelectorAll('input[id$="-key"]')].map((keyField) => keyField.id)).toEqual([
+        'root_newKey-1-key',
+        'root_newKey-key',
+      ]);
+    });
+
     it('should seed from the uiSchema entry of a declared name a property is renamed onto', async () => {
       // The field the declared name brings up reads `uiSchema.count`, so seeding through `uiSchema.additionalProperties`
       // would hand that number field the `ui:initialValue` written for the string the other keys hold

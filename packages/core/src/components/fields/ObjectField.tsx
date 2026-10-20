@@ -47,7 +47,7 @@ import {
 import useReadFieldData from '../../hooks/useReadFieldData.ts';
 import useSendMove from '../../hooks/useSendMove.ts';
 import useWarnIfFormDataNotPassedThrough from '../../hooks/useWarnIfFormDataNotPassedThrough.ts';
-import { ADDITIONAL_PROPERTY_KEY_REMOVE, EMPTY_UI_SCHEMA } from '../constants.ts';
+import { additionalPropertyRemoval, EMPTY_UI_SCHEMA } from '../constants.ts';
 import RichDescription from '../RichDescription.tsx';
 import { getContainerHeading, isAdditionalPropertySchema, storedValue } from './fieldWidgetUtils.ts';
 
@@ -754,15 +754,18 @@ export default function ObjectField<
    */
   const handleRemoveProperty = useCallback(
     (key: string) => {
-      onChange(ADDITIONAL_PROPERTY_KEY_REMOVE as T, toFieldPath(key, fieldPath));
-      // Read off the data the removal left, so a removal `transformChange` refused leaves the property in its place
-      const data = readData();
-      if (!isObject(data) || !Object.hasOwn(data, key)) {
+      const removedPath = toFieldPath(key, fieldPath);
+      const removal = additionalPropertyRemoval<T>();
+      // Announced, though it moves no key, for what became of it: a removal `transformChange` refused, or a rewrite
+      // that kept the property, leaves the property in its place. One no form answered as it was sent, as outside a
+      // `Form` or under a parent field that stores it later, is the field's own to make, so the property leaves the order
+      const outcome = sendMove({ fieldPath: removedPath, value: removal }, () => onChange(removal, removedPath));
+      if (outcome?.kind !== 'refused' && (outcome?.kind !== 'rewritten' || outcome.kept === undefined)) {
         setAdditionalPropertyOrder((order) => order.filter((property) => property !== key));
       }
       forgetChangedSeeds(key);
     },
-    [onChange, fieldPath, forgetChangedSeeds, readData],
+    [sendMove, onChange, fieldPath, forgetChangedSeeds],
   );
 
   /** Returns the stable React key for a property. For the most recently renamed
