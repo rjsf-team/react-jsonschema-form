@@ -232,19 +232,22 @@ export function fieldOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, schem
 
 /** The node of the option `option` a plan's merged `keyword` list holds at `index`: the one a chain providing the list
  * holds there, which is the one parsed under the base of the resource that provider is in, since one object reached in
- * two resources is a node in each
+ * two resources is a node in each. An option no node holds, such as one of the cross product a merge makes of two
+ * lists, is adopted, so that it is still handed out as an option of the field offering it, keeping the field's guard
+ * chain: handed out as a schema of its own, a recursion through it would start afresh at every level.
  */
 function optionNode<S extends StrictRJSFSchema>(
   plan: MergePlan<S>,
   keyword: string,
   index: number,
   option: S,
-): NodeId | undefined {
+): AdoptedSchema<S> {
   const provided = seedsAt(plan, keyword, String(index)).find((seed) => {
     const node = plan.graph.node(seed.node);
     return node.kind === 'schema' && node.raw === option;
   });
-  return provided?.node ?? plan.graph.byObject(option);
+  const node = provided?.node ?? plan.graph.byObject(option);
+  return node === undefined ? plan.graph.adopt(option) : { graph: plan.graph, node };
 }
 
 /** The policy views are planned with: every `allOf` is merged, and an option only where the schema offering it has
@@ -525,16 +528,19 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
         merged,
         keyword,
         options.map((option, index) => {
-          const node =
-            isSchemaObject<S>(option) && !isDecided(option) ? optionNode(plan, keyword, index, option) : undefined;
-          if (node === undefined) {
+          if (!isSchemaObject<S>(option) || isDecided(option)) {
             return option;
           }
-          const provenance = childProvenance(field, {
-            seeds: [{ node, refPath: [] }],
-            chain: optionChain,
-            optionOf: { setKey: plan.setKey, set: plan.set },
-          });
+          const adopted = optionNode(plan, keyword, index, option);
+          const provenance = childProvenance(
+            field,
+            {
+              seeds: [{ node: adopted.node, refPath: [] }],
+              chain: optionChain,
+              optionOf: { setKey: plan.setKey, set: plan.set },
+            },
+            adopted.graph,
+          );
           return resolveOptions
             ? buildView(context, root, provenance, data, false)
             : stubOf(graph.rawRoot, option, provenance);
@@ -547,8 +553,9 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
     stubsExtraKeys ? stubExistingAdditionalProperties<unknown, S, F>(context, merged, graph.rawRoot, data) : merged,
     field,
   );
+  const resolvedOptions = resolveOptions && OPTION_KEYWORDS.some((keyword) => Array.isArray(merged[keyword]));
   // A view whose own plan read the data, or whose options or extra keys were resolved for it, holds for that data alone
-  if (!plan.readsData && !resolveOptions && !stubsExtraKeys) {
+  if (!plan.readsData && !resolvedOptions && !stubsExtraKeys) {
     views.set(viewKey, { view, holds });
   }
   return view;
