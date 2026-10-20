@@ -279,6 +279,16 @@ export function schemaOfBoolean<S extends StrictRJSFSchema>(value: boolean, temp
   return schemaFrom(template, value ? {} : { not: {} });
 }
 
+const EMPTY_SCHEMA: StrictRJSFSchema = Object.freeze({});
+
+/** The empty schema a field renders a boolean option as, one object for every call, so that the memos keyed on a
+ * schema reuse what they hold for it rather than parsing and matching a new one each time
+ */
+export function emptySchema<S extends StrictRJSFSchema>(): S;
+export function emptySchema(): StrictRJSFSchema {
+  return EMPTY_SCHEMA;
+}
+
 /** The schema a boolean node reads as, as `schemaOfBoolean()` reads its value; any other node reads as `{}` */
 export function booleanSchema<S extends StrictRJSFSchema>(node: SchemaNode<S>, template: S): S {
   return schemaOfBoolean(node.kind !== 'boolean' || node.value, template);

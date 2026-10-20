@@ -23,7 +23,7 @@ import type {
   StrictRJSFSchema,
 } from '../types.ts';
 import { closestOption } from './getClosestMatchingOption.ts';
-import { mergeAllOf, schemaFrom, schemaOfBoolean } from './graph/mergePlan.ts';
+import { emptySchema, mergeAllOf, schemaFrom, schemaOfBoolean } from './graph/mergePlan.ts';
 import resolveConstantOptions from './resolveConstantOptions.ts';
 import retrieveSchema, { conditionHolds, resolveOwnRef } from './retrieveSchema.ts';
 
@@ -44,16 +44,6 @@ export function isValueEmpty(value: unknown): boolean {
     return Object.values(value).every(isValueEmpty);
   }
   return false;
-}
-
-const EMPTY_SCHEMA: StrictRJSFSchema = Object.freeze({});
-
-/** The empty schema a field renders a boolean option as, one object for every call, so that retrieving it reuses the
- * memos keyed on the schema rather than parsing a new one each time
- */
-function emptySchema<S extends StrictRJSFSchema>(): S;
-function emptySchema(): StrictRJSFSchema {
-  return EMPTY_SCHEMA;
 }
 
 /** The filtered data, in the type of the data it was filtered from */
