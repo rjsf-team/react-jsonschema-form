@@ -777,13 +777,6 @@ function SchemaFieldRender<
     formData,
     getDiscriminatorFieldFromSchema<S>(schema),
   );
-  const fieldSchema = useMemo(
-    () =>
-      xxxOfOptions && selectedOption >= 0 && rendersOwnFieldBesideOption<S>(schema)
-        ? schemaUtils.retrieveSchema(_schema, formData, false, selectedOption)
-        : schema,
-    [xxxOfOptions, selectedOption, schema, schemaUtils, _schema, formData],
-  );
   const hasOptions = xxxOfOptions !== undefined;
   const shownOption = useMemo(
     () => (xxxOfOptions ? { fieldPath, options: xxxOfOptions, list, selectedOption, selectOption } : undefined),
@@ -791,6 +784,16 @@ function SchemaFieldRender<
   );
   // The field below a named one is the field beside the options the `SchemaField` that named it renders
   const fieldShownOption = optionsRenderedAbove ? shownOptionAbove : shownOption;
+  // An object below a named field stubs its extra keys with the option shown beside it there, as one rendering the
+  // options does, so a key the option declares is left to the option rather than rendered twice
+  const optionBeside = fieldShownOption?.selectedOption ?? -1;
+  const fieldSchema = useMemo(
+    () =>
+      optionBeside >= 0 && rendersOwnFieldBesideOption<S>(schema)
+        ? schemaUtils.retrieveSchema(_schema, formData, false, optionBeside)
+        : schema,
+    [optionBeside, schema, schemaUtils, _schema, formData],
+  );
 
   const rendersNamedField = fieldToRender?.rendersNamedField === true;
   // The selected option, and whatever renders this field's data below a field that is not named here, renders as a

@@ -897,6 +897,29 @@ describe('SchemaField', () => {
       expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { b: 3 } }), 'root_b');
     });
 
+    it("leaves the keys an object oneOf's selected option declares to the option below a field wrapping SchemaField", () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        additionalProperties: { type: 'string' },
+        oneOf: [
+          { title: 'A', properties: { a: { type: 'string' } } },
+          { title: 'B', properties: { b: { type: 'string' } } },
+        ],
+      };
+      const formData = { a: 'x', c: 'y' };
+      const { node: unnamedNode } = createFormComponent({ schema, formData });
+      const { node } = createFormComponent({
+        schema,
+        formData,
+        uiSchema: { 'ui:field': 'wrapping' },
+        fields: { wrapping: WrappingField },
+      });
+
+      expect(node.querySelectorAll('input#root_a')).toHaveLength(1);
+      expect(node.querySelectorAll('input#root_c')).toHaveLength(1);
+      expect(node.querySelectorAll('input')).toHaveLength(unnamedNode.querySelectorAll('input').length);
+    });
+
     it.each<[string, RJSFSchema, UiSchema]>([
       [
         "ui:field: 'SchemaField'",
