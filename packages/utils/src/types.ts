@@ -1247,9 +1247,10 @@ export type ArrayFieldItemTemplateProps<
    * customization in some themes
    */
   parentUiSchema?: UiSchema<T, S, F>;
-  /** Whether the item's `FieldTemplate` draws the item's label, as the plan `SchemaField` builds for the item says: the
-   * `displayLabel` that template is handed. A label the item's field or widget draws itself doesn't count. Used to
-   * assist buttons placement
+  /** Whether a label sits above the item's control: one the item's `FieldTemplate` draws, as the plan `SchemaField`
+   * builds for the item says, which is the `displayLabel` that template is handed, or one the item's field or widget
+   * draws itself where its declaration places it `labelPlacement: 'above'`, for which that template is handed
+   * `displayLabel: false`. Used to assist buttons placement
    */
   displayLabel?: boolean;
   /** A boolean flag indicating whether there is a description for the field, used to assist buttons placement */

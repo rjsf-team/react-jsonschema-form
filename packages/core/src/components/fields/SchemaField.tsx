@@ -711,7 +711,7 @@ export function useSchemaFieldPlan<
     : fieldId;
   const plannedAsOptions = fieldToRender?.plannedAsOptions;
   const renderedComponent = fieldToRender?.FieldComponent;
-  const presentation = useSchemaFieldPresentation<T, S, F>({
+  const { presentation, labelPlacement } = useSchemaFieldPresentation<T, S, F>({
     id: fieldId,
     // The parts the field draws itself render under its own id, unless it is planned as the field rendering the options
     componentId: plannedAsOptions ? undefined : fieldComponentId,
@@ -755,6 +755,7 @@ export function useSchemaFieldPlan<
     plannedAsOptions,
     renderedComponent,
     presentation,
+    labelPlacement,
   };
 }
 

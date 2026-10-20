@@ -12,6 +12,7 @@ import type {
   FieldErrorProps,
   FieldHelpProps,
   FieldTemplateProps,
+  ThemePresentation,
   WidgetProps,
 } from '@rjsf/utils';
 import {
@@ -799,8 +800,9 @@ describe('SchemaField', () => {
        */
       function renderItemLabels({
         formData = ['x'],
+        presentation,
         ...props
-      }: Omit<NoValFormProps, 'fields' | 'presentation' | 'templates'>) {
+      }: Omit<NoValFormProps, 'fields' | 'templates'>) {
         const items: (boolean | undefined)[] = [];
         const fields: (boolean | undefined)[] = [];
         function ArrayFieldItemTemplate(templateProps: ArrayFieldItemTemplateProps) {
@@ -823,7 +825,14 @@ describe('SchemaField', () => {
             wrapping: WrappingField,
             declaredWrapping: DeclaredWrappingField,
           },
-          presentation: { fields: { declared: { label: 'template' }, declaredWrapping: { label: 'template' } } },
+          presentation: {
+            ...presentation,
+            fields: {
+              ...presentation?.fields,
+              declared: { label: 'template' },
+              declaredWrapping: { label: 'template' },
+            },
+          },
           templates: { ArrayFieldItemTemplate, FieldTemplate },
         });
         return { items, fields };
@@ -1002,6 +1011,30 @@ describe('SchemaField', () => {
         const labels = renderItemLabels(props);
 
         expect(labels.fields[0]).toBe(displayLabel);
+        expect(labels.items.at(-1)).toBe(displayLabel);
+      });
+
+      // A theme whose widgets draw their own label above the control, its checkbox beside it, as @rjsf/fluentui-rc's do
+      const selfLabelled: ThemePresentation = {
+        default: { label: 'self', labelPlacement: 'above' },
+        widgets: { CheckboxWidget: { labelPlacement: 'beside' } },
+      };
+      it.each<{ named: string; items: RJSFSchema; value: unknown; displayLabel: boolean }>([
+        { named: 'a text input drawing its label above it', items: titled, value: 'x', displayLabel: true },
+        {
+          named: 'a checkbox drawing its label beside it',
+          items: { type: 'boolean', title: 'Flag' },
+          value: true,
+          displayLabel: false,
+        },
+      ])('with $named, as its declaration places the label', ({ items, value, displayLabel }) => {
+        const labels = renderItemLabels({
+          schema: { type: 'array', items },
+          formData: [value],
+          presentation: selfLabelled,
+        });
+
+        expect(labels.fields[0]).toBe(false);
         expect(labels.items.at(-1)).toBe(displayLabel);
       });
     });

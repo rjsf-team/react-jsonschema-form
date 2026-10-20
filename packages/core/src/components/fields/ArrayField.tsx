@@ -669,10 +669,12 @@ function ArrayFieldItemInner<
     autofocus,
     ...getFieldErrorProps<T, S, F>(rawErrors),
   };
-  // The toolbar is laid out by whether the item's template draws the label, which the plan the item's `SchemaField`
-  // builds from these same props says, so the two can't disagree about it however the field is named
-  const { presentation } = useSchemaFieldPlan<T[], S, F>(itemFieldProps);
-  const displayLabel = presentation?.label.by === 'template';
+  // The toolbar is laid out level with the item's control below a label above it: one its template draws, as the plan
+  // the item's `SchemaField` builds from these same props says, so the two can't disagree about it however the field is
+  // named, or one its field or widget draws itself where its declaration places that label above the control
+  const { presentation, labelPlacement } = useSchemaFieldPlan<T[], S, F>(itemFieldProps);
+  const labelBy = presentation?.label.by;
+  const displayLabel = labelBy === 'template' || (labelBy === 'self' && labelPlacement === 'above');
   const { description } = getUiOptions(itemUiSchema);
   const hasDescription = !!description || !!itemSchema.description;
   const { orderable, removable, copyable } = itemButtonOptions(uiOptions);
