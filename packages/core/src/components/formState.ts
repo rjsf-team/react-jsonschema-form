@@ -633,16 +633,13 @@ function writtenView(written: unknown, own: unknown, view: unknown, settled: unk
     let isUnchanged = true;
     const settledItems: unknown[] = Array.isArray(settled) ? settled : [];
     const items = Array.from(view, (item, index) => {
+      // Whether the item changed is the walk's own answer, so its subtree is compared once
+      const [itemView, isItemUnchanged] = writtenView(written[index], own[index], item, item);
       const settledItem = settledItems[index];
-      if (
-        !deepEquals(written[index], own[index]) &&
-        settledItem !== undefined &&
-        deepEquals(written[index], settledItem)
-      ) {
+      if (!isItemUnchanged && settledItem !== undefined && deepEquals(written[index], settledItem)) {
         isUnchanged = false;
         return settledItem;
       }
-      const [itemView, isItemUnchanged] = writtenView(written[index], own[index], item, item);
       isUnchanged &&= isItemUnchanged;
       return itemView;
     });
