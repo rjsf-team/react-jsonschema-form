@@ -356,12 +356,8 @@ export function conditionHolds<S extends StrictRJSFSchema = RJSFSchema, F extend
 function ownRefNode<S extends StrictRJSFSchema>(rootGraph: SchemaGraph<S>, schema: S, ref: string) {
   const { graph, seeds } = fieldOf<S>(rootGraph, schema);
   // A stub merged from several declarations names the `$ref` of one of them, which is resolved from that one's node
-  const declaring = seeds.find(({ node }) => {
-    const seed = graph.node(node);
-    return seed.kind === 'schema' && seed.raw[REF_KEY] === ref;
-  });
   /* v8 ignore next -- a schema no seed declares the `$ref` of is adopted as a node of its own, which declares it */
-  return { graph, id: (declaring ?? seeds[0]).node };
+  return { graph, id: (declaringSeed(graph, seeds, ref) ?? seeds[0]).node };
 }
 
 /** A schema's own `$ref` resolved, as `resolveOwnRef()` returns it, with the subschema the reference names */
@@ -380,7 +376,10 @@ export interface ResolvedOwnRef<S extends StrictRJSFSchema = RJSFSchema> {
  */
 export type OwnRef<S extends StrictRJSFSchema = RJSFSchema> = ResolvedOwnRef<S> | { readonly error: string };
 
-/** The references `findOwnRef()` resolved, by graph, `customMergeAllOf` and the schema holding the reference */
+/** The references `findOwnRef()` resolved, by graph, `customMergeAllOf` and the schema holding the reference, and
+ * those `resolveMergedOwnRef()` resolved, by graph, `customMergeAllOf`, the node declaring the reference and the schema
+ * holding it
+ */
 const ownRefs = new KeyedMemo<ResolvedOwnRef<StrictRJSFSchema>>();
 
 /** Returns a schema's own `$ref` resolved and marked with it, as a schema an option's `$ref` stands for is scored and
@@ -417,6 +416,21 @@ export function findOwnRef<S extends StrictRJSFSchema = RJSFSchema>(
     return { resolved: known.resolved, target: known.target };
   }
   const { graph, id } = ownRefNode<S>(rootGraph, schema, ref);
+  const found = ownRefAt<S>(graph, id, schema, ref, customMergeAllOf);
+  if (!('error' in found)) {
+    ownRefs.set(keys, found);
+  }
+  return found;
+}
+
+/** Returns the own `$ref` `ref` of `schema` resolved from the node `id` declaring it, as `findOwnRef()` answers it */
+function ownRefAt<S extends StrictRJSFSchema>(
+  graph: SchemaGraph<S>,
+  id: NodeId,
+  schema: S,
+  ref: string,
+  customMergeAllOf: CustomMergeAllOf<S> | undefined,
+): OwnRef<S> {
   const node = graph.node(id);
   /* v8 ignore next -- the node declares the `$ref`, so it is a schema node holding the node the `$ref` resolves to */
   const target = node.kind === 'schema' && node.ref !== undefined ? graph.node(node.ref) : undefined;
@@ -431,9 +445,7 @@ export function findOwnRef<S extends StrictRJSFSchema = RJSFSchema>(
     conjunctionOf<S>(graph, id) === undefined
       ? { ...definition, ...siblings, [RJSF_REF_KEY]: ref }
       : { ...conjoinDefinition(schema, siblings, definition, customMergeAllOf), [RJSF_REF_KEY]: ref };
-  const found = { resolved, target: target?.kind === 'schema' ? target.raw : undefined };
-  ownRefs.set(keys, found);
-  return found;
+  return { resolved, target: target?.kind === 'schema' ? target.raw : undefined };
 }
 
 /** Returns a schema's own `$ref` as `findOwnRef()` resolves it, throwing for one it cannot resolve
@@ -449,7 +461,11 @@ export function requireOwnRef<S extends StrictRJSFSchema = RJSFSchema>(
   rootSchema: S,
   customMergeAllOf?: CustomMergeAllOf<S>,
 ): ResolvedOwnRef<S> {
-  const own = findOwnRef<S>(schema, rootSchema, customMergeAllOf);
+  return required<S>(findOwnRef<S>(schema, rootSchema, customMergeAllOf));
+}
+
+/** Returns a resolved own `$ref`, throwing the error of one that cannot be resolved */
+function required<S extends StrictRJSFSchema>(own: OwnRef<S>): ResolvedOwnRef<S> {
   if ('error' in own) {
     throw new Error(own.error);
   }
@@ -481,6 +497,54 @@ export function resolveOwnRef<S extends StrictRJSFSchema = RJSFSchema>(
  */
 export function ownRefResolves<S extends StrictRJSFSchema = RJSFSchema>(schema: S, rootSchema: S): boolean {
   return !('error' in findOwnRef<S>(schema, rootSchema));
+}
+
+/** Returns the own `$ref` of `schema`, a schema merged from the subschemas `seeds` seed, resolved as `resolveOwnRef()`
+ * resolves it, from the seed declaring it. The merge is an object no graph holds, which `resolveOwnRef()` would read as
+ * a call root, its `$ref` resolved against the root, where one written in a resource of its own resolves against that
+ * resource. A `$ref` none of the seeds declares is resolved as `resolveOwnRef()` resolves it.
+ *
+ * @param graph - The graph holding the seeds
+ * @param seeds - The seeds of the field `schema` is the merged schema of
+ * @param schema - The merged schema whose own `$ref` is to be resolved
+ * @param [customMergeAllOf] - The merge of the context the form renders with, if it has one
+ * @returns - The schema with its own reference resolved, or the schema itself when it holds none
+ * @throws - An error for a reference that resolves to nothing or a chain of references that loops
+ */
+export function resolveMergedOwnRef<S extends StrictRJSFSchema = RJSFSchema>(
+  graph: SchemaGraph<S>,
+  seeds: readonly Seed[],
+  schema: S,
+  customMergeAllOf?: CustomMergeAllOf<S>,
+): S {
+  const ref = schema[REF_KEY];
+  if (typeof ref !== 'string') {
+    return schema;
+  }
+  const declaring = declaringSeed(graph, seeds, ref);
+  if (declaring === undefined) {
+    return resolveOwnRef<S>(schema, graph.rawRoot, customMergeAllOf);
+  }
+  const keys = [graph, customMergeAllOf, declaring.node, schema];
+  const known = ownRefs.peek(keys);
+  if (known !== undefined && isSchemaObject<S>(known.resolved)) {
+    return known.resolved;
+  }
+  const found = required<S>(ownRefAt<S>(graph, declaring.node, schema, ref, customMergeAllOf));
+  ownRefs.set(keys, found);
+  return found.resolved;
+}
+
+/** The seed declaring `ref`, the own `$ref` of a schema merged from several declarations */
+function declaringSeed<S extends StrictRJSFSchema>(
+  graph: SchemaGraph<S>,
+  seeds: readonly Seed[],
+  ref: string,
+): Seed | undefined {
+  return seeds.find(({ node }) => {
+    const seed = graph.node(node);
+    return seed.kind === 'schema' && seed.raw[REF_KEY] === ref;
+  });
 }
 
 /** Whether an option's plan adds nothing to the plan of the field offering it, beyond the option's own `$ref` */

@@ -82,6 +82,7 @@ import retrieveSchema, {
   dependencyOption,
   fieldOf,
   isLeafSchema,
+  resolveMergedOwnRef,
   resolveOwnRef,
   stubExistingAdditionalProperties,
 } from './retrieveSchema.ts';
@@ -1153,9 +1154,11 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   });
   for (const key of Object.keys(schema.properties ?? {})) {
     const propertySchema = getPropertySchema<S>(schema, key);
-    // A property written as a `$ref` keeps its `const` and `type` in the definition it names
+    const { seeds, edge } = childSeeds(view, key);
+    // A property written as a `$ref` keeps its `const` and `type` in the definition it names, which is read where the
+    // declaration holding that `$ref` sits, since a property declared twice is merged into one no graph holds
     const readProperty = isSchemaObject<S>(propertySchema)
-      ? resolveOwnRef<S>(propertySchema, rootSchema, context.customMergeAllOf)
+      ? resolveMergedOwnRef<S>(view.graph, seeds, propertySchema, context.customMergeAllOf)
       : propertySchema;
     // Check if the parent schema has a const property defined AND we are supporting const as defaults, then we
     // should always return the computedDefault since it's coming from the const.
@@ -1169,7 +1172,6 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     // property, rather than a dynamically-named entry.
     const addedByAdditionalProperty =
       isObject(propertySchema) && Boolean(Reflect.get(propertySchema, ADDITIONAL_PROPERTY_FLAG));
-    const { seeds, edge } = childSeeds(view, key);
     // Compute the defaults for this node, with the parent defaults we might have from a previous run: defaults[key].
     const computedDefault = foldChild<T, S, F>(
       context,
@@ -1260,16 +1262,19 @@ function getItemUiSchemaForIndex<
   return getStaticItemsUiSchema<T, S, F>(uiSchema, idx);
 }
 
-/** Returns the array schema `schema` with an `items` written as a `$ref` read as the definition it names, which is
- * what a `computeSkipPopulate()` reading the items' keywords expects to be handed
+/** Returns the schema of the array field `view` with an `items` written as a `$ref` read as the definition it names,
+ * where the declaration holding that `$ref` sits, which is what a `computeSkipPopulate()` reading the items' keywords
+ * expects to be handed
  */
 function withItemsResolved<S extends StrictRJSFSchema>(
-  schema: S,
-  rootSchema: S,
+  view: DefaultsView<S>,
   customMergeAllOf: CustomMergeAllOf<S> | undefined,
 ): S {
+  const { schema } = view;
   const { items } = schema;
-  const resolved = isSchemaObject<S>(items) ? resolveOwnRef<S>(items, rootSchema, customMergeAllOf) : items;
+  const resolved = isSchemaObject<S>(items)
+    ? resolveMergedOwnRef<S>(view.graph, seedsAt(view, 'items'), items, customMergeAllOf)
+    : items;
   return resolved === items ? schema : { ...schema, items: resolved };
 }
 
@@ -1377,10 +1382,11 @@ function arrayDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>
   }
 
   let arrayDefault: unknown;
+  const withItems = schema.minItems ? withItemsResolved(view, context.customMergeAllOf) : schema;
   if (
     !schema.minItems ||
-    isMultiSelect<T, S, F>(context, schema, rootSchema) ||
-    computeSkipPopulate<S, F>(context, withItemsResolved(schema, rootSchema, context.customMergeAllOf), rootSchema) ||
+    isMultiSelect<T, S, F>(context, withItems, rootSchema) ||
+    computeSkipPopulate<S, F>(context, withItems, rootSchema) ||
     schema.minItems <= defaultsLength
   ) {
     // we don't want undefined defaults unless it is both not required or not required as root
