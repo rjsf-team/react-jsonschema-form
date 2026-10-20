@@ -51,7 +51,8 @@ describe('CheckboxWidget', () => {
       await user.click(screen.getByRole('button', { name: 'Submit' }));
 
       // A required boolean the user has not touched is `false`, which satisfies the schema, so the form's own default
-      // state is submittable: the attribute would have the browser refuse it with nothing on the screen to say why
+      // state is submittable: the attribute would have the browser stop the submit with its own prompt, so neither
+      // `onSubmit` nor `onError` would run
       expect(onError).not.toHaveBeenCalled();
       expect(onSubmit.mock.calls[0]?.[0].formData).toEqual({ agree: false });
     });

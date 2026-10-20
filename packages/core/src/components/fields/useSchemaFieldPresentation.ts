@@ -74,14 +74,17 @@ export interface SchemaFieldPresentationInputs<
   inherited?: FieldPresentation;
 }
 
-/** Whether no option of a field's `anyOf`/`oneOf` renders a control under the field's id for a label's `for` to name:
- * each renders a container, an object or an array, or nothing at all, as a `null` does, so the field's label names its
- * selector alone. An option naming no type renders with the field's, as `getRenderedOptionSchema()` gives it. An option
- * given by a `$ref` isn't resolved here and counts as one that may render a control
+/** Whether the options of a field's `anyOf`/`oneOf` are taken to render no control under the field's id for a label's
+ * `for` to name: each is an object, an array or a `null`, so the field's label names its selector through
+ * `aria-labelledby`. An array counts whatever its widget, since the option's widget isn't resolved here, so a
+ * multi-select or file array's control, which does carry the field's id, is named by the label through
+ * `aria-labelledby` as the selector is. An option naming no type renders with the field's, as
+ * `getRenderedOptionSchema()` gives it. An option given by a `$ref` isn't resolved here and counts as one that may
+ * render a control
  *
  * @param schema - The schema of the field rendering the options
  * @param xxxOfKey - The keyword its options are under
- * @returns - True when no option renders a control
+ * @returns - True when every option is an object, an array or a `null`
  */
 function optionsRenderNoControl<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
@@ -218,8 +221,8 @@ export default function useSchemaFieldPresentation<
     if (xxxOfKey === undefined) {
       return declared;
     }
-    // Options that render no control leave a `for` at the field's id naming nothing, so the label names the selector
-    // through `aria-labelledby` alone
+    // Options taken to render no control would leave a `for` at the field's id naming nothing, so the label names the
+    // selector, and any control an option renders under the field's id, through `aria-labelledby`
     return optionsRenderNoControl<S>(schema, xxxOfKey)
       ? { ...declared, labelledBy: 'aria-labelledby' as const }
       : declared;
