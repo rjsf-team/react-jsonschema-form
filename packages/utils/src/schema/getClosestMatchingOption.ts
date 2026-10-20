@@ -6,7 +6,7 @@ import isObject, { isSchemaObject } from '../isObject.ts';
 import { getByPath } from '../pathUtils.ts';
 import type { FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
 import { optionMatches, optionNodeOf, simpleDiscriminatorMatch } from './getFirstMatchingOption.ts';
-import { resolveOwnRef } from './retrieveSchema.ts';
+import { ownRefTarget, resolveOwnRef } from './retrieveSchema.ts';
 
 /** Returns the score of one property's `formValue` against the `value` schema describing it, as
  * `calculateIndexScore()` adds it up:
@@ -25,17 +25,26 @@ import { resolveOwnRef } from './retrieveSchema.ts';
  * @param rootSchema - The root JSON schema of the entire form
  * @param value - The schema of the property
  * @param formValue - The form data the property holds
+ * @param [counted] - The definitions already scored at the property's level of the data, see `scopeScore()`
  * @returns - The property's score
  */
 function propertyScore<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(context: SchemaContext<S, F>, rootSchema: S, value: S, formValue: unknown): number {
+>(context: SchemaContext<S, F>, rootSchema: S, value: S, formValue: unknown, counted = new Set<object>()): number {
   if (typeof value[REF_KEY] === 'string') {
-    return formValue == null
-      ? 0
-      : propertyScore<T, S, F>(context, rootSchema, resolveOwnRef<S>(value, rootSchema), formValue);
+    if (formValue == null) {
+      return 0;
+    }
+    const target = ownRefTarget<S>(value, rootSchema);
+    return propertyScore<T, S, F>(
+      context,
+      rootSchema,
+      resolveOwnRef<S>(value, rootSchema),
+      formValue,
+      new Set(target === undefined ? [] : [target]),
+    );
   }
   const xxxOfKey = getXxxOfKey<S>(value);
   if (xxxOfKey && formValue != null) {
@@ -52,7 +61,7 @@ function propertyScore<
   if (value.type === 'object') {
     // If the structure is matching then give it a little boost in score
     const structureBoost = typeof formValue === 'object' && formValue !== null ? 1 : 0;
-    return structureBoost + calculateIndexScore<T, S, F>(context, rootSchema, value, formValue);
+    return structureBoost + scopeScore<T, S, F>(context, rootSchema, value, formValue, counted);
   }
   if (value.type !== guessType(formValue)) {
     return 0;
@@ -92,20 +101,28 @@ export function calculateIndexScore<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(context: SchemaContext<S, F>, rootSchema: S, schema?: S, formData?: unknown): number {
-  return scopeScore<T, S, F>(context, rootSchema, schema, formData, []);
+  return scopeScore<T, S, F>(context, rootSchema, schema, formData, new Set());
 }
 
-/** Returns the score `calculateIndexScore()` describes, passing over an `allOf` entry already being scored further out,
- * which a definition whose `allOf` leads back to itself would otherwise score without end
+/** Returns the score `calculateIndexScore()` describes, counting the definition an `allOf` entry's `$ref` names once at
+ * this level of the data however many entries name it, as a field's plan merges `X AND X` as `X`: a base two entries
+ * share adds its properties once, and a definition whose `allOf` leads back to itself is not scored again
+ *
+ * @param context - The `SchemaContext` that will be forwarded to all the APIs
+ * @param rootSchema - The root JSON schema of the entire form
+ * @param schema - The schema for which the score is being calculated
+ * @param formData - The form data associated with the schema
+ * @param counted - The definitions already scored at this level of the data, which this adds to
+ * @returns - The score
  */
 function scopeScore<T, S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   rootSchema: S,
   schema: S | undefined,
   formData: unknown,
-  scoring: readonly S[],
+  counted: Set<object>,
 ): number {
-  if (!schema || scoring.includes(schema)) {
+  if (!schema) {
     return 0;
   }
   const own = isObject(schema.properties)
@@ -127,10 +144,14 @@ function scopeScore<T, S extends StrictRJSFSchema, F extends FormContextType>(
     if (!isSchemaObject<S>(entry) || (typeof entry[REF_KEY] === 'string' && formData == null)) {
       return score;
     }
-    return (
-      score +
-      scopeScore<T, S, F>(context, rootSchema, resolveOwnRef<S>(entry, rootSchema), formData, [...scoring, schema])
-    );
+    const target = ownRefTarget<S>(entry, rootSchema);
+    if (target !== undefined) {
+      if (counted.has(target)) {
+        return score;
+      }
+      counted.add(target);
+    }
+    return score + scopeScore<T, S, F>(context, rootSchema, resolveOwnRef<S>(entry, rootSchema), formData, counted);
   }, own);
 }
 
@@ -188,8 +209,15 @@ export function closestOption<S extends StrictRJSFSchema = RJSFSchema, F extends
   const { bestIndex }: BestType = allValidIndexes.reduce(
     (scoreData: BestType, index: number) => {
       const { bestScore } = scoreData;
-      const option = resolvedOptions[index];
-      const score = calculateIndexScore(context, rootSchema, option, formData);
+      const option = options[index];
+      const target = isSchemaObject<S>(option) ? ownRefTarget<S>(option, rootSchema) : undefined;
+      const score = scopeScore(
+        context,
+        rootSchema,
+        resolvedOptions[index],
+        formData,
+        new Set(target === undefined ? [] : [target]),
+      );
       scoreCount.add(score);
       if (score > bestScore) {
         return { bestIndex: index, bestScore: score };

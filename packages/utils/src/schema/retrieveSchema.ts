@@ -340,6 +340,43 @@ export function conditionHolds<S extends StrictRJSFSchema = RJSFSchema, F extend
     : Boolean(condition);
 }
 
+/** Returns the node of `schema` that declares its own `$ref`, and the graph it is a node of
+ *
+ * @param rootGraph - The graph of the root schema
+ * @param schema - A schema holding the `$ref`
+ * @param ref - Its `$ref`
+ * @returns - The graph and the id of the node declaring the `$ref`
+ */
+function ownRefNode<S extends StrictRJSFSchema>(rootGraph: SchemaGraph<S>, schema: S, ref: string) {
+  const { graph, seeds } = fieldOf<S>(rootGraph, schema);
+  // A stub merged from several declarations names the `$ref` of one of them, which is resolved from that one's node
+  const declaring = seeds.find(({ node }) => {
+    const seed = graph.node(node);
+    return seed.kind === 'schema' && seed.raw[REF_KEY] === ref;
+  });
+  /* v8 ignore next -- a schema no seed declares the `$ref` of is adopted as a node of its own, which declares it */
+  return { graph, id: (declaring ?? seeds[0]).node };
+}
+
+/** Returns the subschema a schema's own `$ref` names, as the root holds it: the same object for every reference to it,
+ * from the root or from a schema adopted beside it, which is how option scoring counts a definition once
+ *
+ * @param schema - A schema that may hold a `$ref`
+ * @param rootSchema - The root schema the reference names a subschema of
+ * @returns - The subschema named, or undefined for a schema with no `$ref` or one naming a boolean or nothing
+ */
+export function ownRefTarget<S extends StrictRJSFSchema = RJSFSchema>(schema: S, rootSchema: S): object | undefined {
+  const ref = schema[REF_KEY];
+  if (typeof ref !== 'string') {
+    return undefined;
+  }
+  const { graph, id } = ownRefNode<S>(parseSchemaGraph<S>(rootSchema), schema, ref);
+  const node = graph.node(id);
+  /* v8 ignore next -- the node declares the `$ref`, so it is a schema node holding the node the `$ref` resolves to */
+  const target = node.kind === 'schema' && node.ref !== undefined ? graph.node(node.ref) : undefined;
+  return target?.kind === 'schema' ? target.raw : undefined;
+}
+
 /** The schemas `resolveOwnRef()` made, by graph and the schema holding the reference */
 const ownRefs = new KeyedMemo<object>();
 
@@ -367,14 +404,7 @@ export function resolveOwnRef<S extends StrictRJSFSchema = RJSFSchema>(schema: S
   if (isSchemaObject<S>(known)) {
     return known;
   }
-  const { graph, seeds } = fieldOf<S>(rootGraph, schema);
-  // A stub merged from several declarations names the `$ref` of one of them, which is resolved from that one's node
-  const declaring = seeds.find(({ node }) => {
-    const seed = graph.node(node);
-    return seed.kind === 'schema' && seed.raw[REF_KEY] === ref;
-  });
-  /* v8 ignore next -- a schema no seed declares the `$ref` of is adopted as a node of its own, which declares it */
-  const id = (declaring ?? seeds[0]).node;
+  const { graph, id } = ownRefNode<S>(rootGraph, schema, ref);
   const definition = refDefinition<S>(graph, id);
   const siblings = withoutKeys(schema, REF_KEY);
   const resolved: S =

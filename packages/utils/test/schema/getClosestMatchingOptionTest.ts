@@ -55,6 +55,26 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
       };
       expect(calculateIndexScore({ validator: testValidator }, rootSchema, option, { d: { name: 'x' } })).toEqual(2);
     });
+    it('scores a $ref property naming a boolean definition as the empty schema it reads as', () => {
+      const rootSchema: RJSFSchema = { definitions: { anything: true } };
+      const option: RJSFSchema = { properties: { p: { $ref: '#/definitions/anything' } } };
+      expect(calculateIndexScore({ validator: testValidator }, rootSchema, option, { p: 'x' })).toEqual(0);
+    });
+    it('scores a base that two allOf entries share once, so it cannot outweigh a property only the other option declares', () => {
+      const rootSchema: RJSFSchema = {
+        definitions: {
+          Base: { type: 'object', properties: { id: { type: 'string' }, name: { type: 'string' } } },
+          Pet: { allOf: [{ $ref: '#/definitions/Base' }] },
+          Named: { allOf: [{ $ref: '#/definitions/Base' }] },
+          Cat: { allOf: [{ $ref: '#/definitions/Pet' }, { $ref: '#/definitions/Named' }] },
+          Dog: { allOf: [{ $ref: '#/definitions/Pet' }, { properties: { bark: { type: 'string' } } }] },
+        },
+      };
+      const definitions = rootSchema.definitions as Record<string, RJSFSchema>;
+      const formData = { id: '1', name: 'n', bark: 'b' };
+      expect(calculateIndexScore({ validator: testValidator }, rootSchema, definitions.Cat, formData)).toEqual(2);
+      expect(calculateIndexScore({ validator: testValidator }, rootSchema, definitions.Dog, formData)).toEqual(3);
+    });
     it('returns 2 for first option in oneOf schema, scoring its $ref property as the definition it names', () => {
       expect(calculateIndexScore({ validator: testValidator }, oneOfSchema, firstOption, ONE_OF_SCHEMA_DATA)).toEqual(
         2,
