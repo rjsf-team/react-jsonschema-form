@@ -94,6 +94,14 @@ export function asFieldValue(value: unknown): unknown {
   return value;
 }
 
+/** What `getDefaultFormState()` fills the root schema's defaults into, as the form's data. The overload is the one
+ * trust point that the defaults of the form's own schema are data of the form's type.
+ */
+function asFilledFormData<T>(filled: unknown): T;
+function asFilledFormData(filled: unknown): unknown {
+  return filled;
+}
+
 /** Converts the full `FormState` into the `IChangeEvent` version by picking out the public values
  *
  * @param state - The state of the form
@@ -944,6 +952,11 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
   // A reset re-runs the same "initial" defaults pass a first render does, so `ui:initialValue` applies again even
   // though this instance has generated defaults before.
   const initialDefaultsGenerated = (current?.initialDefaultsGenerated ?? false) && !isReset;
+  const fillDefaults = (data: T | undefined) =>
+    replaceEqualDeep(
+      shareBase,
+      asFilledFormData<T>(schemaUtils.getDefaultFormState(rootSchema, data, false, initialDefaultsGenerated, uiSchema)),
+    );
   let formData: T;
   let retrievedSchema: S;
   let wasSanitized = false;
@@ -969,10 +982,7 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
   // loop rejecting what is there is, and that value is a schema movement or more out of date
   const settledRefills = new Set<FieldPath>();
   do {
-    formData = replaceEqualDeep(
-      shareBase,
-      schemaUtils.getDefaultFormState(rootSchema, defaultsFormData, false, initialDefaultsGenerated, uiSchema) as T,
-    );
+    formData = fillDefaults(defaultsFormData);
     // A dropped path the fill above declined to write goes back before anything else in this iteration reads its
     // absence. The drop has to be visible to that fill — deleting the key is what lets it write the newly selected
     // branch's default — but nothing past it may see the key-absent state: the schema is resolved for this data
@@ -1139,16 +1149,7 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
           // A round that repeats ends on the data its fill makes of what sanitize left, as every other exit does: the
           // sanitize may have cleared a value only the fill writes, such as the `null` of a property a condition just
           // retyped to `null`, which it judges against the schema before the change
-          formData = replaceEqualDeep(
-            shareBase,
-            schemaUtils.getDefaultFormState(
-              rootSchema,
-              sanitizedFormData,
-              false,
-              initialDefaultsGenerated,
-              uiSchema,
-            ) as T,
-          );
+          formData = fillDefaults(sanitizedFormData);
         }
       }
       if (!isFormDataSanitized) {
