@@ -415,6 +415,15 @@ describe('CFWorkerValidator validating a subschema by its place in the root', ()
       expect(validator.isValid(pointer, 'b', rootSchema)).toBe(false);
     },
   );
+  it('resolves a pointer into a dependencies entry named like a keyword inside another such entry', () => {
+    const validator = customizeValidator();
+    const rootSchema: RJSFSchema = {
+      dependencies: { type: { dependencies: { enum: { oneOf: [{ properties: { enum: { const: 'a' } } }] } } } },
+    };
+    const pointer: RJSFSchema = { $ref: '#/dependencies/type/dependencies/enum/oneOf/0/properties/enum' };
+    expect(validator.isValid(pointer, 'a', rootSchema)).toBe(true);
+    expect(validator.isValid(pointer, 'b', rootSchema)).toBe(false);
+  });
   it('resolves a pointer into a dependencies entry named like a keyword below a property whose name holds a #', () => {
     const validator = customizeValidator();
     const dependent = (value: string): RJSFSchema => ({
