@@ -997,6 +997,20 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         });
       });
 
+      it('keeps the fields beside a $ref to a definition that merges itself in through its allOf', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          definitions: {
+            node: { type: 'object', properties: { name: { type: 'string' } }, allOf: [{ $ref: '#/definitions/node' }] },
+          },
+          properties: { d: { $ref: '#/definitions/node', properties: { sib: { type: 'string' } } } },
+        };
+        const formData = { d: { name: 'x', sib: 'y', extra: 'gone' } };
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({
+          d: { name: 'x', sib: 'y' },
+        });
+      });
+
       it.each(['https://json-schema.org/draft/2019-09/schema', 'https://json-schema.org/draft/2020-12/schema'])(
         "under %s, keeps the fields of both a field's own $ref and the keywords beside it, as the form renders them",
         ($schema) => {
@@ -1117,9 +1131,9 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
       });
 
       it('hands customMergeAllOf the same resolved entries the form resolved with, so it agrees with what rendered', () => {
-        // `resolveSchema()` runs each `allOf` entry through `retrieveSchemaInternal()` before the parent is merged, so
-        // a merger that rejects an unresolved `$ref` succeeds while rendering. Omission has to hand it the same input,
-        // or it takes the merge-failure fallback and deletes data the user can see and edit
+        // The merge plan follows each `allOf` entry's `$ref` before it merges the entry into the parent, so a merger
+        // that rejects an unresolved `$ref` succeeds while rendering. Omission has to hand it the same input, or it
+        // takes the merge-failure fallback and deletes data the user can see and edit
         const schema: RJSFSchema = {
           type: 'object',
           definitions: { a: { type: 'object', properties: { x: { type: 'string' } } } },

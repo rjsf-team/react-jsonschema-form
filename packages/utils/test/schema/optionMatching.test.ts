@@ -237,6 +237,31 @@ describe('matching options through the schema graph', () => {
     const data = { a: 'x', b: 'y', c: 'z' };
     expect(getClosestMatchingOption({ validator: miniValidator() }, rootSchema, data, options)).toBe(1);
   });
+  it('scores a recursive definition a property reaches through an allOf as far as the data goes', () => {
+    const options: RJSFSchema[] = [
+      { $ref: '#/definitions/Node' },
+      { type: 'object', properties: { other: { type: 'string' } } },
+    ];
+    const rootSchema: RJSFSchema = {
+      definitions: {
+        Node: {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+            parent: { type: 'object', description: 'The parent', allOf: [{ $ref: '#/definitions/Node' }] },
+          },
+        },
+      },
+      type: 'object',
+      properties: { v: { oneOf: options } },
+    };
+    const validator = miniValidator();
+    expect(
+      getClosestMatchingOption({ validator }, rootSchema, { name: 'x', other: 'y', parent: { name: 'p' } }, options),
+    ).toBe(0);
+    // With no data every option ties, and the tie goes to the first candidate
+    expect(getClosestMatchingOption({ validator }, rootSchema, undefined, options)).toBe(0);
+  });
   it.each([
     [
       'an allOf entry',

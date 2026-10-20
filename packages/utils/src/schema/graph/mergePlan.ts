@@ -146,13 +146,13 @@ export interface PlanPolicy<S extends StrictRJSFSchema = RJSFSchema> {
   readonly optionPolicy?: OptionPolicy;
 }
 
-/** A policy with its defaults filled in */
 /** The `allOf` and `if` policies of `PlanPolicy.optionPolicy` */
 export interface OptionPolicy {
   readonly allOf: boolean | 'if';
   readonly conditions: boolean;
 }
 
+/** A policy with its defaults filled in */
 type ResolvedPolicy<S extends StrictRJSFSchema> = Required<Omit<PlanPolicy<S>, 'selectOption' | 'optionPolicy'>> &
   Pick<PlanPolicy<S>, 'selectOption' | 'optionPolicy'>;
 
@@ -484,6 +484,17 @@ export function refDefinition<S extends StrictRJSFSchema = RJSFSchema>(graph: Sc
     : schemaFrom(graph.rawRoot, {});
 }
 
+/** Returns the `allOf` entries `schemas` hold themselves, which merging the schemas as the `allOf` of them leaves as they
+ * stand: the shallow merge would flatten them into its result and hoist the `$ref` of an entry onto it, merging an
+ * `allOf` that is not the one being merged and leaving a reference no reader of the result follows again
+ */
+function ownAllOf(schemas: readonly object[]): unknown[] {
+  return schemas.flatMap((schema): unknown[] => {
+    const entries: unknown = Reflect.get(schema, ALL_OF_KEY);
+    return Array.isArray(entries) ? entries : [];
+  });
+}
+
 /** Returns the keywords `beside` a `$ref` and the `definition` it names merged as the `allOf` of both, as the form
  * merges them. Two that cannot be merged, such as a `type` beside the `$ref` that the definition's `type` shares no
  * value with, stay the `allOf` of both, which a validator reads the same way, rather than failing every reader.
@@ -494,8 +505,13 @@ export function refDefinition<S extends StrictRJSFSchema = RJSFSchema>(graph: Sc
  * @returns - The merged schema, or the `allOf` of both where they cannot be merged
  */
 export function conjoinDefinition<S extends StrictRJSFSchema>(template: S, beside: S, definition: S): S {
+  const nested = ownAllOf([beside, definition]);
   try {
-    return schemaFrom(template, shallowAllOfMerge({ [ALL_OF_KEY]: [beside, definition] }));
+    const merged = schemaFrom(
+      template,
+      shallowAllOfMerge({ [ALL_OF_KEY]: [withoutKeys(beside, ALL_OF_KEY), withoutKeys(definition, ALL_OF_KEY)] }),
+    );
+    return nested.length === 0 ? merged : schemaFrom(template, { ...merged, [ALL_OF_KEY]: nested });
   } catch (error) {
     logOnce('could not merge subschemas in allOf:\n', 'warn', error);
     return schemaFrom(template, { [ALL_OF_KEY]: [beside, definition] });
@@ -705,7 +721,15 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       return part;
     }
     const schemas = [part.schema, ...members.map((member) => member.schema)];
-    const merged = this.mergeAll({ ...part.schema, [ALL_OF_KEY]: schemas.slice(1) });
+    // An `allOf` a member still holds is one the policy left unmerged
+    const nested = ownAllOf(schemas);
+    const merged = this.mergeAll({
+      ...withoutKeys(part.schema, ALL_OF_KEY),
+      [ALL_OF_KEY]: schemas.slice(1).map((schema) => withoutKeys(schema, ALL_OF_KEY)),
+    });
+    if (nested.length > 0) {
+      Reflect.set(merged, ALL_OF_KEY, nested);
+    }
     for (const [symbol, value] of symbolsOf(schemas)) {
       Reflect.set(merged, symbol, value);
     }

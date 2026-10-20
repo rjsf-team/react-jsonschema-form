@@ -94,4 +94,14 @@ describe('rootSchemaIdOf()', () => {
     expect(rootSchemaIdOf({ $id: '#' })).toBe(ROOT_SCHEMA_PREFIX);
     expect(rootSchemaIdOf({ $id: '#root' })).toBe(ROOT_SCHEMA_PREFIX);
   });
+  it.each([
+    ['5', 5],
+    ['true', true],
+    ['{}', {}],
+  ])('returns ROOT_SCHEMA_PREFIX for a root whose $id is %s, as an untyped caller may hand over', (_written, id) => {
+    const rootSchema: RJSFSchema = {};
+    Reflect.set(rootSchema, '$id', id);
+    expect(rootSchemaIdOf(rootSchema)).toBe(ROOT_SCHEMA_PREFIX);
+    expect(withRootIdRefPrefix({ $ref: '#/a' }, rootSchema)).toEqual({ $ref: `${ROOT_SCHEMA_PREFIX}#/a` });
+  });
 });

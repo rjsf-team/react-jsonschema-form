@@ -34,6 +34,12 @@ describe('the cost of an edit to a wide object', () => {
     expect(retrieveSchema(context, root, root, { f0: 'e', child: { a: 'x' } })).toBe(view);
     expect(retrieveSchema(context, root, root, { f0: 'e' }, true)).not.toBe(view);
   });
+  it('hands out the same view of a field offering no options when asked to resolve its options, as ObjectField asks', () => {
+    const context = { validator: miniValidator() };
+    const root = wideSchema();
+    const view = retrieveSchema(context, root, root, { f0: 'a' }, true);
+    expect(retrieveSchema(context, root, root, { f0: 'b', f1: 'c' }, true)).toBe(view);
+  });
   it('hands out a new view once a key the view reads would collapse, even when its object is mutated in place', () => {
     const context = { validator: miniValidator() };
     const root: RJSFSchema = {

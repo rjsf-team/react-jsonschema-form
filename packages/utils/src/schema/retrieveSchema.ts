@@ -253,19 +253,22 @@ export function fieldOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, schem
 
 /** The node of the option `option` a plan's merged `keyword` list holds at `index`: the one a chain providing the list
  * holds there, which is the one parsed under the base of the resource that provider is in, since one object reached in
- * two resources is a node in each
+ * two resources is a node in each. An option no node holds, such as one of the cross product a merge makes of two
+ * lists, is adopted, so that it is still handed out as an option of the field offering it, keeping the field's guard
+ * chain: handed out as a schema of its own, a recursion through it would start afresh at every level.
  */
 function optionNode<S extends StrictRJSFSchema>(
   plan: MergePlan<S>,
   keyword: string,
   index: number,
   option: S,
-): NodeId | undefined {
+): AdoptedSchema<S> {
   const provided = seedsAt(plan, keyword, String(index)).find((seed) => {
     const node = plan.graph.node(seed.node);
     return node.kind === 'schema' && node.raw === option;
   });
-  return provided?.node ?? plan.graph.byObject(option);
+  const node = provided?.node ?? plan.graph.byObject(option);
+  return node === undefined ? plan.graph.adopt(option) : { graph: plan.graph, node };
 }
 
 /** Returns the expansion of a field `retrieveSchema()` collapsed, flagging it with `RJSF_REF_CYCLE_KEY`: the field
@@ -375,6 +378,43 @@ export function conditionHolds<S extends StrictRJSFSchema = RJSFSchema, F extend
     : Boolean(condition);
 }
 
+/** Returns the node of `schema` that declares its own `$ref`, and the graph it is a node of
+ *
+ * @param rootGraph - The graph of the root schema
+ * @param schema - A schema holding the `$ref`
+ * @param ref - Its `$ref`
+ * @returns - The graph and the id of the node declaring the `$ref`
+ */
+function ownRefNode<S extends StrictRJSFSchema>(rootGraph: SchemaGraph<S>, schema: S, ref: string) {
+  const { graph, seeds } = fieldOf<S>(rootGraph, schema);
+  // A stub merged from several declarations names the `$ref` of one of them, which is resolved from that one's node
+  const declaring = seeds.find(({ node }) => {
+    const seed = graph.node(node);
+    return seed.kind === 'schema' && seed.raw[REF_KEY] === ref;
+  });
+  /* v8 ignore next -- a schema no seed declares the `$ref` of is adopted as a node of its own, which declares it */
+  return { graph, id: (declaring ?? seeds[0]).node };
+}
+
+/** Returns the subschema a schema's own `$ref` names, as the root holds it: the same object for every reference to it,
+ * from the root or from a schema adopted beside it, which is how option scoring counts a definition once
+ *
+ * @param schema - A schema that may hold a `$ref`
+ * @param rootSchema - The root schema the reference names a subschema of
+ * @returns - The subschema named, or undefined for a schema with no `$ref` or one naming a boolean or nothing
+ */
+export function ownRefTarget<S extends StrictRJSFSchema = RJSFSchema>(schema: S, rootSchema: S): object | undefined {
+  const ref = schema[REF_KEY];
+  if (typeof ref !== 'string') {
+    return undefined;
+  }
+  const { graph, id } = ownRefNode<S>(parseSchemaGraph<S>(rootSchema), schema, ref);
+  const node = graph.node(id);
+  /* v8 ignore next -- the node declares the `$ref`, so it is a schema node holding the node the `$ref` resolves to */
+  const target = node.kind === 'schema' && node.ref !== undefined ? graph.node(node.ref) : undefined;
+  return target?.kind === 'schema' ? target.raw : undefined;
+}
+
 /** The schemas `resolveOwnRef()` made, by graph and the schema holding the reference */
 const ownRefs = new KeyedMemo<object>();
 
@@ -402,14 +442,7 @@ export function resolveOwnRef<S extends StrictRJSFSchema = RJSFSchema>(schema: S
   if (isSchemaObject<S>(known)) {
     return known;
   }
-  const { graph, seeds } = fieldOf<S>(rootGraph, schema);
-  // A stub merged from several declarations names the `$ref` of one of them, which is resolved from that one's node
-  const declaring = seeds.find(({ node }) => {
-    const seed = graph.node(node);
-    return seed.kind === 'schema' && seed.raw[REF_KEY] === ref;
-  });
-  /* v8 ignore next -- a schema no seed declares the `$ref` of is adopted as a node of its own, which declares it */
-  const id = (declaring ?? seeds[0]).node;
+  const { graph, id } = ownRefNode<S>(rootGraph, schema, ref);
   const definition = refDefinition<S>(graph, id);
   const siblings = withoutKeys(schema, REF_KEY);
   const resolved: S =
@@ -567,17 +600,20 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
         merged,
         keyword,
         options.map((option, index) => {
-          const node =
-            isSchemaObject<S>(option) && !isDecided(option) ? optionNode(plan, keyword, index, option) : undefined;
-          if (node === undefined) {
+          if (!isSchemaObject<S>(option) || isDecided(option)) {
             return option;
           }
-          const provenance = childProvenance(field, {
-            seeds: [{ node, refPath: [] }],
-            chain: optionChain,
-            optionOf: { setKey: plan.setKey, set: plan.set },
-            stubsOwnExtraKeys,
-          });
+          const adopted = optionNode(plan, keyword, index, option);
+          const provenance = childProvenance(
+            field,
+            {
+              seeds: [{ node: adopted.node, refPath: [] }],
+              chain: optionChain,
+              optionOf: { setKey: plan.setKey, set: plan.set },
+              stubsOwnExtraKeys,
+            },
+            adopted.graph,
+          );
           return resolveOptions
             ? buildView(context, root, provenance, data, false)
             : stubOf(graph.rawRoot, option, provenance);
@@ -603,8 +639,9 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
       : fieldSchema,
     field,
   );
+  const resolvedOptions = resolveOptions && OPTION_KEYWORDS.some((keyword) => Array.isArray(merged[keyword]));
   // A view whose own plan read the data, or whose options or extra keys were resolved for it, holds for that data alone
-  if (!plan.readsData && !resolveOptions && !stubsExtraKeys) {
+  if (!plan.readsData && !resolvedOptions && !stubsExtraKeys) {
     views.set(viewKey, { view, holds });
   }
   return view;
