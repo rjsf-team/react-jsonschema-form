@@ -375,27 +375,55 @@ interface NullFills {
   isCollapsed?: boolean;
 }
 
-/** Whether `schema` names the `null` type anywhere in it, through its definitions included, which only then can hold a
- * `null` fill; worked out once for each schema
+/** What in `schema` a `null` fill can come from: the `null` type, named somewhere in it, or else a `$ref`, which can
+ * lead to one elsewhere in the root; worked out once for each schema
  */
-const holdsNullTypeMemo = new WeakMap<object, boolean>();
-function holdsNullType(schema: unknown): boolean {
+type NullSource = 'nullType' | 'ref' | 'none';
+const nullSourceMemo = new WeakMap<object, NullSource>();
+function nullSourceOf(schema: unknown): NullSource {
   if (typeof schema !== 'object' || schema === null) {
-    return false;
+    return 'none';
   }
-  const memoized = holdsNullTypeMemo.get(schema);
+  const memoized = nullSourceMemo.get(schema);
   if (memoized !== undefined) {
     return memoized;
   }
   // Recorded first, so a schema that holds itself is answered from the memo
-  holdsNullTypeMemo.set(schema, false);
+  nullSourceMemo.set(schema, 'none');
   const type = Array.isArray(schema) ? undefined : Reflect.get(schema, 'type');
-  const answer =
-    type === 'null' ||
-    (Array.isArray(type) && type.includes('null')) ||
-    Object.values(schema).some((value) => holdsNullType(value));
-  holdsNullTypeMemo.set(schema, answer);
-  return answer;
+  let source: NullSource = 'none';
+  if (type === 'null' || (Array.isArray(type) && type.includes('null'))) {
+    source = 'nullType';
+  } else {
+    if (!Array.isArray(schema) && typeof Reflect.get(schema, REF_KEY) === 'string') {
+      source = 'ref';
+    }
+    for (const value of Object.values(schema)) {
+      const valueSource = nullSourceOf(value);
+      if (valueSource === 'nullType') {
+        source = valueSource;
+        break;
+      }
+      if (valueSource === 'ref') {
+        source = valueSource;
+      }
+    }
+  }
+  nullSourceMemo.set(schema, source);
+  return source;
+}
+
+/** Whether a `null` fill can come from `schema`: it names the `null` type somewhere in it, or it holds a `$ref` and the
+ * root names that type anywhere, which the `$ref` may lead to. The `$ref`s are not followed, since
+ * `findSchemaDefinition()` throws for one it cannot resolve, which an option the defaults never pick may hold
+ *
+ * @param schema - The schema a `null` fill would come from
+ * @param rootSchema - The root schema, which the `$ref`s in `schema` resolve against
+ * @returns - False when no `null` fill can come from `schema`
+ */
+function mayHoldNullType(schema: unknown, rootSchema: unknown): boolean {
+  const source = nullSourceOf(schema);
+  return source === 'nullType' || (source === 'ref' && nullSourceOf(rootSchema) === 'nullType');
 }
 
 /** Computes the defaults for the current `schema` given the `rawFormData` and `parentDefaults` if any. This drills into
@@ -693,7 +721,7 @@ export function computeDefaults<
     const rendered =
       (ALL_OF_KEY in schema || IF_KEY in schema) &&
       getSchemaType<S>(schema) === undefined &&
-      (holdsNullType(schema) || holdsNullType(rootSchema))
+      mayHoldNullType(schema, rootSchema)
         ? retrieveSchema<T, S, F>(context, schema, rootSchema, rawFormData)
         : schema;
     if (
@@ -871,7 +899,7 @@ export function getObjectDefaults<
           !nullFills.isCollapsed &&
           !isPropertyRequired &&
           propertyFormData === undefined &&
-          holdsNullType(rootSchema) &&
+          mayHoldNullType(propertySchema, rootSchema) &&
           isOptionalDataControlsType<T, S, F>(
             () => retrieveSchema<T, S, F>(context, propertySchema, rootSchema, undefined),
             uiSchemaDefinitions
@@ -925,7 +953,7 @@ export function getObjectDefaults<
       !shouldRetrieveSchema &&
       (ALL_OF_KEY in schema || IF_KEY in schema) &&
       isObject(objectDefaults) &&
-      (holdsNullType(schema) || holdsNullType(rootSchema))
+      mayHoldNullType(schema, rootSchema)
     ) {
       const fills = nullFillsOfSkippedBranches<T, S, F>(context, schema, {
         rootSchema,

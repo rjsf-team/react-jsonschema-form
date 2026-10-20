@@ -8640,6 +8640,26 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
       },
     );
 
+    describe('where a null fill can come from', () => {
+      it('is filled in from a definition a typeless allOf reaches through a $ref', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { n: { allOf: [{ $ref: '#/definitions/Nothing' }] } },
+          definitions: { Nothing: { type: 'null' } },
+        };
+        expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual({ n: null });
+      });
+
+      it("fills in nothing from an object's allOf that declares no properties, whatever else the root holds", () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { n: { type: 'null' }, o: { type: 'object', allOf: [{ $ref: '#/definitions/Described' }] } },
+          definitions: { Described: { description: 'An object' } },
+        };
+        expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual({ n: null });
+      });
+    });
+
     describe('the null of a null value the data holds as `undefined`', () => {
       it('is filled in, as for a missing one', () => {
         const schema: RJSFSchema = {
