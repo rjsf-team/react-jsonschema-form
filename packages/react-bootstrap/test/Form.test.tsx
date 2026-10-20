@@ -571,3 +571,82 @@ describe('react-bootstrap CheckboxWidget required attribute', () => {
     expect(container.querySelector('input[type=checkbox]')).not.toHaveAttribute('required');
   });
 });
+
+describe("react-bootstrap marks a deprecated field's label, as core does", () => {
+  test.each<[string, RJSFSchema, UiSchema, string]>([
+    ['text input', { type: 'string' }, {}, 'textbox'],
+    ['number input', { type: 'number' }, {}, 'textbox'],
+    ['textarea', { type: 'string' }, { 'ui:widget': 'textarea' }, 'textbox'],
+    ['range', { type: 'number' }, { 'ui:widget': 'range' }, 'slider'],
+    ['checkbox', { type: 'boolean' }, {}, 'checkbox'],
+    ['select', { type: 'string', enum: ['a', 'b'] }, {}, 'combobox'],
+    ['multi-select', { type: 'array', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true }, {}, 'listbox'],
+    ['radio group', { type: 'string', enum: ['a', 'b'] }, { 'ui:widget': 'radio' }, 'radiogroup'],
+    [
+      'checkboxes group',
+      { type: 'array', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true },
+      { 'ui:widget': 'checkboxes' },
+      'group',
+    ],
+    ['rating', { type: 'integer', maximum: 5 }, { 'ui:widget': 'RatingWidget' }, 'radiogroup'],
+  ])('names a deprecated %s by its label with the Deprecated marker', (_, x, ui, role) => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { x: { ...x, title: 'X', deprecated: true } } }}
+        uiSchema={{ x: ui }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole(role, { name: 'X (deprecated)' })).toHaveAttribute('id', 'root_x');
+    expect(container.innerHTML).not.toContain('(deprecated) (deprecated)');
+  });
+
+  test('names an untitled deprecated property by its key with the Deprecated marker', () => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { foo: { type: 'string', deprecated: true } } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('textbox', { name: 'foo (deprecated)' })).toHaveAttribute('id', 'root_foo');
+    expect(container.innerHTML).not.toContain('(deprecated) (deprecated)');
+  });
+
+  test("draws a deprecated object's and array's heading with the Deprecated marker", () => {
+    const { container } = render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: {
+            obj: { type: 'object', title: 'Obj', deprecated: true, properties: { a: { type: 'string' } } },
+            list: { type: 'array', title: 'List', deprecated: true, items: { type: 'string' } },
+          },
+        }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('heading', { name: 'Obj (deprecated)' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'List (deprecated)' })).toBeInTheDocument();
+    expect(container.innerHTML).not.toContain('(deprecated) (deprecated)');
+  });
+
+  // The field's label names both the option selector and the untitled option's input, which takes the field's label
+  // rather than drawing one of its own
+  test.each(['anyOf', 'oneOf'])(
+    "names a deprecated %s field's option selector with the Deprecated marker",
+    (keyword) => {
+      const x: RJSFSchema = { title: 'X', deprecated: true, [keyword]: [{ type: 'string' }, { type: 'number' }] };
+      const { container } = render(<Form schema={{ type: 'object', properties: { x } }} validator={validator} />);
+
+      expect(screen.getByRole('combobox', { name: 'X (deprecated)' })).toHaveAttribute(
+        'id',
+        `root_x__${keyword.toLowerCase()}_select`,
+      );
+      expect(screen.getByRole('textbox', { name: 'X (deprecated)' })).toHaveAttribute('id', 'root_x');
+      expect(container.innerHTML).not.toContain('(deprecated) (deprecated)');
+    },
+  );
+});
