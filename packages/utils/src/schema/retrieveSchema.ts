@@ -243,14 +243,20 @@ export function fieldOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, schem
   );
 }
 
+/** The key each rebuilt option is adopted under, by the field offering it, its keyword and its index */
+const rebuiltOptions = new KeyedMemo<object>();
+
 /** The node of the option `option` a plan's merged `keyword` list holds at `index`: the one a chain providing the list
  * holds there, which is the one parsed under the base of the resource that provider is in, since one object reached in
  * two resources is a node in each. An option no node holds, such as one of the cross product a merge makes of two
  * lists, is adopted, so that it is still handed out as an option of the field offering it, keeping the field's guard
- * chain: handed out as a schema of its own, a recursion through it would start afresh at every level.
+ * chain: handed out as a schema of its own, a recursion through it would start afresh at every level. The merge makes
+ * such an option anew for every plan, and a field whose data a plan reads is planned again on every edit, so it is
+ * adopted as a copy of the one last adopted at its place in the field, which is parsed only when its keywords change.
  */
 function optionNode<S extends StrictRJSFSchema>(
   plan: MergePlan<S>,
+  field: Provenance<S>,
   keyword: string,
   index: number,
   option: S,
@@ -260,7 +266,12 @@ function optionNode<S extends StrictRJSFSchema>(
     return node.kind === 'schema' && node.raw === option;
   });
   const node = provided?.node ?? plan.graph.byObject(option);
-  return node === undefined ? plan.graph.adopt(option) : { graph: plan.graph, node };
+  return node === undefined
+    ? plan.graph.adoptCopy(
+        option,
+        rebuiltOptions.get([field, keyword, index], () => ({})),
+      )
+    : { graph: plan.graph, node };
 }
 
 /** The policy views are planned with: every `allOf` is merged, and an option only where the schema offering it has
@@ -514,7 +525,7 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
           if (!isSchemaObject<S>(option) || isDecided(option)) {
             return option;
           }
-          const adopted = optionNode(plan, keyword, index, option);
+          const adopted = optionNode(plan, field, keyword, index, option);
           const provenance = childProvenance(
             field,
             {

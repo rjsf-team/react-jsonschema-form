@@ -1,8 +1,10 @@
 import {
+  RJSF_PROVENANCE_KEY,
   RJSF_REF_CYCLE_KEY,
   findSelectedOptionInXxxOf,
   getDefaultFormState,
   isObject,
+  isSchemaObject,
   retrieveSchema,
 } from '../../src/index.ts';
 import type { RJSFSchema } from '../../src/index.ts';
@@ -106,5 +108,28 @@ describe('the cost of an edit to a wide object', () => {
       selected,
     );
     expect(adopt.mock.results.map(({ value }) => value.graph === graph)).not.toContain(false);
+  });
+  it('parses the options a merge rebuilds for each plan once while their keywords stay the same', () => {
+    const context = { validator: miniValidator() };
+    // `b` is declared by D0 and by the D1 it merges, each with an option list, so it offers the cross product
+    const root: RJSFSchema = {
+      definitions: {
+        D0: { type: 'object', properties: { b: { $ref: '#/definitions/D1' } }, allOf: [{ $ref: '#/definitions/D1' }] },
+        D1: {
+          type: 'object',
+          properties: { b: { anyOf: [{ $ref: '#/definitions/D0' }, { type: 'string' }] } },
+          anyOf: [{ title: 'first' }, { title: 'second' }],
+        },
+      },
+      $ref: '#/definitions/D0',
+    };
+    const b = retrieveSchema(context, root, root).properties?.b;
+    const provenancesFor = (data: object) =>
+      (isSchemaObject(b) ? (retrieveSchema(context, b, root, data, true).anyOf ?? []) : []).map((option): unknown =>
+        isObject(option) ? Reflect.get(option, RJSF_PROVENANCE_KEY) : undefined,
+      );
+    const first = provenancesFor({ n: 1 });
+    expect(first).toHaveLength(4);
+    provenancesFor({ n: 2 }).forEach((provenance, index) => expect(provenance).toBe(first[index]));
   });
 });
