@@ -2011,5 +2011,43 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         list: [{ k: 'a' }],
       });
     });
+    describe('a select over whole arrays', () => {
+      const definitions: RJSFSchema['definitions'] = { a: { const: [1, 2] }, b: { const: [3] } };
+      const sanitize = (newSchema: RJSFSchema, oldSchema: RJSFSchema, data: unknown) =>
+        sanitizeDataForNewSchema({ validator: testValidator }, newSchema, newSchema, oldSchema, data);
+      const unlisted: RJSFSchema = { type: 'array' };
+      it.each<[string, RJSFSchema]>([
+        [
+          'written as $refs',
+          { definitions, type: 'array', oneOf: [{ $ref: '#/definitions/a' }, { $ref: '#/definitions/b' }] },
+        ],
+        ['written in place', { type: 'array', oneOf: [{ const: [1, 2] }, { const: [3] }] }],
+      ])('clears an array the options %s do not offer, and keeps one they do', (_, select) => {
+        expect(sanitize(select, unlisted, [5])).toBeUndefined();
+        expect(sanitize(select, unlisted, [1, 2])).toEqual([1, 2]);
+      });
+      it('keeps an array the same options written as $refs did not offer either', () => {
+        const select: RJSFSchema = {
+          definitions,
+          type: 'array',
+          oneOf: [{ $ref: '#/definitions/a' }, { $ref: '#/definitions/b' }],
+        };
+        expect(sanitize(select, { ...select, title: 'Old' }, [5])).toEqual([5]);
+      });
+      it('reads an old option whose $ref names nothing under the new root as listing no values', () => {
+        const select: RJSFSchema = {
+          definitions,
+          type: 'array',
+          oneOf: [{ $ref: '#/definitions/a' }, { $ref: '#/definitions/b' }],
+        };
+        // The old schema comes from a root that defined `gone`
+        const oldSelect: RJSFSchema = {
+          type: 'array',
+          oneOf: [{ const: [1, 2] }, { $ref: '#/definitions/gone' }, { $ref: '#/definitions/b' }],
+        };
+        expect(sanitize(select, oldSelect, [5])).toBeUndefined();
+        expect(sanitize(select, oldSelect, [3])).toEqual([3]);
+      });
+    });
   });
 }

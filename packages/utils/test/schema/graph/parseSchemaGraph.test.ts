@@ -1,5 +1,10 @@
-import { JSON_SCHEMA_DRAFT_2019_09, JSON_SCHEMA_DRAFT_2020_12 } from '../../../src/index.ts';
-import type { RJSFSchema } from '../../../src/index.ts';
+import {
+  ADDITIONAL_PROPERTY_FLAG,
+  GUESSED_TYPE_FLAG,
+  JSON_SCHEMA_DRAFT_2019_09,
+  JSON_SCHEMA_DRAFT_2020_12,
+} from '../../../src/index.ts';
+import type { GenericObjectType, RJSFSchema } from '../../../src/index.ts';
 import parseSchemaGraph, { EXTERNAL_POINTER } from '../../../src/schema/graph/parseSchemaGraph.ts';
 import type { NodeId, ObjectNode, SchemaGraph, SchemaNode } from '../../../src/schema/graph/parseSchemaGraph.ts';
 import looseSchema from './looseSchema.ts';
@@ -495,7 +500,8 @@ describe('parseSchemaGraph()', () => {
       const keywords = { $ref: '#/$defs/a', title: 'T' };
       const adopted = graph.adoptCopy({ ...keywords }, of, graph.root);
       expect(graph.adoptCopy({ ...keywords }, of, graph.root)).toBe(adopted);
-      expect(graph.adoptCopy({ ...keywords }, {}, graph.root)).not.toBe(adopted);
+      // A copy for another key holding the same is adopted for what it holds
+      expect(graph.adoptCopy({ ...keywords }, {}, graph.root)).toBe(adopted);
       const retitled = graph.adoptCopy({ ...keywords, title: 'U' }, of, graph.root);
       expect(retitled).not.toBe(adopted);
       expect(graph.adoptCopy({ ...keywords, title: 'U', description: 'D' }, of, graph.root)).not.toBe(retitled);
@@ -581,6 +587,81 @@ describe('parseSchemaGraph()', () => {
       const ownNode = objectNode(second.graph, second.graph.byObject(own));
       expect(ownNode.pointer).toBe(`${EXTERNAL_POINTER}/$defs/x`);
       expect(second.graph.node(ownNode.ref ?? -1)).toMatchObject({ kind: 'schema', raw: { $ref: '#/$defs/x' } });
+    });
+  });
+
+  describe('adopt() of a schema built anew for every call', () => {
+    const held: RJSFSchema = { type: 'string' };
+    const root: RJSFSchema = { definitions: { held } };
+    const graph = parseSchemaGraph(root);
+    const adoptBuilt = (build: () => object) => graph.adopt(looseSchema(build()));
+
+    it('parses it once while it holds the same, once per base', () => {
+      const build = (): RJSFSchema => ({ allOf: [{ $ref: '#/definitions/held' }, { minLength: 1 }], title: 'T' });
+      const adopted = graph.adopt(build());
+      expect(graph.adopt(build())).toBe(adopted);
+      expect(graph.adopt({ ...build(), title: 'U' })).not.toBe(adopted);
+      const elsewhere = graph.adopt(build(), 'https://example.com/other.json');
+      expect(elsewhere).not.toBe(adopted);
+      expect(graph.adopt(build(), 'https://example.com/other.json')).toBe(elsewhere);
+    });
+    it.each<[string, () => object, () => object]>([
+      [
+        'the same keys in another order',
+        () => ({ properties: { x: {}, y: {} } }),
+        () => ({ properties: { y: {}, x: {} } }),
+      ],
+      ['a subschema the root holds and a copy of it', () => ({ allOf: [held] }), () => ({ allOf: [{ ...held }] })],
+      [
+        'one object met twice and two that hold the same',
+        () => {
+          const twice: RJSFSchema = { type: 'string' };
+          return { allOf: [twice, twice] };
+        },
+        () => ({ allOf: [{ type: 'string' }, { type: 'string' }] }),
+      ],
+      [
+        'an object holding itself and one holding a copy of it',
+        () => {
+          const cyclic: GenericObjectType = { type: 'object' };
+          cyclic.properties = { self: cyclic };
+          return cyclic;
+        },
+        () => ({ type: 'object', properties: { self: { type: 'object', properties: { self: {} } } } }),
+      ],
+      ['a marker and none', () => ({ type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true }), () => ({ type: 'string' })],
+      ['two markers', () => ({ [GUESSED_TYPE_FLAG]: true }), () => ({ [ADDITIONAL_PROPERTY_FLAG]: true })],
+      ['a marker and a key named by its place', () => ({ [ADDITIONAL_PROPERTY_FLAG]: true }), () => ({ 0: true })],
+      ['a number and the string of it', () => ({ const: 1 }), () => ({ const: '1' })],
+      ['true and the string of it', () => ({ const: true }), () => ({ const: 'true' })],
+      ['zero and negative zero', () => ({ const: 0 }), () => ({ const: -0 })],
+      ['null and undefined', () => ({ const: null }), () => ({ const: undefined })],
+      ['a key holding undefined and none', () => ({ default: undefined }), () => ({})],
+      ['an array and an object with its keys', () => ({ enum: ['a'] }), () => ({ enum: { 0: 'a' } })],
+      [
+        'a hole and an entry holding undefined',
+        () => {
+          const sparse = [undefined, 'a'];
+          Reflect.deleteProperty(sparse, '0');
+          return { enum: sparse };
+        },
+        () => ({ enum: [undefined, 'a'] }),
+      ],
+    ])('tells apart %s', (_, first, second) => {
+      expect(adoptBuilt(first)).toBe(adoptBuilt(first));
+      expect(adoptBuilt(second)).toBe(adoptBuilt(second));
+      expect(adoptBuilt(second)).not.toBe(adoptBuilt(first));
+    });
+    it.each<[string, () => object]>([
+      ['a class instance', () => ({ default: new Date(0) })],
+      ['a function', () => ({ default: () => 'x' })],
+      ['a symbol no schema built by retrieveSchema() carries', () => ({ [Symbol('other')]: true })],
+      ['a key that is not enumerable', () => Object.defineProperty({}, 'type', { value: 'string' })],
+    ])('parses a schema holding %s once per object', (_, build) => {
+      const raw = looseSchema(build());
+      const adopted = graph.adopt(raw);
+      expect(graph.adopt(raw)).toBe(adopted);
+      expect(adoptBuilt(build)).not.toBe(adopted);
     });
   });
 });
