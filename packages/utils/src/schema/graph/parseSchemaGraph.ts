@@ -62,6 +62,10 @@ export interface ObjectNode<S extends StrictRJSFSchema = RJSFSchema> {
   readonly pureRef: boolean;
   /** The node the `$ref` resolves to, which is an `InvalidNode` when it resolves to nothing */
   readonly ref?: NodeId;
+  /** Where the subschema the `$ref` resolves to sits: the place the `$ref` names, which is that node's `pointer` unless
+   * the root holds the subschema in several places
+   */
+  readonly refPointer?: string;
   /** For a `$ref` that resolves with keywords beside it other than annotations: the node it reads as, the `allOf` of
    * those keywords and of the `$ref` alone, as JSON Schema applies a `$ref` beside other keywords rather than replacing
    * them. Annotations alone stay beside the `$ref` and override the target's own.
@@ -173,7 +177,8 @@ function escapeToken(token: string): string {
   return token.replaceAll('~', '~0').replaceAll('/', '~1');
 }
 
-function childPointer(pointer: string, tokens: readonly string[]): string {
+/** Returns the pointer to the subschema the subschema at `pointer` holds at the unescaped pointer `tokens` */
+export function childPointer(pointer: string, tokens: readonly string[]): string {
   return `${pointer}/${tokens.map(escapeToken).join('/')}`;
 }
 
@@ -229,6 +234,12 @@ interface WalkStart {
   readonly raw: unknown;
   readonly pointer: string;
   readonly base: string;
+}
+
+/** What a `$ref` resolves to: the node, and the place the `$ref` names, where the root may hold the node in others */
+interface Resolved {
+  readonly id: NodeId;
+  readonly pointer: string;
 }
 
 /** Where a pointer token lands: on a subschema, on a keyword's map or list of subschemas, or on data, such as the
@@ -507,7 +518,7 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
    * an `InvalidNode` carrying the message entering it throws
    */
   private resolvePendingRefs(): void {
-    const hops = new Map<NodeId, NodeId | undefined>();
+    const hops = new Map<NodeId, Resolved | undefined>();
     // Resolving a `$ref` can parse a target that holds `$ref`s of its own, which join the queue as it is read: an array
     // iterator reads them too, where taking each off the front would move every one behind it
     for (const next of this.pendingRefs) {
@@ -518,7 +529,9 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
       const ref = refOf(node.raw);
       const failure = this.chainFailure(ref, node, hops);
       if (failure === undefined) {
-        node.ref = hops.get(node.id);
+        const hop = hops.get(node.id);
+        node.ref = hop?.id;
+        node.refPointer = hop?.pointer;
         if (Object.keys(node.raw).some((key) => !NON_CONSTRAINING_KEYS.has(key))) {
           node.conjunction = this.addConjunction(node);
         }
@@ -549,6 +562,7 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
       outerBase: node.baseUri,
       raw: schemaFrom(node.raw, Object.fromEntries(Object.entries(node.raw).filter(([key]) => key !== REF_KEY))),
       ref: undefined,
+      refPointer: undefined,
       conjunction: undefined,
       pureRef: false,
     });
@@ -572,6 +586,7 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
       raw: schemaFrom(node.raw, { [REF_KEY]: refOf(node.raw) }),
       pureRef: true,
       ref: node.ref,
+      refPointer: node.refPointer,
     });
     return this.addSynthetic({
       kind: 'schema',
@@ -598,13 +613,13 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
   private chainFailure(
     first: string,
     from: ObjectNode<S>,
-    hops: ReadonlyMap<NodeId, NodeId | undefined>,
+    hops: ReadonlyMap<NodeId, Resolved | undefined>,
   ): { reason: InvalidReason; message: string } | undefined {
     const followed: string[] = [];
     const written: string[] = [];
     let ref = first;
     let refKey = resolveUri(from.baseUri, first);
-    let target = hops.get(from.id);
+    let target = hops.get(from.id)?.id;
     for (;;) {
       if (target === undefined) {
         return { reason: 'dangling', message: `Could not find a definition for ${ref}.` };
@@ -632,11 +647,11 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
       ref = nextRef;
       refKey = nextKey;
       // A node parsed with the graph this one extends had its `$ref` resolved there
-      target = hops.has(target) ? hops.get(target) : this.resolve(ref, targetNode.baseUri, false);
+      target = (hops.has(target) ? hops.get(target) : this.resolve(ref, targetNode.baseUri, false))?.id;
     }
   }
 
-  private resolve(ref: string, base: string, create: boolean): NodeId | undefined {
+  private resolve(ref: string, base: string, create: boolean): Resolved | undefined {
     const absolute = resolveUri(base, ref);
     // An empty `$ref` with no base to resolve it against names no resource, where `#` names the root
     if (absolute === '') {
@@ -650,7 +665,7 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
       return undefined;
     }
     if (fragment === '' || fragment === '/') {
-      return resource.id;
+      return { id: resource.id, pointer: resource.pointer };
     }
     if (fragment.startsWith('/')) {
       return this.walk(
@@ -659,7 +674,8 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
         create,
       );
     }
-    return this.anchor(`${resourceKey(resource.baseUri)}#${fragment}`);
+    const anchored = this.anchor(`${resourceKey(resource.baseUri)}#${fragment}`);
+    return anchored === undefined ? undefined : { id: anchored, pointer: this.node(anchored).pointer };
   }
 
   /** The resource `key` names: a `$ref` written with a trailing `/` also names the `$id` without one, but an `$id`
@@ -682,7 +698,7 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
    * names is read as one, but from where the pointer leaves the subschemas on, an `$id` is data and the base stays the
    * one it left them under.
    */
-  private walk(start: WalkStart, fragment: string, create: boolean): NodeId | undefined {
+  private walk(start: WalkStart, fragment: string, create: boolean): Resolved | undefined {
     let current: unknown = start.raw;
     let { pointer, base } = start;
     let position: Position = 'schema';
@@ -698,9 +714,14 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
       position = positionAfter(position, token, current);
       pointer = `${pointer}/${escapeToken(token)}`;
     }
-    if (create) {
-      return this.visit(current, pointer, base, position !== 'schema');
-    }
+    const id = create
+      ? this.visit(current, pointer, base, position !== 'schema')
+      : this.walkedNode(start, current, pointer, base);
+    return id === undefined ? undefined : { id, pointer };
+  }
+
+  /** The node already parsed from the subschema `current` a walk from `start` reached at `pointer` under `base` */
+  private walkedNode(start: WalkStart, current: unknown, pointer: string, base: string): NodeId | undefined {
     if (isObject(current)) {
       return this.byObject(current, base);
     }
