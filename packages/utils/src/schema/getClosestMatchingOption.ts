@@ -49,7 +49,12 @@ function propertyScore<
   if (typeof value[REF_KEY] === 'string') {
     return formValue == null
       ? 0
-      : propertyScore<T, S, F>(context, rootSchema, resolveOwnRef<S>(value, rootSchema), formValue);
+      : propertyScore<T, S, F>(
+          context,
+          rootSchema,
+          resolveOwnRef<S>(value, rootSchema, context.customMergeAllOf),
+          formValue,
+        );
   }
   const xxxOfKey = getXxxOfKey<S>(value);
   if (xxxOfKey && formValue != null) {
@@ -154,7 +159,7 @@ export default function getClosestMatchingOption<
   selectedOption = -1,
   discriminatorField?: string,
 ): number {
-  const resolvedOptions = options.map((option) => resolveOwnRef<S>(option, rootSchema));
+  const resolvedOptions = options.map((option) => resolveOwnRef<S>(option, rootSchema, context.customMergeAllOf));
 
   const simpleDiscriminatorMatch = getOptionMatchingSimpleDiscriminator(formData, options, discriminatorField);
   if (typeof simpleDiscriminatorMatch === 'number') {

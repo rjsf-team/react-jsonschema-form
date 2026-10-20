@@ -37,6 +37,7 @@ import resolveUiSchema from '../resolveUiSchema.ts';
 import setOwn from '../setOwn.ts';
 import toConstant from '../toConstant.ts';
 import type {
+  CustomMergeAllOf,
   DefaultFormStateBehavior,
   FormContextType,
   GenericObjectType,
@@ -45,7 +46,6 @@ import type {
   SchemaContext,
   StrictRJSFSchema,
   UiSchema,
-  ValidatorType,
 } from '../types.ts';
 import getClosestMatchingOption from './getClosestMatchingOption.ts';
 import buildPlan, {
@@ -392,7 +392,7 @@ interface ViewProps<T, S extends StrictRJSFSchema, F extends FormContextType> ex
  * merged as selected. Every other option list is left on the schema for the fold to select from.
  */
 function policyFor<S extends StrictRJSFSchema, F extends FormContextType>(
-  validator: ValidatorType<S, F>,
+  context: SchemaContext<S, F>,
   graph: SchemaGraph<S>,
   allOf: boolean | 'if',
   conditions: boolean,
@@ -404,12 +404,13 @@ function policyFor<S extends StrictRJSFSchema, F extends FormContextType>(
   for (const [provider, index] of selections) {
     key += `|${provider}:${index}`;
   }
-  return cachedPolicy<S>(validator, graph, key, () => ({
+  const { validator, customMergeAllOf } = context;
+  return cachedPolicy<S, F>(context, graph, key, () => ({
     allOf,
     conditions,
     cutRecursion,
     selectOption: (request) =>
-      selections.get(request.provider) ?? dependencyOption(validator, request, request.depData),
+      selections.get(request.provider) ?? dependencyOption({ validator, customMergeAllOf }, request, request.depData),
     // An option the fold selects keeps the ref path of the node offering it: restarting it, as render does, would
     // restart it at every level of a recursion through an option chosen without data, which nothing then bounds
     optionsInheritRefPath: true,
@@ -533,7 +534,7 @@ function planWith<S extends StrictRJSFSchema, F extends FormContextType>(
   { allOf, conditions }: OptionPolicy,
   optionPolicy?: OptionPolicy,
 ): PlannedField<S> {
-  const policy = policyFor(context.validator, graph, allOf, conditions, selections, cutRecursion, optionPolicy);
+  const policy = policyFor(context, graph, allOf, conditions, selections, cutRecursion, optionPolicy);
   return { plan: buildPlan<S, F>({ context, graph, seeds, data, depData, policy }), allOf, conditions, optionPolicy };
 }
 
@@ -998,7 +999,10 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
     const option = schemaFrom(rootSchema, options[index]);
     const rendered = rendersOwnField
       ? mergeSchemas(remaining, option)
-      : withDefaultOf(remaining, getRenderedOptionSchema<S>(remaining, resolveOwnRef<S>(option, rootSchema)));
+      : withDefaultOf(
+          remaining,
+          getRenderedOptionSchema<S>(remaining, resolveOwnRef<S>(option, rootSchema, context.customMergeAllOf)),
+        );
     const adopted = graph.adopt(schemaFrom(rootSchema, rendered));
     const offeredAt = view.entries
       .filter(({ node: id }) => {
@@ -1054,7 +1058,7 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
     data: view.data,
     depData: view.depData,
     policy: policyFor(
-      context.validator,
+      context,
       graph,
       inherited.optionPolicy?.allOf ?? view.allOf,
       inherited.optionPolicy?.conditions ?? view.conditions,
@@ -1151,7 +1155,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     const propertySchema = getPropertySchema<S>(schema, key);
     // A property written as a `$ref` keeps its `const` and `type` in the definition it names
     const readProperty = isSchemaObject<S>(propertySchema)
-      ? resolveOwnRef<S>(propertySchema, rootSchema)
+      ? resolveOwnRef<S>(propertySchema, rootSchema, context.customMergeAllOf)
       : propertySchema;
     // Check if the parent schema has a const property defined AND we are supporting const as defaults, then we
     // should always return the computedDefault since it's coming from the const.
@@ -1259,9 +1263,13 @@ function getItemUiSchemaForIndex<
 /** Returns the array schema `schema` with an `items` written as a `$ref` read as the definition it names, which is
  * what a `computeSkipPopulate()` reading the items' keywords expects to be handed
  */
-function withItemsResolved<S extends StrictRJSFSchema>(schema: S, rootSchema: S): S {
+function withItemsResolved<S extends StrictRJSFSchema>(
+  schema: S,
+  rootSchema: S,
+  customMergeAllOf: CustomMergeAllOf<S> | undefined,
+): S {
   const { items } = schema;
-  const resolved = isSchemaObject<S>(items) ? resolveOwnRef<S>(items, rootSchema) : items;
+  const resolved = isSchemaObject<S>(items) ? resolveOwnRef<S>(items, rootSchema, customMergeAllOf) : items;
   return resolved === items ? schema : { ...schema, items: resolved };
 }
 
@@ -1372,7 +1380,7 @@ function arrayDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>
   if (
     !schema.minItems ||
     isMultiSelect<T, S, F>(context, schema, rootSchema) ||
-    computeSkipPopulate<S, F>(context, withItemsResolved(schema, rootSchema), rootSchema) ||
+    computeSkipPopulate<S, F>(context, withItemsResolved(schema, rootSchema, context.customMergeAllOf), rootSchema) ||
     schema.minItems <= defaultsLength
   ) {
     // we don't want undefined defaults unless it is both not required or not required as root
@@ -1621,7 +1629,7 @@ export function ensureFormDataMatchingSchema<
       const propertySchema = getPropertySchema<S>(schemaToMatch, key);
       // A property written as a `$ref` is matched as the definition it names, whose `allOf` it is
       const readProperty = isSchemaObject<S>(propertySchema)
-        ? resolveOwnRef<S>(propertySchema, rootSchema)
+        ? resolveOwnRef<S>(propertySchema, rootSchema, context.customMergeAllOf)
         : propertySchema;
       if (
         Object.hasOwn(matched, key) &&

@@ -3489,6 +3489,7 @@ A widened option is not the schema its `$id` names, so it is given an `$id` of `
 - options: Array&lt;S | boolean> - The raw `oneOf`/`anyOf` array, which may contain boolean schemas
 - [resolveRefs=false]: boolean - When `true`, resolve `$ref`s in each option before relaxing; pass `rootSchema` as well. Set `false` (default) when refs are already resolved at the call site
 - [rootSchema]: S | undefined - Required when `resolveRefs` is `true`; the root schema used to look up `$ref`s
+- [customMergeAllOf]: CustomMergeAllOf&lt;S> | undefined - The `customMergeAllOf` the form renders with, which an option's `$ref` with keywords beside it is merged with when `resolveRefs` is `true`, as the form merges it
 
 #### Returns
 

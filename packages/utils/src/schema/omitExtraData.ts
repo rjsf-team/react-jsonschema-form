@@ -117,7 +117,7 @@ export default function omitExtraData<
         // Resolve $ref so we can inspect the effective required list for the inner schema.
         let sd = isSchemaObject<S>(schemaDef) ? schemaDef : ({} as S);
         if (sd.$ref !== undefined) {
-          sd = resolveOwnRef<S>(sd, rootSchema);
+          sd = resolveOwnRef<S>(sd, rootSchema, context.customMergeAllOf);
         }
         // A key the `patternProperties` match is described by the `allOf` of every pattern matching it, which is where
         // the names it requires live: read off the wrapper around them it requires nothing, and a required child
@@ -276,7 +276,12 @@ export default function omitExtraData<
     // Resolve $refs and relax additionalProperties:false → true in one pass for scoring only.
     // The unrelaxed resolved schema is re-derived for the winning option so that omit() still
     // respects additionalProperties:false during filtering.
-    const scoringOptions = relaxOptionsForScoring<S>(oneOf as (S | boolean)[], true, rootSchema);
+    const scoringOptions = relaxOptionsForScoring<S>(
+      oneOf as (S | boolean)[],
+      true,
+      rootSchema,
+      context.customMergeAllOf,
+    );
     const bestIndex = getClosestMatchingOption<T, S, F>(
       context,
       rootSchema,
@@ -288,7 +293,9 @@ export default function omitExtraData<
     const winning = (oneOf as (S | boolean)[])[bestIndex];
     // For object options, re-resolve without relaxation so additionalProperties:false is respected.
     // For boolean options, scoringOptions already holds the converted schema (true→{}, false→{not:{}}).
-    const resolved: S = isSchemaObject<S>(winning) ? resolveOwnRef<S>(winning, rootSchema) : scoringOptions[bestIndex];
+    const resolved: S = isSchemaObject<S>(winning)
+      ? resolveOwnRef<S>(winning, rootSchema, context.customMergeAllOf)
+      : scoringOptions[bestIndex];
     return omit(resolved, source, target, false);
   }
 
@@ -361,7 +368,7 @@ export default function omitExtraData<
    * @returns - The entry with its own reference resolved
    */
   function resolveAllOfEntry(entry: JSONSchema7Definition): JSONSchema7Definition {
-    return isSchemaObject<S>(entry) ? resolveOwnRef<S>(entry, rootSchema) : entry;
+    return isSchemaObject<S>(entry) ? resolveOwnRef<S>(entry, rootSchema, context.customMergeAllOf) : entry;
   }
 
   /** Returns the merge of a schema's `allOf`, made once per schema object and remembered for the rest of this call.
@@ -415,7 +422,12 @@ export default function omitExtraData<
     const { $ref: ref, allOf } = localSchema;
 
     if (ref !== undefined) {
-      return omit(resolveOwnRef<S>(localSchema, rootSchema), source, target, useSourceAsFallback);
+      return omit(
+        resolveOwnRef<S>(localSchema, rootSchema, context.customMergeAllOf),
+        source,
+        target,
+        useSourceAsFallback,
+      );
     }
     if (allOf) {
       localSchema = mergeAllOfOnce(localSchema, allOf);

@@ -1081,6 +1081,36 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         });
       });
 
+      it('keeps the data of a property the customMergeAllOf adds to an option with keywords beside its $ref', () => {
+        // The form merges the keywords beside the `$ref` with the definition it names through the context's merge, so
+        // the field that merge adds renders, and its data is not taken for extra data
+        const customMergeAllOf = (aSchema: RJSFSchema): RJSFSchema => {
+          const merged = shallowAllOfMerge(aSchema);
+          return typeof merged === 'boolean'
+            ? aSchema
+            : { ...merged, properties: { ...merged.properties, fromCustom: { type: 'string' } } };
+        };
+        const schema: RJSFSchema = {
+          definitions: { A: { type: 'object', properties: { kind: { const: 'a' }, shared: { type: 'string' } } } },
+          type: 'object',
+          properties: {
+            p: {
+              oneOf: [
+                {
+                  $ref: '#/definitions/A',
+                  title: 'B',
+                  properties: { kind: { const: 'b' }, extraB: { type: 'string' } },
+                },
+              ],
+            },
+          },
+        };
+        const formData = { p: { kind: 'b', extraB: 'e', shared: 's', fromCustom: 'typed', extra: 'drop' } };
+        expect(omitExtraData({ validator: testValidator, customMergeAllOf }, schema, schema, formData)).toEqual({
+          p: { kind: 'b', extraB: 'e', shared: 's', fromCustom: 'typed' },
+        });
+      });
+
       it('merges each allOf schema once per call, however many array rows reach it', () => {
         // `omit()` recurses per data node while the `allOf` belongs to the schema, so every row of an array would
         // otherwise repeat a merge that can only reach the same answer. The merge is the observable part: one call

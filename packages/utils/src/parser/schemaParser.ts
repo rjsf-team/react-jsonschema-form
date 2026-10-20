@@ -137,7 +137,7 @@ function parseSchema<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
   // `omitExtraData()` walks the schema a `$ref` names as it walks one written in place, so the `dependencies` and the
   // `if` branches above are read off that schema too, which resolution merges away
   if (typeof schema[REF_KEY] === 'string') {
-    parseSchema<T, S, F>(context, state, rootSchema, resolveOwnRef<S>(schema, rootSchema));
+    parseSchema<T, S, F>(context, state, rootSchema, resolveOwnRef<S>(schema, rootSchema, context.customMergeAllOf));
   }
   schemas.forEach((localSchema) => {
     const resolvedKey = sortedJSONStringify(localSchema);
