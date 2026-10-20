@@ -247,6 +247,9 @@ export function useDatePicker<V>({
    * and fails the format the field declares. That `''` is the only value dismissing the picker rewrites: a field
    * holding nothing is already empty, whatever `ui:emptyValue` would spell that as, and a stored value this widget
    * could not read is not one the user asked to throw away by dismissing a picker they chose no date in
+   *
+   * @returns - The value the close leaves the field holding, which the close reports its blur and focus with: the date
+   *          or empty value stored, or else the value it already held
    */
   const commitDate = useCallback((): unknown => {
     if (draft.picked && draft.date) {
