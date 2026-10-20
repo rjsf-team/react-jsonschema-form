@@ -36,8 +36,8 @@ function getPart(name: string) {
 }
 
 /** Pins the accessible name and description of each select an `AltDateWidget` renders, which no theme's `SelectWidget`
- * receives as a label, and that its Now and Clear buttons are disabled while the form is disabled or read-only, in every
- * theme.
+ * receives as a label, and that its Now and Clear buttons are disabled while the form is disabled or read-only and
+ * hidden by `hideNowButton` and `hideClearButton`, in every theme.
  *
  * These live in their own file rather than alongside `formTests()` because every render advances React's `useId`
  * counter for the rest of the module, so running them there would renumber the ids in that suite's snapshots across
@@ -170,6 +170,19 @@ export function altDateTests(Form: ComponentType<FormProps>) {
         expect(buttons).toHaveLength(2);
         buttons.forEach((button) => expect(button).toBeDisabled());
       });
+    });
+
+    test.each([
+      ['hideNowButton', 'Now', 'Clear'],
+      ['hideClearButton', 'Clear', 'Now'],
+    ])('%s hides the %s button where it is true, and not where it is false', (option, hidden, shown) => {
+      const hiding: UiSchema = {
+        when: { ...bareUiSchema.when, 'ui:options': { ...bareUiSchema.when['ui:options'], [option]: true } },
+        at: { ...bareUiSchema.at, 'ui:options': { ...bareUiSchema.at['ui:options'], [option]: false } },
+      };
+      render(<Form schema={bareSchema} uiSchema={hiding} validator={validator} />);
+      expect(screen.getAllByRole('button', { name: hidden })).toHaveLength(1);
+      expect(screen.getAllByRole('button', { name: shown })).toHaveLength(2);
     });
   });
 }

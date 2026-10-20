@@ -637,7 +637,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Added an `arrayTests` case for an array whose items are named by the `itemLabel` option ([#5474](https://github.com/rjsf-team/react-jsonschema-form/pull/5474))
 - Added `deprecatedLabelTests()`, which checks that a deprecated field's label carries the Deprecated marker, once, on an untitled property's key, an object's and array's heading, an `anyOf`/`oneOf` field's option selector and option input, and a label the template draws ([#5329](https://github.com/rjsf-team/react-jsonschema-form/issues/5329))
 - Added `selectedOptionDescriptionTests()`, which checks that a `SelectWidget` shows its selected option's description exactly where it describes the select, under its field's plan with the label shown, hidden by the field's own `ui:label: false` and hidden by the field above, and rendered without a plan with the label shown, hidden by `hideLabel` and hidden by its `uiSchema`'s `ui:label: false`, and that a select rendered without a plan, its label hidden, is named by its caller's `aria-label` and keeps the ids its caller describes it by ([#5505](https://github.com/rjsf-team/react-jsonschema-form/issues/5505))
-- `altDateTests()` checks that the Now and Clear buttons are enabled by default and disabled when the form is disabled or read-only ([#5378](https://github.com/rjsf-team/react-jsonschema-form/issues/5378))
+- `altDateTests()` checks that the Now and Clear buttons are enabled by default, disabled when the form is disabled or read-only, and hidden by `hideNowButton` and `hideClearButton` ([#5378](https://github.com/rjsf-team/react-jsonschema-form/issues/5378))
 
 ## @rjsf/utils
 
