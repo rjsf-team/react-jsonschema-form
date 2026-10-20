@@ -1,6 +1,9 @@
 import type { FieldProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import { render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
+import CheckboxWidget from '../src/components/widgets/CheckboxWidget.tsx';
+import { getTestRegistry } from '../src/testing.ts';
 import {
   createFormComponent,
   expectToHaveBeenCalledWithFormData,
@@ -301,6 +304,36 @@ describe('BooleanField', () => {
       });
 
       expect(node.querySelector('input[type=checkbox]')).toHaveAttribute('required', '');
+    });
+
+    // Rendered without a plan, as outside SchemaField, the widget gets its parent's `required` as is, so the attribute
+    // has to follow both it and the schema: a required box whose `false` the schema accepts, and an optional one that
+    // has to be true but is left unanswered, each hold data the schema accepts, which the browser would refuse (#5388)
+    it.each<[string, RJSFSchema, boolean, boolean | undefined]>([
+      ['a required boolean whose false the schema accepts', { type: 'boolean' }, true, false],
+      ['an optional boolean that has to be true', { type: 'boolean', const: true }, false, undefined],
+    ])('CheckboxWidget leaves the attribute off %s, rendered without a plan', (_, schema, required, value) => {
+      const { container } = render(
+        <CheckboxWidget
+          id='root'
+          name='root'
+          schema={schema}
+          uiSchema={{}}
+          value={value}
+          required={required}
+          disabled={false}
+          readonly={false}
+          autofocus={false}
+          label='Agree'
+          options={{}}
+          onChange={vi.fn()}
+          onBlur={vi.fn()}
+          onFocus={vi.fn()}
+          registry={getTestRegistry(schema)}
+        />,
+      );
+
+      expect(container.querySelector('input[type=checkbox]')).not.toHaveAttribute('required');
     });
   });
 

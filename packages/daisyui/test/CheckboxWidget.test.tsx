@@ -27,9 +27,9 @@ describe('CheckboxWidget', () => {
     expect(checkbox).toHaveProperty('checked', false);
   });
 
-  // HTML5 constraint validation fails an unchecked required box and blocks the submit before RJSF sees it, with
-  // nothing on the screen to say why, so the attribute has to follow `schemaRequiresTrueValue()` rather than the
-  // `required` prop a parent's `required` list sets
+  // HTML5 constraint validation fails an unchecked required box and blocks the submit before RJSF sees it, so the
+  // attribute is set only on a box the `required` prop marks and `schemaRequiresTrueValue()` demands be checked, not on
+  // every one a parent's `required` list names
   describe('the required attribute', () => {
     const agree: RJSFSchema = { type: 'boolean', title: 'Agree' };
 
@@ -60,6 +60,18 @@ describe('CheckboxWidget', () => {
       const { checkbox } = renderForm({ ...agree, const: true });
 
       expect(checkbox).toHaveAttribute('required');
+    });
+
+    // Rendered without a plan, as outside SchemaField, the widget gets its parent's `required` as is, so the attribute
+    // has to follow both it and the schema: a required box whose `false` the schema accepts, and an optional one that
+    // has to be true but is left unanswered, each hold data the schema accepts, which the browser would refuse
+    test.each<[string, RJSFSchema, boolean, boolean | undefined]>([
+      ['a required boolean whose false the schema accepts', agree, true, false],
+      ['an optional boolean that has to be true', { ...agree, const: true }, false, undefined],
+    ])('leaves the attribute off %s, rendered without a plan', (_, schema, required, value) => {
+      const { container } = render(<CheckboxWidget {...makeWidgetMockProps({ schema, value, required })} />);
+
+      expect(container.querySelector('input[type=checkbox]')).not.toHaveAttribute('required');
     });
   });
 
