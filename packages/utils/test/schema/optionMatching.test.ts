@@ -226,6 +226,32 @@ describe('matching options through the schema graph', () => {
 
     expect(getClosestMatchingOption(context, rootSchema, formData, options)).toBe(1);
   });
+  it('reuses a pick within one call without reading the data below it again', () => {
+    // Every candidate scores `p` by the same option list. Nothing scores `watched`, so only copying the data for a pick
+    // and comparing the data with such a copy read it
+    const nested: RJSFSchema[] = [
+      { type: 'object', properties: { k: { type: 'string' } } },
+      { type: 'object', properties: { k: { type: 'number' } } },
+    ];
+    const readsWith = (candidates: number) => {
+      let reads = 0;
+      const watched = {
+        get value() {
+          reads += 1;
+          return 'x';
+        },
+      };
+      const options = Array.from({ length: candidates }, (_, index): RJSFSchema => ({
+        type: 'object',
+        properties: { p: { anyOf: nested }, [`own${index}`]: { type: 'string' } },
+      }));
+      const formData = { p: { k: 'x', watched } };
+      getClosestMatchingOption({ validator: miniValidator() }, { anyOf: options }, formData, options);
+      return reads;
+    };
+
+    expect(readsWith(5)).toBe(readsWith(2));
+  });
   describe('options that refer to one another across definitions (#4990)', () => {
     const names = ['A', 'B', 'C', 'D', 'E'];
     const definitions = Object.fromEntries(

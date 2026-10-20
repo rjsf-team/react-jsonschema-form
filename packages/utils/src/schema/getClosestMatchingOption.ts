@@ -178,26 +178,28 @@ interface BestOption {
 interface Pick {
   readonly pick: BestOption;
   readonly data: unknown;
-  /** The outermost call the pick was made in, where the copy keeps an object of the data as it is */
-  readonly call: object | undefined;
+  /** Whether the copy keeps an object of the data as it is */
+  readonly keeps: boolean;
 }
 
 /** The options picked for data held in an object or array, by validator, merge, root, flags, the option objects
  * themselves, since an option's view scores the data apart from the option it was retrieved from, and the data itself,
  * with a copy of what the data held. Scoring an option list reads the lists nested below it for each candidate, so
  * without this every level of a recursion through options multiplies the matching done below it by the number of
- * candidates (#4990). A pick is reused only while the data deep-equals the copy, at any depth: a caller may mutate the
- * data in place between calls, and a validator that fills defaults in as it checks, as AJV's `useDefaults` does,
- * mutates it while a call scores it. The copy keeps any object but an array or a plain object, such as a `Date` or a
- * class instance, as it is, so it can't show that object changing in place: a pick whose copy keeps one is reused only
- * during the outermost call that made it, where only the validator can change the data. A default the validator fills
- * into such an object, where an option describes it as an object with properties, goes unseen there. Other data scores
- * no nested list and is not kept.
+ * candidates (#4990). Nothing changes the data while a call scores it, since a validator must not change the data it
+ * checks (see `ValidatorType.isValid()`), so a pick made or found to hold during the outermost call is reused for the
+ * rest of it without comparing again. A caller may mutate the data in place between calls, at any depth, so a later
+ * call reuses a pick only where the data still holds what the copy holds. The copy keeps any object but an array or a
+ * plain object, such as a `Date` or a class instance, as it is, so it can't show that object changing in place: a pick
+ * whose copy keeps one is reused only during the outermost call that made it. Other data scores no nested list and is
+ * not kept.
  */
 const picked = new KeyedMemo<Pick>();
 
-/** The outermost `bestOption()` call running, undefined between calls */
-let scoringCall: object | undefined;
+/** The picks made, or found to hold for their data, during the outermost `bestOption()` call running, undefined
+ * between calls
+ */
+let checkedPicks: WeakSet<Pick> | undefined;
 
 /** Returns the index of the option of `options` closest to `formData`, as `getClosestMatchingOption()` describes,
  * with each option matched as `optionMatches()` matches it under `relax`, and that option's score
@@ -245,22 +247,23 @@ function bestOption<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     ...options,
     formData,
   ];
-  const isOutermost = scoringCall === undefined;
-  const call = scoringCall ?? {};
-  scoringCall = call;
+  const isOutermost = checkedPicks === undefined;
+  const checked = checkedPicks ?? new WeakSet<Pick>();
+  checkedPicks = checked;
   try {
     const stored = picked.peek(keys);
-    if (stored && (stored.call === undefined || stored.call === call) && holdsCopy(stored.data, formData)) {
+    if (stored && (checked.has(stored) || (!stored.keeps && holdsCopy(stored.data, formData)))) {
+      checked.add(stored);
       return stored.pick;
     }
-    // Copied before the scoring, which a validator that fills defaults in changes the data during
     const copy = copyOfData(formData);
-    const pick = compute();
-    picked.set(keys, { pick, data: copy.data, call: copy.keeps ? call : undefined });
-    return pick;
+    const made = { pick: compute(), data: copy.data, keeps: copy.keeps };
+    picked.set(keys, made);
+    checked.add(made);
+    return made.pick;
   } finally {
     if (isOutermost) {
-      scoringCall = undefined;
+      checkedPicks = undefined;
     }
   }
 }

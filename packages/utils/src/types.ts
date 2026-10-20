@@ -2074,6 +2074,11 @@ export interface ValidatorType<S extends StrictRJSFSchema = RJSFSchema, F extend
    * false. The form checks a condition or an option by handing `{ $ref: '#/<pointer>' }` naming where it sits in the
    * `rootSchema`, so a `$ref` local to the root has to be resolved against the `rootSchema`, wherever it appears.
    *
+   * It must not change the `formData`, at any depth: the form checks the same data against many conditions and
+   * options, and `getClosestMatchingOption()` reuses what it found for data it already checked during the same call
+   * without looking at the data again. An engine that fills defaults in, coerces values or removes properties as it
+   * validates, as Ajv does with `useDefaults`, `coerceTypes` or `removeAdditional`, has to be handed a copy.
+   *
    * @param schema - The schema against which to validate the form data, often a `$ref` local to the `rootSchema`
    * @param formData - The form data to validate
    * @param rootSchema - The root schema that a `$ref` starting with `#` in the `schema` names
