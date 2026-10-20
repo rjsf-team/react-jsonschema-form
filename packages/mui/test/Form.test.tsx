@@ -3,7 +3,7 @@ import { withTheme } from '@rjsf/core';
 import { getTestRegistry } from '@rjsf/core/testing';
 import { formTests, themeTests } from '@rjsf/snapshot-tests';
 import type { FieldProps, FormValidation, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
-import { errorId, helpId, optionHelpId } from '@rjsf/utils';
+import { errorId, fieldLabelId, helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -133,8 +133,9 @@ describe("a titled anyOf field's option selector", () => {
       <Form schema={schema} uiSchema={{ pick: { 'ui:widget': 'radio' } }} validator={validator} />,
     );
 
-    const firstOption = container.querySelector('#root_pick__anyof_select-0')!;
-    expect(firstOption.closest('[role="radiogroup"]')).toHaveAccessibleName('Pick');
+    const radioGroup = container.querySelector('#root_pick__anyof_select-0')!.closest('[role="radiogroup"]');
+    expect(radioGroup).toHaveAccessibleName('Pick');
+    expect(radioGroup).toHaveAttribute('aria-labelledby', fieldLabelId('root_pick'));
     expectReferencesResolve(container);
   });
 });

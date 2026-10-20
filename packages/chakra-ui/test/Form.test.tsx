@@ -4,7 +4,7 @@ import { ChakraProvider, defaultSystem } from '@chakra-ui/react';
 import { getTestRegistry } from '@rjsf/core/testing';
 import { formTests, themeTests } from '@rjsf/snapshot-tests';
 import type { FormValidation, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
-import { bracketNameGenerator, errorId, helpId, optionHelpId } from '@rjsf/utils';
+import { bracketNameGenerator, errorId, fieldLabelId, helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -188,8 +188,9 @@ describe('chakra-ui SelectWidget', () => {
     );
 
     const trigger = container.querySelector('#root_pick__anyof_select');
-    // The option's own enum is a second combobox the field's label names
+    // The option's own enum is a second combobox, named "Pick" by a label of its own
     expect(screen.getAllByRole('combobox', { name: 'Pick' })).toContain(trigger);
+    expect(trigger).toHaveAttribute('aria-labelledby', fieldLabelId('root_pick'));
     expectReferencesResolve(container);
   });
 
@@ -205,8 +206,9 @@ describe('chakra-ui SelectWidget', () => {
       />,
     );
 
-    const firstOption = container.querySelector('#root_pick__anyof_select-0')!;
-    expect(firstOption.closest('[role="radiogroup"]')).toHaveAccessibleName('Pick');
+    const radioGroup = container.querySelector('#root_pick__anyof_select-0')!.closest('[role="radiogroup"]');
+    expect(radioGroup).toHaveAccessibleName('Pick');
+    expect(radioGroup).toHaveAttribute('aria-labelledby', fieldLabelId('root_pick'));
     expectReferencesResolve(container);
   });
 
