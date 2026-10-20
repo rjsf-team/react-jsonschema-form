@@ -191,6 +191,26 @@ describe('matching options through the schema graph', () => {
 
     expect(getClosestMatchingOption(context, rootSchema, formData, options)).toBe(1);
   });
+  it('reuses the pick for an array while it holds what it held, and picks for one changed in place what it holds now', () => {
+    const options: RJSFSchema[] = [
+      { type: 'array', items: { const: 'a' } },
+      { type: 'array', items: { const: 'b' } },
+    ];
+    const rootSchema: RJSFSchema = { anyOf: options };
+    const validator = miniValidator();
+    const formData = ['a'];
+    expect(getClosestMatchingOption({ validator }, rootSchema, formData, options)).toBe(0);
+    const { calls } = validator;
+    expect(getClosestMatchingOption({ validator }, rootSchema, formData, options)).toBe(0);
+    expect(validator.calls).toBe(calls);
+
+    formData[0] = 'b';
+    expect(getClosestMatchingOption({ validator }, rootSchema, formData, options)).toBe(1);
+
+    // Matching neither option, the two tie, and the tie goes to the first
+    formData.push('a');
+    expect(getClosestMatchingOption({ validator }, rootSchema, formData, options)).toBe(0);
+  });
   it('picks for an array holding a Date changed in place since the last call what it holds now', () => {
     const options: RJSFSchema[] = [
       { type: 'array', items: looseSchema({ const: new Date(0) }) },
@@ -228,12 +248,18 @@ describe('matching options through the schema graph', () => {
     const rootSchema: RJSFSchema = { definitions, oneOf: options };
     const nested = (depth: number, value: unknown): unknown =>
       depth === 1 ? { child: null, value } : { child: nested(depth - 1, value) };
-    const validations = (value: unknown) =>
+    const validationsOf = (dataAt: (depth: number) => unknown) =>
       [3, 4, 5, 6].map((depth) => {
         const validator = miniValidator();
-        getClosestMatchingOption({ validator }, rootSchema, nested(depth, value), options);
+        getClosestMatchingOption({ validator }, rootSchema, dataAt(depth), options);
         return validator.calls;
       });
+    const validations = (value: unknown) => validationsOf((depth) => nested(depth, value));
+    /** Data `depth` levels deep, each level made by `level` around the one below it */
+    const levelsOf =
+      (level: (child: unknown) => object) =>
+      (depth: number): object =>
+        level(depth === 1 ? null : levelsOf(level)(depth - 1));
 
     it('matches data holding a Date at its deepest level as often as data holding a string there', () => {
       const counts = validations(new Date(0));
@@ -241,6 +267,24 @@ describe('matching options through the schema graph', () => {
 
       expect(counts).toEqual(validations('x'));
       expect(new Set(steps).size).toBe(1);
+    });
+    it.each([
+      [
+        'objects with no prototype',
+        (child: unknown) => {
+          const level: Record<string, unknown> = Object.create(null);
+          level.child = child;
+          return level;
+        },
+        (child: unknown) => ({ child }),
+      ],
+      [
+        'objects holding an object under an own constructor key',
+        (child: unknown) => ({ child, constructor: { name: 'x' } }),
+        (child: unknown) => ({ child, other: { name: 'x' } }),
+      ],
+    ])('matches data of %s as often as plain data', (_name, level, plainLevel) => {
+      expect(validationsOf(levelsOf(level))).toEqual(validationsOf(levelsOf(plainLevel)));
     });
   });
   describe('options sharing a base that declares a key the data holds', () => {

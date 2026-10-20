@@ -43,7 +43,7 @@ import type {
 import uiBooleanOption from '../uiBooleanOption.ts';
 import getClosestMatchingOption from './getClosestMatchingOption.ts';
 import { AdditionalItemsHandling, getInnerSchemaForArrayItem } from './getDefaultFormState.ts';
-import { schemaFrom } from './graph/mergePlan.ts';
+import { emptySchema } from './graph/mergePlan.ts';
 import retrieveSchema, { expandRefCycle } from './retrieveSchema.ts';
 
 /** The schema and uiSchema of the `anyOf`/`oneOf` branch that applies to a node, and, for an object node, the option
@@ -58,12 +58,13 @@ interface SelectedBranch<T, S extends StrictRJSFSchema, F extends FormContextTyp
   uiSchema: UiSchema<T, S, F>;
 }
 
-/** Resolves the `anyOf`/`oneOf` branch that currently applies to `formData`, the same way `computeDefaults()` picks
- * the option it uses, so the walk descends into the branch's schema. Also resolves the uiSchema that
- * `MultiSchemaField` would pass down to that branch's children: `uiSchema[ONE_OF_KEY][index]` /
- * `uiSchema[ANY_OF_KEY][index]` when the matching keyword's uiSchema is an array reaching that index, falling back to
- * `uiSchema` itself otherwise (`AnyOfField`'s own `optionsUiSchema`/`optionUiSchema`) — a plain per-key entry on
- * `uiSchema` (e.g. `uiSchema.thing.b`) is never consulted for a branch's own fields, matching what actually renders.
+/** Resolves the `anyOf`/`oneOf` branch that currently applies to `formData`, the option the form's `fieldState` says
+ * the field shows, or without one the option `computeDefaults()` picks, so the walk descends into the branch's schema.
+ * Also resolves the uiSchema that `MultiSchemaField` would pass down to that branch's children:
+ * `uiSchema[ONE_OF_KEY][index]` / `uiSchema[ANY_OF_KEY][index]` when the matching keyword's uiSchema is an array
+ * reaching that index, falling back to `uiSchema` itself otherwise (`AnyOfField`'s own `optionsUiSchema`/
+ * `optionUiSchema`) — a plain per-key entry on `uiSchema` (e.g. `uiSchema.thing.b`) is never consulted for a branch's
+ * own fields, matching what actually renders.
  */
 function resolveSelectedBranch<T, S extends StrictRJSFSchema, F extends FormContextType>(
   ctx: WalkContext<T, S, F>,
@@ -79,7 +80,7 @@ function resolveSelectedBranch<T, S extends StrictRJSFSchema, F extends FormCont
   const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
   // A boolean option is rendered as an empty schema, as `SchemaField` retrieves it, so the form state is asked about
   // the options it shows
-  const empty = schemaFrom(schema, {});
+  const empty = emptySchema<S>();
   const shownOptions = options.map((option) => (isObject(option) ? option : empty));
   const index = fieldState
     ? fieldState.selectedOption(fieldPathFromList(path), shownOptions, formData, discriminator)

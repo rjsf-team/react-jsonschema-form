@@ -810,7 +810,7 @@ This is the order a widget's UI library needs when it manages its own selection 
 ### getAdditionalPropertySchema&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Returns the schema an object says applies to a `key` its own `properties` don't name, so that everything that renders such a property, seeds it or decides whether it is allowed at all reads one answer rather than its own.
-A key one or more `patternProperties` patterns match is described by all of them together, returned as an `allOf` for the caller to resolve into the one schema that describes it; a `false` among them rejects the key whatever the others allow, since no value satisfies it.
+A key one or more `patternProperties` patterns match is described by all of them together, returned as an `allOf` for the caller to resolve into the one schema that describes it, the same object for every key the same patterns match, so read it rather than change it; a `false` among them rejects the key whatever the others allow, since no value satisfies it.
 A key no pattern matches is `additionalProperties`' to describe, `false` and `true` included.
 
 An `unevaluatedProperties` answers for the key only where the object names no `additionalProperties` at all: the keys the `properties` and the `patternProperties` leave over are exactly the ones that go unevaluated, so that keyword is what then describes or rejects them.
@@ -3325,6 +3325,7 @@ This is used in isValid to make references to the rootSchema
 
 Recursively prefixes every `$ref` local to the root document, one starting with `#`, with the id a validator registers `rootSchema` under, as [rootSchemaIdOf()](#rootschemaidofsextendsstrictrjsfschemarjsfschema) returns it: the root's own `$id` less any fragment, or the value of the `ROOT_SCHEMA_PREFIX` constant where that leaves nothing.
 So `withRootIdRefPrefix({ $ref: '#/if' }, { $id: 'http://example.com/root.json#' })` gives `{ $ref: 'http://example.com/root.json#/if' }`.
+A relative `$ref`, such as `kinds.json#/definitions/cat`, is resolved against that id, unless the id is `ROOT_SCHEMA_PREFIX`, so it names the resource the root embeds rather than one beside the schema holding it.
 A validator applies it to a schema it validates beside `rootSchema`, so that a `$ref` local to the root resolves against the root whatever the schema holding it is registered as.
 
 #### Parameters

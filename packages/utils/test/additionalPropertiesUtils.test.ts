@@ -86,6 +86,14 @@ describe('getAdditionalPropertySchema()', () => {
       allOf: [{ type: 'string' }, { minLength: 2 }],
     });
   });
+  it('returns the same allOf for every key the same patterns match', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      patternProperties: { '^a': { type: 'string' }, c$: { minLength: 2 } },
+    };
+    expect(getAdditionalPropertySchema(schema, 'abc')).toBe(getAdditionalPropertySchema(schema, 'axc'));
+    expect(getAdditionalPropertySchema(schema, 'abc')).not.toBe(getAdditionalPropertySchema(schema, 'ab'));
+  });
   it('returns false for a key a matching pattern forbids, whatever the other matching patterns allow', () => {
     const schema: RJSFSchema = { type: 'object', patternProperties: { '^a': { type: 'string' }, c$: false } };
     expect(getAdditionalPropertySchema(schema, 'abc')).toBe(false);
