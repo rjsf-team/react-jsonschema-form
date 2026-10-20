@@ -382,7 +382,9 @@ class SchemaUtils<
  * resulting interface implementation will forward the `context` and `rootSchema` to all the wrapped APIs.
  *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
- * @param rootSchema - The root schema that will be forwarded to all the APIs
+ * @param rootSchema - The root schema that will be forwarded to all the APIs. It is parsed once per object and treated
+ *        as immutable, so a change made to it in place is not seen, even by a new `createSchemaUtils()`: pass a new
+ *        object to change it
  * @returns - An implementation of a `SchemaUtilsType` interface
  */
 export default function createSchemaUtils<

@@ -9,6 +9,7 @@ import type {
 } from '@rjsf/utils';
 import { ROOT_SCHEMA_PREFIX, getValidationTarget } from '@rjsf/utils';
 
+import nestedResourceTests from '../../utils/test/testUtils/nestedResourceTests.ts';
 import pointerValidationTests, {
   absoluteRefValidationTests,
 } from '../../utils/test/testUtils/pointerValidationTests.ts';
@@ -415,6 +416,15 @@ describe('CFWorkerValidator validating a subschema by its place in the root', ()
       expect(validator.isValid(pointer, 'b', rootSchema)).toBe(false);
     },
   );
+  it('resolves a pointer into a dependencies entry named like a keyword inside another such entry', () => {
+    const validator = customizeValidator();
+    const rootSchema: RJSFSchema = {
+      dependencies: { type: { dependencies: { enum: { oneOf: [{ properties: { enum: { const: 'a' } } }] } } } },
+    };
+    const pointer: RJSFSchema = { $ref: '#/dependencies/type/dependencies/enum/oneOf/0/properties/enum' };
+    expect(validator.isValid(pointer, 'a', rootSchema)).toBe(true);
+    expect(validator.isValid(pointer, 'b', rootSchema)).toBe(false);
+  });
   it('resolves a pointer into a dependencies entry named like a keyword below a property whose name holds a #', () => {
     const validator = customizeValidator();
     const dependent = (value: string): RJSFSchema => ({
@@ -447,3 +457,9 @@ describe('CFWorkerValidator validating a subschema by its place in the root', ()
 
 pointerValidationTests(() => customizeValidator());
 absoluteRefValidationTests(() => customizeValidator());
+
+describe('CFWorkerValidator', () => {
+  nestedResourceTests((rootSchema) =>
+    customizeValidator(String(rootSchema.$schema).includes('2020-12') ? { draft: '2020-12' } : {}),
+  );
+});

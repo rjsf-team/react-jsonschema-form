@@ -80,6 +80,10 @@ describe('withRootIdRefPrefix()', () => {
       $ref: 'http://example.com/root.json#/if',
     });
   });
+  it('prefixes a local $ref with ROOT_SCHEMA_PREFIX for a root that is no schema object, which an untyped caller may hand over', () => {
+    const notASchema: RJSFSchema = JSON.parse('"root"');
+    expect(withRootIdRefPrefix({ $ref: '#/a' }, notASchema)).toEqual({ $ref: `${ROOT_SCHEMA_PREFIX}#/a` });
+  });
 });
 
 describe('rootSchemaIdOf()', () => {

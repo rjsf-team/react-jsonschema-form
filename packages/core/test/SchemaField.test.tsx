@@ -27,12 +27,13 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import SchemaField from '../src/components/fields/SchemaField.tsx';
-import Form, { generateTheme } from '../src/index.ts';
+import Form, { generateTheme, generateWidgets } from '../src/index.ts';
 import MarkdownTemplate from '../src/markdown.tsx';
 import { createFormComponent, setupConsoleWarnSuppression, submitForm } from './testUtils.tsx';
 import type { NoValFormProps } from './testUtils.tsx';
 
 const user = userEvent.setup();
+const { TextWidget: CoreTextWidget, RadioWidget: CoreRadioWidget } = generateWidgets();
 
 describe('SchemaField', () => {
   describe('registry', () => {
@@ -1287,11 +1288,17 @@ describe('SchemaField', () => {
       },
     };
 
-    it('should append (deprecated) to label by default', () => {
-      const { node } = createFormComponent({ schema });
+    it('should append (deprecated) to label by default, and hand the widget the same label', () => {
+      const widgetLabels = new Map<string, string>();
+      function TextWidget(props: WidgetProps) {
+        widgetLabels.set(props.id, props.label);
+        return <CoreTextWidget {...props} />;
+      }
+      const { node } = createFormComponent({ schema, widgets: { TextWidget } });
       const labels = node.querySelectorAll('label');
       expect(labels[0]).toHaveTextContent('foo (deprecated)');
       expect(labels[1]).toHaveTextContent('bar');
+      expect(Object.fromEntries(widgetLabels)).toEqual({ root_foo: 'foo (deprecated)', root_bar: 'bar' });
     });
 
     it('should not append (deprecated) if deprecatedHandling is not label', () => {
@@ -1320,6 +1327,24 @@ describe('SchemaField', () => {
       const { node } = createFormComponent({ schema, uiSchema });
       const hiddenFields = node.querySelectorAll('.hidden');
       expect(hiddenFields.length).toBe(1);
+    });
+
+    // A field with no title and no name has no label to decorate, so neither the template nor a widget naming its
+    // group by the label it is handed is given one reading only the marker
+    it('should render no label and hand the widget an empty one for an untitled, unnamed deprecated field', () => {
+      const recordWidgetLabel = vi.fn<(label: string) => void>();
+      function RadioWidget(props: WidgetProps) {
+        recordWidgetLabel(props.label);
+        return <CoreRadioWidget {...props} />;
+      }
+      const { node } = createFormComponent({
+        schema: { type: 'string', enum: ['a', 'b'], deprecated: true },
+        uiSchema: { 'ui:widget': 'radio' },
+        widgets: { RadioWidget },
+      });
+      expect(node.querySelector('.control-label')).not.toBeInTheDocument();
+      expect(node).not.toHaveTextContent('(deprecated)');
+      expect(recordWidgetLabel).toHaveBeenLastCalledWith('');
     });
   });
 

@@ -10,7 +10,17 @@ import type { FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } fro
 import { optionMatches, optionNodeOf, simpleDiscriminatorMatch } from './getFirstMatchingOption.ts';
 import type { OptionNode } from './getFirstMatchingOption.ts';
 import KeyedMemo from './graph/keyedMemo.ts';
-import { ownRefTarget, resolveOwnRef } from './retrieveSchema.ts';
+import { findOwnRef, requireOwnRef } from './retrieveSchema.ts';
+
+/** Returns the definitions counted at the level of the data a schema's own `$ref` is scored at: the one it names,
+ * which its own `allOf` does not score again
+ *
+ * @param target - The subschema the `$ref` names, as `findOwnRef()` finds it
+ * @returns - The definitions counted
+ */
+function countedFrom(target: object | undefined): Set<object> {
+  return new Set(target === undefined ? [] : [target]);
+}
 
 /** Returns the score of one property's `formValue` against the `value` schema describing it, as
  * `calculateIndexScore()` adds it up:
@@ -41,14 +51,8 @@ function propertyScore<
     if (formValue == null) {
       return 0;
     }
-    const target = ownRefTarget<S>(value, rootSchema);
-    return propertyScore<T, S, F>(
-      context,
-      rootSchema,
-      resolveOwnRef<S>(value, rootSchema),
-      formValue,
-      new Set(target === undefined ? [] : [target]),
-    );
+    const { resolved, target } = requireOwnRef<S>(value, rootSchema, context.customMergeAllOf);
+    return propertyScore<T, S, F>(context, rootSchema, resolved, formValue, countedFrom(target));
   }
   const xxxOfKey = getXxxOfKey<S>(value);
   if (xxxOfKey && formValue != null) {
@@ -92,7 +96,8 @@ function propertyScore<
  * the scores are added up. A schema without `properties` scores 1 when its `type` is the guessed-type of `formData`.
  * The score of each `allOf` entry, read through its `$ref`, is added to the schema's own, so options sharing a base
  * through a `$ref` beside their own keywords or through an `allOf` are told apart by the properties each adds. An
- * entry that is a `$ref` scores 0 where the `formData` is `undefined` or `null`, as a property's `$ref` does.
+ * entry that is a `$ref` scores 0 where the `formData` is `undefined` or `null`, as a property's `$ref` does, and
+ * where the reference resolves to nothing or loops.
  *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param rootSchema - The root JSON schema of the entire form
@@ -148,14 +153,19 @@ function scopeScore<T, S extends StrictRJSFSchema, F extends FormContextType>(
     if (!isSchemaObject<S>(entry) || (typeof entry[REF_KEY] === 'string' && formData == null)) {
       return score;
     }
-    const target = ownRefTarget<S>(entry, rootSchema);
-    if (target !== undefined) {
-      if (counted.has(target)) {
+    const ref = findOwnRef<S>(entry, rootSchema, context.customMergeAllOf);
+    // A reference naming nothing says nothing about the data: whatever resolves the option to render it reports the
+    // broken reference on its own
+    if ('error' in ref) {
+      return score;
+    }
+    if (ref.target !== undefined) {
+      if (counted.has(ref.target)) {
         return score;
       }
-      counted.add(target);
+      counted.add(ref.target);
     }
-    return score + scopeScore<T, S, F>(context, rootSchema, resolveOwnRef<S>(entry, rootSchema), formData, counted);
+    return score + scopeScore<T, S, F>(context, rootSchema, ref.resolved, formData, counted);
   }, own);
 }
 
@@ -169,23 +179,26 @@ interface BestOption {
 interface Pick {
   readonly pick: BestOption;
   readonly data: unknown;
+  /** The outermost call the pick was made in, where the copy keeps an object of the data as it is */
+  readonly call: object | undefined;
 }
 
 /** The options picked for data held in an object or array, by validator, merge, root, flags, the option objects
  * themselves, since an option's view scores the data apart from the option it was retrieved from, and the data itself,
  * with a copy of what the data held. Scoring an option list reads the lists nested below it for each candidate, so
  * without this every level of a recursion through options multiplies the matching done below it by the number of
- * candidates (#4990). A pick is reused only while the data still equals the copy, since a caller may mutate the data in
- * place between calls at any depth; data holding anything but arrays, plain objects and primitives, such as a `Date`,
- * can't be copied to compare with and is not kept. Other data scores no nested list and is not kept either.
+ * candidates (#4990). A pick is reused only while the data deep-equals the copy, at any depth: a caller may mutate the
+ * data in place between calls, and a validator that fills defaults in as it checks, as AJV's `useDefaults` does,
+ * mutates it while a call scores it. The copy keeps any object but an array or a plain object, such as a `Date` or a
+ * class instance, as it is, so it can't show that object changing in place: a pick whose copy keeps one is reused only
+ * during the outermost call that made it, where only the validator can change the data. A default the validator fills
+ * into such an object, where an option describes it as an object with properties, goes unseen there. Other data scores
+ * no nested list and is not kept.
  */
 const picked = new KeyedMemo<Pick>();
 
-/** The picks found to hold for their data during the outermost `bestOption()` call running, which reuses them without
- * comparing again: nothing mutates the data while a call scores it, and scoring asks for the same nested picks once per
- * candidate. Undefined between calls
- */
-let checkedPicks: WeakSet<Pick> | undefined;
+/** The outermost `bestOption()` call running, undefined between calls */
+let scoringCall: object | undefined;
 
 /** Returns the index of the option of `options` closest to `formData`, as `getClosestMatchingOption()` describes,
  * with each option matched as `optionMatches()` matches it under `relax`, and that option's score
@@ -233,62 +246,50 @@ function bestOption<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     ...options,
     formData,
   ];
-  const isOutermost = checkedPicks === undefined;
-  const checked = checkedPicks ?? new WeakSet<Pick>();
-  checkedPicks = checked;
+  const isOutermost = scoringCall === undefined;
+  const call = scoringCall ?? {};
+  scoringCall = call;
   try {
     const stored = picked.peek(keys);
-    if (stored && (checked.has(stored) || deepEquals(stored.data, formData))) {
-      checked.add(stored);
+    if (stored && (stored.call === undefined || stored.call === call) && deepEquals(stored.data, formData)) {
       return stored.pick;
     }
     const pick = compute();
     const copy = copyOfData(formData);
-    if (copy) {
-      const made = { pick, data: copy.data };
-      picked.set(keys, made);
-      checked.add(made);
-    }
+    picked.set(keys, { pick, data: copy.data, call: copy.keeps ? call : undefined });
     return pick;
   } finally {
     if (isOutermost) {
-      checkedPicks = undefined;
+      scoringCall = undefined;
     }
   }
 }
 
-/** A copy of `data`, which holds arrays, plain objects and primitives only; undefined for data holding any other
- * object, which could change in place without the copy showing it
+/** A copy of some data, see `copyOfData()` */
+interface DataCopy {
+  readonly data: unknown;
+  /** Whether the copy keeps an object of the data as it is */
+  readonly keeps: boolean;
+}
+
+/** A copy of `data` in which every array and plain object is copied and any other object is kept as it is, since it
+ * can't be copied without knowing what kind of object it is
  */
-function copyOfData(data: unknown): { data: unknown } | undefined {
-  if (typeof data !== 'object' || data === null) {
-    return { data };
-  }
+function copyOfData(data: unknown): DataCopy {
   if (Array.isArray(data)) {
     const items: readonly unknown[] = data;
-    const copy: unknown[] = [];
-    for (const item of items) {
-      const copied = copyOfData(item);
-      if (copied === undefined) {
-        return undefined;
-      }
-      copy.push(copied.data);
-    }
-    return { data: copy };
+    const copies = items.map(copyOfData);
+    return { data: copies.map((copy) => copy.data), keeps: copies.some((copy) => copy.keeps) };
   }
-  if (!isPlainObject(data)) {
-    return undefined;
+  if (isPlainObject(data)) {
+    const copies = Object.entries(data).map(([key, value]): [string, DataCopy] => [key, copyOfData(value)]);
+    return {
+      // `fromEntries()` defines each key as the object's own, a `__proto__` included
+      data: Object.fromEntries(copies.map(([key, copy]) => [key, copy.data])),
+      keeps: copies.some(([, copy]) => copy.keeps),
+    };
   }
-  const entries: [string, unknown][] = [];
-  for (const [key, value] of Object.entries(data)) {
-    const copied = copyOfData(value);
-    if (copied === undefined) {
-      return undefined;
-    }
-    entries.push([key, copied.data]);
-  }
-  // `fromEntries()` defines each key as the object's own, a `__proto__` included
-  return { data: Object.fromEntries(entries) };
+  return { data, keeps: typeof data === 'object' && data !== null };
 }
 
 /** Picks the option for `bestOption()`, see `getClosestMatchingOption()` */
@@ -308,14 +309,8 @@ function scoreOptions<T, S extends StrictRJSFSchema, F extends FormContextType>(
     if (!isSchemaObject<S>(option)) {
       return 0;
     }
-    const target = ownRefTarget<S>(option, rootSchema);
-    return scopeScore<T, S, F>(
-      context,
-      rootSchema,
-      resolveOwnRef<S>(option, rootSchema),
-      formData,
-      new Set(target === undefined ? [] : [target]),
-    );
+    const { resolved, target } = requireOwnRef<S>(option, rootSchema, context.customMergeAllOf);
+    return scopeScore<T, S, F>(context, rootSchema, resolved, formData, countedFrom(target));
   };
   // The score a list of options nested under a property contributes: what the picked option scores, plus one where the
   // data matches it, as the option picked here without scoring does

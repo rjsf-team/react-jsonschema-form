@@ -44,10 +44,7 @@ interface GetGroupProps {
 
 /** Builds the props that name a widget rendering several controls, since no single control in a group can carry the
  * label `FieldTemplate` renders above it and a `label htmlFor` does not associate with the group's wrapper. The group
- * points at the label element rather than repeating its text, so its accessible name is whatever the label displays:
- * the `label` a widget is handed is computed separately from the one the template renders, and differs from it for an
- * `additionalProperties` entry, whose template label is the key, and under `deprecatedHandling: 'label'`, which
- * decorates only the template's.
+ * points at the label element rather than repeating its text, so its accessible name is whatever the label displays.
  *
  * The reference is claimed only when this widget has a label to be named by, so it is dropped for a field with no
  * label, such as a root field with no title, where the template renders no label to point at.

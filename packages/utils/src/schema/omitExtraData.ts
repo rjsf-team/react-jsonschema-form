@@ -159,7 +159,7 @@ export default function omitExtraData<
         // Resolve $ref so we can inspect the effective required list for the inner schema.
         let sd = isSchemaObject<S>(schemaDef) ? schemaDef : ({} as S);
         if (sd.$ref !== undefined) {
-          sd = resolveOwnRef<S>(sd, rootSchema);
+          sd = resolveOwnRef<S>(sd, rootSchema, context.customMergeAllOf);
         }
         // A key the `patternProperties` match is described by the `allOf` of every pattern matching it, which is where
         // the names it requires live: read off the wrapper around them it requires nothing, and a required child
@@ -343,7 +343,7 @@ export default function omitExtraData<
       winning = oneOf[closestOption<S, F>(context, rootSchema, source, oneOf, 0, true, discriminator)];
     }
     // An index naming no option, as -1 does for none shown, keeps nothing the options describe, as a `false` option does
-    return omit(resolveOwnRef<S>(asOption(winning), rootSchema), source, path, target, false);
+    return omit(resolveOwnRef<S>(asOption(winning), rootSchema, context.customMergeAllOf), source, path, target, false);
   }
 
   /** Applies `anyOf` branches from `schema` to `source`, merging results into `target`. When `anyOf`
@@ -417,7 +417,7 @@ export default function omitExtraData<
    * @returns - The entry with its own reference resolved
    */
   function resolveAllOfEntry(entry: JSONSchema7Definition): JSONSchema7Definition {
-    return isSchemaObject<S>(entry) ? resolveOwnRef<S>(entry, rootSchema) : entry;
+    return isSchemaObject<S>(entry) ? resolveOwnRef<S>(entry, rootSchema, context.customMergeAllOf) : entry;
   }
 
   /** Returns the merge of a schema's `allOf`, made once per schema object and remembered for the rest of this call.
@@ -478,7 +478,13 @@ export default function omitExtraData<
     const { $ref: ref, allOf } = localSchema;
 
     if (ref !== undefined) {
-      return omit(resolveOwnRef<S>(localSchema, rootSchema), source, path, target, useSourceAsFallback);
+      return omit(
+        resolveOwnRef<S>(localSchema, rootSchema, context.customMergeAllOf),
+        source,
+        path,
+        target,
+        useSourceAsFallback,
+      );
     }
     if (allOf) {
       const merged = mergeAllOfOnce(localSchema, allOf);

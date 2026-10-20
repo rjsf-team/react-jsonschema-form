@@ -69,10 +69,11 @@ export function installFormats(
  */
 function indexDependencies(lookup: Record<string, Schema | boolean>): void {
   // In the order the engine indexed them, so a resource's own URI comes before the pointer from the root that reaches
-  // it, and the `$ref`s inside an entry are resolved against the resource's base
+  // it, and the `$ref`s inside an entry are resolved against the resource's base. The entries an index adds join the
+  // list as it is read: an array iterator reads them too, where taking each off the front would move every one
+  // behind it
   const pending = Object.entries(lookup);
-  for (let next = pending.shift(); next !== undefined; next = pending.shift()) {
-    const [uri, schema] = next;
+  for (const [uri, schema] of pending) {
     const dependencies = typeof schema === 'object' ? schema.dependencies : undefined;
     // The engine spells a `#` in a pointer as it stands, so only the first one starts the fragment
     const fragmentAt = uri.indexOf('#');

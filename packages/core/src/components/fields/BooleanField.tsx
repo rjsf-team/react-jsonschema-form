@@ -70,6 +70,7 @@ function BooleanField<
     onChange,
     onFocus,
     onBlur,
+    // oxlint-disable-next-line typescript/no-deprecated -- handed on to its widget, for one that doesn't read `presentation`
     rawErrors,
     presentation,
   } = props;

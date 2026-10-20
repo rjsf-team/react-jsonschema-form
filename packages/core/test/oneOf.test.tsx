@@ -4597,6 +4597,7 @@ describe('oneOf', () => {
   });
 
   it("gives the object's own errors to the option's field, not to the object the selector is rendered for", () => {
+    // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated prop a component without a plan reads
     function RawErrorsObjectFieldTemplate({ id, properties, rawErrors }: ObjectFieldTemplateProps) {
       return (
         <div>

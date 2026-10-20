@@ -957,7 +957,7 @@ console.log(separator); // Output: ','
 
 Resolves how a field has to render a schema marked `deprecated`: `label` appends a deprecation marker to the label it hands its `FieldTemplate`, `disable` disables the field, and `hide` tells the `FieldTemplate` the field is hidden.
 Returns `undefined` for a schema that is not deprecated, so a `ui:deprecatedHandling` on an undeprecated schema cannot hide or disable a field on its own, and a caller can treat the three modes as the only cases.
-Only the label handed to the `FieldTemplate` is decorated under `label`; the one handed to the widget below it names the widget's own control and is left alone.
+Under `label`, the decorated label is the field's own: under a plan, which a `Form` always builds, the `FieldTemplate` and the widget below it are both handed it. A field rendered without a plan, as by a custom field, hands its widget the undecorated label.
 `SchemaField` and `LayoutMultiSchemaField` both call this, and a custom field rendering its own `FieldTemplate` should too, rather than read `uiOptions.deprecatedHandling` directly — which is how the `label` default gets missed, leaving a deprecated field undecorated.
 
 #### Parameters
@@ -1100,6 +1100,20 @@ A finite epoch number or a valid `Date` is an exact instant. It is converted to 
 #### Returns
 
 - DateTimeLocalValueResult: The `DateTimeLocalValueResult` to be used within a `DateTimeWidget` implementation
+
+### getErrorsToDraw&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#geterrorstodraw}
+
+Gets the error messages a widget, or an `ArrayFieldTemplate` or `ObjectFieldTemplate`, draws itself: the messages its field's plan shows, with `ui:hideError` applied, where the plan's `presentation.errors.by` is `'self'`, and none where they are drawn elsewhere, as by the `FieldTemplate` under `'template'` or, below an `anyOf`/`oneOf` option, by the field above.
+For a component rendered without a plan, as one rendered outside `SchemaField` is, it falls back to the deprecated `rawErrors` while `hideError` is off.
+Read it rather than `rawErrors` or the deprecated [getVisibleErrors()](#getvisibleerrors), and [hasWidgetErrors()](#haswidgeterrors) or [hasTemplateErrors()](#hastemplateerrors) for an error state.
+
+#### Parameters
+
+- props: Pick&lt;WidgetProps&lt;T, S, F>, 'rawErrors' | 'hideError' | 'presentation'> - The component's `rawErrors`, `hideError` and `presentation`
+
+#### Returns
+
+- readonly string[]: The messages to draw
 
 ### getExampleSuggestions&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
@@ -1696,8 +1710,8 @@ A schema [`retrieveSchema()`](#retrieveschematunknownsextendsstrictrjsfschemarjs
 
 ### getVisibleErrors()
 
-Returns the list of errors that a widget or template should surface in its own UI, which is empty whenever `ui:hideError` is in effect.
-Components rendering an error state (a red outline, an invalid flag, inline error text) must derive it from this rather than from `rawErrors` directly, since `rawErrors` is deliberately still provided while errors are hidden so that custom widgets can render them their own way.
+Returns the list of errors that a widget or template should surface in its own UI, which is empty whenever `ui:hideError` is in effect: `rawErrors` is deliberately still provided while errors are hidden, so that custom widgets can render them their own way.
+Deprecated, and kept through v7 for a component rendered without a plan: read [getErrorsToDraw()](#geterrorstodraw) instead, which gives the messages its field's plan shows, with `ui:hideError` applied, only where `presentation.errors.by` is `'self'`, since the template draws them under `'template'`, and falls back to this without a plan, and [hasWidgetErrors()](#haswidgeterrors) or [hasTemplateErrors()](#hastemplateerrors) for an error state.
 
 #### Parameters
 
@@ -1915,6 +1929,7 @@ Read it rather than `rawErrors`, which stays through v7 only for a template rend
 
 Determines whether a widget or template has any errors to surface in its own UI, which is never the case while `ui:hideError` is in effect.
 It is the boolean form of [getVisibleErrors()](#getvisibleerrors), for the components that only need to decide whether to render an error state rather than render the errors themselves.
+Deprecated, and kept through v7 for a component rendered without a plan: read [hasWidgetErrors()](#haswidgeterrors) or [hasTemplateErrors()](#hastemplateerrors) instead, which read the plan and fall back to this only without one. A component drawing the messages itself reads [getErrorsToDraw()](#geterrorstodraw).
 
 #### Parameters
 
@@ -3398,7 +3413,9 @@ A tie goes to the `selectedOption` when it is a candidate and to the first candi
 
 The score is the number of matching properties, more heavily favoring options with matching default or const values.
 A property holding an `anyOf`/`oneOf` of its own scores what the option picked among those scores, plus one where the data matches it.
-The pick is remembered per option list and data object, which the form replaces rather than mutates, so a recursion through option lists matches each level once; data mutated in place after a call can be answered as it was before.
+The pick is remembered per option list and data object, so a recursion through option lists matches each level once.
+It is reused only while the data deep-equals a copy kept with it, so data mutated in place, between calls or by a validator that fills defaults in as it checks, is matched for what it holds now.
+An object other than an array or a plain object, such as a `Date`, is kept in the copy as it is, so a pick for data holding one is reused only within the outermost call that made it, and a default the validator fills into that object during the call, where an option describes it as an object with properties, isn't seen.
 
 #### Parameters
 
@@ -3663,6 +3680,7 @@ A value outside the new `enum` or constant options is replaced with the new `def
 
 Creates a `SchemaUtilsType` interface that is based around the given `context` and `rootSchema` parameters.
 The resulting interface implementation will forward the `context` and `rootSchema` to all the wrapped APIs.
+The `rootSchema` is parsed once per object and treated as immutable: a change made to it in place is not seen, even by a new `createSchemaUtils()`, so pass a new object to change it.
 
 #### Parameters
 

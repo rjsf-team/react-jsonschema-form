@@ -7,6 +7,7 @@ import {
   isObject,
   omitExtraData,
   retrieveSchema,
+  schemaKey,
 } from '../../src/index.ts';
 import {
   MERGED_PATTERN_KEY_FORM_DATA,
@@ -57,6 +58,25 @@ export type BuildPrecompiledValidator = (
  * @param buildValidator - Compiles a schema and returns the package's precompiled validator for it
  */
 export default function precompiledCoverageTests(buildValidator: BuildPrecompiledValidator) {
+  describe('missing precompiled validators', () => {
+    const rootSchema: RJSFSchema = { $id: 'root', type: 'string' };
+
+    it.each<RJSFSchema>([
+      { type: 'number' },
+      { allOf: [] },
+      { allOf: [false] },
+      { allOf: [true] },
+      { allOf: [{}] },
+      { allOf: [{ $id: '' }] },
+    ])('retains the hash-only diagnostic for an unnamed schema: %j', (missingSchema) => {
+      const validator = buildValidator(rootSchema);
+
+      expect(() => validator.isValid(missingSchema, {}, rootSchema)).toThrow(
+        `No precompiled validator function was found for the given schema for "${schemaKey(missingSchema)}"`,
+      );
+    });
+  });
+
   describe('with a customMergeAllOf', () => {
     const rootSchema = SCHEMA_MERGED_FOR_PATTERN_PROPERTY;
     const formData = MERGED_PATTERN_PROPERTY_FORM_DATA;
