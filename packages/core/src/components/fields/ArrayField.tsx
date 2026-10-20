@@ -79,6 +79,31 @@ function maxOrder(rows: readonly RowId[]): number {
   return rows.reduce((max, { order }) => Math.max(max, order), -1);
 }
 
+/** Keys `items` by index rather than through `map()`, which skips the holes a write past the end of an array leaves, so
+ * every slot is an item with a row of its own: the row `rowFor` gives its index, or else a new one, ordered after
+ * `others` and every row keyed before it
+ *
+ * @param items - The items to key
+ * @param rowFor - The row the item at `index` keeps, if any
+ * @param newRowId - Makes a row ordered after the rows it is handed
+ * @param [others] - Rows beside the keyed ones that a new row is ordered after
+ * @returns - The keyed items
+ */
+function keyItems<T>(
+  items: T[],
+  rowFor: (index: number, item: T) => RowId | undefined,
+  newRowId: (rows: readonly RowId[]) => RowId,
+  others: readonly RowId[] = [],
+): KeyedFormDataType<T>[] {
+  const keyed: KeyedFormDataType<T>[] = [];
+  for (let index = 0; index < items.length; index++) {
+    const item = items[index];
+    const { key, order } = rowFor(index, item) ?? newRowId([...others, ...keyed]);
+    keyed.push({ key, order, item });
+  }
+  return keyed;
+}
+
 /** Converts `KeyedFormDataType` data into the inner `formData`
  *
  * @param keyedFormData - The `KeyedFormDataType` to be converted
@@ -1164,14 +1189,7 @@ export default function ArrayField<
     if (!Array.isArray(items)) {
       return [];
     }
-    // By index rather than through `map()`, which skips the holes a write past the end of an array leaves: every slot is
-    // an item with a row of its own. A row made here is ordered after the ones before it, made here too included
-    const read: KeyedFormDataType<T>[] = [];
-    for (let index = 0; index < items.length; index++) {
-      const { key, order } = rows[index] ?? newRowId(read);
-      read.push({ key, order, item: items[index] });
-    }
-    return read;
+    return keyItems(items, (index) => rows[index], newRowId);
   }, [readItems, readSentRows, newRowId]);
 
   /** Sends the rows a handler built from `rows`, keying them first so a second handler in the same event starts from
@@ -1205,15 +1223,15 @@ export default function ArrayField<
       if (items.length === newKeyedFormData.length && deepEquals(items, sent)) {
         return;
       }
-      const kept: KeyedFormDataType<T>[] = [];
-      // By index, as `readRows()` reads them, so a hole is an item with a row of its own
-      for (let index = 0; index < items.length; index++) {
-        const item = items[index];
-        const row = newKeyedFormData[index];
-        const { key, order } =
-          row && index < sent.length && deepEquals(item, sent[index]) ? row : newRowId([...newKeyedFormData, ...kept]);
-        kept.push({ key, order, item });
-      }
+      const kept = keyItems(
+        items,
+        (index, item) => {
+          const row = newKeyedFormData[index];
+          return row && index < sent.length && deepEquals(item, sent[index]) ? row : undefined;
+        },
+        newRowId,
+        newKeyedFormData,
+      );
       updateKeyedFormData(kept);
     },
     [sendMove, onChange, updateKeyedFormData, fieldPath, newRowId, readItems],
