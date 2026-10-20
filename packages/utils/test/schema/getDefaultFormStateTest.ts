@@ -8607,6 +8607,64 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           expect(collapsedDefaultsOf(schema)).toEqual({});
         });
 
+        it.each<[string, (opt: RJSFSchema) => RJSFSchema]>([
+          ['an allOf', (opt) => ({ type: 'object', allOf: [{ properties: { opt } }] })],
+          [
+            'an if/then',
+            (opt) => ({ type: 'object', if: { properties: { s: { const: 'x' } } }, then: { properties: { opt } } }),
+          ],
+        ])('is left out where %s of an object below the root brings it in, as where the object names it', (_, of) => {
+          const opt: RJSFSchema = { type: 'object', properties: { n: { type: 'null' } } };
+          const withOpt = (o: RJSFSchema): RJSFSchema => ({
+            type: 'object',
+            required: ['o'],
+            properties: { o: { ...o, properties: { s: { type: 'string' }, ...o.properties } } },
+          });
+          const defaultsOf = (schema: RJSFSchema) =>
+            getDefaultFormState(
+              { validator: testValidator, defaultFormStateBehavior: { emptyObjectFields } },
+              {
+                schema,
+                rootSchema: schema,
+                formData: { o: { s: 'x' } },
+                uiSchema: { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] } },
+              },
+            );
+          const broughtIn = defaultsOf(withOpt(of(opt)));
+          expect(broughtIn).toEqual({ o: { s: 'x' } });
+          expect(broughtIn).toEqual(defaultsOf(withOpt({ type: 'object', properties: { opt } })));
+        });
+
+        it('fills in no null in one the data holds as an empty object, which the controls show as holding none', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: { opt: { type: 'object', properties: { n: { type: 'null' } } } },
+          };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator, defaultFormStateBehavior: { emptyObjectFields } },
+              {
+                schema,
+                rootSchema: schema,
+                formData: { opt: {} },
+                uiSchema: { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] } },
+              },
+            ),
+          ).toEqual({ opt: {} });
+        });
+
+        it('fills in the null of one its own defaults add, which renders its fields', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              opt: { type: 'object', properties: { s: { type: 'string', default: 'x' }, n: { type: 'null' } } },
+            },
+          };
+          // The settings that add an optional object holding a default
+          const isAdded = emptyObjectFields === 'populateAllDefaults' || emptyObjectFields === 'skipEmptyDefaults';
+          expect(collapsedDefaultsOf(schema)).toEqual(isAdded ? { opt: { s: 'x', n: null } } : {});
+        });
+
         it('still fills in the null of a required one, which renders its fields', () => {
           const schema: RJSFSchema = {
             type: 'object',
@@ -8639,6 +8697,47 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         });
       },
     );
+
+    describe('an optional object an allOf of an object below the root brings in', () => {
+      const opt: RJSFSchema = { type: 'object', properties: { n: { type: 'null' } } };
+
+      it('is left out when its own uiSchema entry asks for the optional data controls', () => {
+        // A property schema of `true` beside it, which names no field of its own
+        const schema: RJSFSchema = {
+          type: 'object',
+          required: ['o'],
+          properties: { o: { type: 'object', allOf: [{ properties: { opt, any: true } }] } },
+        };
+        const formData: GenericObjectType = { o: {} };
+        const uiSchema: UiSchema<GenericObjectType> = {
+          o: { opt: { 'ui:options': { enableOptionalDataFieldForType: ['object'] } } },
+        };
+        expect(
+          getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema, formData, uiSchema }),
+        ).toEqual({ o: {} });
+      });
+
+      it('is left out as an additional property when the entry its additional properties share asks for the controls', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          required: ['o'],
+          properties: { o: { type: 'object', allOf: [{ additionalProperties: opt }] } },
+        };
+        expect(
+          getDefaultFormState(
+            { validator: testValidator },
+            {
+              schema,
+              rootSchema: schema,
+              formData: { o: { k: undefined } },
+              uiSchema: {
+                o: { additionalProperties: { 'ui:options': { enableOptionalDataFieldForType: ['object'] } } },
+              },
+            },
+          ),
+        ).toEqual({ o: { k: undefined } });
+      });
+    });
 
     describe('where a null fill can come from', () => {
       it('is filled in from a definition a typeless allOf reaches through a $ref', () => {

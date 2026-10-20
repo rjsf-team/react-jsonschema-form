@@ -27,6 +27,7 @@ import getXxxOfOptions from '../getXxxOfOptions.ts';
 import isConstant from '../isConstant.ts';
 import isConstantOptionList from '../isConstantOptionList.ts';
 import isFixedItems from '../isFixedItems.ts';
+import isFormDataAvailable from '../isFormDataAvailable.ts';
 import isObject, { isSchemaObject } from '../isObject.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
 import mergeDefaultsWithFormData from '../mergeDefaultsWithFormData.ts';
@@ -316,8 +317,8 @@ function nullsOnlyContext<S extends StrictRJSFSchema, F extends FormContextType>
  *
  * @param context - The `SchemaContext` the defaults are computed in
  * @param schema - The object schema, with the `allOf` or `if` left out of its defaults
- * @param props - The root schema, the `$ref`s being recursed, the object's form data, the caller's `onNullFill` and
- *        the call's `nullFills`
+ * @param props - The root schema, the `$ref`s being recursed, the object's form data and uiSchema, the `ui:definitions`,
+ *        the caller's `onNullFill` and the call's `nullFills`
  * @returns - The defaults of those properties that hold such a `null`, keyed by property
  */
 function nullFillsOfSkippedBranches<T, S extends StrictRJSFSchema, F extends FormContextType>(
@@ -327,9 +328,15 @@ function nullFillsOfSkippedBranches<T, S extends StrictRJSFSchema, F extends For
     rootSchema,
     _recurseList,
     rawFormData,
+    uiSchema,
+    uiSchemaDefinitions,
     onNullFill,
     nullFills,
-  }: { rootSchema: S; _recurseList: string[]; rawFormData: T; onNullFill?: () => void; nullFills?: NullFills },
+  }: Pick<ComputeDefaultsProps<T, S, F>, 'uiSchema' | 'uiSchemaDefinitions' | 'onNullFill' | 'nullFills'> & {
+    rootSchema: S;
+    _recurseList: string[];
+    rawFormData: T;
+  },
 ) {
   const [rendered] = retrieveSchemaInternal<T, S, F>(
     context,
@@ -351,14 +358,34 @@ function nullFillsOfSkippedBranches<T, S extends StrictRJSFSchema, F extends For
     )
     .forEach((key) => {
       let holdsNull = false;
-      const computedDefault = computeDefaults<T, S, F>(nullsOnly, getPropertySchema<S>(rendered, key), {
+      const propertySchema = getPropertySchema<S>(rendered, key);
+      const propertyFormData = getByPath<T>(rawFormData, key);
+      // As the properties the object names read theirs, an additional property the retrieve stubbed sharing one entry
+      const propertyUiSchema = getByPath<UiSchema<T, S, F> | undefined>(
+        uiSchema,
+        isObject(propertySchema) && Reflect.get(propertySchema, ADDITIONAL_PROPERTY_FLAG) === true
+          ? ADDITIONAL_PROPERTIES_KEY
+          : key,
+      );
+      const computedDefault = computeDefaults<T, S, F>(nullsOnly, propertySchema, {
         rootSchema,
         _recurseList: enclosingRefPath<S>(rendered, _recurseList),
-        rawFormData: getByPath<T>(rawFormData, key),
+        rawFormData: propertyFormData,
+        uiSchema: propertyUiSchema,
+        uiSchemaDefinitions,
         onNullFill: () => {
           holdsNull = true;
         },
-        nullFills,
+        // An optional object the Optional Data Controls render while it has no value is left out with its `null`s, as
+        // one the object names is: under these settings nothing else could add it
+        nullFills: nullFillsForProperty<T, S, F>(context, propertySchema, {
+          rootSchema,
+          uiSchema: propertyUiSchema,
+          uiSchemaDefinitions,
+          nullFills,
+          isRequired: rendered.required?.includes(key),
+          formData: propertyFormData,
+        }),
       });
       if (holdsNull) {
         setOwn(fills, key, computedDefault);
@@ -452,6 +479,50 @@ function nullSourceOf(schema: unknown): NullSource {
 function mayHoldNullType(schema: unknown, rootSchema: unknown): boolean {
   const source = nullSourceOf(schema);
   return source === 'nullType' || (source === 'ref' && nullSourceOf(rootSchema) === 'nullType');
+}
+
+/** The `null` fills to compute the defaults of a property of an object with: `nullFills` itself, or, for an optional
+ * object the Optional Data Controls render while it has no value, a copy marked collapsed, see `NullFills.isCollapsed`.
+ * No value is what the controls read as none: an empty object counts, as `undefined` and `null` do. Asked of the
+ * uiSchema the field renders with, the `ui:definitions` entry of a definition the property references merged in, as
+ * `computeDefaults()` merges it for the property's own node
+ *
+ * @param context - The `SchemaContext` the defaults are computed in
+ * @param propertySchema - The property's schema
+ * @param props - The root schema, the property's own uiSchema, the `ui:definitions`, the call's `nullFills`, whether
+ *        the object requires the property, and the property's form data
+ * @returns - The `null` fills for the property
+ */
+function nullFillsForProperty<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  propertySchema: S,
+  {
+    rootSchema,
+    uiSchema,
+    uiSchemaDefinitions,
+    nullFills,
+    isRequired,
+    formData,
+  }: Pick<ComputeDefaultsProps<T, S, F>, 'uiSchema' | 'uiSchemaDefinitions' | 'nullFills'> & {
+    rootSchema: S;
+    isRequired?: boolean;
+    formData: unknown;
+  },
+): NullFills | undefined {
+  const isCollapsed =
+    nullFills !== undefined &&
+    !nullFills.isCollapsed &&
+    !isRequired &&
+    !isFormDataAvailable(formData) &&
+    mayHoldNullType(propertySchema, rootSchema) &&
+    isOptionalDataControlsType<T, S, F>(
+      () => retrieveSchema<T, S, F>(context, propertySchema, rootSchema, undefined),
+      uiSchemaDefinitions
+        ? resolveUiSchema<T, S, F>(propertySchema, uiSchema, { rootSchema, uiSchemaDefinitions })
+        : uiSchema,
+      nullFills.globalUiOptions,
+    );
+  return isCollapsed ? { ...nullFills, isCollapsed } : nullFills;
 }
 
 /** Computes the defaults for the current `schema` given the `rawFormData` and `parentDefaults` if any. This drills into
@@ -919,38 +990,53 @@ export function getObjectDefaults<
         const propertyFormData = getByPath<T>(formData, key);
         const isPropertyRequired = retrievedSchema.required?.includes(key);
         // An optional object the Optional Data Controls render while it has no value renders none of its fields, so
-        // the `null` of none of them is filled in until the user adds it. Asked of the uiSchema the field renders with,
-        // the `ui:definitions` entry of a definition the property references merged in, as `computeDefaults()` merges
-        // it for the property's own node
-        const isCollapsed =
-          nullFills !== undefined &&
-          !nullFills.isCollapsed &&
-          !isPropertyRequired &&
-          propertyFormData === undefined &&
-          mayHoldNullType(propertySchema, rootSchema) &&
-          isOptionalDataControlsType<T, S, F>(
-            () => retrieveSchema<T, S, F>(context, propertySchema, rootSchema, undefined),
-            uiSchemaDefinitions
-              ? resolveUiSchema<T, S, F>(propertySchema, propertyUiSchema, { rootSchema, uiSchemaDefinitions })
-              : propertyUiSchema,
-            nullFills.globalUiOptions,
-          );
-        const computedDefault = computeDefaults<T, S, F>(context, propertySchema, {
-          onNullFill: () => {
-            holdsNull = true;
-          },
-          nullFills: isCollapsed ? { ...nullFills, isCollapsed } : nullFills,
+        // the `null` of none of them is filled in until the user adds it
+        const propertyNullFills = nullFillsForProperty<T, S, F>(context, propertySchema, {
           rootSchema,
-          _recurseList: childRecurseList,
-          includeUndefinedValues: includeUndefinedValues === true,
-          parentDefaults: getByPath<T>(defaults, key),
-          rawFormData: propertyFormData,
-          required: isPropertyRequired,
-          shouldMergeDefaultsIntoFormData,
-          initialDefaultsGenerated,
           uiSchema: propertyUiSchema,
           uiSchemaDefinitions,
+          nullFills,
+          isRequired: isPropertyRequired,
+          formData: propertyFormData,
         });
+        const computeProperty = (fills: NullFills | undefined) => {
+          holdsNull = false;
+          return computeDefaults<T, S, F>(context, propertySchema, {
+            onNullFill: () => {
+              holdsNull = true;
+            },
+            nullFills: fills,
+            rootSchema,
+            _recurseList: childRecurseList,
+            includeUndefinedValues: includeUndefinedValues === true,
+            parentDefaults: getByPath<T>(defaults, key),
+            rawFormData: propertyFormData,
+            required: isPropertyRequired,
+            shouldMergeDefaultsIntoFormData,
+            initialDefaultsGenerated,
+            uiSchema: propertyUiSchema,
+            uiSchemaDefinitions,
+          });
+        };
+        let computedDefault = computeProperty(propertyNullFills);
+        if (propertyNullFills !== nullFills) {
+          // Its own defaults can add it all the same, and an object added with a value renders its fields, whose `null`s
+          // it then holds, as it does once the user adds it
+          const added: GenericObjectType = {};
+          maybeAddDefaultToObject<T>(
+            added,
+            key,
+            computedDefault,
+            includeUndefinedValues,
+            required,
+            retrievedSchema.required,
+            defaultFormStateBehavior?.emptyObjectFields,
+            hasConst,
+          );
+          if (isFormDataAvailable(added[key])) {
+            computedDefault = computeProperty(nullFills);
+          }
+        }
         if (holdsNull) {
           fillOverUndefined(nullFills, rawFormData, key, computedDefault);
         }
@@ -985,6 +1071,8 @@ export function getObjectDefaults<
         rootSchema,
         _recurseList,
         rawFormData: formData,
+        uiSchema,
+        uiSchemaDefinitions,
         onNullFill,
         nullFills,
       });
