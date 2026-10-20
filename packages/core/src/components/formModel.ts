@@ -41,6 +41,9 @@ import {
   validateFormData,
 } from './formState.ts';
 
+/** How many of a scalar root's latest values the development warning about an ignored `formData` remembers */
+const HELD_SCALARS_LIMIT = 100;
+
 /** How an operation that calls the consumer's functions runs: a handle method runs it directly, so a throw reaches the
  * method's caller, while a field, which may report from an Effect inside React's commit phase, where a throw from the
  * consumer's `transformChange`, validation callbacks or `onChange` would unmount the form, runs it through
@@ -151,20 +154,27 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   // puts its record back, as a Cancel button does, expects the form to show it
   // oxlint-disable-next-line typescript/no-deprecated -- the form still reads the deprecated alias
   let lastFormDataProp = isDevelopment ? initialProps.formData : undefined;
-  // A scalar root's values are held by value, which a `WeakSet` cannot hold
   const heldData = new WeakSet<object>();
+  // A scalar root's values are held by value, which a `WeakSet` cannot hold, so only the latest are kept: enough for a
+  // parent that stores `onChange` late or puts back a recent value, without an entry per keystroke for the form's life
   const heldScalars = new Set<unknown>();
   let isIgnoredFormDataWarned = false;
   let isBothSeedsWarned = false;
   let isEmptyTransformWarned = false;
   const hold = (data: unknown) => {
-    if (!isDevelopment) {
+    // Once the warning has fired there is nothing left to hold values for
+    if (!isDevelopment || isIgnoredFormDataWarned) {
       return;
     }
     if (typeof data === 'object' && data !== null) {
       heldData.add(data);
-    } else {
-      heldScalars.add(data);
+      return;
+    }
+    // Added again, so a value held before counts as the latest
+    heldScalars.delete(data);
+    heldScalars.add(data);
+    if (heldScalars.size > HELD_SCALARS_LIMIT) {
+      heldScalars.delete(heldScalars.values().next().value);
     }
   };
   const isHeld = (data: unknown) =>
@@ -681,6 +691,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
         return;
       }
       isIgnoredFormDataWarned = true;
+      heldScalars.clear();
       // oxlint-disable-next-line no-console
       console.warn(
         "Form: `formData` changed after the form mounted and was ignored. Like `initialFormData`, it seeds the form on mount and on `reset()` only, and the form owns its data after that. To show other data, remount the form with a `key`, or call `setFieldValue('', data)` on its ref. See https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#show-other-data-after-mount",
