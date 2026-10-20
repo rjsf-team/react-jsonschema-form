@@ -1,4 +1,8 @@
-/** The subset of props a widget or template needs in order to decide which of its errors to surface */
+/** The subset of props a widget or template needs in order to decide which of its errors to surface
+ * @deprecated Kept through v7 with `getVisibleErrors()` and `hasVisibleErrors()`, which take it: type the props as
+ *   `Pick<WidgetProps, 'rawErrors' | 'hideError' | 'presentation'>`, which `getErrorsToDraw()` and `hasWidgetErrors()`
+ *   take, or a `FieldTemplate`'s as `Pick<FieldTemplateProps, …>`, which `hasTemplateErrors()` takes
+ */
 export interface VisibleErrorsProps {
   /** The error messages, carried whatever `hideError` says */
   rawErrors?: string[];
@@ -12,10 +16,11 @@ export interface VisibleErrorsProps {
  *
  * @param props - The props of the widget or template, from which `rawErrors` and `hideError` are read
  * @returns - The errors to display, or an empty array when there are none or they are being hidden
- * @deprecated Kept through v7 for a component rendered without a plan: read `presentation.errors.messages`, which has
- *   `ui:hideError` applied, drawing them only where `presentation.errors.by` is `'self'`, since the template draws
- *   them under `'template'`
+ * @deprecated Kept through v7 for a component rendered without a plan: read `getErrorsToDraw()`, which gives the
+ *   plan's `presentation.errors.messages`, with `ui:hideError` applied, only where `presentation.errors.by` is
+ *   `'self'`, since the template draws them under `'template'`, and falls back to this without a plan
  */
+// oxlint-disable-next-line typescript/no-deprecated -- its parameter type, deprecated with it and kept through v7
 export default function getVisibleErrors({ rawErrors, hideError }: VisibleErrorsProps): string[] {
   return hideError ? [] : (rawErrors ?? []);
 }

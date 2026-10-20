@@ -9,6 +9,7 @@ import type {
   GenericObjectType,
   FormValidation,
   ObjectFieldTemplateProps,
+  PartPlacement,
   UiSchema,
 } from '@rjsf/utils';
 import { fieldLabelId, UI_GLOBAL_OPTIONS_KEY } from '@rjsf/utils';
@@ -164,32 +165,31 @@ describe('ObjectField', () => {
       expect(node.querySelector('#custom')).toHaveTextContent('must NOT have fewer than 1 properties');
     });
 
+    // Under core's declaration the `FieldTemplate` draws the object's errors, so a template drawing them too would draw
+    // them twice: it reads them from its plan only where `errors.by` is `'self'`
     it.each([
-      [false, 1],
-      [true, 0],
-    ])("lists its own errors from its plan's messages while ui:hideError is %s", (hideError, expectedErrors) => {
-      function PlanErrorsObjectFieldTemplate({ properties, presentation }: ObjectFieldTemplateProps) {
-        return (
-          <div>
-            {properties.map((property) => property.content)}
-            <ul className='object-template-errors'>
-              {presentation?.errors.messages.map((error) => (
-                <li key={error}>{error}</li>
-              ))}
-            </ul>
-          </div>
-        );
-      }
-      const { node } = createFormComponent({
-        schema: { type: 'object', properties: { foo: { type: 'object', properties: { bar: { type: 'string' } } } } },
-        uiSchema: { foo: { 'ui:hideError': hideError } },
-        extraErrors: { foo: { __errors: ['object error'] } },
-        templates: { ObjectFieldTemplate: PlanErrorsObjectFieldTemplate },
-        showErrorList: false,
-      });
+      [false, ['object error'], 'template'],
+      [true, [], 'none'],
+    ] satisfies [boolean, string[], PartPlacement][])(
+      'hands its template a plan leaving its own errors to the FieldTemplate while ui:hideError is %s',
+      (hideError, messages, by) => {
+        const recordTemplateProps = vi.fn<(props: ObjectFieldTemplateProps) => void>();
+        function RecordingObjectFieldTemplate(props: ObjectFieldTemplateProps) {
+          recordTemplateProps(props);
+          return <div>{props.properties.map((property) => property.content)}</div>;
+        }
+        createFormComponent({
+          schema: { type: 'object', properties: { foo: { type: 'object', properties: { bar: { type: 'string' } } } } },
+          uiSchema: { foo: { 'ui:hideError': hideError } },
+          extraErrors: { foo: { __errors: ['object error'] } },
+          templates: { ObjectFieldTemplate: RecordingObjectFieldTemplate },
+          showErrorList: false,
+        });
 
-      expect(node.querySelectorAll('.object-template-errors li')).toHaveLength(expectedErrors);
-    });
+        const fooTemplate = recordTemplateProps.mock.calls.findLast(([props]) => props.id === 'root_foo');
+        expect(fooTemplate?.[0].presentation?.errors).toMatchObject({ messages, by });
+      },
+    );
 
     it('should render a default property label', () => {
       const { node } = createFormComponent({ schema });

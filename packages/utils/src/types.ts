@@ -796,10 +796,15 @@ export interface FieldProps<
   /** The unique name of the field, usually derived from the name of the property in the JSONSchema */
   name: string;
   /** An array of strings listing the field's own error messages, which its `errorSchema` doesn't hold. It carries them
-   * whatever `hideError` says, so that a field can render them its own way
-   * @deprecated Kept through v7 for a field rendered without a plan: read `presentation.errors.messages`, which has
-   *   `ui:hideError` applied, drawing them only where `presentation.errors.by` is `'self'`, since the template draws
-   *   them under `'template'`, and `presentation.errors.messages.length > 0` for an error state
+   * whatever `hideError` says, so that a field can render them its own way. It is unset for a field rendered beside a
+   * `oneOf`/`anyOf` option selector, which is handed them instead. A custom `ArraySchemaField` is the exception: each
+   * item is handed the array's own errors and no plan, so it reads its own from its `errorSchema` rather than through
+   * `getErrorsToDraw()`, which would give it the array's
+   * @deprecated Kept through v7 for a field rendered without a plan: read `getErrorsToDraw()` for the messages the
+   *   field draws itself, the plan's `presentation.errors.messages`, with `ui:hideError` applied, where
+   *   `presentation.errors.by` is `'self'`, since the template draws them under `'template'`, and
+   *   `presentation.errors.messages.length > 0` for an error state. Beside a selector, the plan keeps the field's
+   *   errors, which its template draws, so the field shows as invalid along with the selector
    */
   rawErrors?: string[];
   /** The plan `SchemaField` built for the field: who draws its label, description, help and errors, under which ids,
@@ -1258,10 +1263,10 @@ export type ContainerFieldTemplateProps<
   hideError?: boolean;
   /** An array of strings listing the field's own errors, which its `errorSchema` doesn't hold. Unlike
    * `FieldTemplateProps.rawErrors`, it carries them whatever `hideError` says, as a widget's does
-   * @deprecated Kept through v7 for a template rendered without a plan: read `presentation.errors.messages`, which
-   *   has `ui:hideError` applied, drawing them only where `presentation.errors.by` is `'self'`, since the
-   *   `FieldTemplate` draws them under `'template'`, and `hasTemplateErrors()`, which falls back to this, for an error
-   *   state
+   * @deprecated Kept through v7 for a template rendered without a plan: read `getErrorsToDraw()` for the messages the
+   *   template draws itself, the plan's `presentation.errors.messages`, with `ui:hideError` applied, where
+   *   `presentation.errors.by` is `'self'`, since the `FieldTemplate` draws them under `'template'`, and
+   *   `hasTemplateErrors()` for an error state, each falling back to this without a plan
    */
   rawErrors?: string[];
   /** A string value containing the title for the array */

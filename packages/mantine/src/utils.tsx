@@ -25,16 +25,15 @@ import type {
   RJSFSchema,
   StrictRJSFSchema,
   TemplatesType,
-  VisibleErrorsProps,
   WidgetProps,
 } from '@rjsf/utils';
 import {
   errorId,
   getControlAttributes,
+  getErrorsToDraw,
   getGroupAttributes,
   getTemplates,
   getWidgetDescription,
-  getVisibleErrors,
   hasWidgetErrors,
   isLabelledByTemplate,
   isObject,
@@ -189,30 +188,6 @@ export function RequiredMarker() {
   );
 }
 
-/** The props a widget, or a template drawing a container's own errors, reads its errors from */
-type ErrorsProps<T, S extends StrictRJSFSchema, F extends FormContextType> = VisibleErrorsProps &
-  Pick<WidgetProps<T, S, F>, 'presentation'>;
-
-/** Gets the errors a widget, or a template drawing a container's own errors, draws: the messages its field's plan has
- * it draw itself, or, rendered without a plan, those `ui:hideError` leaves. Under a plan a widget draws none where the
- * plan has them drawn elsewhere, as below an `anyOf`/`oneOf` option by the field above it
- *
- * @param props - The props of the widget or template, from which `presentation`, `rawErrors` and `hideError` are read
- * @returns - The errors to draw
- */
-export function getWidgetErrors<
-  T = unknown,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = FormContextType,
->(props: ErrorsProps<T, S, F>): readonly string[] {
-  const { presentation } = props;
-  if (presentation) {
-    return presentation.errors.by === 'self' ? presentation.errors.messages : [];
-  }
-  // oxlint-disable-next-line typescript/no-deprecated -- the fallback for a widget or template rendered without a plan
-  return getVisibleErrors(props);
-}
-
 /** Gets the `error` prop Mantine's inputs render: the errors the widget draws, or `true` where they are drawn
  * elsewhere while the field's plan marks its control invalid, which Mantine styles and marks `aria-invalid` without
  * rendering a message
@@ -224,8 +199,8 @@ export function getWidgetError<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(props: ErrorsProps<T, S, F>): ReactNode {
-  const errors = getWidgetErrors<T, S, F>(props);
+>(props: Pick<WidgetProps<T, S, F>, 'rawErrors' | 'hideError' | 'presentation'>): ReactNode {
+  const errors = getErrorsToDraw<T, S, F>(props);
   return errorLines(errors) ?? (hasWidgetErrors<T, S, F>(props) || undefined);
 }
 
@@ -265,7 +240,7 @@ function getSlotlessErrors<
   if (rendersWrapperPart(inputWrapperOrder, 'error')) {
     return null;
   }
-  const errors = getWidgetErrors<T, S, F>(props);
+  const errors = getErrorsToDraw<T, S, F>(props);
   if (!errors.length) {
     return null;
   }

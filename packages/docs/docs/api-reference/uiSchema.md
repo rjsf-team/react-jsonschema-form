@@ -678,7 +678,7 @@ It does not include the [error list](./form-props.md#showerrorlist) rendered for
 
 Because `rawErrors` is still passed to fields and widgets while errors are hidden, a custom field or widget deciding whether to render an error state must not read `rawErrors` alone.
 Its field's plan, `presentation`, applies the directive: its `errors.messages` is empty, and its control isn't `aria-invalid`, while the errors are hidden.
-A widget reads its error state from [`hasWidgetErrors()`](./utility-functions.md#haswidgeterrors), which follows that `aria-invalid` and falls back to `rawErrors` with `hideError` only for a widget rendered without a plan.
+A widget reads its error state from [`hasWidgetErrors()`](./utility-functions.md#haswidgeterrors), which follows that `aria-invalid`, and the messages it draws itself from [`getErrorsToDraw()`](./utility-functions.md#geterrorstodraw), each falling back to `rawErrors` with `hideError` only for a widget rendered without a plan.
 
 A `FieldTemplate` is handed the errors on the other terms: its `rawErrors` is `undefined` while they are hidden, so a template styling itself from that alone needs no change, and one rendering the errors itself reads them from `errorSchema`, which carries them whatever `hideError` says.
 

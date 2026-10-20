@@ -8,9 +8,10 @@ import getVisibleErrors from './getVisibleErrors.ts';
  * @param props - The props of the widget or template, from which `rawErrors` and `hideError` are read
  * @returns - True when there are errors the component should surface, otherwise false
  * @deprecated Kept through v7 for a component rendered without a plan: read `hasWidgetErrors()` or
- *   `hasTemplateErrors()`, which fall back to this, for an error state, and draw `presentation.errors.messages` only
- *   where `presentation.errors.by` is `'self'`, since the template draws them under `'template'`
+ *   `hasTemplateErrors()`, which fall back to this, for an error state, and `getErrorsToDraw()` for the messages a
+ *   component draws itself
  */
+// oxlint-disable-next-line typescript/no-deprecated -- its parameter type, deprecated with it and kept through v7
 export default function hasVisibleErrors(props: VisibleErrorsProps): boolean {
   // oxlint-disable-next-line typescript/no-deprecated -- its boolean form, deprecated with it and kept through v7
   return getVisibleErrors(props).length > 0;

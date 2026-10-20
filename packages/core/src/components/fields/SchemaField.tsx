@@ -956,7 +956,9 @@ function SchemaFieldRender<
   const { description: templateDescription, help, errors: templateErrors } = getTemplateParts(presentation);
   const description = templateDescription?.text ?? '';
 
-  // From its own errors rather than its plan's, which beneath a field above rendering the same id are that field's
+  // From its own errors and `ui:hideError`, as the deprecated `rawErrors` its template is handed are, rather than from
+  // its plan, which beneath an `anyOf`/`oneOf` field takes the errors as the field above shows them. Where the option's
+  // `ui:hideError` differs from the field above's, the option's own wins here
   const hasErrors = !hideError && (__errors?.length ?? 0) > 0;
 
   const helpComponent = (

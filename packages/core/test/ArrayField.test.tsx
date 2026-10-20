@@ -9,6 +9,7 @@ import type {
   FieldProps,
   GenericObjectType,
   IconButtonProps,
+  PartPlacement,
   RJSFSchema,
   TitleFieldProps,
   UiSchema,
@@ -3622,36 +3623,31 @@ describe('ArrayField', () => {
         expect(node.querySelectorAll('.array-template-errors li')).toHaveLength(0);
       });
 
+      // Under core's declaration the `FieldTemplate` draws the array's errors, so a template drawing them too would draw
+      // them twice: it reads them from its plan only where `errors.by` is `'self'`
       it.each([
-        ['a list', false, { type: 'array', items: { type: 'string' } }, 1],
-        ['a list', true, { type: 'array', items: { type: 'string' } }, 0],
-        ['a fixed items list', false, { type: 'array', items: [{ type: 'string' }] }, 1],
-        ['a fixed items list', true, { type: 'array', items: [{ type: 'string' }] }, 0],
-      ] satisfies [string, boolean, RJSFSchema, number][])(
-        "lists the errors of %s from its plan's messages while ui:hideError is %s",
-        (_, hideError, foo, expectedErrors) => {
-          function PlanErrorsArrayFieldTemplate({ items, presentation }: ArrayFieldTemplateProps) {
-            return (
-              <div>
-                {items}
-                <ul className='array-template-errors'>
-                  {presentation?.errors.messages.map((error) => (
-                    <li key={error}>{error}</li>
-                  ))}
-                </ul>
-              </div>
-            );
+        ['a list', false, { type: 'array', items: { type: 'string' } }, ['array error'], 'template'],
+        ['a list', true, { type: 'array', items: { type: 'string' } }, [], 'none'],
+        ['a fixed items list', false, { type: 'array', items: [{ type: 'string' }] }, ['array error'], 'template'],
+        ['a fixed items list', true, { type: 'array', items: [{ type: 'string' }] }, [], 'none'],
+      ] satisfies [string, boolean, RJSFSchema, string[], PartPlacement][])(
+        'hands the template of %s a plan leaving its errors to the FieldTemplate while ui:hideError is %s',
+        (_, hideError, foo, messages, by) => {
+          const recordTemplateProps = vi.fn<(props: ArrayFieldTemplateProps) => void>();
+          function RecordingArrayFieldTemplate(props: ArrayFieldTemplateProps) {
+            recordTemplateProps(props);
+            return <div>{props.items}</div>;
           }
-          const { node } = createFormComponent({
+          createFormComponent({
             schema: { type: 'object', properties: { foo } },
             uiSchema: { foo: { 'ui:hideError': hideError } },
             initialFormData: { foo: ['a'] },
             extraErrors: { foo: { __errors: ['array error'] } },
-            templates: { ArrayFieldTemplate: PlanErrorsArrayFieldTemplate },
+            templates: { ArrayFieldTemplate: RecordingArrayFieldTemplate },
             showErrorList: false,
           });
 
-          expect(node.querySelectorAll('.array-template-errors li')).toHaveLength(expectedErrors);
+          expect(recordTemplateProps.mock.lastCall?.[0]?.presentation?.errors).toMatchObject({ messages, by });
         },
       );
 
