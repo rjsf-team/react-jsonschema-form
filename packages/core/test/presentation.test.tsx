@@ -1033,7 +1033,7 @@ describe('the label a field hands its widget', () => {
   }
 
   // An empty `title` falls through to the property name, so the template is handed a label. A widget is handed the
-  // same one, which is how one that names its own control or group can tell the template drew a label for it
+  // same label, whoever draws it
   it.each<[string, RJSFSchema, string, Widget, UiSchema?]>([
     ['string', { type: 'string' }, 'TextWidget', CoreTextWidget],
     ['number', { type: 'number' }, 'TextWidget', CoreTextWidget],
@@ -1053,7 +1053,7 @@ describe('the label a field hands its widget', () => {
       { 'ui:widget': 'ArrayWidget' },
     ],
   ])(
-    "hands a %s field's widget the property name its template shows for an empty title",
+    "hands a %s field's widget the property name its template is handed for an empty title",
     (_, foo, widgetKey, InnerWidget, fooUi) => {
       const labels = renderLabels({ ...foo, title: '' }, widgetKey, InnerWidget, fooUi);
       expect(labels).toEqual({ template: 'foo', widget: 'foo' });
