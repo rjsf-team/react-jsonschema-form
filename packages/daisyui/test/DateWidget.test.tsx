@@ -630,6 +630,26 @@ describe('DateWidget', () => {
     });
   });
 
+  describe('the calendar it places', () => {
+    test('is in place before the day a key opens it onto takes the focus', async () => {
+      render(<DateWidget {...makeWidgetMockProps({ value: '2020-05-03', schema, autofocus: false })} />);
+      let topAtDayFocus: string | undefined;
+      const record = ({ target }: FocusEvent) => {
+        if (target instanceof HTMLElement && target.closest('[role="grid"]')) {
+          topAtDayFocus = target.closest<HTMLElement>('.date-picker-popup')?.style.top;
+        }
+      };
+      document.addEventListener('focusin', record);
+      onTestFinished(() => document.removeEventListener('focusin', record));
+
+      await user.tab();
+      await user.keyboard('{ArrowDown}');
+
+      // jsdom measures the trigger as an empty box at the top of the viewport, so the calendar goes 5px below it
+      expect(topAtDayFocus).toBe('5px');
+    });
+  });
+
   test('leaves an optional field untouched when the picker closes with no date chosen', async () => {
     const onError = vi.fn();
     const onSubmit = vi.fn();
