@@ -3,7 +3,7 @@ import { Activity, useState } from 'react';
 import { ChakraProvider, defaultSystem } from '@chakra-ui/react';
 import { getTestRegistry } from '@rjsf/core/testing';
 import { formTests, themeTests } from '@rjsf/snapshot-tests';
-import type { FormValidation, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import type { ArrayFieldItemTemplateProps, FormValidation, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { bracketNameGenerator, errorId, fieldLabelId, helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
@@ -924,6 +924,47 @@ describe('chakra-ui ArrayFieldTemplate', () => {
 
     expect(screen.queryByRole('heading')).not.toBeInTheDocument();
     expect(container.querySelector('#root_tags__optionalRemove')).toBeInTheDocument();
+  });
+});
+
+describe('chakra-ui ArrayFieldItemTemplate', () => {
+  // This theme's own item template doesn't lay its buttons out by `displayLabel`, so a custom one records it
+  test.each<{ named: string; items: RJSFSchema; value: unknown; displayLabel: boolean }>([
+    {
+      named: 'a text input, whose label sits above it',
+      items: { type: 'string', title: 'Tag' },
+      value: 'a',
+      displayLabel: true,
+    },
+    {
+      named: 'a checkbox, whose label sits beside it',
+      items: { type: 'boolean', title: 'Flag' },
+      value: true,
+      displayLabel: false,
+    },
+    {
+      named: "a type list under the fallback UI, whose type selector's label sits above it",
+      items: { type: ['string', 'number'], title: 'Value' },
+      value: 'a',
+      displayLabel: true,
+    },
+  ])('hands a custom template whether a label sits above $named', ({ items, value, displayLabel }) => {
+    const displayLabels: (boolean | undefined)[] = [];
+    function ArrayFieldItemTemplate(props: ArrayFieldItemTemplateProps) {
+      displayLabels.push(props.displayLabel);
+      return <div>{props.children}</div>;
+    }
+    render(
+      <WrappedForm
+        schema={{ type: 'array', items }}
+        initialFormData={[value]}
+        templates={{ ArrayFieldItemTemplate }}
+        validator={validator}
+        useFallbackUiForUnsupportedType
+      />,
+    );
+
+    expect(displayLabels.at(-1)).toBe(displayLabel);
   });
 });
 

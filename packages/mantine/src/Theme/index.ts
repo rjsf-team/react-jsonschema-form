@@ -10,12 +10,12 @@ const baseInputWidgetKeys = ['TextWidget', 'EmailWidget', 'URLWidget', 'UpDownWi
 
 /** Which parts of a field this theme's fields and widgets draw themselves, over `@rjsf/core`'s: every widget draws its
  * own label above its control, the checkbox beside it, and its description, the option selector of an `anyOf`/`oneOf`
- * names the field from above and describes it, and the fallback UI's value field labels itself, wherever its widget
- * draws that label, since this theme's template draws a label and description only for a widget declared to leave
- * them there, as `@rjsf/core`'s `RatingWidget` is, which draws neither, and an object's own template draws its errors.
- * This theme's widgets, and the `@rjsf/core` widgets it renders through its `BaseInputTemplate`, draw their errors in
- * Mantine's error slot; any other widget, such as `RatingWidget` or one of your own, leaves them to the template, since
- * a widget that draws none would otherwise lose them
+ * names the field from above and describes it, and the fallback UI's value field labels itself, below the type
+ * selector, whose own label sits above it as the option selector's does, since this theme's template draws a label and
+ * description only for a widget declared to leave them there, as `@rjsf/core`'s `RatingWidget` is, which draws neither,
+ * and an object's own template draws its errors. This theme's widgets, and the `@rjsf/core` widgets it renders through
+ * its `BaseInputTemplate`, draw their errors in Mantine's error slot; any other widget, such as `RatingWidget` or one
+ * of your own, leaves them to the template, since a widget that draws none would otherwise lose them
  *
  * @param widgetKeys - The keys this theme registers its own widgets under
  */
@@ -33,7 +33,7 @@ function createPresentation(widgetKeys: readonly string[]): ThemePresentation {
     fields: {
       AnyOfField: { label: 'self', description: 'self', labelPlacement: 'above' },
       OneOfField: { label: 'self', description: 'self', labelPlacement: 'above' },
-      FallbackField: { label: 'self' },
+      FallbackField: { label: 'self', labelPlacement: 'above' },
       ObjectField: { errors: 'self' },
     },
   };

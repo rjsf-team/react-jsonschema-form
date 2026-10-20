@@ -5,7 +5,7 @@ import { render } from '@testing-library/react';
 import Form from '../src/index.ts';
 
 describe('ArrayFieldItemTemplate', () => {
-  it.each<{ named: string; items: RJSFSchema; formData: unknown[]; marginTop: string }>([
+  it.each<{ named: string; items: RJSFSchema; formData: unknown[]; marginTop: string; fallbackUi?: boolean }>([
     {
       named: 'a text input, whose label sits above it',
       items: { type: 'string', title: 'Tag' },
@@ -24,8 +24,22 @@ describe('ArrayFieldItemTemplate', () => {
       formData: [true, false],
       marginTop: '0px',
     },
-  ])('lines the buttons of $named up with the control', ({ items, formData, marginTop }) => {
-    const { container } = render(<Form schema={{ type: 'array', items }} formData={formData} validator={validator} />);
+    {
+      named: "a type list under the fallback UI, whose type selector's label sits above it",
+      items: { type: ['string', 'number'], title: 'Value' },
+      formData: ['a', 'b'],
+      marginTop: '26px',
+      fallbackUi: true,
+    },
+  ])('lines the buttons of $named up with the control', ({ items, formData, marginTop, fallbackUi }) => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'array', items }}
+        formData={formData}
+        validator={validator}
+        useFallbackUiForUnsupportedType={fallbackUi}
+      />,
+    );
 
     expect(container.querySelector('#root_0__moveDown')?.parentElement).toHaveStyle({ marginTop });
   });

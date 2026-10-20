@@ -1,7 +1,7 @@
 import { MantineProvider, Switch } from '@mantine/core';
 import { getTestRegistry } from '@rjsf/core/testing';
 import { formTests, themeTests } from '@rjsf/snapshot-tests';
-import type { RJSFSchema, WidgetProps } from '@rjsf/utils';
+import type { ArrayFieldItemTemplateProps, RJSFSchema, WidgetProps } from '@rjsf/utils';
 import { helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
@@ -355,6 +355,47 @@ describe('mantine ArrayFieldTemplate', () => {
 
     expect(container.querySelector('#root_tags__title')).toHaveTextContent('Tags');
     expect(container.querySelector('#root_tags__optionalAdd')).toBeInTheDocument();
+  });
+});
+
+describe('mantine ArrayFieldItemTemplate', () => {
+  // This theme's own item template doesn't lay its buttons out by `displayLabel`, so a custom one records it
+  test.each<{ named: string; items: RJSFSchema; value: unknown; displayLabel: boolean }>([
+    {
+      named: 'a text input, whose label sits above it',
+      items: { type: 'string', title: 'Tag' },
+      value: 'a',
+      displayLabel: true,
+    },
+    {
+      named: 'a checkbox, whose label sits beside it',
+      items: { type: 'boolean', title: 'Flag' },
+      value: true,
+      displayLabel: false,
+    },
+    {
+      named: "a type list under the fallback UI, whose type selector's label sits above it",
+      items: { type: ['string', 'number'], title: 'Value' },
+      value: 'a',
+      displayLabel: true,
+    },
+  ])('hands a custom template whether a label sits above $named', ({ items, value, displayLabel }) => {
+    const displayLabels: (boolean | undefined)[] = [];
+    function ArrayFieldItemTemplate(props: ArrayFieldItemTemplateProps) {
+      displayLabels.push(props.displayLabel);
+      return <div>{props.children}</div>;
+    }
+    render(
+      <WrappedForm
+        schema={{ type: 'array', items }}
+        initialFormData={[value]}
+        templates={{ ArrayFieldItemTemplate }}
+        validator={validator}
+        useFallbackUiForUnsupportedType
+      />,
+    );
+
+    expect(displayLabels.at(-1)).toBe(displayLabel);
   });
 });
 

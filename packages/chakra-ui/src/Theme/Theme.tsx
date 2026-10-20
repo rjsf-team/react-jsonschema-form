@@ -5,12 +5,12 @@ import { createTemplates } from '../Templates/index.ts';
 import { createWidgets } from '../Widgets/index.ts';
 
 /** Which parts of a field this theme's fields and widgets draw themselves, over `@rjsf/core`'s: every widget built on
- * the library's inputs draws its own label above its control, the checkbox its label beside it and its description
- * too, and, since this theme's template draws a label only for a widget declared to leave it there, the option selector
- * of an `anyOf`/`oneOf` names the field from above and the fallback UI's value field labels itself, wherever its widget
- * draws that label. The rating and the date parts draw no label, so the template draws theirs, and names them by
- * reference, through the `labelledBy: 'aria-labelledby'` `@rjsf/core` declares for them: no element carrying the
- * field's id wraps the date parts, so a `for` couldn't name them
+ * the library's inputs draws its own label above its control, the checkbox its label beside it and its description too,
+ * and, since this theme's template draws a label only for a widget declared to leave it there, the option selector of
+ * an `anyOf`/`oneOf` names the field from above and the fallback UI's value field labels itself, below the type
+ * selector, whose own label sits above it as the option selector's does. The rating and the date parts draw no label,
+ * so the template draws theirs, and names them by reference, through the `labelledBy: 'aria-labelledby'` `@rjsf/core`
+ * declares for them: no element carrying the field's id wraps the date parts, so a `for` couldn't name them
  */
 function createPresentation(): ThemePresentation {
   return {
@@ -24,7 +24,7 @@ function createPresentation(): ThemePresentation {
     fields: {
       AnyOfField: { label: 'self', labelPlacement: 'above' },
       OneOfField: { label: 'self', labelPlacement: 'above' },
-      FallbackField: { label: 'self' },
+      FallbackField: { label: 'self', labelPlacement: 'above' },
     },
   };
 }
