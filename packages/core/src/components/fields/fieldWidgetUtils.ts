@@ -1,6 +1,7 @@
 import type {
   EnumOptionsType,
   Field,
+  FieldPath,
   FieldPresentation,
   FieldTemplateProps,
   FormContextType,
@@ -15,6 +16,7 @@ import type {
 } from '@rjsf/utils';
 import {
   ADDITIONAL_PROPERTY_FLAG,
+  fieldPathEndsWithIndex,
   getDescribedControlAttributes,
   getUiOptions,
   isCustomWidget,
@@ -247,6 +249,30 @@ export function getTemplateParts(presentation: FieldPresentation | undefined) {
  */
 export function isAdditionalPropertySchema(schema: unknown) {
   return Boolean((schema as RJSFMarkedSchema)?.[ADDITIONAL_PROPERTY_FLAG]);
+}
+
+/** The value a container field stores for what its child at `fieldPath` sends. A cleared child sends `undefined`,
+ * which would take its slot out of the data, so an array item is stored as `null`, which keeps its index and gives the
+ * validator an item to check (https://github.com/tdegrunt/jsonschema/issues/206), and an `additionalProperties` entry
+ * as `''`, which keeps its key and the key input with it. A field that announces a key move with its change, as an
+ * option switch does, sends this value itself, so the change that reaches the form carries the value the move was
+ * announced with. The overload is the one trust point that the stored value is of the type the child's `onChange`
+ * hands over, as `FieldProps['onChange']` types a change at any depth
+ *
+ * @param value - The value the child sends
+ * @param fieldPath - The `FieldPath` of the child
+ * @param isAdditionalProperty - Whether the child is an `additionalProperties` entry of its object
+ * @returns - The value the container stores
+ */
+export function storedValue<V>(value: V, fieldPath: FieldPath, isAdditionalProperty: boolean): V;
+export function storedValue(value: unknown, fieldPath: FieldPath, isAdditionalProperty: boolean): unknown {
+  if (value !== undefined) {
+    return value;
+  }
+  if (fieldPathEndsWithIndex(fieldPath)) {
+    return null;
+  }
+  return isAdditionalProperty ? '' : undefined;
 }
 
 /** Gets the heading an object or array draws itself. Under its plan: none where the plan gives its label to someone

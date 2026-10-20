@@ -49,7 +49,7 @@ import useSendMove from '../../hooks/useSendMove.ts';
 import useWarnIfFormDataNotPassedThrough from '../../hooks/useWarnIfFormDataNotPassedThrough.ts';
 import { ADDITIONAL_PROPERTY_KEY_REMOVE, EMPTY_UI_SCHEMA } from '../constants.ts';
 import RichDescription from '../RichDescription.tsx';
-import { getContainerHeading, isAdditionalPropertySchema } from './fieldWidgetUtils.ts';
+import { getContainerHeading, isAdditionalPropertySchema, storedValue } from './fieldWidgetUtils.ts';
 
 /** Returns a flag indicating whether the `name` field is required in the object schema
  *
@@ -262,25 +262,18 @@ function ObjectFieldPropertyFn<
   const innerFieldPath = toFieldPath(propertyName, fieldPath);
   const innerFieldId = fieldPathToId(innerFieldPath, globalFormOptions);
 
-  /** The `onChange` handler installed on this property's `SchemaField`. Handles the special case where the user
-   * clears a value at this property's own path when it was added as an additional property, coercing `undefined`
-   * to the empty string so the property's key input survives. Every other change, including any change to a
-   * descendant of this property, is forwarded to `onChange()` untouched.
+  /** The `onChange` handler installed on this property's `SchemaField`. A change at this property's own path is
+   * stored as `storedValue()` says, so a cleared `additionalProperties` entry keeps its key and its key input. Every
+   * other change, including any change to a descendant of this property, is forwarded to `onChange()` untouched.
    */
   const onPropertyChange = useCallback(
     (value: T | undefined, path: FieldPath, newErrorSchema?: ErrorSchema<T>, id?: string) => {
-      // An `additionalProperties` value lives at this property's own path, so clearing its widget to `undefined`
-      // would drop the key from the formData and take the key input with it. Coerce that one case to the empty
-      // string.
-      // A descendant's path is this property's path plus at least one segment, so comparing to this
-      // property's own path (rather than merely its length) tells apart "this property changed" from "a
-      // descendant changed"; a cleared descendant must stay `undefined` so it is omitted from the formData
-      // exactly like a cleared property declared in `properties` (#5222).
-      let normalizedValue = value;
-      if (value === undefined && addedByAdditionalProperties && path === innerFieldPath) {
-        normalizedValue = '' as unknown as T;
-      }
-      onChange(normalizedValue, path, newErrorSchema, id);
+      // A descendant's path is this property's path plus at least one segment, so comparing to this property's own
+      // path (rather than merely its length) tells apart "this property changed" from "a descendant changed"; a
+      // cleared descendant must stay `undefined` so it is omitted from the formData exactly like a cleared property
+      // declared in `properties` (#5222).
+      const sent = path === innerFieldPath ? storedValue(value, path, addedByAdditionalProperties) : value;
+      onChange(sent, path, newErrorSchema, id);
     },
     [onChange, addedByAdditionalProperties, innerFieldPath],
   );

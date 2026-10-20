@@ -8,6 +8,7 @@ import {
   isWholeValueSelect,
 } from '@rjsf/utils';
 
+import { isAdditionalPropertySchema, storedValue } from '../components/fields/fieldWidgetUtils.ts';
 import useSendMove from './useSendMove.ts';
 
 /** The options of an `anyOf`/`oneOf` field a switch leaves and selects, each with the uiSchema its field renders with */
@@ -73,17 +74,19 @@ function rendersItemsAlike<T, S extends StrictRJSFSchema, F extends FormContextT
  * an array the switch carries over at the same length to an option that renders its items as the option left did,
  * since the fields of the items it still holds stay as they are too. A change of length has `ArrayField` key every
  * item anew, which mounts each item's field afresh. The errors raised at the field's own path go too, whatever the
- * options declare. What it returns says what became of the change, see `FormDataAccess.sendMove()`.
+ * options declare. `send` is handed the value to send, the new option's data as the field's container stores it, see
+ * `storedValue()`, which is the value the move is announced with. What it returns says what became of the change, see
+ * `FormDataAccess.sendMove()`.
  */
 export default function useSendOptionSwitch(fieldPath: FieldPath) {
   const sendMove = useSendMove(fieldPath);
   return useCallback(
-    <T, S extends StrictRJSFSchema, F extends FormContextType>(
+    <T, S extends StrictRJSFSchema, F extends FormContextType, V>(
       schema: S,
       optionSwitch: OptionSwitch<T, S, F>,
       formData: unknown,
-      newFormData: unknown,
-      send: () => void,
+      newFormData: V,
+      send: (value: V) => void,
     ) => {
       const { oldOption, newOption } = optionSwitch;
       const kept = schema.properties ?? {};
@@ -102,16 +105,17 @@ export default function useSendOptionSwitch(fieldPath: FieldPath) {
       const declaredByNew = newOption?.properties ?? {};
       const held = typeof formData === 'object' && formData !== null ? Object.keys(formData) : [];
       const gone = new Set([...Object.keys(oldOption?.properties ?? {}), ...held].filter((key) => !isKept(key)));
+      const value = storedValue(newFormData, fieldPath, isAdditionalPropertySchema(schema));
       return sendMove(
         {
-          value: newFormData,
+          value,
           newKeyOf: (key) => (gone.has(key) && !Object.hasOwn(declaredByNew, key) ? undefined : key),
           newOwnKeyOf: (key) => (gone.has(key) ? undefined : key),
           dropsOwnErrors: true,
         },
-        send,
+        () => send(value),
       );
     },
-    [sendMove],
+    [sendMove, fieldPath],
   );
 }

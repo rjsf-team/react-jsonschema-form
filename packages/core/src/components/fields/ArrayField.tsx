@@ -29,7 +29,6 @@ import {
   resolveWidget,
   shouldRenderOptionalField,
   toFieldPath,
-  fieldPathEndsWithIndex,
   fieldPathToId,
   fieldPathToName,
   TranslatableString,
@@ -47,6 +46,7 @@ import {
   getContainerHeading,
   getWidgetErrorProps,
   getWidgetLabelProps,
+  storedValue,
   withFallbackItems,
 } from './fieldWidgetUtils.ts';
 import OwnTitleAndDescription from './OwnTitleAndDescription.tsx';
@@ -1340,16 +1340,8 @@ export default function ArrayField<
    */
   const handleChange = useCallback(
     (value: any, changedFieldPath: FieldPath, newErrorSchema?: ErrorSchema<T[]>, id?: string) => {
-      const lastPathIsItemIndex = fieldPathEndsWithIndex(changedFieldPath);
-      onChange(
-        // We need to treat undefined items as nulls to have validation.
-        // See https://github.com/tdegrunt/jsonschema/issues/206
-        // Only set to null for array items, and not for object properties within array items
-        lastPathIsItemIndex && value === undefined ? null : value,
-        changedFieldPath,
-        newErrorSchema,
-        id,
-      );
+      // A cleared item is stored as `null`, and a cleared property inside an item as `undefined`
+      onChange(storedValue(value, changedFieldPath, false), changedFieldPath, newErrorSchema, id);
     },
     [onChange],
   );

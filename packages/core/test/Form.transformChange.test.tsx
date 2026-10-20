@@ -278,15 +278,18 @@ describe('transformChange', () => {
         ],
       },
     };
+    // Refuses an edit that puts the second item first, which the reorder below does and the switch does not
     const refuseReorder: FormProps<string[]>['transformChange'] = (next, previous) =>
-      next?.[0] === previous?.[0] ? next : previous;
+      (previous?.length ?? 0) > 1 && next?.[0] === previous?.[1] ? previous : next;
     const { node } = renderForm<string[]>({
       schema: choiceSchema,
       initialFormData: ['x', 'y'],
       transformChange: refuseReorder,
     });
     const optionOf = (index: number) => elementOf(node, `#root_${index}__oneof_select`);
+    // A switch between two string options clears the item, so it is typed again under the option picked
     await user.selectOptions(optionOf(0), 'B');
+    await user.type(input(node, 'root_0'), 'x');
 
     await user.click(elementOf(node, `#${buttonId('root_0', 'moveDown')}`));
     expect(optionOf(0)).toHaveValue('1');
@@ -310,7 +313,7 @@ describe('transformChange', () => {
     };
     // A copy of the data before the edit refuses it as that data itself does
     const refuseWithCopy: FormProps<string[]>['transformChange'] = (next, previous) =>
-      next?.[0] === previous?.[0] ? next : [...(previous ?? [])];
+      (previous?.length ?? 0) > 1 && next?.[0] === previous?.[1] ? [...(previous ?? [])] : next;
     const { node } = renderForm<string[]>({
       schema: choiceSchema,
       initialFormData: ['x', 'y'],
@@ -318,6 +321,7 @@ describe('transformChange', () => {
     });
     const optionOf = (index: number) => elementOf(node, `#root_${index}__oneof_select`);
     await user.selectOptions(optionOf(0), 'B');
+    await user.type(input(node, 'root_0'), 'x');
 
     await user.click(elementOf(node, `#${buttonId('root_0', 'moveDown')}`));
 
@@ -336,14 +340,16 @@ describe('transformChange', () => {
         ],
       },
     };
-    // The reorder leaves data equal to the data before it, which `previous` still refuses
+    // The reorder leaves data equal to the data before it, which `previous` still refuses. Only such an edit is
+    // refused, so the switch, which clears the item, and typing it again are taken
     const { node } = renderForm<string[]>({
       schema: choiceSchema,
       initialFormData: ['x', 'x'],
-      transformChange: (_next, previous) => previous,
+      transformChange: (next, previous) => (JSON.stringify(next) === JSON.stringify(previous) ? previous : next),
     });
     const optionOf = (index: number) => elementOf(node, `#root_${index}__oneof_select`);
     await user.selectOptions(optionOf(0), 'B');
+    await user.type(input(node, 'root_0'), 'x');
 
     await user.click(elementOf(node, `#${buttonId('root_0', 'moveDown')}`));
 

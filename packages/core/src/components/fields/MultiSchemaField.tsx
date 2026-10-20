@@ -270,7 +270,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
         },
         formData,
         newFormData,
-        () => onChange(newFormData, fieldPath, undefined, fieldId),
+        (sent) => onChange(sent, fieldPath, undefined, fieldId),
       );
       // A switch the form refused changed nothing, so the option shown stays, even where the data fits the one picked
       if (outcome?.kind === 'refused') {

@@ -2394,6 +2394,41 @@ describe('oneOf', () => {
     expect(node.querySelector('#root_choice_a')).toHaveValue('x');
   });
 
+  describe('keeps the option picked for a value its container stores in place of a cleared one', () => {
+    // Switching `'abc'` to `N` clears the value, which the string option would match again as its container stores it
+    const options: RJSFSchema[] = [
+      { title: 'S', type: ['string', 'null'] },
+      { title: 'N', type: 'number' },
+    ];
+
+    it('an array item, stored as null', async () => {
+      const { node, getFormData } = createFormComponent({
+        schema: { type: 'array', items: { oneOf: options } },
+        initialFormData: ['abc'],
+      });
+      const select = elementOf(node, '#root_0__oneof_select');
+
+      await user.selectOptions(select, 'N');
+
+      expect(getFormData()).toEqual([null]);
+      // The selector's option values are the option indexes: '1' is N
+      expect(select).toHaveValue('1');
+    });
+
+    it("an additional property, stored as ''", async () => {
+      const { node, getFormData } = createFormComponent({
+        schema: { type: 'object', additionalProperties: { oneOf: options } },
+        initialFormData: { k: 'abc' },
+      });
+      const select = elementOf(node, '#root_k__oneof_select');
+
+      await user.selectOptions(select, 'N');
+
+      expect(getFormData()).toEqual({ k: '' });
+      expect(select).toHaveValue('1');
+    });
+  });
+
   describe('Custom Field without ui:fieldReplacesAnyOrOneOf', () => {
     const schema: RJSFSchema = {
       oneOf: [
