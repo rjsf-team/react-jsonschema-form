@@ -809,6 +809,40 @@ describe('getUiRequiredErrorSchema()', () => {
     expect(shown).toEqual([['thing', 2, {}]]);
   });
 
+  it('asks the form state among the options as the field shows them, a boolean one as the empty schema', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        thing: { type: 'object', anyOf: [false, { type: 'object', properties: { b: { type: 'string' } } }] },
+      },
+    };
+    const uiSchema: UiSchema = { thing: { b: { 'ui:required': true } } };
+    const asked: unknown[] = [];
+    const errorsWhenShown = (index: number) =>
+      toErrorList(
+        getUiRequiredErrorSchema(
+          { validator: testValidator },
+          schema,
+          uiSchema,
+          { thing: {} },
+          undefined,
+          undefined,
+          undefined,
+          {
+            selectedOption: (_fieldPath, options) => {
+              asked.push(options[0]);
+              return index;
+            },
+            isExpanded: () => false,
+          },
+        ),
+      ).map(({ property }) => property);
+    expect(errorsWhenShown(1)).toEqual(['.thing.b']);
+    // No option shown walks the field alone
+    expect(errorsWhenShown(-1)).toEqual([]);
+    expect(asked).toEqual([{}, {}]);
+  });
+
   it('does not treat a primitive value at an object-schema node as satisfying a ui:required child, matching computeDefaults isObject(rawFormData) handling', () => {
     const schema: RJSFSchema = {
       type: 'object',

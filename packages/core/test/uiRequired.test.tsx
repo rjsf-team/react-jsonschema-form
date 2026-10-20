@@ -171,6 +171,28 @@ describeOwnerships('ui:required enforcement', (createFormComponent) => {
       ]);
     });
 
+    it.each([false, true])(
+      'reads a %s option as the empty option the field shows, and submits under it',
+      async (booleanOption) => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            thing: {
+              type: 'object',
+              anyOf: [booleanOption, { title: 'B', properties: { bField: { type: 'string' } } }],
+            },
+          },
+        };
+        const uiSchema: UiSchema = { thing: { anyOf: [{}, { bField: { 'ui:required': true } }] } };
+        const { node, onSubmit } = createFormComponent({ schema, uiSchema, initialFormData: { thing: {} } });
+        expect(node.querySelector('#root_thing_bField')).not.toBeInTheDocument();
+
+        await submitForm(node, user, true);
+
+        expect(onSubmit).toHaveBeenCalledTimes(1);
+      },
+    );
+
     it('enforces ui:required below a $ref cycle once the user expands it, and not before', async () => {
       const schema: RJSFSchema = {
         definitions: {

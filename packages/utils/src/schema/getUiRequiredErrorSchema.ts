@@ -43,6 +43,7 @@ import type {
 import uiBooleanOption from '../uiBooleanOption.ts';
 import getClosestMatchingOption from './getClosestMatchingOption.ts';
 import { AdditionalItemsHandling, getInnerSchemaForArrayItem } from './getDefaultFormState.ts';
+import { schemaFrom } from './graph/mergePlan.ts';
 import retrieveSchema, { expandRefCycle } from './retrieveSchema.ts';
 
 /** The schema and uiSchema of the `anyOf`/`oneOf` branch that applies to a node, and, for an object node, the option
@@ -76,11 +77,14 @@ function resolveSelectedBranch<T, S extends StrictRJSFSchema, F extends FormCont
   // Both keywords are dropped, since `MultiSchemaField` renders the option without the one it doesn't read either
   const { [ANY_OF_KEY]: _anyOf, [ONE_OF_KEY]: _oneOf, ...remaining } = schema;
   const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
+  // A boolean option is rendered as an empty schema, as `SchemaField` retrieves it, so the form state is asked about
+  // the options it shows
+  const empty = schemaFrom(schema, {});
+  const shownOptions = options.map((option) => (isObject(option) ? option : empty));
   const index = fieldState
-    ? fieldState.selectedOption(fieldPathFromList(path), options, formData, discriminator)
+    ? fieldState.selectedOption(fieldPathFromList(path), shownOptions, formData, discriminator)
     : getClosestMatchingOption<unknown, S, F>(schemaContext, rootSchema, formData, options, 0, discriminator);
-  // A boolean option is rendered as an empty schema, as `SchemaField` retrieves it
-  const option = isObject(options[index]) ? options[index] : ({} as S);
+  const option = index >= 0 ? shownOptions[index] : empty;
   const optionUiSchema = getOptionUiSchema<T, S, F>(uiSchema, key, index) ?? {};
   if (!rendersOwnFieldBesideOption<S>(schema)) {
     return { schema: getRenderedOptionSchema<S>(schema, option), uiSchema: optionUiSchema };
