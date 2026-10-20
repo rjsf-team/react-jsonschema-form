@@ -253,6 +253,44 @@ describe('DaisyUIFrameProvider', () => {
     expect(screen.getByText('cupcake')).toBeInTheDocument();
   });
 
+  test('has useTheme() outside a ThemeProvider name the stored theme the frame shows', () => {
+    localStorageMock['daisyui-theme'] = 'dark';
+    function ThemeName() {
+      return <span>{useTheme().theme}</span>;
+    }
+    const DaisyUIFrame = __createDaisyUIFrameProvider({ children: <ThemeName /> });
+
+    const { container } = render(<DaisyUIFrame />);
+
+    expect(container.querySelector('[data-theme="dark"]')).not.toBeNull();
+    expect(screen.getByText('dark')).toBeInTheDocument();
+  });
+
+  test("shows a theme useTheme()'s setTheme stores outside a ThemeProvider", async () => {
+    function DarkButton() {
+      const { theme, setTheme } = useTheme();
+      return (
+        <button type='button' onClick={() => setTheme('dark')}>
+          {theme}
+        </button>
+      );
+    }
+    const DaisyUIFrame = __createDaisyUIFrameProvider({ children: <div>Test Content</div> });
+    const { container } = render(
+      <>
+        <DarkButton />
+        <DaisyUIFrame />
+      </>,
+    );
+    expect(container.querySelector('[data-theme="cupcake"]')).not.toBeNull();
+
+    await user.click(screen.getByText('cupcake'));
+
+    expect(mockSetItem).toHaveBeenCalledWith('daisyui-theme', 'dark');
+    expect(container.querySelector('[data-theme="dark"]')).not.toBeNull();
+    expect(screen.getByRole('button')).toHaveTextContent('dark');
+  });
+
   test('falls back to the theme last stored when the chosen theme is cleared', () => {
     localStorageMock['daisyui-theme'] = 'cupcake';
     // Rendered as the playground renders it, through the element the factory's component returns, so a new `subtheme`

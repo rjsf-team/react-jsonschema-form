@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { createContext, useContext, useMemo, useSyncExternalStore } from 'react';
+import { useMemo, useSyncExternalStore } from 'react';
 import type { ThemeProps } from '@rjsf/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, ThemePresentation } from '@rjsf/utils';
 
@@ -41,50 +41,30 @@ export function generateTheme<
 
 export default createTheme();
 
-/** Interface for the theme context that manages and provides the current DaisyUI theme */
-interface ThemeContextType {
-  /** Current DaisyUI theme name */
-  theme: string;
-  /** Function to update the current theme */
-  setTheme: (theme: string) => void;
-}
-
-/** React context for sharing theme information throughout the application. Outside a `ThemeProvider` it names the
- * theme every provider shows where none is stored
- */
-export const ThemeContext = createContext<ThemeContextType>({
-  theme: DEFAULT_THEME,
-  setTheme: () => {
-    /* empty */
-  },
-});
-
 /** Props for the ThemeProvider component */
 interface ThemeProviderProps {
   /** React components to be wrapped by the provider */
   children: ReactNode;
 }
 
-/** ThemeProvider component that manages DaisyUI theme state and persistence
- *
- * This provider:
- * - Reads the theme from localStorage, following every theme a provider or another tab stores
- * - Provides theme state via context
- * - Persists theme changes to localStorage, where a storage that refuses one leaves the theme as it was
+/** ThemeProvider component, kept for the apps that wrap their forms in it: `useTheme()` reads the stored theme itself,
+ * so the provider holds no theme of its own and renders its children as they are
  *
  * @param props - The props for the component
  */
 export function ThemeProvider({ children }: ThemeProviderProps) {
-  // The stored theme is the one source of truth, read as an external store, so a theme a `DaisyUIFrameProvider` or
-  // another tab stores reaches `useTheme()` too. The server has no storage, so it renders the default
-  const theme = useSyncExternalStore(subscribeToStoredTheme, readStoredTheme, () => DEFAULT_THEME);
-
-  const contextValue = useMemo(() => ({ theme, setTheme: storeTheme }), [theme]);
-  return <ThemeContext.Provider value={contextValue}>{children}</ThemeContext.Provider>;
+  return <>{children}</>;
 }
 
-/** Custom hook for accessing the current theme and theme setter function
+/** Custom hook for accessing the current theme and theme setter function. The stored theme is the one source of truth,
+ * read as an external store, so every caller, inside a `ThemeProvider` or not, names the theme a `DaisyUIFrameProvider`
+ * shows, and follows one any of them, a provider or another tab stores. The server has no storage, so it renders the
+ * default
  *
- * @returns The current theme context with theme name and setter function
+ * @returns The current theme name, and the setter that stores a theme, where a storage that refuses one leaves the
+ *          theme as it was
  */
-export const useTheme = () => useContext(ThemeContext);
+export function useTheme() {
+  const theme = useSyncExternalStore(subscribeToStoredTheme, readStoredTheme, () => DEFAULT_THEME);
+  return useMemo(() => ({ theme, setTheme: storeTheme }), [theme]);
+}
