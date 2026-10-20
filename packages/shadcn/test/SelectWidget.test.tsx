@@ -928,7 +928,7 @@ describe("the single select's combobox while its listbox is open", () => {
       expect(combobox).toHaveAttribute('aria-controls', screen.getByRole('listbox').id);
 
       await user.keyboard('{Enter}');
-      expect(onChange).toHaveBeenLastCalledWith('green');
+      expect(onChange).toHaveBeenCalledExactlyOnceWith('green');
       expect(combobox).toHaveAttribute('aria-expanded', 'false');
       expect(combobox).not.toHaveAttribute('aria-activedescendant');
 
@@ -1150,7 +1150,7 @@ describe("the single select's combobox while its listbox is open", () => {
       expect(combobox).toHaveAttribute('aria-activedescendant', highlightedOption()!.id);
       await user.keyboard(key);
 
-      expect(onChange).toHaveBeenLastCalledWith(' s');
+      expect(onChange).toHaveBeenCalledExactlyOnceWith(' s');
       expect(combobox).toHaveAttribute('aria-expanded', 'false');
     });
 
@@ -1174,7 +1174,7 @@ describe("the single select's combobox while its listbox is open", () => {
       await user.keyboard('{ArrowDown}');
       await user.keyboard(' ');
 
-      expect(onChange).toHaveBeenLastCalledWith('green');
+      expect(onChange).toHaveBeenCalledExactlyOnceWith('green');
       expect(combobox).toHaveAttribute('aria-expanded', 'false');
     });
 
