@@ -564,3 +564,269 @@ describe('precompiled validator integration: oneOf with additionalProperties:fal
     });
   });
 });
+
+describe('an option whose patternProperties or additionalProperties take keys from the form data', () => {
+  /** Retrieving an option against the data stubs each key its `patternProperties` or `additionalProperties` take into
+   * its `properties`. Those stubs only render the keys: options are scored and checked without them, so the precompiled
+   * and live validators validate the same schema, and the keyword that takes a key decides its value
+   */
+  function rootFor(options: RJSFSchema[], discriminator?: string): RJSFSchema {
+    const v: RJSFSchema = { oneOf: options };
+    if (discriminator) {
+      v.discriminator = { propertyName: discriminator };
+    }
+    return { type: 'object', properties: { v } };
+  }
+
+  /** The option the precompiled and the live validator each pick for `data`, scoring the options retrieved against
+   * it as `MultiSchemaField` does, through both `getFirstMatchingOption()` and `getClosestMatchingOption()`
+   */
+  function picks(options: RJSFSchema[], data: unknown, discriminator?: string) {
+    const root = rootFor(options, discriminator);
+    return [buildPrecompiledValidator(root), customizeValidator()].map((validator) => {
+      const schemaUtils = createSchemaUtils({ validator }, root);
+      const retrieved = options.map((option) => schemaUtils.retrieveSchema(option, data));
+      return [
+        getFirstMatchingOption({ validator }, data, retrieved, root, discriminator),
+        getClosestMatchingOption({ validator }, root, data, retrieved, 0, discriminator),
+      ];
+    });
+  }
+
+  it('does not let the `{ type: "null" }` stub of a key `additionalProperties: false` forbids match it', () => {
+    // Option 0 forbids `other`, which its `{ type: 'null' }` stub would accept, so option 1 is picked
+    const options: RJSFSchema[] = [
+      {
+        type: 'object',
+        properties: { id: { type: 'string' } },
+        patternProperties: { '^s_': { type: 'string' } },
+        additionalProperties: false,
+      },
+      { type: 'object', properties: { other: {} } },
+    ];
+    expect(picks(options, { other: null })).toEqual([
+      [1, 1],
+      [1, 1],
+    ]);
+  });
+  it('applies the `not` a guessed-type stub drops', () => {
+    // `{ k: 'x' }` breaks option 1's `additionalProperties`, whose `not` its stub for `k` drops, so option 2 is picked
+    const options: RJSFSchema[] = [
+      { type: 'object', properties: { q: { type: 'number' } } },
+      { type: 'object', properties: { id: { type: 'string' } }, additionalProperties: { not: { const: 'x' } } },
+      { type: 'object', properties: { k: { const: 'x' } } },
+    ];
+    expect(picks(options, { k: 'x' })).toEqual([
+      [2, 2],
+      [2, 2],
+    ]);
+    // No option names `k`, which option 1 takes through its `additionalProperties` alone, so no option matches and
+    // `getFirstMatchingOption()` falls back to option 0, where scoring picks option 1
+    expect(picks(options, { k: 'y' })).toEqual([
+      [0, 1],
+      [0, 1],
+    ]);
+  });
+  it('does not count a key holding undefined as one the option takes', () => {
+    const options: RJSFSchema[] = [
+      { type: 'object', properties: { q: { type: 'number' } } },
+      { type: 'object', properties: { a: { type: 'string' } }, additionalProperties: true },
+    ];
+    // A key holding undefined is no key, as `required` reads it, so `z` names nothing option 1 declares
+    const [precompiled, live] = picks(options, { z: undefined });
+    expect(precompiled[0]).toBe(0);
+    expect(live[0]).toBe(0);
+    expect(precompiled[1]).toBe(live[1]);
+    // Nor does a defined `z`, which option 1 takes through its `additionalProperties` alone, so no option matches and
+    // `getFirstMatchingOption()` falls back to option 0, where scoring picks option 1
+    expect(picks(options, { z: 'set' })).toEqual([
+      [0, 1],
+      [0, 1],
+    ]);
+    // An option that declares no names of its own is not asked for one, so it takes data whose only key holds
+    // undefined as it takes `{}`
+    const mapOnly: RJSFSchema[] = [options[0], { type: 'object', additionalProperties: true }];
+    const [precompiledMap, liveMap] = picks(mapOnly, { z: undefined });
+    expect(precompiledMap[0]).toBe(1);
+    expect(liveMap[0]).toBe(1);
+    expect(precompiledMap[1]).toBe(liveMap[1]);
+    expect(picks(mapOnly, { z: 'set' })).toEqual([
+      [1, 1],
+      [1, 1],
+    ]);
+  });
+  it('scores an option with a `required` by the schema the parse records for a key it takes', () => {
+    const options: RJSFSchema[] = [
+      { type: 'number' },
+      {
+        type: 'object',
+        properties: { id: { type: 'string' } },
+        required: ['id'],
+        additionalProperties: { type: 'string' },
+      },
+    ];
+    expect(picks(options, { id: 'a', k: 'v' })).toEqual([
+      [1, 1],
+      [1, 1],
+    ]);
+  });
+  it('scores an option whose discriminator is only a stub for the key of the data, rather than checking the stub', () => {
+    const options: RJSFSchema[] = [
+      { type: 'object', properties: { kind: { const: 'a' } } },
+      { type: 'object', properties: { x: {} }, additionalProperties: { not: { const: 'zzz' } } },
+    ];
+    // Option 1 doesn't declare `kind`, and its `additionalProperties` rejects `'zzz'`, which the stub would accept
+    const [precompiled, live] = picks(options, { kind: 'zzz' }, 'kind');
+    expect(precompiled[0]).toBe(0);
+    expect(live[0]).toBe(0);
+    // When no option validates, `getClosestMatchingOption()` falls back to a score that still counts the stub; both
+    // validators agree on it
+    expect(precompiled[1]).toBe(live[1]);
+    expect(picks(options, { kind: 'a' }, 'kind')).toEqual([
+      [0, 0],
+      [0, 0],
+    ]);
+  });
+  it('does not take a stubbed discriminator as a simple discriminator match either', () => {
+    // Option 1's stub for `kind` keeps the `enum` of its `additionalProperties` but drops the `not` that rejects 'a'
+    const options: RJSFSchema[] = [
+      { type: 'object', properties: { kind: { const: 'b' } } },
+      { type: 'object', properties: { x: {} }, additionalProperties: { enum: ['a', 'b'], not: { const: 'a' } } },
+      { type: 'object', properties: { kind: { type: 'string' } } },
+    ];
+    const [precompiled, live] = picks(options, { kind: 'a' }, 'kind');
+    expect(precompiled[0]).toBe(2);
+    expect(live[0]).toBe(2);
+  });
+  it('scores and checks an option without the stubs retrieved into a property a pattern also matches', () => {
+    const options: RJSFSchema[] = [
+      {
+        type: 'object',
+        properties: { s_cfg: { type: 'object' } },
+        patternProperties: { '^s_': { type: 'object', additionalProperties: { type: 'string' } } },
+      },
+      { type: 'number' },
+    ];
+    const data = { s_cfg: { inner: 'x' } };
+    expect(picks(options, data)).toEqual([
+      [0, 0],
+      [0, 0],
+    ]);
+    const root = rootFor(options);
+    const validator = buildPrecompiledValidator(root);
+    const retrieved = createSchemaUtils({ validator }, root).retrieveSchema(options[0], data);
+    expect(validator.isValid(getValidationTarget(retrieved, root), data, root)).toBe(true);
+  });
+  it('checks a retrieved option that carries an `$id` as MultiSchemaField does when a switch is declined', () => {
+    const options: RJSFSchema[] = [
+      { $id: 'http://e.com/opt.json', type: 'object', additionalProperties: { type: 'string' } },
+      { type: 'number' },
+    ];
+    const root = rootFor(options);
+    const validator = buildPrecompiledValidator(root);
+    const live = customizeValidator();
+    for (const data of [{ k: 'v' }, { k: 1 }]) {
+      const chosen = createSchemaUtils({ validator: live }, root).retrieveSchema(options[0], data);
+      // Checked as `MultiSchemaField` checks it, by its place in the root, which no stub or `$id` changes
+      const checked = getValidationTarget(chosen, root);
+      expect(validator.isValid(checked, data, root)).toBe(live.isValid(checked, data, root));
+    }
+    expect(picks(options, { k: 'v' })).toEqual([
+      [0, 0],
+      [0, 0],
+    ]);
+  });
+  it.each([
+    [{ id: 'a', s_na: 'xx' }, 0],
+    [{ name: 'a', s_na: 'x' }, 2],
+    [{ kind: 'extra', n: 1 }, 1],
+    [{ kind: 'extra', n: 'one', name: 'b' }, 2],
+    [{ name: 'a' }, 2],
+  ])('picks the same option for %j with either validator', (data, expected) => {
+    const options: RJSFSchema[] = [
+      {
+        type: 'object',
+        properties: { id: { type: 'string' } },
+        patternProperties: { '^s_': { type: 'string' }, '^s_n': { minLength: 2 } },
+        additionalProperties: false,
+      },
+      { type: 'object', properties: { kind: { const: 'extra' } }, additionalProperties: { type: 'number' } },
+      { type: 'object', properties: { name: { type: 'string' } } },
+      { type: 'number' },
+    ];
+    expect(picks(options, data)).toEqual([
+      [expected, expected],
+      [expected, expected],
+    ]);
+  });
+  /** Whether the first option, retrieved against `data`, passes the check `MultiSchemaField` runs when a switch is
+   * declined, answered by the precompiled and the live validator
+   */
+  function declineChecks(options: RJSFSchema[], data: unknown, discriminator?: string) {
+    const root = rootFor(options, discriminator);
+    return [buildPrecompiledValidator(root), customizeValidator()].map((validator) => {
+      const retrieved = createSchemaUtils({ validator }, root).retrieveSchema(options[0], data);
+      return validator.isValid(getValidationTarget(retrieved, root), data, root);
+    });
+  }
+  it.each<[string, RJSFSchema, object]>([
+    [
+      'an `allOf` entry',
+      {
+        allOf: [
+          { type: 'object', properties: { id: { type: 'string', maxLength: 2 } } },
+          { patternProperties: { '^s_': { type: 'string' } } },
+        ],
+      },
+      { id: 'abc', s_x: 'v' },
+    ],
+    [
+      'the rest of a schema whose `then` takes extra keys',
+      {
+        type: 'object',
+        properties: { id: { type: 'string', maxLength: 2 } },
+        if: { required: ['id'] },
+        then: { additionalProperties: { type: 'string' } },
+      },
+      { id: 'abcdef', k: 'v' },
+    ],
+  ])('keeps a property declared by %s, rather than taking it as a stub another part stubbed', (_, first, data) => {
+    // The declared `id` is too long, so option 0 fails and option 1 is picked
+    const options: RJSFSchema[] = [first, { type: 'object', properties: { id: { type: 'string' } } }];
+    expect(picks(options, data)).toEqual([
+      [1, 1],
+      [1, 1],
+    ]);
+    expect(declineChecks(options, data)).toEqual([false, false]);
+  });
+  it('takes a discriminator declared in one `allOf` entry as declared when another entry takes extra keys', () => {
+    const base: RJSFSchema = {
+      type: 'object',
+      properties: { name: { type: 'string' } },
+      additionalProperties: { type: 'string' },
+    };
+    const options: RJSFSchema[] = [
+      { allOf: [base, { properties: { kind: { const: 'a' } } }] },
+      { allOf: [base, { properties: { kind: { const: 'b' } } }] },
+    ];
+    const data = { kind: 'b', name: 'x' };
+    expect(picks(options, data, 'kind')).toEqual([
+      [1, 1],
+      [1, 1],
+    ]);
+    expect(declineChecks(options, data, 'kind')).toEqual([false, false]);
+  });
+  it('throws for a stubbed schema handed to it as it stands, as for any schema the parse never saw', () => {
+    const options: RJSFSchema[] = [
+      { type: 'object', properties: { id: { type: 'string' } }, patternProperties: { '^s_': { type: 'string' } } },
+      { type: 'number' },
+    ];
+    const root = rootFor(options);
+    const validator = buildPrecompiledValidator(root);
+    const stubbed = createSchemaUtils({ validator }, root).retrieveSchema(options[0], { s_a: 'x' });
+    expect(() => validator.isValid(stubbed, { s_a: 'x' }, root)).toThrow(/No precompiled validator function was found/);
+    expect(() => validator.isValid({ type: 'string', minLength: 99 }, 'x', root)).toThrow(
+      /No precompiled validator function was found/,
+    );
+  });
+});

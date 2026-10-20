@@ -231,6 +231,47 @@ describe('getValidationSchemas()', () => {
     ]);
   });
 
+  it('lists the scored form of an option that stubs the keys of the data into its properties, whatever the keys', () => {
+    const option: RJSFSchema = {
+      type: 'object',
+      properties: { id: { type: 'string' } },
+      required: ['id'],
+      patternProperties: { '^s_': { type: 'string' } },
+    };
+    const strict: RJSFSchema = {
+      type: 'object',
+      properties: { name: { type: 'string' } },
+      required: ['name'],
+      additionalProperties: false,
+    };
+    const rootSchema: RJSFSchema = { type: 'object', properties: { v: { oneOf: [option, strict] } } };
+    // Scoring reads an option where it sits rather than the copy retrieved with the data's keys stubbed into it, so
+    // one scored form serves whatever keys the data holds, and the strict option gets one plain and one relaxed
+    const name = { $ref: '#/properties/v/oneOf/1/properties/name' };
+    expect(listed(rootSchema)).toEqual([
+      rootSchema,
+      { $ref: '#/properties/v/oneOf/0' },
+      {
+        type: 'object',
+        properties: { id: { $ref: '#/properties/v/oneOf/0/properties/id' } },
+        patternProperties: { '^s_': { $ref: '#/properties/v/oneOf/0/patternProperties/%5Es_' } },
+      },
+      { $ref: '#/properties/v/oneOf/1' },
+      { type: 'object', properties: { name }, additionalProperties: false },
+      { type: 'object', properties: { name }, additionalProperties: true },
+    ]);
+  });
+  it('lists an option with no names of its own by pointer alone, which it is scored by whatever its keys hold', () => {
+    const rootSchema: RJSFSchema = {
+      type: 'object',
+      properties: { v: { oneOf: [{ type: 'object', additionalProperties: true }, { type: 'number' }] } },
+    };
+    expect(listed(rootSchema)).toEqual([
+      rootSchema,
+      { $ref: '#/properties/v/oneOf/0' },
+      { $ref: '#/properties/v/oneOf/1' },
+    ]);
+  });
   it('reads a $ref an option spells as an allOf entry of what it names when it scores the option', () => {
     const schema: RJSFSchema = {
       definitions: { Base: { type: 'object', properties: { id: { type: 'string' } }, required: ['id'] } },
