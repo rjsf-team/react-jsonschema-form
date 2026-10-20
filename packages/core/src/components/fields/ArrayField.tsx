@@ -637,8 +637,11 @@ function ArrayFieldItemInner<
     handleRemoveItem,
     handleReorderItems,
   } = props;
-  const { schemaUtils, fields, globalFormOptions } = registry;
-  const { ArraySchemaField, SchemaField } = fields;
+  const {
+    schemaUtils,
+    fields: { ArraySchemaField, SchemaField },
+    globalFormOptions,
+  } = registry;
   const itemSchema = useMemo(
     () => schemaUtils.retrieveSchema(rawItemSchema, itemData),
     [schemaUtils, rawItemSchema, itemData],

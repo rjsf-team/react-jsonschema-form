@@ -523,6 +523,7 @@ export function useSchemaFieldPlan<
   const namedFieldAbove = use(NamedFieldContext);
   const namedHere = namedFieldAbove?.fieldPath === fieldPath ? namedFieldAbove : undefined;
   const namedAbove = namedHere !== undefined;
+  const framedAbove = namedHere?.framedAbove === true;
   const optionsRenderedAbove = namedHere?.optionsRendered === true;
 
   const ownUiSchema = useMemo(
@@ -733,7 +734,9 @@ export function useSchemaFieldPlan<
   });
   return {
     namedFieldAbove,
-    namedHere,
+    namedAbove,
+    framedAbove,
+    optionsRenderedAbove,
     schema,
     xxxOfKey,
     uiField,
@@ -790,7 +793,9 @@ function SchemaFieldRender<
   const readsFormData = useReadsFormData(SchemaField);
   const {
     namedFieldAbove,
-    namedHere,
+    namedAbove,
+    framedAbove,
+    optionsRenderedAbove,
     schema,
     xxxOfKey,
     uiField,
@@ -813,9 +818,6 @@ function SchemaFieldRender<
     renderedComponent,
     presentation,
   } = useSchemaFieldPlan<T, S, F>(props);
-  const namedAbove = namedHere !== undefined;
-  const framedAbove = namedHere?.framedAbove === true;
-  const optionsRenderedAbove = namedHere?.optionsRendered === true;
   const { required: fieldUiRequired, initialValue: fieldInitialValue, emptyValue: fieldEmptyValue } = ownUiOptions;
 
   // `MultiSchemaField` renders the options it is handed. Memoized so a re-render that changed neither the schema nor
@@ -865,10 +867,9 @@ function SchemaFieldRender<
       namedAbove || rendersNamedField ? { fieldPath, framedAbove: false, optionsRendered: false } : namedFieldAbove,
     [namedAbove, rendersNamedField, fieldPath, namedFieldAbove],
   );
-  const optionsRendered = xxxOfOptions !== undefined;
   const namedFieldPath = useMemo<NamedFieldPath | undefined>(
-    () => (rendersNamedField ? { fieldPath, framedAbove: true, optionsRendered } : ownNamedFieldPath),
-    [rendersNamedField, fieldPath, optionsRendered, ownNamedFieldPath],
+    () => (rendersNamedField ? { fieldPath, framedAbove: true, optionsRendered: hasOptions } : ownNamedFieldPath),
+    [rendersNamedField, fieldPath, hasOptions, ownNamedFieldPath],
   );
 
   /** Intermediary `onChange` handler for field components that will inject the `id` of the current field into the
