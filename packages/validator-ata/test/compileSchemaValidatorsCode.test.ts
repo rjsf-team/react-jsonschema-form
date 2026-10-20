@@ -2,6 +2,7 @@ import type { RJSFSchema } from '@rjsf/utils';
 import { createSchemaUtils } from '@rjsf/utils';
 import type { Validator } from 'ata-validator';
 
+import nestedResourceTests from '../../utils/test/testUtils/nestedResourceTests.ts';
 import precompiledCoverageTests from '../../utils/test/testUtils/precompiledCoverageTests.ts';
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
 import { createPrecompiledValidator } from '../src/index.ts';
@@ -296,5 +297,8 @@ describe('compileSchemaValidatorsCode', () => {
   });
   precompiledCoverageTests((rootSchema, options) =>
     createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(rootSchema, options)), rootSchema, options),
+  );
+  nestedResourceTests((rootSchema) =>
+    createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(rootSchema)), rootSchema),
   );
 });

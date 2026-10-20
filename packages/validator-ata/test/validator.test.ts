@@ -9,6 +9,7 @@ import type {
 import { createSchemaUtils, ErrorSchemaBuilder, ID_KEY, ROOT_SCHEMA_PREFIX, noop } from '@rjsf/utils';
 import type { Validator } from 'ata-validator';
 
+import nestedResourceTests from '../../utils/test/testUtils/nestedResourceTests.ts';
 import customizeValidator from '../src/customizeValidator.ts';
 // Static import of the package surface so its top-level evaluation
 // (`export default customizeValidator()`) is included in coverage.
@@ -583,4 +584,8 @@ describe('ATAValidator resolving a $ref local to the root', () => {
     expect(validator.isValid(ref, 1, edited)).toBe(true);
     expect(validator.isValid(ref, 's', edited)).toBe(false);
   });
+});
+
+describe('ATAValidator', () => {
+  nestedResourceTests(() => customizeValidator());
 });

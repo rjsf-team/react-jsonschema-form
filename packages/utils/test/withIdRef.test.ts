@@ -80,6 +80,67 @@ describe('withRootIdRefPrefix()', () => {
       $ref: 'http://example.com/root.json#/if',
     });
   });
+  it('prefixes a local $ref with ROOT_SCHEMA_PREFIX for a root that is no schema object, which an untyped caller may hand over', () => {
+    const notASchema: RJSFSchema = JSON.parse('"root"');
+    expect(withRootIdRefPrefix({ $ref: '#/a' }, notASchema)).toEqual({ $ref: `${ROOT_SCHEMA_PREFIX}#/a` });
+  });
+  describe('a $ref the root holds below an $id of its own', () => {
+    const kind: RJSFSchema = { $ref: '#/$defs/kind' };
+    const relative: RJSFSchema = { $ref: 'kinds.json#/$defs/cat' };
+    const dangling: RJSFSchema = { $ref: '#/$defs/missing' };
+    const anchored: RJSFSchema = { $id: '#here', $ref: '#/$defs/kind' };
+    const own: RJSFSchema = { $ref: '#/$defs/kind' };
+    const pet: RJSFSchema = {
+      $id: 'pet.json',
+      $defs: { kind: { const: 'cat' } },
+      properties: { kind, relative, dangling, anchored },
+    };
+    const rootSchema: RJSFSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $id: 'https://example.com/root.json',
+      $defs: {
+        kind: { const: 'dog' },
+        pet,
+        kinds: { $id: 'kinds.json', $defs: { 'a cat#': { const: 'cat' }, cat: { const: 'cat' } } },
+      },
+      properties: { own },
+    };
+    it('names the target its resource resolves it to by the pointer to it in the root', () => {
+      expect(withRootIdRefPrefix(pet, rootSchema)).toEqual({
+        ...pet,
+        properties: {
+          kind: { $ref: 'https://example.com/root.json#/$defs/pet/$defs/kind' },
+          relative: { $ref: 'https://example.com/root.json#/$defs/kinds/$defs/cat' },
+          // One that resolves to nothing is prefixed as before, for the validator to report
+          dangling: { $ref: 'https://example.com/root.json#/$defs/missing' },
+          // An `$id` that is only a fragment names a place in the resource rather than a resource of its own
+          anchored: { $id: '#here', $ref: 'https://example.com/root.json#/$defs/pet/$defs/kind' },
+        },
+      });
+    });
+    it('names the root by the id it is given, escaping what a fragment cannot hold', () => {
+      const name: RJSFSchema = { $ref: 'kinds.json#/$defs/a%20cat%23' };
+      const root: RJSFSchema = { ...rootSchema, $defs: { ...rootSchema.$defs, pet: { ...pet, properties: { name } } } };
+      expect(withRootIdRefPrefix(name, root, 'compiled#')).toEqual({
+        $ref: 'compiled#/$defs/kinds/$defs/a%20cat%23',
+      });
+    });
+    it("leaves one in the root's own resource as it would be written", () => {
+      expect(withRootIdRefPrefix(own, rootSchema)).toEqual({
+        $ref: 'https://example.com/root.json#/$defs/kind',
+      });
+    });
+    it('leaves one as written below an $id the schema handed over holds, where a relative root id would move', () => {
+      const { $id: _id, ...root } = rootSchema;
+      expect(withRootIdRefPrefix({ $id: 'https://example.com/variant.json', properties: { relative } }, root)).toEqual({
+        $id: 'https://example.com/variant.json',
+        properties: { relative: { $ref: 'kinds.json#/$defs/cat' } },
+      });
+      expect(withRootIdRefPrefix({ properties: { relative } }, root)).toEqual({
+        properties: { relative: { $ref: `${ROOT_SCHEMA_PREFIX}#/$defs/kinds/$defs/cat` } },
+      });
+    });
+  });
 });
 
 describe('rootSchemaIdOf()', () => {

@@ -1,6 +1,8 @@
 import type { RJSFSchema } from '@rjsf/utils';
 import { ID_KEY, schemaKey, schemaParser, withRootIdRefPrefix } from '@rjsf/utils';
+import { Ajv2020 } from 'ajv/dist/2020.js';
 
+import nestedResourceTests from '../../utils/test/testUtils/nestedResourceTests.ts';
 import precompiledCoverageTests from '../../utils/test/testUtils/precompiledCoverageTests.ts';
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
 import createAjvInstance from '../src/createAjvInstance.ts';
@@ -102,4 +104,8 @@ describe('compileSchemaValidatorsCode()', () => {
       options,
     ),
   );
+  nestedResourceTests((rootSchema) => {
+    const options = String(rootSchema.$schema).includes('2020-12') ? { AjvClass: Ajv2020 } : {};
+    return createPrecompiledValidator(evalValidatorCode(compileSchemaValidatorsCode(rootSchema, options)), rootSchema);
+  });
 });

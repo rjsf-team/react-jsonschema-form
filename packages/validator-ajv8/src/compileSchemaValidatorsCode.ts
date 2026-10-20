@@ -35,7 +35,7 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
   // resolve against itself, so it names the root by the id the root is compiled under
   const rootId = schemaKey(schema);
   const schemas = Object.values(schemaMaps).map((parsed) =>
-    parsed[ID_KEY] === rootId ? parsed : withRootIdRefPrefix<StrictRJSFSchema>(parsed, { [ID_KEY]: rootId }),
+    parsed[ID_KEY] === rootId ? parsed : withRootIdRefPrefix<StrictRJSFSchema>(parsed, schema, rootId),
   );
 
   // Allow users to turn off the `lines: true` feature in their own overrides, but NOT the `source: true`

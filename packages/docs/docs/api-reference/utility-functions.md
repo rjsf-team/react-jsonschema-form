@@ -3242,11 +3242,13 @@ This is used in isValid to make references to the rootSchema
 Recursively prefixes every `$ref` local to the root document, one starting with `#`, with the id a validator registers `rootSchema` under, as [rootSchemaIdOf()](#rootschemaidofsextendsstrictrjsfschemarjsfschema) returns it: the root's own `$id`, or the value of the `ROOT_SCHEMA_PREFIX` constant where it has none.
 An id ending in an empty fragment names the same document as one without it, so that `#` is left out: `withRootIdRefPrefix({ $ref: '#/if' }, { $id: 'http://example.com/root.json#' })` gives `{ $ref: 'http://example.com/root.json#/if' }`.
 A validator applies it to a schema it validates beside `rootSchema`, so that a `$ref` local to the root resolves against the root whatever the schema holding it is registered as.
+A `$ref` that a subschema of `rootSchema` holds below an `$id` of its own, the subschema's or its resource's, resolves against that resource, which the subschema handed over no longer sits under, so it is spelled as the pointer to its target in the root, prefixed with the id: with `$id: 'https://example.com/root.json'` and `$defs: { pet: { $id: 'pet.json', $defs: { cat: { const: 'cat' } }, properties: { kind: { $ref: '#/$defs/cat' } } } }`, the `kind` subschema gives `{ $ref: 'https://example.com/root.json#/$defs/pet/$defs/cat' }`.
 
 #### Parameters
 
 - schemaNode: S - The object node to which the prefix is added when a `$ref` is part of it
 - rootSchema: S - The root schema the local `$ref`s name
+- [rootId=rootSchemaIdOf(rootSchema)]: string - The id the validator registers `rootSchema` under, where it is not the one `rootSchemaIdOf()` gives
 
 #### Returns
 

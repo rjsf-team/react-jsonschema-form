@@ -1,7 +1,59 @@
 import { ID_KEY, REF_KEY, ROOT_SCHEMA_PREFIX } from './constants.ts';
 import isObject from './isObject.ts';
+import parseSchemaGraph from './schema/graph/parseSchemaGraph.ts';
+import type { SchemaGraph } from './schema/graph/parseSchemaGraph.ts';
 import { resolveUri } from './schemaUri.ts';
 import type { GenericObjectType, RJSFSchema, StrictRJSFSchema } from './types.ts';
+
+/** How `prefixRefs()` rewrites the `$ref`s of a schema handed to a validator beside the root */
+interface RefRewrite {
+  /** The id of the root schema the local `$ref`s name, without an empty trailing fragment */
+  readonly base: string;
+  /** Returns the `$ref` a subschema of the root is to hold in place of its own, given the base the validator resolves
+   * a `$ref` there against, or undefined where it is to hold its own, prefixed as written
+   */
+  readonly nestedRef?: (holder: object, scope: string) => string | undefined;
+}
+
+/** Returns the `$ref` naming the subschema at the JSON `pointer` in the root, encoded as `encodeURI()` encodes it,
+ * which leaves the characters a fragment may hold, such as the `$` of `$defs`, as they are. A `#` is escaped too:
+ * `encodeURI()` keeps it, and Ajv drops one ending the `$ref` as an empty fragment. A lone surrogate, which a property
+ * name may hold, has no UTF-8 encoding and is left as it is.
+ */
+function refTo(pointer: string): string {
+  return `#${pointer.replace(/[^\uD800-\uDFFF]+/gu, (wellFormed) => encodeURI(wellFormed)).replaceAll('#', '%23')}`;
+}
+
+/** Returns the `nestedRef` of a `RefRewrite` for the root `graph` was parsed from, registered under `rootId`. A
+ * subschema of the root that sits in a resource of its own, below an `$id` of its own or one around it, holds a `$ref`
+ * that resolves against that resource, but the subschema a validator is handed, such as an option or an `if`, no
+ * longer sits under that `$id`. So the target the graph resolved the `$ref` to is named by its pointer in the root.
+ * Where an `$id` the schema handed over still holds around the `$ref` would resolve that pointer elsewhere, as an
+ * absolute one does a root registered under a relative id such as `ROOT_SCHEMA_PREFIX`, the `$ref` is left for the
+ * validator to resolve against that `$id`, and so is any other: one written in the root's own resource, or one that
+ * resolves to nothing.
+ */
+function nestedRefOf<S extends StrictRJSFSchema>(
+  graph: SchemaGraph<S>,
+  rootId: string,
+): NonNullable<RefRewrite['nestedRef']> {
+  const root = graph.node(graph.root);
+  /* v8 ignore next -- the root of a graph is the object node the root schema parsed to */
+  const rootBase = root.kind === 'schema' ? root.baseUri : undefined;
+  return (holder, scope) => {
+    const id = graph.byObject(holder);
+    const node = id === undefined ? undefined : graph.node(id);
+    if (node?.kind !== 'schema' || node.baseUri === rootBase || node.ref === undefined) {
+      return undefined;
+    }
+    const target = graph.node(node.ref);
+    if (target.kind === 'invalid') {
+      return undefined;
+    }
+    const ref = `${rootId}${refTo(target.pointer)}`;
+    return resolveUri(scope, ref) === resolveUri('', ref) ? ref : undefined;
+  };
+}
 
 /** Returns the `$ref` written as `ref` as a schema validated beside the root has to spell it: one local to the root
  * names the root by `base`, and a relative one names a resource beside the root, so it is resolved against the root's
@@ -21,19 +73,29 @@ function rootRef(ref: string, base: string): string {
 /** Takes a `node` object and transforms any contained `$ref` node variables with a prefix, recursively calling
  * `prefixRefs` for any other elements.
  *
- * @param node - The object node to which the `base` is added when a REF_KEY is part of it
- * @param base - The id of the root schema the local `$ref`s name, without an empty trailing fragment
+ * @param node - The copy of `holder` to which the `base` is added when a REF_KEY is part of it
+ * @param holder - The object node `node` copies, by which the graph knows it
+ * @param rewrite - How the `$ref`s are rewritten
+ * @param outerScope - The base the validator resolves a `$ref` around the object against
  */
-function withIdRefPrefixObject<S extends StrictRJSFSchema = RJSFSchema>(node: S, base: string): S {
+function withIdRefPrefixObject<S extends StrictRJSFSchema = RJSFSchema>(
+  node: S,
+  holder: object,
+  rewrite: RefRewrite,
+  outerScope: string,
+): S {
   const realObj: GenericObjectType = node;
+  const ownId: unknown = realObj[ID_KEY];
+  const scope = typeof ownId === 'string' && !ownId.startsWith('#') ? resolveUri(outerScope, ownId) : outerScope;
+  const nestedRef = rewrite.nestedRef?.(holder, scope);
   for (const key in realObj) {
     /* v8 ignore next -- spread in caller guarantees only own properties reach this loop */
     if (Object.hasOwn(realObj, key)) {
       const value = realObj[key];
       if (key === REF_KEY && typeof value === 'string') {
-        realObj[key] = rootRef(value, base);
+        realObj[key] = nestedRef ?? rootRef(value, rewrite.base);
       } else {
-        realObj[key] = prefixRefs<S>(value, base);
+        realObj[key] = prefixRefs<S>(value, rewrite, scope);
       }
     }
   }
@@ -44,26 +106,33 @@ function withIdRefPrefixObject<S extends StrictRJSFSchema = RJSFSchema>(node: S,
  * `prefixRefs` for any other elements.
  *
  * @param node - The list of object nodes to which the `base` is added when a REF_KEY is part of it
- * @param base - The id of the root schema the local `$ref`s name, without an empty trailing fragment
+ * @param rewrite - How the `$ref`s are rewritten
+ * @param scope - The base the validator resolves a `$ref` in the list against
  */
-function withIdRefPrefixArray<S extends StrictRJSFSchema = RJSFSchema>(node: S[], base: string): S[] {
-  return node.map((item) => prefixRefs<S>(item, base));
+function withIdRefPrefixArray<S extends StrictRJSFSchema = RJSFSchema>(
+  node: S[],
+  rewrite: RefRewrite,
+  scope: string,
+): S[] {
+  return node.map((item) => prefixRefs<S>(item, rewrite, scope));
 }
 
-function prefixRefs<S extends StrictRJSFSchema = RJSFSchema>(schemaNode: S, base: string): S;
+function prefixRefs<S extends StrictRJSFSchema = RJSFSchema>(schemaNode: S, rewrite: RefRewrite, scope?: string): S;
 function prefixRefs<S extends StrictRJSFSchema = RJSFSchema>(
   schemaNode: S | S[] | S[keyof S],
-  base: string,
+  rewrite: RefRewrite,
+  scope?: string,
 ): S | S[] | S[keyof S];
 function prefixRefs<S extends StrictRJSFSchema = RJSFSchema>(
   schemaNode: S | S[] | S[keyof S],
-  base: string,
+  rewrite: RefRewrite,
+  scope = '',
 ): S | S[] | S[keyof S] {
   if (Array.isArray(schemaNode)) {
-    return withIdRefPrefixArray<S>([...schemaNode], base);
+    return withIdRefPrefixArray<S>([...schemaNode], rewrite, scope);
   }
   if (isObject(schemaNode)) {
-    return withIdRefPrefixObject<S>({ ...schemaNode }, base);
+    return withIdRefPrefixObject<S>({ ...schemaNode }, schemaNode, rewrite, scope);
   }
   return schemaNode;
 }
@@ -86,12 +155,27 @@ export function rootSchemaIdOf<S extends StrictRJSFSchema = RJSFSchema>(rootSche
  * schema it validates beside `rootSchema`, so that a `$ref` written in the root resolves against the root whatever the
  * schema holding it is registered as.
  *
+ * A `$ref` a subschema of the root holds where it sits in a resource of its own, below its own `$id` or one around
+ * it, resolves against that resource rather than the root, so it is spelled as the pointer to its target in the root,
+ * with the id as the prefix: the subschema handed over, such as an option or an `if`, no longer sits under that `$id`.
+ *
  * @param schemaNode - The object node to which the prefix is added when a REF_KEY is part of it
  * @param rootSchema - The root schema the local `$ref`s name
+ * @param [rootId=rootSchemaIdOf(rootSchema)] - The id the validator registers `rootSchema` under, where it is not the
+ *        one `rootSchemaIdOf()` gives
  * @returns - A copy of the `schemaNode` with updated `$ref`s
  */
-export function withRootIdRefPrefix<S extends StrictRJSFSchema = RJSFSchema>(schemaNode: S, rootSchema: S): S {
-  return prefixRefs<S>(schemaNode, rootSchemaIdOf(rootSchema).replace(/#$/, ''));
+export function withRootIdRefPrefix<S extends StrictRJSFSchema = RJSFSchema>(
+  schemaNode: S,
+  rootSchema: S,
+  rootId = rootSchemaIdOf(rootSchema),
+): S {
+  const base = rootId.replace(/#$/, '');
+  // A root that is no schema object, which an untyped caller may hand a validator, has no subschemas to find
+  return prefixRefs<S>(schemaNode, {
+    base,
+    nestedRef: isObject(rootSchema) ? nestedRefOf(parseSchemaGraph<S>(rootSchema), base) : undefined,
+  });
 }
 
 /** Recursively prefixes all `$ref`s local to the root document, one starting with `#`, with the value of the
@@ -109,5 +193,5 @@ export default function withIdRefPrefix<S extends StrictRJSFSchema = RJSFSchema>
 export default function withIdRefPrefix<S extends StrictRJSFSchema = RJSFSchema>(
   schemaNode: S | S[] | S[keyof S],
 ): S | S[] | S[keyof S] {
-  return prefixRefs<S>(schemaNode, ROOT_SCHEMA_PREFIX);
+  return prefixRefs<S>(schemaNode, { base: ROOT_SCHEMA_PREFIX });
 }
