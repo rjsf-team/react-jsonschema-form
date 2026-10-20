@@ -16,6 +16,7 @@ import {
 } from '@rjsf/utils';
 import type { Validator } from 'ata-validator';
 
+import nestedResourceTests from '../../utils/test/testUtils/nestedResourceTests.ts';
 import pointerValidationTests, {
   absoluteRefValidationTests,
 } from '../../utils/test/testUtils/pointerValidationTests.ts';
@@ -664,3 +665,7 @@ describe('ATAValidator validating a subschema by its place in the root', () => {
 
 pointerValidationTests(() => customizeValidator());
 absoluteRefValidationTests(() => customizeValidator());
+
+describe('ATAValidator', () => {
+  nestedResourceTests(() => customizeValidator());
+});

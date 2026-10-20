@@ -47,7 +47,7 @@ function propertyScore<
     if (formValue == null) {
       return 0;
     }
-    const { resolved, target } = requireOwnRef<S>(value, rootSchema);
+    const { resolved, target } = requireOwnRef<S>(value, rootSchema, context.customMergeAllOf);
     return propertyScore<T, S, F>(context, rootSchema, resolved, formValue, countedFrom(target));
   }
   const xxxOfKey = getXxxOfKey<S>(value);
@@ -149,7 +149,7 @@ function scopeScore<T, S extends StrictRJSFSchema, F extends FormContextType>(
     if (!isSchemaObject<S>(entry) || (typeof entry[REF_KEY] === 'string' && formData == null)) {
       return score;
     }
-    const ref = findOwnRef<S>(entry, rootSchema);
+    const ref = findOwnRef<S>(entry, rootSchema, context.customMergeAllOf);
     // A reference naming nothing says nothing about the data: whatever resolves the option to render it reports the
     // broken reference on its own
     if ('error' in ref) {
@@ -208,7 +208,7 @@ export function closestOption<S extends StrictRJSFSchema = RJSFSchema, F extends
     allValidIndexes.push(...options.keys());
   }
   const resolvedOptions = options.map((option) =>
-    isSchemaObject<S>(option) ? requireOwnRef<S>(option, rootSchema) : undefined,
+    isSchemaObject<S>(option) ? requireOwnRef<S>(option, rootSchema, context.customMergeAllOf) : undefined,
   );
   interface BestType {
     bestIndex: number;

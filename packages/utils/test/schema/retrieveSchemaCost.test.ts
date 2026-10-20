@@ -1,5 +1,14 @@
-import { RJSF_REF_CYCLE_KEY, getDefaultFormState, isObject, retrieveSchema } from '../../src/index.ts';
+import {
+  RJSF_PROVENANCE_KEY,
+  RJSF_REF_CYCLE_KEY,
+  findSelectedOptionInXxxOf,
+  getDefaultFormState,
+  isObject,
+  isSchemaObject,
+  retrieveSchema,
+} from '../../src/index.ts';
 import type { RJSFSchema } from '../../src/index.ts';
+import parseSchemaGraph from '../../src/schema/graph/parseSchemaGraph.ts';
 import { miniValidator } from './graph/miniValidator.ts';
 
 function wideSchema(): RJSFSchema {
@@ -84,5 +93,43 @@ describe('the cost of an edit to a wide object', () => {
     const first = validator.calls;
     getDefaultFormState({ validator }, { schema: root, rootSchema: root, formData: { f0: 'b' } });
     expect(validator.calls).toBe(first);
+  });
+  it('parses no schema anew to find the option a selector picks among options that lack the selector', () => {
+    const context = { validator: miniValidator() };
+    const selected: RJSFSchema = { type: 'object', properties: { kind: { const: 'hit' } } };
+    const root: RJSFSchema = {
+      type: 'object',
+      properties: { p: { oneOf: [{ type: 'object', properties: { other: { type: 'string' } } }, selected] } },
+    };
+    const graph = parseSchemaGraph(root);
+    const adopt = vi.spyOn(graph, 'adopt');
+    const p = root.properties?.p;
+    expect(isObject(p) && findSelectedOptionInXxxOf(context, root, p, 'kind', 'oneOf', { kind: 'hit' })).toEqual(
+      selected,
+    );
+    expect(adopt.mock.results.map(({ value }) => value.graph === graph)).not.toContain(false);
+  });
+  it('parses the options a merge rebuilds for each plan once while their keywords stay the same', () => {
+    const context = { validator: miniValidator() };
+    // `b` is declared by D0 and by the D1 it merges, each with an option list, so it offers the cross product
+    const root: RJSFSchema = {
+      definitions: {
+        D0: { type: 'object', properties: { b: { $ref: '#/definitions/D1' } }, allOf: [{ $ref: '#/definitions/D1' }] },
+        D1: {
+          type: 'object',
+          properties: { b: { anyOf: [{ $ref: '#/definitions/D0' }, { type: 'string' }] } },
+          anyOf: [{ title: 'first' }, { title: 'second' }],
+        },
+      },
+      $ref: '#/definitions/D0',
+    };
+    const b = retrieveSchema(context, root, root).properties?.b;
+    const provenancesFor = (data: object) =>
+      (isSchemaObject(b) ? (retrieveSchema(context, b, root, data, true).anyOf ?? []) : []).map((option): unknown =>
+        isObject(option) ? Reflect.get(option, RJSF_PROVENANCE_KEY) : undefined,
+      );
+    const first = provenancesFor({ n: 1 });
+    expect(first).toHaveLength(4);
+    provenancesFor({ n: 2 }).forEach((provenance, index) => expect(provenance).toBe(first[index]));
   });
 });

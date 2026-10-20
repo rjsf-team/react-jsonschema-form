@@ -30,6 +30,7 @@ import isObject, { isSchemaObject } from '../isObject.ts';
 import { getByPath } from '../pathUtils.ts';
 import setOwn from '../setOwn.ts';
 import type {
+  CustomMergeAllOf,
   FormContextType,
   GenericObjectType,
   RJSFMarkedSchema,
@@ -230,14 +231,20 @@ export function fieldOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, schem
   );
 }
 
+/** The key each rebuilt option is adopted under, by the field offering it, its keyword and its index */
+const rebuiltOptions = new KeyedMemo<object>();
+
 /** The node of the option `option` a plan's merged `keyword` list holds at `index`: the one a chain providing the list
  * holds there, which is the one parsed under the base of the resource that provider is in, since one object reached in
  * two resources is a node in each. An option no node holds, such as one of the cross product a merge makes of two
  * lists, is adopted, so that it is still handed out as an option of the field offering it, keeping the field's guard
- * chain: handed out as a schema of its own, a recursion through it would start afresh at every level.
+ * chain: handed out as a schema of its own, a recursion through it would start afresh at every level. The merge makes
+ * such an option anew for every plan, and a field whose data a plan reads is planned again on every edit, so it is
+ * adopted as a copy of the one last adopted at its place in the field, which is parsed only when its keywords change.
  */
 function optionNode<S extends StrictRJSFSchema>(
   plan: MergePlan<S>,
+  field: Provenance<S>,
   keyword: string,
   index: number,
   option: S,
@@ -247,7 +254,12 @@ function optionNode<S extends StrictRJSFSchema>(
     return node.kind === 'schema' && node.raw === option;
   });
   const node = provided?.node ?? plan.graph.byObject(option);
-  return node === undefined ? plan.graph.adopt(option) : { graph: plan.graph, node };
+  return node === undefined
+    ? plan.graph.adoptCopy(
+        option,
+        rebuiltOptions.get([field, keyword, index], () => ({})),
+      )
+    : { graph: plan.graph, node };
 }
 
 /** The policy views are planned with: every `allOf` is merged, and an option only where the schema offering it has
@@ -374,32 +386,38 @@ export interface ResolvedOwnRef<S extends StrictRJSFSchema = RJSFSchema> {
  */
 export type OwnRef<S extends StrictRJSFSchema = RJSFSchema> = ResolvedOwnRef<S> | { readonly error: string };
 
-/** The references `findOwnRef()` resolved, by graph and the schema holding the reference */
+/** The references `findOwnRef()` resolved, by graph, `customMergeAllOf` and the schema holding the reference */
 const ownRefs = new KeyedMemo<ResolvedOwnRef<StrictRJSFSchema>>();
 
 /** Returns a schema's own `$ref` resolved and marked with it, as a schema an option's `$ref` stands for is scored and
  * validated: the definition overridden by the keywords beside the reference where those only annotate, and otherwise
- * the `allOf` of them and of the definition merged, as the form reads it, so that scoring, constant options and the
- * `ui:definitions` walk read the keywords of both sides. The reference is resolved through the schema graph, from where
- * the schema sits in the root, as the form resolves it. Only that reference is followed: the validator follows those
- * below it against the root schema. The result is made once per schema and shared, so that a memo keyed on it hits
- * across calls, and a caller copies it rather than changing it.
+ * the `allOf` of them and of the definition merged, as the form reads it, by the `customMergeAllOf` the form renders
+ * with, so that scoring, constant options and the `ui:definitions` walk read the keywords of both sides as the field
+ * renders them. The reference is resolved through the schema graph, from where the schema sits in the root, as the form
+ * resolves it. Only that reference is followed: the validator follows those below it against the root schema. The
+ * result is made once per schema and merge, and shared, so that a memo keyed on it hits across calls, and a caller
+ * copies it rather than changing it.
  *
  * A reference that resolves to nothing, or a chain of references that loops, is answered with the error resolving it
  * throws rather than thrown, for a reader such as option scoring, to which such an `allOf` entry says nothing.
  *
  * @param schema - The schema whose own `$ref` is to be resolved
  * @param rootSchema - The root schema the reference names a definition of
+ * @param [customMergeAllOf] - The merge of the context the form renders with, if it has one
  * @returns - The schema with its own reference resolved and the subschema it names, or the error for a reference
  *          that cannot be resolved
  */
-export function findOwnRef<S extends StrictRJSFSchema = RJSFSchema>(schema: S, rootSchema: S): OwnRef<S> {
+export function findOwnRef<S extends StrictRJSFSchema = RJSFSchema>(
+  schema: S,
+  rootSchema: S,
+  customMergeAllOf?: CustomMergeAllOf<S>,
+): OwnRef<S> {
   const ref = schema[REF_KEY];
   if (typeof ref !== 'string') {
     return { resolved: schema, target: undefined };
   }
   const rootGraph = parseSchemaGraph<S>(rootSchema);
-  const keys = [rootGraph, schema];
+  const keys = [rootGraph, customMergeAllOf, schema];
   const known = ownRefs.peek(keys);
   if (known !== undefined && isSchemaObject<S>(known.resolved)) {
     return { resolved: known.resolved, target: known.target };
@@ -413,12 +431,12 @@ export function findOwnRef<S extends StrictRJSFSchema = RJSFSchema>(schema: S, r
   if (target?.kind === 'invalid') {
     return { error: target.message };
   }
-  const definition = refDefinition<S>(graph, id);
+  const definition = refDefinition<S>(graph, id, customMergeAllOf);
   const siblings = withoutKeys(schema, REF_KEY);
   const resolved: S =
     conjunctionOf<S>(graph, id) === undefined
       ? { ...definition, ...siblings, [RJSF_REF_KEY]: ref }
-      : { ...conjoinDefinition(schema, siblings, definition), [RJSF_REF_KEY]: ref };
+      : { ...conjoinDefinition(schema, siblings, definition, customMergeAllOf), [RJSF_REF_KEY]: ref };
   const found = { resolved, target: target?.kind === 'schema' ? target.raw : undefined };
   ownRefs.set(keys, found);
   return found;
@@ -428,11 +446,16 @@ export function findOwnRef<S extends StrictRJSFSchema = RJSFSchema>(schema: S, r
  *
  * @param schema - The schema whose own `$ref` is to be resolved
  * @param rootSchema - The root schema the reference names a definition of
+ * @param [customMergeAllOf] - The merge of the context the form renders with, if it has one
  * @returns - The schema with its own reference resolved and the subschema it names
  * @throws - An error for a reference that resolves to nothing or a chain of references that loops
  */
-export function requireOwnRef<S extends StrictRJSFSchema = RJSFSchema>(schema: S, rootSchema: S): ResolvedOwnRef<S> {
-  const own = findOwnRef<S>(schema, rootSchema);
+export function requireOwnRef<S extends StrictRJSFSchema = RJSFSchema>(
+  schema: S,
+  rootSchema: S,
+  customMergeAllOf?: CustomMergeAllOf<S>,
+): ResolvedOwnRef<S> {
+  const own = findOwnRef<S>(schema, rootSchema, customMergeAllOf);
   if ('error' in own) {
     throw new Error(own.error);
   }
@@ -443,11 +466,16 @@ export function requireOwnRef<S extends StrictRJSFSchema = RJSFSchema>(schema: S
  *
  * @param schema - The schema whose own `$ref` is to be resolved
  * @param rootSchema - The root schema the reference names a definition of
+ * @param [customMergeAllOf] - The merge of the context the form renders with, if it has one
  * @returns - The schema with its own reference resolved, or the schema itself when it holds none
  * @throws - An error for a reference that resolves to nothing or a chain of references that loops
  */
-export function resolveOwnRef<S extends StrictRJSFSchema = RJSFSchema>(schema: S, rootSchema: S): S {
-  return requireOwnRef<S>(schema, rootSchema).resolved;
+export function resolveOwnRef<S extends StrictRJSFSchema = RJSFSchema>(
+  schema: S,
+  rootSchema: S,
+  customMergeAllOf?: CustomMergeAllOf<S>,
+): S {
+  return requireOwnRef<S>(schema, rootSchema, customMergeAllOf).resolved;
 }
 
 /** Whether an option's plan adds nothing to the plan of the field offering it, beyond the option's own `$ref` */
@@ -596,7 +624,7 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
           if (!isSchemaObject<S>(option) || isDecided(option)) {
             return option;
           }
-          const adopted = optionNode(plan, keyword, index, option);
+          const adopted = optionNode(plan, field, keyword, index, option);
           const provenance = childProvenance(
             field,
             {
@@ -680,6 +708,7 @@ export function getAdditionalPropertyType<S extends StrictRJSFSchema = RJSFSchem
  * @param schema - The schema whose reference is to be looked up
  * @param rootSchema - The root schema the reference names a definition of, when there is one to look it up in
  * @param followed - The definitions already read on this walk, which the one `schema` names is added to
+ * @param [customMergeAllOf] - The merge of the context the form renders with, if it has one
  * @returns - The definition the reference names, less any keywords the referring schema shadows, or undefined where
  *          there is none to name or it was followed already
  */
@@ -687,6 +716,7 @@ function referencedDefinition<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
   rootSchema: S | undefined,
   followed: Set<NodeId>,
+  customMergeAllOf?: CustomMergeAllOf<S>,
 ): S | undefined {
   if (rootSchema === undefined || schema[REF_KEY] === undefined) {
     return undefined;
@@ -702,7 +732,7 @@ function referencedDefinition<S extends StrictRJSFSchema = RJSFSchema>(
   }
   followed.add(target);
   try {
-    const definition = refDefinition<S>(graph, node);
+    const definition = refDefinition<S>(graph, node, customMergeAllOf);
     return conjunctionOf<S>(graph, node) === undefined ? withoutKeys(definition, ...Object.keys(schema)) : definition;
   } catch {
     // A reference that names no definition says nothing about the property, as the subschema holding it does until it
@@ -988,19 +1018,27 @@ function dependencySubschemas<S extends StrictRJSFSchema = RJSFSchema, F extends
   // without following the reference it offers no branches, and a name the matching branch declares would be stubbed
   // beside the field that branch renders it with, which is what the inline spelling no longer does
   const referenced =
-    ownOneOf === undefined ? referencedDefinition<S>(dependent, rootSchema, new Set<NodeId>()) : undefined;
+    ownOneOf === undefined
+      ? referencedDefinition<S>(dependent, rootSchema, new Set<NodeId>(), context.customMergeAllOf)
+      : undefined;
   const oneOf = ownOneOf ?? referenced?.[ONE_OF_KEY];
   if (!Array.isArray(oneOf)) {
     return [dependent];
   }
   // The rest of the dependency is read without those branches, which a dependency spelled as a `$ref` holds behind the
   // reference: read as options, a name every branch declares would count as one the form renders even where no
-  // single branch qualifies and none of the `oneOf` is merged in. So the definition is read without its `oneOf`, beside
-  // the keywords the dependency declares itself
+  // single branch qualifies and none of the `oneOf` is merged in. So the definition is read without its `oneOf`,
+  // conjoined with the keywords the dependency declares beside its `$ref` as the form merges them, so that a
+  // `properties` there adds its names to those the definition declares rather than replacing them
   const withoutOneOf =
     referenced === undefined
       ? withoutKeys(dependent, ONE_OF_KEY)
-      : { ...withoutKeys(referenced, ONE_OF_KEY), ...withoutKeys(dependent, ONE_OF_KEY, REF_KEY) };
+      : conjoinDefinition(
+          dependent,
+          withoutKeys(dependent, ONE_OF_KEY, REF_KEY),
+          withoutKeys(referenced, ONE_OF_KEY),
+          context.customMergeAllOf,
+        );
   const matching =
     rootSchema === undefined
       ? []
@@ -1061,7 +1099,7 @@ function declaredPropertyNames<S extends StrictRJSFSchema = RJSFSchema, F extend
   // The references followed to reach this schema, which this walk adds its own to without adding to the lists of the
   // walks beside it
   const refs = new Set(followedRefs);
-  merged.push(referencedDefinition<S>(schema, rootSchema, refs));
+  merged.push(referencedDefinition<S>(schema, rootSchema, refs, context.customMergeAllOf));
   if (IF_KEY in schema && rootSchema !== undefined) {
     const holds = conditionHolds<S, F>(context, schema[IF_KEY], formData, rootSchema);
     merged.push((holds ? schema[THEN_KEY] : schema[ELSE_KEY]) as S | boolean | undefined);

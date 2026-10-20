@@ -9,6 +9,7 @@ import type {
 } from '@rjsf/utils';
 import { ROOT_SCHEMA_PREFIX, getValidationTarget } from '@rjsf/utils';
 
+import nestedResourceTests from '../../utils/test/testUtils/nestedResourceTests.ts';
 import pointerValidationTests, {
   absoluteRefValidationTests,
 } from '../../utils/test/testUtils/pointerValidationTests.ts';
@@ -456,3 +457,9 @@ describe('CFWorkerValidator validating a subschema by its place in the root', ()
 
 pointerValidationTests(() => customizeValidator());
 absoluteRefValidationTests(() => customizeValidator());
+
+describe('CFWorkerValidator', () => {
+  nestedResourceTests((rootSchema) =>
+    customizeValidator(String(rootSchema.$schema).includes('2020-12') ? { draft: '2020-12' } : {}),
+  );
+});

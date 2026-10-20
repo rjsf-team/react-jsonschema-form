@@ -18,5 +18,6 @@ export default function hasWidgetErrors<
   if (presentation) {
     return !!presentation.control?.attributes['aria-invalid'];
   }
+  // oxlint-disable-next-line typescript/no-deprecated -- the fallback for a widget rendered without a plan
   return hasVisibleErrors(props);
 }

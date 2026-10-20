@@ -117,7 +117,7 @@ export default function omitExtraData<
         // Resolve $ref so we can inspect the effective required list for the inner schema.
         let sd = isSchemaObject<S>(schemaDef) ? schemaDef : ({} as S);
         if (sd.$ref !== undefined) {
-          sd = resolveOwnRef<S>(sd, rootSchema);
+          sd = resolveOwnRef<S>(sd, rootSchema, context.customMergeAllOf);
         }
         // A key the `patternProperties` match is described by the `allOf` of every pattern matching it, which is where
         // the names it requires live: read off the wrapper around them it requires nothing, and a required child
@@ -282,7 +282,7 @@ export default function omitExtraData<
     );
     const winning: unknown = oneOf[bestIndex];
     const resolved: S = isSchemaObject<S>(winning)
-      ? resolveOwnRef<S>(winning, rootSchema)
+      ? resolveOwnRef<S>(winning, rootSchema, context.customMergeAllOf)
       : schemaOfBoolean(Boolean(winning), rootSchema);
     return omit(resolved, source, target, false);
   }
@@ -356,7 +356,7 @@ export default function omitExtraData<
    * @returns - The entry with its own reference resolved
    */
   function resolveAllOfEntry(entry: JSONSchema7Definition): JSONSchema7Definition {
-    return isSchemaObject<S>(entry) ? resolveOwnRef<S>(entry, rootSchema) : entry;
+    return isSchemaObject<S>(entry) ? resolveOwnRef<S>(entry, rootSchema, context.customMergeAllOf) : entry;
   }
 
   /** Returns the merge of a schema's `allOf`, made once per schema object and remembered for the rest of this call.
@@ -410,7 +410,12 @@ export default function omitExtraData<
     const { $ref: ref, allOf } = localSchema;
 
     if (ref !== undefined) {
-      return omit(resolveOwnRef<S>(localSchema, rootSchema), source, target, useSourceAsFallback);
+      return omit(
+        resolveOwnRef<S>(localSchema, rootSchema, context.customMergeAllOf),
+        source,
+        target,
+        useSourceAsFallback,
+      );
     }
     if (allOf) {
       const merged = mergeAllOfOnce(localSchema, allOf);

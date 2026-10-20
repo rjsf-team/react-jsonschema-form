@@ -1,7 +1,7 @@
-import { CONST_KEY, DEFAULT_KEY } from '../constants.ts';
+import { CONST_KEY, DEFAULT_KEY, PROPERTIES_KEY, REF_KEY } from '../constants.ts';
 import deepEquals from '../deepEquals.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
-import getPropertySchema from '../getPropertySchema.ts';
+import { isSchemaObject } from '../isObject.ts';
 import { getByPath } from '../pathUtils.ts';
 import type { FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
 import retrieveSchema from './retrieveSchema.ts';
@@ -38,13 +38,17 @@ export default function findSelectedOptionInXxxOf<
     const data = getByPath(formData, selectorField);
     if (data !== undefined) {
       return xxxOfs.find((xxxOfOption) => {
-        // An option hands its properties out as written, so a selector written as a `$ref` is retrieved to be read
-        const selector = retrieveSchema<unknown, S, F>(
-          context,
-          getPropertySchema<S>(xxxOfOption, selectorField),
-          rootSchema,
-          data,
-        );
+        const property: unknown = xxxOfOption[PROPERTIES_KEY]?.[selectorField];
+        if (!isSchemaObject<S>(property)) {
+          return false;
+        }
+        // An option hands its properties out as written, so a selector written as a `$ref` is retrieved to be read. One
+        // written in place already holds its value, and an option without one has none to match: retrieving a schema the
+        // root does not hold, such as a stand-in for the missing property, would parse it anew on every render
+        const selector =
+          typeof property[REF_KEY] === 'string'
+            ? retrieveSchema<unknown, S, F>(context, property, rootSchema, data)
+            : property;
         const constValue = getByPath(selector, CONST_KEY);
         return deepEquals(getByPath(selector, DEFAULT_KEY, constValue), data);
       });

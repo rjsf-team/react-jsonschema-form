@@ -20,7 +20,7 @@ import isObject, { isSchemaObject } from '../../isObject.ts';
 import logOnce from '../../logOnce.ts';
 import mergeSchemas from '../../mergeSchemas.ts';
 import { getByPath } from '../../pathUtils.ts';
-import type { FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../../types.ts';
+import type { CustomMergeAllOf, FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../../types.ts';
 import shallowAllOfMerge from '../shallowAllOfMerge.ts';
 import KeyedMemo from './keyedMemo.ts';
 import { stringKeyword } from './parseSchemaGraph.ts';
@@ -464,23 +464,29 @@ export function declaresKeyword<S extends StrictRJSFSchema>(
   return Object.hasOwn(node.raw, keyword) || (node.ref !== undefined && declaresKeyword(graph, node.ref, keyword));
 }
 
-/** The definitions `refDefinition()` read, by graph and node */
+/** The definitions `refDefinition()` read, by graph, `customMergeAllOf` and node */
 const definitions = new KeyedMemo<object>();
 
 /** Returns the definition the `$ref` of the node `from` names, as the form reads it: the target with its own `$ref`s
  * followed, each one's annotations beside it over the target's, and any other keywords beside it merged with the
- * target as the `allOf` of both. A boolean definition reads as the empty schema, and so does a node holding no `$ref`.
- * The definition is made once per node and shared, so a caller copies it rather than changing it.
+ * target as the `allOf` of both, by the `customMergeAllOf` a field's plan merges them with. A boolean definition reads
+ * as the empty schema, and so does a node holding no `$ref`. The definition is made once per node and merge, and
+ * shared, so a caller copies it rather than changing it.
  *
  * @param graph - The graph holding the node
  * @param from - The node holding the reference
+ * @param [customMergeAllOf] - The merge of the context the form renders with, if it has one
  * @returns - The definition
  * @throws - An error for a reference that resolves to nothing or a chain of references that loops
  */
-export function refDefinition<S extends StrictRJSFSchema = RJSFSchema>(graph: SchemaGraph<S>, from: NodeId): S {
+export function refDefinition<S extends StrictRJSFSchema = RJSFSchema>(
+  graph: SchemaGraph<S>,
+  from: NodeId,
+  customMergeAllOf?: CustomMergeAllOf<S>,
+): S {
   const node = graph.node(from);
   return node.kind === 'schema' && node.ref !== undefined
-    ? definitionOf(graph, node.ref)
+    ? definitionOf(graph, node.ref, customMergeAllOf)
     : schemaFrom(graph.rawRoot, {});
 }
 
@@ -495,21 +501,44 @@ function ownAllOf(schemas: readonly object[]): unknown[] {
   });
 }
 
+/** Returns the `allOf` of `schema` merged into it as a field's plan merges one: by the `customMergeAllOf` given, or
+ * else by the shallow merge
+ *
+ * @param schema - The schema holding the `allOf` to merge
+ * @param [customMergeAllOf] - The merge of the context the form renders with, if it has one
+ * @returns - The merged schema
+ */
+function mergedAllOf<S extends StrictRJSFSchema>(schema: S, customMergeAllOf?: CustomMergeAllOf<S>): S {
+  return customMergeAllOf ? customMergeAllOf(schema) : schemaFrom(schema, shallowAllOfMerge(schema));
+}
+
 /** Returns the keywords `beside` a `$ref` and the `definition` it names merged as the `allOf` of both, as the form
- * merges them. Two that cannot be merged, such as a `type` beside the `$ref` that the definition's `type` shares no
- * value with, stay the `allOf` of both, which a validator reads the same way, rather than failing every reader.
+ * merges them, by the same `customMergeAllOf`. Two that cannot be merged, such as a `type` beside the `$ref` that the
+ * definition's `type` shares no value with, stay the `allOf` of both, which a validator reads the same way, rather than
+ * failing every reader.
  *
  * @param template - A schema of the type to return, whose keywords are not copied
  * @param beside - The keywords beside the `$ref`
  * @param definition - The definition the `$ref` names
+ * @param [customMergeAllOf] - The merge of the context the form renders with, if it has one
  * @returns - The merged schema, or the `allOf` of both where they cannot be merged
  */
-export function conjoinDefinition<S extends StrictRJSFSchema>(template: S, beside: S, definition: S): S {
+export function conjoinDefinition<S extends StrictRJSFSchema>(
+  template: S,
+  beside: S,
+  definition: S,
+  customMergeAllOf?: CustomMergeAllOf<S>,
+): S {
   const nested = ownAllOf([beside, definition]);
   try {
     const merged = schemaFrom(
       template,
-      shallowAllOfMerge({ [ALL_OF_KEY]: [withoutKeys(beside, ALL_OF_KEY), withoutKeys(definition, ALL_OF_KEY)] }),
+      mergedAllOf(
+        schemaFrom(template, {
+          [ALL_OF_KEY]: [withoutKeys(beside, ALL_OF_KEY), withoutKeys(definition, ALL_OF_KEY)],
+        }),
+        customMergeAllOf,
+      ),
     );
     return nested.length === 0 ? merged : schemaFrom(template, { ...merged, [ALL_OF_KEY]: nested });
   } catch (error) {
@@ -519,8 +548,12 @@ export function conjoinDefinition<S extends StrictRJSFSchema>(template: S, besid
 }
 
 /** Returns the schema the node `id` reads as, its own `$ref` followed as `refDefinition()` follows one */
-function definitionOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId): S {
-  const keys = [graph, id];
+function definitionOf<S extends StrictRJSFSchema>(
+  graph: SchemaGraph<S>,
+  id: NodeId,
+  customMergeAllOf?: CustomMergeAllOf<S>,
+): S {
+  const keys = [graph, customMergeAllOf, id];
   const known = definitions.peek(keys);
   if (isSchemaObject<S>(known)) {
     return known;
@@ -532,12 +565,12 @@ function definitionOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: Nod
   if (node.kind === 'boolean' || node.ref === undefined) {
     return node.kind === 'boolean' ? booleanSchema(node, graph.rawRoot) : node.raw;
   }
-  const target = definitionOf(graph, node.ref);
+  const target = definitionOf(graph, node.ref, customMergeAllOf);
   const beside = withoutKeys(node.raw, REF_KEY);
   const definition =
     node.conjunction === undefined
       ? schemaFrom(node.raw, { ...target, ...beside })
-      : conjoinDefinition(node.raw, beside, target);
+      : conjoinDefinition(node.raw, beside, target, customMergeAllOf);
   definitions.set(keys, definition);
   return definition;
 }

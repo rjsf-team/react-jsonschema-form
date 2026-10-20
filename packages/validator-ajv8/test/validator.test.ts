@@ -25,6 +25,7 @@ import { Ajv2020 } from 'ajv/dist/2020.js';
 import metaSchemaDraft6 from 'ajv/lib/refs/json-schema-draft-06.json' with { type: 'json' };
 import type { Mock } from 'vitest';
 
+import nestedResourceTests from '../../utils/test/testUtils/nestedResourceTests.ts';
 import pointerValidationTests, {
   absoluteRefValidationTests,
   sharedSubschemaValidationTests,
@@ -3628,3 +3629,9 @@ describe('AJV8Validator validating a subschema by its place in the root', () => 
 pointerValidationTests(() => customizeValidator());
 absoluteRefValidationTests(() => customizeValidator());
 sharedSubschemaValidationTests(() => customizeValidator());
+
+describe('AJV8Validator', () => {
+  nestedResourceTests(
+    (rootSchema) => new AJV8Validator(String(rootSchema.$schema).includes('2020-12') ? { AjvClass: Ajv2020 } : {}),
+  );
+});
