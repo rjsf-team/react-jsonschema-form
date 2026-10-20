@@ -5,8 +5,10 @@ import {
   ALL_OF_KEY,
   CONST_KEY,
   DEFAULT_KEY,
+  DEPENDENCIES_KEY,
   IF_KEY,
   ONE_OF_KEY,
+  REF_KEY,
   UI_DEFINITIONS_KEY,
 } from '../constants.ts';
 import constIsAjvDataReference from '../constIsAjvDataReference.ts';
@@ -24,6 +26,7 @@ import getXxxOfOptions from '../getXxxOfOptions.ts';
 import type { XxxOfOptions } from '../getXxxOfOptions.ts';
 import isConstant from '../isConstant.ts';
 import isConstantOptionList from '../isConstantOptionList.ts';
+import isConstantSelect from '../isConstantSelect.ts';
 import isFixedItems from '../isFixedItems.ts';
 import isObject, { isSchemaObject } from '../isObject.ts';
 import isPlainObject from '../isPlainObject.ts';
@@ -87,6 +90,9 @@ import retrieveSchema, {
 } from './retrieveSchema.ts';
 
 const PRIMITIVE_TYPES = ['string', 'number', 'integer', 'boolean', 'null'];
+
+/** The keywords retrieving a schema merges subschemas in through; it leaves the own keywords of a schema holding none */
+const MERGING_KEYWORDS = [REF_KEY, ALL_OF_KEY, IF_KEY, DEPENDENCIES_KEY];
 
 /** Enum that indicates how `schema.additionalItems` should be handled by the `getInnerSchemaForArrayItem()` function.
  */
@@ -1642,9 +1648,15 @@ function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextTy
   const { defaultFormStateBehavior } = context;
   const shouldRetrieveAllOf = shouldPopulateAllOfDefaults(schema, defaultFormStateBehavior);
   const schemaToMatch = shouldRetrieveAllOf ? retrieveSchema<T, S, F>(context, schema, rootSchema, formData) : schema;
-  // Without data there is nothing to check against the options of a select, so only data asks whether it is one
+  // Without data there is nothing to check against the options of a select, so only data asks whether it is one. A
+  // schema with nothing left to merge is asked as it stands, which is what retrieving it would give: one the fold merged
+  // holds subschemas merged from several declarations, which retrieving it as a call root would resolve against the root
   const isSelectField =
-    formData !== undefined && !isConstant<S>(schemaToMatch) && isSelect<T, S, F>(context, schemaToMatch, rootSchema);
+    formData !== undefined &&
+    !isConstant<S>(schemaToMatch) &&
+    (MERGING_KEYWORDS.some((keyword) => Object.hasOwn(schemaToMatch, keyword))
+      ? isSelect<T, S, F>(context, schemaToMatch, rootSchema)
+      : isConstantSelect<S>(resolveConstantOptions<S>(schemaToMatch, rootSchema), true));
   let validFormData: unknown = formData;
   if (isSelectField) {
     const getOptionsList = optionsList<T, S, F>(resolveConstantOptions<S>(schemaToMatch, rootSchema));
