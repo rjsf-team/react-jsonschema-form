@@ -211,6 +211,18 @@ describe('DaisyUIFrameProvider', () => {
     expect(screen.getByText('dark')).toBeInTheDocument();
   });
 
+  test('has useTheme() outside a ThemeProvider name the theme the frame shows where none is stored', () => {
+    function ThemeName() {
+      return <span>{useTheme().theme}</span>;
+    }
+    const DaisyUIFrame = __createDaisyUIFrameProvider({ children: <ThemeName /> });
+
+    const { container } = render(<DaisyUIFrame />);
+
+    expect(container.querySelector('[data-theme="cupcake"]')).not.toBeNull();
+    expect(screen.getByText('cupcake')).toBeInTheDocument();
+  });
+
   test('falls back to the theme last stored when the chosen theme is cleared', () => {
     localStorageMock['daisyui-theme'] = 'cupcake';
     // Rendered as the playground renders it, through the element the factory's component returns, so a new `subtheme`

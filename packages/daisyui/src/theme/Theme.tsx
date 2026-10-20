@@ -49,9 +49,11 @@ interface ThemeContextType {
   setTheme: (theme: string) => void;
 }
 
-/** React context for sharing theme information throughout the application */
+/** React context for sharing theme information throughout the application. Outside a `ThemeProvider` it names the
+ * theme every provider shows where none is stored
+ */
 export const ThemeContext = createContext<ThemeContextType>({
-  theme: 'night',
+  theme: DEFAULT_THEME,
   setTheme: () => {
     /* empty */
   },
