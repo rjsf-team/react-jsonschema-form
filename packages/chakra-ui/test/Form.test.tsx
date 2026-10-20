@@ -679,6 +679,62 @@ describe("chakra-ui marks a deprecated field's label, as core does", () => {
     expect(screen.getByRole('heading', { name: 'List (deprecated)' })).toBeInTheDocument();
     expect(container.innerHTML).not.toContain('(deprecated) (deprecated)');
   });
+
+  test.each(['anyOf', 'oneOf'])(
+    "names a deprecated %s field's option selector with the Deprecated marker",
+    (keyword) => {
+      const x: RJSFSchema = { title: 'X', deprecated: true, [keyword]: [{ type: 'string' }, { type: 'number' }] };
+      const { container } = render(
+        <WrappedForm schema={{ type: 'object', properties: { x } }} validator={validator} />,
+      );
+
+      expect(screen.getByRole('combobox', { name: 'X (deprecated)' })).toHaveAttribute(
+        'id',
+        `root_x__${keyword.toLowerCase()}_select`,
+      );
+      expect(screen.getByRole('textbox', { name: 'X (deprecated)' })).toHaveAttribute('id', 'root_x');
+      expect(container.innerHTML).not.toContain('(deprecated) (deprecated)');
+    },
+  );
+
+  test('names a deprecated field whose label the template draws with the Deprecated marker', () => {
+    render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { x: { type: 'integer', maximum: 5, title: 'X', deprecated: true } } }}
+        uiSchema={{ x: { 'ui:widget': 'RatingWidget' } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('radiogroup', { name: 'X (deprecated)' })).toHaveAttribute('id', 'root_x');
+  });
+
+  // The widgets table has no array widget, so nothing else in this file renders a deprecated one
+  test.each<[string, UiSchema, string]>([
+    ['checkboxes group', { 'ui:widget': 'checkboxes' }, 'group'],
+    ['multi-select', {}, 'combobox'],
+  ])('names a deprecated %s by its label with the Deprecated marker', (_, ui, role) => {
+    render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          properties: {
+            x: {
+              type: 'array',
+              title: 'X',
+              deprecated: true,
+              items: { type: 'string', enum: ['a', 'b'] },
+              uniqueItems: true,
+            },
+          },
+        }}
+        uiSchema={{ x: ui }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole(role, { name: 'X (deprecated)' })).toHaveAttribute('id', 'root_x');
+  });
 });
 
 describe('chakra-ui CheckboxesWidget', () => {
