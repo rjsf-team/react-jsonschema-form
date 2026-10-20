@@ -118,10 +118,10 @@ The following props are passed to each `ArrayFieldTemplate`:
 - `uiSchema`: The uiSchema object for this array field.
 - `title`: A string value containing the title for the array.
 - `optionalDataControl`: The control that adds or removes the data of an optional array, when it has one. [`titleDrawsOptionalDataControl()`](../api-reference/utility-functions.md#titledrawsoptionaldatacontrol) says whether to lay it out in the heading drawn for `title` or with the items, so it isn't dropped with a heading that isn't drawn.
-- `presentation`: The array's plan: whether its heading and description are this template's to draw, which they aren't when they repeat the field above it, and the id its description renders under. See [`resolveFieldPresentation()`](../api-reference/utility-functions.md#resolvefieldpresentation). [`getArrayDescription()`](../api-reference/utility-functions.md#getarraydescription) reads the description this template draws from it, falling back to the `ui:description` or schema `description` for a template rendered without one.
+- `presentation`: The array's plan: whether its heading and description are this template's to draw, which they aren't when they repeat the field above it, and the id its description renders under. It also carries the array's own errors, `presentation.errors.messages`, with `ui:hideError` applied, which this template draws, under `presentation.errors.id`, only where `presentation.errors.by` is `'self'`; under `'template'` the `FieldTemplate` draws them. [`getErrorsToDraw()`](../api-reference/utility-functions.md#geterrorstodraw) gives the messages this template draws. See [`resolveFieldPresentation()`](../api-reference/utility-functions.md#resolvefieldpresentation). [`getArrayDescription()`](../api-reference/utility-functions.md#getarraydescription) reads the description this template draws from it, falling back to the `ui:description` or schema `description` for a template rendered without one.
 - `formData`: The formData for this array.
 - `errorSchema`: The optional validation errors for the array field and the items within it, in the form of an `ErrorSchema`
-- `rawErrors`: An array of strings listing all generated error messages from encountered errors for this widget. Unlike the `rawErrors` a `FieldTemplate` receives, it carries them whatever `hideError` says, so pair the two through [`hasVisibleErrors()`](../api-reference/utility-functions.md#hasvisibleerrors) before rendering an error state.
+- `rawErrors`: An array of strings listing the array's own errors, which `errorSchema` doesn't hold. Unlike the `rawErrors` a `FieldTemplate` receives, it carries them whatever `hideError` says. Deprecated, and kept through v7 for a template rendered without a plan: read [`getErrorsToDraw()`](../api-reference/utility-functions.md#geterrorstodraw) for the messages this template draws itself, `presentation.errors.messages`, with `ui:hideError` applied, where `presentation.errors.by` is `'self'`, since the `FieldTemplate` draws them under `'template'`, and [`hasTemplateErrors()`](../api-reference/utility-functions.md#hastemplateerrors) for an error state, instead, each falling back to `rawErrors` with `hideError` without a plan.
 - `registry`: The `registry` object.
 
 > Note: Array and object field templates are always rendered inside the FieldTemplate. To fully customize an array field template, you may need to specify both `ui:FieldTemplate` and `ui:ArrayFieldTemplate`.
@@ -372,7 +372,7 @@ For instance, say you have a `CustomTextInput` component that you want to integr
 
 ```tsx
 import { ChangeEvent, FocusEvent } from 'react';
-import { getInputProps, getVisibleErrors, RJSFSchema, BaseInputTemplateProps } from '@rjsf/utils';
+import { getControlAttributes, getInputProps, hasWidgetErrors, RJSFSchema, BaseInputTemplateProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 import CustomTextInput from '../CustomTextInput';
@@ -402,6 +402,7 @@ function BaseInputTemplate(props: BaseInputTemplateProps) {
     onFocus,
     rawErrors,
     hideError,
+    presentation,
     uiSchema,
     registry,
     ...rest
@@ -414,27 +415,39 @@ function BaseInputTemplate(props: BaseInputTemplateProps) {
   const onTextFocus = ({ target: { value: val } }: FocusEvent<HTMLInputElement>) => onFocus(id, val);
 
   const inputProps = { ...rest, ...getInputProps(schema, type, options) };
-  // `rawErrors` is still provided while `ui:hideError` is in effect, so `getVisibleErrors()` is what decides the
-  // error state a widget renders. Both stay destructured so that `...rest` does not spread them onto the input
-  const visibleErrors = getVisibleErrors({ rawErrors, hideError });
-  const hasError = visibleErrors.length > 0;
+  // The field's plan leaves out the errors `ui:hideError` hides, and `hasWidgetErrors()` reads the `aria-invalid` it
+  // gives the control, falling back to `rawErrors` with `hideError` for a widget rendered without a plan. The messages
+  // are drawn here only where the plan has the widget draw them, under the id the control's `aria-describedby` names,
+  // and by the `FieldTemplate` otherwise. `rawErrors`, `hideError` and `presentation` stay destructured so that
+  // `...rest` does not spread them onto the input
+  const hasError = hasWidgetErrors(props);
+  const ownErrors = presentation?.errors.by === 'self' ? presentation.errors : undefined;
 
   return (
-    <CustomTextInput
-      id={id}
-      label={label}
-      value={value}
-      placeholder={placeholder}
-      disabled={disabled}
-      readOnly={readonly}
-      autoFocus={autofocus}
-      error={hasError}
-      errors={hasError ? visibleErrors : undefined}
-      onChange={onChangeOverride || onTextChange}
-      onBlur={onTextBlur}
-      onFocus={onTextFocus}
-      {...inputProps}
-    />
+    <>
+      <CustomTextInput
+        id={id}
+        label={label}
+        value={value}
+        placeholder={placeholder}
+        disabled={disabled}
+        readOnly={readonly}
+        autoFocus={autofocus}
+        error={hasError}
+        onChange={onChangeOverride || onTextChange}
+        onBlur={onTextBlur}
+        onFocus={onTextFocus}
+        {...inputProps}
+        {...getControlAttributes({ id, presentation })}
+      />
+      {ownErrors && (
+        <ul id={ownErrors.id}>
+          {ownErrors.messages.map((error) => (
+            <li key={error}>{error}</li>
+          ))}
+        </ul>
+      )}
+    </>
   );
 }
 
@@ -481,7 +494,8 @@ The following props are passed to the `BaseInputTemplate`:
 - `onFocus`: The input focus event handler; call it with the widget id and value;
 - `options`: A map of options passed as a prop to the component (see [Custom widget options](./custom-widgets-fields.md#custom-widget-options)).
 - `options.enumOptions`: For enum fields, this property contains the list of options for the enum as an array of \{ label, value } objects. If the enum is defined using the oneOf/anyOf syntax, the entire schema object for each option is appended onto the \{ schema, label, value } object.
-- `rawErrors`: An array of strings listing all generated error messages from encountered errors for this widget.
+- `rawErrors`: An array of strings listing all generated error messages from encountered errors for this widget. It carries them whatever `hideError` says. Deprecated, and kept through v7 for a widget rendered without a plan: read [`hasWidgetErrors()`](../api-reference/utility-functions.md#haswidgeterrors), which follows the `aria-invalid` the plan gives `presentation.control`, for the widget's error state instead;
+- `presentation`: The plan of the field the widget renders the value of: the errors it shows, `presentation.errors.messages`, with `ui:hideError` applied, whether the widget draws them itself, `presentation.errors.by === 'self'`, and the attributes its control carries, which [`getControlAttributes()`](../api-reference/utility-functions.md#getcontrolattributes) gives it. Undefined for a widget rendered without a `SchemaField` above it, or by a field that draws its parts itself.
 - `registry`: The `registry` object
 
 ## CyclicSchemaExpandTemplate
@@ -1059,7 +1073,7 @@ The following props are passed to each `ObjectFieldTemplate` as defined by the `
 
 - `title`: A string value containing the title for the object.
 - `optionalDataControl`: The control that adds or removes the data of an optional object, when it has one. [`titleDrawsOptionalDataControl()`](../api-reference/utility-functions.md#titledrawsoptionaldatacontrol) says whether to lay it out in the heading drawn for `title` or with the properties, so it isn't dropped with a heading that isn't drawn.
-- `presentation`: The object's plan: whether its heading and description are this template's to draw, which they aren't when they repeat the field above it, and the id its description renders under. See [`resolveFieldPresentation()`](../api-reference/utility-functions.md#resolvefieldpresentation).
+- `presentation`: The object's plan: whether its heading and description are this template's to draw, which they aren't when they repeat the field above it, and the id its description renders under. It also carries the object's own errors, `presentation.errors.messages`, with `ui:hideError` applied, which this template draws, under `presentation.errors.id`, only where `presentation.errors.by` is `'self'`; under `'template'` the `FieldTemplate` draws them. [`getErrorsToDraw()`](../api-reference/utility-functions.md#geterrorstodraw) gives the messages this template draws. See [`resolveFieldPresentation()`](../api-reference/utility-functions.md#resolvefieldpresentation).
 - `description`: A string value containing the description for the object.
 - `disabled`: A boolean value stating if the object is disabled.
 - `properties`: An array of object representing the properties in the object. Each of the properties represent a child with properties described below.
@@ -1071,7 +1085,7 @@ The following props are passed to each `ObjectFieldTemplate` as defined by the `
 - `uiSchema`: The uiSchema object for this object field.
 - `id`: The id of the field in the hierarchy.
 - `errorSchema`: The optional validation errors in the form of an `ErrorSchema`
-- `rawErrors`: An array of strings listing the object's own errors, which `errorSchema` doesn't hold. Unlike the `rawErrors` a `FieldTemplate` receives, it carries them whatever `hideError` says, so pair the two through [`hasVisibleErrors()`](../api-reference/utility-functions.md#hasvisibleerrors) before rendering an error state.
+- `rawErrors`: An array of strings listing the object's own errors, which `errorSchema` doesn't hold. Unlike the `rawErrors` a `FieldTemplate` receives, it carries them whatever `hideError` says. Deprecated, and kept through v7 for a template rendered without a plan: read [`getErrorsToDraw()`](../api-reference/utility-functions.md#geterrorstodraw) for the messages this template draws itself, `presentation.errors.messages`, with `ui:hideError` applied, where `presentation.errors.by` is `'self'`, since the `FieldTemplate` draws them under `'template'`, and [`hasTemplateErrors()`](../api-reference/utility-functions.md#hastemplateerrors) for an error state, instead, each falling back to `rawErrors` with `hideError` without a plan.
 - `formData`: The form data for the object.
 - `registry`: The `registry` object.
 

@@ -3,6 +3,7 @@ import {
   createSchemaUtils,
   findFieldInSchema,
   findSelectedOptionInXxxOf,
+  getClosestMatchingOption,
   getDefaultFormState,
   getDisplayLabel,
   getFromSchema,
@@ -34,6 +35,11 @@ const objectAllOfDefinitions: RJSFSchema = {
   definitions: { A: { allOf: [{ type: 'object', properties: { b: { type: 'string' } } }] } },
 };
 const oldObjectSchema: RJSFSchema = { type: 'object', properties: { a: { type: 'string' } } };
+/** A `$ref` with keywords beside it that constrain the data, which the form reads as the `allOf` of both */
+const refBesideProperties: RJSFSchema = { $ref: '#/definitions/A', properties: { c: { type: 'string' } } };
+const objectDefinitions: RJSFSchema = {
+  definitions: { A: { type: 'object', properties: { b: { type: 'string' } } } },
+};
 
 const CASES: PropagationCase[] = [
   {
@@ -100,6 +106,21 @@ const CASES: PropagationCase[] = [
     rootSchema: { ...objectAllOfDefinitions, properties: { a: { $ref: '#/definitions/A' } } },
     callFunction: (context, rootSchema) => findFieldInSchema(context, rootSchema, rootSchema, 'a.b'),
     callSchemaUtils: (schemaUtils) => schemaUtils.findFieldInSchema(schemaUtils.getRootSchema(), 'a.b'),
+  },
+  {
+    // Data both options validate, which only scoring tells apart
+    name: 'getClosestMatchingOption through an option with keywords beside its $ref',
+    rootSchema: objectDefinitions,
+    callFunction: (context, rootSchema) =>
+      getClosestMatchingOption(context, rootSchema, { a: 'z', b: 'x', c: 'y' }, [refBesideProperties, oldObjectSchema]),
+    callSchemaUtils: (schemaUtils) =>
+      schemaUtils.getClosestMatchingOption({ a: 'z', b: 'x', c: 'y' }, [refBesideProperties, oldObjectSchema]),
+  },
+  {
+    name: 'omitExtraData through a property with keywords beside its $ref',
+    rootSchema: { ...objectDefinitions, type: 'object', properties: { p: refBesideProperties } },
+    callFunction: (context, rootSchema) => omitExtraData(context, rootSchema, rootSchema, { p: { b: 'x', c: 'y' } }),
+    callSchemaUtils: (schemaUtils) => schemaUtils.omitExtraData(schemaUtils.getRootSchema(), { p: { b: 'x', c: 'y' } }),
   },
   {
     name: 'omitExtraData',

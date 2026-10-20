@@ -1,5 +1,5 @@
 import type { RJSFSchema } from '../../src/index.ts';
-import { getValidationSchemas, ID_KEY, schemaKey, schemaParser } from '../../src/index.ts';
+import { getValidationSchemas, ID_KEY, noop, resetLogOnce, schemaKey, schemaParser } from '../../src/index.ts';
 import {
   PROPERTY_DEPENDENCIES,
   RECURSIVE_REF,
@@ -163,6 +163,48 @@ describe('getValidationSchemas()', () => {
     };
     expect(listed(schema)).toEqual([schema, { $ref: '#/if' }, { $ref: '#/properties/nested/if' }]);
   });
+  it('lists each if of a schema whose allOf, dependencies and condition multiply into 8192 forms once, without warning', () => {
+    resetLogOnce();
+    const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
+    const oneSided = (key: string): RJSFSchema => ({
+      if: { required: [`if_${key}`] },
+      then: { properties: { [key]: { type: 'string' } } },
+    });
+    const schemaWith = (dependencyCount: number): RJSFSchema => {
+      const names = Array.from({ length: dependencyCount }, (_, i) => `d${i}`);
+      return {
+        type: 'object',
+        properties: Object.fromEntries(names.map((name) => [name, {}])),
+        dependencies: Object.fromEntries(names.map((name) => [name, { properties: { [`dep_${name}`]: {} } }])),
+        allOf: ['a0', 'a1', 'a2', 'a3'].map(oneSided),
+        ...oneSided('own'),
+      };
+    };
+    // 256 dependency paths, 16 allOf forms and 2 for the condition would give 8192 forms, but the graph lists a
+    // pointer to each `if` rather than the forms their combinations resolve to, so there is no limit to pass
+    const conditions = ['#/if', '#/allOf/0/if', '#/allOf/1/if', '#/allOf/2/if', '#/allOf/3/if'].map(($ref) => ({
+      $ref,
+    }));
+    expect(listed(schemaWith(8))).toEqual([schemaWith(8), ...conditions]);
+    expect(listed(schemaWith(2))).toEqual([schemaWith(2), ...conditions]);
+    expect(consoleWarnSpy).not.toHaveBeenCalled();
+    consoleWarnSpy.mockRestore();
+  });
+  it('lists a schema with nine schema dependencies as it stands, with no limit on their subsets to warn about', () => {
+    const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
+    resetLogOnce();
+    const keys = Array.from({ length: 9 }, (_, i) => `k${i}`);
+    const rootSchema: RJSFSchema = {
+      type: 'object',
+      properties: Object.fromEntries(keys.map((key) => [key, { type: 'string' }])),
+      dependencies: Object.fromEntries(keys.map((key) => [key, { properties: { [`${key}v`]: { type: 'string' } } }])),
+    };
+    // A form applies a schema dependency without asking the validator, and validates the data against the root, which
+    // applies whichever subset of them the data selects
+    expect(listed(rootSchema)).toEqual([rootSchema]);
+    expect(consoleWarnSpy).not.toHaveBeenCalled();
+    consoleWarnSpy.mockRestore();
+  });
 
   it('lists each option by pointer, and as scored without the required it states', () => {
     const schema: RJSFSchema = {
@@ -189,6 +231,47 @@ describe('getValidationSchemas()', () => {
     ]);
   });
 
+  it('lists the scored form of an option that stubs the keys of the data into its properties, whatever the keys', () => {
+    const option: RJSFSchema = {
+      type: 'object',
+      properties: { id: { type: 'string' } },
+      required: ['id'],
+      patternProperties: { '^s_': { type: 'string' } },
+    };
+    const strict: RJSFSchema = {
+      type: 'object',
+      properties: { name: { type: 'string' } },
+      required: ['name'],
+      additionalProperties: false,
+    };
+    const rootSchema: RJSFSchema = { type: 'object', properties: { v: { oneOf: [option, strict] } } };
+    // Scoring reads an option where it sits rather than the copy retrieved with the data's keys stubbed into it, so
+    // one scored form serves whatever keys the data holds, and the strict option gets one plain and one relaxed
+    const name = { $ref: '#/properties/v/oneOf/1/properties/name' };
+    expect(listed(rootSchema)).toEqual([
+      rootSchema,
+      { $ref: '#/properties/v/oneOf/0' },
+      {
+        type: 'object',
+        properties: { id: { $ref: '#/properties/v/oneOf/0/properties/id' } },
+        patternProperties: { '^s_': { $ref: '#/properties/v/oneOf/0/patternProperties/%5Es_' } },
+      },
+      { $ref: '#/properties/v/oneOf/1' },
+      { type: 'object', properties: { name }, additionalProperties: false },
+      { type: 'object', properties: { name }, additionalProperties: true },
+    ]);
+  });
+  it('lists an option with no names of its own by pointer alone, which it is scored by whatever its keys hold', () => {
+    const rootSchema: RJSFSchema = {
+      type: 'object',
+      properties: { v: { oneOf: [{ type: 'object', additionalProperties: true }, { type: 'number' }] } },
+    };
+    expect(listed(rootSchema)).toEqual([
+      rootSchema,
+      { $ref: '#/properties/v/oneOf/0' },
+      { $ref: '#/properties/v/oneOf/1' },
+    ]);
+  });
   it('reads a $ref an option spells as an allOf entry of what it names when it scores the option', () => {
     const schema: RJSFSchema = {
       definitions: { Base: { type: 'object', properties: { id: { type: 'string' } }, required: ['id'] } },

@@ -3211,6 +3211,31 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           stubExistingAdditionalProperties({ validator: testValidator }, rootSchema, rootSchema, { a: 1 }).properties,
         ).toEqual({ a: { type: 'number', [ADDITIONAL_PROPERTY_FLAG]: true } });
       });
+      it('has an option declaring names through a dependency spelled as a $ref with properties beside it', () => {
+        const rootSchema: RJSFSchema = {
+          definitions: {
+            dep: {
+              properties: { named: { type: 'string' } },
+              oneOf: [{ properties: { kind: { enum: ['x'] } } }, { properties: { kind: { enum: ['y'] } } }],
+            },
+          },
+        };
+        const option: RJSFSchema = {
+          properties: { kind: { type: 'string', enum: ['x', 'y'] } },
+          dependencies: { kind: { $ref: '#/definitions/dep', properties: { beside: { type: 'string' } } } },
+        };
+        const schema: RJSFSchema = { additionalProperties: { type: 'string' }, oneOf: [option] };
+        testValidator.setReturnValues({ isValid: [true, false] });
+        const formData = { kind: 'x', named: 'n', beside: 'b' };
+        const selected = retrieveSchema({ validator: testValidator }, option, rootSchema, formData);
+        // The `properties` beside the reference is conjoined with the definition's, as the form merges them, so the
+        // option renders a field for the name the definition declares as well as for the one declared beside it
+        expect(Object.keys(selected.properties ?? {}).sort()).toEqual(['beside', 'kind', 'named']);
+        expect(
+          stubExistingAdditionalProperties({ validator: testValidator }, schema, rootSchema, formData, selected)
+            .properties,
+        ).toEqual({});
+      });
       it('describes its extra keys with additionalProperties beside unevaluatedProperties', () => {
         const schema: RJSFSchema = {
           type: 'object',

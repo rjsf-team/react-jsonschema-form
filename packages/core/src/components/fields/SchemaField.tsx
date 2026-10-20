@@ -37,7 +37,6 @@ import {
   getXxxOfKey,
   GUESSED_TYPE_FLAG,
   guessType,
-  hasVisibleErrors,
   isComponentType,
   isConstant,
   isConstantOptionList,
@@ -66,7 +65,12 @@ import { useShownOption } from '../../hooks/useOptionSelection.ts';
 import useUiState from '../../hooks/useUiState.ts';
 import { retrievedOptionsOf } from '../uiState.ts';
 import UiStateContext from '../UiStateContext.ts';
-import { getDeprecatedTemplateProps, getTemplateParts, withoutDescribers } from './fieldWidgetUtils.ts';
+import {
+  getDeprecatedTemplateProps,
+  getFieldErrorProps,
+  getTemplateParts,
+  withoutDescribers,
+} from './fieldWidgetUtils.ts';
 import PresentationContext, { useInheritedPresentation } from './PresentationContext.ts';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 import ShownOptionContext from './ShownOptionContext.ts';
@@ -989,7 +993,7 @@ function SchemaFieldRender<
       autofocus={autofocus}
       errorSchema={fieldErrorSchema as ErrorSchema}
       // The `XxxOfField` hands the field's own errors to the selected option and its selector
-      rawErrors={XxxOfField ? undefined : __errors}
+      {...getFieldErrorProps<T, S, F>(XxxOfField ? undefined : __errors)}
       presentation={fieldComponentPresentation}
     />
   );
@@ -1007,7 +1011,10 @@ function SchemaFieldRender<
   const { description: templateDescription, help, errors: templateErrors } = getTemplateParts(presentation);
   const description = templateDescription?.text ?? '';
 
-  const hasErrors = hasVisibleErrors({ rawErrors: __errors, hideError });
+  // From its own errors and `ui:hideError`, as the deprecated `rawErrors` its template is handed are, rather than from
+  // its plan, which beneath an `anyOf`/`oneOf` field takes the errors as the field above shows them. Where the option's
+  // `ui:hideError` differs from the field above's, the option's own wins here
+  const hasErrors = !hideError && (__errors?.length ?? 0) > 0;
 
   const helpComponent = (
     <FieldHelpTemplate

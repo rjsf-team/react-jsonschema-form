@@ -31,6 +31,7 @@ function StringField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
     onBlur,
     onFocus,
     registry,
+    // oxlint-disable-next-line typescript/no-deprecated -- handed on to its widget, for one that doesn't read `presentation`
     rawErrors,
     presentation,
     hideError,

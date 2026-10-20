@@ -25,16 +25,20 @@ import { Ajv2020 } from 'ajv/dist/2020.js';
 import metaSchemaDraft6 from 'ajv/lib/refs/json-schema-draft-06.json' with { type: 'json' };
 import type { Mock } from 'vitest';
 
+import nestedResourceTests from '../../utils/test/testUtils/nestedResourceTests.ts';
 import pointerValidationTests, {
   absoluteRefValidationTests,
   sharedSubschemaValidationTests,
 } from '../../utils/test/testUtils/pointerValidationTests.ts';
+import relativeOptionScoringTests from '../../utils/test/testUtils/relativeOptionScoringTests.ts';
 import customizeValidator from '../src/customizeValidator.ts';
 import type { Localizer } from '../src/index.ts';
 import AJV8Validator from '../src/validator.ts';
 import { expectWarn } from './harness/testData.ts';
 
 const illFormedKey = "bar`'()=+*&^%$#@!";
+
+relativeOptionScoringTests(() => new AJV8Validator({}));
 
 describe('AJV8Validator', () => {
   let builder: ErrorSchemaBuilder;
@@ -3625,3 +3629,9 @@ describe('AJV8Validator validating a subschema by its place in the root', () => 
 pointerValidationTests(() => customizeValidator());
 absoluteRefValidationTests(() => customizeValidator());
 sharedSubschemaValidationTests(() => customizeValidator());
+
+describe('AJV8Validator', () => {
+  nestedResourceTests(
+    (rootSchema) => new AJV8Validator(String(rootSchema.$schema).includes('2020-12') ? { AjvClass: Ajv2020 } : {}),
+  );
+});

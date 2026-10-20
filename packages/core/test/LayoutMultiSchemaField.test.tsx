@@ -789,6 +789,7 @@ describe('LayoutMultiSchemaField', () => {
     // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
     expect(templateProps?.rawErrors).toEqual(hidden ? undefined : ['first error', 'second error']);
     expect(templateProps?.hideError).toBe(hidden);
+    // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated helper a component without a plan reads
     expect(getVisibleErrors(templateProps!)).toEqual(expectedVisibleErrors);
     // The hidden errors remain reachable, so a template rendering them itself is not cut off by the directive
     expect(templateProps?.errorSchema).toEqual(NESTED_ERROR_SCHEMA);

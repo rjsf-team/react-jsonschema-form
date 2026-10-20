@@ -1049,6 +1049,55 @@ describe('form data ownership', () => {
       expect(select).toHaveValue('1');
     });
 
+    it('a oneOf selector checks the chosen option without the stubs of its additional keys when a parent pushes the data back', async () => {
+      // The chosen option's stub for `k` is a guessed `{ type: 'string' }`, which takes `'x'`, but the option's own
+      // `additionalProperties` rejects it, so the data pushed back no longer fits the choice and the selector goes back
+      // to option 0. A switch the parent declines keeps the choice whatever the data, so the parent takes the switch
+      // and pushes the data back afterwards, as an undo would, which the selector matches again
+      const stubbed: RJSFSchema = {
+        type: 'object',
+        properties: {
+          status: {
+            type: 'object',
+            oneOf: [
+              { title: 'Fixed', type: 'object', properties: { k: { const: 'x' } } },
+              {
+                title: 'Open',
+                type: 'object',
+                properties: { id: { type: 'string' } },
+                additionalProperties: { not: { const: 'x' } },
+              },
+            ],
+          },
+        },
+      };
+      function UndoingParent() {
+        const [value, setValue] = useState<unknown>({ status: { k: 'x' } });
+        return (
+          <>
+            <Form
+              schema={stubbed}
+              validator={validator}
+              formData={value}
+              onChange={(event) => setValue(event.formData)}
+            />
+            <button type='button' onClick={() => setValue({ status: { k: 'x' } })}>
+              Undo
+            </button>
+          </>
+        );
+      }
+      render(<UndoingParent />);
+      const select = screen.getByDisplayValue('Fixed');
+      expect(select).toHaveValue('0');
+      await user.selectOptions(select, '1');
+      expect(select).toHaveValue('1');
+
+      await user.click(screen.getByRole('button', { name: 'Undo' }));
+
+      expect(select).toHaveValue('0');
+    });
+
     it('a self-owned oneOf switch that leaves the data unchanged keeps the chosen option the data does not fit yet', async () => {
       const rangeSchema: RJSFSchema = {
         type: 'object',

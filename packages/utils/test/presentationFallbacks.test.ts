@@ -4,6 +4,7 @@ import {
   englishStringTranslator,
   getControlAriaLabel,
   getControlFallbackName,
+  getErrorsToDraw,
   hasTemplateErrors,
   hasWidgetErrors,
   isNamedByTemplateLabel,
@@ -109,6 +110,34 @@ describe('hasWidgetErrors()', () => {
     expect(hasWidgetErrors({ rawErrors: ['bad'] })).toBe(true);
     expect(hasWidgetErrors({ rawErrors: ['bad'], hideError: true })).toBe(false);
     expect(hasWidgetErrors({})).toBe(false);
+  });
+});
+
+describe('getErrorsToDraw()', () => {
+  const self = { ...TEMPLATE, errors: 'self' as const };
+
+  it("draws the plan's messages where the plan has the component draw them, whatever rawErrors says", () => {
+    expect(getErrorsToDraw({ presentation: plan({ declaration: self, errors: ['bad'] }), rawErrors: [] })).toEqual([
+      'bad',
+    ]);
+    expect(
+      getErrorsToDraw({
+        presentation: plan({ declaration: self, errors: ['bad'], hideError: true }),
+        rawErrors: ['bad'],
+      }),
+    ).toEqual([]);
+  });
+
+  it('draws none where the template, or the field above, draws them', () => {
+    expect(getErrorsToDraw({ presentation: plan({ errors: ['bad'] }), rawErrors: ['bad'] })).toEqual([]);
+    const option = plan({ declaration: self, inherited: plan({ declaration: self, errors: ['bad'] }) });
+    expect(getErrorsToDraw({ presentation: option, rawErrors: ['bad'] })).toEqual([]);
+  });
+
+  it('follows rawErrors and hideError without a plan', () => {
+    expect(getErrorsToDraw({ rawErrors: ['bad'] })).toEqual(['bad']);
+    expect(getErrorsToDraw({ rawErrors: ['bad'], hideError: true })).toEqual([]);
+    expect(getErrorsToDraw({})).toEqual([]);
   });
 });
 

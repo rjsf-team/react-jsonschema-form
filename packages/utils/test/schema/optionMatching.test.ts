@@ -1,5 +1,14 @@
-import type { RJSFSchema } from '../../src/index.ts';
-import { getClosestMatchingOption, getFirstMatchingOption, omitExtraData, retrieveSchema } from '../../src/index.ts';
+import type { RJSFSchema, ValidatorType } from '../../src/index.ts';
+import {
+  getClosestMatchingOption,
+  getDefaultFormState,
+  getFirstMatchingOption,
+  getValidationSchemas,
+  ID_KEY,
+  omitExtraData,
+  retrieveSchema,
+  schemaKey,
+} from '../../src/index.ts';
 import looseSchema from './graph/looseSchema.ts';
 import { miniValidator } from './graph/miniValidator.ts';
 
@@ -300,6 +309,26 @@ describe('matching options through the schema graph', () => {
     expect(getClosestMatchingOption({ validator }, rootSchema, undefined, options)).toBe(0);
   });
   it.each([
+    ['resolves to nothing', '#/definitions/missing'],
+    ['loops', '#/definitions/a'],
+  ])('scores an allOf entry whose $ref %s as nothing, without throwing', (_name, $ref) => {
+    const options: RJSFSchema[] = [{ type: 'object', properties: { a: { type: 'string' } } }, { allOf: [{ $ref }] }];
+    const rootSchema: RJSFSchema = {
+      definitions: { a: { $ref: '#/definitions/b' }, b: { $ref: '#/definitions/a' } },
+      type: 'object',
+      properties: { v: { anyOf: options } },
+    };
+    const field: RJSFSchema = { definitions: rootSchema.definitions, anyOf: options };
+    // A validator fails a schema holding a `$ref` it cannot resolve, so neither option matches and both are scored
+    const validator = { ...miniValidator(), isValid: () => false };
+    // Both options score nothing, so the tie goes to the first candidate: the broken entry adds nothing to the second
+    expect(getClosestMatchingOption({ validator }, rootSchema, { b: 1 }, options)).toBe(0);
+    expect(omitExtraData({ validator }, field, field, { b: 1 })).toEqual({});
+    expect(getDefaultFormState({ validator }, { schema: rootSchema, formData: { v: { b: 1 } }, rootSchema })).toEqual({
+      v: { b: 1 },
+    });
+  });
+  it.each([
     [
       'an allOf entry',
       (kind: string, key: string): RJSFSchema => ({
@@ -354,5 +383,79 @@ describe('matching options through the schema graph', () => {
       expect(getClosestMatchingOption({ validator }, rootSchema, data, options, 0, 'petType')).toBe(1);
       expect(omitExtraData({ validator }, rootSchema, rootSchema, { pet: data })).toEqual({ pet: data });
     });
+  });
+});
+
+describe('scoring an option with keys of the data stubbed into it', () => {
+  /** A validator that records the schemas it is asked about and answers true for every one */
+  function recordingValidator() {
+    const schemas: RJSFSchema[] = [];
+    const validator: ValidatorType = {
+      validateFormData: () => ({ errors: [], errorSchema: {} }),
+      isValid: (schema: RJSFSchema) => {
+        schemas.push(schema);
+        return true;
+      },
+      rawValidation: () => ({}),
+    };
+    return { schemas, validator };
+  }
+  const declared: RJSFSchema = {
+    type: 'object',
+    properties: { id: { type: 'string' } },
+    required: ['id'],
+    patternProperties: { '^s_': { type: 'string' } },
+  };
+  const mapOnly: RJSFSchema = { type: 'object', additionalProperties: true };
+  const options: RJSFSchema[] = [declared, { type: 'number' }];
+  const mapOptions: RJSFSchema[] = [mapOnly, { type: 'number' }];
+  const rootSchema: RJSFSchema = {
+    type: 'object',
+    properties: { v: { oneOf: options }, m: { oneOf: mapOptions } },
+  };
+  /** The option as it is scored: without its `required`, each subschema named where it sits in the root */
+  const scored: RJSFSchema = {
+    type: 'object',
+    properties: { id: { $ref: '#/properties/v/oneOf/0/properties/id' } },
+    patternProperties: { '^s_': { $ref: '#/properties/v/oneOf/0/patternProperties/%5Es_' } },
+  };
+  /** Matches the options retrieved against `data`, as `MultiSchemaField` retrieves them, returning the index matched
+   * and the schemas the validator was asked about while matching
+   */
+  function matching(candidates: RJSFSchema[], data: unknown) {
+    const { schemas, validator } = recordingValidator();
+    const retrieved = candidates.map((option) => retrieveSchema({ validator }, option, rootSchema, data));
+    schemas.length = 0;
+    const index = getFirstMatchingOption({ validator }, data, retrieved, rootSchema);
+    return { index, schemas };
+  }
+
+  it('scores it without the stubs, in the form that does not depend on the keys', () => {
+    expect(matching(options, { id: 'x', s_a: 'y' }).schemas).toEqual([scored]);
+    expect(Object.values(getValidationSchemas(rootSchema))).toContainEqual({ ...scored, [ID_KEY]: schemaKey(scored) });
+  });
+  it('scores the same option with no stubs by the same schema, the names it declares checked without the validator', () => {
+    expect(matching(options, { id: 'x' }).schemas).toEqual([scored]);
+  });
+  it('does not ask the validator about it while every stubbed key holds undefined', () => {
+    // A key holding undefined is no key, as `required` reads it, so the data holds none the option declares
+    expect(matching(options, { s_a: undefined })).toEqual({ index: 1, schemas: [{ $ref: '#/properties/v/oneOf/1' }] });
+  });
+  it('scores an option with no names of its own by where it sits, whether or not a stubbed key holds undefined', () => {
+    expect(matching(mapOptions, { z: undefined }).schemas).toEqual([{ $ref: '#/properties/m/oneOf/0' }]);
+    expect(matching(mapOptions, { z: 'set' }).schemas).toEqual([{ $ref: '#/properties/m/oneOf/0' }]);
+  });
+  it('derives the scored form once per option', () => {
+    const { schemas, validator } = recordingValidator();
+    const retrieved = retrieveSchema({ validator }, declared, rootSchema, { s_a: 'x' });
+    getFirstMatchingOption({ validator }, { s_a: 'x' }, [retrieved], rootSchema);
+    getFirstMatchingOption({ validator }, { s_a: 'y' }, [retrieved], rootSchema);
+    getFirstMatchingOption({ validator }, { s_a: undefined }, [retrieved], rootSchema);
+    getFirstMatchingOption({ validator }, {}, [retrieved], rootSchema);
+    expect(schemas).toEqual([scored, scored]);
+    expect(schemas[1]).toBe(schemas[0]);
+  });
+  it('scores non-object data by the same schema', () => {
+    expect(matching(options, 'text').schemas).toEqual([scored]);
   });
 });
