@@ -158,7 +158,8 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   }
   // Each subschema walked below is one this retrieve handed out, which carries where it came from, so retrieving it in
   // turn flags a recursive $ref as `SchemaField` sees it, one level at a time. Resolving the oneOf/anyOf options too,
-  // as ObjectField's own retrieve does, gives `resolveSelectedBranch()` an option's `properties` rather than its `$ref`
+  // each for the data as `SchemaField` retrieves them, gives `resolveSelectedBranch()` an option's `properties` rather
+  // than its `$ref`
   const resolvedSchema = retrieveSchema<unknown, S, F>(schemaContext, schema, rootSchema, formData, true);
   // A select over object or array constants renders one control for its whole value, with no fields beneath it
   if (isWholeValueSelect<S>(resolvedSchema)) {

@@ -2686,8 +2686,9 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         // The stub names the type the pattern implies and leaves its `$id` out, since an `$id` copied onto every
         // sibling property would route them all to the one field registered under it
         expect(once.properties!.k1).not.toHaveProperty('$id');
-        // `SchemaField` retrieves an object's schema and `ObjectField` retrieves the result, so a stub left in the
-        // merge would be merged with the very patterns it was built from and take all of that back on the second pass
+        // A custom field may retrieve the schema `SchemaField` retrieved before handing it to `ObjectField`, so a stub
+        // left in the merge would be merged with the very patterns it was built from and take all of that back on the
+        // second pass
         expect(retrieveSchema({ validator: testValidator }, once, undefined, formData)).toEqual(once);
       });
     });
@@ -3752,7 +3753,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         const once = retrieveSchema({ validator: testValidator }, rootSchema, rootSchema);
         expect(once.properties).toEqual({ d1: { $ref: D('d1') }, d2: { $ref: D('d2') }, d3: { $ref: D('d3') } });
         expect(retrieveSchema({ validator: testValidator }, once, rootSchema)).toEqual(once);
-        // As `ObjectField` retrieves the schema `SchemaField` retrieved, resolving the options too
+        // Retrieved again with its options resolved too, as a custom field may retrieve what `SchemaField` retrieved
         expect(retrieveSchema({ validator: testValidator }, once, rootSchema, {}, true)).toEqual(once);
         const d1 = retrieveProperty(testValidator, once, 'd1', rootSchema);
         // `d0` is the definition the root was resolved from, so `d1`'s way back to it is the cycle
