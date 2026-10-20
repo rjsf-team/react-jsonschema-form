@@ -32,9 +32,9 @@ import {
   READONLY_KEY,
   toFieldPath,
   fieldPathToId,
+  UI_FIELD_KEY,
   UI_OPTIONS_KEY,
   ITEMS_KEY,
-  uiBooleanOption,
 } from '@rjsf/utils';
 
 import describeUnresolvedComponent from '../../describeUnresolvedComponent.ts';
@@ -99,9 +99,8 @@ export const LAYOUT_GRID_UI_OPTION = 'layoutGrid';
  */
 export const LAYOUT_GRID_OPTION = `ui:${LAYOUT_GRID_UI_OPTION}`;
 
-/** Type used to return options list and whether it has a discriminator */
-interface OneOfOptionsInfoType<S extends StrictRJSFSchema = RJSFSchema> {
-  options: S[];
+/** Type used to return whether a oneOf/anyOf has a discriminator */
+interface OneOfOptionsInfoType {
   hasDiscriminator: boolean;
 }
 
@@ -329,16 +328,16 @@ export function computeArraySchemasIfPresent<S extends StrictRJSFSchema = RJSFSc
 
 /** Given a `dottedPath` to a field in the `initialSchema`, iterate through each individual path in the schema until
  * the leaf path is found and returned (along with whether that leaf path `isRequired`) OR no schema exists for an
- * element in the path. If the leaf schema element happens to be a oneOf/anyOf then also return the oneOf/anyOf as
- * `options`.
+ * element in the path. If the leaf schema element happens to be a oneOf/anyOf then also return whether it has a
+ * discriminator.
  *
  * @param registry - The registry
  * @param dottedPath - The dotted-path to the field for which to get the schema
  * @param initialSchema - The initial schema to start the search from
  * @param formData - The formData, useful for resolving a oneOf/anyOf selection in the path hierarchy
  * @param initialFieldIdPath - The initial fieldPath to start the search from
- * @returns - An object containing the destination schema, isRequired and isReadonly flags for the field and options
- *            info if a oneOf/anyOf
+ * @returns - An object containing the destination schema, isRequired and isReadonly flags for the field and whether
+ *            a oneOf/anyOf has a discriminator
  */
 export function getSchemaDetailsForField<
   T = unknown,
@@ -354,7 +353,7 @@ export function getSchemaDetailsForField<
   schema?: S;
   isRequired: boolean;
   isReadonly?: boolean;
-  optionsInfo?: OneOfOptionsInfoType<S>;
+  optionsInfo?: OneOfOptionsInfoType;
   fieldPath: FieldPath;
 } {
   const { schemaUtils } = registry;
@@ -391,7 +390,7 @@ export function getSchemaDetailsForField<
     isReadonly = getNonNullishValue(schema.readOnly, isReadonly);
   });
 
-  let optionsInfo: OneOfOptionsInfoType<S> | undefined;
+  let optionsInfo: OneOfOptionsInfoType | undefined;
   let isRequired = false;
   // retrieveSchema will return an empty schema in the worst case scenario, convert it to undefined
   if (!schema || Object.keys(schema).length === 0) {
@@ -425,9 +424,9 @@ export function getSchemaDetailsForField<
     isReadonly = getNonNullishValue(schema?.readOnly, isReadonly);
     const optionsKey = schema && getXxxOfKey<S>(schema);
     if (schema && optionsKey) {
-      // Set the options if we have a schema with a oneOf/anyOf
+      // Note whether a schema with a oneOf/anyOf has a discriminator
       const discriminator = getDiscriminatorFieldFromSchema(schema);
-      optionsInfo = { options: schema[optionsKey] as S[], hasDiscriminator: !!discriminator };
+      optionsInfo = { hasDiscriminator: !!discriminator };
     }
   }
 
@@ -678,14 +677,14 @@ type LayoutGridFieldComponentProps<
  * other props. If `name` does not exist and there is an optional `render`, we return the `render` component with only
  * specified props for that component. If `name` exists, we take the name, the initial & root schemas and the formData
  * and get the destination schema, is required state and optional oneOf/anyOf options for it. If the destination
- * schema was located along with oneOf/anyOf options then a `LayoutMultiSchemaField` will be rendered with the
- * `uiSchema`, `errorSchema`, `fieldPath` and `formData` drilled down to the dotted-path field, spreading any other
- * props from `gridSchema` into the `ui:options`. If the destination schema located without any oneOf/anyOf options,
- * then a `SchemaField` will be rendered with the same props as mentioned in the previous sentence. If no destination
- * schema was located, but a custom render component was found, then it will be rendered with many of the non-event
- * handling props. If none of the previous render paths are valid, then a null is returned.
+ * schema was located, then a `SchemaField` will be rendered with the `uiSchema`, `errorSchema`, `fieldPath` and
+ * `formData` drilled down to the dotted-path field, spreading any other props from `gridSchema` into the `ui:options`.
+ * A destination schema with discriminated oneOf/anyOf options has its `uiSchema` name the `LayoutMultiSchemaField`,
+ * which renders only its option selector. If no destination schema was located, but a custom render component was
+ * found, then it will be rendered with many of the non-event handling props. If none of the previous render paths are
+ * valid, then a null is returned.
  *
- * @returns - One of `LayoutMultiSchemaField`, `SchemaField`, a custom render component or null, depending
+ * @returns - One of `SchemaField`, a custom render component or null, depending
  */
 // oxlint-disable-next-line typescript/promise-function-async -- ReactNode's type includes Promise for async components; this component is always synchronous
 function LayoutGridFieldComponent<
@@ -710,7 +709,7 @@ function LayoutGridFieldComponent<
   } = props;
   const { onChange } = otherProps;
   const { fields } = registry;
-  const { SchemaField, LayoutMultiSchemaField } = fields;
+  const { SchemaField } = fields;
 
   const uiComponentProps = useMemo(
     () => computeUIComponentPropsFromGridSchema<T, S, F>(registry, gridSchema),
@@ -726,36 +725,47 @@ function LayoutGridFieldComponent<
     () => computeFieldUiSchema<T, S, F>(name, uiProps, uiSchema, isReadonly, readonly),
     [name, uiProps, uiSchema, isReadonly, readonly],
   );
+  // A discriminated cell renders its option selector alone, the field `SchemaField` renders in place of the options
+  // once the cell names it with `fieldReplacesAnyOrOneOf`. It is named over any field the cell names itself, which
+  // would render beside the options the rest of the grid lays out. Both are set in both spellings, since
+  // `getUiOptions()` reads the two in key order and `SchemaField` merges a `ui:definitions` entry beneath this
+  // `uiSchema`, whose own spelling of either would otherwise come first or last as that entry orders it
+  const hasDiscriminator = optionsInfo?.hasDiscriminator ?? false;
+  const cellUiSchema = useMemo<UiSchema<T, S, F>>(
+    () =>
+      hasDiscriminator
+        ? {
+            ...fieldUiSchema,
+            [UI_FIELD_KEY]: 'LayoutMultiSchemaField',
+            'ui:fieldReplacesAnyOrOneOf': true,
+            [UI_OPTIONS_KEY]: {
+              ...(isObject(fieldUiSchema[UI_OPTIONS_KEY]) ? fieldUiSchema[UI_OPTIONS_KEY] : {}),
+              field: 'LayoutMultiSchemaField',
+              fieldReplacesAnyOrOneOf: true,
+            },
+          }
+        : fieldUiSchema,
+    [hasDiscriminator, fieldUiSchema],
+  );
 
   if (uiComponentProps.rendered) {
     return uiComponentProps.rendered;
   }
 
   if (schema) {
-    const Field = optionsInfo?.hasDiscriminator ? LayoutMultiSchemaField : SchemaField;
-    // SchemaField resolves `ui:required` itself from the `uiSchema` prop we're already passing it below (and uses
-    // the raw schema-derived `isRequired` as its own fallback, plus to detect a misconfigured `ui:required: false`),
-    // so only `LayoutMultiSchemaField` -- which has no such override logic of its own -- needs the effective value
-    // computed here.
-    let requiredForField = isRequired;
-    if (optionsInfo?.hasDiscriminator) {
-      requiredForField = uiBooleanOption(getUiOptions<T, S, F>(fieldUiSchema).required) ?? isRequired;
-    }
     const namePath = toPath(name);
 
     return (
-      <Field
+      <SchemaField
         data-testid={
-          optionsInfo?.hasDiscriminator
-            ? LAYOUT_GRID_FIELD_TEST_IDS.layoutMultiSchemaField
-            : LAYOUT_GRID_FIELD_TEST_IDS.field
+          hasDiscriminator ? LAYOUT_GRID_FIELD_TEST_IDS.layoutMultiSchemaField : LAYOUT_GRID_FIELD_TEST_IDS.field
         }
         {...otherProps}
         name={name}
-        required={requiredForField}
+        required={isRequired}
         readonly={uiReadonly}
         schema={schema}
-        uiSchema={fieldUiSchema}
+        uiSchema={cellUiSchema}
         errorSchema={getByPath(errorSchema, namePath)}
         fieldPath={fieldPath}
         id={fieldPathToId(fieldPath, registry.globalFormOptions)}
@@ -763,7 +773,6 @@ function LayoutGridFieldComponent<
         onChange={onChange}
         onBlur={onBlur}
         onFocus={onFocus}
-        options={optionsInfo?.options}
         registry={registry}
       />
     );

@@ -25,6 +25,7 @@ import {
   fieldPathToId,
   fieldPathToList,
   ROOT_FIELD_PATH,
+  UI_FIELD_KEY,
   UI_GLOBAL_OPTIONS_KEY,
   getByPath,
   hasByPath,
@@ -797,8 +798,6 @@ function getExpectedPropsForField(
   }
   // Get the readonly options from the schema, if any
   const readonly = getByPath<boolean>(schema, 'readOnly');
-  // Get the options from the schema's oneOf, if any
-  const options = getByPath<RJSFSchema[]>(schema, ONE_OF_KEY);
   // Drill down in the uiSchema, errorSchema, fieldPath and formData to the field
   const uiSchema = getByPath<UiSchema>(props.uiSchema, toPath(field));
   const errorSchema = getByPath<ErrorSchema>(props.errorSchema, toPath(field));
@@ -814,7 +813,6 @@ function getExpectedPropsForField(
     ...otherProps,
     required,
     readonly: uiReadonly ?? readonly,
-    options,
     formData,
     name: field,
     schema,
@@ -1030,8 +1028,7 @@ describe('LayoutGridField', () => {
         { pets: [{ kind: 'dog' }] },
         FIELD_PATH,
       );
-      expect(details.optionsInfo).toEqual({ options: expect.any(Array), hasDiscriminator: true });
-      expect(details.optionsInfo?.options).toHaveLength(2);
+      expect(details.optionsInfo).toEqual({ hasDiscriminator: true });
       expect(details.isReadonly).toBe(true);
     });
   });
@@ -1198,7 +1195,6 @@ describe('LayoutGridField', () => {
         isReadonly: undefined,
         fieldPath: toFieldPath(path, FIELD_PATH),
         optionsInfo: {
-          options: getByPath(schema, [ONE_OF_KEY]),
           hasDiscriminator: true,
         },
       });
@@ -1255,7 +1251,6 @@ describe('LayoutGridField', () => {
         isReadonly: undefined,
         fieldPath: toFieldPath(path, FIELD_PATH),
         optionsInfo: {
-          options: getByPath(schema, [ONE_OF_KEY]),
           hasDiscriminator: false,
         },
       });
@@ -1784,29 +1779,25 @@ describe('LayoutGridField', () => {
     });
     render(<LayoutGridField {...props} {...otherProps} />);
     const field = screen.getByTestId(LayoutGridField.TEST_IDS.layoutMultiSchemaField);
+    const expected = getExpectedPropsForField(props, fieldName, otherProps, otherUIProps);
+    // A discriminated cell names the field rendering its selector in place of the options, over the `ui:field` its own
+    // uiSchema names, in both spellings
     expect(field).toHaveTextContent(
-      stringifyProps(getExpectedPropsForField(props, fieldName, otherProps, otherUIProps)),
+      stringifyProps({
+        ...expected,
+        uiSchema: {
+          ...expected.uiSchema,
+          [UI_FIELD_KEY]: 'LayoutMultiSchemaField',
+          'ui:fieldReplacesAnyOrOneOf': true,
+          [UI_OPTIONS_KEY]: {
+            ...expected.uiSchema[UI_OPTIONS_KEY],
+            field: 'LayoutMultiSchemaField',
+            fieldReplacesAnyOrOneOf: true,
+          },
+        },
+      }),
     );
   });
-  test.each([0, null])(
-    'renderField passes a ui:required of %s to a required discriminated field as required: false',
-    (uiRequired) => {
-      const fieldName = 'employment';
-      const uiRequiredFromJson: GenericObjectType = { 'ui:required': uiRequired };
-      const props = getProps({
-        schema: { ...GRID_FORM_SCHEMA, required: [fieldName] },
-        uiSchema: { ...gridFormUISchema, [fieldName]: uiRequiredFromJson },
-        formData: {},
-        fieldPath: ROOT_FIELD_PATH,
-        id: gridFormSchemaRegistry.globalFormOptions.idPrefix,
-        layoutGridSchema: { name: fieldName },
-        registry: gridFormSchemaRegistry,
-      });
-      render(<LayoutGridField {...props} />);
-      const field = screen.getByTestId(LayoutGridField.TEST_IDS.layoutMultiSchemaField);
-      expect(field).toHaveTextContent('"required":false');
-    },
-  );
   test('renderField via object explicit readonlySchema, and uiSchema readonly override', () => {
     const fieldName = 'string';
     const props = getProps({

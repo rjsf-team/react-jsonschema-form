@@ -227,6 +227,7 @@ function getFieldComponent<
   rendersNamedField: boolean;
   rendersOptionsItself: boolean;
   rendersOptionSelector: boolean;
+  optionsGiveWayToField: boolean;
   plannedAsOptions: boolean;
   fieldKey: string | undefined;
   handsDownOwnParts: boolean;
@@ -377,6 +378,7 @@ function getFieldComponent<
     // `yieldsToOptions` requires `!rendersOptionsItself`, so the flags read the same whether or not the field is withheld
     rendersOptionsItself,
     rendersOptionSelector,
+    optionsGiveWayToField,
     plannedAsOptions,
     fieldKey,
     handsDownOwnParts,
@@ -923,14 +925,18 @@ function SchemaFieldRender<
   if (!uiField || !fieldToRender) {
     return withUiState(<CyclicSchemaField {...props} />);
   }
-  const { FieldComponent } = fieldToRender;
+  const { FieldComponent, optionsGiveWayToField } = fieldToRender;
 
   const { FieldTemplate, DescriptionFieldTemplate, FieldHelpTemplate, FieldErrorTemplate } = getTemplates<T, S, F>(
     registry,
     uiOptions,
   );
 
-  const disabled = Boolean(ownUiOptions.disabled ?? props.disabled) || deprecatedHandling === 'disable';
+  // A field the options give way to renders the choice between them, so with no options it has nothing to choose, which
+  // no `ui:disabled` can change
+  const hasNoOptionToChoose = optionsGiveWayToField && xxxOfKey !== undefined && (schema[xxxOfKey]?.length ?? 0) === 0;
+  const disabled =
+    Boolean(ownUiOptions.disabled ?? props.disabled) || deprecatedHandling === 'disable' || hasNoOptionToChoose;
   const readonly = Boolean(ownUiOptions.readonly ?? (props.readonly || props.schema.readOnly || schema.readOnly));
   if (
     uiRequired === false &&

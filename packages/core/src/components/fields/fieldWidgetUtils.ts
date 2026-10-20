@@ -30,6 +30,8 @@ import {
   uiBooleanOption,
 } from '@rjsf/utils';
 
+import { getFirstOption, getSelectorField, resolveSelectorWidget } from './layoutMultiSchemaFieldSelector.ts';
+
 /** How `ArrayField` renders an array: as one widget (`multiSelect`, `customWidget`, `files`), as a list of items
  * (`fixed`, `normal`), or as the unsupported-field template when the schema declares no `items`
  */
@@ -153,6 +155,29 @@ function getArrayFieldWidget<
     uiSchema,
   );
   return widget;
+}
+
+/** Gets the widget `LayoutMultiSchemaField` renders its option selector with, from the schema's own `anyOf`/`oneOf`,
+ * which the field renders the options of too, or `undefined` where it has no selector property, which the field throws
+ * for
+ *
+ * @param schema - The schema of the field
+ * @param uiSchema - The uiSchema of the field
+ * @param registry - The registry
+ * @returns - The widget, if the field has a selector property
+ */
+function getLayoutSelectorWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(schema: S, uiSchema: UiSchema<T, S, F> | undefined, registry: Registry<T, S, F>): Widget<T, S, F> | undefined {
+  const uiOptions = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);
+  const selectorField = getSelectorField<T, S, F>(schema, uiOptions);
+  if (!selectorField) {
+    return undefined;
+  }
+  const firstOption = getFirstOption<T, S, F>(schema, registry.schemaUtils);
+  return resolveSelectorWidget<T, S, F>(schema, firstOption, selectorField, uiOptions, registry.widgets).Widget;
 }
 
 /** Whether a widget is told to hide its label: unless its plan has it draw the label. A field with no label text has
@@ -412,6 +437,9 @@ export default function getFieldWidget<
   }
   if (field === fields.ArrayField) {
     return getArrayFieldWidget<T, S, F>(schema, uiSchema, registry);
+  }
+  if (field === fields.LayoutMultiSchemaField) {
+    return getLayoutSelectorWidget<T, S, F>(schema, uiSchema, registry);
   }
   return undefined;
 }
