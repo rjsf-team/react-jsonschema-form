@@ -860,7 +860,7 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
       // Or if the schema has allOf, we need to merge the defaults into the formData because we don't compute the defaults for allOf.
       defaultsWithFormData = mergeDefaultsWithFormData(
         defaultsWithFormData,
-        ensureFormDataMatchingSchema<unknown, S, F>(context, schema, rootSchema, rawFormData),
+        viewFormDataMatching<unknown, S, F>(context, view, rawFormData),
         mergeExtraDefaults,
         true,
       );
@@ -1610,6 +1610,35 @@ export function ensureFormDataMatchingSchema<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(context: SchemaContext<S, F>, schema: S, rootSchema: S, formData: T | undefined): T | T[] | undefined {
+  return formDataMatching<T, S, F>(context, schema, rootSchema, formData, (_key, propertySchema) =>
+    resolveOwnRef<S>(propertySchema, rootSchema, context.customMergeAllOf),
+  );
+}
+
+/** `ensureFormDataMatchingSchema()` for the field `view` the fold computed, whose properties' own `$ref`s are read where
+ * the declarations holding them sit, as `objectDefaults()` reads them: a property declared twice is merged into one no
+ * graph holds
+ */
+function viewFormDataMatching<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  view: DefaultsView<S>,
+  formData: T | undefined,
+): T | T[] | undefined {
+  return formDataMatching<T, S, F>(context, view.schema, view.field.graph.rawRoot, formData, (key, propertySchema) =>
+    resolveMergedOwnRef<S>(view.graph, childSeeds(view, key).seeds, propertySchema, context.customMergeAllOf),
+  );
+}
+
+/** Returns `formData` matched to `schema` as `ensureFormDataMatchingSchema()` matches it, the own `$ref` of each of the
+ * schema's properties read by `readOwnRef()`
+ */
+function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  schema: S,
+  rootSchema: S,
+  formData: T | undefined,
+  readOwnRef: (key: string, propertySchema: S) => S,
+): T | T[] | undefined {
   const { defaultFormStateBehavior } = context;
   const shouldRetrieveAllOf = shouldPopulateAllOfDefaults(schema, defaultFormStateBehavior);
   const schemaToMatch = shouldRetrieveAllOf ? retrieveSchema<T, S, F>(context, schema, rootSchema, formData) : schema;
@@ -1634,9 +1663,7 @@ export function ensureFormDataMatchingSchema<
     for (const key of Object.keys(schemaToMatch.properties)) {
       const propertySchema = getPropertySchema<S>(schemaToMatch, key);
       // A property written as a `$ref` is matched as the definition it names, whose `allOf` it is
-      const readProperty = isSchemaObject<S>(propertySchema)
-        ? resolveOwnRef<S>(propertySchema, rootSchema, context.customMergeAllOf)
-        : propertySchema;
+      const readProperty = isSchemaObject<S>(propertySchema) ? readOwnRef(key, propertySchema) : propertySchema;
       if (
         Object.hasOwn(matched, key) &&
         (shouldRetrieveAllOf || (isObject(readProperty) && ALL_OF_KEY in readProperty))
@@ -1717,7 +1744,7 @@ export default function getDefaultFormState<
   if (isObject(formData) || Array.isArray(formData)) {
     const { mergeDefaultsIntoFormData } = context.defaultFormStateBehavior ?? {};
     const defaultSupercedesUndefined = mergeDefaultsIntoFormData === 'useDefaultIfFormDataUndefined';
-    const matchingFormData = ensureFormDataMatchingSchema<T, S, F>(context, schema, view.field.graph.rawRoot, formData);
+    const matchingFormData = viewFormDataMatching<T, S, F>(context, view, formData);
     return asDeclared<T | T[] | undefined>(
       mergeDefaultsWithFormData(
         defaults,

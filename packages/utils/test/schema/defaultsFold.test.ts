@@ -1140,6 +1140,17 @@ describe('getDefaultFormState() reading $ref, branches and extra keys as the for
       );
       expect(defaultsOf(schema, undefined, { emptyObjectFields: 'skipEmptyDefaults' })).toEqual({ p: { k: 'c' } });
     });
+    it.each<[string, unknown]>([
+      ['the value it names', { p: { k: 'c' } }],
+      ['no value for it', { p: {} }],
+    ])("reads a property's $ref in the resource for data holding %s", (_, formData) => {
+      const schema = rootOf(
+        { $ref: 'res.json', properties: { k: { title: 'K' } } },
+        { const: 'c' },
+        { type: 'object', properties: { k: { $ref: '#/$defs/s' } } },
+      );
+      expect(defaultsOf(schema, formData)).toEqual({ p: { k: 'c' } });
+    });
     it.each<[string, RJSFSchema, unknown]>([
       ['filled up to minItems', { minItems: 1 }, { p: ['r'] }],
       ['a multi-select, left unfilled', { minItems: 1, uniqueItems: true }, {}],
