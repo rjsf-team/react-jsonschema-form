@@ -254,8 +254,9 @@ function bestOption<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     if (stored && (stored.call === undefined || stored.call === call) && deepEquals(stored.data, formData)) {
       return stored.pick;
     }
-    const pick = compute();
+    // Copied before the scoring, which a validator that fills defaults in changes the data during
     const copy = copyOfData(formData);
+    const pick = compute();
     picked.set(keys, { pick, data: copy.data, call: copy.keeps ? call : undefined });
     return pick;
   } finally {

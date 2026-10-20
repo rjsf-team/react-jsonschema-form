@@ -44,4 +44,23 @@ describe('options scored with useDefaults, which fills defaults into the data as
     expect(getClosestMatchingOption({ validator }, root, formData, options)).toBe(2);
     expect(formData.p).toEqual({ k: 'x', flag: 'on', ...extra });
   });
+  it('matches data again that the validator filled defaults into while matching it', () => {
+    // Checking the first option fills nothing, and it is checked before the second fills `flag`, which it rules out: the
+    // first call picks between both, while the data that call leaves matches the second alone
+    const filledLast: RJSFSchema[] = [
+      {
+        type: 'object',
+        properties: { k: { type: 'string' }, m: { type: 'number' }, n: { type: 'boolean' } },
+        not: { required: ['flag'] },
+      },
+      filling,
+    ];
+    const filledLastRoot: RJSFSchema = { anyOf: filledLast };
+    const validator = customizeValidator({ ajvOptionsOverrides: { useDefaults: true } });
+    const formData = { k: 'x', m: 1, n: true };
+    getClosestMatchingOption({ validator }, filledLastRoot, formData, filledLast);
+    expect(formData).toEqual({ k: 'x', m: 1, n: true, flag: 'on' });
+
+    expect(getClosestMatchingOption({ validator }, filledLastRoot, formData, filledLast)).toBe(1);
+  });
 });
