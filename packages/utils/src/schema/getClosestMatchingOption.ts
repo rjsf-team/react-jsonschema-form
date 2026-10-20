@@ -1,5 +1,4 @@
 import { ALL_OF_KEY, REF_KEY } from '../constants.ts';
-import deepEquals from '../deepEquals.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getXxxOfKey from '../getXxxOfKey.ts';
 import guessType from '../guessType.ts';
@@ -251,7 +250,7 @@ function bestOption<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   scoringCall = call;
   try {
     const stored = picked.peek(keys);
-    if (stored && (stored.call === undefined || stored.call === call) && deepEquals(stored.data, formData)) {
+    if (stored && (stored.call === undefined || stored.call === call) && holdsCopy(stored.data, formData)) {
       return stored.pick;
     }
     // Copied before the scoring, which a validator that fills defaults in changes the data during
@@ -291,6 +290,37 @@ function copyOfData(data: unknown): DataCopy {
     };
   }
   return { data, keeps: typeof data === 'object' && data !== null };
+}
+
+/** Whether `data` still holds what `copy`, a `copyOfData()` copy, holds: arrays and plain objects alike item by item
+ * and key by key, whatever their prototype, and the objects the copy kept as they are, by identity. A deep equality
+ * that compares constructors would never find a copy equal to an object with no prototype, or to one holding an
+ * object under an own `constructor` key, and score such data afresh at every level of a recursion (#4990)
+ */
+function holdsCopy(copy: unknown, data: unknown): boolean {
+  if (Array.isArray(copy)) {
+    const items: readonly unknown[] = copy;
+    if (!Array.isArray(data) || data.length !== items.length) {
+      return false;
+    }
+    const dataItems: readonly unknown[] = data;
+    // Every index, a hole included, which `every()` would pass over
+    for (let index = 0; index < items.length; index += 1) {
+      if (!holdsCopy(items[index], dataItems[index])) {
+        return false;
+      }
+    }
+    return true;
+  }
+  if (isPlainObject(copy)) {
+    const keys = Object.keys(copy);
+    return (
+      isPlainObject(data) &&
+      Object.keys(data).length === keys.length &&
+      keys.every((key) => Object.hasOwn(data, key) && holdsCopy(copy[key], data[key]))
+    );
+  }
+  return Object.is(copy, data);
 }
 
 /** Picks the option for `bestOption()`, see `getClosestMatchingOption()` */
