@@ -3518,6 +3518,8 @@ A widened option is not the schema its `$id` names, so it is given an `$id` of `
 Retrieves the schema of one field: the `schema` with its own `$ref`, `allOf`, `if`/`then`/`else`, `dependencies` and the patterns its properties match merged in for the `rawFormData`, and the additional properties of that data stubbed among its `properties`.
 The schema is resolved one level at a time: a `$ref` under `properties`, `items` or an `anyOf`/`oneOf` option is handed out as it stands, for the caller to retrieve when it renders that subschema.
 Every subschema handed out carries where it came from, so retrieving it resolves it as the field it is: a recursive `$ref` under `properties` is handed out flagged with `RJSF_REF_CYCLE_KEY`, retrieving a copy with that flag set to `false` expands it by one level, and retrieving a schema `retrieveSchema()` returned gives the same schema back.
+A `schema` the root does not hold is parsed once per content and kept for as long as the root, so one built from form data keeps an entry for each distinct value until the root changes.
+Like the root, it must not be changed once handed in: calls handed the same content share its result.
 
 #### Parameters
 

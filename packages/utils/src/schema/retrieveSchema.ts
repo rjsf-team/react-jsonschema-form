@@ -78,6 +78,10 @@ import shallowAllOfMerge from './shallowAllOfMerge.ts';
  * `false` expands it by one level. Retrieving a schema this function returned gives the same schema back, and a schema
  * that carries nothing of the kind is resolved as a field of its own, from the top.
  *
+ * A `schema` the root does not hold is parsed once per content and kept for as long as the root, so one built from form
+ * data keeps an entry for each distinct value until the root changes. Like the root, it must not be changed once handed
+ * in: calls handed the same content share its result.
+ *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param schema - The schema for which retrieving a schema is desired
  * @param [rootSchema={}] - The root schema that will be forwarded to all the APIs

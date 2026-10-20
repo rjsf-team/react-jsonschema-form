@@ -104,7 +104,8 @@ export interface SchemaGraph<S extends StrictRJSFSchema = RJSFSchema> {
    * it, once per content and base. A call root such as the `{ allOf: [property, ...patterns] }` a caller builds, or an
    * option spread over its parent, is such a schema: its `$ref`s resolve against the root like any other, or against
    * `outerBase` where it is given. A schema holding what one adopted before holds, as a call root a caller builds anew
-   * for every call does, is that one's node, so the plans and views made for one are made for the other.
+   * for every call does, is that one's node, so the plans and views made for one are made for the other, and neither may
+   * change once adopted.
    */
   adopt(raw: S, outerBase?: string): AdoptedSchema<S>;
   /** Returns the node `raw` parsed to, `raw` being a copy a caller made of the schema `of` stands for, such as a spread
