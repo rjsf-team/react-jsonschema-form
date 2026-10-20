@@ -211,6 +211,36 @@ describe('DaisyUIFrameProvider', () => {
     expect(screen.getByText('dark')).toBeInTheDocument();
   });
 
+  test("has a ThemeProvider follow the theme another ThemeProvider's setTheme stores", async () => {
+    localStorageMock['daisyui-theme'] = 'cupcake';
+    function DarkButton() {
+      const { setTheme } = useTheme();
+      return (
+        <button type='button' onClick={() => setTheme('dark')}>
+          Dark
+        </button>
+      );
+    }
+    function ThemeName() {
+      return <span>{useTheme().theme}</span>;
+    }
+    render(
+      <>
+        <ThemeProvider>
+          <DarkButton />
+        </ThemeProvider>
+        <ThemeProvider>
+          <ThemeName />
+        </ThemeProvider>
+      </>,
+    );
+    expect(screen.getByText('cupcake')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Dark' }));
+
+    expect(screen.getByText('dark')).toBeInTheDocument();
+  });
+
   test('has useTheme() outside a ThemeProvider name the theme the frame shows where none is stored', () => {
     function ThemeName() {
       return <span>{useTheme().theme}</span>;
