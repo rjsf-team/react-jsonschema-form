@@ -252,7 +252,11 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
   const [uiSchemaGenerator, setUiSchemaGenerator] = useState<{ generator: UiSchemaForTheme } | undefined>(
     initial.uiSchemaGenerator,
   );
+  // `formData` follows every `onChange`, for the formData editor and the share link. The form is seeded apart from it,
+  // so `reset()` goes back to the data it was loaded with: a sample or a shared link, the formData editor's edit, or,
+  // for a theme switch, which remounts it, the data it held then
   const [formData, setFormData] = useState<unknown>(initial.formData);
+  const [seedFormData, setSeedFormData] = useState<unknown>(initial.formData);
   const [extraErrors, setExtraErrors] = useState<ErrorSchema | undefined>(initial.extraErrors);
   const [shareURL, setShareURL] = useState<string | null>(null);
   const [theme, setTheme] = useState<string>(initial.theme);
@@ -266,6 +270,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
   const [editKey, setEditKey] = useState(0);
   const setEditedFormData = useCallback((data: unknown) => {
     setFormData(data);
+    setSeedFormData(data);
     setEditKey((key) => key + 1);
   }, []);
   const [liveSettings, setLiveSettings] = useState<LiveSettings>(initial.liveSettings);
@@ -281,11 +286,12 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
     (newTheme: string, { stylesheet: newStylesheet }: ThemesType) => {
       setTheme(newTheme);
       setStylesheet(newStylesheet);
+      setSeedFormData(formData);
       if (uiSchemaGenerator) {
         setUiSchema(uiSchemaGenerator.generator(newTheme));
       }
     },
-    [uiSchemaGenerator, setTheme, setStylesheet],
+    [uiSchemaGenerator, setTheme, setStylesheet, formData],
   );
 
   const load = useCallback(
@@ -305,6 +311,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
       setSchema(next.schema);
       setUiSchema(next.uiSchema);
       setFormData(next.formData);
+      setSeedFormData(next.formData);
       setExtraErrors(next.extraErrors);
       setLiveSettings(next.liveSettings);
       if (next.validator !== undefined) {
@@ -397,7 +404,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
               extraErrors={extraErrors}
               schema={schema}
               uiSchema={uiSchema}
-              initialFormData={formData}
+              initialFormData={seedFormData}
               templates={{ MarkdownTemplate, ...otherFormProps.templates }}
               fields={{
                 ...otherFormProps.fields,
