@@ -3,7 +3,7 @@ import { withTheme } from '@rjsf/core';
 import { getTestRegistry } from '@rjsf/core/testing';
 import { formTests, themeTests } from '@rjsf/snapshot-tests';
 import type { FieldProps, FormValidation, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
-import { errorId, helpId, optionHelpId } from '@rjsf/utils';
+import { errorId, fieldLabelId, helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -112,6 +112,31 @@ describe('a pure anyOf union', () => {
 
     expect(screen.getAllByText('Foo')).toHaveLength(1);
     expect(container.querySelector('#root_foo__anyof_select-label')).not.toBeInTheDocument();
+  });
+});
+
+describe("a titled anyOf field's option selector", () => {
+  const schema: RJSFSchema = {
+    type: 'object',
+    properties: { pick: { title: 'Pick', anyOf: [{ type: 'string', enum: ['a', 'b'] }, { type: 'number' }] } },
+  };
+
+  it("is a select named by its field's title", () => {
+    const { container } = render(<Form schema={schema} validator={validator} />);
+
+    expect(container.querySelector('#root_pick__anyof_select')).toHaveAccessibleName('Pick');
+    expectReferencesResolve(container);
+  });
+
+  it("is a radio group named by its field's label under ui:widget radio", () => {
+    const { container } = render(
+      <Form schema={schema} uiSchema={{ pick: { 'ui:widget': 'radio' } }} validator={validator} />,
+    );
+
+    const radioGroup = container.querySelector('#root_pick__anyof_select-0')!.closest('[role="radiogroup"]');
+    expect(radioGroup).toHaveAccessibleName('Pick');
+    expect(radioGroup).toHaveAttribute('aria-labelledby', fieldLabelId('root_pick'));
+    expectReferencesResolve(container);
   });
 });
 

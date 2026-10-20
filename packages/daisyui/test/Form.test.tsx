@@ -96,6 +96,25 @@ describe("daisyui widgets carry their field's plan on the element a user focuses
     expectReferencesResolve(container);
   });
 
+  test("names a radio option selector by its field's label, through an aria-labelledby that resolves", () => {
+    const { container } = render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: { pick: { title: 'Pick', anyOf: [{ type: 'string', enum: ['a', 'b'] }, { type: 'number' }] } },
+        }}
+        uiSchema={{ pick: { 'ui:widget': 'radio' } }}
+        validator={validator}
+      />,
+    );
+
+    const selector = container.querySelector('#root_pick__anyof_select');
+    expect(selector).toHaveAttribute('role', 'radiogroup');
+    expect(selector).toHaveAttribute('aria-labelledby', fieldLabelId('root_pick'));
+    expect(selector).toHaveAccessibleName('Pick');
+    expectReferencesResolve(container);
+  });
+
   test('names a checkboxes group by its label, and marks each checkbox invalid and described by its errors', () => {
     const { container } = render(
       <Form
