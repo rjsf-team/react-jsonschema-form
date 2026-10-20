@@ -3396,7 +3396,9 @@ A tie goes to the `selectedOption` when it is a candidate and to the first candi
 
 The score is the number of matching properties, more heavily favoring options with matching default or const values.
 A property holding an `anyOf`/`oneOf` of its own scores what the option picked among those scores, plus one where the data matches it.
-The pick is remembered per option list and data object, which the form replaces rather than mutates, so a recursion through option lists matches each level once; data mutated in place after a call can be answered as it was before.
+The pick is remembered per option list and data object, so a recursion through option lists matches each level once.
+It is reused only while the data deep-equals a copy kept with it, so data mutated in place, between calls or by a validator that fills defaults in as it checks, is matched for what it holds now.
+An object other than an array or a plain object, such as a `Date`, is kept in the copy as it is, so a pick for data holding one is reused only within the outermost call that made it, and a default the validator fills into that object during the call, where an option describes it as an object with properties, isn't seen.
 
 #### Parameters
 
