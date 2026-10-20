@@ -280,4 +280,44 @@ describe('DaisyUIFrameProvider', () => {
     // Should fall back to default theme
     expect(container.querySelector('[data-theme="cupcake"]')).not.toBeNull();
   });
+
+  test('shows a chosen theme the storage refuses to store', () => {
+    mockSetItem.mockImplementationOnce(() => {
+      throw new DOMException('The quota has been exceeded.', 'QuotaExceededError');
+    });
+    const DaisyUIFrame = __createDaisyUIFrameProvider({
+      children: <div>Test Content</div>,
+      subtheme: { dataTheme: 'dark' },
+    });
+
+    const { container } = render(<DaisyUIFrame />);
+
+    expect(mockSetItem).toHaveBeenCalledWith('daisyui-theme', 'dark');
+    expect(container.querySelector('[data-theme="dark"]')).not.toBeNull();
+  });
+
+  test("keeps ThemeProvider's theme where the storage refuses the one setTheme stores", async () => {
+    localStorageMock['daisyui-theme'] = 'cupcake';
+    mockSetItem.mockImplementationOnce(() => {
+      throw new DOMException('The quota has been exceeded.', 'QuotaExceededError');
+    });
+    function DarkButton() {
+      const { theme, setTheme } = useTheme();
+      return (
+        <button type='button' onClick={() => setTheme('dark')}>
+          {theme}
+        </button>
+      );
+    }
+    render(
+      <ThemeProvider>
+        <DarkButton />
+      </ThemeProvider>,
+    );
+
+    await user.click(screen.getByRole('button', { name: 'cupcake' }));
+
+    expect(mockSetItem).toHaveBeenCalledWith('daisyui-theme', 'dark');
+    expect(screen.getByRole('button', { name: 'cupcake' })).toBeInTheDocument();
+  });
 });

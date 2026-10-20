@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { createContext, useCallback, useContext, useMemo, useSyncExternalStore } from 'react';
+import { createContext, useContext, useMemo, useSyncExternalStore } from 'react';
 import type { ThemeProps } from '@rjsf/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, ThemePresentation } from '@rjsf/utils';
 
@@ -68,9 +68,9 @@ interface ThemeProviderProps {
 /** ThemeProvider component that manages DaisyUI theme state and persistence
  *
  * This provider:
- * - Reads the theme from localStorage, following every change to it
+ * - Reads the theme from localStorage, following every theme a provider or another tab stores
  * - Provides theme state via context
- * - Persists theme changes to localStorage
+ * - Persists theme changes to localStorage, where a storage that refuses one leaves the theme as it was
  *
  * @param props - The props for the component
  */
@@ -79,15 +79,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
   // another tab stores reaches `useTheme()` too. The server has no storage, so it renders the default
   const theme = useSyncExternalStore(subscribeToStoredTheme, readStoredTheme, () => DEFAULT_THEME);
 
-  const handleSetTheme = useCallback((newTheme: string) => {
-    try {
-      storeTheme(newTheme);
-    } catch {
-      // Ignore localStorage errors
-    }
-  }, []);
-
-  const contextValue = useMemo(() => ({ theme, setTheme: handleSetTheme }), [theme, handleSetTheme]);
+  const contextValue = useMemo(() => ({ theme, setTheme: storeTheme }), [theme]);
   return <ThemeContext.Provider value={contextValue}>{children}</ThemeContext.Provider>;
 }
 

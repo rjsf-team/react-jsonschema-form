@@ -21,13 +21,17 @@ export function readStoredTheme() {
   }
 }
 
-/** Stores a theme, and tells everyone in this document who shows the stored one
+/** Stores a theme, and tells everyone in this document who shows the stored one. A storage that can't be written, as
+ * in a sandboxed frame or once its quota is spent, keeps the theme it holds, so nobody is told
  *
  * @param theme - The theme to store
- * @throws - Where the storage can't be written, as in a sandboxed frame, in which case nobody is told
  */
 export function storeTheme(theme: string) {
-  localStorage.setItem(THEME_KEY, theme);
+  try {
+    localStorage.setItem(THEME_KEY, theme);
+  } catch {
+    return;
+  }
   listeners.forEach((listener) => listener());
 }
 

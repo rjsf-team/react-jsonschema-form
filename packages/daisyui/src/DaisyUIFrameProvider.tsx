@@ -43,15 +43,11 @@ function DaisyUIFrameComponent(props: DaisyUIFrameProviderProps & { document?: D
     () => chosenTheme || DEFAULT_THEME,
   );
 
-  // Storing the chosen theme is a side effect, so it waits for the commit rather than happening while rendering
+  // Storing the chosen theme is a side effect, so it waits for the commit rather than happening while rendering. A
+  // storage that refuses it leaves the chosen theme shown all the same
   useEffect(() => {
-    if (!chosenTheme) {
-      return;
-    }
-    try {
+    if (chosenTheme) {
       storeTheme(chosenTheme);
-    } catch {
-      // Storage can be unavailable, as in a sandboxed frame; the chosen theme still applies for this session
     }
   }, [chosenTheme]);
 
