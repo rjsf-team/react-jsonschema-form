@@ -717,6 +717,7 @@ describe('mui labels the core widgets that draw no label of their own', () => {
     container.querySelectorAll('label[for]').forEach((labelFor) => {
       expect(container.querySelector(`[id="${labelFor.getAttribute('for')}"]`)).toBeInTheDocument();
     });
+    expect(screen.getByRole('group', { name: 'When' })).toHaveAttribute('id', 'root_when');
   });
 });
 

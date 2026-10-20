@@ -7,14 +7,12 @@ import { createTemplates } from '../templates/Templates.tsx';
 import { createWidgets } from '../widgets/Widgets.tsx';
 
 /** Which parts of a field this theme's fields and widgets draw themselves, over `@rjsf/core`'s: the toggle draws its
- * own label and description and holds `false` unchecked, as the checkbox does. The rating's entry repeats the one
- * `@rjsf/core` declares
+ * own label and description and holds `false` unchecked, as the checkbox does
  */
 function createPresentation(): ThemePresentation {
   return {
     widgets: {
       toggle: { label: 'self', description: 'self', uncheckedIsFalse: true },
-      RatingWidget: { labelledBy: 'aria-labelledby' },
     },
   };
 }
