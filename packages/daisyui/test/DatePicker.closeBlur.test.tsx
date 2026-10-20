@@ -365,7 +365,8 @@ describe.each([
     } else {
       expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent('May 17, 2020');
     }
-    // The trigger the close returned the focus to is gone, so the only focus reported is the one the opening did
+    // Once the save commits, no trigger holds the focus: a press elsewhere took it, and Done returned it to a trigger
+    // the save then replaced. So the only focus reported is the one the opening did
     expect(onFocus).toHaveBeenCalledTimes(1);
     unmount();
     expect(onBlur).toHaveBeenCalledTimes(1);
