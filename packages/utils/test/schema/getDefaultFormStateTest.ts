@@ -8679,11 +8679,82 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         ).toEqual({ n: null, s: 'a', a: { n: null } });
       });
 
+      it.each<[string, RJSFSchema]>([
+        ['an additional property', { type: 'object', additionalProperties: { type: 'null' } }],
+        ['a property an allOf brings in', { type: 'object', allOf: [{ properties: { n: { type: 'null' } } }] }],
+      ])('is filled in for %s of an object below the root, as for one of the root', (_, nested) => {
+        const schema: RJSFSchema = { type: 'object', properties: { o: nested } };
+        expect(
+          getDefaultFormState(
+            { validator: testValidator },
+            { schema, rootSchema: schema, formData: { o: { n: undefined } } },
+          ),
+        ).toEqual({ o: { n: null } });
+      });
+
       it('is not filled in for a value of another type', () => {
         const schema: RJSFSchema = { type: 'object', properties: { s: { type: 'string', default: null } } };
         expect(
           getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema, formData: { s: undefined } }),
         ).toEqual({ s: undefined });
+      });
+    });
+
+    describe('the null of an additional property of an object below the root, once the defaults are generated', () => {
+      const defaultsOf = (additionalProperties: RJSFSchema, formData: GenericObjectType) => {
+        const schema: RJSFSchema = { type: 'object', properties: { o: { type: 'object', additionalProperties } } };
+        return getDefaultFormState(
+          { validator: testValidator },
+          { schema, rootSchema: schema, formData, initialDefaultsGenerated: true },
+        );
+      };
+
+      it('is filled in for a value the data holds as undefined', () => {
+        expect(defaultsOf({ type: 'null' }, { o: { k: undefined } })).toEqual({ o: { k: null } });
+      });
+
+      it('is filled in beside the properties the object names, which are left to their own defaults', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            o: { type: 'object', properties: { s: { type: 'string' } }, additionalProperties: { type: 'null' } },
+          },
+        };
+        expect(
+          getDefaultFormState(
+            { validator: testValidator },
+            { schema, rootSchema: schema, formData: { o: { s: 'a', k: undefined } }, initialDefaultsGenerated: true },
+          ),
+        ).toEqual({ o: { s: 'a', k: null } });
+      });
+
+      it('is filled in by getObjectDefaults() for an object it is handed alone', () => {
+        const schema: RJSFSchema = { type: 'object', additionalProperties: { type: 'null' } };
+        expect(
+          getObjectDefaults({ validator: testValidator }, schema, {
+            rootSchema: schema,
+            rawFormData: { k: undefined },
+            initialDefaultsGenerated: true,
+          }),
+        ).toEqual({ k: null });
+      });
+
+      it('is filled in alone in an object the data holds, which takes no other default', () => {
+        const additionalProperties: RJSFSchema = {
+          type: 'object',
+          properties: { n: { type: 'null' }, s: { type: 'string', default: 'x' } },
+        };
+        expect(defaultsOf(additionalProperties, { o: { k: {} } })).toEqual({ o: { k: { n: null } } });
+      });
+
+      it('leaves an additional property that holds no null fill as the data holds it', () => {
+        expect(defaultsOf({ type: 'object', properties: { s: { default: 'x' } } }, { o: { k: {} } })).toEqual({
+          o: { k: {} },
+        });
+      });
+
+      it('leaves a value of a nullable type, whose field renders the type beside null, as it is held', () => {
+        expect(defaultsOf({ type: ['string', 'null'] }, { o: { k: undefined } })).toEqual({ o: { k: undefined } });
       });
     });
 

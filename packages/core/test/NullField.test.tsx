@@ -214,5 +214,29 @@ describe('NullField', () => {
 
       expect(getFormData()).toEqual({ p: { n: null } });
     });
+
+    it.each<[string, RJSFSchema, unknown, unknown]>([
+      ['a null additional property', { type: 'null' }, undefined, null],
+      [
+        'an additional property holding a null field',
+        { type: 'object', properties: { n: { type: 'null' } } },
+        {},
+        { n: null },
+      ],
+    ])(
+      'is filled in for %s of an object below the root, written after mount',
+      (_, additionalProperties, written, kept) => {
+        const ref = createFormRef();
+        const { getFormData } = createFormComponent({
+          ref,
+          schema: { type: 'object', properties: { o: { type: 'object', additionalProperties } } },
+          initialFormData: { o: {} },
+        });
+
+        act(() => handleOf(ref).setFieldValue(['o', 'k'], written));
+
+        expect(getFormData()).toEqual({ o: { k: kept } });
+      },
+    );
   });
 });
