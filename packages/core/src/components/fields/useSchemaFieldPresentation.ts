@@ -75,10 +75,10 @@ export interface SchemaFieldPresentationInputs<
 }
 
 /** Whether the options of a field's `anyOf`/`oneOf` are taken to render no control under the field's id for a label's
- * `for` to name: each is an object, an array or a `null`, so the field's label names its selector through
- * `aria-labelledby`. An array counts whatever its widget, since the option's widget isn't resolved here, so a
- * multi-select or file array's control, which does carry the field's id, is named by the label through
- * `aria-labelledby` as the selector is. An option naming no type renders with the field's, as
+ * `for` to name: each is an object, an array or a `null`, so the field's label is drawn with no `for` and names what
+ * it names through `aria-labelledby`. An array counts whatever its widget, since the option's widget isn't resolved
+ * here, so a multi-select or file array's control, which does carry the field's id, is named by the label through
+ * `aria-labelledby`, as the selector is. An option naming no type renders with the field's, as
  * `getRenderedOptionSchema()` gives it. An option given by a `$ref` isn't resolved here and counts as one that may
  * render a control
  *
@@ -221,8 +221,9 @@ export default function useSchemaFieldPresentation<
     if (xxxOfKey === undefined) {
       return declared;
     }
-    // Options taken to render no control would leave a `for` at the field's id naming nothing, so the label names the
-    // selector, and any control an option renders under the field's id, through `aria-labelledby`
+    // A `for` at the field's id is taken to name nothing where every option is taken to render no control there, so
+    // the label names through `aria-labelledby` any control an option does render there, as a multi-select or file
+    // array does
     return optionsRenderNoControl<S>(schema, xxxOfKey)
       ? { ...declared, labelledBy: 'aria-labelledby' as const }
       : declared;
