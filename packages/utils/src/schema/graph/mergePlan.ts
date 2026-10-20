@@ -143,13 +143,13 @@ export interface PlanPolicy<S extends StrictRJSFSchema = RJSFSchema> {
   readonly optionPolicy?: OptionPolicy;
 }
 
-/** A policy with its defaults filled in */
 /** The `allOf` and `if` policies of `PlanPolicy.optionPolicy` */
 export interface OptionPolicy {
   readonly allOf: boolean | 'if';
   readonly conditions: boolean;
 }
 
+/** A policy with its defaults filled in */
 type ResolvedPolicy<S extends StrictRJSFSchema> = Required<Omit<PlanPolicy<S>, 'selectOption' | 'optionPolicy'>> &
   Pick<PlanPolicy<S>, 'selectOption' | 'optionPolicy'>;
 
