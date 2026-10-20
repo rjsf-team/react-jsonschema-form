@@ -1,5 +1,7 @@
 import { ALL_OF_KEY, UNEVALUATED_PROPERTIES_KEY } from './constants.ts';
 import isObject, { isSchemaObject } from './isObject.ts';
+import KeyedMemo from './schema/graph/keyedMemo.ts';
+import { schemaFrom } from './schema/graph/mergePlan.ts';
 import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
 
 /** The compiled form of every `patternProperties` pattern seen so far, so that testing a key against one costs no
@@ -103,6 +105,27 @@ export function allowsAdditionalProperties<S extends StrictRJSFSchema = RJSFSche
   return keyword !== undefined && keyword !== false;
 }
 
+/** The `allOf` of the patterns a key matches, by those patterns */
+const patternConjunctions = new KeyedMemo<object>();
+
+/** Returns the `allOf` of `patterns`, the same object for every key the same patterns match: a reader that keys its
+ * work on the schema it is handed, as `retrieveSchema()` parses a schema the root does not hold once per object and
+ * `omitExtraData()` merges an `allOf` once per object, would otherwise do it again for every key on every render
+ *
+ * @param template - A schema of the type to return, whose keywords are not copied
+ * @param patterns - The pattern subschemas the key matches
+ * @returns - The `allOf` of the patterns
+ */
+function patternConjunction<S extends StrictRJSFSchema>(template: S, patterns: readonly unknown[]): S {
+  const known = patternConjunctions.peek(patterns);
+  if (isSchemaObject<S>(known)) {
+    return known;
+  }
+  const conjunction = schemaFrom(template, { [ALL_OF_KEY]: patterns });
+  patternConjunctions.set(patterns, conjunction);
+  return conjunction;
+}
+
 /** Returns the subschema a key has to meet under both `own` and `other`, which each describe it, allow it (`true`
  * or `undefined`) or forbid it (`false`)
  *
@@ -145,7 +168,7 @@ function describesKey<S extends StrictRJSFSchema>(schema: S, key: string, readsU
   if (schema.patternProperties) {
     const matchingPatterns: unknown[] = Object.values(getMatchingPatternProperties<S>(schema, key));
     if (matchingPatterns.length > 0) {
-      return matchingPatterns.includes(false) ? false : { [ALL_OF_KEY]: matchingPatterns };
+      return matchingPatterns.includes(false) ? false : patternConjunction<S>(schema, matchingPatterns);
     }
   }
   return additionalPropertiesKeyword<S>(
@@ -156,9 +179,10 @@ function describesKey<S extends StrictRJSFSchema>(schema: S, key: string, readsU
 /** Returns the schema an object says applies to a `key` its own `properties` don't name, so that everything that
  * renders such a property, seeds it or decides whether it is allowed at all reads one answer rather than its own. A key
  * one or more `patternProperties` patterns match is described by all of them together, returned as an `allOf` for the
- * caller to resolve into the one schema that describes it; a `false` among them rejects the key whatever the others
- * allow, since no value satisfies it. A key no pattern matches is `additionalProperties`' to describe, `false` and
- * `true` included, which `additionalPropertiesKeyword()` reads with the precedence the keywords have.
+ * caller to resolve into the one schema that describes it, the same object for every key the same patterns match; a
+ * `false` among them rejects the key whatever the others allow, since no value satisfies it. A key no pattern matches
+ * is `additionalProperties`' to describe, `false` and `true` included, which `additionalPropertiesKeyword()` reads with
+ * the precedence the keywords have.
  *
  * A schema `retrieveSchema()` joined with the option selected beside it answers for the object and for the option
  * apart, and conjoins the two: the object's `unevaluatedProperties` says nothing about a key the option evaluates.

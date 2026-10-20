@@ -1220,19 +1220,20 @@ describe('LayoutMultiSchemaField', () => {
       ]);
     });
     test('reads the value of a selector property written as a $ref off the definition it names', () => {
+      const options: RJSFSchema[] = [
+        { type: 'object', properties: { kind: { $ref: '#/definitions/catKind' }, meow: { type: 'string' } } },
+        { type: 'object', properties: { kind: { $ref: '#/definitions/dogKind' }, bark: { type: 'string' } } },
+      ];
       const schema: RJSFSchema = {
         definitions: {
           catKind: { title: 'Cat', type: 'string', const: 'cat' },
           dogKind: { title: 'Dog', type: 'string', const: 'dog' },
         },
         discriminator: { propertyName: 'kind' },
-        oneOf: [
-          { type: 'object', properties: { kind: { $ref: '#/definitions/catKind' }, meow: { type: 'string' } } },
-          { type: 'object', properties: { kind: { $ref: '#/definitions/dogKind' }, bark: { type: 'string' } } },
-        ],
+        oneOf: options,
       };
       const { schemaUtils } = getTestRegistry(schema);
-      const enumOptions = computeEnumOptions(schema, schema[ONE_OF_KEY] as RJSFSchema[], schemaUtils);
+      const enumOptions = computeEnumOptions(schema, options, schemaUtils);
       expect(enumOptions.map(({ label, value }) => ({ label, value }))).toEqual([
         { label: 'Cat', value: 'cat' },
         { label: 'Dog', value: 'dog' },
