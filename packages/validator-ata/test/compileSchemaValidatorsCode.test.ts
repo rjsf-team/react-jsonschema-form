@@ -4,6 +4,7 @@ import type { Validator } from 'ata-validator';
 
 import nestedResourceTests from '../../utils/test/testUtils/nestedResourceTests.ts';
 import pointerValidationTests, {
+  sharedObjectValidationTests,
   sharedSubschemaValidationTests,
 } from '../../utils/test/testUtils/pointerValidationTests.ts';
 import precompiledCoverageTests from '../../utils/test/testUtils/precompiledCoverageTests.ts';
@@ -304,8 +305,11 @@ describe('compileSchemaValidatorsCode', () => {
   pointerValidationTests((rootSchema) =>
     createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(rootSchema)), rootSchema),
   );
-  sharedSubschemaValidationTests((rootSchema) =>
-    createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(rootSchema)), rootSchema),
+  sharedObjectValidationTests((compiledFrom, runWith) =>
+    createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(compiledFrom)), runWith),
+  );
+  sharedSubschemaValidationTests((compiledFrom, runWith) =>
+    createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(compiledFrom)), runWith),
   );
   test('compiles an option whose $ref leads to a boolean schema as what the boolean says', () => {
     for (const value of [true, false]) {
