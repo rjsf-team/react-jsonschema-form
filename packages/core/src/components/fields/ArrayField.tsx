@@ -671,9 +671,10 @@ function ArrayFieldItemInner<
   };
   // The toolbar is laid out level with the item's control below a label above it: one its template draws, as the plan
   // the item's `SchemaField` builds from these same props says, so the two can't disagree about it however the field is
-  // named, or one its field or widget draws itself where its declaration places that label above the control
+  // named, or one its field or widget draws itself where its declaration places that label above the control. A hidden
+  // item has no control on screen, so nothing draws a label above it
   const { presentation, labelPlacement } = useSchemaFieldPlan<T[], S, F>(itemFieldProps);
-  const labelBy = presentation?.label.by;
+  const labelBy = presentation?.control && presentation.label.by;
   const displayLabel = labelBy === 'template' || (labelBy === 'self' && labelPlacement === 'above');
   const { description } = getUiOptions(itemUiSchema);
   const hasDescription = !!description || !!itemSchema.description;

@@ -1019,7 +1019,7 @@ describe('SchemaField', () => {
         default: { label: 'self', labelPlacement: 'above' },
         widgets: { CheckboxWidget: { labelPlacement: 'beside' } },
       };
-      it.each<{ named: string; items: RJSFSchema; value: unknown; displayLabel: boolean }>([
+      it.each<{ named: string; items: RJSFSchema; uiSchema?: UiSchema; value: unknown; displayLabel: boolean }>([
         { named: 'a text input drawing its label above it', items: titled, value: 'x', displayLabel: true },
         {
           named: 'a checkbox drawing its label beside it',
@@ -1027,9 +1027,17 @@ describe('SchemaField', () => {
           value: true,
           displayLabel: false,
         },
-      ])('with $named, as its declaration places the label', ({ items, value, displayLabel }) => {
+        {
+          named: 'a hidden input, with no control on screen to draw a label above',
+          items: titled,
+          uiSchema: { items: { 'ui:widget': 'hidden' } },
+          value: 'x',
+          displayLabel: false,
+        },
+      ])('with $named, as its declaration places the label', ({ items, uiSchema, value, displayLabel }) => {
         const labels = renderItemLabels({
           schema: { type: 'array', items },
+          uiSchema,
           formData: [value],
           presentation: selfLabelled,
         });
