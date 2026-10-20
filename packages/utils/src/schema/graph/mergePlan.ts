@@ -798,8 +798,8 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     if (memoized !== undefined) {
       return memoized;
     }
-    // A field with no data is checked as an empty object, a new one each time, which a validator filling defaults in
-    // as it checks, as AJV's `useDefaults` does, may fill
+    // A field with no data is checked as an empty object: `required` constrains only objects, so the missing data
+    // itself would hold every `if` that requires a key
     const holds = this.context.validator.isValid(condition, data ?? {}, this.graph.rawRoot);
     conditionMemo.setLatest(keys, [data], holds);
     return holds;
