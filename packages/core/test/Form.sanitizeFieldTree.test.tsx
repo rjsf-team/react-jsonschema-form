@@ -1263,6 +1263,19 @@ describe('sanitize as a diff of the field trees before and after a change', () =
       expect(ref.current?.getFormData()).toEqual({ color: 'a' });
     });
 
+    it.each([
+      { state: 'disabled', flags: { disabled: true } },
+      { state: 'readonly', flags: { readonly: true } },
+    ])('leaves the value of a $state self-owned form to it as the new schema arrives, as an edit does', ({ flags }) => {
+      const ref = createRef<FormRef<{ color?: string; unrelated?: string }>>();
+      const props = { validator, initialFormData: { color: 'b' }, ...flags };
+      const { rerender } = render(<Form ref={ref} schema={colorSchema(['a', 'b'])} {...props} />);
+
+      rerender(<Form ref={ref} schema={colorSchema(['a'])} {...props} />);
+
+      expect(ref.current?.getFormData()).toEqual({ color: 'b' });
+    });
+
     it('leaves the value of a parent-owned form to the parent, at the push and at the next edit', async () => {
       const events: IChangeEvent<{ color?: string; unrelated?: string }>[] = [];
       const props = {
