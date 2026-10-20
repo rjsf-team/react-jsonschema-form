@@ -1,4 +1,4 @@
-import { render, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
 import { __createDaisyUIFrameProvider } from '../src/DaisyUIFrameProvider.tsx';
 
@@ -81,23 +81,65 @@ describe('DaisyUIFrameProvider', () => {
     expect(mockDocument.head.appendChild).toHaveBeenCalledTimes(4);
   });
 
-  test('reads the stored theme once across renders, and stores a chosen theme', () => {
+  test('stores a chosen theme once it has rendered, not while rendering', () => {
     localStorageMock['daisyui-theme'] = 'dark';
-    const DaisyUIFrame = __createDaisyUIFrameProvider({ children: <div>Test Content</div> });
-    const Chosen = __createDaisyUIFrameProvider({
+    const storedWhileRendering: (string | null)[] = [];
+    function Probe() {
+      storedWhileRendering.push(localStorageMock['daisyui-theme']);
+      return null;
+    }
+    const DaisyUIFrame = __createDaisyUIFrameProvider({ children: <Probe />, subtheme: { dataTheme: 'light' } });
+
+    const { container } = render(<DaisyUIFrame />);
+
+    expect(container.querySelector('[data-theme="light"]')).not.toBeNull();
+    expect(storedWhileRendering).toEqual(['dark']);
+    expect(mockSetItem).toHaveBeenCalledWith('daisyui-theme', 'light');
+  });
+
+  test('shows a chosen theme without reading the storage', () => {
+    const DaisyUIFrame = __createDaisyUIFrameProvider({
       children: <div>Test Content</div>,
       subtheme: { dataTheme: 'light' },
     });
 
-    const { container, rerender } = render(<DaisyUIFrame />);
-    rerender(<DaisyUIFrame />);
-    expect(container.querySelector('[data-theme="dark"]')).not.toBeNull();
-    expect(mockGetItem).toHaveBeenCalledTimes(1);
-    expect(mockSetItem).not.toHaveBeenCalled();
+    const { container } = render(<DaisyUIFrame />);
 
-    rerender(<Chosen />);
     expect(container.querySelector('[data-theme="light"]')).not.toBeNull();
-    expect(mockSetItem).toHaveBeenCalledWith('daisyui-theme', 'light');
+    expect(mockGetItem).not.toHaveBeenCalled();
+  });
+
+  test('shows a theme another provider stores after it mounted', () => {
+    localStorageMock['daisyui-theme'] = 'cupcake';
+    const Unchosen = __createDaisyUIFrameProvider({ children: <div>Unchosen</div> });
+    const Chosen = __createDaisyUIFrameProvider({ children: <div>Chosen</div>, subtheme: { dataTheme: 'dark' } });
+    function Page({ withChosen }: { withChosen: boolean }) {
+      return (
+        <>
+          <Unchosen />
+          {withChosen && <Chosen />}
+        </>
+      );
+    }
+    const { rerender } = render(<Page withChosen={false} />);
+    expect(screen.getByText('Unchosen').closest('[data-theme]')).toHaveAttribute('data-theme', 'cupcake');
+
+    rerender(<Page withChosen />);
+
+    expect(screen.getByText('Unchosen').closest('[data-theme]')).toHaveAttribute('data-theme', 'dark');
+  });
+
+  test('shows a theme another tab stores', () => {
+    localStorageMock['daisyui-theme'] = 'cupcake';
+    const DaisyUIFrame = __createDaisyUIFrameProvider({ children: <div>Test Content</div> });
+    const { container } = render(<DaisyUIFrame />);
+    expect(container.querySelector('[data-theme="cupcake"]')).not.toBeNull();
+
+    localStorageMock['daisyui-theme'] = 'dark';
+    // Another tab's write reaches this document only as a `storage` event, which nothing a user does here dispatches
+    fireEvent(window, new StorageEvent('storage', { key: 'daisyui-theme', newValue: 'dark' }));
+
+    expect(container.querySelector('[data-theme="dark"]')).not.toBeNull();
   });
 
   test('falls back to the theme last stored when the chosen theme is cleared', () => {
@@ -115,7 +157,6 @@ describe('DaisyUIFrameProvider', () => {
     rerender(<Frame />);
 
     expect(container.querySelector('[data-theme="dark"]')).not.toBeNull();
-    expect(mockGetItem).toHaveBeenCalledTimes(1);
   });
 
   test('handles localStorage exceptions gracefully', () => {
