@@ -565,6 +565,8 @@ id="root_first">` when rendering `first`.
 
 The seed of the form's data, the way `defaultValue` works on an `<input>`. It is read, and filled in with the schema's defaults, when the form mounts and when `reset()` is called, and ignored otherwise, so a value written inline does not replace the data the form holds on a re-render. Every edit is reported through [`onChange`](#onchange); read the current value with [`getFormData()`](../advanced-customization/internals.md#read-form-data-programmatically). When both props are passed, [`formData`](#formdata), a deprecated name for this prop, is the seed and `initialFormData` is ignored. To show other data after mount, remount the form under a `key`, or call `setFieldValue('', data)` on its ref.
 
+The form's data shares its unchanged parts with the object you pass, so don't mutate that object afterwards; change a copy. In development the form freezes it from its first edit, validation, submit or reset on, so a mutation throws.
+
 ## nameGenerator
 
 The `nameGenerator` prop allows you to customize how HTML `name` attributes are generated for form fields. This is essential when submitting form data to backend frameworks that expect specific naming conventions for structured data.
