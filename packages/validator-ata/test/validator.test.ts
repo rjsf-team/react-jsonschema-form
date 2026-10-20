@@ -19,6 +19,7 @@ import type { Validator } from 'ata-validator';
 import nestedResourceTests from '../../utils/test/testUtils/nestedResourceTests.ts';
 import pointerValidationTests, {
   absoluteRefValidationTests,
+  sharedObjectValidationTests,
 } from '../../utils/test/testUtils/pointerValidationTests.ts';
 import relativeOptionScoringTests from '../../utils/test/testUtils/relativeOptionScoringTests.ts';
 import customizeValidator from '../src/customizeValidator.ts';
@@ -665,6 +666,7 @@ describe('ATAValidator validating a subschema by its place in the root', () => {
 
 pointerValidationTests(() => customizeValidator());
 absoluteRefValidationTests(() => customizeValidator());
+sharedObjectValidationTests(() => customizeValidator());
 
 describe('ATAValidator', () => {
   nestedResourceTests(() => customizeValidator());

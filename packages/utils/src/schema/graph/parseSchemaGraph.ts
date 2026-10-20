@@ -496,7 +496,9 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
     if (startsResource && !this.resources.has(key)) {
       this.resources.set(key, node);
     }
-    if (anchor !== undefined) {
+    // The first subschema declaring an anchor keeps it, as the first declaring an `$id` keeps the resource, so an
+    // anchor a root repeats in equal subschemas names one place whether or not the root shares one object for them
+    if (anchor !== undefined && !this.anchors.has(`${key}#${anchor}`)) {
       this.anchors.set(`${key}#${anchor}`, node.id);
     }
   }

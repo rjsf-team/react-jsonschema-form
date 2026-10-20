@@ -1,5 +1,5 @@
 import type { RJSFSchema, ValidatorType } from '../../src/index.ts';
-import { createSchemaUtils, getDefaultFormState, isObject } from '../../src/index.ts';
+import { createSchemaUtils, getDefaultFormState, getValidationTarget, isObject } from '../../src/index.ts';
 
 /** Returns the `anyOf`/`oneOf` options of the `schema`'s own keyword `key` */
 function optionsOf(schema: RJSFSchema | boolean | undefined, key: 'anyOf' | 'oneOf'): RJSFSchema[] {
@@ -363,13 +363,213 @@ export default function pointerValidationTests(buildValidator: (rootSchema: RJSF
   });
 }
 
+/** Returns the package's validator for the root `runWith`, which equals `compiledFrom` but may share other objects: a
+ * precompiled validator is compiled from `compiledFrom` and handed `runWith`
+ */
+export type BuildValidatorFor = (compiledFrom: RJSFSchema, runWith: RJSFSchema) => ValidatorType;
+
+/** Returns a maker of the object `make` makes, for a root built from what it makes: one sharing objects gets the
+ * same object at every place it uses one, and an equal root sharing none, as `JSON.parse()` would make, a new one
+ */
+type Reuse = <T>(make: () => T) => () => T;
+
+const sharing: Reuse = (make) => {
+  const made = make();
+  return () => made;
+};
+
+const copying: Reuse = (make) => make;
+
+/** The pairs of equal roots a precompiled validator is compiled from and run with, which share different objects */
+const SHARINGS: [string, Reuse, Reuse][] = [
+  ['compiled from a root sharing objects and run with an equal one sharing none', sharing, copying],
+  ['compiled from a root sharing no objects and run with an equal one sharing them', copying, sharing],
+];
+
+/** Runs the cases where a precompiled validator is compiled from a root and handed an equal one that shares other
+ * objects, such as a module's schema and its JSON copy: the form has to name a subschema the root holds in several
+ * places the same way whichever objects the root shares. Each validator package runs them against its live validator
+ * and, where it has one, its precompiled one.
+ *
+ * @param buildValidator - Returns the package's validator for a root equal to the one it was compiled from
+ */
+export function sharedObjectValidationTests(buildValidator: BuildValidatorFor) {
+  describe.each(SHARINGS)('validating %s', (_name, compiledReuse, runReuse) => {
+    /** Returns the schema utils for the root `build` makes, with the validator compiled from the equal root it makes */
+    function utilsFor(build: (reuse: Reuse) => RJSFSchema) {
+      const rootSchema = build(runReuse);
+      const validator = buildValidator(build(compiledReuse), rootSchema);
+      return { rootSchema, validator, schemaUtils: createSchemaUtils({ validator }, rootSchema) };
+    }
+
+    it('reads an object holding an if and options at each place the root holds it', () => {
+      const { rootSchema, schemaUtils } = utilsFor((reuse) => {
+        const contact = reuse((): RJSFSchema => ({
+          type: 'object',
+          properties: { kind: { enum: ['email', 'phone'] } },
+          oneOf: [
+            { type: 'object', properties: { email: { type: 'string' } }, required: ['email'] },
+            { type: 'object', properties: { phone: { type: 'string' } }, required: ['phone'] },
+          ],
+          if: { properties: { kind: { const: 'email' } }, required: ['kind'] },
+          then: { properties: { verified: { type: 'boolean', default: false } } },
+        }));
+        return { type: 'object', properties: { home: contact(), work: contact() } };
+      });
+      expect(schemaUtils.getDefaultFormState(rootSchema, { work: { kind: 'email' } })).toEqual({
+        work: { kind: 'email', verified: false },
+      });
+      for (const field of ['home', 'work']) {
+        const options = optionsOf(rootSchema.properties?.[field], 'oneOf');
+        const data = { phone: '1' };
+        const retrieved = options.map((option) => schemaUtils.retrieveSchema(option, data));
+        expect(schemaUtils.getFirstMatchingOption(data, retrieved)).toBe(1);
+        expect(schemaUtils.getClosestMatchingOption(data, retrieved)).toBe(1);
+      }
+      expect(schemaUtils.omitExtraData(rootSchema, { work: { kind: 'phone', phone: '1', fax: '2' } })).toEqual({
+        work: { kind: 'phone', phone: '1' },
+      });
+    });
+    it('scores an option holding a subschema the root holds elsewhere too', () => {
+      const { rootSchema, schemaUtils } = utilsFor((reuse) => {
+        const text = reuse((): RJSFSchema => ({ type: 'string' }));
+        const contact = (): RJSFSchema => ({
+          type: 'object',
+          oneOf: [
+            { type: 'object', properties: { email: text() }, required: ['email'] },
+            { type: 'object', properties: { phone: { type: 'string' } }, required: ['phone'] },
+          ],
+        });
+        return { type: 'object', properties: { name: text(), home: contact(), work: contact() } };
+      });
+      for (const field of ['home', 'work']) {
+        const options = optionsOf(rootSchema.properties?.[field], 'oneOf');
+        const data = { email: 'a' };
+        const retrieved = options.map((option) => schemaUtils.retrieveSchema(option, data));
+        expect(schemaUtils.getFirstMatchingOption(data, retrieved)).toBe(0);
+        expect(schemaUtils.getClosestMatchingOption(data, retrieved, 1)).toBe(0);
+      }
+      expect(schemaUtils.omitExtraData(rootSchema, { home: { email: 'a', fax: '2' } })).toEqual({
+        home: { email: 'a' },
+      });
+    });
+    it('names an option where the root holds it as one, though it holds the object first as a property', () => {
+      const { rootSchema, validator, schemaUtils } = utilsFor((reuse) => {
+        const byEmail = reuse((): RJSFSchema => ({
+          type: 'object',
+          properties: { email: { type: 'string' } },
+          required: ['email'],
+        }));
+        const byPhone: RJSFSchema = { type: 'object', properties: { phone: { type: 'string' } }, required: ['phone'] };
+        return { type: 'object', properties: { primary: byEmail(), contact: { oneOf: [byEmail(), byPhone] } } };
+      });
+      const options = optionsOf(rootSchema.properties?.contact, 'oneOf');
+      expect(schemaUtils.getFirstMatchingOption({ phone: '1' }, options)).toBe(1);
+      expect(schemaUtils.getClosestMatchingOption({ email: 'a' }, options, 1)).toBe(0);
+      const chosen = schemaUtils.retrieveSchema(options[0], { email: 'a' });
+      expect(validator.isValid(getValidationTarget(chosen, rootSchema), { email: 'a' }, rootSchema)).toBe(true);
+    });
+    it('checks an if where the root holds it as one, though it holds the object first as a definition', () => {
+      const { rootSchema, schemaUtils } = utilsFor((reuse) => {
+        const isEmail = reuse((): RJSFSchema => ({ properties: { kind: { const: 'email' } }, required: ['kind'] }));
+        return {
+          definitions: { isEmail: isEmail() },
+          type: 'object',
+          properties: { kind: { type: 'string' } },
+          if: isEmail(),
+          then: { properties: { verified: { type: 'boolean', default: false } } },
+        };
+      });
+      expect(schemaUtils.getDefaultFormState(rootSchema, { kind: 'email' })).toEqual({
+        kind: 'email',
+        verified: false,
+      });
+      expect(schemaUtils.omitExtraData(rootSchema, { kind: 'email', verified: true, fax: '2' })).toEqual({
+        kind: 'email',
+        verified: true,
+      });
+    });
+    it('matches a dependency oneOf option the root holds first as an option of a property', () => {
+      const { rootSchema, schemaUtils } = utilsFor((reuse) => {
+        const work = reuse((): RJSFSchema => ({
+          properties: { kind: { enum: ['work'] }, ext: { type: 'string', default: 'EXT' } },
+        }));
+        return {
+          type: 'object',
+          properties: { kind: { type: 'string', enum: ['home', 'work'] }, sample: { oneOf: [work()] } },
+          dependencies: { kind: { oneOf: [{ properties: { kind: { enum: ['home'] } } }, work()] } },
+        };
+      });
+      expect(schemaUtils.getDefaultFormState(rootSchema, { kind: 'work', sample: {} })).toEqual({
+        kind: 'work',
+        sample: { ext: 'EXT' },
+        ext: 'EXT',
+      });
+    });
+    it('scores an option through a $ref by the place the $ref names, which the root holds first elsewhere', () => {
+      const { rootSchema, schemaUtils } = utilsFor((reuse) => {
+        const base = reuse((): RJSFSchema => ({ type: 'object', properties: { id: { type: 'string' } } }));
+        return {
+          type: 'object',
+          properties: {
+            b: base(),
+            v: {
+              oneOf: [
+                { $ref: '#/definitions/Base', required: ['id'] },
+                { type: 'object', properties: { n: { type: 'number' } }, required: ['n'] },
+              ],
+            },
+          },
+          definitions: { Base: base() },
+        };
+      });
+      const options = optionsOf(rootSchema.properties?.v, 'oneOf');
+      expect(schemaUtils.getFirstMatchingOption({ n: 1 }, options)).toBe(1);
+      expect(schemaUtils.getClosestMatchingOption({ id: 'a' }, options, 1)).toBe(0);
+    });
+  });
+}
+
 /** Runs the cases where one subschema object sits in two resources, the root and a nested `$id`, so the form has to
  * name the one the option it scores sits in. ata's and cfworker's engines resolve such an object against one of the
  * resources whatever the pointer names, so only the validators whose engines resolve it run them.
  *
- * @param buildValidator - Returns the package's validator for the `rootSchema`
+ * @param buildValidator - Returns the package's validator for a root equal to the one it was compiled from
  */
-export function sharedSubschemaValidationTests(buildValidator: (rootSchema: RJSFSchema) => ValidatorType) {
+export function sharedSubschemaValidationTests(buildValidator: BuildValidatorFor) {
+  describe.each(SHARINGS)(
+    'scores an option in a nested $id against that resource, holding an object the resource holds first elsewhere, %s',
+    (_name, compiledReuse, runReuse) => {
+      it('choosing the option whose property the resource defines', () => {
+        const build = (reuse: Reuse): RJSFSchema => {
+          const ofKind = reuse((): RJSFSchema => ({ $ref: '#/definitions/K' }));
+          return {
+            definitions: { K: { type: 'string', const: 'root' } },
+            type: 'object',
+            properties: {
+              a: { type: 'object', properties: { k: ofKind() } },
+              n: {
+                $id: 'http://example.com/nested.json',
+                definitions: { K: { type: 'string', const: 'nested' }, Kind: ofKind() },
+                oneOf: [
+                  { type: 'object', properties: { z: { type: 'string' } } },
+                  { type: 'object', properties: { k: ofKind() }, required: ['k'] },
+                ],
+              },
+            },
+          };
+        };
+        const rootSchema = build(runReuse);
+        const schemaUtils = createSchemaUtils(
+          { validator: buildValidator(build(compiledReuse), rootSchema) },
+          rootSchema,
+        );
+        const options = optionsOf(rootSchema.properties?.n, 'oneOf');
+        expect(schemaUtils.getFirstMatchingOption({ k: 'nested' }, options)).toBe(1);
+        expect(schemaUtils.getClosestMatchingOption({ k: 'nested' }, options)).toBe(1);
+      });
+    },
+  );
   describe('scores an option in a nested $id against that resource where it shares a subschema object with the root', () => {
     const property: RJSFSchema = { $ref: '#/definitions/K' };
     const entry: RJSFSchema = { properties: { k: { $ref: '#/definitions/K' } }, required: ['k'] };
@@ -391,7 +591,7 @@ export function sharedSubschemaValidationTests(buildValidator: (rootSchema: RJSF
           },
         },
       };
-      const schemaUtils = createSchemaUtils({ validator: buildValidator(rootSchema) }, rootSchema);
+      const schemaUtils = createSchemaUtils({ validator: buildValidator(rootSchema, rootSchema) }, rootSchema);
       expect(schemaUtils.getFirstMatchingOption({ k: 'nested' }, options)).toBe(1);
       expect(schemaUtils.getClosestMatchingOption({ k: 'nested' }, options)).toBe(1);
     });

@@ -3,6 +3,7 @@ import parseSchemaGraph from '../../../src/schema/graph/parseSchemaGraph.ts';
 import type { SchemaGraph } from '../../../src/schema/graph/parseSchemaGraph.ts';
 import {
   declaredPropertyTarget,
+  dependencyCondition,
   holdsDeclaredKey,
   pointerTo,
   scoringTarget,
@@ -62,6 +63,15 @@ describe('pointerTo()', () => {
     const { graph: overlay, node } = graph.adopt(outside);
     expect(pointerTo(overlay, node)).toBeUndefined();
     expect(targetOf(overlay, node)).toBe(outside);
+  });
+  it('names an option and an if where the root holds them as one, though it holds the objects first elsewhere', () => {
+    const option: RJSFSchema = { type: 'string' };
+    const condition: RJSFSchema = { required: ['a'] };
+    const root: RJSFSchema = { properties: { a: option, c: condition }, anyOf: [option], if: condition };
+    const graph = parseSchemaGraph(root);
+    expect(pointerTo(graph, nodeAt(graph, '/properties/a'))).toEqual({ $ref: '#/anyOf/0' });
+    expect(pointerTo(graph, nodeAt(graph, '/properties/c'))).toEqual({ $ref: '#/if' });
+    expect(validationTargets(graph)).toEqual(expect.arrayContaining([{ $ref: '#/anyOf/0' }, { $ref: '#/if' }]));
   });
   it('names nothing for a $ref that resolves to nothing', () => {
     const root: RJSFSchema = { properties: { a: { $ref: '#/definitions/missing' } } };
@@ -168,6 +178,33 @@ describe('scoringTarget()', () => {
       properties: { kind: { $ref: '#/oneOf/0/properties/kind' } },
     });
   });
+  it('names the subschemas below an option the root holds first as a property at the place it is an option', () => {
+    const text: RJSFSchema = { type: 'string' };
+    const option: RJSFSchema = { properties: { email: text }, required: ['email'] };
+    const schema: RJSFSchema = { properties: { name: text, primary: option }, oneOf: [option] };
+    expect(scored(schema, '/properties/primary')).toEqual({
+      properties: { email: { $ref: '#/oneOf/0/properties/email' } },
+    });
+  });
+  it('names the subschemas behind a $ref at the place it names, where the root holds the target first elsewhere', () => {
+    const base: RJSFSchema = { properties: { id: { type: 'string' } } };
+    const schema: RJSFSchema = {
+      properties: { b: base },
+      definitions: { Base: base },
+      oneOf: [{ $ref: '#/definitions/Base', required: ['id'] }],
+    };
+    expect(scored(schema, '/oneOf/0')).toEqual({
+      allOf: [{ properties: { id: { $ref: '#/definitions/Base/properties/id' } } }],
+    });
+  });
+  it('names an allOf entry holding the option itself at its place rather than copying it without end', () => {
+    const option: RJSFSchema = { properties: { x: {} }, required: ['x'] };
+    option.allOf = [option];
+    expect(scored({ oneOf: [option] }, '/oneOf/0')).toEqual({
+      properties: { x: { $ref: '#/oneOf/0/properties/x' } },
+      allOf: [{ $ref: '#/oneOf/0/allOf/0' }],
+    });
+  });
 });
 
 describe('declaredPropertyTarget()', () => {
@@ -182,7 +219,15 @@ describe('declaredPropertyTarget()', () => {
     expect(target).toEqual({
       allOf: [{ $ref: '#/definitions/Base/properties/kind' }, { $ref: '#/oneOf/0/allOf/1/properties/kind' }],
     });
-    expect(validationTargets(graph)).toContain(target);
+    expect(validationTargets(graph)).toContainEqual(target);
+  });
+  it('checks the value against each place of a declaration the scope holds twice, as against two copies of it', () => {
+    const kind: RJSFSchema = { properties: { kind: { type: 'string' } } };
+    const root: RJSFSchema = { discriminator: { propertyName: 'kind' }, oneOf: [{ allOf: [kind, kind] }] };
+    const graph = parseSchemaGraph(root);
+    expect(declaredPropertyTarget(graph, nodeAt(graph, '/oneOf/0'), 'kind')).toEqual({
+      allOf: [{ $ref: '#/oneOf/0/allOf/0/properties/kind' }, { $ref: '#/oneOf/0/allOf/1/properties/kind' }],
+    });
   });
   it('reads only the first declaration of a then or an else, which apply to different data', () => {
     const root: RJSFSchema = {
@@ -194,6 +239,23 @@ describe('declaredPropertyTarget()', () => {
     expect(declaredPropertyTarget(graph, nodeAt(graph, '/oneOf/0'), 'kind')).toEqual({
       $ref: '#/oneOf/0/then/properties/kind',
     });
+  });
+});
+
+describe('dependencyCondition()', () => {
+  it('names an option where the root holds it as an option of that dependency, though it holds it first elsewhere', () => {
+    const work: RJSFSchema = { properties: { kind: { enum: ['work'] } } };
+    const root: RJSFSchema = {
+      properties: { kind: { type: 'string' }, sample: { oneOf: [work] } },
+      dependencies: { kind: { oneOf: [{ properties: { kind: { enum: ['home'] } } }, work] } },
+    };
+    const graph = parseSchemaGraph(root);
+    const condition = dependencyCondition(graph, nodeAt(graph, '/properties/sample/oneOf/0'), 'kind');
+    expect(condition).toEqual({
+      type: 'object',
+      properties: { kind: { $ref: '#/dependencies/kind/oneOf/1/properties/kind' } },
+    });
+    expect(validationTargets(graph)).toContainEqual(condition);
   });
 });
 
@@ -233,6 +295,48 @@ describe('validationTargets()', () => {
     expect(validationTargets(parseSchemaGraph(schema))).not.toContainEqual(
       expect.objectContaining({ type: 'object', properties: expect.anything() }),
     );
+  });
+});
+
+describe('validationTargets() of a root sharing objects', () => {
+  /** The targets listed for the root, but the root itself */
+  const listed = (root: RJSFSchema) => validationTargets(parseSchemaGraph(root)).slice(1);
+  it('lists an object the root holds in two places at each, as it lists two equal copies of it', () => {
+    const contact = (): RJSFSchema => ({
+      properties: { kind: { type: 'string' } },
+      oneOf: [{ properties: { email: { type: 'string' } }, required: ['email'] }],
+      if: { required: ['kind'] },
+    });
+    const shared = contact();
+    const sharing = listed({ properties: { home: shared, work: shared } });
+    expect(sharing).toEqual(listed({ properties: { home: contact(), work: contact() } }));
+    expect(sharing).toEqual(
+      expect.arrayContaining([{ $ref: '#/properties/home/if' }, { $ref: '#/properties/work/if' }]),
+    );
+  });
+  it('lists the places of a root holding itself through its own objects up to where one recurs, whichever it shares', () => {
+    const looping = (): RJSFSchema => {
+      const node: RJSFSchema = {
+        type: 'object',
+        oneOf: [{ properties: { a: { type: 'string' } }, required: ['a'] }, { properties: { b: { type: 'string' } } }],
+      };
+      node.properties = { next: node };
+      return node;
+    };
+    const shared = looping();
+    const sharing: RJSFSchema = { properties: { x: shared, y: shared } };
+    const separate: RJSFSchema = { properties: { x: looping(), y: looping() } };
+    expect(listed(sharing)).toEqual(listed(separate));
+    const graph = parseSchemaGraph(separate);
+    expect(listed(sharing)).toContainEqual(scoringTarget(graph, nodeAt(graph, '/properties/y/oneOf/0'), false));
+    expect(listed(sharing)).not.toContainEqual({ $ref: '#/properties/x/properties/next/oneOf/0' });
+  });
+  it('lists the subschemas below the place a $ref names under a keyword no walk follows', () => {
+    const root: RJSFSchema = {
+      $ref: '#/components/schemas/Pet',
+      components: { schemas: { Pet: { oneOf: [{ type: 'string' }] } } },
+    };
+    expect(listed(root)).toContainEqual({ $ref: '#/components/schemas/Pet/oneOf/0' });
   });
 });
 

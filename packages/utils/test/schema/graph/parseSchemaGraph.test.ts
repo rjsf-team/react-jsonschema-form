@@ -370,6 +370,14 @@ describe('parseSchemaGraph()', () => {
     const reference = objectNode(graph, graph.child(withSiblings.conjunction ?? -1, 'allOf', '1'));
     expect(reference.refPointer).toBe('/$defs/again');
   });
+  it('keeps an $anchor on the first subschema declaring it, as an $id keeps its resource', () => {
+    const graph = parseSchemaGraph({
+      $schema: JSON_SCHEMA_DRAFT_2020_12,
+      $defs: { a: { $anchor: 'foo', type: 'string' }, b: { $anchor: 'foo', type: 'string' } },
+      properties: { p: { $ref: '#foo' } },
+    });
+    expect(target(graph, '/properties/p').pointer).toBe('/$defs/a');
+  });
   it('reads $anchor as no keyword under a draft-07 root', () => {
     const graph = parseSchemaGraph({
       $schema: 'http://json-schema.org/draft-07/schema#',

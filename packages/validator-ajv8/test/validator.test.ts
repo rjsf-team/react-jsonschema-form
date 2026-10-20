@@ -28,6 +28,7 @@ import type { Mock } from 'vitest';
 import nestedResourceTests from '../../utils/test/testUtils/nestedResourceTests.ts';
 import pointerValidationTests, {
   absoluteRefValidationTests,
+  sharedObjectValidationTests,
   sharedSubschemaValidationTests,
 } from '../../utils/test/testUtils/pointerValidationTests.ts';
 import relativeOptionScoringTests from '../../utils/test/testUtils/relativeOptionScoringTests.ts';
@@ -3628,6 +3629,7 @@ describe('AJV8Validator validating a subschema by its place in the root', () => 
 
 pointerValidationTests(() => customizeValidator());
 absoluteRefValidationTests(() => customizeValidator());
+sharedObjectValidationTests(() => customizeValidator());
 sharedSubschemaValidationTests(() => customizeValidator());
 
 describe('AJV8Validator', () => {

@@ -18,10 +18,11 @@ import {
 import hashForSchema from '../../hashForSchema.ts';
 import isObject, { isSchemaObject } from '../../isObject.ts';
 import { getByPath } from '../../pathUtils.ts';
+import { keywordShape } from '../../schemaUri.ts';
 import type { GenericObjectType, RJSFSchema, StrictRJSFSchema } from '../../types.ts';
 import KeyedMemo from './keyedMemo.ts';
 import { booleanSchema, schemaFrom } from './mergePlan.ts';
-import { isRootPointer } from './parseSchemaGraph.ts';
+import { childPointer, isRootPointer } from './parseSchemaGraph.ts';
 import type { NodeId, ObjectNode, SchemaGraph } from './parseSchemaGraph.ts';
 
 /** The suffix `withVariantId()` adds to an `$id`, matched at the end so deriving a variant of a variant replaces it
@@ -69,14 +70,140 @@ function refTo(pointer: string): string {
   return `#${pointer.replace(/[^\uD800-\uDFFF]+/gu, (wellFormed) => encodeURI(wellFormed)).replaceAll('#', '%23')}`;
 }
 
+/** Returns `{ $ref }` naming the subschema at the JSON `pointer` in the root */
+function refAt(pointer: string): GenericObjectType {
+  return { [REF_KEY]: refTo(pointer) };
+}
+
+/** Where the root holds a subschema: a JSON pointer into it, or undefined for a subschema it does not hold, such as one
+ * parsed from outside it
+ */
+type Place = string | undefined;
+
+/** Returns the place below `place` at the unescaped pointer `tokens` */
+function placeBelow(place: Place, tokens: readonly string[]): Place {
+  return place === undefined ? undefined : childPointer(place, tokens);
+}
+
+/** Returns what tells the subschema `id` reached at `place` apart from the others on a walk: the place, or, for one
+ * with no place in the root, the node
+ */
+function placeKey(id: NodeId, place: Place): string {
+  return place ?? `@${id}`;
+}
+
+/** Returns the place the `$ref` of `node` names in the root, see `ObjectNode.refPointer` */
+function refPlace(node: ObjectNode): Place {
+  return node.refPointer !== undefined && isRootPointer(node.refPointer) ? node.refPointer : undefined;
+}
+
+/** Returns the place the node `id` was first found at in the root, if it was */
+function firstPlace<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId): Place {
+  const node = graph.node(id);
+  return node.kind === 'schema' && isRootPointer(node.pointer) ? node.pointer : undefined;
+}
+
+/** Returns what a validator checks the subschema `id` reached at `place` with: `{ $ref }` naming the place, or, where
+ * it has none or for a boolean, what `targetOf()` hands it
+ */
+function targetAt<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId, place: Place): S {
+  return place !== undefined && graph.node(id).kind === 'schema'
+    ? schemaFrom(graph.rawRoot, refAt(place))
+    : targetOf(graph, id);
+}
+
+/** The role of an `anyOf`/`oneOf` option in `Reached` */
+const OPTION_ROLE = 'option';
+
+/** A subschema a form validates data against, reached from the subschema holding it as the `role` says: `if` for its
+ * `if`, `option` for one of its `anyOf`/`oneOf` options, or `dependencies/<key>` for a `oneOf` option of its
+ * `dependencies` entry `key`
+ */
+interface Reached {
+  readonly role: string;
+  readonly id: NodeId;
+  readonly place: Place;
+  readonly key?: string;
+}
+
+/** Returns the subschemas a form validates data against that the subschema `id` holds where the root holds it at
+ * `place`, each at the place it is reached at below that one, see `Reached`
+ */
+function reachedFrom<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId, place: string): Reached[] {
+  const reached: Reached[] = [];
+  const condition = graph.child(id, IF_KEY);
+  if (condition !== undefined) {
+    reached.push({ role: IF_KEY, id: condition, place: childPointer(place, [IF_KEY]) });
+  }
+  for (const keyword of [ANY_OF_KEY, ONE_OF_KEY]) {
+    for (const [index, option] of graph.subschemas(id, keyword)) {
+      reached.push({ role: OPTION_ROLE, id: option, place: childPointer(place, [keyword, index]) });
+    }
+  }
+  for (const [key, dependency] of graph.subschemas(id, DEPENDENCIES_KEY)) {
+    for (const provider of scopeAt(graph, dependency, childPointer(place, [DEPENDENCIES_KEY, key]))) {
+      for (const [index, option] of graph.subschemas(provider.node.id, ONE_OF_KEY)) {
+        const role = `${DEPENDENCIES_KEY}/${key}`;
+        reached.push({ role, id: option, place: placeBelow(provider.place, [ONE_OF_KEY, index]), key });
+      }
+    }
+  }
+  return reached;
+}
+
+/** The places `placesOf()` finds, per root graph */
+const placesMemo = new KeyedMemo<ReadonlyMap<string, ReadonlyMap<NodeId, string>>>();
+
+/** Returns the graph `graph` extends with schemas from outside the root, or the graph itself */
+function rootGraphOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>): SchemaGraph<S> {
+  return graph.base === undefined ? graph : rootGraphOf(graph.base);
+}
+
+/** Returns, per role `Reached` names, a place where the root of `graph` holds each node in that role: the place below
+ * where the root first holds the subschema holding it. A precompiled validator lists every place a root holds a
+ * subschema at in each role, see `validationTargets()`, so any of them is found in one compiled from any equal root,
+ * whichever objects that root shares. The place a node was first found at is not enough: the root may hold one object
+ * first as a property and only later as an option.
+ */
+function placesOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>): ReadonlyMap<string, ReadonlyMap<NodeId, string>> {
+  const root = rootGraphOf(graph);
+  return placesMemo.get([root], () => {
+    const places = new Map<string, Map<NodeId, string>>();
+    for (let id = 0; id < root.size; id += 1) {
+      const place = firstPlace(root, id);
+      for (const reached of place === undefined ? [] : reachedFrom(root, id, place)) {
+        const byNode = places.get(reached.role) ?? new Map<NodeId, string>();
+        places.set(reached.role, byNode);
+        if (reached.place !== undefined && !byNode.has(reached.id)) {
+          byNode.set(reached.id, reached.place);
+        }
+      }
+    }
+    return places;
+  });
+}
+
+/** Returns the place where the root first holds the node `id` in the `role` `Reached` names */
+function placeAs<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, role: string, id: NodeId): Place {
+  return placesOf(graph).get(role)?.get(id);
+}
+
+/** Returns the place a form names the option `id` at: where the root holds it as an option, or else where it was
+ * first found
+ */
+function optionPlace<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId): Place {
+  return placeAs(graph, OPTION_ROLE, id) ?? firstPlace(graph, id);
+}
+
 /** The `{ $ref }` `pointerTo()` names each node by, per graph and node, or `null` for a node it gives none, so a
  * validator caching what it compiles by schema is handed the same object for a node every time
  */
 const pointers = new KeyedMemo<object | null>();
 
-/** Returns `{ $ref }` naming the node `id` where it sits in the root, which a validator resolves against the root it is
- * given, or undefined for a node with no location there or a boolean one, which holds no `$ref` for a pointer to keep
- * in reach and which ata reads as `true` behind a `$ref`
+/** Returns `{ $ref }` naming the node `id` at a place the root holds it, which a validator resolves against the root it
+ * is given: where it is an option, or else an `if`, which is where `validationTargets()` lists a pointer, or else where
+ * it was first found. Undefined for a node with no place there or a boolean one, which holds no `$ref` for a pointer to
+ * keep in reach and which ata reads as `true` behind a `$ref`.
  *
  * @param graph - The graph of the root
  * @param id - The node to name
@@ -84,8 +211,8 @@ const pointers = new KeyedMemo<object | null>();
  */
 export function pointerTo<S extends StrictRJSFSchema = RJSFSchema>(graph: SchemaGraph<S>, id: NodeId): S | undefined {
   const pointer = pointers.get([graph, id], () => {
-    const node = graph.node(id);
-    return node.kind === 'schema' && isRootPointer(node.pointer) ? { [REF_KEY]: refTo(node.pointer) } : null;
+    const place = placeAs(graph, OPTION_ROLE, id) ?? placeAs(graph, IF_KEY, id) ?? firstPlace(graph, id);
+    return place === undefined || graph.node(id).kind !== 'schema' ? null : refAt(place);
   });
   return isSchemaObject<S>(pointer) ? pointer : undefined;
 }
@@ -106,44 +233,82 @@ export function targetOf<S extends StrictRJSFSchema = RJSFSchema>(graph: SchemaG
   return node.kind === 'schema' ? node.raw : booleanSchema(node, graph.rawRoot);
 }
 
+/** A subschema in an option's scope, and the place the walk of the scope reached it at */
+interface Member<S extends StrictRJSFSchema> {
+  readonly node: ObjectNode<S>;
+  readonly place: Place;
+}
+
 /** Returns the nodes whose keywords apply wherever the node `id` applies: the node, what its `$ref` resolves to and its
  * `allOf` entries, and, unless `unconditional`, its `then`/`else` and its `dependencies` schemas, which apply only for
- * some data. Each is followed the same way and listed once.
+ * some data. Each is followed the same way, at the place it is reached at from `place`: below it, or where a `$ref`
+ * names. A place is listed once, so one object the root holds in two places of the scope is listed at each, as two
+ * equal copies of it would be; a node with no place is listed once. An object reached again below itself, which only
+ * a root holding itself through its own objects does, is not followed.
  */
-function scopeOf<S extends StrictRJSFSchema>(
+function scopeAt<S extends StrictRJSFSchema>(
   graph: SchemaGraph<S>,
   id: NodeId,
+  place: Place,
   unconditional = false,
-): ObjectNode<S>[] {
-  const seen = new Set<NodeId>();
-  const nodes: ObjectNode<S>[] = [];
-  const visit = (next: NodeId | undefined) => {
-    if (next === undefined || seen.has(next)) {
+): Member<S>[] {
+  const seen = new Set<string>();
+  const members: Member<S>[] = [];
+  const visit = (next: NodeId | undefined, at: Place, above: ReadonlySet<NodeId>) => {
+    if (next === undefined || above.has(next) || seen.has(placeKey(next, at))) {
       return;
     }
-    seen.add(next);
+    seen.add(placeKey(next, at));
     const node = graph.node(next);
     if (node.kind !== 'schema') {
       return;
     }
-    nodes.push(node);
-    visit(node.ref);
-    graph.subschemas(next, ALL_OF_KEY).forEach(([, member]) => visit(member));
+    members.push({ node, place: at });
+    const inner = new Set(above).add(next);
+    visit(node.ref, refPlace(node), new Set());
+    graph
+      .subschemas(next, ALL_OF_KEY)
+      .forEach(([index, member]) => visit(member, placeBelow(at, [ALL_OF_KEY, index]), inner));
     if (unconditional) {
       return;
     }
-    visit(graph.child(next, THEN_KEY));
-    visit(graph.child(next, ELSE_KEY));
-    graph.subschemas(next, DEPENDENCIES_KEY).forEach(([, dependency]) => visit(dependency));
+    visit(graph.child(next, THEN_KEY), placeBelow(at, [THEN_KEY]), inner);
+    visit(graph.child(next, ELSE_KEY), placeBelow(at, [ELSE_KEY]), inner);
+    graph
+      .subschemas(next, DEPENDENCIES_KEY)
+      .forEach(([key, dependency]) => visit(dependency, placeBelow(at, [DEPENDENCIES_KEY, key]), inner));
   };
-  visit(id);
-  return nodes;
+  visit(id, place, new Set());
+  return members;
 }
 
-/** Returns the nodes of the property `key` the option `id` declares: every declaration that applies whatever the data,
- * as the OpenAPI spelling `allOf: [{ $ref: Base }, { properties: { petType: { const: 'cat' } } }]` declares it twice,
- * and the value has to fit each of them. Where only a `then`, an `else` or a `dependencies` schema declares it, the
- * first of those is read alone: a `then` and its `else` apply to different data, and no value need fit both.
+/** Returns the nodes `scopeAt()` lists for the node `id` reached at no place in particular */
+function scopeOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId): ObjectNode<S>[] {
+  return scopeAt(graph, id, undefined).map(({ node }) => node);
+}
+
+/** Returns the declarations of the property `key` in the scope of the option `id` reached at `place`, each at the place
+ * it is reached at: every one that applies whatever the data, as the OpenAPI spelling
+ * `allOf: [{ $ref: Base }, { properties: { petType: { const: 'cat' } } }]` declares it twice, and the value has to fit
+ * each of them. Where only a `then`, an `else` or a `dependencies` schema declares it, the first of those is read
+ * alone: a `then` and its `else` apply to different data, and no value need fit both.
+ */
+function declarationsAt<S extends StrictRJSFSchema>(
+  graph: SchemaGraph<S>,
+  id: NodeId,
+  place: Place,
+  key: string,
+): { readonly id: NodeId; readonly place: Place }[] {
+  const declaredIn = (members: Member<S>[]) =>
+    members.flatMap(({ node, place: at }) => {
+      const property = graph.child(node.id, PROPERTIES_KEY, key);
+      return property === undefined ? [] : [{ id: property, place: placeBelow(at, [PROPERTIES_KEY, key]) }];
+    });
+  const always = declaredIn(scopeAt(graph, id, place, true));
+  return always.length > 0 ? always : declaredIn(scopeAt(graph, id, place)).slice(0, 1);
+}
+
+/** Returns the nodes of the property `key` the option `id` declares, see `declarationsAt()`
  *
  * @param graph - The graph of the root
  * @param id - The option, or any subschema declaring properties
@@ -155,15 +320,7 @@ export function declaredProperties<S extends StrictRJSFSchema = RJSFSchema>(
   id: NodeId,
   key: string,
 ): readonly NodeId[] {
-  return declarations.get([graph, id, key], () => {
-    const declaredIn = (nodes: ObjectNode<S>[]) =>
-      nodes.flatMap((node) => {
-        const property = graph.child(node.id, PROPERTIES_KEY, key);
-        return property === undefined ? [] : [property];
-      });
-    const always = declaredIn(scopeOf(graph, id, true));
-    return always.length > 0 ? always : declaredIn(scopeOf(graph, id)).slice(0, 1);
-  });
+  return declarations.get([graph, id, key], () => declarationsAt(graph, id, undefined, key).map((found) => found.id));
 }
 
 /** The nodes `declaredProperties()` finds, per graph, option and key: an option is matched on its discriminator on
@@ -171,8 +328,22 @@ export function declaredProperties<S extends StrictRJSFSchema = RJSFSchema>(
  */
 const declarations = new KeyedMemo<readonly NodeId[]>();
 
-/** Returns what a validator checks the value of the property `key` the option `id` declares with: what `targetOf()`
- * hands it for the one declaration `declaredProperties()` finds, or an `allOf` of them for several
+/** Returns what a validator checks the value of the property `key` with that the option `id` reached at `place`
+ * declares: `{ $ref }` naming the place of the one declaration `declarationsAt()` finds, or an `allOf` of them for
+ * several, or undefined where the scope declares none
+ */
+function declaredPropertyTargetAt<S extends StrictRJSFSchema>(
+  graph: SchemaGraph<S>,
+  id: NodeId,
+  place: Place,
+  key: string,
+): S | undefined {
+  const targets = declarationsAt(graph, id, place, key).map((found) => targetAt(graph, found.id, found.place));
+  return targets.length < 2 ? targets[0] : schemaFrom(graph.rawRoot, { [ALL_OF_KEY]: targets });
+}
+
+/** Returns what a validator checks the value of the property `key` the option `id` declares with, see
+ * `declaredPropertyTargetAt()`, the option named where the root holds it as an option
  *
  * @param graph - The graph of the root
  * @param id - The option, or any subschema declaring properties
@@ -184,13 +355,10 @@ export function declaredPropertyTarget<S extends StrictRJSFSchema = RJSFSchema>(
   id: NodeId,
   key: string,
 ): S | undefined {
-  const target = declaredPropertyTargets.get([graph, id, key], () => {
-    const targets = declaredProperties(graph, id, key).map((property) => targetOf(graph, property));
-    if (targets.length < 2) {
-      return targets[0] ?? null;
-    }
-    return { [ALL_OF_KEY]: targets };
-  });
+  const target = declaredPropertyTargets.get(
+    [graph, id, key],
+    () => declaredPropertyTargetAt(graph, id, optionPlace(graph, id), key) ?? null,
+  );
   return isSchemaObject<S>(target) ? target : undefined;
 }
 
@@ -199,8 +367,23 @@ export function declaredPropertyTarget<S extends StrictRJSFSchema = RJSFSchema>(
  */
 const declaredPropertyTargets = new KeyedMemo<object | null>();
 
-/** Returns the schema a dependency's `oneOf` option is matched on: an object whose `key` holds what the option says
- * the property holds
+/** Returns the schema a dependency's `oneOf` option reached at `place` is matched on: an object whose `key` holds what
+ * the option says the property holds, or undefined where the option declares no property `key`
+ */
+function dependencyConditionAt<S extends StrictRJSFSchema>(
+  graph: SchemaGraph<S>,
+  option: NodeId,
+  place: Place,
+  key: string,
+): S | undefined {
+  const property = declaredPropertyTargetAt(graph, option, place, key);
+  return property === undefined
+    ? undefined
+    : schemaFrom(graph.rawRoot, { type: 'object', properties: { [key]: property } });
+}
+
+/** Returns the schema a dependency's `oneOf` option is matched on, see `dependencyConditionAt()`, the option named
+ * where the root holds it as an option of a dependency named `key`
  *
  * @param graph - The graph of the root
  * @param option - The node of the option
@@ -213,8 +396,8 @@ export function dependencyCondition<S extends StrictRJSFSchema = RJSFSchema>(
   key: string,
 ): S | undefined {
   const condition = dependencyConditions.get([graph, option, key], () => {
-    const property = declaredPropertyTarget(graph, option, key);
-    return property === undefined ? null : { type: 'object', properties: { [key]: property } };
+    const place = placeAs(graph, `${DEPENDENCIES_KEY}/${key}`, option) ?? optionPlace(graph, option);
+    return dependencyConditionAt(graph, option, place, key) ?? null;
   });
   return isSchemaObject<S>(condition) ? condition : undefined;
 }
@@ -242,43 +425,65 @@ function loosens(node: ObjectNode, loosening: Loosening): boolean {
   );
 }
 
-/** Returns `value`, held by a subschema whose `$ref`s resolve against `base`, with each subschema the graph holds in it
- * replaced by what `targetOf()` hands a validator for it. The node is looked up under `base`, since an object reached
- * in two resources is a node in each.
+/** Returns the value the keyword `key` holds in a subschema reached at `place`, whose `$ref`s resolve against `base`,
+ * with each subschema it holds replaced by `{ $ref }` naming its place below `place`, or, for a subschema with no
+ * place, by what `targetOf()` hands a validator for its node, looked up under `base`, since an object reached in two
+ * resources is a node in each
  */
-function pointed<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, value: unknown, base: string): unknown {
-  if (Array.isArray(value)) {
-    return value.map((item) => pointed(graph, item, base));
+function pointed<S extends StrictRJSFSchema>(
+  graph: SchemaGraph<S>,
+  key: string,
+  value: unknown,
+  place: Place,
+  base: string,
+): unknown {
+  const name = (sub: unknown, tokens: string[]) => {
+    const id = isObject(sub) ? graph.byObject(sub, base) : undefined;
+    if (place !== undefined && id !== undefined) {
+      return refAt(childPointer(place, tokens));
+    }
+    return id === undefined ? sub : targetOf(graph, id);
+  };
+  const shape = keywordShape(key, value);
+  if (shape === 'single') {
+    return name(value, [key]);
   }
-  if (!isObject(value)) {
-    return value;
+  if (shape === 'array' && Array.isArray(value)) {
+    return value.map((sub, index) => name(sub, [key, String(index)]));
   }
-  const id = graph.byObject(value, base);
-  return id === undefined
-    ? Object.fromEntries(Object.entries(value).map(([key, child]) => [key, pointed(graph, child, base)]))
-    : targetOf(graph, id);
+  if (shape === 'map' && isObject(value)) {
+    return Object.fromEntries(Object.entries(value).map(([entry, sub]) => [entry, name(sub, [key, entry])]));
+  }
+  return value;
 }
 
-/** Returns a copy of the node `id` without what `loosening` drops, from the node and from the nodes `scopeOf()` lists,
- * a dropped `additionalProperties: false` turned into `true`. A `$ref` among them is read as JSON Schema reads one, as an
- * `allOf` entry beside the keywords next to it, since a pointer cannot subtract from what it names. The subschemas
- * under the copy's other keywords are named by `pointed()` where they sit in the root, so each `$ref` below them
- * resolves against the `$id`s above it there, and the copy drops its `$id`, which would rebase them.
+/** Returns a copy of the node `id` reached at `place` without what `loosening` drops, from the node and from the
+ * nodes `scopeOf()` lists, a dropped `additionalProperties: false` turned into `true`. A `$ref` among them is read as
+ * JSON Schema reads one, as an `allOf` entry beside the keywords next to it, since a pointer cannot subtract from what
+ * it names. The subschemas under the copy's other keywords are named by `pointed()` at their places below `place`, so
+ * each `$ref` below them resolves against the `$id`s above it there, and the copy drops its `$id`, which would rebase
+ * them. A subschema reached again at a place on the way to it, `path`, or below itself, `above`, which only a root
+ * holding itself through its own objects does, is named rather than copied without end.
  */
 function derive<S extends StrictRJSFSchema>(
   graph: SchemaGraph<S>,
   node: ObjectNode<S>,
+  place: Place,
   loosening: Loosening,
-  path: ReadonlySet<NodeId>,
+  path: ReadonlySet<string>,
+  above: ReadonlySet<NodeId>,
 ): S {
   const { id } = node;
-  const inner = new Set(path).add(id);
-  const sub = (value: unknown, child: NodeId | undefined) => {
+  const innerPath = new Set(path).add(placeKey(id, place));
+  const innerAbove = new Set(above).add(id);
+  const sub = (value: unknown, child: NodeId | undefined, at: Place, viaRef = false) => {
     const childNode = child === undefined ? undefined : graph.node(child);
     if (childNode?.kind !== 'schema') {
       return value;
     }
-    return inner.has(childNode.id) ? targetOf(graph, childNode.id) : derive(graph, childNode, loosening, inner);
+    return innerPath.has(placeKey(childNode.id, at)) || (!viaRef && innerAbove.has(childNode.id))
+      ? targetAt(graph, childNode.id, at)
+      : derive(graph, childNode, at, loosening, innerPath, viaRef ? new Set() : innerAbove);
   };
   const {
     [ID_KEY]: _id,
@@ -291,7 +496,7 @@ function derive<S extends StrictRJSFSchema>(
     ...rest
   }: GenericObjectType = node.raw;
   const copy: GenericObjectType = Object.fromEntries(
-    Object.entries(rest).map(([key, value]) => [key, pointed(graph, value, node.baseUri)]),
+    Object.entries(rest).map(([key, value]) => [key, pointed(graph, key, value, place, node.baseUri)]),
   );
   if (!loosening.required && required !== undefined) {
     copy[REQUIRED_KEY] = required;
@@ -300,11 +505,17 @@ function derive<S extends StrictRJSFSchema>(
   const resolved = target?.kind === 'invalid' ? undefined : target;
   const conjuncts = [
     ...(Array.isArray(allOf)
-      ? allOf.map((entry, index) => sub(entry, graph.child(id, ALL_OF_KEY, String(index))))
+      ? allOf.map((entry, index) =>
+          sub(entry, graph.child(id, ALL_OF_KEY, String(index)), placeBelow(place, [ALL_OF_KEY, String(index)])),
+        )
       : []),
     ...(resolved === undefined
       ? []
-      : [resolved.kind === 'schema' ? sub(resolved.raw, resolved.id) : targetOf(graph, resolved.id)]),
+      : [
+          resolved.kind === 'schema'
+            ? sub(resolved.raw, resolved.id, refPlace(node), true)
+            : targetOf(graph, resolved.id),
+        ]),
   ];
   if (ref !== undefined && resolved === undefined) {
     copy[REF_KEY] = ref;
@@ -313,17 +524,20 @@ function derive<S extends StrictRJSFSchema>(
     copy[ALL_OF_KEY] = conjuncts;
   }
   if (then !== undefined) {
-    copy[THEN_KEY] = sub(then, graph.child(id, THEN_KEY));
+    copy[THEN_KEY] = sub(then, graph.child(id, THEN_KEY), placeBelow(place, [THEN_KEY]));
   }
   if (otherwise !== undefined) {
-    copy[ELSE_KEY] = sub(otherwise, graph.child(id, ELSE_KEY));
+    copy[ELSE_KEY] = sub(otherwise, graph.child(id, ELSE_KEY), placeBelow(place, [ELSE_KEY]));
   }
   const keptDependencies = Object.entries(isObject(dependencies) ? dependencies : {}).filter(
     ([, dependency]) => !loosening.required || !Array.isArray(dependency),
   );
   if (keptDependencies.length > 0) {
     copy[DEPENDENCIES_KEY] = Object.fromEntries(
-      keptDependencies.map(([key, dependency]) => [key, sub(dependency, graph.child(id, DEPENDENCIES_KEY, key))]),
+      keptDependencies.map(([key, dependency]) => [
+        key,
+        sub(dependency, graph.child(id, DEPENDENCIES_KEY, key), placeBelow(place, [DEPENDENCIES_KEY, key])),
+      ]),
     );
   }
   if (loosening.additionalProperties && copy[ADDITIONAL_PROPERTIES_KEY] === false) {
@@ -332,13 +546,33 @@ function derive<S extends StrictRJSFSchema>(
   return schemaFrom(graph.rawRoot, copy);
 }
 
-/** Returns what an `anyOf`/`oneOf` option is scored with: `{ $ref }` naming it in the root, or, where something in its
- * scope states a `required`, lists names under `dependencies` or, with `relax`, sets `additionalProperties: false`,
- * the copy `derive()` makes without them. A user who has yet to fill in a key the option requires is still matched to
- * it. The `required`s are kept where nothing in the scope declares `properties`: an option such as
- * `{ required: ['email'] }` describes nothing else for the data to fit, and is chosen by the keys it requires. The
- * copy depends on the root, the node and `relax` alone, so a precompiled validator finds it under the key it was
- * compiled under.
+/** Returns what the `anyOf`/`oneOf` option `id` reached at `place` is scored with: `{ $ref }` naming the place, or,
+ * where something in its scope states a `required`, lists names under `dependencies` or, with `relax`, sets
+ * `additionalProperties: false`, the copy `derive()` makes without them. A user who has yet to fill in a key the
+ * option requires is still matched to it. The `required`s are kept where nothing in the scope declares `properties`: an
+ * option such as `{ required: ['email'] }` describes nothing else for the data to fit, and is chosen by the keys it
+ * requires.
+ */
+function scoringTargetAt<S extends StrictRJSFSchema>(
+  graph: SchemaGraph<S>,
+  id: NodeId,
+  place: Place,
+  relax: boolean,
+): S {
+  const node = graph.node(id);
+  if (node.kind !== 'schema') {
+    return targetOf(graph, id);
+  }
+  const scope = scopeOf(graph, id);
+  const loosening = { required: scope.some((member) => isObject(member.raw.properties)), additionalProperties: relax };
+  return place !== undefined && !scope.some((member) => loosens(member, loosening))
+    ? targetAt(graph, id, place)
+    : derive(graph, node, place, loosening, new Set(), new Set());
+}
+
+/** Returns what an `anyOf`/`oneOf` option is scored with, see `scoringTargetAt()`, the option named where the root
+ * holds it as an option. The schema depends on the root, the node and `relax` alone, so a precompiled validator finds
+ * it under the key it was compiled under.
  *
  * @param graph - The graph of the root
  * @param id - The option's node
@@ -355,7 +589,7 @@ export function scoringTarget<S extends StrictRJSFSchema = RJSFSchema>(
   if (isSchemaObject<S>(memoized)) {
     return memoized;
   }
-  const target = buildScoringTarget(graph, id, relax);
+  const target = scoringTargetAt(graph, id, optionPlace(graph, id), relax);
   scoringTargets.set(keys, target);
   return target;
 }
@@ -364,19 +598,6 @@ export function scoringTarget<S extends StrictRJSFSchema = RJSFSchema>(
  * validator hashes a schema it is handed to find what it compiled for it
  */
 const scoringTargets = new KeyedMemo<object>();
-
-function buildScoringTarget<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId, relax: boolean): S {
-  const node = graph.node(id);
-  if (node.kind !== 'schema') {
-    return targetOf(graph, id);
-  }
-  const pointer = pointerTo(graph, id);
-  const scope = scopeOf(graph, id);
-  const loosening = { required: scope.some((member) => isObject(member.raw.properties)), additionalProperties: relax };
-  return pointer !== undefined && !scope.some((member) => loosens(member, loosening))
-    ? pointer
-    : derive(graph, node, loosening, new Set());
-}
 
 /** What of an option's scope `holdsDeclaredKey()` reads: the names and patterns its `properties` and
  * `patternProperties` declare, or the answer, where it does not depend on the data
@@ -449,69 +670,159 @@ export function holdsDeclaredKey<S extends StrictRJSFSchema = RJSFSchema>(
   );
 }
 
+/** Returns the subschemas the node `id` holds, each with the unescaped pointer tokens leading to it */
+function childrenOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId): [string[], NodeId][] {
+  const node = graph.node(id);
+  if (node.kind !== 'schema') {
+    return [];
+  }
+  return Object.keys(node.raw).flatMap((key): [string[], NodeId][] => {
+    const single = graph.child(id, key);
+    return single === undefined
+      ? graph.subschemas(id, key).map(([entry, child]) => [[key, entry], child])
+      : [[[key], single]];
+  });
+}
+
+/** The keywords holding the subschemas `reachedFrom()` reaches */
+const REACHING_KEYWORDS = new Set([IF_KEY, ANY_OF_KEY, ONE_OF_KEY, DEPENDENCIES_KEY]);
+
+/** Returns, for each node of the root `graph` that holds a subschema `reachedFrom()` reaches, or holds one that does
+ * however deep, the subschemas it holds that do, see `childrenOf()`; a node that leads to none is left out
+ */
+function childrenLeadingToTargets<S extends StrictRJSFSchema>(
+  graph: SchemaGraph<S>,
+): ReadonlyMap<NodeId, [string[], NodeId][]> {
+  const children = new Map<NodeId, [string[], NodeId][]>();
+  const parents = new Map<NodeId, NodeId[]>();
+  const leading: NodeId[] = [];
+  for (let id = 0; id < graph.size; id += 1) {
+    const held = childrenOf(graph, id);
+    children.set(id, held);
+    for (const [, child] of held) {
+      const known = parents.get(child);
+      if (known === undefined) {
+        parents.set(child, [id]);
+      } else {
+        known.push(id);
+      }
+    }
+    if (held.some(([tokens]) => REACHING_KEYWORDS.has(tokens[0]))) {
+      leading.push(id);
+    }
+  }
+  const found = new Set(leading);
+  // An array iterator reads the parents pushed while it runs
+  for (const id of leading) {
+    for (const parent of parents.get(id) ?? []) {
+      if (!found.has(parent)) {
+        found.add(parent);
+        leading.push(parent);
+      }
+    }
+  }
+  return new Map(
+    [...children]
+      .filter(([id]) => found.has(id))
+      .map(([id, held]) => [id, held.filter(([, child]) => found.has(child))]),
+  );
+}
+
+/** Calls `visit` with each node of the root `graph` at every place the root holds it, below the root and below the
+ * place each `$ref` names, which may be under a keyword no walk of the schema follows: the places an equal copy of the
+ * root sharing no objects has. A place holding nothing that leads to a subschema `reachedFrom()` reaches is not walked
+ * into, and neither is one whose node recurs on its own path, which only a root holding itself through its own objects
+ * has.
+ */
+function forEachPlace<S extends StrictRJSFSchema>(
+  graph: SchemaGraph<S>,
+  visit: (id: NodeId, place: string) => void,
+): void {
+  const leading = childrenLeadingToTargets(graph);
+  const seen = new Set<string>();
+  const above = new Set<NodeId>();
+  const walk = (id: NodeId, place: string) => {
+    const children = leading.get(id);
+    if (children === undefined || above.has(id) || seen.has(place)) {
+      return;
+    }
+    seen.add(place);
+    visit(id, place);
+    above.add(id);
+    for (const [tokens, child] of children) {
+      walk(child, childPointer(place, tokens));
+    }
+    above.delete(id);
+  };
+  walk(graph.root, '');
+  for (let id = 0; id < graph.size; id += 1) {
+    const node = graph.node(id);
+    const place = node.kind === 'schema' ? refPlace(node) : undefined;
+    if (node.kind === 'schema' && node.ref !== undefined && place !== undefined) {
+      walk(node.ref, place);
+    }
+  }
+}
+
 /** Returns every schema the form hands a validator for the root of `graph`: the root itself; each `if`; each
  * `anyOf`/`oneOf` option, as a pointer and as scored, plain and relaxed, which for a boolean option is the schema it
- * reads as, `{}` or `{ not: {} }`, and `{}` where an option is a boolean; the
- * property each option declares under any `discriminator.propertyName` in the root; and the condition each `oneOf`
- * option of a `dependencies` schema is matched on. Each is named by the graph, so the list depends on the root alone,
- * never on form data.
+ * reads as, `{}` or `{ not: {} }`, and `{}` where an option is a boolean; the property each option declares under any
+ * `discriminator.propertyName` in the root; and the condition each `oneOf` option of a `dependencies` schema is matched
+ * on. Each is listed at every place the root holds it, see `forEachPlace()`, and named by that place, so the list
+ * depends on the root's content alone, never on form data nor on which objects the root shares: one object the root
+ * holds in two places is listed at each, as two equal copies of it would be, and the form names it at either.
  *
  * @param graph - The graph of the root
  * @returns - The schemas, the root first
  */
 export function validationTargets<S extends StrictRJSFSchema = RJSFSchema>(graph: SchemaGraph<S>): S[] {
-  const nodes: ObjectNode<S>[] = [];
-  for (let id = 0; id < graph.size; id += 1) {
-    const node = graph.node(id);
-    if (node.kind === 'schema' && isRootPointer(node.pointer)) {
-      nodes.push(node);
-    }
-  }
   // The field reads its discriminator from the schema it retrieves, which takes one declared beside a `$ref` to the
   // options or in another `allOf` entry, so each option is listed under every name a discriminator anywhere declares
-  const discriminators = new Set(
-    nodes.flatMap((node) => {
-      const name = getByPath(node.raw, DISCRIMINATOR_PATH);
-      return typeof name === 'string' ? [name] : [];
-    }),
-  );
-  return [graph.rawRoot, ...nodes.flatMap((node) => nodeTargets(graph, node, discriminators))];
-}
-
-/** Returns the schemas `validationTargets()` lists for the conditions, options and dependencies of one node */
-function nodeTargets<S extends StrictRJSFSchema>(
-  graph: SchemaGraph<S>,
-  node: ObjectNode<S>,
-  discriminators: ReadonlySet<string>,
-): S[] {
-  const targets: S[] = [];
-  const condition = graph.child(node.id, IF_KEY);
-  if (condition !== undefined) {
-    targets.push(targetOf(graph, condition));
-  }
-  const options = [...graph.subschemas(node.id, ANY_OF_KEY), ...graph.subschemas(node.id, ONE_OF_KEY)];
-  for (const [, option] of options) {
-    targets.push(targetOf(graph, option), scoringTarget(graph, option, false), scoringTarget(graph, option, true));
-    if (graph.node(option).kind === 'boolean') {
-      // `SchemaField` retrieves a boolean option as a schema of its own, `{}`, which has no place in the root
-      targets.push(schemaFrom(graph.rawRoot, {}));
-    }
-    for (const name of discriminators) {
-      const discriminator = declaredPropertyTarget(graph, option, name);
-      if (discriminator !== undefined) {
-        targets.push(discriminator);
-      }
+  const discriminators = new Set<string>();
+  for (let id = 0; id < graph.size; id += 1) {
+    const node = graph.node(id);
+    const name = node.kind === 'schema' ? getByPath(node.raw, DISCRIMINATOR_PATH) : undefined;
+    if (typeof name === 'string') {
+      discriminators.add(name);
     }
   }
-  graph.subschemas(node.id, DEPENDENCIES_KEY).forEach(([key, dependency]) => {
-    for (const provider of scopeOf(graph, dependency)) {
-      for (const [, option] of graph.subschemas(provider.id, ONE_OF_KEY)) {
-        const dependent = dependencyCondition(graph, option, key);
-        if (dependent !== undefined) {
-          targets.push(dependent);
-        }
-      }
+  const targets: S[] = [graph.rawRoot];
+  forEachPlace(graph, (id, place) => {
+    for (const reached of reachedFrom(graph, id, place)) {
+      targets.push(...reachedTargets(graph, reached, discriminators));
     }
   });
+  return targets;
+}
+
+/** Returns the schemas `validationTargets()` lists for one subschema a form validates against, at its place */
+function reachedTargets<S extends StrictRJSFSchema>(
+  graph: SchemaGraph<S>,
+  reached: Reached,
+  discriminators: ReadonlySet<string>,
+): S[] {
+  const { id, place, key } = reached;
+  if (reached.role === IF_KEY) {
+    return [targetAt(graph, id, place)];
+  }
+  if (key !== undefined) {
+    const condition = dependencyConditionAt(graph, id, place, key);
+    return condition === undefined ? [] : [condition];
+  }
+  const targets = [
+    targetAt(graph, id, place),
+    scoringTargetAt(graph, id, place, false),
+    scoringTargetAt(graph, id, place, true),
+  ];
+  if (graph.node(id).kind === 'boolean') {
+    // `SchemaField` retrieves a boolean option as a schema of its own, `{}`, which has no place in the root
+    targets.push(schemaFrom(graph.rawRoot, {}));
+  }
+  for (const name of discriminators) {
+    const discriminator = declaredPropertyTargetAt(graph, id, place, name);
+    if (discriminator !== undefined) {
+      targets.push(discriminator);
+    }
+  }
   return targets;
 }
