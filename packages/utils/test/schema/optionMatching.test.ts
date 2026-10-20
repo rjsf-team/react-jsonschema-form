@@ -197,6 +197,43 @@ describe('matching options through the schema graph', () => {
 
     expect(getClosestMatchingOption(context, rootSchema, formData, options)).toBe(1);
   });
+  describe('options that refer to one another across definitions (#4990)', () => {
+    const names = ['A', 'B', 'C', 'D', 'E'];
+    const definitions = Object.fromEntries(
+      names.map((name): [string, RJSFSchema] => [
+        name,
+        {
+          type: 'object',
+          properties: {
+            child: {
+              oneOf: [
+                { type: 'null' },
+                ...names.filter((other) => other !== name).map((other) => ({ $ref: `#/definitions/${other}` })),
+              ],
+            },
+          },
+        },
+      ]),
+    );
+    const options: RJSFSchema[] = [{ type: 'null' }, ...names.map((name) => ({ $ref: `#/definitions/${name}` }))];
+    const rootSchema: RJSFSchema = { definitions, oneOf: options };
+    const nested = (depth: number, value: unknown): unknown =>
+      depth === 1 ? { child: null, value } : { child: nested(depth - 1, value) };
+    const validations = (value: unknown) =>
+      [3, 4, 5, 6].map((depth) => {
+        const validator = miniValidator();
+        getClosestMatchingOption({ validator }, rootSchema, nested(depth, value), options);
+        return validator.calls;
+      });
+
+    it('matches data holding a Date at its deepest level as often as data holding a string there', () => {
+      const counts = validations(new Date(0));
+      const steps = counts.slice(1).map((count, index) => count - counts[index]);
+
+      expect(counts).toEqual(validations('x'));
+      expect(new Set(steps).size).toBe(1);
+    });
+  });
   describe('options sharing a base that declares a key the data holds', () => {
     const pet = {
       type: 'object',

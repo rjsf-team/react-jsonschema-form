@@ -34,10 +34,14 @@ describe('options scored with useDefaults, which fills defaults into the data as
     { type: 'object', properties: { p: { anyOf: shared }, q: { type: 'string' } } },
   ];
   const root: RJSFSchema = { anyOf: options };
-  it('scores a nested option list again for the data a default was filled into since it was scored', () => {
+  it.each([
+    ['plain data', {}],
+    // A pick for data holding a Date is kept for the outermost call alone, and compared within it all the same
+    ['data holding a Date', { when: new Date(0) }],
+  ])('scores a nested option list again once a default is filled into %s it was scored for', (_name, extra) => {
     const validator = customizeValidator({ ajvOptionsOverrides: { useDefaults: true } });
-    const formData = { p: { k: 'x' }, q: 'z' };
+    const formData = { p: { k: 'x', ...extra }, q: 'z' };
     expect(getClosestMatchingOption({ validator }, root, formData, options)).toBe(2);
-    expect(formData.p).toEqual({ k: 'x', flag: 'on' });
+    expect(formData.p).toEqual({ k: 'x', flag: 'on', ...extra });
   });
 });
