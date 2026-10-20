@@ -953,6 +953,22 @@ describe('refDefinition()', () => {
       'Could not find a definition for #/$defs/missing.',
     );
   });
+  it('keeps the allOf a chained target holds beside the keywords it is merged with, rather than the $ref of an entry', () => {
+    const composed: RJSFSchema = {
+      definitions: {
+        Base: { type: 'object', properties: { b: { type: 'string' } } },
+        D: { type: 'object', properties: { d: { type: 'string' } }, allOf: [{ $ref: '#/definitions/Base' }] },
+        S: { $ref: '#/definitions/D', properties: { s: { type: 'string' } } },
+      },
+      properties: { item: { $ref: '#/definitions/S' } },
+    };
+    const composedGraph = parseSchemaGraph(composed);
+    expect(refDefinition(composedGraph, composedGraph.byPointer('/properties/item') ?? -1)).toEqual({
+      type: 'object',
+      properties: { s: { type: 'string' }, d: { type: 'string' } },
+      allOf: [{ $ref: '#/definitions/Base' }],
+    });
+  });
   it('keeps a chained target whose keywords cannot be merged with those beside it as the allOf of both, saying so', () => {
     const conflicting: RJSFSchema = {
       definitions: {

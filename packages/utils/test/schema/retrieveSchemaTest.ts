@@ -3798,6 +3798,32 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         const retrieved = retrieveSchema({ validator: testValidator }, rootSchema, rootSchema);
         expect(retrieved.properties?.child).toEqual({ ...child, [RJSF_REF_CYCLE_KEY]: true });
       });
+      it('collapses a recursion through an option of a list a merge rebuilt, as through a list the plan met', () => {
+        // `b` is declared by D0 and by the D1 it merges, each with an option list, so it offers the cross product
+        const rootSchema: RJSFSchema = {
+          definitions: {
+            D0: { type: 'object', properties: { b: { $ref: D('D1') } }, allOf: [{ $ref: D('D1') }] },
+            D1: {
+              type: 'object',
+              properties: { b: { anyOf: [{ $ref: D('D0') }, { type: 'string' }] } },
+              anyOf: [{ title: 'first' }, { title: 'second' }],
+            },
+          },
+          $ref: D('D0'),
+        };
+        const collapsedAt = (schema: RJSFSchema, level: number): number | undefined => {
+          const property = retrieveSchema({ validator: testValidator }, schema, rootSchema).properties?.b;
+          if (level > 10 || !isSchemaObject(property)) {
+            return undefined;
+          }
+          if (Reflect.get(property, RJSF_REF_CYCLE_KEY) === true) {
+            return level;
+          }
+          const [option] = retrieveSchema({ validator: testValidator }, property, rootSchema).anyOf ?? [];
+          return isSchemaObject(option) ? collapsedAt(option, level + 1) : undefined;
+        };
+        expect(collapsedAt(rootSchema, 0)).toBe(1);
+      });
       it('expands a collapsed property by one level through expandRefCycle()', () => {
         const rootSchema: RJSFSchema = { definitions: { node }, $ref: D('node') };
         const retrieved = retrieveSchema({ validator: testValidator }, rootSchema, rootSchema);

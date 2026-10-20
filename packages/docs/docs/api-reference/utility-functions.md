@@ -2733,7 +2733,7 @@ it in a component, e.g. `const { Widget } = resolveWidget(schema, widget, regist
 
 ### rootSchemaIdOf&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
-Returns the id a validator registers the root schema under, which is the prefix [withRootIdRefPrefix()](#withrootidrefprefixsextendsstrictrjsfschemarjsfschema) gives a local `$ref`: the root's own `$id` less any fragment, which names a place in the document rather than the document a pointer is read in, or the value of the `ROOT_SCHEMA_PREFIX` constant where that leaves nothing, as for no `$id`, an empty one or one that is only a fragment, such as `#root`.
+Returns the id a validator registers the root schema under, which is the prefix [withRootIdRefPrefix()](#withrootidrefprefixsextendsstrictrjsfschemarjsfschema) gives a local `$ref`: the root's own `$id` less any fragment, which names a place in the document rather than the document a pointer is read in, or the value of the `ROOT_SCHEMA_PREFIX` constant where that leaves nothing, as for no `$id`, an empty one, one that is only a fragment, such as `#root`, or one that is not a string, which an untyped caller may hand over.
 So `http://example.com/root.json#foo` gives `http://example.com/root.json`.
 
 #### Parameters
