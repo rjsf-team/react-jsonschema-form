@@ -737,7 +737,7 @@ describe('the plan SchemaField builds', () => {
   });
 });
 
-describe('an anyOf/oneOf whose options all render a container', () => {
+describe('an anyOf/oneOf whose options are all objects, arrays or nulls', () => {
   const pet: RJSFSchema = {
     title: 'Pet',
     oneOf: [
@@ -759,7 +759,7 @@ describe('an anyOf/oneOf whose options all render a container', () => {
     expect(node.querySelector(`#${fieldLabelId('root_pet')}`)?.closest('label')).not.toHaveAttribute('for');
   });
 
-  it('keeps the for where an option renders a control under the field id', () => {
+  it('keeps the for where an option of another type renders a control under the field id', () => {
     const { outerTemplatePlans } = renderPlans({
       type: 'object',
       properties: { pet: { ...pet, oneOf: [...pet.oneOf!, { title: 'Name', type: 'string' }] } },
@@ -779,6 +779,45 @@ describe('an anyOf/oneOf whose options all render a container', () => {
     const { outerTemplatePlans } = renderPlans({ type: 'object', properties: { pet: petSchema } });
 
     expect(outerTemplatePlans.get('root_pet')?.control?.attributes['aria-labelledby']).toBe(fieldLabelId('root_pet'));
+  });
+
+  it('names a multi-select array option by the field label through aria-labelledby', () => {
+    createFormComponent({
+      schema: {
+        type: 'object',
+        properties: {
+          pet: {
+            ...pet,
+            oneOf: [
+              { title: 'Breeds', type: 'array', uniqueItems: true, items: { enum: ['Lab', 'Pug'] } },
+              pet.oneOf![0],
+            ],
+          },
+        },
+      },
+    });
+
+    const select = screen.getByRole('listbox');
+    expect(select).toHaveAttribute('aria-labelledby', fieldLabelId('root_pet'));
+    expect(select).toHaveAccessibleName('Pet');
+  });
+
+  it('names a file array option by the field label through aria-labelledby', () => {
+    const { node } = createFormComponent({
+      schema: {
+        type: 'object',
+        properties: {
+          pet: {
+            ...pet,
+            oneOf: [{ title: 'Photos', type: 'array', items: { type: 'string', format: 'data-url' } }, pet.oneOf![0]],
+          },
+        },
+      },
+    });
+
+    const input = node.querySelector('input[type="file"]');
+    expect(input).toHaveAttribute('aria-labelledby', fieldLabelId('root_pet'));
+    expect(input).toHaveAccessibleName('Pet');
   });
 
   it('keeps the for where an option is a $ref it does not resolve', () => {
