@@ -6,7 +6,17 @@ import isObject, { isSchemaObject } from '../isObject.ts';
 import { getByPath } from '../pathUtils.ts';
 import type { FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
 import { optionMatches, optionNodeOf, simpleDiscriminatorMatch } from './getFirstMatchingOption.ts';
-import { ownRefTarget, resolveOwnRef } from './retrieveSchema.ts';
+import { findOwnRef, requireOwnRef } from './retrieveSchema.ts';
+
+/** Returns the definitions counted at the level of the data a schema's own `$ref` is scored at: the one it names,
+ * which its own `allOf` does not score again
+ *
+ * @param target - The subschema the `$ref` names, as `findOwnRef()` finds it
+ * @returns - The definitions counted
+ */
+function countedFrom(target: object | undefined): Set<object> {
+  return new Set(target === undefined ? [] : [target]);
+}
 
 /** Returns the score of one property's `formValue` against the `value` schema describing it, as
  * `calculateIndexScore()` adds it up:
@@ -37,14 +47,8 @@ function propertyScore<
     if (formValue == null) {
       return 0;
     }
-    const target = ownRefTarget<S>(value, rootSchema);
-    return propertyScore<T, S, F>(
-      context,
-      rootSchema,
-      resolveOwnRef<S>(value, rootSchema),
-      formValue,
-      new Set(target === undefined ? [] : [target]),
-    );
+    const { resolved, target } = requireOwnRef<S>(value, rootSchema);
+    return propertyScore<T, S, F>(context, rootSchema, resolved, formValue, countedFrom(target));
   }
   const xxxOfKey = getXxxOfKey<S>(value);
   if (xxxOfKey && formValue != null) {
@@ -88,7 +92,8 @@ function propertyScore<
  * the scores are added up. A schema without `properties` scores 1 when its `type` is the guessed-type of `formData`.
  * The score of each `allOf` entry, read through its `$ref`, is added to the schema's own, so options sharing a base
  * through a `$ref` beside their own keywords or through an `allOf` are told apart by the properties each adds. An
- * entry that is a `$ref` scores 0 where the `formData` is `undefined` or `null`, as a property's `$ref` does.
+ * entry that is a `$ref` scores 0 where the `formData` is `undefined` or `null`, as a property's `$ref` does, and
+ * where the reference resolves to nothing or loops.
  *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param rootSchema - The root JSON schema of the entire form
@@ -144,14 +149,19 @@ function scopeScore<T, S extends StrictRJSFSchema, F extends FormContextType>(
     if (!isSchemaObject<S>(entry) || (typeof entry[REF_KEY] === 'string' && formData == null)) {
       return score;
     }
-    const target = ownRefTarget<S>(entry, rootSchema);
-    if (target !== undefined) {
-      if (counted.has(target)) {
+    const ref = findOwnRef<S>(entry, rootSchema);
+    // A reference naming nothing says nothing about the data: whatever resolves the option to render it reports the
+    // broken reference on its own
+    if ('error' in ref) {
+      return score;
+    }
+    if (ref.target !== undefined) {
+      if (counted.has(ref.target)) {
         return score;
       }
-      counted.add(target);
+      counted.add(ref.target);
     }
-    return score + scopeScore<T, S, F>(context, rootSchema, resolveOwnRef<S>(entry, rootSchema), formData, counted);
+    return score + scopeScore<T, S, F>(context, rootSchema, ref.resolved, formData, counted);
   }, own);
 }
 
@@ -198,7 +208,7 @@ export function closestOption<S extends StrictRJSFSchema = RJSFSchema, F extends
     allValidIndexes.push(...options.keys());
   }
   const resolvedOptions = options.map((option) =>
-    isSchemaObject<S>(option) ? resolveOwnRef<S>(option, rootSchema) : undefined,
+    isSchemaObject<S>(option) ? requireOwnRef<S>(option, rootSchema) : undefined,
   );
   interface BestType {
     bestIndex: number;
@@ -209,15 +219,8 @@ export function closestOption<S extends StrictRJSFSchema = RJSFSchema, F extends
   const { bestIndex }: BestType = allValidIndexes.reduce(
     (scoreData: BestType, index: number) => {
       const { bestScore } = scoreData;
-      const option = options[index];
-      const target = isSchemaObject<S>(option) ? ownRefTarget<S>(option, rootSchema) : undefined;
-      const score = scopeScore(
-        context,
-        rootSchema,
-        resolvedOptions[index],
-        formData,
-        new Set(target === undefined ? [] : [target]),
-      );
+      const option = resolvedOptions[index];
+      const score = scopeScore(context, rootSchema, option?.resolved, formData, countedFrom(option?.target));
       scoreCount.add(score);
       if (score > bestScore) {
         return { bestIndex: index, bestScore: score };

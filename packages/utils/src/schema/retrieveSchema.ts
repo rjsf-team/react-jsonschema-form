@@ -358,27 +358,24 @@ function ownRefNode<S extends StrictRJSFSchema>(rootGraph: SchemaGraph<S>, schem
   return { graph, id: (declaring ?? seeds[0]).node };
 }
 
-/** Returns the subschema a schema's own `$ref` names, as the root holds it: the same object for every reference to it,
- * from the root or from a schema adopted beside it, which is how option scoring counts a definition once
- *
- * @param schema - A schema that may hold a `$ref`
- * @param rootSchema - The root schema the reference names a subschema of
- * @returns - The subschema named, or undefined for a schema with no `$ref` or one naming a boolean or nothing
- */
-export function ownRefTarget<S extends StrictRJSFSchema = RJSFSchema>(schema: S, rootSchema: S): object | undefined {
-  const ref = schema[REF_KEY];
-  if (typeof ref !== 'string') {
-    return undefined;
-  }
-  const { graph, id } = ownRefNode<S>(parseSchemaGraph<S>(rootSchema), schema, ref);
-  const node = graph.node(id);
-  /* v8 ignore next -- the node declares the `$ref`, so it is a schema node holding the node the `$ref` resolves to */
-  const target = node.kind === 'schema' && node.ref !== undefined ? graph.node(node.ref) : undefined;
-  return target?.kind === 'schema' ? target.raw : undefined;
+/** A schema's own `$ref` resolved, as `resolveOwnRef()` returns it, with the subschema the reference names */
+export interface ResolvedOwnRef<S extends StrictRJSFSchema = RJSFSchema> {
+  /** The schema with its own `$ref` resolved, or the schema itself when it holds none */
+  readonly resolved: S;
+  /** The subschema the `$ref` names, as the root holds it: the same object for every reference to it, from the root or
+   * from a schema adopted beside it, which is how option scoring counts a definition once. Undefined for a schema
+   * with no `$ref` or one naming a boolean.
+   */
+  readonly target: object | undefined;
 }
 
-/** The schemas `resolveOwnRef()` made, by graph and the schema holding the reference */
-const ownRefs = new KeyedMemo<object>();
+/** A schema's own `$ref` as `findOwnRef()` finds it: resolved, or, for a reference that resolves to nothing or a chain
+ * of references that loops, the `error` `resolveOwnRef()` throws for it
+ */
+export type OwnRef<S extends StrictRJSFSchema = RJSFSchema> = ResolvedOwnRef<S> | { readonly error: string };
+
+/** The references `findOwnRef()` resolved, by graph and the schema holding the reference */
+const ownRefs = new KeyedMemo<ResolvedOwnRef<StrictRJSFSchema>>();
 
 /** Returns a schema's own `$ref` resolved and marked with it, as a schema an option's `$ref` stands for is scored and
  * validated: the definition overridden by the keywords beside the reference where those only annotate, and otherwise
@@ -388,31 +385,69 @@ const ownRefs = new KeyedMemo<object>();
  * below it against the root schema. The result is made once per schema and shared, so that a memo keyed on it hits
  * across calls, and a caller copies it rather than changing it.
  *
+ * A reference that resolves to nothing, or a chain of references that loops, is answered with the error resolving it
+ * throws rather than thrown, for a reader such as option scoring, to which such an `allOf` entry says nothing.
+ *
  * @param schema - The schema whose own `$ref` is to be resolved
  * @param rootSchema - The root schema the reference names a definition of
- * @returns - The schema with its own reference resolved, or the schema itself when it holds none
- * @throws - An error for a reference that resolves to nothing or a chain of references that loops
+ * @returns - The schema with its own reference resolved and the subschema it names, or the error for a reference
+ *          that cannot be resolved
  */
-export function resolveOwnRef<S extends StrictRJSFSchema = RJSFSchema>(schema: S, rootSchema: S): S {
+export function findOwnRef<S extends StrictRJSFSchema = RJSFSchema>(schema: S, rootSchema: S): OwnRef<S> {
   const ref = schema[REF_KEY];
   if (typeof ref !== 'string') {
-    return schema;
+    return { resolved: schema, target: undefined };
   }
   const rootGraph = parseSchemaGraph<S>(rootSchema);
   const keys = [rootGraph, schema];
   const known = ownRefs.peek(keys);
-  if (isSchemaObject<S>(known)) {
-    return known;
+  if (known !== undefined && isSchemaObject<S>(known.resolved)) {
+    return { resolved: known.resolved, target: known.target };
   }
   const { graph, id } = ownRefNode<S>(rootGraph, schema, ref);
+  const node = graph.node(id);
+  /* v8 ignore next -- the node declares the `$ref`, so it is a schema node holding the node the `$ref` resolves to */
+  const target = node.kind === 'schema' && node.ref !== undefined ? graph.node(node.ref) : undefined;
+  // The graph points a `$ref` whose chain ends at nothing or loops at an invalid node, which every resolution of the
+  // reference would throw on
+  if (target?.kind === 'invalid') {
+    return { error: target.message };
+  }
   const definition = refDefinition<S>(graph, id);
   const siblings = withoutKeys(schema, REF_KEY);
   const resolved: S =
     conjunctionOf<S>(graph, id) === undefined
       ? { ...definition, ...siblings, [RJSF_REF_KEY]: ref }
       : { ...conjoinDefinition(schema, siblings, definition), [RJSF_REF_KEY]: ref };
-  ownRefs.set(keys, resolved);
-  return resolved;
+  const found = { resolved, target: target?.kind === 'schema' ? target.raw : undefined };
+  ownRefs.set(keys, found);
+  return found;
+}
+
+/** Returns a schema's own `$ref` as `findOwnRef()` resolves it, throwing for one it cannot resolve
+ *
+ * @param schema - The schema whose own `$ref` is to be resolved
+ * @param rootSchema - The root schema the reference names a definition of
+ * @returns - The schema with its own reference resolved and the subschema it names
+ * @throws - An error for a reference that resolves to nothing or a chain of references that loops
+ */
+export function requireOwnRef<S extends StrictRJSFSchema = RJSFSchema>(schema: S, rootSchema: S): ResolvedOwnRef<S> {
+  const own = findOwnRef<S>(schema, rootSchema);
+  if ('error' in own) {
+    throw new Error(own.error);
+  }
+  return own;
+}
+
+/** Returns a schema's own `$ref` resolved and marked with it, as `findOwnRef()` resolves it
+ *
+ * @param schema - The schema whose own `$ref` is to be resolved
+ * @param rootSchema - The root schema the reference names a definition of
+ * @returns - The schema with its own reference resolved, or the schema itself when it holds none
+ * @throws - An error for a reference that resolves to nothing or a chain of references that loops
+ */
+export function resolveOwnRef<S extends StrictRJSFSchema = RJSFSchema>(schema: S, rootSchema: S): S {
+  return requireOwnRef<S>(schema, rootSchema).resolved;
 }
 
 /** Whether an option's plan adds nothing to the plan of the field offering it, beyond the option's own `$ref` */

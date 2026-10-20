@@ -1,5 +1,11 @@
 import type { RJSFSchema } from '../../src/index.ts';
-import { getClosestMatchingOption, getFirstMatchingOption, omitExtraData, retrieveSchema } from '../../src/index.ts';
+import {
+  getClosestMatchingOption,
+  getDefaultFormState,
+  getFirstMatchingOption,
+  omitExtraData,
+  retrieveSchema,
+} from '../../src/index.ts';
 import { miniValidator } from './graph/miniValidator.ts';
 
 describe('matching options through the schema graph', () => {
@@ -180,6 +186,25 @@ describe('matching options through the schema graph', () => {
       getClosestMatchingOption({ validator }, rootSchema, { name: 'x', other: 'y', parent: { name: 'p' } }, options),
     ).toBe(0);
     expect(getClosestMatchingOption({ validator }, rootSchema, undefined, options)).toBe(-1);
+  });
+  it.each([
+    ['resolves to nothing', '#/definitions/missing'],
+    ['loops', '#/definitions/a'],
+  ])('scores an allOf entry whose $ref %s as nothing, without throwing', (_name, $ref) => {
+    const options: RJSFSchema[] = [{ type: 'object', properties: { a: { type: 'string' } } }, { allOf: [{ $ref }] }];
+    const rootSchema: RJSFSchema = {
+      definitions: { a: { $ref: '#/definitions/b' }, b: { $ref: '#/definitions/a' } },
+      type: 'object',
+      properties: { v: { anyOf: options } },
+    };
+    const field: RJSFSchema = { definitions: rootSchema.definitions, anyOf: options };
+    // A validator fails a schema holding a `$ref` it cannot resolve, so neither option matches and both are scored
+    const validator = { ...miniValidator(), isValid: () => false };
+    expect(getClosestMatchingOption({ validator }, rootSchema, { b: 1 }, options)).toBe(-1);
+    expect(omitExtraData({ validator }, field, field, { b: 1 })).toEqual({});
+    expect(getDefaultFormState({ validator }, { schema: rootSchema, formData: { v: { b: 1 } }, rootSchema })).toEqual({
+      v: { b: 1 },
+    });
   });
   it.each([
     [
