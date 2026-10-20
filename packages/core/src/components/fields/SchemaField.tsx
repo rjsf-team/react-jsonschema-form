@@ -614,7 +614,7 @@ function SchemaFieldRender<
       uiOptions,
       ownUiOptions.widget,
       namedField,
-      uiField?.namedFieldKey,
+      uiField.namedFieldKey,
       registry,
       xxxOfKey,
       isSelectSchema,
