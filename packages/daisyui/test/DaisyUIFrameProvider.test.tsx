@@ -1,5 +1,7 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
+import { hydrateRoot } from 'react-dom/client';
+import { renderToString } from 'react-dom/server';
 
 import { __createDaisyUIFrameProvider } from '../src/DaisyUIFrameProvider.tsx';
 import { ThemeProvider, useTheme } from '../src/theme/index.ts';
@@ -186,6 +188,31 @@ describe('DaisyUIFrameProvider', () => {
 
     expect(container.querySelector('[data-theme="dark"]')).not.toBeNull();
   });
+
+  test.each([
+    ['no theme is chosen', undefined, 'cupcake', 'dark'],
+    ['a theme is chosen', { dataTheme: 'light' }, 'light', 'light'],
+  ])(
+    'renders on the server, where %s, with no storage read, and hydrates to the theme shown',
+    async (_, subtheme, onServer, hydrated) => {
+      localStorageMock['daisyui-theme'] = 'dark';
+      const DaisyUIFrame = __createDaisyUIFrameProvider({ children: <div>Test Content</div>, subtheme });
+
+      const markup = renderToString(<DaisyUIFrame />);
+      expect(markup).toContain(`data-theme="${onServer}"`);
+      expect(mockGetItem).not.toHaveBeenCalled();
+
+      const container = document.createElement('div');
+      container.innerHTML = markup;
+      document.body.appendChild(container);
+      const onRecoverableError = vi.fn();
+      const root = await act(async () => hydrateRoot(container, <DaisyUIFrame />, { onRecoverableError }));
+      expect(onRecoverableError).not.toHaveBeenCalled();
+      expect(container.querySelector(`[data-theme="${hydrated}"]`)).not.toBeNull();
+      act(() => root.unmount());
+      container.remove();
+    },
+  );
 
   test('handles localStorage exceptions gracefully', () => {
     // Make localStorage.getItem throw an exception

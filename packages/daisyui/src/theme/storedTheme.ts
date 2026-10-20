@@ -1,8 +1,8 @@
 /** The `localStorage` key the chosen DaisyUI theme is kept under */
 const THEME_KEY = 'daisyui-theme';
 
-/** The theme shown where none is stored, or where the storage can't be read */
-const DEFAULT_THEME = 'cupcake';
+/** The theme shown where none is stored, or where the storage can't be read, as on the server */
+export const DEFAULT_THEME = 'cupcake';
 
 /** Everyone in this document showing the stored theme. They are told of a theme stored here directly, since the
  * `storage` event that tells every other document sharing the storage never fires in the one that wrote it

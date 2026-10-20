@@ -19,7 +19,7 @@
 import type { ReactNode } from 'react';
 import { useEffect, useSyncExternalStore } from 'react';
 
-import { readStoredTheme, storeTheme, subscribeToStoredTheme } from './theme/storedTheme.ts';
+import { DEFAULT_THEME, readStoredTheme, storeTheme, subscribeToStoredTheme } from './theme/storedTheme.ts';
 
 interface DaisyUIFrameProviderProps {
   children: ReactNode;
@@ -35,8 +35,13 @@ function DaisyUIFrameComponent(props: DaisyUIFrameProviderProps & { document?: D
   const { children, subtheme = {}, document } = props;
   const chosenTheme = subtheme?.dataTheme;
   // The stored theme lives outside React, so it is read as an external store, which renders the provider again when
-  // another provider or another tab stores a theme. A chosen theme is shown without reading the storage at all
-  const theme = useSyncExternalStore(subscribeToStoredTheme, () => chosenTheme || readStoredTheme());
+  // another provider or another tab stores a theme. A chosen theme is shown without reading the storage at all. The
+  // server has no storage, so it renders the default, which hydration starts from too before showing the stored one
+  const theme = useSyncExternalStore(
+    subscribeToStoredTheme,
+    () => chosenTheme || readStoredTheme(),
+    () => chosenTheme || DEFAULT_THEME,
+  );
 
   // Storing the chosen theme is a side effect, so it waits for the commit rather than happening while rendering
   useEffect(() => {
