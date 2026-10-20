@@ -647,7 +647,6 @@ function SchemaFieldRender<
   const namedAbove = namedHere !== undefined;
   const framedAbove = namedHere?.framedAbove === true;
   const optionsRenderedAbove = namedHere?.optionsRendered === true;
-  const shownOptionAbove = use(ShownOptionContext);
 
   const ownUiSchema = useMemo(
     () => resolveUiSchema<T, S, F>(_schema, _uiSchema, registry),
@@ -782,8 +781,10 @@ function SchemaFieldRender<
     () => (xxxOfOptions ? { fieldPath, options: xxxOfOptions, list, selectedOption, selectOption } : undefined),
     [xxxOfOptions, list, selectedOption, selectOption, fieldPath],
   );
-  // The field below a named one is the field beside the options the `SchemaField` that named it renders
-  const fieldShownOption = optionsRenderedAbove ? shownOptionAbove : shownOption;
+  // The field below a named one is the field beside the options the `SchemaField` that named it renders. Read there
+  // alone: the options are retrieved afresh with every change of the data, so a field reading them re-renders with
+  // every keystroke in a field beside them, past its `memo`
+  const fieldShownOption = optionsRenderedAbove ? use(ShownOptionContext) : shownOption;
   // An object below a named field stubs its extra keys with the option shown beside it there, as one rendering the
   // options does, so a key the option declares is left to the option rather than rendered twice
   const optionBeside = fieldShownOption?.selectedOption ?? -1;

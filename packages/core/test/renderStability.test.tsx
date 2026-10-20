@@ -292,6 +292,28 @@ describe('render stability across sibling fields', () => {
     expect(renderCount('root_nested')).toBe(nestedBefore);
   });
 
+  // The options beside an object's own properties are retrieved afresh with every change of the object's data
+  it("typing in a property beside an object's oneOf options re-renders no sibling", async () => {
+    createFormComponent({
+      schema: {
+        type: 'object',
+        properties: { first: { type: 'string' }, second: { type: 'string' } },
+        oneOf: [
+          { title: 'A', properties: { a: { type: 'string' } } },
+          { title: 'B', properties: { b: { type: 'string' } } },
+        ],
+      },
+      initialFormData: { first: '', second: '' },
+      templates: { FieldTemplate: CountingFieldTemplate },
+    });
+    const secondBefore = renderCount('root_second');
+    expect(secondBefore).toBeGreaterThan(0);
+
+    await user.type(screen.getByRole('textbox', { name: 'first' }), 'abc');
+
+    expect(renderCount('root_second')).toBe(secondBefore);
+  });
+
   describe('a keystroke in a field', () => {
     const fieldSchema: RJSFSchema = { type: 'string', title: 'A', examples: ['one', 'two'] };
     const keystrokeSchema: RJSFSchema = { type: 'object', properties: { a: fieldSchema } };
