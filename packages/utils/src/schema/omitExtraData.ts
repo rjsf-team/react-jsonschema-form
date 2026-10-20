@@ -276,12 +276,9 @@ export default function omitExtraData<
     // Resolve $refs and relax additionalProperties:false → true in one pass for scoring only.
     // The unrelaxed resolved schema is re-derived for the winning option so that omit() still
     // respects additionalProperties:false during filtering.
-    const scoringOptions = relaxOptionsForScoring<S>(
-      oneOf as (S | boolean)[],
-      true,
-      rootSchema,
-      context.customMergeAllOf,
-    );
+    // An option that is no schema object is read as the boolean schema it stands for, as scoring reads it
+    const options = oneOf.map((option: unknown): S | boolean => (isSchemaObject<S>(option) ? option : Boolean(option)));
+    const scoringOptions = relaxOptionsForScoring<S>(options, true, rootSchema, context.customMergeAllOf);
     const bestIndex = getClosestMatchingOption<T, S, F>(
       context,
       rootSchema,
@@ -290,7 +287,7 @@ export default function omitExtraData<
       0,
       getDiscriminatorFieldFromSchema<S>(childSchema),
     );
-    const winning = (oneOf as (S | boolean)[])[bestIndex];
+    const winning = options[bestIndex];
     // For object options, re-resolve without relaxation so additionalProperties:false is respected.
     // For boolean options, scoringOptions already holds the converted schema (true→{}, false→{not:{}}).
     const resolved: S = isSchemaObject<S>(winning)
