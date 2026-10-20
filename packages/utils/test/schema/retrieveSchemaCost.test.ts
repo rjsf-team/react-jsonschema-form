@@ -128,6 +128,32 @@ describe('the cost of an edit to a wide object', () => {
     const first = edit('x');
     expect([...edit('w')].filter((adopted) => !first.has(adopted))).toEqual([]);
   });
+  it('parses no schema anew for the defaults of an untouched field offering options beside an unmerged allOf', () => {
+    const context = { validator: miniValidator() };
+    const root: RJSFSchema = {
+      type: 'object',
+      properties: {
+        p: {
+          allOf: [{ type: 'object' }],
+          oneOf: [{ properties: { a: { type: 'string', default: 'a' } } }, { properties: { b: { type: 'string' } } }],
+        },
+        q: { type: 'string' },
+      },
+    };
+    const graph = parseSchemaGraph(root);
+    const adopt = vi.spyOn(graph, 'adopt');
+    const adoptedGraphs = () =>
+      new Set(adopt.mock.results.splice(0).flatMap((result) => (result.type === 'return' ? [result.value.graph] : [])));
+    const edit = (value: string) => {
+      expect(getDefaultFormState(context, { schema: root, rootSchema: root, formData: { q: value } })).toEqual({
+        q: value,
+        p: { a: 'a' },
+      });
+      return adoptedGraphs();
+    };
+    const first = edit('x');
+    expect([...edit('y')].filter((adopted) => !first.has(adopted))).toEqual([]);
+  });
   it('parses the options a merge rebuilds for each plan once while their keywords stay the same', () => {
     const context = { validator: miniValidator() };
     // `b` is declared by D0 and by the D1 it merges, each with an option list, so it offers the cross product

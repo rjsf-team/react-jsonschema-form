@@ -48,6 +48,7 @@ import type {
   UiSchema,
 } from '../types.ts';
 import getClosestMatchingOption from './getClosestMatchingOption.ts';
+import KeyedMemo from './graph/keyedMemo.ts';
 import buildPlan, {
   asTarget,
   cachedPolicy,
@@ -961,6 +962,27 @@ function chooseOption<S extends StrictRJSFSchema, F extends FormContextType>(
   return { context: optionContext, index, isWholeValue, wholeOptions };
 }
 
+/** The schemas of fields offering options, without the keyword holding them, by the field's schema and that keyword */
+const withoutOptions = new KeyedMemo<object>();
+
+/** Returns `schema` without the option keyword `key`, the same object for the same schema: `retrieveSchema()` parses a
+ * schema the root does not hold once per object, and the defaults of a field whose plan is reused across calls would
+ * otherwise have it parse a new copy on every call
+ *
+ * @param schema - The field's schema
+ * @param key - The keyword holding its options
+ * @returns - The schema without the keyword
+ */
+function withoutOptionsOf<S extends StrictRJSFSchema>(schema: S, key: string): S {
+  const known = withoutOptions.peek([schema, key]);
+  if (isSchemaObject<S>(known)) {
+    return known;
+  }
+  const remaining = withoutKeys(schema, key);
+  withoutOptions.set([schema, key], remaining);
+  return remaining;
+}
+
 /** Computes the defaults of a field from the option at `index` of the options it offers. An object renders its own
  * field beside the option, so the option is merged into the whole field: the field is planned again with the option
  * selected, its seeds joining the plan with the ref path of the node offering it. Any other field renders only the
@@ -977,7 +999,7 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const { schema, field } = view;
   const { graph } = field;
   const rootSchema = graph.rawRoot;
-  const remaining = withoutKeys(schema, key);
+  const remaining = withoutOptionsOf(schema, key);
   const branchProps = { ...props, uiSchema: getOptionUiSchema<T, S, F>(props.uiSchema, key, index) };
   const chosen = new Set(view.options.chosen).add(options);
   // Which of the two the field is gets asked of it with its `allOf` merged, as the fields ask it, since its `type` can
