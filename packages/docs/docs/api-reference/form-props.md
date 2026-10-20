@@ -727,6 +727,8 @@ render(
 
 **Required**! Form schema. We support JSON schema draft-07 by default. See [Schema Reference](https://json-schema.org/draft-07/json-schema-release-notes.html) for more information.
 
+The schema is treated as immutable: it is parsed once per object, so a change made to it in place is not seen. Pass a new object to change it.
+
 ## showErrorList
 
 When this prop is set to `top` or `bottom`, a list of errors (or the custom error list defined in the `ErrorList`) will also show at the `bottom` or `top` of the form. When set to false, only inline input validation errors will be shown. Set to `top` by default. See [Validation](../usage/validation.md) for more information.

@@ -3613,6 +3613,7 @@ Without `oldData` the filter always runs, matching v6.
 
 Creates a `SchemaUtilsType` interface that is based around the given `context` and `rootSchema` parameters.
 The resulting interface implementation will forward the `context` and `rootSchema` to all the wrapped APIs.
+The `rootSchema` is parsed once per object and treated as immutable: a change made to it in place is not seen, even by a new `createSchemaUtils()`, so pass a new object to change it.
 
 #### Parameters
 
