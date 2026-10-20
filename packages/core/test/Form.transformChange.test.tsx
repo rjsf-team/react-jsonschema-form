@@ -398,6 +398,47 @@ describe('transformChange', () => {
     expect(optionOf(1)).toHaveValue('0');
   });
 
+  it('takes an option switch that leaves the data as it was when it returns a copy of the data', async () => {
+    const optionsSchema: RJSFSchema = {
+      oneOf: [
+        { title: 'A', type: 'object', properties: { v: { type: 'string' } } },
+        { title: 'B', type: 'object', properties: { v: { type: 'string' } } },
+      ],
+    };
+    const { node, reported } = renderForm<Record<string, unknown>>({
+      schema: optionsSchema,
+      initialFormData: { v: 'x' },
+      // Rebuilds the data on every edit, as one that rewrites a field does
+      transformChange: (next) => next && { ...next },
+    });
+    const select = elementOf(node, '#root__oneof_select');
+
+    await user.selectOptions(select, 'B');
+
+    // The selector's option values are the option indexes: '1' is B
+    expect(select).toHaveValue('1');
+    expect(reported.at(-1)?.formData).toEqual({ v: 'x' });
+  });
+
+  it('refuses an option switch that leaves the data as it was by returning the data before it', async () => {
+    const optionsSchema: RJSFSchema = {
+      oneOf: [
+        { title: 'A', type: 'object', properties: { v: { type: 'string' } } },
+        { title: 'B', type: 'object', properties: { v: { type: 'string' } } },
+      ],
+    };
+    const { node } = renderForm<Record<string, unknown>>({
+      schema: optionsSchema,
+      initialFormData: { v: 'x' },
+      transformChange: (_next, previous) => previous,
+    });
+    const select = elementOf(node, '#root__oneof_select');
+
+    await user.selectOptions(select, 'B');
+
+    expect(select).toHaveValue('0');
+  });
+
   it('takes a reorder of two equal items by returning the data after it', async () => {
     const choiceSchema: RJSFSchema = {
       type: 'array',

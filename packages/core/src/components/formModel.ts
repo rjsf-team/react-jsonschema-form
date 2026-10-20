@@ -377,18 +377,18 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     if (Object.is(returned, base.formData)) {
       return { next: base };
     }
-    // A copy of the data before the edit refuses it as that data itself does: shared against it, a copy comes back as
-    // it, and the refusal is what undoes the key moves the edit announced. Anything else is shared against the edit's
-    // data first, so a copy that changes nothing of the edit, as `{ ...next }` with a field already upper-cased is,
-    // takes it in one walk rather than deriving the whole form's data a second time. Only a key move whose data equals
-    // the data before it, such as two equal items swapped, needs the second walk to tell a refusal from a copy
+    // Shared against the edit's data first, so a copy that changes nothing of the edit, as `{ ...next }` with a field
+    // already upper-cased is, takes it in one walk rather than deriving the whole form's data a second time. An edit
+    // that left the data as it was, such as an option switch whose data fits both options, has `next` equal to
+    // `previous`, so a copy of either takes it, and only `previous` itself refuses it
     const transformed = replaceEqualDeep(edited.formData, returned);
-    const isCopyOfEdit = Object.is(transformed, edited.formData);
-    if ((!isCopyOfEdit || change.newKeyOf) && Object.is(replaceEqualDeep(base.formData, transformed), base.formData)) {
-      return { next: base };
-    }
-    if (isCopyOfEdit) {
+    if (Object.is(transformed, edited.formData)) {
       return { next: applyChangeToErrorsOf(edited, base.formData, change, props, isValidated) };
+    }
+    // Otherwise a copy of the data before the edit refuses it as that data itself does: shared against it, a copy comes
+    // back as it, and the refusal is what undoes the key moves the edit announced
+    if (Object.is(replaceEqualDeep(base.formData, transformed), base.formData)) {
+      return { next: base };
     }
     // No field made the rewrite, so the errors the fields raised, the root's included, are carried through it as the
     // edit left them
