@@ -780,7 +780,7 @@ This is the order a widget's UI library needs when it manages its own selection 
 ### getAdditionalPropertySchema&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Returns the schema an object says applies to a `key` its own `properties` don't name, so that everything that renders such a property, seeds it or decides whether it is allowed at all reads one answer rather than its own.
-A key one or more `patternProperties` patterns match is described by all of them together, returned as an `allOf` for the caller to resolve into the one schema that describes it; a `false` among them rejects the key whatever the others allow, since no value satisfies it.
+A key one or more `patternProperties` patterns match is described by all of them together, returned as an `allOf` for the caller to resolve into the one schema that describes it, the same object for every key the same patterns match, so read it rather than change it; a `false` among them rejects the key whatever the others allow, since no value satisfies it.
 A key no pattern matches is `additionalProperties`' to describe, `false` and `true` included.
 
 An `unevaluatedProperties` answers for the key only where the object names no `additionalProperties` at all: the keys the `properties` and the `patternProperties` leave over are exactly the ones that go unevaluated, so that keyword is what then describes or rejects them.
