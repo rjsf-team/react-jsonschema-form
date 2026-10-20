@@ -5,8 +5,10 @@ import {
   ALL_OF_KEY,
   CONST_KEY,
   DEFAULT_KEY,
+  DEPENDENCIES_KEY,
   IF_KEY,
   ONE_OF_KEY,
+  REF_KEY,
   UI_DEFINITIONS_KEY,
 } from '../constants.ts';
 import constIsAjvDataReference from '../constIsAjvDataReference.ts';
@@ -24,6 +26,7 @@ import getXxxOfOptions from '../getXxxOfOptions.ts';
 import type { XxxOfOptions } from '../getXxxOfOptions.ts';
 import isConstant from '../isConstant.ts';
 import isConstantOptionList from '../isConstantOptionList.ts';
+import isConstantSelect from '../isConstantSelect.ts';
 import isFixedItems from '../isFixedItems.ts';
 import isObject, { isSchemaObject } from '../isObject.ts';
 import isPlainObject from '../isPlainObject.ts';
@@ -89,6 +92,9 @@ import retrieveSchema, {
 } from './retrieveSchema.ts';
 
 const PRIMITIVE_TYPES = ['string', 'number', 'integer', 'boolean', 'null'];
+
+/** The keywords retrieving a schema merges subschemas in through; it leaves the own keywords of a schema holding none */
+const MERGING_KEYWORDS = [REF_KEY, ALL_OF_KEY, IF_KEY, DEPENDENCIES_KEY];
 
 /** Enum that indicates how `schema.additionalItems` should be handled by the `getInnerSchemaForArrayItem()` function.
  */
@@ -861,7 +867,7 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
       // Or if the schema has allOf, we need to merge the defaults into the formData because we don't compute the defaults for allOf.
       defaultsWithFormData = mergeDefaultsWithFormData(
         defaultsWithFormData,
-        ensureFormDataMatchingSchema<unknown, S, F>(context, schema, rootSchema, rawFormData),
+        viewFormDataMatching<unknown, S, F>(context, view, rawFormData),
         mergeExtraDefaults,
         true,
       );
@@ -1611,12 +1617,47 @@ export function ensureFormDataMatchingSchema<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(context: SchemaContext<S, F>, schema: S, rootSchema: S, formData: T | undefined): T | T[] | undefined {
+  return formDataMatching<T, S, F>(context, schema, rootSchema, formData, (_key, propertySchema) =>
+    resolveOwnRef<S>(propertySchema, rootSchema, context.customMergeAllOf),
+  );
+}
+
+/** `ensureFormDataMatchingSchema()` for the field `view` the fold computed, whose properties' own `$ref`s are read where
+ * the declarations holding them sit, as `objectDefaults()` reads them: a property declared twice is merged into one no
+ * graph holds
+ */
+function viewFormDataMatching<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  view: DefaultsView<S>,
+  formData: T | undefined,
+): T | T[] | undefined {
+  return formDataMatching<T, S, F>(context, view.schema, view.field.graph.rawRoot, formData, (key, propertySchema) =>
+    resolveMergedOwnRef<S>(view.graph, childSeeds(view, key).seeds, propertySchema, context.customMergeAllOf),
+  );
+}
+
+/** Returns `formData` matched to `schema` as `ensureFormDataMatchingSchema()` matches it, the own `$ref` of each of the
+ * schema's properties read by `readOwnRef()`
+ */
+function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  schema: S,
+  rootSchema: S,
+  formData: T | undefined,
+  readOwnRef: (key: string, propertySchema: S) => S,
+): T | T[] | undefined {
   const { defaultFormStateBehavior } = context;
   const shouldRetrieveAllOf = shouldPopulateAllOfDefaults(schema, defaultFormStateBehavior);
   const schemaToMatch = shouldRetrieveAllOf ? retrieveSchema<T, S, F>(context, schema, rootSchema, formData) : schema;
-  // Without data there is nothing to check against the options of a select, so only data asks whether it is one
+  // Without data there is nothing to check against the options of a select, so only data asks whether it is one. A
+  // schema with nothing left to merge is asked as it stands, which is what retrieving it would give: one the fold merged
+  // holds subschemas merged from several declarations, which retrieving it as a call root would resolve against the root
   const isSelectField =
-    formData !== undefined && !isConstant<S>(schemaToMatch) && isSelect<T, S, F>(context, schemaToMatch, rootSchema);
+    formData !== undefined &&
+    !isConstant<S>(schemaToMatch) &&
+    (MERGING_KEYWORDS.some((keyword) => Object.hasOwn(schemaToMatch, keyword))
+      ? isSelect<T, S, F>(context, schemaToMatch, rootSchema)
+      : isConstantSelect<S>(resolveConstantOptions<S>(schemaToMatch, rootSchema), true));
   let validFormData: unknown = formData;
   if (isSelectField) {
     const getOptionsList = optionsList<T, S, F>(resolveConstantOptions<S>(schemaToMatch, rootSchema));
@@ -1635,9 +1676,7 @@ export function ensureFormDataMatchingSchema<
     for (const key of Object.keys(schemaToMatch.properties)) {
       const propertySchema = getPropertySchema<S>(schemaToMatch, key);
       // A property written as a `$ref` is matched as the definition it names, whose `allOf` it is
-      const readProperty = isSchemaObject<S>(propertySchema)
-        ? resolveOwnRef<S>(propertySchema, rootSchema, context.customMergeAllOf)
-        : propertySchema;
+      const readProperty = isSchemaObject<S>(propertySchema) ? readOwnRef(key, propertySchema) : propertySchema;
       if (
         Object.hasOwn(matched, key) &&
         (shouldRetrieveAllOf || (isObject(readProperty) && ALL_OF_KEY in readProperty))
@@ -1718,7 +1757,7 @@ export default function getDefaultFormState<
   if (isObject(formData) || Array.isArray(formData)) {
     const { mergeDefaultsIntoFormData } = context.defaultFormStateBehavior ?? {};
     const defaultSupercedesUndefined = mergeDefaultsIntoFormData === 'useDefaultIfFormDataUndefined';
-    const matchingFormData = ensureFormDataMatchingSchema<T, S, F>(context, schema, view.field.graph.rawRoot, formData);
+    const matchingFormData = viewFormDataMatching<T, S, F>(context, view, formData);
     return asDeclared<T | T[] | undefined>(
       mergeDefaultsWithFormData(
         defaults,
