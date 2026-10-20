@@ -43,8 +43,7 @@ export default function findSelectedOptionInXxxOf<
           return false;
         }
         // An option hands its properties out as written, so a selector written as a `$ref` is retrieved to be read. One
-        // written in place already holds its value, and an option without one has none to match: retrieving a schema the
-        // root does not hold, such as a stand-in for the missing property, would parse it anew on every render
+        // written in place already holds its value, and an option without one has none to match
         const selector =
           typeof property[REF_KEY] === 'string'
             ? retrieveSchema<unknown, S, F>(context, property, rootSchema, data)

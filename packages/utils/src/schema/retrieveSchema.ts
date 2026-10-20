@@ -72,6 +72,10 @@ import { pointerTo, withVariantId } from './graph/validationTargets.ts';
  * one level. Retrieving a schema this function returned gives the same schema back, and a schema
  * that carries nothing of the kind is resolved as a field of its own, from the top.
  *
+ * A `schema` the root does not hold is parsed once per content and kept for as long as the root, so one built from form
+ * data keeps an entry for each distinct value until the root changes. Like the root, it must not be changed once handed
+ * in: calls handed the same content share its result.
+ *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param schema - The schema for which retrieving a schema is desired
  * @param [rootSchema={}] - The root schema that will be forwarded to all the APIs
@@ -252,20 +256,15 @@ export function fieldOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, schem
   );
 }
 
-/** The key each rebuilt option is adopted under, by the field offering it, its keyword and its index */
-const rebuiltOptions = new KeyedMemo<object>();
-
 /** The node of the option `option` a plan's merged `keyword` list holds at `index`: the one a chain providing the list
  * holds there, which is the one parsed under the base of the resource that provider is in, since one object reached in
  * two resources is a node in each. An option no node holds, such as one of the cross product a merge makes of two
  * lists, is adopted, so that it is still handed out as an option of the field offering it, keeping the field's guard
  * chain: handed out as a schema of its own, a recursion through it would start afresh at every level. The merge makes
- * such an option anew for every plan, and a field whose data a plan reads is planned again on every edit, so it is
- * adopted as a copy of the one last adopted at its place in the field, which is parsed only when its keywords change.
+ * such an option anew for every plan, which the graph adopts once for what it holds.
  */
 function optionNode<S extends StrictRJSFSchema>(
   plan: MergePlan<S>,
-  field: Provenance<S>,
   keyword: string,
   index: number,
   option: S,
@@ -275,12 +274,7 @@ function optionNode<S extends StrictRJSFSchema>(
     return node.kind === 'schema' && node.raw === option;
   });
   const node = provided?.node ?? plan.graph.byObject(option);
-  return node === undefined
-    ? plan.graph.adoptCopy(
-        option,
-        rebuiltOptions.get([field, keyword, index], () => ({})),
-      )
-    : { graph: plan.graph, node };
+  return node === undefined ? plan.graph.adopt(option) : { graph: plan.graph, node };
 }
 
 /** Returns the expansion of a field `retrieveSchema()` collapsed, flagging it with `RJSF_REF_CYCLE_KEY`: the field
@@ -355,11 +349,11 @@ export function nodeOfSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: S,
 }
 
 /** Returns the schema a validator checks `schema` with as the subschema it stands for: a `{ $ref }` naming its place in
- * `rootSchema`, which the validator resolves against the root it is handed, or, for a schema with no place there, the
- * schema itself under an `$id` derived from its own, see `withVariantId()`, which a validator reads a `$ref` that is
- * only a fragment against the root under, as it reads every one it is handed. A schema `retrieveSchema()` handed out
- * from one subschema stands for it, so it is checked as JSON Schema reads that subschema rather than as the form merged
- * it; one merged from several is checked as merged.
+ * `rootSchema`, see `pointerTo()`, which the validator resolves against the root it is handed, or, for a schema with no
+ * place there, the schema itself under an `$id` derived from its own, see `withVariantId()`, which a validator reads a
+ * `$ref` that is only a fragment against the root under, as it reads every one it is handed. A schema
+ * `retrieveSchema()` handed out from one subschema stands for it, so it is checked as JSON Schema reads that subschema
+ * rather than as the form merged it; one merged from several is checked as merged.
  *
  * @param schema - The schema to check data against
  * @param rootSchema - The root schema it belongs to
@@ -516,6 +510,17 @@ export function resolveOwnRef<S extends StrictRJSFSchema = RJSFSchema>(
   return requireOwnRef<S>(schema, rootSchema, customMergeAllOf).resolved;
 }
 
+/** Returns whether the own `$ref` of `schema` names a definition under `rootSchema`, so that `resolveOwnRef()` resolves
+ * it rather than throwing: a schema written for another root can hold a reference that names nothing under this one
+ *
+ * @param schema - The schema whose own `$ref` is looked up
+ * @param rootSchema - The root schema the reference is looked up in
+ * @returns - False for a reference that resolves to nothing or a chain of references that loops, and true otherwise
+ */
+export function ownRefResolves<S extends StrictRJSFSchema = RJSFSchema>(schema: S, rootSchema: S): boolean {
+  return !('error' in findOwnRef<S>(schema, rootSchema));
+}
+
 /** Whether an option's plan adds nothing to the plan of the field offering it, beyond the option's own `$ref` */
 function addsNothing<S extends StrictRJSFSchema>(
   plan: MergePlan<S>,
@@ -666,7 +671,7 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
           if (!isSchemaObject<S>(option) || isDecided(option)) {
             return option;
           }
-          const adopted = optionNode(plan, field, keyword, index, option);
+          const adopted = optionNode(plan, keyword, index, option);
           const provenance = childProvenance(
             field,
             {

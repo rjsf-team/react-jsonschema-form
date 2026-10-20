@@ -17,9 +17,14 @@ describe('an if checked for a field with no data, with useDefaults', () => {
   });
 });
 
-describe('options scored with useDefaults, which fills defaults into the data as it checks', () => {
+/** Data that is neither an array nor a plain object, which Ajv fills defaults into all the same */
+class Holder {
+  readonly k = 'x';
+}
+
+describe('options scored with useDefaults, which fills defaults into a copy of the data as it checks', () => {
   // The first and last options offer `p` the same option objects, so scoring the last asks again for the pick the first
-  // made for `p`, after scoring the middle one has filled `flag` into `p`
+  // made for `p`, after checking the middle one has filled `flag` into a copy of `p`
   const shared: RJSFSchema[] = [
     { type: 'object', properties: { k: { type: 'string' }, flag: { not: {} } } },
     { type: 'object', properties: { k: { type: 'string' }, flag: { type: 'string', const: 'on' } } },
@@ -34,19 +39,24 @@ describe('options scored with useDefaults, which fills defaults into the data as
     { type: 'object', properties: { p: { anyOf: shared }, q: { type: 'string' } } },
   ];
   const root: RJSFSchema = { anyOf: options };
-  it.each([
-    ['plain data', {}],
-    // A pick for data holding a Date is kept for the outermost call alone, and compared within it all the same
-    ['data holding a Date', { when: new Date(0) }],
-  ])('scores a nested option list again once a default is filled into %s it was scored for', (_name, extra) => {
+  it.each<[string, () => object]>([
+    ['plain data', () => ({ k: 'x' })],
+    ['data holding a Date', () => ({ k: 'x', when: new Date(0) })],
+    ['a class instance', () => new Holder()],
+    ['a Date', () => new Date(0)],
+  ])('picks for %s under a nested option list as for data no default was filled into', (_name, p) => {
     const validator = customizeValidator({ ajvOptionsOverrides: { useDefaults: true } });
-    const formData = { p: { k: 'x', ...extra }, q: 'z' };
-    expect(getClosestMatchingOption({ validator }, root, formData, options)).toBe(2);
-    expect(formData.p).toEqual({ k: 'x', flag: 'on', ...extra });
+    const formData = { p: p(), q: 'z' };
+    // What the data scores with nothing filled into it, as without `useDefaults`
+    const fresh = getClosestMatchingOption({ validator: customizeValidator() }, root, { p: p(), q: 'z' }, options);
+
+    expect(getClosestMatchingOption({ validator }, root, formData, options)).toBe(fresh);
+    expect(fresh).toBe(2);
+    expect(formData.p).toEqual(p());
+    expect(Object.keys(formData.p)).toEqual(Object.keys(p()));
   });
-  it('matches data again that the validator filled defaults into while matching it', () => {
-    // Checking the first option fills nothing, and it is checked before the second fills `flag`, which it rules out: the
-    // first call picks between both, while the data that call leaves matches the second alone
+  it('leaves the data it matches as it was, so a later call matches it as the first did', () => {
+    // Checking the second option fills `flag`, which the first rules out, into a copy: the data matches both every time
     const filledLast: RJSFSchema[] = [
       {
         type: 'object',
@@ -58,9 +68,9 @@ describe('options scored with useDefaults, which fills defaults into the data as
     const filledLastRoot: RJSFSchema = { anyOf: filledLast };
     const validator = customizeValidator({ ajvOptionsOverrides: { useDefaults: true } });
     const formData = { k: 'x', m: 1, n: true };
-    getClosestMatchingOption({ validator }, filledLastRoot, formData, filledLast);
-    expect(formData).toEqual({ k: 'x', m: 1, n: true, flag: 'on' });
 
-    expect(getClosestMatchingOption({ validator }, filledLastRoot, formData, filledLast)).toBe(1);
+    expect(getClosestMatchingOption({ validator }, filledLastRoot, formData, filledLast)).toBe(0);
+    expect(formData).toEqual({ k: 'x', m: 1, n: true });
+    expect(getClosestMatchingOption({ validator }, filledLastRoot, formData, filledLast)).toBe(0);
   });
 });

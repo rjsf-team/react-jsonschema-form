@@ -3,13 +3,14 @@ import deepEquals from '../deepEquals.ts';
 import getPropertySchema from '../getPropertySchema.ts';
 import getSchemaType from '../getSchemaType.ts';
 import getXxxOfKey from '../getXxxOfKey.ts';
-import isObject from '../isObject.ts';
+import getXxxOfOptions from '../getXxxOfOptions.ts';
+import isObject, { isSchemaObject } from '../isObject.ts';
 import isPlainObject from '../isPlainObject.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
 import { getByPath, hasByPath } from '../pathUtils.ts';
 import type { FormContextType, GenericObjectType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
 import resolveConstantOptions from './resolveConstantOptions.ts';
-import retrieveSchema from './retrieveSchema.ts';
+import retrieveSchema, { ownRefResolves } from './retrieveSchema.ts';
 
 const NO_VALUE = Symbol('no Value');
 
@@ -38,6 +39,22 @@ function enumValuesForSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: S)
   const values = (options as S[]).flatMap((option) => (CONST_KEY in option ? [option[CONST_KEY]] : option.enum!));
 
   return values.length > 0 ? values : undefined;
+}
+
+/** Returns the values the old schema's select lists, its constant options written as `$ref`s read as the definitions
+ * they name under `rootSchema`, as the new schema's are read. The old schema can come from another root, where an
+ * option's `$ref` names nothing under this one: such a list lists no values, so it agrees with no list the new schema
+ * offers, and the new schema's options decide.
+ *
+ * @param oldSchema - The old schema
+ * @param rootSchema - The root schema of the new schema
+ * @returns - The values the select lists, or undefined when it lists none
+ */
+function oldListedValues<S extends StrictRJSFSchema = RJSFSchema>(oldSchema: S, rootSchema: S): unknown[] | undefined {
+  const options = getXxxOfOptions<S>(oldSchema)?.options ?? [];
+  return options.every((option) => !isSchemaObject<S>(option) || ownRefResolves<S>(option, rootSchema))
+    ? enumValuesForSchema<S>(resolveConstantOptions<S>(oldSchema, rootSchema))
+    : undefined;
 }
 
 /** Whether two schemas' `type`s name the same types. A list is compared by what it names rather than by identity or
@@ -113,7 +130,8 @@ function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>
  * - If the old and new schema types, read through `getSchemaType()` so that a type list also allowing `null` counts,
  *   are both array, the `data` is an array, the new schema's `const` is not an array other than the `data` unless the
  *   old schema declares the same `const`, and the `data` is one of the new schema's `enum` or constant options when it
- *   lists any the old schema did not list alike, then:
+ *   lists any the old schema did not list alike, the options of both read with their `$ref`s resolved against
+ *   `rootSchema`, where an old option whose `$ref` names nothing there lists no values, then:
  *   - If the old and new schema `items` are both a single schema rather than a tuple or a boolean:
  *     - Retrieve the schema for any refs within each `oldKeySchema.items` and/or `newKeySchema.items`
  *     - If the `type`s of both items are the same (or the old does not have a type):
@@ -281,9 +299,12 @@ export default function sanitizeDataForNewSchema<
       deepEquals(newSchema.const, data) ||
       deepEquals(oldSchema.const, newSchema.const)) &&
     // A select over whole arrays holds one of its values, so an array it does not list is cleared as well, unless the
-    // old schema listed the same values, for the same reason
-    (replacementForInvalidEnumValue<S>(newSchema, data) === NO_VALUE ||
-      deepEquals(enumValuesForSchema<S>(oldSchema), enumValuesForSchema<S>(newSchema)))
+    // old schema listed the same values, for the same reason. Its constant options are read as the property's are
+    (replacementForInvalidEnumValue<S>(resolveConstantOptions<S>(newSchema, rootSchema), data) === NO_VALUE ||
+      deepEquals(
+        oldListedValues<S>(oldSchema, rootSchema),
+        enumValuesForSchema<S>(resolveConstantOptions<S>(newSchema, rootSchema)),
+      ))
   ) {
     let oldSchemaItems = oldSchema.items;
     let newSchemaItems = newSchema.items;
