@@ -306,18 +306,21 @@ describe('BooleanField', () => {
       expect(node.querySelector('input[type=checkbox]')).toHaveAttribute('required', '');
     });
 
-    // Rendered without a plan, as outside SchemaField, the widget gets its parent's `required` as is, so it has to
-    // leave the attribute off a box whose `false` the schema accepts on its own (#5388)
-    it('CheckboxWidget leaves the attribute off a required boolean whose false the schema accepts, rendered without a plan', () => {
-      const schema: RJSFSchema = { type: 'boolean' };
+    // Rendered without a plan, as outside SchemaField, the widget gets its parent's `required` as is, so the attribute
+    // has to follow both it and the schema: a required box whose `false` the schema accepts, and an optional one that
+    // has to be true but is left unanswered, each hold data the schema accepts, which the browser would refuse (#5388)
+    it.each<[string, RJSFSchema, boolean, boolean | undefined]>([
+      ['a required boolean whose false the schema accepts', { type: 'boolean' }, true, false],
+      ['an optional boolean that has to be true', { type: 'boolean', const: true }, false, undefined],
+    ])('CheckboxWidget leaves the attribute off %s, rendered without a plan', (_, schema, required, value) => {
       const { container } = render(
         <CheckboxWidget
           id='root'
           name='root'
           schema={schema}
           uiSchema={{}}
-          value={false}
-          required
+          value={value}
+          required={required}
           disabled={false}
           readonly={false}
           autofocus={false}

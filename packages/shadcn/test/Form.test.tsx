@@ -778,8 +778,9 @@ describe('shadcn focuses its groups as core does', () => {
   });
 });
 
-// HTML5 constraint validation fails an unchecked required box and blocks the submit before RJSF sees it, with nothing on
-// the screen to say why, so only a boolean the schema demands be true carries the attribute (#5388)
+// HTML5 constraint validation fails an unchecked required box and blocks the submit before RJSF sees it, so neither
+// onSubmit nor onError runs and the browser asks the user to check a box the schema lets them leave unchecked. Only a
+// required boolean the schema demands be true carries the attribute (#5388)
 describe('shadcn CheckboxWidget required attribute', () => {
   const agree: RJSFSchema = { type: 'boolean', title: 'Agree' };
   const formSchema = (field: RJSFSchema): RJSFSchema => ({
@@ -812,12 +813,17 @@ describe('shadcn CheckboxWidget required attribute', () => {
     expect(container.querySelector('input[type=checkbox]')).toHaveAttribute('required');
   });
 
-  // Rendered without a plan, as outside SchemaField, the widget gets its parent's `required` as is, and Radix renders the
-  // input the browser validates only inside a form
-  test('leaves the attribute off a required boolean whose false the schema accepts, rendered without a plan', () => {
+  // Rendered without a plan, as outside SchemaField, the widget gets its parent's `required` as is, so the attribute
+  // has to follow both it and the schema: a required box whose `false` the schema accepts, and an optional one that
+  // has to be true but is left unanswered, each hold data the schema accepts, which the browser would refuse.
+  // Radix renders the input the browser validates only inside a form
+  test.each<[string, RJSFSchema, boolean, boolean | undefined]>([
+    ['a required boolean whose false the schema accepts', agree, true, false],
+    ['an optional boolean that has to be true', { ...agree, const: true }, false, undefined],
+  ])('leaves the attribute off %s, rendered without a plan', (_, schema, required, value) => {
     const { container } = render(
       <form>
-        <CheckboxWidget {...makeWidgetMockProps({ schema: agree, value: false, required: true, readonly: false })} />
+        <CheckboxWidget {...makeWidgetMockProps({ schema, value, required, readonly: false })} />
       </form>,
     );
 

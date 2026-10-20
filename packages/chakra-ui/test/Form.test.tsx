@@ -1095,8 +1095,9 @@ describe('chakra-ui WrapIfAdditionalTemplate', () => {
   });
 });
 
-// HTML5 constraint validation fails an unchecked required box and blocks the submit before RJSF sees it, with nothing on
-// the screen to say why, so only a boolean the schema demands be true carries the attribute (#5388)
+// HTML5 constraint validation fails an unchecked required box and blocks the submit before RJSF sees it, so neither
+// onSubmit nor onError runs and the browser asks the user to check a box the schema lets them leave unchecked. Only a
+// required boolean the schema demands be true carries the attribute (#5388)
 describe('chakra-ui CheckboxWidget required attribute', () => {
   const agree: RJSFSchema = { type: 'boolean', title: 'Agree' };
   const formSchema = (field: RJSFSchema): RJSFSchema => ({
@@ -1129,17 +1130,22 @@ describe('chakra-ui CheckboxWidget required attribute', () => {
     expect(container.querySelector('input[type=checkbox]')).toHaveAttribute('required');
   });
 
-  // Rendered without a plan, as outside SchemaField, the widget gets its parent's `required` as is
-  test('leaves the attribute off a required boolean whose false the schema accepts, rendered without a plan', () => {
+  // Rendered without a plan, as outside SchemaField, the widget gets its parent's `required` as is, so the attribute
+  // has to follow both it and the schema: a required box whose `false` the schema accepts, and an optional one that
+  // has to be true but is left unanswered, each hold data the schema accepts, which the browser would refuse
+  test.each<[string, RJSFSchema, boolean, boolean | undefined]>([
+    ['a required boolean whose false the schema accepts', agree, true, false],
+    ['an optional boolean that has to be true', { ...agree, const: true }, false, undefined],
+  ])('leaves the attribute off %s, rendered without a plan', (_, schema, required, value) => {
     const { container } = render(
       <ChakraProvider value={defaultSystem}>
         <CheckboxWidget
           id='root'
           name='root'
-          schema={agree}
+          schema={schema}
           uiSchema={{}}
-          value={false}
-          required
+          value={value}
+          required={required}
           disabled={false}
           readonly={false}
           autofocus={false}
@@ -1148,7 +1154,7 @@ describe('chakra-ui CheckboxWidget required attribute', () => {
           onChange={vi.fn()}
           onBlur={vi.fn()}
           onFocus={vi.fn()}
-          registry={getTestRegistry(agree)}
+          registry={getTestRegistry(schema)}
         />
       </ChakraProvider>,
     );
