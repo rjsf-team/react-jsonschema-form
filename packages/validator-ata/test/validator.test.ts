@@ -19,10 +19,13 @@ import type { Validator } from 'ata-validator';
 import pointerValidationTests, {
   absoluteRefValidationTests,
 } from '../../utils/test/testUtils/pointerValidationTests.ts';
+import relativeOptionScoringTests from '../../utils/test/testUtils/relativeOptionScoringTests.ts';
 import customizeValidator from '../src/customizeValidator.ts';
 // Static import of the package surface so its top-level evaluation
 // (`export default customizeValidator()`) is included in coverage.
 import * as pkg from '../src/index.ts';
+
+relativeOptionScoringTests(() => customizeValidator());
 
 /** ATAValidator behavior tests. The shared `@rjsf/utils` schema test suite
  * (see `test/utilsTests/schema.test.ts`) exercises the full ValidatorType

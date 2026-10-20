@@ -29,12 +29,15 @@ import pointerValidationTests, {
   absoluteRefValidationTests,
   sharedSubschemaValidationTests,
 } from '../../utils/test/testUtils/pointerValidationTests.ts';
+import relativeOptionScoringTests from '../../utils/test/testUtils/relativeOptionScoringTests.ts';
 import customizeValidator from '../src/customizeValidator.ts';
 import type { Localizer } from '../src/index.ts';
 import AJV8Validator from '../src/validator.ts';
 import { expectWarn } from './harness/testData.ts';
 
 const illFormedKey = "bar`'()=+*&^%$#@!";
+
+relativeOptionScoringTests(() => new AJV8Validator({}));
 
 describe('AJV8Validator', () => {
   let builder: ErrorSchemaBuilder;
