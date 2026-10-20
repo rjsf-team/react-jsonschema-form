@@ -1143,12 +1143,13 @@ function dependencySubschemas<S extends StrictRJSFSchema = RJSFSchema, F extends
   }
   // The rest of the dependency is read without those branches, which a dependency spelled as a `$ref` holds behind the
   // reference: read as options, a name every branch declares would count as one the form renders even where no
-  // single branch qualifies and none of the `oneOf` is merged in. So the definition is read without its `oneOf`, beside
-  // the keywords the dependency declares itself
+  // single branch qualifies and none of the `oneOf` is merged in. So the definition is read without its `oneOf`,
+  // conjoined with the keywords the dependency declares beside its `$ref` as the form merges them, so that a
+  // `properties` there adds its names to those the definition declares rather than replacing them
   const withoutOneOf =
     referenced === undefined
       ? withoutKeys(dependent, ONE_OF_KEY)
-      : { ...withoutKeys(referenced, ONE_OF_KEY), ...withoutKeys(dependent, ONE_OF_KEY, REF_KEY) };
+      : conjoinDefinition(dependent, withoutKeys(dependent, ONE_OF_KEY, REF_KEY), withoutKeys(referenced, ONE_OF_KEY));
   const matching =
     rootSchema === undefined
       ? []
