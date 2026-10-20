@@ -109,6 +109,51 @@ describe('the cost of an edit to a wide object', () => {
     );
     expect(adopt.mock.results.map(({ value }) => value.graph === graph)).not.toContain(false);
   });
+  it('parses the schema of the extra keys its patterns describe once, from one edit to the next', () => {
+    const context = { validator: miniValidator() };
+    const root: RJSFSchema = {
+      type: 'object',
+      patternProperties: { '^a': { type: 'string' }, '^ab': { minLength: 1 } },
+    };
+    const graph = parseSchemaGraph(root);
+    const adopt = vi.spyOn(graph, 'adopt');
+    const adoptedGraphs = () =>
+      new Set(adopt.mock.results.splice(0).flatMap((result) => (result.type === 'return' ? [result.value.graph] : [])));
+    const edit = (value: string) => {
+      const formData = { abc: value, ab2: 'y', a: 'z' };
+      retrieveSchema(context, root, root, formData);
+      getDefaultFormState(context, { schema: root, rootSchema: root, formData });
+      return adoptedGraphs();
+    };
+    const first = edit('x');
+    expect([...edit('w')].filter((adopted) => !first.has(adopted))).toEqual([]);
+  });
+  it('parses no schema anew for the defaults of an untouched field offering options beside an unmerged allOf', () => {
+    const context = { validator: miniValidator() };
+    const root: RJSFSchema = {
+      type: 'object',
+      properties: {
+        p: {
+          allOf: [{ type: 'object' }],
+          oneOf: [{ properties: { a: { type: 'string', default: 'a' } } }, { properties: { b: { type: 'string' } } }],
+        },
+        q: { type: 'string' },
+      },
+    };
+    const graph = parseSchemaGraph(root);
+    const adopt = vi.spyOn(graph, 'adopt');
+    const adoptedGraphs = () =>
+      new Set(adopt.mock.results.splice(0).flatMap((result) => (result.type === 'return' ? [result.value.graph] : [])));
+    const edit = (value: string) => {
+      expect(getDefaultFormState(context, { schema: root, rootSchema: root, formData: { q: value } })).toEqual({
+        q: value,
+        p: { a: 'a' },
+      });
+      return adoptedGraphs();
+    };
+    const first = edit('x');
+    expect([...edit('y')].filter((adopted) => !first.has(adopted))).toEqual([]);
+  });
   it('parses the options a merge rebuilds for each plan once while their keywords stay the same', () => {
     const context = { validator: miniValidator() };
     // `b` is declared by D0 and by the D1 it merges, each with an option list, so it offers the cross product
