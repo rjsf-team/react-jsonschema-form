@@ -1,5 +1,6 @@
 import { Suspense, forwardRef, lazy, memo } from 'react';
 import type {
+  ArrayFieldItemTemplateProps,
   ErrorSchema,
   Field,
   FieldProps,
@@ -773,6 +774,82 @@ describe('SchemaField', () => {
       const { node: namedNode } = createFormComponent({ schema: named, uiSchema, showErrorList: false, ...props });
 
       expect(namedNode.innerHTML).toBe(unnamedNode.innerHTML);
+    });
+
+    describe("labels an array item as the item's field is labelled", () => {
+      setupConsoleWarnSuppression();
+      function OwnField(props: FieldProps) {
+        return <input id={props.id} />;
+      }
+
+      it.each<{ named: string; items: RJSFSchema; uiSchema: UiSchema; displayLabel: boolean }>([
+        {
+          named: "ui:field: 'SchemaField'",
+          items: titled,
+          uiSchema: { items: { 'ui:field': 'SchemaField' } },
+          displayLabel: true,
+        },
+        {
+          named: "ui:field: 'Missing'",
+          items: titled,
+          uiSchema: { items: { 'ui:field': 'Missing' } },
+          displayLabel: true,
+        },
+        {
+          named: "ui:field: 'Missing' and ui:globalOptions.field: 'SchemaField'",
+          items: titled,
+          uiSchema: { items: { 'ui:field': 'Missing' }, 'ui:globalOptions': { field: 'SchemaField' } },
+          displayLabel: true,
+        },
+        {
+          named: "ui:field: 'Missing' and a $id naming 'SchemaField'",
+          items: { ...titled, $id: 'SchemaField' },
+          uiSchema: { items: { 'ui:field': 'Missing' } },
+          displayLabel: true,
+        },
+        {
+          named: 'a ui:field naming a field written for the item',
+          items: titled,
+          uiSchema: { items: { 'ui:field': 'own' } },
+          displayLabel: false,
+        },
+        {
+          named: 'a ui:options.field naming a field written for the item',
+          items: titled,
+          uiSchema: { items: { 'ui:options': { field: 'own' } } },
+          displayLabel: false,
+        },
+        {
+          named: 'a $id naming a field written for the item',
+          items: { ...titled, $id: 'own' },
+          uiSchema: {},
+          displayLabel: false,
+        },
+      ])('with $named', ({ items, uiSchema, displayLabel }) => {
+        const renderItem = vi.fn<(displayLabel: boolean | undefined) => void>();
+        const renderField = vi.fn<(displayLabel: boolean | undefined) => void>();
+        function ArrayFieldItemTemplate(props: ArrayFieldItemTemplateProps) {
+          renderItem(props.displayLabel);
+          return <div>{props.children}</div>;
+        }
+        function FieldTemplate(props: FieldTemplateProps) {
+          if (props.id === 'root_0') {
+            // oxlint-disable-next-line typescript/no-deprecated -- the prop the item's template lays its toolbar out to match
+            renderField(props.displayLabel);
+          }
+          return <div>{props.children}</div>;
+        }
+        createFormComponent({
+          schema: { type: 'array', items },
+          uiSchema,
+          formData: ['x'],
+          fields: { own: OwnField },
+          templates: { ArrayFieldItemTemplate, FieldTemplate },
+        });
+
+        expect(renderItem).toHaveBeenLastCalledWith(displayLabel);
+        expect(renderField).toHaveBeenLastCalledWith(displayLabel);
+      });
     });
 
     const describedSchema: RJSFSchema = {

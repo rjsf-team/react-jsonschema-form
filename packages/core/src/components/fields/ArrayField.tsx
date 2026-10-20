@@ -33,7 +33,6 @@ import {
   fieldPathToId,
   fieldPathToName,
   TranslatableString,
-  UI_FIELD_KEY,
 } from '@rjsf/utils';
 
 import useFieldView from '../../hooks/useFieldView.ts';
@@ -48,7 +47,7 @@ import {
   getWidgetLabelProps,
   withFallbackItems,
 } from './fieldWidgetUtils.ts';
-import { isSchemaFieldOwn, lookUpUiField, withoutNamedField } from './namedField.ts';
+import { isWrittenField, resolveNamedField } from './namedField.ts';
 import OwnTitleAndDescription from './OwnTitleAndDescription.tsx';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 
@@ -644,18 +643,19 @@ function ArrayFieldItemInner<
   const ItemSchemaField = ArraySchemaField || SchemaField;
   const readsFormData = useReadsFormData(ArrayFieldItem);
   const { ArrayFieldItemTemplate } = getTemplates<T[], S, F>(registry, uiOptions);
-  // Labelled as the item's `SchemaField` labels it, which reads a `ui:field` naming `SchemaField` as naming no field
-  const namesSchemaFieldOwn = isSchemaFieldOwn<T[], S, F>(
-    lookUpUiField<T[], S, F>(itemUiSchema?.[UI_FIELD_KEY], fields),
+  // Labelled from the same resolution of the field it names as its `SchemaField` renders by: a field written for the
+  // item draws its own label whichever spelling names it, as `getDisplayLabel()` says of one its `ui:field` names
+  const { namedField, uiSchema: resolvedItemUiSchema } = resolveNamedField<T[], S, F>(
+    itemUiSchema ?? {},
+    globalUiOptions?.field,
+    itemSchema.$id,
     fields,
+    fieldPath,
+    globalFormOptions,
   );
-  const displayLabel = displaysLabel<T[], S, F>(
-    registry,
-    itemSchema,
-    itemUiSchema && namesSchemaFieldOwn
-      ? withoutNamedField<T[], S, F>(itemUiSchema, globalUiOptions?.field)
-      : itemUiSchema,
-  );
+  const displayLabel =
+    !isWrittenField<T[], S, F>(namedField, fields) &&
+    displaysLabel<T[], S, F>(registry, itemSchema, resolvedItemUiSchema);
   const { description } = getUiOptions(itemUiSchema);
   const hasDescription = !!description || !!itemSchema.description;
   const { orderable, removable, copyable } = itemButtonOptions(uiOptions);
