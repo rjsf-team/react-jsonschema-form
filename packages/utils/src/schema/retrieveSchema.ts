@@ -341,16 +341,40 @@ export function resolveOwnRef<S extends StrictRJSFSchema = RJSFSchema>(
   if (isSchemaObject<S>(known)) {
     return known;
   }
+  const { graph, node } = ownRefNode<S>(rootGraph, schema, ref);
+  const resolved = ownRefResolved(graph, node, schema, ref, customMergeAllOf);
+  ownRefs.set(keys, resolved);
+  return resolved;
+}
+
+/** Returns whether the own `$ref` of `schema` names a definition under `rootSchema`, so that `resolveOwnRef()` resolves
+ * it rather than throwing: a schema written for another root can hold a reference that names nothing under this one
+ *
+ * @param schema - The schema whose own `$ref` is looked up
+ * @param rootSchema - The root schema the reference is looked up in
+ * @returns - False for a reference that resolves to nothing or a chain of references that loops, and true otherwise
+ */
+export function ownRefResolves<S extends StrictRJSFSchema = RJSFSchema>(schema: S, rootSchema: S): boolean {
+  const ref = schema[REF_KEY];
+  if (typeof ref !== 'string') {
+    return true;
+  }
+  const { graph, node } = ownRefNode<S>(parseSchemaGraph<S>(rootSchema), schema, ref);
+  const declared = graph.node(node);
+  return declared.kind === 'schema' && declared.ref !== undefined && graph.node(declared.ref).kind !== 'invalid';
+}
+
+/** Returns the node the own `$ref` of `schema` is read from: a stub merged from several declarations names the `$ref`
+ * of one of them, which is read from that one's node
+ */
+function ownRefNode<S extends StrictRJSFSchema>(rootGraph: SchemaGraph<S>, schema: S, ref: string): AdoptedSchema<S> {
   const { graph, seeds } = fieldOf<S>(rootGraph, schema);
-  // A stub merged from several declarations names the `$ref` of one of them, which is resolved from that one's node
   const declaring = seeds.find(({ node }) => {
     const seed = graph.node(node);
     return seed.kind === 'schema' && seed.raw[REF_KEY] === ref;
   });
   /* v8 ignore next -- a schema no seed declares the `$ref` of is adopted as a node of its own, which declares it */
-  const resolved = ownRefResolved(graph, (declaring ?? seeds[0]).node, schema, ref, customMergeAllOf);
-  ownRefs.set(keys, resolved);
-  return resolved;
+  return { graph, node: (declaring ?? seeds[0]).node };
 }
 
 /** Returns the own `$ref` of the node `node` resolved, as `resolveOwnRef()` resolves a schema's, from the node itself
