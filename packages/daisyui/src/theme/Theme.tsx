@@ -5,6 +5,7 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, ThemePresentation }
 
 import { createTemplates } from '../templates/Templates.tsx';
 import { createWidgets } from '../widgets/Widgets.tsx';
+import { readStoredTheme, storeTheme } from './storedTheme.ts';
 
 /** Which parts of a field this theme's fields and widgets draw themselves, over `@rjsf/core`'s: the toggle draws its
  * own label and description and holds `false` unchecked, as the checkbox does, and the rating and the date parts are
@@ -76,17 +77,11 @@ interface ThemeProviderProps {
  * @param props - The props for the component
  */
 export function ThemeProvider({ children }: ThemeProviderProps) {
-  const [theme, setTheme] = useState(() => {
-    try {
-      return localStorage.getItem('daisyui-theme') || 'cupcake';
-    } catch {
-      return 'cupcake';
-    }
-  });
+  const [theme, setTheme] = useState(readStoredTheme);
 
   const handleSetTheme = useCallback((newTheme: string) => {
     try {
-      localStorage.setItem('daisyui-theme', newTheme);
+      storeTheme(newTheme);
       setTheme(newTheme);
     } catch {
       // Ignore localStorage errors

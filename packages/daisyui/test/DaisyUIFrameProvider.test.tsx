@@ -1,6 +1,10 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 
 import { __createDaisyUIFrameProvider } from '../src/DaisyUIFrameProvider.tsx';
+import { ThemeProvider, useTheme } from '../src/theme/index.ts';
+
+const user = userEvent.setup();
 
 let localStorageMock: Record<string, string> = {};
 const mockSetItem = vi.fn((key, value) => {
@@ -139,6 +143,30 @@ describe('DaisyUIFrameProvider', () => {
     // Another tab's write reaches this document only as a `storage` event, which nothing a user does here dispatches
     fireEvent(window, new StorageEvent('storage', { key: 'daisyui-theme', newValue: 'dark' }));
 
+    expect(container.querySelector('[data-theme="dark"]')).not.toBeNull();
+  });
+
+  test("shows a theme ThemeProvider's setTheme stores", async () => {
+    function DarkButton() {
+      const { setTheme } = useTheme();
+      return (
+        <button type='button' onClick={() => setTheme('dark')}>
+          Dark
+        </button>
+      );
+    }
+    const DaisyUIFrame = __createDaisyUIFrameProvider({ children: <div>Test Content</div> });
+    const { container } = render(
+      <ThemeProvider>
+        <DarkButton />
+        <DaisyUIFrame />
+      </ThemeProvider>,
+    );
+    expect(container.querySelector('[data-theme="cupcake"]')).not.toBeNull();
+
+    await user.click(screen.getByText('Dark'));
+
+    expect(mockSetItem).toHaveBeenCalledWith('daisyui-theme', 'dark');
     expect(container.querySelector('[data-theme="dark"]')).not.toBeNull();
   });
 
