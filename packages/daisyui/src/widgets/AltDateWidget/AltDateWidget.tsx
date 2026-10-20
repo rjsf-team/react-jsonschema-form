@@ -79,12 +79,12 @@ export default function AltDateWidget<
         })}
       </div>
       <div className='flex justify-start space-x-2'>
-        {(options.hideNowButton !== undefined ? !options.hideNowButton : true) && (
+        {!options.hideNowButton && (
           <button type='button' className='btn btn-sm btn-primary' onClick={handleSetNow} disabled={buttonsDisabled}>
             {translateString(TranslatableString.NowLabel)}
           </button>
         )}
-        {(options.hideClearButton !== undefined ? !options.hideClearButton : true) && (
+        {!options.hideClearButton && (
           <button type='button' className='btn btn-sm btn-secondary' onClick={handleClear} disabled={buttonsDisabled}>
             {translateString(TranslatableString.ClearLabel)}
           </button>
