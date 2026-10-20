@@ -15,7 +15,14 @@ import type {
   WidgetProps,
   FormValidation,
 } from '@rjsf/utils';
-import { englishStringTranslator, fieldLabelId, getVisibleErrors, noop, TranslatableString } from '@rjsf/utils';
+import {
+  englishStringTranslator,
+  fieldLabelId,
+  getVisibleErrors,
+  isPlainObject,
+  noop,
+  TranslatableString,
+} from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -4902,6 +4909,30 @@ describe('ArrayField', () => {
         expect(keepsItsItem(before, shown(node))).toBe(true);
       });
 
+      it('when the defaults put an item back after a remove that transformChange rewrites', async () => {
+        const { node, getFormData } = createFormComponent({
+          schema: {
+            type: 'object',
+            properties: {
+              count: { type: 'number' },
+              list: { type: 'array', minItems: 2, items: { type: 'string', default: 'new' } },
+            },
+          },
+          uiSchema: { list: { items: { 'ui:widget': InstanceWidget } } },
+          initialFormData: { list: ['a', 'b'] },
+          defaultFormStateBehavior: { arrayMinItems: { populate: 'all', mergeExtraDefaults: true } },
+          // Rewrites every edit, beside the list, so the remove comes back rewritten rather than taken
+          transformChange: (next: unknown) =>
+            isPlainObject(next) ? { ...next, count: (typeof next.count === 'number' ? next.count : 0) + 1 } : next,
+        });
+        const before = shown(node);
+
+        await user.click(node.querySelectorAll('.rjsf-array-item-remove')[0]);
+
+        expect(getFormData()).toEqual({ count: 1, list: ['b', 'new'] });
+        expect(keepsItsItem(before, shown(node))).toBe(true);
+      });
+
       it('when onChange sets a reorder back', async () => {
         const ref = createFormRef<string[]>();
         let previous: string[] | undefined = ['a', 'b'];
@@ -4924,6 +4955,24 @@ describe('ArrayField', () => {
         expect(keepsItsItem(before, shown(node))).toBe(true);
         previous = undefined;
       });
+    });
+
+    it('should keep the row of an item the form only derived, as a live omit does, across an add', async () => {
+      const { node, getFormData } = createFormComponent({
+        schema: { type: 'array', items: { type: 'object', properties: { a: { type: 'string' } } } },
+        // The first edit omits the seed's extra data, which leaves the item it sat in the same item
+        initialFormData: [{ a: 'x', extra: 1 }, { a: 'y' }],
+        omitExtraData: true,
+        liveOmit: 'onChange',
+      });
+      const first = input(node, 'root_0_a');
+      const second = input(node, 'root_1_a');
+
+      await user.click(screen.getByRole('button', { name: 'Add' }));
+
+      expect(getFormData()).toEqual([{ a: 'x' }, { a: 'y' }, {}]);
+      expect(input(node, 'root_0_a')).toBe(first);
+      expect(input(node, 'root_1_a')).toBe(second);
     });
 
     it('should drop a remove a custom parent refused from the rows a later event keys its items by', async () => {

@@ -1180,8 +1180,9 @@ export default function ArrayField<
    * where they were, so the rows go back to `rows`: kept, a refused reorder, which leaves the length as it was, would
    * hand each row's instance, and the state it holds, to another item. Otherwise the form may hold other items than
    * the change put there: `transformChange` rewrote them, the defaults put one back, or `setFieldValue()` set the field back.
-   * A row then keeps its key only where the form holds the item the change put there, and every other item gets a row
-   * of its own
+   * A row then keeps its key only where the form holds the item the change put there, as the form made it, with the
+   * defaults it filled in and the extra data it omitted, so an item the form only derived keeps its row. An item past
+   * the rows the change sent, as one the defaults put back, gets a row of its own, as does every other item
    */
   const commitRows = useCallback(
     (rows: KeyedFormDataType<T>[], newKeyedFormData: KeyedFormDataType<T>[]) => {
@@ -1199,11 +1200,9 @@ export default function ArrayField<
       }
       const held = readItems();
       const items: T[] = Array.isArray(held) ? held : [];
-      const sent: unknown[] =
-        outcome.kind === 'rewritten' && Array.isArray(outcome.edited)
-          ? outcome.edited
-          : keyedToPlainFormData(newKeyedFormData);
-      if (deepEquals(items, sent)) {
+      const made = outcome.kind === 'rewritten' ? outcome.edited : outcome.kept;
+      const sent: unknown[] = Array.isArray(made) ? made : keyedToPlainFormData(newKeyedFormData);
+      if (items.length === newKeyedFormData.length && deepEquals(items, sent)) {
         return;
       }
       const kept: KeyedFormDataType<T>[] = [];
