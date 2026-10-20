@@ -210,8 +210,9 @@ export interface FormProps<
   /** Returns the data an edit leaves the form with, given the data the edit produced and the data before it: `next` to
    * take the edit as it is, `previous`, or a copy of it, to refuse it, or another value, such as `next` with a field
    * trimmed. It runs for every edit, a field's change and `setFieldValue()` alike, and for those alone: what the form
-   * derives on its own, the defaults for a new schema, the live omit a blur runs and a `reset()`, is stored and
-   * reported through `onChange` without it. It runs before the form stores the result, validates it and reports it.
+   * derives on its own, the defaults for a new schema, the live omit a blur runs and a `reset()`, is stored without it,
+   * and the last two are reported through `onChange`. It runs before the form stores the result, validates it and
+   * reports it.
    * It must be pure, since the form may call it again for the same edit, and should return `next`'s unchanged subtrees
    * as they are, so their fields do not render again. `undefined` leaves the form with no data, and what it returns is
    * filled in with the schema's defaults like any data the form holds.
