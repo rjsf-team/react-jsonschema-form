@@ -15,12 +15,13 @@ import {
   dateElementId,
   dateElementLabel,
   dateRangeOptions,
+  getControlDescribedBy,
   isObject,
   TranslatableString,
   useAltDateWidgetProps,
 } from '@rjsf/utils';
 
-import { useAriaDescribedByProps, useFieldWrapperProps, useShownSuccessId } from '../../utils.tsx';
+import { getOwnLabel, useAriaDescribedByProps, useFieldWrapperProps, useShownSuccessId } from '../../utils.tsx';
 
 interface AltDatePartProps {
   id: string;
@@ -99,6 +100,8 @@ function AltDatePart({
 
 interface AltDatePartsProps extends Omit<AltDatePartProps, 'part' | 'ariaDescribedByProps' | 'success'> {
   elements: DateElementProp[];
+  /** The ids its field's plan describes each part by */
+  describedBy?: string;
   inputContainer: unknown;
   wrapperOverrides: GenericObjectType;
   fieldSuccessId: string;
@@ -109,6 +112,7 @@ interface AltDatePartsProps extends Omit<AltDatePartProps, 'part' | 'ariaDescrib
  */
 function AltDateParts({
   elements,
+  describedBy,
   autofocus,
   inputContainer,
   wrapperOverrides,
@@ -120,7 +124,7 @@ function AltDateParts({
     'Select',
     partProps.id,
     { inputContainer },
-    { alsoDescribedBy: shownSuccessId, wrapperOverrides },
+    { describedBy, alsoDescribedBy: shownSuccessId, wrapperOverrides },
   );
   return elements.map((part, i) => (
     <AltDatePart
@@ -146,7 +150,7 @@ export default function AltDateWidget<
   const { id, disabled, readonly, autofocus, required, label, options, registry, onBlur, onFocus } = props;
   const { translateString } = registry;
   const { elements, handleChange, handleClear, handleSetNow } = useAltDateWidgetProps(props);
-  const { wrapperProps, invalid, successId } = useFieldWrapperProps(props, true);
+  const { wrapperProps, invalid, successId, slotlessErrors } = useFieldWrapperProps(props, true);
   const { inputContainer, wrapperProps: fieldWrapperProps } = options;
   // Each part renders the field's `inputContainer` in its own wrapper, rather than the field's wrapper around them all,
   // resolved as for any input. The field's own wrapper applies the rest of its `wrapperProps`, so only their
@@ -161,37 +165,43 @@ export default function AltDateWidget<
     [fieldWrapperProps],
   );
   return (
-    <Input.Wrapper {...wrapperProps}>
-      <Flex gap='xs' align='center' wrap='nowrap'>
-        <AltDateParts
-          id={id}
-          elements={elements}
-          inputContainer={inputContainer}
-          wrapperOverrides={wrapperOverrides}
-          disabled={disabled || readonly}
-          autofocus={autofocus}
-          required={required}
-          invalid={invalid}
-          label={label}
-          translateString={translateString}
-          fieldSuccessId={successId}
-          onChange={handleChange}
-          onBlur={onBlur}
-          onFocus={onFocus}
-        />
-        <Group wrap='nowrap' gap={3}>
-          {!options.hideNowButton && (
-            <Button variant='subtle' size='xs' disabled={disabled || readonly} onClick={handleSetNow}>
-              {translateString(TranslatableString.NowLabel)}
-            </Button>
-          )}
-          {!options.hideClearButton && (
-            <Button variant='subtle' size='xs' disabled={disabled || readonly} onClick={handleClear}>
-              {translateString(TranslatableString.ClearLabel)}
-            </Button>
-          )}
-        </Group>
-      </Flex>
-    </Input.Wrapper>
+    <>
+      <Input.Wrapper {...wrapperProps}>
+        <Flex gap='xs' align='center' wrap='nowrap'>
+          <AltDateParts
+            id={id}
+            elements={elements}
+            describedBy={getControlDescribedBy<T, S, F>(props)}
+            inputContainer={inputContainer}
+            wrapperOverrides={wrapperOverrides}
+            disabled={disabled || readonly}
+            autofocus={autofocus}
+            required={required}
+            invalid={invalid}
+            // The text `ui:label: false` hides names the parts, as it names the field's other controls; where the
+            // template draws the label, the parts still name themselves after it
+            label={getOwnLabel<T, S, F>(props) ?? label}
+            translateString={translateString}
+            fieldSuccessId={successId}
+            onChange={handleChange}
+            onBlur={onBlur}
+            onFocus={onFocus}
+          />
+          <Group wrap='nowrap' gap={3}>
+            {!options.hideNowButton && (
+              <Button variant='subtle' size='xs' disabled={disabled || readonly} onClick={handleSetNow}>
+                {translateString(TranslatableString.NowLabel)}
+              </Button>
+            )}
+            {!options.hideClearButton && (
+              <Button variant='subtle' size='xs' disabled={disabled || readonly} onClick={handleClear}>
+                {translateString(TranslatableString.ClearLabel)}
+              </Button>
+            )}
+          </Group>
+        </Flex>
+      </Input.Wrapper>
+      {slotlessErrors}
+    </>
   );
 }

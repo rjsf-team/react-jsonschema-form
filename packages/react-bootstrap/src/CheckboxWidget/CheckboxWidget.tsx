@@ -1,6 +1,13 @@
 import type { FocusEvent } from 'react';
 import type { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
-import { ariaDescribedByIds, descriptionId, getTemplates, schemaRequiresTrueValue } from '@rjsf/utils';
+import {
+  getControlAttributes,
+  getTemplates,
+  getWidgetDescription,
+  hasWidgetErrors,
+  schemaRequiresTrueValue,
+  widgetDrawsLabel,
+} from '@rjsf/utils';
 import { Form } from 'react-bootstrap';
 
 export default function CheckboxWidget<
@@ -15,7 +22,6 @@ export default function CheckboxWidget<
     disabled,
     readonly,
     label,
-    hideLabel,
     schema,
     autofocus,
     options,
@@ -23,9 +29,11 @@ export default function CheckboxWidget<
     onBlur,
     onFocus,
     registry,
+    presentation,
     uiSchema,
     required,
   } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   // Because an unchecked checkbox will cause html5 validation to fail, only add
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords
@@ -36,13 +44,13 @@ export default function CheckboxWidget<
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target?.checked);
   const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target?.checked);
 
-  const description = options.description || schema.description;
+  const description = getWidgetDescription<T, S, F>(props);
   return (
-    <Form.Group className={disabled || readonly ? 'disabled' : ''} aria-describedby={ariaDescribedByIds(id)}>
-      {!hideLabel && description && (
+    <Form.Group className={disabled || readonly ? 'disabled' : ''}>
+      {description && (
         <DescriptionFieldTemplate
-          id={descriptionId(id)}
-          description={description}
+          id={description.id}
+          description={description.text}
           schema={schema}
           uiSchema={uiSchema}
           registry={registry}
@@ -61,12 +69,14 @@ export default function CheckboxWidget<
         }
         checked={typeof value === 'undefined' ? false : value}
         required={trueValueRequired}
+        isInvalid={hasWidgetErrors<T, S, F>(props)}
         disabled={disabled || readonly}
         autoFocus={autofocus}
         onChange={handleChange}
         type='checkbox'
         onBlur={handleBlur}
         onFocus={handleFocus}
+        {...getControlAttributes<T, S, F>({ id, presentation })}
       />
     </Form.Group>
   );

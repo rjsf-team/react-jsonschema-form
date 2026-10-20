@@ -1,10 +1,11 @@
 import type { FormContextType, WidgetProps, RJSFSchema, StrictRJSFSchema, GenericObjectType } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
   enumOptionSelectedValue,
+  enumOptionsAutofocusIndex,
   enumOptionsIsDisabled,
   enumOptionValueDecoder,
   enumOptionsDomValues,
+  getGroupAttributes,
   getOptionValueFormat,
   optionId,
   useOptionFocusHandlers,
@@ -32,6 +33,7 @@ export default function CheckboxesWidget<
   options,
   readonly,
   value,
+  presentation,
 }: WidgetProps<T, S, F>) {
   const { formContext } = registry;
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
@@ -51,14 +53,19 @@ export default function CheckboxesWidget<
   const extraProps = { id };
 
   const selectValue: string[] = enumOptionSelectedValue(value, enumOptions, true, optionValueFormat, []);
+  const { group: groupAttributes, option: optionAttributes } = getGroupAttributes<T, S, F>(
+    { id, presentation },
+    'group',
+  );
 
+  const autofocusIndex = enumOptionsAutofocusIndex<S>(enumOptions, enumDisabled, autofocus);
   return Array.isArray(enumOptions) && enumOptions.length > 0 ? (
     <Checkbox.Group
       name={htmlName || id}
       onChange={!readonly ? handleChange : undefined}
       value={selectValue}
       {...extraProps}
-      aria-describedby={ariaDescribedByIds(id)}
+      {...groupAttributes}
     >
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, i) => (
@@ -67,13 +74,14 @@ export default function CheckboxesWidget<
             <Checkbox
               id={optionId(id, i)}
               name={htmlName || id}
-              autoFocus={i === 0 ? autofocus : false}
+              autoFocus={i === autofocusIndex}
               // `undefined` rather than `false` for an enabled option, since antd reads its `DisabledContext` only when
               // the checkbox leaves `disabled` unset
               disabled={fieldDisabled || enumOptionsIsDisabled(option.value, enumDisabled) || undefined}
               value={domValues[i]}
               onBlur={!readonly ? blurHandlers[i] : undefined}
               onFocus={!readonly ? focusHandlers[i] : undefined}
+              {...optionAttributes}
             >
               {option.label}
             </Checkbox>

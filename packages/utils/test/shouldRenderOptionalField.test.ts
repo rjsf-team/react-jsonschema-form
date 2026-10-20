@@ -2,6 +2,7 @@ import type { GlobalUISchemaOptions, Registry, RJSFSchema, TemplatesType } from 
 import {
   createSchemaUtils,
   englishStringTranslator,
+  mergeThemePresentation,
   ROOT_FIELD_PATH,
   shouldRenderOptionalField,
   toFieldPath,
@@ -69,6 +70,7 @@ const registry: Registry = {
   translateString: englishStringTranslator,
   fields: {},
   widgets: {},
+  presentation: mergeThemePresentation(),
   templates: {} as TemplatesType,
   globalFormOptions: GLOBAL_FORM_OPTIONS,
 };

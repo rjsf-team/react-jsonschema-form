@@ -2,12 +2,13 @@ import type { ChangeEvent, FocusEvent } from 'react';
 import { useCallback } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
-  descriptionId,
+  getControlAttributes,
   getTemplates,
   labelValue,
   schemaRequiresTrueValue,
   getUiOptions,
+  getWidgetDescription,
+  widgetDrawsLabel,
 } from '@rjsf/utils';
 
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.
@@ -19,24 +20,25 @@ function CheckboxWidget<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({
-  schema,
-  uiSchema,
-  options,
-  id,
-  value,
-  disabled,
-  readonly,
-  label,
-  hideLabel,
-  autofocus = false,
-  onBlur,
-  onFocus,
-  onChange,
-  registry,
-  htmlName,
-  required,
-}: WidgetProps<T, S, F>) {
+>(props: WidgetProps<T, S, F>) {
+  const {
+    schema,
+    uiSchema,
+    options,
+    id,
+    value,
+    disabled,
+    readonly,
+    label,
+    autofocus = false,
+    onBlur,
+    onFocus,
+    onChange,
+    registry,
+    htmlName,
+    required,
+    presentation,
+  } = props;
   const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
   // Because an unchecked checkbox will cause html5 validation to fail, only add
   // the "required" attribute if the field value must be "true", due to the
@@ -58,15 +60,17 @@ function CheckboxWidget<
     [onFocus, id],
   );
 
-  const uiOptions = getUiOptions(uiSchema);
-  const isCheckboxWidget = uiOptions.widget === 'checkbox';
-  const description = isCheckboxWidget ? undefined : (options.description ?? schema.description);
+  // The plan says whether the label and description are this widget's to draw, so a checkbox under a label above names
+  // none of its own; without a plan, a template rendering the `checkbox` alias draws the description itself
+  const showsLabel = widgetDrawsLabel<T, S, F>(props);
+  const description =
+    presentation || getUiOptions(uiSchema).widget !== 'checkbox' ? getWidgetDescription<T, S, F>(props) : undefined;
   return (
     <div className={`checkbox ${disabled || readonly ? 'disabled' : ''}`}>
-      {!hideLabel && description && (
+      {description && (
         <DescriptionFieldTemplate
-          id={descriptionId(id)}
-          description={description}
+          id={description.id}
+          description={description.text}
           schema={schema}
           uiSchema={uiSchema}
           registry={registry}
@@ -78,20 +82,20 @@ function CheckboxWidget<
           id={id}
           name={htmlName || id}
           checked={typeof value === 'undefined' ? false : value}
-          required={required}
+          required={trueValueRequired}
           disabled={disabled || readonly}
           autoFocus={autofocus}
           onChange={handleChange}
           onBlur={handleBlur}
           onFocus={handleFocus}
-          aria-describedby={ariaDescribedByIds(id)}
+          {...getControlAttributes<T, S, F>({ id, presentation })}
         />
         {labelValue(
           <span>
             {label}
             {trueValueRequired && <span className='required'>*</span>}
           </span>,
-          hideLabel,
+          !showsLabel,
         )}
       </label>
     </div>

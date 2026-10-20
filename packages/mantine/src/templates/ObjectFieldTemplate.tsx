@@ -7,9 +7,18 @@ import type {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { buttonId, canExpand, descriptionId, getTemplates, getUiOptions, titleId } from '@rjsf/utils';
+import {
+  buttonId,
+  canExpand,
+  descriptionId,
+  getErrorsToDraw,
+  getTemplates,
+  getUiOptions,
+  titleDrawsOptionalDataControl,
+  titleId,
+} from '@rjsf/utils';
 
-import { useContainerErrors } from '../utils.tsx';
+import { renderErrors } from '../utils.tsx';
 
 /** The `ObjectFieldTemplate` is the template to use to render all the inner properties of an object along with the
  * title and description if available. If the object is expandable, then an `AddButton` is also rendered after all
@@ -33,13 +42,14 @@ export default function ObjectFieldTemplate<
     required,
     schema,
     uiSchema,
+    presentation,
     id,
     formData,
     registry,
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const { TitleFieldTemplate, DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, uiOptions);
-  const showOptionalDataControlInTitle = !readonly && !disabled;
+  const showOptionalDataControlInTitle = titleDrawsOptionalDataControl<T, S, F>(props);
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
@@ -47,7 +57,7 @@ export default function ObjectFieldTemplate<
   const gridCols = (typeof uiOptions?.gridCols === 'number' && uiOptions?.gridCols) || undefined;
   const gridSpacing = uiOptions?.gridSpacing;
   const gridVerticalSpacing = uiOptions?.gridVerticalSpacing;
-  const errors = useContainerErrors(props);
+  const errors = renderErrors(id, getErrorsToDraw<T, S, F>(props));
 
   return (
     <Container id={id} p={0} fluid>
@@ -64,7 +74,7 @@ export default function ObjectFieldTemplate<
       )}
       {description && (
         <DescriptionFieldTemplate
-          id={descriptionId(id)}
+          id={presentation?.description.id ?? descriptionId(id)}
           description={description}
           schema={schema}
           uiSchema={uiSchema}

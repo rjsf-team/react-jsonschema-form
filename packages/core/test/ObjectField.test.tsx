@@ -9,9 +9,10 @@ import type {
   GenericObjectType,
   FormValidation,
   ObjectFieldTemplateProps,
+  PartPlacement,
   UiSchema,
 } from '@rjsf/utils';
-import { UI_GLOBAL_OPTIONS_KEY } from '@rjsf/utils';
+import { fieldLabelId, UI_GLOBAL_OPTIONS_KEY } from '@rjsf/utils';
 import { act, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
@@ -78,7 +79,7 @@ describe('ObjectField', () => {
       const legend = node.querySelector('fieldset > legend');
 
       expect(legend).toHaveTextContent('my object');
-      expect(legend).toHaveAttribute('id', 'root__title');
+      expect(legend).toContainElement(node.querySelector('#root__title'));
     });
 
     it('should render a hidden object', () => {
@@ -150,6 +151,7 @@ describe('ObjectField', () => {
     );
 
     it('should pass its own errors down to a custom ObjectFieldTemplate as rawErrors', async () => {
+      // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated prop a component without a plan reads
       function RawErrorsObjectFieldTemplate({ rawErrors }: ObjectFieldTemplateProps) {
         return <div id='custom'>{rawErrors}</div>;
       }
@@ -162,6 +164,32 @@ describe('ObjectField', () => {
 
       expect(node.querySelector('#custom')).toHaveTextContent('must NOT have fewer than 1 properties');
     });
+
+    // Under core's declaration the `FieldTemplate` draws the object's errors, so a template drawing them too would draw
+    // them twice: it reads them from its plan only where `errors.by` is `'self'`
+    it.each([
+      [false, ['object error'], 'template'],
+      [true, [], 'none'],
+    ] satisfies [boolean, string[], PartPlacement][])(
+      'hands its template a plan leaving its own errors to the FieldTemplate while ui:hideError is %s',
+      (hideError, messages, by) => {
+        const recordTemplateProps = vi.fn<(props: ObjectFieldTemplateProps) => void>();
+        function RecordingObjectFieldTemplate(props: ObjectFieldTemplateProps) {
+          recordTemplateProps(props);
+          return <div>{props.properties.map((property) => property.content)}</div>;
+        }
+        createFormComponent({
+          schema: { type: 'object', properties: { foo: { type: 'object', properties: { bar: { type: 'string' } } } } },
+          uiSchema: { foo: { 'ui:hideError': hideError } },
+          extraErrors: { foo: { __errors: ['object error'] } },
+          templates: { ObjectFieldTemplate: RecordingObjectFieldTemplate },
+          showErrorList: false,
+        });
+
+        const fooTemplate = recordTemplateProps.mock.calls.findLast(([props]) => props.id === 'root_foo');
+        expect(fooTemplate?.[0].presentation?.errors).toMatchObject({ messages, by });
+      },
+    );
 
     it('should render a default property label', () => {
       const { node } = createFormComponent({ schema });
@@ -888,6 +916,18 @@ describe('ObjectField', () => {
       expect(objectTitle).toHaveTextContent('CustomName');
     });
 
+    it('shows the schema title of an additionalProperties object as its heading when no ui:title names it', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          additionalProperties: { type: 'object', title: 'Entry', properties: { name: { type: 'string' } } },
+        },
+        initialFormData: { property1: { name: 'hello' } },
+      });
+
+      expect(node.querySelector('.form-additional > fieldset > legend')).toHaveTextContent('Entry');
+    });
+
     it('should not throw validation errors if additionalProperties is undefined', async () => {
       const undefinedAPSchema: RJSFSchema = {
         ...schema,
@@ -953,6 +993,17 @@ describe('ObjectField', () => {
       expect(node.querySelector("[for='root_first-key']")).toHaveTextContent('first Key');
     });
 
+    it("names the additional property key's input by its label where ui:label: false hides it", () => {
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: { additionalProperties: { 'ui:label': false } },
+        initialFormData: { first: 1 },
+      });
+
+      expect(node.querySelector("[for='root_first-key']")).toBeNull();
+      expect(screen.getByRole('textbox', { name: 'first Key' })).toHaveAttribute('id', 'root_first-key');
+    });
+
     it('should render a label for the additional property key if additionalProperties is true', () => {
       const { node } = createFormComponent({
         schema: { ...schema, additionalProperties: true },
@@ -1010,6 +1061,28 @@ describe('ObjectField', () => {
       await user.tab();
 
       expectToHaveBeenCalledWithFormData(onChange, { newFirst: 1, first: undefined }, 'root');
+    });
+
+    // Renamed onto a declared property, the entry is no longer an additional property, so the rename alone is what
+    // labels it by its key rather than by that property's title
+    it("should label a renamed key's field and its widget's parts by the new key", async () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { end: { type: 'string', format: 'date', title: 'End date' } },
+          additionalProperties: { type: 'string', format: 'date', title: 'Date' },
+        },
+        uiSchema: { end: { 'ui:widget': 'alt-date' }, additionalProperties: { 'ui:widget': 'alt-date' } },
+        initialFormData: { start: '2020-05-03' },
+      });
+
+      const textNode = node.querySelector('#root_start-key')!;
+      await user.clear(textNode);
+      await user.type(textNode, 'end');
+      await user.tab();
+
+      expect(node.querySelector(`#${fieldLabelId('root_end')}`)?.textContent).toBe('end');
+      expect(screen.getByRole('combobox', { name: 'end, year' })).toBeInTheDocument();
     });
 
     it('should retain and display user-input data if key-value pair has a title present in the schema when renaming key', async () => {
@@ -3526,5 +3599,19 @@ describe('ObjectField', () => {
       const checkbox = node.querySelector('form .form-group .form-group .rjsf-field-boolean .field-description');
       expect(checkbox).toContainHTML('Checkbox with some `markdown`!');
     });
+  });
+
+  it('keeps the optional data control of an object whose ui:label turns its heading off', () => {
+    const { node } = createFormComponent({
+      schema: {
+        type: 'object',
+        properties: { pet: { type: 'object', title: 'Pet', properties: { a: { type: 'string' } } } },
+      },
+      uiSchema: { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] }, pet: { 'ui:label': false } },
+      formData: { pet: { a: 'x' } },
+    });
+
+    expect(node.querySelector('#root_pet__title')).not.toBeInTheDocument();
+    expect(node.querySelector('#root_pet__optionalRemove')).toBeInTheDocument();
   });
 });

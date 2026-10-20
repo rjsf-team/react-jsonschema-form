@@ -9,13 +9,14 @@ import type {
   FieldProps,
   GenericObjectType,
   IconButtonProps,
+  PartPlacement,
   RJSFSchema,
   TitleFieldProps,
   UiSchema,
   WidgetProps,
   FormValidation,
 } from '@rjsf/utils';
-import { englishStringTranslator, getVisibleErrors, noop, TranslatableString } from '@rjsf/utils';
+import { englishStringTranslator, fieldLabelId, getVisibleErrors, noop, TranslatableString } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -209,6 +210,7 @@ const mockFileReader = {
 } as unknown as FileReader;
 
 describe('ArrayField', () => {
+  // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated prop a component without a plan reads
   const CustomComponent = (props: WidgetProps) => <div id='custom'>{props.rawErrors}</div>;
 
   const CustomSelectComponent = (props: WidgetProps) => (
@@ -353,7 +355,7 @@ describe('ArrayField', () => {
       const legend = node.querySelector('fieldset > legend');
 
       expect(legend).toHaveTextContent('my list');
-      expect(legend).toHaveAttribute('id', 'root__title');
+      expect(legend).toContainElement(node.querySelector('#root__title'));
     });
 
     it('should render a description', () => {
@@ -1375,6 +1377,18 @@ describe('ArrayField', () => {
         expect(matches[0]).toHaveTextContent(schema.title!);
       });
 
+      it("should pass an additional property's key as the label to custom widgets, as its template shows", () => {
+        const LabelComponent = ({ label }: WidgetProps) => <div data-label={label} />;
+        const { node } = createFormComponent({
+          schema: { type: 'object', additionalProperties: schema },
+          widgets: { SelectWidget: LabelComponent },
+          initialFormData: { start: ['foo'] },
+        });
+
+        expect(node.querySelector(`#${fieldLabelId('root_start')}`)?.textContent).toBe('start');
+        expect(node.querySelector('[data-label]')).toHaveAttribute('data-label', 'start');
+      });
+
       it('should pass uiSchema to multiselect', () => {
         const { node } = createFormComponent({
           schema,
@@ -1753,6 +1767,7 @@ describe('ArrayField', () => {
       const CustomTemplate = (props: ArrayFieldTemplateProps) => (
         <div id='custom'>
           {props.items}
+          {/* oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated prop a component without a plan reads */}
           <div id='custom-error'>{props.rawErrors && props.rawErrors.join(', ')}</div>
         </div>
       );
@@ -1833,7 +1848,7 @@ describe('ArrayField', () => {
       const { node } = createFormComponent({ schema });
       const legend = node.querySelector('fieldset > legend');
       expect(legend).toHaveTextContent('List of fixed items');
-      expect(legend).toHaveAttribute('id', 'root__title');
+      expect(legend).toContainElement(node.querySelector('#root__title'));
     });
 
     it('should render field widgets', () => {
@@ -3024,17 +3039,38 @@ describe('ArrayField', () => {
       });
       expect(node.querySelector('#title-test')).toBeNull();
     });
+
+    it.each([
+      ['schema title', {}, 'Tags'],
+      ['ui:title', { additionalProperties: { 'ui:title': 'Labels' } }, 'Labels'],
+    ])(
+      'heads an additionalProperties array by its %s rather than the key its key input shows',
+      (_, uiSchema, heading) => {
+        const { node } = createFormComponent({
+          schema: { type: 'object', additionalProperties: { type: 'array', title: 'Tags', items: { type: 'string' } } },
+          uiSchema,
+          initialFormData: { myKey: ['a'] },
+        });
+        expect(node.querySelector('#root_myKey__title')).toHaveTextContent(heading);
+      },
+    );
   });
 
   describe('Tests for item title', () => {
     describe('Should show indexed title for widgets when necessary', () => {
-      const widgetTestData: { widgetName: string; itemSchema: RJSFSchema; itemUiSchema?: UiSchema }[] = [
+      const widgetTestData: {
+        widgetName: string;
+        itemSchema: RJSFSchema;
+        itemUiSchema?: UiSchema;
+        labelFor?: string | null;
+      }[] = [
         {
           widgetName: 'AltDateWidget',
           itemSchema: {
             type: 'string',
             format: 'alt-date',
           },
+          labelFor: null,
         },
         {
           widgetName: 'AltDateTimeWidget',
@@ -3042,6 +3078,7 @@ describe('ArrayField', () => {
             type: 'string',
             format: 'alt-datetime',
           },
+          labelFor: null,
         },
         {
           widgetName: 'CheckboxesWidget',
@@ -3110,6 +3147,7 @@ describe('ArrayField', () => {
           itemUiSchema: {
             'ui:widget': 'radio',
           },
+          labelFor: null,
         },
         {
           widgetName: 'RangeWidget',
@@ -3217,7 +3255,7 @@ describe('ArrayField', () => {
 
       it.each(widgetTestData)(
         "Should show indexed title for the `$widgetName` widget if no title is mentioned in it's UI Schema",
-        async ({ itemSchema, itemUiSchema }) => {
+        async ({ itemSchema, itemUiSchema, labelFor = 'root_0' }) => {
           const schema: RJSFSchema = {
             type: 'array',
             title: 'Array',
@@ -3235,13 +3273,17 @@ describe('ArrayField', () => {
 
           await user.click(node.querySelector('.rjsf-array-item-add button')!);
 
-          expect(node.querySelector('label[for="root_0"]')).toHaveTextContent('Array-1');
+          // By the label's id, since a group's label has no `for`; the id is on the label's text
+          const widgetLabel = node.querySelector(`#${fieldLabelId('root_0')}`)?.closest('label');
+
+          expect(widgetLabel).toHaveTextContent('Array-1');
+          expect(widgetLabel?.getAttribute('for')).toBe(labelFor);
         },
       );
 
       it.each(widgetTestData)(
         "Should not show indexed title for the `$widgetName` widget if title is mentioned in it's UI Schema",
-        async ({ itemSchema, itemUiSchema }) => {
+        async ({ itemSchema, itemUiSchema, labelFor = 'root_0' }) => {
           const schema: RJSFSchema = {
             type: 'array',
             title: 'Array',
@@ -3262,10 +3304,11 @@ describe('ArrayField', () => {
 
           await user.click(node.querySelector('.rjsf-array-item-add button')!);
 
-          const widgetLabelText = node.querySelector('label[for="root_0"]');
+          const widgetLabelText = node.querySelector(`#${fieldLabelId('root_0')}`)?.closest('label');
 
           expect(widgetLabelText).not.toHaveTextContent('Array-1');
           expect(widgetLabelText).toHaveTextContent('Item Title');
+          expect(widgetLabelText?.getAttribute('for')).toBe(labelFor);
         },
       );
     });
@@ -3362,7 +3405,7 @@ describe('ArrayField', () => {
 
           await user.click(node.querySelector('.rjsf-array-item-add button')!);
 
-          expect(node.querySelector('legend#root_0__title')).toHaveTextContent('Array-1');
+          expect(node.querySelector('legend #root_0__title')).toHaveTextContent('Array-1');
         },
       );
 
@@ -3384,7 +3427,7 @@ describe('ArrayField', () => {
 
           await user.click(node.querySelector('.rjsf-array-item-add button')!);
 
-          const legendText = node.querySelector('legend#root_0__title');
+          const legendText = node.querySelector('legend #root_0__title');
 
           expect(legendText).toHaveTextContent('Item Field Title');
           expect(legendText).not.toHaveTextContent('Array-1');
@@ -3528,11 +3571,13 @@ describe('ArrayField', () => {
       expect(inputsNoError).toHaveLength(0);
     });
     describe('ArrayFieldTemplate', () => {
+      // Reads the deprecated `rawErrors` with `hideError`, as a template rendered without a plan does
       function ErrorListingArrayFieldTemplate(props: ArrayFieldTemplateProps) {
         return (
           <div>
             {props.items}
             <ul className='array-template-errors'>
+              {/* oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated helper a component without a plan reads */}
               {getVisibleErrors(props).map((error) => (
                 <li key={error}>{error}</li>
               ))}
@@ -3578,6 +3623,34 @@ describe('ArrayField', () => {
         expect(node.querySelectorAll('.array-template-errors li')).toHaveLength(0);
       });
 
+      // Under core's declaration the `FieldTemplate` draws the array's errors, so a template drawing them too would draw
+      // them twice: it reads them from its plan only where `errors.by` is `'self'`
+      it.each([
+        ['a list', false, { type: 'array', items: { type: 'string' } }, ['array error'], 'template'],
+        ['a list', true, { type: 'array', items: { type: 'string' } }, [], 'none'],
+        ['a fixed items list', false, { type: 'array', items: [{ type: 'string' }] }, ['array error'], 'template'],
+        ['a fixed items list', true, { type: 'array', items: [{ type: 'string' }] }, [], 'none'],
+      ] satisfies [string, boolean, RJSFSchema, string[], PartPlacement][])(
+        'hands the template of %s a plan leaving its errors to the FieldTemplate while ui:hideError is %s',
+        (_, hideError, foo, messages, by) => {
+          const recordTemplateProps = vi.fn<(props: ArrayFieldTemplateProps) => void>();
+          function RecordingArrayFieldTemplate(props: ArrayFieldTemplateProps) {
+            recordTemplateProps(props);
+            return <div>{props.items}</div>;
+          }
+          createFormComponent({
+            schema: { type: 'object', properties: { foo } },
+            uiSchema: { foo: { 'ui:hideError': hideError } },
+            initialFormData: { foo: ['a'] },
+            extraErrors: { foo: { __errors: ['array error'] } },
+            templates: { ArrayFieldTemplate: RecordingArrayFieldTemplate },
+            showErrorList: false,
+          });
+
+          expect(recordTemplateProps.mock.lastCall?.[0]?.presentation?.errors).toMatchObject({ messages, by });
+        },
+      );
+
       // `errorSchema` is what a template renders the errors `ui:hideError` withholds from, so it has to arrive for
       // both array shapes, not just the fixed one
       it.each([
@@ -3605,6 +3678,60 @@ describe('ArrayField', () => {
 
         expect(recordTemplateProps.mock.lastCall?.[0]?.errorSchema?.[0]?.__errors).toEqual(['item error']);
       });
+    });
+
+    describe('an array rendered by a single widget', () => {
+      const ARIA_INVALID_CASES: [boolean, true | undefined][] = [
+        [false, true],
+        [true, undefined],
+      ];
+      function createRecordingWidget() {
+        const recordWidgetProps = vi.fn<(props: WidgetProps) => void>();
+        function RecordingWidget(props: WidgetProps) {
+          recordWidgetProps(props);
+          const { id } = props;
+          return <input id={id} />;
+        }
+        return { RecordingWidget, recordWidgetProps };
+      }
+
+      it.each(ARIA_INVALID_CASES)(
+        "hands a custom ui:widget a plan whose control's aria-invalid follows ui:hideError: %s",
+        (hideError, ariaInvalid) => {
+          const { RecordingWidget, recordWidgetProps } = createRecordingWidget();
+          createFormComponent({
+            schema: { type: 'object', properties: { foo: { type: 'array', items: { type: 'string' } } } },
+            uiSchema: { foo: { 'ui:hideError': hideError, 'ui:widget': RecordingWidget } },
+            extraErrors: { foo: { __errors: ['array error'] } },
+            showErrorList: false,
+          });
+
+          const widgetProps = recordWidgetProps.mock.lastCall?.[0];
+          expect(widgetProps?.id).toBe('root_foo');
+          expect(widgetProps?.presentation?.control?.attributes['aria-invalid']).toBe(ariaInvalid);
+        },
+      );
+
+      it.each(ARIA_INVALID_CASES)(
+        "hands the files widget a plan whose control's aria-invalid follows ui:hideError: %s",
+        (hideError, ariaInvalid) => {
+          const { RecordingWidget, recordWidgetProps } = createRecordingWidget();
+          createFormComponent({
+            schema: {
+              type: 'object',
+              properties: { foo: { type: 'array', items: { type: 'string', format: 'data-url' } } },
+            },
+            uiSchema: { foo: { 'ui:hideError': hideError } },
+            widgets: { FileWidget: RecordingWidget },
+            extraErrors: { foo: { __errors: ['array error'] } },
+            showErrorList: false,
+          });
+
+          const widgetProps = recordWidgetProps.mock.lastCall?.[0];
+          expect(widgetProps?.id).toBe('root_foo');
+          expect(widgetProps?.presentation?.control?.attributes['aria-invalid']).toBe(ariaInvalid);
+        },
+      );
     });
   });
   describe('FormContext gets passed', () => {
@@ -5161,6 +5288,90 @@ describe('ArrayField', () => {
       // Each row keeps its key and its error: rows, keys and errors all come from the same proposal
       expect(rowKeys(container)).toEqual([keysBefore[2], keysBefore[0]]);
       expect(log.events.at(-1)?.errorSchema).toEqual({ 0: { __errors: ['must NOT have fewer than 2 characters'] } });
+    });
+  });
+
+  describe('the heading and the optional data control beside it', () => {
+    const optionalArrays: UiSchema = { 'ui:globalOptions': { enableOptionalDataFieldForType: ['array'] } };
+    /** Renders the array without a plan, as a caller outside `SchemaField` does */
+    function NoPlanArrayField(props: FieldProps<unknown[]>) {
+      return <ArrayField {...props} presentation={undefined} />;
+    }
+
+    it('keeps the control of an array option whose heading a field above draws', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            tags: {
+              title: 'Tags',
+              anyOf: [
+                { type: 'array', items: { type: 'string' }, maxItems: 3 },
+                { type: 'array', items: { type: 'string' }, minItems: 1 },
+              ],
+            },
+          },
+        },
+        uiSchema: optionalArrays,
+        formData: { tags: ['a'] },
+      });
+
+      expect(node.querySelector('#root_tags__title')).not.toBeInTheDocument();
+      expect(node.querySelector('#root_tags__optionalRemove')).toBeInTheDocument();
+    });
+
+    it("keeps an option's heading and control where ui:globalOptions turns labels off and its field's ui:label turns them on", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            tags: {
+              anyOf: [
+                { type: 'array', title: 'Tags', items: { type: 'string' } },
+                { type: 'number', title: 'Count' },
+              ],
+            },
+          },
+        },
+        uiSchema: {
+          'ui:globalOptions': { label: false, enableOptionalDataFieldForType: ['array'] },
+          tags: { 'ui:label': true, anyOf: [{}, {}] },
+        },
+      });
+
+      expect(node.querySelector('#root_tags__title')).toHaveTextContent('Tags');
+      expect(node.querySelector('#root_tags__optionalAdd')).toBeInTheDocument();
+    });
+
+    it('draws the ui:title of an array rendered without a plan', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { tags: { type: 'array', title: 'Tags', items: { type: 'string' } } } },
+        uiSchema: { tags: { 'ui:field': NoPlanArrayField, 'ui:title': 'Labels' } },
+      });
+
+      expect(node.querySelector('#root_tags__title')).toHaveTextContent(/^Labels$/);
+    });
+
+    it('keeps the control of an array rendered without a plan whose ui:label turns its heading off', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { tags: { type: 'array', title: 'Tags', items: { type: 'string' } } } },
+        uiSchema: { ...optionalArrays, tags: { 'ui:field': NoPlanArrayField, 'ui:label': false } },
+        formData: { tags: ['a'] },
+      });
+
+      expect(node.querySelector('#root_tags__title')).not.toBeInTheDocument();
+      expect(node.querySelector('#root_tags__optionalRemove')).toBeInTheDocument();
+    });
+
+    it('keeps the control of an array rendered without a plan whose JSON ui:label is null', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { tags: { type: 'array', title: 'Tags', items: { type: 'string' } } } },
+        uiSchema: { ...optionalArrays, tags: { 'ui:field': NoPlanArrayField, 'ui:label': null } },
+        formData: { tags: ['a'] },
+      });
+
+      expect(node.querySelector('#root_tags__title')).not.toBeInTheDocument();
+      expect(node.querySelector('#root_tags__optionalRemove')).toBeInTheDocument();
     });
   });
 });

@@ -26,13 +26,16 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
               >
                 <div
                   class="___12hmf4e_0000000 f2zxqi febqm8h"
-                  id="root_person__title"
                 >
                   <h5
                     class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                     style="margin-block: 0px;"
                   >
-                    person
+                    <span
+                      id="root_person__title"
+                    >
+                      person
+                    </span>
                   </h5>
                   <div
                     aria-orientation="horizontal"
@@ -63,7 +66,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                           class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                         >
                           <input
-                            aria-describedby="root_person_name__error root_person_name__description root_person_name__help"
                             class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                             id="root_person_name"
                             name="root[person][name]"
@@ -87,13 +89,16 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                       >
                         <div
                           class="___12hmf4e_0000000 f2zxqi febqm8h"
-                          id="root_person_address__title"
                         >
                           <h5
                             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                             style="margin-block: 0px;"
                           >
-                            address
+                            <span
+                              id="root_person_address__title"
+                            >
+                              address
+                            </span>
                           </h5>
                           <div
                             aria-orientation="horizontal"
@@ -124,7 +129,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                   class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                                 >
                                   <input
-                                    aria-describedby="root_person_address_street__error root_person_address_street__description root_person_address_street__help"
                                     class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                                     id="root_person_address_street"
                                     name="root[person][address][street]"
@@ -156,7 +160,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                   class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                                 >
                                   <input
-                                    aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                                     class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                                     id="root_person_address_city"
                                     name="root[person][address][city]"
@@ -188,7 +191,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                   class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                                 >
                                   <input
-                                    aria-describedby="root_person_address_country__error root_person_address_country__description root_person_address_country__help"
                                     class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                                     id="root_person_address_country"
                                     name="root[person][address][country]"
@@ -259,7 +261,6 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                   class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
-                    aria-describedby="root_name__error root_name__description root_name__help"
                     class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     id="root_name"
                     name="root[name]"
@@ -286,8 +287,8 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="field-_r_2s___control"
-                    id="field-_r_2s___label"
+                    for="root_customField-key"
+                    id="root_customField-key__label"
                   >
                     customField Key
                   </label>
@@ -295,7 +296,6 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-labelledby="field-_r_2s___label"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_customField-key"
                       name="root_customField-key"
@@ -321,7 +321,6 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-describedby="root_customField__error root_customField__description root_customField__help"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_customField"
                       name="root[customField]"
@@ -447,7 +446,6 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                   class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
-                    aria-describedby="root_name__error root_name__description root_name__help"
                     class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     id="root_name"
                     name="root[name]"
@@ -479,7 +477,6 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                   class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
-                    aria-describedby="root_age__error root_age__description root_age__help"
                     class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     id="root_age"
                     inputmode="decimal"
@@ -508,7 +505,6 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                   class="fui-Checkbox r1nzur1d ___13877ya_6gg83z0 f19n0e5 f35ds98 f12mnkne fei9a8h fix56y3 f1bcv2js f7dr4go f1r5cpua"
                 >
                   <input
-                    aria-describedby="root_active__error root_active__description root_active__help"
                     checked=""
                     class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
                     id="root_active"
@@ -557,13 +553,16 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
               >
                 <div
                   class="___12hmf4e_0000000 f2zxqi febqm8h"
-                  id="root_tags__title"
                 >
                   <h5
                     class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                     style="margin-block: 0px;"
                   >
-                    tags
+                    <span
+                      id="root_tags__title"
+                    >
+                      tags
+                    </span>
                   </h5>
                   <div
                     aria-orientation="horizontal"
@@ -602,7 +601,6 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                             class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                           >
                             <input
-                              aria-describedby="root_tags_0__error root_tags_0__description root_tags_0__help"
                               class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                               id="root_tags_0"
                               name="root[tags][0]"
@@ -731,7 +729,6 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                             class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                           >
                             <input
-                              aria-describedby="root_tags_1__error root_tags_1__description root_tags_1__help"
                               class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                               id="root_tags_1"
                               name="root[tags][1]"
@@ -917,7 +914,6 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                   class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
-                    aria-describedby="root_firstName__error root_firstName__description root_firstName__help"
                     class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     id="root_firstName"
                     name="root[firstName]"
@@ -949,7 +945,6 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                   class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
-                    aria-describedby="root_lastName__error root_lastName__description root_lastName__help"
                     class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     id="root_lastName"
                     name="root[lastName]"
@@ -981,7 +976,6 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                   class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
-                    aria-describedby="root_age__error root_age__description root_age__help"
                     class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     id="root_age"
                     inputmode="decimal"
@@ -1039,13 +1033,16 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
               >
                 <div
                   class="___12hmf4e_0000000 f2zxqi febqm8h"
-                  id="root_person__title"
                 >
                   <h5
                     class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                     style="margin-block: 0px;"
                   >
-                    person
+                    <span
+                      id="root_person__title"
+                    >
+                      person
+                    </span>
                   </h5>
                   <div
                     aria-orientation="horizontal"
@@ -1076,7 +1073,6 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                           class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                         >
                           <input
-                            aria-describedby="root_person_name__error root_person_name__description root_person_name__help"
                             class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                             id="root_person_name"
                             name="root.person.name"
@@ -1100,13 +1096,16 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                       >
                         <div
                           class="___12hmf4e_0000000 f2zxqi febqm8h"
-                          id="root_person_address__title"
                         >
                           <h5
                             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                             style="margin-block: 0px;"
                           >
-                            address
+                            <span
+                              id="root_person_address__title"
+                            >
+                              address
+                            </span>
                           </h5>
                           <div
                             aria-orientation="horizontal"
@@ -1137,7 +1136,6 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                   class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                                 >
                                   <input
-                                    aria-describedby="root_person_address_street__error root_person_address_street__description root_person_address_street__help"
                                     class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                                     id="root_person_address_street"
                                     name="root.person.address.street"
@@ -1169,7 +1167,6 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                   class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                                 >
                                   <input
-                                    aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                                     class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                                     id="root_person_address_city"
                                     name="root.person.address.city"
@@ -1240,7 +1237,6 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                   class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
-                    aria-describedby="root_name__error root_name__description root_name__help"
                     class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     id="root_name"
                     name="root.name"
@@ -1272,7 +1268,6 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                   class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
-                    aria-describedby="root_count__error root_count__description root_count__help"
                     class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     id="root_count"
                     inputmode="decimal"
@@ -1299,13 +1294,16 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
               >
                 <div
                   class="___12hmf4e_0000000 f2zxqi febqm8h"
-                  id="root_items__title"
                 >
                   <h5
                     class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                     style="margin-block: 0px;"
                   >
-                    items
+                    <span
+                      id="root_items__title"
+                    >
+                      items
+                    </span>
                   </h5>
                   <div
                     aria-orientation="horizontal"
@@ -1344,7 +1342,6 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                             class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                           >
                             <input
-                              aria-describedby="root_items_0__error root_items_0__description root_items_0__help"
                               class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                               id="root_items_0"
                               name="root.items.0"
@@ -1473,7 +1470,6 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                             class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                           >
                             <input
-                              aria-describedby="root_items_1__error root_items_1__description root_items_1__help"
                               class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                               id="root_items_1"
                               name="root.items.1"
@@ -1659,7 +1655,6 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                   class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
-                    aria-describedby="root_firstName__error root_firstName__description root_firstName__help"
                     class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     id="root_firstName"
                     name="root.firstName"
@@ -1691,7 +1686,6 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                   class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
-                    aria-describedby="root_lastName__error root_lastName__description root_lastName__help"
                     class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     id="root_lastName"
                     name="root.lastName"
@@ -1723,7 +1717,6 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                   class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
-                    aria-describedby="root_age__error root_age__description root_age__help"
                     class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     id="root_age"
                     inputmode="decimal"
@@ -1784,8 +1777,8 @@ exports[`object fields > additionalProperties 1`] = `
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="field-_r_4___control"
-                    id="field-_r_4___label"
+                    for="root_foo-key"
+                    id="root_foo-key__label"
                   >
                     foo Key
                   </label>
@@ -1793,7 +1786,6 @@ exports[`object fields > additionalProperties 1`] = `
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-labelledby="field-_r_4___label"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_foo-key"
                       name="root_foo-key"
@@ -1819,7 +1811,6 @@ exports[`object fields > additionalProperties 1`] = `
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-describedby="root_foo__error root_foo__description root_foo__help"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_foo"
                       name="root_foo"
@@ -1940,8 +1931,8 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="field-_r_q___control"
-                    id="field-_r_q___label"
+                    for="root_foo-key"
+                    id="root_foo-key__label"
                   >
                     foo Key
                   </label>
@@ -1949,9 +1940,8 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                     class="fui-Dropdown form-control ___y35djy0_1vjl6qf ft85np5 f1ewtqcl ftuwxu6 fy77jfu f10pi13n fmrv4ls f14a1fxs f3e99gv fhljsf7 f1gw3sf2 f13zj6fq f1mdlcz9 f1a7op3 f1gboi2j f1cjjd47 ffyw7fx f1kp91vd f1ibwz09 f1mnjydx f13evtba f1yk9hq fhwpy7i f14ee0xe f1xhbsuh fsrmcvb f1t3k7v9 fjw5xc1 f1xdyd5c fatpbeo fb7uyps fx04xgm f1c7in40 f1ibeo51 f18qfb8s f1m082s7 fxugw4r f1c1zstj fhz96rm fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi fvs00aa f1assf6x f1z0osm6 f4ruux4 f1b473iu f381qr8 f1qzcrsd ft4skwv fly5x3f"
                   >
                     <button
-                      aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
                       aria-expanded="false"
-                      aria-labelledby="field-_r_q___label"
+                      aria-labelledby="root_foo-key__label"
                       class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
                       data-tabster="{"focusable":{"ignoreKeydown":{"Escape":false}}}"
                       id="root_foo-key"
@@ -2022,7 +2012,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-describedby="root_foo__error root_foo__description root_foo__help"
+                      aria-describedby="root_foo__description"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_foo"
                       name="root_foo"
@@ -2154,8 +2144,8 @@ exports[`object fields > additionalProperties, array type 1`] = `
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="field-_r_i___control"
-                    id="field-_r_i___label"
+                    for="root_foo-key"
+                    id="root_foo-key__label"
                   >
                     foo Key
                   </label>
@@ -2163,7 +2153,6 @@ exports[`object fields > additionalProperties, array type 1`] = `
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-labelledby="field-_r_i___label"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_foo-key"
                       name="root_foo-key"
@@ -2181,13 +2170,16 @@ exports[`object fields > additionalProperties, array type 1`] = `
                 >
                   <div
                     class="___12hmf4e_0000000 f2zxqi febqm8h"
-                    id="root_foo__title"
                   >
                     <h5
                       class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                       style="margin-block: 0px;"
                     >
-                      foo
+                      <span
+                        id="root_foo__title"
+                      >
+                        foo
+                      </span>
                     </h5>
                     <div
                       aria-orientation="horizontal"
@@ -2341,8 +2333,8 @@ exports[`object fields > additionalProperties, description 1`] = `
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="field-_r_a___control"
-                    id="field-_r_a___label"
+                    for="root_foo-key"
+                    id="root_foo-key__label"
                   >
                     foo Key
                   </label>
@@ -2350,7 +2342,6 @@ exports[`object fields > additionalProperties, description 1`] = `
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-labelledby="field-_r_a___label"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_foo-key"
                       name="root_foo-key"
@@ -2376,7 +2367,7 @@ exports[`object fields > additionalProperties, description 1`] = `
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-describedby="root_foo__error root_foo__description root_foo__help"
+                      aria-describedby="root_foo__description"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_foo"
                       name="root_foo"
@@ -2508,8 +2499,8 @@ exports[`object fields > additionalProperties, label off 1`] = `
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="field-_r_7___control"
-                    id="field-_r_7___label"
+                    for="root_foo-key"
+                    id="root_foo-key__label"
                   >
                     foo Key
                   </label>
@@ -2517,7 +2508,6 @@ exports[`object fields > additionalProperties, label off 1`] = `
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-labelledby="field-_r_7___label"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_foo-key"
                       name="root_foo-key"
@@ -2543,7 +2533,6 @@ exports[`object fields > additionalProperties, label off 1`] = `
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-describedby="root_foo__error root_foo__description root_foo__help"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_foo"
                       name="root_foo"
@@ -2664,8 +2653,8 @@ exports[`object fields > additionalProperties, object type 1`] = `
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="field-_r_d___control"
-                    id="field-_r_d___label"
+                    for="root_foo-key"
+                    id="root_foo-key__label"
                   >
                     foo Key
                   </label>
@@ -2673,7 +2662,6 @@ exports[`object fields > additionalProperties, object type 1`] = `
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-labelledby="field-_r_d___label"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_foo-key"
                       name="root_foo-key"
@@ -2691,13 +2679,16 @@ exports[`object fields > additionalProperties, object type 1`] = `
                 >
                   <div
                     class="___12hmf4e_0000000 f2zxqi febqm8h"
-                    id="root_foo__title"
                   >
                     <h5
                       class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                       style="margin-block: 0px;"
                     >
-                      foo
+                      <span
+                        id="root_foo__title"
+                      >
+                        foo
+                      </span>
                     </h5>
                     <div
                       aria-orientation="horizontal"
@@ -2728,7 +2719,6 @@ exports[`object fields > additionalProperties, object type 1`] = `
                             class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                           >
                             <input
-                              aria-describedby="root_foo_foo__error root_foo_foo__description root_foo_foo__help"
                               class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                               id="root_foo_foo"
                               name="root_foo_foo"
@@ -2853,8 +2843,8 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="field-_r_m___control"
-                    id="field-_r_m___label"
+                    for="root_foo-key"
+                    id="root_foo-key__label"
                   >
                     foo Key
                   </label>
@@ -2862,9 +2852,8 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                     class="fui-Dropdown form-control ___y35djy0_1vjl6qf ft85np5 f1ewtqcl ftuwxu6 fy77jfu f10pi13n fmrv4ls f14a1fxs f3e99gv fhljsf7 f1gw3sf2 f13zj6fq f1mdlcz9 f1a7op3 f1gboi2j f1cjjd47 ffyw7fx f1kp91vd f1ibwz09 f1mnjydx f13evtba f1yk9hq fhwpy7i f14ee0xe f1xhbsuh fsrmcvb f1t3k7v9 fjw5xc1 f1xdyd5c fatpbeo fb7uyps fx04xgm f1c7in40 f1ibeo51 f18qfb8s f1m082s7 fxugw4r f1c1zstj fhz96rm fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi fvs00aa f1assf6x f1z0osm6 f4ruux4 f1b473iu f381qr8 f1qzcrsd ft4skwv fly5x3f"
                   >
                     <button
-                      aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
                       aria-expanded="false"
-                      aria-labelledby="field-_r_m___label"
+                      aria-labelledby="root_foo-key__label"
                       class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
                       data-tabster="{"focusable":{"ignoreKeydown":{"Escape":false}}}"
                       id="root_foo-key"
@@ -2935,7 +2924,6 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-describedby="root_foo__error root_foo__description root_foo__help"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_foo"
                       name="root_foo"
@@ -3056,8 +3044,8 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="field-_r_u___control"
-                    id="field-_r_u___label"
+                    for="root_foo-key"
+                    id="root_foo-key__label"
                   >
                     foo (deprecated) Key
                   </label>
@@ -3065,9 +3053,8 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                     class="fui-Dropdown form-control ___y35djy0_1vjl6qf ft85np5 f1ewtqcl ftuwxu6 fy77jfu f10pi13n fmrv4ls f14a1fxs f3e99gv fhljsf7 f1gw3sf2 f13zj6fq f1mdlcz9 f1a7op3 f1gboi2j f1cjjd47 ffyw7fx f1kp91vd f1ibwz09 f1mnjydx f13evtba f1yk9hq fhwpy7i f14ee0xe f1xhbsuh fsrmcvb f1t3k7v9 fjw5xc1 f1xdyd5c fatpbeo fb7uyps fx04xgm f1c7in40 f1ibeo51 f18qfb8s f1m082s7 fxugw4r f1c1zstj fhz96rm fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi fvs00aa f1assf6x f1z0osm6 f4ruux4 f1b473iu f381qr8 f1qzcrsd ft4skwv fly5x3f"
                   >
                     <button
-                      aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
                       aria-expanded="false"
-                      aria-labelledby="field-_r_u___label"
+                      aria-labelledby="root_foo-key__label"
                       class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
                       data-tabster="{"focusable":{"ignoreKeydown":{"Escape":false}}}"
                       id="root_foo-key"
@@ -3132,13 +3119,12 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                     class="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
                     for="root_foo"
                   >
-                    foo
+                    foo (deprecated)
                   </label>
                   <span
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-describedby="root_foo__error root_foo__description root_foo__help"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_foo"
                       name="root_foo"
@@ -3264,7 +3250,6 @@ exports[`object fields > object 1`] = `
                   class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
-                    aria-describedby="root_a__error root_a__description root_a__help"
                     class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     id="root_a"
                     name="root_a"
@@ -3296,7 +3281,6 @@ exports[`object fields > object 1`] = `
                   class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
-                    aria-describedby="root_b__error root_b__description root_b__help"
                     class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     id="root_b"
                     inputmode="decimal"
@@ -3357,8 +3341,8 @@ exports[`object fields > show add button and fields if additionalProperties is t
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="field-_r_12___control"
-                    id="field-_r_12___label"
+                    for="root_additionalProperty-key"
+                    id="root_additionalProperty-key__label"
                   >
                     additionalProperty Key
                   </label>
@@ -3366,7 +3350,6 @@ exports[`object fields > show add button and fields if additionalProperties is t
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-labelledby="field-_r_12___label"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_additionalProperty-key"
                       name="root_additionalProperty-key"
@@ -3392,7 +3375,6 @@ exports[`object fields > show add button and fields if additionalProperties is t
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_additionalProperty"
                       name="root_additionalProperty"
@@ -3497,13 +3479,16 @@ exports[`object fields > with title and description > additionalProperties 1`] =
       >
         <div
           class="___12hmf4e_0000000 f2zxqi febqm8h"
-          id="root__title"
         >
           <h5
             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
             style="margin-block: 0px;"
           >
-            Test field
+            <span
+              id="root__title"
+            >
+              Test field
+            </span>
           </h5>
           <div
             aria-orientation="horizontal"
@@ -3535,8 +3520,8 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="field-_r_1a___control"
-                    id="field-_r_1a___label"
+                    for="root_foo-key"
+                    id="root_foo-key__label"
                   >
                     foo Key
                   </label>
@@ -3544,7 +3529,6 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-labelledby="field-_r_1a___label"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_foo-key"
                       name="root_foo-key"
@@ -3570,7 +3554,6 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-describedby="root_foo__error root_foo__description root_foo__help"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_foo"
                       name="root_foo"
@@ -3675,13 +3658,16 @@ exports[`object fields > with title and description > object 1`] = `
       >
         <div
           class="___12hmf4e_0000000 f2zxqi febqm8h"
-          id="root__title"
         >
           <h5
             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
             style="margin-block: 0px;"
           >
-            Test field
+            <span
+              id="root__title"
+            >
+              Test field
+            </span>
           </h5>
           <div
             aria-orientation="horizontal"
@@ -3718,7 +3704,7 @@ exports[`object fields > with title and description > object 1`] = `
                   class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
-                    aria-describedby="root_a__error root_a__description root_a__help"
+                    aria-describedby="root_a__description"
                     class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     id="root_a"
                     name="root_a"
@@ -3761,7 +3747,7 @@ exports[`object fields > with title and description > object 1`] = `
                   class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
-                    aria-describedby="root_b__error root_b__description root_b__help"
+                    aria-describedby="root_b__description"
                     class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     id="root_b"
                     inputmode="decimal"
@@ -3817,13 +3803,16 @@ exports[`object fields > with title and description > show add button and fields
       >
         <div
           class="___12hmf4e_0000000 f2zxqi febqm8h"
-          id="root__title"
         >
           <h5
             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
             style="margin-block: 0px;"
           >
-            Test field
+            <span
+              id="root__title"
+            >
+              Test field
+            </span>
           </h5>
           <div
             aria-orientation="horizontal"
@@ -3855,8 +3844,8 @@ exports[`object fields > with title and description > show add button and fields
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="field-_r_1e___control"
-                    id="field-_r_1e___label"
+                    for="root_additionalProperty-key"
+                    id="root_additionalProperty-key__label"
                   >
                     additionalProperty Key
                   </label>
@@ -3864,7 +3853,6 @@ exports[`object fields > with title and description > show add button and fields
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-labelledby="field-_r_1e___label"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_additionalProperty-key"
                       name="root_additionalProperty-key"
@@ -3890,7 +3878,6 @@ exports[`object fields > with title and description > show add button and fields
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_additionalProperty"
                       name="root_additionalProperty"
@@ -3995,13 +3982,16 @@ exports[`object fields > with title and description from both > additionalProper
       >
         <div
           class="___12hmf4e_0000000 f2zxqi febqm8h"
-          id="root__title"
         >
           <h5
             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
             style="margin-block: 0px;"
           >
-            My Field
+            <span
+              id="root__title"
+            >
+              My Field
+            </span>
           </h5>
           <div
             aria-orientation="horizontal"
@@ -4033,8 +4023,8 @@ exports[`object fields > with title and description from both > additionalProper
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="field-_r_22___control"
-                    id="field-_r_22___label"
+                    for="root_foo-key"
+                    id="root_foo-key__label"
                   >
                     foo Key
                   </label>
@@ -4042,7 +4032,6 @@ exports[`object fields > with title and description from both > additionalProper
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-labelledby="field-_r_22___label"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_foo-key"
                       name="root_foo-key"
@@ -4068,7 +4057,6 @@ exports[`object fields > with title and description from both > additionalProper
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-describedby="root_foo__error root_foo__description root_foo__help"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_foo"
                       name="root_foo"
@@ -4173,13 +4161,16 @@ exports[`object fields > with title and description from both > object 1`] = `
       >
         <div
           class="___12hmf4e_0000000 f2zxqi febqm8h"
-          id="root__title"
         >
           <h5
             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
             style="margin-block: 0px;"
           >
-            My Field
+            <span
+              id="root__title"
+            >
+              My Field
+            </span>
           </h5>
           <div
             aria-orientation="horizontal"
@@ -4216,7 +4207,7 @@ exports[`object fields > with title and description from both > object 1`] = `
                   class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
-                    aria-describedby="root_a__error root_a__description root_a__help"
+                    aria-describedby="root_a__description"
                     class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     id="root_a"
                     name="root_a"
@@ -4259,7 +4250,7 @@ exports[`object fields > with title and description from both > object 1`] = `
                   class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
-                    aria-describedby="root_b__error root_b__description root_b__help"
+                    aria-describedby="root_b__description"
                     class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     id="root_b"
                     inputmode="decimal"
@@ -4315,13 +4306,16 @@ exports[`object fields > with title and description from uiSchema > additionalPr
       >
         <div
           class="___12hmf4e_0000000 f2zxqi febqm8h"
-          id="root__title"
         >
           <h5
             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
             style="margin-block: 0px;"
           >
-            My Field
+            <span
+              id="root__title"
+            >
+              My Field
+            </span>
           </h5>
           <div
             aria-orientation="horizontal"
@@ -4353,8 +4347,8 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="field-_r_1m___control"
-                    id="field-_r_1m___label"
+                    for="root_foo-key"
+                    id="root_foo-key__label"
                   >
                     foo Key
                   </label>
@@ -4362,7 +4356,6 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-labelledby="field-_r_1m___label"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_foo-key"
                       name="root_foo-key"
@@ -4388,7 +4381,6 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-describedby="root_foo__error root_foo__description root_foo__help"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_foo"
                       name="root_foo"
@@ -4493,13 +4485,16 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
       >
         <div
           class="___12hmf4e_0000000 f2zxqi febqm8h"
-          id="root__title"
         >
           <h5
             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
             style="margin-block: 0px;"
           >
-            My Field
+            <span
+              id="root__title"
+            >
+              My Field
+            </span>
           </h5>
           <div
             aria-orientation="horizontal"
@@ -4536,7 +4531,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                   class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
-                    aria-describedby="root_a__error root_a__description root_a__help"
+                    aria-describedby="root_a__description"
                     class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     id="root_a"
                     name="root_a"
@@ -4579,7 +4574,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                   class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
-                    aria-describedby="root_b__error root_b__description root_b__help"
+                    aria-describedby="root_b__description"
                     class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     id="root_b"
                     inputmode="decimal"
@@ -4635,13 +4630,16 @@ exports[`object fields > with title and description from uiSchema > show add but
       >
         <div
           class="___12hmf4e_0000000 f2zxqi febqm8h"
-          id="root__title"
         >
           <h5
             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
             style="margin-block: 0px;"
           >
-            My Field
+            <span
+              id="root__title"
+            >
+              My Field
+            </span>
           </h5>
           <div
             aria-orientation="horizontal"
@@ -4673,8 +4671,8 @@ exports[`object fields > with title and description from uiSchema > show add but
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="field-_r_1q___control"
-                    id="field-_r_1q___label"
+                    for="root_additionalProperty-key"
+                    id="root_additionalProperty-key__label"
                   >
                     additionalProperty Key
                   </label>
@@ -4682,7 +4680,6 @@ exports[`object fields > with title and description from uiSchema > show add but
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-labelledby="field-_r_1q___label"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_additionalProperty-key"
                       name="root_additionalProperty-key"
@@ -4708,7 +4705,6 @@ exports[`object fields > with title and description from uiSchema > show add but
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_additionalProperty"
                       name="root_additionalProperty"
@@ -4831,6 +4827,7 @@ exports[`object fields > with title and description with global label off > addi
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
+                      aria-label="foo Key"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_foo-key"
                       name="root_foo-key"
@@ -4850,7 +4847,7 @@ exports[`object fields > with title and description with global label off > addi
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-describedby="root_foo__error root_foo__description root_foo__help"
+                      aria-label="foo"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_foo"
                       name="root_foo"
@@ -4970,7 +4967,7 @@ exports[`object fields > with title and description with global label off > obje
                   class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
-                    aria-describedby="root_a__error root_a__description root_a__help"
+                    aria-label="A"
                     class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     id="root_a"
                     name="root_a"
@@ -4996,7 +4993,7 @@ exports[`object fields > with title and description with global label off > obje
                   class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
-                    aria-describedby="root_b__error root_b__description root_b__help"
+                    aria-label="B"
                     class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     id="root_b"
                     inputmode="decimal"
@@ -5059,6 +5056,7 @@ exports[`object fields > with title and description with global label off > show
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
+                      aria-label="additionalProperty Key"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_additionalProperty-key"
                       name="root_additionalProperty-key"
@@ -5078,7 +5076,7 @@ exports[`object fields > with title and description with global label off > show
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
+                      aria-label="additionalProperty"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_additionalProperty"
                       name="root_additionalProperty"

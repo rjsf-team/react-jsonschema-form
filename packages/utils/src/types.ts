@@ -134,7 +134,25 @@ export interface DefaultFormStateBehavior {
    */
   emptyObjectFields?: 'populateAllDefaults' | 'populateRequiredDefaults' | 'skipDefaults' | 'skipEmptyDefaults';
   /**
-   * Optional flag to compute the default form state using allOf and if/then/else schemas. Defaults to `skipDefaults'.
+   * Optional flag to compute the default form state using allOf and if/then/else schemas. Defaults to `skipDefaults`.
+   * NOTE: `skipDefaults` only skips the `allOf` schemas nested inside the schema that `getDefaultFormState()` computes
+   * defaults from, so the defaults of that schema's own `allOf` are still populated. Outside a `dependencies` entry,
+   * the `if-then-else` branch is picked from `formData`, not from the computed defaults, so when the `if` lists in
+   * `required` a property that only a default provides, the `then` default is left out until `formData` holds that
+   * value. Without `required`, such an `if` passes with no `formData`, so its `then` default is filled in even when the
+   * `if` does not match the defaulted value. A nested `allOf` is skipped as a whole, plain property defaults included,
+   * while an `if-then-else` placed directly in a nested object schema is resolved, along with any `allOf` next to it,
+   * unless `emptyObjectFields` is `skipEmptyDefaults`. With one `allOf` entry per `enum` value and no `formData`, the
+   * default `allOf` merger merges the `then` defaults of all the entries, and the first entry that defaults a property
+   * wins, while a `customMergeAllOf` that throws on the conflicting `default`s drops the whole `allOf`. A
+   * `customMergeAllOf` built on a deep merger also turns a property's `allOf: [{ if, then }]` into a direct
+   * `if-then-else` wherever it merges an `allOf` (the root's own, or one next to a direct `if` in a nested object
+   * schema, but not a nested `allOf` on its own), so that property's `then` default is filled in under `skipDefaults`
+   * too, unless `emptyObjectFields` is `skipEmptyDefaults`. The `allOf` and `if-then-else` of a nested object's
+   * `dependencies` entry are resolved once its property has a value, even when `emptyObjectFields` is
+   * `skipEmptyDefaults`, and a default counts as that value, so the entry's `if` is checked against it. A root
+   * `dependencies` entry counts a default only while `formData` is empty.
+   * See the `allOf` section of `defaultFormStateBehavior` in the form props docs for examples of each case.
    */
   allOf?: 'populateDefaults' | 'skipDefaults';
   /** Optional enumerated flag controlling how the defaults are merged into the form data when dealing with undefined
@@ -494,6 +512,10 @@ export type FieldHelpProps<
   id: string;
   /** Flag indicating whether there are errors associated with this field */
   hasErrors?: boolean;
+  /** The plan of the field, whose help id the help takes: an option showing help of its own beneath its field's takes
+   * `optionHelpId()` rather than repeating `helpId(id)`
+   */
+  presentation?: FieldPresentation;
 };
 
 /** The properties that are passed to a `GridTemplate` */
@@ -710,6 +732,10 @@ export interface Registry<
    * registered widgets
    */
   readonly widgets: RegistryWidgetsType<T, S, F>;
+  /** Which parts of a field each registered field and widget draws itself, merged from the declarations of `core`, the
+   * theme and the `Form`'s `presentation` prop by `mergeThemePresentation()`
+   */
+  readonly presentation: MergedThemePresentation;
   /** The `formContext` object that was passed to `Form` */
   readonly formContext: F;
   /** The root schema, as passed to the `Form`, which can contain referenced definitions */
@@ -769,8 +795,172 @@ export interface FieldProps<
   required?: boolean;
   /** The unique name of the field, usually derived from the name of the property in the JSONSchema */
   name: string;
-  /** An array of strings listing all generated error messages from encountered errors for this field */
+  /** An array of strings listing the field's own error messages, which its `errorSchema` doesn't hold. It carries them
+   * whatever `hideError` says, so that a field can render them its own way. It is unset for a field rendered beside a
+   * `oneOf`/`anyOf` option selector, which is handed them instead. A custom `ArraySchemaField` is the exception: each
+   * item is handed the array's own errors and no plan, so it reads its own from its `errorSchema` rather than through
+   * `getErrorsToDraw()`, which would give it the array's
+   * @deprecated Kept through v7 for a field rendered without a plan: read `getErrorsToDraw()` for the messages the
+   *   field draws itself, the plan's `presentation.errors.messages`, with `ui:hideError` applied, where
+   *   `presentation.errors.by` is `'self'`, since the template draws them under `'template'`, and
+   *   `presentation.errors.messages.length > 0` for an error state. Beside a selector, the plan keeps the field's
+   *   errors, which its template draws, so the field shows as invalid along with the selector
+   */
   rawErrors?: string[];
+  /** The plan `SchemaField` built for the field: who draws its label, description, help and errors, under which ids,
+   * and the attributes its control carries. Set on the field `SchemaField` renders, not on the `SchemaField` itself,
+   * which builds it. Its `'self'` is this field's, so hand it to a widget only when the field leaves its parts to that
+   * widget, as one declaring `WIDGET_FIELD_PRESENTATION` does: a widget reads `'self'` as its own
+   */
+  presentation?: FieldPresentation;
+}
+
+/** Who draws one part of a field: its `FieldTemplate`, or the field or widget component itself. `widget` is for a field
+ * component that renders a single widget and leaves the part to whoever that widget says draws it
+ */
+export type PartOwner = 'template' | 'self' | 'widget';
+
+/** The parts of a field a template or a component can draw */
+export type PresentationPart = 'label' | 'description' | 'errors' | 'help';
+
+/** Which parts of a field a field or widget component draws itself. A part a widget's declaration leaves out takes the
+ * theme's `default`, or else is drawn by the template; one a field's leaves out takes the theme's `fieldDefault`, or
+ * else the field default, which draws its own label and description and leaves its errors and help to the template
+ */
+export interface PresentationDeclaration<Owner extends PartOwner = PartOwner> {
+  /** Who draws the label naming the field's control */
+  label?: Owner;
+  /** Who draws the field's description */
+  description?: Owner;
+  /** Who draws the field's errors. A component drawing them itself promises one element carrying the id its plan's
+   * `errors` gives, `errorId()` of the id the component renders under, whenever there are messages to show, and none
+   * when there are not
+   */
+  errors?: Owner;
+  /** Who draws the field's `ui:help` */
+  help?: Owner;
+  /** How a label the template draws reaches the control: its `for`, or the control pointing `aria-labelledby` at the
+   * id the field's plan gives the label, `fieldLabelId(id)` unless a label a field above draws already takes it, which
+   * a group of controls needs since `for` names a single element
+   */
+  labelledBy?: 'for' | 'aria-labelledby';
+  /** Whether the control, left alone, already holds `false`, as an unchecked checkbox or switch does where its field
+   * renders a `boolean`, which `getDefaultFormState()` seeds a required one with. A native `required` would then fail a
+   * value the schema accepts, so `@rjsf/core` plans the control as required only where the schema demands `true`
+   * (#5388), and as any other control where its field renders another type, as a `type` list's string field renders a
+   * switch. A fact about one control, so it is declared under the key of the widget, or of a field drawing the control
+   * itself, and the blanket `default` and `fieldDefault` of a `ThemePresentation` take none
+   */
+  uncheckedIsFalse?: boolean;
+}
+
+/** A widget's `PresentationDeclaration`, which has no widget beneath it to leave a part to */
+export type WidgetPresentationDeclaration = PresentationDeclaration<Exclude<PartOwner, 'widget'>>;
+
+/** A `PresentationDeclaration` with every part settled on the template or the component, as
+ * `getPresentationDeclaration()` returns it, and `uncheckedIsFalse` left out where nothing declares it
+ */
+export type ResolvedPresentationDeclaration = Required<Omit<WidgetPresentationDeclaration, 'uncheckedIsFalse'>> &
+  Pick<WidgetPresentationDeclaration, 'uncheckedIsFalse'>;
+
+/** The declarations a theme registers for the components it provides, keyed by the registry key each is registered
+ * under, so a component replacing another under the same key draws what that key declares. A component given
+ * directly, as a `ui:field` or `ui:widget`, is found by identity among the registered ones and takes the declaration
+ * for the first key it is registered under that declares it; nothing is declared on the component itself, so a wrapper
+ * such as `memo()` can't lose it
+ */
+export interface ThemePresentation {
+  /** What every widget draws for a part this layer's own entry for it doesn't declare, custom and unregistered widgets
+   * included, e.g. a theme whose widgets all draw their own label. `mergeThemePresentation()` layers it beneath this
+   * layer's own entry for every key, so it overrides the parts it declares in the layers beneath it, even under a key
+   * one of them declares
+   */
+  default?: Omit<WidgetPresentationDeclaration, 'uncheckedIsFalse'>;
+  /** Declarations for widgets, by the key they are registered under */
+  widgets?: Readonly<Record<string, WidgetPresentationDeclaration>>;
+  /** Declarations for fields, by the key they are registered under */
+  fields?: Readonly<Record<string, PresentationDeclaration>>;
+  /** What every field draws for a part its merged entry doesn't declare, custom fields included, over the field default
+   * of drawing its own label and description, e.g. a theme whose template draws every description. It is also what a
+   * part a field leaves to its widget falls back to when the field renders none. Unlike `default`, it sits beneath the
+   * merged entries rather than beneath each layer's own, so it can't override a part a lower layer declares under a
+   * key, such as a field leaving its parts to its widget. Its `labelledBy` reaches only fields that keep their label or
+   * render no widget to leave it to, since one leaving it to a widget it renders takes the widget's
+   */
+  fieldDefault?: Omit<WidgetPresentationDeclaration, 'uncheckedIsFalse'>;
+}
+
+/** A form's `ThemePresentation` once `mergeThemePresentation()` merged its layers: an entry in `widgets` for every key
+ * any layer declares, with each layer's `default` beneath that layer's own entry, the layered `default` for a key no
+ * layer declares, and the layered `fieldDefault`
+ */
+export type MergedThemePresentation = Required<ThemePresentation>;
+
+/** Where one part of a field is drawn: by its template, by its field or widget component, by a field above it
+ * rendering the same id, or not at all
+ */
+export type PartPlacement = 'template' | 'self' | 'above' | 'none';
+
+/** One part of a field's plan: where it is drawn, and the id of the element drawing it */
+export interface PartPresentation {
+  by: PartPlacement;
+  id: string;
+}
+
+/** The attributes the element(s) of a field's control carry, which are the elements that also carry its `id`, or, for a
+ * group of controls, its wrapper and each control in it, as `getGroupAttributes()` splits them
+ */
+export interface ControlAttributes {
+  'aria-labelledby'?: string;
+  /** The label's text, naming a control whose label `ui:label: false` hides, which would otherwise have no name */
+  'aria-label'?: string;
+  /** Lists only the ids of the parts that render */
+  'aria-describedby'?: string;
+  'aria-invalid'?: true;
+  required?: true;
+}
+
+/** One field's plan of what draws its label, description, help and errors, and the attributes its control carries.
+ * Resolved once by `resolveFieldPresentation()`
+ */
+export interface FieldPresentation {
+  /** The label text, decorated for a deprecated field, or `''` when there is none. An `above` label carries the text,
+   * id and required marker of the label drawn above
+   */
+  label: PartPresentation & {
+    text: string;
+    /** Whether the label shows a required marker, as `control.attributes.required` has the control carry the native
+     * attribute. Planned whether or not there is a control, so a container's heading shows it too
+     */
+    requiredMarker: boolean;
+  };
+  description: PartPresentation & { text: string };
+  help: PartPresentation & { text?: string | ReactElement };
+  errors: PartPresentation & {
+    /** The messages to show, with `ui:hideError` applied */
+    messages: readonly string[];
+  };
+  /** The ids of the field's parts describing its control, in order, counting only parts that render here or above. A
+   * field below rendering the same id inherits them, so the ids of the elements a widget renders to describe its own
+   * control, which `getControlAttributes()` adds after these, are never in them
+   */
+  describedBy: readonly string[];
+  /** Whether `ui:label` lets the field show its label and description, as the caller resolved it through the fields
+   * above. A part it lets show may still be `none`, having no text, or `above`, drawn by a field above
+   */
+  showLabel: boolean;
+  /** The control the label names. Undefined when there is no control on screen to name: a container, an opted-out
+   * optional field or a hidden one
+   */
+  control?: {
+    id: string;
+    /** Spread onto the element(s) carrying `id`, and nowhere else, except as `getGroupAttributes()` splits them between
+     * a group's wrapper and its controls
+     */
+    attributes: ControlAttributes;
+  };
+  /** The plan of the field above that renders this same id, which this one was built under */
+  inherited?: FieldPresentation;
 }
 
 /** The definition of a React-based Field component */
@@ -817,6 +1007,8 @@ export type FieldTemplateProps<
   /** An array of strings listing the generated error messages this field is displaying, `undefined` while
    * `ui:hideError` is in effect, so that a template styling itself from it alone stays out of the error state.
    * To render the withheld errors yourself, read them from `errorSchema`
+   * @deprecated Kept through v7 for a template rendered without a plan: read `presentation.errors.messages`, or
+   *   `hasTemplateErrors()`, which falls back to this
    */
   rawErrors?: string[];
   /** The tree of errors for this field and its children, carrying every error whatever `hideError` says, for a
@@ -831,7 +1023,9 @@ export type FieldTemplateProps<
   rawHelp?: string | ReactElement;
   /** A boolean value stating if the field should be hidden */
   hidden?: boolean;
-  /** A boolean value stating if the field is required */
+  /** A boolean value stating if the field is required. The label the template draws is marked from
+   * `templateMarksRequired()`, which follows the field's plan, so a checkbox the schema lets be `false` isn't marked
+   */
   required?: boolean;
   /** A boolean value stating if the field is read-only */
   readonly: boolean;
@@ -839,10 +1033,16 @@ export type FieldTemplateProps<
   hideError?: boolean;
   /** A boolean value stating if the field is disabled */
   disabled: boolean;
-  /** A boolean value stating if the label should be rendered or not. This is useful for nested fields in arrays where
-   * you don't want to clutter the UI
+  /** A boolean value stating if the template renders the label: true only where the field's `presentation` says the
+   * template draws it, so it is false where the widget draws its own label and where `ui:label: false` turns it off
+   * @deprecated Kept through v7 for a template rendered without a plan: read `presentation.label.by`, or
+   *   `templateDrawsLabel()`, which falls back to this
    */
   displayLabel?: boolean;
+  /** The plan `SchemaField` built for the field: who draws its label, description, help and errors, under which ids,
+   * and the attributes its control carries
+   */
+  presentation?: FieldPresentation;
   /** The formData for this field */
   formData?: T;
   /** The value change event handler; Can be called with a new value to change the value for this field */
@@ -950,6 +1150,8 @@ export type ArrayFieldDescriptionProps<
   description?: string | ReactElement;
   /** The id of the field in the hierarchy */
   id: string;
+  /** The plan of the array, whose description id the description renders under when there is one */
+  presentation?: FieldPresentation;
 };
 
 /** The properties of the buttons to render for each element in the ArrayFieldTemplateProps.items array */
@@ -1060,8 +1262,11 @@ export type ContainerFieldTemplateProps<
   /** A boolean value stating if the field is hiding its errors */
   hideError?: boolean;
   /** An array of strings listing the field's own errors, which its `errorSchema` doesn't hold. Unlike
-   * `FieldTemplateProps.rawErrors`, it carries them whatever `hideError` says, as a widget's does, so a template
-   * rendering an error state from it must pair the two through `hasVisibleErrors({ rawErrors, hideError })`
+   * `FieldTemplateProps.rawErrors`, it carries them whatever `hideError` says, as a widget's does
+   * @deprecated Kept through v7 for a template rendered without a plan: read `getErrorsToDraw()` for the messages the
+   *   template draws itself, the plan's `presentation.errors.messages`, with `ui:hideError` applied, where
+   *   `presentation.errors.by` is `'self'`, since the `FieldTemplate` draws them under `'template'`, and
+   *   `hasTemplateErrors()` for an error state, each falling back to this without a plan
    */
   rawErrors?: string[];
   /** A string value containing the title for the array */
@@ -1072,6 +1277,11 @@ export type ContainerFieldTemplateProps<
   errorSchema?: ErrorSchema<T>;
   /** The optional data control node to render within the ObjectFieldTemplate that controls */
   optionalDataControl?: ReactNode;
+  /** The plan `SchemaField` built for the field: whether its heading and description are the container's to draw, and
+   * under which ids, and its own errors, `errors.messages`, with `ui:hideError` applied, which the container draws only
+   * where `errors.by` is `'self'`, under `errors.id`
+   */
+  presentation?: FieldPresentation;
 };
 
 /** The properties that are passed to an `ArrayFieldTemplate` implementation */
@@ -1179,6 +1389,7 @@ export type WrapIfAdditionalTemplateProps<
     | 'onRemoveProperty'
     | 'propertyNamesEnum'
     | 'registry'
+    | 'presentation'
   >;
 
 /** The properties that are passed to a MultiSchemaFieldTemplate implementation */
@@ -1218,7 +1429,9 @@ export interface WidgetProps<
   name: string;
   /** The current value for this widget */
   value: any;
-  /** The required status of this widget */
+  /** The required status of this widget. A widget declared `uncheckedIsFalse`, as `CheckboxWidget` is, is required only
+   * where the schema demands `true`, since left alone it already holds the `false` a required boolean accepts (#5388)
+   */
   required?: boolean;
   /** A boolean value stating if the widget is disabled */
   disabled?: boolean;
@@ -1247,14 +1460,24 @@ export interface WidgetProps<
   onFocus: (id: string, value: any) => void;
   /** The computed label for this widget, as a string */
   label: string;
-  /** A boolean value, if true, will cause the label to be hidden. This is useful for nested fields where you don't want
-   * to clutter the UI. Customized via `label` in the `UiSchema`
+  /** A boolean value, if true, tells the widget not to draw its label: its field's `presentation` has the template, or a
+   * field above rendering the same id, draw it, or `label` in the `UiSchema` turns it off
+   * @deprecated Kept through v7 for a widget rendered without a plan: read `presentation.label.by`, or
+   *   `widgetDrawsLabel()`, which falls back to this
    */
   hideLabel?: boolean;
   /** A boolean value stating if the widget can accept multiple values */
   multiple?: boolean;
-  /** An array of strings listing all generated error messages from encountered errors for this widget */
+  /** An array of strings listing all generated error messages from encountered errors for this widget
+   * @deprecated Kept through v7 for a widget rendered without a plan: read `presentation.control`'s `aria-invalid`, or
+   *   `hasWidgetErrors()`, which falls back to this
+   */
   rawErrors?: string[];
+  /** The plan of the field the widget renders the value of, handed on by a field that leaves its parts to the widget:
+   * whether the widget draws the label and description itself, and the attributes its control carries. Undefined for a
+   * widget rendered without a `SchemaField` above it, or by a field that draws its parts itself
+   */
+  presentation?: FieldPresentation;
   /** The optional custom HTML name attribute generated by the nameGenerator function, if provided */
   htmlName?: string;
   /** An accessible name chosen by the widget's caller, such as the `DateElement` an `AltDateWidget` renders for each
@@ -1958,6 +2181,7 @@ export interface SchemaUtilsType<
    * @param [uiSchema] - The UI schema from which to derive potentially displayable information
    * @param [globalOptions={}] - The Global UI Schema from which to get any fallback `xxx` options
    * @returns - True if the label should be displayed or false if it should not
+   * @deprecated Kept through v7 for a field rendered without a plan, which says what draws its label
    */
   getDisplayLabel(schema: S, uiSchema?: UiSchema<T, S, F>, globalOptions?: GlobalUISchemaOptions): boolean;
   /** Determines which of the given `options` provided most closely matches the `formData`.

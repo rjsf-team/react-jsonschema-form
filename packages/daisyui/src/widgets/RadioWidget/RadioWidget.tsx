@@ -2,15 +2,17 @@ import type { FocusEvent } from 'react';
 import { useCallback } from 'react';
 import type { WidgetProps, StrictRJSFSchema, FormContextType, RJSFSchema } from '@rjsf/utils';
 import {
+  enumOptionsAutofocusIndex,
   enumOptionsDomValues,
   enumOptionsIsDisabled,
   enumOptionsIsSelected,
   enumOptionValueDecoder,
   getOptionValueFormat,
   optionId,
+  widgetDrawsLabel,
 } from '@rjsf/utils';
 
-import { getGroupProps, getOptionClassNames } from '../../utils.ts';
+import { getGroupAndOptionProps, getOptionClassNames } from '../../utils.ts';
 
 /** The `RadioWidget` component renders a group of radio buttons with DaisyUI styling
  *
@@ -28,21 +30,23 @@ export default function RadioWidget<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({
-  id,
-  htmlName,
-  name,
-  options,
-  value,
-  label,
-  hideLabel,
-  required,
-  disabled,
-  readonly,
-  onChange,
-  onFocus,
-  onBlur,
-}: WidgetProps<T, S, F>) {
+>(props: WidgetProps<T, S, F>) {
+  const {
+    id,
+    htmlName,
+    options,
+    value,
+    label,
+    presentation,
+    required,
+    disabled,
+    readonly,
+    autofocus,
+    onChange,
+    onFocus,
+    onBlur,
+  } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
@@ -79,10 +83,19 @@ export default function RadioWidget<
     [onChange, enumOptions, optionValueFormat, emptyValue],
   );
 
+  const { group: groupProps, option: optionAttributes } = getGroupAndOptionProps({
+    id,
+    label,
+    hideLabel,
+    presentation,
+    role: 'radiogroup',
+  });
+
+  const autofocusIndex = enumOptionsAutofocusIndex<S>(enumOptions, enumDisabled, autofocus, value);
   return (
     <div className='form-control'>
       {/* Display the options in a vertical flex layout for better spacing */}
-      <div className='flex flex-col gap-2 mt-1' {...getGroupProps({ id, label, name, hideLabel, role: 'radiogroup' })}>
+      <div className='flex flex-col gap-2 mt-1' {...groupProps}>
         {enumOptions?.map((option, index) => {
           const optionDisabled = disabled || readonly || enumOptionsIsDisabled(option.value, enumDisabled);
           const classNames = getOptionClassNames(optionDisabled);
@@ -101,10 +114,12 @@ export default function RadioWidget<
                 checked={enumOptionsIsSelected<S>(option.value, value, false)}
                 required={required}
                 disabled={optionDisabled}
+                autoFocus={index === autofocusIndex}
                 data-index={index}
                 onChange={handleChange}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
+                {...optionAttributes}
               />
               <span className={classNames.text}>{option.label}</span>
             </label>

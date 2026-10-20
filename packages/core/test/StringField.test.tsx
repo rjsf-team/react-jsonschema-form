@@ -178,7 +178,7 @@ describe('StringField', () => {
       const input = node.querySelector('.rjsf-field input');
       expect(node.querySelector('.rjsf-field datalist')).toBeNull();
       expect(input).not.toHaveAttribute('list');
-      expect(input?.getAttribute('aria-describedby')).not.toContain('__examples');
+      expect(input).not.toHaveAttribute('aria-describedby');
     });
 
     it('should not suggest an undefined example as the string "undefined"', () => {
@@ -2256,6 +2256,28 @@ describe('StringField', () => {
 
       expect(node.querySelector('#custom')).toBeInTheDocument();
     });
+
+    it.each([
+      ['disabled', { 'ui:disabled': true }],
+      ['read-only', { 'ui:readonly': true }],
+    ])(
+      'disables its Now and Clear buttons, so a failed submit leaves focus where it is, while %s',
+      async (_, options) => {
+        const { node, onError } = createFormComponent({
+          schema: { type: 'object', required: ['when'], properties: { when: { type: 'string', title: 'When' } } },
+          uiSchema: { when: { 'ui:widget': 'alt-date', ...options } },
+          focusOnFirstError: true,
+        });
+
+        const buttons = node.querySelectorAll('button.btn-now, button.btn-clear');
+        expect(buttons).toHaveLength(2);
+        buttons.forEach((button) => expect(button).toBeDisabled());
+        // Clicking the submit button would move focus onto it, which is what this checks nothing else does
+        await submitForm(node, user, true);
+        expect(onError).toHaveBeenCalled();
+        expect(document.activeElement).toBe(document.body);
+      },
+    );
   });
 
   describe('EmailWidget', () => {

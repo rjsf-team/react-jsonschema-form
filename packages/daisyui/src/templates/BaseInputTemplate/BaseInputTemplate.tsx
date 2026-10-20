@@ -3,8 +3,8 @@ import { useCallback } from 'react';
 import { SchemaExamples } from '@rjsf/core';
 import type { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
   examplesId,
+  getControlAttributes,
   getExampleSuggestions,
   getInputProps,
   getNumericInputTitle,
@@ -46,6 +46,7 @@ export default function BaseInputTemplate<
     type,
     placeholder,
     registry,
+    presentation,
   } = props;
   const { ClearButton } = registry.templates.ButtonTemplates;
 
@@ -107,7 +108,7 @@ export default function BaseInputTemplate<
             onChange={onChangeOverride || handleChange}
             onBlur={handleBlur}
             onFocus={handleFocus}
-            aria-describedby={ariaDescribedByIds(id, hasExamples)}
+            {...getControlAttributes<T, S, F>({ id, presentation }, hasExamples ? [examplesId(id)] : [])}
           />
           {options.allowClearTextInputs && !readonly && !disabled && value && (
             <ClearButton registry={registry} onClick={handleClear} />

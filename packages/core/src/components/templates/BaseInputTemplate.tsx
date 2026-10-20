@@ -2,8 +2,8 @@ import type { ChangeEvent, FocusEvent, MouseEvent } from 'react';
 import { useCallback } from 'react';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
   examplesId,
+  getControlAttributes,
   getExampleSuggestions,
   getInputProps,
   getNumericInputTitle,
@@ -39,10 +39,13 @@ export default function BaseInputTemplate<
     schema,
     uiSchema,
     registry,
+    // oxlint-disable-next-line typescript/no-deprecated -- kept out of the props this spreads onto the element
     rawErrors,
     type,
+    // oxlint-disable-next-line typescript/no-deprecated -- kept out of the props this spreads onto the element
     hideLabel, // remove this from ...rest
     hideError, // remove this from ...rest
+    presentation, // remove this from ...rest
     ...rest
   } = props;
   const { ClearButton } = registry.templates.ButtonTemplates;
@@ -111,7 +114,7 @@ export default function BaseInputTemplate<
         onChange={onChangeOverride ?? handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
-        aria-describedby={ariaDescribedByIds(id, hasExamples)}
+        {...getControlAttributes<T, S, F>({ id, presentation }, hasExamples ? [examplesId(id)] : [])}
       />
       {options.allowClearTextInputs && !readonly && !disabled && inputValue && (
         <ClearButton registry={registry} onClick={handleClear} />

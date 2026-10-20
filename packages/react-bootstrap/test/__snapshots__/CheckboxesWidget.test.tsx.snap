@@ -2,7 +2,10 @@
 
 exports[`CheckboxesWidget > inline 1`] = `
 <DocumentFragment>
-  <div>
+  <div
+    id="_id"
+    role="group"
+  >
     <div
       class="bg-transparent border-0 form-check form-check-inline"
     >
@@ -12,7 +15,6 @@ exports[`CheckboxesWidget > inline 1`] = `
         disabled=""
         id="_id-0"
         name="_id"
-        required=""
         type="checkbox"
         value="0"
       />
@@ -30,7 +32,10 @@ exports[`CheckboxesWidget > inline 1`] = `
 
 exports[`CheckboxesWidget > simple 1`] = `
 <DocumentFragment>
-  <div>
+  <div
+    id="_id"
+    role="group"
+  >
     <div
       class="bg-transparent border-0 form-check"
     >
@@ -40,7 +45,6 @@ exports[`CheckboxesWidget > simple 1`] = `
         disabled=""
         id="_id-0"
         name="_id"
-        required=""
         type="checkbox"
         value="0"
       />

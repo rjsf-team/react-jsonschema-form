@@ -7,11 +7,12 @@ import type {
   WrapIfAdditionalTemplateProps,
 } from '@rjsf/utils';
 import {
-  AdditionalPropertyKeySelect,
   ADDITIONAL_PROPERTY_FLAG,
-  UI_OPTIONS_KEY,
+  AdditionalPropertyKeySelect,
   buttonId,
+  hasAdditionalKeyLabel,
   TranslatableString,
+  UI_OPTIONS_KEY,
 } from '@rjsf/utils';
 
 /** The `WrapIfAdditional` component is used by the `FieldTemplate` to rename, or remove properties that are
@@ -30,7 +31,6 @@ export default function WrapIfAdditionalTemplate<
     style,
     label,
     keyName,
-    displayLabel,
     rawDescription,
     required,
     readonly,
@@ -44,6 +44,10 @@ export default function WrapIfAdditionalTemplate<
     registry,
     children,
   } = props;
+  // The key is labelled wherever the value's label is drawn, by the template or the value's own component
+  const hasKeyLabel = hasAdditionalKeyLabel<T, S, F>(props);
+  // A description this theme's widget draws itself still takes a row, so the key lines up with the value whoever draws it
+  const hasDescription = props.presentation ? props.presentation.description.by !== 'none' : !!rawDescription;
   const { templates, translateString } = registry;
   // Button templates are not overridden in the uiSchema
   const { RemoveButton } = templates.ButtonTemplates;
@@ -75,7 +79,7 @@ export default function WrapIfAdditionalTemplate<
                 <AdditionalPropertyKeySelect<T, S, F>
                   id={`${id}-key`}
                   label={keyLabel}
-                  hideLabel={!displayLabel}
+                  hideLabel={!hasKeyLabel}
                   value={keyName}
                   propertyNamesEnum={propertyNamesEnum}
                   onKeyRename={onKeyRename}
@@ -86,16 +90,17 @@ export default function WrapIfAdditionalTemplate<
                 />
                 {/* The key input below reserves a description row so the key lines up with the value beside it; the
                     dropdown reserves the same row, since it renders no description of its own */}
-                {!!rawDescription && <Input.Description>&nbsp;</Input.Description>}
+                {hasDescription && <Input.Description>&nbsp;</Input.Description>}
               </>
             ) : (
               <TextInput
                 key={keyName}
                 className='form-group'
-                label={displayLabel ? keyLabel : undefined}
+                label={hasKeyLabel ? keyLabel : undefined}
+                aria-label={hasKeyLabel ? undefined : keyLabel}
                 defaultValue={keyName}
                 required={required}
-                description={rawDescription ? '\u00A0' : undefined}
+                description={hasDescription ? '\u00A0' : undefined}
                 disabled={disabled || readonly}
                 id={`${id}-key`}
                 name={`${id}-key`}

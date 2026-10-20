@@ -1,6 +1,10 @@
-import type { RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import type { FieldProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import { fieldLabelId } from '@rjsf/utils';
+import { render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
+import CheckboxWidget from '../src/components/widgets/CheckboxWidget.tsx';
+import { getTestRegistry } from '../src/testing.ts';
 import {
   createFormComponent,
   expectToHaveBeenCalledWithFormData,
@@ -83,7 +87,8 @@ describe('BooleanField', () => {
   });
 
   describe('HTML5 required attribute', () => {
-    it('should render a required attribute for simple required fields', () => {
+    // An unchecked checkbox fails the browser's own check of a native `required`, which `false` satisfies (#5388)
+    it('should not render a required attribute for a required boolean that false satisfies', () => {
       const { node } = createFormComponent({
         schema: {
           type: 'object',
@@ -96,7 +101,113 @@ describe('BooleanField', () => {
         },
       });
 
-      expect(node.querySelector('input[type=checkbox]')).toHaveAttribute('required', '');
+      expect(node.querySelector('input[type=checkbox]')).not.toHaveAttribute('required');
+    });
+
+    // A required boolean is seeded with the `false` an unchecked box holds; the string a `type` list renders is seeded
+    // with nothing, so a switch rendered as one is required and marked as any other control is
+    it.each<[string, RJSFSchema['type'], boolean]>([
+      ['a boolean', 'boolean', false],
+      ["a type list's string", ['string', 'boolean'], true],
+    ])('requires and marks a switch declared to hold false unchecked that %s field renders', (_, type, expected) => {
+      const requiredProps: (boolean | undefined)[] = [];
+      const SwitchWidget = ({ required }: WidgetProps) => {
+        requiredProps.push(required);
+        return null;
+      };
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { foo: { type, title: 'Foo' } }, required: ['foo'] },
+        uiSchema: { foo: { 'ui:widget': 'SwitchWidget' } },
+        widgets: { SwitchWidget },
+        presentation: { widgets: { SwitchWidget: { uncheckedIsFalse: true, label: 'template' } } },
+      });
+
+      const label = node.querySelector('label[for="root_foo"]');
+      expect(requiredProps.at(-1)).toBe(expected);
+      expect(label).toHaveTextContent(/^Foo/);
+      expect(Boolean(label?.querySelector('span.required'))).toBe(expected);
+    });
+
+    it('neither requires nor marks a custom boolean field declared to hold false unchecked', () => {
+      const requiredAttributes: unknown[] = [];
+      const ToggleField = ({ presentation }: FieldProps) => {
+        requiredAttributes.push(presentation?.control?.attributes.required);
+        return null;
+      };
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { foo: { type: 'boolean', title: 'Foo' } }, required: ['foo'] },
+        uiSchema: { foo: { 'ui:field': 'ToggleField' } },
+        fields: { ToggleField },
+        presentation: { fields: { ToggleField: { uncheckedIsFalse: true, label: 'template' } } },
+      });
+
+      const label = node.querySelector('label[for="root_foo"]');
+      expect(requiredAttributes.at(-1)).not.toBe(true);
+      expect(label).toHaveTextContent(/^Foo/);
+      expect(label?.querySelector('span.required')).toBeNull();
+    });
+
+    it("hands a custom checkbox widget the plan's required, which a boolean false satisfies isn't", () => {
+      const requiredProps: (boolean | undefined)[] = [];
+      const CheckboxWidget = ({ required }: WidgetProps) => {
+        requiredProps.push(required);
+        return null;
+      };
+      createFormComponent({
+        schema: { type: 'object', properties: { foo: { type: 'boolean' } }, required: ['foo'] },
+        widgets: { CheckboxWidget },
+      });
+
+      expect(requiredProps.at(-1)).toBe(false);
+    });
+
+    it.each([
+      ['declares it holds false unchecked', { uncheckedIsFalse: true }, false],
+      ['declares nothing', {}, true],
+    ])('hands a switch registered under its own key that %s the matching required', (_, declaration, expected) => {
+      const requiredProps: (boolean | undefined)[] = [];
+      const SwitchWidget = ({ required }: WidgetProps) => {
+        requiredProps.push(required);
+        return null;
+      };
+      createFormComponent({
+        schema: { type: 'object', properties: { foo: { type: 'boolean' } }, required: ['foo'] },
+        uiSchema: { foo: { 'ui:widget': 'SwitchWidget' } },
+        widgets: { SwitchWidget },
+        presentation: { widgets: { SwitchWidget: declaration } },
+      });
+
+      expect(requiredProps.at(-1)).toBe(expected);
+    });
+
+    it.each([
+      ['declares it holds false unchecked', { uncheckedIsFalse: true }, false],
+      ['declares nothing', {}, true],
+    ])("marks the template's label for a switch that %s only where its plan says", (_, declaration, marked) => {
+      const SwitchWidget = () => null;
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { foo: { type: 'boolean', title: 'Foo' } }, required: ['foo'] },
+        uiSchema: { foo: { 'ui:widget': 'SwitchWidget' } },
+        widgets: { SwitchWidget },
+        presentation: { widgets: { SwitchWidget: { ...declaration, label: 'template' } } },
+      });
+
+      const label = node.querySelector('label[for="root_foo"]');
+      expect(label).toHaveTextContent(/^Foo/);
+      expect(Boolean(label?.querySelector('span.required'))).toBe(marked);
+    });
+
+    it('should submit a required boolean left unchecked', async () => {
+      const { node, onSubmit } = createFormComponent({
+        schema: { type: 'object', properties: { foo: { type: 'boolean' } }, required: ['foo'] },
+      });
+
+      await user.click(node.querySelector('button[type=submit]')!);
+
+      expect(onSubmit).toHaveBeenLastCalledWith(
+        expect.objectContaining({ formData: { foo: false } }),
+        expect.anything(),
+      );
     });
 
     it('should add a required attribute if the schema uses const with a true value', () => {
@@ -194,6 +305,36 @@ describe('BooleanField', () => {
       });
 
       expect(node.querySelector('input[type=checkbox]')).toHaveAttribute('required', '');
+    });
+
+    // Rendered without a plan, as outside SchemaField, the widget gets its parent's `required` as is, so the attribute
+    // has to follow both it and the schema: a required box whose `false` the schema accepts, and an optional one that
+    // has to be true but is left unanswered, each hold data the schema accepts, which the browser would refuse (#5388)
+    it.each<[string, RJSFSchema, boolean, boolean | undefined]>([
+      ['a required boolean whose false the schema accepts', { type: 'boolean' }, true, false],
+      ['an optional boolean that has to be true', { type: 'boolean', const: true }, false, undefined],
+    ])('CheckboxWidget leaves the attribute off %s, rendered without a plan', (_, schema, required, value) => {
+      const { container } = render(
+        <CheckboxWidget
+          id='root'
+          name='root'
+          schema={schema}
+          uiSchema={{}}
+          value={value}
+          required={required}
+          disabled={false}
+          readonly={false}
+          autofocus={false}
+          label='Agree'
+          options={{}}
+          onChange={vi.fn()}
+          onBlur={vi.fn()}
+          onFocus={vi.fn()}
+          registry={getTestRegistry(schema)}
+        />,
+      );
+
+      expect(container.querySelector('input[type=checkbox]')).not.toHaveAttribute('required');
     });
   });
 
@@ -1372,6 +1513,18 @@ describe('BooleanField', () => {
       };
       const { node } = createFormComponent({ schema, widgets, uiSchema });
       expect(node.querySelector('#label-')).not.toBeNull();
+    });
+
+    it("should pass an additional property's key to widget, as its template shows", () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', additionalProperties: { type: 'boolean', title: 'Flag' } },
+        widgets,
+        uiSchema: { additionalProperties: { 'ui:widget': 'Widget' } },
+        initialFormData: { start: true },
+      });
+
+      expect(node.querySelector(`#${fieldLabelId('root_start')}`)?.textContent).toBe('start');
+      expect(node.querySelector('#label-start')).not.toBeNull();
     });
   });
 

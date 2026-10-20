@@ -49,7 +49,7 @@ Under the hood this calls `ata-validator`'s `bundleStandalone` and wraps the res
 
 - schema: S - The schema to be compiled into a set of precompiled validator functions
 - output: string - The name of the file into which the precompiled validator functions are generated
-- [options={}]: CompileValidatorOptionsType&lt;S> - The options used to alter the validator that compiles the schema, plus the `customMergeAllOf` the schema is parsed with, which must merge the same way as the one the `Form` is given or the form can validate against sub-schemas that were not compiled
+- [options={}]: CompileValidatorOptionsType&lt;S> - The options accepted by `customizeValidator()`, plus the `customMergeAllOf` the schema is parsed with, which must merge the same way as the one the `Form` is given or the form can validate against sub-schemas that were not compiled. The `customizeValidator()` options have limits: `extenderFn`, extra schemas without an `$id` and the `ataOptionsOverrides` keys `coerceTypes`, `removeAdditional` and `keywords` cannot be carried into the generated file and are ignored with a warning, the generated file never fills in `default` values, and `suppressDuplicateFiltering` belongs to `createPrecompiledValidator()`. See the precompiled section of `usage/validation.md`
 
 ### createPrecompiledValidator&lt;S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 

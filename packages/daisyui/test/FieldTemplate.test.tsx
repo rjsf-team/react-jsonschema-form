@@ -1,16 +1,19 @@
-import type { FieldProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import { getTestRegistry } from '@rjsf/core/testing';
+import type { FieldProps, RJSFSchema, ThemePresentation, UiSchema, WidgetProps } from '@rjsf/utils';
+import { fieldLabelId, toFieldPath } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 
-import Form from '../src/index.ts';
+import Form, { generateTemplates } from '../src/index.ts';
+import DaisyFieldTemplate from '../src/templates/FieldTemplate/FieldTemplate.tsx';
 import DaisyCheckboxWidget from '../src/widgets/CheckboxWidget/CheckboxWidget.tsx';
 import DaisyToggleWidget from '../src/widgets/ToggleWidget/ToggleWidget.tsx';
 
-/** The label `FieldTemplate` renders above the control. It is the only one pointing at the field's own id: a widget's
- * own label (`CheckboxWidget`, `ToggleWidget`) has no `htmlFor`, and `AltDateWidget`'s point at their sub-controls
+/** The label `FieldTemplate` renders above the control, found by the `fieldLabelId()` it alone carries, on its text: a
+ * widget's own label (`CheckboxWidget`, `ToggleWidget`) has no id, and a group's label has no `htmlFor` to find it by
  */
-function templateLabelFor(container: HTMLElement, id: string) {
-  return container.querySelector(`label[for="${id}"]`);
+function fieldLabel(container: HTMLElement, id: string) {
+  return container.querySelector(`#${fieldLabelId(id)}`)?.closest('label') ?? null;
 }
 
 const agree: RJSFSchema = { type: 'boolean', title: 'Agree' };
@@ -19,14 +22,25 @@ function CustomWidget({ id, value }: WidgetProps) {
   return <input type='text' id={id} readOnly value={String(value ?? '')} />;
 }
 
-function renderForm(uiSchema: UiSchema = {}, fieldSchema: RJSFSchema = agree, widgets = {}) {
+function renderForm(
+  uiSchema: UiSchema = {},
+  fieldSchema: RJSFSchema = agree,
+  widgets = {},
+  presentation?: ThemePresentation,
+) {
   const schema: RJSFSchema = { type: 'object', properties: { agree: fieldSchema } };
   const { container } = render(
-    <Form schema={schema} uiSchema={uiSchema} validator={validator} widgets={{ custom: CustomWidget, ...widgets }} />,
+    <Form
+      schema={schema}
+      uiSchema={uiSchema}
+      validator={validator}
+      widgets={{ custom: CustomWidget, ...widgets }}
+      presentation={presentation}
+    />,
   );
   return {
     container,
-    templateLabel: () => templateLabelFor(container, 'root_agree'),
+    templateLabel: () => fieldLabel(container, 'root_agree'),
   };
 }
 
@@ -49,7 +63,7 @@ describe('FieldTemplate', () => {
       const { templateLabel } = renderForm({ agree: { 'ui:widget': 'select' } });
 
       expect(templateLabel()).toHaveTextContent('Agree');
-      expect(screen.getByLabelText('Agree')).toBe(screen.getByRole('button', { name: /Agree/ }));
+      expect(screen.getByLabelText('Agree')).toBe(screen.getByRole('combobox', { name: /Agree/ }));
     });
 
     test('leaves the label to the checkbox widget, which renders it after the input', () => {
@@ -169,25 +183,29 @@ describe('FieldTemplate', () => {
     // Of the boolean aliases only `checkbox` is recognized, so a field that names another alias whose key holds a
     // widget rendering its own label gets the template's label and description as well, the description twice under
     // one id. A known limitation, pinned so it changes on purpose
-    test('renders a second label and description for another boolean alias whose key holds the toggle', () => {
-      const { container, templateLabel } = renderForm(
-        { agree: { 'ui:widget': 'radio' } },
-        { ...agree, description: 'Whether you agree' },
-        { RadioWidget: DaisyToggleWidget },
-      );
+    test.each(['radio', 'RadioWidget'])(
+      'draws the label and description once, through the template, for a toggle under the RadioWidget key, named as %s',
+      (widget) => {
+        const { container, templateLabel } = renderForm(
+          { agree: { 'ui:widget': widget } },
+          { ...agree, description: 'Whether you agree' },
+          { RadioWidget: DaisyToggleWidget },
+        );
 
-      expect(templateLabel()).toHaveTextContent('Agree');
-      expect(screen.getAllByText('Agree')).toHaveLength(2);
-      expect(screen.getAllByText('Whether you agree')).toHaveLength(2);
-      expect(container.querySelectorAll('[id="root_agree__description"]')).toHaveLength(2);
-      expect(screen.getByRole('checkbox')).toHaveClass('toggle');
-    });
+        expect(templateLabel()).toHaveTextContent('Agree');
+        expect(screen.getAllByText('Agree')).toHaveLength(1);
+        expect(screen.getAllByText('Whether you agree')).toHaveLength(1);
+        expect(container.querySelectorAll('[id="root_agree__description"]')).toHaveLength(1);
+        expect(screen.getByRole('checkbox')).toHaveClass('toggle');
+      },
+    );
 
-    test('leaves the label and description to the toggle when the field names the key that holds it', () => {
+    test('leaves the label and description to the toggle when the key holding it declares that it draws them', () => {
       const { templateLabel } = renderForm(
         { agree: { 'ui:widget': 'RadioWidget' } },
         { ...agree, description: 'Whether you agree' },
         { RadioWidget: DaisyToggleWidget },
+        { widgets: { RadioWidget: { label: 'self', description: 'self' } } },
       );
 
       expect(templateLabel()).toBeNull();
@@ -309,17 +327,33 @@ describe('FieldTemplate', () => {
       expect(screen.getByRole('radiogroup')).toHaveAccessibleName('Agree');
     });
 
-    test('claims no name of its own when the label is hidden', () => {
+    test("is named by the hidden label's text rather than by a label it doesn't draw", () => {
       renderForm({ agree: { 'ui:widget': 'radio', 'ui:options': { label: false } } });
 
       const group = screen.getByRole('radiogroup');
       expect(group).not.toHaveAttribute('aria-labelledby');
-      expect(group).toHaveAccessibleName('');
+      expect(group).toHaveAccessibleName('Agree');
+    });
+
+    test('marks the radio group invalid rather than its radios while the field has errors', () => {
+      render(
+        <Form
+          schema={{ type: 'object', properties: { agree } }}
+          uiSchema={{ agree: { 'ui:widget': 'radio' } }}
+          validator={validator}
+          extraErrors={{ agree: { __errors: ['must agree'] } }}
+        />,
+      );
+
+      expect(screen.getByRole('radiogroup')).toHaveAttribute('aria-invalid', 'true');
+      for (const radio of screen.getAllByRole('radio')) {
+        expect(radio).not.toHaveAttribute('aria-invalid');
+      }
     });
   });
 
-  // A group is named by pointing at the label element, so its accessible name is whatever the label displays. The
-  // `label` a widget is handed is computed separately and differs from the template's in both cases below
+  // A group is named by pointing at the label element, so its accessible name is whatever the label displays, including
+  // where that isn't the schema title as written
   describe('naming a group from the label the user can see', () => {
     test('uses the key, not the schema title, for an additionalProperties entry', () => {
       const { container } = render(
@@ -331,7 +365,7 @@ describe('FieldTemplate', () => {
         />,
       );
 
-      expect(templateLabelFor(container, 'root_foo')).toHaveTextContent('foo');
+      expect(fieldLabel(container, 'root_foo')).toHaveTextContent('foo');
       expect(screen.getByRole('radiogroup')).toHaveAccessibleName('foo');
     });
 
@@ -355,7 +389,7 @@ describe('FieldTemplate', () => {
       // daisyui's SelectWidget opens from a real `button`, which `label htmlFor` can associate with. Its `aria-label`
       // names it, and starts with the field's title so the visible label alone doesn't leave the part out of context
       for (const type of ['year', 'month', 'day']) {
-        expect(screen.getByLabelText(type)).toBe(screen.getByRole('button', { name: `Agree, ${type}` }));
+        expect(screen.getByLabelText(type)).toBe(screen.getByRole('combobox', { name: `Agree, ${type}` }));
       }
     });
 
@@ -377,50 +411,52 @@ describe('FieldTemplate', () => {
       ],
       ['a root field', dateSchema, '2020-05-03', altDate, ''],
     ])('for %s', (_, schema, formData, uiSchema, namePrefix) => {
-      test('names each of its selects with its own label, and describes it with the value it shows', () => {
+      test('names each of its selects with its own label, and shows the value it holds', () => {
         render(<Form schema={schema} uiSchema={uiSchema} formData={formData} validator={validator} />);
 
-        // Each select is named by its `aria-label`, replacing the contents that display the value, so the
-        // value is exposed as the description instead. Both are spelled out rather than read back off the elements,
-        // which would pass for the wrong value as readily as the right one
+        // Each select is a combobox named by its `aria-label`, whose contents are its value. Both are spelled out
+        // rather than read back off the elements, which would pass for the wrong value as readily as the right one
         for (const [part, shown] of [
           ['year', '2020'],
           ['month', '05'],
           ['day', '03'],
         ]) {
-          expect(screen.getByRole('button', { name: `${namePrefix}${part}` })).toHaveAccessibleDescription(shown);
+          const select = screen.getByRole('combobox', { name: `${namePrefix}${part}` });
+          expect(select).toHaveTextContent(shown);
+          expect(select).toHaveAccessibleDescription('');
         }
       });
     });
   });
 
-  // The dropdown button carries the selected option as its contents, which the label naming it from outside replaces,
-  // so the option is exposed as its description instead — the same split the picker triggers make
+  // The dropdown button is a combobox, whose contents, the selected option, are its value rather than its name, so the
+  // label names it and nothing describes it with the option again
   describe("a select widget's dropdown button", () => {
     const colorSchema = {
       type: 'object' as const,
       properties: { color: { type: 'string' as const, title: 'Color', enum: ['red', 'green'] } },
     };
 
-    test('is named by the label, and describes itself with the option it displays', () => {
+    test('is a combobox named by the label, holding the option it displays as its value', () => {
       render(<Form schema={colorSchema} formData={{ color: 'green' }} validator={validator} />);
 
-      const dropdown = screen.getByRole('button', { name: 'Color' });
+      const dropdown = screen.getByRole('combobox', { name: 'Color' });
       expect(dropdown).toBe(screen.getByLabelText('Color'));
-      expect(dropdown).toHaveAccessibleDescription('green');
+      expect(dropdown).toHaveTextContent('green');
+      expect(dropdown).toHaveAccessibleDescription('');
     });
 
-    test('describes itself with nothing while it displays no option', () => {
-      render(<Form schema={colorSchema} validator={validator} />);
+    test('is marked invalid while its errors show', () => {
+      render(<Form schema={colorSchema} validator={validator} extraErrors={{ color: { __errors: ['Pick one'] } }} />);
 
-      // The contents it falls back to are the label itself, so referencing them would announce the label twice
-      expect(screen.getByRole('button', { name: 'Color' })).toHaveAccessibleDescription('');
+      const dropdown = screen.getByRole('combobox', { name: 'Color' });
+      expect(dropdown).toHaveAttribute('aria-invalid', 'true');
+      expect(dropdown).toHaveAccessibleDescription('Pick one');
     });
 
-    // The template labels the field's own control, not this selector, so nothing outside the button names it and its
-    // contents are its whole name — the value it displays is announced twice, which is the cost of a predicate that
-    // can only answer from the label the widget was handed
-    test('is named by its own contents where no label points at it', () => {
+    // The template's label names the field's own control through its `for`, and the selector through the
+    // `aria-labelledby` its plan gives it
+    test("is named by its field's label, holding the option it displays as its value", () => {
       render(
         <Form
           schema={{
@@ -441,14 +477,31 @@ describe('FieldTemplate', () => {
       );
 
       const selector = document.getElementById('root_region__oneof_select')!;
-      expect(screen.queryByLabelText('Region')).not.toBe(selector);
-      // The dropdown arrow is decoration, and hidden, so the name it falls back to is the option alone
-      expect(selector).toHaveAccessibleName('Europe');
-      expect(selector).toHaveAccessibleDescription('Europe');
+      expect(selector).toHaveAccessibleName('Region');
+      expect(selector).toHaveTextContent('Europe');
     });
 
-    // Naming the button by reference instead would point at an id only this theme's `FieldTemplate` renders, leaving
-    // it named by the option it displays and the field's own label dropped under any other one
+    test('is named by the heading of an object with properties beside its options', () => {
+      render(
+        <Form
+          schema={{
+            type: 'object',
+            title: 'Pet',
+            properties: { name: { type: 'string' } },
+            anyOf: [
+              { title: 'Dog', properties: { bark: { type: 'string' } } },
+              { title: 'Cat', properties: { meow: { type: 'string' } } },
+            ],
+          }}
+          validator={validator}
+        />,
+      );
+
+      expect(document.getElementById('root__anyof_select')).toHaveAccessibleName('Pet');
+    });
+
+    // Naming the combobox by reference instead would point at an id only this theme's `FieldTemplate` renders, leaving
+    // it unnamed under any other one
     test('is named by the label of a replacement FieldTemplate', () => {
       render(
         <Form
@@ -466,7 +519,7 @@ describe('FieldTemplate', () => {
         />,
       );
 
-      expect(screen.getByRole('button', { name: 'Color' })).toHaveAccessibleDescription('green');
+      expect(screen.getByRole('combobox', { name: 'Color' })).toHaveTextContent('green');
     });
 
     // Its own label already spells the key out, so referencing the key it displays would announce it twice
@@ -489,7 +542,7 @@ describe('FieldTemplate', () => {
     });
   });
 
-  test("a date widget's trigger is named by the label, and describes its own selected value", () => {
+  test("a date widget's trigger is a combobox named by the label, holding its selected value", () => {
     render(
       <Form
         schema={{ type: 'object', properties: { birthday: { type: 'string', format: 'date', title: 'Birthday' } } }}
@@ -498,12 +551,12 @@ describe('FieldTemplate', () => {
       />,
     );
 
-    // The label reaches the trigger through `htmlFor`, which replaces the trigger's own contents as its name, so the
-    // date is exposed as its description instead. It is spelled out rather than read back off the element, which would
-    // pass for a wrong day as much as the right one
-    const trigger = screen.getByRole('button', { name: 'Birthday' });
+    // The label reaches the trigger through `htmlFor`, and the date it holds is its value. It is spelled out rather than
+    // read back off the element, which would pass for a wrong day as much as the right one
+    const trigger = screen.getByRole('combobox', { name: 'Birthday' });
     expect(trigger).toBe(screen.getByLabelText('Birthday'));
-    expect(trigger).toHaveAccessibleDescription('May 3, 2020');
+    expect(trigger).toHaveTextContent('May 3, 2020');
+    expect(trigger).toHaveAccessibleDescription('');
   });
 
   // A named property falls back to its name for the label, so only a root field and an array item can end up with none
@@ -513,7 +566,7 @@ describe('FieldTemplate', () => {
         <Form schema={{ type: 'boolean' }} uiSchema={{ 'ui:widget': 'radio' }} validator={validator} />,
       );
 
-      expect(templateLabelFor(container, 'root')).toBeNull();
+      expect(fieldLabel(container, 'root')).toBeNull();
       expect(screen.getByRole('radiogroup')).not.toHaveAttribute('aria-labelledby');
     });
 
@@ -522,13 +575,12 @@ describe('FieldTemplate', () => {
         <Form schema={{ type: 'array', items: { type: 'string' } }} formData={['first']} validator={validator} />,
       );
 
-      expect(templateLabelFor(container, 'root_0')).toBeNull();
+      expect(fieldLabel(container, 'root_0')).toBeNull();
       expect(screen.queryByText('*')).not.toBeInTheDocument();
     });
   });
 
-  // `SchemaField` falls back to the property name for the label it hands the template, so the template renders one,
-  // while the `label` a widget is handed keeps the empty `title` it was given
+  // An empty `title` falls through to the property name, so the field still has a label for its controls to be named by
   describe("a field whose title is ''", () => {
     test('names a group of controls with the label the template renders from the property name', () => {
       render(
@@ -542,7 +594,7 @@ describe('FieldTemplate', () => {
       expect(screen.getByRole('radiogroup')).toHaveAccessibleName('agree');
     });
 
-    test("describes a date widget's trigger with the date it displays", () => {
+    test("names a date widget's trigger by the label, holding the date it displays", () => {
       render(
         <Form
           schema={{ type: 'object', properties: { when: { type: 'string', format: 'date', title: '' } } }}
@@ -551,7 +603,7 @@ describe('FieldTemplate', () => {
         />,
       );
 
-      expect(screen.getByRole('button', { name: 'when' })).toHaveAccessibleDescription('May 3, 2020');
+      expect(screen.getByRole('combobox', { name: 'when' })).toHaveTextContent('May 3, 2020');
     });
   });
 
@@ -602,5 +654,44 @@ describe('FieldTemplate', () => {
 
     expect(screen.queryByText('Name')).not.toBeInTheDocument();
     expect(container.querySelector('input[type="hidden"]')).toBeInTheDocument();
+  });
+});
+
+describe('FieldTemplate rendered without a plan, as outside SchemaField', () => {
+  function renderTemplate(displayLabel: boolean) {
+    const registry = getTestRegistry({}, {}, generateTemplates());
+    return render(
+      <DaisyFieldTemplate
+        id='root_foo'
+        fieldPath={toFieldPath('foo')}
+        label='Foo'
+        keyName='foo'
+        description={<span id='root_foo__description'>About foo</span>}
+        rawDescription='About foo'
+        // oxlint-disable-next-line typescript/no-deprecated -- a template rendered without a plan reads the deprecated prop
+        displayLabel={displayLabel}
+        schema={{ type: 'string' }}
+        registry={registry}
+        readonly={false}
+        disabled={false}
+        required={false}
+        onChange={vi.fn()}
+        onKeyRename={vi.fn()}
+        onKeyRenameBlur={vi.fn()}
+        onRemoveProperty={vi.fn()}
+      >
+        <input id='root_foo' />
+      </DaisyFieldTemplate>,
+    );
+  }
+
+  it('draws the description where displayLabel lets it draw the label', () => {
+    const { container } = renderTemplate(true);
+    expect(container.querySelector('#root_foo__description')).toHaveTextContent('About foo');
+  });
+
+  it('draws no description where displayLabel turns the label off', () => {
+    const { container } = renderTemplate(false);
+    expect(container.querySelector('#root_foo__description')).toBeNull();
   });
 });

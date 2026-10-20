@@ -2,7 +2,14 @@ import { createElement, forwardRef, lazy, memo } from 'react';
 
 import { setupConsoleWarnSuppression } from '../../../testing/consoleSuppression.ts';
 import type { Registry, UIOptionsType } from '../src/index.ts';
-import { createSchemaUtils, englishStringTranslator, getTemplate, getTemplates, resetLogOnce } from '../src/index.ts';
+import {
+  createSchemaUtils,
+  englishStringTranslator,
+  getTemplate,
+  getTemplates,
+  mergeThemePresentation,
+  resetLogOnce,
+} from '../src/index.ts';
 import getTestValidator from './testUtils/getTestValidator.ts';
 import { GLOBAL_FORM_OPTIONS } from './testUtils/testData.ts';
 
@@ -49,6 +56,7 @@ const registry: Registry = {
   },
   fields: {},
   widgets: {},
+  presentation: mergeThemePresentation(),
   globalFormOptions: GLOBAL_FORM_OPTIONS,
 };
 

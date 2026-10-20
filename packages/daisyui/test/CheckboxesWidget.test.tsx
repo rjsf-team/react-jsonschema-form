@@ -111,7 +111,8 @@ describe('CheckboxesWidget', () => {
     await user.click(screen.getByRole('button', { name: 'Submit' }));
 
     // Constraint validation weighs each box on its own, so the attribute on every one of them asks for all of them:
-    // the browser refuses a submit with one checked, and refuses it silently, with neither callback firing
+    // the browser would stop a submit with one checked, prompting on the first unchecked box, so neither `onSubmit` nor
+    // `onError` would run
     expect(onError).not.toHaveBeenCalled();
     expect(onSubmit.mock.calls[0]?.[0].formData).toEqual({ choices: ['a'] });
   });

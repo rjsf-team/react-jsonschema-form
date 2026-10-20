@@ -1,10 +1,17 @@
 import type { ReactElement, ChangeEvent, FocusEvent } from 'react';
 import { useCallback } from 'react';
-import { Checkbox, Input } from '@mantine/core';
+import { Checkbox } from '@mantine/core';
 import type { StrictRJSFSchema, RJSFSchema, FormContextType, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, errorId, labelValue, schemaRequiresTrueValue } from '@rjsf/utils';
+import {
+  getControlAttributes,
+  getErrorsToDraw,
+  hasWidgetErrors,
+  labelValue,
+  schemaRequiresTrueValue,
+  widgetDrawsLabel,
+} from '@rjsf/utils';
 
-import { getDescriptionProps, useVisibleErrors } from '../utils.tsx';
+import { getDescriptionProps, renderErrors } from '../utils.tsx';
 
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.
  *  It is typically used to represent a boolean.
@@ -25,12 +32,12 @@ export default function CheckboxWidget<
     readonly,
     autofocus,
     label,
-    hideLabel,
     schema,
     onChange,
     onBlur,
     onFocus,
   } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
 
   const trueValueRequired = schemaRequiresTrueValue(schema) && required;
   const handleCheckboxChange = useCallback(
@@ -61,7 +68,8 @@ export default function CheckboxWidget<
   );
 
   const { description } = getDescriptionProps(props);
-  const errors = useVisibleErrors(props);
+  const errors = getErrorsToDraw<T, S, F>(props);
+  const invalid = hasWidgetErrors<T, S, F>(props);
   return (
     <>
       {description}
@@ -88,15 +96,11 @@ export default function CheckboxWidget<
         // Mantine's `Checkbox` would render a message as its own error, with an id derived from the input's rather than
         // `errorId(id)`, so it only gets a boolean, for the error styling, and the errors are rendered below it. It
         // doesn't set `aria-invalid` either.
-        error={!!errors}
-        aria-invalid={!!errors || undefined}
-        aria-describedby={ariaDescribedByIds(id)}
+        error={invalid}
+        {...getControlAttributes<T, S, F>(props)}
+        aria-invalid={invalid || undefined}
       />
-      {errors && (
-        <Input.Error id={errorId(id)} mt='calc(var(--mantine-spacing-xs) / 2)'>
-          {errors}
-        </Input.Error>
-      )}
+      {renderErrors(id, errors, { mt: 'calc(var(--mantine-spacing-xs) / 2)' })}
     </>
   );
 }

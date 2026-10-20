@@ -2,9 +2,9 @@ import type { ChangeEvent, FocusEvent } from 'react';
 import { useCallback } from 'react';
 import { TimeInput } from '@mantine/dates';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { labelValue, useTimeWidgetProps } from '@rjsf/utils';
+import { labelValue, useTimeWidgetProps, widgetDrawsLabel } from '@rjsf/utils';
 
-import { cleanupOptions, getDescriptionProps, useAriaDescribedByProps, useVisibleErrors } from '../../utils.tsx';
+import { cleanupOptions, getDescriptionProps, getWidgetError, useInputAriaProps } from '../../utils.tsx';
 
 /** The `TimeWidget` component uses the `TimeInput` component from `@mantine/dates` for rendering.
  *
@@ -31,12 +31,12 @@ export default function TimeWidget<
     readonly,
     autofocus,
     label,
-    hideLabel,
     options,
     onChange,
     onBlur,
     onFocus,
   } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
 
   const { localValue: displayValue, computeTimeValue } = useTimeWidgetProps(props);
   const emptyValue = options.emptyValue || '';
@@ -72,8 +72,8 @@ export default function TimeWidget<
     [onFocus, id],
   );
 
-  const ariaDescribedByProps = useAriaDescribedByProps('TimeInput', id, options);
-  const error = useVisibleErrors(props);
+  const ariaDescribedByProps = useInputAriaProps('TimeInput', props);
+  const error = getWidgetError<T, S, F>(props);
 
   return (
     <TimeInput

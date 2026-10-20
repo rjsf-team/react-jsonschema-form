@@ -1,8 +1,9 @@
 import type { ChangeEvent, FocusEvent } from 'react';
 import { useCallback } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { widgetDrawsLabel } from '@rjsf/utils';
 
-import { getGroupProps } from '../../utils.ts';
+import { getGroupAndOptionProps } from '../../utils.ts';
 
 /** The `RatingWidget` component renders a star or heart rating input with DaisyUI styling
  *
@@ -23,22 +24,24 @@ export default function RatingWidget<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({
-  id,
-  value,
-  label,
-  name,
-  hideLabel,
-  required,
-  disabled,
-  readonly,
-  autofocus,
-  onChange,
-  onFocus,
-  onBlur,
-  schema,
-  options,
-}: WidgetProps<T, S, F>) {
+>(props: WidgetProps<T, S, F>) {
+  const {
+    id,
+    htmlName,
+    value,
+    label,
+    presentation,
+    required,
+    disabled,
+    readonly,
+    autofocus,
+    onChange,
+    onFocus,
+    onBlur,
+    schema,
+    options,
+  } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const { stars = 5, shape = 'star', color = 'orange', size = 'md', colorGradient = false } = options;
 
   // Use schema.maximum if provided, otherwise use stars option (limited to 1-5)
@@ -97,12 +100,21 @@ export default function RatingWidget<
     return `bg-${colors[colorIdx]}-400`;
   };
 
+  const { group: groupProps, option: optionAttributes } = getGroupAndOptionProps({
+    id,
+    label,
+    hideLabel,
+    presentation,
+    role: 'radiogroup',
+  });
+
+  // The checked star, where Tab into the group lands, as `RadioWidget` gives it its checked radio, else the first
+  const autofocusValue =
+    typeof value === 'number' && Number.isInteger(value - min) && value >= min && value < min + numStars ? value : min;
+
   return (
     <div className='form-control w-full'>
-      <div
-        className={`rating gap-1 ${sizeClass}`}
-        {...getGroupProps({ id, label, name, hideLabel, role: 'radiogroup' })}
-      >
+      <div className={`rating gap-1 ${sizeClass}`} {...groupProps}>
         {[...Array(numStars)].map((_, index) => {
           const starValue = min + index;
           return (
@@ -110,7 +122,7 @@ export default function RatingWidget<
               // oxlint-disable-next-line react/no-array-index-key
               key={index}
               type='radio'
-              name={id}
+              name={htmlName || id}
               value={starValue}
               checked={value === starValue}
               onChange={handleChange}
@@ -119,8 +131,9 @@ export default function RatingWidget<
               className={`mask ${maskClass} ${getColorClass(index)}`}
               disabled={disabled || readonly}
               required={required}
-              autoFocus={autofocus && index === 0}
+              autoFocus={autofocus && starValue === autofocusValue}
               aria-label={`${starValue} ${shape === 'heart' ? 'heart' : 'star'}${starValue === 1 ? '' : 's'}`}
+              {...optionAttributes}
             />
           );
         })}

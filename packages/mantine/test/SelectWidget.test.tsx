@@ -24,6 +24,7 @@ function makeProps(props: Partial<WidgetProps> = {}): WidgetProps {
     disabled: false,
     readonly: false,
     multiple: false,
+    // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
     rawErrors: [],
     uiSchema: {},
     onChange: () => undefined,
@@ -163,6 +164,7 @@ describe('mantine SelectWidget optgroups', () => {
 
   test('hides description when hideLabel is true', () => {
     const { queryByText } = renderWidget({
+      // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated prop a component without a plan reads
       hideLabel: true,
       options: {
         description: 'Test description',

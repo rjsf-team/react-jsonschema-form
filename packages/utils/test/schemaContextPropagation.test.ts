@@ -77,7 +77,9 @@ const CASES: PropagationCase[] = [
   {
     name: 'getDisplayLabel',
     rootSchema: { type: 'array', uniqueItems: true, items: enumAllOf },
+    // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated function a field without a plan calls
     callFunction: (context, rootSchema) => getDisplayLabel(context, rootSchema, undefined, rootSchema),
+    // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated method a field without a plan calls
     callSchemaUtils: (schemaUtils) => schemaUtils.getDisplayLabel(schemaUtils.getRootSchema()),
   },
   {
