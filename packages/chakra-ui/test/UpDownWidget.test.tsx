@@ -93,6 +93,24 @@ describe('UpDownWidget value', () => {
     });
 
     await waitFor(() => expect(input).toHaveValue(''));
+    // The number input's own state is cleared with its text, so a step starts from an empty input rather than from the
+    // number it held
+    await user.click(input);
+    await user.keyboard('{ArrowUp}');
+    expect(ref.current?.getFormData()).toEqual({ n: 1 });
+  });
+
+  it('shows a stored 0', () => {
+    render(
+      <Form
+        schema={{ type: 'integer' }}
+        uiSchema={{ 'ui:widget': 'updown' }}
+        initialFormData={0}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('spinbutton')).toHaveValue('0');
   });
 
   it('shows what the user types', async () => {
