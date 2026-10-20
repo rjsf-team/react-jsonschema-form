@@ -11,13 +11,14 @@ import {
   buttonId,
   canExpand,
   descriptionId,
+  getErrorsToDraw,
   getTemplates,
   getUiOptions,
   titleDrawsOptionalDataControl,
   titleId,
 } from '@rjsf/utils';
 
-import { getWidgetErrors, renderErrors } from '../utils.tsx';
+import { renderErrors } from '../utils.tsx';
 
 /** The `ObjectFieldTemplate` is the template to use to render all the inner properties of an object along with the
  * title and description if available. If the object is expandable, then an `AddButton` is also rendered after all
@@ -56,7 +57,7 @@ export default function ObjectFieldTemplate<
   const gridCols = (typeof uiOptions?.gridCols === 'number' && uiOptions?.gridCols) || undefined;
   const gridSpacing = uiOptions?.gridSpacing;
   const gridVerticalSpacing = uiOptions?.gridVerticalSpacing;
-  const errors = renderErrors(id, getWidgetErrors<T, S, F>(props));
+  const errors = renderErrors(id, getErrorsToDraw<T, S, F>(props));
 
   return (
     <Container id={id} p={0} fluid>

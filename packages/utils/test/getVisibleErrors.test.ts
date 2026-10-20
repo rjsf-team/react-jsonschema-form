@@ -1,3 +1,4 @@
+/* oxlint-disable typescript/no-deprecated -- this file tests the deprecated `getVisibleErrors()` */
 import { getVisibleErrors } from '../src/index.ts';
 
 describe('getVisibleErrors()', () => {

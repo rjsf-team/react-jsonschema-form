@@ -1,7 +1,9 @@
 import type {
+  ContainerFieldTemplateProps,
   EnumOptionsType,
   Field,
   FieldPresentation,
+  FieldProps,
   FieldTemplateProps,
   FormContextType,
   Registry,
@@ -223,6 +225,39 @@ export function getWidgetErrorProps<
   F extends FormContextType = FormContextType,
 >(rawErrors: string[] | undefined): Pick<WidgetProps<T, S, F>, 'rawErrors'> {
   // oxlint-disable-next-line typescript/no-deprecated -- set for a widget that doesn't read `presentation`
+  return { rawErrors };
+}
+
+/** Gets the deprecated `rawErrors` a field hands the field component it renders, for one that doesn't read
+ * `presentation`: the field's own error messages, whatever `ui:hideError` says, so the component can render them its
+ * own way, except that `ArrayField` hands each item's `ArraySchemaField` the array's own, as it always has. The one
+ * place a field component is handed them
+ *
+ * @param rawErrors - The field's own error messages, or, for an array's item, the array's
+ * @returns - The `rawErrors` for the field component
+ */
+export function getFieldErrorProps<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(rawErrors: string[] | undefined): Pick<FieldProps<T, S, F>, 'rawErrors'> {
+  // oxlint-disable-next-line typescript/no-deprecated -- set for a field component that doesn't read `presentation`
+  return { rawErrors };
+}
+
+/** Gets the deprecated `rawErrors` an array or object hands its container template, for one that doesn't read
+ * `presentation`: the container's own error messages, whatever `ui:hideError` says, as a widget is handed them. The one
+ * place a container template is handed them
+ *
+ * @param rawErrors - The container's own error messages
+ * @returns - The `rawErrors` for the container template
+ */
+export function getContainerErrorProps<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(rawErrors: string[] | undefined): Pick<ContainerFieldTemplateProps<T, S, F>, 'rawErrors'> {
+  // oxlint-disable-next-line typescript/no-deprecated -- set for a container template that doesn't read `presentation`
   return { rawErrors };
 }
 
