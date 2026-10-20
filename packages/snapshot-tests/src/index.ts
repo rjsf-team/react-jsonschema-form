@@ -10,6 +10,8 @@ export { hideErrorTests } from './hideErrorTests.tsx';
 
 export { objectTests } from './objectTests.tsx';
 
+export { selectedOptionDescriptionTests } from './selectedOptionDescriptionTests.tsx';
+
 export { type GridRenderCustomOptions, gridTests } from './gridTests.tsx';
 
 export { type ThemeGenerators, themeTests } from './themeTests.ts';

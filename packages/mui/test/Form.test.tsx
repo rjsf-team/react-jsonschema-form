@@ -1,7 +1,7 @@
 import Switch from '@mui/material/Switch';
 import { withTheme } from '@rjsf/core';
 import { getTestRegistry } from '@rjsf/core/testing';
-import { formTests, themeTests } from '@rjsf/snapshot-tests';
+import { formTests, selectedOptionDescriptionTests, themeTests } from '@rjsf/snapshot-tests';
 import type { FieldProps, FormValidation, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { errorId, fieldLabelId, helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
@@ -921,39 +921,4 @@ describe('mui CheckboxWidget required attribute', () => {
   });
 });
 
-describe("mui SelectWidget's selected option description", () => {
-  const describedOptions = [
-    { const: 'r', title: 'Red', description: 'Warm' },
-    { const: 'b', title: 'Blue' },
-  ];
-  test.each<[string, RJSFSchema, UiSchema, boolean]>([
-    ['label shown', { title: 'Color', type: 'string', oneOf: describedOptions }, {}, true],
-    [
-      "the field's own ui:label false",
-      { title: 'Color', type: 'string', oneOf: describedOptions },
-      { 'ui:label': false },
-      false,
-    ],
-    [
-      'ui:label false on the anyOf field above',
-      { title: 'Color', anyOf: [{ type: 'string', oneOf: describedOptions }, { type: 'number' }] },
-      { 'ui:label': false, anyOf: [{}, {}] },
-      false,
-    ],
-  ])(
-    "shows a selected option's description exactly where it describes the select (%s)",
-    (_, color, uiSchema, shown) => {
-      const { container } = render(
-        <Form
-          schema={{ type: 'object', properties: { color } }}
-          uiSchema={{ color: uiSchema }}
-          initialFormData={{ color: 'r' }}
-          validator={validator}
-        />,
-      );
-
-      expect(screen.queryAllByText('Warm')).toHaveLength(shown ? 1 : 0);
-      expect(container.querySelector('#root_color')).toHaveAccessibleDescription(shown ? 'Warm' : '');
-    },
-  );
-});
+selectedOptionDescriptionTests(Form);
