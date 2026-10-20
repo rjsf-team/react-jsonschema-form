@@ -110,10 +110,9 @@ export interface SchemaGraph<S extends StrictRJSFSchema = RJSFSchema> {
   /** Returns the node `raw` parsed to, `raw` being a copy a caller made of the schema `of` stands for, such as a spread
    * of it with a keyword of its own made on every render: a copy whose keywords are those of the last copy adopted for
    * `of` is not parsed again, so the plans made for one are made for the other. The copy is parsed where the node
-   * `copied` it copies sits, so its `$ref`s resolve against the resource that node is in, or as a call root is when it
-   * copies no one node, as an option a merge rebuilds on every plan does not.
+   * `copied` it copies sits, so its `$ref`s resolve against the resource that node is in.
    */
-  adoptCopy(raw: S, of: object, copied?: NodeId): AdoptedSchema<S>;
+  adoptCopy(raw: S, of: object, copied: NodeId): AdoptedSchema<S>;
 }
 
 /** A schema's node and the graph holding it: the graph `adopt()` was called on when the schema was parsed with it, or
@@ -384,14 +383,14 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
     return `${key}}`;
   }
 
-  adoptCopy(raw: S, of: object, copied?: NodeId): AdoptedSchema<S> {
+  adoptCopy(raw: S, of: object, copied: NodeId): AdoptedSchema<S> {
     const last = this.copies.get(of);
     if (last !== undefined && sameKeywords(last.raw, raw)) {
       return last.adopted;
     }
-    const node = copied === undefined ? undefined : this.node(copied);
+    const node = this.node(copied);
     // A boolean sits in no resource of its own, so a copy of what it reads as is parsed as a call root
-    const adopted = this.adopt(raw, node?.kind === 'schema' ? node.outerBase : this.rootBase);
+    const adopted = this.adopt(raw, node.kind === 'schema' ? node.outerBase : this.rootBase);
     this.copies.set(of, { raw, adopted });
     return adopted;
   }
