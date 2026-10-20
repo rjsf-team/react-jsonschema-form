@@ -1035,10 +1035,16 @@ describe('ObjectField', () => {
       expectToHaveBeenCalledWithFormData(onChange, { newFirst: 1, first: undefined }, 'root');
     });
 
+    // Renamed onto a declared property, the entry is no longer an additional property, so the rename alone is what
+    // labels it by its key rather than by that property's title
     it("should label a renamed key's field and its widget's parts by the new key", async () => {
       const { node } = createFormComponent({
-        schema: { type: 'object', additionalProperties: { type: 'string', format: 'date', title: 'Date' } },
-        uiSchema: { additionalProperties: { 'ui:widget': 'alt-date' } },
+        schema: {
+          type: 'object',
+          properties: { end: { type: 'string', format: 'date', title: 'End date' } },
+          additionalProperties: { type: 'string', format: 'date', title: 'Date' },
+        },
+        uiSchema: { end: { 'ui:widget': 'alt-date' }, additionalProperties: { 'ui:widget': 'alt-date' } },
         initialFormData: { start: '2020-05-03' },
       });
 
