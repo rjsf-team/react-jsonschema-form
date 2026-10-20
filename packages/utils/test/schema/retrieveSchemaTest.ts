@@ -17,10 +17,12 @@ import {
   RJSF_REF_KEY,
   noop,
 } from '../../src/index.ts';
+import parseSchemaGraph from '../../src/schema/graph/parseSchemaGraph.ts';
 import {
   expandRefCycle,
   getAdditionalPropertyType,
   getValidationTarget,
+  resolveMergedOwnRef,
   resolveOwnRef,
   stubExistingAdditionalProperties,
 } from '../../src/schema/retrieveSchema.ts';
@@ -178,6 +180,15 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       expect(() => resolveOwnRef({ $ref: '#/components/schemas/missing' }, { components })).toThrow(
         'Could not find a definition for #/components/schemas/missing.',
       );
+    });
+  });
+  describe('resolveMergedOwnRef()', () => {
+    it('resolves a $ref none of the seeds declares as resolveOwnRef() resolves it', () => {
+      const rootSchema: RJSFSchema = { definitions: { a: { type: 'string', title: 'A' } } };
+      const schema: RJSFSchema = { $ref: '#/definitions/a', description: 'D' };
+      const resolved = resolveMergedOwnRef(parseSchemaGraph(rootSchema), [], schema);
+      expect(resolved).toBe(resolveOwnRef(schema, rootSchema));
+      expect(resolved).toMatchObject({ type: 'string', title: 'A', description: 'D' });
     });
   });
   describe('retrieveSchema()', () => {

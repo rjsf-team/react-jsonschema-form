@@ -677,6 +677,7 @@ describe('parseSchemaGraph()', () => {
         },
         () => ({ enum: [undefined, 'a'] }),
       ],
+      ['a hole at the end and no entry', () => ({ enum: new Array<unknown>(1) }), () => ({ enum: [] })],
     ])('tells apart %s', (_, first, second) => {
       expect(adoptBuilt(first)).toBe(adoptBuilt(first));
       expect(adoptBuilt(second)).toBe(adoptBuilt(second));

@@ -192,7 +192,8 @@ export default class AJV8PrecompiledValidator<
    * @param rootSchema - The root schema used to provide $ref resolutions
    * @returns - true if the formData validates against the schema, false otherwise
    * @throws - Error when the schema provided does not match the base schema of the precompiled validator OR if there
-   *        isn't a precompiled validator function associated with the schema
+   *        isn't a precompiled validator function associated with the schema OR, for a function marked `changesData`, if
+   *        the `formData` holds an object that can't be copied, such as a class instance holding a function
    */
   isValid(schema: S, formData: unknown, rootSchema: S) {
     this.ensureSameRootSchema(rootSchema, formData);

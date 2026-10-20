@@ -400,7 +400,8 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
     if (Object.getPrototypeOf(value) !== (isArray ? Array.prototype : Object.prototype)) {
       return undefined;
     }
-    let key = isArray ? '[' : '{';
+    // A list's length is no key of its own, but a reader of the list sees the holes at its end
+    let key = Array.isArray(value) ? `[${value.length}` : '{';
     for (const name of Reflect.ownKeys(value).filter((own) => !isArray || own !== 'length')) {
       // A marker is keyed by its place in the list, which no quoted name can be mistaken for
       const named = typeof name === 'string' ? JSON.stringify(name) : MARKERS.indexOf(name);
