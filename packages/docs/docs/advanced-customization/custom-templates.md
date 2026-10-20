@@ -233,6 +233,7 @@ The following props are passed to each `ArrayFieldItemTemplate`:
 - `uiSchema`: The uiSchema object for this array item.
 - `registry`: The `registry` object.
 - `parentUiSchema`: The UI schema of the array item's parent array field, used for customization in some themes
+- `displayLabel`: Whether the item's `FieldTemplate` draws the item's label, as the plan `SchemaField` builds for the item says: the `displayLabel` that template is handed. A label the item's field or widget draws itself, as a custom field's or, in a theme whose widgets draw their own label, a widget's, doesn't count. Used to place the item's buttons beside its control rather than beside its label.
 
 ## ArrayFieldItemButtonTemplate
 

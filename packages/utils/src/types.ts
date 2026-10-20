@@ -1238,7 +1238,10 @@ export type ArrayFieldItemTemplateProps<
    * customization in some themes
    */
   parentUiSchema?: UiSchema<T, S, F>;
-  /** A boolean flag indicating whether the label for the field is being shown, used to assist buttons placement */
+  /** Whether the item's `FieldTemplate` draws the item's label, as the plan `SchemaField` builds for the item says: the
+   * `displayLabel` that template is handed. A label the item's field or widget draws itself doesn't count. Used to
+   * assist buttons placement
+   */
   displayLabel?: boolean;
   /** A boolean flag indicating whether there is a description for the field, used to assist buttons placement */
   hasDescription?: boolean;

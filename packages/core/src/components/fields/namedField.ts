@@ -40,7 +40,7 @@ export function lookUpUiField<
  * @param fields - The registered fields
  * @returns - Whether a field is named that is neither `SchemaField` nor `FallbackField`
  */
-export function isWrittenField<
+function isWrittenField<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
@@ -90,9 +90,9 @@ export interface NamedFieldResolution<
    * written for the schema, which reads it itself, and otherwise naming no field. Where none is written for the schema
    * the data renders as though none were named — none resolved, or the one that did is `SchemaField` or `FallbackField`
    * — so the label `getDisplayLabel()` would leave to a named field, the value field `FallbackField` renders, the
-   * `anyOf`/`oneOf` options, whose fields would name it again, and the label of the array item holding the field all
-   * read it as naming none. A spelling ignored on the way to a field written for the schema names no field either, so
-   * that field and its templates read the `uiSchema` naming none rather than the name that was ignored
+   * `anyOf`/`oneOf` options, whose fields would name it again, and the plan the array item holding the field is laid
+   * out by all read it as naming none. A spelling ignored on the way to a field written for the schema names no field
+   * either, so that field and its templates read the `uiSchema` naming none rather than the name that was ignored
    */
   uiSchema: UiSchema<T, S, F>;
 }
@@ -114,8 +114,9 @@ function ignoredMessage(entry: string, value: unknown, resolved: unknown, render
  * field, the same field is selected, beside the schema's `anyOf`/`oneOf` options or in their place under
  * `ui:fieldReplacesAnyOrOneOf` (#5391). A component is either a function or one of the objects `memo()`, `forwardRef()`
  * and `lazy()` return, all of which `Field`'s type admits, and a registered value is checked the same way as one given
- * directly, since `fields` can hold anything a caller passes in. `SchemaField` resolves its own field through this, and
- * the array item holding it labels it through the same call, so the two cannot disagree about which field is named.
+ * directly, since `fields` can hold anything a caller passes in. `SchemaField` resolves its own field through this as
+ * it plans the field, and the array item holding the field lays its template out by that same plan, so the two cannot
+ * disagree about which field is named.
  *
  * A field's own `ui:field` that names nothing is ignored, so the `ui:globalOptions.field` it would have shadowed applies
  * as though it were never given. An empty one — `undefined`, `null`, `false`, `''` or `0` — still shadows it, since it

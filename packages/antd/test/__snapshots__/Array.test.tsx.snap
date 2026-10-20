@@ -140,7 +140,7 @@ exports[`array fields > array icons 1`] = `
                       style="padding-inline: 12px;"
                     >
                       <div
-                        class="ant-row ant-row-middle css-dev-only-do-not-override-oc1rc0 css-var-root"
+                        class="ant-row ant-row-top css-dev-only-do-not-override-oc1rc0 css-var-root"
                         style="margin-inline: -12px;"
                       >
                         <div
@@ -191,7 +191,7 @@ exports[`array fields > array icons 1`] = `
                         </div>
                         <div
                           class="ant-col css-dev-only-do-not-override-oc1rc0 css-var-root"
-                          style="padding-inline: 12px; flex: 0 0 120px; margin-top: 16px;"
+                          style="padding-inline: 12px; flex: 0 0 120px;"
                         >
                           <div
                             class="ant-space-compact css-dev-only-do-not-override-oc1rc0"
@@ -326,7 +326,7 @@ exports[`array fields > array icons 1`] = `
                         </div>
                       </div>
                       <div
-                        class="ant-row ant-row-middle css-dev-only-do-not-override-oc1rc0 css-var-root"
+                        class="ant-row ant-row-top css-dev-only-do-not-override-oc1rc0 css-var-root"
                         style="margin-inline: -12px;"
                       >
                         <div
@@ -377,7 +377,7 @@ exports[`array fields > array icons 1`] = `
                         </div>
                         <div
                           class="ant-col css-dev-only-do-not-override-oc1rc0 css-var-root"
-                          style="padding-inline: 12px; flex: 0 0 120px; margin-top: 16px;"
+                          style="padding-inline: 12px; flex: 0 0 120px;"
                         >
                           <div
                             class="ant-space-compact css-dev-only-do-not-override-oc1rc0"
@@ -826,7 +826,7 @@ exports[`array fields > fixed array 1`] = `
                       style="padding-inline: 12px;"
                     >
                       <div
-                        class="ant-row ant-row-middle css-dev-only-do-not-override-oc1rc0 css-var-root"
+                        class="ant-row ant-row-top css-dev-only-do-not-override-oc1rc0 css-var-root"
                         style="margin-inline: -12px;"
                       >
                         <div
@@ -877,7 +877,7 @@ exports[`array fields > fixed array 1`] = `
                         </div>
                       </div>
                       <div
-                        class="ant-row ant-row-middle css-dev-only-do-not-override-oc1rc0 css-var-root"
+                        class="ant-row ant-row-top css-dev-only-do-not-override-oc1rc0 css-var-root"
                         style="margin-inline: -12px;"
                       >
                         <div
@@ -2134,7 +2134,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                       style="padding-inline: 12px;"
                     >
                       <div
-                        class="ant-row ant-row-middle css-dev-only-do-not-override-oc1rc0 css-var-root"
+                        class="ant-row ant-row-top css-dev-only-do-not-override-oc1rc0 css-var-root"
                         style="margin-inline: -12px;"
                       >
                         <div
@@ -2185,7 +2185,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                         </div>
                         <div
                           class="ant-col css-dev-only-do-not-override-oc1rc0 css-var-root"
-                          style="padding-inline: 12px; flex: 0 0 120px; margin-top: 16px;"
+                          style="padding-inline: 12px; flex: 0 0 120px;"
                         >
                           <div
                             class="ant-space-compact css-dev-only-do-not-override-oc1rc0"
@@ -2289,7 +2289,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                         </div>
                       </div>
                       <div
-                        class="ant-row ant-row-middle css-dev-only-do-not-override-oc1rc0 css-var-root"
+                        class="ant-row ant-row-top css-dev-only-do-not-override-oc1rc0 css-var-root"
                         style="margin-inline: -12px;"
                       >
                         <div
@@ -2340,7 +2340,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                         </div>
                         <div
                           class="ant-col css-dev-only-do-not-override-oc1rc0 css-var-root"
-                          style="padding-inline: 12px; flex: 0 0 120px; margin-top: 16px;"
+                          style="padding-inline: 12px; flex: 0 0 120px;"
                         >
                           <div
                             class="ant-space-compact css-dev-only-do-not-override-oc1rc0"
@@ -2648,7 +2648,7 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                       style="padding-inline: 12px;"
                     >
                       <div
-                        class="ant-row ant-row-middle css-dev-only-do-not-override-oc1rc0 css-var-root"
+                        class="ant-row ant-row-top css-dev-only-do-not-override-oc1rc0 css-var-root"
                         style="margin-inline: -12px;"
                       >
                         <div
@@ -2699,7 +2699,7 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                         </div>
                       </div>
                       <div
-                        class="ant-row ant-row-middle css-dev-only-do-not-override-oc1rc0 css-var-root"
+                        class="ant-row ant-row-top css-dev-only-do-not-override-oc1rc0 css-var-root"
                         style="margin-inline: -12px;"
                       >
                         <div
@@ -2954,7 +2954,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                             style="padding-inline: 12px;"
                                           >
                                             <div
-                                              class="ant-row ant-row-middle css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                              class="ant-row ant-row-top css-dev-only-do-not-override-oc1rc0 css-var-root"
                                               style="margin-inline: -12px;"
                                             >
                                               <div
@@ -3005,7 +3005,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                               </div>
                                               <div
                                                 class="ant-col css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                                style="padding-inline: 12px; flex: 0 0 120px; margin-top: 16px;"
+                                                style="padding-inline: 12px; flex: 0 0 120px;"
                                               >
                                                 <div
                                                   class="ant-space-compact css-dev-only-do-not-override-oc1rc0"
@@ -3109,7 +3109,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                               </div>
                                             </div>
                                             <div
-                                              class="ant-row ant-row-middle css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                              class="ant-row ant-row-top css-dev-only-do-not-override-oc1rc0 css-var-root"
                                               style="margin-inline: -12px;"
                                             >
                                               <div
@@ -3160,7 +3160,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                               </div>
                                               <div
                                                 class="ant-col css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                                style="padding-inline: 12px; flex: 0 0 120px; margin-top: 16px;"
+                                                style="padding-inline: 12px; flex: 0 0 120px;"
                                               >
                                                 <div
                                                   class="ant-space-compact css-dev-only-do-not-override-oc1rc0"
@@ -3466,7 +3466,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                             style="padding-inline: 12px;"
                                           >
                                             <div
-                                              class="ant-row ant-row-middle css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                              class="ant-row ant-row-top css-dev-only-do-not-override-oc1rc0 css-var-root"
                                               style="margin-inline: -12px;"
                                             >
                                               <div
@@ -3517,7 +3517,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                               </div>
                                               <div
                                                 class="ant-col css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                                style="padding-inline: 12px; flex: 0 0 120px; margin-top: 16px;"
+                                                style="padding-inline: 12px; flex: 0 0 120px;"
                                               >
                                                 <div
                                                   class="ant-space-compact css-dev-only-do-not-override-oc1rc0"
@@ -3621,7 +3621,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                               </div>
                                             </div>
                                             <div
-                                              class="ant-row ant-row-middle css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                              class="ant-row ant-row-top css-dev-only-do-not-override-oc1rc0 css-var-root"
                                               style="margin-inline: -12px;"
                                             >
                                               <div
@@ -3672,7 +3672,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                               </div>
                                               <div
                                                 class="ant-col css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                                style="padding-inline: 12px; flex: 0 0 120px; margin-top: 16px;"
+                                                style="padding-inline: 12px; flex: 0 0 120px;"
                                               >
                                                 <div
                                                   class="ant-space-compact css-dev-only-do-not-override-oc1rc0"
@@ -4806,7 +4806,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                       style="padding-inline: 12px;"
                     >
                       <div
-                        class="ant-row ant-row-middle css-dev-only-do-not-override-oc1rc0 css-var-root"
+                        class="ant-row ant-row-top css-dev-only-do-not-override-oc1rc0 css-var-root"
                         style="margin-inline: -12px;"
                       >
                         <div
@@ -4857,7 +4857,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                         </div>
                         <div
                           class="ant-col css-dev-only-do-not-override-oc1rc0 css-var-root"
-                          style="padding-inline: 12px; flex: 0 0 120px; margin-top: 16px;"
+                          style="padding-inline: 12px; flex: 0 0 120px;"
                         >
                           <div
                             class="ant-space-compact css-dev-only-do-not-override-oc1rc0"
@@ -4961,7 +4961,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                         </div>
                       </div>
                       <div
-                        class="ant-row ant-row-middle css-dev-only-do-not-override-oc1rc0 css-var-root"
+                        class="ant-row ant-row-top css-dev-only-do-not-override-oc1rc0 css-var-root"
                         style="margin-inline: -12px;"
                       >
                         <div
@@ -5012,7 +5012,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                         </div>
                         <div
                           class="ant-col css-dev-only-do-not-override-oc1rc0 css-var-root"
-                          style="padding-inline: 12px; flex: 0 0 120px; margin-top: 16px;"
+                          style="padding-inline: 12px; flex: 0 0 120px;"
                         >
                           <div
                             class="ant-space-compact css-dev-only-do-not-override-oc1rc0"

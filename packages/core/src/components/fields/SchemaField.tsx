@@ -496,12 +496,13 @@ function isLabelUndrawnForLackOfControl({ label, control, showLabel }: FieldPres
 }
 
 /** Resolves the field a `SchemaField` renders and plans who draws its parts, from the props it is handed and from the
- * fields above it rendering the same path or id
+ * fields above it rendering the same path or id. The array item holding a field plans it with the props it hands the
+ * item's `SchemaField`, so the item's template is laid out by the plan the field's own template draws by
  *
  * @param props - The `FieldProps` the `SchemaField` is handed
  * @returns - The field `SchemaField` renders, the schema and `uiSchema` it renders it with, and its plan
  */
-function useSchemaFieldPlan<
+export function useSchemaFieldPlan<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,

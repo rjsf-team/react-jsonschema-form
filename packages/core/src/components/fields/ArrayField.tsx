@@ -49,9 +49,9 @@ import {
   getWidgetLabelProps,
   withFallbackItems,
 } from './fieldWidgetUtils.ts';
-import { isWrittenField, resolveNamedField } from './namedField.ts';
 import OwnTitleAndDescription from './OwnTitleAndDescription.tsx';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
+import { useSchemaFieldPlan } from './SchemaField.tsx';
 
 /** A row's stable React `key`, and its `order`: when the row was added, counted across every array */
 interface RowId {
@@ -637,7 +637,7 @@ function ArrayFieldItemInner<
     handleRemoveItem,
     handleReorderItems,
   } = props;
-  const { schemaUtils, fields, globalUiOptions, globalFormOptions } = registry;
+  const { schemaUtils, fields, globalFormOptions } = registry;
   const { ArraySchemaField, SchemaField } = fields;
   const itemSchema = useMemo(
     () => schemaUtils.retrieveSchema(rawItemSchema, itemData),
@@ -648,19 +648,31 @@ function ArrayFieldItemInner<
   const ItemSchemaField = ArraySchemaField || SchemaField;
   const readsFormData = useReadsFormData(ArrayFieldItem);
   const { ArrayFieldItemTemplate } = getTemplates<T[], S, F>(registry, uiOptions);
-  // Labelled from the same resolution of the field it names as its `SchemaField` renders by: a field written for the
-  // item draws its own label whichever spelling names it, as `getDisplayLabel()` says of one its `ui:field` names
-  const { namedField, uiSchema: resolvedItemUiSchema } = resolveNamedField<T[], S, F>(
-    itemUiSchema ?? {},
-    globalUiOptions?.field,
-    itemSchema.$id,
-    fields,
+  const itemFieldProps: FieldProps<T[], S, F> = {
+    name,
+    title,
+    index,
+    schema: itemSchema,
+    uiSchema: itemUiSchema,
+    formData: itemData,
+    errorSchema: asItemErrorSchema(itemErrorSchema),
     fieldPath,
-    globalFormOptions,
-  );
-  const displayLabel =
-    !isWrittenField<T[], S, F>(namedField, fields) &&
-    displaysLabel<T[], S, F>(registry, itemSchema, resolvedItemUiSchema);
+    id: fieldId,
+    required: isItemRequired<S>(itemSchema),
+    onChange,
+    onBlur,
+    onFocus,
+    registry,
+    disabled,
+    readonly,
+    hideError,
+    autofocus,
+    ...getFieldErrorProps<T, S, F>(rawErrors),
+  };
+  // The toolbar is laid out by whether the item's template draws the label, which the plan the item's `SchemaField`
+  // builds from these same props says, so the two can't disagree about it however the field is named
+  const { presentation } = useSchemaFieldPlan<T[], S, F>(itemFieldProps);
+  const displayLabel = presentation?.label.by === 'template';
   const { description } = getUiOptions(itemUiSchema);
   const hasDescription = !!description || !!itemSchema.description;
   const { orderable, removable, copyable } = itemButtonOptions(uiOptions);
@@ -734,27 +746,7 @@ function ArrayFieldItemInner<
   const templateProps = {
     children: (
       <RawFormDataContext value={readsFormData ? ItemSchemaField : undefined}>
-        <ItemSchemaField
-          name={name}
-          title={title}
-          index={index}
-          schema={itemSchema}
-          uiSchema={itemUiSchema}
-          formData={itemData}
-          errorSchema={asItemErrorSchema(itemErrorSchema)}
-          fieldPath={fieldPath}
-          id={fieldId}
-          required={isItemRequired<S>(itemSchema)}
-          onChange={onChange}
-          onBlur={onBlur}
-          onFocus={onFocus}
-          registry={registry}
-          disabled={disabled}
-          readonly={readonly}
-          hideError={hideError}
-          autofocus={autofocus}
-          {...getFieldErrorProps<T, S, F>(rawErrors)}
-        />
+        <ItemSchemaField {...itemFieldProps} />
       </RawFormDataContext>
     ),
     buttonsProps: {

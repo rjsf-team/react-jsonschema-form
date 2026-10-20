@@ -782,6 +782,52 @@ describe('SchemaField', () => {
       function OwnField(props: FieldProps) {
         return <input id={props.id} />;
       }
+      function DeclaredField(props: FieldProps) {
+        return <input id={props.id} />;
+      }
+      function DeclaredWrappingField(props: FieldProps) {
+        const { SchemaField: RegistrySchemaField } = props.registry.fields;
+        return (
+          <div className='wrapper'>
+            <RegistrySchemaField {...props} />
+          </div>
+        );
+      }
+
+      /** Renders a one-item array, recording the `displayLabel` the item's template is handed, and the one each
+       * template rendered at the item's id is handed, in the order they render
+       */
+      function renderItemLabels({
+        formData = ['x'],
+        ...props
+      }: Omit<NoValFormProps, 'fields' | 'presentation' | 'templates'>) {
+        const items: (boolean | undefined)[] = [];
+        const fields: (boolean | undefined)[] = [];
+        function ArrayFieldItemTemplate(templateProps: ArrayFieldItemTemplateProps) {
+          items.push(templateProps.displayLabel);
+          return <div>{templateProps.children}</div>;
+        }
+        function FieldTemplate(templateProps: FieldTemplateProps) {
+          if (templateProps.id === 'root_0') {
+            // oxlint-disable-next-line typescript/no-deprecated -- the prop the item's template lays its toolbar out to match
+            fields.push(templateProps.displayLabel);
+          }
+          return <div>{templateProps.children}</div>;
+        }
+        createFormComponent({
+          ...props,
+          formData,
+          fields: {
+            own: OwnField,
+            declared: DeclaredField,
+            wrapping: WrappingField,
+            declaredWrapping: DeclaredWrappingField,
+          },
+          presentation: { fields: { declared: { label: 'template' }, declaredWrapping: { label: 'template' } } },
+          templates: { ArrayFieldItemTemplate, FieldTemplate },
+        });
+        return { items, fields };
+      }
 
       it.each<{ named: string; items: RJSFSchema; uiSchema: UiSchema; displayLabel: boolean }>([
         {
@@ -827,29 +873,136 @@ describe('SchemaField', () => {
           displayLabel: false,
         },
       ])('with $named', ({ items, uiSchema, displayLabel }) => {
-        const renderItem = vi.fn<(displayLabel: boolean | undefined) => void>();
-        const renderField = vi.fn<(displayLabel: boolean | undefined) => void>();
-        function ArrayFieldItemTemplate(props: ArrayFieldItemTemplateProps) {
-          renderItem(props.displayLabel);
-          return <div>{props.children}</div>;
-        }
-        function FieldTemplate(props: FieldTemplateProps) {
-          if (props.id === 'root_0') {
-            // oxlint-disable-next-line typescript/no-deprecated -- the prop the item's template lays its toolbar out to match
-            renderField(props.displayLabel);
-          }
-          return <div>{props.children}</div>;
-        }
-        createFormComponent({
-          schema: { type: 'array', items },
-          uiSchema,
-          formData: ['x'],
-          fields: { own: OwnField },
-          templates: { ArrayFieldItemTemplate, FieldTemplate },
-        });
+        const labels = renderItemLabels({ schema: { type: 'array', items }, uiSchema });
 
-        expect(renderItem).toHaveBeenLastCalledWith(displayLabel);
-        expect(renderField).toHaveBeenLastCalledWith(displayLabel);
+        expect(labels.items.at(-1)).toBe(displayLabel);
+        expect(labels.fields.at(-1)).toBe(displayLabel);
+      });
+
+      const spellings: { spelling: string; naming: (key: string) => Pick<NoValFormProps, 'schema' | 'uiSchema'> }[] = [
+        {
+          spelling: 'ui:field',
+          naming: (key) => ({ schema: { type: 'array', items: titled }, uiSchema: { items: { 'ui:field': key } } }),
+        },
+        {
+          spelling: 'ui:options.field',
+          naming: (key) => ({
+            schema: { type: 'array', items: titled },
+            uiSchema: { items: { 'ui:options': { field: key } } },
+          }),
+        },
+        {
+          spelling: 'ui:globalOptions.field',
+          // The array's own empty `ui:field` keeps the global field for its item alone
+          naming: (key) => ({
+            schema: { type: 'array', items: titled },
+            uiSchema: { 'ui:field': '', 'ui:globalOptions': { field: key } },
+          }),
+        },
+        { spelling: 'a $id', naming: (key) => ({ schema: { type: 'array', items: { ...titled, $id: key } } }) },
+      ];
+      const namedFields: { kind: string; key: string; templateDrawsLabel: boolean }[] = [
+        { kind: 'a custom field drawing its own label', key: 'own', templateDrawsLabel: false },
+        { kind: "a field declared label: 'template'", key: 'declared', templateDrawsLabel: true },
+        // The field a wrapper renders for its own data draws the label it hands down, within the wrapper's template,
+        // which the plan of the field named here has no way to foresee
+        { kind: 'a field wrapping SchemaField', key: 'wrapping', templateDrawsLabel: false },
+        {
+          kind: "a wrapper declared label: 'template'",
+          key: 'declaredWrapping',
+          templateDrawsLabel: true,
+        },
+        { kind: "StringField, the item's default field", key: 'StringField', templateDrawsLabel: true },
+      ];
+      it.each(
+        spellings.flatMap(({ spelling, naming }) =>
+          namedFields.map(({ kind, key, templateDrawsLabel }) => ({
+            spelling,
+            kind,
+            templateDrawsLabel,
+            ...naming(key),
+          })),
+        ),
+      )(
+        'with $spelling naming $kind, as the template of the field named draws its label',
+        ({ templateDrawsLabel, ...props }) => {
+          const labels = renderItemLabels(props);
+
+          expect(labels.fields[0]).toBe(templateDrawsLabel);
+          expect(labels.items.at(-1)).toBe(templateDrawsLabel);
+        },
+      );
+
+      it.each<{
+        named: string;
+        props: Omit<NoValFormProps, 'fields' | 'presentation' | 'templates'>;
+        displayLabel: boolean;
+      }>([
+        {
+          named: 'a boolean with titled oneOf constants',
+          props: {
+            schema: {
+              type: 'array',
+              items: {
+                type: 'boolean',
+                title: 'Flag',
+                oneOf: [
+                  { const: true, title: 'Yes' },
+                  { const: false, title: 'No' },
+                ],
+              },
+            },
+            formData: [true],
+          },
+          displayLabel: true,
+        },
+        {
+          named: 'an untitled item, with no label text',
+          props: { schema: { type: 'array', items: { type: 'string' } } },
+          displayLabel: false,
+        },
+        {
+          named: 'a null item, which NullField titles',
+          props: { schema: { type: 'array', items: { type: 'null', title: 'Nothing' } }, formData: [null] },
+          displayLabel: false,
+        },
+        {
+          named: "ui:widget: 'checkbox' on a boolean",
+          props: {
+            schema: { type: 'array', items: { type: 'boolean', title: 'Flag' } },
+            uiSchema: { items: { 'ui:widget': 'checkbox' } },
+            formData: [true],
+          },
+          displayLabel: false,
+        },
+        {
+          named: 'an object union, its selector labelled',
+          props: {
+            schema: {
+              type: 'array',
+              items: {
+                type: 'object',
+                title: 'Union',
+                anyOf: [{ properties: { a: { type: 'string' } } }, { properties: { b: { type: 'string' } } }],
+              },
+            },
+            formData: [{}],
+          },
+          displayLabel: true,
+        },
+        {
+          named: 'ui:definitions naming a custom field',
+          props: {
+            schema: { type: 'array', items: { $ref: '#/definitions/val' }, definitions: { val: titled } },
+            uiSchema: { 'ui:definitions': { '#/definitions/val': { 'ui:field': 'own' } } },
+          },
+          displayLabel: false,
+        },
+      ])('with $named, as its template draws the label', ({ props, displayLabel }) => {
+        const labels = renderItemLabels(props);
+
+        expect(labels.fields[0]).toBe(displayLabel);
+        expect(labels.items.at(-1)).toBe(displayLabel);
       });
     });
 
