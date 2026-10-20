@@ -987,7 +987,9 @@ describe('antd read-only fields under readonlyAsDisabled: false', () => {
     expect(keyInput).not.toBeDisabled();
     expect(keyInput).toHaveValue('first');
   });
+});
 
+describe('antd renders a field a named field wraps once', () => {
   function WrappingField(props: FieldProps) {
     const { SchemaField } = props.registry.fields;
     return <SchemaField {...props} />;
