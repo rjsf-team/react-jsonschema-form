@@ -1488,7 +1488,9 @@ export function copyAlongPath<T>(data: T, path: FieldPathList): T {
   const root = copyOf(data as object) as Record<PropertyKey, unknown>;
   let container = root;
   for (const segment of path.slice(0, -1)) {
-    const child = container[segment];
+    // Own keys only, as `setByPath()` reads them: a `__proto__` the data does not hold as its own key reads the
+    // prototype, and writing a copy of that back would re-point the root copy's prototype instead of adding a key
+    const child = Object.hasOwn(container, segment) ? container[segment] : undefined;
     if (!isObject(child) && !Array.isArray(child)) {
       break;
     }
