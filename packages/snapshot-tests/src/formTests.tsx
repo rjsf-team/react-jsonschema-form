@@ -4,7 +4,7 @@ import MarkdownTemplate from '@rjsf/core/markdown';
 import type { RJSFSchema, ErrorSchema, UiSchema, DefaultFormStateBehavior } from '@rjsf/utils';
 import { bracketNameGenerator, dotNotationNameGenerator } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 
 export function formTests(Form: ComponentType<FormProps>) {
   describe('single fields', () => {
@@ -1490,4 +1490,21 @@ export function formTests(Form: ComponentType<FormProps>) {
       });
     },
   );
+  // Last, because React's generated ids count up through the file: a case added earlier renumbers the cases after it
+  describe('single fields', () => {
+    test('select widget with selected oneOf option description beside the field description', async () => {
+      const schema: RJSFSchema = {
+        type: 'string',
+        description: 'Pick a plan',
+        oneOf: [
+          { const: 'foo', title: 'Foo', description: 'Foo description' },
+          { const: 'bar', title: 'Bar', description: 'Bar description' },
+        ],
+      };
+      const { asFragment } = render(<Form schema={schema} formData='foo' validator={validator} />);
+      expect(document.querySelectorAll('#root__description')).toHaveLength(1);
+      expect(screen.getByRole('combobox')).toHaveAccessibleDescription('Pick a plan Foo description');
+      expect(asFragment()).toMatchSnapshot();
+    });
+  });
 }
