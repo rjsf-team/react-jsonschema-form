@@ -932,7 +932,7 @@ console.log(separator); // Output: ','
 
 Resolves how a field has to render a schema marked `deprecated`: `label` appends a deprecation marker to the label it hands its `FieldTemplate`, `disable` disables the field, and `hide` tells the `FieldTemplate` the field is hidden.
 Returns `undefined` for a schema that is not deprecated, so a `ui:deprecatedHandling` on an undeprecated schema cannot hide or disable a field on its own, and a caller can treat the three modes as the only cases.
-Under `label`, the decorated label is the field's own: the `FieldTemplate` and the widget below it are both handed it.
+Under `label`, the decorated label is the field's own: under a plan, which a `Form` always builds, the `FieldTemplate` and the widget below it are both handed it. A field rendered without a plan, as by a custom field, hands its widget the undecorated label.
 `SchemaField` and `LayoutMultiSchemaField` both call this, and a custom field rendering its own `FieldTemplate` should too, rather than read `uiOptions.deprecatedHandling` directly — which is how the `label` default gets missed, leaving a deprecated field undecorated.
 
 #### Parameters

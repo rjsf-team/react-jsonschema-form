@@ -168,6 +168,8 @@ Optional enumerated flag controlling how empty object fields are populated, defa
 | `skipDefaults`             | Does not set defaults                                                                                                       |
 | `skipEmptyDefaults`        | Does not set an empty default. It will still apply the default value if a default property is defined in your schema        |
 
+A required boolean these flags leave unset, under `skipDefaults`, or under `populateRequiredDefaults` where the object holding it is optional, is reported missing by validation once the object holding it has a value, as the form's root always does. An optional object left empty is left out of the data, so until then nothing reports it. Either way its checkbox, like that of any required boolean whose schema doesn't demand `true`, isn't marked required, as [`requiredBooleanDefault`](#requiredbooleandefault) explains.
+
 ```tsx
 import { Form } from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
@@ -355,7 +357,7 @@ An explicit schema `default`, a parent default and an existing `formData` value 
 #### Example
 
 In the following example, `agree` is required but has no `default`. By default it would start as `false`, so [`getFormData()`](../advanced-customization/internals.md#read-form-data-programmatically) would return `{ agree: false }` before the user touched it. With `requiredBooleanDefault` set to `skip`, the data stays `{}` until the user answers, and validation reports `agree` as missing until then. This is the behavior to choose when a boolean question is rendered with an explicit "unanswered" state, for example a `- - -` / Yes / No select, rather than a checkbox.
-A checkbox under `skip` is not marked required, by its `*` or a native `required`: it has no unanswered state to show, and a native `required` would block the `false` a user gives by checking and then unchecking it, so validation alone reports it missing.
+A checkbox isn't marked required, by its `*` or a native `required`, unless its schema demands `true`, whatever this flag is: a native `required` would block the `false` an unchecked box holds, whether `populateFalse` filled it in or a user gave it by unchecking the box. Under `skip` it also has no unanswered state to show, so validation alone reports it missing, and only once the object holding it has a value, since an optional object left empty is left out of the data.
 The same holds wherever [`emptyObjectFields`](#emptyobjectfields) leaves a required boolean unset: under `skipDefaults`, and under `populateRequiredDefaults` where the object holding it is optional.
 
 ```tsx
