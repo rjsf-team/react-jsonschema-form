@@ -109,8 +109,8 @@ export function allowsAdditionalProperties<S extends StrictRJSFSchema = RJSFSche
 const patternConjunctions = new KeyedMemo<object>();
 
 /** Returns the `allOf` of `patterns`, the same object for every key the same patterns match: a reader that keys its
- * work on the schema it is handed, as `retrieveSchema()` parses a schema the root does not hold once per object and
- * `omitExtraData()` merges an `allOf` once per object, would otherwise do it again for every key on every render
+ * work on the schema it is handed, as `omitExtraData()` merges an `allOf` once per object, would otherwise do it again
+ * for every key on every render
  *
  * @param template - A schema of the type to return, whose keywords are not copied
  * @param patterns - The pattern subschemas the key matches

@@ -1,15 +1,26 @@
+import type { MockInstance } from 'vitest';
+
 import {
   RJSF_PROVENANCE_KEY,
   RJSF_REF_CYCLE_KEY,
   findSelectedOptionInXxxOf,
   getDefaultFormState,
+  getPropertySchema,
   isObject,
   isSchemaObject,
   retrieveSchema,
 } from '../../src/index.ts';
-import type { RJSFSchema } from '../../src/index.ts';
+import type { RJSFSchema, SchemaContext } from '../../src/index.ts';
 import parseSchemaGraph from '../../src/schema/graph/parseSchemaGraph.ts';
+import type { SchemaGraph } from '../../src/schema/graph/parseSchemaGraph.ts';
 import { miniValidator } from './graph/miniValidator.ts';
+
+/** The graphs the spied-on `graph.adopt()` returned since the last call */
+function graphsAdopted(adopt: MockInstance<SchemaGraph['adopt']>): Set<SchemaGraph> {
+  return new Set(
+    adopt.mock.results.splice(0).flatMap((result) => (result.type === 'return' ? [result.value.graph] : [])),
+  );
+}
 
 function wideSchema(): RJSFSchema {
   const properties: Record<string, RJSFSchema> = { child: { $ref: '#/definitions/child' } };
@@ -176,5 +187,91 @@ describe('the cost of an edit to a wide object', () => {
     const first = provenancesFor({ n: 1 });
     expect(first).toHaveLength(4);
     provenancesFor({ n: 2 }).forEach((provenance, index) => expect(provenance).toBe(first[index]));
+  });
+  it.each<[string, (context: SchemaContext, root: RJSFSchema, index: number) => RJSFSchema]>([
+    [
+      "SchemaField's stand-in for a boolean option, retrieved for the field's data",
+      (context, root, index) => retrieveSchema(context, {}, root, `v${index}`),
+    ],
+    [
+      "LayoutGridField's stand-in for a part the schema lacks, retrieved for the empty data it reads there",
+      (context, root) => retrieveSchema(context, {}, root, {}),
+    ],
+    [
+      'the stand-in getPropertySchema() hands back for an undeclared property, as a switch of options retrieves it',
+      (context, root) => retrieveSchema(context, getPropertySchema(root, 'undeclared'), root),
+    ],
+  ])('plans %s once, however often it is built', (_, retrieveBuilt) => {
+    const context = { validator: miniValidator() };
+    const root = wideSchema();
+    const adopt = vi.spyOn(parseSchemaGraph(root), 'adopt');
+    const view = retrieveBuilt(context, root, 0);
+    expect(retrieveBuilt(context, root, 1)).toBe(view);
+    expect(graphsAdopted(adopt).size).toBe(1);
+  });
+  it('parses the options a merge rebuilds for the defaults once, from one call to the next', () => {
+    const context = { validator: miniValidator() };
+    // An `if` beside the `allOf` has it merged, which makes the cross product of the two lists
+    const root: RJSFSchema = {
+      type: 'object',
+      properties: {
+        q: { type: 'string' },
+        p: {
+          type: 'object',
+          if: { properties: { k: { const: 'z' } } },
+          then: { properties: { t: { type: 'string' } } },
+          allOf: [
+            {
+              anyOf: [
+                { properties: { a: { type: 'string', default: 'a' } } },
+                { properties: { b: { type: 'string' } } },
+              ],
+            },
+            {
+              anyOf: [
+                { properties: { c: { type: 'string', default: 'c' } } },
+                { properties: { d: { type: 'string' } } },
+              ],
+            },
+          ],
+        },
+      },
+    };
+    const adopt = vi.spyOn(parseSchemaGraph(root), 'adopt');
+    const edit = (value: string) => {
+      expect(getDefaultFormState(context, { schema: root, rootSchema: root, formData: { q: value } })).toEqual({
+        q: value,
+        p: { a: 'a', c: 'c' },
+      });
+      return graphsAdopted(adopt);
+    };
+    const first = edit('x');
+    expect(first.size).toBeGreaterThan(0);
+    expect([...edit('y')].filter((adopted) => !first.has(adopted))).toEqual([]);
+  });
+  it('parses no schema anew for the defaults of a field holding an object, offering options beside an unmerged allOf', () => {
+    const context = { validator: miniValidator() };
+    const root: RJSFSchema = {
+      type: 'object',
+      properties: {
+        p: {
+          allOf: [{ type: 'object' }],
+          oneOf: [{ properties: { a: { type: 'string', default: 'a' } } }, { properties: { b: { type: 'string' } } }],
+        },
+        q: { type: 'string' },
+      },
+    };
+    const adopt = vi.spyOn(parseSchemaGraph(root), 'adopt');
+    const edit = (value: string) => {
+      expect(
+        getDefaultFormState(context, { schema: root, rootSchema: root, formData: { q: value, p: { a: value } } }),
+      ).toEqual({
+        q: value,
+        p: { a: value },
+      });
+      return graphsAdopted(adopt);
+    };
+    const first = edit('x');
+    expect([...edit('y')].filter((adopted) => !first.has(adopted))).toEqual([]);
   });
 });
