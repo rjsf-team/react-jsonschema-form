@@ -380,7 +380,8 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     // Shared against the edit's data first, so a copy that changes nothing of the edit, as `{ ...next }` with a field
     // already upper-cased is, takes it in one walk rather than deriving the whole form's data a second time. An edit
     // that left the data as it was, such as an option switch whose data fits both options, has `next` equal to
-    // `previous`, so a copy of either takes it, and only `previous` itself refuses it
+    // `previous`, so a copy of either takes it, and only `previous` itself refuses it. A string, number or boolean root
+    // has no copy to tell apart, so such an edit's `next` is `previous` and is taken
     const transformed = replaceEqualDeep(edited.formData, returned);
     if (Object.is(transformed, edited.formData)) {
       return { next: applyChangeToErrorsOf(edited, base.formData, change, props, isValidated) };
