@@ -4,7 +4,7 @@ import MarkdownTemplate from '@rjsf/core/markdown';
 import type { RJSFSchema, ErrorSchema, UiSchema, DefaultFormStateBehavior } from '@rjsf/utils';
 import { bracketNameGenerator, dotNotationNameGenerator } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 
 export function formTests(Form: ComponentType<FormProps>) {
   describe('single fields', () => {
@@ -1501,7 +1501,9 @@ export function formTests(Form: ComponentType<FormProps>) {
           { const: 'bar', title: 'Bar', description: 'Bar description' },
         ],
       };
-      const { asFragment } = render(<Form schema={schema} initialFormData='foo' validator={validator} />);
+      const { asFragment } = render(<Form schema={schema} formData='foo' validator={validator} />);
+      expect(document.querySelectorAll('#root__description')).toHaveLength(1);
+      expect(screen.getByRole('combobox')).toHaveAccessibleDescription('Pick a plan Foo description');
       expect(asFragment()).toMatchSnapshot();
     });
   });
