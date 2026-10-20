@@ -3559,6 +3559,8 @@ Retrieves the schema of one field: the `schema` with its own `$ref`, `allOf`, `i
 The schema is resolved one level at a time: a `$ref` under `properties`, `items` or an `anyOf`/`oneOf` option is handed out as it stands, for the caller to retrieve when it renders that subschema.
 Every subschema handed out carries where it came from, so retrieving it resolves it as the field it is: a recursive `$ref` under `properties` is handed out flagged with `RJSF_REF_CYCLE_KEY`, [`expandRefCycle()`](#expandrefcycle) expands it by one level, and retrieving a schema `retrieveSchema()` returned gives the same schema back.
 A copy carrying `RJSF_REF_CYCLE_KEY: false` is retrieved like any other copy of the field it was made from.
+A `schema` the root does not hold is parsed once per content and kept for as long as the root, so one built from form data keeps an entry for each distinct value until the root changes.
+Like the root, it must not be changed once handed in: calls handed the same content share its result.
 
 With a `selectedOption`, the extra keys of the data are stubbed once, for the field and the option selected among the options of the keyword `getXxxOfKey()` reads together.
 A key the option declares is left to the option, which renders it.

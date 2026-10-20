@@ -1,11 +1,14 @@
 import {
+  ADDITIONAL_PROPERTY_FLAG,
   ALL_OF_KEY,
   DEFAULT_KEY,
   DEFINITIONS_KEY,
+  GUESSED_TYPE_FLAG,
   ID_KEY,
   JSON_SCHEMA_DRAFT_2019_09,
   JSON_SCHEMA_DRAFT_2020_12,
   REF_KEY,
+  RJSF_REF_KEY,
   SCHEMA_KEY,
 } from '../../constants.ts';
 import isObject, { isSchemaObject } from '../../isObject.ts';
@@ -100,18 +103,19 @@ export interface SchemaGraph<S extends StrictRJSFSchema = RJSFSchema> {
    */
   byObject(raw: object, outerBase?: string): NodeId | undefined;
   /** Returns the node `raw` parsed to, parsing a schema from outside the root into a graph that extends this one with
-   * it, once per object and base. A call root such as the `{ allOf: [property, ...patterns] }` a caller builds, or an
+   * it, once per content and base. A call root such as the `{ allOf: [property, ...patterns] }` a caller builds, or an
    * option spread over its parent, is such a schema: its `$ref`s resolve against the root like any other, or against
-   * `outerBase` where it is given.
+   * `outerBase` where it is given. A schema holding what one adopted before holds, as a call root a caller builds anew
+   * for every call does, is that one's node, so the plans and views made for one are made for the other, and neither may
+   * change once adopted.
    */
   adopt(raw: S, outerBase?: string): AdoptedSchema<S>;
   /** Returns the node `raw` parsed to, `raw` being a copy a caller made of the schema `of` stands for, such as a spread
    * of it with a keyword of its own made on every render: a copy whose keywords are those of the last copy adopted for
    * `of` is not parsed again, so the plans made for one are made for the other. The copy is parsed where the node
-   * `copied` it copies sits, so its `$ref`s resolve against the resource that node is in, or as a call root is when it
-   * copies no one node, as an option a merge rebuilds on every plan does not.
+   * `copied` it copies sits, so its `$ref`s resolve against the resource that node is in.
    */
-  adoptCopy(raw: S, of: object, copied?: NodeId): AdoptedSchema<S>;
+  adoptCopy(raw: S, of: object, copied: NodeId): AdoptedSchema<S>;
 }
 
 /** A schema's node and the graph holding it: the graph `adopt()` was called on when the schema was parsed with it, or
@@ -267,6 +271,8 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
   private readonly anchors = new Map<string, NodeId>();
   private readonly pendingRefs: Mutable<ObjectNode<S>>[] = [];
   private readonly overlays = new WeakMap<object, Map<string, AdoptedSchema<S>>>();
+  /** The schemas adopted so far, by base and `contentKey()` */
+  private readonly contents = new Map<string, AdoptedSchema<S>>();
   private readonly copies = new WeakMap<object, { readonly raw: S; readonly adopted: AdoptedSchema<S> }>();
 
   constructor(rawRoot: S, base?: Graph<S>) {
@@ -345,21 +351,68 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
     }
     let adopted = byBase.get(outerBase);
     if (adopted === undefined) {
-      const overlay = new Graph<S>(this.rawRoot, this);
-      adopted = { graph: overlay, node: overlay.parse(raw, EXTERNAL_POINTER, outerBase).id };
+      const content = this.contentKey(raw, new Map());
+      const key = content === undefined ? undefined : JSON.stringify(outerBase) + content;
+      adopted = key === undefined ? undefined : this.contents.get(key);
+      if (adopted === undefined) {
+        const overlay = new Graph<S>(this.rawRoot, this);
+        adopted = { graph: overlay, node: overlay.parse(raw, EXTERNAL_POINTER, outerBase).id };
+        if (key !== undefined) {
+          this.contents.set(key, adopted);
+        }
+      }
       byBase.set(outerBase, adopted);
     }
     return adopted;
   }
 
-  adoptCopy(raw: S, of: object, copied?: NodeId): AdoptedSchema<S> {
+  /** Returns a key two values share exactly when they hold the same: the same keys in the same order, holding the same
+   * values, where an object this graph holds is that object, as the parse keeps it, and an object met twice is met
+   * twice. A value holding what a reader could tell apart beyond that, such as a class instance, a function, a key that
+   * is not enumerable or a symbol other than the markers a schema `retrieveSchema()` builds carries, has none, and is
+   * adopted once per object.
+   */
+  private contentKey(value: unknown, seen: Map<object, number>): string | undefined {
+    if (typeof value !== 'object' || value === null) {
+      return typeof value === 'string' ? JSON.stringify(value) : primitiveKey(value);
+    }
+    const known = this.byObject(value);
+    if (known !== undefined) {
+      return `@${known}`;
+    }
+    const met = seen.get(value);
+    if (met !== undefined) {
+      return `^${met}`;
+    }
+    seen.set(value, seen.size);
+    const isArray = Array.isArray(value);
+    if (Object.getPrototypeOf(value) !== (isArray ? Array.prototype : Object.prototype)) {
+      return undefined;
+    }
+    let key = isArray ? '[' : '{';
+    for (const name of Reflect.ownKeys(value).filter((own) => !isArray || own !== 'length')) {
+      // A marker is keyed by its place in the list, which no quoted name can be mistaken for
+      const named = typeof name === 'string' ? JSON.stringify(name) : MARKERS.indexOf(name);
+      const entry =
+        named !== -1 && Object.prototype.propertyIsEnumerable.call(value, name)
+          ? this.contentKey(Reflect.get(value, name), seen)
+          : undefined;
+      if (entry === undefined) {
+        return undefined;
+      }
+      key += `${named}:${entry},`;
+    }
+    return `${key}}`;
+  }
+
+  adoptCopy(raw: S, of: object, copied: NodeId): AdoptedSchema<S> {
     const last = this.copies.get(of);
     if (last !== undefined && sameKeywords(last.raw, raw)) {
       return last.adopted;
     }
-    const node = copied === undefined ? undefined : this.node(copied);
+    const node = this.node(copied);
     // A boolean sits in no resource of its own, so a copy of what it reads as is parsed as a call root
-    const adopted = this.adopt(raw, node?.kind === 'schema' ? node.outerBase : this.rootBase);
+    const adopted = this.adopt(raw, node.kind === 'schema' ? node.outerBase : this.rootBase);
     this.copies.set(of, { raw, adopted });
     return adopted;
   }
@@ -708,6 +761,21 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
     // extending that one reuses its pointers for a schema adopted from outside the root
     return typeof current === 'boolean' ? this.graphOf(start.id).byPointer(pointer) : undefined;
   }
+}
+
+/** The symbols a schema `retrieveSchema()` builds can carry, such as the stub of an extra key, which say what the schema
+ * is to the fields that render it
+ */
+const MARKERS: readonly symbol[] = [ADDITIONAL_PROPERTY_FLAG, GUESSED_TYPE_FLAG, RJSF_REF_KEY];
+
+/** The key of a primitive in a `contentKey()`, apart from a string, which is quoted there to set it apart from these;
+ * undefined for one no schema holds, such as a function
+ */
+function primitiveKey(value: unknown): string | undefined {
+  if (typeof value === 'number') {
+    return Object.is(value, -0) ? '-0' : String(value);
+  }
+  return value === null || value === undefined || typeof value === 'boolean' ? String(value) : undefined;
 }
 
 function sameKeywords(a: object, b: object): boolean {
