@@ -1,11 +1,11 @@
 import type { ReactNode } from 'react';
-import { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useMemo, useSyncExternalStore } from 'react';
 import type { ThemeProps } from '@rjsf/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, ThemePresentation } from '@rjsf/utils';
 
 import { createTemplates } from '../templates/Templates.tsx';
 import { createWidgets } from '../widgets/Widgets.tsx';
-import { readStoredTheme, storeTheme } from './storedTheme.ts';
+import { DEFAULT_THEME, readStoredTheme, storeTheme, subscribeToStoredTheme } from './storedTheme.ts';
 
 /** Which parts of a field this theme's fields and widgets draw themselves, over `@rjsf/core`'s: the toggle draws its
  * own label and description and holds `false` unchecked, as the checkbox does
@@ -66,19 +66,20 @@ interface ThemeProviderProps {
 /** ThemeProvider component that manages DaisyUI theme state and persistence
  *
  * This provider:
- * - Loads the theme from localStorage
+ * - Reads the theme from localStorage, following every change to it
  * - Provides theme state via context
  * - Persists theme changes to localStorage
  *
  * @param props - The props for the component
  */
 export function ThemeProvider({ children }: ThemeProviderProps) {
-  const [theme, setTheme] = useState(readStoredTheme);
+  // The stored theme is the one source of truth, read as an external store, so a theme a `DaisyUIFrameProvider` or
+  // another tab stores reaches `useTheme()` too. The server has no storage, so it renders the default
+  const theme = useSyncExternalStore(subscribeToStoredTheme, readStoredTheme, () => DEFAULT_THEME);
 
   const handleSetTheme = useCallback((newTheme: string) => {
     try {
       storeTheme(newTheme);
-      setTheme(newTheme);
     } catch {
       // Ignore localStorage errors
     }

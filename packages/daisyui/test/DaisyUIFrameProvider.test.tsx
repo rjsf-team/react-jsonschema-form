@@ -172,6 +172,45 @@ describe('DaisyUIFrameProvider', () => {
     expect(container.querySelector('[data-theme="dark"]')).not.toBeNull();
   });
 
+  test('gives a ThemeProvider inside it the theme it chose and stored', () => {
+    localStorageMock['daisyui-theme'] = 'cupcake';
+    function ThemeName() {
+      return <span>{useTheme().theme}</span>;
+    }
+    const DaisyUIFrame = __createDaisyUIFrameProvider({
+      children: (
+        <ThemeProvider>
+          <ThemeName />
+        </ThemeProvider>
+      ),
+      subtheme: { dataTheme: 'dark' },
+    });
+
+    const { container } = render(<DaisyUIFrame />);
+
+    expect(container.querySelector('[data-theme="dark"]')).not.toBeNull();
+    expect(screen.getByText('dark')).toBeInTheDocument();
+  });
+
+  test("hands useTheme() another tab's stored theme through a ThemeProvider", () => {
+    localStorageMock['daisyui-theme'] = 'cupcake';
+    function ThemeName() {
+      return <span>{useTheme().theme}</span>;
+    }
+    render(
+      <ThemeProvider>
+        <ThemeName />
+      </ThemeProvider>,
+    );
+    expect(screen.getByText('cupcake')).toBeInTheDocument();
+
+    localStorageMock['daisyui-theme'] = 'dark';
+    // Another tab's write reaches this document only as a `storage` event, which nothing a user does here dispatches
+    fireEvent(window, new StorageEvent('storage', { key: 'daisyui-theme', newValue: 'dark' }));
+
+    expect(screen.getByText('dark')).toBeInTheDocument();
+  });
+
   test('falls back to the theme last stored when the chosen theme is cleared', () => {
     localStorageMock['daisyui-theme'] = 'cupcake';
     // Rendered as the playground renders it, through the element the factory's component returns, so a new `subtheme`
