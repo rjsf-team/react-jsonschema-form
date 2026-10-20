@@ -87,11 +87,12 @@ export interface NamedFieldResolution<
   /** The warning for each `ui:field`, `ui:globalOptions.field` or `$id` that was given but names no field */
   ignored: readonly string[];
   /** The field's `uiSchema` as everything rendering or labelling its data reads it: as given where it names a field
-   * written for the schema, which reads it itself, and otherwise naming no field. The data then renders as though none
-   * were named — none resolved, or the one that did is `SchemaField` or `FallbackField`, neither of which is written
-   * for the schema — so the label `getDisplayLabel()` would leave to a named field, the value field `FallbackField`
-   * renders, the `anyOf`/`oneOf` options, whose fields would name it again, and the label of the array item holding
-   * the field all read it as naming none
+   * written for the schema, which reads it itself, and otherwise naming no field. Where none is written for the schema
+   * the data renders as though none were named — none resolved, or the one that did is `SchemaField` or `FallbackField`
+   * — so the label `getDisplayLabel()` would leave to a named field, the value field `FallbackField` renders, the
+   * `anyOf`/`oneOf` options, whose fields would name it again, and the label of the array item holding the field all
+   * read it as naming none. A spelling ignored on the way to a field written for the schema names no field either, so
+   * that field and its templates read the `uiSchema` naming none rather than the name that was ignored
    */
   uiSchema: UiSchema<T, S, F>;
 }
@@ -149,9 +150,10 @@ export function resolveNamedField<
     namedField,
     namedFieldKey,
     ignored,
-    uiSchema: isWrittenField<T, S, F>(namedField, fields)
-      ? ownUiSchema
-      : withoutNamedField<T, S, F>(ownUiSchema, globalField),
+    uiSchema:
+      isWrittenField<T, S, F>(namedField, fields) && ignored.length === 0
+        ? ownUiSchema
+        : withoutNamedField<T, S, F>(ownUiSchema, globalField),
   });
   const ownUiOptions = getUiOptions<T, S, F>(ownUiSchema);
   const ownField = ownUiOptions.field;

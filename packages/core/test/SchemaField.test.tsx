@@ -1218,6 +1218,42 @@ describe('SchemaField', () => {
     });
   });
 
+  describe('the uiSchema a field written for the schema reads, named past an own ui:field that names nothing', () => {
+    setupConsoleWarnSuppression();
+
+    it.each<[string, RJSFSchema, UiSchema]>([
+      ['ui:globalOptions.field', { type: 'string' }, { 'ui:field': 'Missing', 'ui:globalOptions': { field: 'Own' } }],
+      [
+        'ui:globalOptions.field, past ui:options.field',
+        { type: 'string' },
+        { 'ui:options': { field: 'Missing' }, 'ui:globalOptions': { field: 'Own' } },
+      ],
+      ['a $id', { $id: 'Own', type: 'string' }, { 'ui:field': 'Missing' }],
+    ])('names no field where %s names it', (_, schema, uiSchema) => {
+      const received = vi.fn<(uiSchema: FieldProps['uiSchema']) => void>();
+      function Own(props: FieldProps) {
+        received(props.uiSchema);
+        return null;
+      }
+      createFormComponent({ schema, uiSchema, fields: { Own } });
+
+      expect(received).toHaveBeenCalled();
+      expect(received.mock.lastCall?.[0]).not.toHaveProperty(['ui:field']);
+      expect(received.mock.lastCall?.[0]?.['ui:options']?.field).toBeUndefined();
+    });
+
+    it('keeps the ui:field that names it', () => {
+      const received = vi.fn<(uiSchema: FieldProps['uiSchema']) => void>();
+      function Own(props: FieldProps) {
+        received(props.uiSchema);
+        return null;
+      }
+      createFormComponent({ schema: { type: 'string' }, uiSchema: { 'ui:field': 'Own' }, fields: { Own } });
+
+      expect(received).toHaveBeenLastCalledWith(expect.objectContaining({ 'ui:field': 'Own' }));
+    });
+  });
+
   describe('label support', () => {
     const schema: RJSFSchema = {
       type: 'object',
