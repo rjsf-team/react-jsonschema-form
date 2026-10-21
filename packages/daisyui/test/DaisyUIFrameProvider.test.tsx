@@ -226,6 +226,71 @@ describe('DaisyUIFrameProvider', () => {
     expect(screen.getByRole('button')).toHaveTextContent('dark');
   });
 
+  test('renders useTheme() inside it no more when a theme is stored while it has chosen one', async () => {
+    const rendered: string[] = [];
+    function ThemeName() {
+      const { theme } = useTheme();
+      rendered.push(theme);
+      return <span>{theme}</span>;
+    }
+    function LightButton() {
+      const { setTheme } = useTheme();
+      return (
+        <button type='button' onClick={() => setTheme('light')}>
+          light
+        </button>
+      );
+    }
+    const DaisyUIFrame = __createDaisyUIFrameProvider({
+      children: (
+        <>
+          <ThemeName />
+          <LightButton />
+        </>
+      ),
+      subtheme: { dataTheme: 'dark' },
+    });
+    render(<DaisyUIFrame />);
+    const rendersBeforeWrite = rendered.length;
+
+    await user.click(screen.getByRole('button', { name: 'light' }));
+
+    expect(mockSetItem).toHaveBeenCalledWith('daisyui-theme', 'light');
+    expect(rendered).toHaveLength(rendersBeforeWrite);
+  });
+
+  test('has useTheme() inside it name the stored theme once it clears the theme it chose', async () => {
+    function ThemeName() {
+      return <span data-testid='theme-name'>{useTheme().theme}</span>;
+    }
+    function LightButton() {
+      const { setTheme } = useTheme();
+      return (
+        <button type='button' onClick={() => setTheme('light')}>
+          light
+        </button>
+      );
+    }
+    const children = (
+      <>
+        <ThemeName />
+        <LightButton />
+      </>
+    );
+    // Rendered through the element the factory's component returns, so clearing `subtheme` changes the mounted
+    // provider's props rather than remounting it
+    function Frame({ subtheme }: { subtheme?: { dataTheme?: string } }) {
+      return __createDaisyUIFrameProvider({ children, subtheme })({});
+    }
+    const { rerender } = render(<Frame subtheme={{ dataTheme: 'dark' }} />);
+    await user.click(screen.getByRole('button', { name: 'light' }));
+    expect(screen.getByTestId('theme-name')).toHaveTextContent('dark');
+
+    rerender(<Frame />);
+
+    expect(screen.getByTestId('theme-name')).toHaveTextContent('light');
+  });
+
   test("hands useTheme() another tab's stored theme through a ThemeProvider", () => {
     localStorageMock['daisyui-theme'] = 'cupcake';
     function ThemeName() {

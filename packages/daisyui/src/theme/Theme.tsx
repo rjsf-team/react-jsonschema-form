@@ -67,7 +67,12 @@ export function ThemeProvider({ children }: ThemeProviderProps): ReactNode {
  */
 export function useTheme() {
   const frameTheme = use(FrameThemeContext);
-  const storedTheme = useSyncExternalStore(subscribeToStoredTheme, readStoredTheme, () => DEFAULT_THEME);
-  const theme = frameTheme ?? storedTheme;
+  // Inside a frame the snapshot is the frame's theme, which a stored theme doesn't change, so a theme stored while the
+  // frame shows another renders nothing here; the frame hands down the stored one when it shows it
+  const theme = useSyncExternalStore(
+    subscribeToStoredTheme,
+    () => frameTheme ?? readStoredTheme(),
+    () => frameTheme ?? DEFAULT_THEME,
+  );
   return useMemo(() => ({ theme, setTheme: storeTheme }), [theme]);
 }
