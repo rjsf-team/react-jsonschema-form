@@ -8778,6 +8778,26 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         ).toEqual({ n: null, s: 'a', a: { n: null } });
       });
 
+      it('is filled in for an object schema with an object `default` and no `type`, leaving the data as it was', () => {
+        const schema: RJSFSchema = {
+          properties: {
+            n: { type: 'null' },
+            s: { type: 'string' },
+            a: { type: 'object', properties: { n: { type: 'null' } } },
+            arr: { type: 'array', items: { type: 'object', properties: { n: { type: 'null' } } } },
+          },
+          default: {},
+        };
+        const formData = { n: undefined, s: 'a', a: { n: undefined }, arr: [{ n: undefined }] };
+        expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema, formData })).toEqual({
+          n: null,
+          s: 'a',
+          a: { n: null },
+          arr: [{ n: null }],
+        });
+        expect(formData).toEqual({ n: undefined, s: 'a', a: { n: undefined }, arr: [{ n: undefined }] });
+      });
+
       it.each<[string, RJSFSchema]>([
         ['an additional property', { type: 'object', additionalProperties: { type: 'null' } }],
         ['a property an allOf brings in', { type: 'object', allOf: [{ properties: { n: { type: 'null' } } }] }],

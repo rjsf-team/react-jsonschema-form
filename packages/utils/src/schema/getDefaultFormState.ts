@@ -1489,10 +1489,11 @@ export default function getDefaultFormState<
   const objectDefaults: GenericObjectType | undefined = isObject(defaults) ? defaults : undefined;
   // Array form data takes the merge path below, which knows how to combine it with the defaults
   if (schema.type !== 'object' && isObject(schema.default) && objectDefaults && !Array.isArray(formData)) {
-    return {
+    const merged = {
       ...objectDefaults,
       ...(isObject(formData) ? formData : undefined),
     } as T;
+    return withNullFills(merged, formData, nullFills);
   }
 
   // If the formData is an object or an array, add additional properties from formData and override formData with
@@ -1508,34 +1509,45 @@ export default function getDefaultFormState<
       defaultSupercedesUndefined,
       true, // set to true to override formData with defaults if they exist.
     );
-    if (nullFills.overUndefined.size > 0) {
-      putNullFillsOverUndefined(result, formData, nullFills);
-    }
-    return result;
+    return withNullFills(result, formData, nullFills);
   }
 
   return defaults;
 }
 
 /** Puts the `null` of each `null` schema's field the form data holds as `undefined` into `merged`, see
- * `NullFills.overUndefined`. `merged` holds the keys of `formData` at every level, so the two are walked together. It
- * is written in place: `mergeDefaultsWithFormData()` builds every object of what it returns afresh, so none is the
- * caller's
+ * `NullFills.overUndefined`. `merged` holds the keys of `formData` at every level, so the two are walked together. An
+ * object or array of `merged` is copied before a `null` goes into it, since a shallow merge hands back the caller's own
  *
  * @param merged - The defaults merged into the form data
  * @param formData - The form data, whose objects `nullFills` names
  * @param nullFills - The `null` fills of the call
+ * @returns - `merged` with the `null`s in, or `merged` itself when it takes none
  */
-function putNullFillsOverUndefined(merged: unknown, formData: unknown, nullFills: NullFills) {
-  if (typeof merged !== 'object' || merged === null || typeof formData !== 'object' || formData === null) {
-    return;
+function withNullFills<V>(merged: V, formData: unknown, nullFills: NullFills): V {
+  if (
+    nullFills.overUndefined.size === 0 ||
+    typeof merged !== 'object' ||
+    merged === null ||
+    typeof formData !== 'object' ||
+    formData === null
+  ) {
+    return merged;
   }
   const fills = nullFills.overUndefined.get(formData);
+  let filled = merged;
   for (const [key, value] of Object.entries(formData)) {
-    if (fills?.has(key) && Object.hasOwn(merged, key) && Reflect.get(merged, key) === undefined) {
-      Reflect.set(merged, key, null);
-    } else {
-      putNullFillsOverUndefined(Reflect.get(merged, key), value, nullFills);
+    const current: unknown = Reflect.get(merged, key);
+    const next =
+      fills?.has(key) && Object.hasOwn(merged, key) && current === undefined
+        ? null
+        : withNullFills(current, value, nullFills);
+    if (next !== current) {
+      if (filled === merged) {
+        filled = Array.isArray(merged) ? Object.assign([], merged) : { ...merged };
+      }
+      Reflect.set(filled, key, next);
     }
   }
+  return filled;
 }
