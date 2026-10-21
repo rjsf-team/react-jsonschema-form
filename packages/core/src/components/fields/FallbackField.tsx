@@ -48,6 +48,16 @@ function getFallbackTypes<S extends StrictRJSFSchema = RJSFSchema>(schema: S): J
   return getSchemaOwnTypes<S>(schema) ?? [...JSON_SCHEMA_TYPES];
 }
 
+/** Whether the fallback UI renders its type selector for `schema`, above the value: only where it offers a choice of
+ * types, since one type is not a choice to be made
+ *
+ * @param schema - The schema being rendered by the fallback UI
+ * @returns - True when the fallback UI offers more than one type
+ */
+export function rendersTypeSelector<S extends StrictRJSFSchema = RJSFSchema>(schema: S): boolean {
+  return getFallbackTypes<S>(schema).length > 1;
+}
+
 /**
  * Get the type the selection starts on when the form data gives nothing to match: for a schema listing its types, the
  * type of the field its widget renders, and otherwise the first type the schema offers that can hold a value. Starting
@@ -465,7 +475,7 @@ function FallbackUiField<
   // card or panel chrome and the gap meant for the control around an ordinary field. This arises whenever something
   // other than the type sent the schema here — a `ui:field`, a `$id` or a `ui:globalOptions.field` naming this field —
   // since a schema naming one type is otherwise rendered by the field for it
-  if (types.length === 1) {
+  if (!rendersTypeSelector<S>(schema)) {
     return valueField;
   }
 

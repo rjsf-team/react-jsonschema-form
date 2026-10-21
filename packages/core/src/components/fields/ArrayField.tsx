@@ -38,6 +38,7 @@ import {
 import useFieldView from '../../hooks/useFieldView.ts';
 import { EMPTY_UI_SCHEMA } from '../constants.ts';
 import { moveOfItems } from '../formState.ts';
+import { rendersTypeSelector } from './FallbackField.tsx';
 import {
   ARRAY_MODE_DEFAULT_WIDGETS,
   displaysLabel,
@@ -672,13 +673,26 @@ function ArrayFieldItemInner<
     autofocus,
     ...getFieldErrorProps<T, S, F>(rawErrors),
   };
-  // The toolbar is laid out level with the item's control below a label above it: one its template draws, as the plan
-  // the item's `SchemaField` builds from these same props says, so the two can't disagree about it however the field is
-  // named, or one its field or widget draws itself where its declaration places that label above the control. A hidden
-  // item has no control on screen, so nothing draws a label above it
-  const { presentation, labelPlacement } = useSchemaFieldPlan<T[], S, F>(itemFieldProps);
+  // The toolbar is laid out level with the item's first control below a label above it: one its template draws, as the
+  // plan the item's `SchemaField` builds from these same props says, so the two can't disagree about it however the
+  // field is named, or one its field or widget draws itself where its declaration places that label above the control.
+  // A hidden item has no control on screen, so nothing draws a label above it. The fallback UI's type selector is a
+  // control of its own, rendered above the value whatever the value's widget, and its label names the type rather than
+  // the item, so it is drawn above it whatever the item's title, wherever `ui:label` leaves the field's labels shown
+  const {
+    schema: plannedSchema,
+    fieldToRender,
+    presentation,
+    labelPlacement,
+  } = useSchemaFieldPlan<T[], S, F>(itemFieldProps);
+  const typeSelectorFirst =
+    fieldToRender?.FieldComponent === registry.fields.FallbackField &&
+    Boolean(globalFormOptions.useFallbackUiForUnsupportedType) &&
+    rendersTypeSelector<S>(plannedSchema);
   const labelBy = presentation?.control && presentation.label.by;
-  const displayLabel = labelBy === 'template' || (labelBy === 'self' && labelPlacement === 'above');
+  const displayLabel = typeSelectorFirst
+    ? presentation?.showLabel === true
+    : labelBy === 'template' || (labelBy === 'self' && labelPlacement === 'above');
   const { description } = getUiOptions(itemUiSchema);
   const hasDescription = !!description || !!itemSchema.description;
   const { orderable, removable, copyable } = itemButtonOptions(uiOptions);
