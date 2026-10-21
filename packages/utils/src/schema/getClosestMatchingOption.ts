@@ -8,11 +8,11 @@ import { getByPath } from '../pathUtils.ts';
 import type { FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
 import getFirstMatchingOption from './getFirstMatchingOption.ts';
 import buildPlan, { seedsAt } from './graph/mergePlan.ts';
-import type { MergePlan, Seed } from './graph/mergePlan.ts';
+import type { MergePlan, Seed, Seeding } from './graph/mergePlan.ts';
 import parseSchemaGraph from './graph/parseSchemaGraph.ts';
 import type { SchemaGraph } from './graph/parseSchemaGraph.ts';
 import { readProvenance } from './graph/provenance.ts';
-import { fieldOf, resolveOwnRef } from './retrieveSchema.ts';
+import { fieldOf, optionNode, resolveOwnRef } from './retrieveSchema.ts';
 
 /** A junk option used to determine when the getFirstMatchingOption call really matches an option rather than returning
  * the first item
@@ -93,6 +93,26 @@ function propertyWhere<S extends StrictRJSFSchema>(
   return whereOf<S>(rootSchema, value);
 }
 
+/** Returns where the option of `options`, the list `keyword` holds in the field `seeding` describes, at an index is
+ * declared: where a declaration of the field holds it, or, for one a merge of lists rebuilt, where `optionNode()`
+ * adopted it
+ *
+ * @param seeding - Returns the graph and chains of the field offering the options
+ * @param keyword - The keyword holding the list
+ * @param options - The options
+ * @returns - Where the option at an index is declared
+ */
+export function listedAt<S extends StrictRJSFSchema>(
+  seeding: () => Seeding<S>,
+  keyword: string,
+  options: readonly S[],
+): (index: number) => Where<S> {
+  return (index) => {
+    const { graph, node } = optionNode<S>(seeding(), keyword, index, options[index]);
+    return { graph, seeds: [{ node, refPath: [] }] };
+  };
+}
+
 /** Returns the score of one property's `formValue` against the `value` schema describing it, as
  * `calculateIndexScore()` adds it up:
  * - If the `value` is a `$ref` and the formValue is neither `undefined` nor `null`, it is scored as the definition it
@@ -130,11 +150,13 @@ function propertyScore<
   const xxxOfKey = getXxxOfKey<S>(value);
   if (xxxOfKey && formValue != null) {
     const discriminator = getDiscriminatorFieldFromSchema<S>(value);
-    return getClosestMatchingOption<unknown, S, F>(
+    const options = getByPath<S[]>(value, xxxOfKey);
+    return closestOption<unknown, S, F>(
       context,
       rootSchema,
       formValue,
-      getByPath<S[]>(value, xxxOfKey),
+      options,
+      listedAt<S>(scored.plan, xxxOfKey, options),
       -1,
       discriminator,
     );

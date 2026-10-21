@@ -59,7 +59,7 @@ import buildPlan, {
   tupleSeeds,
   withoutKeys,
 } from './graph/mergePlan.ts';
-import type { MergePlan, OptionRequest, PlanPolicy, Seed } from './graph/mergePlan.ts';
+import type { MergePlan, OptionRequest, PlanPolicy, Seed, Seeding } from './graph/mergePlan.ts';
 import parseSchemaGraph from './graph/parseSchemaGraph.ts';
 import type { AdoptedSchema, NodeId, ObjectNode, SchemaGraph } from './graph/parseSchemaGraph.ts';
 import { childProvenance, extendChain, readProvenance, rootProvenance, stamp } from './graph/provenance.ts';
@@ -252,20 +252,32 @@ export function fieldOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, schem
  * two resources is a node in each. An option no node holds, such as one of the cross product a merge makes of two
  * lists, is adopted, so that it is still handed out as an option of the field offering it, keeping the field's guard
  * chain: handed out as a schema of its own, a recursion through it would start afresh at every level. The merge makes
- * such an option anew for every plan, which the graph adopts once for what it holds.
+ * such an option anew for every plan, which the graph adopts once for what it holds, in the resource the lists merged
+ * into it sit in, so that the `$ref`s it holds resolve where they were written.
+ *
+ * @param seeding - The graph and chains of the field offering the option
+ * @param keyword - The keyword holding the list
+ * @param index - The option's index in the list
+ * @param option - The option
+ * @returns - The option's node and the graph holding it
  */
-function optionNode<S extends StrictRJSFSchema>(
-  plan: MergePlan<S>,
+export function optionNode<S extends StrictRJSFSchema>(
+  seeding: Seeding<S>,
   keyword: string,
   index: number,
   option: S,
 ): AdoptedSchema<S> {
-  const provided = seedsAt(plan, keyword, String(index)).find((seed) => {
-    const node = plan.graph.node(seed.node);
+  const { graph, chains } = seeding;
+  const provided = seedsAt(seeding, keyword, String(index)).find((seed) => {
+    const node = graph.node(seed.node);
     return node.kind === 'schema' && node.raw === option;
   });
-  const node = provided?.node ?? plan.graph.byObject(option);
-  return node === undefined ? plan.graph.adopt(option) : { graph: plan.graph, node };
+  const node = provided?.node ?? graph.byObject(option);
+  if (node !== undefined) {
+    return { graph, node };
+  }
+  const bases = new Set(chains.flatMap((chain) => chain.get(keyword)?.node.baseUri ?? []));
+  return graph.adopt(option, bases.size === 1 ? [...bases][0] : undefined);
 }
 
 /** The policy views are planned with: every `allOf` is merged, and an option only where the schema offering it has

@@ -50,7 +50,7 @@ import type {
   StrictRJSFSchema,
   UiSchema,
 } from '../types.ts';
-import getClosestMatchingOption from './getClosestMatchingOption.ts';
+import { closestOption, listedAt } from './getClosestMatchingOption.ts';
 import buildPlan, {
   asTarget,
   cachedPolicy,
@@ -84,6 +84,7 @@ import retrieveSchema, {
   dependencyOption,
   fieldOf,
   isLeafSchema,
+  optionNode as offeredOption,
   resolveMergedOwnRef,
   resolveOwnRef,
   stubExistingAdditionalProperties,
@@ -816,7 +817,7 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
       ),
     );
   } else if (xxxOf) {
-    const choice = chooseOption<S, F>(context, rootSchema, schema, xxxOf, rawFormData, defaults, preferParentDefaults);
+    const choice = chooseOption<S, F>(context, view, xxxOf, rawFormData, defaults, preferParentDefaults);
     isWholeValue = choice.isWholeValue;
     if (choice.wholeOptions === undefined) {
       return foldOption<T, S, F>(choice.context, view, xxxOf, choice.index, { ...props, parentDefaults: defaults });
@@ -913,18 +914,20 @@ function ownValue<V>(value: V): V {
 }
 
 /** Picks the option of a field offering `anyOf`/`oneOf` options that its data, or its default, matches, and the context
- * the option's defaults are computed in
+ * the option's defaults are computed in. Each option is scored where it is declared, or where the merge that rebuilt
+ * its list adopted it.
  */
 function chooseOption<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
-  rootSchema: S,
-  schema: S,
+  view: DefaultsView<S>,
   { key, options }: XxxOfOptions<S>,
   rawFormData: unknown,
   defaults: unknown,
   preferParentDefaults: boolean,
 ): { context: SchemaContext<S, F>; index: number; isWholeValue: boolean; wholeOptions: S[] | undefined } {
   const { defaultFormStateBehavior } = context;
+  const { schema } = view;
+  const rootSchema = view.graph.rawRoot;
   const { type = 'null' } = withoutKeys(schema, key);
   // An object or array select holds one of its constants as a whole, the way a primitive select does. The options are
   // checked as well, since a non-empty `enum` makes the schema a select whatever they are, and only a constant can be
@@ -957,11 +960,12 @@ function chooseOption<S extends StrictRJSFSchema, F extends FormContextType>(
   const index =
     equalOptionIndex !== -1
       ? equalOptionIndex
-      : getClosestMatchingOption<unknown, S, F>(
+      : closestOption<unknown, S, F>(
           context,
           rootSchema,
           valueToMatch,
           options,
+          listedAt<S>(() => view, key, options),
           0,
           getDiscriminatorFieldFromSchema<S>(schema),
         );
@@ -1003,14 +1007,32 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
     // option is read as written and the field computed from it. It is still the same field, reached the same way: it
     // keeps its edge, and the longest ref path a node of its plan holding such a list was entered with, or a recursion
     // through the option would start afresh at every level
-    const option = schemaFrom(rootSchema, options[index]);
+    const listed: unknown = options[index];
+    const option = schemaFrom(rootSchema, listed);
+    // The option is read where it is declared, or where the merge rebuilding its list adopted it, so that its `$ref`s
+    // resolve in the resource it sits in
+    const offered = isSchemaObject<S>(listed) ? offeredOption<S>(view, key, index, listed) : undefined;
+    const declared = offered?.graph.node(offered.node);
     const rendered = rendersOwnField
       ? mergeSchemas(remaining, option)
       : withDefaultOf(
           remaining,
-          getRenderedOptionSchema<S>(remaining, resolveOwnRef<S>(option, rootSchema, context.customMergeAllOf)),
+          getRenderedOptionSchema<S>(
+            remaining,
+            offered === undefined
+              ? option
+              : resolveMergedOwnRef<S>(
+                  offered.graph,
+                  [{ node: offered.node, refPath: [] }],
+                  option,
+                  context.customMergeAllOf,
+                ),
+          ),
         );
-    const adopted = graph.adopt(schemaFrom(rootSchema, rendered));
+    const adopted = graph.adopt(
+      schemaFrom(rootSchema, rendered),
+      declared?.kind === 'schema' ? declared.outerBase : undefined,
+    );
     const offeredAt = view.entries
       .filter(({ node: id }) => {
         const node = graph.node(id);

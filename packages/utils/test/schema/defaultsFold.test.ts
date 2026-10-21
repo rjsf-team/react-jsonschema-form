@@ -380,6 +380,21 @@ describe('getDefaultFormState() on recursive schemas', () => {
       );
     };
     const twoLists = { next: { a: 'x', c: 'c' }, a: 'x', c: 'c' };
+    it.each<[string, RJSFSchema, unknown]>([
+      [
+        'an object, merged with its field',
+        { type: 'object', properties: { k: { type: 'string', default: 'k' } }, allOf: [{ anyOf: [true, optB] }] },
+        { k: 'k' },
+      ],
+      ['any other field, rendered alone', { allOf: [{ anyOf: [true, { type: 'string', default: 's' }] }] }, undefined],
+    ])(
+      'reads a boolean option of a list a customMergeAllOf copied as the schema it stands for, for %s',
+      (_, schema, expected) => {
+        const context = { validator, defaultFormStateBehavior: populate, customMergeAllOf: copyingMerge };
+        expect(getDefaultFormState(context, { schema, rootSchema: schema })).toEqual(expected);
+      },
+    );
+
     it.each<[string, RJSFSchema, DefaultFormStateBehavior | undefined, Partial<SchemaContext>, unknown]>([
       [
         'a $ref with an anyOf beside it whose target has an anyOf',
@@ -1198,6 +1213,52 @@ describe('getDefaultFormState() reading $ref, branches and extra keys as the for
       });
       expect(defaultsOf(schema)).toEqual({});
     });
+    const behaviors: [string, DefaultFormStateBehavior | undefined][] = [
+      ['by default', undefined],
+      ['populated', populate],
+      ['skipping empty defaults', { emptyObjectFields: 'skipEmptyDefaults' }],
+    ];
+    it.each(behaviors)(
+      "picks an option a dependency in the resource brings by the option's $ref there, %s",
+      (_, behavior) => {
+        const resource: RJSFSchema = {
+          $defs: {
+            o1: { properties: { x: { type: 'string', default: 'x' } } },
+            o2: { properties: { y: { type: 'string', default: 'y' } } },
+            o: {
+              type: 'object',
+              properties: { k: { type: 'string' } },
+              dependencies: { k: { anyOf: [{ $ref: '#/$defs/o1' }, { $ref: '#/$defs/o2' }] } },
+            },
+          },
+        };
+        const schema = rootOf({ $ref: 'res.json#/$defs/o' }, {}, resource);
+        expect(defaultsOf(schema, { p: { k: 'a' } }, behavior)).toEqual({ p: { k: 'a', x: 'x' } });
+      },
+    );
+    it.each(behaviors.slice(0, 2))(
+      'reads the $refs of an option a merge of two lists in the resource rebuilt there, %s',
+      (_, behavior) => {
+        const option = (key: string, beside: RJSFSchema = { $ref: '#/$defs/s' }): RJSFSchema => ({
+          properties: { [key]: beside },
+        });
+        // An `if` beside the `allOf` has it merged, which makes the cross product of the two lists
+        const resource: RJSFSchema = {
+          $defs: {
+            o: {
+              type: 'object',
+              if: {},
+              then: {},
+              allOf: [{ anyOf: [option('a'), option('b')] }, { anyOf: [option('a', { title: 'A' }), option('c')] }],
+            },
+          },
+        };
+        const schema = rootOf({ $ref: 'res.json#/$defs/o' }, { type: 'string', default: 's' }, resource);
+        expect(defaultsOf(schema, undefined, behavior)).toEqual({ p: { a: 's' } });
+        expect(defaultsOf(schema, { p: { k: 'a' } }, behavior)).toEqual({ p: { a: 's', k: 'a' } });
+        expect(defaultsOf(schema, { p: { a: 'z' } }, behavior)).toEqual({ p: { a: 'z' } });
+      },
+    );
   });
 });
 
