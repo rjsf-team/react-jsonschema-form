@@ -148,6 +148,13 @@ describe('a discriminated cell of a layout grid', () => {
     expect(screen.getByRole('combobox')).toBeInTheDocument();
   });
 
+  // A boolean option holds no selector property to type the selector by, so it is typed as an object, as for no options
+  it('renders a radio group for a union whose first option is a boolean schema', () => {
+    renderGrid(gridUiSchema(), schemaWithPick({ ...SIMPLE_ONEOF, oneOf: [false, ...SIMPLE_ONEOF_SCHEMAS] }));
+
+    expect(screen.getByRole('radiogroup')).toHaveAttribute('aria-labelledby', 'root_pick__label');
+  });
+
   it('renders a widget registered under the radio alias as its default selector', () => {
     function AliasRadio(_props: WidgetProps) {
       return <div data-testid='alias-radio' />;

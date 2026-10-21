@@ -19,6 +19,7 @@ import {
   getSchemaType,
   getUiOptions,
   getXxxOfKey,
+  isObject,
   optionsList,
   PROPERTIES_KEY,
   resolveWidget,
@@ -123,7 +124,7 @@ export function getSelectorField<
  *
  * @param schema - The schema of the field
  * @param schemaUtils - The SchemaUtilsType object used to call retrieveSchema
- * @returns - The first option, retrieved, if the schema has one
+ * @returns - The first option, retrieved, if the schema has one that isn't a boolean schema
  */
 export function getFirstOption<
   T = unknown,
@@ -132,7 +133,7 @@ export function getFirstOption<
 >(schema: S, schemaUtils: SchemaUtilsType<T, S, F>): S | undefined {
   const xxxOfKey = getXxxOfKey<S>(schema);
   const [firstOption] = ((xxxOfKey && schema[xxxOfKey]) ?? []) as S[];
-  return firstOption && schemaUtils.retrieveSchema(firstOption);
+  return isObject(firstOption) ? schemaUtils.retrieveSchema(firstOption) : undefined;
 }
 
 /** Gets the widget `LayoutMultiSchemaField` renders its option selector with, which `SchemaField` plans the field with
