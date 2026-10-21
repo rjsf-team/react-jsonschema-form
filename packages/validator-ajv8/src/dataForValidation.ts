@@ -1,14 +1,22 @@
 import { isPlainObject } from '@rjsf/utils';
-import type { Options } from 'ajv';
+import type { Ajv } from 'ajv';
 
-/** Whether Ajv built with `options` changes the data it validates: it fills defaults in under `useDefaults`, converts
- * values in place under `coerceTypes` and deletes properties under `removeAdditional`
+/** Whether `ajv` changes the data it validates: it fills defaults in under `useDefaults`, converts values in place
+ * under `coerceTypes` and deletes properties under `removeAdditional`, and a keyword registered with `modifying: true`,
+ * which Ajv requires of a keyword whose function changes the data, may change it too. A keyword that generates its own
+ * code declares nothing of the kind, so one that writes into the data that way, such as ajv-keywords' `transform`,
+ * isn't seen here.
  *
- * @param options - The options of the Ajv instance
- * @returns - Whether validating with them can change the data
+ * @param ajv - The Ajv instance, with the keywords registered with it so far
+ * @returns - Whether validating with it can change the data
  */
-export function changesData({ useDefaults, coerceTypes, removeAdditional }: Options): boolean {
-  return Boolean(useDefaults || coerceTypes || removeAdditional);
+export function changesData({ opts: { useDefaults, coerceTypes, removeAdditional }, RULES }: Ajv): boolean {
+  return (
+    Boolean(useDefaults || coerceTypes || removeAdditional) ||
+    Object.values(RULES.all).some(
+      (rule) => typeof rule === 'object' && 'modifying' in rule.definition && rule.definition.modifying === true,
+    )
+  );
 }
 
 /** Returns a copy of `data` for Ajv to change as it validates, since `isValid()` must not change the data it checks.

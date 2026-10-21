@@ -1,5 +1,6 @@
 import type { RJSFSchema, ValidatorType } from '@rjsf/utils';
-import type { Options } from 'ajv';
+import { isObject } from '@rjsf/utils';
+import type { KeywordDefinition, Options } from 'ajv';
 
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
 import type { CompiledValidateFunction } from '../src/index.ts';
@@ -100,6 +101,29 @@ describe('the data isValid() hands the validation function', () => {
     expect(seen[0]).toBe(formData);
     expect(seen[1]).not.toBe(formData);
     expect(seen[1]).toEqual(formData);
+  });
+  it('is a copy where a keyword registered, through extenderFn or after a first check, declares it changes the data', () => {
+    const fill: KeywordDefinition = {
+      keyword: 'x-fill',
+      modifying: true,
+      validate: (values: object, data: unknown) => {
+        if (isObject(data)) {
+          Object.assign(data, values);
+        }
+        return true;
+      },
+    };
+    const schema: RJSFSchema = { type: 'object', 'x-fill': { flag: 'on' }, required: ['flag'] };
+    const extended = customizeValidator({ extenderFn: (ajv) => ajv.addKeyword(fill) });
+    const late = customizeValidator();
+    const formData = {};
+
+    expect(extended.isValid(schema, formData, schema)).toBe(true);
+    expect(formData).toEqual({});
+    expect(late.isValid({ type: 'object' }, formData, schema)).toBe(true);
+    late.ajv.addKeyword(fill);
+    expect(late.isValid(schema, formData, schema)).toBe(true);
+    expect(formData).toEqual({});
   });
   it('is the data itself for a precompiled function unless it is marked as changing the data', () => {
     const seen: unknown[] = [];

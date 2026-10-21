@@ -49,7 +49,8 @@ export function compiledSchemas<S extends StrictRJSFSchema = RJSFSchema>(
  * validator. The main reasons for using a precompiled validator is reducing code size, improving validation speed and,
  * most importantly, avoiding dynamic code compilation when prohibited by a browser's Content Security Policy. For more
  * information about AJV code compilation see: https://ajv.js.org/standalone.html. Compiled with Ajv options that change
- * the data validated, every function the code exports is marked with `changesData`, since the code carries no options.
+ * the data validated, or with a keyword registered with `modifying: true`, every function the code exports is marked
+ * with `changesData`, since the code carries no options.
  *
  * @param schema - The schema to be compiled into a set of precompiled validators functions
  * @param [options={}] - The `CustomValidatorOptionsType` to compile with: the same options that are passed to the
@@ -89,7 +90,7 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
   );
 
   const code = standaloneCode.default(ajv, exportNames);
-  if (!changesData(ajv.opts)) {
+  if (!changesData(ajv)) {
     return code;
   }
   // Each export is named as Ajv names it in the code: an ES module exports an identifier, CommonJS a property

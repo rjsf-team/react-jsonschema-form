@@ -9,7 +9,7 @@ If you depend on having specifically formatted messages, then using this validat
 
 It is also possible for you to provide your own implementation if you desire, as long as it fulfills the `ValidatorType` interface specified in `@rjsf/utils`.
 Its `isValid()` must not change the data it is handed, at any depth: the form checks the same data against many conditions and options, and reuses what it found for data it already checked without looking at the data again.
-If your validation engine fills in defaults, coerces values or removes properties as it validates, hand it a copy of the data in `isValid()`, as `@rjsf/validator-ajv8` does under Ajv's `useDefaults`, `coerceTypes` and `removeAdditional` options.
+If your validation engine fills in defaults, coerces values or removes properties as it validates, hand it a copy of the data in `isValid()`, as `@rjsf/validator-ajv8` does under Ajv's `useDefaults`, `coerceTypes` and `removeAdditional` options and with a keyword registered with `modifying: true`.
 
 ## API documentation
 
@@ -668,12 +668,13 @@ render(<Form schema={schema} validator={validator} />, document.getElementById('
 ```
 
 Ajv's `useDefaults`, `coerceTypes` and `removeAdditional` options change the data Ajv validates: it fills in defaults, converts values to the type the schema names and deletes properties the schema doesn't allow.
+So may a keyword registered with `modifying: true`, which Ajv requires of a keyword whose `validate` or `compile` function changes the data, such as `ajv-keywords`' `dynamicDefaults`.
 Under any of them, `isValid()`, which the form calls to check each condition and option against the data, validates a copy of the data, so those checks never change the form's data.
 The copy holds arrays and plain objects copied key by key and any other object copied with `structuredClone()`, so a class instance is checked as a plain object of its own properties, and data holding an object that can't be copied, such as a class instance holding a function, fails the check with a warning.
 `validateFormData()` and `rawValidation()` validate the data they are handed, so those changes reach it.
-Under the other options nothing is copied.
+Under the other options, with no such keyword registered, nothing is copied.
 
-A keyword added through `extenderFn` or `validator.ajv` that writes into the data, such as `ajv-keywords`' `transform`, doesn't make `isValid()` copy the data, though `isValid()` must not change it.
+A keyword added through `extenderFn` or `validator.ajv` that writes into the data through the code it generates, such as `ajv-keywords`' `transform`, declares no `modifying`, so it doesn't make `isValid()` copy the data, though `isValid()` must not change it.
 Such a keyword needs `useDefaults`, `coerceTypes` or `removeAdditional` set, so that `isValid()` validates a copy (each of them also changes what Ajv accepts), or else a copy of its own, such as a `ValidatorType` that wraps this one and hands its `isValid()` a copy of the data.
 
 ## Using the raw Ajv instance
