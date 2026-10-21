@@ -1,4 +1,4 @@
-import type { DefaultFormStateBehavior, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import type { DefaultFormStateBehavior, FieldProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { act } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
@@ -148,6 +148,29 @@ describe('NullField', () => {
 
       expect(onError).not.toHaveBeenCalled();
       expectToHaveBeenCalledWithFormData(onSubmit, {}, true);
+    });
+  });
+
+  describe('a value no field renders', () => {
+    // Filled in as the schema's other defaults are, a `{ const: null }`'s among them, whether or not a field renders it
+    const OwnField = (_props: FieldProps) => <div>Own field</div>;
+
+    it.each<[string, UiSchema]>([
+      ['left out of a LayoutGridField layout', { 'ui:field': 'LayoutGridField', 'ui:layoutGrid': { 'ui:row': ['s'] } }],
+      ['under a ui:field that renders none of its properties', { 'ui:field': OwnField }],
+    ])('is filled in as null when it is %s, as a const: null is', async (_, uiSchema) => {
+      const { node, onSubmit } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { s: { type: 'string' }, n: { type: 'null' }, c: { const: null } },
+        },
+        uiSchema,
+      });
+
+      await submitForm(node, user);
+
+      expect(node.querySelector('.rjsf-field-null')).not.toBeInTheDocument();
+      expectToHaveBeenCalledWithFormData(onSubmit, { n: null, c: null }, true);
     });
   });
 
