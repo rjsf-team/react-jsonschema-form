@@ -1241,6 +1241,20 @@ describe('LayoutMultiSchemaField', () => {
       expect(getPropertySchema(enumOptions[1].schema, 'kind')).toEqual(expect.objectContaining({ type: 'string' }));
       expect(getSelectedOption(enumOptions, 'kind', 'dog')).toBe(enumOptions[1].schema);
     });
+    test('hands out each option as retrieving it gives, across changes of the data, when its selector is written in place', () => {
+      const options: RJSFSchema[] = [
+        { type: 'object', properties: { kind: { type: 'string', default: 'cat' }, meow: { type: 'string' } } },
+        { type: 'object', properties: { kind: { type: 'string', default: 'dog' }, bark: { type: 'string' } } },
+      ];
+      const schema: RJSFSchema = { discriminator: { propertyName: 'kind' }, oneOf: options };
+      const { schemaUtils } = getTestRegistry(schema);
+      const typed = computeEnumOptions(schema, options, schemaUtils, undefined, { kind: 'cat', meow: 'p' });
+      const typedOn = computeEnumOptions(schema, options, schemaUtils, undefined, { kind: 'cat', meow: 'pu' });
+      expect(typed.map(({ value }) => value)).toEqual(['cat', 'dog']);
+      expect(typed[0].schema).toBe(schemaUtils.retrieveSchema(options[0], { kind: 'cat', meow: 'p' }));
+      expect(typedOn[0].schema).toBe(typed[0].schema);
+      expect(typedOn[1].schema).toBe(typed[1].schema);
+    });
     test('throws error when no enumOptions are generated', () => {
       const { schemaUtils } = getTestRegistry({});
       expect(() => computeEnumOptions({}, [], schemaUtils)).toThrow('No enumOptions were computed from the schema {}');
