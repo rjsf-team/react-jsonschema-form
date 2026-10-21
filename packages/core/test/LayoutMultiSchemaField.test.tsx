@@ -33,13 +33,18 @@ import SchemaField from '../src/components/fields/SchemaField.tsx';
 import RadioWidget from '../src/components/widgets/RadioWidget.tsx';
 import SelectWidget from '../src/components/widgets/SelectWidget.tsx';
 import { getTestRegistry } from '../src/testing.ts';
-import { SIMPLE_ONEOF, SIMPLE_ONEOF_OPTIONS, SIMPLE_ONEOF_SCHEMAS } from './testData/layoutData.ts';
+import {
+  SIMPLE_ONEOF,
+  SIMPLE_ONEOF_OPTIONS,
+  SIMPLE_ONEOF_SCHEMAS,
+  withTypelessSelector,
+} from './testData/layoutData.ts';
 import { setupConsoleErrorSuppression } from './testUtils.tsx';
 
 vi.mock('@rjsf/utils', async (importOriginal) => ({
   ...(await importOriginal()),
   resolveWidget: vi.fn().mockImplementation((_schema: unknown, widget: unknown, widgets: Record<string, unknown>) => {
-    const widgetToUse = widget === 'select' || widget === 'SelectWidget' ? 'SelectWidget' : 'RadioWidget';
+    const widgetToUse = widget === 'select' ? 'SelectWidget' : 'RadioWidget';
     // Picks the registry widget directly, so the test controls which one renders without resolving the schema
     return { Widget: widgets[widgetToUse] };
   }),
@@ -810,11 +815,7 @@ describe('LayoutMultiSchemaField', () => {
         recordTemplateProps(props);
         return <FakeFieldTemplate {...props} />;
       }
-      const options: RJSFSchema[] = SIMPLE_ONEOF_SCHEMAS.map((option) => ({
-        ...option,
-        properties: { answer: { default: (option.properties!.answer as RJSFSchema).default } },
-      }));
-      const schema: RJSFSchema = { ...SIMPLE_ONEOF, oneOf: options };
+      const schema: RJSFSchema = { ...SIMPLE_ONEOF, oneOf: withTypelessSelector(SIMPLE_ONEOF_SCHEMAS) };
       const props = getProps({ schema, formData: { answer: '1' } });
       const registry = getTestRegistry(
         schema,
@@ -908,7 +909,7 @@ describe('LayoutMultiSchemaField', () => {
       const { schemaUtils } = getTestRegistry(schema);
       const option1 = schemaUtils.retrieveSchema(oneOfSchema[ONE_OF_KEY][0]);
       const option2 = schemaUtils.retrieveSchema(oneOfSchema[ONE_OF_KEY][1]);
-      const enumOptions = computeEnumOptions(schema, oneOfSchema[ONE_OF_KEY] as RJSFSchema[], schemaUtils, uiSchema);
+      const enumOptions = computeEnumOptions(schema, schemaUtils, uiSchema);
       expect(enumOptions).toEqual([
         {
           schema: option1,
@@ -926,7 +927,7 @@ describe('LayoutMultiSchemaField', () => {
       const schema = anyOfSchema;
       const options = SIMPLE_ONEOF_SCHEMAS;
       const { schemaUtils } = getTestRegistry(schema);
-      const enumOptions = computeEnumOptions(schema, options, schemaUtils);
+      const enumOptions = computeEnumOptions(schema, schemaUtils);
       expect(enumOptions).toEqual([
         {
           schema: options[0],
@@ -951,7 +952,7 @@ describe('LayoutMultiSchemaField', () => {
       };
       const uiSchema = { [UI_OPTIONS_KEY]: { optionsSchemaSelector: 'answer' } };
       const { schemaUtils } = getTestRegistry(schema);
-      const enumOptions = computeEnumOptions(schema, schema[ANY_OF_KEY] as RJSFSchema[], schemaUtils, uiSchema);
+      const enumOptions = computeEnumOptions(schema, schemaUtils, uiSchema);
       expect(enumOptions.map(({ label, value }) => ({ label, value }))).toEqual([
         { label: 'A', value: 'a' },
         { label: 'B', value: 'b' },
@@ -971,7 +972,7 @@ describe('LayoutMultiSchemaField', () => {
         oneOf: options,
       };
       const { schemaUtils } = getTestRegistry(schema);
-      const enumOptions = computeEnumOptions(schema, options, schemaUtils);
+      const enumOptions = computeEnumOptions(schema, schemaUtils);
       expect(enumOptions.map(({ label, value }) => ({ label, value }))).toEqual([
         { label: 'Cat', value: 'cat' },
         { label: 'Dog', value: 'dog' },
@@ -986,8 +987,8 @@ describe('LayoutMultiSchemaField', () => {
       ];
       const schema: RJSFSchema = { discriminator: { propertyName: 'kind' }, oneOf: options };
       const { schemaUtils } = getTestRegistry(schema);
-      const typed = computeEnumOptions(schema, options, schemaUtils, undefined, { kind: 'cat', meow: 'p' });
-      const typedOn = computeEnumOptions(schema, options, schemaUtils, undefined, { kind: 'cat', meow: 'pu' });
+      const typed = computeEnumOptions(schema, schemaUtils, undefined, { kind: 'cat', meow: 'p' });
+      const typedOn = computeEnumOptions(schema, schemaUtils, undefined, { kind: 'cat', meow: 'pu' });
       expect(typed.map(({ value }) => value)).toEqual(['cat', 'dog']);
       expect(typed[0].schema).toBe(schemaUtils.retrieveSchema(options[0], { kind: 'cat', meow: 'p' }));
       expect(typedOn[0].schema).toBe(typed[0].schema);
@@ -995,7 +996,7 @@ describe('LayoutMultiSchemaField', () => {
     });
     test('throws error when no enumOptions are generated', () => {
       const { schemaUtils } = getTestRegistry({});
-      expect(() => computeEnumOptions({}, [], schemaUtils)).toThrow('No enumOptions were computed from the schema {}');
+      expect(() => computeEnumOptions({}, schemaUtils)).toThrow('No enumOptions were computed from the schema {}');
     });
   });
   describe('getSelectedOption', () => {

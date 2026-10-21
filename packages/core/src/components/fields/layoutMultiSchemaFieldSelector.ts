@@ -61,8 +61,7 @@ export function getSelectedOption<S extends StrictRJSFSchema = RJSFSchema>(
 
 /** Computes the `enumOptions` array from the schema and options.
  *
- * @param schema - The schema that contains the `options`
- * @param options - The options from the `schema`
+ * @param schema - The schema whose `oneOf`/`anyOf` holds the options
  * @param schemaUtils - The SchemaUtilsType object used to call retrieveSchema,
  * @param [uiSchema] - The optional uiSchema for the schema
  * @param [formData] - The optional formData associated with the schema
@@ -73,35 +72,29 @@ export function computeEnumOptions<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(
-  schema: S,
-  options: S[],
-  schemaUtils: SchemaUtilsType<T, S, F>,
-  uiSchema?: UiSchema<T, S, F>,
-  formData?: T,
-): EnumOptionsType<S>[] {
+>(schema: S, schemaUtils: SchemaUtilsType<T, S, F>, uiSchema?: UiSchema<T, S, F>, formData?: T): EnumOptionsType<S>[] {
   let selectorField = getDiscriminatorFieldFromSchema<S>(schema);
   if (uiSchema) {
     const { optionsSchemaSelector = selectorField } = getUiOptions<T, S, F>(uiSchema);
     selectorField = optionsSchemaSelector;
   }
-  const realOptions = options.map((opt: S) => {
-    const option = schemaUtils.retrieveSchema(opt, formData);
-    if (!selectorField) {
-      return option;
-    }
-    const written = option[PROPERTIES_KEY]?.[selectorField];
-    const selector = getOptionSelectorSchema<S>(option, selectorField, (ref) =>
-      schemaUtils.retrieveSchema(ref, getByPath(formData, selectorField)),
-    );
-    // The option keeps the identity `retrieveSchema()` gives it where its selector is read as written
-    return selector === undefined || selector === written
-      ? option
-      : { ...option, [PROPERTIES_KEY]: { ...option[PROPERTIES_KEY], [selectorField]: selector } };
-  });
   let tempSchema = schema;
   const xxxOfKey = getXxxOfKey<S>(schema);
   if (xxxOfKey) {
+    const realOptions = ((schema[xxxOfKey] ?? []) as S[]).map((opt: S) => {
+      const option = schemaUtils.retrieveSchema(opt, formData);
+      if (!selectorField) {
+        return option;
+      }
+      const written = option[PROPERTIES_KEY]?.[selectorField];
+      const selector = getOptionSelectorSchema<S>(option, selectorField, (ref) =>
+        schemaUtils.retrieveSchema(ref, getByPath(formData, selectorField)),
+      );
+      // The option keeps the identity `retrieveSchema()` gives it where its selector is read as written
+      return selector === undefined || selector === written
+        ? option
+        : { ...option, [PROPERTIES_KEY]: { ...option[PROPERTIES_KEY], [selectorField]: selector } };
+    });
     tempSchema = { ...schema, [xxxOfKey]: realOptions };
   }
   const enumOptions = optionsList<T, S, F>(tempSchema, uiSchema);

@@ -26,8 +26,7 @@ import {
 
 /** Returns the field's `uiSchema` without the `field` and `fieldReplacesAnyOrOneOf` that had `SchemaField` render this
  * field in place of the options, in either spelling. A layout grid writes them into a cell's `uiSchema` itself, and
- * they mean nothing to the selector widget or to the option a switch selects, whose uiSchema falls back to this one.
- * The original object is returned when there is nothing to strip, so the memo of it keeps its identity
+ * they mean nothing to the selector widget or to the option a switch selects, whose uiSchema falls back to this one
  *
  * @param uiSchema - The uiSchema of the field
  * @returns - The uiSchema without the directives that named this field
@@ -38,19 +37,11 @@ function omitFieldDirectives<T, S extends StrictRJSFSchema, F extends FormContex
   if (!uiSchema) {
     return uiSchema;
   }
-  const rawUiOptions = uiSchema[UI_OPTIONS_KEY];
-  const uiOptions = isObject(rawUiOptions) ? rawUiOptions : undefined;
-  const namesField =
-    UI_FIELD_KEY in uiSchema ||
-    'ui:fieldReplacesAnyOrOneOf' in uiSchema ||
-    (uiOptions !== undefined && ('field' in uiOptions || 'fieldReplacesAnyOrOneOf' in uiOptions));
-  if (!namesField) {
-    return uiSchema;
-  }
+  const uiOptions = uiSchema[UI_OPTIONS_KEY];
   const strippedUiSchema: UiSchema<T, S, F> = { ...uiSchema };
   delete strippedUiSchema[UI_FIELD_KEY];
   delete strippedUiSchema['ui:fieldReplacesAnyOrOneOf'];
-  if (uiOptions) {
+  if (isObject(uiOptions)) {
     const { field: _field, fieldReplacesAnyOrOneOf: _fieldReplacesAnyOrOneOf, ...selectorUiOptions } = uiOptions;
     strippedUiSchema[UI_OPTIONS_KEY] = selectorUiOptions;
   }
@@ -99,8 +90,8 @@ export default function LayoutMultiSchemaField<
   const uiSchema = useMemo(() => omitFieldDirectives<T, S, F>(namingUiSchema), [namingUiSchema]);
   const keyword = getXxxOfKey<S>(schema) ?? ONE_OF_KEY;
   const enumOptions = useMemo(
-    () => computeEnumOptions(schema, (schema[keyword] ?? []) as S[], schemaUtils, uiSchema, formData),
-    [schema, keyword, schemaUtils, uiSchema, formData],
+    () => computeEnumOptions(schema, schemaUtils, uiSchema, formData),
+    [schema, schemaUtils, uiSchema, formData],
   );
   const firstOption = useMemo(() => getFirstOption<T, S, F>(schema, schemaUtils), [schema, schemaUtils]);
   const allUiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);

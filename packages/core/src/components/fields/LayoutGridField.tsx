@@ -676,7 +676,7 @@ type LayoutGridFieldComponentProps<
  * to be the dotted-path to the field in the schema. Otherwise, we extract the `name`, and optional `render` and all
  * other props. If `name` does not exist and there is an optional `render`, we return the `render` component with only
  * specified props for that component. If `name` exists, we take the name, the initial & root schemas and the formData
- * and get the destination schema, is required state and optional oneOf/anyOf options for it. If the destination
+ * and get the destination schema, is required state and whether its oneOf/anyOf has a discriminator. If the destination
  * schema was located, then a `SchemaField` will be rendered with the `uiSchema`, `errorSchema`, `fieldPath` and
  * `formData` drilled down to the dotted-path field, spreading any other props from `gridSchema` into the `ui:options`.
  * A destination schema with discriminated oneOf/anyOf options has its `uiSchema` name the `LayoutMultiSchemaField`,
