@@ -344,6 +344,37 @@ export function createUiState() {
       ({ selections, expanded } = snapshot);
       notify();
     },
+    /** Settles a move at `container` that `transformChange` rewrote, key by key, as `fateOf` says of each: one the
+     * form holds the moved item under keeps the moved state, one holding the item it held before the move takes back
+     * the state from before, `unmoved`, and any other key loses its state, so its data is matched again
+     */
+    settleMove: (
+      container: FieldPath,
+      unmoved: UiStateSnapshot,
+      fateOf: (key: string) => 'moved' | 'unmoved' | 'none',
+    ) => {
+      const containerSegments = fieldPathToList(container);
+      const keyOf = (path: FieldPath) => {
+        const segments = fieldPathToList(path);
+        return segments.length > containerSegments.length && isPathPrefix(containerSegments, segments)
+          ? String(segments[containerSegments.length])
+          : undefined;
+      };
+      const isKept = (path: FieldPath) => {
+        const key = keyOf(path);
+        return key === undefined || fateOf(key) === 'moved';
+      };
+      const isRestored = (path: FieldPath) => {
+        const key = keyOf(path);
+        return key !== undefined && fateOf(key) === 'unmoved';
+      };
+      selections = new Map([
+        ...[...selections].filter(([path]) => isKept(path)),
+        ...[...unmoved.selections].filter(([path]) => isRestored(path)),
+      ]);
+      expanded = new Set([...[...expanded].filter(isKept), ...[...unmoved.expanded].filter(isRestored)]);
+      notify();
+    },
     /** Moves the selections and expansions under the array or object at `container` as its keys moved */
     move: (container: FieldPath, newKeyOf: KeyMove) => {
       const containerSegments = fieldPathToList(container);

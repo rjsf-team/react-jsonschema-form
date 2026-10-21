@@ -9,6 +9,7 @@ import type {
 } from '@rjsf/utils';
 import {
   callWithDeferredThrow,
+  deepEquals,
   deepEqualsUndefinedAsMissing,
   propertyToPath,
   ROOT_FIELD_PATH,
@@ -16,6 +17,7 @@ import {
   fieldPathFromList,
   fieldPathToId,
   fieldPathToList,
+  getByPath,
 } from '@rjsf/utils';
 
 import isDevelopment from '../isDevelopment.ts';
@@ -472,7 +474,9 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     // The selections and expansions under keys the change moves, or under a property it removes, move before it is
     // applied, so the sanitize reads them where the change puts the data; a change the form refuses puts them back
     const uiMove = uiStateMoveOf(move, newValue, path);
+    const containerPath = uiMove && fieldPathToList(uiMove.container);
     deliver(() => {
+      const before = containerPath && getAt<unknown>(current().formData, containerPath);
       const unmoved = uiMove && uiState.save();
       if (uiMove) {
         uiState.move(uiMove.container, uiMove.newKeyOf);
@@ -514,6 +518,17 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
         }
         if (unmoved && edit.isRefused) {
           uiState.restore(unmoved);
+        } else if (uiMove && unmoved && containerPath && edit.edited) {
+          // A rewritten move put the items where the rewrite says, which `ArrayField` reads the same way for its rows
+          const kept = getAt<unknown>(committed.formData, containerPath);
+          const moved = getAt<unknown>(edit.edited.formData, containerPath);
+          uiState.settleMove(uiMove.container, unmoved, (key) => {
+            const held = getByPath(kept, key);
+            if (deepEquals(held, getByPath(moved, key))) {
+              return 'moved';
+            }
+            return deepEquals(held, getByPath(before, key)) ? 'unmoved' : 'none';
+          });
         }
         props.onChange?.(toIChangeEvent(committed), id);
       } catch (error) {
