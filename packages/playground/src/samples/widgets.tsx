@@ -297,7 +297,7 @@ const widgets: Sample = {
       },
     },
   },
-  formData: {
+  initialFormData: {
     stringFormats: {
       email: 'chuck@norris.net',
       uri: 'http://chucknorris.com/',

@@ -11,6 +11,7 @@ import {
   PROPERTIES_KEY,
   REF_KEY,
   UI_DEFINITIONS_KEY,
+  UI_GLOBAL_OPTIONS_KEY,
 } from '../constants.ts';
 import constIsAjvDataReference from '../constIsAjvDataReference.ts';
 import deepEquals from '../deepEquals.ts';
@@ -29,6 +30,7 @@ import isConstant from '../isConstant.ts';
 import isConstantOptionList from '../isConstantOptionList.ts';
 import isConstantSelect from '../isConstantSelect.ts';
 import isFixedItems from '../isFixedItems.ts';
+import isFormDataAvailable from '../isFormDataAvailable.ts';
 import isObject, { isSchemaObject } from '../isObject.ts';
 import isPlainObject from '../isPlainObject.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
@@ -39,6 +41,7 @@ import optionsList from '../optionsList.ts';
 import { getByPath } from '../pathUtils.ts';
 import resolveUiSchema from '../resolveUiSchema.ts';
 import setOwn from '../setOwn.ts';
+import { isOptionalDataControlsType } from '../shouldRenderOptionalField.ts';
 import toConstant from '../toConstant.ts';
 import type {
   CustomMergeAllOf,
@@ -46,6 +49,7 @@ import type {
   FormContextType,
   GenericObjectType,
   GetDefaultFormStateProps,
+  GlobalUISchemaOptions,
   RJSFSchema,
   SchemaContext,
   StrictRJSFSchema,
@@ -210,31 +214,30 @@ export function computeDefaultBasedOnSchemaTypeAndDefaults<T = unknown, S extend
  * @param emptyObjectFields - How to treat an empty object field, stated by the caller rather than read off the
  *        context, since the `additionalProperties` pass deliberately does not apply the form's setting
  * @param isConst - Optional flag, if true, indicates that the schema has a const property defined, thus we should always return the computedDefault since it's coming from the const.
- * @param isNullType - The type of the schema is null
+ * @param holdsNull - Whether `computedDefault` holds the `null` a missing value of a `null` schema is filled in as,
+ *        itself or under a property of the objects along the way, see `ComputeDefaultsProps.onNullFill`. It is added
+ *        like a const, with those objects, whatever `emptyObjectFields` says: that `null` is the one value the field
+ *        rendered for the schema can hold, and the other defaults the objects hold were already left out by this rule
  */
 function maybeAddDefaultToObject<T = unknown>(
   acc: GenericObjectType,
   key: string,
-  computedDefault: T | T[] | undefined,
+  computedDefault: T | T[] | null | undefined,
   includeUndefinedValues: boolean | 'excludeObjectChildren',
   isParentRequired?: boolean,
   requiredFields: string[] = [],
   emptyObjectFields: NonNullable<DefaultFormStateBehavior['emptyObjectFields']> = 'populateAllDefaults',
   isConst = false,
-  isNullType = false,
+  holdsNull = false,
 ) {
-  if (includeUndefinedValues === true || isConst) {
+  if (includeUndefinedValues === true || isConst || holdsNull) {
     // If includeUndefinedValues is explicitly true
     // Or if the schema has a const property defined, then we should always return the computedDefault since it's coming from the const.
     setOwn(acc, key, computedDefault);
   } else if (includeUndefinedValues === 'excludeObjectChildren') {
     // Fix for Issue #4709: When in 'excludeObjectChildren' mode, don't set primitive fields to empty objects
     // Only add the computed default if it's not an empty object placeholder for a primitive field
-    if (
-      (isNullType && computedDefault !== undefined) ||
-      !isObject(computedDefault) ||
-      Object.keys(computedDefault).length > 0
-    ) {
+    if (!isObject(computedDefault) || Object.keys(computedDefault).length > 0) {
       setOwn(acc, key, computedDefault);
     }
     // If computedDefault is an empty object {}, don't add it - let the field stay undefined
@@ -283,12 +286,24 @@ interface ComputeDefaultsProps<
 > extends Omit<GetDefaultFormStateProps<T, S, F>, 'schema' | 'formData'> {
   /** Any defaults provided by the parent field in the schema */
   parentDefaults?: T;
+  /** Whether the schema is the `anyOf`/`oneOf` option a field renders, whose `null` option renders no field and so is
+   * left without a value
+   */
+  isRenderedOption?: boolean;
   /** The current formData, if any, onto which to provide any missing defaults */
   rawFormData?: T;
   /** Optional flag, if true, indicates this schema was required in the parent schema. */
   required?: boolean;
   /** Optional flag, if true, indicates this schema was required because it is the root. */
   requiredAsRoot?: boolean;
+  /** Called when the defaults computed hold the `null` a missing value of a `null` schema is filled in as, itself or
+   * under a property of the objects along the way, wherever the schema brings that property in from: its own
+   * `properties`, a `$ref`, `allOf`, `if`/`then`/`else`, `dependencies` or `additionalProperties`, or an item of an
+   * array the data holds. The items a `minItems` adds do not report it, since the data holds none of them yet
+   */
+  onNullFill?: () => void;
+  /** What the `null` fills of one `getDefaultFormState()` call share, see `NullFills` */
+  nullFills?: NullFills;
   /** Optional flag, if true, It will merge defaults into formData.
    *  The formData should take precedence unless it's not valid. This is useful when for example the value from formData does not exist in the schema 'enum' property, in such cases we take the value from the defaults because the value from the formData is not valid.
    */
@@ -305,6 +320,155 @@ interface ComputeDefaultsProps<
  */
 function withDefaultOf(parent: GenericObjectType, renderedOption: GenericObjectType): GenericObjectType {
   return DEFAULT_KEY in parent ? mergeSchemas({ [DEFAULT_KEY]: parent[DEFAULT_KEY] }, renderedOption) : renderedOption;
+}
+
+/** What the `null` fills of one `getDefaultFormState()` call share as they reach every level */
+interface NullFills {
+  /** The global UI options of the root uiSchema, which decide where a field renders an object with the Optional Data
+   * Controls, whose fields render only once the object has a value
+   */
+  globalUiOptions?: GlobalUISchemaOptions;
+  /** For each object of the form data that holds the value of a `null` schema's field as `undefined`, those
+   * properties. The data's `undefined` is kept over a default everywhere else, so their `null`s are put in once the
+   * defaults are merged into the data: the field of a `null` schema holds `null` whatever it was given
+   */
+  overUndefined: Map<object, Set<string>>;
+  /** Set below an optional object the Optional Data Controls render while it has no value: none of its fields render
+   * until the user adds it, so none of their `null`s is filled in, and the object stays out of the defaults as one with
+   * no `null` schema in it would
+   */
+  isCollapsed?: boolean;
+}
+
+/** `context` with settings under which the defaults of a schema hold nothing but its `null` fills and the objects
+ * leading to them
+ *
+ * @param context - The `SchemaContext` the defaults are computed in
+ * @returns - The context for the `null` fills alone
+ */
+function nullsOnlyContext<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+): SchemaContext<S, F> {
+  return {
+    ...context,
+    defaultFormStateBehavior: {
+      ...context.defaultFormStateBehavior,
+      emptyObjectFields: 'skipDefaults',
+      constAsDefaults: 'never',
+    },
+  };
+}
+
+/** What in `schema` a `null` fill can come from: the `null` type, named somewhere in it, or else a `$ref`, which can
+ * lead to one elsewhere in the root; worked out once for each schema
+ */
+type NullSource = 'nullType' | 'ref' | 'none';
+const nullSourceMemo = new WeakMap<object, NullSource>();
+function nullSourceOf(schema: unknown): NullSource {
+  if (typeof schema !== 'object' || schema === null) {
+    return 'none';
+  }
+  const memoized = nullSourceMemo.get(schema);
+  if (memoized !== undefined) {
+    return memoized;
+  }
+  // Recorded first, so a schema that holds itself is answered from the memo
+  nullSourceMemo.set(schema, 'none');
+  const type = Array.isArray(schema) ? undefined : Reflect.get(schema, 'type');
+  let source: NullSource = 'none';
+  if (type === 'null' || (Array.isArray(type) && type.includes('null'))) {
+    source = 'nullType';
+  } else {
+    if (!Array.isArray(schema) && typeof Reflect.get(schema, REF_KEY) === 'string') {
+      source = 'ref';
+    }
+    for (const value of Object.values(schema)) {
+      const valueSource = nullSourceOf(value);
+      if (valueSource === 'nullType') {
+        source = valueSource;
+        break;
+      }
+      if (valueSource === 'ref') {
+        source = valueSource;
+      }
+    }
+  }
+  nullSourceMemo.set(schema, source);
+  return source;
+}
+
+/** Whether a `null` fill can come from `schema`: it names the `null` type somewhere in it, or it holds a `$ref` and the
+ * root names that type anywhere, which the `$ref` may lead to
+ *
+ * @param schema - The schema a `null` fill would come from
+ * @param rootSchema - The root schema, which the `$ref`s in `schema` resolve against
+ * @returns - False when no `null` fill can come from `schema`
+ */
+function mayHoldNullType(schema: unknown, rootSchema: unknown): boolean {
+  const source = nullSourceOf(schema);
+  return source === 'nullType' || (source === 'ref' && nullSourceOf(rootSchema) === 'nullType');
+}
+
+/** Records the property `key` of `formData`, whose defaults hold a `null` fill, for the `null` to go over the
+ * `undefined` the data holds it as, see `NullFills.overUndefined`, when the property is itself the field of a `null`
+ * schema: that `null` is the one value the field holds. A property the data does not hold takes it from the merge
+ * already, and an object or array held as `undefined` keeps it, with every default of what it holds, as one holding
+ * no `null` schema does
+ *
+ * @param nullFills - The `null` fills of the call
+ * @param formData - The object of the form data the property belongs to
+ * @param key - The property
+ * @param defaults - The property's defaults
+ */
+function fillOverUndefined(nullFills: NullFills | undefined, formData: unknown, key: string, defaults: unknown) {
+  if (
+    nullFills &&
+    defaults === null &&
+    isObject(formData) &&
+    Object.hasOwn(formData, key) &&
+    formData[key] === undefined
+  ) {
+    const fills = nullFills.overUndefined.get(formData) ?? new Set<string>();
+    fills.add(key);
+    nullFills.overUndefined.set(formData, fills);
+  }
+}
+
+/** Puts the `null` of each `null` schema's field the form data holds as `undefined` into `merged`, see
+ * `NullFills.overUndefined`. `merged` holds the keys of `formData` at every level, so the two are walked together. An
+ * object or array of `merged` is copied before a `null` goes into it, since a shallow merge hands back the caller's own
+ *
+ * @param merged - The defaults merged into the form data
+ * @param formData - The form data, whose objects `nullFills` names
+ * @param nullFills - The `null` fills of the call
+ * @returns - `merged` with the `null`s in, or `merged` itself when it takes none
+ */
+function withNullFills<V>(merged: V, formData: unknown, nullFills: NullFills): V {
+  if (
+    nullFills.overUndefined.size === 0 ||
+    typeof merged !== 'object' ||
+    merged === null ||
+    typeof formData !== 'object' ||
+    formData === null
+  ) {
+    return merged;
+  }
+  const fills = nullFills.overUndefined.get(formData);
+  let filled = merged;
+  for (const [key, value] of Object.entries(formData)) {
+    const current: unknown = Reflect.get(merged, key);
+    const next =
+      fills?.has(key) && Object.hasOwn(merged, key) && current === undefined
+        ? null
+        : withNullFills(current, value, nullFills);
+    if (next !== current) {
+      if (filled === merged) {
+        filled = Array.isArray(merged) ? Object.assign([], merged) : { ...merged };
+      }
+      Reflect.set(filled, key, next);
+    }
+  }
+  return filled;
 }
 
 /** Returns the defaults the fold computed as the form data type the caller declared. Nothing at runtime can check a
@@ -375,6 +539,8 @@ const NO_OPTIONS: OptionState = { selections: new Map(), chosen: new Set() };
 interface MemoEntry {
   readonly inputs: readonly unknown[];
   readonly value: unknown;
+  /** Whether `value` holds a `null` fill, which a hit reports again */
+  readonly holdsNull: boolean;
 }
 
 /** The props the fold hands each field: those of `computeDefaults()`, holding the data as it comes */
@@ -653,18 +819,30 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const track = (computed: DefaultsView<S>) => {
     lastView = computed;
   };
-  const passProps = { ...props, memo: new Map<string, MemoEntry>(), track };
-  let value = foldView(context, view, passProps);
+  // Only the pass whose value is kept reports its `null` fill
+  let holdsNull = false;
+  const onNullFill = () => {
+    holdsNull = true;
+  };
+  const passProps = { ...props, memo: new Map<string, MemoEntry>(), track, onNullFill };
+  const fold = (passView: DefaultsView<S>) => {
+    holdsNull = false;
+    return foldView(context, passView, passProps);
+  };
+  let value = fold(view);
   const seen = new Set([qualifiedDependencies(lastView, data)]);
   for (;;) {
     const depData = { ...(isObject(value) ? value : {}), ...(isObject(data) ? data : {}) };
     const qualified = qualifiedDependencies(lastView, depData);
     if (seen.has(qualified)) {
+      if (holdsNull) {
+        props.onNullFill?.();
+      }
       return { value, view };
     }
     seen.add(qualified);
     view = settle(context, field, data, depData);
-    value = foldView(context, view, passProps);
+    value = fold(view);
   }
 }
 
@@ -720,17 +898,29 @@ function foldChild<T, S extends StrictRJSFSchema, F extends FormContextType>(
     props.uiSchema,
     props.uiSchemaDefinitions,
     props.shouldMergeDefaultsIntoFormData,
+    props.isRenderedOption,
+    props.nullFills?.isCollapsed,
   ];
   const leaf = leafOf(child);
   for (const entry of [memo?.get(memoKey), leaf && leafDefaults.get(leaf)]) {
     if (entry?.inputs.every((input, index) => Object.is(input, inputs[index]))) {
+      if (entry.holdsNull) {
+        props.onNullFill?.();
+      }
       return entry.value;
     }
   }
-  const { value } = foldField<T, S, F>(context, child, { ...props, memo: undefined });
-  memo?.set(memoKey, { inputs, value });
+  let holdsNull = false;
+  const onNullFill = () => {
+    holdsNull = true;
+  };
+  const { value } = foldField<T, S, F>(context, child, { ...props, memo: undefined, onNullFill });
+  if (holdsNull) {
+    props.onNullFill?.();
+  }
+  memo?.set(memoKey, { inputs, value, holdsNull });
   if (leaf !== undefined && (typeof value !== 'object' || value === null)) {
-    leafDefaults.set(leaf, { inputs, value });
+    leafDefaults.set(leaf, { inputs, value, holdsNull });
   }
   return value;
 }
@@ -815,6 +1005,7 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
           initialDefaultsGenerated,
           uiSchema: getStaticItemsUiSchema<T, S, F>(uiSchema, idx),
           uiSchemaDefinitions,
+          nullFills: props.nullFills,
         },
         props.memo,
       ),
@@ -853,6 +1044,10 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const defaultBasedOnSchemaType = typeDefaults<T, S, F>(context, view, props, defaults, isWholeValue);
 
   let defaultsWithFormData = defaultBasedOnSchemaType ?? defaults;
+  if ((defaultsWithFormData === undefined || defaultsWithFormData === null) && rendersNull(context, view, props)) {
+    defaultsWithFormData = null;
+    props.onNullFill?.();
+  }
   // if shouldMergeDefaultsIntoFormData is true, then merge the defaults into the formData.
   if (shouldMergeDefaultsIntoFormData) {
     const { arrayMinItems = {} } = defaultFormStateBehavior ?? {};
@@ -878,6 +1073,31 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
   }
 
   return defaultsWithFormData;
+}
+
+/** Whether the field of `view` holds the `null` a `null` schema allows as its one value, so a missing value is that
+ * value, as is its `default: null`. An option of `type: 'null'` itself is the exception, since `MultiSchemaField`
+ * renders no field for it; one that is `null` only through a `type` list renders `NullField`. The type is read off the
+ * schema as the field renders it, its `allOf` and `if` merged, and an optional object the Optional Data Controls show
+ * collapsed renders none of its fields
+ */
+function rendersNull<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  view: DefaultsView<S>,
+  { isRenderedOption, nullFills }: FoldProps<T, S, F>,
+): boolean {
+  if (nullFills?.isCollapsed) {
+    return false;
+  }
+  const { schema } = view;
+  const rootSchema = view.graph.rawRoot;
+  const rendered =
+    (ALL_OF_KEY in schema || IF_KEY in schema) &&
+    getSchemaType<S>(schema) === undefined &&
+    mayHoldNullType(schema, rootSchema)
+      ? retrieveSchema<unknown, S, F>(context, schema, rootSchema, view.data)
+      : schema;
+  return !(isRenderedOption && rendered.type === 'null') && getSchemaType<S>(rendered) === 'null';
 }
 
 /** Returns `value` with every array and plain object in it copied, as `ownValue()` copies a `default`. Anything else,
@@ -992,7 +1212,11 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const { graph } = field;
   const rootSchema = graph.rawRoot;
   const remaining = withoutKeys(schema, key);
-  const branchProps = { ...props, uiSchema: getOptionUiSchema<T, S, F>(props.uiSchema, key, index) };
+  const branchProps = {
+    ...props,
+    uiSchema: getOptionUiSchema<T, S, F>(props.uiSchema, key, index),
+    isRenderedOption: true,
+  };
   const chosen = new Set(view.options.chosen).add(options);
   // Which of the two the field is gets asked of it with its `allOf` merged, as the fields ask it, since its `type` can
   // come through one. A field naming one type already has it, which an `allOf` can't change, so it is spared the merge
@@ -1128,6 +1352,52 @@ function innerItem<S extends StrictRJSFSchema>(
   return { seeds: [], edge: 'item', fallback: {} };
 }
 
+/** The `null` fills to compute the defaults of a property of an object with: `nullFills` itself, or, for an optional
+ * object the Optional Data Controls render while it has no value, a copy marked collapsed, see `NullFills.isCollapsed`.
+ * No value is what the controls read as none: an empty object counts, as `undefined` and `null` do. Asked of the
+ * uiSchema the field renders with, the `ui:definitions` entry of a definition the property references merged in, as
+ * `foldView()` merges it for the property's own field
+ *
+ * @param context - The `SchemaContext` the defaults are computed in
+ * @param child - The property's field
+ * @param propertySchema - The property's schema as the object declares it
+ * @param props - The property's own uiSchema, the `ui:definitions`, the call's `nullFills`, whether the object requires
+ *        the property, and the property's form data
+ * @returns - The `null` fills for the property
+ */
+function nullFillsForProperty<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  child: DefaultsField<S>,
+  propertySchema: S,
+  {
+    uiSchema,
+    uiSchemaDefinitions,
+    nullFills,
+    isRequired,
+    formData,
+  }: Pick<FoldProps<T, S, F>, 'uiSchema' | 'uiSchemaDefinitions' | 'nullFills'> & {
+    isRequired?: boolean;
+    formData: unknown;
+  },
+): NullFills | undefined {
+  const rootSchema = child.graph.rawRoot;
+  const isCollapsed =
+    nullFills !== undefined &&
+    !nullFills.isCollapsed &&
+    !isRequired &&
+    !isFormDataAvailable(formData) &&
+    mayHoldNullType(propertySchema, rootSchema) &&
+    isOptionalDataControlsType<T, S, F>(
+      () => settle(context, { ...child, retrieves: true }, undefined, undefined).schema,
+      uiSchemaDefinitions
+        ? resolveUiSchema<T, S, F>(propertySchema, uiSchema, { rootSchema, uiSchemaDefinitions })
+        : uiSchema,
+      nullFills.globalUiOptions,
+      rootSchema,
+    );
+  return isCollapsed ? { ...nullFills, isCollapsed } : nullFills;
+}
+
 /** Returns the child of an array field at the item `getInnerSchemaForArrayItem()` picks */
 function itemField<S extends StrictRJSFSchema>(
   view: DefaultsView<S>,
@@ -1162,6 +1432,8 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     uiSchema,
     uiSchemaDefinitions,
     memo,
+    onNullFill,
+    nullFills,
   } = props;
   const formData = isObject(rawFormData) ? rawFormData : {};
   const rootSchema = view.field.graph.rawRoot;
@@ -1182,7 +1454,30 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     initialDefaultsGenerated,
     uiSchema: getByPath<UiSchema<T, S, F> | undefined>(uiSchema, uiSchemaKey),
     uiSchemaDefinitions,
+    nullFills,
   });
+  // Computes a child's defaults, reporting whether they hold a `null` fill
+  const foldReporting = (
+    childContext: SchemaContext<S, F>,
+    memoKey: string,
+    child: DefaultsField<S>,
+    childFoldProps: FoldProps<T, S, F>,
+  ) => {
+    let holdsNull = false;
+    const value = foldChild<T, S, F>(
+      childContext,
+      memoKey,
+      child,
+      {
+        ...childFoldProps,
+        onNullFill: () => {
+          holdsNull = true;
+        },
+      },
+      memo,
+    );
+    return { value, holdsNull };
+  };
   for (const key of Object.keys(schema.properties ?? {})) {
     const propertySchema = getPropertySchema<S>(schema, key);
     const { seeds, edge } = childSeeds(view, key);
@@ -1203,26 +1498,72 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     // property, rather than a dynamically-named entry.
     const addedByAdditionalProperty =
       isObject(propertySchema) && Boolean(Reflect.get(propertySchema, ADDITIONAL_PROPERTY_FLAG));
+    const child = defaultsChild(view, seeds, edge, propertySchema);
+    const ownProps = childProps(key, addedByAdditionalProperty ? ADDITIONAL_PROPERTIES_KEY : key);
+    // An optional object the Optional Data Controls render while it has no value renders none of its fields, so the
+    // `null` of none of them is filled in until the user adds it
+    const propertyNullFills = nullFillsForProperty<T, S, F>(context, child, propertySchema, {
+      uiSchema: ownProps.uiSchema,
+      uiSchemaDefinitions,
+      nullFills,
+      isRequired: ownProps.required,
+      formData: ownProps.rawFormData,
+    });
     // Compute the defaults for this node, with the parent defaults we might have from a previous run: defaults[key].
-    const computedDefault = foldChild<T, S, F>(
+    let property = foldReporting(
       context,
-      `property:${key}`,
-      defaultsChild(view, seeds, edge, propertySchema),
-      childProps(key, addedByAdditionalProperty ? ADDITIONAL_PROPERTIES_KEY : key),
-      memo,
+      propertyNullFills === nullFills ? `property:${key}` : `collapsed:${key}`,
+      child,
+      { ...ownProps, nullFills: propertyNullFills },
     );
+    if (propertyNullFills !== nullFills) {
+      // Its own defaults can add it all the same, and an object added with a value renders its fields, whose `null`s
+      // it then holds, as it does once the user adds it
+      const added: GenericObjectType = {};
+      maybeAddDefaultToObject(
+        added,
+        key,
+        property.value,
+        includeUndefinedValues,
+        required,
+        schema.required,
+        defaultFormStateBehavior?.emptyObjectFields,
+        hasConst,
+      );
+      if (isFormDataAvailable(added[key])) {
+        property = foldReporting(context, `property:${key}`, child, ownProps);
+      }
+    }
+    if (property.holdsNull) {
+      fillOverUndefined(nullFills, rawFormData, key, property.value);
+    }
 
     maybeAddDefaultToObject(
       computed,
       key,
-      computedDefault,
+      property.value,
       includeUndefinedValues,
       required,
       schema.required,
       defaultFormStateBehavior?.emptyObjectFields,
       hasConst,
-      isObject(readProperty) && readProperty.type === 'null',
+      property.holdsNull,
     );
+    if (property.holdsNull) {
+      onNullFill?.();
+    }
+  }
+  // An `allOf` or `if` the field's plan left unmerged still brings its properties into the field rendered for it
+  if (
+    !view.field.retrieves &&
+    (ALL_OF_KEY in view.schema || IF_KEY in view.schema) &&
+    mayHoldNullType(view.schema, rootSchema)
+  ) {
+    branchNullFills<T, S, F>(context, view, schema, props, foldReporting).forEach(({ key, value }) => {
+      setOwn(computed, key, value);
+      fillOverUndefined(nullFills, rawFormData, key, value);
+      onNullFill?.();
+    });
   }
   const { additionalProperties } = schema;
   if (additionalProperties && !initialDefaultsGenerated) {
@@ -1248,19 +1589,23 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
         .forEach((key) => keys.add(key));
     }
     keys.forEach((key) => {
-      const computedDefault = foldChild<T, S, F>(
+      const { value, holdsNull } = foldReporting(
         context,
         `additional:${key}`,
         defaultsChild(view, seedsAt(view, ADDITIONAL_PROPERTIES_KEY), 'additionalKey', additionalPropertiesSchema),
         // Matches ObjectField's convention for properties added by `additionalProperties`: they all share
         // `uiSchema.additionalProperties` rather than each having its own dynamically-named entry in `uiSchema`.
         childProps(key, ADDITIONAL_PROPERTIES_KEY),
-        memo,
       );
+      // Added whatever the form's settings say, below, so its `null` only has to reach the objects above
+      if (holdsNull) {
+        fillOverUndefined(nullFills, rawFormData, key, value);
+        onNullFill?.();
+      }
       maybeAddDefaultToObject(
         computed,
         key,
-        computedDefault,
+        value,
         includeUndefinedValues,
         required,
         formDataRequired,
@@ -1270,7 +1615,103 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
       );
     });
   }
+  // Once the form has generated its defaults, the additional properties the data holds keep the values the user left
+  // them (#3759), except for the `null` the field of a `null` schema holds, which is filled in for them as it is for
+  // the properties the schema names
+  if (
+    initialDefaultsGenerated &&
+    isSchemaObject<S>(additionalProperties) &&
+    mayHoldNullType(additionalProperties, rootSchema)
+  ) {
+    const nullsOnly = nullsOnlyContext(context);
+    const child = defaultsChild(view, seedsAt(view, ADDITIONAL_PROPERTIES_KEY), 'additionalKey', additionalProperties);
+    Object.keys(formData)
+      .filter((key) => !schema.properties || !Object.hasOwn(schema.properties, key))
+      .forEach((key) => {
+        const { value, holdsNull } = foldReporting(nullsOnly, `additionalNull:${key}`, child, {
+          rawFormData: getByPath(formData, key),
+          initialDefaultsGenerated,
+          uiSchema: getByPath<UiSchema<T, S, F> | undefined>(uiSchema, ADDITIONAL_PROPERTIES_KEY),
+          uiSchemaDefinitions,
+          nullFills,
+        });
+        if (holdsNull) {
+          setOwn(computed, key, value);
+          fillOverUndefined(nullFills, rawFormData, key, value);
+          onNullFill?.();
+        }
+      });
+  }
   return computeDefaultBasedOnSchemaTypeAndDefaults<unknown, S>(view.schema, computed);
+}
+
+/** The `null` a missing value of a `null` schema is filled in as, for each property an `allOf` or `if` of the object
+ * field `view` brings in that its plan left unmerged, and each of its own properties a branch makes `null`. The field
+ * rendered for such a property renders all the same, from the schema `SchemaField` retrieves, and a `null` schema's one
+ * value is the value it holds, so that `null` is added, with the objects that lead to it, and nothing else the
+ * branches would default.
+ *
+ * @param context - The `SchemaContext` the defaults are computed in
+ * @param view - The object field's view
+ * @param schema - The object's schema, its extra keys stubbed where the field stubs them
+ * @param props - The props of the object field
+ * @param foldReporting - Computes a child's defaults, reporting whether they hold a `null` fill
+ * @returns - The defaults of those properties that hold such a `null`
+ */
+function branchNullFills<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  view: DefaultsView<S>,
+  schema: S,
+  { rawFormData, uiSchema, uiSchemaDefinitions, nullFills }: FoldProps<T, S, F>,
+  foldReporting: (
+    childContext: SchemaContext<S, F>,
+    memoKey: string,
+    child: DefaultsField<S>,
+    childFoldProps: FoldProps<T, S, F>,
+  ) => { value: unknown; holdsNull: boolean },
+): { key: string; value: unknown }[] {
+  const formData = isObject(rawFormData) ? rawFormData : {};
+  const retrieved = settle(context, { ...view.field, retrieves: true }, view.data, view.depData, view.options);
+  const rendered = allowsAdditionalProperties<S>(retrieved.schema)
+    ? stubExistingAdditionalProperties<unknown, S, F>(context, retrieved.schema, view.graph.rawRoot, formData)
+    : retrieved.schema;
+  const nullsOnly = nullsOnlyContext(context);
+  const ownProperties = schema.properties ?? {};
+  return Object.keys(rendered.properties ?? {})
+    .filter(
+      (key) =>
+        !Object.hasOwn(ownProperties, key) ||
+        (getSchemaType<S>(getPropertySchema<S>(rendered, key)) === 'null' &&
+          getSchemaType<S>(getPropertySchema<S>(schema, key)) !== 'null'),
+    )
+    .flatMap((key) => {
+      const propertySchema = getPropertySchema<S>(rendered, key);
+      const { seeds, edge } = childSeeds(retrieved, key);
+      const child = defaultsChild(retrieved, seeds, edge, propertySchema);
+      const propertyFormData = getByPath(formData, key);
+      // As the properties the object names read theirs, an additional property the retrieve stubbed sharing one entry
+      const propertyUiSchema = getByPath<UiSchema<T, S, F> | undefined>(
+        uiSchema,
+        isObject(propertySchema) && Reflect.get(propertySchema, ADDITIONAL_PROPERTY_FLAG) === true
+          ? ADDITIONAL_PROPERTIES_KEY
+          : key,
+      );
+      const { value, holdsNull } = foldReporting(nullsOnly, `branch:${key}`, child, {
+        rawFormData: propertyFormData,
+        uiSchema: propertyUiSchema,
+        uiSchemaDefinitions,
+        // An optional object the Optional Data Controls render while it has no value is left out with its `null`s, as
+        // one the object names is: under these settings nothing else could add it
+        nullFills: nullFillsForProperty<T, S, F>(context, child, propertySchema, {
+          uiSchema: propertyUiSchema,
+          uiSchemaDefinitions,
+          nullFills,
+          isRequired: rendered.required?.includes(key),
+          formData: propertyFormData,
+        }),
+      });
+      return holdsNull ? [{ key, value }] : [];
+    });
 }
 
 /** Resolves the `uiSchema` for the array item at `idx`, mirroring `getInnerSchemaForArrayItem()`'s own fallback: for
@@ -1333,6 +1774,8 @@ function arrayDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>
     uiSchema,
     uiSchemaDefinitions,
     memo,
+    onNullFill,
+    nullFills,
   } = props;
   const { schema } = view;
   const rootSchema = view.field.graph.rawRoot;
@@ -1354,6 +1797,7 @@ function arrayDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>
     initialDefaultsGenerated,
     uiSchema: getItemUiSchemaForIndex<T, S, F>(schema, uiSchema, idx),
     uiSchemaDefinitions,
+    nullFills,
   });
 
   // Inject defaults into existing array defaults
@@ -1367,6 +1811,8 @@ function arrayDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>
           ...itemProps(idx),
           parentDefaults: item,
           rawFormData: Array.isArray(rawFormData) ? rawFormData[idx] : undefined,
+          // An item the data holds is one a field renders
+          onNullFill: Array.isArray(rawFormData) && idx < rawFormData.length ? onNullFill : undefined,
         },
         memo,
       ),
@@ -1383,7 +1829,8 @@ function arrayDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>
           context,
           `row:${idx}`,
           itemField(view, AdditionalItemsHandling.Ignore),
-          { ...itemProps(idx), rawFormData: item, parentDefaults: getByPath(defaults, idx) },
+          // An item the data holds is one a field renders
+          { ...itemProps(idx), rawFormData: item, parentDefaults: getByPath(defaults, idx), onNullFill },
           memo,
         ),
       );
@@ -1434,7 +1881,7 @@ function arrayDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>
         context,
         `filler:${i}`,
         itemField(view, AdditionalItemsHandling.Invert),
-        { ...itemProps(defaultsLength + i), parentDefaults: fillerDefault },
+        { ...itemProps(defaultsLength + i), parentDefaults: fillerDefault, nullFills: undefined },
         memo,
       ),
     );
@@ -1546,9 +1993,13 @@ export function computeDefaults<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(context: SchemaContext<S, F>, rawSchema: S, inputProps: ComputeDefaultsProps<T, S, F> = {}): T | T[] | undefined {
+>(
+  context: SchemaContext<S, F>,
+  rawSchema: S,
+  inputProps: ComputeDefaultsProps<T, S, F> = {},
+): T | T[] | null | undefined {
   const field = callRoot<S>(inputProps.rootSchema, rawSchema);
-  return asDeclared<T | T[] | undefined>(foldField<T, S, F>(context, field, inputProps).value);
+  return asDeclared<T | T[] | null | undefined>(foldField<T, S, F>(context, field, inputProps).value);
 }
 
 /** Computes the default value for objects, reading the properties `rawSchema` declares as it stands, unless it holds
@@ -1806,7 +2257,7 @@ export default function getDefaultFormState<
     // need to pass the root uiSchema's `ui:definitions` explicitly, since `ui:definitions` only ever lives at the root.
     uiSchemaDefinitions = uiSchema?.[UI_DEFINITIONS_KEY],
   }: GetDefaultFormStateProps<T, S, F>,
-): T | T[] | undefined {
+): T | T[] | null | undefined {
   if (!isObject(theSchema)) {
     throw new Error(`Invalid schema: ${String(theSchema)}`);
   }
@@ -1816,7 +2267,12 @@ export default function getDefaultFormState<
   // Get the computed defaults with 'shouldMergeDefaultsIntoFormData' set to true to merge defaults into formData.
   // This is done when for example the value from formData does not exist in the schema 'enum' property, in such
   // cases we take the value from the defaults because the value from the formData is not valid.
+  const nullFills: NullFills = {
+    globalUiOptions: getByPath<GlobalUISchemaOptions | undefined>(uiSchema, UI_GLOBAL_OPTIONS_KEY),
+    overUndefined: new Map(),
+  };
   const { value: defaults, view } = foldField<T, S, F>(context, field, {
+    nullFills,
     includeUndefinedValues,
     rawFormData: formData,
     shouldMergeDefaultsIntoFormData: true,
@@ -1829,10 +2285,16 @@ export default function getDefaultFormState<
 
   // Array form data takes the merge path below, which knows how to combine it with the defaults
   if (schema.type !== 'object' && isObject(schema.default) && isObject(defaults) && !Array.isArray(formData)) {
-    return asDeclared<T>({
-      ...defaults,
-      ...(isObject(formData) ? formData : undefined),
-    });
+    return asDeclared<T>(
+      withNullFills(
+        {
+          ...defaults,
+          ...(isObject(formData) ? formData : undefined),
+        },
+        formData,
+        nullFills,
+      ),
+    );
   }
 
   // If the formData is an object or an array, add additional properties from formData and override formData with
@@ -1841,16 +2303,20 @@ export default function getDefaultFormState<
     const { mergeDefaultsIntoFormData } = context.defaultFormStateBehavior ?? {};
     const defaultSupercedesUndefined = mergeDefaultsIntoFormData === 'useDefaultIfFormDataUndefined';
     const matchingFormData = viewFormDataMatching<T, S, F>(context, view, formData);
-    return asDeclared<T | T[] | undefined>(
-      mergeDefaultsWithFormData(
-        defaults,
-        matchingFormData,
-        true, // set to true to add any additional default array entries.
-        defaultSupercedesUndefined,
-        true, // set to true to override formData with defaults if they exist.
+    return asDeclared<T | T[] | null | undefined>(
+      withNullFills(
+        mergeDefaultsWithFormData(
+          defaults,
+          matchingFormData,
+          true, // set to true to add any additional default array entries.
+          defaultSupercedesUndefined,
+          true, // set to true to override formData with defaults if they exist.
+        ),
+        formData,
+        nullFills,
       ),
     );
   }
 
-  return asDeclared<T | T[] | undefined>(defaults);
+  return asDeclared<T | T[] | null | undefined>(defaults);
 }

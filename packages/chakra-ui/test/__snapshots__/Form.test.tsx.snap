@@ -3919,7 +3919,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field::_r_al_"
+                      id="field::_r_bt_"
                       role="group"
                     >
                       <label
@@ -3954,10 +3954,10 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                             data-state="unchecked"
                             dir="ltr"
                             for="root_option-0"
-                            id="radio-group:_r_am_:radio:0"
+                            id="radio-group:_r_bu_:radio:0"
                           >
                             <input
-                              aria-labelledby="radio-group:_r_am_:radio:label:0"
+                              aria-labelledby="radio-group:_r_bu_:radio:label:0"
                               data-ownedby="root_option"
                               id="root_option-0"
                               name="root[option]"
@@ -3974,7 +3974,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                               data-ssr=""
                               data-state="unchecked"
                               dir="ltr"
-                              id="radio-group:_r_am_:radio:control:0"
+                              id="radio-group:_r_bu_:radio:control:0"
                             />
                             <span
                               class="chakra-radio-group__itemText"
@@ -3984,7 +3984,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                               data-ssr=""
                               data-state="unchecked"
                               dir="ltr"
-                              id="radio-group:_r_am_:radio:label:0"
+                              id="radio-group:_r_bu_:radio:label:0"
                             >
                               foo
                             </span>
@@ -3998,10 +3998,10 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                             data-state="unchecked"
                             dir="ltr"
                             for="root_option-1"
-                            id="radio-group:_r_am_:radio:1"
+                            id="radio-group:_r_bu_:radio:1"
                           >
                             <input
-                              aria-labelledby="radio-group:_r_am_:radio:label:1"
+                              aria-labelledby="radio-group:_r_bu_:radio:label:1"
                               data-ownedby="root_option"
                               id="root_option-1"
                               name="root[option]"
@@ -4018,7 +4018,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                               data-ssr=""
                               data-state="unchecked"
                               dir="ltr"
-                              id="radio-group:_r_am_:radio:control:1"
+                              id="radio-group:_r_bu_:radio:control:1"
                             />
                             <span
                               class="chakra-radio-group__itemText"
@@ -4028,7 +4028,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                               data-ssr=""
                               data-state="unchecked"
                               dir="ltr"
-                              id="radio-group:_r_am_:radio:label:1"
+                              id="radio-group:_r_bu_:radio:label:1"
                             >
                               bar
                             </span>
@@ -9801,7 +9801,7 @@ exports[`radio widget with options sharing a String() in the realValue format (#
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_df_"
+            id="field::_r_eq_"
             role="group"
           >
             <div
@@ -9828,10 +9828,10 @@ exports[`radio widget with options sharing a String() in the realValue format (#
                   data-state="unchecked"
                   dir="ltr"
                   for="root-0"
-                  id="radio-group:_r_dg_:radio:__rjsf_index:0"
+                  id="radio-group:_r_er_:radio:__rjsf_index:0"
                 >
                   <input
-                    aria-labelledby="radio-group:_r_dg_:radio:label:__rjsf_index:0"
+                    aria-labelledby="radio-group:_r_er_:radio:label:__rjsf_index:0"
                     data-ownedby="root"
                     id="root-0"
                     name="root"
@@ -9848,7 +9848,7 @@ exports[`radio widget with options sharing a String() in the realValue format (#
                     data-ssr=""
                     data-state="unchecked"
                     dir="ltr"
-                    id="radio-group:_r_dg_:radio:control:__rjsf_index:0"
+                    id="radio-group:_r_er_:radio:control:__rjsf_index:0"
                   />
                   <span
                     class="chakra-radio-group__itemText"
@@ -9858,7 +9858,7 @@ exports[`radio widget with options sharing a String() in the realValue format (#
                     data-ssr=""
                     data-state="unchecked"
                     dir="ltr"
-                    id="radio-group:_r_dg_:radio:label:__rjsf_index:0"
+                    id="radio-group:_r_er_:radio:label:__rjsf_index:0"
                   >
                     Number
                   </span>
@@ -9872,10 +9872,10 @@ exports[`radio widget with options sharing a String() in the realValue format (#
                   data-state="checked"
                   dir="ltr"
                   for="root-1"
-                  id="radio-group:_r_dg_:radio:__rjsf_index:1"
+                  id="radio-group:_r_er_:radio:__rjsf_index:1"
                 >
                   <input
-                    aria-labelledby="radio-group:_r_dg_:radio:label:__rjsf_index:1"
+                    aria-labelledby="radio-group:_r_er_:radio:label:__rjsf_index:1"
                     checked=""
                     data-ownedby="root"
                     id="root-1"
@@ -9894,7 +9894,7 @@ exports[`radio widget with options sharing a String() in the realValue format (#
                     data-ssr=""
                     data-state="checked"
                     dir="ltr"
-                    id="radio-group:_r_dg_:radio:control:__rjsf_index:1"
+                    id="radio-group:_r_er_:radio:control:__rjsf_index:1"
                   >
                     <span
                       class="dot"
@@ -9908,7 +9908,7 @@ exports[`radio widget with options sharing a String() in the realValue format (#
                     data-ssr=""
                     data-state="checked"
                     dir="ltr"
-                    id="radio-group:_r_dg_:radio:label:__rjsf_index:1"
+                    id="radio-group:_r_er_:radio:label:__rjsf_index:1"
                   >
                     String
                   </span>
@@ -17986,7 +17986,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
           class="fieldset__legend emotion-1"
           data-part="legend"
           data-scope="fieldset"
-          id="fieldset::_r_2j_::legend"
+          id="fieldset::_r_2n_::legend"
         >
           <sup
             class="emotion-2"
@@ -18532,7 +18532,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
           class="fieldset__legend emotion-1"
           data-part="legend"
           data-scope="fieldset"
-          id="fieldset::_r_2o_::legend"
+          id="fieldset::_r_2t_::legend"
         >
           <sup
             class="emotion-2"
@@ -19007,7 +19007,7 @@ exports[`single fields > field with description 1`] = `
                     class="fieldset__legend emotion-4"
                     data-part="legend"
                     data-scope="fieldset"
-                    id="fieldset::_r_4k_::legend"
+                    id="fieldset::_r_4s_::legend"
                   >
                     <sup
                       class="emotion-5"
@@ -19348,7 +19348,7 @@ exports[`single fields > field with description in uiSchema 1`] = `
                     class="fieldset__legend emotion-4"
                     data-part="legend"
                     data-scope="fieldset"
-                    id="fieldset::_r_4n_::legend"
+                    id="fieldset::_r_4v_::legend"
                   >
                     <sup
                       class="emotion-5"
@@ -19689,7 +19689,7 @@ exports[`single fields > field with markdown description 1`] = `
                     class="fieldset__legend emotion-4"
                     data-part="legend"
                     data-scope="fieldset"
-                    id="fieldset::_r_4q_::legend"
+                    id="fieldset::_r_52_::legend"
                   >
                     <sup
                       class="emotion-5"
@@ -20036,7 +20036,7 @@ exports[`single fields > field with markdown description in uiSchema 1`] = `
                     class="fieldset__legend emotion-4"
                     data-part="legend"
                     data-scope="fieldset"
-                    id="fieldset::_r_4t_::legend"
+                    id="fieldset::_r_55_::legend"
                   >
                     <sup
                       class="emotion-5"
@@ -32391,7 +32391,7 @@ exports[`single fields > radio field 1`] = `
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_4d_"
+            id="field::_r_4l_"
             role="group"
           >
             <div
@@ -32418,10 +32418,10 @@ exports[`single fields > radio field 1`] = `
                   data-state="unchecked"
                   dir="ltr"
                   for="root-0"
-                  id="radio-group:_r_4e_:radio:0"
+                  id="radio-group:_r_4m_:radio:0"
                 >
                   <input
-                    aria-labelledby="radio-group:_r_4e_:radio:label:0"
+                    aria-labelledby="radio-group:_r_4m_:radio:label:0"
                     data-ownedby="root"
                     id="root-0"
                     name="root"
@@ -32438,7 +32438,7 @@ exports[`single fields > radio field 1`] = `
                     data-ssr=""
                     data-state="unchecked"
                     dir="ltr"
-                    id="radio-group:_r_4e_:radio:control:0"
+                    id="radio-group:_r_4m_:radio:control:0"
                   />
                   <span
                     class="chakra-radio-group__itemText"
@@ -32448,7 +32448,7 @@ exports[`single fields > radio field 1`] = `
                     data-ssr=""
                     data-state="unchecked"
                     dir="ltr"
-                    id="radio-group:_r_4e_:radio:label:0"
+                    id="radio-group:_r_4m_:radio:label:0"
                   >
                     Yes
                   </span>
@@ -32462,10 +32462,10 @@ exports[`single fields > radio field 1`] = `
                   data-state="unchecked"
                   dir="ltr"
                   for="root-1"
-                  id="radio-group:_r_4e_:radio:1"
+                  id="radio-group:_r_4m_:radio:1"
                 >
                   <input
-                    aria-labelledby="radio-group:_r_4e_:radio:label:1"
+                    aria-labelledby="radio-group:_r_4m_:radio:label:1"
                     data-ownedby="root"
                     id="root-1"
                     name="root"
@@ -32482,7 +32482,7 @@ exports[`single fields > radio field 1`] = `
                     data-ssr=""
                     data-state="unchecked"
                     dir="ltr"
-                    id="radio-group:_r_4e_:radio:control:1"
+                    id="radio-group:_r_4m_:radio:control:1"
                   />
                   <span
                     class="chakra-radio-group__itemText"
@@ -32492,7 +32492,7 @@ exports[`single fields > radio field 1`] = `
                     data-ssr=""
                     data-state="unchecked"
                     dir="ltr"
-                    id="radio-group:_r_4e_:radio:label:1"
+                    id="radio-group:_r_4m_:radio:label:1"
                   >
                     No
                   </span>
@@ -32840,7 +32840,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
           class="fieldset__legend emotion-1"
           data-part="legend"
           data-scope="fieldset"
-          id="fieldset::_r_3q_::legend"
+          id="fieldset::_r_41_::legend"
         >
           <sup
             class="emotion-2"
@@ -32856,7 +32856,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
             class="chakra-field__root emotion-4"
             data-part="root"
             data-scope="field"
-            id="field::_r_3r_"
+            id="field::_r_42_"
             role="group"
           >
             <label
@@ -32891,11 +32891,11 @@ exports[`single fields > radio widget with description in schema and FieldTempla
                   data-state="unchecked"
                   dir="ltr"
                   for="root-0"
-                  id="radio-group:_r_3s_:radio:0"
+                  id="radio-group:_r_43_:radio:0"
                 >
                   <input
                     aria-describedby="root__description"
-                    aria-labelledby="radio-group:_r_3s_:radio:label:0"
+                    aria-labelledby="radio-group:_r_43_:radio:label:0"
                     data-ownedby="root"
                     id="root-0"
                     name="root"
@@ -32912,7 +32912,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
                     data-ssr=""
                     data-state="unchecked"
                     dir="ltr"
-                    id="radio-group:_r_3s_:radio:control:0"
+                    id="radio-group:_r_43_:radio:control:0"
                   />
                   <span
                     class="chakra-radio-group__itemText"
@@ -32922,7 +32922,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
                     data-ssr=""
                     data-state="unchecked"
                     dir="ltr"
-                    id="radio-group:_r_3s_:radio:label:0"
+                    id="radio-group:_r_43_:radio:label:0"
                   >
                     Yes
                   </span>
@@ -32936,11 +32936,11 @@ exports[`single fields > radio widget with description in schema and FieldTempla
                   data-state="unchecked"
                   dir="ltr"
                   for="root-1"
-                  id="radio-group:_r_3s_:radio:1"
+                  id="radio-group:_r_43_:radio:1"
                 >
                   <input
                     aria-describedby="root__description"
-                    aria-labelledby="radio-group:_r_3s_:radio:label:1"
+                    aria-labelledby="radio-group:_r_43_:radio:label:1"
                     data-ownedby="root"
                     id="root-1"
                     name="root"
@@ -32957,7 +32957,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
                     data-ssr=""
                     data-state="unchecked"
                     dir="ltr"
-                    id="radio-group:_r_3s_:radio:control:1"
+                    id="radio-group:_r_43_:radio:control:1"
                   />
                   <span
                     class="chakra-radio-group__itemText"
@@ -32967,7 +32967,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
                     data-ssr=""
                     data-state="unchecked"
                     dir="ltr"
-                    id="radio-group:_r_3s_:radio:label:1"
+                    id="radio-group:_r_43_:radio:label:1"
                   >
                     No
                   </span>
@@ -39275,7 +39275,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_1o_"
+            id="field::_r_1q_"
             role="group"
           >
             <div
@@ -39302,10 +39302,10 @@ exports[`single fields > select field single choice enumDisabled using radio wid
                   data-state="unchecked"
                   dir="ltr"
                   for="root-0"
-                  id="radio-group:_r_1p_:radio:0"
+                  id="radio-group:_r_1r_:radio:0"
                 >
                   <input
-                    aria-labelledby="radio-group:_r_1p_:radio:label:0"
+                    aria-labelledby="radio-group:_r_1r_:radio:label:0"
                     data-ownedby="root"
                     id="root-0"
                     name="root"
@@ -39322,7 +39322,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
                     data-ssr=""
                     data-state="unchecked"
                     dir="ltr"
-                    id="radio-group:_r_1p_:radio:control:0"
+                    id="radio-group:_r_1r_:radio:control:0"
                   />
                   <span
                     class="chakra-radio-group__itemText"
@@ -39332,7 +39332,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
                     data-ssr=""
                     data-state="unchecked"
                     dir="ltr"
-                    id="radio-group:_r_1p_:radio:label:0"
+                    id="radio-group:_r_1r_:radio:label:0"
                   >
                     foo
                   </span>
@@ -39347,10 +39347,10 @@ exports[`single fields > select field single choice enumDisabled using radio wid
                   data-state="unchecked"
                   dir="ltr"
                   for="root-1"
-                  id="radio-group:_r_1p_:radio:1"
+                  id="radio-group:_r_1r_:radio:1"
                 >
                   <input
-                    aria-labelledby="radio-group:_r_1p_:radio:label:1"
+                    aria-labelledby="radio-group:_r_1r_:radio:label:1"
                     data-ownedby="root"
                     disabled=""
                     id="root-1"
@@ -39369,7 +39369,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
                     data-ssr=""
                     data-state="unchecked"
                     dir="ltr"
-                    id="radio-group:_r_1p_:radio:control:1"
+                    id="radio-group:_r_1r_:radio:control:1"
                   />
                   <span
                     class="chakra-radio-group__itemText"
@@ -39380,7 +39380,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
                     data-ssr=""
                     data-state="unchecked"
                     dir="ltr"
-                    id="radio-group:_r_1p_:radio:label:1"
+                    id="radio-group:_r_1r_:radio:label:1"
                   >
                     bar
                   </span>
@@ -39687,7 +39687,7 @@ exports[`single fields > select field single choice form disabled using radio wi
             data-disabled=""
             data-part="root"
             data-scope="field"
-            id="field::_r_1u_"
+            id="field::_r_20_"
             role="group"
           >
             <div
@@ -39717,10 +39717,10 @@ exports[`single fields > select field single choice form disabled using radio wi
                   data-state="unchecked"
                   dir="ltr"
                   for="root-0"
-                  id="radio-group:_r_1v_:radio:0"
+                  id="radio-group:_r_21_:radio:0"
                 >
                   <input
-                    aria-labelledby="radio-group:_r_1v_:radio:label:0"
+                    aria-labelledby="radio-group:_r_21_:radio:label:0"
                     data-ownedby="root"
                     disabled=""
                     id="root-0"
@@ -39739,7 +39739,7 @@ exports[`single fields > select field single choice form disabled using radio wi
                     data-ssr=""
                     data-state="unchecked"
                     dir="ltr"
-                    id="radio-group:_r_1v_:radio:control:0"
+                    id="radio-group:_r_21_:radio:control:0"
                   />
                   <span
                     class="chakra-radio-group__itemText"
@@ -39750,7 +39750,7 @@ exports[`single fields > select field single choice form disabled using radio wi
                     data-ssr=""
                     data-state="unchecked"
                     dir="ltr"
-                    id="radio-group:_r_1v_:radio:label:0"
+                    id="radio-group:_r_21_:radio:label:0"
                   >
                     foo
                   </span>
@@ -39765,10 +39765,10 @@ exports[`single fields > select field single choice form disabled using radio wi
                   data-state="unchecked"
                   dir="ltr"
                   for="root-1"
-                  id="radio-group:_r_1v_:radio:1"
+                  id="radio-group:_r_21_:radio:1"
                 >
                   <input
-                    aria-labelledby="radio-group:_r_1v_:radio:label:1"
+                    aria-labelledby="radio-group:_r_21_:radio:label:1"
                     data-ownedby="root"
                     disabled=""
                     id="root-1"
@@ -39787,7 +39787,7 @@ exports[`single fields > select field single choice form disabled using radio wi
                     data-ssr=""
                     data-state="unchecked"
                     dir="ltr"
-                    id="radio-group:_r_1v_:radio:control:1"
+                    id="radio-group:_r_21_:radio:control:1"
                   />
                   <span
                     class="chakra-radio-group__itemText"
@@ -39798,7 +39798,7 @@ exports[`single fields > select field single choice form disabled using radio wi
                     data-ssr=""
                     data-state="unchecked"
                     dir="ltr"
-                    id="radio-group:_r_1v_:radio:label:1"
+                    id="radio-group:_r_21_:radio:label:1"
                   >
                     bar
                   </span>
@@ -41080,12 +41080,12 @@ exports[`single fields > select field single choice optgroups 1`] = `
                   tabindex="0"
                 >
                   <div
-                    aria-labelledby="select:root:optgroup-label:_r_2c_"
+                    aria-labelledby="select:root:optgroup-label:_r_2g_"
                     class="chakra-select__itemGroup emotion-12"
                     data-part="item-group"
                     data-scope="select"
                     dir="ltr"
-                    id="select:root:optgroup:_r_2c_"
+                    id="select:root:optgroup:_r_2g_"
                     role="group"
                   >
                     <div
@@ -41093,7 +41093,7 @@ exports[`single fields > select field single choice optgroups 1`] = `
                       data-part="item-group-label"
                       data-scope="select"
                       dir="ltr"
-                      id="select:root:optgroup-label:_r_2c_"
+                      id="select:root:optgroup-label:_r_2g_"
                       role="presentation"
                     >
                       Group A
@@ -41160,12 +41160,12 @@ exports[`single fields > select field single choice optgroups 1`] = `
                     </div>
                   </div>
                   <div
-                    aria-labelledby="select:root:optgroup-label:_r_2d_"
+                    aria-labelledby="select:root:optgroup-label:_r_2h_"
                     class="chakra-select__itemGroup emotion-12"
                     data-part="item-group"
                     data-scope="select"
                     dir="ltr"
-                    id="select:root:optgroup:_r_2d_"
+                    id="select:root:optgroup:_r_2h_"
                     role="group"
                   >
                     <div
@@ -41173,7 +41173,7 @@ exports[`single fields > select field single choice optgroups 1`] = `
                       data-part="item-group-label"
                       data-scope="select"
                       dir="ltr"
-                      id="select:root:optgroup-label:_r_2d_"
+                      id="select:root:optgroup-label:_r_2h_"
                       role="presentation"
                     >
                       Group B
@@ -41864,12 +41864,12 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
                   tabindex="0"
                 >
                   <div
-                    aria-labelledby="select:root:optgroup-label:_r_2h_"
+                    aria-labelledby="select:root:optgroup-label:_r_2l_"
                     class="chakra-select__itemGroup emotion-12"
                     data-part="item-group"
                     data-scope="select"
                     dir="ltr"
-                    id="select:root:optgroup:_r_2h_"
+                    id="select:root:optgroup:_r_2l_"
                     role="group"
                   >
                     <div
@@ -41877,7 +41877,7 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
                       data-part="item-group-label"
                       data-scope="select"
                       dir="ltr"
-                      id="select:root:optgroup-label:_r_2h_"
+                      id="select:root:optgroup-label:_r_2l_"
                       role="presentation"
                     >
                       Group A
@@ -41946,12 +41946,12 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
                     </div>
                   </div>
                   <div
-                    aria-labelledby="select:root:optgroup-label:_r_2i_"
+                    aria-labelledby="select:root:optgroup-label:_r_2m_"
                     class="chakra-select__itemGroup emotion-12"
                     data-part="item-group"
                     data-scope="select"
                     dir="ltr"
-                    id="select:root:optgroup:_r_2i_"
+                    id="select:root:optgroup:_r_2m_"
                     role="group"
                   >
                     <div
@@ -41959,7 +41959,7 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
                       data-part="item-group-label"
                       data-scope="select"
                       dir="ltr"
-                      id="select:root:optgroup-label:_r_2i_"
+                      id="select:root:optgroup-label:_r_2m_"
                       role="presentation"
                     >
                       Group B
@@ -42328,7 +42328,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
             data-disabled=""
             data-part="root"
             data-scope="field"
-            id="field::_r_1r_"
+            id="field::_r_1t_"
             role="group"
           >
             <div
@@ -42358,10 +42358,10 @@ exports[`single fields > select field single choice uiSchema disabled using radi
                   data-state="unchecked"
                   dir="ltr"
                   for="root-0"
-                  id="radio-group:_r_1s_:radio:0"
+                  id="radio-group:_r_1u_:radio:0"
                 >
                   <input
-                    aria-labelledby="radio-group:_r_1s_:radio:label:0"
+                    aria-labelledby="radio-group:_r_1u_:radio:label:0"
                     data-ownedby="root"
                     disabled=""
                     id="root-0"
@@ -42380,7 +42380,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
                     data-ssr=""
                     data-state="unchecked"
                     dir="ltr"
-                    id="radio-group:_r_1s_:radio:control:0"
+                    id="radio-group:_r_1u_:radio:control:0"
                   />
                   <span
                     class="chakra-radio-group__itemText"
@@ -42391,7 +42391,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
                     data-ssr=""
                     data-state="unchecked"
                     dir="ltr"
-                    id="radio-group:_r_1s_:radio:label:0"
+                    id="radio-group:_r_1u_:radio:label:0"
                   >
                     foo
                   </span>
@@ -42406,10 +42406,10 @@ exports[`single fields > select field single choice uiSchema disabled using radi
                   data-state="unchecked"
                   dir="ltr"
                   for="root-1"
-                  id="radio-group:_r_1s_:radio:1"
+                  id="radio-group:_r_1u_:radio:1"
                 >
                   <input
-                    aria-labelledby="radio-group:_r_1s_:radio:label:1"
+                    aria-labelledby="radio-group:_r_1u_:radio:label:1"
                     data-ownedby="root"
                     disabled=""
                     id="root-1"
@@ -42428,7 +42428,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
                     data-ssr=""
                     data-state="unchecked"
                     dir="ltr"
-                    id="radio-group:_r_1s_:radio:control:1"
+                    id="radio-group:_r_1u_:radio:control:1"
                   />
                   <span
                     class="chakra-radio-group__itemText"
@@ -42439,7 +42439,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
                     data-ssr=""
                     data-state="unchecked"
                     dir="ltr"
-                    id="radio-group:_r_1s_:radio:label:1"
+                    id="radio-group:_r_1u_:radio:label:1"
                   >
                     bar
                   </span>
@@ -42974,7 +42974,7 @@ exports[`single fields > select widget with description in schema and FieldTempl
           class="fieldset__legend emotion-1"
           data-part="legend"
           data-scope="fieldset"
-          id="fieldset::_r_3t_::legend"
+          id="fieldset::_r_44_::legend"
         >
           <sup
             class="emotion-2"
@@ -44987,7 +44987,7 @@ exports[`single fields > select widget with selected oneOf option description be
           class="fieldset__legend emotion-1"
           data-part="legend"
           data-scope="fieldset"
-          id="fieldset::_r_dh_::legend"
+          id="fieldset::_r_es_::legend"
         >
           <sup
             class="emotion-2"
@@ -45494,7 +45494,7 @@ exports[`single fields > slider field 1`] = `
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_4g_"
+            id="field::_r_4o_"
             role="group"
           >
             <div

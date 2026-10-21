@@ -388,7 +388,7 @@ describe('ObjectFieldTemplate colSpan map', () => {
         <Form
           schema={formSchema}
           validator={validator}
-          formData={formData}
+          initialFormData={formData}
           formContext={{ colSpan: { string: 8, number: 4 } }}
         />,
       );

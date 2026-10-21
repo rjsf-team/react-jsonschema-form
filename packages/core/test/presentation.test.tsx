@@ -349,7 +349,7 @@ describe('the plan SchemaField builds', () => {
         schema,
         // An option given a uiSchema of its own renders its own field rather than the custom one (#5391)
         uiSchema: { foo: { 'ui:field': MyField, anyOf: [{}, {}] } },
-        formData: { foo: 'a' },
+        initialFormData: { foo: 'a' },
       });
 
       for (const control of [node.querySelector('#root_foo__anyof_select')!, node.querySelector('input#root_foo')!]) {
@@ -544,7 +544,7 @@ describe('the plan SchemaField builds', () => {
       const { node } = createFormComponent({
         schema: { type: 'object', properties: { pet: schema }, required },
         uiSchema: { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] } },
-        formData: { pet: { name: 'Rex' } },
+        initialFormData: { pet: { name: 'Rex' } },
       });
 
       const title = node.querySelector('#root_pet_XxxOf__title');
@@ -589,7 +589,7 @@ describe('the plan SchemaField builds', () => {
           },
         },
       },
-      formData: { color: 'r' },
+      initialFormData: { color: 'r' },
     });
 
     expect(node.querySelectorAll('#root_color__description')).toHaveLength(1);
@@ -1072,7 +1072,7 @@ describe('a widget rendering a group of controls', () => {
     createFormComponent({
       schema: { type: 'object', properties: { foo: { type: 'integer', title: 'Foo' } } },
       uiSchema: { foo: { 'ui:widget': 'RatingWidget', 'ui:autofocus': true } },
-      formData: value === undefined ? {} : { foo: value },
+      initialFormData: value === undefined ? {} : { foo: value },
     });
     expect(screen.getByRole('radio', { name })).toHaveFocus();
   });
@@ -1083,7 +1083,7 @@ describe('a widget rendering a group of controls', () => {
       createFormComponent({
         schema: { type: 'object', properties: { foo: { type: 'integer', title: 'Foo' } } },
         uiSchema: { foo: { 'ui:widget': 'RatingWidget', 'ui:autofocus': true, [key]: true } },
-        formData: { foo: 3 },
+        initialFormData: { foo: 3 },
       });
       expect(document.body).toHaveFocus();
     },

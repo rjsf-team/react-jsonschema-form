@@ -11,6 +11,7 @@ import type {
 import {
   ANY_OF_KEY,
   deepEquals,
+  deepEqualsUndefinedAsMissing,
   ERRORS_KEY,
   getDiscriminatorFieldFromSchema,
   getRenderedOptionSchema,
@@ -33,18 +34,17 @@ import fieldLabelForLog from '../../fieldLabelForLog.ts';
 import useSendOptionSwitch from '../../hooks/useSendOptionSwitch.ts';
 import { displaysLabel, getWidgetErrorProps, getWidgetLabelProps } from './fieldWidgetUtils.ts';
 import formDataForNewOption from './formDataForNewOption.ts';
-import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 
 /** The option an `AnyOfField` has selected, with what it last rendered, to tell a change of data from a re-render */
 interface OptionSelection<T> {
   selectedOption: number;
   formData: T | undefined;
   id: string;
-  /** The data the user's last option switch proposed, so re-matching the option to the data does not override the
-   * explicit choice. It is needed even when the switch is accepted, since getDefaultFormState populates undefined
-   * properties that make deepEquals see a false formData change.
+  /** The data the user's last option switch sent, and what the form stored for it when it took the switch as sent, or
+   * rewrote only data outside this field, so an accepted switch keeps the explicit choice and one rewritten here is
+   * re-matched to the data the form kept. A switch the form refused is not recorded, since it changed nothing
    */
-  proposal: { formData: T | undefined } | undefined;
+  switched: { formData: T | undefined; taken?: { kept: unknown } } | undefined;
 }
 
 /** Re-matches the selected option of an `AnyOfField` to data that changed under the same field
@@ -67,25 +67,28 @@ function optionForData<
   schema: S,
   registry: Registry<T, S, F>,
 ): number {
-  const { selectedOption, proposal } = selection;
+  const { selectedOption, switched } = selection;
   const { schemaUtils } = registry;
-  const isFormDataChanged = !deepEquals(formData, selection.formData);
-  if (proposal) {
-    // A switch that proposed the data the form already held has nothing a parent could decline
-    if (isFormDataChanged || deepEquals(formData, proposal.formData)) {
+  if (switched) {
+    // The data is what the form stored for the switch it took, the defaults it derived for it included; or, from a
+    // parent other than a form, the data came back as the switch sent it
+    if (
+      (switched.taken && deepEquals(formData, switched.taken.kept)) ||
+      deepEqualsUndefinedAsMissing(formData, switched.formData)
+    ) {
       return selectedOption;
     }
-    // The option switch was proposed but the data did not follow it, which is what a parent declining the proposal
-    // looks like (RFC, section 5): the chosen option stays while the data still fits it, so a form whose data
-    // matches several options keeps the explicit choice, and one whose data does not is put back on the option that
-    // describes it
+    // The data is not what the switch sent, which is what a `transformChange` that rewrites this field looks like, or a parent
+    // of the field other than a form that refused it, rewrote it or kept the data it had: the chosen option stays while
+    // the data the form kept still fits it, so a form whose data matches several options keeps the explicit choice,
+    // and one whose data does not is put on the option that describes it
     const chosen = selectedOption >= 0 ? options[selectedOption] : undefined;
     // The retrieved option is not the schema its own `$id` names, and a validator caches what it compiles under
     // that `$id`, so it is validated under one derived from its content, as the option scoring does
     if (chosen && schemaUtils.getValidator().isValid(withVariantId<S>(chosen), formData, registry.rootSchema)) {
       return selectedOption;
     }
-  } else if (!isFormDataChanged) {
+  } else if (deepEquals(formData, selection.formData)) {
     return selectedOption;
   }
   return schemaUtils.getClosestMatchingOption(
@@ -152,7 +155,6 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     presentation,
   } = props;
   const { schemaUtils } = registry;
-  const readsFormData = useReadsFormData(AnyOfField);
   const sendOptionSwitch = useSendOptionSwitch(fieldPath);
 
   const [selection, setSelection] = useState<OptionSelection<T>>(() => ({
@@ -164,24 +166,24 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     ),
     formData,
     id,
-    proposal: undefined,
+    switched: undefined,
   }));
   const { selectedOption } = selection;
 
   // Adjusted while rendering rather than in an effect, so the option that no longer describes the data is never
-  // committed. A pending proposal is settled by the first render after it, against the data rendered before it, whether
-  // or not the data followed it and whether or not the id changed in that render too. A render that changed the id with
-  // no proposal pending only records what it rendered.
+  // committed. The user's own switch is settled by the first render after it, against the data rendered before it,
+  // whether or not the data followed it and whether or not the id changed in that render too. A render that changed
+  // the id after no switch only records what it rendered.
   // `Object.is`, since `NaN !== NaN` would have data a widget parsed to `NaN` set this state on every pass
-  if (!Object.is(selection.formData, formData) || selection.id !== id || selection.proposal) {
+  if (!Object.is(selection.formData, formData) || selection.id !== id || selection.switched) {
     setSelection({
       selectedOption:
-        selection.id === id || selection.proposal
+        selection.id === id || selection.switched
           ? optionForData<T, S, F>(selection, formData, options, schema, registry)
           : selectedOption,
       formData,
       id,
-      proposal: undefined,
+      switched: undefined,
     });
   }
 
@@ -255,10 +257,10 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
         newOptionUiSchema,
         oldOptionUiSchema: optionUiSchema,
         uiSchemaDefinitions,
+        globalUiOptions,
       });
 
-      setSelection((current) => ({ ...current, selectedOption: intOption, proposal: { formData: newFormData } }));
-      sendOptionSwitch(
+      const outcome = sendOptionSwitch(
         schema,
         {
           oldOption,
@@ -269,8 +271,23 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
         },
         formData,
         newFormData,
-        () => onChange(newFormData, fieldPath, undefined, fieldId),
+        (sent) => onChange(sent, fieldPath, undefined, fieldId),
       );
+      // A switch the form refused changed nothing, so the option shown stays, even where the data fits the one picked
+      if (outcome?.kind === 'refused') {
+        return;
+      }
+      setSelection((current) => ({
+        ...current,
+        selectedOption: intOption,
+        switched: {
+          formData: newFormData,
+          taken:
+            outcome && (outcome.kind === 'taken' || deepEquals(outcome.kept, outcome.edited))
+              ? { kept: outcome.kept }
+              : undefined,
+        },
+      }));
     },
     [
       selectedOption,
@@ -289,6 +306,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
       renderedOption,
       uiSchema,
       uiSchemaDefinitions,
+      globalUiOptions,
     ],
   );
 
@@ -350,25 +368,19 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
 
   const optionsSchemaField =
     (renderedOption && renderedOption.type !== 'null' && (
-      <RawFormDataContext value={readsFormData ? SchemaFieldComponent : undefined}>
-        <SchemaFieldComponent {...props} schema={renderedOption} uiSchema={optionFieldUiSchema} />
-      </RawFormDataContext>
+      <SchemaFieldComponent {...props} schema={renderedOption} uiSchema={optionFieldUiSchema} />
     )) ||
     null;
 
-  // The option's field is handed this field's own data, and is vouched for directly; the template and the selector are
-  // not
   return (
-    <RawFormDataContext value={undefined}>
-      <MultiSchemaFieldTemplate
-        id={id}
-        schema={schema}
-        registry={registry}
-        uiSchema={uiSchema}
-        selector={selector}
-        optionSchemaField={optionsSchemaField}
-      />
-    </RawFormDataContext>
+    <MultiSchemaFieldTemplate
+      id={id}
+      schema={schema}
+      registry={registry}
+      uiSchema={uiSchema}
+      selector={selector}
+      optionSchemaField={optionsSchemaField}
+    />
   );
 }
 

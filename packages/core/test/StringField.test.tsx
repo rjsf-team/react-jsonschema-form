@@ -7,7 +7,9 @@ import StringField from '../src/components/fields/StringField.tsx';
 import MarkdownTemplate from '../src/markdown.tsx';
 import {
   createFormComponent,
+  createFormRef,
   getSelectedOptionValue,
+  handleOf,
   setupConsoleErrorSuppression,
   submitForm,
   expectToHaveBeenCalledWithFormData,
@@ -372,9 +374,11 @@ describe('StringField', () => {
     });
 
     it('Check that when formData changes, the form should re-validate', async () => {
-      const { node, rerender } = createFormComponent({
+      const ref = createFormRef();
+      const { node } = createFormComponent({
+        ref,
         schema: { type: 'string' },
-        formData: null,
+        initialFormData: null,
         liveValidate: 'onChange',
       });
 
@@ -386,7 +390,7 @@ describe('StringField', () => {
       const errorMessageContent = node.querySelector('#root__error .text-danger');
       expect(errorMessageContent).toHaveTextContent('must be string');
 
-      rerender({ schema: { type: 'string' }, formData: 'hello', liveValidate: 'onChange' });
+      act(() => handleOf(ref).setFieldValue('', 'hello'));
 
       expect(node.querySelectorAll('#root__error')).toHaveLength(0);
     });
@@ -2837,7 +2841,7 @@ describe('StringField', () => {
         uiSchema: {
           'ui:options': { filePreview: true },
         },
-        formData,
+        initialFormData: formData,
       });
 
       const preview = node.querySelector<HTMLImageElement>('img.file-preview');
@@ -2855,7 +2859,7 @@ describe('StringField', () => {
         uiSchema: {
           'ui:options': { filePreview: true },
         },
-        formData,
+        initialFormData: formData,
       });
 
       const download = node.querySelector<HTMLLinkElement>('a.file-download');
@@ -2887,7 +2891,7 @@ describe('StringField', () => {
           type: 'string',
           format: 'data-url',
         },
-        formData,
+        initialFormData: formData,
       });
 
       // Find the delete button

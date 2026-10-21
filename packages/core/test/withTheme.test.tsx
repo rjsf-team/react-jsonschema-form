@@ -354,7 +354,7 @@ describe('withTheme', () => {
       <ThemedForm
         schema={schema}
         validator={validator}
-        formData={{ name: 'a' }}
+        initialFormData={{ name: 'a' }}
         onChange={({ formData }) => seen.push(formData?.name)}
       />,
     );

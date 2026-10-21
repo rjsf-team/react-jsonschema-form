@@ -46,7 +46,7 @@ describe('ArrayFieldTemplate', () => {
         it('should render a stateful custom component', () => {
           const { node } = createFormComponent({
             schema: { type: 'array', items: { type: 'string' } },
-            formData,
+            initialFormData: formData,
             templates: { ArrayFieldTemplate, ArrayFieldItemTemplate },
           });
 
@@ -57,7 +57,7 @@ describe('ArrayFieldTemplate', () => {
         it('should render a stateful custom component', () => {
           const { node } = createFormComponent({
             schema: { type: 'array', items: { type: 'string' } },
-            formData,
+            initialFormData: formData,
             uiSchema: {
               'ui:ArrayFieldTemplate': ArrayFieldTemplate,
               'ui:ArrayFieldItemTemplate': ArrayFieldItemTemplate,
@@ -71,7 +71,7 @@ describe('ArrayFieldTemplate', () => {
         it('should render a stateful custom component', () => {
           const { node } = createFormComponent({
             schema: { type: 'array', items: { type: 'string' } },
-            formData,
+            initialFormData: formData,
             uiSchema: {
               'ui:ArrayFieldTemplate': ArrayFieldTemplate,
               'ui:ArrayFieldItemTemplate': ArrayFieldItemTemplate,
@@ -103,7 +103,7 @@ describe('ArrayFieldTemplate', () => {
         beforeEach(() => {
           node = createFormComponent({
             templates: { ArrayFieldTemplate, ArrayFieldItemTemplate },
-            formData,
+            initialFormData: formData,
             schema,
             uiSchema,
           }).node;
@@ -120,7 +120,7 @@ describe('ArrayFieldTemplate', () => {
 
         beforeEach(() => {
           node = createFormComponent({
-            formData,
+            initialFormData: formData,
             schema,
             uiSchema,
           }).node;
@@ -136,7 +136,7 @@ describe('ArrayFieldTemplate', () => {
 
         beforeEach(() => {
           node = createFormComponent({
-            formData,
+            initialFormData: formData,
             schema,
             uiSchema,
             // Empty field template for proof that we're doing overrides
@@ -190,7 +190,7 @@ describe('ArrayFieldTemplate', () => {
         };
         beforeEach(() => {
           node = createFormComponent({
-            formData,
+            initialFormData: formData,
             schema,
             uiSchema,
             templates: { ArrayFieldTemplate, ArrayFieldItemTemplate },
@@ -207,7 +207,7 @@ describe('ArrayFieldTemplate', () => {
         };
         beforeEach(() => {
           node = createFormComponent({
-            formData,
+            initialFormData: formData,
             schema,
             uiSchema,
           }).node;
@@ -222,7 +222,7 @@ describe('ArrayFieldTemplate', () => {
         };
         beforeEach(() => {
           node = createFormComponent({
-            formData,
+            initialFormData: formData,
             schema,
             uiSchema,
             // Empty field template for proof that we're doing overrides
@@ -269,7 +269,7 @@ describe('ArrayFieldTemplate', () => {
     it('should render a stateful custom component', () => {
       const { node } = createFormComponent({
         schema: { type: 'array', items: { type: 'string' } },
-        formData,
+        initialFormData: formData,
         templates: { ArrayFieldTemplate, ArrayFieldItemTemplate },
       });
       expect(node.querySelectorAll('.rjsf-field-array .field-content div')).toHaveLength(3);

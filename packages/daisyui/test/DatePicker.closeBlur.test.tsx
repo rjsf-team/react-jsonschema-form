@@ -988,7 +988,10 @@ describe.each([
 });
 
 describe('a close in a form', () => {
-  test('lets onBlur read the stored value when the form takes the date', async () => {
+  test.each([
+    ['takes the date', undefined, '2020-05-17'],
+    ['rewrites it in transformChange', (next: unknown) => (next === '2020-05-17' ? '2020-05-20' : next), '2020-05-20'],
+  ] as const)('lets onBlur read the stored value when the form %s', async (_, transformChange, stored) => {
     const ref = createRef<FormRef>();
     const atBlur: unknown[] = [];
     render(
@@ -997,6 +1000,7 @@ describe('a close in a form', () => {
         schema={{ type: 'string', format: 'date' }}
         validator={validator}
         initialFormData='2020-05-03'
+        transformChange={transformChange}
         onBlur={(_id, reported) => atBlur.push([reported, ref.current?.getFormData()])}
       />,
     );
@@ -1005,6 +1009,6 @@ describe('a close in a form', () => {
     await user.click(screen.getByText('Done'));
 
     // The blur is reported once the commit that renders the form's save is in, so the form holds the date by then
-    expect(atBlur).toEqual([['2020-05-17', '2020-05-17']]);
+    expect(atBlur).toEqual([[stored, stored]]);
   });
 });

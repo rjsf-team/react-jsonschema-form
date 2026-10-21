@@ -64,7 +64,6 @@ import {
   withoutDescribers,
 } from './fieldWidgetUtils.ts';
 import PresentationContext, { useInheritedPresentation } from './PresentationContext.ts';
-import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 import useSchemaFieldPresentation from './useSchemaFieldPresentation.ts';
 
 /** The map of component type to FieldName */
@@ -587,7 +586,6 @@ function SchemaFieldRender<
   } = props;
   const { schemaUtils, globalFormOptions, globalUiOptions, fields } = registry;
   const { AnyOfField: _AnyOfField, OneOfField: _OneOfField, CyclicSchemaField } = fields;
-  const readsFormData = useReadsFormData(SchemaField);
 
   /** Intermediary `onChange` handler for field components that will inject the `id` of the current field into the
    * `onChange` chain if it is not already being provided from a deeper level in the hierarchy
@@ -856,11 +854,7 @@ function SchemaFieldRender<
   // which is when the field is left unresolved above. The check must come after all hook calls to satisfy React's
   // rules of hooks.
   if (!uiField || !fieldToRender) {
-    return (
-      <RawFormDataContext value={readsFormData ? CyclicSchemaField : undefined}>
-        <CyclicSchemaField {...props} />
-      </RawFormDataContext>
-    );
+    return <CyclicSchemaField {...props} />;
   }
   const { ignoredOwnField, ignoredGlobalField } = uiField;
   const { FieldComponent, optionsReplaceNamedField } = fieldToRender;
@@ -948,9 +942,7 @@ function SchemaFieldRender<
   // A container's properties and items render under ids of their own, so they inherit nothing from it, and are handed
   // no plan whose every change would re-render each of them past its `memo`
   const field = (
-    <PresentationContext value={isContainer ? undefined : presentationBelow}>
-      <RawFormDataContext value={readsFormData ? FieldComponent : undefined}>{fieldComponent}</RawFormDataContext>
-    </PresentationContext>
+    <PresentationContext value={isContainer ? undefined : presentationBelow}>{fieldComponent}</PresentationContext>
   );
 
   const { description: templateDescription, help, errors: templateErrors } = getTemplateParts(presentation);
@@ -1022,41 +1014,35 @@ function SchemaFieldRender<
     registry,
   };
 
-  // The field component and the option field are each vouched for directly: a custom template may pass on a view of
-  // the data
   return (
-    <RawFormDataContext value={undefined}>
-      <FieldTemplate {...fieldProps}>
-        <>
-          {field}
-          {XxxOfField && (
-            <PresentationContext value={optionsBelow}>
-              <RawFormDataContext value={readsFormData ? XxxOfField : undefined}>
-                <XxxOfField
-                  name={name}
-                  disabled={disabled}
-                  readonly={readonly}
-                  hideError={hideError}
-                  errorSchema={errorSchema}
-                  formData={formData}
-                  fieldPath={fieldPath}
-                  id={fieldId}
-                  onBlur={props.onBlur}
-                  onChange={props.onChange}
-                  onFocus={props.onFocus}
-                  options={xxxOfOptions}
-                  registry={registry}
-                  required={effectiveRequired}
-                  schema={schema}
-                  uiSchema={XxxOfUiSchema}
-                  presentation={optionsPresentation}
-                />
-              </RawFormDataContext>
-            </PresentationContext>
-          )}
-        </>
-      </FieldTemplate>
-    </RawFormDataContext>
+    <FieldTemplate {...fieldProps}>
+      <>
+        {field}
+        {XxxOfField && (
+          <PresentationContext value={optionsBelow}>
+            <XxxOfField
+              name={name}
+              disabled={disabled}
+              readonly={readonly}
+              hideError={hideError}
+              errorSchema={errorSchema}
+              formData={formData}
+              fieldPath={fieldPath}
+              id={fieldId}
+              onBlur={props.onBlur}
+              onChange={props.onChange}
+              onFocus={props.onFocus}
+              options={xxxOfOptions}
+              registry={registry}
+              required={effectiveRequired}
+              schema={schema}
+              uiSchema={XxxOfUiSchema}
+              presentation={optionsPresentation}
+            />
+          </PresentationContext>
+        )}
+      </>
+    </FieldTemplate>
   );
 }
 

@@ -55,7 +55,7 @@ const validation: Sample = {
     pass1: { 'ui:widget': 'password' },
     pass2: { 'ui:widget': 'password' },
   },
-  formData: {},
+  initialFormData: {},
   customValidate,
   transformErrors,
 };

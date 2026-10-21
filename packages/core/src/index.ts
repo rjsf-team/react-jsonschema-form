@@ -1,4 +1,4 @@
-import type { FormProps, FormState } from './components/Form.tsx';
+import type { FormProps } from './components/Form.tsx';
 import Form from './components/Form.tsx';
 import type { FormRef } from './components/FormRef.ts';
 import type { EventFormData, IChangeEvent } from './components/IChangeEvent.ts';
@@ -16,7 +16,6 @@ export type {
   EventFormData,
   FormRef,
   FormProps,
-  FormState,
   IChangeEvent,
   ThemedForm,
   ThemeProps,

@@ -1460,7 +1460,7 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                       class="dropdown w-full"
                     >
                       <button
-                        aria-controls="_r_3o_"
+                        aria-controls="_r_50_"
                         aria-expanded="false"
                         aria-haspopup="listbox"
                         class="btn btn-outline w-full text-left flex justify-between items-center "
@@ -1484,7 +1484,7 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                       </button>
                       <ul
                         class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-                        id="_r_3o_"
+                        id="_r_50_"
                         role="listbox"
                       >
                         <li
@@ -2917,7 +2917,7 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                       class="dropdown w-full"
                     >
                       <button
-                        aria-controls="_r_4l_"
+                        aria-controls="_r_60_"
                         aria-expanded="false"
                         aria-haspopup="listbox"
                         class="btn btn-outline w-full text-left flex justify-between items-center "
@@ -2941,7 +2941,7 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                       </button>
                       <ul
                         class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-                        id="_r_4l_"
+                        id="_r_60_"
                         role="listbox"
                       >
                         <li
@@ -3289,7 +3289,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                           class="dropdown w-full"
                         >
                           <button
-                            aria-controls="_r_4r_"
+                            aria-controls="_r_66_"
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             aria-labelledby="root_region__label"
@@ -3313,7 +3313,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                           </button>
                           <ul
                             class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-                            id="_r_4r_"
+                            id="_r_66_"
                             role="listbox"
                           >
                             <li
@@ -3363,7 +3363,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                             class="dropdown w-full"
                           >
                             <button
-                              aria-controls="_r_4s_"
+                              aria-controls="_r_67_"
                               aria-expanded="false"
                               aria-haspopup="listbox"
                               class="btn btn-outline w-full text-left flex justify-between items-center "
@@ -3386,7 +3386,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                             </button>
                             <ul
                               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-                              id="_r_4s_"
+                              id="_r_67_"
                               role="listbox"
                             >
                               <li
@@ -3462,7 +3462,7 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
             class="dropdown w-full"
           >
             <button
-              aria-controls="_r_4u_"
+              aria-controls="_r_69_"
               aria-expanded="false"
               aria-haspopup="listbox"
               aria-label="Select ..."
@@ -3486,7 +3486,7 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
             </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-              id="_r_4u_"
+              id="_r_69_"
               role="listbox"
             >
               <li
@@ -3539,7 +3539,7 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
             class="dropdown w-full"
           >
             <button
-              aria-controls="_r_4q_"
+              aria-controls="_r_65_"
               aria-expanded="false"
               aria-haspopup="listbox"
               aria-label="Select ..."
@@ -3563,7 +3563,7 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
             </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-              id="_r_4q_"
+              id="_r_65_"
               role="listbox"
             >
               <li
@@ -3646,7 +3646,7 @@ exports[`select widget from oneOf boolean constants with a null option without a
             class="dropdown w-full"
           >
             <button
-              aria-controls="_r_4t_"
+              aria-controls="_r_68_"
               aria-expanded="false"
               aria-haspopup="listbox"
               aria-label="Select ..."
@@ -3670,7 +3670,7 @@ exports[`select widget from oneOf boolean constants with a null option without a
             </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-              id="_r_4t_"
+              id="_r_68_"
               role="listbox"
             >
               <li
@@ -3753,7 +3753,7 @@ exports[`select widget from oneOf constants without a type 1`] = `
             class="dropdown w-full"
           >
             <button
-              aria-controls="_r_4p_"
+              aria-controls="_r_64_"
               aria-expanded="false"
               aria-haspopup="listbox"
               aria-label="Select ..."
@@ -3777,7 +3777,7 @@ exports[`select widget from oneOf constants without a type 1`] = `
             </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-              id="_r_4p_"
+              id="_r_64_"
               role="listbox"
             >
               <li
@@ -3845,7 +3845,7 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
             class="dropdown w-full"
           >
             <button
-              aria-controls="_r_4v_"
+              aria-controls="_r_6a_"
               aria-expanded="false"
               aria-haspopup="listbox"
               aria-label="Select ..."
@@ -3869,7 +3869,7 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
             </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-              id="_r_4v_"
+              id="_r_6a_"
               role="listbox"
             >
               <li
@@ -3937,7 +3937,7 @@ exports[`select widget with options sharing a String() in the realValue format (
             class="dropdown w-full"
           >
             <button
-              aria-controls="_r_51_"
+              aria-controls="_r_6c_"
               aria-expanded="false"
               aria-haspopup="listbox"
               aria-label="Select ..."
@@ -3961,7 +3961,7 @@ exports[`select widget with options sharing a String() in the realValue format (
             </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-              id="_r_51_"
+              id="_r_6c_"
               role="listbox"
             >
               <li
@@ -6330,7 +6330,7 @@ exports[`single fields > optional data controls > does not show optional control
                           class="dropdown w-full"
                         >
                           <button
-                            aria-controls="_r_u_"
+                            aria-controls="_r_1b_"
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             aria-labelledby="root_optionalObjectWithOneofs__label"
@@ -6354,7 +6354,7 @@ exports[`single fields > optional data controls > does not show optional control
                           </button>
                           <ul
                             class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-                            id="_r_u_"
+                            id="_r_1b_"
                             role="listbox"
                           >
                             <li
@@ -6504,7 +6504,7 @@ exports[`single fields > optional data controls > does not show optional control
                           class="dropdown w-full"
                         >
                           <button
-                            aria-controls="_r_v_"
+                            aria-controls="_r_1c_"
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             aria-labelledby="root_optionalArrayWithAnyofs__label"
@@ -6528,7 +6528,7 @@ exports[`single fields > optional data controls > does not show optional control
                           </button>
                           <ul
                             class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-                            id="_r_v_"
+                            id="_r_1c_"
                             role="listbox"
                           >
                             <li
@@ -7422,7 +7422,7 @@ exports[`single fields > optional data controls > does not show optional control
                           class="dropdown w-full"
                         >
                           <button
-                            aria-controls="_r_2c_"
+                            aria-controls="_r_38_"
                             aria-disabled="true"
                             aria-expanded="false"
                             aria-haspopup="listbox"
@@ -7447,7 +7447,7 @@ exports[`single fields > optional data controls > does not show optional control
                           </button>
                           <ul
                             class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-                            id="_r_2c_"
+                            id="_r_38_"
                             role="listbox"
                           >
                             <li
@@ -7600,7 +7600,7 @@ exports[`single fields > optional data controls > does not show optional control
                           class="dropdown w-full"
                         >
                           <button
-                            aria-controls="_r_2d_"
+                            aria-controls="_r_39_"
                             aria-disabled="true"
                             aria-expanded="false"
                             aria-haspopup="listbox"
@@ -7625,7 +7625,7 @@ exports[`single fields > optional data controls > does not show optional control
                           </button>
                           <ul
                             class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-                            id="_r_2d_"
+                            id="_r_39_"
                             role="listbox"
                           >
                             <li
@@ -11067,7 +11067,7 @@ exports[`single fields > select field multiple choice 1`] = `
             class="dropdown w-full"
           >
             <button
-              aria-controls="_r_9_"
+              aria-controls="_r_a_"
               aria-expanded="false"
               aria-haspopup="listbox"
               aria-label="Select ..."
@@ -11093,7 +11093,7 @@ exports[`single fields > select field multiple choice 1`] = `
             <ul
               aria-multiselectable="true"
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-              id="_r_9_"
+              id="_r_a_"
               role="listbox"
             >
               <li
@@ -11219,7 +11219,7 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
             class="dropdown w-full"
           >
             <button
-              aria-controls="_r_c_"
+              aria-controls="_r_f_"
               aria-expanded="false"
               aria-haspopup="listbox"
               aria-label="Select ..."
@@ -11245,7 +11245,7 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
             <ul
               aria-multiselectable="true"
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-              id="_r_c_"
+              id="_r_f_"
               role="listbox"
             >
               <li
@@ -11477,7 +11477,7 @@ exports[`single fields > select field multiple choice formData 1`] = `
             class="dropdown w-full"
           >
             <button
-              aria-controls="_r_g_"
+              aria-controls="_r_n_"
               aria-expanded="false"
               aria-haspopup="listbox"
               aria-label="Select ..."
@@ -11502,7 +11502,7 @@ exports[`single fields > select field multiple choice formData 1`] = `
             <ul
               aria-multiselectable="true"
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-              id="_r_g_"
+              id="_r_n_"
               role="listbox"
             >
               <li
@@ -11630,7 +11630,7 @@ exports[`single fields > select field multiple choice with labels 1`] = `
             class="dropdown w-full"
           >
             <button
-              aria-controls="_r_a_"
+              aria-controls="_r_c_"
               aria-expanded="false"
               aria-haspopup="listbox"
               aria-label="Select ..."
@@ -11656,7 +11656,7 @@ exports[`single fields > select field multiple choice with labels 1`] = `
             <ul
               aria-multiselectable="true"
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-              id="_r_a_"
+              id="_r_c_"
               role="listbox"
             >
               <li
@@ -11760,7 +11760,7 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
             class="dropdown w-full"
           >
             <button
-              aria-controls="_r_b_"
+              aria-controls="_r_d_"
               aria-expanded="false"
               aria-haspopup="listbox"
               aria-label="Select ..."
@@ -11785,7 +11785,7 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
             </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-              id="_r_b_"
+              id="_r_d_"
               role="listbox"
             >
               <li
@@ -11998,7 +11998,7 @@ exports[`single fields > select field single choice formData 1`] = `
             class="dropdown w-full"
           >
             <button
-              aria-controls="_r_f_"
+              aria-controls="_r_l_"
               aria-expanded="false"
               aria-haspopup="listbox"
               aria-label="Select ..."
@@ -12022,7 +12022,7 @@ exports[`single fields > select field single choice formData 1`] = `
             </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-              id="_r_f_"
+              id="_r_l_"
               role="listbox"
             >
               <li
@@ -12090,7 +12090,7 @@ exports[`single fields > select field single choice optgroups 1`] = `
             class="dropdown w-full"
           >
             <button
-              aria-controls="_r_d_"
+              aria-controls="_r_h_"
               aria-expanded="false"
               aria-haspopup="listbox"
               aria-label="Select ..."
@@ -12115,7 +12115,7 @@ exports[`single fields > select field single choice optgroups 1`] = `
             </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-              id="_r_d_"
+              id="_r_h_"
               role="listbox"
             >
               <li
@@ -12243,7 +12243,7 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
             class="dropdown w-full"
           >
             <button
-              aria-controls="_r_e_"
+              aria-controls="_r_i_"
               aria-expanded="false"
               aria-haspopup="listbox"
               aria-label="Select ..."
@@ -12268,7 +12268,7 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
             </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-              id="_r_e_"
+              id="_r_i_"
               role="listbox"
             >
               <li
@@ -12484,7 +12484,7 @@ exports[`single fields > select widget with description in schema and FieldTempl
             class="dropdown w-full"
           >
             <button
-              aria-controls="_r_h_"
+              aria-controls="_r_o_"
               aria-describedby="root__description"
               aria-expanded="false"
               aria-haspopup="listbox"
@@ -12509,7 +12509,7 @@ exports[`single fields > select widget with description in schema and FieldTempl
             </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-              id="_r_h_"
+              id="_r_o_"
               role="listbox"
             >
               <li
@@ -12587,7 +12587,7 @@ exports[`single fields > select widget with selected oneOf option description 1`
             class="dropdown w-full"
           >
             <button
-              aria-controls="_r_i_"
+              aria-controls="_r_p_"
               aria-describedby="root__selectedOptionDescription"
               aria-expanded="false"
               aria-haspopup="listbox"
@@ -12612,7 +12612,7 @@ exports[`single fields > select widget with selected oneOf option description 1`
             </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-              id="_r_i_"
+              id="_r_p_"
               role="listbox"
             >
               <li
@@ -12690,7 +12690,7 @@ exports[`single fields > select widget with selected oneOf option description an
             class="dropdown w-full"
           >
             <button
-              aria-controls="_r_j_"
+              aria-controls="_r_q_"
               aria-expanded="false"
               aria-haspopup="listbox"
               aria-label="Select ..."
@@ -12714,7 +12714,7 @@ exports[`single fields > select widget with selected oneOf option description an
             </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-              id="_r_j_"
+              id="_r_q_"
               role="listbox"
             >
               <li
@@ -12782,7 +12782,7 @@ exports[`single fields > select widget with selected oneOf option description be
             class="dropdown w-full"
           >
             <button
-              aria-controls="_r_52_"
+              aria-controls="_r_6d_"
               aria-describedby="root__description root__selectedOptionDescription"
               aria-expanded="false"
               aria-haspopup="listbox"
@@ -12807,7 +12807,7 @@ exports[`single fields > select widget with selected oneOf option description be
             </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-              id="_r_52_"
+              id="_r_6d_"
               role="listbox"
             >
               <li
@@ -13892,7 +13892,7 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                       class="dropdown w-full"
                     >
                       <button
-                        aria-controls="_r_50_"
+                        aria-controls="_r_6b_"
                         aria-expanded="false"
                         aria-haspopup="listbox"
                         class="btn btn-outline w-full text-left flex justify-between items-center "
@@ -13915,7 +13915,7 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                       </button>
                       <ul
                         class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-                        id="_r_50_"
+                        id="_r_6b_"
                         role="listbox"
                       >
                         <li

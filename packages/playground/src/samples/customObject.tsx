@@ -77,7 +77,7 @@ const customObject: Sample = {
       },
     },
   },
-  formData: {
+  initialFormData: {
     firstName: 'Chuck',
     lastName: 'Norris',
     age: 75,

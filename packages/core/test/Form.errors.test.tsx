@@ -16,8 +16,10 @@ import { userEvent } from '@testing-library/user-event';
 import type { FormProps } from '../src/index.ts';
 import {
   AcceptingParent,
+  createFormComponent,
   createFormRef,
   describeRepeated,
+  elementOf,
   errorListMessages,
   expectToHaveBeenCalledWithFormData,
   fieldErrorsById,
@@ -115,8 +117,6 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
             required: ['foo', 'bar'],
           };
 
-          // The form has to be controlled, since the errors are cleared by comparing the incoming
-          // `formData` prop against the previous one.
           const { container } = render(
             <AcceptingParent<Record<string, unknown>>
               schema={altSchema}
@@ -294,10 +294,13 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
             "must have required property 'qux'",
           ]);
 
-          // Moving the first item down leaves neither item holding a `qux`, so both of those errors are still the
-          // errors of the values sitting at those paths and only the `corge` that moved loses its own
+          // The errors follow the items they describe: the item lacking both moved down, and its two errors with it
           await user.click(node.querySelector<HTMLButtonElement>('.rjsf-array-item-move-down')!);
-          expect(shownErrors()).toEqual(["must have required property 'qux'", "must have required property 'qux'"]);
+          expect(shownErrors()).toEqual([
+            "must have required property 'qux'",
+            "must have required property 'qux'",
+            "must have required property 'corge'",
+          ]);
         });
       });
 
@@ -413,7 +416,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
           schema: { type: 'number', minimum: 5 },
           uiSchema: { 'ui:widget': 'SliderWidget' },
           widgets: { SliderWidget },
-          formData: 1,
+          initialFormData: 1,
           focusOnFirstError: true,
         });
 
@@ -433,7 +436,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
           schema: { type: 'number', minimum: 5 },
           uiSchema: { 'ui:widget': 'SliderWidget' },
           widgets: { SliderWidget },
-          formData: 1,
+          initialFormData: 1,
           focusOnFirstError: true,
         });
 
@@ -469,7 +472,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
             },
           },
           uiSchema: { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] } },
-          formData: { pet: { name: 'Rex' } },
+          initialFormData: { pet: { name: 'Rex' } },
           focusOnFirstError: true,
         });
 
@@ -496,7 +499,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
           schema: { type: 'array', items: { type: 'string', enum: ['a', 'b'] }, minItems: 1, uniqueItems: true },
           uiSchema: { 'ui:widget': 'ChecksWidget' },
           widgets: { ChecksWidget },
-          formData: [],
+          initialFormData: [],
           focusOnFirstError: true,
         });
 
@@ -522,7 +525,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
           schema: { type: 'number', minimum: 5 },
           uiSchema: { 'ui:widget': 'SliderWidget' },
           widgets: { SliderWidget },
-          formData: 1,
+          initialFormData: 1,
           focusOnFirstError: true,
         });
 
@@ -543,7 +546,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
           schema: { type: 'number', minimum: 5 },
           uiSchema: { 'ui:widget': 'SliderWidget' },
           widgets: { SliderWidget },
-          formData: 1,
+          initialFormData: 1,
           focusOnFirstError: true,
         });
 
@@ -556,7 +559,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         const { node } = createFormComponent({
           schema: { type: 'integer', minimum: 3, maximum: 5 },
           uiSchema: { 'ui:widget': 'RatingWidget' },
-          formData: 1,
+          initialFormData: 1,
           focusOnFirstError: true,
         });
 
@@ -569,7 +572,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         const { node } = createFormComponent({
           schema: { type: 'string', minLength: 100 },
           uiSchema: { 'ui:widget': widget },
-          formData: '2020-01-01',
+          initialFormData: '2020-01-01',
           focusOnFirstError: true,
         });
 
@@ -591,7 +594,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
           schema: { type: 'number', minimum: 5 },
           uiSchema: { 'ui:widget': 'ChoiceWidget' },
           widgets: { ChoiceWidget },
-          formData: 1,
+          initialFormData: 1,
           focusOnFirstError: true,
         });
 
@@ -627,7 +630,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         try {
           const { node } = createFormComponent({
             schema: { type: 'string', minLength: 5 },
-            formData: 'a',
+            initialFormData: 'a',
             focusOnFirstError: true,
           });
 
@@ -642,7 +645,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
       it('focuses the field whose property name holds characters a CSS selector would read as syntax', async () => {
         const { node } = createFormComponent({
           schema: { type: 'object', properties: { 'say "hi"\\': { type: 'string', minLength: 5 } } },
-          formData: { 'say "hi"\\': 'a' },
+          initialFormData: { 'say "hi"\\': 'a' },
           focusOnFirstError: true,
         });
 
@@ -1748,7 +1751,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
             then: withCfg('a'),
             else: withCfg('b', 5),
           },
-          formData: { mode: 'a', cfg: { name: 'a' } },
+          initialFormData: { mode: 'a', cfg: { name: 'a' } },
           liveValidate: 'onChange',
         });
 
@@ -1915,7 +1918,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         // ui:required anywhere in the uiSchema, getUiRequiredErrorSchema() also returns `{}` — an empty-but-truthy
         // object that must not be treated the same as "nothing to merge".
         const transformErrors = (errors: RJSFValidationError[]) => errors.map((error) => ({ ...error, message: '' }));
-        const { node, onError } = createFormComponent({ schema, formData: {}, transformErrors });
+        const { node, onError } = createFormComponent({ schema, initialFormData: {}, transformErrors });
         await submitForm(node, user, true);
         expect(onError).toHaveBeenCalled();
         expect(onError.mock.calls[0][0]).toHaveLength(1);
@@ -1987,7 +1990,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
       const extraErrors: ErrorSchema = { list: [{ name: { __errors: ['taken'] } }] };
 
       it('blocks the submit, shows and lists the error and passes it to onError', async () => {
-        const { node, onError, onSubmit } = createFormComponent({ schema, formData, extraErrors });
+        const { node, onError, onSubmit } = createFormComponent({ schema, initialFormData: formData, extraErrors });
 
         await submitForm(node, user);
 
@@ -2000,7 +2003,12 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
       });
 
       it("focuses the item's field on submit with focusOnFirstError", async () => {
-        const { node } = createFormComponent({ schema, formData, extraErrors, focusOnFirstError: true });
+        const { node } = createFormComponent({
+          schema,
+          initialFormData: formData,
+          extraErrors,
+          focusOnFirstError: true,
+        });
 
         await submitForm(node, user);
 
@@ -2009,7 +2017,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
 
       it('passes the error to a focusOnFirstError callback', async () => {
         const focusOnFirstError = vi.fn();
-        const { node } = createFormComponent({ schema, formData, extraErrors, focusOnFirstError });
+        const { node } = createFormComponent({ schema, initialFormData: formData, extraErrors, focusOnFirstError });
 
         await submitForm(node, user);
 
@@ -2021,7 +2029,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
       it("keeps the validator's errors for the other items", async () => {
         const { node } = createFormComponent({
           schema,
-          formData: { list: [{ name: 'abc' }, { name: 'a' }] },
+          initialFormData: { list: [{ name: 'abc' }, { name: 'a' }] },
           extraErrors,
         });
 
@@ -2034,7 +2042,12 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
       });
 
       it('passes the error keyed by index to onSubmit when it does not block', async () => {
-        const { node, onSubmit } = createFormComponent({ schema, formData, extraErrors, extraErrorsAreWarnings: true });
+        const { node, onSubmit } = createFormComponent({
+          schema,
+          initialFormData: formData,
+          extraErrors,
+          extraErrorsAreWarnings: true,
+        });
 
         await submitForm(node, user);
 
@@ -2061,7 +2074,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         }
         const { node, onError, onSubmit } = createFormComponent({
           schema: { type: 'object', properties: { list: { type: 'array', items: { type: 'string' } } } },
-          formData: { list: ['a'] },
+          initialFormData: { list: ['a'] },
           uiSchema: { 'ui:field': RaisingField },
         });
 
@@ -2079,5 +2092,97 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         expect(onError).toHaveBeenCalledTimes(1);
       });
     });
+  });
+});
+
+describe('the errors a field raises for the items of an array', () => {
+  /** A field that raises `errorSchema` for its own data through the Raise button, and renders the object below it */
+  function raisingField(errorSchema: ErrorSchema) {
+    return function RaisingField(props: FieldProps) {
+      const { ObjectField } = props.registry.fields;
+      return (
+        <>
+          <button type='button' onClick={() => props.onChange(props.formData, props.fieldPath, errorSchema)}>
+            Raise
+          </button>
+          <ObjectField {...props} />
+        </>
+      );
+    };
+  }
+
+  it('leave no node behind for the items a raised array holds nothing for, once the rest are dropped', async () => {
+    const { node, onChange } = createFormComponent({
+      schema: { type: 'object', properties: { list: { type: 'array', items: { type: 'string' } } } },
+      initialFormData: { list: ['a', 'b'] },
+      uiSchema: { 'ui:field': raisingField({ list: [undefined, { __errors: ['taken'] }] }) },
+    });
+
+    await user.click(screen.getByRole('button', { name: 'Raise' }));
+    expect(onChange.mock.lastCall?.[0].errorSchema).toEqual({ list: { 1: { __errors: ['taken'] } } });
+    await user.type(elementOf(node, '#root_list_1'), 'c');
+
+    expect(onChange.mock.lastCall?.[0].errorSchema).toEqual({});
+  });
+
+  it('keep the errors of a property named __proto__ in a raised array as that property', async () => {
+    const { onChange } = createFormComponent({
+      schema: { type: 'object', properties: { list: { type: 'array', items: { type: 'object' } } } },
+      initialFormData: { list: [{}] },
+      uiSchema: { 'ui:field': raisingField({ list: [JSON.parse('{"__proto__": {"__errors": ["taken"]}}')] }) },
+    });
+
+    await user.click(screen.getByRole('button', { name: 'Raise' }));
+
+    const [event] = onChange.mock.lastCall ?? [];
+    expect(Object.getPrototypeOf(event?.errorSchema.list[0])).toBe(Object.prototype);
+    expect(event?.errors).toEqual([
+      { property: '.list.0.__proto__', message: 'taken', stack: '.list.0.__proto__ taken' },
+    ]);
+  });
+
+  it('keep the errors of a property named __proto__ as that property when a sibling is renamed', async () => {
+    const { node, onChange } = createFormComponent({
+      schema: { type: 'object', properties: { obj: { type: 'object', additionalProperties: { type: 'string' } } } },
+      initialFormData: { obj: { a: 'x' } },
+      uiSchema: {
+        'ui:field': raisingField({
+          obj: JSON.parse('{"__proto__": {"__errors": ["proto"]}, "a": {"__errors": ["renamed"]}}'),
+        }),
+      },
+    });
+
+    await user.click(screen.getByRole('button', { name: 'Raise' }));
+    const keyInput = elementOf(node, '#root_obj_a-key');
+    await user.clear(keyInput);
+    await user.type(keyInput, 'c');
+    await user.tab();
+
+    const [event] = onChange.mock.lastCall ?? [];
+    expect(Object.getPrototypeOf(event?.errorSchema.obj)).toBe(Object.prototype);
+    expect(event?.errors).toEqual([
+      { property: '.obj.__proto__', message: 'proto', stack: '.obj.__proto__ proto' },
+      { property: '.obj.c', message: 'renamed', stack: '.obj.c renamed' },
+    ]);
+  });
+
+  it('report no error for a property named __proto__ once renaming a sibling leaves the data without it', async () => {
+    const { node, onChange } = createFormComponent({
+      schema: {
+        type: 'object',
+        properties: { obj: { type: 'object', additionalProperties: { type: 'string', minLength: 3 } } },
+      },
+      initialFormData: JSON.parse('{"obj": {"__proto__": "x", "a": "yyyy"}}'),
+    });
+
+    await submitForm(node, user);
+    const keyInput = elementOf(node, '#root_obj_a-key');
+    await user.clear(keyInput);
+    await user.type(keyInput, 'c');
+    await user.tab();
+
+    const [event] = onChange.mock.lastCall ?? [];
+    expect(Object.keys(event?.formData.obj)).toEqual(['c']);
+    expect(event?.errors).toEqual([]);
   });
 });

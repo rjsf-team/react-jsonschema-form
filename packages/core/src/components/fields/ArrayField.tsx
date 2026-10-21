@@ -1,5 +1,5 @@
-import type { MouseEvent, ReactNode } from 'react';
-import { memo, useCallback, useMemo, useState } from 'react';
+import type { MouseEvent } from 'react';
+import { memo, useCallback, useId, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type {
   ArrayFieldItemButtonProps,
   ArrayFieldTemplateProps,
@@ -17,6 +17,7 @@ import {
   getByPath,
   toPath,
   allowAdditionalItems,
+  deepEquals,
   getItemUiSchemaForItem,
   getStaticItemsUiSchema,
   getTemplates,
@@ -28,13 +29,14 @@ import {
   resolveWidget,
   shouldRenderOptionalField,
   toFieldPath,
-  fieldPathEndsWithIndex,
   fieldPathToId,
   fieldPathToName,
   TranslatableString,
 } from '@rjsf/utils';
 
-import useFieldView from '../../hooks/useFieldView.ts';
+import useReadFieldData from '../../hooks/useReadFieldData.ts';
+import useSendMove from '../../hooks/useSendMove.ts';
+import useWarnIfFormDataNotPassedThrough from '../../hooks/useWarnIfFormDataNotPassedThrough.ts';
 import { EMPTY_UI_SCHEMA } from '../constants.ts';
 import { moveOfItems } from '../formState.ts';
 import {
@@ -46,12 +48,13 @@ import {
   getFieldErrorProps,
   getWidgetErrorProps,
   getWidgetLabelProps,
+  storedValue,
   withFallbackItems,
+  withGlobalUiOptions,
 } from './fieldWidgetUtils.ts';
 import OwnTitleAndDescription from './OwnTitleAndDescription.tsx';
-import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 
-/** A row's stable React `key`, and its `order`: when the row was added, counted across every array */
+/** A row's stable React `key`, and its `order`: when the row was added, relative to the other rows of its array */
 interface RowId {
   key: string;
   order: number;
@@ -62,12 +65,47 @@ interface KeyedFormDataType<T> extends RowId {
   item: T;
 }
 
-/** Used to generate a unique ID for an element in a row */
-let rowIdCounter = 0;
+/** The rows of items the field renders without a handler having made them, on mount or when the data's length gives
+ * no way to tell which rows survived: keyed by `generation`, which each such pass raises, so no row of an earlier pass
+ * hands its instance to one of these, and ordered as the items are
+ *
+ * @param keyPrefix - The field's own prefix for its rows' keys
+ * @param length - The number of items
+ * @param generation - The pass the rows are made in
+ * @returns - The rows
+ */
+function renderedRows(keyPrefix: string, length: number, generation: number): RowId[] {
+  return Array.from({ length }, (_, index) => ({ key: `${keyPrefix}-${generation}-${index}`, order: index }));
+}
 
-function generateRowId(): RowId {
-  rowIdCounter += 1;
-  return { key: `rjsf-array-item-${rowIdCounter}`, order: rowIdCounter };
+/** The highest `order` among `rows`, or `-1` for none */
+function maxOrder(rows: readonly RowId[]): number {
+  return rows.reduce((max, { order }) => Math.max(max, order), -1);
+}
+
+/** Keys `items` by index rather than through `map()`, which skips the holes a write past the end of an array leaves, so
+ * every slot is an item with a row of its own: the row `rowFor` gives its index, or else a new one, ordered after
+ * `others` and every row keyed before it
+ *
+ * @param items - The items to key
+ * @param rowFor - The row the item at `index` keeps, if any
+ * @param newRowId - Makes a row ordered after the rows it is handed
+ * @param [others] - Rows beside the keyed ones that a new row is ordered after
+ * @returns - The keyed items
+ */
+function keyItems<T>(
+  items: T[],
+  rowFor: (index: number, item: T) => RowId | undefined,
+  newRowId: (rows: readonly RowId[]) => RowId,
+  others: readonly RowId[] = [],
+): KeyedFormDataType<T>[] {
+  const keyed: KeyedFormDataType<T>[] = [];
+  for (let index = 0; index < items.length; index++) {
+    const item = items[index];
+    const { key, order } = rowFor(index, item) ?? newRowId([...others, ...keyed]);
+    keyed.push({ key, order, item });
+  }
+  return keyed;
 }
 
 /** Converts `KeyedFormDataType` data into the inner `formData`
@@ -147,7 +185,7 @@ function getNewFormDataRow<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(registry: Registry<T[], S, F>, schema: S, index: number, uiSchema?: UiSchema<T[], S, F>): T {
-  const { schemaUtils, globalFormOptions, uiSchemaDefinitions } = registry;
+  const { schemaUtils, globalFormOptions, globalUiOptions, uiSchemaDefinitions } = registry;
   let itemSchema = schema.items as S;
   // Cast this (and the uiSchema below) as T/T[] to work around schema utils being for T/T[] caused by the
   // FieldProps<T[], S, F> call on the class
@@ -168,7 +206,7 @@ function getNewFormDataRow<
     undefined,
     false,
     undefined,
-    itemUiSchema,
+    withGlobalUiOptions<T[], S, F>(itemUiSchema, globalUiOptions),
     uiSchemaDefinitions,
   ) as unknown as T;
 }
@@ -644,7 +682,6 @@ function ArrayFieldItemInner<
   const fieldPath = toFieldPath(index, parentFieldPath);
   const fieldId = fieldPathToId(fieldPath, globalFormOptions);
   const ItemSchemaField = ArraySchemaField || SchemaField;
-  const readsFormData = useReadsFormData(ArrayFieldItem);
   const { ArrayFieldItemTemplate } = getTemplates<T[], S, F>(registry, uiOptions);
   const displayLabel = displaysLabel<T[], S, F>(registry, itemSchema, itemUiSchema);
   const { description } = getUiOptions(itemUiSchema);
@@ -719,29 +756,27 @@ function ArrayFieldItemInner<
 
   const templateProps = {
     children: (
-      <RawFormDataContext value={readsFormData ? ItemSchemaField : undefined}>
-        <ItemSchemaField
-          name={name}
-          title={title}
-          index={index}
-          schema={itemSchema}
-          uiSchema={itemUiSchema}
-          formData={itemData}
-          errorSchema={asItemErrorSchema(itemErrorSchema)}
-          fieldPath={fieldPath}
-          id={fieldId}
-          required={isItemRequired<S>(itemSchema)}
-          onChange={onChange}
-          onBlur={onBlur}
-          onFocus={onFocus}
-          registry={registry}
-          disabled={disabled}
-          readonly={readonly}
-          hideError={hideError}
-          autofocus={autofocus}
-          {...getFieldErrorProps<T, S, F>(rawErrors)}
-        />
-      </RawFormDataContext>
+      <ItemSchemaField
+        name={name}
+        title={title}
+        index={index}
+        schema={itemSchema}
+        uiSchema={itemUiSchema}
+        formData={itemData}
+        errorSchema={asItemErrorSchema(itemErrorSchema)}
+        fieldPath={fieldPath}
+        id={fieldId}
+        required={isItemRequired<S>(itemSchema)}
+        onChange={onChange}
+        onBlur={onBlur}
+        onFocus={onFocus}
+        registry={registry}
+        disabled={disabled}
+        readonly={readonly}
+        hideError={hideError}
+        autofocus={autofocus}
+        {...getFieldErrorProps<T, S, F>(rawErrors)}
+      />
     ),
     buttonsProps: {
       id: fieldId,
@@ -1054,6 +1089,10 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
 interface KeyedFormDataState<T = unknown> {
   /** The keyed form data elements */
   keyedFormData: KeyedFormDataType<T>[];
+  /** The rows as a handler sees them: those rendered, or sent since by a handler */
+  readSentRows: () => KeyedFormDataType<T>[];
+  /** The items of those rows, the field's own record of its data for a handler outside a `Form` */
+  readSentItems: () => T[];
   /** Updates the keyed form data elements to the given value */
   updateKeyedFormData: (newData: KeyedFormDataType<T>[]) => T[];
 }
@@ -1061,55 +1100,69 @@ interface KeyedFormDataState<T = unknown> {
 const NO_ITEMS: never[] = [];
 
 /** Pairs each item of the `formData` prop with a stable React key. Only the keys live in state: the items are read
- * from props on every render, so the rows always show the value the form actually holds, never a proposal the field
- * made and the form did not commit. The keys are UI metadata, kept so that React reuses row instances (and their DOM
- * focus) across accepted adds, removes and reorders.
+ * from props on every render, so the rows always show the value the form holds. The keys are UI metadata, kept so that
+ * React reuses row instances (and their DOM focus) across adds, removes and reorders.
  *
  * Two sets of rows are kept: `keys`, the rows of the field's latest change, and `confirmed`, the rows of the last data
  * whose length matched them. Data of the latest change's length uses `keys`, and becomes the confirmed rows. Data of
- * the confirmed rows' length uses `confirmed`, as when a parent that applies `onChange` later still passes the data
- * from before the change. Data whose length matches neither, an external replacement or a proposal the form
- * transformed, gives no way to tell which rows survived, so every key is regenerated.
+ * the confirmed rows' length uses `confirmed`, as when a custom parent field keeps the change to itself, so the form's
+ * data stays what it was. Data whose length matches neither, an external replacement, gives no way to tell which rows
+ * survived, so every key is regenerated. Where the form keeps other items than a change sent, the handler rekeys the
+ * rows itself, see `commitRows()`.
+ *
+ * A handler reads the rows from a ref rather than closing over the render's: a second handler in the same event has to
+ * start from the rows the first one sent, which React has yet to render, and a handler closing over the rendered rows
+ * would change identity with them and re-render every row on every edit. Each committed render installs its rows from
+ * a layout Effect, which React runs children first: a handler called from a layout Effect of a row or a template in
+ * the same commit still reads the rows of the commit before, under the keys of which it reads the form's current items.
  */
-function useKeyedFormData<T = unknown>(formData: T[] = NO_ITEMS): KeyedFormDataState<T> {
+function useKeyedFormData<T = unknown>(keyPrefix: string, formData: T[] = NO_ITEMS): KeyedFormDataState<T> {
   const items: T[] = Array.isArray(formData) ? formData : NO_ITEMS;
-  const freshKeys = () => items.map(() => generateRowId());
-  // `keys` are the rows of the field's latest change, and `confirmed` those of the last data that matched them
-  const [rows, setRows] = useState<{ keys: RowId[]; confirmed: RowId[] }>(() => {
-    const keys = freshKeys();
-    return { keys, confirmed: keys };
+  // `keys` are the rows of the field's latest change, and `confirmed` those of the last data that matched them;
+  // `generation` counts the passes that made rows while rendering, see `renderedRows()`
+  const [rows, setRows] = useState<{ keys: RowId[]; confirmed: RowId[]; generation: number }>(() => {
+    const keys = renderedRows(keyPrefix, items.length, 0);
+    return { keys, confirmed: keys, generation: 0 };
   });
 
   let itemKeys: RowId[];
   if (rows.keys.length === items.length) {
     itemKeys = rows.keys;
     if (rows.confirmed !== rows.keys) {
-      setRows({ keys: rows.keys, confirmed: rows.keys });
+      setRows({ ...rows, confirmed: rows.keys });
     }
   } else if (rows.confirmed.length === items.length) {
-    // A parent that applies `onChange` later, after an `await` or in a transition, still passes the data from before the
-    // field's change, which matches the confirmed rows; keeping those, and the change's rows for when its data arrives,
-    // stops the rows and the order they were added in from being regenerated in between. Only lengths are compared, so
-    // two changes inside one such delay that leave the data at neither length, as a copy and then a remove, regenerate
-    // the keys of the renders in between, until the last change's data arrives
+    // A custom parent field kept the change to itself, so the form's data matches the confirmed rows; keeping those
+    // stops the rows and the order they were added in from being regenerated. Only lengths are compared, so data set
+    // to another array of that length keeps the confirmed keys too
     itemKeys = rows.confirmed;
   } else {
-    itemKeys = freshKeys();
-    setRows({ keys: itemKeys, confirmed: itemKeys });
+    const generation = rows.generation + 1;
+    itemKeys = renderedRows(keyPrefix, items.length, generation);
+    setRows({ keys: itemKeys, confirmed: itemKeys, generation });
   }
 
   const keyedFormData = useMemo(
     () => itemKeys.map(({ key, order }, index) => ({ key, order, item: items[index] })),
     [itemKeys, items],
   );
+  const sentRows = useRef(keyedFormData);
+  // Every commit, not only one that changed the rows: a change that never reached the form, as under a custom field
+  // that keeps it to itself, re-renders the rows it sent no data for, which must not outlive that render
+  useLayoutEffect(() => {
+    sentRows.current = keyedFormData;
+  });
+  const readSentRows = useCallback(() => sentRows.current, []);
+  const readSentItems = useCallback(() => keyedToPlainFormData(sentRows.current), []);
 
   const updateKeyedFormData = useCallback((newData: KeyedFormDataType<T>[]) => {
+    sentRows.current = newData;
     const keys = newData.map(({ key, order }) => ({ key, order }));
-    setRows((current) => ({ keys, confirmed: current.confirmed }));
+    setRows((current) => ({ ...current, keys }));
     return keyedToPlainFormData(newData);
   }, []);
 
-  return { keyedFormData, updateKeyedFormData };
+  return { keyedFormData, readSentRows, readSentItems, updateKeyedFormData };
 }
 
 /** The `ArrayField` component is used to render a field in the schema that is of type `array`. It supports both normal
@@ -1122,39 +1175,91 @@ export default function ArrayField<
 >(props: FieldProps<T[], S, F>) {
   const { schema, uiSchema, fieldPath, id: fieldId, registry, formData, onChange } = props;
   const { globalFormOptions, translateString } = registry;
-  const { keyedFormData, updateKeyedFormData } = useKeyedFormData<T>(formData);
-  const view = useFieldView(fieldPath, keyedFormData, ArrayField);
-  /** Every return renders through this, so a template or widget below never inherits what was said of this field */
-  const vouchForItems = (content: ReactNode) => (
-    <RawFormDataContext value={view.readsFormData ? ArrayFieldItem : undefined}>{content}</RawFormDataContext>
+  // Each field's own, so a row's `itemKey` is unique beyond its array, among the rows of an array nested in it or of
+  // another form, as a template that uses it as a DOM id needs; the field's id would not do, since it moves with the
+  // row it is in
+  const rowKeyPrefix = `rjsf-array-item-${useId()}`;
+  const { keyedFormData, readSentRows, readSentItems, updateKeyedFormData } = useKeyedFormData<T>(
+    rowKeyPrefix,
+    formData,
+  );
+  const readItems = useReadFieldData(fieldPath, readSentItems);
+  useWarnIfFormDataNotPassedThrough('ArrayField', fieldId, fieldPath, formData);
+  const sendMove = useSendMove(fieldPath);
+  // Counts the rows the handlers made, so that a row a handler adds never takes the key of one it removed in the same
+  // event, whose instance React would then reuse; mutated by handlers only, so rendering stays pure
+  const handlerRowCount = useRef(0);
+  /** A row a handler adds next to `rows`, ordered after every one of them, as the newest */
+  const newRowId = useCallback(
+    (rows: readonly RowId[]): RowId => {
+      handlerRowCount.current += 1;
+      return { key: `${rowKeyPrefix}-added-${handlerRowCount.current}`, order: maxOrder(rows) + 1 };
+    },
+    [rowKeyPrefix],
   );
 
+  /** The rows as a handler sees them: the form's current items at this path, edits made since the form last rendered
+   * included, under the keys of the rows rendered or sent since, with a fresh key for an item those do not cover.
+   * Outside a `Form`, the rows rendered or sent since.
+   */
   const readRows = useCallback(() => {
-    const rows = view.read();
-    const current = view.readData<T[] | undefined>(keyedToPlainFormData(rows));
-    if (!Array.isArray(current)) {
+    const rows = readSentRows();
+    const items = readItems();
+    if (!Array.isArray(items)) {
       return [];
     }
-    return current.map((item, index) => {
-      const { key, order } = rows[index] ?? generateRowId();
-      return { key, order, item };
-    });
-  }, [view]);
+    return keyItems(items, (index) => rows[index], newRowId);
+  }, [readItems, readSentRows, newRowId]);
 
-  /** Proposes the rows a handler built from `rows`, recording them first so a second handler in the same event starts
-   * from them, and saying where each item went, so the form moves the items' errors along. Where that is, is read off
-   * the rows themselves, so the errors go nowhere the items did not
+  /** Sends the rows a handler built from `rows`, keying them first so a second handler in the same event starts from
+   * them, and saying where each item went, so the form moves the items' errors along. Where that is, is read off the
+   * rows themselves, so the errors go nowhere the items did not. A change `transformChange` refused leaves the items
+   * where they were, so the rows go back to `rows`: kept, a refused reorder, which leaves the length as it was, would
+   * hand each row's instance, and the state it holds, to another item. So do the rows of a change a custom parent field
+   * kept, for later as a debounced `onChange` does or for good, wherever the form holds other items than the change
+   * sent: a second change before the next render would key the form's items by them. Otherwise the form may hold other
+   * items than the change put there: `transformChange` rewrote them, the defaults put one back, or `setFieldValue()`
+   * set the field back. A row then keeps its key only where the form holds the item the change put there, as the form
+   * made it, with the defaults it filled in and the extra data it omitted, so an item the form only derived keeps its
+   * row. An item past the rows the change sent, as one the defaults put back, gets a row of its own, as does every
+   * other item
    */
   const commitRows = useCallback(
     (rows: KeyedFormDataType<T>[], newKeyedFormData: KeyedFormDataType<T>[]) => {
       const newIndexes = new Map(newKeyedFormData.map((row, index) => [row, index]));
-      view.propose(
-        newKeyedFormData,
-        () => onChange(updateKeyedFormData(newKeyedFormData), fieldPath),
-        moveOfItems((index) => newIndexes.get(rows[index])),
+      const value = updateKeyedFormData(newKeyedFormData);
+      const outcome = sendMove({ value, newKeyOf: moveOfItems((index) => newIndexes.get(rows[index])) }, () =>
+        onChange(value, fieldPath),
       );
+      if (outcome === undefined) {
+        if (!deepEquals(readItems(), value)) {
+          updateKeyedFormData(rows);
+        }
+        return;
+      }
+      if (outcome.kind === 'refused') {
+        updateKeyedFormData(rows);
+        return;
+      }
+      const held = readItems();
+      const items: T[] = Array.isArray(held) ? held : [];
+      const made = outcome.kind === 'rewritten' ? outcome.edited : outcome.kept;
+      const sent: unknown[] = Array.isArray(made) ? made : keyedToPlainFormData(newKeyedFormData);
+      if (items.length === newKeyedFormData.length && deepEquals(items, sent)) {
+        return;
+      }
+      const kept = keyItems(
+        items,
+        (index, item) => {
+          const row = newKeyedFormData[index];
+          return row && index < sent.length && deepEquals(item, sent[index]) ? row : undefined;
+        },
+        newRowId,
+        newKeyedFormData,
+      );
+      updateKeyedFormData(kept);
     },
-    [view, onChange, updateKeyedFormData, fieldPath],
+    [sendMove, onChange, updateKeyedFormData, fieldPath, newRowId, readItems],
   );
 
   /** Callback handler for when the user clicks on the add or add at index buttons. Creates a new row of keyed form data
@@ -1172,7 +1277,7 @@ export default function ArrayField<
 
       const rows = readRows();
       const newKeyedFormDataRow: KeyedFormDataType<T> = {
-        ...generateRowId(),
+        ...newRowId(rows),
         item: getNewFormDataRow<T, S, F>(registry, schema, index ?? rows.length, uiSchema),
       };
       const newKeyedFormData = [...rows];
@@ -1183,7 +1288,7 @@ export default function ArrayField<
       }
       commitRows(rows, newKeyedFormData);
     },
-    [registry, schema, uiSchema, commitRows, readRows],
+    [registry, schema, uiSchema, commitRows, readRows, newRowId],
   );
 
   /** Callback handler for when the user clicks on the copy button on an existing array element. Clones the row of
@@ -1204,7 +1309,7 @@ export default function ArrayField<
       }
 
       const newKeyedFormDataRow: KeyedFormDataType<T> = {
-        ...generateRowId(),
+        ...newRowId(rows),
         item: structuredClone(rows[index].item),
       };
       const newKeyedFormData = [...rows];
@@ -1215,7 +1320,7 @@ export default function ArrayField<
       }
       commitRows(rows, newKeyedFormData);
     },
-    [commitRows, readRows],
+    [commitRows, readRows, newRowId],
   );
 
   /** Callback handler for when the user clicks on the remove button on an existing array element. Removes the row of
@@ -1278,16 +1383,8 @@ export default function ArrayField<
    */
   const handleChange = useCallback(
     (value: any, changedFieldPath: FieldPath, newErrorSchema?: ErrorSchema<T[]>, id?: string) => {
-      const lastPathIsItemIndex = fieldPathEndsWithIndex(changedFieldPath);
-      onChange(
-        // We need to treat undefined items as nulls to have validation.
-        // See https://github.com/tdegrunt/jsonschema/issues/206
-        // Only set to null for array items, and not for object properties within array items
-        lastPathIsItemIndex && value === undefined ? null : value,
-        changedFieldPath,
-        newErrorSchema,
-        id,
-      );
+      // A cleared item is stored as `null`, and a cleared property inside an item as `undefined`
+      onChange(storedValue(value, changedFieldPath, false), changedFieldPath, newErrorSchema, id);
     },
     [onChange],
   );
@@ -1305,7 +1402,7 @@ export default function ArrayField<
     const uiOptions = getUiOptions<T[], S, F>(uiSchema);
     const { UnsupportedFieldTemplate } = getTemplates<T[], S, F>(registry, uiOptions);
 
-    return vouchForItems(
+    return (
       <>
         <OwnTitleAndDescription<T[], S, F> {...props} />
         <UnsupportedFieldTemplate
@@ -1315,7 +1412,7 @@ export default function ArrayField<
           reason={translateString(TranslatableString.MissingItems)}
           registry={registry}
         />
-      </>,
+      </>
     );
   }
   const arraySchema = withFallbackItems<S>(schema);
@@ -1340,14 +1437,14 @@ export default function ArrayField<
   switch (mode) {
     case 'multiSelect':
       // If array has enum or uniqueItems set to true, call renderMultiSelect() to render the default multiselect widget or a custom widget, if specified.
-      return vouchForItems(<ArrayAsMultiSelect<T, S, F> {...arrayAsMultiProps} />);
+      return <ArrayAsMultiSelect<T, S, F> {...arrayAsMultiProps} />;
     case 'customWidget':
-      return vouchForItems(<ArrayAsCustomWidget<T, S, F> {...arrayAsMultiProps} />);
+      return <ArrayAsCustomWidget<T, S, F> {...arrayAsMultiProps} />;
     case 'fixed':
-      return vouchForItems(<FixedArray<T, S, F> {...arrayProps} />);
+      return <FixedArray<T, S, F> {...arrayProps} />;
     case 'files':
-      return vouchForItems(<ArrayAsFiles<T, S, F> {...arrayAsMultiProps} />);
+      return <ArrayAsFiles<T, S, F> {...arrayAsMultiProps} />;
     default:
-      return vouchForItems(<NormalArray<T, S, F> {...arrayProps} />);
+      return <NormalArray<T, S, F> {...arrayProps} />;
   }
 }

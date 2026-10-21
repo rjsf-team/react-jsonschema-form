@@ -19,9 +19,10 @@ import {
   AcceptingParent,
   createFormComponent,
   createParentLog,
-  RejectingParent,
-  TransformingParent,
+  ListeningParent,
   createFormRef,
+  handleOf,
+  input,
 } from './testUtils.tsx';
 
 const user = userEvent.setup();
@@ -131,7 +132,7 @@ describe('render stability across sibling fields', () => {
     expect(renderCount('root_nested_inner')).toBe(innerBefore);
   });
 
-  it('a controlled parent accepting each change keeps sibling fields and unchanged subtrees stable', async () => {
+  it('a parent storing each change keeps sibling fields and unchanged subtrees stable', async () => {
     const seen: IChangeEvent<FormValue>[] = [];
     function Parent() {
       const [formData, setFormData] = useState(initialFormData);
@@ -139,6 +140,7 @@ describe('render stability across sibling fields', () => {
         <Form
           schema={schema}
           validator={validator}
+          // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
           formData={formData}
           templates={{ FieldTemplate: CountingFieldTemplate }}
           onChange={(event) => {
@@ -156,10 +158,10 @@ describe('render stability across sibling fields', () => {
 
     await user.type(container.querySelector('#root_first')!, 'abc');
 
-    const proposals = seen.map((event) => event.formData);
-    expect(proposals.map((formData) => formData?.first)).toEqual(['a', 'ab', 'abc']);
-    // Each proposal becomes the next prop, so it must share unchanged subtrees with the value it was applied to
-    const nestedInstances = new Set(proposals.map((formData) => formData?.nested));
+    const reported = seen.map((event) => event.formData);
+    expect(reported.map((formData) => formData?.first)).toEqual(['a', 'ab', 'abc']);
+    // Each reported value becomes the next prop, so it must share unchanged subtrees with the value it was applied to
+    const nestedInstances = new Set(reported.map((formData) => formData?.nested));
     expect(nestedInstances.size).toBe(1);
     expect(renderCount('root_second')).toBe(secondBefore);
     expect(renderCount('root_nested')).toBe(nestedBefore);
@@ -172,7 +174,7 @@ describe('render stability across sibling fields', () => {
         <Form
           schema={schema}
           validator={validator}
-          formData={initialFormData()}
+          initialFormData={initialFormData()}
           uiSchema={{ first: { 'ui:help': <span>tick {tick >= 0 ? 'help' : ''}</span> } }}
           formContext={{ label: 'stable' }}
           templates={{ FieldTemplate: CountingFieldTemplate }}
@@ -363,7 +365,7 @@ describe('render stability across sibling fields', () => {
           uiSchema={{ first: { 'ui:widget': 'custom' } }}
           widgets={{ custom: widget }}
           validator={validator}
-          formData={{ first: '' }}
+          initialFormData={{ first: '' }}
         />
       );
     }
@@ -375,16 +377,16 @@ describe('render stability across sibling fields', () => {
     expect(container.querySelector('#root_first')).toHaveAttribute('data-which', 'second');
   });
 
-  /** The cases single ownership makes well defined (RFC, section 6). Each asserts its baseline count first, so a
+  /** The cases one owner makes well defined. Each asserts its baseline count first, so a
    * renamed id cannot pass vacuously.
    */
-  describe('under single ownership', () => {
+  describe('under one owner', () => {
     const templates = { FieldTemplate: CountingFieldTemplate };
 
-    it('a rejected controlled proposal re-renders nothing outside the proposing branch and shows no rejected value', async () => {
+    it('an edit a parent does not store back re-renders nothing outside its own branch', async () => {
       const log = createParentLog<FormValue>();
       const { container } = render(
-        <RejectingParent<FormValue> schema={schema} initialValue={initialFormData()} log={log} templates={templates} />,
+        <ListeningParent<FormValue> schema={schema} initialValue={initialFormData()} log={log} templates={templates} />,
       );
       const secondBefore = renderCount('root_second');
       const innerBefore = renderCount('root_nested_inner');
@@ -392,29 +394,44 @@ describe('render stability across sibling fields', () => {
 
       await user.type(container.querySelector('#root_first')!, 'abc');
 
-      expect(log.proposals.map((proposal) => proposal?.first)).toEqual(['a', 'b', 'c']);
-      expect(container.querySelector('#root_first')).toHaveValue('');
+      expect(log.reported.map((edit) => edit?.first)).toEqual(['a', 'ab', 'abc']);
+      expect(container.querySelector('#root_first')).toHaveValue('abc');
       expect(renderCount('root_second')).toBe(secondBefore);
       expect(renderCount('root_nested_inner')).toBe(innerBefore);
     });
 
-    it('a transforming parent re-renders only the field whose value it transformed', async () => {
-      const { container } = render(
-        <TransformingParent<FormValue>
-          schema={schema}
-          initialValue={initialFormData()}
-          templates={templates}
-          transform={(proposal) => proposal && { ...proposal, first: proposal.first.toUpperCase() }}
-        />,
-      );
+    it('a parent that writes a transform back re-renders only the field whose value it transformed', async () => {
+      const ref = createFormRef<FormValue>();
+      function TransformingWriter() {
+        const [value, setValue] = useState(initialFormData);
+        return (
+          <Form<FormValue>
+            ref={ref}
+            schema={schema}
+            validator={validator}
+            templates={templates}
+            // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
+            formData={value}
+            onChange={(event) => {
+              const upper = event.formData.first.toUpperCase();
+              if (upper !== event.formData.first) {
+                handleOf(ref).setFieldValue('first', upper);
+                return;
+              }
+              setValue(event.formData);
+            }}
+          />
+        );
+      }
+      const { container } = render(<TransformingWriter />);
       const firstBefore = renderCount('root_first');
       const secondBefore = renderCount('root_second');
       const innerBefore = renderCount('root_nested_inner');
       expect(secondBefore).toBeGreaterThan(0);
 
-      await user.type(container.querySelector('#root_first')!, 'ab');
+      await user.type(input(container, 'root_first'), 'ab');
 
-      expect(container.querySelector('#root_first')).toHaveValue('AB');
+      expect(input(container, 'root_first')).toHaveValue('AB');
       expect(renderCount('root_first')).toBeGreaterThan(firstBefore);
       expect(renderCount('root_second')).toBe(secondBefore);
       expect(renderCount('root_nested_inner')).toBe(innerBefore);
@@ -427,7 +444,7 @@ describe('render stability across sibling fields', () => {
           <Form
             schema={schema}
             validator={validator}
-            formData={initialFormData()}
+            initialFormData={initialFormData()}
             extraErrors={extraErrors}
             templates={templates}
             onChange={() => undefined}
@@ -504,7 +521,7 @@ describe('render stability across sibling fields', () => {
       expect(renderCount('root_2')).toBe(thirdBefore);
     });
 
-    it('a controlled reset re-renders only the fields whose errors cleared', async () => {
+    it('a reset under a parent passing formData re-renders only the fields whose errors cleared', async () => {
       const constrained: RJSFSchema = {
         ...schema,
         properties: { ...schema.properties, first: { type: 'string', minLength: 1 } },
@@ -515,7 +532,7 @@ describe('render stability across sibling fields', () => {
           ref={ref}
           schema={constrained}
           validator={validator}
-          formData={{ first: '', second: '', nested: { inner: '' } }}
+          initialFormData={{ first: '', second: '', nested: { inner: '' } }}
           templates={templates}
           onChange={() => undefined}
         />,
