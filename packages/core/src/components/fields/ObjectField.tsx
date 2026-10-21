@@ -673,16 +673,29 @@ export default function ObjectField<
     // of the user's that happens to equal one
     seededProperties.current.set(newKey, seed);
 
-    setLastRenamedProperty((previous) =>
-      previous.previousKey === newKey
-        ? { currentKey: newKey, previousKey: getAvailableKey(newKey, newFormData) }
-        : previous,
-    );
-    setAdditionalPropertyOrder((order) => [...order, newKey]);
     sentFormData.current = newFormData;
-    onChange(newFormData, fieldPath);
+    const outcome = sendMove({ value: newFormData }, () => onChange(newFormData, fieldPath));
+    // A refused add leaves the order as it was, and the React key the last rename gave a property with that property
+    if (outcome?.kind !== 'refused') {
+      setLastRenamedProperty((previous) =>
+        previous.previousKey === newKey
+          ? { currentKey: newKey, previousKey: getAvailableKey(newKey, newFormData) }
+          : previous,
+      );
+      setAdditionalPropertyOrder((order) => [...order, newKey]);
+    }
     forgetChangedSeeds(newKey);
-  }, [readData, onChange, fieldPath, getAvailableKey, schema, resolvedSchema, seedForKey, forgetChangedSeeds]);
+  }, [
+    readData,
+    sendMove,
+    onChange,
+    fieldPath,
+    getAvailableKey,
+    schema,
+    resolvedSchema,
+    seedForKey,
+    forgetChangedSeeds,
+  ]);
 
   /** Returns a callback function that deals with the rename of a key for an additional property for a schema. That
    * callback will attempt to rename the key and move the existing data to that key, calling `onChange` when it does.

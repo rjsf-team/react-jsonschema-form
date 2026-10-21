@@ -1499,6 +1499,30 @@ describe('ObjectField', () => {
       expect(elementOf(node, '#root_B')).toBe(valueB);
     });
 
+    it('should keep the instance of the last renamed property when transformChange refuses an add', async () => {
+      const ref = createFormRef<GenericObjectType>();
+      const { node } = createFormComponent({
+        ref,
+        schema: { type: 'object', additionalProperties: { type: 'string' } },
+        initialFormData: { newKey: 'a' },
+        transformChange: (next, previous) =>
+          isPlainObject(next) && isPlainObject(previous) && Object.keys(next).length > Object.keys(previous).length
+            ? previous
+            : next,
+      });
+      const keyInput = elementOf(node, '#root_newKey-key');
+      await user.clear(keyInput);
+      await user.type(keyInput, 'foo');
+      await user.tab();
+      const valueFoo = elementOf(node, '#root_foo');
+
+      await user.click(elementOf(node, '.rjsf-object-property-expand button'));
+
+      expect(handleOf(ref).getFormData()).toEqual({ foo: 'a' });
+      // The same element: the refused add did not take the React key the rename gave the property
+      expect(elementOf(node, '#root_foo')).toBe(valueFoo);
+    });
+
     it('should keep a property in its place when transformChange refuses its rename', async () => {
       const ref = createFormRef<GenericObjectType>();
       const { node } = createFormComponent({
