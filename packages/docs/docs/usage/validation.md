@@ -100,7 +100,7 @@ Here is an example of how to use your precompiled validator with your `Form`:
 
 ```tsx
 import { createPrecompiledValidator } from '@rjsf/validator-ajv8';
-import Form, { FormProps } from '@rjsf/core'; // Or whatever theme you use
+import Form, { type FormProps } from '@rjsf/core'; // Or whatever theme you use
 
 import yourSchema from 'path_to/yourSchema.json' with { type: 'json' }; // This needs to be the same file that was precompiled
 import * as precompiledValidatorFns from 'path_to/yourCompiledSchema.cjs';

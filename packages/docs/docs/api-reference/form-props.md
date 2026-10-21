@@ -716,7 +716,7 @@ It is layered part by part over the theme's declarations, which are layered over
 See [Custom Themes](../advanced-customization/custom-themes.md#presentation) for more information.
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { ThemePresentation } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
