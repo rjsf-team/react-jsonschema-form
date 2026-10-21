@@ -244,33 +244,44 @@ function allOfEntries<S extends StrictRJSFSchema>(scored: Scored<S>, rootSchema:
 
 const brokenReach = new KeyedMemo<boolean>();
 
-/** Returns whether the subschema at `node` reaches a `$ref` that resolves to nothing or loops, through its `$ref`, its
- * `allOf` entries or its properties: the subschemas a merge of it enters, which then throws, whatever the data
+/** Returns whether the subschema at `node` reaches a `$ref` that resolves to nothing or loops where a merge of it would:
+ * through its `$ref` and its `allOf` entries, at any depth, and through its properties, one level down from a subschema
+ * it reaches that way, whose own `$ref` and `allOf` a merge resolves too. A property of a property is merged only once
+ * the form renders it, so a broken `$ref` there leaves the option to be scored. Walked with an explicit stack, since a
+ * chain of definitions can be deeper than the call stack allows
  *
  * @param graph - The graph the node is in
  * @param node - The subschema
- * @returns - Whether a reference it reaches names nothing
+ * @returns - Whether a reference a merge of it resolves names nothing
  */
 function reachesBrokenRef<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, node: NodeId): boolean {
   return brokenReach.get([graph, node], () => {
-    const seen = new Set<NodeId>();
-    const reaches = (id: NodeId): boolean => {
-      if (seen.has(id)) {
-        return false;
+    // A subschema reached as a property is walked again where it is reached otherwise, to enter its properties then
+    const seen = [new Set<NodeId>(), new Set<NodeId>()];
+    const pending: [NodeId, boolean][] = [[node, false]];
+    for (let next = pending.pop(); next !== undefined; next = pending.pop()) {
+      const [id, isProperty] = next;
+      const visited = seen[isProperty ? 1 : 0];
+      if (visited.has(id)) {
+        continue;
       }
-      seen.add(id);
+      visited.add(id);
       const found = graph.node(id);
       if (found.kind !== 'schema') {
-        return found.kind === 'invalid';
+        if (found.kind === 'invalid') {
+          return true;
+        }
+        continue;
       }
-      return (
-        (found.ref !== undefined && reaches(found.ref)) ||
-        [ALL_OF_KEY, PROPERTIES_KEY].some((keyword) =>
-          graph.subschemas(id, keyword).some(([, child]) => reaches(child)),
-        )
-      );
-    };
-    return reaches(node);
+      if (found.ref !== undefined) {
+        pending.push([found.ref, isProperty]);
+      }
+      graph.subschemas(id, ALL_OF_KEY).forEach(([, child]) => pending.push([child, isProperty]));
+      if (!isProperty) {
+        graph.subschemas(id, PROPERTIES_KEY).forEach(([, child]) => pending.push([child, true]));
+      }
+    }
+    return false;
   });
 }
 

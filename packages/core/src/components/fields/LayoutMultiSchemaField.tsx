@@ -20,12 +20,12 @@ import {
   DEFAULT_KEY,
   ERRORS_KEY,
   getDiscriminatorFieldFromSchema,
+  getOptionSelectorSchema,
   getOptionUiSchema,
   fieldPathToName,
   ONE_OF_KEY,
   optionsList,
   PROPERTIES_KEY,
-  REF_KEY,
   getDeprecatedHandling,
   getPresentationDeclaration,
   getTemplates,
@@ -33,7 +33,6 @@ import {
   getPropertySchema,
   getUiOptions,
   getXxxOfKey,
-  isSchemaObject,
   noop,
   omitConsumedStyling,
   TranslatableString,
@@ -114,19 +113,17 @@ export function computeEnumOptions<
   }
   const realOptions = options.map((opt: S) => {
     const option = schemaUtils.retrieveSchema(opt, formData);
-    const selector = selectorField && option[PROPERTIES_KEY]?.[selectorField];
-    // An option hands its properties out as written, so a selector written as a `$ref` is retrieved for the value,
-    // title and type it is read for. One written in place is read as it stands, as `findSelectedOptionInXxxOf()` reads
-    // it, so the option keeps the identity `retrieveSchema()` gives it across changes of the data
-    return selectorField && isSchemaObject<S>(selector) && typeof selector[REF_KEY] === 'string'
-      ? {
-          ...option,
-          [PROPERTIES_KEY]: {
-            ...option[PROPERTIES_KEY],
-            [selectorField]: schemaUtils.retrieveSchema(selector, getByPath(formData, selectorField)),
-          },
-        }
-      : option;
+    if (!selectorField) {
+      return option;
+    }
+    const written = option[PROPERTIES_KEY]?.[selectorField];
+    const selector = getOptionSelectorSchema<S>(option, selectorField, (ref) =>
+      schemaUtils.retrieveSchema(ref, getByPath(formData, selectorField)),
+    );
+    // The option keeps the identity `retrieveSchema()` gives it where its selector is read as written
+    return selector === undefined || selector === written
+      ? option
+      : { ...option, [PROPERTIES_KEY]: { ...option[PROPERTIES_KEY], [selectorField]: selector } };
   });
   let tempSchema = schema;
   const xxxOfKey = getXxxOfKey<S>(schema);
