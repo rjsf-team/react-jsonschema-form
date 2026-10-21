@@ -3545,6 +3545,9 @@ Takes a schema and formData and returns a copy of the formData with any fields n
 This is useful for ensuring that only data that is relevant to the schema is preserved.
 Objects with `additionalProperties` keyword set to `true` will not have their extra fields removed.
 
+Known limitation: a property declared both beside a `$ref` and in the definition it names, or an option an `allOf` merge rebuilds, is a schema no `$id` resource holds, so a `$ref` inside it that a resource of its own wrote is resolved against the root.
+Filtering through it throws `Could not find a definition for …`, or reads the root's definition of the same name.
+
 ```ts
 const schema = {
   type: 'object',
