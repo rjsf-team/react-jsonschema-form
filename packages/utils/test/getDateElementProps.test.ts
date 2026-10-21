@@ -5,6 +5,21 @@ describe('getDateElementProps', () => {
   const dayRange = [1, 31];
   const defaultYearRange = [1900, new Date().getFullYear() + 2] as [number, number];
 
+  it('gives a part the date holds as -1 an undefined value, and a part of 0 its 0', () => {
+    const date = { day: -1, month: 12, year: -1, hour: 0, minute: -1, second: 0 };
+
+    const prop = getDateElementProps(date, true);
+
+    expect(prop).toEqual([
+      { type: 'year', range: defaultYearRange, value: undefined },
+      { type: 'month', range: monthRange, value: 12 },
+      { type: 'day', range: dayRange, value: undefined },
+      { type: 'hour', range: [0, 23], value: 0 },
+      { type: 'minute', range: [0, 59], value: undefined },
+      { type: 'second', range: [0, 59], value: 0 },
+    ]);
+  });
+
   it('returns date in default(YMD) format when time is false and format is not passed', () => {
     const date = { day: 11, month: 12, year: 2023 };
 

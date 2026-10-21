@@ -58,8 +58,6 @@ function AltDatePart({
   onBlur,
   onFocus,
 }: AltDatePartProps) {
-  // The widget's state holds -1 for an unset part
-  const partValue = part.value === undefined || part.value < 0 ? undefined : part.value;
   const partId = dateElementId(id, part.type);
   const partLabel = dateElementLabel(part.type, translateString);
   const [start, end] = part.range;
@@ -68,8 +66,8 @@ function AltDatePart({
     (value: string | null) => onChange(part.type as keyof DateObject, value || undefined),
     [onChange, part.type],
   );
-  const handleBlur = useCallback(() => onBlur(partId, partValue), [onBlur, partId, partValue]);
-  const handleFocus = useCallback(() => onFocus(partId, partValue), [onFocus, partId, partValue]);
+  const handleBlur = useCallback(() => onBlur(partId, part.value), [onBlur, partId, part.value]);
+  const handleFocus = useCallback(() => onFocus(partId, part.value), [onFocus, partId, part.value]);
   return (
     <Box>
       <Select
@@ -85,7 +83,7 @@ function AltDatePart({
         error={invalid}
         success={success}
         data={data}
-        value={partValue === undefined ? null : partValue.toString()}
+        value={part.value === undefined ? null : part.value.toString()}
         onChange={handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
@@ -149,7 +147,7 @@ export default function AltDateWidget<
 >(props: WidgetProps<T, S, F>) {
   const { id, disabled, readonly, autofocus, required, label, options, registry, onBlur, onFocus } = props;
   const { translateString } = registry;
-  const { elements, handleChange, handleClear, handleSetNow } = useAltDateWidgetProps(props);
+  const { elements, handleChange, handleClear, handleSetNow, buttonsDisabled } = useAltDateWidgetProps(props);
   const { wrapperProps, invalid, successId, slotlessErrors } = useFieldWrapperProps(props, true);
   const { inputContainer, wrapperProps: fieldWrapperProps } = options;
   // Each part renders the field's `inputContainer` in its own wrapper, rather than the field's wrapper around them all,
@@ -189,12 +187,12 @@ export default function AltDateWidget<
           />
           <Group wrap='nowrap' gap={3}>
             {!options.hideNowButton && (
-              <Button variant='subtle' size='xs' disabled={disabled || readonly} onClick={handleSetNow}>
+              <Button variant='subtle' size='xs' disabled={buttonsDisabled} onClick={handleSetNow}>
                 {translateString(TranslatableString.NowLabel)}
               </Button>
             )}
             {!options.hideClearButton && (
-              <Button variant='subtle' size='xs' disabled={disabled || readonly} onClick={handleClear}>
+              <Button variant='subtle' size='xs' disabled={buttonsDisabled} onClick={handleClear}>
                 {translateString(TranslatableString.ClearLabel)}
               </Button>
             )}

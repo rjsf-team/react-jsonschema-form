@@ -126,6 +126,7 @@ describe('useAltDateWidgetProps()', () => {
     expect(PROPS.onChange).not.toHaveBeenCalled();
     const expectedDate = { ...parseDateString(DATE_STR), [part]: -1 };
     expect(result.current.elements).toEqual(getDateElementProps(expectedDate, false, PROPS.options.yearsRange));
+    expect(result.current.elements.find(({ type }) => type === part)?.value).toBeUndefined();
     act(() => result.current.handleChange(part, part === 'month' ? '11' : '28'));
     expect(PROPS.onChange).toHaveBeenCalledExactlyOnceWith(part === 'month' ? '2023-11-27' : '2023-10-28');
   });
@@ -139,6 +140,7 @@ describe('useAltDateWidgetProps()', () => {
     expect(handleChange).toBeInstanceOf(Function);
     expect(handleClear).toBeInstanceOf(Function);
     expect(handleSetNow).toBeInstanceOf(Function);
+    expect(result.current.buttonsDisabled).toBe(false);
     // Simulate clicking the setNow button
     const simulatedEvent = {
       preventDefault: vi.fn(),
@@ -158,6 +160,7 @@ describe('useAltDateWidgetProps()', () => {
     expect(handleChange).toBeInstanceOf(Function);
     expect(handleClear).toBeInstanceOf(Function);
     expect(handleSetNow).toBeInstanceOf(Function);
+    expect(result.current.buttonsDisabled).toBe(false);
     // Simulate clicking the setNow button
     const simulatedEvent = {
       preventDefault: vi.fn(),
@@ -380,6 +383,7 @@ describe('useAltDateWidgetProps()', () => {
     expect(handleChange).toBeInstanceOf(Function);
     expect(handleClear).toBeInstanceOf(Function);
     expect(handleSetNow).toBeInstanceOf(Function);
+    expect(result.current.buttonsDisabled).toBe(true);
     // Simulate clicking the setNow button
     const simulatedEvent = {
       preventDefault: vi.fn(),
@@ -401,6 +405,7 @@ describe('useAltDateWidgetProps()', () => {
     expect(handleChange).toBeInstanceOf(Function);
     expect(handleClear).toBeInstanceOf(Function);
     expect(handleSetNow).toBeInstanceOf(Function);
+    expect(result.current.buttonsDisabled).toBe(true);
     // Simulate clicking the setNow button
     const simulatedEvent = {
       preventDefault: vi.fn(),
@@ -499,5 +504,21 @@ describe('useAltDateWidgetProps()', () => {
       const select = screen.getByRole('combobox', { name: '[minute] / When' });
       expect(select).toHaveDisplayValue('[minute]');
     });
+  });
+  test('DateElement hands its SelectWidget an unset element as undefined, and a set one as it is', () => {
+    const SpySelectWidget = vi.fn((props: WidgetProps) => SelectWidget(props));
+    const registry = { ...REGISTRY, widgets: { SelectWidget: SpySelectWidget } } as unknown as Registry;
+    const elementProps = { rootId: 'root', select: vi.fn(), registry, onBlur: vi.fn(), onFocus: vi.fn() };
+    render(
+      <>
+        <DateElement {...elementProps} type='year' range={[2000, 2030]} value={-1} />
+        <DateElement {...elementProps} type='month' range={[1, 12]} value={10} />
+        <DateElement {...elementProps} type='hour' range={[0, 23]} value={0} />
+      </>,
+    );
+    const valueOf = (id: string): unknown => SpySelectWidget.mock.calls.find(([props]) => props.id === id)?.[0].value;
+    expect(valueOf('root_year')).toBeUndefined();
+    expect(valueOf('root_month')).toBe(10);
+    expect(valueOf('root_hour')).toBe(0);
   });
 });
