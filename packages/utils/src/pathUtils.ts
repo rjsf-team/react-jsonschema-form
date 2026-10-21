@@ -120,7 +120,7 @@ export function setByPath<O>(obj: O, path: ObjectPath, value: unknown, createInt
   }
   // Fast path for a single constant key, avoiding the segment-list allocation
   if (!Array.isArray(path)) {
-    setOwn(obj, String(path), value);
+    setOwn(obj, path, value);
     return obj;
   }
   const segments = path;
@@ -128,7 +128,7 @@ export function setByPath<O>(obj: O, path: ObjectPath, value: unknown, createInt
   for (let i = 0; i < segments.length; i++) {
     const segment = segments[i];
     if (i === segments.length - 1) {
-      setOwn(current, String(segment), value);
+      setOwn(current, segment, value);
     } else {
       // Own properties only, so an inherited member is never traversed into
       const existing = Object.hasOwn(current, segment) ? current[segment] : undefined;
@@ -136,7 +136,7 @@ export function setByPath<O>(obj: O, path: ObjectPath, value: unknown, createInt
         current = existing;
       } else {
         const next = createIntermediateObjects || !isIndex(segments[i + 1]) ? {} : [];
-        setOwn(current, String(segment), next);
+        setOwn(current, segment, next);
         /* v8 ignore next -- a fresh {} or [] is always settable; the guard exists only to narrow the type */
         if (isSettable(next)) {
           current = next;

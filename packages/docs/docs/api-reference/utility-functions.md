@@ -2883,13 +2883,13 @@ setByPath({}, 'a.b', 1); // { 'a.b': 1 }, a bare string is one literal key
 
 ### setOwn()
 
-Writes `value` at `key` of `obj` as an own, enumerable data property, mutating `obj`.
-A plain assignment to a `__proto__` key, which JSON-sourced data can hold, would reach the prototype setter and re-point `obj`'s prototype instead of adding the key, so that key is written through `Object.defineProperty`; every other key is assigned.
+Writes `value` at `key` of a plain object `obj` as an own, enumerable data property, mutating `obj`.
+A plain assignment to a `__proto__` key, which JSON-sourced data can hold, would reach the prototype setter and re-point `obj`'s prototype instead of adding the key, so that key is written through `Object.defineProperty`; every other key is assigned, so on an object whose prototype has a setter for the key, or that already holds the key as a non-enumerable property, it runs that setter or keeps those attributes.
 
 #### Parameters
 
 - obj: GenericObjectType - The object to write to
-- key: string - The key to write
+- key: string | number - The key to write, a path segment's array index included
 - value: unknown - The value to store at `key`
 
 #### Example

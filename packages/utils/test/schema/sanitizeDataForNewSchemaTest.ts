@@ -1494,6 +1494,18 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         expect(Object.getOwnPropertyDescriptor(result.nested, '__proto__')?.value).toBe('inner');
         expect(Object.getPrototypeOf(result.nested)).toBe(Object.prototype);
       });
+      it('sanitizes the object held under a __proto__ property and keeps it an own key', () => {
+        const oldSchema = JSON.parse(
+          '{"type": "object", "properties": {"__proto__": {"type": "object", "properties": {"a": {"type": "string"}, "b": {"type": "string"}}}}}',
+        ) as RJSFSchema;
+        const newSchema = JSON.parse(
+          '{"type": "object", "properties": {"__proto__": {"type": "object", "properties": {"a": {"type": "string"}}}}}',
+        ) as RJSFSchema;
+        const data = JSON.parse('{"__proto__": {"a": "kept", "b": "dropped"}}');
+        const result = schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, data);
+        expect(Object.getPrototypeOf(result)).toBe(Object.prototype);
+        expect(Object.getOwnPropertyDescriptor(result, '__proto__')?.value).toEqual({ a: 'kept', b: undefined });
+      });
     });
   });
 }
