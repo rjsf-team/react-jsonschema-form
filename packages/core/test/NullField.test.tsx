@@ -1,4 +1,4 @@
-import type { DefaultFormStateBehavior, RJSFSchema, UiSchema } from '@rjsf/utils';
+import type { DefaultFormStateBehavior, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { act } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
@@ -316,5 +316,45 @@ describe('NullField', () => {
         expect(getFormData()).toEqual({ o: { k: kept } });
       },
     );
+
+    // An object holding a null field keeps the `undefined` it is given, as one holding none does
+    const holder: RJSFSchema = {
+      type: 'object',
+      properties: { n: { type: 'null' }, s: { type: 'string', default: 'x' } },
+    };
+
+    it('is left alone for an object holding a null field, through the edits after it', async () => {
+      const ref = createFormRef();
+      const { node, getFormData } = createFormComponent({
+        ref,
+        schema: { type: 'object', properties: { a: { type: 'string' }, p: holder } },
+      });
+
+      act(() => handleOf(ref).setFieldValue('p', undefined));
+      await user.type(elementOf(node, '#root_a'), 'z');
+
+      expect(getFormData()).toEqual({ a: 'z', p: undefined });
+    });
+
+    it('is left alone for the object of an anyOf/oneOf whose selector was cleared', async () => {
+      // A selector that can send no option, as a theme's select that allows deselecting does
+      const ClearableSelector = ({ onChange }: WidgetProps) => (
+        <button type='button' id='clear-option' onClick={() => onChange(undefined)}>
+          Clear
+        </button>
+      );
+      const { node, getFormData } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { a: { type: 'string' }, p: { oneOf: [holder, { type: 'string' }] } },
+        },
+        uiSchema: { p: { 'ui:widget': ClearableSelector } },
+      });
+
+      await user.click(elementOf(node, '#clear-option'));
+      await user.type(elementOf(node, '#root_a'), 'z');
+
+      expect(getFormData()).toEqual({ a: 'z', p: undefined });
+    });
   });
 });

@@ -396,8 +396,11 @@ function nullFillsOfSkippedBranches<T, S extends StrictRJSFSchema, F extends For
   return fills;
 }
 
-/** Records the defaults of the property `key` of `formData`, which hold a `null` fill, for the property the data holds
- * as `undefined`, see `NullFills.overUndefined`. A property the data does not hold takes them from the merge already
+/** Records the property `key` of `formData`, whose defaults hold a `null` fill, for the `null` to go over the
+ * `undefined` the data holds it as, see `NullFills.overUndefined`, when the property is itself the field of a `null`
+ * schema: that `null` is the one value the field holds. A property the data does not hold takes it from the merge
+ * already, and an object or array held as `undefined` keeps it, with every default of what it holds, as one holding
+ * no `null` schema does
  *
  * @param nullFills - The `null` fills of the call
  * @param formData - The object of the form data the property belongs to
@@ -405,9 +408,15 @@ function nullFillsOfSkippedBranches<T, S extends StrictRJSFSchema, F extends For
  * @param defaults - The property's defaults
  */
 function fillOverUndefined(nullFills: NullFills | undefined, formData: unknown, key: string, defaults: unknown) {
-  if (nullFills && isObject(formData) && Object.hasOwn(formData, key) && formData[key] === undefined) {
-    const fills = nullFills.overUndefined.get(formData) ?? new Map<string, unknown>();
-    fills.set(key, defaults);
+  if (
+    nullFills &&
+    defaults === null &&
+    isObject(formData) &&
+    Object.hasOwn(formData, key) &&
+    formData[key] === undefined
+  ) {
+    const fills = nullFills.overUndefined.get(formData) ?? new Set<string>();
+    fills.add(key);
     nullFills.overUndefined.set(formData, fills);
   }
 }
@@ -418,11 +427,11 @@ interface NullFills {
    * Controls, whose fields render only once the object has a value
    */
   globalUiOptions?: GlobalUISchemaOptions;
-  /** For each object of the form data that holds a property as `undefined` whose field holds a `null` fill, the
-   * defaults those properties take. The data's `undefined` is kept over a default everywhere else, so these are put in
-   * once the defaults are merged into the data: the field of a `null` schema holds `null` whatever it was given
+  /** For each object of the form data that holds the value of a `null` schema's field as `undefined`, those
+   * properties. The data's `undefined` is kept over a default everywhere else, so their `null`s are put in once the
+   * defaults are merged into the data: the field of a `null` schema holds `null` whatever it was given
    */
-  overUndefined: Map<object, Map<string, unknown>>;
+  overUndefined: Map<object, Set<string>>;
   /** Set below an optional object the Optional Data Controls render while it has no value: none of its fields render
    * until the user adds it, so none of their `null`s is filled in, and the object stays out of the defaults as one with
    * no `null` schema in it would
@@ -1508,7 +1517,7 @@ export default function getDefaultFormState<
   return defaults;
 }
 
-/** Puts the `null` fills of the properties the form data holds as `undefined` into `merged`, see
+/** Puts the `null` of each `null` schema's field the form data holds as `undefined` into `merged`, see
  * `NullFills.overUndefined`. `merged` holds the keys of `formData` at every level, so the two are walked together. It
  * is written in place: `mergeDefaultsWithFormData()` builds every object of what it returns afresh, so none is the
  * caller's
@@ -1524,7 +1533,7 @@ function putNullFillsOverUndefined(merged: unknown, formData: unknown, nullFills
   const fills = nullFills.overUndefined.get(formData);
   for (const [key, value] of Object.entries(formData)) {
     if (fills?.has(key) && Object.hasOwn(merged, key) && Reflect.get(merged, key) === undefined) {
-      Reflect.set(merged, key, fills.get(key));
+      Reflect.set(merged, key, null);
     } else {
       putNullFillsOverUndefined(Reflect.get(merged, key), value, nullFills);
     }

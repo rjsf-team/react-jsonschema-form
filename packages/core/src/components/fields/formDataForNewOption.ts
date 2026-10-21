@@ -88,8 +88,9 @@ interface OptionUiSchemas<T, S extends StrictRJSFSchema, F extends FormContextTy
  * option's `default` put there outlasts the switch and switching back does not restore it
  * ([#4476](https://github.com/rjsf-team/react-jsonschema-form/issues/4476)). The same is true of a key whose value
  * sanitize discarded, because it clears by assigning `undefined` rather than by removing the key, and
- * `getDefaultFormState()` populates an absent key but leaves one explicitly set to `undefined` alone. Deleting either
- * kind of key outright is what lets the fill below reach it.
+ * `getDefaultFormState()` populates an absent key but leaves one explicitly set to `undefined` alone, unless it is the
+ * field of a `null` schema, whose one value it fills in. Deleting either kind of key outright is what lets the fill
+ * below reach it.
  *
  * A key qualifies only when all of the following hold, which between them keep the deletion from stranding data the
  * user or the caller supplied:

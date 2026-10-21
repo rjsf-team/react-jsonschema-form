@@ -8797,6 +8797,49 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema, formData: { s: undefined } }),
         ).toEqual({ s: undefined });
       });
+
+      // The data's `undefined` wins over every default of the object, as it does for an object that holds no null schema
+      const holder: RJSFSchema = {
+        type: 'object',
+        properties: { n: { type: 'null' }, s: { type: 'string', default: 'x' } },
+      };
+      it.each<[string, RJSFSchema, GenericObjectType, boolean]>([
+        ['a property', { type: 'object', properties: { p: holder } }, { p: undefined }, false],
+        [
+          'a property an allOf brings in',
+          { type: 'object', properties: { o: { type: 'object', allOf: [{ properties: { p: holder } }] } } },
+          { o: { p: undefined } },
+          false,
+        ],
+        [
+          'an additional property',
+          { type: 'object', properties: { o: { type: 'object', additionalProperties: holder } } },
+          { o: { p: undefined } },
+          false,
+        ],
+        [
+          'an additional property, once the defaults are generated',
+          { type: 'object', properties: { o: { type: 'object', additionalProperties: holder } } },
+          { o: { p: undefined } },
+          true,
+        ],
+        [
+          'an anyOf/oneOf property',
+          { type: 'object', properties: { p: { oneOf: [holder, { type: 'string' }] } } },
+          { p: undefined },
+          false,
+        ],
+      ])(
+        'is not filled in for an object holding a null field that is %s the data holds as undefined',
+        (_, schema, formData, initialDefaultsGenerated) => {
+          expect(
+            getDefaultFormState(
+              { validator: testValidator },
+              { schema, rootSchema: schema, formData, initialDefaultsGenerated },
+            ),
+          ).toEqual(formData);
+        },
+      );
     });
 
     describe('the null of an additional property of an object below the root, once the defaults are generated', () => {
