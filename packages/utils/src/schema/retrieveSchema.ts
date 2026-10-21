@@ -279,7 +279,10 @@ export function fieldOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, schem
  * lists, is adopted, so that it is still handed out as an option of the field offering it, keeping the field's guard
  * chain: handed out as a schema of its own, a recursion through it would start afresh at every level. The merge makes
  * such an option anew for every plan, which the graph adopts once for what it holds, in the resource the lists merged
- * into it sit in, so that the `$ref`s it holds resolve where they were written.
+ * into it sit in, so that the `$ref`s it holds resolve where they were written. Where the field's declarations offer
+ * lists under `keyword` in several resources it is adopted at the root's base, which is a known gap: that includes a
+ * list the option the field chose replaced, so an option that option's own merge rebuilds in a resource of its own is
+ * adopted at the root's base when the field offering the list it replaced sits in another.
  *
  * @param seeding - The graph and chains of the field offering the option
  * @param keyword - The keyword holding the list

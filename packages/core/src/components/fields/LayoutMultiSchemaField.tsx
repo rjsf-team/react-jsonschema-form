@@ -25,6 +25,7 @@ import {
   ONE_OF_KEY,
   optionsList,
   PROPERTIES_KEY,
+  REF_KEY,
   getDeprecatedHandling,
   getPresentationDeclaration,
   getTemplates,
@@ -115,8 +116,9 @@ export function computeEnumOptions<
     const option = schemaUtils.retrieveSchema(opt, formData);
     const selector = selectorField && option[PROPERTIES_KEY]?.[selectorField];
     // An option hands its properties out as written, so a selector written as a `$ref` is retrieved for the value,
-    // title and type it is read for
-    return selectorField && isSchemaObject<S>(selector)
+    // title and type it is read for. One written in place is read as it stands, as `findSelectedOptionInXxxOf()` reads
+    // it, so the option keeps the identity `retrieveSchema()` gives it across changes of the data
+    return selectorField && isSchemaObject<S>(selector) && typeof selector[REF_KEY] === 'string'
       ? {
           ...option,
           [PROPERTIES_KEY]: {
