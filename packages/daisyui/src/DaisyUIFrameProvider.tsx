@@ -17,7 +17,10 @@
  */
 
 import type { ReactNode } from 'react';
-import { useEffect } from 'react';
+import { useEffect, useSyncExternalStore } from 'react';
+
+import { FrameThemeContext } from './theme/frameTheme.ts';
+import { DEFAULT_THEME, readStoredTheme, storeTheme, subscribeToStoredTheme } from './theme/storedTheme.ts';
 
 interface DaisyUIFrameProviderProps {
   children: ReactNode;
@@ -31,17 +34,24 @@ interface DaisyUIFrameProviderProps {
  */
 function DaisyUIFrameComponent(props: DaisyUIFrameProviderProps & { document?: Document }) {
   const { children, subtheme = {}, document } = props;
-  const theme = (() => {
-    try {
-      if (subtheme?.dataTheme) {
-        localStorage.setItem('daisyui-theme', subtheme.dataTheme);
-        return subtheme.dataTheme;
-      }
-      return localStorage.getItem('daisyui-theme') || 'cupcake';
-    } catch {
-      return 'cupcake';
+  const chosenTheme = subtheme?.dataTheme;
+  // The stored theme lives outside React, so it is read as an external store, which renders the provider again when
+  // another provider or another tab stores a theme. A chosen theme is shown without reading the storage at all. The
+  // server has no storage, so it renders the default, which hydration starts from too before showing the stored one
+  const theme = useSyncExternalStore(
+    subscribeToStoredTheme,
+    () => chosenTheme || readStoredTheme(),
+    () => chosenTheme || DEFAULT_THEME,
+  );
+
+  // Storing the chosen theme is a side effect, so it waits for the commit rather than happening while rendering; the
+  // components inside get the theme shown through `FrameThemeContext` meanwhile. A storage that refuses it leaves the
+  // chosen theme shown all the same
+  useEffect(() => {
+    if (chosenTheme) {
+      storeTheme(chosenTheme);
     }
-  })();
+  }, [chosenTheme]);
 
   useEffect(() => {
     if (document) {
@@ -88,7 +98,7 @@ function DaisyUIFrameComponent(props: DaisyUIFrameProviderProps & { document?: D
 
   return (
     <div data-theme={theme} className='daisy-ui-theme'>
-      {children}
+      <FrameThemeContext value={theme}>{children}</FrameThemeContext>
     </div>
   );
 }
