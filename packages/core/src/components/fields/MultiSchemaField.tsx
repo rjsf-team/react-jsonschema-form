@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { use, useCallback, useMemo } from 'react';
 import type { ErrorSchema, FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
 import {
   ANY_OF_KEY,
@@ -21,11 +21,12 @@ import {
   UI_OPTIONS_KEY,
 } from '@rjsf/utils';
 
-import fieldLabelForLog from '../../fieldLabelForLog.ts';
+import fieldLabelForLog, { entryLabelForLog } from '../../fieldLabelForLog.ts';
 import useOptionSelection from '../../hooks/useOptionSelection.ts';
 import useSendOptionSwitch from '../../hooks/useSendOptionSwitch.ts';
 import { displaysLabel, getWidgetErrorProps, getWidgetLabelProps } from './fieldWidgetUtils.ts';
 import formDataForNewOption from './formDataForNewOption.ts';
+import NamedFieldContext from './NamedFieldContext.ts';
 
 /** Returns the field's `uiSchema` for an option that declares none of its own, without the field's title and
  * description, which the field's plan already carries to the option's, so the option keeps the title and description
@@ -98,7 +99,8 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   const selectSuffix = xxxOfKey === ANY_OF_KEY ? '__anyof_select' : '__oneof_select';
   const fieldId = `${id}${selectSuffix}`;
 
-  const { widgets, fields, translateString, globalUiOptions, uiSchemaDefinitions, rootSchema } = registry;
+  const { widgets, fields, translateString, globalFormOptions, globalUiOptions, uiSchemaDefinitions, rootSchema } =
+    registry;
   const {
     widget = 'select',
     placeholder,
@@ -126,6 +128,16 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
 
   // Then we pick the one that matches the selected option index, if one exists otherwise default to the main uiSchema
   const optionUiSchema = selectOptionUiSchema<T, S, F>(optionsUiSchema, uiSchema, selectedOption);
+  // Below a field named for this path the option renders as though no field were named, which its `SchemaField` can't
+  // tell apart from a `uiSchema` it inherits, so a field the option's own entry names is warned about here instead
+  const namedForPath = use(NamedFieldContext)?.fieldPath === fieldPath;
+  if (namedForPath && optionUiSchema !== uiSchema && getUiOptions<T, S, F>(optionUiSchema).field) {
+    logOnce(
+      `ui:field in uiSchema.${xxxOfKey}[${selectedOption}] for ${entryLabelForLog(fieldPath, globalFormOptions)} is ` +
+        'ignored, since a field is already named for that path, so the option is rendered as though no ui:field were ' +
+        'given.',
+    );
+  }
 
   const option = selectedOption >= 0 ? options[selectedOption] || null : null;
   // A parent allowing several types passes all of them on: when the fallback UI is on, it pins one type on the schema

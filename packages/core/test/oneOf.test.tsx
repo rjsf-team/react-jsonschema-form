@@ -2884,6 +2884,9 @@ describe('oneOf', () => {
 
         expect(node.querySelectorAll('.custom-field')).toHaveLength(1);
         expect(node.querySelector('input#root')).toBeInTheDocument();
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledWith(
+          expect.stringContaining('ui:field in uiSchema.oneOf[0] for "root" is ignored'),
+        );
       });
     });
   });
