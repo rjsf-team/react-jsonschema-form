@@ -6,7 +6,7 @@ import { useCallback, useMemo, useState } from 'react';
 import dateElementLabel, { dateElementAriaLabel } from './dateElementLabel.ts';
 import dateRangeOptions from './dateRangeOptions.ts';
 import type { DateElementFormat, DateElementProp } from './getDateElementProps.ts';
-import getDateElementProps from './getDateElementProps.ts';
+import getDateElementProps, { elementValue } from './getDateElementProps.ts';
 import getNestedControlPresentation from './getNestedControlPresentation.ts';
 import { ariaDescribedByIds, dateElementId } from './idGenerators.ts';
 import parseDateString from './parseDateString.ts';
@@ -70,9 +70,10 @@ export type DateElementProps<
  * as its placeholder and an `aria-label` built from the field's `label`, such as `When, year`. Given its field's plan,
  * it hands it a plan of its own, through which `widgetAriaProps()` describes it by the field's parts that render and
  * marks it `aria-invalid` while the field's errors show, without the field's `aria-labelledby`, which would outrank its
- * own name. Without one, it describes it by `ariaDescribedByIds(rootId)`. An unset element, which the hook stores as
- * -1, is no option, so it is handed to the `SelectWidget` as an `undefined` value, which a native select reports to
- * `onFocus` and `onBlur` as `undefined` and every other built-in `SelectWidget` reports as it is handed.
+ * own name. Without one, it describes it by `ariaDescribedByIds(rootId)`. An unset element, which the hook's
+ * `elements` give as `undefined` and a `DateObject` holds as -1, is no option, so it is handed to the `SelectWidget` as
+ * an `undefined` value, which a native select reports to `onFocus` and `onBlur` as `undefined` and every other built-in
+ * `SelectWidget` reports as it is handed.
  *
  * @param props - The `DateElementProps` for the date element
  */
@@ -116,7 +117,7 @@ export function DateElement<
       className={className}
       options={{ enumOptions: dateRangeOptions<S>(range[0], range[1]) }}
       placeholder={elementLabel}
-      value={typeof value === 'number' && value < 0 ? undefined : value}
+      value={elementValue(value)}
       disabled={disabled}
       readonly={readonly}
       autofocus={autofocus}

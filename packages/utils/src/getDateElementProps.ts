@@ -10,7 +10,18 @@ export interface DateElementProp {
   value: number | undefined;
 }
 
-/** Given date & time information with optional yearRange & format, returns props for DateElement
+/** The value of a date element for a part of a `DateObject`, which holds `-1` for a part no one has picked yet. That is
+ * no option, so it is given as `undefined`
+ *
+ * @param part - The part of the `DateObject`
+ * @returns - The `part`, or `undefined` where it is unset
+ */
+export function elementValue(part?: number) {
+  return part === undefined || part < 0 ? undefined : part;
+}
+
+/** Given date & time information with optional yearRange & format, returns props for DateElement, an unset part of the
+ * `date` given an `undefined` value
  *
  * @param date - Object containing date with optional time information
  * @param time - Determines whether to include time or not
@@ -27,9 +38,9 @@ export default function getDateElementProps(
 ) {
   const { day, month, year, hour, minute, second } = date;
 
-  const dayObj: DateElementProp = { type: 'day', range: [1, 31], value: day };
-  const monthObj: DateElementProp = { type: 'month', range: [1, 12], value: month };
-  const yearObj: DateElementProp = { type: 'year', range: yearRange, value: year };
+  const dayObj: DateElementProp = { type: 'day', range: [1, 31], value: elementValue(day) };
+  const monthObj: DateElementProp = { type: 'month', range: [1, 12], value: elementValue(month) };
+  const yearObj: DateElementProp = { type: 'year', range: yearRange, value: elementValue(year) };
 
   const dateElementProp: DateElementProp[] = [];
   switch (format) {
@@ -46,9 +57,9 @@ export default function getDateElementProps(
 
   if (time) {
     dateElementProp.push(
-      { type: 'hour', range: [0, 23], value: hour },
-      { type: 'minute', range: [0, 59], value: minute },
-      { type: 'second', range: [0, 59], value: second },
+      { type: 'hour', range: [0, 23], value: elementValue(hour) },
+      { type: 'minute', range: [0, 59], value: elementValue(minute) },
+      { type: 'second', range: [0, 59], value: elementValue(second) },
     );
   }
 

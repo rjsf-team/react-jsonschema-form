@@ -35,9 +35,9 @@ function getPart(name: string) {
   return screen.queryByRole('combobox', { name }) ?? screen.getByRole('button', { name });
 }
 
-/** Pins the accessible name and description of each select an `AltDateWidget` renders, which no theme's `SelectWidget`
- * receives as a label, when its Now and Clear buttons show and are enabled, and what its parts report to `onFocus`
- * and `onBlur`, in every theme.
+/** Pins, in every theme, the accessible name and description of each select an `AltDateWidget` renders, which no
+ * theme's `SelectWidget` receives as a label; whether its Now and Clear buttons show and are enabled; and what its parts
+ * report to `onFocus` and `onBlur`.
  *
  * These live in their own file rather than alongside `formTests()` because every render advances React's `useId`
  * counter for the rest of the module, so running them there would renumber the ids in that suite's snapshots across
@@ -207,7 +207,7 @@ export function altDateTests(Form: ComponentType<FormProps>) {
   });
 
   // Focused through the DOM rather than user-event, which isn't among this package's peer dependencies
-  test('alt-date reports an unset part to onFocus and onBlur as undefined, and a set one as its number', () => {
+  test('alt-date reports an unset part to onFocus and onBlur as undefined, and a set one as its number, 0 included', () => {
     const onFocus = vi.fn();
     const onBlur = vi.fn();
     render(
@@ -223,6 +223,7 @@ export function altDateTests(Form: ComponentType<FormProps>) {
     const cases: [string, string, number | undefined][] = [
       ['When, year', 'root_when_year', undefined],
       ['At, year', 'root_at_year', 2021],
+      ['At, minute', 'root_at_minute', 0],
     ];
     cases.forEach(([name, partId, reported]) => {
       const part = getPart(name);

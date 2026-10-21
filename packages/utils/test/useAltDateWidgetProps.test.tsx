@@ -126,6 +126,7 @@ describe('useAltDateWidgetProps()', () => {
     expect(PROPS.onChange).not.toHaveBeenCalled();
     const expectedDate = { ...parseDateString(DATE_STR), [part]: -1 };
     expect(result.current.elements).toEqual(getDateElementProps(expectedDate, false, PROPS.options.yearsRange));
+    expect(result.current.elements.find(({ type }) => type === part)?.value).toBeUndefined();
     act(() => result.current.handleChange(part, part === 'month' ? '11' : '28'));
     expect(PROPS.onChange).toHaveBeenCalledExactlyOnceWith(part === 'month' ? '2023-11-27' : '2023-10-28');
   });
@@ -512,10 +513,12 @@ describe('useAltDateWidgetProps()', () => {
       <>
         <DateElement {...elementProps} type='year' range={[2000, 2030]} value={-1} />
         <DateElement {...elementProps} type='month' range={[1, 12]} value={10} />
+        <DateElement {...elementProps} type='hour' range={[0, 23]} value={0} />
       </>,
     );
     const valueOf = (id: string): unknown => SpySelectWidget.mock.calls.find(([props]) => props.id === id)?.[0].value;
     expect(valueOf('root_year')).toBeUndefined();
     expect(valueOf('root_month')).toBe(10);
+    expect(valueOf('root_hour')).toBe(0);
   });
 });

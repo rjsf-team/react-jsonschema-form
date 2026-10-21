@@ -83,7 +83,7 @@ The `useAltDateWidgetProps()` hook returns the props for each of them, so a them
 
 #### Props
 
-- value: any - The value currently selected for this element, or `-1` for none, which it hands the `SelectWidget` as `undefined`
+- value: any - The value currently selected for this element, or `undefined` for none, as `getDateElementProps()` gives it; a `-1`, as a `DateObject` holds an unset part, is handed to the `SelectWidget` as `undefined` too
 - [name]: string - Deprecated and ignored: the element takes [dateElementId()](#dateelementid) as its name
 - rootId: string - The id of the field, from which the element derives its own id with [dateElementId()](#dateelementid)
 - select: (property: keyof DateObject, value: any) => void - Records a value for one property of the `DateObject`
@@ -1084,7 +1084,7 @@ Given date & time information with optional yearRange & format, returns props fo
 
 #### Returns
 
-- Array of props for DateElement
+- Array of props for DateElement, each part the `date` holds as `-1`, which no one has picked yet, given an `undefined` `value`
 
 ### getDateTimeLocalValue&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
