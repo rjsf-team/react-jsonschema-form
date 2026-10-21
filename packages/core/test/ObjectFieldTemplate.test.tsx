@@ -1,5 +1,5 @@
 import { PureComponent } from 'react';
-import type { DescriptionFieldProps, ObjectFieldTemplateProps } from '@rjsf/utils';
+import type { DescriptionFieldProps, ObjectFieldTemplateProps, RJSFSchema } from '@rjsf/utils';
 
 import { createFormComponent } from './testUtils.tsx';
 
@@ -98,5 +98,77 @@ describe('ObjectFieldTemplate', () => {
       },
     }).node;
     sharedIts();
+  });
+});
+
+describe('ObjectFieldTemplate property hidden flag', () => {
+  const schema: RJSFSchema = {
+    type: 'object',
+    properties: { a: { type: 'string' }, b: { type: 'string', deprecated: true } },
+  };
+  let seen: ObjectFieldTemplateProps['properties'] = [];
+  const CapturingTemplate = ({ properties }: ObjectFieldTemplateProps) => {
+    seen = properties;
+    return (
+      <div>
+        {properties.map(({ content, name }) => (
+          <div key={name}>{content}</div>
+        ))}
+      </div>
+    );
+  };
+  const hiddenByName = () => Object.fromEntries(seen.map(({ name, hidden }) => [name, hidden]));
+
+  it('marks a property hidden by ui:widget as hidden', () => {
+    createFormComponent({
+      schema,
+      uiSchema: { b: { 'ui:widget': 'hidden' } },
+      templates: { ObjectFieldTemplate: CapturingTemplate },
+    });
+    expect(hiddenByName()).toEqual({ a: false, b: true });
+  });
+  it('marks a deprecated property hidden by the global deprecatedHandling: hide as hidden', () => {
+    createFormComponent({
+      schema,
+      uiSchema: { 'ui:globalOptions': { deprecatedHandling: 'hide' } },
+      templates: { ObjectFieldTemplate: CapturingTemplate },
+    });
+    expect(hiddenByName()).toEqual({ a: false, b: true });
+  });
+  it('marks a deprecated property hidden by its own ui:deprecatedHandling: hide as hidden', () => {
+    createFormComponent({
+      schema,
+      uiSchema: { b: { 'ui:deprecatedHandling': 'hide' } },
+      templates: { ObjectFieldTemplate: CapturingTemplate },
+    });
+    expect(hiddenByName()).toEqual({ a: false, b: true });
+  });
+  it('marks a property hidden when its $ref target is deprecated and the global deprecatedHandling is hide', () => {
+    createFormComponent({
+      schema: {
+        type: 'object',
+        properties: { a: { type: 'string' }, b: { $ref: '#/$defs/old' } },
+        $defs: { old: { type: 'string', deprecated: true } },
+      },
+      uiSchema: { 'ui:globalOptions': { deprecatedHandling: 'hide' } },
+      templates: { ObjectFieldTemplate: CapturingTemplate },
+    });
+    expect(hiddenByName()).toEqual({ a: false, b: true });
+  });
+  it('marks a property hidden by the ui:widget from its $ref ui:definitions as hidden', () => {
+    createFormComponent({
+      schema: {
+        type: 'object',
+        properties: { a: { type: 'string' }, b: { $ref: '#/$defs/secret' } },
+        $defs: { secret: { type: 'string' } },
+      },
+      uiSchema: { 'ui:definitions': { '#/$defs/secret': { 'ui:widget': 'hidden' } } },
+      templates: { ObjectFieldTemplate: CapturingTemplate },
+    });
+    expect(hiddenByName()).toEqual({ a: false, b: true });
+  });
+  it('does not hide a deprecated property by default', () => {
+    createFormComponent({ schema, templates: { ObjectFieldTemplate: CapturingTemplate } });
+    expect(hiddenByName()).toEqual({ a: false, b: false });
   });
 });

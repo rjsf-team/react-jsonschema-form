@@ -24,6 +24,7 @@ import {
   getUiOptions,
   isFormDataAvailable,
   orderProperties,
+  resolveUiSchema,
   shouldRenderOptionalField,
   toFieldPathId,
   useDeepCompareMemo,
@@ -419,13 +420,24 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
     properties: orderedProperties.map((propertyName) => {
       const addedByAdditionalProperties = isAdditionalPropertySchema(schema.properties?.[propertyName]);
       const fieldUiSchema = addedByAdditionalProperties ? uiSchema.additionalProperties : uiSchema[propertyName];
-      const hidden = getUiOptions<T, S, F>(fieldUiSchema).widget === 'hidden';
+      const propertySchema = getPropertySchema<S>(schema, propertyName);
+      // Mirror how `SchemaField` decides to hide a field: the `hidden` widget or a deprecated property with
+      // `deprecatedHandling: 'hide'`, using the global ui options and the `ui:definitions` for a `$ref`
+      const propertyUiOptions = getUiOptions<T, S, F>(
+        resolveUiSchema<T, S, F>(propertySchema, fieldUiSchema, registry),
+        globalUiOptions,
+      );
+      const isDeprecated = Boolean(
+        schemaUtils.retrieveSchema(propertySchema, getByPath(formData, propertyName)).deprecated,
+      );
+      const hidden =
+        propertyUiOptions.widget === 'hidden' || (isDeprecated && propertyUiOptions.deprecatedHandling === 'hide');
       const content = (
         <ObjectFieldProperty<T, S, F>
           key={getStableKey(propertyName)}
           propertyName={propertyName}
           required={isRequired<S>(schema, propertyName)}
-          schema={getPropertySchema<S>(schema, propertyName)}
+          schema={propertySchema}
           uiSchema={fieldUiSchema}
           errorSchema={getByPath(errorSchema, propertyName)}
           fieldPathId={childFieldPathId}
