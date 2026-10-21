@@ -9,30 +9,32 @@ import type {
 } from '@rjsf/utils';
 import {
   callWithDeferredThrow,
+  deepEqualsUndefinedAsMissing,
   propertyToPath,
+  ROOT_FIELD_PATH,
   replaceEqualDeep,
   fieldPathFromList,
   fieldPathToId,
   fieldPathToList,
 } from '@rjsf/utils';
 
+import isDevelopment from '../isDevelopment.ts';
+import { ADDITIONAL_PROPERTY_KEY_REMOVE } from './constants.ts';
 import type { FormProps, FormState } from './Form.tsx';
 import type { FormRef } from './FormRef.ts';
-import type { AnnouncedMove, PendingChange } from './formState.ts';
+import type { AnnouncedMove, FieldChange, KeyMove, MoveOutcome } from './formState.ts';
 import {
   applyBlur,
-  applyChange,
-  applyChangeToErrors,
-  ownErrorsAfterChange,
-  ownedErrorsOf,
+  applyChangeToData,
+  applyChangeToErrorsOf,
   applyReset,
   applySubmit,
   applyValidation,
+  copyAlongPath,
   getAt,
   deriveState,
   freezeFormData,
   isBlurValidated,
-  isDevelopment,
   isLiveValidated,
   toEventFormData,
   toIChangeEvent,
@@ -40,92 +42,28 @@ import {
 } from './formState.ts';
 import { asFieldValue, fieldStateOf } from './uiState.ts';
 
-/** How an operation calls the consumer's callback: directly for a handle method, whose caller catches the throw, or
- * through `callWithDeferredThrow()` for a field, which can report from an Effect inside React's commit phase, where a
- * throw from the consumer's callback would unmount the form. Either way the callback is handed the props of the last
- * committed render as the report is delivered, so a report held while the form was hidden reaches the handlers its
- * parent passes now, not the ones the operation started with.
- */
-type Report<Props> = (callback: (latest: Props) => void) => void;
+/** How many of a scalar root's latest values the development warning about an ignored `formData` remembers */
+const HELD_SCALARS_LIMIT = 100;
 
-/** The props an operation computes with, read once as it starts. The consumer's callbacks are not among them, so an
- * operation cannot report through the props it started with: a report is handed the props to call, see `Report`.
+/** How an operation that calls the consumer's functions runs: a handle method runs it directly, so a throw reaches the
+ * method's caller, while a field, which may report from an Effect inside React's commit phase, where a throw from the
+ * consumer's `transformChange`, validation callbacks or `onChange` would unmount the form, runs it through
+ * `callWithDeferredThrow()`
  */
-type OperationProps<T, S extends StrictRJSFSchema, F extends FormContextType> = Omit<
-  FormProps<T, S, F>,
-  'onChange' | 'onBlur' | 'onFocus' | 'onSubmit' | 'onError' | 'focusOnFirstError'
->;
-
-/** Whether each member of the state is a parent-owned form's own, and so taken from the result of an operation: its
- * errors are, and the validation a blur owes the render that answers its proposal. Everything else is derived from the
- * props before every render, so the data an operation computed is the parent's to accept through `onChange`, and the
- * render context an edit resolved for its proposal would describe data the parent has not accepted. Every member is
- * listed, so the state cannot gain one without it being decided whose it is.
- */
-const IS_OWNED_BY_FORM = {
-  schema: false,
-  uiSchema: false,
-  schemaUtils: false,
-  formData: false,
-  edit: false,
-  errors: true,
-  errorSchema: true,
-  schemaValidationErrors: true,
-  schemaValidationErrorSchema: true,
-  customErrors: true,
-  retrievedSchema: false,
-  uiState: false,
-  initialDefaultsGenerated: false,
-  registry: false,
-  isControlled: false,
-  isBlurValidationOwed: true,
-  validationProps: false,
-  defaultsBehavior: false,
-} satisfies Record<keyof FormState, boolean>;
-
-/** `base` with the members `picks` marks taken from `from`
- *
- * @param picks - Which members to take
- * @param base - The object the others are kept from
- * @param from - The object the marked members are taken from
- * @returns - A new object
- */
-function withMembers<Members extends object>(
-  picks: Record<keyof Members, boolean>,
-  base: Members,
-  from: Members,
-): Members {
-  const taken = { ...base };
-  for (const key in picks) {
-    // Compared first, so that taking nothing new does not add a key `base` does not have, which would read as a change
-    if (picks[key] && taken[key] !== from[key]) {
-      taken[key] = from[key];
-    }
-  }
-  return taken;
-}
-
-/** `result` as the form commits it onto `base`: all of it for a self-owned form, and for a parent-owned one only what
- * is its own, see `IS_OWNED_BY_FORM`
- *
- * @param base - The state the result is committed onto
- * @param result - The result of an operation
- * @returns - The state to commit
- */
-function withOwned<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  base: FormState<T, S, F>,
-  result: FormState<T, S, F>,
-): FormState<T, S, F> {
-  return base.isControlled ? withMembers<FormState<T, S, F>>(IS_OWNED_BY_FORM, base, result) : result;
-}
+type Deliver = (operation: () => void) => void;
+const deliverToCaller: Deliver = (operation) => operation();
 
 /** Whether `element` takes focus, as a form control or an element with a `tabindex` does. A hidden input, an element
  * the `hidden` attribute hides, a disabled control and an `<a>` with no `href` report a `tabIndex` of 0 all the same,
  * yet `focus()` leaves them unfocused
+ *
+ * @param element - The element to check
+ * @param view - The window of the form, whose `HTMLElement` an element the form holds is an instance of
+ * @returns - True if `element` takes focus
  */
-function isFocusable(element: Node | null | undefined): element is HTMLElement {
+function isFocusable(element: Node | null | undefined, view: Window & typeof globalThis): element is HTMLElement {
   return (
-    element instanceof HTMLElement &&
+    element instanceof view.HTMLElement &&
     element.tabIndex >= 0 &&
     !element.matches(':disabled, input[type="hidden"], [hidden], [hidden] *, a:not([href]):not([tabindex])')
   );
@@ -155,84 +93,54 @@ function findElement<E extends Element>(elements: NodeListOf<E>, matches: (eleme
  * @param formElement - The form searched
  * @param exact - The element carrying the field's id, if any
  * @param elementId - The field's id
+ * @param view - The window of the form
  * @returns - The element to focus, if any
  */
-function focusableForId(formElement: Element, exact: Element | undefined, elementId: string): Element | undefined {
-  if (exact instanceof HTMLFieldSetElement) {
+function focusableForId(
+  formElement: Element,
+  exact: Element | undefined,
+  elementId: string,
+  view: Window & typeof globalThis,
+): Element | undefined {
+  if (exact instanceof view.HTMLFieldSetElement) {
     return undefined;
   }
   if (exact) {
-    return findElement(exact.querySelectorAll('*'), isFocusable);
+    return findElement(exact.querySelectorAll('*'), (element) => isFocusable(element, view));
   }
   return findElement(
     formElement.querySelectorAll('input[id], button[id]'),
-    (element) => element.id.startsWith(elementId) && isFocusable(element),
+    (element) => element.id.startsWith(elementId) && isFocusable(element, view),
   );
 }
 
-/** Reports to the consumer for the model, and knows whether the form is attached. Its layout Effects are disconnected
- * while an `<Activity>` hides it as well as once it has unmounted, and have yet to connect when it is first rendered,
- * which inside a hidden `<Activity>` they do only once it is shown. Operations still apply then, but what they would
- * tell the consumer waits until the Effects connect, as React asks of a hidden component; an unmounted form never
- * reconnects, so what it would report is dropped instead: held, each report would keep the state it describes alive
- * for as long as the consumer keeps the handle.
+/** Where the change at `path` moves the selections and expansions `uiState` holds: under the keys of the container the
+ * move announced for it moved, where the errors raised there go, or out from under a property the change removes
+ *
+ * @param move - The key move announced for the change, if any
+ * @param newValue - The value the change sets
+ * @param path - The path of the change
+ * @returns - The container whose keys move and where each goes, or undefined for a change that moves none
  */
-function createReporter<Props>(getLatestProps: () => Props) {
-  let detached = true;
-  let unmounted = false;
-  let held: ((latest: Props) => void)[] = [];
-  /** A report that is held while the form is detached, and otherwise made through `call` */
-  const whenAttached =
-    (call: (deliver: () => void) => void): Report<Props> =>
-    (callback) => {
-      if (!detached) {
-        call(() => callback(getLatestProps()));
-      } else if (!unmounted) {
-        held.push(callback);
-      }
-    };
-  /** For a report whose caller already holds the answer, which is dropped rather than held while detached */
-  const reportIfAttached: Report<Props> = (callback) => {
-    if (!detached) {
-      callback(getLatestProps());
-    }
-  };
-  return {
-    isDetached: () => detached,
-    /** Calls back directly, so a throw reaches the caller of the handle method that reports */
-    reportToCaller: whenAttached((deliver) => deliver()),
-    reportIfAttached,
-    /** For a field, which may be reporting from inside React's commit phase, see `Report` */
-    reportFromField: whenAttached(callWithDeferredThrow),
-    /** Reports what was held, from a layout Effect: the handle call that made each report has long returned */
-    attach: () => {
-      detached = false;
-      const reports = held;
-      held = [];
-      reports.forEach((callback) => callWithDeferredThrow(() => callback(getLatestProps())));
-    },
-    detach: () => {
-      detached = true;
-    },
-    /** The setup of an insertion Effect, which, unlike a layout Effect, React leaves connected while an `<Activity>`
-     * hides the form. Its cleanup is therefore the form unmounting, which releases what was held for a show that
-     * will not come.
-     */
-    mount: () => {
-      unmounted = false;
-      return () => {
-        unmounted = true;
-        held = [];
-      };
-    },
-  };
+function uiStateMoveOf<T>(
+  move: AnnouncedMove | undefined,
+  newValue: T | undefined,
+  path: FieldPathList,
+): { container: FieldPath; newKeyOf: KeyMove } | undefined {
+  const newKeyOf = move?.newOwnKeyOf ?? move?.newKeyOf;
+  if (move && newKeyOf) {
+    return { container: move.fieldPath, newKeyOf };
+  }
+  if (newValue === ADDITIONAL_PROPERTY_KEY_REMOVE && path.length > 0) {
+    const removed = String(path[path.length - 1]);
+    return { container: fieldPathFromList(path.slice(0, -1)), newKeyOf: (key) => (key === removed ? undefined : key) };
+  }
+  return undefined;
 }
 
 /** The model holds the form's state between renders and performs every operation on it. An operation starts from the
- * current state, which for a parent-owned form carries the data the last commit rendered, or from a proposal made since
- * React last rendered the form (see `pending`), which it builds on as if the parent had accepted it. It reads the props
- * and the state once, as it starts, so that everything it computes belongs to one moment. The consumer's callbacks
- * are not its to read: a report is handed the props to call, see `Report`.
+ * current state and reads the props once, as it starts, so that everything it computes and reports belongs to one
+ * moment.
  *
  * Internal to `@rjsf/core`: `package.json` excludes `./lib/components/formModel.js` from the `./lib/*.js` exports
  * wildcard so it can't be deep-imported, since a reachable subpath would have to keep working until the next major.
@@ -242,109 +150,147 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   initial: FormState<T, S, F>,
 ) {
   let formElement: HTMLElement | null = null;
-  // The props of the last committed render, and the state it showed
-  let committedProps = initialProps;
-  let shown = initial;
-  // The form's one current state: `shown`, or what an operation has made of it since. React subscribes to `snapshot`,
-  // a record of the state that is made anew whenever an operation changes the state or proposes. A commit stores the
-  // state its render derived (a new registry, live validation of a controlled value) without a new record: that state
-  // is already on screen, and a new one would make `useSyncExternalStore` render and commit a second time.
-  // `operations` counts the commits that changed the state, so that a record made for a proposal alone, which has the
-  // form render but changes nothing, is not taken for one that carries a newer state.
-  let state = initial;
-  let operations = 0;
-  let snapshot = { state, operations };
+  // What operations have made of the form: the store React subscribes to. A render derives what it shows from it and
+  // the props, see `deriveState()`, and nothing a render derives is written back
+  let published = initial;
   const listeners = new Set<() => void>();
-  const notify = () => {
-    snapshot = { state, operations };
-    listeners.forEach((listener) => listener());
-  };
-  const { isDetached, reportToCaller, reportIfAttached, reportFromField, attach, detach, mount } = createReporter(
-    () => committedProps,
-  );
-  // A parent-owned form's last proposal, until React commits a render of the form made with the consumer told of it
-  // (see `committed()`). Edits made before then (two fields setting a value from mount Effects, several
-  // `setFieldValue()` calls in one event) build on it, as they would if the parent had already accepted it; that commit
-  // returns to the value the parent chose. Every proposal makes a new `snapshot`, so a parent that refuses one, and does
-  // not render, still has the form render and drop it. `epoch` counts those returns, so a field's own record of a
-  // proposal it made is dropped with it.
-  let pending: FormState<T, S, F> | undefined;
-  let epoch = 0;
-  // The key move of the change a field is sending, see `FormDataAccess.sendMove()`
+  // What the last commit rendered: its props, the state it showed, and the store's state that state was derived from.
+  // Recorded after the commit, so an operation can start from what is on screen
+  let committedProps = initialProps;
+  let rendered = initial;
+  let renderedFrom = initial;
+  // The props the store's state was derived under, by the operation that made it
+  let publishedProps = initialProps;
+  // The state an operation starts from, for the store's and the committed props' present values
+  let derivedCache: { props: FormProps<T, S, F>; from: FormState<T, S, F>; state: FormState<T, S, F> } | undefined;
+  // The key move of the change a field is sending, see `FormDataAccess.sendMove()`, and what became of the last change
+  // that carried one
   let announced: AnnouncedMove | undefined;
+  let moved: { move: AnnouncedMove; outcome: MoveOutcome } | undefined;
+  // The form's option selections and cycle expansions, which live as long as the form, see `createUiState()`
   const { uiState } = initial;
-  const propose = (next: FormState<T, S, F>) => {
-    // `commit()` freezes self-owned data; a proposal never reaches it
-    if (isDevelopment) {
-      freezeFormData(next.formData);
-    }
-    pending = next;
-    notify();
-  };
-  // A `submit()` waiting for the commit that lets it through, see `submitWhenRendered()`
-  let isSubmitQueued = false;
-  /** Performs a queued `submit()` through the DOM, see `FormRef.submit()`, once the form is shown and its inputs show
-   * the data it submits: a form hidden by an `<Activity>` has no element to submit through, and native constraint
-   * validation reads the inputs. Until then the submit stays queued for the next commit.
-   */
-  const submitWhenRendered = () => {
-    if (!isSubmitQueued || isDetached() || state.formData !== shown.formData) {
+  // A form an `<Activity>` hides is detached as an unmounted one is, the way React asks of hidden content, and drops
+  // what reaches it then: a draft a widget flushes from an Effect cleanup, a timer or a file read that finishes late,
+  // or a call through a handle kept past the unmount. Reported through the `onChange` of the last render, it would be
+  // stored as the data of whichever form replaced this one, or of a form the user cannot see. Detached until the first
+  // attachment, since a form first rendered inside a hidden `<Activity>` runs no layout Effect until it is shown
+  let isDetached = true;
+  // Development only, for the warning about a `formData` passed after mount, which the form ignores: the prop as the
+  // last commit passed it, and every object an operation made the form's data, since a parent that stores what
+  // `onChange` reported passes those back, later ones as well as the latest. The seed is not among them: a parent that
+  // puts its record back, as a Cancel button does, expects the form to show it
+  // oxlint-disable-next-line typescript/no-deprecated -- the form still reads the deprecated alias
+  let lastFormDataProp = isDevelopment ? initialProps.formData : undefined;
+  const heldData = new WeakSet<object>();
+  // A scalar root's values are held by value, which a `WeakSet` cannot hold, so only the latest are kept: enough for a
+  // parent that stores `onChange` late or puts back a recent value, without an entry per keystroke for the form's life
+  const heldScalars = new Set<unknown>();
+  let isIgnoredFormDataWarned = false;
+  let isBothSeedsWarned = false;
+  let isEmptyTransformWarned = false;
+  const hold = (data: unknown) => {
+    // Once the warning has fired there is nothing left to hold values for
+    if (!isDevelopment || isIgnoredFormDataWarned) {
       return;
     }
-    isSubmitQueued = false;
-    if (formElement) {
-      const event = new CustomEvent('submit', { cancelable: true });
-      event.preventDefault();
-      formElement.dispatchEvent(event);
-      if (formElement instanceof HTMLFormElement) {
-        formElement.requestSubmit();
-      }
+    if (typeof data === 'object' && data !== null) {
+      heldData.add(data);
+      return;
+    }
+    // Added again, so a value held before counts as the latest
+    heldScalars.delete(data);
+    heldScalars.add(data);
+    if (heldScalars.size > HELD_SCALARS_LIMIT) {
+      heldScalars.delete(heldScalars.values().next().value);
     }
   };
+  const isHeld = (data: unknown) =>
+    typeof data === 'object' && data !== null ? heldData.has(data) : heldScalars.has(data);
+  // Development only, once per form: a handle call the form dropped because it was detached. A field's change, blur or
+  // focus is dropped silently, since a widget flushing a draft from its Effect cleanup is expected to arrive then
+  let isDroppedCallWarned = false;
+  // The submit event `submit()` last dispatched, which goes no further than this form
+  let dispatchedSubmit: Event | undefined;
+  // What a throw from the submit `submit()` is running became, for `submit()` to throw it to its own caller: the
+  // submit runs inside the event it fires, where the browser would report the throw instead
+  let submission: { error?: unknown; isThrown: boolean } | undefined;
+  const warnDroppedCall = (method: string) => {
+    if (!isDevelopment || isDroppedCallWarned) {
+      return;
+    }
+    isDroppedCallWarned = true;
+    // oxlint-disable-next-line no-console
+    console.warn(
+      `Form: \`${method}()\` was called on a form that is hidden by \`<Activity>\` or a \`<Suspense>\` fallback, or has unmounted, and was dropped. React asks that hidden content be treated as unmounted, so the form takes calls again once it is shown. See https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#a-form-inside-a-hidden-activity`,
+    );
+  };
 
-  /** Stores the result of an operation that started from `start`, and returns what was stored. A reentrant operation
-   * may have committed since the operation started; `reapply` then applies it again on top of that.
+  /** The form's current state, the one an operation starts from: the store's, under the props of the last commit, and
+   * the state that commit rendered when the store has not changed since. Derived again only for an operation made
+   * since that commit, and shared against what is on screen, so an unchanged member keeps the reference the fields
+   * hold.
    */
-  const commit = (
-    start: FormState<T, S, F>,
-    next: FormState<T, S, F>,
-    reapply: (base: FormState<T, S, F>) => FormState<T, S, F>,
-  ) => {
-    const base = state;
-    const committed = replaceEqualDeep(base, withOwned(base, base === start ? next : reapply(base)));
-    if (isDevelopment && !committed.isControlled) {
+  const current = (): FormState<T, S, F> => {
+    if (published === renderedFrom) {
+      return rendered;
+    }
+    // An operation's result is derived already, under the props it started from
+    if (publishedProps === committedProps) {
+      return published;
+    }
+    if (derivedCache?.props !== committedProps || derivedCache.from !== published) {
+      const derived = deriveState(committedProps, published);
+      derivedCache = {
+        props: committedProps,
+        from: published,
+        state: derived === published ? published : replaceEqualDeep(rendered, derived),
+      };
+    }
+    return derivedCache.state;
+  };
+
+  /** Stores the result of an operation, shared against the current state so an unchanged member keeps the reference
+   * the fields hold, and publishes it when it changed. Returns what was stored.
+   */
+  const commit = (next: FormState<T, S, F>) => {
+    const start = current();
+    const committed = replaceEqualDeep(start, next);
+    if (isDevelopment) {
       freezeFormData(committed.formData);
     }
-    if (committed !== base) {
-      state = committed;
-      operations += 1;
-      // An unanswered proposal carries the form's own members too, and a later edit in the tick builds on it, so it
-      // would otherwise commit the proposal's older copy back over this one
-      if (pending) {
-        pending = withOwned(pending, committed);
-      }
-      notify();
+    if (committed !== start) {
+      published = committed;
+      publishedProps = committedProps;
+      hold(committed.formData);
+      listeners.forEach((listener) => listener());
     }
     return committed;
   };
 
-  /** Proposes `next` with a validation owed: the render that answers the proposal validates whatever data the parent
-   * renders (see `isBlurValidationOwed`). The state carries the debt for that render to read, the proposal for a later
-   * edit in the tick, which builds on it, to keep.
+  /** Runs `apply` on the current state and returns its result. A function of the consumer's that `apply` calls, such as
+   * `customValidate`, may issue an operation of its own, which commits before `apply` returns; `apply` then runs once
+   * more on top of that, so the result does not put back the data from before the nested operation.
    */
-  const proposeOwingValidation = (start: FormState<T, S, F>, next: FormState<T, S, F>) => {
-    const owe = (base: FormState<T, S, F>): FormState<T, S, F> => ({ ...base, isBlurValidationOwed: true });
-    commit(start, owe(start), owe);
-    propose(owe(next));
+  const settled = <R>(apply: (base: FormState<T, S, F>) => R): R => {
+    const before = published;
+    const result = apply(current());
+    return published === before ? result : apply(current());
   };
 
-  /** `formData` without the fields the schema does not describe, when `omitExtraData` asks for it: what a submit and
-   * `validateForm()` act on
+  /** The form's data without the fields the schema does not describe, when `omitExtraData` asks for it: what a submit
+   * and `validateForm()` act on
    */
-  const withExtraDataOmitted = (props: OperationProps<T, S, F>, start: FormState<T, S, F>, formData: T | undefined) =>
-    props.omitExtraData === true
-      ? start.schemaUtils.omitExtraData(start.schema, formData, fieldStateOf(uiState, start.schemaUtils))
+  const withExtraDataOmitted = (props: FormProps<T, S, F>) => {
+    const { schemaUtils, schema, formData } = current();
+    return props.omitExtraData === true
+      ? schemaUtils.omitExtraData(schema, formData, fieldStateOf(uiState, schemaUtils))
       : formData;
+  };
+
+  /** The window of the form element, whose classes the element and what it holds are instances of: a form rendered
+   * into another document, such as an iframe's, is no instance of this window's `HTMLFormElement`
+   */
+  const formWindow = () => formElement?.ownerDocument.defaultView;
 
   /** Attempts to focus on the field associated with the `error`. Uses the `property` field to compute path of the error
    * field, then, using the `idPrefix` and `idSeparator` converts that path into an id. Then the input element with that
@@ -360,7 +306,8 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     path.unshift(idPrefix);
 
     const elementId = path.join(idSeparator);
-    if (!formElement) {
+    const view = formWindow();
+    if (!formElement || !view) {
       return;
     }
     // A focusable element carrying the id comes first, since one that isn't a form control, such as a slider's thumb, can
@@ -374,225 +321,319 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     // field. The search stays inside the form, which another form on the page rendering the same ids would defeat through
     // `getElementById()`, and compares ids as strings, so a property name holding a selector's syntax needs no escaping
     const exact = findElement(formElement.querySelectorAll('[id]'), (element) => element.id === elementId);
-    const named = formElement instanceof HTMLFormElement ? formElement.elements.namedItem(elementId) : null;
-    const namedControls = named instanceof RadioNodeList ? Array.from(named) : [named];
-    const field = [exact, ...namedControls].find(isFocusable) ?? focusableForId(formElement, exact, elementId);
-    if (field instanceof HTMLElement) {
+    const named = formElement instanceof view.HTMLFormElement ? formElement.elements.namedItem(elementId) : null;
+    const namedControls = named instanceof view.RadioNodeList ? Array.from(named) : [named];
+    const field =
+      [exact, ...namedControls].find((element) => isFocusable(element, view)) ??
+      focusableForId(formElement, exact, elementId, view);
+    if (field instanceof view.HTMLElement) {
       field.focus();
     }
   };
 
-  /** Validates `formData` for a submission or a programmatic validation, committing the errors it reports and calling
-   * `onError` with them, or focusing the first one when `focusOnFirstError` asks for it. The data itself is never
-   * installed.
+  /** Validates the data `readFormData` returns for a submission or a programmatic validation, committing the errors it
+   * reports and calling `onError` with them, or focusing the first one when `focusOnFirstError` asks for it. The data
+   * itself is never installed. A detached form only answers: the errors have no form to show them, and
+   * `onError` would be the last render's, as a change's `onChange` would be.
    *
    * @param props - The props the operation started with
-   * @param start - The state the operation started from
-   * @param formData - The form data to validate
-   * @param report - How the errors are reported; the caller knows whether anything else tells the consumer
+   * @param readFormData - Returns the form data to validate; read again when the validation runs again, see `settled()`
    * @returns - True if the form is valid, false otherwise.
    */
-  const runValidation = (
-    props: OperationProps<T, S, F>,
-    start: FormState<T, S, F>,
-    formData: T | undefined,
-    report: Report<FormProps<T, S, F>>,
-  ): boolean => {
-    const { hasError, next } = applyValidation(start, props, formData);
-    const { errors } = next;
-    if (next !== start) {
-      commit(start, next, (base) => applyValidation(base, props, formData).next);
+  const runValidation = (props: FormProps<T, S, F>, readFormData: () => T | undefined): boolean => {
+    const { hasError, next } = settled((base) => applyValidation(base, props, readFormData()));
+    if (isDetached) {
+      return !hasError;
     }
+    const { errors } = commit(next);
     if (!hasError) {
       return true;
     }
-    report((latest) => {
-      const { focusOnFirstError, onError } = latest;
-      if (focusOnFirstError) {
-        if (typeof focusOnFirstError === 'function') {
-          focusOnFirstError(errors[0]);
-        } else {
-          focusOnError(errors[0]);
-        }
-      }
-      if (onError) {
-        onError(errors);
+    const { focusOnFirstError, onError } = props;
+    if (focusOnFirstError) {
+      if (typeof focusOnFirstError === 'function') {
+        focusOnFirstError(errors[0]);
       } else {
-        // oxlint-disable-next-line no-console
-        console.error('Form validation failed', errors);
+        focusOnError(errors[0]);
       }
-    });
+    }
+    if (onError) {
+      onError(errors);
+    } else {
+      // oxlint-disable-next-line no-console
+      console.error('Form validation failed', errors);
+    }
     return false;
   };
 
-  /** Applies a change to the field at `fieldPath` with `applyChange()`, and does with the result the one thing that
-   * differs between the two owners. A self-owned form commits it and reports it through `onChange`. A parent-owned form
-   * calls `onChange` with the result as a proposal and commits only what it owns itself: the custom errors and the
-   * errors that go with them. Either way `onChange` is called before this returns, through `report`.
+  /** `change` applied to `base`, with the data the consumer's `transformChange` decides on: the change's own, `base`
+   * itself for a refused one, or other data, written over the whole form with no key move after the change's own
+   * error moves. The data is decided before anything validates it, so live validation, `customValidate` and
+   * `transformErrors` run once, on the data the form keeps. Pure, as `settled()` asks: it may run again on a newer base.
+   *
+   * @returns - The next state, and for a rewritten change the state the change alone would have left
+   */
+  const applyEdit = (
+    base: FormState<T, S, F>,
+    change: FieldChange<T>,
+    props: FormProps<T, S, F>,
+  ): { next: FormState<T, S, F>; edited?: FormState<T, S, F> } => {
+    const isValidated = isLiveValidated(props);
+    const edited = applyChangeToData(base, change, props);
+    // A key move can leave data equal to the data before it, such as two equal items swapped, which the store hands
+    // back as that data itself. `transformChange` gets a copy of it as `next`, so returning `previous` still refuses it
+    const next =
+      props.transformChange && change.newKeyOf && Object.is(edited.formData, base.formData)
+        ? copyAlongPath(edited.formData, [])
+        : edited.formData;
+    if (isDevelopment && props.transformChange) {
+      // A transform that mutates its arguments writes into data the form holds, which the fields compare by identity,
+      // or into the edit's data after its defaults and sanitize were worked out, so in development a mutation throws
+      freezeFormData(base.formData);
+      freezeFormData(next);
+    }
+    const returned = props.transformChange ? props.transformChange(next, base.formData) : next;
+    if (isDevelopment && returned === undefined && next !== undefined && !isEmptyTransformWarned) {
+      isEmptyTransformWarned = true;
+      // oxlint-disable-next-line no-console
+      console.warn(
+        'Form: `transformChange` returned `undefined` for an edit that left the form with data, so the form now holds no data. A function body that does not return on every path does this: return `next` to take an edit and `previous` to refuse it.',
+      );
+    }
+    if (Object.is(returned, next)) {
+      return { next: applyChangeToErrorsOf(edited, base.formData, change, props, isValidated) };
+    }
+    if (Object.is(returned, base.formData)) {
+      return { next: base };
+    }
+    // Shared against the edit's data first, so a copy that changes nothing of the edit, as `{ ...next }` with a field
+    // already upper-cased is, takes it in one walk rather than deriving the whole form's data a second time. An edit
+    // that left the data as it was, such as an option switch whose data fits both options, has `next` equal to
+    // `previous`, so a copy of either takes it, and only `previous` itself refuses it. A string, number or boolean root
+    // has no copy to tell apart, so such an edit's `next` is `previous` and is taken
+    const transformed = replaceEqualDeep(edited.formData, returned);
+    if (Object.is(transformed, edited.formData)) {
+      return { next: applyChangeToErrorsOf(edited, base.formData, change, props, isValidated) };
+    }
+    // Otherwise a copy of the data before the edit refuses it as that data itself does: shared against it, a copy comes
+    // back as it, and the refusal is what undoes the key moves the edit announced
+    if (Object.is(replaceEqualDeep(base.formData, transformed), base.formData)) {
+      return { next: base };
+    }
+    // No field made the rewrite, so the errors the fields raised, the root's included, are carried through it as the
+    // edit left them
+    const path = fieldPathToList(change.fieldPath);
+    const rewrite: FieldChange<T> = {
+      newValue: transformed,
+      fieldPath: ROOT_FIELD_PATH,
+      keepsOwnErrors: true,
+      editedPath: path,
+      // The edit's clear of a field outlives the defaults the rewrite merges in, as it outlives those the edit does (#5125)
+      clearedPath: change.newValue === undefined && path.length > 0 ? path : undefined,
+    };
+    // Unvalidated, the change still moves its errors with the keys it moved and settles the fields' own errors, which
+    // the rewrite then carries through its one validation
+    const withEditErrors = applyChangeToErrorsOf(edited, base.formData, change, props, false);
+    const rewritten = applyChangeToData(withEditErrors, rewrite, props);
+    return { next: applyChangeToErrorsOf(rewritten, edited.formData, rewrite, props, isValidated), edited };
+  };
+
+  /** Applies a change to the field at `fieldPath` with `applyEdit()`, commits the result and reports it through
+   * `onChange`, all run the way `deliver` says. A change that throws, from `transformChange` or a validation callback,
+   * commits nothing, so the key move it carried is refused.
    *
    * @param newValue - The new value at `fieldPath`
    * @param fieldPath - The `FieldPath` of the change at which to set the formData
    * @param [newErrorSchema] - The new `ErrorSchema` based on the field change
    * @param [id] - The id of the field that caused the change
-   * @param [report] - How `onChange` is called
+   * @param [deliver] - How the change runs
+   * @param [isFieldEdit] - Whether a field made the change, whose option selections hold for what it leaves; data set
+   *        from outside, as `setFieldValue()` sets it, is matched again
    */
   const change = (
     newValue: T | undefined,
     fieldPath: FieldPath,
     newErrorSchema?: ErrorSchema<T>,
     id?: string,
-    report = reportToCaller,
+    deliver: Deliver = deliverToCaller,
+    isFieldEdit = false,
   ) => {
-    const props: OperationProps<T, S, F> = committedProps;
-    const start = state;
-    // Taken by the change it was announced for, so a second change at the path moves nothing again
-    const move = announced?.fieldPath === fieldPath ? announced : undefined;
-    if (move) {
-      announced = undefined;
-      // A parent-owned form's move is a proposal, made on the latest one if one is pending, which the parent declines
-      // by rendering the data it is made on
-      const proposedOn = start.isControlled
-        ? { data: getAt((pending ?? start).formData, fieldPathToList(fieldPath)) }
-        : undefined;
-      uiState.move(fieldPath, move.newOwnKeyOf ?? move.newKeyOf, proposedOn);
-    }
-    const edit: PendingChange<T> = {
-      newValue,
-      fieldPath,
-      newErrorSchema,
-      newKeyOf: move?.newKeyOf,
-      newOwnKeyOf: move?.newOwnKeyOf,
-      dropsOwnErrors: move?.dropsOwnErrors,
-    };
-    const next = applyChange(pending ?? start, edit, props);
-    uiState.edited(fieldPath, (path) => getAt(next.formData, path), start.isControlled);
-    if (!start.isControlled) {
-      // A reentrant operation may have committed while this one was being calculated, so report what was committed
-      const committed = commit(start, next, (base) => applyChange(base, edit, props));
-      report((latest) => latest.onChange?.(toIChangeEvent(committed), id));
+    if (isDetached) {
       return;
     }
-    // The form commits what the change does to the errors it owns, before the parent is told, so a throwing handler
-    // cannot lose them. Under live validation that is the fields' own errors alone: the validated ones describe the
-    // proposal, which the parent may yet refuse, so they wait for its answer in `deriveState()`. So do the validator's
-    // errors under keys the proposal moved: the parent either renders the moved data back, which clears the changed
-    // fields' errors, or keeps its own, which the old keys describe
-    const withOwnedErrors = (base: FormState<T, S, F>): FormState<T, S, F> => {
-      // `next` was built on `start` when no proposal is pending, so it already carries what the change did to them
-      const isNext = base === start && !pending;
-      if (isLiveValidated(props) || move) {
-        return { ...base, customErrors: isNext ? next.customErrors : ownErrorsAfterChange(base, edit) };
+    const props = committedProps;
+    // Taken by the change it was announced for, so a second change at the path moves nothing again
+    const move = announced?.fieldPath === fieldPath && Object.is(announced.value, newValue) ? announced : undefined;
+    if (move) {
+      announced = undefined;
+      moved = { move, outcome: { kind: 'refused' } };
+    }
+    const path = fieldPathToList(fieldPath);
+    // The selections and expansions under keys the change moves, or under a property it removes, move before it is
+    // applied, so the sanitize reads them where the change puts the data; a change the form refuses puts them back
+    const uiMove = uiStateMoveOf(move, newValue, path);
+    deliver(() => {
+      const unmoved = uiMove && uiState.save();
+      if (uiMove) {
+        uiState.move(uiMove.container, uiMove.newKeyOf);
       }
-      return { ...base, ...(isNext ? ownedErrorsOf(next) : applyChangeToErrors(base, edit, props.extraErrors)) };
-    };
-    commit(start, withOwnedErrors(start), withOwnedErrors);
-    propose(next);
-    report((latest) => latest.onChange?.(toIChangeEvent(next), id));
+      // A change that throws, from `transformChange` or a validation callback, commits nothing, as a refused one does
+      let edit: { isRefused: boolean; edited?: FormState<T, S, F> } = { isRefused: true };
+      try {
+        const committed = commit(
+          settled((base) => {
+            const { next, edited } = applyEdit(
+              base,
+              {
+                newValue,
+                fieldPath,
+                newErrorSchema,
+                newKeyOf: move?.newKeyOf,
+                newOwnKeyOf: move?.newOwnKeyOf,
+                dropsOwnErrors: move?.dropsOwnErrors,
+              },
+              props,
+            );
+            // `applyEdit()` hands `base` itself back only for an edit `transformChange` refused
+            edit = { isRefused: next === base, edited };
+            return next;
+          }),
+        );
+        if (isFieldEdit && !edit.isRefused) {
+          uiState.edited(fieldPath, (at) => getAt(committed.formData, at));
+        }
+        if (move) {
+          const kept = getAt<unknown>(committed.formData, path);
+          let outcome: MoveOutcome = { kind: 'taken', kept };
+          if (edit.isRefused) {
+            outcome = { kind: 'refused' };
+          } else if (edit.edited) {
+            outcome = { kind: 'rewritten', kept, edited: getAt<unknown>(edit.edited.formData, path) };
+          }
+          moved = { move, outcome };
+        }
+        if (unmoved && edit.isRefused) {
+          uiState.restore(unmoved);
+        }
+        props.onChange?.(toIChangeEvent(committed), id);
+      } catch (error) {
+        if (unmoved && edit.isRefused) {
+          uiState.restore(unmoved);
+        }
+        throw error;
+      }
+    });
   };
 
   /** What a blurred field does to the form, after the `Form`'s `onBlur`: any live validation and live omit that the
-   * flags ask for on blur, on current model data for a self-owned form, or for a parent-owned form on the committed
-   * props or a proposal made earlier in the same tick. For a parent-owned form an omission is a proposal like any
-   * other: it goes to `onChange` and is not rendered until the parent hands it back. The errors the blur found are the
-   * form's own and are committed, with one exception: errors found for a proposal the parent has not answered describe
-   * data that may never be rendered, so they are not committed, and the form owes the render that answers the proposal
-   * a validation instead.
+   * flags ask for on blur, reported through `onChange` when they changed what an `IChangeEvent` carries. Run through
+   * `callWithDeferredThrow()` as a field's change is, since a field may report the blur from an Effect, where a throw
+   * from a validation callback or `onChange` would unmount the form.
    *
    * @param id - The unique `id` of the field that was blurred
    */
   const blur = (id: string) => {
-    const props: OperationProps<T, S, F> = committedProps;
-    const start = state;
+    const props = committedProps;
     const { omitExtraData, liveOmit } = props;
-    if (!((omitExtraData === true && liveOmit === 'onBlur') || isBlurValidated(props))) {
+    if (isDetached || !((omitExtraData === true && liveOmit === 'onBlur') || isBlurValidated(props))) {
       return;
     }
-    const editBase = pending ?? start;
-    // Shared so an unchanged error list keeps its reference and does not count as a change below
-    const applyTo = (base: FormState<T, S, F>) => replaceEqualDeep(base, applyBlur(base, props));
-    const next = applyTo(editBase);
+    const start = current();
+    const committed = commit(settled((base) => applyBlur(base, props)));
     // Only the `IChangeEvent` members count; the validator's own results are not among them
-    const hasChanges = (['formData', 'errors', 'errorSchema'] as const).some((key) => editBase[key] !== next[key]);
-    if (!start.isControlled) {
-      const committed = commit(start, next, applyTo);
-      if (hasChanges) {
-        reportFromField((latest) => latest.onChange?.(toIChangeEvent(committed), id));
-      }
-      return;
-    }
-    if (pending && isBlurValidated(props)) {
-      // The proposal goes on with the blur's data, without the errors found for it
-      proposeOwingValidation(start, { ...pending, formData: next.formData });
-    } else {
-      // A blur that only omitted extra data from an unanswered proposal has no errors of its own to commit
-      if (!pending) {
-        commit(start, next, applyTo);
-      }
-      if (hasChanges) {
-        propose(next);
-      }
-    }
-    if (hasChanges) {
-      reportFromField((latest) => latest.onChange?.(toIChangeEvent(next), id));
+    if ((['formData', 'errors', 'errorSchema'] as const).some((key) => start[key] !== committed[key])) {
+      props.onChange?.(toIChangeEvent(committed), id);
     }
   };
 
-  /** Validates and submits the owner's data, keeping omitted data for a self-owned form. Parent-owned submissions do
-   * not install data the parent has not accepted.
-   */
-  const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
+  /** Validates and submits the form's data, with extra data omitted when `omitExtraData` asks for it */
+  const submitFromEvent = (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (event.target !== event.currentTarget) {
+    // The event `submit()` dispatched stands in for this form's own submit, so an enclosing form does not get it too
+    if (event.nativeEvent === dispatchedSubmit) {
+      event.stopPropagation();
+    }
+    // A detached form drops a submit event that still reaches it, such as one from a `<button form>` outside the
+    // `<Activity>` that hides it, as it drops `submit()`
+    if (isDetached || event.target !== event.currentTarget) {
       return;
     }
-    const props: OperationProps<T, S, F> = committedProps;
-    const start = state;
+    const props = committedProps;
     // oxlint-disable-next-line typescript/no-deprecated
     const { noValidate } = props;
-    const formData = withExtraDataOmitted(props, start, start.formData);
-    // The errors are all a submit has to say, so they are held while the form is hidden, as `onChange` is
-    if (!noValidate && !runValidation(props, start, formData, reportToCaller)) {
+    if (!noValidate && !runValidation(props, () => withExtraDataOmitted(props))) {
       return;
     }
     // There are no errors generated through schema validation, so only the user-provided ones are shown
-    const next = applySubmit(start, props, formData);
-    commit(start, next, (base) => applySubmit(base, props, withExtraDataOmitted(props, start, base.formData)));
-    reportToCaller((latest) => latest.onSubmit?.(toIChangeEvent(next, 'submitted'), event));
+    const committed = commit(settled((base) => applySubmit(base, props, withExtraDataOmitted(props))));
+    props.onSubmit?.(toIChangeEvent(committed, 'submitted'), event);
+  };
+
+  /** `submitFromEvent()`, with a throw from the submit `submit()` is running kept for `submit()` to throw */
+  const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
+    const running = submission;
+    submission = undefined;
+    if (!running) {
+      submitFromEvent(event);
+      return;
+    }
+    try {
+      submitFromEvent(event);
+    } catch (error) {
+      running.error = error;
+      running.isThrown = true;
+    }
   };
 
   const handle: FormRef<T> = {
-    getFormData: () => toEventFormData(state.formData),
+    getFormData: () => toEventFormData(current().formData),
 
-    submit: () => {
-      isSubmitQueued = true;
-      submitWhenRendered();
-    },
-
-    /** Resets the form, see `FormRef.reset()`. A self-owned form re-derives its data from `initialFormData` and the
-     * schema the way an initial render does, clears every error and tells `onChange`. A parent-owned form clears its
-     * own errors only: the data is the parent's to reset, by passing a new `formData`, so nothing is proposed and
-     * `onChange` is not called. `extraErrors` are the parent's too and stay.
+    /** Submits through the form element, see `FormRef.submit()`, whose submit event reaches `handleSubmit()`, which
+     * submits the data the form holds. While the inputs show that data, the browser's constraint validation checks them
+     * first, as for a submit button. While they have yet to show an edit, they describe data the form no longer holds,
+     * so the submit event is dispatched without it, and schema validation alone checks the data
      */
-    reset: () => {
-      const props: OperationProps<T, S, F> = committedProps;
-      const start = state;
-      if (start.isControlled) {
-        // `deriveState()` merges `extraErrors` back onto the cleared errors before the render
-        const clear = (base: FormState<T, S, F>): FormState<T, S, F> => ({
-          ...base,
-          errors: [],
-          errorSchema: {},
-          schemaValidationErrors: [],
-          schemaValidationErrorSchema: {},
-          customErrors: undefined,
-          isBlurValidationOwed: false,
-        });
-        commit(start, clear(start), clear);
+    submit: () => {
+      if (isDetached) {
+        warnDroppedCall('submit');
         return;
       }
-      const committed = commit(start, applyReset(start, props), (base) => applyReset(base, props));
-      // A reset replaces whatever a parent holds with the reset data
-      reportToCaller((latest) => latest.onChange?.(toIChangeEvent(committed)));
+      const view = formWindow();
+      if (!view || !(formElement instanceof view.HTMLElement)) {
+        return;
+      }
+      // Only a `<form>` has `requestSubmit()`, and only inputs that show the stored data describe it, so an element
+      // another `tagName` renders, or a form with an edit React has yet to show, gets a submit event dispatched to it
+      // instead, which `handleSubmit()` takes without the browser's constraint validation
+      const running: { error?: unknown; isThrown: boolean } = { isThrown: false };
+      submission = running;
+      try {
+        if (formElement instanceof view.HTMLFormElement && current().formData === rendered.formData) {
+          formElement.requestSubmit();
+        } else {
+          dispatchedSubmit = new view.SubmitEvent('submit', { bubbles: true, cancelable: true });
+          formElement.dispatchEvent(dispatchedSubmit);
+        }
+      } finally {
+        // A submit the browser's constraint validation blocked fires no event to take it
+        submission = undefined;
+      }
+      if (running.isThrown) {
+        throw running.error;
+      }
+    },
+
+    /** Resets the form, see `FormRef.reset()`: re-derives its data from the props the way an initial render does,
+     * clears every error and tells `onChange`. `extraErrors` are the props' and stay.
+     */
+    reset: () => {
+      if (isDetached) {
+        warnDroppedCall('reset');
+        return;
+      }
+      const props = committedProps;
+      const committed = commit(settled((base) => applyReset(base, props)));
+      props.onChange?.(toIChangeEvent(committed));
     },
 
     /** Sets the value of the field at `fieldPath`, see `FormRef.setFieldValue()`. The dotted form splits on `.`
@@ -601,6 +642,10 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
      * resolve to `null` rather than `undefined`.
      */
     setFieldValue: (fieldPath: string | FieldPathList, newValue?: unknown) => {
+      if (isDetached) {
+        warnDroppedCall('setFieldValue');
+        return;
+      }
       let path = fieldPath;
       if (typeof path === 'string') {
         // `''` is the documented spelling of the root; splitting it would name a property called `''` instead
@@ -611,41 +656,29 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
         asFieldValue<T>(newValue),
         targetFieldPath,
         undefined,
-        fieldPathToId(targetFieldPath, state.registry.globalFormOptions),
+        fieldPathToId(targetFieldPath, current().registry.globalFormOptions),
       );
     },
 
-    // The two validations hand their answer back, so on a detached form they drop the errors instead of holding them
-    // until the form is shown, when they could describe data that has changed since
     validateForm: () => {
-      const props: OperationProps<T, S, F> = committedProps;
-      const start = state;
-      return runValidation(props, start, withExtraDataOmitted(props, start, start.formData), reportIfAttached);
+      const props = committedProps;
+      return runValidation(props, () => withExtraDataOmitted(props));
     },
 
-    validateFormWithFormData: (formData?: T) => runValidation(committedProps, state, formData, reportIfAttached),
+    validateFormWithFormData: (formData?: T) => runValidation(committedProps, () => formData),
 
-    validate: (formData: T | undefined) => validateFormData(committedProps, state, formData),
+    validate: (formData: T | undefined) => validateFormData(committedProps, current(), formData),
 
     focusOnError,
   };
 
   return {
+    /** The callback ref of the form element. React detaches it, with `null`, while an `<Activity>` hides the form as
+     * well as when the form unmounts, and attaches it again when the form is shown, so a handle kept past the unmount
+     * does not hold the form's DOM
+     */
     setFormElement: (element: HTMLElement | null) => {
       formElement = element;
-    },
-    epoch: () => epoch,
-    /** Has the form render for a field's record of a proposal, see `FormDataAccess.proposing()`, unless sending the
-     * proposal had the form render already: one that reached the form, as an operation or as a proposal of its own,
-     * made a new `snapshot`
-     */
-    proposing: () => {
-      const before = snapshot;
-      return () => {
-        if (snapshot === before) {
-          notify();
-        }
-      };
     },
     sendMove: (move: AnnouncedMove, send: () => void) => {
       announced = move;
@@ -656,63 +689,107 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
           announced = undefined;
         }
       }
+      // `undefined` for a change that never reached the form at the move's path, which a custom parent field kept
+      const outcome = moved?.move === move ? moved.outcome : undefined;
+      moved = undefined;
+      return outcome;
     },
+    /** The latest value at `path`: an edit made since the form last rendered included */
+    readField: <D>(path: FieldPath) => getAt<D>(current().formData, fieldPathToList(path)),
+    readRenderedField: <D>(path: FieldPath) => getAt<D>(rendered.formData, fieldPathToList(path)),
     uiState,
-    /** The latest value at `path`: a self-owned edit or a pending proposal, else the rendered data */
-    readField: <D>(path: FieldPath) => getAt<D>((pending ?? state).formData, fieldPathToList(path)),
-    getSnapshot: () => snapshot,
+    getSnapshot: () => published,
     subscribe: (listener: () => void) => {
       listeners.add(listener);
       return () => {
         listeners.delete(listener);
       };
     },
-    /** Called from an insertion Effect of every commit of the form, with what React rendered. React runs those before
-     * the setup of any layout Effect, and whether or not an `<Activity>` hides the form, so an Effect of the same commit
-     * that issues a command, and a handle retained from a hidden form, find the props and the state of this commit.
+    /** The setup of the layout Effect that attaches the form; what it returns is the cleanup. React runs that cleanup
+     * when the form unmounts and when an `<Activity>` hides it, and React asks that hidden content be treated as
+     * unmounted, so a hidden form drops what reaches it as an unmounted one does, until it is shown again.
      */
-    committed: (nextProps: FormProps<T, S, F>, derived: FormState<T, S, F>, renderedSnapshot: typeof snapshot) => {
+    attached: () => {
+      isDetached = false;
+      return () => {
+        isDetached = true;
+      };
+    },
+    /** Called from an insertion Effect of every commit of the form, the `Handoff` rendered first inside the form
+     * element, with what it rendered: its props, the state it showed and the store's state that was derived from. React
+     * runs every insertion Effect of a commit before any of its layout Effects, and before the layout cleanups of the
+     * fields the commit removes, which come after it in the tree, so a command from either starts from that commit's
+     * props; a layout Effect would run after those and leave them the previous commit's.
+     * Only recorded, for the operations that start from it; nothing is published, since the render already shows it.
+     */
+    committed: (nextProps: FormProps<T, S, F>, derived: FormState<T, S, F>, from: FormState<T, S, F>) => {
       committedProps = nextProps;
-      shown = derived;
-      // An operation that committed after this render began is not in `derived`. A render for it is already scheduled;
-      // until it runs, operations start from that commit derived under the new props
-      state =
-        snapshot.operations === renderedSnapshot.operations
-          ? derived
-          : replaceEqualDeep(derived, deriveState(nextProps, state));
-      // The commit answers the proposal the consumer was told of, unless its render is not the latest: a field React
-      // removes or cleans up in this commit does so before this runs, and a proposal it makes then is one no render
-      // has answered, so it waits for the render it scheduled. A detached form has yet to tell the consumer of any
-      if (!isDetached() && snapshot === renderedSnapshot) {
-        pending = undefined;
-        epoch += 1;
-        uiState.rendered((path) => getAt(derived.formData, path));
+      rendered = derived;
+      renderedFrom = from;
+      derivedCache = undefined;
+      // Only a commit of the store's latest state: an operation made since the render began has left data the selections
+      // already hold for, which a render of the data before it would release
+      if (from === published) {
+        uiState.rendered((at) => getAt(derived.formData, at));
       }
     },
-    /** The setup of a layout Effect, which React runs when the form mounts and when an `<Activity>` shows it again:
-     * reports what was held meanwhile.
+    /** Warns, once, that the `formData` prop changed after mount to a value the form ignores: neither data it has held
+     * nor a copy of the data it holds. Called after the commit that passed it, in development only
      */
-    attach: () => {
-      const isProposalHeld = pending !== undefined;
-      attach();
-      // The consumer has only now heard of the proposal, so it takes another render to answer it
-      if (isProposalHeld) {
-        notify();
+    warnIfFormDataIgnored: (formData: T | undefined) => {
+      if (isIgnoredFormDataWarned) {
+        return;
       }
+      // A copy of the last prop, as an inline literal is on every render, changed nothing the parent meant. A key the
+      // form holds as `undefined` is one a JSON copy leaves out, so it counts as missing
+      if (Object.is(formData, lastFormDataProp) || deepEqualsUndefinedAsMissing(formData, lastFormDataProp)) {
+        lastFormDataProp = formData;
+        return;
+      }
+      lastFormDataProp = formData;
+      if (formData === undefined || isHeld(formData) || deepEqualsUndefinedAsMissing(formData, current().formData)) {
+        return;
+      }
+      isIgnoredFormDataWarned = true;
+      heldScalars.clear();
+      // oxlint-disable-next-line no-console
+      console.warn(
+        "Form: `formData` changed after the form mounted and was ignored. Like `initialFormData`, it seeds the form on mount and on `reset()` only, and the form owns its data after that. To show other data, remount the form with a `key`, or call `setFieldValue('', data)` on its ref. See https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#show-other-data-after-mount",
+      );
     },
-    /** The cleanup of that Effect, which React runs when an `<Activity>` hides the form as well as when it unmounts */
-    detach,
-    mount,
-    submitWhenRendered,
+    /** Warns, once, that both `formData` and `initialFormData` were passed, naming the one the form seeds from. Called
+     * after the commit that passed them, in development only
+     */
+    warnIfBothSeedsPassed: (formData: T | undefined, initialFormData: T | undefined) => {
+      if (isBothSeedsWarned || formData === undefined || initialFormData === undefined) {
+        return;
+      }
+      isBothSeedsWarned = true;
+      // oxlint-disable-next-line no-console
+      console.warn(
+        'Form: `formData` and `initialFormData` were both passed. `formData` seeds the form and `initialFormData` is ignored. Pass `initialFormData` alone.',
+      );
+    },
     handle,
     handleSubmit,
     handleChange: (value: T | undefined, path: FieldPath, errors?: ErrorSchema<T>, id?: string) =>
-      change(value, path, errors, id, reportFromField),
+      change(value, path, errors, id, callWithDeferredThrow, true),
+    // A detached form drops a blur or a focus as it drops a change: its handlers are those of the last render
     handleBlur: (id: string, data: unknown) => {
+      if (isDetached) {
+        return;
+      }
+      const props = committedProps;
       // Before the blur reads the state, so it validates an edit `onBlur` makes instead of reverting it
-      reportFromField((latest) => latest.onBlur?.(id, data));
-      blur(id);
+      callWithDeferredThrow(() => props.onBlur?.(id, data));
+      callWithDeferredThrow(() => blur(id));
     },
-    handleFocus: (id: string, data: unknown) => reportFromField((latest) => latest.onFocus?.(id, data)),
+    handleFocus: (id: string, data: unknown) => {
+      if (isDetached) {
+        return;
+      }
+      const props = committedProps;
+      callWithDeferredThrow(() => props.onFocus?.(id, data));
+    },
   };
 }

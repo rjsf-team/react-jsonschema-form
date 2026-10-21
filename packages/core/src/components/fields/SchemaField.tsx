@@ -71,7 +71,6 @@ import {
   withoutDescribers,
 } from './fieldWidgetUtils.ts';
 import PresentationContext, { useInheritedPresentation } from './PresentationContext.ts';
-import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 import ShownOptionContext from './ShownOptionContext.ts';
 import useSchemaFieldPresentation from './useSchemaFieldPresentation.ts';
 
@@ -595,7 +594,6 @@ function SchemaFieldRender<
   } = props;
   const { schemaUtils, globalFormOptions, globalUiOptions, fields } = registry;
   const { AnyOfField: _AnyOfField, OneOfField: _OneOfField, CyclicSchemaField } = fields;
-  const readsFormData = useReadsFormData(SchemaField);
 
   const resolvedUiSchema = useMemo(
     () => resolveUiSchema<T, S, F>(_schema, _uiSchema, registry),
@@ -899,11 +897,7 @@ function SchemaFieldRender<
   // which is when the field is left unresolved above. The check must come after all hook calls to satisfy React's
   // rules of hooks.
   if (!uiField || !fieldToRender) {
-    return withUiState(
-      <RawFormDataContext value={readsFormData ? CyclicSchemaField : undefined}>
-        <CyclicSchemaField {...props} />
-      </RawFormDataContext>,
-    );
+    return withUiState(<CyclicSchemaField {...props} />);
   }
   const { ignoredOwnField, ignoredGlobalField } = uiField;
   const { FieldComponent, optionsReplaceNamedField } = fieldToRender;
@@ -992,9 +986,7 @@ function SchemaFieldRender<
   // no plan whose every change would re-render each of them past its `memo`
   const field = (
     <ShownOptionContext value={shownOption}>
-      <PresentationContext value={isContainer ? undefined : presentationBelow}>
-        <RawFormDataContext value={readsFormData ? FieldComponent : undefined}>{fieldComponent}</RawFormDataContext>
-      </PresentationContext>
+      <PresentationContext value={isContainer ? undefined : presentationBelow}>{fieldComponent}</PresentationContext>
     </ShownOptionContext>
   );
 
@@ -1067,43 +1059,37 @@ function SchemaFieldRender<
     registry,
   };
 
-  // The field component and the option field are each vouched for directly: a custom template may pass on a view of
-  // the data
   return withUiState(
-    <RawFormDataContext value={undefined}>
-      <FieldTemplate {...fieldProps}>
-        <>
-          {field}
-          {XxxOfField && (
-            <ShownOptionContext value={shownOption}>
-              <PresentationContext value={optionsBelow}>
-                <RawFormDataContext value={readsFormData ? XxxOfField : undefined}>
-                  <XxxOfField
-                    name={name}
-                    disabled={disabled}
-                    readonly={readonly}
-                    hideError={hideError}
-                    errorSchema={errorSchema}
-                    formData={formData}
-                    fieldPath={fieldPath}
-                    id={fieldId}
-                    onBlur={props.onBlur}
-                    onChange={handleOptionFieldChange}
-                    onFocus={props.onFocus}
-                    options={xxxOfOptions}
-                    registry={registry}
-                    required={effectiveRequired}
-                    schema={schema}
-                    uiSchema={XxxOfUiSchema}
-                    presentation={optionsPresentation}
-                  />
-                </RawFormDataContext>
-              </PresentationContext>
-            </ShownOptionContext>
-          )}
-        </>
-      </FieldTemplate>
-    </RawFormDataContext>,
+    <FieldTemplate {...fieldProps}>
+      <>
+        {field}
+        {XxxOfField && (
+          <ShownOptionContext value={shownOption}>
+            <PresentationContext value={optionsBelow}>
+              <XxxOfField
+                name={name}
+                disabled={disabled}
+                readonly={readonly}
+                hideError={hideError}
+                errorSchema={errorSchema}
+                formData={formData}
+                fieldPath={fieldPath}
+                id={fieldId}
+                onBlur={props.onBlur}
+                onChange={handleOptionFieldChange}
+                onFocus={props.onFocus}
+                options={xxxOfOptions}
+                registry={registry}
+                required={effectiveRequired}
+                schema={schema}
+                uiSchema={XxxOfUiSchema}
+                presentation={optionsPresentation}
+              />
+            </PresentationContext>
+          </ShownOptionContext>
+        )}
+      </>
+    </FieldTemplate>,
   );
 }
 

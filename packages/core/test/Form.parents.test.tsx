@@ -6,10 +6,10 @@ import { act, render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import Form from '../src/index.ts';
-import type { ControlledParentProps } from './testUtils.tsx';
+import type { ParentProps } from './testUtils.tsx';
 import {
   AcceptingParent,
-  RejectingParent,
+  ListeningParent,
   TransformingParent,
   aMicrotaskApart,
   createFormRef,
@@ -20,6 +20,7 @@ import {
   handleOf,
   input,
   outsideAct,
+  setupConsoleWarnSuppression,
   submitForm,
 } from './testUtils.tsx';
 
@@ -41,8 +42,10 @@ interface Data {
   other?: string | null;
 }
 
-describe('controlled parent harnesses', () => {
-  it('an accepting parent commits each proposal and the form renders the committed value', async () => {
+describe('parent harnesses', () => {
+  const warnings = setupConsoleWarnSuppression();
+
+  it('an accepting parent stores each edit and the form renders the stored value', async () => {
     const log = createParentLog<Data>();
     const { container } = render(<AcceptingParent<Data> schema={schema} initialValue={{ name: 'a' }} log={log} />);
 
@@ -50,37 +53,38 @@ describe('controlled parent harnesses', () => {
 
     expect(input(container, 'root_name')).toHaveValue('abc');
     expect(log.value).toEqual({ name: 'abc' });
-    expect(log.proposals.at(-1)).toEqual({ name: 'abc' });
+    expect(log.reported.at(-1)).toEqual({ name: 'abc' });
   });
 
-  it('a rejecting parent records proposals while its value stays put', async () => {
+  it('a listening parent records the edits while the form keeps showing them', async () => {
     const log = createParentLog<Data>();
-    const { container } = render(<RejectingParent<Data> schema={schema} initialValue={{ name: 'a' }} log={log} />);
+    const { container } = render(<ListeningParent<Data> schema={schema} initialValue={{ name: 'a' }} log={log} />);
 
     await user.type(input(container, 'root_name'), 'b');
 
-    expect(log.proposals).toEqual([{ name: 'ab' }]);
-    // A controlled form renders the parent's value (RFC, section 3.2): the refused edit is never shown
-    expect(input(container, 'root_name')).toHaveValue('a');
+    expect(log.reported).toEqual([{ name: 'ab' }]);
+    // The form owns the edit: a parent that stores nothing back changes nothing
+    expect(input(container, 'root_name')).toHaveValue('ab');
   });
 
-  it('a transforming parent commits the transformed proposal and the form renders it', async () => {
+  it('a transforming parent stores the transformed edit, which the form ignores with a warning', async () => {
     const log = createParentLog<Data>();
-    const upper = (proposal: Data | undefined) => proposal && { ...proposal, name: proposal.name?.toUpperCase() };
+    const upper = (edit: Data | undefined) => edit && { ...edit, name: edit.name?.toUpperCase() };
     const { container } = render(
       <TransformingParent<Data> schema={schema} initialValue={{ name: '' }} log={log} transform={upper} />,
     );
 
     await user.type(input(container, 'root_name'), 'ab');
 
-    expect(log.proposals).toEqual([{ name: 'a' }, { name: 'Ab' }]);
+    expect(log.reported).toEqual([{ name: 'a' }, { name: 'ab' }]);
     expect(log.value).toEqual({ name: 'AB' });
-    expect(input(container, 'root_name')).toHaveValue('AB');
+    expect(input(container, 'root_name')).toHaveValue('ab');
+    expect(warnings.consoleSpy).toHaveBeenCalledTimes(1);
   });
 
   it('two same-tick changes from mount Effects both reach the parent', async () => {
     // The Form.handlers variant merges into an external variable, which proves nothing about composition through a
-    // parent. Both proposals here precede parent acceptance, so the second builds on the first.
+    // parent. Both edits here precede the parent's render, so the second builds on the first.
     function changeOnMount<V extends string | null | undefined>(from: string, to: string) {
       return function Widget(props: WidgetProps<V>) {
         const { value, id, onChange, uiSchema, registry } = props;
@@ -115,8 +119,7 @@ describe('controlled parent harnesses', () => {
 
   it('a dependent field clearing itself from an effect when its sibling changes (#3367)', async () => {
     // The second field watches the first through formContext and clears itself from an effect, so its onChange(null)
-    // fires in the very commit that shows the sibling's change, and both must survive the trip through the parent
-    // (RFC, section 5).
+    // fires in the very commit that shows the sibling's change, and both must survive the trip through the parent.
     // The parent is written out rather than using the harness because formContext has to derive from its state.
     function ClearWhenSiblingChanges({
       formData,
@@ -142,6 +145,7 @@ describe('controlled parent harnesses', () => {
           schema={schema}
           uiSchema={uiSchema}
           validator={validator}
+          // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
           formData={data}
           formContext={{ name: data?.name }}
           onChange={(event) => setData(event.formData)}
@@ -155,12 +159,13 @@ describe('controlled parent harnesses', () => {
     await waitFor(() => expect(committed.at(-1)).toEqual({ name: 'x', other: null }));
   });
 
-  it('sibling null fields both reach the parent when they fill themselves in on mount', async () => {
-    // Each `NullField` proposes `null` from a mount Effect, before the parent has rendered the other's proposal
+  it('sibling null fields are both filled in on mount, as defaults are, without an onChange', async () => {
     const log = createParentLog<{ a?: null; b?: null }>();
+    const ref = createFormRef<{ a?: null; b?: null }>();
     await act(async () => {
       render(
         <AcceptingParent<{ a?: null; b?: null }>
+          ref={ref}
           schema={{ type: 'object', properties: { a: { type: 'null' }, b: { type: 'null' } } }}
           initialValue={{}}
           log={log}
@@ -168,13 +173,14 @@ describe('controlled parent harnesses', () => {
       );
     });
 
-    expect(log.value).toEqual({ a: null, b: null });
+    expect(handleOf(ref).getFormData()).toEqual({ a: null, b: null });
+    expect(log.reported).toEqual([]);
   });
 
   it('an edit a field makes as it unmounts and one a field makes as it mounts both reach the parent', async () => {
     // One commit removes the first field and mounts the second. React runs what the removed field does as it goes
     // before it hands the commit to the form, and the mounting field's layout Effect after, so the hand-off comes
-    // between two proposals that no render has answered, and the second must still build on the first.
+    // between two edits that no render has shown, and the second must still build on the first.
     class EditsAsItUnmounts extends Component<WidgetProps<Data['name']>> {
       override componentWillUnmount() {
         this.props.onChange('left', undefined, this.props.id);
@@ -200,7 +206,7 @@ describe('controlled parent harnesses', () => {
 
     rerender(<AcceptingParent<Data> {...props} uiSchema={{ other: { 'ui:widget': EditsAsItMounts } }} />);
 
-    expect(log.proposals).toEqual([
+    expect(log.reported).toEqual([
       { name: 'left', other: 'b' },
       { name: 'left', other: 'arrived' },
     ]);
@@ -230,13 +236,13 @@ describe('edits from outside React, the way a widget reports from a timer or a F
       await new Promise((resolve) => {
         setTimeout(resolve);
       });
-      // Nothing renders between the two: the parent's answer to the first is still to come
+      // Nothing renders between the two: the parent has yet to render the first
       change('root_name', 'a2');
       change('root_other', 'b2');
       await waitFor(() => expect(log.value).toEqual({ name: 'a2', other: 'b2' }));
     });
 
-    expect(log.proposals).toEqual([
+    expect(log.reported).toEqual([
       { name: 'a2', other: 'b' },
       { name: 'a2', other: 'b2' },
     ]);
@@ -245,8 +251,8 @@ describe('edits from outside React, the way a widget reports from a timer or a F
   it('a second edit a microtask later starts from the answer the parent has rendered by then', async () => {
     const { change, log } = renderRetaining();
     await outsideAct(async () => {
-      // React flushes the form's render of the first proposal in the microtask between the two, and the parent's
-      // update with it, so the second edit needs no proposal to build on
+      // React flushes the form's render of the first edit in the microtask between the two, and the parent's
+      // update with it, so the second edit builds on what was rendered
       await aMicrotaskApart(
         () => change('root_name', 'a2'),
         () => change('root_other', 'b2'),
@@ -256,7 +262,7 @@ describe('edits from outside React, the way a widget reports from a timer or a F
   });
 });
 
-describe('a blur in the same event as a controlled edit, under onBlur validation', () => {
+describe('a blur in the same event as an edit, under onBlur validation, with a parent passing formData', () => {
   interface Named {
     name?: string;
   }
@@ -271,7 +277,7 @@ describe('a blur in the same event as a controlled edit, under onBlur validation
     sent?: string;
     afterBlur?: (onChange: WidgetProps['onChange']) => void;
     onRender?: () => void;
-  } = {}): ControlledParentProps<Named> {
+  } = {}): ParentProps<Named> {
     function ChangeThenBlurWidget({ id, onChange, onBlur, value }: WidgetProps) {
       onRender?.();
       return (
@@ -303,16 +309,17 @@ describe('a blur in the same event as a controlled edit, under onBlur validation
     expect(fieldErrorsById(container)).toEqual({ root_name: [tooShort] });
   });
 
-  it('drops the errors found for an edit the parent refuses', async () => {
-    const { container } = render(<RejectingParent<Named> {...propsFor()} />);
+  it('shows the errors found for the edit whatever the parent stores', async () => {
+    const { container } = render(<ListeningParent<Named> {...propsFor()} />);
 
     await user.click(screen.getByRole('button', { name: 'Set from abcd' }));
 
-    // The inputs still show 'abcd', which is valid, so no error describes data that is not on screen
-    expect(fieldErrorsById(container)).toEqual({});
+    // The form shows 'ab', the data it holds, and the errors the blur found for it
+    expect(screen.getByRole('button', { name: 'Set from ab' })).toBeInTheDocument();
+    expect(fieldErrorsById(container)).toEqual({ root_name: [tooShort] });
   });
 
-  it.each<[string, Partial<ControlledParentProps<Named>>]>([
+  it.each<[string, Partial<ParentProps<Named>>]>([
     ['only omits extra data', { liveValidate: undefined, omitExtraData: true, liveOmit: 'onBlur' }],
     // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated `noValidate` prop
     ['belongs to a form told not to validate', { noValidate: true }],
@@ -325,18 +332,24 @@ describe('a blur in the same event as a controlled edit, under onBlur validation
     expect(fieldErrorsById(container)).toEqual({});
   });
 
-  it('validates the value a transforming parent renders', async () => {
+  it('validates the value at the blur, and keeps it over the one a transforming parent stores after it', async () => {
+    const ref = createFormRef<Named>();
+    const log = createParentLog<Named>();
     const { container } = render(
       <TransformingParent<Named>
         {...propsFor({ sent: 'ab ' })}
-        transform={(proposal) => ({ name: proposal?.name?.trim() })}
+        ref={ref}
+        log={log}
+        transform={(edit) => ({ name: edit?.name?.trim() })}
       />,
     );
 
     await user.click(screen.getByRole('button', { name: 'Set from abcd' }));
 
-    // The proposal 'ab ' is long enough; the 'ab' the parent rendered is not
-    expect(fieldErrorsById(container)).toEqual({ root_name: [tooShort] });
+    // The edit 'ab ' is long enough; the 'ab' the parent stored is its own copy, which the form ignores
+    expect(handleOf(ref).getFormData()).toEqual({ name: 'ab ' });
+    expect(log.value).toEqual({ name: 'ab' });
+    expect(fieldErrorsById(container)).toEqual({});
   });
 
   it('lets a reset later in the same event clear the errors', async () => {
@@ -361,7 +374,7 @@ describe('a blur in the same event as a controlled edit, under onBlur validation
 
     await user.click(screen.getByRole('button', { name: 'Set from abcd' }));
 
-    // The reset called off the validation the blur owed, and no blur has followed the change after it
+    // The reset cleared what the blur validated, and no blur has followed the change after it
     expect(screen.getByRole('button', { name: 'Set from ab' })).toBeInTheDocument();
     expect(fieldErrorsById(container)).toEqual({});
   });
@@ -386,7 +399,7 @@ describe('a blur in the same event as a controlled edit, under onBlur validation
   });
 });
 
-describe('an edit after another operation on an unanswered proposal, in the same event', () => {
+describe('an edit after another operation in the same event, with a parent passing formData', () => {
   interface Fields {
     name?: string;
     other?: string;
@@ -418,7 +431,7 @@ describe('an edit after another operation on an unanswered proposal, in the same
     return { ref, container };
   }
 
-  it('does not bring back a custom error a reset cleared', async () => {
+  it('a reset puts the data the parent passed back and clears a custom error raised before it', async () => {
     const { ref, container } = mount(fieldsSchema, (onChange) => {
       onChange('x', { __errors: ['custom'] });
       handleOf(ref).reset();
@@ -427,7 +440,8 @@ describe('an edit after another operation on an unanswered proposal, in the same
 
     await user.click(screen.getByRole('button', { name: 'Act from a' }));
 
-    expect(handleOf(ref).getFormData()).toEqual({ name: 'x', other: 'z' });
+    // The reset went back to the `formData` the parent had rendered, which the edit after it builds on
+    expect(handleOf(ref).getFormData()).toEqual({ name: 'a', other: 'z' });
     expect(fieldErrorsById(container)).toEqual({});
   });
 
@@ -445,7 +459,7 @@ describe('an edit after another operation on an unanswered proposal, in the same
   });
 });
 
-describe('validating a controlled form again after exactly one edit', () => {
+describe('validating again after exactly one edit, with a parent passing formData', () => {
   it('shows the errors of a second submit', async () => {
     const onError = vi.fn();
     const { container } = render(
@@ -577,7 +591,7 @@ describe('a widget that sets its value from an Effect as it mounts (#3953)', () 
   }
   const uiSchema: UiSchema<Kinds> = { kind: { 'ui:widget': ChoosesDetailedOnMount } };
 
-  it('renders the field the schema makes depend on that value, in a parent-owned form', () => {
+  it('renders the field the schema makes depend on that value, with a parent passing formData', () => {
     const log = createParentLog<Kinds>();
     const { container } = render(
       <AcceptingParent<Kinds>
@@ -592,7 +606,7 @@ describe('a widget that sets its value from an Effect as it mounts (#3953)', () 
     expect(input(container, 'root_extra')).toBeVisible();
   });
 
-  it('renders the field the schema makes depend on that value, in a self-owned form', () => {
+  it('renders the field the schema makes depend on that value, with initialFormData', () => {
     const { container } = render(
       <Form<Kinds>
         schema={dependentSchema}
@@ -619,6 +633,7 @@ describe('typing in a custom widget under a parent that renders for every change
         <Form<Data>
           schema={schema}
           validator={validator}
+          // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
           formData={data}
           uiSchema={{ name: { 'ui:widget': CustomTextarea } }}
           onChange={(event) => setData(event.formData)}

@@ -3,7 +3,6 @@ import type { FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '
 import { expandRefCycle, getTemplates, getUiOptions } from '@rjsf/utils';
 
 import useUiState from '../../hooks/useUiState.ts';
-import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 
 /** The `CyclicSchemaField` component renders a field `retrieveSchema()` collapsed as a `$ref` cycle (marked with
  * `RJSF_REF_CYCLE_KEY`): an Expand button until the field is expanded, and then the field resolved one level further.
@@ -18,7 +17,6 @@ export default function CyclicSchemaField<
   F extends FormContextType = FormContextType,
 >(props: FieldProps<T, S, F>) {
   const { uiState } = useUiState();
-  const readsFormData = useReadsFormData(CyclicSchemaField);
   const { name, registry, schema, uiSchema, id, fieldPath } = props;
   const readExpanded = () => uiState.isExpanded(fieldPath);
   const expanded = useSyncExternalStore(uiState.subscribe, readExpanded, readExpanded);
@@ -44,9 +42,5 @@ export default function CyclicSchemaField<
     );
   }
   const { SchemaField } = fields;
-  return (
-    <RawFormDataContext value={readsFormData ? SchemaField : undefined}>
-      <SchemaField {...props} schema={expandedSchema} />
-    </RawFormDataContext>
-  );
+  return <SchemaField {...props} schema={expandedSchema} />;
 }

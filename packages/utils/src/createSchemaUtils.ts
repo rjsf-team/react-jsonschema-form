@@ -167,7 +167,7 @@ class SchemaUtils<
     initialDefaultsGenerated?: boolean,
     uiSchema?: UiSchema<T, S, F>,
     uiSchemaDefinitions?: UiSchemaDefinitions<S, F>,
-  ): T | T[] | undefined {
+  ): T | T[] | null | undefined {
     return getDefaultFormState<T, S, F>(this.context, {
       schema,
       formData,

@@ -85,7 +85,7 @@ const alternatives: Sample = {
       'ui:widget': 'radio',
     },
   },
-  formData: {
+  initialFormData: {
     currentColor: '#00ff00',
     colorMask: ['#0000ff'],
     colorPalette: ['#ff0000'],

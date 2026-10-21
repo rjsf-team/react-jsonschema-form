@@ -407,7 +407,7 @@ exports[`array fields > checkboxes 1`] = `
             class="dropdown w-full"
           >
             <button
-              aria-controls="_r_2_"
+              aria-controls="_r_5_"
               aria-expanded="false"
               aria-haspopup="listbox"
               aria-label="Select ..."
@@ -433,7 +433,7 @@ exports[`array fields > checkboxes 1`] = `
             <ul
               aria-multiselectable="true"
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-              id="_r_2_"
+              id="_r_5_"
               role="listbox"
             >
               <li
@@ -1585,7 +1585,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
             class="dropdown w-full"
           >
             <button
-              aria-controls="_r_5f_"
+              aria-controls="_r_6a_"
               aria-expanded="false"
               aria-haspopup="listbox"
               aria-label="Select ..."
@@ -1611,7 +1611,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
             <ul
               aria-multiselectable="true"
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-              id="_r_5f_"
+              id="_r_6a_"
               role="listbox"
             >
               <li
@@ -4145,7 +4145,7 @@ exports[`with title and description > checkboxes 1`] = `
             class="dropdown w-full"
           >
             <button
-              aria-controls="_r_n_"
+              aria-controls="_r_u_"
               aria-describedby="root__description"
               aria-expanded="false"
               aria-haspopup="listbox"
@@ -4171,7 +4171,7 @@ exports[`with title and description > checkboxes 1`] = `
             <ul
               aria-multiselectable="true"
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-              id="_r_n_"
+              id="_r_u_"
               role="listbox"
             >
               <li
@@ -4957,7 +4957,7 @@ exports[`with title and description from both > checkboxes 1`] = `
             class="dropdown w-full"
           >
             <button
-              aria-controls="_r_21_"
+              aria-controls="_r_2g_"
               aria-describedby="root__description"
               aria-expanded="false"
               aria-haspopup="listbox"
@@ -4983,7 +4983,7 @@ exports[`with title and description from both > checkboxes 1`] = `
             <ul
               aria-multiselectable="true"
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-              id="_r_21_"
+              id="_r_2g_"
               role="listbox"
             >
               <li
@@ -5769,7 +5769,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
             class="dropdown w-full"
           >
             <button
-              aria-controls="_r_1c_"
+              aria-controls="_r_1n_"
               aria-describedby="root__description"
               aria-expanded="false"
               aria-haspopup="listbox"
@@ -5795,7 +5795,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
             <ul
               aria-multiselectable="true"
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-              id="_r_1c_"
+              id="_r_1n_"
               role="listbox"
             >
               <li
@@ -6475,7 +6475,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
             class="dropdown w-full"
           >
             <button
-              aria-controls="_r_2m_"
+              aria-controls="_r_39_"
               aria-expanded="false"
               aria-haspopup="listbox"
               aria-label="Test field"
@@ -6501,7 +6501,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
             <ul
               aria-multiselectable="true"
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-              id="_r_2m_"
+              id="_r_39_"
               role="listbox"
             >
               <li

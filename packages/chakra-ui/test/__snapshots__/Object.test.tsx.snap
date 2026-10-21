@@ -6053,7 +6053,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                       class="fieldset__legend emotion-27"
                       data-part="legend"
                       data-scope="fieldset"
-                      id="fieldset::_r_11_::legend"
+                      id="fieldset::_r_12_::legend"
                     >
                       <sup
                         class="emotion-28"
@@ -12583,7 +12583,7 @@ exports[`object fields > with title and description > object 1`] = `
                     class="fieldset__legend emotion-8"
                     data-part="legend"
                     data-scope="fieldset"
-                    id="fieldset::_r_1d_::legend"
+                    id="fieldset::_r_1e_::legend"
                   >
                     <sup
                       class="emotion-5"
@@ -12641,7 +12641,7 @@ exports[`object fields > with title and description > object 1`] = `
                     class="fieldset__legend emotion-8"
                     data-part="legend"
                     data-scope="fieldset"
-                    id="fieldset::_r_1f_::legend"
+                    id="fieldset::_r_1g_::legend"
                   >
                     <sup
                       class="emotion-5"
@@ -14309,7 +14309,7 @@ exports[`object fields > with title and description from both > object 1`] = `
                     class="fieldset__legend emotion-8"
                     data-part="legend"
                     data-scope="fieldset"
-                    id="fieldset::_r_27_::legend"
+                    id="fieldset::_r_28_::legend"
                   >
                     <sup
                       class="emotion-5"
@@ -14367,7 +14367,7 @@ exports[`object fields > with title and description from both > object 1`] = `
                     class="fieldset__legend emotion-8"
                     data-part="legend"
                     data-scope="fieldset"
-                    id="fieldset::_r_29_::legend"
+                    id="fieldset::_r_2a_::legend"
                   >
                     <sup
                       class="emotion-5"
@@ -15397,7 +15397,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                     class="fieldset__legend emotion-8"
                     data-part="legend"
                     data-scope="fieldset"
-                    id="fieldset::_r_1q_::legend"
+                    id="fieldset::_r_1r_::legend"
                   >
                     <sup
                       class="emotion-5"
@@ -15455,7 +15455,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                     class="fieldset__legend emotion-8"
                     data-part="legend"
                     data-scope="fieldset"
-                    id="fieldset::_r_1s_::legend"
+                    id="fieldset::_r_1t_::legend"
                   >
                     <sup
                       class="emotion-5"

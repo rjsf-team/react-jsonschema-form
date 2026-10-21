@@ -87,7 +87,7 @@ The handle exposes `getFormData()`, `submit()`, `reset()`, `setFieldValue()`, `v
 
 ## Read form data programmatically
 
-Call `getFormData()` to read the current value without storing every `onChange` event yourself. For example, a self-owned form can save a draft from a button:
+Call `getFormData()` to read the current value without storing every `onChange` event yourself. For example, a form can save a draft from a button:
 
 ```tsx
 import { useRef } from 'react';
@@ -115,12 +115,9 @@ function DraftEditor() {
 }
 ```
 
-What you read depends on who owns the value:
+`getFormData()` returns the form's current value: the seed your props handed it on mount or at the last `reset()`, filled in with the schema's defaults, and every edit made since, including one React has yet to show in the inputs.
 
-- With `initialFormData`, Form stores edits immediately. `getFormData()` sees them even before React updates the inputs.
-- With `formData`, your component owns the value. `getFormData()` returns the last value you passed back and React rendered, rather than an edit you have not accepted.
-
-Inside `onChange`, use `event.formData` to read the edit being proposed. Treat data from both the event and the handle as read-only.
+Inside `onChange`, use `event.formData` to read the edit being reported. Treat data from both the event and the handle as read-only.
 
 ## Submit form programmatically
 
@@ -152,9 +149,7 @@ function Editor() {
 }
 ```
 
-In a self-owned form, a write followed by `submit()` submits the new value. If the inputs have not updated yet, the submit waits for React to render them, so native HTML constraint validation checks the value being submitted; `onSubmit` or `onError` is then called once React commits that render, rather than before `submit()` returns.
-
-In a controlled form, let your component pass back the accepted value and let it render before submitting. Calling `setData(nextData)` and `submit()` in the same handler can submit the previous value. `validateForm()` also checks the current value; use `validateFormWithFormData(nextData)` to check a proposed value immediately without accepting or submitting it.
+`submit()` submits the form's current value through the form element before it returns: schema validation checks the value and `onSubmit` or `onError` is called. When the inputs show the value, the browser's constraint validation checks them first, as for a submit button, and an input it rejects blocks the submit. A write followed by `submit()` in the same handler submits the new value at once; the inputs have yet to show the write, so schema validation alone checks it. `validateForm()` checks the current value; `validateFormWithFormData(nextData)` checks a value without storing or submitting it.
 
 ## Change form data programmatically
 
@@ -169,28 +164,26 @@ formRef.current?.setFieldValue(['address', 'city'], 'Paris');
 formRef.current?.setFieldValue('', { address: { city: 'Paris', country: 'France' } });
 ```
 
-A self-owned form stores the edit immediately. A controlled form proposes it through `onChange`; your handler decides what value to pass back through `formData`.
-
-In a controlled form, several calls in one event build on each other: each proposal includes the edits proposed before it, until React renders the value your handler passed back. A handler that refuses a proposal still sees the refused edit in later proposals of the same event, and one that transforms proposals has to transform every one, since a later proposal builds on the earlier edit as proposed. You can also update parent state directly; that does not call Form's `onChange`.
+The form stores the edit immediately and reports it through `onChange`. Several calls in one event build on each other, since each reads the form's current value. A `formData` passed after mount does not replace the value: call `setFieldValue('', data)`, or remount the form under a `key`.
 
 ## Command timing
 
-Use event handlers for actions such as saving, resetting and validating. New `formData` belongs in the prop itself; it does not need an Effect that copies it into Form.
+Use event handlers for actions such as saving, resetting and validating. Other data reaches the form through `setFieldValue('', data)` where it arrives, or a remount under a `key`; a `formData` passed after mount is ignored.
 
-An existing integration may need to issue a command when props change. Use a passive `useEffect` for that synchronization. For example, a descendant receiving a stable `formRef` can validate when its supplied schema or data changes:
+An existing integration may need to issue a command when props change. Use a passive `useEffect` for that synchronization. For example, a descendant receiving a stable `formRef` can validate when its supplied schema changes:
 
 ```tsx
 useEffect(() => {
   formRef.current?.validateForm();
-}, [formRef, schema, data]);
+}, [formRef, schema]);
 ```
 
-A command issued from the setup of a layout Effect, a callback ref being attached, or a class component's `componentDidMount` or `componentDidUpdate`, in the commit that renders new props, sees those props too: Form installs them into its store in an insertion Effect, which React runs before any of those, and also while an `<Activity>` hides the form. The cleanup of a layout Effect, a ref being detached or a `componentWillUnmount` in that commit may run earlier, depending on where it sits in the tree, and then sees Form's previous configuration. Those in the form's own subtree, in a sibling rendered before the form, and in anything removed from under one of the form's ancestors run earlier; those in a sibling rendered after the form, or in an ancestor that stays mounted, run later.
+Form takes the props of a commit in an insertion Effect, which React runs before any layout Effect of that commit. A command issued from the setup of a layout Effect, a callback ref being attached, or a class component's `componentDidMount` or `componentDidUpdate`, in the commit that renders new props, therefore sees those props wherever it sits: inside the form, such as a widget's, or in a sibling rendered before or after it. The insertion Effect is the first thing inside the form element, so the layout cleanup of a field the commit removes, which flushes a draft as a widget unmounts, sees them too. The exception is the cleanup of a sibling of the form that the commit removes: React runs it before it reaches the form, so a command from it sees the props of the commit before. Passive Effects and event handlers see the new props too.
 
-Do not issue commands while rendering or from a validation function. React may repeat those calls or abandon the render.
+Do not issue commands while rendering or from a validation function. React may repeat those calls or abandon the render, and an edit made while a validation runs has the operation that ran it validate a second time, on the edited data.
 
-Under `liveValidate: 'onBlur'`, a blur in the same event as a controlled edit builds on that edit's proposal, so its `onChange` carries the errors for the edited value. The errors the form shows come from validating whatever value your component then renders: the edit, a value you transformed it into, or the previous one if you refused it.
+Under `liveValidate: 'onBlur'`, a blur in the same event as an edit validates the edit, and its `onChange` carries the errors found.
 
-Inside `<Activity mode="hidden">`, `setFieldValue()`, `reset()` and a field's change still update the form, but the `onChange`, `onBlur` or `onFocus` they cause is called when the form is shown again, in the order they happened. A `submit()` waits for the form to be shown too, as do the `onSubmit` or `onError` of a submit event the hidden form receives, and `validateForm()` returns its answer without calling `onError`. An `onSubmit` held this way is handed its event after React has dispatched it, so `event.currentTarget` is `null` by then; `event.target` is still the form. An unmounted form never calls them, and drops what it was holding.
+A form that has unmounted drops a change that reaches it late: `setFieldValue()` or `reset()` through a handle you kept, or a field's change, such as the value a debounced widget flushes as it unmounts or a file that finishes reading. It neither changes the data nor calls `onChange`, as in v6, so the late change of one record is never stored as the data of the form that replaced it. React asks that content an `<Activity>` hides be treated as unmounted, so a hidden form does the same until it is shown again: it drops a field's change, blur and focus, `setFieldValue()`, `reset()` and `submit()`, and `validateForm()` returns its result without calling `onError`. Its data and errors are kept for when it is shown. In development, the first `setFieldValue()`, `reset()` or `submit()` a hidden or unmounted form drops is warned about once, since the call itself is a sign that the caller has not noticed the form is hidden; a field's late change is dropped silently, as a widget flushing a draft from its Effect cleanup is expected to arrive then.
 
-Form stores edits synchronously through `useSyncExternalStore`. Wrapping a handle call in `startTransition()` does not make it non-blocking. See the [migration guide](../migration-guides/v7.x%20upgrade%20guide.md#edits-are-applied-immediately-breaking-change) for examples of timing-dependent code to update.
+Form stores edits synchronously through `useSyncExternalStore`. Wrapping a handle call in `startTransition()` does not make it non-blocking. See the [migration guide](../migration-guides/v7.x%20upgrade%20guide.md#form-owns-its-data-breaking-change) for examples of timing-dependent code to update.

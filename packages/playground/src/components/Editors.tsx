@@ -100,6 +100,8 @@ function Editor<T>({ title, code, accepts, onChange }: EditorProps<T>) {
 const toJson = (val: unknown) => JSON.stringify(val, null, 2);
 
 interface EditorsProps {
+  /** Changes whenever the playground loads a sample or a shared link, which remounts the selector forms it seeds */
+  loadKey: number;
   schema: RJSFSchema;
   setSchema: React.Dispatch<React.SetStateAction<RJSFSchema>>;
   uiSchema: UiSchema;
@@ -119,6 +121,7 @@ interface EditorsProps {
 }
 
 export default function Editors({
+  loadKey,
   extraErrors,
   formData,
   schema,
@@ -191,11 +194,16 @@ export default function Editors({
             </Typography>
           </Grid>
           <Grid size={3}>
-            <ThemeSelector themes={themes} theme={theme} select={onThemeSelected} />
+            <ThemeSelector key={loadKey} themes={themes} theme={theme} select={onThemeSelected} />
           </Grid>
           <Grid size={3}>
             {themes[theme] && themes[theme].subthemes && (
-              <SubthemeSelector subthemes={themes[theme].subthemes} subtheme={subtheme} select={onSubthemeSelected} />
+              <SubthemeSelector
+                key={`${theme}-${loadKey}`}
+                subthemes={themes[theme].subthemes}
+                subtheme={subtheme}
+                select={onSubthemeSelected}
+              />
             )}
           </Grid>
         </Grid>

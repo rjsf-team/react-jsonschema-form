@@ -103,7 +103,7 @@ export function formTests(Form: ComponentType<FormProps>) {
             schema={schema}
             uiSchema={uiSchema}
             validator={validator}
-            formData={{}}
+            initialFormData={{}}
             templates={{ MarkdownTemplate }}
           />,
         );
@@ -127,7 +127,7 @@ export function formTests(Form: ComponentType<FormProps>) {
           'ui:allowClearTextInputs': true,
         };
         const { asFragment } = render(
-          <Form schema={schema} validator={validator} uiSchema={uiSchema} formData='foo' />,
+          <Form schema={schema} validator={validator} uiSchema={uiSchema} initialFormData='foo' />,
         );
         expect(asFragment()).toMatchSnapshot();
       });
@@ -140,7 +140,7 @@ export function formTests(Form: ComponentType<FormProps>) {
           'ui:allowClearTextInputs': true,
         };
         const { asFragment } = render(
-          <Form schema={schema} validator={validator} uiSchema={uiSchema} formData='foo' />,
+          <Form schema={schema} validator={validator} uiSchema={uiSchema} initialFormData='foo' />,
         );
         expect(asFragment()).toMatchSnapshot();
       });
@@ -157,7 +157,7 @@ export function formTests(Form: ComponentType<FormProps>) {
         type: 'number',
       };
       const formData = 0;
-      const { asFragment } = render(<Form schema={schema} validator={validator} formData={formData} />);
+      const { asFragment } = render(<Form schema={schema} validator={validator} initialFormData={formData} />);
       expect(asFragment()).toMatchSnapshot();
     });
     test('null field', async () => {
@@ -412,7 +412,7 @@ export function formTests(Form: ComponentType<FormProps>) {
       const formData = ['option1'];
 
       const { asFragment } = render(
-        <Form schema={schema} uiSchema={uiSchema} formData={formData} validator={validator} />,
+        <Form schema={schema} uiSchema={uiSchema} initialFormData={formData} validator={validator} />,
       );
       expect(asFragment()).toMatchSnapshot();
     });
@@ -441,7 +441,7 @@ export function formTests(Form: ComponentType<FormProps>) {
         enum: ['foo', 'bar'],
       };
       const formData = 'bar';
-      const { asFragment } = render(<Form schema={schema} formData={formData} validator={validator} />);
+      const { asFragment } = render(<Form schema={schema} initialFormData={formData} validator={validator} />);
       expect(asFragment()).toMatchSnapshot();
     });
     test('select field multiple choice formData', async () => {
@@ -454,7 +454,7 @@ export function formTests(Form: ComponentType<FormProps>) {
         uniqueItems: true,
       };
       const formData = ['foo', 'bar'];
-      const { asFragment } = render(<Form schema={schema} formData={formData} validator={validator} />);
+      const { asFragment } = render(<Form schema={schema} initialFormData={formData} validator={validator} />);
       expect(asFragment()).toMatchSnapshot();
     });
     test('checkbox field', async () => {
@@ -571,7 +571,7 @@ export function formTests(Form: ComponentType<FormProps>) {
           { const: 'bar', title: 'Bar', description: 'Bar description' },
         ],
       };
-      const { asFragment } = render(<Form schema={schema} formData='foo' validator={validator} />);
+      const { asFragment } = render(<Form schema={schema} initialFormData='foo' validator={validator} />);
       expect(asFragment()).toMatchSnapshot();
     });
     test('select widget with selected oneOf option description and hidden label', async () => {
@@ -587,7 +587,9 @@ export function formTests(Form: ComponentType<FormProps>) {
           label: false,
         },
       };
-      const { asFragment } = render(<Form schema={schema} formData='foo' uiSchema={uiSchema} validator={validator} />);
+      const { asFragment } = render(
+        <Form schema={schema} initialFormData='foo' uiSchema={uiSchema} validator={validator} />,
+      );
       expect(asFragment()).toMatchSnapshot();
     });
     test('checkboxes field', async () => {
@@ -625,7 +627,9 @@ export function formTests(Form: ComponentType<FormProps>) {
       const uiSchema = {
         'ui:widget': 'range',
       };
-      const { asFragment } = render(<Form schema={schema} validator={validator} uiSchema={uiSchema} formData={75} />);
+      const { asFragment } = render(
+        <Form schema={schema} validator={validator} uiSchema={uiSchema} initialFormData={75} />,
+      );
       expect(asFragment()).toMatchSnapshot();
     });
     test('hidden field', async () => {
@@ -998,7 +1002,7 @@ export function formTests(Form: ComponentType<FormProps>) {
           uiSchema,
           validator,
           defaultFormStateBehavior,
-          formData,
+          initialFormData: formData,
         };
         const { asFragment } = render(<Form {...formProps} />);
         expect(asFragment()).toMatchSnapshot();
@@ -1031,7 +1035,7 @@ export function formTests(Form: ComponentType<FormProps>) {
           uiSchema,
           validator,
           defaultFormStateBehavior,
-          formData,
+          initialFormData: formData,
           readonly: true,
         };
         const { asFragment } = render(<Form {...formProps} />);
@@ -1111,7 +1115,12 @@ export function formTests(Form: ComponentType<FormProps>) {
         };
         const formData = { tags: ['foo', 'bar'] };
         const { asFragment } = render(
-          <Form schema={schema} formData={formData} validator={validator} nameGenerator={bracketNameGenerator} />,
+          <Form
+            schema={schema}
+            initialFormData={formData}
+            validator={validator}
+            nameGenerator={bracketNameGenerator}
+          />,
         );
         expect(asFragment()).toMatchSnapshot();
       });
@@ -1143,7 +1152,12 @@ export function formTests(Form: ComponentType<FormProps>) {
           ],
         };
         const { asFragment } = render(
-          <Form schema={schema} formData={formData} validator={validator} nameGenerator={bracketNameGenerator} />,
+          <Form
+            schema={schema}
+            initialFormData={formData}
+            validator={validator}
+            nameGenerator={bracketNameGenerator}
+          />,
         );
         expect(asFragment()).toMatchSnapshot();
       });
@@ -1301,7 +1315,12 @@ export function formTests(Form: ComponentType<FormProps>) {
         };
         const formData = { tags: ['foo', 'bar'] };
         const { asFragment } = render(
-          <Form schema={schema} formData={formData} validator={validator} nameGenerator={dotNotationNameGenerator} />,
+          <Form
+            schema={schema}
+            initialFormData={formData}
+            validator={validator}
+            nameGenerator={dotNotationNameGenerator}
+          />,
         );
         expect(asFragment()).toMatchSnapshot();
       });
@@ -1333,7 +1352,12 @@ export function formTests(Form: ComponentType<FormProps>) {
           ],
         };
         const { asFragment } = render(
-          <Form schema={schema} formData={formData} validator={validator} nameGenerator={dotNotationNameGenerator} />,
+          <Form
+            schema={schema}
+            initialFormData={formData}
+            validator={validator}
+            nameGenerator={dotNotationNameGenerator}
+          />,
         );
         expect(asFragment()).toMatchSnapshot();
       });
@@ -1392,7 +1416,7 @@ export function formTests(Form: ComponentType<FormProps>) {
         { const: 'bar', title: 'Bar' },
       ],
     };
-    const { asFragment } = render(<Form schema={schema} formData='bar' validator={validator} />);
+    const { asFragment } = render(<Form schema={schema} initialFormData='bar' validator={validator} />);
     expect(asFragment()).toMatchSnapshot();
   });
   test('select widget from anyOf constants of mixed types without a type', async () => {
@@ -1403,7 +1427,7 @@ export function formTests(Form: ComponentType<FormProps>) {
         { const: 'unlimited', title: 'Unlimited' },
       ],
     };
-    const { asFragment } = render(<Form schema={schema} formData={1} validator={validator} />);
+    const { asFragment } = render(<Form schema={schema} initialFormData={1} validator={validator} />);
     expect(asFragment()).toMatchSnapshot();
   });
   test('select widget from a nested oneOf of constants without a type', async () => {
@@ -1424,7 +1448,7 @@ export function formTests(Form: ComponentType<FormProps>) {
         },
       },
     };
-    const { asFragment } = render(<Form schema={schema} formData={{ region: 'DE' }} validator={validator} />);
+    const { asFragment } = render(<Form schema={schema} initialFormData={{ region: 'DE' }} validator={validator} />);
     expect(asFragment()).toMatchSnapshot();
   });
   test('select widget from oneOf boolean constants with a null option without a type', async () => {
@@ -1435,14 +1459,14 @@ export function formTests(Form: ComponentType<FormProps>) {
         { const: false, title: 'No' },
       ],
     };
-    const { asFragment } = render(<Form schema={schema} formData={null} validator={validator} />);
+    const { asFragment } = render(<Form schema={schema} initialFormData={null} validator={validator} />);
     expect(asFragment()).toMatchSnapshot();
   });
   test('select widget from a single anyOf boolean constant without a type', async () => {
     const schema: RJSFSchema = {
       anyOf: [{ const: true, title: 'Subscribed' }],
     };
-    const { asFragment } = render(<Form schema={schema} formData validator={validator} />);
+    const { asFragment } = render(<Form schema={schema} initialFormData validator={validator} />);
     expect(asFragment()).toMatchSnapshot();
   });
   test('select widget from oneOf true and false constants without a type', async () => {
@@ -1452,7 +1476,7 @@ export function formTests(Form: ComponentType<FormProps>) {
         { const: false, title: 'No' },
       ],
     };
-    const { asFragment } = render(<Form schema={schema} formData={false} validator={validator} />);
+    const { asFragment } = render(<Form schema={schema} initialFormData={false} validator={validator} />);
     expect(asFragment()).toMatchSnapshot();
   });
   // The title is the point: a boolean rendered as a select still has to show it, even in a theme that hides the label
@@ -1470,7 +1494,7 @@ export function formTests(Form: ComponentType<FormProps>) {
         },
       },
     };
-    const { asFragment } = render(<Form schema={schema} formData={{ answer: true }} validator={validator} />);
+    const { asFragment } = render(<Form schema={schema} initialFormData={{ answer: true }} validator={validator} />);
     expect(asFragment()).toMatchSnapshot();
   });
   // A theme whose select keys or validates its items by value, like chakra's or mantine's, fails on options sharing one
@@ -1485,7 +1509,9 @@ export function formTests(Form: ComponentType<FormProps>) {
           ],
         };
         const uiSchema: UiSchema = { 'ui:widget': widget, 'ui:options': { optionValueFormat: 'realValue' } };
-        const { asFragment } = render(<Form schema={schema} uiSchema={uiSchema} formData='1' validator={validator} />);
+        const { asFragment } = render(
+          <Form schema={schema} uiSchema={uiSchema} initialFormData='1' validator={validator} />,
+        );
         expect(asFragment()).toMatchSnapshot();
       });
     },
@@ -1501,7 +1527,7 @@ export function formTests(Form: ComponentType<FormProps>) {
           { const: 'bar', title: 'Bar', description: 'Bar description' },
         ],
       };
-      const { asFragment } = render(<Form schema={schema} formData='foo' validator={validator} />);
+      const { asFragment } = render(<Form schema={schema} initialFormData='foo' validator={validator} />);
       expect(document.querySelectorAll('#root__description')).toHaveLength(1);
       expect(screen.getByRole('combobox')).toHaveAccessibleDescription('Pick a plan Foo description');
       expect(asFragment()).toMatchSnapshot();

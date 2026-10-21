@@ -30,14 +30,12 @@ export interface OptionSelection {
    * since picking the selected option again shows it where the data showed another
    */
   readonly pick: number;
-  /** The field's data as the form last rendered it under the selection, and the data each change the form proposed
-   * since leaves there: a parent answers a proposal with one of them, the proposal or, declining it, the data before.
-   * Empty once the form rendered other data, which the selection is then only the preference in matching
+  /** The field's data as the form last rendered it under the selection, or as the last change since left it. Empty once
+   * the form rendered other data, which the selection is then only the preference in matching
    */
   readonly holdsFor: readonly unknown[];
   /** Whether an edit to a property of the object's own that the options can disagree about was made since the form
-   * last rendered: the data it leaves is matched again, while the data in `holdsFor` still holds the selection, so a
-   * parent declining the edit leaves the option shown
+   * last rendered: the data it leaves is matched again
    */
   readonly isReleased: boolean;
 }
@@ -102,11 +100,11 @@ export function shownOption<T, S extends StrictRJSFSchema, F extends FormContext
 /** The selection once an edit left `data` at its field. One that holds for no data, or that the edit released, is
  * left as it is, so the data the edit leaves is matched again
  */
-function heldAfterEdit(selection: OptionSelection, data: unknown, isProposal: boolean): OptionSelection {
+function heldAfterEdit(selection: OptionSelection, data: unknown): OptionSelection {
   if (selection.holdsFor.length === 0 || selection.isReleased) {
     return selection;
   }
-  return { ...selection, holdsFor: isProposal ? [...selection.holdsFor, data] : [data] };
+  return { ...selection, holdsFor: [data] };
 }
 
 const EMPTY_SCHEMA: StrictRJSFSchema = Object.freeze({});
@@ -239,21 +237,10 @@ export function isPathPrefix(prefix: FieldPathList, path: FieldPathList): boolea
   return prefix.length <= path.length && prefix.every((segment, i) => String(segment) === String(path[i]));
 }
 
-/** The selections and expansions of a form at one moment */
-interface UiStateSnapshot {
+/** The selections and expansions of a form at one moment, see `save()` */
+export interface UiStateSnapshot {
   selections: Map<FieldPath, Map<string, OptionSelection>>;
   expanded: Set<FieldPath>;
-}
-
-/** Moves a parent-owned form proposed: the containers whose keys moved, each with the data the first move there was
- * proposed on and the data the latest proposal leaves there, and the state from before the moves. The parent takes
- * them by rendering the proposed data, and declines them by rendering the data from before. `moved` is the state after
- * the moves, kept once a commit declined them, for a parent that renders the proposed data later
- */
-interface ProposedMoves {
-  containers: { path: FieldPathList; before: unknown; proposed?: { data: unknown } }[];
-  unmoved: UiStateSnapshot;
-  moved?: UiStateSnapshot;
 }
 
 /** The state of a form that is about what it shows rather than the data: the option selected for each option list, by
@@ -266,27 +253,8 @@ export function createUiState() {
   let selections = new Map<FieldPath, Map<string, OptionSelection>>();
   let expanded = new Set<FieldPath>();
   let picks = 0;
-  // The moves a parent-owned form proposed, until a commit answers them, see `move()`
-  let proposedMoves: ProposedMoves | undefined;
-  // Whether a commit restored the state of before or after proposed moves, which the fields have yet to be told of
-  let isRestored = false;
   const listeners = new Set<() => void>();
   const notify = () => listeners.forEach((listener) => listener());
-  const save = (): UiStateSnapshot => ({
-    selections: new Map([...selections].map(([path, lists]) => [path, new Map(lists)])),
-    expanded: new Set(expanded),
-  });
-  const restore = (snapshot: UiStateSnapshot) => {
-    ({ selections, expanded } = snapshot);
-    isRestored = true;
-  };
-  // A choice the user makes once a commit declined the moves is made on the state the parent kept, so the moved state
-  // is not brought back over it
-  const endWaitForMoves = () => {
-    if (proposedMoves?.moved) {
-      proposedMoves = undefined;
-    }
-  };
   const selectionAt = (path: FieldPath, list: string) => selections.get(path)?.get(list);
   const setSelection = (path: FieldPath, list: string, selection: OptionSelection) => {
     const lists = selections.get(path);
@@ -304,11 +272,12 @@ export function createUiState() {
       };
     },
     selection: selectionAt,
-    /** Selects option `index` of `list` at `path` for the field's `data` as it is shown */
-    select: (path: FieldPath, list: string, index: number, data: unknown) => {
-      endWaitForMoves();
+    /** Selects option `index` of `list` at `path`, holding for the data in `holdsFor`: what the form kept for the
+     * switch, or nothing where the form's data is to be matched again with the selection preferred
+     */
+    select: (path: FieldPath, list: string, index: number, holdsFor: readonly unknown[]) => {
       picks += 1;
-      setSelection(path, list, { index, pick: picks, holdsFor: [data], isReleased: false });
+      setSelection(path, list, { index, pick: picks, holdsFor, isReleased: false });
       notify();
     },
     /** Records the option shown for `data` before an edit inside the field, unless the selection already holds for that
@@ -322,7 +291,7 @@ export function createUiState() {
     },
     /** Lets the data an edit to a property of the object's own that the options can disagree about leaves be matched
      * again, as data from outside the field is: the edit may be a choice between them. The data the selection holds for
-     * still holds it, so a parent declining the edit leaves the option shown
+     * still holds it, so an edit the form refuses leaves the option shown
      */
     release: (path: FieldPath, list: string) => {
       const current = selectionAt(path, list);
@@ -330,60 +299,26 @@ export function createUiState() {
         setSelection(path, list, { ...current, isReleased: true });
       }
     },
-    /** Records, for every selection at or above the edited `path` that holds, the data the edit left there: in place of
-     * the data before, unless the edit is a proposal the parent may decline. The data a released edit leaves is left to
-     * be matched
+    /** Records, for every selection at or above the edited `path` that holds, the data the edit left there in place of
+     * the data before. The data a released edit leaves is left to be matched
      */
-    edited: (path: FieldPath, dataAt: (path: FieldPathList) => unknown, isProposal: boolean) => {
-      endWaitForMoves();
-      if (proposedMoves) {
-        proposedMoves = {
-          ...proposedMoves,
-          containers: proposedMoves.containers.map((container) => ({
-            ...container,
-            proposed: { data: dataAt(container.path) },
-          })),
-        };
-      }
+    edited: (path: FieldPath, dataAt: (path: FieldPathList) => unknown) => {
       const segments = fieldPathToList(path);
       for (const [at, lists] of selections) {
         const atSegments = fieldPathToList(at);
         if (isPathPrefix(atSegments, segments)) {
           const data = dataAt(atSegments);
           for (const [list, selection] of lists) {
-            lists.set(list, heldAfterEdit(selection, data, isProposal));
+            lists.set(list, heldAfterEdit(selection, data));
           }
         }
       }
     },
     /** Records the data the form rendered at each selection's field: the one data the selection holds for from now on,
-     * or none where the field showed other data, matched again. It answers the moves a parent-owned form proposed. The
-     * proposed data at every container they moved takes them, also where it equals the data from before, as moving rows
-     * that hold equal data leaves; the moved state comes back for a parent that renders it only after a commit that
-     * declined it. Otherwise the data from before at every container declines them and restores the state from before.
-     * Any other data is the parent's own: it takes moves no commit declined, and ends the wait for a declined one
-     * without bringing it back. Called as React commits, where nothing may render, so a restore is notified by
-     * `notifyRestored()` instead
+     * or none where the field showed other data, matched again. Called as React commits, where nothing may render, so
+     * it changes no option a field shows for the data it rendered and tells no field
      */
     rendered: (dataAt: (path: FieldPathList) => unknown) => {
-      if (proposedMoves) {
-        const { containers, unmoved, moved } = proposedMoves;
-        const isTaken = containers.every(
-          ({ path, proposed }) => proposed !== undefined && deepEquals(dataAt(path), proposed.data),
-        );
-        const isDeclined = !isTaken && containers.every(({ path, before }) => deepEquals(dataAt(path), before));
-        if (isDeclined) {
-          if (!moved) {
-            proposedMoves = { containers, unmoved, moved: save() };
-            restore(unmoved);
-          }
-        } else {
-          proposedMoves = undefined;
-          if (isTaken && moved) {
-            restore(moved);
-          }
-        }
-      }
       for (const [at, lists] of selections) {
         const data = dataAt(fieldPathToList(at));
         for (const [list, selection] of lists) {
@@ -394,35 +329,24 @@ export function createUiState() {
         }
       }
     },
-    /** Tells the fields of a restore `rendered()` made, from a layout Effect of the commit that made it */
-    notifyRestored: () => {
-      if (isRestored) {
-        isRestored = false;
-        notify();
-      }
-    },
     isExpanded: (path: FieldPath) => expanded.has(path),
     expand: (path: FieldPath) => {
-      endWaitForMoves();
       expanded.add(path);
       notify();
     },
-    /** Moves the selections and expansions under the array or object at `container` as its keys moved. For a move a
-     * parent-owned form proposes, `proposedOn` is the data at `container` the move is made on, which a commit answering
-     * the proposal compares to, see `rendered()`; the data the proposal leaves there is recorded by `edited()`
-     */
-    move: (container: FieldPath, newKeyOf: KeyMove, proposedOn?: { data: unknown }) => {
+    /** The selections and expansions as they are, for `restore()` to put back */
+    save: (): UiStateSnapshot => ({
+      selections: new Map([...selections].map(([path, lists]) => [path, new Map(lists)])),
+      expanded: new Set(expanded),
+    }),
+    /** Puts back what `save()` returned, as a change the form refused leaves it */
+    restore: (snapshot: UiStateSnapshot) => {
+      ({ selections, expanded } = snapshot);
+      notify();
+    },
+    /** Moves the selections and expansions under the array or object at `container` as its keys moved */
+    move: (container: FieldPath, newKeyOf: KeyMove) => {
       const containerSegments = fieldPathToList(container);
-      if (proposedOn) {
-        const proposed = proposedMoves && !proposedMoves.moved ? proposedMoves : { containers: [], unmoved: save() };
-        // A container moved again before an answer keeps the data from before its first move, which declines them all
-        const isRecorded = proposed.containers.some(
-          ({ path }) => path.length === containerSegments.length && isPathPrefix(path, containerSegments),
-        );
-        proposedMoves = isRecorded
-          ? proposed
-          : { ...proposed, containers: [...proposed.containers, { path: containerSegments, before: proposedOn.data }] };
-      }
       const movedSelections = new Map<FieldPath, Map<string, OptionSelection>>();
       for (const [path, lists] of selections) {
         const to = movedPath(path, containerSegments, newKeyOf);

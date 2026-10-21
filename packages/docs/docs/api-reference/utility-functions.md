@@ -1698,7 +1698,7 @@ That last `$ref`, to a subschema the form checks neither as an option nor as an 
 A validator caches the function it compiles for a schema under its `$id`, so a schema you derived from one carrying an `$id` would otherwise be answered with the original's function.
 The derived `$id` keeps the original's base for a `$ref` with a path, such as `other.json`, but a `$ref` that is only a fragment, such as `#/definitions/s`, is read against the root, as a validator reads every such `$ref` it is handed, so a copy of an option carrying an `$id` that refers into its own definitions is checked against the root's.
 A schema [`retrieveSchema()`](#retrieveschematunknownsextendsstrictrjsfschemarjsfschemafextendsformcontexttypeformcontexttype) handed out stands for the subschema it was resolved from, so it is checked as JSON Schema reads that subschema, not as the form merged it, where one subschema gives it its keywords; a view merged from several, such as a property declared in two `allOf` entries, is checked as the form merged it.
-`MultiSchemaField` checks with it that the data still fits an option a parent declined to switch away from.
+`MultiSchemaField` checks with it that the data still fits the option a switch chose when `transformChange` rewrites the switch.
 
 #### Parameters
 
@@ -3407,7 +3407,7 @@ Returns the superset of `formData` that includes the given set updated to includ
 
 #### Returns
 
-- T: The resulting `formData` with all the defaults provided
+- T | T[] | null | undefined: The resulting `formData` with all the defaults provided. A missing value of a `type: 'null'` schema, or one the data holds as `undefined`, is filled in as `null`, whatever `emptyObjectFields` says, as its `allOf` or `if` resolves it, except for an `anyOf`/`oneOf` option of `type: 'null'`, which renders no field, and inside an optional object the `enableOptionalDataFieldForType` UI option renders without its fields; so the result is `null` for such a root
 
 ### getClosestMatchingOption&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 

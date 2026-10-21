@@ -10,8 +10,12 @@ import useUiState from './useUiState.ts';
 export interface OptionSelectionState {
   /** The index of the option shown, -1 when there are no options */
   selectedOption: number;
-  /** Selects the option at `index`. It does not change the data: the field sends the data for the new option itself */
-  selectOption: (index: number) => void;
+  /** Selects the option at `index`. It does not change the data: the field sends the data for the new option itself.
+   * The selection holds for the data in `holdsFor`, by default the data shown, which the change the field sends next
+   * replaces with what it leaves; a field that sends first passes what the form kept, or nothing for data to be matched
+   * again with the option preferred
+   */
+  selectOption: (index: number, holdsFor?: readonly unknown[]) => void;
 }
 
 /** `OptionSelectionState`, and what `SchemaField` calls before an edit inside the field */
@@ -69,9 +73,9 @@ export function useShownOption<T, S extends StrictRJSFSchema, F extends FormCont
     shown.current = { index: selectedOption, data: formData, options };
   }, [selectedOption, formData, options]);
   const selectOption = useCallback(
-    (index: number) => {
+    (index: number, holdsFor?: readonly unknown[]) => {
       if (list !== undefined) {
-        uiState.select(fieldPath, list, index, shown.current.data);
+        uiState.select(fieldPath, list, index, holdsFor ?? [shown.current.data]);
       }
     },
     [list, uiState, fieldPath],
@@ -109,12 +113,11 @@ export function useShownOption<T, S extends StrictRJSFSchema, F extends FormCont
  * With no selection, the option is the one `getClosestMatchingOption()` picks for the data, an option whose discriminator
  * holds the data's value first. A selection holds for the data the form last rendered under it and the data the
  * form's own changes leave at the field, so neither an edit inside the option, an edit to a property of the object's
- * own that the options cannot disagree about, nor a parent declining a switch or an edit changes it. Other data, such
- * as a parent's new `formData`, a reset, a parent answering a switch with data of its own, or an edit to a property of
- * the object's own that they can disagree about, is matched again, with the selection preferred where it fits the data
- * as well as any other option, and so is the data after it until the user switches or makes an edit that holds the
- * option then shown. Data holding a value for the declared discriminator is always matched, so an edit to the
- * discriminator switches.
+ * own that the options cannot disagree about, nor an edit `transformChange` refuses changes it. Other data, such as
+ * `setFieldValue()`'s, a reset, a `transformChange` that rewrites a switch, or an edit to a property of the object's own
+ * that they can disagree about, is matched again, with the selection preferred where it fits the data as well as any
+ * other option, and so is the data after it until the user switches or makes an edit that holds the option then shown.
+ * Data holding a value for the declared discriminator is always matched, so an edit to the discriminator switches.
  *
  * Outside a `Form` the selection is kept by the outermost `SchemaField`, or the calling component when there is none,
  * and nothing records the data a switch or an edit leaves, so the data rendered after one counts as arriving from
