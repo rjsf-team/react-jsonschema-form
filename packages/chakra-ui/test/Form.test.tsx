@@ -649,66 +649,6 @@ describe("chakra-ui widgets are named by their label and carry their field's id 
 });
 
 describe("chakra-ui marks a deprecated field's label, as core does", () => {
-  test('names an untitled deprecated property by its key with the Deprecated marker', () => {
-    const { container } = render(
-      <WrappedForm
-        schema={{ type: 'object', properties: { foo: { type: 'string', deprecated: true } } }}
-        validator={validator}
-      />,
-    );
-
-    expect(screen.getByRole('textbox', { name: 'foo (deprecated)' })).toHaveAttribute('id', 'root_foo');
-    expect(container.innerHTML).not.toContain('(deprecated) (deprecated)');
-  });
-
-  test("draws a deprecated object's and array's heading with the Deprecated marker", () => {
-    const { container } = render(
-      <WrappedForm
-        schema={{
-          type: 'object',
-          properties: {
-            obj: { type: 'object', title: 'Obj', deprecated: true, properties: { a: { type: 'string' } } },
-            list: { type: 'array', title: 'List', deprecated: true, items: { type: 'string' } },
-          },
-        }}
-        validator={validator}
-      />,
-    );
-
-    expect(screen.getByRole('heading', { name: 'Obj (deprecated)' })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: 'List (deprecated)' })).toBeInTheDocument();
-    expect(container.innerHTML).not.toContain('(deprecated) (deprecated)');
-  });
-
-  test.each(['anyOf', 'oneOf'])(
-    "names a deprecated %s field's option selector with the Deprecated marker",
-    (keyword) => {
-      const x: RJSFSchema = { title: 'X', deprecated: true, [keyword]: [{ type: 'string' }, { type: 'number' }] };
-      const { container } = render(
-        <WrappedForm schema={{ type: 'object', properties: { x } }} validator={validator} />,
-      );
-
-      expect(screen.getByRole('combobox', { name: 'X (deprecated)' })).toHaveAttribute(
-        'id',
-        `root_x__${keyword.toLowerCase()}_select`,
-      );
-      expect(screen.getByRole('textbox', { name: 'X (deprecated)' })).toHaveAttribute('id', 'root_x');
-      expect(container.innerHTML).not.toContain('(deprecated) (deprecated)');
-    },
-  );
-
-  test('names a deprecated field whose label the template draws with the Deprecated marker', () => {
-    render(
-      <WrappedForm
-        schema={{ type: 'object', properties: { x: { type: 'integer', maximum: 5, title: 'X', deprecated: true } } }}
-        uiSchema={{ x: { 'ui:widget': 'RatingWidget' } }}
-        validator={validator}
-      />,
-    );
-
-    expect(screen.getByRole('radiogroup', { name: 'X (deprecated)' })).toHaveAttribute('id', 'root_x');
-  });
-
   // The widgets table has no array widget, so nothing else in this file renders a deprecated one
   test.each<[string, UiSchema, string]>([
     ['checkboxes group', { 'ui:widget': 'checkboxes' }, 'group'],

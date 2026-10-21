@@ -593,6 +593,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Added `realValue` select and radio cases with options sharing a `String()`; `@rjsf/validator-ajv8` is now a peer dependency ([#5315](https://github.com/rjsf-team/react-jsonschema-form/issues/5315))
 - Added `altDateTests()`, which checks the exact accessible name of each part an `AltDateWidget` and `AltDateTimeWidget` render, with the label shown and hidden, in english and through `translateString`, and that each part is described by the field's description and errors ([#5355](https://github.com/rjsf-team/react-jsonschema-form/issues/5355), [#5357](https://github.com/rjsf-team/react-jsonschema-form/issues/5357))
 - Added an `arrayTests` case for an array whose items are named by the `itemLabel` option ([#5474](https://github.com/rjsf-team/react-jsonschema-form/pull/5474))
+- Added `deprecatedLabelTests()`, which checks that a deprecated field's label carries the Deprecated marker, once, on an untitled property's key, an object's and array's heading, an `anyOf`/`oneOf` field's option selector and option input, and a label the template draws ([#5329](https://github.com/rjsf-team/react-jsonschema-form/issues/5329))
 
 ## @rjsf/utils
 
