@@ -505,7 +505,11 @@ describe('matching options through the schema graph', () => {
     const rootSchema: RJSFSchema = {
       definitions: {
         deep: {
-          properties: { b: { type: 'number' }, inner: { properties: { z: { $ref: '#/definitions/missing' } } } },
+          properties: {
+            b: { type: 'number' },
+            any: true,
+            inner: { properties: { z: { $ref: '#/definitions/missing' } } },
+          },
         },
       },
       type: 'object',

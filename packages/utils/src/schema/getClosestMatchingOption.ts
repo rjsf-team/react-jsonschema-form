@@ -262,23 +262,19 @@ function reachesBrokenRef<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, nod
     for (let next = pending.pop(); next !== undefined; next = pending.pop()) {
       const [id, isProperty] = next;
       const visited = seen[isProperty ? 1 : 0];
-      if (visited.has(id)) {
-        continue;
-      }
+      const found = visited.has(id) ? undefined : graph.node(id);
       visited.add(id);
-      const found = graph.node(id);
-      if (found.kind !== 'schema') {
-        if (found.kind === 'invalid') {
-          return true;
+      if (found?.kind === 'invalid') {
+        return true;
+      }
+      if (found?.kind === 'schema') {
+        if (found.ref !== undefined) {
+          pending.push([found.ref, isProperty]);
         }
-        continue;
-      }
-      if (found.ref !== undefined) {
-        pending.push([found.ref, isProperty]);
-      }
-      graph.subschemas(id, ALL_OF_KEY).forEach(([, child]) => pending.push([child, isProperty]));
-      if (!isProperty) {
-        graph.subschemas(id, PROPERTIES_KEY).forEach(([, child]) => pending.push([child, true]));
+        graph.subschemas(id, ALL_OF_KEY).forEach(([, child]) => pending.push([child, isProperty]));
+        if (!isProperty) {
+          graph.subschemas(id, PROPERTIES_KEY).forEach(([, child]) => pending.push([child, true]));
+        }
       }
     }
     return false;
