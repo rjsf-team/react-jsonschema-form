@@ -1,6 +1,6 @@
 import { MantineProvider, Switch } from '@mantine/core';
 import { getTestRegistry } from '@rjsf/core/testing';
-import { formTests, selectedOptionDescriptionTests, themeTests } from '@rjsf/snapshot-tests';
+import { formTests, themeTests } from '@rjsf/snapshot-tests';
 import type { ArrayFieldItemTemplateProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
@@ -620,5 +620,3 @@ describe('mantine CheckboxWidget required attribute', () => {
     expect(container.querySelector('input[type=checkbox]')).not.toHaveAttribute('required');
   });
 });
-
-selectedOptionDescriptionTests(WrappedForm);

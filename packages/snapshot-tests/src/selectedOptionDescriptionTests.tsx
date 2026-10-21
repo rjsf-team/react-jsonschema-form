@@ -60,7 +60,15 @@ export function selectedOptionDescriptionTests(Form: ComponentType<FormProps>, w
     );
 
     /** Renders the form's `SelectWidget` from a custom field, so without a plan, described by an element of its own */
-    function renderWithoutPlan(hideLabel: boolean, ariaLabel?: string) {
+    function renderWithoutPlan({
+      hideLabel,
+      uiSchema,
+      ariaLabel,
+    }: {
+      hideLabel: boolean;
+      uiSchema?: UiSchema;
+      ariaLabel?: string;
+    }) {
       function Planless({ registry }: FieldProps) {
         const { SelectWidget } = registry.widgets;
         return (
@@ -73,6 +81,7 @@ export function selectedOptionDescriptionTests(Form: ComponentType<FormProps>, w
               label='Color'
               // oxlint-disable-next-line typescript/no-deprecated -- a widget rendered without a plan reads the deprecated prop
               hideLabel={hideLabel}
+              uiSchema={uiSchema}
               aria-label={ariaLabel}
               aria-describedby='ext'
               options={{
@@ -104,24 +113,26 @@ export function selectedOptionDescriptionTests(Form: ComponentType<FormProps>, w
       return container.querySelector('#root_custom');
     }
 
-    // Without a plan only `hideLabel` decides, and the select keeps the ids its caller describes it by
-    test.each([
-      ['hidden', true, callerDescription],
-      ['shown', false, `${callerDescription} Warm`],
+    // Without a plan `hideLabel` and the widget's `uiSchema` decide, and the select keeps the ids its caller describes
+    // it by
+    test.each<[string, boolean, UiSchema, boolean]>([
+      ['hidden by hideLabel', true, {}, false],
+      ['hidden by its ui:label false', false, { 'ui:label': false }, false],
+      ['shown', false, {}, true],
     ])(
       "shows a selected option's description exactly where it describes a select rendered without a plan, its label %s",
-      (_, hideLabel, description) => {
-        const select = renderWithoutPlan(hideLabel);
+      (_, hideLabel, uiSchema, shown) => {
+        const select = renderWithoutPlan({ hideLabel, uiSchema });
 
-        expect(screen.queryAllByText('Warm')).toHaveLength(hideLabel ? 0 : 1);
-        expect(select).toHaveAccessibleDescription(description);
+        expect(screen.queryAllByText('Warm')).toHaveLength(shown ? 1 : 0);
+        expect(select).toHaveAccessibleDescription(shown ? `${callerDescription} Warm` : callerDescription);
         expectNoDanglingIds(select);
       },
     );
 
     // A label the widget draws can name the select over its caller's `aria-label`, so the label is hidden here
     test("names a select rendered without a plan, its label hidden, by its caller's aria-label", () => {
-      expect(renderWithoutPlan(true, callerLabel)).toHaveAccessibleName(callerLabel);
+      expect(renderWithoutPlan({ hideLabel: true, ariaLabel: callerLabel })).toHaveAccessibleName(callerLabel);
     });
   });
 }

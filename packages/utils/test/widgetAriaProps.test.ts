@@ -44,7 +44,7 @@ describe('widgetAriaProps()', () => {
     expect(widgetAriaProps({ ...props, 'aria-label': 'Paint' })['aria-label']).toBe('Paint');
     expect(widgetAriaProps({ ...props, 'aria-label': '' })['aria-label']).toBe('Color');
   });
-  it('describes the widget by none of the selected option description its plan hides with its label', () => {
+  it("leaves out the selected option's description when its plan hides the label, though hideLabel is false", () => {
     expect(
       widgetAriaProps({ ...colorProps, hideLabel: false, presentation: hiddenLabelPlan })['aria-describedby'],
     ).toBe('ext');

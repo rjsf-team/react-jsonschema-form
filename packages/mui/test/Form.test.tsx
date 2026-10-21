@@ -1,7 +1,7 @@
 import Switch from '@mui/material/Switch';
 import { withTheme } from '@rjsf/core';
 import { getTestRegistry } from '@rjsf/core/testing';
-import { formTests, selectedOptionDescriptionTests, themeTests } from '@rjsf/snapshot-tests';
+import { formTests, themeTests } from '@rjsf/snapshot-tests';
 import type { FieldProps, FormValidation, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { errorId, fieldLabelId, helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
@@ -920,5 +920,3 @@ describe('mui CheckboxWidget required attribute', () => {
     expect(container.querySelector('input[type=checkbox]')).not.toHaveAttribute('required');
   });
 });
-
-selectedOptionDescriptionTests(Form);

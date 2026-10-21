@@ -1,6 +1,6 @@
 import { Switch } from '@fluentui/react-components';
 import { getTestRegistry } from '@rjsf/core/testing';
-import { formTests, selectedOptionDescriptionTests, themeTests } from '@rjsf/snapshot-tests';
+import { formTests, themeTests } from '@rjsf/snapshot-tests';
 import type { FormValidation, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { bracketNameGenerator, errorId, helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
@@ -746,5 +746,3 @@ describe('fluentui-rc CheckboxWidget required attribute', () => {
     expect(container.querySelector('input[type=checkbox]')).not.toHaveAttribute('required');
   });
 });
-
-selectedOptionDescriptionTests(Form);

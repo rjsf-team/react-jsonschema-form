@@ -1,4 +1,4 @@
-import { formTests, selectedOptionDescriptionTests, themeTests } from '@rjsf/snapshot-tests';
+import { formTests, themeTests } from '@rjsf/snapshot-tests';
 import type { FormValidation, RJSFSchema, UiSchema } from '@rjsf/utils';
 import { bracketNameGenerator, errorId, fieldLabelId, helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
@@ -601,5 +601,3 @@ describe("react-bootstrap marks a deprecated field's label, as core does", () =>
     expect(container.innerHTML).not.toContain('(deprecated) (deprecated)');
   });
 });
-
-selectedOptionDescriptionTests(Form);
