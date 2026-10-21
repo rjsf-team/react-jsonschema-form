@@ -1,11 +1,18 @@
-import type { RJSFSchema } from '@rjsf/utils';
+import type { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render } from '@testing-library/react';
 
 import Form from '../src/index.ts';
 
 describe('ArrayFieldItemTemplate', () => {
-  it.each<{ named: string; items: RJSFSchema; formData: unknown[]; marginTop: string; fallbackUi?: boolean }>([
+  it.each<{
+    named: string;
+    items: RJSFSchema;
+    uiSchema?: UiSchema;
+    formData: unknown[];
+    marginTop: string;
+    fallbackUi?: boolean;
+  }>([
     {
       named: 'a text input, whose label sits above it',
       items: { type: 'string', title: 'Tag' },
@@ -31,10 +38,41 @@ describe('ArrayFieldItemTemplate', () => {
       marginTop: '26px',
       fallbackUi: true,
     },
-  ])('lines the buttons of $named up with the control', ({ items, formData, marginTop, fallbackUi }) => {
+    {
+      named: "an untitled type list under the fallback UI, whose type selector's label sits above it",
+      items: { type: ['string', 'number'] },
+      formData: ['a', 'a'],
+      marginTop: '26px',
+      fallbackUi: true,
+    },
+    {
+      named: "a type list with a hidden value under the fallback UI, whose type selector's label sits above it",
+      items: { type: ['string', 'number'], title: 'Value' },
+      uiSchema: { items: { 'ui:widget': 'hidden' } },
+      formData: ['a', 'a'],
+      marginTop: '26px',
+      fallbackUi: true,
+    },
+    {
+      named: 'a hidden text input, with no control on screen to draw a label above',
+      items: { type: 'string', title: 'Tag' },
+      uiSchema: { items: { 'ui:widget': 'hidden' } },
+      formData: ['a', 'b'],
+      marginTop: '0px',
+    },
+    {
+      named: 'a hidden text input under the fallback UI, with no control on screen to draw a label above',
+      items: { type: 'string', title: 'Tag' },
+      uiSchema: { items: { 'ui:widget': 'hidden' } },
+      formData: ['a', 'b'],
+      marginTop: '0px',
+      fallbackUi: true,
+    },
+  ])('lines the buttons of $named up with the control', ({ items, uiSchema, formData, marginTop, fallbackUi }) => {
     const { container } = render(
       <Form
         schema={{ type: 'array', items }}
+        uiSchema={uiSchema}
         formData={formData}
         validator={validator}
         useFallbackUiForUnsupportedType={fallbackUi}

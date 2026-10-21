@@ -1045,6 +1045,50 @@ describe('SchemaField', () => {
         expect(labels.fields[0]).toBe(false);
         expect(labels.items.at(-1)).toBe(displayLabel);
       });
+
+      // The fallback UI's type selector comes first and is labelled for the type, whatever the item's title or the
+      // value's widget, by the template here and by the select itself under a theme declaring it so
+      const typeList: RJSFSchema = { type: ['string', 'number'] };
+      describe.each<{ theme: string; presentation?: ThemePresentation }>([
+        { theme: 'the template' },
+        {
+          theme: 'the select',
+          presentation: { ...selfLabelled, fields: { FallbackField: { label: 'self', labelPlacement: 'above' } } },
+        },
+      ])('under the fallback UI, its type selector labelled by $theme', ({ presentation }) => {
+        it.each<{ named: string; items: RJSFSchema; uiSchema?: UiSchema; displayLabel: boolean }>([
+          { named: 'a titled type list', items: { ...typeList, title: 'Value' }, displayLabel: true },
+          { named: 'an untitled type list', items: typeList, displayLabel: true },
+          {
+            named: 'a type list with a hidden value',
+            items: { ...typeList, title: 'Value' },
+            uiSchema: { items: { 'ui:widget': 'hidden' } },
+            displayLabel: true,
+          },
+          {
+            named: "a type list with ui:label false, which turns the selector's label off too",
+            items: { ...typeList, title: 'Value' },
+            uiSchema: { items: { 'ui:label': false } },
+            displayLabel: false,
+          },
+          {
+            named: 'a hidden text input, which renders no type selector',
+            items: titled,
+            uiSchema: { items: { 'ui:widget': 'hidden' } },
+            displayLabel: false,
+          },
+        ])('with $named', ({ items, uiSchema, displayLabel }) => {
+          const labels = renderItemLabels({
+            schema: { type: 'array', items },
+            uiSchema,
+            formData: ['a'],
+            presentation,
+            useFallbackUiForUnsupportedType: true,
+          });
+
+          expect(labels.items.at(-1)).toBe(displayLabel);
+        });
+      });
     });
 
     const describedSchema: RJSFSchema = {

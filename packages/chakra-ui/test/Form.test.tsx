@@ -970,7 +970,7 @@ describe('chakra-ui ArrayFieldTemplate', () => {
 
 describe('chakra-ui ArrayFieldItemTemplate', () => {
   // This theme's own item template doesn't lay its buttons out by `displayLabel`, so a custom one records it
-  test.each<{ named: string; items: RJSFSchema; value: unknown; displayLabel: boolean }>([
+  test.each<{ named: string; items: RJSFSchema; uiSchema?: UiSchema; value: unknown; displayLabel: boolean }>([
     {
       named: 'a text input, whose label sits above it',
       items: { type: 'string', title: 'Tag' },
@@ -989,7 +989,27 @@ describe('chakra-ui ArrayFieldItemTemplate', () => {
       value: 'a',
       displayLabel: true,
     },
-  ])('hands a custom template whether a label sits above $named', ({ items, value, displayLabel }) => {
+    {
+      named: "an untitled type list under the fallback UI, whose type selector's label sits above it",
+      items: { type: ['string', 'number'] },
+      value: 'a',
+      displayLabel: true,
+    },
+    {
+      named: "a type list with a hidden value under the fallback UI, whose type selector's label sits above it",
+      items: { type: ['string', 'number'], title: 'Value' },
+      uiSchema: { items: { 'ui:widget': 'hidden' } },
+      value: 'a',
+      displayLabel: true,
+    },
+    {
+      named: 'a hidden text input, with no control on screen to draw a label above',
+      items: { type: 'string', title: 'Tag' },
+      uiSchema: { items: { 'ui:widget': 'hidden' } },
+      value: 'a',
+      displayLabel: false,
+    },
+  ])('hands a custom template whether a label sits above $named', ({ items, uiSchema, value, displayLabel }) => {
     const displayLabels: (boolean | undefined)[] = [];
     function ArrayFieldItemTemplate(props: ArrayFieldItemTemplateProps) {
       displayLabels.push(props.displayLabel);
@@ -998,6 +1018,7 @@ describe('chakra-ui ArrayFieldItemTemplate', () => {
     render(
       <WrappedForm
         schema={{ type: 'array', items }}
+        uiSchema={uiSchema}
         initialFormData={[value]}
         templates={{ ArrayFieldItemTemplate }}
         validator={validator}

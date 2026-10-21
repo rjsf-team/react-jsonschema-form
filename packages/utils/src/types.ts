@@ -1250,7 +1250,9 @@ export type ArrayFieldItemTemplateProps<
   /** Whether a label sits above the item's control: one the item's `FieldTemplate` draws, as the plan `SchemaField`
    * builds for the item says, which is the `displayLabel` that template is handed, or one the item's field or widget
    * draws itself where its declaration places it `labelPlacement: 'above'`, for which that template is handed
-   * `displayLabel: false`. Used to assist buttons placement
+   * `displayLabel: false`. Under the fallback UI with a choice of types, the item's first control is the type selector,
+   * whose label names the type, so a label sits above it whatever the item's title or the value's widget, unless
+   * `ui:label` is false. Used to assist buttons placement
    */
   displayLabel?: boolean;
   /** A boolean flag indicating whether there is a description for the field, used to assist buttons placement */
