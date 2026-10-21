@@ -16,6 +16,7 @@ import {
   isSchemaObject,
   isWholeValueSelect,
   rendersOwnFieldBesideOption,
+  resolveConstantOptions,
   RJSF_REF_CYCLE_KEY,
   toConstant,
 } from '@rjsf/utils';
@@ -114,7 +115,8 @@ function layersOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
     }
     schema = expandRefCycle<S>(schema, rootSchema);
   }
-  const view = retrieved ?? schemaUtils.retrieveSchema(schema, data);
+  // A select whose constant options are `$ref`s renders as `SchemaField` renders it: a select, not an option field
+  const view = resolveConstantOptions<S>(retrieved ?? schemaUtils.retrieveSchema(schema, data), rootSchema);
   const options = retrievedOptionsOf<T, S, F>(schemaUtils, view, data);
   if (!options) {
     return [view];
