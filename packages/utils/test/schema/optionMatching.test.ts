@@ -11,6 +11,8 @@ import {
 } from '../../src/index.ts';
 import { miniValidator } from './graph/miniValidator.ts';
 
+const B_NUMBER: RJSFSchema = { properties: { b: { type: 'number' } } };
+
 describe('matching options through the schema graph', () => {
   it('passes over a boolean option and one without the discriminator when matching by const', () => {
     const field: RJSFSchema = {
@@ -223,6 +225,46 @@ describe('matching options through the schema graph', () => {
     expect(getDefaultFormState({ validator }, { schema: rootSchema, formData: { v: { b: 1 } }, rootSchema })).toEqual({
       v: { b: 1 },
     });
+  });
+  it.each<[string, RJSFSchema]>([
+    ['an entry whose $ref resolves to nothing', { allOf: [{ $ref: '#/definitions/missing' }, B_NUMBER] }],
+    [
+      'an entry naming a definition whose own allOf reaches one that resolves to nothing',
+      { allOf: [{ $ref: '#/definitions/ok' }, { $ref: '#/definitions/good' }] },
+    ],
+    ['a definition holding a property whose $ref resolves to nothing', { allOf: [{ $ref: '#/definitions/P' }] }],
+    ['a definition holding a property whose $ref loops', { allOf: [{ $ref: '#/definitions/looping' }] }],
+  ])("scores none of an allOf's entries where it holds %s, without throwing", (_name, broken) => {
+    const options: RJSFSchema[] = [{ type: 'object', properties: { a: { type: 'string' } } }, broken];
+    const rootSchema: RJSFSchema = {
+      definitions: {
+        a: { $ref: '#/definitions/b' },
+        b: { $ref: '#/definitions/a' },
+        ok: { allOf: [{ $ref: '#/definitions/missing' }], properties: { b: { type: 'number' } } },
+        good: B_NUMBER,
+        P: { properties: { b: { type: 'number' }, c: { $ref: '#/definitions/missing' } } },
+        looping: { properties: { b: { type: 'number' }, c: { $ref: '#/definitions/a' } } },
+      },
+      type: 'object',
+      properties: { v: { anyOf: options } },
+    };
+    const field: RJSFSchema = { definitions: rootSchema.definitions, anyOf: options };
+    // A validator fails a schema holding a `$ref` it cannot resolve, so neither option matches and both are scored
+    const validator = { ...miniValidator(), isValid: () => false };
+    expect(getClosestMatchingOption({ validator }, rootSchema, { b: 1 }, options)).toBe(-1);
+    expect(omitExtraData({ validator }, field, field, { b: 1 })).toEqual({});
+    expect(getDefaultFormState({ validator }, { schema: rootSchema, formData: { v: { b: 1 } }, rootSchema })).toEqual({
+      v: { b: 1 },
+    });
+  });
+  it("scores a scope's own properties beside an allOf whose entry resolves to nothing", () => {
+    const options: RJSFSchema[] = [
+      { type: 'object', properties: { a: { type: 'string' } } },
+      { properties: { b: { type: 'number' } }, allOf: [{ $ref: '#/definitions/missing' }, B_NUMBER] },
+    ];
+    const rootSchema: RJSFSchema = { definitions: {}, properties: { v: { anyOf: options } } };
+    const validator = { ...miniValidator(), isValid: () => false };
+    expect(getClosestMatchingOption({ validator }, rootSchema, { b: 1 }, options)).toBe(1);
   });
   describe('options a customMergeAllOf merges', () => {
     // Neither option matches, so both are scored

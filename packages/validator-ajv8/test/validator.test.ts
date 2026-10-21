@@ -3612,6 +3612,32 @@ describe('AJV8Validator resolving a $ref local to the root', () => {
   );
 });
 
+describe('AJV8Validator scoring an option whose allOf reaches a $ref naming nothing', () => {
+  const B_NUMBER: RJSFSchema = { properties: { b: { type: 'number' } } };
+  it.each<[string, RJSFSchema]>([
+    ['beside an entry naming nothing', { allOf: [{ $ref: '#/definitions/missing' }, B_NUMBER] }],
+    [
+      'beside a definition whose allOf names nothing',
+      { allOf: [{ $ref: '#/definitions/ok' }, { $ref: '#/definitions/good' }] },
+    ],
+    ['through a property of the definition it names', { allOf: [{ $ref: '#/definitions/P' }] }],
+  ])('scores it as nothing %s, so the defaults leave the data as v7 does', (_name, broken) => {
+    const options: RJSFSchema[] = [{ type: 'object', properties: { a: { type: 'string' } } }, broken];
+    const rootSchema: RJSFSchema = {
+      definitions: {
+        ok: { allOf: [{ $ref: '#/definitions/missing' }], properties: { b: { type: 'number' } } },
+        good: B_NUMBER,
+        P: { properties: { b: { type: 'number' }, c: { $ref: '#/definitions/missing' } } },
+      },
+      type: 'object',
+      properties: { v: { anyOf: options } },
+    };
+    const schemaUtils = createSchemaUtils({ validator: new AJV8Validator({}) }, rootSchema);
+    expect(schemaUtils.getClosestMatchingOption({ b: 1 }, options)).toBe(-1);
+    expect(schemaUtils.getDefaultFormState(rootSchema, { v: { b: 1 } })).toEqual({ v: { b: 1 } });
+  });
+});
+
 describe('AJV8Validator validating a subschema by its place in the root', () => {
   it('does not answer a pointer with what it compiled for an earlier root', () => {
     const validator = customizeValidator();
