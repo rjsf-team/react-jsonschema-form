@@ -40,9 +40,9 @@ interface OptionSelection<T> {
   selectedOption: number;
   formData: T | undefined;
   id: string;
-  /** The data the user's last option switch sent, and what the form stored for it when it took the switch as sent, so
-   * an accepted switch keeps the explicit choice and a rewritten one is re-matched to the data the form kept. A switch
-   * the form refused is not recorded, since it changed nothing
+  /** The data the user's last option switch sent, and what the form stored for it when it took the switch as sent, or
+   * rewrote only data outside this field, so an accepted switch keeps the explicit choice and one rewritten here is
+   * re-matched to the data the form kept. A switch the form refused is not recorded, since it changed nothing
    */
   switched: { formData: T | undefined; taken?: { kept: unknown } } | undefined;
 }
@@ -78,7 +78,7 @@ function optionForData<
     ) {
       return selectedOption;
     }
-    // The data is not what the switch sent, which is what a `transformChange` that rewrites it looks like, or a parent
+    // The data is not what the switch sent, which is what a `transformChange` that rewrites this field looks like, or a parent
     // of the field other than a form that refused it, rewrote it or kept the data it had: the chosen option stays while
     // the data the form kept still fits it, so a form whose data matches several options keeps the explicit choice,
     // and one whose data does not is put on the option that describes it
@@ -280,7 +280,13 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
       setSelection((current) => ({
         ...current,
         selectedOption: intOption,
-        switched: { formData: newFormData, taken: outcome?.kind === 'taken' ? { kept: outcome.kept } : undefined },
+        switched: {
+          formData: newFormData,
+          taken:
+            outcome && (outcome.kind === 'taken' || deepEquals(outcome.kept, outcome.edited))
+              ? { kept: outcome.kept }
+              : undefined,
+        },
       }));
     },
     [

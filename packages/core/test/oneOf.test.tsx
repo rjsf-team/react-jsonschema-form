@@ -9,7 +9,7 @@ import type {
   UiSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { noop, optionDescriptionId } from '@rjsf/utils';
+import { isPlainObject, noop, optionDescriptionId } from '@rjsf/utils';
 import { act, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
@@ -4858,6 +4858,55 @@ describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes',
 
     expect(onChange).toHaveBeenLastCalledWith(
       expect.objectContaining({ formData: { status: { kind: 'b', note: 'n' } } }),
+      `root_status__${keyword.toLowerCase()}_select`,
+    );
+    expect(selector).toHaveValue('1');
+    expect(node.querySelector('#root_status_reason')).toBeInTheDocument();
+  });
+  it('keeps the chosen option when transformChange rewrites only another part of the data', async () => {
+    // Option A describes data with a `kind` and a `note` better than option B does, so only the user's choice keeps B
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        stamp: { type: 'number' },
+        status: {
+          [keyword]: [
+            {
+              title: 'A',
+              type: 'object',
+              properties: { kind: { type: 'string' }, note: { type: 'string' }, by: { type: 'string' } },
+              required: ['by'],
+            },
+            {
+              title: 'B',
+              type: 'object',
+              properties: { kind: { const: 'b' }, reason: { type: 'string' } },
+              required: ['reason'],
+            },
+          ],
+        },
+      },
+      allOf: [
+        {
+          if: {
+            properties: { status: { properties: { kind: { const: 'b' } }, required: ['kind'] } },
+            required: ['status'],
+          },
+          then: { properties: { status: { properties: { note: { type: 'string', default: 'n' } } } } },
+        },
+      ],
+    };
+    const { node, onChange } = createFormComponent({
+      schema,
+      initialFormData: { status: { by: 'me' } },
+      transformChange: (next) => (isPlainObject(next) ? { ...next, stamp: 1 } : next),
+    });
+    const selector = elementOf(node, `#root_status__${keyword.toLowerCase()}_select`);
+
+    await user.selectOptions(selector, 'B');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { stamp: 1, status: { kind: 'b', note: 'n' } } }),
       `root_status__${keyword.toLowerCase()}_select`,
     );
     expect(selector).toHaveValue('1');
