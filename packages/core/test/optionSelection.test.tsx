@@ -692,6 +692,35 @@ describe('option selection as form state', () => {
     expect(selectOf(node, 'root_1__anyof_select')).toHaveValue('0');
   });
 
+  it('keeps the selections of array items on the items transformChange leaves where they were when it rewrites a reorder', async () => {
+    const schema: RJSFSchema = {
+      type: 'array',
+      items: {
+        anyOf: [
+          { title: 'A', type: 'object', properties: { name: { type: 'string' } } },
+          { title: 'B', type: 'object', properties: { name: { type: 'string' }, more: { type: 'string' } } },
+        ],
+      },
+    };
+    let rewrites = false;
+    const { node } = createFormComponent({
+      schema,
+      initialFormData: [{ name: 'first' }, { name: 'second' }],
+      // Puts the rows back where they were, renaming the second
+      transformChange: (next, previous) =>
+        rewrites && Array.isArray(previous) ? [previous[0], { ...previous[1], name: 'second!' }] : next,
+    });
+    await user.selectOptions(selectOf(node, 'root_0__anyof_select'), 'B');
+    rewrites = true;
+
+    await user.click(node.querySelectorAll('.rjsf-array-item-move-down')[0]);
+
+    expect(node.querySelector('#root_0_name')).toHaveValue('first');
+    expect(selectOf(node, 'root_0__anyof_select')).toHaveValue('1');
+    expect(node.querySelector('#root_1_name')).toHaveValue('second!');
+    expect(selectOf(node, 'root_1__anyof_select')).toHaveValue('0');
+  });
+
   it('keeps the selections of array items where they are when setFieldValue changes the array after a refused reorder', async () => {
     const schema: RJSFSchema = {
       type: 'array',
@@ -1226,6 +1255,24 @@ describe('cycle expansion as form state', () => {
       transformChange: (_next, previous) => previous,
     });
     await user.click(elementOf(node, '#root_0_child-button'));
+
+    await user.click(node.querySelectorAll('.rjsf-array-item-move-down')[0]);
+
+    expect(node.querySelector('#root_0_name')).toHaveValue('a');
+    expect(node.querySelector('#root_0_child_name')).toBeInTheDocument();
+    expect(node.querySelector('#root_1_child-button')).toBeInTheDocument();
+  });
+
+  it('keeps an expansion on the item transformChange leaves where it was when it rewrites a reorder', async () => {
+    let rewrites = false;
+    const { node } = createFormComponent({
+      schema,
+      initialFormData: [{ name: 'a' }, { name: 'b' }],
+      transformChange: (next, previous) =>
+        rewrites && Array.isArray(previous) ? [previous[0], { ...previous[1], name: 'b!' }] : next,
+    });
+    await user.click(elementOf(node, '#root_0_child-button'));
+    rewrites = true;
 
     await user.click(node.querySelectorAll('.rjsf-array-item-move-down')[0]);
 

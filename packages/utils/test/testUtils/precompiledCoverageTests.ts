@@ -96,7 +96,10 @@ export default function precompiledCoverageTests(buildValidator: BuildPrecompile
 
       // What misses is the copy scoring hands the validator, whose properties point at the places in the root the
       // option's content is declared. The copy can't carry the option's `$id`, which would resolve those pointers against
-      // the option's base instead of the root's, so the miss has no ID to name and names the lookup key alone
+      // the option's base instead of the root's, so the miss has no ID to name and names the lookup key alone. Nor has
+      // it a pointer to name: the changed option is an object the root does not hold, so it sits nowhere in the root,
+      // and the copy holds only the pointers of its properties' declarations, such as `#/oneOf/1/properties/name`, which
+      // name where those properties sit rather than the option
       expect(() => getFirstMatchingOption({ validator }, { name: 'Ada' }, [options[0], changedOption], schema)).toThrow(
         /^No precompiled validator function was found for the given schema for "-?[0-9a-f]+"$/,
       );

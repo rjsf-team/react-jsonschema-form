@@ -497,6 +497,43 @@ describe('matching options through the schema graph', () => {
       v: { b: 1 },
     });
   });
+  it('scores an allOf entry whose broken $ref sits below a property of a property, which no merge of it enters', () => {
+    const options: RJSFSchema[] = [
+      { type: 'object', properties: { a: { type: 'string' } } },
+      { allOf: [{ $ref: '#/definitions/deep' }] },
+    ];
+    const rootSchema: RJSFSchema = {
+      definitions: {
+        deep: {
+          properties: { b: { type: 'number' }, inner: { properties: { z: { $ref: '#/definitions/missing' } } } },
+        },
+      },
+      type: 'object',
+      properties: { v: { anyOf: options } },
+    };
+    const validator = { ...miniValidator(), isValid: () => false };
+    expect(getClosestMatchingOption({ validator }, rootSchema, { b: 1 }, options)).toBe(1);
+    expect(getDefaultFormState({ validator }, { schema: rootSchema, formData: { v: { b: 1 } }, rootSchema })).toEqual({
+      v: { b: 1 },
+    });
+  });
+  it('scores options over a chain of definitions linked through properties too deep to walk by recursion', () => {
+    const depth = 3000;
+    const definitions: Record<string, RJSFSchema> = {};
+    for (let i = 0; i < depth; i++) {
+      definitions[`d${i}`] = {
+        allOf: [{ properties: { b: { type: 'number' } } }],
+        properties: i + 1 < depth ? { next: { $ref: `#/definitions/d${i + 1}` } } : {},
+      };
+    }
+    const options: RJSFSchema[] = [
+      { type: 'object', properties: { a: { type: 'string' } } },
+      { allOf: [{ $ref: '#/definitions/d0' }] },
+    ];
+    const rootSchema: RJSFSchema = { definitions, type: 'object', properties: { v: { anyOf: options } } };
+    const validator = { ...miniValidator(), isValid: () => false };
+    expect(getClosestMatchingOption({ validator }, rootSchema, { b: 1 }, options)).toBe(1);
+  });
   it("scores a scope's own properties beside an allOf whose entry resolves to nothing", () => {
     const options: RJSFSchema[] = [
       { type: 'object', properties: { a: { type: 'string' } } },

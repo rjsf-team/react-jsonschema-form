@@ -4,7 +4,7 @@ import parseSchemaGraph from './schema/graph/parseSchemaGraph.ts';
 import type { AdoptedSchema, SchemaGraph } from './schema/graph/parseSchemaGraph.ts';
 import { readProvenance } from './schema/graph/provenance.ts';
 import { declaringSeed } from './schema/retrieveSchema.ts';
-import { resolveUri } from './schemaUri.ts';
+import { isSubschemaKeyword, keywordShape, resolveUri } from './schemaUri.ts';
 import type { GenericObjectType, RJSFSchema, StrictRJSFSchema } from './types.ts';
 
 /** How `prefixRefs()` rewrites the `$ref`s of a schema handed to a validator beside the root */
@@ -51,7 +51,7 @@ function holderNode<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, holder: o
  * absolute one does a root registered under a relative id such as `ROOT_SCHEMA_PREFIX`, no pointer is returned, and
  * neither is one for any other `$ref`: one written in the root's own resource, or one that resolves to nothing. Of
  * those, only a relative `$ref` is left for the validator to resolve against that `$id`: `rootRef()` puts the root's
- * id in front of a fragment one, which then resolves against the `$id` and misses, as it does in `v7`.
+ * id in front of a fragment one, which then resolves against the `$id` and misses.
  */
 function nestedRefOf<S extends StrictRJSFSchema>(
   graph: SchemaGraph<S>,
@@ -98,32 +98,55 @@ function rootRef(ref: string, base: string, scope: string): string {
   return resolveUri(scope === '' ? base : resolveUri(base, scope), ref);
 }
 
+/** Returns the value of a subschema keyword with each subschema it holds prefixed, as `keywordShape()` reads its shape:
+ * the subschema itself, each one of a list, or each value of a map, whose keys, such as property names, are no keywords
+ */
+function prefixSubschemas(key: string, value: unknown, rewrite: RefRewrite, scope: string): unknown {
+  if (keywordShape(key, value) === 'map' && isObject(value)) {
+    return Object.fromEntries(
+      Object.entries(value).map(([name, subschema]) => [name, prefixRefs(subschema, rewrite, scope)]),
+    );
+  }
+  return prefixRefs(value, rewrite, scope);
+}
+
 /** Takes a `node` object and transforms any contained `$ref` node variables with a prefix, recursively calling
- * `prefixRefs` for any other elements.
+ * `prefixRefs` for any other elements. Only a keyword holding subschemas is read as schemas: any other, such as `const`,
+ * `enum`, `default` or `examples`, holds data, where a `$ref` key is part of a value, so only a local one is prefixed
+ * there, as `withIdRefPrefix()` prefixes every local one
  *
  * @param node - The copy of `holder` to which the `base` is added when a REF_KEY is part of it
  * @param holder - The object node `node` copies, by which the graph knows it
  * @param rewrite - How the `$ref`s are rewritten
  * @param outerScope - The base the validator resolves a `$ref` around the object against
+ * @param isData - Whether the object is part of a data keyword's value rather than a schema
  */
-function withIdRefPrefixObject<S extends StrictRJSFSchema = RJSFSchema>(
-  node: S,
+function withIdRefPrefixObject(
+  node: GenericObjectType,
   holder: object,
   rewrite: RefRewrite,
   outerScope: string,
-): S {
+  isData: boolean,
+): GenericObjectType {
   const realObj: GenericObjectType = node;
   const ownId: unknown = realObj[ID_KEY];
-  const scope = typeof ownId === 'string' && !ownId.startsWith('#') ? resolveUri(outerScope, ownId) : outerScope;
-  const nestedRef = rewrite.nestedRef?.(holder, scope);
+  const scope =
+    !isData && typeof ownId === 'string' && !ownId.startsWith('#') ? resolveUri(outerScope, ownId) : outerScope;
+  const nestedRef = isData ? undefined : rewrite.nestedRef?.(holder, scope);
   for (const key in realObj) {
     /* v8 ignore next -- spread in caller guarantees only own properties reach this loop */
     if (Object.hasOwn(realObj, key)) {
       const value = realObj[key];
       if (key === REF_KEY && typeof value === 'string') {
-        realObj[key] = nestedRef ?? rootRef(value, rewrite.base, scope);
+        if (!isData) {
+          realObj[key] = nestedRef ?? rootRef(value, rewrite.base, scope);
+        } else if (value.startsWith('#')) {
+          realObj[key] = rewrite.base + value;
+        }
+      } else if (isData || !isSubschemaKeyword(key)) {
+        realObj[key] = prefixRefs(value, rewrite, scope, true);
       } else {
-        realObj[key] = prefixRefs<S>(value, rewrite, scope);
+        realObj[key] = prefixSubschemas(key, value, rewrite, scope);
       }
     }
   }
@@ -137,30 +160,29 @@ function withIdRefPrefixObject<S extends StrictRJSFSchema = RJSFSchema>(
  * @param rewrite - How the `$ref`s are rewritten
  * @param scope - The base the validator resolves a `$ref` in the list against
  */
-function withIdRefPrefixArray<S extends StrictRJSFSchema = RJSFSchema>(
-  node: S[],
-  rewrite: RefRewrite,
-  scope: string,
-): S[] {
-  return node.map((item) => prefixRefs<S>(item, rewrite, scope));
+function withIdRefPrefixArray(node: unknown[], rewrite: RefRewrite, scope: string, isData: boolean): unknown[] {
+  return node.map((item) => prefixRefs(item, rewrite, scope, isData));
 }
 
-function prefixRefs<S extends StrictRJSFSchema = RJSFSchema>(schemaNode: S, rewrite: RefRewrite, scope?: string): S;
+function prefixRefs<S extends StrictRJSFSchema = RJSFSchema>(
+  schemaNode: S,
+  rewrite: RefRewrite,
+  scope?: string,
+  isData?: boolean,
+): S;
 function prefixRefs<S extends StrictRJSFSchema = RJSFSchema>(
   schemaNode: S | S[] | S[keyof S],
   rewrite: RefRewrite,
   scope?: string,
+  isData?: boolean,
 ): S | S[] | S[keyof S];
-function prefixRefs<S extends StrictRJSFSchema = RJSFSchema>(
-  schemaNode: S | S[] | S[keyof S],
-  rewrite: RefRewrite,
-  scope = '',
-): S | S[] | S[keyof S] {
+function prefixRefs(schemaNode: unknown, rewrite: RefRewrite, scope?: string, isData?: boolean): unknown;
+function prefixRefs(schemaNode: unknown, rewrite: RefRewrite, scope = '', isData = false): unknown {
   if (Array.isArray(schemaNode)) {
-    return withIdRefPrefixArray<S>([...schemaNode], rewrite, scope);
+    return withIdRefPrefixArray([...schemaNode], rewrite, scope, isData);
   }
   if (isObject(schemaNode)) {
-    return withIdRefPrefixObject<S>({ ...schemaNode }, schemaNode, rewrite, scope);
+    return withIdRefPrefixObject({ ...schemaNode }, schemaNode, rewrite, scope, isData);
   }
   return schemaNode;
 }
