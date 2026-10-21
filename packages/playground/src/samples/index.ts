@@ -40,7 +40,7 @@ import validation from './validation.ts';
 import widgets from './widgets.tsx';
 
 const samplesList: Record<string, Sample> = {
-  Blank: { schema: {}, uiSchema: {}, formData: {} },
+  Blank: { schema: {}, uiSchema: {}, initialFormData: {} },
   Simple: simple,
   'UI Options': options,
   Nested: nested,

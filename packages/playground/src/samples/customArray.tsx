@@ -50,7 +50,7 @@ const customArray: Sample = {
       type: 'string',
     },
   },
-  formData: ['react', 'jsonschema', 'form'],
+  initialFormData: ['react', 'jsonschema', 'form'],
   templates: { ArrayFieldTemplate, ArrayFieldItemButtonsTemplate },
 };
 

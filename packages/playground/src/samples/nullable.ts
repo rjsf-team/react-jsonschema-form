@@ -65,7 +65,7 @@ const nullable: Sample = {
       },
     },
   },
-  formData: {
+  initialFormData: {
     lastName: 'Norris',
     age: 75,
     bio: null,

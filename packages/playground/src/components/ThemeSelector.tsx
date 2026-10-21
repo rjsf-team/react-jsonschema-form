@@ -50,7 +50,7 @@ export default function ThemeSelector({ theme, themes, select }: ThemeSelectorPr
         idPrefix='rjsf_themeSelector'
         schema={schema}
         uiSchema={uiSchema}
-        formData={theme}
+        initialFormData={theme}
         validator={localValidator}
         onChange={onChange}
       >

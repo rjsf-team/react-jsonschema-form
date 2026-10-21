@@ -2173,7 +2173,7 @@ export interface SchemaUtilsType<
     initialDefaultsGenerated?: boolean,
     uiSchema?: UiSchema<T, S, F>,
     uiSchemaDefinitions?: UiSchemaDefinitions<S, F>,
-  ): T | T[] | undefined;
+  ): T | T[] | null | undefined;
   /** Determines whether the combination of `schema` and `uiSchema` properties indicates that the label for the `schema`
    * should be displayed in a UI.
    *

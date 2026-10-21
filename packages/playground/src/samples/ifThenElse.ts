@@ -43,7 +43,7 @@ const ifThenElse: Sample = {
       },
     ],
   },
-  formData: {},
+  initialFormData: {},
 };
 
 export default ifThenElse;

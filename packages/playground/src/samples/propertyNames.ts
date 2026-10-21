@@ -15,7 +15,7 @@ const propertyNames: Sample = {
     },
   },
   uiSchema: {},
-  formData: {
+  initialFormData: {
     darkMode: true,
   },
 };

@@ -14,6 +14,8 @@ import {
   TranslatableString,
 } from '@rjsf/utils';
 
+import { withGlobalUiOptions } from './fieldWidgetUtils.ts';
+
 /** The `OptionalDataControlsField` component is used to render the optional data controls for the field associated
  * with the given props.
  *
@@ -67,7 +69,7 @@ export default function OptionalDataControlsField<
           undefined,
           'excludeObjectChildren',
           undefined,
-          uiSchema,
+          withGlobalUiOptions<T, S, F>(uiSchema, globalUiOptions),
           uiSchemaDefinitions,
         );
         if (newFormData === undefined) {

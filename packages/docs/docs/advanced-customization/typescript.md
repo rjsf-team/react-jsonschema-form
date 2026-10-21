@@ -11,12 +11,12 @@ Every other library in the `@rjsf/*` ecosystem use these same generics in their 
 For instance, in the `@rjsf/core` library the definitions of the `Form` component and the `withTheme()` and `generateTheme()` functions are as follows:
 
 ```ts
-export default class Form<
+export default function Form<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
-> extends Component<FormProps<T, S, F>, FormState<T, S, F>> {
-  // ... class implementation
+>(props: FormProps<T, S, F>) {
+  // ... function implementation
 }
 
 export default function withTheme<
@@ -39,7 +39,7 @@ export function generateTheme<
 The defaults describe the general case, where RJSF cannot know the shape of your data: the schema decides it at runtime.
 Because `T` defaults to `unknown` rather than `any`, code that reads `formData` without naming its type has to narrow it first.
 Providing custom types for these generics is the way to avoid that, and is useful whenever the caller is working with typed `formData`, `schema` or `formContext` props.
-`Form` infers `T` from the `formData` prop when one is passed, so naming it is only needed when there is no `formData` to infer from.
+`Form` infers `T` from the `initialFormData` prop (or its deprecated alias `formData`) when one is passed, so naming it is only needed when there is no seed to infer from.
 The validator has no `T`: `ValidatorType<S, F>` puts the form data type on `validateFormData<T>()`, so one validator serves every form.
 
 ## Overriding generics
@@ -71,7 +71,7 @@ const formData: FormData = {};
 
 const validator = customizeValidator();
 
-render(<Form<FormData> schema={schema} validator={validator} formData={formData} />, document.getElementById('app'));
+render(<Form<FormData> schema={schema} validator={validator} initialFormData={formData} />, document.getElementById('app'));
 ```
 
 ### S

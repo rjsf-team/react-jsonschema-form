@@ -115,7 +115,7 @@ const enumObjects: Sample = {
       },
     },
   },
-  formData: {
+  initialFormData: {
     location: {
       name: 'Amsterdam',
       lat: 52,

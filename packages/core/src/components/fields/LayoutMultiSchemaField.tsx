@@ -302,6 +302,7 @@ export default function LayoutMultiSchemaField<
       newOptionUiSchema,
       oldOptionUiSchema,
       uiSchemaDefinitions,
+      globalUiOptions,
     });
     if (newFormData) {
       setByPath(newFormData, selectorField, opt);
@@ -312,7 +313,7 @@ export default function LayoutMultiSchemaField<
       { oldOption, newOption, oldUiSchema: oldOptionUiSchema, newUiSchema: newOptionUiSchema },
       formData,
       newFormData,
-      () => onChange(newFormData, fieldPath, undefined, id),
+      (sent) => onChange(sent, fieldPath, undefined, id),
     );
   };
 

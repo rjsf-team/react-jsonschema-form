@@ -298,7 +298,7 @@ describe('DateWidget', () => {
     const { container } = render(
       <Form
         schema={{ type: 'object', properties: { birthday: { ...schema, title: 'Birthday' } } }}
-        formData={{ birthday: '2020-05-03' }}
+        initialFormData={{ birthday: '2020-05-03' }}
         validator={validator}
         onChange={onChange}
       />,
@@ -512,7 +512,7 @@ describe('DateWidget', () => {
 
     // The label names the combobox through `htmlFor`, and the day it displays is its value
     test('holds the selected date as its value', () => {
-      render(<Form schema={dateSchema} formData={{ birthday: '2020-05-03' }} validator={validator} />);
+      render(<Form schema={dateSchema} initialFormData={{ birthday: '2020-05-03' }} validator={validator} />);
 
       const trigger = screen.getByRole('combobox', { name: 'Birthday' });
       expect(trigger).toHaveTextContent('May 3, 2020');
@@ -525,7 +525,7 @@ describe('DateWidget', () => {
       render(
         <Form
           schema={dateSchema}
-          formData={{ birthday: '2020-05-03' }}
+          initialFormData={{ birthday: '2020-05-03' }}
           validator={validator}
           templates={{
             FieldTemplate: ({ id, label, children }) => (
@@ -570,7 +570,12 @@ describe('DateWidget', () => {
     ])('is closed again, committing its day, by a second click on the %s', async (_, press) => {
       const onChange = vi.fn();
       const { container } = render(
-        <Form schema={dateSchema} formData={{ birthday: '2020-05-03' }} validator={validator} onChange={onChange} />,
+        <Form
+          schema={dateSchema}
+          initialFormData={{ birthday: '2020-05-03' }}
+          validator={validator}
+          onChange={onChange}
+        />,
       );
 
       await openPicker(container);
@@ -593,7 +598,7 @@ describe('DateWidget', () => {
 
     // With no label, and no title to name it by, the translated prompt names it, and the date is its value
     test('is named by the translated prompt where nothing else names it', () => {
-      const { container } = render(<Form schema={schema} formData='2020-05-03' validator={validator} />);
+      const { container } = render(<Form schema={schema} initialFormData='2020-05-03' validator={validator} />);
 
       const trigger = container.querySelector('button[aria-haspopup]')!;
       expect(trigger).toHaveAccessibleName(englishStringTranslator(TranslatableString.AriaDateLabel));

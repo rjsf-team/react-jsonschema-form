@@ -26,7 +26,7 @@ describe('ui:hideError', () => {
       <Form
         schema={oneOfSchema}
         uiSchema={uiSchema}
-        formData={{ userId: 1 }}
+        initialFormData={{ userId: 1 }}
         customValidate={addUserIdError}
         validator={validator}
       />,
@@ -56,7 +56,7 @@ describe('ui:hideError', () => {
 
   async function renderMultiSelect(uiSchema: UiSchema) {
     const { container } = render(
-      <Form schema={multiSelectSchema} uiSchema={uiSchema} formData={{ picks: ['a'] }} validator={validator} />,
+      <Form schema={multiSelectSchema} uiSchema={uiSchema} initialFormData={{ picks: ['a'] }} validator={validator} />,
     );
     await submit(container);
     return container;
@@ -83,7 +83,7 @@ describe('ui:hideError', () => {
 
   async function renderFiles(uiSchema: UiSchema) {
     const { container } = render(
-      <Form schema={filesSchema} uiSchema={uiSchema} formData={{ uploads: [] }} validator={validator} />,
+      <Form schema={filesSchema} uiSchema={uiSchema} initialFormData={{ uploads: [] }} validator={validator} />,
     );
     await submit(container);
     return container;
@@ -105,7 +105,7 @@ describe('ui:hideError', () => {
     const { container } = render(
       <Form
         schema={{ type: 'object', properties: { foo: { type: 'string', minLength: 10 } } }}
-        formData={{ foo: 'a' }}
+        initialFormData={{ foo: 'a' }}
         validator={validator}
       />,
     );
@@ -119,7 +119,7 @@ describe('ui:hideError', () => {
       <Form
         schema={{ type: 'object', properties: { foo: { type: 'string', minLength: 10 } } }}
         uiSchema={{ 'ui:hideError': true }}
-        formData={{ foo: 'a' }}
+        initialFormData={{ foo: 'a' }}
         validator={validator}
       />,
     );

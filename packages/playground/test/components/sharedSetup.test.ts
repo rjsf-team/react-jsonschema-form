@@ -76,6 +76,14 @@ describe('loadedState', () => {
     expect(consoleError).not.toHaveBeenCalled();
   });
 
+  it('seeds the data of a shared link, which carries it as `formData`', () => {
+    expect(load({ formData: { name: 'Grace' } }).formData).toEqual({ name: 'Grace' });
+  });
+
+  it("seeds a sample's `initialFormData`", () => {
+    expect(load({ initialFormData: { name: 'Grace' } }).formData).toEqual({ name: 'Grace' });
+  });
+
   it('leaves the validator to the caller when the data names none', () => {
     expect(load({}).validator).toBeUndefined();
   });

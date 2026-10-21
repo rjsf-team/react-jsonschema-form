@@ -1,7 +1,6 @@
 import type { ComponentType, ReactNode, RefObject } from 'react';
 import { Activity, createRef, useEffect, useState } from 'react';
 import type { GenericObjectType, ValidatorType, WidgetProps } from '@rjsf/utils';
-import { createSchemaUtils } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render, fireEvent } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
@@ -27,7 +26,16 @@ export function handleOf<T>(ref: RefObject<FormRef<T> | null>): FormRef<T> {
   return ref.current;
 }
 
-export function input(container: HTMLElement, id: string) {
+/** The first element `selector` matches in `container`, failing the test when there is none */
+export function elementOf(container: ParentNode, selector: string) {
+  const element = container.querySelector(selector);
+  if (!element) {
+    throw new Error(`Nothing matches ${selector}`);
+  }
+  return element;
+}
+
+export function input(container: ParentNode, id: string) {
   const element = container.querySelector(`#${id}`);
   if (!(element instanceof HTMLInputElement)) {
     throw new Error(`There is no input #${id}`);
@@ -127,38 +135,39 @@ export interface FormComponentResult {
   getFormData: () => unknown;
 }
 
-/** What a controlled parent has done so far: the value it currently renders and every proposal the form sent it.
- * A `vi.fn()` `onChange` is not a controlled parent: it records the proposal but never hands it back as the next
- * `formData` prop, so a test built on one exercises the form's own state and nothing about controlled composition.
- * These parents do hand values back, each with a different policy, so a test can state which policy it relies on.
+/** What a parent passing `formData` has done so far: the value it currently renders and every edit the form reported.
+ * A `vi.fn()` `onChange` records the edit but never hands it back as the next `formData` prop, so a test built on one
+ * exercises the form's own data and nothing about composition with a parent. These parents do hand values back, each
+ * with a different policy, so a test can state which policy it relies on.
  */
-export interface ControlledParentLog<T> {
+export interface ParentLog<T> {
   value: T | undefined;
-  proposals: (T | undefined)[];
-  /** Every event the form sent, for the errors a proposal carried */
+  reported: (T | undefined)[];
+  /** Every event the form sent, for the errors an edit carried */
   events: IChangeEvent<T>[];
 }
 
-export function createParentLog<T>(): ControlledParentLog<T> {
-  return { value: undefined, proposals: [], events: [] };
+export function createParentLog<T>(): ParentLog<T> {
+  return { value: undefined, reported: [], events: [] };
 }
 
-export type ControlledParentProps<T> = Omit<FormProps<T>, 'validator' | 'formData' | 'onChange'> & {
+export type ParentProps<T> = Omit<FormProps<T>, 'validator' | 'formData' | 'onChange'> & {
   initialValue?: T;
-  log?: ControlledParentLog<T>;
+  log?: ParentLog<T>;
 };
 
-/** Stores every proposal as its next value, exactly `setData(event.formData)`, the ordinary React controlled pattern */
-export function AcceptingParent<T>({ initialValue, log, ...formProps }: ControlledParentProps<T>) {
+/** Stores every edit as its next value, exactly `setData(event.formData)`, the ordinary React pattern */
+export function AcceptingParent<T>({ initialValue, log, ...formProps }: ParentProps<T>) {
   const [value, setValue] = useState(initialValue);
   Object.assign(log ?? {}, { value });
   return (
     <Form<T>
       {...formProps}
       validator={validator}
+      // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
       formData={value}
       onChange={(event) => {
-        log?.proposals.push(event.formData);
+        log?.reported.push(event.formData);
         log?.events.push(event);
         setValue(event.formData);
       }}
@@ -166,38 +175,42 @@ export function AcceptingParent<T>({ initialValue, log, ...formProps }: Controll
   );
 }
 
-/** Keeps rendering its initial value whatever the form proposes, the shape of a parent whose validation refused */
-export function RejectingParent<T>({ initialValue, log, ...formProps }: ControlledParentProps<T>) {
+/** Keeps passing its initial value whatever the form reports, the shape of a parent that only listens: the form owns
+ * the edits and shows them, and since the value it passes never changes after mount, the form has nothing to warn about
+ */
+export function ListeningParent<T>({ initialValue, log, ...formProps }: ParentProps<T>) {
   Object.assign(log ?? {}, { value: initialValue });
   return (
     <Form<T>
       {...formProps}
       validator={validator}
+      // oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias: a `formData` passed after mount is ignored with a warning
       formData={initialValue}
       onChange={(event) => {
-        log?.proposals.push(event.formData);
+        log?.reported.push(event.formData);
         log?.events.push(event);
       }}
     />
   );
 }
 
-/** Stores a transformed version of each proposal, the shape of a parent that normalizes what it is handed */
+/** Stores a transformed version of each edit, the shape of a parent that normalizes what it is handed */
 export function TransformingParent<T>({
   initialValue,
   log,
   transform,
   ...formProps
-}: ControlledParentProps<T> & { transform: (proposal: T | undefined) => T | undefined }) {
+}: ParentProps<T> & { transform: (edit: T | undefined) => T | undefined }) {
   const [value, setValue] = useState(initialValue);
   Object.assign(log ?? {}, { value });
   return (
     <Form<T>
       {...formProps}
       validator={validator}
+      // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
       formData={value}
       onChange={(event) => {
-        log?.proposals.push(event.formData);
+        log?.reported.push(event.formData);
         log?.events.push(event);
         setValue(transform(event.formData));
       }}
@@ -241,68 +254,12 @@ export function createFormComponent(props: NoValFormProps, v: ValidatorType = va
   return createComponent(Form, { validator: v, ...props });
 }
 
-/** `createFormComponent()` with the data owned by an accepting parent instead of the form: the seed (`formData` or
- * `initialFormData`) is filled with the schema's defaults the way the docs tell a controlled parent to, and every
- * proposal is stored and passed back, exactly `setData(event.formData)`. A `formData` passed to `rerender()` replaces
- * the parent's value. Running a suite through both creators is what checks that the two owners behave alike wherever
- * ownership should make no difference.
- */
-function createAcceptingFormComponent(props: NoValFormProps, v: ValidatorType = validator): FormComponentResult {
-  return createComponent(AcceptingSeededParent, { validator: v, ...props });
-}
-
-function AcceptingSeededParent({ formData, initialFormData, onChange, ...props }: FormProps) {
-  const [value, setValue] = useState<unknown>(() => {
-    const { schema, uiSchema, defaultFormStateBehavior, customMergeAllOf } = props;
-    const schemaUtils = createSchemaUtils(
-      { validator: props.validator, defaultFormStateBehavior, customMergeAllOf },
-      schema,
-    );
-    const seeded = schemaUtils.getDefaultFormState(
-      schema,
-      formData !== undefined ? formData : initialFormData,
-      false,
-      false,
-      uiSchema,
-    );
-    // A seed without defaults resolves to `undefined`, which would make the form own its data
-    return seeded === undefined ? null : seeded;
-  });
-  const [replaced, setReplaced] = useState(formData);
-  if (formData !== replaced) {
-    setReplaced(formData);
-    setValue(formData);
-  }
-  return (
-    <Form
-      {...props}
-      formData={value}
-      onChange={(event, id) => {
-        setValue(event.formData);
-        onChange?.(event, id);
-      }}
-    />
-  );
-}
-
 interface FormExtraProps {
   omitExtraData: FormProps['omitExtraData'];
   liveOmit?: FormProps['liveOmit'];
 }
 
-/** Runs a group of tests once with the form owning its data and once with an accepting parent owning it, for the
- * behavior ownership must not change: validation, errors, submit and the events that report them
- */
-export function describeOwnerships(
-  title: string,
-  fn: (creatorFn: typeof createFormComponent, isControlled: boolean) => void,
-) {
-  describe(`${title} (self-owned)`, () => fn(createFormComponent, false));
-  describe(`${title} (parent-owned)`, () => fn(createAcceptingFormComponent, true));
-}
-
-/* Run a group of tests with each combination of omitExtraData and liveOmit as form props, under both owners.
- */
+/** Runs a group of tests with each combination of `omitExtraData` and `liveOmit` as form props */
 export function describeRepeated(title: string, fn: (creatorFn: typeof createFormComponent) => void) {
   const formExtraPropsList: FormExtraProps[] = [
     { omitExtraData: false },
@@ -310,9 +267,9 @@ export function describeRepeated(title: string, fn: (creatorFn: typeof createFor
     { omitExtraData: true, liveOmit: 'onChange' },
     { omitExtraData: true, liveOmit: 'onBlur' },
   ];
-  describeOwnerships(title, (create) => {
+  describe(title, () => {
     for (const formExtraProps of formExtraPropsList) {
-      const createFormComponentFn = (props: NoValFormProps) => create({ ...props, ...formExtraProps });
+      const createFormComponentFn = (props: NoValFormProps) => createFormComponent({ ...props, ...formExtraProps });
       describe(JSON.stringify(formExtraProps), () => fn(createFormComponentFn));
     }
   });

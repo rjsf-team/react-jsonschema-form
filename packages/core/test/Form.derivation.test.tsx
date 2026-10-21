@@ -1,7 +1,7 @@
 import type { FormValidation, RJSFSchema } from '@rjsf/utils';
 import { act } from '@testing-library/react';
 
-import { createFormComponent, errorListMessages, createFormRef } from './testUtils.tsx';
+import { createFormComponent, errorListMessages, createFormRef, handleOf } from './testUtils.tsx';
 
 /** Deriving state from the props honors every input that changed, whether or not the reconciler's identity-prop
  * gate lists it. Reference retention across a derivation is `renderStability.test.tsx`'s job.
@@ -45,7 +45,7 @@ describe('state derivation', () => {
     expect(node.querySelector('.error-detail')).toHaveTextContent('custom');
   });
 
-  it('a parent-driven data change validates with the schema resolved for the data, as an edit does', () => {
+  it('a root replacement through setFieldValue validates with the schema resolved for the data, as typing does', () => {
     // The resolved schema has had the root's `then` folded into it: its constraints are reported where they apply and
     // the `then` miss itself is not, exactly as when the same data is typed. Submit and `validateForm()` still
     // validate the root.
@@ -55,9 +55,15 @@ describe('state derivation', () => {
       if: { properties: { c: { const: 'yes' } }, required: ['c'] },
       then: { required: ['d'], properties: { d: { minimum: 100 } } },
     };
-    const props = { schema: conditional, liveValidate: 'onChange' as const, showErrorList: 'top' as const };
-    const { node, rerender } = createFormComponent({ ...props, formData: { c: 'no', d: 1 } });
-    rerender({ ...props, formData: { c: 'yes', d: 1 } });
+    const ref = createFormRef();
+    const { node } = createFormComponent({
+      ref,
+      schema: conditional,
+      liveValidate: 'onChange',
+      showErrorList: 'top',
+      initialFormData: { c: 'no', d: 1 },
+    });
+    act(() => handleOf(ref).setFieldValue('', { c: 'yes', d: 1 }));
 
     expect(node.querySelector('.panel-danger.errors')).toHaveTextContent('must be >= 100');
     expect(node.querySelector('.panel-danger.errors')).not.toHaveTextContent('must match "then" schema');

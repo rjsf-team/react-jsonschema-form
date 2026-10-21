@@ -82,7 +82,7 @@ export function arrayTests(Form: ComponentType<FormProps>) {
         'ui:options': { copyable: true },
       };
       const { asFragment } = render(
-        <Form schema={schema} uiSchema={uiSchema} validator={validator} formData={['a', 'b']} />,
+        <Form schema={schema} uiSchema={uiSchema} validator={validator} initialFormData={['a', 'b']} />,
       );
       expect(asFragment()).toMatchSnapshot();
     });
@@ -189,7 +189,7 @@ export function arrayTests(Form: ComponentType<FormProps>) {
         'ui:options': { copyable: true },
       };
       const { asFragment } = render(
-        <Form schema={schema} uiSchema={uiSchema} validator={validator} formData={['a', 'b']} />,
+        <Form schema={schema} uiSchema={uiSchema} validator={validator} initialFormData={['a', 'b']} />,
       );
       expect(asFragment()).toMatchSnapshot();
     });
@@ -244,7 +244,7 @@ export function arrayTests(Form: ComponentType<FormProps>) {
         ...uiTitleAndDesc,
       };
       const { asFragment } = render(
-        <Form schema={schema} uiSchema={uiSchema} validator={validator} formData={['a', 'b']} />,
+        <Form schema={schema} uiSchema={uiSchema} validator={validator} initialFormData={['a', 'b']} />,
       );
       expect(asFragment()).toMatchSnapshot();
     });
@@ -303,7 +303,7 @@ export function arrayTests(Form: ComponentType<FormProps>) {
         ...uiTitleAndDesc,
       };
       const { asFragment } = render(
-        <Form schema={schema} uiSchema={uiSchema} validator={validator} formData={['a', 'b']} />,
+        <Form schema={schema} uiSchema={uiSchema} validator={validator} initialFormData={['a', 'b']} />,
       );
       expect(asFragment()).toMatchSnapshot();
     });
@@ -367,7 +367,7 @@ export function arrayTests(Form: ComponentType<FormProps>) {
         'ui:options': { copyable: true },
       };
       const { asFragment } = render(
-        <Form schema={schema} uiSchema={uiSchema} validator={validator} formData={['a', 'b']} />,
+        <Form schema={schema} uiSchema={uiSchema} validator={validator} initialFormData={['a', 'b']} />,
       );
       expect(asFragment()).toMatchSnapshot();
     });
@@ -384,7 +384,12 @@ export function arrayTests(Form: ComponentType<FormProps>) {
         };
         const formData = ['foo', 'bar'];
         const { asFragment } = render(
-          <Form schema={schema} formData={formData} validator={validator} nameGenerator={bracketNameGenerator} />,
+          <Form
+            schema={schema}
+            initialFormData={formData}
+            validator={validator}
+            nameGenerator={bracketNameGenerator}
+          />,
         );
         expect(asFragment()).toMatchSnapshot();
       });
@@ -405,7 +410,12 @@ export function arrayTests(Form: ComponentType<FormProps>) {
           { name: 'Item 2', value: 20 },
         ];
         const { asFragment } = render(
-          <Form schema={schema} formData={formData} validator={validator} nameGenerator={bracketNameGenerator} />,
+          <Form
+            schema={schema}
+            initialFormData={formData}
+            validator={validator}
+            nameGenerator={bracketNameGenerator}
+          />,
         );
         expect(asFragment()).toMatchSnapshot();
       });
@@ -417,7 +427,12 @@ export function arrayTests(Form: ComponentType<FormProps>) {
         };
         const formData = ['text', 42, true];
         const { asFragment } = render(
-          <Form schema={schema} formData={formData} validator={validator} nameGenerator={bracketNameGenerator} />,
+          <Form
+            schema={schema}
+            initialFormData={formData}
+            validator={validator}
+            nameGenerator={bracketNameGenerator}
+          />,
         );
         expect(asFragment()).toMatchSnapshot();
       });
@@ -437,7 +452,12 @@ export function arrayTests(Form: ComponentType<FormProps>) {
           ['c', 'd'],
         ];
         const { asFragment } = render(
-          <Form schema={schema} formData={formData} validator={validator} nameGenerator={bracketNameGenerator} />,
+          <Form
+            schema={schema}
+            initialFormData={formData}
+            validator={validator}
+            nameGenerator={bracketNameGenerator}
+          />,
         );
         expect(asFragment()).toMatchSnapshot();
       });
@@ -468,7 +488,12 @@ export function arrayTests(Form: ComponentType<FormProps>) {
         };
         const formData = ['foo', 'bar'];
         const { asFragment } = render(
-          <Form schema={schema} formData={formData} validator={validator} nameGenerator={dotNotationNameGenerator} />,
+          <Form
+            schema={schema}
+            initialFormData={formData}
+            validator={validator}
+            nameGenerator={dotNotationNameGenerator}
+          />,
         );
         expect(asFragment()).toMatchSnapshot();
       });
@@ -489,7 +514,12 @@ export function arrayTests(Form: ComponentType<FormProps>) {
           { name: 'Item 2', value: 20 },
         ];
         const { asFragment } = render(
-          <Form schema={schema} formData={formData} validator={validator} nameGenerator={dotNotationNameGenerator} />,
+          <Form
+            schema={schema}
+            initialFormData={formData}
+            validator={validator}
+            nameGenerator={dotNotationNameGenerator}
+          />,
         );
         expect(asFragment()).toMatchSnapshot();
       });
@@ -512,7 +542,7 @@ export function arrayTests(Form: ComponentType<FormProps>) {
             schema={schema}
             uiSchema={uiSchema}
             validator={validator}
-            formData={[{ name: 'report.pdf' }, { name: 'invoice.pdf' }]}
+            initialFormData={[{ name: 'report.pdf' }, { name: 'invoice.pdf' }]}
           />,
         );
         expect(asFragment()).toMatchSnapshot();
@@ -535,7 +565,7 @@ export function arrayTests(Form: ComponentType<FormProps>) {
     };
 
     test('gives the field and the option each a description id of their own', () => {
-      const { container } = render(<Form schema={schema} formData={{ tags: ['a'] }} validator={validator} />);
+      const { container } = render(<Form schema={schema} initialFormData={{ tags: ['a'] }} validator={validator} />);
 
       // The ids RJSF gives, not those a library generates for its own parts. A theme's widget may list every part's id
       // whether or not it renders, so only the `tags` field's own description ids are required to exist
@@ -556,7 +586,7 @@ export function arrayTests(Form: ComponentType<FormProps>) {
     test("hides the option's description under the field's ui:label false", () => {
       const uiSchema: UiSchema = { tags: { 'ui:label': false } };
       const { container } = render(
-        <Form schema={schema} uiSchema={uiSchema} formData={{ tags: ['a'] }} validator={validator} />,
+        <Form schema={schema} uiSchema={uiSchema} initialFormData={{ tags: ['a'] }} validator={validator} />,
       );
 
       expect(container).not.toHaveTextContent('Some tags');
