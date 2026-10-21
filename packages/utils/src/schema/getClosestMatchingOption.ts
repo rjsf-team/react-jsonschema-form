@@ -1,4 +1,4 @@
-import { REF_KEY, JUNK_OPTION_ID } from '../constants.ts';
+import { JUNK_OPTION_ID, PROPERTIES_KEY, REF_KEY } from '../constants.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getOptionMatchingSimpleDiscriminator from '../getOptionMatchingSimpleDiscriminator.ts';
 import getXxxOfKey from '../getXxxOfKey.ts';
@@ -7,7 +7,12 @@ import isObject, { isSchemaObject } from '../isObject.ts';
 import { getByPath } from '../pathUtils.ts';
 import type { FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
 import getFirstMatchingOption from './getFirstMatchingOption.ts';
-import { resolveOwnRef } from './retrieveSchema.ts';
+import buildPlan, { seedsAt } from './graph/mergePlan.ts';
+import type { MergePlan, Seed } from './graph/mergePlan.ts';
+import parseSchemaGraph from './graph/parseSchemaGraph.ts';
+import type { SchemaGraph } from './graph/parseSchemaGraph.ts';
+import { readProvenance } from './graph/provenance.ts';
+import { fieldOf, resolveOwnRef } from './retrieveSchema.ts';
 
 /** A junk option used to determine when the getFirstMatchingOption call really matches an option rather than returning
  * the first item
@@ -22,6 +27,72 @@ export const JUNK_OPTION: StrictRJSFSchema = {
   },
 };
 
+/** Where a schema scoring reads is declared: the graph and the seeds of the field it is the schema of */
+interface Where<S extends StrictRJSFSchema> {
+  readonly graph: SchemaGraph<S>;
+  readonly seeds: readonly Seed[];
+}
+
+/** A schema scoring reads, and the plan of the field it is read as, whose chains say where each subschema it holds is
+ * declared. A subschema merged from declarations in several resources is an object no graph holds, so reading it as a
+ * call root would resolve its `$ref`s against the root's base rather than each against its own resource.
+ */
+interface Scored<S extends StrictRJSFSchema> {
+  readonly schema: S;
+  readonly plan: () => MergePlan<S>;
+}
+
+/** Returns where `schema` is declared, as `retrieveSchema()` reads it: a schema it handed out by its stamp, and any
+ * other as a call root
+ */
+function whereOf<S extends StrictRJSFSchema>(rootSchema: S, schema: S): Where<S> {
+  return fieldOf<S>(parseSchemaGraph<S>(rootSchema), schema);
+}
+
+/** Returns the plan scoring reads the field `where` names by: its `$ref`s followed and the keywords beside each
+ * conjoined with what it names, as `resolveOwnRef()` reads a `$ref`, but its `allOf`, `if` and options left as they
+ * stand
+ */
+function scoringPlan<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  { graph, seeds }: Where<S>,
+): MergePlan<S> {
+  return buildPlan<S, F>({ context, graph, seeds, policy: { allOf: false, conditions: false } });
+}
+
+/** The seeds of each property of a scoring plan, by plan and key: a plan without data is made once per field, so the
+ * seeds of its properties are kept with it, and a property's own plan is found again by the same seeds on every call
+ */
+const propertySeeds = new WeakMap<object, Map<string, readonly Seed[]>>();
+
+/** Returns where the property `key`, which the field planned by `parentPlan` holds as `value`, is declared: by its
+ * stamp, for a subschema `retrieveSchema()` handed out, or else where the field's declarations hold it
+ */
+function propertyWhere<S extends StrictRJSFSchema>(
+  rootSchema: S,
+  parentPlan: () => MergePlan<S>,
+  key: string,
+  value: S,
+): Where<S> {
+  if (readProvenance<S>(value, parseSchemaGraph<S>(rootSchema)) === undefined) {
+    const plan = parentPlan();
+    let byKey = propertySeeds.get(plan);
+    if (byKey === undefined) {
+      byKey = new Map();
+      propertySeeds.set(plan, byKey);
+    }
+    let seeds = byKey.get(key);
+    if (seeds === undefined) {
+      seeds = seedsAt(plan, PROPERTIES_KEY, key);
+      byKey.set(key, seeds);
+    }
+    if (seeds.length > 0) {
+      return { graph: plan.graph, seeds };
+    }
+  }
+  return whereOf<S>(rootSchema, value);
+}
+
 /** Returns the score of one property's `formValue` against the `value` schema describing it, as
  * `calculateIndexScore()` adds it up:
  * - If the `value` is a `$ref` and the formValue is neither `undefined` nor `null`, it is scored as the definition it
@@ -35,9 +106,11 @@ export const JUNK_OPTION: StrictRJSFSchema = {
  *   truthy `default` or a `const`. In those case, if the `default` or `const` and the `formValue` match, the score is
  *   incremented by another 1 otherwise it is decremented by 1. A missing formValue is not compared to a `const`.
  *
+ * Each `$ref` is resolved, and each subschema of the `value` read, where the declaration holding it sits.
+ *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param rootSchema - The root JSON schema of the entire form
- * @param value - The schema of the property
+ * @param scored - The schema of the property, and where it is declared
  * @param formValue - The form data the property holds
  * @returns - The property's score
  */
@@ -45,16 +118,14 @@ function propertyScore<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(context: SchemaContext<S, F>, rootSchema: S, value: S, formValue: unknown): number {
+>(context: SchemaContext<S, F>, rootSchema: S, scored: Scored<S>, formValue: unknown): number {
+  const { schema: value } = scored;
   if (typeof value[REF_KEY] === 'string') {
-    return formValue == null
-      ? 0
-      : propertyScore<T, S, F>(
-          context,
-          rootSchema,
-          resolveOwnRef<S>(value, rootSchema, context.customMergeAllOf),
-          formValue,
-        );
+    if (formValue == null) {
+      return 0;
+    }
+    const plan = scored.plan();
+    return propertyScore<T, S, F>(context, rootSchema, { schema: plan.schema, plan: () => plan }, formValue);
   }
   const xxxOfKey = getXxxOfKey<S>(value);
   if (xxxOfKey && formValue != null) {
@@ -71,7 +142,7 @@ function propertyScore<
   if (value.type === 'object') {
     // If the structure is matching then give it a little boost in score
     const structureBoost = typeof formValue === 'object' && formValue !== null ? 1 : 0;
-    return structureBoost + calculateIndexScore<T, S, F>(context, rootSchema, value, formValue);
+    return structureBoost + scopeScore<T, S, F>(context, rootSchema, scored, formValue);
   }
   if (value.type !== guessType(formValue)) {
     return 0;
@@ -111,13 +182,51 @@ export function calculateIndexScore<
   if (!schema) {
     return 0;
   }
+  return scopeScore<T, S, F>(
+    context,
+    rootSchema,
+    { schema, plan: () => scoringPlan<S, F>(context, whereOf<S>(rootSchema, schema)) },
+    formData,
+  );
+}
+
+/** Returns the score `calculateIndexScore()` describes of the scored schema, each of its properties read where the
+ * field it is the schema of declares it
+ *
+ * @param context - The `SchemaContext` that will be forwarded to all the APIs
+ * @param rootSchema - The root JSON schema of the entire form
+ * @param scored - The schema for which the score is being calculated, and where it is declared
+ * @param formData - The form data associated with the schema
+ * @returns - The score
+ */
+function scopeScore<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  rootSchema: S,
+  scored: Scored<S>,
+  formData: unknown,
+): number {
+  const { schema } = scored;
   if (isObject(schema.properties)) {
+    let plan: MergePlan<S> | undefined;
+    const parentPlan = () => {
+      plan ??= scored.plan();
+      return plan;
+    };
     return Object.entries(schema.properties).reduce(
       // An own-property read, so a schema property legally named `toString`, `constructor` or `valueOf` reads the
       // data's own value rather than the one every object inherits, which would never look like missing data
       (score, [key, value]) =>
         isSchemaObject<S>(value)
-          ? score + propertyScore<T, S, F>(context, rootSchema, value, getByPath<T>(formData, key))
+          ? score +
+            propertyScore<T, S, F>(
+              context,
+              rootSchema,
+              {
+                schema: value,
+                plan: () => scoringPlan<S, F>(context, propertyWhere<S>(rootSchema, parentPlan, key, value)),
+              },
+              getByPath<T>(formData, key),
+            )
           : score,
       0,
     );
@@ -159,6 +268,40 @@ export default function getClosestMatchingOption<
   selectedOption = -1,
   discriminatorField?: string,
 ): number {
+  return closestOption<T, S, F>(
+    context,
+    rootSchema,
+    formData,
+    options,
+    (index) => whereOf<S>(rootSchema, options[index]),
+    selectedOption,
+    discriminatorField,
+  );
+}
+
+/** Returns the index of the option of `options` closest to `formData`, as `getClosestMatchingOption()` describes, each
+ * option scored where `declaredAt` says it is declared: a caller that matches each option with a schema made from it,
+ * such as `omitExtraData()` relaxing an option's `additionalProperties`, scores it where the option it was made from
+ * sits, and one offered by a list a merge rebuilt, where the merge adopted it.
+ *
+ * @param context - The `SchemaContext` that will be forwarded to all the APIs
+ * @param rootSchema - The root JSON schema of the entire form
+ * @param formData - The form data associated with the schema
+ * @param options - The list of options that can be selected from, as they are matched
+ * @param declaredAt - Returns where the option at an index is declared
+ * @param selectedOption - The index of the currently selected option, -1 for none
+ * @param [discriminatorField] - The name of the property the options are told apart by
+ * @returns - The index of the closest option, or the `selectedOption` if no option is closer
+ */
+export function closestOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  rootSchema: S,
+  formData: T | undefined,
+  options: S[],
+  declaredAt: (index: number) => Where<S>,
+  selectedOption: number,
+  discriminatorField?: string,
+): number {
   const resolvedOptions = options.map((option) => resolveOwnRef<S>(option, rootSchema, context.customMergeAllOf));
 
   const simpleDiscriminatorMatch = getOptionMatchingSimpleDiscriminator(formData, options, discriminatorField);
@@ -166,9 +309,10 @@ export default function getClosestMatchingOption<
     return simpleDiscriminatorMatch;
   }
 
+  const junk = [JUNK_OPTION].filter((entry): entry is S => isSchemaObject<S>(entry));
   // Reduce the array of options down to a list of the indexes that are considered matching options
   const allValidIndexes = resolvedOptions.reduce((validList: number[], option, index: number) => {
-    const testOptions: S[] = [JUNK_OPTION as S, option];
+    const testOptions: S[] = [...junk, option];
     const match = getFirstMatchingOption<T, S, F>(context, formData, testOptions, rootSchema, discriminatorField);
     // The match is the real option, so add its index to list of valid indexes
     if (match === 1) {
@@ -195,7 +339,14 @@ export default function getClosestMatchingOption<
     (scoreData: BestType, index: number) => {
       const { bestScore } = scoreData;
       const option = resolvedOptions[index];
-      const score = calculateIndexScore(context, rootSchema, option, formData);
+      const score = isSchemaObject<S>(option)
+        ? scopeScore<T, S, F>(
+            context,
+            rootSchema,
+            { schema: option, plan: () => scoringPlan<S, F>(context, declaredAt(index)) },
+            formData,
+          )
+        : 0;
       scoreCount.add(score);
       if (score > bestScore) {
         return { bestIndex: index, bestScore: score };

@@ -3360,6 +3360,7 @@ Determines which of the given `options` provided most closely matches the `formD
 Returns the index of the option that is valid and is the closest match, or 0 if there is no match.
 
 The closest match is determined using the number of matching properties, and more heavily favors options with matching readOnly, default, or const values.
+A property written as a `$ref` is scored as the definition it names, and each `$ref` scoring follows resolves in the resource of the declaration holding it, including one in a property declared both beside a `$ref` and in the definition it names.
 
 #### Parameters
 

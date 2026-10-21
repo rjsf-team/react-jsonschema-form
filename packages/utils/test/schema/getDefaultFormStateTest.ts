@@ -21,7 +21,12 @@ import {
 } from '../../src/schema/getDefaultFormState.ts';
 import { resolveDependencies } from '../../src/schema/retrieveSchema.ts';
 import shallowAllOfMerge from '../../src/schema/shallowAllOfMerge.ts';
-import { RECURSIVE_REF, RECURSIVE_REF_ALLOF } from '../testUtils/testData.ts';
+import {
+  PET_RESOURCE_DEEP_SCHEMA,
+  PET_RESOURCE_SCHEMA,
+  RECURSIVE_REF,
+  RECURSIVE_REF_ALLOF,
+} from '../testUtils/testData.ts';
 import type { TestValidatorType } from './types.ts';
 
 export default function getDefaultFormStateTest(testValidator: TestValidatorType) {
@@ -9229,6 +9234,17 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
         expect(schemaUtils.getDefaultFormState(schemaUtils.getRootSchema())).toEqual({ c: { v: 'ok' } });
       });
+      it.each<[number, RJSFSchema, unknown]>([
+        [1, PET_RESOURCE_SCHEMA, { p: { kind: 5 } }],
+        [2, PET_RESOURCE_DEEP_SCHEMA, { p: { info: { kind: 5 } } }],
+      ])(
+        'picks the option for data by the $ref a merged property holds in a resource of its own, %i level(s) down',
+        (_, schema, formData) => {
+          expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema, formData })).toEqual(
+            formData,
+          );
+        },
+      );
     });
     describe('of a subschema retrieveSchema() handed out', () => {
       // The root and the nested resource each define `x`, so a `$ref` resolved against the wrong one fills 1

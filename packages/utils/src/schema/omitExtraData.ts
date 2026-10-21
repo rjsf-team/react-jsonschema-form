@@ -13,9 +13,10 @@ import isObject, { isSchemaObject } from '../isObject.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
 import setOwn from '../setOwn.ts';
 import type { FormContextType, GenericObjectType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
-import getClosestMatchingOption from './getClosestMatchingOption.ts';
+import { closestOption } from './getClosestMatchingOption.ts';
+import parseSchemaGraph from './graph/parseSchemaGraph.ts';
 import resolveConstantOptions from './resolveConstantOptions.ts';
-import { mergeAllOf, relaxOptionsForScoring, resolveOwnRef } from './retrieveSchema.ts';
+import { fieldOf, mergeAllOf, relaxOptionsForScoring, resolveOwnRef } from './retrieveSchema.ts';
 
 /** Returns true when a form value is considered empty: null/undefined/'', an empty array, or a plain
  * object whose every own value is itself empty (recursive). Scalars like `0` and `false` are not empty.
@@ -279,11 +280,15 @@ export default function omitExtraData<
     // An option that is no schema object is read as the boolean schema it stands for, as scoring reads it
     const options = oneOf.map((option: unknown): S | boolean => (isSchemaObject<S>(option) ? option : Boolean(option)));
     const scoringOptions = relaxOptionsForScoring<S>(options, true, rootSchema, context.customMergeAllOf);
-    const bestIndex = getClosestMatchingOption<T, S, F>(
+    // Each option is scored where it is declared, since the subschemas a `$ref` option resolves to can hold `$ref`s
+    // written in other resources
+    const declared = options.map((option, index) => (isSchemaObject<S>(option) ? option : scoringOptions[index]));
+    const bestIndex = closestOption<unknown, S, F>(
       context,
       rootSchema,
-      source as T,
+      source,
       scoringOptions,
+      (index) => fieldOf<S>(parseSchemaGraph<S>(rootSchema), declared[index]),
       0,
       getDiscriminatorFieldFromSchema<S>(childSchema),
     );
