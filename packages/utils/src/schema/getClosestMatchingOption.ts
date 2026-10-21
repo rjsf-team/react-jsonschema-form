@@ -463,8 +463,8 @@ interface DataCopy {
   readonly keeps: boolean;
 }
 
-/** A copy of `data` in which every array and plain object is copied and any other object is kept as it is, since it
- * can't be copied without knowing what kind of object it is
+/** A copy of `data` in which every array and plain object is copied, an object with no prototype keeping none, and any
+ * other object is kept as it is, since it can't be copied without knowing what kind of object it is
  */
 function copyOfData(data: unknown): DataCopy {
   if (Array.isArray(data)) {
@@ -474,19 +474,22 @@ function copyOfData(data: unknown): DataCopy {
   }
   if (isPlainObject(data)) {
     const copies = Object.entries(data).map(([key, value]): [string, DataCopy] => [key, copyOfData(value)]);
-    return {
-      // `fromEntries()` defines each key as the object's own, a `__proto__` included
-      data: Object.fromEntries(copies.map(([key, copy]) => [key, copy.data])),
-      keeps: copies.some(([, copy]) => copy.keeps),
-    };
+    // `fromEntries()` defines each key as the object's own, a `__proto__` included
+    const copy = Object.fromEntries(copies.map(([key, entry]) => [key, entry.data]));
+    if (Object.getPrototypeOf(data) === null) {
+      Object.setPrototypeOf(copy, null);
+    }
+    return { data: copy, keeps: copies.some(([, entry]) => entry.keeps) };
   }
   return { data, keeps: typeof data === 'object' && data !== null };
 }
 
-/** Whether `data` still holds what `copy`, a `copyOfData()` copy, holds: arrays and plain objects alike item by item
- * and key by key, whatever their prototype, and the objects the copy kept as they are, by identity. A deep equality
- * that compares constructors would never find a copy equal to an object with no prototype, or to one holding an
- * object under an own `constructor` key, and score such data afresh at every level of a recursion (#4990)
+/** Whether `data` still holds what `copy`, a `copyOfData()` copy, holds: arrays item by item, plain objects key by key
+ * and by whether they have a prototype, and the objects the copy kept as they are, by identity. A validator reads a
+ * name the schema lists through the object's prototype, as Ajv does, so an object with no prototype and a plain one
+ * holding the same keys can match different options. A deep equality that compares constructors would never find a
+ * copy equal to an object holding an object under an own `constructor` key, and score such data afresh at every level
+ * of a recursion (#4990)
  */
 function holdsCopy(copy: unknown, data: unknown): boolean {
   if (Array.isArray(copy)) {
@@ -507,6 +510,7 @@ function holdsCopy(copy: unknown, data: unknown): boolean {
     const keys = Object.keys(copy);
     return (
       isPlainObject(data) &&
+      Object.getPrototypeOf(data) === Object.getPrototypeOf(copy) &&
       Object.keys(data).length === keys.length &&
       keys.every((key) => Object.hasOwn(data, key) && holdsCopy(copy[key], data[key]))
     );

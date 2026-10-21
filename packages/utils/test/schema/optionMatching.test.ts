@@ -174,6 +174,30 @@ describe('matching options through the schema graph', () => {
     expect(getClosestMatchingOption(context, rootSchema, inner, options)).toBe(1);
     expect(getClosestMatchingOption(context, rootSchema, formData, outer)).toBe(0);
   });
+  it.each([
+    { from: 'a plain object', to: 'one with no prototype', before: {}, after: Object.create(null), picks: [0, 1] },
+    {
+      from: 'an object with no prototype',
+      to: 'a plain object',
+      before: Object.create(null),
+      after: {},
+      picks: [1, 0],
+    },
+  ])('picks what it holds now for data in which $from was replaced in place by $to', ({ before, after, picks }) => {
+    // A validator reads a name the schema lists through the object's prototype, as Ajv does
+    const options: RJSFSchema[] = [
+      { type: 'object', properties: { c: { type: 'object', required: ['toString'] } }, required: ['c'] },
+      { type: 'object', properties: { c: { type: 'object', not: { required: ['toString'] } } }, required: ['c'] },
+    ];
+    const rootSchema: RJSFSchema = { anyOf: options };
+    const context = { validator: miniValidator() };
+    const formData = { c: before };
+    expect(getClosestMatchingOption(context, rootSchema, formData, options)).toBe(picks[0]);
+
+    formData.c = after;
+
+    expect(getClosestMatchingOption(context, rootSchema, formData, options)).toBe(picks[1]);
+  });
   it('picks for data holding a Date changed in place since the last call what it holds now', () => {
     const early = new Date(0);
     const late = new Date(1000);

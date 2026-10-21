@@ -1246,6 +1246,47 @@ describe('sanitize as a diff of the field trees before and after a change', () =
     expect(events[events.length - 1].formData).toEqual({ kind: 'b', fixed: ['x'] });
   });
 
+  it.each([
+    { spelling: 'inline', options: (one: RJSFSchema, two: RJSFSchema) => [one, two] },
+    {
+      spelling: 'as $refs',
+      options: () => [{ $ref: '#/definitions/one' }, { $ref: '#/definitions/two' }],
+    },
+  ])(
+    'keeps the constant a select offers with its options $spelling, whatever its conditionals default',
+    async ({ options }) => {
+      const one: RJSFSchema = { title: 'One', const: { x: 1, y: { z: 'a' } } };
+      const two: RJSFSchema = { title: 'Two', const: { x: 2, y: { z: 'a' } } };
+      const schema: RJSFSchema = {
+        type: 'object',
+        definitions: { one, two },
+        properties: {
+          sel: {
+            type: 'object',
+            properties: { x: { type: 'number' }, y: { type: 'object', properties: { z: { type: 'string' } } } },
+            if: { properties: { x: { const: 1 } } },
+            then: { properties: { y: { default: { z: 'a' } } } },
+            else: { properties: { y: { default: { z: 'b' } } } },
+            oneOf: options(one, two),
+          },
+        },
+      };
+      const events: IChangeEvent<{ sel?: unknown }>[] = [];
+      const { container } = render(
+        <Form<{ sel?: unknown }>
+          schema={schema}
+          validator={validator}
+          initialFormData={{ sel: { x: 1, y: { z: 'a' } } }}
+          onChange={(event) => events.push(event)}
+        />,
+      );
+
+      await user.selectOptions(elementOf(container, '#root_sel'), 'Two');
+
+      expect(events[events.length - 1].formData).toEqual({ sel: { x: 2, y: { z: 'a' } } });
+    },
+  );
+
   describe('a schema change', () => {
     const colorSchema = (colors: string[]): RJSFSchema => ({
       type: 'object',
