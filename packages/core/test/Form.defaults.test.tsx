@@ -2,6 +2,7 @@ import type { RJSFSchema } from '@rjsf/utils';
 import { userEvent } from '@testing-library/user-event';
 
 import {
+  elementOf,
   expectToHaveBeenCalledWithFormData,
   setupConsoleErrorSuppression,
   submitForm,
@@ -1349,6 +1350,35 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
         expect.objectContaining({ formData: { wrap: { mode: 'b', kind: { v: 'k2' } } }, errors: [] }),
         'root_wrap_mode',
       );
+    });
+
+    it('replaces a default holding a collapsed optional object at a level inside a property', async () => {
+      // Each branch's `cfg` default leaves its optional `sub` object out, as the Optional Data Controls show it
+      // without its fields, so the value still holds the old branch's default and the new one replaces it, as at the
+      // root
+      const cfgWithSub = (name: string): RJSFSchema => ({
+        type: 'object',
+        default: { name },
+        properties: {
+          name: { type: 'string' },
+          sub: { type: 'object', properties: { none: { type: 'null' } } },
+        },
+      });
+      const level: RJSFSchema = {
+        type: 'object',
+        properties: { mode: { type: 'string', enum: ['a', 'b'], default: 'a' } },
+        if: { properties: { mode: { const: 'a' } } },
+        then: { properties: { cfg: cfgWithSub('a') } },
+        else: { properties: { cfg: cfgWithSub('b') } },
+      };
+      const { node, onChange } = createFormComponent({
+        schema: { type: 'object', properties: { wrap: level } },
+        uiSchema: { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] } },
+      });
+
+      await user.selectOptions(elementOf(node, '#root_wrap_mode'), 'b');
+
+      expectToHaveBeenCalledWithFormData(onChange, { wrap: { mode: 'b', cfg: { name: 'b' } } }, 'root_wrap_mode');
     });
 
     // Where a branch declares the default is what decides how much of the value it speaks for. On the object itself

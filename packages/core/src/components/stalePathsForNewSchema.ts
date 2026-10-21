@@ -20,9 +20,11 @@ import {
   REF_KEY,
   replaceEqualDeep,
   UI_DEFINITIONS_KEY,
+  UI_GLOBAL_OPTIONS_KEY,
 } from '@rjsf/utils';
 
 import { declaresValueFor } from './declaresValue.ts';
+import { withGlobalUiOptions } from './fields/fieldWidgetUtils.ts';
 
 /** What the walk below needs that does not change as it descends */
 interface StaleSearchOptions<T, S extends StrictRJSFSchema, F extends FormContextType> {
@@ -375,7 +377,12 @@ export default function stalePathsForNewSchema<
       // The old side only differs where the level itself re-resolved, and asking costs a resolution per `$ref` option
       (newLevel === oldLevel || !optionsDeclareProperties<T, S, F>(schemaUtils, oldLevel))
     ) {
-      const levelUiSchema = levelPath.length ? getByPath<UiSchema<T, S, F> | undefined>(uiSchema, levelPath) : uiSchema;
+      const levelUiSchema = levelPath.length
+        ? withGlobalUiOptions<T, S, F>(
+            getByPath<UiSchema<T, S, F> | undefined>(uiSchema, levelPath),
+            uiSchema?.[UI_GLOBAL_OPTIONS_KEY],
+          )
+        : uiSchema;
       const computeFor = (level: S, keys: string[]) => {
         const defaults = schemaUtils.getDefaultFormState(
           onlyProperties<S>(level, level === newLevel ? newProperties : oldProperties, keys),
