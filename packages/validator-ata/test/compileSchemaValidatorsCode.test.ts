@@ -307,26 +307,52 @@ describe('compileSchemaValidatorsCode', () => {
   );
 
   test('compiles every extra in where ata cannot be asked for its copy', async () => {
-    // A later ata could change what the probe reads. Then nothing is left out, which only costs size.
+    // A later ata could change what the probe reads. Then nothing is left out, which only costs
+    // size. A fresh module graph, so no answer is cached, and the first compile is the probe's.
+    vi.resetModules();
     const { Validator } = await import('ata-validator');
-    // The names of ata's internals, kept in strings since they are not public API.
-    const compileKey = '_ensureCompiled';
-    const rawKey = '_rawSchema';
-    const proto = Validator.prototype as unknown as Record<string, (this: object) => unknown>;
-    const original = proto[compileKey];
-    const spy = vi.spyOn(proto, compileKey).mockImplementation(function (this: object) {
-      const raw = Reflect.get(this, rawKey) as { $ref?: unknown } | undefined;
-      if (raw && typeof raw.$ref === 'string') {
-        throw new Error('probe unavailable');
-      }
-      return original.call(this);
+    const { compileSchemaValidatorsCode: compileFresh } = await import('../src/compileSchemaValidators.ts');
+    // oxlint-disable-next-line no-underscore-dangle
+    const spy = vi.spyOn(Validator.prototype, '_ensureCompiled').mockImplementationOnce(() => {
+      throw new Error('probe unavailable');
     });
     try {
       const draft07 = METASCHEMAS.get('http://json-schema.org/draft-07/schema#')!;
-      expect(compileSchemaValidatorsCode(schema, { additionalMetaSchemas: [draft07] })).not.toBe(baseline);
+      expect(compileFresh(schema, { additionalMetaSchemas: [draft07] })).not.toBe(compileFresh(schema));
     } finally {
       spy.mockRestore();
     }
+  });
+
+  test('answers as the runtime validator when two extras share a shipped $id', () => {
+    // At runtime `additionalMetaSchemas` is added last, so ata's copy there replaces the other one.
+    const draft07Id = 'http://json-schema.org/draft-07/schema#';
+    const draft07 = METASCHEMAS.get(draft07Id)!;
+    const other = { $id: draft07Id, maxLength: 2 };
+    const form = refersTo(draft07Id);
+    for (const options of [
+      { additionalMetaSchemas: [draft07], ataOptionsOverrides: { schemas: [other] } },
+      { additionalMetaSchemas: [other, draft07] },
+      { additionalMetaSchemas: [draft07, other] },
+    ]) {
+      agree(form, { x: 'ab' }, options);
+      agree(form, { x: 'abc' }, options);
+    }
+  });
+
+  test('answers as the runtime validator when another extra refers to a shipped document', () => {
+    // ata loads its own copy only for a form that refers to it itself, so a copy reached through
+    // another document must stay in the module.
+    const draft07 = METASCHEMAS.get('http://json-schema.org/draft-07/schema#')!;
+    const a = { $id: 'https://example.com/a', not: { $ref: 'http://json-schema.org/draft-07/schema#' } };
+    const form: RJSFSchema = {
+      $id: 'f',
+      type: 'object',
+      properties: { x: { not: { $ref: 'https://example.com/a' } } },
+    };
+    const options = { additionalMetaSchemas: [draft07, a] };
+    expect(agree(form, { x: { type: 42 } }, options)).toBe(false);
+    expect(agree(form, { x: { type: 'string' } }, options)).toBe(true);
   });
 
   test.each([
