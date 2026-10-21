@@ -53,7 +53,7 @@ import buildPlan, {
   tupleSeeds,
   withoutKeys,
 } from './graph/mergePlan.ts';
-import type { MergePlan, OptionRequest, PlanPolicy, Seed } from './graph/mergePlan.ts';
+import type { MergePlan, OptionRequest, PlanPolicy, Seed, Seeding } from './graph/mergePlan.ts';
 import parseSchemaGraph from './graph/parseSchemaGraph.ts';
 import type { AdoptedSchema, NodeId, SchemaGraph } from './graph/parseSchemaGraph.ts';
 import { childProvenance, extendChain, readProvenance, rootProvenance, stamp } from './graph/provenance.ts';
@@ -229,6 +229,23 @@ function mergesNothing<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, seeds:
   );
 }
 
+/** Retrieves the field `field` describes as `retrieveSchema()` retrieves a schema it handed out for that field: a schema
+ * merged from declarations in several resources holds subschemas no graph holds, which retrieving it as a call root
+ * would resolve against the root's base, where retrieving the field resolves each against its own resource
+ *
+ * @param context - The `SchemaContext` that will be forwarded to all the APIs
+ * @param field - The provenance of the field
+ * @param [data] - The field's data
+ * @returns - The field's schema
+ */
+export function retrieveField<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  field: Provenance<S>,
+  data?: unknown,
+): S {
+  return buildView<S, F>(context, parseSchemaGraph<S>(field.graph.rawRoot), field, data, false);
+}
+
 /** Returns the field `schema` is the schema of. An unstamped schema, or one stamped for another root, is a call root.
  * A copy of a handed-out schema, such as an option merged with what it inherits or a custom field's spread with a
  * keyword of its own, is planned from its own keywords, with the ref path and chain of the field it copies: restarting
@@ -261,20 +278,32 @@ export function fieldOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, schem
  * two resources is a node in each. An option no node holds, such as one of the cross product a merge makes of two
  * lists, is adopted, so that it is still handed out as an option of the field offering it, keeping the field's guard
  * chain: handed out as a schema of its own, a recursion through it would start afresh at every level. The merge makes
- * such an option anew for every plan, which the graph adopts once for what it holds.
+ * such an option anew for every plan, which the graph adopts once for what it holds, in the resource the lists merged
+ * into it sit in, so that the `$ref`s it holds resolve where they were written.
+ *
+ * @param seeding - The graph and chains of the field offering the option
+ * @param keyword - The keyword holding the list
+ * @param index - The option's index in the list
+ * @param option - The option
+ * @returns - The option's node and the graph holding it
  */
-function optionNode<S extends StrictRJSFSchema>(
-  plan: MergePlan<S>,
+export function optionNode<S extends StrictRJSFSchema>(
+  seeding: Seeding<S>,
   keyword: string,
   index: number,
   option: S,
 ): AdoptedSchema<S> {
-  const provided = seedsAt(plan, keyword, String(index)).find((seed) => {
-    const node = plan.graph.node(seed.node);
+  const { graph, chains } = seeding;
+  const provided = seedsAt(seeding, keyword, String(index)).find((seed) => {
+    const node = graph.node(seed.node);
     return node.kind === 'schema' && node.raw === option;
   });
-  const node = provided?.node ?? plan.graph.byObject(option);
-  return node === undefined ? plan.graph.adopt(option) : { graph: plan.graph, node };
+  const node = provided?.node ?? graph.byObject(option);
+  if (node !== undefined) {
+    return { graph, node };
+  }
+  const bases = new Set(chains.flatMap((chain) => chain.get(keyword)?.node.baseUri ?? []));
+  return graph.adopt(option, bases.size === 1 ? [...bases][0] : undefined);
 }
 
 /** Returns the expansion of a field `retrieveSchema()` collapsed, flagging it with `RJSF_REF_CYCLE_KEY`: the field
@@ -573,8 +602,14 @@ export function resolveMergedOwnRef<S extends StrictRJSFSchema = RJSFSchema>(
   return found.resolved;
 }
 
-/** The seed declaring `ref`, the own `$ref` of a schema merged from several declarations */
-function declaringSeed<S extends StrictRJSFSchema>(
+/** Returns the seed declaring `ref`, the own `$ref` of a schema merged from several declarations
+ *
+ * @param graph - The graph holding the seeds
+ * @param seeds - The seeds of the field the schema is the merged schema of
+ * @param ref - The `$ref` as the schema holds it
+ * @returns - The seed whose subschema writes that `$ref`, if one does
+ */
+export function declaringSeed<S extends StrictRJSFSchema>(
   graph: SchemaGraph<S>,
   seeds: readonly Seed[],
   ref: string,

@@ -1,6 +1,7 @@
 import type { FormFieldState, RJSFSchema } from '../../src/index.ts';
 import { createSchemaUtils, isObject, isValueEmpty, noop, omitExtraData } from '../../src/index.ts';
 import shallowAllOfMerge from '../../src/schema/shallowAllOfMerge.ts';
+import { PET_RESOURCE_SCHEMA } from '../testUtils/testData.ts';
 import type { TestValidatorType } from './types.ts';
 
 export default function omitExtraDataTest(testValidator: TestValidatorType) {
@@ -2045,6 +2046,13 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
       const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
       expect(schemaUtils.omitExtraData(schemaUtils.getRootSchema(), { c: { v: 'x', extra: 1 } })).toEqual({
         c: { v: 'x' },
+      });
+    });
+    it('scores an option by the $ref a merged property holds in a resource of its own', () => {
+      // The `kind` of the first option is a definition the resource names, which the data does not match
+      const formData = { p: { kind: 'woof', bark: 5, extra: 1 } };
+      expect(omitExtraData({ validator: testValidator }, PET_RESOURCE_SCHEMA, PET_RESOURCE_SCHEMA, formData)).toEqual({
+        p: { kind: 'woof', bark: 5 },
       });
     });
     it('keeps the value of a select over object constants written as $refs whole', () => {
