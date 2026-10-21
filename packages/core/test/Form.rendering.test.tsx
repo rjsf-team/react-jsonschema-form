@@ -1,6 +1,6 @@
 import { createRef } from 'react';
 import type { FieldTemplateProps, RJSFSchema, UiSchema, ValidatorType } from '@rjsf/utils';
-import { JSON_SCHEMA_TYPES } from '@rjsf/utils';
+import { englishStringTranslator, JSON_SCHEMA_TYPES, templateDrawsLabel, TranslatableString } from '@rjsf/utils';
 import { act, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
@@ -2103,6 +2103,41 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       // A template says how any field renders rather than what one holds, so it reaches the selector as it reaches
       // every other field, unlike the entries that describe the caller's own field
       expect(ids).toContain('root_val___internal_type_selector');
+    });
+
+    describe('the TranslatableString.Value title of the value field', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { val: { title: 'Val', type: ['string', 'number'] } },
+      };
+      const translateString = (str: TranslatableString, params?: string[]) =>
+        str === TranslatableString.Value ? 'VALUE-OVERRIDE' : englishStringTranslator(str, params);
+
+      it('reaches a custom FieldTemplate as the label it is not asked to display, and as the schema title', () => {
+        const seen: { label: string; drawsLabel: boolean; title: unknown }[] = [];
+        function RecordingFieldTemplate(props: FieldTemplateProps) {
+          if (props.id === 'root_val') {
+            seen.push({ label: props.label, drawsLabel: templateDrawsLabel(props), title: props.schema.title });
+          }
+          return <div>{props.children}</div>;
+        }
+        createFormComponent({
+          schema,
+          templates: { FieldTemplate: RecordingFieldTemplate },
+          translateString,
+          useFallbackUiForUnsupportedType: true,
+        });
+
+        expect(seen).toContainEqual({ label: 'Val', drawsLabel: true, title: 'Val' });
+        expect(seen).toContainEqual({ label: 'VALUE-OVERRIDE', drawsLabel: false, title: 'VALUE-OVERRIDE' });
+      });
+
+      it('is not rendered by the default templates', () => {
+        const { node } = createFormComponent({ schema, translateString, useFallbackUiForUnsupportedType: true });
+
+        expect(screen.getByRole('textbox', { name: 'Val' })).toBeInTheDocument();
+        expect(node.innerHTML).not.toContain('VALUE-OVERRIDE');
+      });
     });
 
     it.each<[string, UiSchema, RJSFSchema]>([
