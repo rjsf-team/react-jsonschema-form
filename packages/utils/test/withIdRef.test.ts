@@ -81,6 +81,28 @@ describe('withRootIdRefPrefix()', () => {
     });
     expect(withRootIdRefPrefix(schema, {})).toEqual(schema);
   });
+  it('rewrites only a local $ref in a keyword that holds data, such as const, enum, default or examples', () => {
+    const root: RJSFSchema = { $id: 'https://example.com/schemas/root.json' };
+    const data = { $ref: 'other.json' };
+    const local = { $ref: '#/a' };
+    const schema: RJSFSchema = {
+      const: data,
+      enum: [data, local],
+      default: { nested: data },
+      examples: [data],
+      properties: { const: { $ref: 'other.json' }, enum: { items: { $ref: 'other.json' } } },
+    };
+    expect(withRootIdRefPrefix(schema, root)).toEqual({
+      const: data,
+      enum: [data, { $ref: 'https://example.com/schemas/root.json#/a' }],
+      default: { nested: data },
+      examples: [data],
+      properties: {
+        const: { $ref: 'https://example.com/schemas/other.json' },
+        enum: { items: { $ref: 'https://example.com/schemas/other.json' } },
+      },
+    });
+  });
   it('prefixes a local $ref with ROOT_SCHEMA_PREFIX for a root without an $id', () => {
     expect(withRootIdRefPrefix({ $ref: '#/a' }, {})).toEqual({ $ref: `${ROOT_SCHEMA_PREFIX}#/a` });
   });
