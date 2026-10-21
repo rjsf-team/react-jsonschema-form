@@ -48,9 +48,10 @@ function holderNode<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, holder: o
  * that resolves against that resource, but the subschema a validator is handed, such as an option or an `if`, no
  * longer sits under that `$id`. So the target the graph resolved the `$ref` to is named by its pointer in the root.
  * Where an `$id` the schema handed over still holds around the `$ref` would resolve that pointer elsewhere, as an
- * absolute one does a root registered under a relative id such as `ROOT_SCHEMA_PREFIX`, the `$ref` is left for the
- * validator to resolve against that `$id`, and so is any other: one written in the root's own resource, or one that
- * resolves to nothing.
+ * absolute one does a root registered under a relative id such as `ROOT_SCHEMA_PREFIX`, no pointer is returned, and
+ * neither is one for any other `$ref`: one written in the root's own resource, or one that resolves to nothing. Of
+ * those, only a relative `$ref` is left for the validator to resolve against that `$id`: `rootRef()` puts the root's
+ * id in front of a fragment one, which then resolves against the `$id` and misses, as it does in `v7`.
  */
 function nestedRefOf<S extends StrictRJSFSchema>(
   graph: SchemaGraph<S>,
