@@ -177,12 +177,12 @@ const stubs = new WeakMap<object, { readonly value: unknown; readonly stub: obje
  * else, so the same object is handed out again while the field's subschema is the same, which spares the deep
  * comparison that would otherwise find a new copy equal on every render of its parent.
  */
-function stubOf<S extends StrictRJSFSchema>(rawRoot: S, value: unknown, provenance: Provenance<S>): S {
+function stubOf<S extends StrictRJSFSchema>(value: S, provenance: Provenance<S>): S {
   const cached = stubs.get(provenance);
-  if (cached !== undefined && cached.value === value && isSchemaObject<S>(cached.stub)) {
+  if (cached?.value === value && isSchemaObject<S>(cached.stub)) {
     return cached.stub;
   }
-  const stub = handOut(schemaFrom(rawRoot, value), provenance);
+  const stub = handOut(value, provenance);
   stubs.set(provenance, { value, stub });
   return stub;
 }
@@ -597,11 +597,13 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
       }
       // A property its patterns are merged into is not the subschema it was declared as, so it is handed out merged
       const { seeds: propertySeeds, edge, patterned } = found;
-      if (!patterned && !isSchemaObject<S>(value)) {
-        return [key, value];
-      }
-      if (!patterned && mergesNothing(graph, propertySeeds)) {
-        return [key, stubOf(graph.rawRoot, value, child(propertySeeds, edge, false).provenance)];
+      if (!patterned) {
+        if (!isSchemaObject<S>(value)) {
+          return [key, value];
+        }
+        if (mergesNothing(graph, propertySeeds)) {
+          return [key, stubOf(value, child(propertySeeds, edge, false).provenance)];
+        }
       }
       const { next, provenance } = child(propertySeeds, edge, isObject(data) && Object.hasOwn(data, key));
       const own = valueOf(data, key);
@@ -618,9 +620,9 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
       }
       return [
         key,
-        patterned
-          ? buildView(context, root, provenance, own, false, childPlan)
-          : stubOf(graph.rawRoot, value, provenance),
+        !patterned && isSchemaObject<S>(value)
+          ? stubOf(value, provenance)
+          : buildView(context, root, provenance, own, false, childPlan),
       ];
     });
     Reflect.set(merged, PROPERTIES_KEY, Object.fromEntries(entries));
@@ -628,7 +630,7 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
   const item = (value: unknown, seedsOfItem: readonly Seed[], edge: ContainmentEdge) =>
     seedsOfItem.length === 0 || !isSchemaObject<S>(value) || isDecided(value)
       ? value
-      : stubOf(graph.rawRoot, value, child(seedsOfItem, edge, true).provenance);
+      : stubOf(value, child(seedsOfItem, edge, true).provenance);
   const tuple = (entries: unknown[]) =>
     entries.map((entry, index) => item(entry, tupleSeeds(plan, index), 'tupleItem'));
   // A view drops the row keywords that hold nothing, rather than holding them as undefined
@@ -670,9 +672,7 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
             },
             adopted.graph,
           );
-          return resolveOptions
-            ? buildView(context, root, provenance, data, false)
-            : stubOf(graph.rawRoot, option, provenance);
+          return resolveOptions ? buildView(context, root, provenance, data, false) : stubOf(option, provenance);
         }),
       );
     }
