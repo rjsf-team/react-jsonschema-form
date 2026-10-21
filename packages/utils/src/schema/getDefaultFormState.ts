@@ -82,7 +82,7 @@ import type { Provenance } from './graph/provenance.ts';
 import { collapses, restartSeeds } from './graph/recursionRule.ts';
 import type { ContainmentEdge } from './graph/recursionRule.ts';
 import isMultiSelect from './isMultiSelect.ts';
-import resolveConstantOptions from './resolveConstantOptions.ts';
+import { resolveDeclaredConstantOptions } from './resolveConstantOptions.ts';
 import retrieveSchema, {
   dependencyOption,
   fieldOf,
@@ -785,7 +785,7 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
     isObject(defaults) &&
     isObject(schema.default) &&
     !xxxOf &&
-    !isWholeValueSelect<S>(resolveConstantOptions<S>(schema, rootSchema))
+    !isWholeValueSelect<S>(resolveDeclaredConstantOptions<S>(schema, () => view))
   ) {
     // For object defaults, merge defaults by precedence setting.
     // Skip this for anyOf/oneOf schemas, which need special handling, and for a select over object constants,
@@ -935,7 +935,7 @@ function chooseOption<S extends StrictRJSFSchema, F extends FormContextType>(
   // An object or array select holds one of its constants as a whole, the way a primitive select does. The options are
   // checked as well, since a non-empty `enum` makes the schema a select whatever they are, and only a constant can be
   // taken whole
-  const select = resolveConstantOptions<S>(schema, rootSchema);
+  const select = resolveDeclaredConstantOptions<S>(schema, () => view);
   const isWholeValue = isWholeValueSelect<S>(select);
   const constants = getXxxOfOptions<S>(select)?.options;
   const wholeOptions =
@@ -1459,7 +1459,7 @@ function typeDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>(
   view: DefaultsView<S>,
   props: FoldProps<T, S, F>,
   defaults: unknown,
-  isWholeValue = isWholeValueSelect<S>(resolveConstantOptions<S>(view.schema, view.field.graph.rawRoot)),
+  isWholeValue = isWholeValueSelect<S>(resolveDeclaredConstantOptions<S>(view.schema, () => view)),
 ): unknown {
   const { uiSchema, rawFormData } = props;
   // A select over object or array constants picks one of them as a whole, so it has no contents of its own to fill in,
@@ -1698,23 +1698,28 @@ function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextTy
   const { defaultFormStateBehavior } = context;
   const shouldRetrieveAllOf = shouldPopulateAllOfDefaults(schema, defaultFormStateBehavior);
   const schemaToMatch = shouldRetrieveAllOf ? retrieveField<S, F>(context, field(), formData) : schema;
+  let declaredIn: Seeding<S> | undefined;
+  const declarations = () => {
+    declaredIn ??= { graph: field().graph, chains: chains() };
+    return declaredIn;
+  };
   // Without data there is nothing to check against the options of a select, so only data asks whether it is one. A
   // schema with nothing left to merge is asked as it stands, which is what retrieving it would give
   const isSelectField =
     formData !== undefined &&
     !isConstant<S>(schemaToMatch) &&
     isConstantSelect<S>(
-      resolveConstantOptions<S>(
+      resolveDeclaredConstantOptions<S>(
         MERGING_KEYWORDS.some((keyword) => Object.hasOwn(schemaToMatch, keyword))
           ? retrieveField<S, F>(context, field())
           : schemaToMatch,
-        rootSchema,
+        declarations,
       ),
       true,
     );
   let validFormData: unknown = formData;
   if (isSelectField) {
-    const getOptionsList = optionsList<T, S, F>(resolveConstantOptions<S>(schemaToMatch, rootSchema));
+    const getOptionsList = optionsList<T, S, F>(resolveDeclaredConstantOptions<S>(schemaToMatch, declarations));
     // An empty option list has no value to check the data against, so the data is kept, as it is without the list
     if (getOptionsList?.length !== 0) {
       validFormData = getOptionsList?.some((option) => deepEquals(option.value, formData)) ? formData : undefined;
@@ -1728,14 +1733,12 @@ function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextTy
   } else if (isObject(validFormData) && isObject(schemaToMatch.properties)) {
     const matched: GenericObjectType = { ...validFormData };
     const rootGraph = parseSchemaGraph<S>(rootSchema);
-    let declaredIn: Seeding<S> | undefined;
     // A property `retrieveSchema()` handed out is the field it was handed out for, and any other is declared where the
     // declarations of the schema holding it declare it
     const fieldOfProperty = (key: string, propertySchema: S): Provenance<S> => {
       let declared: readonly Seed[] = [];
       if (readProvenance<S>(propertySchema, rootGraph) === undefined) {
-        declaredIn ??= { graph: field().graph, chains: chains() };
-        declared = seedsAt(declaredIn, PROPERTIES_KEY, key);
+        declared = seedsAt(declarations(), PROPERTIES_KEY, key);
       }
       return declared.length > 0 ? rootProvenance<S>(field().graph, declared) : fieldOf<S>(rootGraph, propertySchema);
     };

@@ -663,6 +663,17 @@ describe('getDefaultFormState() on recursive schemas', () => {
     };
     expect(defaultsOf({ definitions: { pl: definition }, $ref: D('pl') })).toEqual({ a: 'x', child: { a: 'x' } });
   });
+
+  it('merges the object default of a field an option leads back to with the one its parent gives it', () => {
+    // The option `$ref` back to `A` renders `A` again, whose list it has chosen from already
+    const schema: RJSFSchema = {
+      definitions: { A: { default: { a: 1 }, oneOf: [{ $ref: D('A') }, { const: 'x' }] } },
+      type: 'object',
+      default: { p: { b: 2 } },
+      properties: { p: { $ref: D('A') } },
+    };
+    expect(defaultsOf(schema)).toEqual({ p: { b: 2, a: 1 } });
+  });
 });
 
 describe('getDefaultFormState() reading $ref, branches and extra keys as the form does', () => {
@@ -1303,6 +1314,27 @@ describe('getDefaultFormState() reading $ref, branches and extra keys as the for
         expect(defaultsOf(schema, undefined, behavior)).toEqual({ p: { a: 's' } });
         expect(defaultsOf(schema, { p: { k: 'a' } }, behavior)).toEqual({ p: { a: 's', k: 'a' } });
         expect(defaultsOf(schema, { p: { a: 'z' } }, behavior)).toEqual({ p: { a: 'z' } });
+      },
+    );
+    it.each(behaviors.slice(0, 2))(
+      'reads the own $ref of each option a merge of two lists in the resource rebuilt there, %s',
+      (_, behavior) => {
+        // Each option of the cross product is one of the first list's `$ref`s with the `title` of the second beside it
+        const resource: RJSFSchema = {
+          $defs: {
+            t: { type: 'object', properties: { r: { type: 'string', default: 'R' } }, required: ['r'] },
+            o: {
+              type: 'object',
+              if: {},
+              then: {},
+              allOf: [{ anyOf: [{ $ref: '#/$defs/s' }, { $ref: '#/$defs/t' }] }, { anyOf: [{ title: 'A' }] }],
+            },
+          },
+        };
+        const s: RJSFSchema = { type: 'object', properties: { q: { type: 'string', default: 'Q' } }, required: ['q'] };
+        const schema = rootOf({ $ref: 'res.json#/$defs/o' }, s, resource, { type: 'number' });
+        expect(defaultsOf(schema, undefined, behavior)).toEqual({ p: { q: 'Q' } });
+        expect(defaultsOf(schema, { p: { r: 'y' } }, behavior)).toEqual({ p: { r: 'y' } });
       },
     );
   });
