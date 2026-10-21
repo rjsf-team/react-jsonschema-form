@@ -2,7 +2,7 @@ import type { RJSFSchema } from '@rjsf/utils';
 import { createSchemaUtils } from '@rjsf/utils';
 import type { Validator } from 'ata-validator';
 
-import nestedResourceTests from '../../utils/test/testUtils/nestedResourceTests.ts';
+import nestedResourceTests, { mergedResourceViewTests } from '../../utils/test/testUtils/nestedResourceTests.ts';
 import pointerValidationTests, {
   sharedObjectValidationTests,
   sharedSubschemaValidationTests,
@@ -632,7 +632,8 @@ describe('compileSchemaValidatorsCode', () => {
         .errors.map((error) => error.property),
     ).toEqual(['.children.0.name']);
   });
-  nestedResourceTests((rootSchema) =>
-    createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(rootSchema)), rootSchema),
-  );
+  const precompiledFor = (rootSchema: RJSFSchema) =>
+    createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(rootSchema)), rootSchema);
+  nestedResourceTests(precompiledFor);
+  mergedResourceViewTests(precompiledFor, false);
 });

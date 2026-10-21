@@ -245,6 +245,71 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       expect(resolved).toMatchObject({ type: 'string', title: 'A', description: 'D' });
     });
   });
+  describe('the options retrieveSchema() hands out for a list a merge rebuilt', () => {
+    it("resolves the $refs an option holds in the resource of the lists merged into it, not the root's", () => {
+      const s: RJSFSchema = { type: 'string', default: 's' };
+      const option = (key: string, beside: RJSFSchema = { $ref: '#/$defs/s' }): RJSFSchema => ({
+        properties: { [key]: beside },
+      });
+      // The root's own `s` is a number, which an option resolved against the root would read
+      const rootSchema: RJSFSchema = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        $id: 'https://example.com/root.json',
+        $defs: {
+          s: { type: 'number' },
+          res: {
+            $id: 'res.json',
+            $defs: {
+              s,
+              o: {
+                type: 'object',
+                allOf: [{ anyOf: [option('a'), option('b')] }, { anyOf: [option('a', { title: 'A' }), option('c')] }],
+              },
+            },
+          },
+        },
+        type: 'object',
+        properties: { p: { $ref: 'res.json#/$defs/o' } },
+      };
+      const schemaUtils = createSchemaUtils({ validator: testValidator }, rootSchema);
+      const field = schemaUtils.retrieveSchema(rootSchema).properties?.p;
+      const options = schemaUtils.retrieveSchema(isObject(field) ? field : {}).anyOf ?? [];
+      expect(options).toHaveLength(4);
+      const [first] = options;
+      const a = schemaUtils.retrieveSchema(isObject(first) ? first : {}).properties?.a;
+      expect(schemaUtils.retrieveSchema(isObject(a) ? a : {})).toMatchObject({ ...s, title: 'A' });
+    });
+    it('hands out an option rebuilt from lists in two resources, which no one resource holds, as a call root', () => {
+      const list = (id: string, key: string): RJSFSchema => ({
+        $id: id,
+        anyOf: [{ properties: { [key]: { type: 'string' } } }, { properties: { [`${key}2`]: { type: 'number' } } }],
+      });
+      const rootSchema: RJSFSchema = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        $id: 'https://example.com/root.json',
+        $defs: { a: list('a.json', 'a'), b: list('b.json', 'b') },
+        type: 'object',
+        properties: { p: { type: 'object', allOf: [{ $ref: 'a.json' }, { $ref: 'b.json' }] } },
+      };
+      const schemaUtils = createSchemaUtils({ validator: testValidator }, rootSchema);
+      const field = schemaUtils.retrieveSchema(rootSchema).properties?.p;
+      const [first] = schemaUtils.retrieveSchema(isObject(field) ? field : {}).anyOf ?? [];
+      expect(schemaUtils.retrieveSchema(isObject(first) ? first : {}).properties).toEqual({
+        a: { type: 'string' },
+        b: { type: 'string' },
+      });
+    });
+  });
+
+  describe('resolveMergedOwnRef()', () => {
+    it('resolves a $ref none of the seeds declares as resolveOwnRef() resolves it', () => {
+      const rootSchema: RJSFSchema = { definitions: { a: { type: 'string', title: 'A' } } };
+      const schema: RJSFSchema = { $ref: '#/definitions/a', description: 'D' };
+      const resolved = resolveMergedOwnRef(parseSchemaGraph(rootSchema), [], schema);
+      expect(resolved).toBe(resolveOwnRef(schema, rootSchema));
+      expect(resolved).toMatchObject({ type: 'string', title: 'A', description: 'D' });
+    });
+  });
   describe('retrieveSchema()', () => {
     let consoleWarnSpy: MockInstance;
     beforeAll(() => {

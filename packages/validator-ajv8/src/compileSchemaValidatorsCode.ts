@@ -1,11 +1,11 @@
 import type { RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { ID_KEY, REF_KEY, schemaKey, getValidationSchemas } from '@rjsf/utils';
+import { ID_KEY, REF_KEY, schemaKey, getValidationSchemas, withRootIdRefPrefix } from '@rjsf/utils';
 import type { Ajv } from 'ajv';
 // Node's ESM resolver has no directory-index lookup, so the file has to be named explicitly.
 import uri from 'ajv/dist/runtime/uri.js';
 import standaloneCode from 'ajv/dist/standalone/index.js';
 
-import ajvRootSchemaId, { withAjvRootIdRefPrefix } from './ajvRootSchemaId.ts';
+import ajvRootSchemaId from './ajvRootSchemaId.ts';
 import createAjvInstance from './createAjvInstance.ts';
 import type { CustomValidatorOptionsType } from './types.ts';
 
@@ -37,7 +37,7 @@ export function compiledSchemas<S extends StrictRJSFSchema = RJSFSchema>(
     } else if (typeof ref === 'string' && ref.startsWith('#') && Object.keys(rest).length === 0) {
       exportNames[key] = `${rootId}${ref}`;
     } else {
-      schemas[key] = withAjvRootIdRefPrefix<S>(listed, rootSchema, rootId);
+      schemas[key] = withRootIdRefPrefix<S>(listed, rootSchema, rootId);
       exportNames[key] = key;
     }
   }

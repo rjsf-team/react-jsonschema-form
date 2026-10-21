@@ -8,10 +8,10 @@ import type {
   ValidationData,
   ValidatorType,
 } from '@rjsf/utils';
-import { deepEquals, isObject, logOnce, ID_KEY, schemaKey } from '@rjsf/utils';
+import { deepEquals, isObject, logOnce, ID_KEY, schemaKey, withRootIdRefPrefix } from '@rjsf/utils';
 import type { ErrorObject, ValidateFunction, Ajv } from 'ajv';
 
-import ajvRootSchemaId, { withAjvRootIdRefPrefix } from './ajvRootSchemaId.ts';
+import ajvRootSchemaId from './ajvRootSchemaId.ts';
 import createAjvInstance from './createAjvInstance.ts';
 import type { RawValidationErrorsType } from './processRawValidationErrors.ts';
 import processRawValidationErrors from './processRawValidationErrors.ts';
@@ -315,7 +315,7 @@ export default class AJV8Validator<
       const rootSchemaId = this.registerRootSchema(rootSchema);
       // A `$ref` local to the root, such as the `{ $ref: '#/properties/a/if' }` a form validates a condition with,
       // names the root by the id it is registered under, whatever the schema holding it is registered as
-      const schemaWithIdRefPrefix = withAjvRootIdRefPrefix<S>(schema, rootSchema, rootSchemaId);
+      const schemaWithIdRefPrefix = withRootIdRefPrefix<S>(schema, rootSchema, rootSchemaId);
       schemaId = schemaKey(schemaWithIdRefPrefix);
       // Add schema by an explicit ID so it can be fetched later
       // Fall back to using compile if necessary

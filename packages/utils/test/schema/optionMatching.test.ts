@@ -209,6 +209,38 @@ describe('matching options through the schema graph', () => {
       v: { b: 1 },
     });
   });
+  describe('options a customMergeAllOf merges', () => {
+    // Neither option matches, so both are scored
+    const validator = { ...miniValidator(), isValid: () => false };
+    it("scores a property the merge adds to the keywords beside an option's $ref as it stands", () => {
+      const customMergeAllOf = (): RJSFSchema => ({
+        type: 'object',
+        properties: { z: { type: 'object', properties: { w: { type: 'string' } } } },
+      });
+      const options: RJSFSchema[] = [
+        { $ref: '#/definitions/A', properties: { x: { type: 'number' } } },
+        { type: 'object', properties: { y: { type: 'number' } } },
+      ];
+      const rootSchema: RJSFSchema = { definitions: { A: { type: 'object' } }, properties: { v: { anyOf: options } } };
+      const formData = { z: { w: 's' } };
+      expect(getClosestMatchingOption({ validator, customMergeAllOf }, rootSchema, formData, options)).toBe(0);
+    });
+    it('scores the allOf entries of an option retrieveSchema() handed out, where the merge left them unmerged', () => {
+      const customMergeAllOf = (schema: RJSFSchema): RJSFSchema => schema;
+      const options: RJSFSchema[] = [
+        { allOf: [{ $ref: '#/definitions/Base' }, { properties: { x: { type: 'string' } } }] },
+        { properties: { y: { type: 'string' } } },
+      ];
+      const rootSchema: RJSFSchema = {
+        definitions: { Base: { type: 'object', properties: { id: { type: 'string' } } } },
+        properties: { v: { anyOf: options } },
+      };
+      const context = { validator, customMergeAllOf };
+      const views = options.map((option) => retrieveSchema(context, option, rootSchema, { id: 'a' }));
+      expect(views[0].allOf).toHaveLength(2);
+      expect(getClosestMatchingOption(context, rootSchema, { id: 'a' }, views)).toBe(0);
+    });
+  });
   it.each([
     [
       'an allOf entry',

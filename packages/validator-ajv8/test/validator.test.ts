@@ -25,7 +25,10 @@ import { Ajv2020 } from 'ajv/dist/2020.js';
 import metaSchemaDraft6 from 'ajv/lib/refs/json-schema-draft-06.json' with { type: 'json' };
 import type { Mock } from 'vitest';
 
-import nestedResourceTests from '../../utils/test/testUtils/nestedResourceTests.ts';
+import nestedResourceTests, {
+  handedResourceTests,
+  mergedResourceViewTests,
+} from '../../utils/test/testUtils/nestedResourceTests.ts';
 import pointerValidationTests, {
   absoluteRefValidationTests,
   sharedObjectValidationTests,
@@ -348,6 +351,30 @@ describe('AJV8Validator', () => {
         const retrieved = pickOptions.map((option) => retrieveSchema({ validator }, option, rootSchema, {}));
 
         expect(getFirstMatchingOption({ validator }, { x: 'ab' }, retrieved, rootSchema)).toBe(1);
+      });
+    });
+    describe('scoring an option whose $id is the base of a relative $ref to a schema beside the root', () => {
+      const ext: RJSFSchema = { $id: 'https://ex.com/schemas/ext.json', type: 'string', minLength: 3 };
+      const options: RJSFSchema[] = [
+        { type: 'number' },
+        {
+          $id: 'https://ex.com/schemas/a.json',
+          type: 'object',
+          properties: { s: { $ref: 'ext.json' } },
+          required: ['s'],
+        },
+      ];
+      const rootSchema: RJSFSchema = { $id: 'https://ex.com/root.json', properties: { q: { oneOf: options } } };
+
+      it('resolves the $ref against the option it sits in rather than against the root', () => {
+        const withExt = new AJV8Validator({
+          extenderFn: (ajv: Ajv) => {
+            ajv.addSchema(ext);
+            return ajv;
+          },
+        });
+        expect(getFirstMatchingOption({ validator: withExt }, { s: 'abcd' }, options, rootSchema)).toBe(1);
+        expect(withExt.isValid(options[1], { s: 'ab' }, rootSchema)).toBe(false);
       });
     });
     describe('compilation error caching (issue #3933)', () => {
@@ -3633,7 +3660,9 @@ sharedObjectValidationTests(() => customizeValidator());
 sharedSubschemaValidationTests(() => customizeValidator());
 
 describe('AJV8Validator', () => {
-  nestedResourceTests(
-    (rootSchema) => new AJV8Validator(String(rootSchema.$schema).includes('2020-12') ? { AjvClass: Ajv2020 } : {}),
-  );
+  const validatorFor = (rootSchema: RJSFSchema) =>
+    new AJV8Validator(String(rootSchema.$schema).includes('2020-12') ? { AjvClass: Ajv2020 } : {});
+  nestedResourceTests(validatorFor);
+  mergedResourceViewTests(validatorFor);
+  handedResourceTests(validatorFor);
 });

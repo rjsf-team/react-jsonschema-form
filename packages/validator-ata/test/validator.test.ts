@@ -16,7 +16,10 @@ import {
 } from '@rjsf/utils';
 import type { Validator } from 'ata-validator';
 
-import nestedResourceTests from '../../utils/test/testUtils/nestedResourceTests.ts';
+import nestedResourceTests, {
+  handedResourceTests,
+  mergedResourceViewTests,
+} from '../../utils/test/testUtils/nestedResourceTests.ts';
 import pointerValidationTests, {
   absoluteRefValidationTests,
   sharedObjectValidationTests,
@@ -355,6 +358,24 @@ describe('ATAValidator', () => {
       expect(v.isValid(schema, {}, schema)).toBe(true);
     });
 
+    it('resolves a relative $ref under an option of its own $id against that $id, as a schema beside the root', () => {
+      const ext = { $id: 'https://ex.com/schemas/ext.json', type: 'string', minLength: 3 };
+      const options: RJSFSchema[] = [
+        { type: 'number' },
+        {
+          $id: 'https://ex.com/schemas/a.json',
+          type: 'object',
+          properties: { s: { $ref: 'ext.json' } },
+          required: ['s'],
+        },
+      ];
+      const rootSchema: RJSFSchema = { $id: 'https://ex.com/root.json', properties: { q: { oneOf: options } } };
+      const v = customizeValidator({ additionalMetaSchemas: [ext] });
+      const schemaUtils = createSchemaUtils({ validator: v }, rootSchema);
+      expect(schemaUtils.getFirstMatchingOption({ s: 'abcd' }, options)).toBe(1);
+      expect(v.isValid(options[1], { s: 'ab' }, rootSchema)).toBe(false);
+    });
+
     it('passes the constructed Validator through extenderFn', () => {
       const extenderFn = vi.fn((validator: Validator) => validator);
       const v = customizeValidator({ extenderFn });
@@ -670,4 +691,6 @@ sharedObjectValidationTests(() => customizeValidator());
 
 describe('ATAValidator', () => {
   nestedResourceTests(() => customizeValidator());
+  mergedResourceViewTests(() => customizeValidator());
+  handedResourceTests(() => customizeValidator());
 });

@@ -8,6 +8,7 @@ import {
   DEPENDENCIES_KEY,
   IF_KEY,
   ONE_OF_KEY,
+  PROPERTIES_KEY,
   REF_KEY,
   UI_DEFINITIONS_KEY,
 } from '../constants.ts';
@@ -51,7 +52,7 @@ import type {
   UiSchema,
   ValidatorType,
 } from '../types.ts';
-import getClosestMatchingOption from './getClosestMatchingOption.ts';
+import { closestOption, listedAt } from './getClosestMatchingOption.ts';
 import buildPlan, {
   asTarget,
   cachedPolicy,
@@ -73,20 +74,23 @@ import type {
   PlanPolicy,
   RefPath,
   Seed,
+  Seeding,
 } from './graph/mergePlan.ts';
 import parseSchemaGraph from './graph/parseSchemaGraph.ts';
 import type { NodeId, SchemaGraph } from './graph/parseSchemaGraph.ts';
+import { readProvenance, rootProvenance } from './graph/provenance.ts';
+import type { Provenance } from './graph/provenance.ts';
 import { collapses, restartSeeds } from './graph/recursionRule.ts';
 import type { ContainmentEdge } from './graph/recursionRule.ts';
 import isMultiSelect from './isMultiSelect.ts';
-import isSelect from './isSelect.ts';
 import resolveConstantOptions from './resolveConstantOptions.ts';
 import retrieveSchema, {
   dependencyOption,
   fieldOf,
   isLeafSchema,
+  optionNode as offeredOption,
   resolveMergedOwnRef,
-  resolveOwnRef,
+  retrieveField,
   stubExistingAdditionalProperties,
 } from './retrieveSchema.ts';
 
@@ -816,7 +820,7 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
       ),
     );
   } else if (xxxOf) {
-    const choice = chooseOption<S, F>(context, rootSchema, schema, xxxOf, rawFormData, defaults, preferParentDefaults);
+    const choice = chooseOption<S, F>(context, view, xxxOf, rawFormData, defaults, preferParentDefaults);
     isWholeValue = choice.isWholeValue;
     if (choice.wholeOptions === undefined) {
       return foldOption<T, S, F>(choice.context, view, xxxOf, choice.index, { ...props, parentDefaults: defaults });
@@ -913,18 +917,20 @@ function ownValue<V>(value: V): V {
 }
 
 /** Picks the option of a field offering `anyOf`/`oneOf` options that its data, or its default, matches, and the context
- * the option's defaults are computed in
+ * the option's defaults are computed in. Each option is scored where it is declared, or where the merge that rebuilt
+ * its list adopted it.
  */
 function chooseOption<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
-  rootSchema: S,
-  schema: S,
+  view: DefaultsView<S>,
   { key, options }: XxxOfOptions<S>,
   rawFormData: unknown,
   defaults: unknown,
   preferParentDefaults: boolean,
 ): { context: SchemaContext<S, F>; index: number; isWholeValue: boolean; wholeOptions: S[] | undefined } {
   const { defaultFormStateBehavior } = context;
+  const { schema } = view;
+  const rootSchema = view.graph.rawRoot;
   const { type = 'null' } = withoutKeys(schema, key);
   // An object or array select holds one of its constants as a whole, the way a primitive select does. The options are
   // checked as well, since a non-empty `enum` makes the schema a select whatever they are, and only a constant can be
@@ -957,13 +963,15 @@ function chooseOption<S extends StrictRJSFSchema, F extends FormContextType>(
   const index =
     equalOptionIndex !== -1
       ? equalOptionIndex
-      : getClosestMatchingOption<unknown, S, F>(
+      : closestOption<S, F>(
           context,
           rootSchema,
           valueToMatch,
           options,
           0,
+          false,
           getDiscriminatorFieldFromSchema<S>(schema),
+          listedAt<S>(() => view, key, options),
         );
   return { context: optionContext, index, isWholeValue, wholeOptions };
 }
@@ -1003,14 +1011,32 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
     // option is read as written and the field computed from it. It is still the same field, reached the same way: it
     // keeps its edge, and the longest ref path a node of its plan holding such a list was entered with, or a recursion
     // through the option would start afresh at every level
-    const option = schemaFrom(rootSchema, options[index]);
+    const listed: unknown = options[index];
+    const option = schemaFrom(rootSchema, listed);
+    // The option is read where it is declared, or where the merge rebuilding its list adopted it, so that its `$ref`s
+    // resolve in the resource it sits in
+    const offered = isSchemaObject<S>(listed) ? offeredOption<S>(view, key, index, listed) : undefined;
+    const declared = offered?.graph.node(offered.node);
     const rendered = rendersOwnField
       ? mergeSchemas(remaining, option)
       : withDefaultOf(
           remaining,
-          getRenderedOptionSchema<S>(remaining, resolveOwnRef<S>(option, rootSchema, context.customMergeAllOf)),
+          getRenderedOptionSchema<S>(
+            remaining,
+            offered === undefined
+              ? option
+              : resolveMergedOwnRef<S>(
+                  offered.graph,
+                  [{ node: offered.node, refPath: [] }],
+                  option,
+                  context.customMergeAllOf,
+                ),
+          ),
         );
-    const adopted = graph.adopt(schemaFrom(rootSchema, rendered));
+    const adopted = graph.adopt(
+      schemaFrom(rootSchema, rendered),
+      declared?.kind === 'schema' ? declared.outerBase : undefined,
+    );
     const offeredAt = view.entries
       .filter(({ node: id }) => {
         const node = graph.node(id);
@@ -1616,47 +1642,63 @@ export function ensureFormDataMatchingSchema<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(context: SchemaContext<S, F>, schema: S, rootSchema: S, formData: T | undefined): T | T[] | undefined {
-  return formDataMatching<T, S, F>(context, schema, rootSchema, formData, (_key, propertySchema) =>
-    resolveOwnRef<S>(propertySchema, rootSchema, context.customMergeAllOf),
-  );
+  const field = () => fieldOf<S>(parseSchemaGraph<S>(rootSchema), schema);
+  const chains = () => {
+    const { graph, seeds } = field();
+    return ownChains(graph, seeds);
+  };
+  return formDataMatching<T, S, F>(context, { schema, field, chains }, rootSchema, formData);
 }
 
-/** `ensureFormDataMatchingSchema()` for the field `view` the fold computed, whose properties' own `$ref`s are read where
- * the declarations holding them sit, as `objectDefaults()` reads them: a property declared twice is merged into one no
- * graph holds
- */
+/** `ensureFormDataMatchingSchema()` for the field `view` the fold computed */
 function viewFormDataMatching<T, S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   view: DefaultsView<S>,
   formData: T | undefined,
 ): T | T[] | undefined {
-  return formDataMatching<T, S, F>(context, view.schema, view.field.graph.rawRoot, formData, (key, propertySchema) =>
-    resolveMergedOwnRef<S>(view.graph, childSeeds(view, key).seeds, propertySchema, context.customMergeAllOf),
+  return formDataMatching<T, S, F>(
+    context,
+    { schema: view.schema, field: () => rootProvenance<S>(view.graph, view.field.seeds), chains: () => view.chains },
+    view.graph.rawRoot,
+    formData,
   );
 }
 
-/** Returns `formData` matched to `schema` as `ensureFormDataMatchingSchema()` matches it, the own `$ref` of each of the
- * schema's properties read by `readOwnRef()`
+/** A schema the data is matched to, and the field it is the schema of, from whose declarations it is retrieved and its
+ * properties read: a schema merged from declarations in several resources holds subschemas no graph holds, which
+ * reading it as a call root would resolve against the root's base
  */
+interface MatchedSchema<S extends StrictRJSFSchema> {
+  readonly schema: S;
+  readonly field: () => Provenance<S>;
+  /** The chains the properties of `schema` are declared in */
+  readonly chains: () => readonly Keywords<S>[];
+}
+
+/** Returns `formData` matched to `matched.schema` as `ensureFormDataMatchingSchema()` matches it */
 function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
-  schema: S,
+  { schema, field, chains }: MatchedSchema<S>,
   rootSchema: S,
   formData: T | undefined,
-  readOwnRef: (key: string, propertySchema: S) => S,
 ): T | T[] | undefined {
   const { defaultFormStateBehavior } = context;
   const shouldRetrieveAllOf = shouldPopulateAllOfDefaults(schema, defaultFormStateBehavior);
-  const schemaToMatch = shouldRetrieveAllOf ? retrieveSchema<T, S, F>(context, schema, rootSchema, formData) : schema;
+  const schemaToMatch = shouldRetrieveAllOf ? retrieveField<S, F>(context, field(), formData) : schema;
   // Without data there is nothing to check against the options of a select, so only data asks whether it is one. A
-  // schema with nothing left to merge is asked as it stands, which is what retrieving it would give: one the fold merged
-  // holds subschemas merged from several declarations, which retrieving it as a call root would resolve against the root
+  // schema with nothing left to merge is asked as it stands, which is what retrieving it would give
   const isSelectField =
     formData !== undefined &&
     !isConstant<S>(schemaToMatch) &&
-    (MERGING_KEYWORDS.some((keyword) => Object.hasOwn(schemaToMatch, keyword))
-      ? isSelect<T, S, F>(context, schemaToMatch, rootSchema)
-      : isConstantSelect<S>(resolveConstantOptions<S>(schemaToMatch, rootSchema), true));
+    isConstantSelect<S>(
+      resolveConstantOptions<S>(
+        MERGING_KEYWORDS.some((keyword) => Object.hasOwn(schemaToMatch, keyword))
+          ? retrieveField<S, F>(context, field())
+          : schemaToMatch,
+        rootSchema,
+      ),
+      true,
+    );
   let validFormData: unknown = formData;
   if (isSelectField) {
     const getOptionsList = optionsList<T, S, F>(resolveConstantOptions<S>(schemaToMatch, rootSchema));
@@ -1672,18 +1714,44 @@ function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextTy
     validFormData = schemaToMatch.const;
   } else if (isObject(validFormData) && isObject(schemaToMatch.properties)) {
     const matched: GenericObjectType = { ...validFormData };
+    const rootGraph = parseSchemaGraph<S>(rootSchema);
+    let declaredIn: Seeding<S> | undefined;
+    // A property `retrieveSchema()` handed out is the field it was handed out for, and any other is declared where the
+    // declarations of the schema holding it declare it
+    const fieldOfProperty = (key: string, propertySchema: S): Provenance<S> => {
+      let declared: readonly Seed[] = [];
+      if (readProvenance<S>(propertySchema, rootGraph) === undefined) {
+        declaredIn ??= { graph: field().graph, chains: chains() };
+        declared = seedsAt(declaredIn, PROPERTIES_KEY, key);
+      }
+      return declared.length > 0 ? rootProvenance<S>(field().graph, declared) : fieldOf<S>(rootGraph, propertySchema);
+    };
     for (const key of Object.keys(schemaToMatch.properties)) {
       const propertySchema = getPropertySchema<S>(schemaToMatch, key);
+      const propertyField = () => fieldOfProperty(key, propertySchema);
       // A property written as a `$ref` is matched as the definition it names, whose `allOf` it is
-      const readProperty = isSchemaObject<S>(propertySchema) ? readOwnRef(key, propertySchema) : propertySchema;
+      let readProperty = propertySchema;
+      if (isSchemaObject<S>(propertySchema) && typeof propertySchema[REF_KEY] === 'string') {
+        const { graph, seeds } = propertyField();
+        readProperty = resolveMergedOwnRef<S>(graph, seeds, propertySchema, context.customMergeAllOf);
+      }
       if (
         Object.hasOwn(matched, key) &&
         (shouldRetrieveAllOf || (isObject(readProperty) && ALL_OF_KEY in readProperty))
       ) {
+        const chainsOfProperty = () => {
+          const { graph, seeds } = propertyField();
+          return buildPlan<S, F>({ context, graph, seeds, policy: { allOf: false, conditions: false } }).chains;
+        };
         setOwn(
           matched,
           key,
-          ensureFormDataMatchingSchema<unknown, S, F>(context, readProperty, rootSchema, matched[key]),
+          formDataMatching<unknown, S, F>(
+            context,
+            { schema: readProperty, field: propertyField, chains: chainsOfProperty },
+            rootSchema,
+            matched[key],
+          ),
         );
       }
     }

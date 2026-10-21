@@ -1,5 +1,5 @@
 import type { RJSFSchema, SchemaUtilsType } from '../../src/index.ts';
-import { createSchemaUtils, getByPath, getClosestMatchingOption } from '../../src/index.ts';
+import { createSchemaUtils, getByPath, getClosestMatchingOption, isSchemaObject } from '../../src/index.ts';
 import { calculateIndexScore } from '../../src/schema/getClosestMatchingOption.ts';
 import {
   oneOfData,
@@ -9,6 +9,8 @@ import {
   OPTIONAL_ONE_OF_SCHEMA,
   ONE_OF_SCHEMA_OPTIONS,
   OPTIONAL_ONE_OF_SCHEMA_ONEOF,
+  PET_RESOURCE_DEEP_SCHEMA,
+  PET_RESOURCE_SCHEMA,
 } from '../testUtils/testData.ts';
 import type { TestValidatorType } from './types.ts';
 
@@ -54,6 +56,11 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
         properties: { d: { $ref: '#/definitions/node', properties: { sib: { type: 'string' } } } },
       };
       expect(calculateIndexScore({ validator: testValidator }, rootSchema, option, { d: { name: 'x' } })).toEqual(2);
+    });
+    it('scores an option written as a $ref naming a boolean definition as the empty schema it reads as', () => {
+      const rootSchema: RJSFSchema = { definitions: { anything: true } };
+      const option: RJSFSchema = { $ref: '#/definitions/anything' };
+      expect(calculateIndexScore({ validator: testValidator }, rootSchema, option, 'x')).toEqual(0);
     });
     it('scores a $ref property naming a boolean definition as the empty schema it reads as', () => {
       const rootSchema: RJSFSchema = { definitions: { anything: true } };
@@ -537,5 +544,43 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
         );
       },
     );
+    describe('a property merged with one a resource of its own declares, holding a $ref written there', () => {
+      const optionsOf = (rootSchema: RJSFSchema): RJSFSchema[] => {
+        const field = rootSchema.properties?.p;
+        return isSchemaObject(field) && Array.isArray(field.oneOf) ? field.oneOf.filter(isSchemaObject) : [];
+      };
+      const views = (rootSchema: RJSFSchema, formData: unknown) => {
+        const resourceUtils = createSchemaUtils({ validator: testValidator }, rootSchema);
+        return optionsOf(rootSchema).map((option) => resourceUtils.retrieveSchema(option, formData));
+      };
+      it.each<[string, unknown, number]>([
+        ['the definition it names', { kind: { a: 'x' } }, 0],
+        ['the other option', { kind: 'woof', bark: 5 }, 1],
+      ])('scores the $ref in the resource for data matching %s', (_, formData, expected) => {
+        const rootSchema = PET_RESOURCE_SCHEMA;
+        const context = { validator: testValidator };
+        expect(getClosestMatchingOption(context, rootSchema, formData, optionsOf(rootSchema))).toBe(expected);
+        expect(getClosestMatchingOption(context, rootSchema, formData, views(rootSchema, formData))).toBe(expected);
+      });
+      it('scores an extra key of an option retrieved for the data by the schema its additionalProperties give it', () => {
+        const rootSchema: RJSFSchema = { definitions: { n: { type: 'number' } } };
+        const entry = (x: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { x } });
+        const options: RJSFSchema[] = [
+          { type: 'object', additionalProperties: entry({ $ref: '#/definitions/n' }) },
+          { type: 'object', additionalProperties: entry({ type: 'string' }) },
+        ];
+        const formData = { k: { x: 5 } };
+        const resourceUtils = createSchemaUtils({ validator: testValidator }, rootSchema);
+        const retrieved = options.map((option) => resourceUtils.retrieveSchema(option, formData));
+        expect(getClosestMatchingOption({ validator: testValidator }, rootSchema, formData, retrieved)).toBe(0);
+      });
+      it('scores the $ref in the resource a level further down, for the options and for their views', () => {
+        const rootSchema = PET_RESOURCE_DEEP_SCHEMA;
+        const formData = { info: { kind: 5 } };
+        const context = { validator: testValidator };
+        expect(getClosestMatchingOption(context, rootSchema, formData, optionsOf(rootSchema))).toBe(0);
+        expect(getClosestMatchingOption(context, rootSchema, formData, views(rootSchema, formData))).toBe(0);
+      });
+    });
   });
 }
