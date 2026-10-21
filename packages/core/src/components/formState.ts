@@ -252,7 +252,7 @@ function emptyValuesOf(uiSchema: unknown): unknown {
     }
     const nested = emptyValuesOf(value);
     if (nested !== undefined) {
-      found[key] = nested;
+      setOwn(found, key, nested);
     }
   });
   return Object.keys(found).length > 0 ? found : undefined;

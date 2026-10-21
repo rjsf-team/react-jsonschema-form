@@ -412,8 +412,9 @@ export function getSchemaDetailsForField<
       // An array hands its items out as written, so items written as a `$ref` are retrieved for the item's data
       schema = schemaUtils.retrieveSchema(result.rawSchema, getByPath<T>(innerData, leafPath));
     } else {
-      // Now grab the schema from the leafPath of the current schema properties
-      schema = schema?.[PROPERTIES_KEY]?.[leafPath] as S | undefined;
+      // Now grab the schema from the leafPath of the current schema properties, by own key, so a leaf named like an
+      // `Object.prototype` member that the schema doesn't declare finds no schema rather than the inherited function
+      schema = getByPath<S>(schema?.[PROPERTIES_KEY], leafPath);
       // Resolve any `$ref`s for the current schema
       schema = schema ? schemaUtils.retrieveSchema(schema) : schema;
     }

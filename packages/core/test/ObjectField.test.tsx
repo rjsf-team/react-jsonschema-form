@@ -1091,6 +1091,38 @@ describe('ObjectField', () => {
       expect(screen.getByRole('combobox', { name: 'end, year' })).toBeInTheDocument();
     });
 
+    // A `JSON.parse()`d `__proto__` key is a property like any other, which a rename must neither drop nor turn into
+    // the renamed object's prototype
+    it('should keep a sibling named __proto__ as that property when a key is renamed', async () => {
+      const { node, onChange } = createFormComponent({
+        schema,
+        initialFormData: JSON.parse('{"__proto__": "kept", "first": "renamed"}'),
+      });
+
+      const textNode = node.querySelector('#root_first-key')!;
+      await user.clear(textNode);
+      await user.type(textNode, 'newFirst');
+      await user.tab();
+
+      const { formData } = onChange.mock.lastCall![0];
+      expect(Object.getPrototypeOf(formData)).toBe(Object.prototype);
+      expect(Object.getOwnPropertyDescriptor(formData, '__proto__')?.value).toBe('kept');
+      expect(formData.newFirst).toBe('renamed');
+    });
+
+    it('should keep the value of a key renamed to __proto__ under that property', async () => {
+      const { node, onChange } = createFormComponent({ schema, initialFormData: { first: 'kept' } });
+
+      const textNode = node.querySelector('#root_first-key')!;
+      await user.clear(textNode);
+      await user.type(textNode, '__proto__');
+      await user.tab();
+
+      const { formData } = onChange.mock.lastCall![0];
+      expect(Object.getPrototypeOf(formData)).toBe(Object.prototype);
+      expect(Object.getOwnPropertyDescriptor(formData, '__proto__')?.value).toBe('kept');
+    });
+
     it('should retain and display user-input data if key-value pair has a title present in the schema when renaming key', async () => {
       const { node, onChange } = createFormComponent({
         schema: {

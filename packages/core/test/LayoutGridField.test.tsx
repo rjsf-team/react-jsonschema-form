@@ -1062,6 +1062,13 @@ describe('LayoutGridField', () => {
       }); // `path` digs into `fieldPath`
       expect(retrieveSchemaSpy).toHaveBeenCalledTimes(1);
     });
+    test('returns no schema or options when the leaf field is named like an Object.prototype member the schema lacks', () => {
+      const fieldPath = toFieldPath('toString', FIELD_PATH);
+      expect(getSchemaDetailsForField(sampleSchemaRegistry, 'toString', SAMPLE_SCHEMA, {}, FIELD_PATH)).toEqual({
+        ...NO_SCHEMA_OR_OPTIONS,
+        fieldPath,
+      });
+    });
     test('returns schema, isRequired: true, isReadonly: undefined, options: undefined, and fieldPath when simple schema is used', () => {
       const path = 'ranges';
       const schema = retrieveSchema(

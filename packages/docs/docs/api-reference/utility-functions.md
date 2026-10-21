@@ -1387,6 +1387,7 @@ The type of an `anyOf`/`oneOf` schema whose options name no type of their own is
 
 Returns the schema of the selector property of an `anyOf`/`oneOf` option, the one the options are told apart by, as it is read for the value, title and type that tell them apart.
 An option hands its properties out as written, so a selector written as a `$ref` is retrieved by `retrieve`; one written in place is read as it stands.
+Only an own property counts, so a selector named `__proto__` that the option doesn't declare gives `undefined` rather than `Object.prototype`.
 `findSelectedOptionInXxxOf()` and `LayoutMultiSchemaField` both read a selector this way, so the option one selects is the one the other lists.
 
 #### Parameters
@@ -1455,7 +1456,8 @@ A part nothing declares is drawn by the template. A widget `getWidget()` rejects
 
 ### getPropertySchema&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
-Returns the sub-schema declared for `property` in the `properties` of `schema`, falling back to an empty schema when the schema has no such property.
+Returns the sub-schema declared for `property` in the `properties` of `schema`, falling back to an empty schema when the schema has no such property, or declares it as `null`.
+Only an own property counts, so a property named like an `Object.prototype` member, such as `toString`, that the schema doesn't declare isn't read as the inherited function.
 Callers treat the properties of a schema as schemas of the same type `S`, which the `JSONSchema7` typing of `properties` cannot express, so this function owns that single assertion rather than repeating it at every lookup.
 
 #### Parameters

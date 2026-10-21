@@ -22,6 +22,10 @@ describe('getPropertySchema()', () => {
     const schema: RJSFSchema = { properties: { toString: { type: 'string' as const } } };
     expect(getPropertySchema(schema, 'toString')).toEqual({ type: 'string' });
   });
+  it('returns an empty schema for a property declared as null, as YAML gives for one left empty', () => {
+    const schema = JSON.parse('{"type": "object", "properties": {"a": null, "b": {"type": "string"}}}') as RJSFSchema;
+    expect(getPropertySchema(schema, 'a')).toEqual({});
+  });
   it('returns an empty schema when there is no schema', () => {
     expect(getPropertySchema(undefined, 'foo')).toEqual({});
   });
