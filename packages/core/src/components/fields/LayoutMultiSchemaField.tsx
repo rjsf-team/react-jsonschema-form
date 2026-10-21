@@ -107,8 +107,6 @@ export default function LayoutMultiSchemaField<
   const selectorField = getSelectorField<T, S, F>(schema, allUiOptions);
   const {
     widget: _widget,
-    field: _field,
-    fieldReplacesAnyOrOneOf: _fieldReplacesAnyOrOneOf,
     title = '',
     placeholder = '',
     optionsSchemaSelector: _optionsSchemaSelector,

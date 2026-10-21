@@ -125,6 +125,36 @@ describe('a discriminated cell of a layout grid', () => {
     expect(screen.getByRole('radiogroup')).toHaveAttribute('aria-labelledby', 'root_pick__label');
   });
 
+  // `getWidget()` maps an alias only through a type, which a selector property with none takes from the first option,
+  // or else from the object every discriminated option is
+  it.each([
+    ['options that declare theirs', SIMPLE_ONEOF_SCHEMAS],
+    ['options that only imply theirs', SIMPLE_ONEOF_SCHEMAS.map(({ type: _type, ...option }) => option)],
+    ['no options', []],
+  ])('renders the select it names by alias, for a selector property with no type, in %s', (_, oneOf) => {
+    const options = oneOf.map((option) => ({
+      ...option,
+      properties: { answer: { default: (option.properties!.answer as RJSFSchema).default } },
+    }));
+    const pick: RJSFSchema = { ...SIMPLE_ONEOF, oneOf: options };
+    createFormComponent({
+      schema: { ...schema, properties: { ...schema.properties, pick } },
+      uiSchema: gridUiSchema({ pick: { 'ui:widget': 'select' } }),
+      formData: { pick: { answer: 'matches no option' } },
+    });
+
+    expect(screen.getByRole('combobox')).toBeInTheDocument();
+  });
+
+  it('renders a widget registered under the radio alias as its default selector', () => {
+    function AliasRadio(_props: WidgetProps) {
+      return <div data-testid='alias-radio' />;
+    }
+    createFormComponent({ schema, uiSchema: gridUiSchema(), widgets: { radio: AliasRadio } });
+
+    expect(screen.getByTestId('alias-radio')).toBeInTheDocument();
+  });
+
   it('renders its selector in place of the options, over a ui:fieldReplacesAnyOrOneOf of false of its own', () => {
     renderGrid(gridUiSchema({ pick: { 'ui:options': {}, 'ui:fieldReplacesAnyOrOneOf': false } }));
 
@@ -243,5 +273,43 @@ describe('a discriminated cell of a layout grid', () => {
 
     expect(screen.queryByTestId('custom-field')).not.toBeInTheDocument();
     expect(screen.getByRole('radiogroup')).toBeInTheDocument();
+  });
+
+  // `getUiOptions()` reads both spellings in key order, so its own `ui:options` coming after its top-level spelling
+  // would win were the grid's directive not in both
+  it.each([
+    ['a ui:field', { 'ui:field': 'CustomField', 'ui:options': { field: 'CustomField' } }],
+    [
+      'a ui:fieldReplacesAnyOrOneOf of false',
+      { 'ui:fieldReplacesAnyOrOneOf': false, 'ui:options': { fieldReplacesAnyOrOneOf: false } },
+    ],
+  ])('renders its selector in place of the options, over %s of its own in both spellings', (_, pickUiSchema) => {
+    function CustomField(_props: FieldProps) {
+      return <div data-testid='custom-field' />;
+    }
+    createFormComponent({ schema, uiSchema: gridUiSchema({ pick: pickUiSchema }), fields: { CustomField } });
+
+    expect(screen.queryByTestId('custom-field')).not.toBeInTheDocument();
+    expect(screen.getAllByRole('radiogroup')).toHaveLength(1);
+  });
+
+  it('takes the ui:definitions entry for its $ref', () => {
+    createFormComponent({
+      schema: { ...schema, definitions: { Pick: SIMPLE_ONEOF }, properties: { pick: { $ref: '#/definitions/Pick' } } },
+      uiSchema: {
+        'ui:definitions': { '#/definitions/Pick': { 'ui:widget': 'select', 'ui:title': 'From definitions' } },
+        'ui:field': 'LayoutGridField',
+        'ui:layoutGrid': { 'ui:row': [{ 'ui:col': ['pick'] }] },
+      },
+    });
+
+    expect(screen.getByRole('combobox', { name: 'From definitions' })).toBeInTheDocument();
+    expect(screen.queryByRole('radiogroup')).not.toBeInTheDocument();
+  });
+
+  it('focuses its selector for its own ui:autofocus', () => {
+    renderGrid(gridUiSchema({ pick: { 'ui:autofocus': true } }));
+
+    expect(screen.getAllByRole('radio')[0]).toHaveFocus();
   });
 });

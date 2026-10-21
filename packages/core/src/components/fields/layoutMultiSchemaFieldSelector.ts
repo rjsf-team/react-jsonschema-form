@@ -146,7 +146,8 @@ export function getFirstOption<
  * too: its `ui:widget`, or radios for a schema with a discriminator and a select for one without, resolved against the
  * selector property's schema in the first option. A selector property with no type of its own, nor one its `const` or
  * `enum` implies, takes the option's, declared or implied, so the widget never depends on the data and the plan needn't
- * read it
+ * read it. With no option to take one from it is typed as the object every option holding a selector is, which maps
+ * every alias a selector takes
  *
  * @param schema - The schema of the field
  * @param firstOption - The first of the schema's options, from `getFirstOption()`
@@ -167,12 +168,11 @@ export function resolveSelectorWidget<
   uiOptions: UIOptionsType<T, S, F>,
   widgets: Registry<T, S, F>['widgets'],
 ): { Widget: Widget<T, S, F> } {
-  // Named as registered rather than by alias, which `getWidget()` maps only through a type, so a union with no options
-  // to type the selector by still renders the default
-  const widget = uiOptions.widget ?? (getDiscriminatorFieldFromSchema<S>(schema) ? 'RadioWidget' : 'SelectWidget');
+  // Named by alias, as every other field's default is, so a widget registered under the alias replaces it
+  const widget = uiOptions.widget ?? (getDiscriminatorFieldFromSchema<S>(schema) ? 'radio' : 'select');
   const propertySchema = getPropertySchema<S>(firstOption, selectorField);
   const selectorSchema = getSchemaType<S>(propertySchema)
     ? propertySchema
-    : { ...propertySchema, type: firstOption?.type ?? (firstOption && getSchemaType<S>(firstOption)) };
+    : { ...propertySchema, type: firstOption?.type ?? (firstOption && getSchemaType<S>(firstOption)) ?? 'object' };
   return resolveWidget<T, S, F>(selectorSchema, widget, widgets);
 }
