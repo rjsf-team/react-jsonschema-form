@@ -78,17 +78,23 @@ function nestedRefOf<S extends StrictRJSFSchema>(
 
 /** Returns the `$ref` written as `ref` as a schema validated beside the root has to spell it: one local to the root
  * names the root by `base`, and a relative one names a resource beside the root, so it is resolved against the root's
- * URI, which a root without an `$id` does not have
+ * URI, which a root without an `$id` does not have. Under an `$id` the handed schema holds, a relative one resolves
+ * against that `$id` instead, read against the root's URI as one written in the root would be.
  *
  * @param ref - The `$ref` as written
  * @param base - The id of the root schema, without an empty trailing fragment
+ * @param scope - The `$id` the handed schema holds around the `$ref`, resolved as the validator resolves it, or `''`
+ *        where it holds none
  * @returns - The `$ref` as the validator is to resolve it
  */
-function rootRef(ref: string, base: string): string {
+function rootRef(ref: string, base: string, scope: string): string {
   if (ref.startsWith('#')) {
     return base + ref;
   }
-  return base === ROOT_SCHEMA_PREFIX ? ref : resolveUri(base, ref);
+  if (base === ROOT_SCHEMA_PREFIX) {
+    return ref;
+  }
+  return resolveUri(scope === '' ? base : resolveUri(base, scope), ref);
 }
 
 /** Takes a `node` object and transforms any contained `$ref` node variables with a prefix, recursively calling
@@ -114,7 +120,7 @@ function withIdRefPrefixObject<S extends StrictRJSFSchema = RJSFSchema>(
     if (Object.hasOwn(realObj, key)) {
       const value = realObj[key];
       if (key === REF_KEY && typeof value === 'string') {
-        realObj[key] = nestedRef ?? rootRef(value, rewrite.base);
+        realObj[key] = nestedRef ?? rootRef(value, rewrite.base, scope);
       } else {
         realObj[key] = prefixRefs<S>(value, rewrite, scope);
       }

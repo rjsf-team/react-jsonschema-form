@@ -139,6 +139,14 @@ describe('withRootIdRefPrefix()', () => {
         $ref: 'https://example.com/root.json#/$defs/kind',
       });
     });
+    it('resolves a relative one below an $id the schema handed over holds against that $id, where it names no subschema of the root', () => {
+      const option = (id: string): RJSFSchema => ({ $id: id, type: 'object', properties: { s: { $ref: 'ext.json' } } });
+      const absolute = option('https://ex.com/schemas/a.json');
+      const relative = option('schemas/b.json');
+      const root: RJSFSchema = { $id: 'https://ex.com/root.json', properties: { q: { oneOf: [absolute, relative] } } };
+      expect(withRootIdRefPrefix(absolute, root).properties?.s).toEqual({ $ref: 'https://ex.com/schemas/ext.json' });
+      expect(withRootIdRefPrefix(relative, root).properties?.s).toEqual({ $ref: 'https://ex.com/schemas/ext.json' });
+    });
     it('leaves one as written below an $id the schema handed over holds, where a relative root id would move', () => {
       const { $id: _id, ...root } = rootSchema;
       expect(withRootIdRefPrefix({ $id: 'https://example.com/variant.json', properties: { relative } }, root)).toEqual({
