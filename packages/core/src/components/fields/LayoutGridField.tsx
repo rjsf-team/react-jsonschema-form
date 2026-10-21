@@ -374,7 +374,7 @@ export function getSchemaDetailsForField<
     const schemaProperties = schema?.[PROPERTIES_KEY];
     const xxx = schema && getXxxOfKey<S>(schema);
     if (schemaProperties) {
-      rawSchema = (schemaProperties[part] ?? {}) as S;
+      rawSchema = getPropertySchema<S>(schema, part);
     } else if (schema && xxx) {
       // When the schema represents a oneOf/anyOf, find the selected schema for it and grab the inner part
       const selectedSchema = schemaUtils.findSelectedOptionInXxxOf(schema, part, xxx, innerData);
