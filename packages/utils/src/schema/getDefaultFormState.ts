@@ -1649,15 +1649,29 @@ export function ensureFormDataMatchingSchema<
   return formDataMatching<T, S, F>(context, { schema, field, chains }, rootSchema, formData);
 }
 
-/** `ensureFormDataMatchingSchema()` for the field `view` the fold computed */
+/** `ensureFormDataMatchingSchema()` for the field `view` the fold computed. Its schema holds the options the fold
+ * selected for it, so the field it is retrieved as is seeded by them too, each merged over the field's own seeds as the
+ * fold merged it
+ */
 function viewFormDataMatching<T, S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   view: DefaultsView<S>,
   formData: T | undefined,
 ): T | T[] | undefined {
+  let provenance: Provenance<S> | undefined;
+  const field = () => {
+    provenance ??= rootProvenance<S>(view.graph, [
+      ...view.field.seeds,
+      ...view.choices.flatMap(({ provider, options, refPath }): Seed[] => {
+        const index = view.options.selections.get(provider);
+        return index === undefined ? [] : [{ node: options[index], refPath, scope: [`o${options[index]}`] }];
+      }),
+    ]);
+    return provenance;
+  };
   return formDataMatching<T, S, F>(
     context,
-    { schema: view.schema, field: () => rootProvenance<S>(view.graph, view.field.seeds), chains: () => view.chains },
+    { schema: view.schema, field, chains: () => view.chains },
     view.graph.rawRoot,
     formData,
   );

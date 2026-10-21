@@ -900,6 +900,30 @@ describe('getDefaultFormState() reading $ref, branches and extra keys as the for
     });
   });
 
+  it.each<[string, DefaultFormStateBehavior | undefined]>([
+    ['by default', undefined],
+    ['skipping empty defaults', { emptyObjectFields: 'skipEmptyDefaults' }],
+  ])('replaces data the option it selects does not list, beside an allOf left unmerged, %s', (_, behavior) => {
+    const withField = (beside: RJSFSchema): RJSFSchema => ({
+      type: 'object',
+      properties: { p: { type: 'string', default: 'b', ...beside, oneOf: [{ enum: ['a', 'b'] }, { enum: ['c'] }] } },
+    });
+    expect(defaultsOf(withField({}), { p: 'z' }, behavior)).toEqual({ p: 'b' });
+    expect(defaultsOf(withField({ allOf: [{ title: 'P' }] }), { p: 'z' }, behavior)).toEqual({ p: 'b' });
+  });
+
+  it('drops data a $ref property names a select without, at a root offering options it has not chosen', () => {
+    const withRoot = (beside: RJSFSchema): RJSFSchema => ({
+      definitions: { s: { type: 'string', allOf: [{ enum: ['a', 'b'] }] } },
+      type: 'object',
+      properties: { k: { $ref: '#/definitions/s' } },
+      ...beside,
+    });
+    const options: RJSFSchema = { anyOf: [{ required: ['k'] }, { required: ['x'] }] };
+    expect(defaultsOf(withRoot({}), { k: 'z' })).toStrictEqual({ k: undefined });
+    expect(defaultsOf(withRoot(options), { k: 'z' })).toStrictEqual({ k: undefined });
+  });
+
   it.each<[string, RJSFSchema]>([
     [
       'an object default a branch merges',
