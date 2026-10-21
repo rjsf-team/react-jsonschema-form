@@ -4,6 +4,7 @@ import {
   getClosestMatchingOption,
   getDefaultFormState,
   getDiscriminatorFieldFromSchema,
+  getFirstMatchingOption,
   isObject,
   omitExtraData,
   retrieveSchema,
@@ -61,6 +62,15 @@ export default function precompiledCoverageTests(buildValidator: BuildPrecompile
   describe('missing precompiled validators', () => {
     const rootSchema: RJSFSchema = { $id: 'root', type: 'string' };
 
+    it('includes a contained schema ID while retaining the lookup key', () => {
+      const validator = buildValidator(rootSchema);
+      const missingSchema: RJSFSchema = { allOf: [{ $id: 'defs/person.json', type: 'object' }] };
+
+      expect(() => validator.isValid(missingSchema, {}, rootSchema)).toThrow(
+        `No precompiled validator function was found for the given schema for "${schemaKey(missingSchema)}" (contained schema "defs/person.json")`,
+      );
+    });
+
     it.each<RJSFSchema>([
       { type: 'number' },
       { allOf: [] },
@@ -73,6 +83,22 @@ export default function precompiledCoverageTests(buildValidator: BuildPrecompile
 
       expect(() => validator.isValid(missingSchema, {}, rootSchema)).toThrow(
         `No precompiled validator function was found for the given schema for "${schemaKey(missingSchema)}"`,
+      );
+    });
+
+    it.each(['oneOf', 'anyOf'] as const)('reports a %s option given an ID after precompilation', (keyword) => {
+      const option: RJSFSchema = { type: 'object', properties: { name: { type: 'string' } } };
+      const options: RJSFSchema[] = [{ type: 'object', properties: { other: { type: 'string' } } }, option];
+      const schema: RJSFSchema = { [keyword]: options };
+      const validator = buildValidator(schema);
+      expect(getFirstMatchingOption({ validator }, { name: 'Ada' }, options, schema)).toBe(1);
+      const changedOption: RJSFSchema = { ...option, $id: 'namedOption' };
+
+      // What misses is the copy scoring hands the validator, whose properties point at the places in the root the
+      // option's content is declared. The copy can't carry the option's `$id`, which would resolve those pointers against
+      // the option's base instead of the root's, so the miss has no ID to name and names the lookup key alone
+      expect(() => getFirstMatchingOption({ validator }, { name: 'Ada' }, [options[0], changedOption], schema)).toThrow(
+        /^No precompiled validator function was found for the given schema for "-?[0-9a-f]+"$/,
       );
     });
   });
