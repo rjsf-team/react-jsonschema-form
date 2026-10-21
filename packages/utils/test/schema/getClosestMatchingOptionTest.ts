@@ -581,6 +581,35 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
         expect(getClosestMatchingOption(context, rootSchema, formData, optionsOf(rootSchema))).toBe(0);
         expect(getClosestMatchingOption(context, rootSchema, formData, views(rootSchema, formData))).toBe(0);
       });
+      it('scores the options of a list a merge rebuilt in the resource by the $ref each holds there', () => {
+        // `k` conjoins the list `l` names with the list beside it, which makes each option of `l` anew; the root defines
+        // an `s` of its own and no `t`
+        const definitions: RJSFSchema = {
+          s: { type: 'object', properties: { q: { type: 'string' } }, required: ['q'] },
+          t: { type: 'object', properties: { r: { type: 'string' } }, required: ['r'] },
+          l: { anyOf: [{ $ref: '#/$defs/s' }, { $ref: '#/$defs/t' }] },
+          w: { type: 'object', properties: { k: { $ref: '#/$defs/l', anyOf: [{ title: 'A' }] } } },
+        };
+        const rootOf = (inResource: boolean): RJSFSchema => ({
+          $schema: 'https://json-schema.org/draft/2020-12/schema',
+          $id: 'https://example.com/root.json',
+          $defs: inResource ? { s: { type: 'number' }, res: { $id: 'res.json', $defs: definitions } } : definitions,
+          type: 'object',
+          properties: {
+            p: {
+              oneOf: [
+                { $ref: inResource ? 'res.json#/$defs/w' : '#/$defs/w' },
+                { type: 'object', properties: { k: {} } },
+              ],
+            },
+          },
+        });
+        const formData = { k: { r: 'y' } };
+        const context = { validator: testValidator };
+        for (const rootSchema of [rootOf(false), rootOf(true)]) {
+          expect(getClosestMatchingOption(context, rootSchema, formData, optionsOf(rootSchema))).toBe(0);
+        }
+      });
     });
   });
 }

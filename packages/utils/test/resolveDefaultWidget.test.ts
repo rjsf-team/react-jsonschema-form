@@ -28,6 +28,29 @@ describe('resolveDefaultWidget()', () => {
     ]);
   });
 
+  it('reads constant options written as $refs as the select isSelect() finds in the same retrieved schema', () => {
+    const colourSchema: RJSFSchema = {
+      type: 'string',
+      oneOf: [{ $ref: '#/definitions/red' }, { $ref: '#/definitions/blue' }],
+    };
+    const rootSchema: RJSFSchema = {
+      definitions: { red: { const: 'red', title: 'Red' }, blue: { const: 'blue', title: 'Blue' } },
+      type: 'object',
+      properties: { colour: colourSchema },
+    };
+    const schemaUtils = createSchemaUtils({ validator: testValidator }, rootSchema);
+    const colour = schemaUtils.retrieveSchema(colourSchema);
+
+    const { defaultWidget, enumOptions } = resolveDefaultWidget(colour, {}, schemaUtils);
+
+    expect(schemaUtils.isSelect(colour)).toBe(true);
+    expect(defaultWidget).toEqual('select');
+    expect(enumOptions?.map(({ label, value }) => ({ label, value }))).toEqual([
+      { label: 'Red', value: 'red' },
+      { label: 'Blue', value: 'blue' },
+    ]);
+  });
+
   it('uses the schema format as the default widget when a widget is registered for it', () => {
     const schema: RJSFSchema = { type: 'number', format: 'custom-format' };
     const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
