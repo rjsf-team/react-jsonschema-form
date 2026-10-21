@@ -2563,7 +2563,7 @@ An app that swaps schemas at runtime needs it for the same reason the playground
 ### resolveConstantOptions&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Returns `schema` with the own `$ref` of each of its `anyOf`/`oneOf` options resolved when that makes every option a constant, the shape a select is read from, and `schema` itself otherwise.
-`retrieveSchema()` hands an option written as a `$ref` out as it stands, for the field that renders it to retrieve, but a select renders no field per option, so `isSelect()`, `isMultiSelect()`, `getDisplayLabel()`, `getDefaultFormState()`, `omitExtraData()`, `sanitizeDataForNewSchema()` and the fields read a select's options through this before `optionsList()` labels them or a select over object or array constants is told from a container.
+`retrieveSchema()` hands an option written as a `$ref` out as it stands, for the field that renders it to retrieve, but a select renders no field per option, so `isSelect()`, `isMultiSelect()`, `resolveDefaultWidget()`, `getDisplayLabel()`, `getDefaultFormState()`, `omitExtraData()`, `sanitizeDataForNewSchema()` and the fields read a select's options through this before `optionsList()` labels them or a select over object or array constants is told from a container.
 The result is made once per schema and shared.
 
 #### Parameters
@@ -2583,10 +2583,11 @@ The result is made once per schema and shared.
 
 Computes the widget name a field falls back to when no `ui:widget` is specified, along with the `enumOptions` (if any) that back a `select`-like fallback.
 The default is `select` when `schema` has enumerable options, the schema's `format` when a widget is registered for it under that name or as an alias of the type the schema resolves to, or `text` otherwise.
+Options written as `$ref`s to constants are listed resolved, as `isSelect()` reads them.
 
 #### Parameters
 
-- schema: S - The schema for the field
+- schema: S - The retrieved schema for the field
 - uiSchema: UiSchema&lt;T, S, F> | undefined - The uiSchema for the field
 - schemaUtils: SchemaUtilsType&lt;T, S, F> - The `SchemaUtilsType` used to detect whether `schema` has enumerable options
 - [registeredWidgets={}]: RegistryWidgetsType&lt;T, S, F> - A registry of widget name to `Widget` implementation
