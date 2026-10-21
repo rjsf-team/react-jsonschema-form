@@ -56,9 +56,10 @@ export interface CompiledValidateFunction extends Bivariant<[data: unknown], boo
   /** The errors produced by the precompiled validator */
   errors?: null | ErrorObject[];
   /** Whether the function changes the data it validates, as one compiled with Ajv's `useDefaults`, `coerceTypes` or
-   * `removeAdditional` does. `compileSchemaValidatorsCode()` sets it on each function it compiles with one of them, and
-   * a precompiled validator's `isValid()` hands such a function a copy of the data, since `isValid()` must not change
-   * the data it checks. A hand-written function that changes the data it validates sets it too.
+   * `removeAdditional`, or with a keyword registered with `modifying: true`, may. `compileSchemaValidatorsCode()` sets it
+   * on each function it compiles with one of them, and a precompiled validator's `isValid()` hands such a function a
+   * copy of the data, since `isValid()` must not change the data it checks. A hand-written function that changes the
+   * data it validates sets it too.
    */
   changesData?: boolean;
 }

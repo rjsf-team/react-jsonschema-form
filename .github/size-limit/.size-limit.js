@@ -21,12 +21,12 @@ const PACKAGES = {
   },
   '@rjsf/utils': {
     installed: '45 kB',
-    own: '39 kB',
+    own: '40 kB',
     canaries: [{ label: 'getUiOptions', import: '{ getUiOptions }', limit: '1 kB' }],
   },
   '@rjsf/validator-ajv8': {
     installed: '39 kB',
-    own: '3 kB',
+    own: '4 kB',
     canaries: [{ label: 'createPrecompiledValidator', import: '{ createPrecompiledValidator }', limit: '2 kB' }],
     nodeOnly: ['./compileSchemaValidators'],
   },
