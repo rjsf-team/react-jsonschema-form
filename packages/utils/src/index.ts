@@ -68,6 +68,7 @@ import getInputProps from './getInputProps.ts';
 import getItemUiSchemaForItem from './getItemUiSchemaForItem.ts';
 import getLabelId from './getLabelId.ts';
 import getNumericInputTitle from './getNumericInputTitle.ts';
+import getOptionSelectorSchema from './getOptionSelectorSchema.ts';
 import getOptionUiSchema, { selectOptionUiSchema } from './getOptionUiSchema.ts';
 import getOptionValueFormat from './getOptionValueFormat.ts';
 import type { PresentationSource, PresentationSubject } from './getPresentationDeclaration.ts';
@@ -307,6 +308,7 @@ export {
   getMatchingPatternProperties,
   getNumericInputTitle,
   getOptionalDataControlsType,
+  getOptionSelectorSchema,
   getOptionUiSchema,
   getPresentationDeclaration,
   getPropertySchema,
