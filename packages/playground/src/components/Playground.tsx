@@ -286,12 +286,17 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
     (newTheme: string, { stylesheet: newStylesheet }: ThemesType) => {
       setTheme(newTheme);
       setStylesheet(newStylesheet);
-      setSeedFormData(formData);
+      // Read from the form at the switch rather than from `formData`, which changes with every edit and would rebuild
+      // the theme selector each time
+      const form = playGroundFormRef.current;
+      if (form) {
+        setSeedFormData(form.getFormData());
+      }
       if (uiSchemaGenerator) {
         setUiSchema(uiSchemaGenerator.generator(newTheme));
       }
     },
-    [uiSchemaGenerator, setTheme, setStylesheet, formData],
+    [uiSchemaGenerator, setTheme, setStylesheet, playGroundFormRef],
   );
 
   const load = useCallback(
