@@ -861,3 +861,56 @@ describe('shadcn CheckboxWidget required attribute', () => {
     expect(container.querySelector('input[type=checkbox]')).not.toHaveAttribute('required');
   });
 });
+
+describe("shadcn marks a deprecated field's label, as core does", () => {
+  test.each<[string, RJSFSchema, UiSchema, string]>([
+    ['text input', { type: 'string' }, {}, 'textbox'],
+    ['number input', { type: 'number' }, {}, 'textbox'],
+    ['textarea', { type: 'string' }, { 'ui:widget': 'textarea' }, 'textbox'],
+    ['range', { type: 'number' }, { 'ui:widget': 'range' }, 'slider'],
+    ['checkbox', { type: 'boolean' }, {}, 'checkbox'],
+    ['select', { type: 'string', enum: ['a', 'b'] }, {}, 'combobox'],
+    ['radio group', { type: 'string', enum: ['a', 'b'] }, { 'ui:widget': 'radio' }, 'radiogroup'],
+    [
+      'checkboxes group',
+      { type: 'array', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true },
+      { 'ui:widget': 'checkboxes' },
+      'group',
+    ],
+  ])('names a deprecated %s by its label with the Deprecated marker', (_, x, ui, role) => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { x: { ...x, title: 'X', deprecated: true } } }}
+        uiSchema={{ x: ui }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole(role, { name: 'X (deprecated)' })).toHaveAttribute('id', 'root_x');
+    expect(container.innerHTML).not.toContain('(deprecated) (deprecated)');
+  });
+
+  // cmdk replaces the id of the multiple select's input with one of its own (#5478), so only its name is checked
+  test('names a deprecated multi-select by its label with the Deprecated marker', () => {
+    const { container } = render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: {
+            x: {
+              type: 'array',
+              title: 'X',
+              deprecated: true,
+              items: { type: 'string', enum: ['a', 'b'] },
+              uniqueItems: true,
+            },
+          },
+        }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('combobox', { name: 'X (deprecated)' })).toBeInTheDocument();
+    expect(container.innerHTML).not.toContain('(deprecated) (deprecated)');
+  });
+});

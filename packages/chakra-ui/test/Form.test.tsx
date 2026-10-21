@@ -534,6 +534,18 @@ describe("chakra-ui widgets are named by their label and carry their field's id 
     expectReferencesResolve(container);
   });
 
+  test.each(widgets)('names a deprecated %s by its label with the Deprecated marker', (_, x, ui, role) => {
+    render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { x: { ...x, title: 'X', deprecated: true } } }}
+        uiSchema={{ x: ui }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole(role, { name: 'X (deprecated)' })).toHaveAttribute('id', 'root_x');
+  });
+
   test.each(widgets)(
     'moves focus to a %s with errors when focusOnFirstError is set',
     async (_, x, ui, _role, focusedId) => {
@@ -633,6 +645,35 @@ describe("chakra-ui widgets are named by their label and carry their field's id 
     );
 
     expect(screen.getByRole('textbox', { name: 'foo Key' })).toHaveAttribute('id', 'root_foo-key');
+  });
+});
+
+describe("chakra-ui marks a deprecated field's label, as core does", () => {
+  // The widgets table has no array widget, so nothing else in this file renders a deprecated one
+  test.each<[string, UiSchema, string]>([
+    ['checkboxes group', { 'ui:widget': 'checkboxes' }, 'group'],
+    ['multi-select', {}, 'combobox'],
+  ])('names a deprecated %s by its label with the Deprecated marker', (_, ui, role) => {
+    render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          properties: {
+            x: {
+              type: 'array',
+              title: 'X',
+              deprecated: true,
+              items: { type: 'string', enum: ['a', 'b'] },
+              uniqueItems: true,
+            },
+          },
+        }}
+        uiSchema={{ x: ui }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole(role, { name: 'X (deprecated)' })).toHaveAttribute('id', 'root_x');
   });
 });
 
