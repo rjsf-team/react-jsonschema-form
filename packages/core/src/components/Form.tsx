@@ -35,6 +35,7 @@ import isDevelopment from '../isDevelopment.ts';
 import FormDataContext from './FormDataContext.ts';
 import { createFormModel } from './formModel.ts';
 import type { FormRef } from './FormRef.ts';
+import type { PairingView } from './formState.ts';
 import { deriveState, initialState } from './formState.ts';
 import type { IChangeEvent } from './IChangeEvent.ts';
 
@@ -303,7 +304,7 @@ export interface FormState<
    * with the row's own starting value, while the old schema side keeps reading `settledFormData`, whose
    * conditionals resolved the way the settled data saw them. Settles and resets together with `settledFormData`
    */
-  settledFormDataForPairing?: unknown;
+  settledFormDataForPairing?: PairingView;
   /** The schema `settledFormData` was resolved under when it settled: the previous-data side of the sanitize
    * call resolves from it, since the committed data's `retrievedSchema` already carries the root's
    * conditionals merged for data that can sit on the other side of a flip

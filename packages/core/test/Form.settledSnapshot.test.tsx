@@ -889,6 +889,146 @@ describe('settled snapshot sanitization', () => {
     ]);
   });
 
+  it('keeps each nested row paired with its own previous value when a write sets a nested reorder back (#5451)', async () => {
+    interface Row {
+      kind?: string;
+      tags?: (string | null)[];
+    }
+    interface Group {
+      label?: string;
+      rows?: Row[];
+    }
+    interface GroupData {
+      note?: string;
+      groups?: Group[];
+    }
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        note: { type: 'string' },
+        groups: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              label: { type: 'string' },
+              rows: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    kind: { type: 'string', enum: ['x', 'y'] },
+                    tags: { type: 'array', items: { type: 'string' }, minItems: 2 },
+                  },
+                  allOf: [
+                    {
+                      if: { properties: { kind: { const: 'x' } } },
+                      then: { properties: { tags: { items: { enum: ['a'] } } } },
+                    },
+                    {
+                      if: { properties: { kind: { const: 'y' } } },
+                      then: { properties: { tags: { items: { enum: ['b'] } } } },
+                    },
+                  ],
+                },
+              },
+            },
+          },
+        },
+      },
+    };
+    const rows: Row[] = [
+      { kind: 'x', tags: [null, null] },
+      { kind: 'y', tags: [null, null] },
+    ];
+    const ref = createRef<FormRef<GroupData>>();
+    const { container } = render(
+      <Form<GroupData>
+        ref={ref}
+        schema={schema}
+        validator={validator}
+        initialFormData={{ groups: [{ label: 'g', rows }] }}
+      />,
+    );
+    await user.click(elementOf(container, `#${buttonId('root_groups_0_rows_0', 'moveDown')}`));
+
+    // The group is written back with its rows in their settled order and its label changed, so below the level
+    // the write starts at each row pairs with its own previous value, and both keep the placeholders their
+    // branches offer
+    act(() => handleOf(ref).setFieldValue('groups', [{ label: 'h', rows }]));
+    await user.type(input(container, 'root_note'), 'n');
+
+    expect(handleOf(ref).getFormData().groups).toEqual([{ label: 'h', rows }]);
+  });
+
+  it('keeps each nested row paired with its own previous value when a write below a reorder sets a nested reorder back (#5451)', async () => {
+    interface Row {
+      kind?: string;
+      tags?: (string | null)[];
+    }
+    interface Group {
+      rows?: Row[];
+    }
+    interface GroupData {
+      note?: string;
+      groups?: Group[];
+    }
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        note: { type: 'string' },
+        groups: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              rows: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    kind: { type: 'string', enum: ['x', 'y'] },
+                    tags: { type: 'array', items: { type: 'string' }, minItems: 2 },
+                  },
+                  allOf: [
+                    {
+                      if: { properties: { kind: { const: 'x' } } },
+                      then: { properties: { tags: { items: { enum: ['a'] } } } },
+                    },
+                    {
+                      if: { properties: { kind: { const: 'y' } } },
+                      then: { properties: { tags: { items: { enum: ['b'] } } } },
+                    },
+                  ],
+                },
+              },
+            },
+          },
+        },
+      },
+    };
+    const x: Row = { kind: 'x', tags: [null, null] };
+    const y: Row = { kind: 'y', tags: [null, null] };
+    const ref = createRef<FormRef<GroupData>>();
+    const { container } = render(
+      <Form<GroupData>
+        ref={ref}
+        schema={schema}
+        validator={validator}
+        initialFormData={{ groups: [{ rows: [x, y] }, { rows: [y, x] }] }}
+      />,
+    );
+    await user.click(elementOf(container, `#${buttonId('root_groups_1', 'moveUp')}`));
+    await user.click(elementOf(container, `#${buttonId('root_groups_0_rows_0', 'moveDown')}`));
+
+    // The group the reorder moved to the front gets its rows back in the order it settled with, which is not the
+    // order of the group that settled at the front
+    act(() => handleOf(ref).setFieldValue('groups.0.rows', [y, x]));
+    await user.type(input(container, 'root_note'), 'n');
+
+    expect(handleOf(ref).getFormData().groups).toEqual([{ rows: [y, x] }, { rows: [x, y] }]);
+  });
+
   describe('pairs a row a container write changes in place with its own previous value', () => {
     interface Row {
       kind?: string;

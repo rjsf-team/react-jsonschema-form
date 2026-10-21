@@ -556,6 +556,46 @@ function moveErrorSchemaKeys<T>(errorSchema: ErrorSchema<T>, path: FieldPathList
   return replaceErrorSchemaNode(errorSchema, path, moved);
 }
 
+/** The settled data as the container writes since the settle moved it, which the sanitize call pairs rows against,
+ * with where each moved row settled
+ */
+export interface PairingView {
+  /** The settled data with each array's rows moved where the container writes put them */
+  data: unknown;
+  /** For each array of `data` that a move or a container write rebuilt, the index in the settled array of the row it
+   * holds at each position: after a reorder that is another row's index, and an inserted row has none. An array not
+   * listed holds each row at the index it settled at. Comparing a written row with the data as it last settled needs
+   * the settled row the view put there, which `data`'s own rows, moved again below them, no longer are
+   */
+  settledIndexes: readonly SettledIndexes[];
+}
+
+/** The settled indexes of the rows of the pairing view's array at `path` */
+interface SettledIndexes {
+  path: FieldPathList;
+  indexes: readonly (number | undefined)[];
+}
+
+function indexesAt(settledIndexes: readonly SettledIndexes[], path: FieldPathList) {
+  return settledIndexes.find((entry) => entry.path.length === path.length && isPathPrefix(entry.path, path))?.indexes;
+}
+
+/** The data as it last settled for the value the pairing view holds at `path`: at each array along the way, the
+ * settled row the view put at that index, so a path below a reorder reaches the row that moved there
+ */
+function settledAtViewPath(settled: unknown, settledIndexes: readonly SettledIndexes[], path: FieldPathList): unknown {
+  let settledNode = settled;
+  for (let depth = 0; depth < path.length; depth++) {
+    const indexes = indexesAt(settledIndexes, path.slice(0, depth));
+    const segment = indexes === undefined ? path[depth] : indexes[Number(path[depth])];
+    if (segment === undefined) {
+      return undefined;
+    }
+    settledNode = getAt<unknown>(settledNode, [segment]);
+  }
+  return settledNode;
+}
+
 /** The settled snapshot with the items of the array at `path` moved the way `newKeyOf` moved the data's: a row
  * follows its item to its new index, and an index the move maps no row onto pairs with the row's own starting
  * value
@@ -567,28 +607,45 @@ function moveErrorSchemaKeys<T>(errorSchema: ErrorSchema<T>, path: FieldPathList
  * of the view keeps its recorded moves
  */
 function moveSettledArrayAtPath(
-  data: unknown,
+  view: PairingView,
   path: FieldPathList,
   newKeyOf: KeyMove,
   newArray: unknown[],
   oldLength: number,
-): unknown {
+): PairingView {
+  const { data, settledIndexes } = view;
   const settled = getAt<unknown>(data, path);
   if (!Array.isArray(settled)) {
-    return data;
+    return view;
   }
   // `setByPath()` walks the path to write through its containers, so a root-level array takes the value itself
   const writeAtPath = (value: unknown) =>
     path.length === 0 ? value : setByPath(copyAlongPath(data, path), path, value);
   if (settled.length !== oldLength) {
     // Drop only this array: this position holds no previous array, and the rest of the view keeps its moves
-    return writeAtPath(undefined);
+    return {
+      data: writeAtPath(undefined),
+      settledIndexes: settledIndexes.filter((entry) => !isPathPrefix(path, entry.path)),
+    };
   }
+  // The arrays inside a row keep their settled indexes, under the index the row moved to
+  const indexesBelow = settledIndexes.flatMap((entry) => {
+    if (!isPathPrefix(path, entry.path)) {
+      return [entry];
+    }
+    const newIndex = entry.path.length === path.length ? undefined : newKeyOf(String(entry.path[path.length]));
+    return newIndex === undefined
+      ? []
+      : [{ ...entry, path: [...path, newIndex, ...entry.path.slice(path.length + 1)] }];
+  });
+  const ownIndexes = indexesAt(settledIndexes, path);
   const moved: unknown[] = new Array(newArray.length);
+  const indexes: (number | undefined)[] = Array.from({ length: newArray.length }, () => undefined);
   settled.forEach((item, index) => {
     const newIndex = newKeyOf(String(index));
     if (newIndex !== undefined) {
       moved[Number(newIndex)] = item;
+      indexes[Number(newIndex)] = ownIndexes === undefined ? index : ownIndexes[index];
     }
   });
   // An index the move maps no row onto is an inserted one: pair the row with its own starting value, the
@@ -598,7 +655,17 @@ function moveSettledArrayAtPath(
       moved[index] = newArray[index];
     }
   }
-  return writeAtPath(moved);
+  return { data: writeAtPath(moved), settledIndexes: [...indexesBelow, { path, indexes }] };
+}
+
+/** What `writtenView()` reads and records of the settled indexes as it walks a write */
+interface WriteWalk {
+  /** The settled indexes of the view the write replaces */
+  settledIndexes: readonly SettledIndexes[];
+  /** The settled indexes of each array the walk rebuilt */
+  rebuilt: SettledIndexes[];
+  /** The rows set back to the data as it last settled, whose arrays hold their rows where they settled */
+  setBack: FieldPathList[];
 }
 
 /** The pairing view of a value written in place of `own` with no move announced, as `setFieldValue()` writes an array
@@ -607,16 +674,26 @@ function moveSettledArrayAtPath(
  * The moved `view` stays wherever the written value holds what `own` does, since the container writes that moved the
  * view moved those very rows. An item of an array that holds the data as it last `settled`, from before those writes,
  * at its index is the reorder set back (#5451), so it pairs with that. Any other value is the one `own` held there,
- * changed, so it pairs with the view's: the item a reorder moved there is the one it changed. A position the view holds
- * nothing for, which a move of another length dropped, stays unpaired
+ * changed, so it pairs with the view's: the item a reorder moved there is the one it changed, and below it the walk
+ * compares with the data that item last settled with. A position the view holds nothing for, which a move of another
+ * length dropped, stays unpaired
  *
  * @param written - The value written
  * @param own - The data the value replaces
  * @param view - The pairing view of `own`
- * @param settled - The data as it last settled
+ * @param settled - The data as it last settled for the value the view holds here
+ * @param path - Where `written` is in the data
+ * @param walk - The settled indexes of the view, and those the walk rebuilt or set back
  * @returns - The pairing view of `written`, and whether `written` holds what `own` does
  */
-function writtenView(written: unknown, own: unknown, view: unknown, settled: unknown): [unknown, boolean] {
+function writtenView(
+  written: unknown,
+  own: unknown,
+  view: unknown,
+  settled: unknown,
+  path: FieldPathList,
+  walk: WriteWalk,
+): [unknown, boolean] {
   if (Object.is(written, own)) {
     return [view, true];
   }
@@ -632,18 +709,35 @@ function writtenView(written: unknown, own: unknown, view: unknown, settled: unk
   ) {
     let isUnchanged = true;
     const settledItems: unknown[] = Array.isArray(settled) ? settled : [];
+    const ownIndexes = indexesAt(walk.settledIndexes, path);
+    const indexes: (number | undefined)[] = [];
     const items = Array.from(view, (item, index) => {
+      const settledIndex = ownIndexes === undefined ? index : ownIndexes[index];
       // Whether the item changed is the walk's own answer, so its subtree is compared once
-      const [itemView, isItemUnchanged] = writtenView(written[index], own[index], item, item);
+      const [itemView, isItemUnchanged] = writtenView(
+        written[index],
+        own[index],
+        item,
+        settledIndex === undefined ? undefined : settledItems[settledIndex],
+        [...path, index],
+        walk,
+      );
       const settledItem = settledItems[index];
       if (!isItemUnchanged && settledItem !== undefined && deepEquals(written[index], settledItem)) {
         isUnchanged = false;
+        indexes.push(index);
+        walk.setBack.push([...path, index]);
         return settledItem;
       }
       isUnchanged &&= isItemUnchanged;
+      indexes.push(settledIndex);
       return itemView;
     });
-    return isUnchanged ? [view, true] : [items, false];
+    if (isUnchanged) {
+      return [view, true];
+    }
+    walk.rebuilt.push({ path, indexes });
+    return [items, false];
   }
   if (isPlainObject(written) && isPlainObject(own) && isPlainObject(view)) {
     const settledObject = isPlainObject(settled) ? settled : {};
@@ -653,7 +747,14 @@ function writtenView(written: unknown, own: unknown, view: unknown, settled: unk
       (key) => viewKeys.has(key) || deepEquals(written[key], own[key]),
     );
     const entries = Object.entries(view).map(([key, value]) => {
-      const [childView, isChildUnchanged] = writtenView(written[key], own[key], value, settledObject[key]);
+      const [childView, isChildUnchanged] = writtenView(
+        written[key],
+        own[key],
+        value,
+        settledObject[key],
+        [...path, key],
+        walk,
+      );
       isUnchanged &&= isChildUnchanged;
       return [key, childView];
     });
@@ -817,7 +918,7 @@ interface DerivedData<T, S extends StrictRJSFSchema, F extends FormContextType> 
    * with the row's own starting value, while the old schema side keeps reading `settledFormData`, whose
    * conditionals resolved the way the settled data saw them. Settles and resets together with `settledFormData`
    */
-  settledFormDataForPairing: unknown;
+  settledFormDataForPairing: PairingView | undefined;
   /** The schema the settling pass resolved for `settledFormData`: the previous-data side of the sanitize call
    * resolves from it, since the committed data's resolved schema already carries the root's conditionals for
    * data that can sit on the other side of a flip
@@ -890,14 +991,14 @@ function settledFormDataState<T, S extends StrictRJSFSchema, F extends FormConte
 ): {
   formDataSchema: S | undefined;
   settledFormData: T | undefined;
-  settledFormDataForPairing: unknown;
+  settledFormDataForPairing: PairingView | undefined;
   settledRetrievedSchema: S | undefined;
 } {
   if (sanitizeRan || current === undefined) {
     return {
       formDataSchema: rootSchema,
       settledFormData: formData,
-      settledFormDataForPairing: formData,
+      settledFormDataForPairing: { data: formData, settledIndexes: [] },
       settledRetrievedSchema: retrievedSchema,
     };
   }
@@ -970,7 +1071,7 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
   // A dropped pairing view (a root-level array whose length desynced drops the whole view) leaves the settled
   // side nothing to pair by; handing the settled data over anyway would pair rows by index against it.
   // Treat a dropped view as no settled data at the sanitize call, so the filter runs with no previous value
-  const hasSettledPairingView = hasSettledData && current?.settledFormDataForPairing !== undefined;
+  const hasSettledPairingView = hasSettledData && current?.settledFormDataForPairing?.data !== undefined;
   let sanitize = shouldSanitize;
   // Each value dropped as a swapped-away branch's default, keyed by its path: the keys let a repeat search skip a path
   // it has already reported, the paths let a later iteration judge the refill the fill has since written there, the
@@ -1030,7 +1131,7 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
               formData,
               hasSettledPairingView ? current?.settledFormData : undefined,
               hasSettledPairingView ? current?.settledRetrievedSchema : undefined,
-              hasSettledPairingView ? current?.settledFormDataForPairing : undefined,
+              hasSettledPairingView ? current?.settledFormDataForPairing?.data : undefined,
             ),
           );
       // A path dropped on an earlier iteration has been refilled above with the newly selected branch's own default,
@@ -1821,17 +1922,33 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
     ) {
       // A container written with no move announced, as `setFieldValue()` puts a reorder back, may replace rows the view
       // moved, so an item it sets back to the data as it last settled pairs with that, see `writtenView()`
-      const view = getAt<unknown>(settledFormDataForPairing, path);
+      const { data, settledIndexes } = settledFormDataForPairing;
+      const view = getAt<unknown>(data, path);
       if (view !== undefined) {
+        const walk: WriteWalk = { settledIndexes, rebuilt: [], setBack: [] };
         const [viewOfWrite] = writtenView(
           getAt<unknown>(formData, path),
           getAt<unknown>(current.formData, path),
           view,
-          getAt<unknown>(settledFormData, path),
+          settledAtViewPath(settledFormData, settledIndexes, path),
+          path,
+          walk,
         );
-        settledFormDataForPairing = isRootPath
-          ? viewOfWrite
-          : setByPath(copyAlongPath(settledFormDataForPairing, path), path, viewOfWrite);
+        const isKept = (entry: SettledIndexes) =>
+          !walk.setBack.some((setBackPath) => isPathPrefix(setBackPath, entry.path));
+        settledFormDataForPairing = {
+          data: isRootPath ? viewOfWrite : setByPath(copyAlongPath(data, path), path, viewOfWrite),
+          settledIndexes: [
+            ...settledIndexes.filter(
+              (entry) =>
+                isKept(entry) &&
+                !walk.rebuilt.some(
+                  (rebuilt) => rebuilt.path.length === entry.path.length && isPathPrefix(rebuilt.path, entry.path),
+                ),
+            ),
+            ...walk.rebuilt.filter(isKept),
+          ],
+        };
       }
     }
 
