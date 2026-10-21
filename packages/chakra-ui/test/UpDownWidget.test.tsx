@@ -113,6 +113,28 @@ describe('UpDownWidget value', () => {
     expect(screen.getByRole('spinbutton')).toHaveValue('0');
   });
 
+  it.each([
+    ['loses the focus', '{Tab}'],
+    ['takes Enter', '{Enter}'],
+  ])('reports no change for a stored number when the input %s', async (_, key) => {
+    const onChange = vi.fn();
+    render(
+      <Form
+        schema={{ type: 'integer' }}
+        uiSchema={{ 'ui:widget': 'updown' }}
+        initialFormData={5}
+        validator={validator}
+        onChange={onChange}
+      />,
+    );
+
+    await user.click(screen.getByRole('spinbutton'));
+    await user.keyboard(key);
+
+    expect(onChange).not.toHaveBeenCalled();
+    expect(screen.getByRole('spinbutton')).toHaveValue('5');
+  });
+
   it('shows what the user types', async () => {
     render(
       <Form

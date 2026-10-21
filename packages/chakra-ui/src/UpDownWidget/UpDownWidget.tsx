@@ -49,8 +49,10 @@ export default function UpDownWidget<
     >
       <NumberInputRoot
         // Zag's number input is uncontrolled while `value` is `undefined`, and would go on showing the last number
-        // after the form clears the value, so a missing value is passed as the empty input it is
-        value={value ?? ''}
+        // after the form clears the value, so a missing value is passed as the empty input it is. Its value is the
+        // input's text, which it compares by identity with the text it formats on blur and Enter, so a stored number
+        // is passed as its text too, or that comparison would report a change nobody made
+        value={value == null ? '' : String(value)}
         onValueChange={handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
