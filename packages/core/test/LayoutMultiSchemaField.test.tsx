@@ -17,6 +17,7 @@ import {
   getByPath,
   ErrorSchemaBuilder,
   getDiscriminatorFieldFromSchema,
+  getPropertySchema,
   getVisibleErrors,
   isObject,
   ONE_OF_KEY,
@@ -1217,6 +1218,42 @@ describe('LayoutMultiSchemaField', () => {
         { label: 'A', value: 'a' },
         { label: 'B', value: 'b' },
       ]);
+    });
+    test('reads the value of a selector property written as a $ref off the definition it names', () => {
+      const options: RJSFSchema[] = [
+        { type: 'object', properties: { kind: { $ref: '#/definitions/catKind' }, meow: { type: 'string' } } },
+        { type: 'object', properties: { kind: { $ref: '#/definitions/dogKind' }, bark: { type: 'string' } } },
+      ];
+      const schema: RJSFSchema = {
+        definitions: {
+          catKind: { title: 'Cat', type: 'string', const: 'cat' },
+          dogKind: { title: 'Dog', type: 'string', const: 'dog' },
+        },
+        discriminator: { propertyName: 'kind' },
+        oneOf: options,
+      };
+      const { schemaUtils } = getTestRegistry(schema);
+      const enumOptions = computeEnumOptions(schema, options, schemaUtils);
+      expect(enumOptions.map(({ label, value }) => ({ label, value }))).toEqual([
+        { label: 'Cat', value: 'cat' },
+        { label: 'Dog', value: 'dog' },
+      ]);
+      expect(getPropertySchema(enumOptions[1].schema, 'kind')).toEqual(expect.objectContaining({ type: 'string' }));
+      expect(getSelectedOption(enumOptions, 'kind', 'dog')).toBe(enumOptions[1].schema);
+    });
+    test('hands out each option as retrieving it gives, across changes of the data, when its selector is written in place', () => {
+      const options: RJSFSchema[] = [
+        { type: 'object', properties: { kind: { type: 'string', default: 'cat' }, meow: { type: 'string' } } },
+        { type: 'object', properties: { kind: { type: 'string', default: 'dog' }, bark: { type: 'string' } } },
+      ];
+      const schema: RJSFSchema = { discriminator: { propertyName: 'kind' }, oneOf: options };
+      const { schemaUtils } = getTestRegistry(schema);
+      const typed = computeEnumOptions(schema, options, schemaUtils, undefined, { kind: 'cat', meow: 'p' });
+      const typedOn = computeEnumOptions(schema, options, schemaUtils, undefined, { kind: 'cat', meow: 'pu' });
+      expect(typed.map(({ value }) => value)).toEqual(['cat', 'dog']);
+      expect(typed[0].schema).toBe(schemaUtils.retrieveSchema(options[0], { kind: 'cat', meow: 'p' }));
+      expect(typedOn[0].schema).toBe(typed[0].schema);
+      expect(typedOn[1].schema).toBe(typed[1].schema);
     });
     test('throws error when no enumOptions are generated', () => {
       const { schemaUtils } = getTestRegistry({});

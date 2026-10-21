@@ -69,6 +69,7 @@ import getItemUiSchemaForItem from './getItemUiSchemaForItem.ts';
 import getLabelId from './getLabelId.ts';
 import getNumericInputTitle from './getNumericInputTitle.ts';
 import getOptionMatchingSimpleDiscriminator from './getOptionMatchingSimpleDiscriminator.ts';
+import getOptionSelectorSchema from './getOptionSelectorSchema.ts';
 import getOptionUiSchema, { selectOptionUiSchema } from './getOptionUiSchema.ts';
 import getOptionValueFormat from './getOptionValueFormat.ts';
 import type { PresentationSource, PresentationSubject } from './getPresentationDeclaration.ts';
@@ -201,7 +202,7 @@ import type { WidgetAriaPropsInput } from './widgetAriaProps.ts';
 import widgetAriaProps from './widgetAriaProps.ts';
 import widgetDrawsLabel from './widgetDrawsLabel.ts';
 import widgetDrawsLabelText from './widgetDrawsLabelText.ts';
-import withIdRefPrefix from './withIdRefPrefix.ts';
+import withIdRefPrefix, { rootSchemaIdOf, withRootIdRefPrefix } from './withIdRefPrefix.ts';
 
 export type * from './types.ts';
 export * from './enums.ts';
@@ -276,6 +277,7 @@ export {
   expandButtonId,
   ErrorSchemaBuilder,
   fieldLabelId,
+  // oxlint-disable-next-line typescript/no-deprecated -- re-exported for callers written against 6.x
   findSchemaDefinition,
   flattenGroupedOptions,
   getAdditionalPropertySchema,
@@ -307,6 +309,7 @@ export {
   getNumericInputTitle,
   getOptionalDataControlsType,
   getOptionMatchingSimpleDiscriminator,
+  getOptionSelectorSchema,
   getOptionUiSchema,
   getPresentationDeclaration,
   getPropertySchema,
@@ -436,6 +439,8 @@ export {
   widgetDrawsLabel,
   widgetDrawsLabelText,
   withIdRefPrefix,
+  withRootIdRefPrefix,
+  rootSchemaIdOf,
   bracketNameGenerator,
   dotNotationNameGenerator,
 };

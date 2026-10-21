@@ -51,7 +51,9 @@ export interface FormProps<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 > {
-  /** The JSON schema object for the form */
+  /** The JSON schema object for the form. It is parsed once per object and treated as immutable, so a change made to it
+   * in place is not seen: pass a new object to change it
+   */
   schema: S;
   /** An implementation of the `ValidatorType` interface that is needed for form validation to work */
   validator: ValidatorType<S, F>;

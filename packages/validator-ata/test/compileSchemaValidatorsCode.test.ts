@@ -1,6 +1,8 @@
 import type { RJSFSchema } from '@rjsf/utils';
+import { createSchemaUtils } from '@rjsf/utils';
 import type { Validator } from 'ata-validator';
 
+import nestedResourceTests from '../../utils/test/testUtils/nestedResourceTests.ts';
 import precompiledCoverageTests from '../../utils/test/testUtils/precompiledCoverageTests.ts';
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
 import { createPrecompiledValidator } from '../src/index.ts';
@@ -38,6 +40,23 @@ describe('compileSchemaValidatorsCode', () => {
     expect(validator.isValid(lengthSchema, { name: '' }, lengthSchema)).toBe(false);
     expect(validator.isValid(lengthSchema, { name: 'a', code: '😀😀' }, lengthSchema)).toBe(true);
     expect(validator.isValid(lengthSchema, { name: 'a', code: '😀😀😀' }, lengthSchema)).toBe(false);
+  });
+
+  test('compiles the options that keep a $ref to the root for scoring, defaults and omitting', () => {
+    const rootSchema: RJSFSchema = {
+      definitions: {
+        Name: { type: 'string' },
+        Cat: { type: 'object', properties: { name: { $ref: '#/definitions/Name' }, meow: { type: 'boolean' } } },
+        Dog: { type: 'object', properties: { name: { $ref: '#/definitions/Name' }, bark: { type: 'number' } } },
+      },
+      type: 'object',
+      properties: { pet: { oneOf: [{ $ref: '#/definitions/Cat' }, { $ref: '#/definitions/Dog' }] } },
+    };
+    const validator = createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(rootSchema)), rootSchema);
+    const schemaUtils = createSchemaUtils({ validator }, rootSchema);
+    const formData = { pet: { name: 'Rex', bark: 2 } };
+    expect(schemaUtils.getDefaultFormState(rootSchema, formData)).toEqual(formData);
+    expect(schemaUtils.omitExtraData(rootSchema, { pet: { name: 'Rex', bark: 2, extra: true } })).toEqual(formData);
   });
 
   test('generates a module with a validator function per schema id', () => {
@@ -278,5 +297,8 @@ describe('compileSchemaValidatorsCode', () => {
   });
   precompiledCoverageTests((rootSchema, options) =>
     createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(rootSchema, options)), rootSchema, options),
+  );
+  nestedResourceTests((rootSchema) =>
+    createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(rootSchema)), rootSchema),
   );
 });

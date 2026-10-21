@@ -134,6 +134,23 @@ describe('schemaParser()', () => {
     const schemaMap = schemaParser(RECURSIVE_REF_ALLOF);
     expect(schemaMap).toMatchSnapshot();
   });
+  it('terminates on an allOf entry declaring a recursive property its own pattern matches (#5452 b)', () => {
+    const rootSchema: RJSFSchema = {
+      $ref: '#/definitions/node',
+      definitions: {
+        node: {
+          type: 'object',
+          allOf: [
+            {
+              properties: { child: { $ref: '#/definitions/node' }, name: { type: 'string' } },
+              patternProperties: { '^child': { title: 'Child' } },
+            },
+          ],
+        },
+      },
+    };
+    expect(Object.values(schemaParser(rootSchema))).toEqual([{ ...rootSchema, $id: expect.any(String) }]);
+  });
   it('parses schema dependencies properly', () => {
     const schemaMap = schemaParser(SCHEMA_DEPENDENCIES);
     expect(schemaMap).toMatchSnapshot();
@@ -360,6 +377,29 @@ describe('schemaParser()', () => {
       allOf: [true, { properties: { choice: { oneOf: [{ const: 'a' }, { const: 'b' }] } } }],
     };
     expect(Object.values(schemaParser(rootSchema))).toContainEqual(expect.objectContaining({ const: 'b' }));
+  });
+  it.each<[string, RJSFSchema]>([
+    [
+      'a true anyOf option',
+      { type: 'object', properties: { p: { anyOf: [true, { type: 'string', title: 'text' }] } } },
+    ],
+    [
+      'a false oneOf option',
+      { type: 'object', properties: { p: { oneOf: [false, { type: 'string', title: 'text' }] } } },
+    ],
+    ['a true option of the root', { anyOf: [true, { type: 'string', title: 'text' }] }],
+    [
+      'a true option of a dependency oneOf',
+      {
+        type: 'object',
+        properties: { a: { type: 'string' } },
+        dependencies: {
+          a: { oneOf: [true, { title: 'text', properties: { a: { const: 'x' }, b: { type: 'string' } } }] },
+        },
+      },
+    ],
+  ])('parses the other options of a list holding %s', (_, rootSchema) => {
+    expect(Object.values(schemaParser(rootSchema))).toContainEqual(expect.objectContaining({ title: 'text' }));
   });
   it('parses each pattern alone and all of them together for more patternProperties than can be combined', () => {
     const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);

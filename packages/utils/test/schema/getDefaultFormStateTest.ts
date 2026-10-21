@@ -21,7 +21,12 @@ import {
 } from '../../src/schema/getDefaultFormState.ts';
 import { resolveDependencies } from '../../src/schema/retrieveSchema.ts';
 import shallowAllOfMerge from '../../src/schema/shallowAllOfMerge.ts';
-import { RECURSIVE_REF, RECURSIVE_REF_ALLOF } from '../testUtils/testData.ts';
+import {
+  PET_RESOURCE_DEEP_SCHEMA,
+  PET_RESOURCE_SCHEMA,
+  RECURSIVE_REF,
+  RECURSIVE_REF_ALLOF,
+} from '../testUtils/testData.ts';
 import type { TestValidatorType } from './types.ts';
 
 export default function getDefaultFormStateTest(testValidator: TestValidatorType) {
@@ -250,6 +255,28 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             ).toEqual(expected);
           });
         });
+      });
+
+      describe('a property written as a $ref to a const', () => {
+        const schema: RJSFSchema = {
+          definitions: { K: { type: 'string', const: 'k' } },
+          type: 'object',
+          properties: { constInPlace: { type: 'string', const: 'k' }, constViaRef: { $ref: '#/definitions/K' } },
+        };
+        it.each<NonNullable<DefaultFormStateBehavior['emptyObjectFields']>>([
+          'skipDefaults',
+          'populateRequiredDefaults',
+        ])(
+          'fills the const behind the $ref as the const written in place, under emptyObjectFields %s',
+          (emptyObjectFields) => {
+            expect(
+              getDefaultFormState(
+                { validator: testValidator, defaultFormStateBehavior: { emptyObjectFields } },
+                { schema, rootSchema: schema },
+              ),
+            ).toEqual({ constInPlace: 'k', constViaRef: 'k' });
+          },
+        );
       });
 
       describe('an object with an optional property that has a nested required property', () => {
@@ -1399,6 +1426,9 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           test('computeDefaults', () => {
             // NOTE: `includeUndefinedValues` is not used L1275
             expect(computeDefaults({ validator: testValidator }, schema, { rootSchema: schema })).toEqual({
+              children: {
+                name: '',
+              },
               name: '',
             });
           });
@@ -1432,6 +1462,31 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               name: 'n',
               child: { name: 'n' },
             });
+          });
+        });
+
+        describe('a recursive schema whose anyOf option refers back to it', () => {
+          const nodeWith = (c: RJSFSchema): RJSFSchema => ({
+            definitions: {
+              node: { type: 'object', properties: { name: { type: 'string', default: 'n' }, c } },
+            },
+            $ref: '#/definitions/node',
+          });
+          const ref: RJSFSchema = { $ref: '#/definitions/node' };
+          const formData = { c: { c: { c: { c: {} } } } };
+
+          test.each<[string, RJSFSchema]>([
+            ['as an option', { anyOf: [ref, { type: 'null' }] }],
+            ['as an option of an object', { type: 'object', anyOf: [ref, { properties: { z: { type: 'string' } } }] }],
+            ['as a property', ref],
+          ])('getDefaultFormState stops where the schema does, whatever the data holds below, %s', (_, c) => {
+            const schema = nodeWith(c);
+            expect(getDefaultFormState({ validator: testValidator }, { schema, formData, rootSchema: schema })).toEqual(
+              {
+                name: 'n',
+                c: { name: 'n', c: { c: { c: {} } } },
+              },
+            );
           });
         });
 
@@ -1573,7 +1628,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             ).toEqual({ name: 'n', child: { name: 'n', child: { name: 'deep', child: { name: 'deep' } } } });
           });
 
-          test('stops at a $ref back to the definition whose allOf merged another $ref in', () => {
+          test('expands a $ref back to the definition whose allOf merged another $ref in once', () => {
             const schema: RJSFSchema = {
               definitions: {
                 outer: {
@@ -1592,12 +1647,10 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
                 { validator: testValidator, defaultFormStateBehavior: { allOf: 'populateDefaults' } },
                 { schema, rootSchema: schema },
               ),
-            ).toEqual({ a: { name: 'n', extra: 'e' } });
+            ).toEqual({ a: { name: 'n', extra: 'e', back: { name: 'n', extra: 'e' } } });
           });
 
-          test('stops a recursion under a populated allOf one level sooner than the same one without it', () => {
-            // The `allOf` branch of `computeDefaults()` keeps the schema's own ref on the path of what it computes
-            // below, which the test above relies on, and `getObjectDefaults()` and the array defaults do not
+          test('stops a recursion under a populated allOf where it stops the same one without it', () => {
             const tags: RJSFSchema = { type: 'array', minItems: 1, items: { $ref: '#/definitions/tags' } };
             const populated = (definition: RJSFSchema) => {
               const schema: RJSFSchema = {
@@ -1612,7 +1665,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               );
             };
             expect(populated(tags)).toEqual({ t: [[undefined]] });
-            expect(populated({ ...tags, allOf: [{ minItems: 1 }] })).toEqual({ t: [undefined] });
+            expect(populated({ ...tags, allOf: [{ minItems: 1 }] })).toEqual({ t: [[undefined]] });
           });
         });
 
@@ -2413,6 +2466,20 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           o: { a: 1 },
           e: [1],
         });
+      });
+      it('defaults a select over object constants written as $refs as one written in place', () => {
+        const pick: RJSFSchema = { type: 'object', oneOf: [{ $ref: '#/definitions/A' }, { $ref: '#/definitions/B' }] };
+        const schema: RJSFSchema = {
+          definitions: { A: { const: { k: 'a' }, title: 'A' }, B: { const: { k: 'b' }, title: 'B' } },
+          type: 'object',
+          properties: { pick },
+        };
+        const withDefault: RJSFSchema = { ...schema, properties: { pick: { ...pick, default: { k: 'b' } } } };
+        const required: RJSFSchema = { ...schema, required: ['pick'] };
+        expect(getDefaultFormState({ validator: testValidator }, { schema: withDefault })).toEqual({
+          pick: { k: 'b' },
+        });
+        expect(getDefaultFormState({ validator: testValidator }, { schema: required })).toEqual({ pick: { k: 'a' } });
       });
       it('defaults a oneOf select to the constant matching its own default', () => {
         const schema: RJSFSchema = {
@@ -3374,6 +3441,37 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
       });
       it('Test schema with valid formData for enum property', () => {
         expect(ensureFormDataMatchingSchema({ validator: testValidator }, schema, schema, 'b')).toEqual('b');
+      });
+      it('keeps an option of constants written as $refs and drops a value none of them holds', () => {
+        const color: RJSFSchema = {
+          type: 'string',
+          oneOf: [{ $ref: '#/definitions/red' }, { $ref: '#/definitions/blue' }],
+        };
+        const rootSchema: RJSFSchema = {
+          definitions: { red: { const: 'red' }, blue: { const: 'blue' } },
+          type: 'object',
+          properties: { color },
+        };
+        expect(ensureFormDataMatchingSchema({ validator: testValidator }, color, rootSchema, 'blue')).toEqual('blue');
+        expect(ensureFormDataMatchingSchema({ validator: testValidator }, color, rootSchema, 'green')).toBeUndefined();
+      });
+      it('drops a value none of the options of a property written as a $ref to an allOf holds', () => {
+        const rootSchema: RJSFSchema = {
+          definitions: { E: { allOf: [{ type: 'string', enum: ['a', 'b'] }] } },
+          type: 'object',
+          properties: {
+            inPlace: { allOf: [{ type: 'string', enum: ['a', 'b'] }] },
+            viaRef: { $ref: '#/definitions/E' },
+            free: true,
+          },
+        };
+        expect(
+          ensureFormDataMatchingSchema({ validator: testValidator }, rootSchema, rootSchema, {
+            inPlace: 'zzz',
+            viaRef: 'zzz',
+            free: 'zzz',
+          }),
+        ).toEqual({ inPlace: undefined, viaRef: undefined, free: 'zzz' });
       });
       it('Test schema with const property', () => {
         schema = {
@@ -6651,7 +6749,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ).toEqual([{ animal: 'Cat' }]);
         });
 
-        it("should populate a property's allOf conditional defaults once a deep custom merger merges the root's allOf", () => {
+        it("should skip a property's allOf conditional defaults even where a deep custom merger merges the root's allOf", () => {
           const deepAllOfMerge: CustomMergeAllOf = (schema) => {
             const merged = shallowAllOfMerge(schema) as RJSFSchema;
             const properties = Object.fromEntries(
@@ -6672,7 +6770,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               },
               { schema: rootAllOfSchema, formData, rootSchema: rootAllOfSchema },
             ),
-          ).toEqual({ animalInfo: { animal: 'Cat', food: 'meat' } });
+          ).toEqual(formData);
           expect(
             getDefaultFormState(
               {
@@ -6683,23 +6781,34 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               { schema: animalInfoObjectSchema, formData, rootSchema: animalInfoObjectSchema },
             ),
           ).toEqual(formData);
-        });
-
-        it("should populate a property's allOf conditional defaults with @x0k/json-schema-merge's createDeepAllOfMerge", () => {
           expect(
             getDefaultFormState(
               {
                 validator: testValidator,
-                defaultFormStateBehavior: { allOf: 'skipDefaults' },
-                customMergeAllOf: createDeepAllOfMerge(shallowAllOfMerge) as CustomMergeAllOf,
+                defaultFormStateBehavior: { allOf: 'populateDefaults' },
+                customMergeAllOf: deepAllOfMerge,
               },
-              { schema: rootAllOfSchema, formData: { animalInfo: { animal: 'Cat' } }, rootSchema: rootAllOfSchema },
+              { schema: rootAllOfSchema, formData, rootSchema: rootAllOfSchema },
             ),
           ).toEqual({ animalInfo: { animal: 'Cat', food: 'meat' } });
         });
 
+        it("should skip a property's allOf conditional defaults with @x0k/json-schema-merge's createDeepAllOfMerge", () => {
+          const getDefaults = (allOf: DefaultFormStateBehavior['allOf']) =>
+            getDefaultFormState(
+              {
+                validator: testValidator,
+                defaultFormStateBehavior: { allOf },
+                customMergeAllOf: createDeepAllOfMerge(shallowAllOfMerge) as CustomMergeAllOf,
+              },
+              { schema: rootAllOfSchema, formData: { animalInfo: { animal: 'Cat' } }, rootSchema: rootAllOfSchema },
+            );
+          expect(getDefaults('skipDefaults')).toEqual({ animalInfo: { animal: 'Cat' } });
+          expect(getDefaults('populateDefaults')).toEqual({ animalInfo: { animal: 'Cat', food: 'meat' } });
+        });
+
         it.each(nestedPlacements)(
-          "should populate a property's allOf conditional defaults with createDeepAllOfMerge in $where whose schema also has a direct if",
+          "should skip a property's allOf conditional defaults with createDeepAllOfMerge in $where whose schema also has a direct if",
           ({ wrap, wrapData }) => {
             const deepMerge = createDeepAllOfMerge(shallowAllOfMerge) as CustomMergeAllOf;
             const directIfSchema = wrap({ ...rootAllOfSchema, if: { properties: { x: { const: 1 } } }, then: {} });
@@ -6710,7 +6819,8 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
                 { validator: testValidator, defaultFormStateBehavior: behavior, customMergeAllOf: deepMerge },
                 { schema, formData, rootSchema: schema },
               );
-            expect(getDefaults(directIfSchema, { allOf: 'skipDefaults' })).toEqual(
+            expect(getDefaults(directIfSchema, { allOf: 'skipDefaults' })).toEqual(formData);
+            expect(getDefaults(directIfSchema, { allOf: 'populateDefaults' })).toEqual(
               wrapData({ animalInfo: { animal: 'Cat', food: 'meat' } }),
             );
             expect(getDefaults(allOfSchema, { allOf: 'skipDefaults' })).toEqual(formData);
@@ -7151,7 +7261,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ).toEqual({ pet: { id: 'ID', meow: true } });
         });
       });
-      it("hands a selected option written as a $ref its field's default, as a $ref property is handed it", () => {
+      it("merges a selected option written as a $ref with its field's default, as it merges one written in place", () => {
         const schema: RJSFSchema = {
           $defs: {
             O: { type: 'object', properties: { a: { type: 'number' }, b: { type: 'number' } } },
@@ -7165,13 +7275,13 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         };
         expect(
           getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema, formData: { o: { b: 2 } } }),
-        ).toEqual({ o: { b: 2 }, s: 'child' });
+        ).toEqual({ o: { a: 1, b: 2 }, s: 'child' });
         expect(
           getDefaultFormState(
             { validator: testValidator, defaultFormStateBehavior: { nestedDefaultsPrecedence: 'ancestorWins' } },
             { schema, rootSchema: schema, formData: { o: { b: 2 } } },
           ),
-        ).toEqual({ o: { b: 2 }, s: 'parent' });
+        ).toEqual({ o: { a: 1, b: 2 }, s: 'child' });
       });
       it('stops following a selected option written as a $ref once it leads back to a $ref already followed', () => {
         const schema: RJSFSchema = {
@@ -7567,6 +7677,23 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           value: 5,
           ...(variant === 'allOf' ? { fromAllOf: 'A' } : {}),
         });
+      });
+      it('should count a default as the value of a root dependencies entry whatever else the form data holds, as a nested entry does', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { animal: { type: 'string', default: 'Cat' }, other: { type: 'string' } },
+          dependencies: { animal: { properties: { food: { type: 'string', default: 'meat' } } } },
+        };
+        const nested: RJSFSchema = { type: 'object', properties: { n: schema } };
+        expect(
+          getDefaultFormState({ validator: testValidator }, { schema, formData: { other: 'x' }, rootSchema: schema }),
+        ).toEqual({ animal: 'Cat', other: 'x', food: 'meat' });
+        expect(
+          getDefaultFormState(
+            { validator: testValidator },
+            { schema: nested, formData: { n: { other: 'x' } }, rootSchema: nested },
+          ),
+        ).toEqual({ n: { animal: 'Cat', other: 'x', food: 'meat' } });
       });
       it('should populate dependency defaults when formData is an empty object', () => {
         testValidator.setReturnValues({ isValid: [true] });
@@ -8393,6 +8520,13 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             $defs: { alias: { $ref: '#/$defs/none' }, none: { type: 'null' } },
           };
           expect(defaultsOf(schema)).toEqual({ n: null, viaRef: null, o: { n: null } });
+        });
+
+        it('is filled in again when the same schema is read a second time in the same context', () => {
+          const context = { validator: testValidator, defaultFormStateBehavior: { emptyObjectFields } };
+          const schema: RJSFSchema = { type: 'object', properties: { n: { type: 'null' } } };
+          expect(getDefaultFormState(context, { schema, rootSchema: schema })).toEqual({ n: null });
+          expect(getDefaultFormState(context, { schema, rootSchema: schema })).toEqual({ n: null });
         });
 
         it.each<[string, RJSFSchema, unknown?]>([
@@ -9661,6 +9795,91 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         ).toEqual({ home: { country: 'US' } });
       });
     });
+    describe('under a draft 2020-12 root with $id resources', () => {
+      it("fills the defaults of the same #/ $ref text in two resources from each one's own definition (#5529)", () => {
+        const schema: RJSFSchema = {
+          $schema: 'https://json-schema.org/draft/2020-12/schema',
+          $id: 'https://example.com/root.json',
+          $defs: {
+            node: { type: 'object', properties: { l: { $ref: 'lib.json' } } },
+            lib: { $id: 'lib.json', $defs: { node: { type: 'number', default: 7 } }, $ref: '#/$defs/node' },
+          },
+          $ref: '#/$defs/node',
+        };
+        expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual({ l: 7 });
+        const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
+        expect(schemaUtils.getDefaultFormState(schemaUtils.getRootSchema())).toEqual({ l: 7 });
+      });
+      it('fills the defaults of a $ref under a relative root $id through createSchemaUtils()', () => {
+        const schema: RJSFSchema = {
+          $schema: 'https://json-schema.org/draft/2020-12/schema',
+          $id: 'nested/root.json',
+          $defs: { c: { $id: 'child.json', type: 'object', properties: { v: { type: 'string', default: 'ok' } } } },
+          type: 'object',
+          properties: { c: { $ref: 'child.json' } },
+        };
+        const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
+        expect(schemaUtils.getDefaultFormState(schemaUtils.getRootSchema())).toEqual({ c: { v: 'ok' } });
+      });
+      it.each<[number, RJSFSchema, unknown]>([
+        [1, PET_RESOURCE_SCHEMA, { p: { kind: 5 } }],
+        [2, PET_RESOURCE_DEEP_SCHEMA, { p: { info: { kind: 5 } } }],
+      ])(
+        'picks the option for data by the $ref a merged property holds in a resource of its own, %i level(s) down',
+        (_, schema, formData) => {
+          expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema, formData })).toEqual(
+            formData,
+          );
+        },
+      );
+    });
+    describe('of a subschema retrieveSchema() handed out', () => {
+      // The root and the nested resource each define `x`, so a `$ref` resolved against the wrong one fills 1
+      it.each<[string, RJSFSchema]>([
+        [
+          'draft-07',
+          {
+            definitions: {
+              x: { type: 'number', default: 1 },
+              child: {
+                $id: 'child.json',
+                definitions: { x: { type: 'string', default: 'nested' } },
+                type: 'array',
+                items: { $ref: '#/definitions/x' },
+              },
+            },
+            type: 'object',
+            properties: { list: { $ref: '#/definitions/child' } },
+          },
+        ],
+        [
+          'draft 2020-12',
+          {
+            $schema: 'https://json-schema.org/draft/2020-12/schema',
+            $id: 'https://example.com/root.json',
+            $defs: {
+              x: { type: 'number', default: 1 },
+              child: {
+                $id: 'nested/child.json',
+                $defs: { x: { type: 'string', default: 'nested' } },
+                type: 'array',
+                items: { $ref: '#/$defs/x' },
+              },
+            },
+            type: 'object',
+            properties: { list: { $ref: 'nested/child.json' } },
+          },
+        ],
+      ])('fills an item of a nested resource from that resource, as a new row does (%s)', (_, schema) => {
+        const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
+        const list = schemaUtils.retrieveSchema(schema).properties?.list;
+        const items = isObject(list) ? schemaUtils.retrieveSchema(list).items : undefined;
+        if (!isObject(items) || Array.isArray(items)) {
+          throw new Error('The list has no items schema');
+        }
+        expect(schemaUtils.getDefaultFormState(items)).toBe('nested');
+      });
+    });
 
     describe('own prototype-named properties', () => {
       it('keeps an additionalProperties key named like an Object.prototype member', () => {
@@ -9734,6 +9953,25 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         );
         const result = getDefaultFormState({ validator: testValidator }, { schema, formData: {} });
         expect(Object.hasOwn(result!, 'toString')).toBe(false);
+      });
+
+      it('copies a __proto__ key of a default as an own key', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { p: { default: JSON.parse('{"__proto__":{"x":1}}') } },
+        };
+        const result = getDefaultFormState({ validator: testValidator }, { schema });
+        expect(result).toEqual(JSON.parse('{"p":{"__proto__":{"x":1}}}'));
+        expect(Object.getPrototypeOf(Object.getOwnPropertyDescriptor(result, 'p')?.value)).toBe(Object.prototype);
+      });
+
+      it('matches no property named __proto__ that the data holds no own value for', () => {
+        const schema: RJSFSchema = JSON.parse(
+          '{"type":"object","properties":{"__proto__":{"type":"object","allOf":[{}],"properties":{"x":{"type":"string"}}}}}',
+        );
+        const result = ensureFormDataMatchingSchema({ validator: testValidator }, schema, schema, { a: 'y' });
+        expect(Object.getPrototypeOf(result)).toBe(Object.prototype);
+        expect(result).toEqual({ a: 'y' });
       });
     });
   });

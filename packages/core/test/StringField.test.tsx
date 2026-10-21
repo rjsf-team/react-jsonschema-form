@@ -1,6 +1,6 @@
 import type { ErrorSchema, FieldPath, FieldProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { parseDateString, toDateString, TranslatableString, utcToLocal } from '@rjsf/utils';
-import { fireEvent, act } from '@testing-library/react';
+import { fireEvent, act, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import StringField from '../src/components/fields/StringField.tsx';
@@ -523,6 +523,41 @@ describe('StringField', () => {
 
       expect(node).not.toHaveTextContent('Foo description');
       expect(node).toHaveTextContent('Bar description');
+    });
+
+    it('should render constant options written as $refs as a select with their titles', async () => {
+      const { onChange } = createFormComponent({
+        schema: {
+          definitions: { red: { const: 'red', title: 'Red' }, blue: { const: 'blue', title: 'Blue' } },
+          type: 'object',
+          properties: {
+            color: { type: 'string', oneOf: [{ $ref: '#/definitions/red' }, { $ref: '#/definitions/blue' }] },
+          },
+        },
+      });
+      const select = screen.getByRole('combobox');
+      expect(Array.from(select.querySelectorAll('option'), (option) => option.textContent)).toEqual([
+        '',
+        'Red',
+        'Blue',
+      ]);
+      await user.selectOptions(select, 'Blue');
+      expectToHaveBeenCalledWithFormData(onChange, { color: 'blue' }, 'root_color');
+    });
+
+    it('should render a typeless anyOf of a constant and a constant written as a $ref as a select', () => {
+      const { node } = createFormComponent({
+        schema: {
+          definitions: { red: { const: 'red', title: 'Red' } },
+          type: 'object',
+          properties: { color: { anyOf: [{ $ref: '#/definitions/red' }, { const: 'green', title: 'Green' }] } },
+        },
+      });
+      expect(Array.from(node.querySelectorAll('select#root_color option'), (option) => option.textContent)).toEqual([
+        '',
+        'Red',
+        'Green',
+      ]);
     });
 
     it('should render a string field', () => {

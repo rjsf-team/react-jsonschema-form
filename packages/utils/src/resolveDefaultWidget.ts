@@ -15,9 +15,11 @@ import type {
 /** Computes the widget name a field falls back to when no `ui:widget` is specified, along with the `enumOptions`
  * (if any) that back a `select`-like fallback. The default is `select` when `schema` has enumerable options,
  * the schema's `format` when a widget is registered for it under that name or as an alias of the type the schema
- * resolves to, or `text` otherwise.
+ * resolves to, or `text` otherwise. A select's constants written as `$ref`s are listed from the retrieved schema, which
+ * holds them resolved. A schema that hasn't been through `retrieveSchema()` isn't supported: `isSelect()` retrieves
+ * it, and so counts constants written as `$ref`s, but the options are listed from `schema` as it is, which finds none.
  *
- * @param schema - The schema for the field
+ * @param schema - The schema for the field, as `retrieveSchema()` returns it
  * @param uiSchema - The uiSchema for the field
  * @param schemaUtils - The `SchemaUtilsType` used to detect whether `schema` has enumerable options
  * @param [registeredWidgets={}] - A registry of widget name to `Widget` implementation

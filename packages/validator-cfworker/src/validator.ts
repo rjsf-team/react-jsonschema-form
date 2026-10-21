@@ -9,7 +9,7 @@ import type {
   ValidationData,
   ValidatorType,
 } from '@rjsf/utils';
-import { deepEquals, logOnce, ID_KEY, ROOT_SCHEMA_PREFIX, schemaKey, withIdRefPrefix } from '@rjsf/utils';
+import { deepEquals, logOnce, ID_KEY, ROOT_SCHEMA_PREFIX, schemaKey, withRootIdRefPrefix } from '@rjsf/utils';
 
 import createCfworkerInstance from './createCfworkerInstance.ts';
 import type { RawValidationErrorsType } from './processRawValidationErrors.ts';
@@ -189,7 +189,7 @@ export default class CFWorkerValidator<
     if (this.lastSeenRootSchema === rootSchema && this.hasRegisteredRootSchema) {
       return;
     }
-    // `withIdRefPrefix()` rewrites local refs to ROOT_SCHEMA_PREFIX, so the
+    // `withRootIdRefPrefix()` is handed ROOT_SCHEMA_PREFIX as the root's id below, so the
     // root must be registered under that alias even when it has its own $id.
     const rootSchemaId = ROOT_SCHEMA_PREFIX;
     const rootWithId =
@@ -218,7 +218,7 @@ export default class CFWorkerValidator<
     let id: string | undefined;
     try {
       this.handleSchemaUpdate(rootSchema);
-      const schemaWithIdRefPrefix = withIdRefPrefix<S>(schema);
+      const schemaWithIdRefPrefix = withRootIdRefPrefix<S>(schema, rootSchema, ROOT_SCHEMA_PREFIX);
       id = schemaKey(schemaWithIdRefPrefix);
       const validator = this.getOrBuild(id, schemaWithIdRefPrefix);
       return validator.validate(normalizeFormDataForValidation(formData)).valid;

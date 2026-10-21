@@ -1,5 +1,5 @@
 import type { RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { schemaParser } from '@rjsf/utils';
+import { ID_KEY, schemaKey, schemaParser, withRootIdRefPrefix } from '@rjsf/utils';
 // Node's ESM resolver has no directory-index lookup, so the file has to be named explicitly.
 import standaloneCode from 'ajv/dist/standalone/index.js';
 
@@ -31,7 +31,12 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
     customMergeAllOf,
   } = options;
   const schemaMaps = schemaParser(schema, { customMergeAllOf });
-  const schemas = Object.values(schemaMaps);
+  // A sub-schema the form validates can keep a `$ref` local to the root, which compiled under an `$id` of its own would
+  // resolve against itself, so it names the root by the id the root is compiled under
+  const rootId = schemaKey(schema);
+  const schemas = Object.values(schemaMaps).map((parsed) =>
+    parsed[ID_KEY] === rootId ? parsed : withRootIdRefPrefix<StrictRJSFSchema>(parsed, schema, rootId),
+  );
 
   // Allow users to turn off the `lines: true` feature in their own overrides, but NOT the `source: true`
   const compileOptions = {

@@ -144,14 +144,11 @@ export interface DefaultFormStateBehavior {
    * while an `if-then-else` placed directly in a nested object schema is resolved, along with any `allOf` next to it,
    * unless `emptyObjectFields` is `skipEmptyDefaults`. With one `allOf` entry per `enum` value and no `formData`, the
    * default `allOf` merger merges the `then` defaults of all the entries, and the first entry that defaults a property
-   * wins, while a `customMergeAllOf` that throws on the conflicting `default`s drops the whole `allOf`. A
-   * `customMergeAllOf` built on a deep merger also turns a property's `allOf: [{ if, then }]` into a direct
-   * `if-then-else` wherever it merges an `allOf` (the root's own, or one next to a direct `if` in a nested object
-   * schema, but not a nested `allOf` on its own), so that property's `then` default is filled in under `skipDefaults`
-   * too, unless `emptyObjectFields` is `skipEmptyDefaults`. The `allOf` and `if-then-else` of a nested object's
-   * `dependencies` entry are resolved once its property has a value, even when `emptyObjectFields` is
-   * `skipEmptyDefaults`, and a default counts as that value, so the entry's `if` is checked against it. A root
-   * `dependencies` entry counts a default only while `formData` is empty.
+   * wins, while a `customMergeAllOf` that throws on the conflicting `default`s drops the whole `allOf`. Each property's
+   * defaults are computed from the property as the schema declares it, so a `customMergeAllOf` built on a deep merger
+   * leaves a property's `allOf` skipped too. The `allOf` and `if-then-else` of a `dependencies` entry are resolved
+   * once its property has a value, even when `emptyObjectFields` is `skipEmptyDefaults`, and a default counts as that
+   * value, so the entry's `if` is checked against it.
    * See the `allOf` section of `defaultFormStateBehavior` in the form props docs for examples of each case.
    */
   allOf?: 'populateDefaults' | 'skipDefaults';
@@ -2109,7 +2106,8 @@ export interface SchemaUtilsType<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 > {
-  /** Returns the `rootSchema` in the `SchemaUtilsType`
+  /** Returns the `rootSchema` in the `SchemaUtilsType`: the object the `SchemaUtilsType` was created with, its `$ref`s
+   * as written, since each one is resolved against the `$id`s around it where it is looked up
    *
    * @returns - The rootSchema
    */

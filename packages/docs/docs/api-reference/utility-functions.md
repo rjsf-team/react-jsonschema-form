@@ -749,22 +749,20 @@ Derives the HTML `name` for `fieldPath` using the `nameGenerator` in `globalForm
 
 ### findSchemaDefinition&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
-Given the name of a `$ref` from within a schema, using the `rootSchema`, look up and return the sub-schema using the path provided by that reference.
-If `#` is not the first character of the reference, or the path does not exist in the schema, then throw an Error.
-Otherwise, return the sub-schema. Also deals with nested `$ref`s in the sub-schema.
+**Deprecated.** Kept for callers written against 6.x; resolve a `$ref` as the form does with `schemaUtils.retrieveSchema({ $ref })` instead.
+
+Returns the definition `$ref` names in `rootSchema`, resolved through the schema graph as the form resolves a field's `$ref`: a JSON pointer, an `$anchor` or the `$id` of an embedded resource, each resolved against the `$id`s around it, with every `$ref` below the target followed, the annotations beside a followed `$ref` read over the target's and any other keywords beside it merged with the target as the `allOf` of both.
+The result is shared across calls and marked with `RJSF_REF_KEY`, so copy it rather than changing it.
+Throws `Could not find a definition for …` for a `$ref` that names nothing, and `Definition for … is a circular reference` for a chain of `$ref`s that loops back on itself.
 
 #### Parameters
 
-- $ref: string - The ref string for which the schema definition is desired
-- [rootSchema={}]: S - The root schema in which to search for the definition
+- [$ref]: string - The `$ref` to resolve
+- [rootSchema={}]: S - The root schema the `$ref` names a definition of
 
 #### Returns
 
-- S: The sub-schema within the `rootSchema` which matches the `$ref` if it exists
-
-#### Throws
-
-- Error indicating that no schema for that reference exists
+- S: The definition the `$ref` names
 
 ### flattenGroupedOptions&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
@@ -782,7 +780,7 @@ This is the order a widget's UI library needs when it manages its own selection 
 ### getAdditionalPropertySchema&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Returns the schema an object says applies to a `key` its own `properties` don't name, so that everything that renders such a property, seeds it or decides whether it is allowed at all reads one answer rather than its own.
-A key one or more `patternProperties` patterns match is described by all of them together, returned as an `allOf` for the caller to resolve into the one schema that describes it; a `false` among them rejects the key whatever the others allow, since no value satisfies it.
+A key one or more `patternProperties` patterns match is described by all of them together, returned as an `allOf` for the caller to resolve into the one schema that describes it, the same object for every key the same patterns match, so read it rather than change it; a `false` among them rejects the key whatever the others allow, since no value satisfies it.
 A key no pattern matches is `additionalProperties`' to describe, `false` and `true` included.
 
 An `unevaluatedProperties` answers for the key only where the object names no `additionalProperties` at all: the keys the `properties` and the `patternProperties` leave over are exactly the ones that go unevaluated, so that keyword is what then describes or rejects them.
@@ -1373,6 +1371,22 @@ This function does not work with discriminators of `"type": "object"` and `"type
 #### Returns
 
 - number | undefined: index of the matched option
+
+### getOptionSelectorSchema&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns the schema of the selector property of an `anyOf`/`oneOf` option, the one the options are told apart by, as it is read for the value, title and type that tell them apart.
+An option hands its properties out as written, so a selector written as a `$ref` is retrieved by `retrieve`; one written in place is read as it stands.
+`findSelectedOptionInXxxOf()` and `LayoutMultiSchemaField` both read a selector this way, so the option one selects is the one the other lists.
+
+#### Parameters
+
+- option: S - The option, retrieved for the field's data
+- selectorField: string - The name of the selector property
+- retrieve: (selector: S) => S - Retrieves a selector written as a `$ref`, such as `(selector) => schemaUtils.retrieveSchema(selector, selectorData)`
+
+#### Returns
+
+- S | undefined: The selector's schema, or `undefined` where the option declares no schema for it
 
 ### getOptionUiSchema&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
@@ -2562,14 +2576,34 @@ Forgets every message `logOnce()` has already logged, so each will be logged aga
 Tests need it so each one sees its own warnings.
 An app that swaps schemas at runtime needs it for the same reason the playground does: a wizard whose steps reuse the same field ids, a schema editor or a form builder would otherwise have the second schema's warnings held back by the first's.
 
+### resolveConstantOptions&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns `schema` with the own `$ref` of each of its `anyOf`/`oneOf` options resolved when that makes every option a constant, the shape a select is read from, and `schema` itself otherwise.
+`retrieveSchema()` hands an option written as a `$ref` out as it stands, for the field that renders it to retrieve, except a select's: a select renders no field per option, so the schema it hands out holds a select's constants resolved this way. `getDisplayLabel()`, `getDefaultFormState()`, `omitExtraData()` and `sanitizeDataForNewSchema()` read the options of a schema that did not come from `retrieveSchema()` through this before `optionsList()` labels them or a select over object or array constants is told from a container.
+The result is made once per schema and shared.
+
+#### Parameters
+
+- schema: S - The schema that may offer options written as `$ref`s
+- rootSchema: S - The root schema the references name definitions of
+
+#### Returns
+
+- S: The schema with its constant options resolved, or `schema` itself
+
+#### Throws
+
+- Error for an option's reference that resolves to nothing, as retrieving that option does
+
 ### resolveDefaultWidget&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Computes the widget name a field falls back to when no `ui:widget` is specified, along with the `enumOptions` (if any) that back a `select`-like fallback.
 The default is `select` when `schema` has enumerable options, the schema's `format` when a widget is registered for it under that name or as an alias of the type the schema resolves to, or `text` otherwise.
+A select's constants written as `$ref`s are listed from the retrieved schema, which holds them resolved.
 
 #### Parameters
 
-- schema: S - The schema for the field
+- schema: S - The retrieved schema for the field
 - uiSchema: UiSchema&lt;T, S, F> | undefined - The uiSchema for the field
 - schemaUtils: SchemaUtilsType&lt;T, S, F> - The `SchemaUtilsType` used to detect whether `schema` has enumerable options
 - [registeredWidgets={}]: RegistryWidgetsType&lt;T, S, F> - A registry of widget name to `Widget` implementation
@@ -2654,6 +2688,18 @@ Recursively checks whether the given raw `schema` contains a `dependencies` or `
 #### Returns
 
 - boolean: True if a `dependencies` or `if` keyword exists below the root of the schema
+
+### rootSchemaIdOf&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns the id a validator registers the root schema under, which is the prefix [withRootIdRefPrefix()](#withrootidrefprefixsextendsstrictrjsfschemarjsfschema) gives a local `$ref`: the root's own `$id`, or the value of the `ROOT_SCHEMA_PREFIX` constant where it has none, since an empty `$id` names nothing a `$ref` could resolve against.
+
+#### Parameters
+
+- rootSchema: S - The root schema
+
+#### Returns
+
+- string: The id the root is registered under
 
 ### schemaKey&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
@@ -3212,12 +3258,30 @@ A label holding only a required field's `*` would name the control "star", so a 
 
 ### withIdRefPrefix&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
-Recursively prefixes all `$ref`s in a schema with the value of the `ROOT_SCHEMA_PREFIX` constant.
+Recursively prefixes every `$ref` local to the root document, one starting with `#`, with the value of the `ROOT_SCHEMA_PREFIX` constant.
 This is used in isValid to make references to the rootSchema
 
 #### Parameters
 
 - schemaNode: S - The object node to which a `ROOT_SCHEMA_PREFIX` is added when a `$ref` is part of it
+
+#### Returns
+
+- S: A copy of the `schemaNode` with updated `$ref`s
+
+### withRootIdRefPrefix&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Recursively prefixes every `$ref` local to the root document, one starting with `#`, with the id a validator registers `rootSchema` under, as [rootSchemaIdOf()](#rootschemaidofsextendsstrictrjsfschemarjsfschema) returns it: the root's own `$id`, or the value of the `ROOT_SCHEMA_PREFIX` constant where it has none.
+A relative `$ref`, such as `kinds.json#/definitions/cat`, is resolved against that id, unless the id is `ROOT_SCHEMA_PREFIX`, so it names the resource the root embeds rather than one beside the schema holding it.
+An id ending in an empty fragment names the same document as one without it, so that `#` is left out: `withRootIdRefPrefix({ $ref: '#/if' }, { $id: 'http://example.com/root.json#' })` gives `{ $ref: 'http://example.com/root.json#/if' }`.
+A validator applies it to a schema it validates beside `rootSchema`, so that a `$ref` local to the root resolves against the root whatever the schema holding it is registered as.
+A `$ref` that a subschema of `rootSchema` holds below an `$id` of its own, the subschema's or its resource's, resolves against that resource, which the subschema handed over no longer sits under, so it is spelled as the pointer to its target in the root, prefixed with the id: with `$id: 'https://example.com/root.json'` and `$defs: { pet: { $id: 'pet.json', $defs: { cat: { const: 'cat' } }, properties: { kind: { $ref: '#/$defs/cat' } } } }`, the `kind` subschema gives `{ $ref: 'https://example.com/root.json#/$defs/pet/$defs/cat' }`.
+
+#### Parameters
+
+- schemaNode: S - The object node to which the prefix is added when a `$ref` is part of it
+- rootSchema: S - The root schema the local `$ref`s name
+- [rootId=rootSchemaIdOf(rootSchema)]: string - The id the validator registers `rootSchema` under, where it is not the one `rootSchemaIdOf()` gives
 
 #### Returns
 
@@ -3313,6 +3377,7 @@ Determines which of the given `options` provided most closely matches the `formD
 Returns the index of the option that is valid and is the closest match, or 0 if there is no match.
 
 The closest match is determined using the number of matching properties, and more heavily favors options with matching readOnly, default, or const values.
+A property written as a `$ref` is scored as the definition it names, and each `$ref` scoring follows resolves in the resource of the declaration holding it, including one in a property declared both beside a `$ref` and in the definition it names.
 
 #### Parameters
 
@@ -3451,7 +3516,7 @@ When the schema has both keywords, `anyOf` is the one checked (see `getXxxOfKey(
 
 Normalises a list of `oneOf`/`anyOf` options for use in option-scoring only (not for filtering).
 Boolean schemas are converted to their object equivalents (`true` → `{}`, `false` → `{not:{}}`).
-When `resolveRefs` is `true`, each object option is first passed through `resolveAllReferences` so that `$ref`-based options expose their `additionalProperties` constraint before relaxation.
+When `resolveRefs` is `true`, each object option has its own `$ref` resolved first so that `$ref`-based options expose their `additionalProperties` constraint before relaxation.
 Any option whose `additionalProperties` is `false` is widened to `true` so that `getClosestMatchingOption` / `validator.isValid()` does not produce false negatives when the form data contains keys not listed in `properties`.
 A widened option is not the schema its `$id` names, so it is given an `$id` of `<the option's>?rjsf=<the widened option's hash>`: distinct enough that a validator compiles a function for it rather than reusing the option's, while keeping the option's `$id` as the base that a relative `$ref` inside it resolves against.
 
@@ -3460,6 +3525,7 @@ A widened option is not the schema its `$id` names, so it is given an `$id` of `
 - options: Array&lt;S | boolean> - The raw `oneOf`/`anyOf` array, which may contain boolean schemas
 - [resolveRefs=false]: boolean - When `true`, resolve `$ref`s in each option before relaxing; pass `rootSchema` as well. Set `false` (default) when refs are already resolved at the call site
 - [rootSchema]: S | undefined - Required when `resolveRefs` is `true`; the root schema used to look up `$ref`s
+- [customMergeAllOf]: CustomMergeAllOf&lt;S> | undefined - The `customMergeAllOf` the form renders with, which an option's `$ref` with keywords beside it is merged with when `resolveRefs` is `true`, as the form merges it
 
 #### Returns
 
@@ -3467,9 +3533,11 @@ A widened option is not the schema its `$id` names, so it is given an `$id` of `
 
 ### retrieveSchema&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
-Retrieves an expanded schema that has had all of its conditions, additional properties, references and dependencies
-resolved and merged into the `schema` given a `context`, `rootSchema` and `rawFormData` that is used to do the
-potentially recursive resolution.
+Retrieves the schema of one field: the `schema` with its own `$ref`, `allOf`, `if`/`then`/`else`, `dependencies` and the patterns its properties match merged in for the `rawFormData`, and the additional properties of that data stubbed among its `properties`.
+The schema is resolved one level at a time: a `$ref` under `properties`, `items` or an `anyOf`/`oneOf` option is handed out as it stands, for the caller to retrieve when it renders that subschema.
+Every subschema handed out carries where it came from, so retrieving it resolves it as the field it is: a recursive `$ref` under `properties` is handed out flagged with `RJSF_REF_CYCLE_KEY`, retrieving a copy with that flag set to `false` expands it by one level, and retrieving a schema `retrieveSchema()` returned gives the same schema back.
+A `schema` the root does not hold is parsed once per content and kept for as long as the root, so one built from form data keeps an entry for each distinct value until the root changes.
+Like the root, it must not be changed once handed in: calls handed the same content share its result.
 
 #### Parameters
 
@@ -3477,6 +3545,7 @@ potentially recursive resolution.
 - schema: S - The schema for which retrieving a schema is desired
 - [rootSchema={}]: S - The root schema that will be forwarded to all the APIs
 - [rawFormData]: T | undefined - The current formData, if any, to assist retrieving a schema
+- [resolveAnyOfOrOneOfRefs=false]: boolean - Whether to resolve the `anyOf`/`oneOf` options too, each as `retrieveSchema()` resolves it
 
 #### Returns
 
@@ -3492,6 +3561,9 @@ Any keyword that asserts nothing, such as an annotation, an identifier, `$defs`,
 Takes a schema and formData and returns a copy of the formData with any fields not defined in the schema removed.
 This is useful for ensuring that only data that is relevant to the schema is preserved.
 Objects with `additionalProperties` keyword set to `true` will not have their extra fields removed.
+
+Known limitation: a property declared both beside a `$ref` and in the definition it names, or an option an `allOf` merge rebuilds, is a schema no `$id` resource holds, so a `$ref` inside it that a resource of its own wrote is resolved against the root.
+Filtering through it throws `Could not find a definition for …`, or reads the root's definition of the same name.
 
 ```ts
 const schema = {
@@ -3583,6 +3655,7 @@ Without `oldData` the filter always runs, matching v6.
 
 Creates a `SchemaUtilsType` interface that is based around the given `context` and `rootSchema` parameters.
 The resulting interface implementation will forward the `context` and `rootSchema` to all the wrapped APIs.
+The `rootSchema` is parsed once per object and treated as immutable: a change made to it in place is not seen, even by a new `createSchemaUtils()`, so pass a new object to change it.
 
 #### Parameters
 

@@ -1,5 +1,5 @@
 import type { RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { logOnce, schemaParser } from '@rjsf/utils';
+import { ID_KEY, logOnce, schemaKey, schemaParser, withRootIdRefPrefix } from '@rjsf/utils';
 import { Validator } from 'ata-validator';
 
 import { ATA_CONFIG, COLOR_FORMAT_REGEX, DATA_URL_FORMAT_REGEX } from './createAtaInstance.ts';
@@ -44,7 +44,12 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
   const { customFormats, additionalMetaSchemas = [], extenderFn, ataOptionsOverrides = {}, customMergeAllOf } = options;
   const schemaMaps = schemaParser(schema, { customMergeAllOf });
   const keys = Object.keys(schemaMaps);
-  const schemas = Object.values(schemaMaps);
+  // A sub-schema the form validates can keep a `$ref` local to the root, which compiled under an `$id` of its own would
+  // resolve against itself, so it names the root by the id the root is compiled under
+  const rootId = schemaKey(schema);
+  const schemas = Object.values(schemaMaps).map((parsed) =>
+    parsed[ID_KEY] === rootId ? parsed : withRootIdRefPrefix<StrictRJSFSchema>(parsed, schema, rootId),
+  );
 
   // What the module cannot carry is left out. `engine` only picks how the runtime validator
   // answers, never what it answers, and a standalone module is generated code by definition.

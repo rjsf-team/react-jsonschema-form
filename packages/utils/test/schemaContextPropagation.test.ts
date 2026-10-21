@@ -3,6 +3,7 @@ import {
   createSchemaUtils,
   findFieldInSchema,
   findSelectedOptionInXxxOf,
+  getClosestMatchingOption,
   getDefaultFormState,
   getDisplayLabel,
   getFromSchema,
@@ -14,7 +15,6 @@ import {
   retrieveSchema,
   sanitizeDataForNewSchema,
 } from '../src/index.ts';
-import { calculateIndexScore } from '../src/schema/getClosestMatchingOption.ts';
 import shallowAllOfMerge from '../src/schema/shallowAllOfMerge.ts';
 import getTestValidator from './testUtils/getTestValidator.ts';
 
@@ -35,6 +35,11 @@ const objectAllOfDefinitions: RJSFSchema = {
   definitions: { A: { allOf: [{ type: 'object', properties: { b: { type: 'string' } } }] } },
 };
 const oldObjectSchema: RJSFSchema = { type: 'object', properties: { a: { type: 'string' } } };
+/** A `$ref` with keywords beside it that constrain the data, which the form reads as the `allOf` of both */
+const refBesideProperties: RJSFSchema = { $ref: '#/definitions/A', properties: { c: { type: 'string' } } };
+const objectDefinitions: RJSFSchema = {
+  definitions: { A: { type: 'object', properties: { b: { type: 'string' } } } },
+};
 
 const CASES: PropagationCase[] = [
   {
@@ -103,12 +108,18 @@ const CASES: PropagationCase[] = [
     callSchemaUtils: (schemaUtils) => schemaUtils.findFieldInSchema(schemaUtils.getRootSchema(), 'a.b'),
   },
   {
-    // `getClosestMatchingOption()` resolves the `$ref`s of every option before scoring it, so it is the scoring of an
-    // option that still holds a `$ref` that reaches the merge
-    name: 'calculateIndexScore',
-    rootSchema: objectAllOfDefinitions,
+    name: 'getClosestMatchingOption through an option with keywords beside its $ref',
+    rootSchema: objectDefinitions,
     callFunction: (context, rootSchema) =>
-      calculateIndexScore(context, rootSchema, { properties: { a: { $ref: '#/definitions/A' } } }, { a: { b: 'x' } }),
+      getClosestMatchingOption(context, rootSchema, { b: 'x', c: 'y' }, [refBesideProperties, oldObjectSchema]),
+    callSchemaUtils: (schemaUtils) =>
+      schemaUtils.getClosestMatchingOption({ b: 'x', c: 'y' }, [refBesideProperties, oldObjectSchema]),
+  },
+  {
+    name: 'omitExtraData through a property with keywords beside its $ref',
+    rootSchema: { ...objectDefinitions, type: 'object', properties: { p: refBesideProperties } },
+    callFunction: (context, rootSchema) => omitExtraData(context, rootSchema, rootSchema, { p: { b: 'x', c: 'y' } }),
+    callSchemaUtils: (schemaUtils) => schemaUtils.omitExtraData(schemaUtils.getRootSchema(), { p: { b: 'x', c: 'y' } }),
   },
   {
     name: 'omitExtraData',

@@ -46,6 +46,13 @@ describe('OptionalDataControlsField', () => {
     ['a oneOf', { oneOf: ARRAY_OPTIONS }],
     // The options' type is the one the controls are rendered for, so it wins over the object's own
     ['an object with an anyOf', { type: 'object', properties: { p: { type: 'string' } }, anyOf: ARRAY_OPTIONS }],
+    [
+      'a oneOf written as $refs',
+      {
+        definitions: { strings: ARRAY_OPTIONS[0], numbers: ARRAY_OPTIONS[1] },
+        oneOf: [{ $ref: '#/definitions/strings' }, { $ref: '#/definitions/numbers' }],
+      },
+    ],
   ])('adding data to %s whose options are all arrays stores an empty array', async (_, schema) => {
     const onChange = await clickAdd(schema);
     expect(onChange).toHaveBeenCalledWith([], toFieldPath('optional'));

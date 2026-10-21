@@ -13,8 +13,8 @@ import {
   THEN_KEY,
   UNEVALUATED_PROPERTIES_KEY,
 } from './constants.ts';
-import findSchemaDefinition from './findSchemaDefinition.ts';
 import isObject from './isObject.ts';
+import { resolveOwnRef } from './schema/retrieveSchema.ts';
 import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
 
 /** Recursively checks whether the given raw `schema` contains a `dependencies` or `if` keyword anywhere below its
@@ -48,14 +48,9 @@ export default function schemaHasNestedConditional<S extends StrictRJSFSchema = 
     }
     refs = [...refs, ref];
     try {
-      const target = findSchemaDefinition<S>(ref, rootSchema);
-      if (isObject(target)) {
-        // Merge, don't replace: sibling keywords declared alongside `$ref` are preserved and applied by
-        // `retrieveSchema()` (via `{ ...refSchema, ...localSchema }`), so a local `dependencies`/`if` next to a
-        // `$ref` must still be seen here, not just ones found on the ref target.
-        const { [REF_KEY]: _ref, ...localSchema } = resolved;
-        resolved = { ...target, ...localSchema };
-      }
+      // The `$ref` is read with the keywords beside it, as the form reads them, so a `dependencies`/`if` beside the
+      // `$ref` is seen here as well as one the definition holds
+      resolved = resolveOwnRef<S>(resolved, rootSchema);
     } catch {
       // An unresolvable $ref will already have surfaced elsewhere (e.g. when rendering the field); treat it as
       // having no nested conditional here rather than letting this best-effort check throw.

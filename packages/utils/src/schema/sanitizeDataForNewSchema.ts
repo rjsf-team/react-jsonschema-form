@@ -3,12 +3,14 @@ import deepEquals from '../deepEquals.ts';
 import getPropertySchema from '../getPropertySchema.ts';
 import getSchemaType from '../getSchemaType.ts';
 import getXxxOfKey from '../getXxxOfKey.ts';
-import isObject from '../isObject.ts';
+import getXxxOfOptions from '../getXxxOfOptions.ts';
+import isObject, { isSchemaObject } from '../isObject.ts';
 import isPlainObject from '../isPlainObject.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
 import { getByPath, hasByPath } from '../pathUtils.ts';
 import type { FormContextType, GenericObjectType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
-import retrieveSchema from './retrieveSchema.ts';
+import resolveConstantOptions from './resolveConstantOptions.ts';
+import retrieveSchema, { ownRefResolves } from './retrieveSchema.ts';
 
 const NO_VALUE = Symbol('no Value');
 
@@ -37,6 +39,22 @@ function enumValuesForSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: S)
   const values = (options as S[]).flatMap((option) => (CONST_KEY in option ? [option[CONST_KEY]] : option.enum!));
 
   return values.length > 0 ? values : undefined;
+}
+
+/** Returns the values the old schema's select lists, its constant options written as `$ref`s read as the definitions
+ * they name under `rootSchema`, as the new schema's are read. The old schema can come from another root, where an
+ * option's `$ref` names nothing under this one: such a list lists no values, so it agrees with no list the new schema
+ * offers, and the new schema's options decide.
+ *
+ * @param oldSchema - The old schema
+ * @param rootSchema - The root schema of the new schema
+ * @returns - The values the select lists, or undefined when it lists none
+ */
+function oldListedValues<S extends StrictRJSFSchema = RJSFSchema>(oldSchema: S, rootSchema: S): unknown[] | undefined {
+  const options = getXxxOfOptions<S>(oldSchema)?.options ?? [];
+  return options.every((option) => !isSchemaObject<S>(option) || ownRefResolves<S>(option, rootSchema))
+    ? enumValuesForSchema<S>(resolveConstantOptions<S>(oldSchema, rootSchema))
+    : undefined;
 }
 
 /** Whether two schemas' `type`s name the same types. A list is compared by what it names rather than by identity or
@@ -133,7 +151,8 @@ function constraintMayHaveChanged<
  * - If the old and new schema types, read through `getSchemaType()` so that a type list also allowing `null` counts,
  *   are both array, the `data` is an array, the new schema's `const` is not an array other than the `data` unless the
  *   old schema declares the same `const`, and the `data` is one of the new schema's `enum` or constant options when it
- *   lists any the old schema did not list alike, then:
+ *   lists any the old schema did not list alike, the options of both read with their `$ref`s resolved against
+ *   `rootSchema`, where an old option whose `$ref` names nothing there lists no values, then:
  *   - If the old and new schema `items` are both a single schema rather than a tuple or a boolean:
  *     - Retrieve the schema for any refs within each `oldKeySchema.items` and/or `newKeySchema.items`
  *     - If the `type`s of both items are the same (or the old does not have a type):
@@ -468,9 +487,12 @@ function sanitizeDataForNewSchemaInternal<
       deepEquals(newSchema.const, data) ||
       deepEquals(oldSchema.const, newSchema.const)) &&
     // A select over whole arrays holds one of its values, so an array it does not list is cleared as well, unless the
-    // old schema listed the same values, for the same reason
-    (replacementForInvalidEnumValue<S>(newSchema, data) === NO_VALUE ||
-      deepEquals(enumValuesForSchema<S>(oldSchema), enumValuesForSchema<S>(newSchema)))
+    // old schema listed the same values, for the same reason. Its constant options are read as the property's are
+    (replacementForInvalidEnumValue<S>(resolveConstantOptions<S>(newSchema, rootSchema), data) === NO_VALUE ||
+      deepEquals(
+        oldListedValues<S>(oldSchema, rootSchema),
+        enumValuesForSchema<S>(resolveConstantOptions<S>(newSchema, rootSchema)),
+      ))
   ) {
     let oldSchemaItems = oldSchema.items;
     let newSchemaItems = newSchema.items;
@@ -493,13 +515,15 @@ function sanitizeDataForNewSchemaInternal<
       // filter comparison ask for it only when an enum check actually follows
       // `resolveOldSchemaPrev()` already memoizes, so this stays a plain read of it
       const resolveOldSchemaItemsPrevRaw = () => resolveOldSchemaPrev()?.[ITEMS_KEY] as S | undefined;
-      oldSchemaItems = retrieveSchema<T, S, F>(context, oldSchemaItemsRaw, rootSchema, data as T);
+      const oldItemsSchema = retrieveSchema<unknown, S, F>(context, oldSchemaItemsRaw, rootSchema, data);
+      oldSchemaItems = oldItemsSchema;
       // The old and new raw items schema are usually the same object, so skip resolving a second time in that common
       // case
       const sameRawItemsSchema = oldSchemaItemsRaw === newSchemaItemsRaw;
-      newSchemaItems = sameRawItemsSchema
-        ? oldSchemaItems
-        : retrieveSchema<T, S, F>(context, newSchemaItemsRaw, rootSchema, data as T);
+      const newItemsSchema = sameRawItemsSchema
+        ? oldItemsSchema
+        : retrieveSchema<unknown, S, F>(context, newSchemaItemsRaw, rootSchema, data);
+      newSchemaItems = newItemsSchema;
       // Now get types and see if they are the same
       const oldSchemaType = getByPath(oldSchemaItems, 'type');
       const newSchemaType = getByPath(newSchemaItems, 'type');
@@ -508,10 +532,10 @@ function sanitizeDataForNewSchemaInternal<
         const maxItems = newSchema.maxItems ?? -1;
         // Items whose type list also allows `null` are read through `getSchemaType()`, as a property is above, so an
         // object one holds is sanitized as an object item is and a `null` it allows stays as it is
-        const itemsType = newSchemaType === undefined ? undefined : getSchemaType<S>(newSchemaItems as S);
+        const itemsType = newSchemaType === undefined ? undefined : getSchemaType<S>(newItemsSchema);
         // An item picked from object constants is one of them as a whole, so it's filtered against the options below
         // rather than sanitized property by property, which would find no properties and drop it
-        if (itemsType === 'object' && !isWholeValueSelect<S>(newSchemaItems as S)) {
+        if (itemsType === 'object' && !isWholeValueSelect<S>(newItemsSchema)) {
           newFormData = data.reduce<unknown[]>((newValue, aValue: T, index: number) => {
             let itemValue: unknown = aValue;
             if (newSchemaType === 'object' || isPlainObject(aValue)) {
@@ -554,7 +578,7 @@ function sanitizeDataForNewSchemaInternal<
           // silently dropped by an unrelated sanitize pass (#5451), while a conditional that flipped between
           // the previous and current data shows up as a real difference and the filter still runs (#5250).
           // The comparison runs only when some item would actually be dropped, since it can cost a resolve
-          const newItemEnumValues = enumValuesForSchema(newSchemaItems as S);
+          const newItemEnumValues = enumValuesForSchema(newItemsSchema);
           const filtered = newItemEnumValues
             ? data.filter((item: unknown) => newItemEnumValues.some((v) => deepEquals(v, item)))
             : data;
@@ -562,7 +586,7 @@ function sanitizeDataForNewSchemaInternal<
             newItemEnumValues &&
             filtered.length < data.length &&
             (oldSchemaPrevRawForFrame === undefined ||
-              isWholeValueSelect<S>(newSchemaItems as S) ||
+              isWholeValueSelect<S>(newItemsSchema) ||
               // The committed side, as the scalar path compares it: a push or reset can cross a
               // conditional branch without settling, leaving the chain on the new side's branch while
               // the committed items schema still holds the branch the data came from (#5250). Where the
@@ -576,7 +600,7 @@ function sanitizeDataForNewSchemaInternal<
                 newSchemaItemsRaw,
                 oldData,
                 data,
-                newSchemaItems as S,
+                newItemsSchema,
               ))
               ? filtered
               : data;

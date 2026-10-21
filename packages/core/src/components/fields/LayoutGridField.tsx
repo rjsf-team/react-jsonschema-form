@@ -409,7 +409,8 @@ export function getSchemaDetailsForField<
     const result = computeArraySchemasIfPresent<S>(schema, leafPath);
     fieldPath = toFieldPath(result.index ?? leafPath, fieldPath);
     if (result.rawSchema) {
-      schema = result.rawSchema;
+      // An array hands its items out as written, so items written as a `$ref` are retrieved for the item's data
+      schema = schemaUtils.retrieveSchema(result.rawSchema, getByPath<T>(innerData, leafPath));
     } else {
       // Now grab the schema from the leafPath of the current schema properties
       schema = schema?.[PROPERTIES_KEY]?.[leafPath] as S | undefined;

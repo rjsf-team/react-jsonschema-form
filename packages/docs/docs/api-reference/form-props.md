@@ -220,8 +220,8 @@ This is specific to `allOf`:
 
 - An `if-then-else` placed directly in a nested object schema is resolved with either value, unless `emptyObjectFields` is `skipEmptyDefaults`. For example, under `skipDefaults`, `items: { type: 'object', if, then }` fills in the `then` default, while `items: { type: 'object', allOf: [{ if, then }] }` does not.
 - Adding a direct `if` to that `items` schema resolves its whole `allOf` too, unless `emptyObjectFields` is `skipEmptyDefaults`.
-- With a `customMergeAllOf` built on a deep merger, such as `createDeepAllOfMerge` from `@x0k/json-schema-merge` given a shallow merge built with that library's `createMerger` and `createShallowAllOfMerge`, merging an `allOf` also turns a property's `allOf: [{ if, then }]` into a direct `if-then-else`, so that property's `then` default is filled in under `skipDefaults`, unless `emptyObjectFields` is `skipEmptyDefaults`. That happens wherever an `allOf` is merged: the root's own `allOf`, or the `allOf` of an object or `items` schema that also has a direct `if`, but not a nested `allOf` on its own.
-- A `dependencies` entry in a nested object schema is resolved once its property has a value, its `allOf` and `if-then-else` included, even when `emptyObjectFields` is `skipEmptyDefaults`. A default counts as that value, and the entry's `if` is checked against it, so an `if` that lists the property in `required` passes with no form data, while one that does not match the default fails. For example, under `skipDefaults`, `items: { type: 'object', properties: { animal: { default: 'Cat' } }, dependencies: { animal: { allOf: [{ if, then }] } } }` fills in the `then` default. A root `dependencies` entry counts a default only while the form data is empty: once the form data holds any value, the entry is applied only when the form data holds its property.
+- A `customMergeAllOf` built on a deep merger, such as `createDeepAllOfMerge` from `@x0k/json-schema-merge`, changes none of this. It may also flatten the `allOf` of the properties inside the `allOf` it merges, but each property's defaults are computed from the property as the schema declares it, so a property's `allOf` is skipped under `skipDefaults` as any other nested `allOf` is.
+- A `dependencies` entry in a nested object schema is resolved once its property has a value, its `allOf` and `if-then-else` included, even when `emptyObjectFields` is `skipEmptyDefaults`. A default counts as that value, and the entry's `if` is checked against it, so an `if` that lists the property in `required` passes with no form data, while one that does not match the default fails. For example, under `skipDefaults`, `items: { type: 'object', properties: { animal: { default: 'Cat' } }, dependencies: { animal: { allOf: [{ if, then }] } } }` fills in the `then` default. A root `dependencies` entry counts a default too, whatever else the form data holds.
 
 ```tsx
 import { Form } from '@rjsf/core';
@@ -732,6 +732,8 @@ render(
 ## schema
 
 **Required**! Form schema. We support JSON schema draft-07 by default. See [Schema Reference](https://json-schema.org/draft-07/json-schema-release-notes.html) for more information.
+
+The schema is treated as immutable: it is parsed once per object, so a change made to it in place is not seen. Pass a new object to change it.
 
 ## showErrorList
 

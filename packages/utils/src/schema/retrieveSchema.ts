@@ -6,6 +6,7 @@ import {
 } from '../additionalPropertiesUtils.ts';
 import { combinationsUpTo } from '../combinationsOf.ts';
 import {
+  ADDITIONAL_PROPERTIES_KEY,
   ADDITIONAL_PROPERTY_FLAG,
   ALL_OF_KEY,
   ANY_OF_KEY,
@@ -19,27 +20,25 @@ import {
   PROPERTIES_KEY,
   REF_KEY,
   RJSF_REF_CYCLE_KEY,
+  RJSF_REF_KEY,
   THEN_KEY,
+  UNEVALUATED_PROPERTIES_KEY,
 } from '../constants.ts';
 import deepEquals from '../deepEquals.ts';
-import findSchemaDefinition, {
-  findSchemaDefinitionWithBase,
-  ownBaseURI,
-  splitKeyElementFromObject,
-} from '../findSchemaDefinition.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getSchemaOwnTypes from '../getSchemaOwnTypes.ts';
 import getXxxOfKey from '../getXxxOfKey.ts';
 import getXxxOfOptions from '../getXxxOfOptions.ts';
 import guessType from '../guessType.ts';
-import isObject from '../isObject.ts';
-import isPlainObject from '../isPlainObject.ts';
+import isConstantOptionList from '../isConstantOptionList.ts';
+import isObject, { isSchemaObject } from '../isObject.ts';
 import logOnce from '../logOnce.ts';
 import mergeSchemas from '../mergeSchemas.ts';
 import { getByPath } from '../pathUtils.ts';
-import { declaredRef, enclosingRefPath, mergeBranch, resolvedFromRef, resolvedSchemaOf } from '../refOf.ts';
+import { splitKeyElementFromObject } from '../schemaUri.ts';
 import setOwn from '../setOwn.ts';
 import type {
+  CustomMergeAllOf,
   FormContextType,
   GenericObjectType,
   RJSFMarkedSchema,
@@ -48,53 +47,679 @@ import type {
   StrictRJSFSchema,
 } from '../types.ts';
 import getFirstMatchingOption, { withVariantId } from './getFirstMatchingOption.ts';
+import KeyedMemo from './graph/keyedMemo.ts';
+import buildPlan, {
+  booleanSchema,
+  cachedPolicy,
+  childSeeds,
+  conjoinDefinition,
+  conjunctionOf,
+  refDefinition,
+  schemaFrom,
+  seedsAt,
+  tupleSeeds,
+  withoutKeys,
+} from './graph/mergePlan.ts';
+import type { MergePlan, OptionRequest, PlanInput, PlanPolicy, Seed, Seeding } from './graph/mergePlan.ts';
+import parseSchemaGraph from './graph/parseSchemaGraph.ts';
+import type { AdoptedSchema, NodeId, ObjectNode, SchemaGraph } from './graph/parseSchemaGraph.ts';
+import { childProvenance, extendChain, readProvenance, rootProvenance, stamp } from './graph/provenance.ts';
+import type { GuardChain, Provenance } from './graph/provenance.ts';
+import { childField, collapses, ownRefTargets, restartSeeds } from './graph/recursionRule.ts';
+import type { ContainmentEdge, FieldPosition } from './graph/recursionRule.ts';
 import shallowAllOfMerge from './shallowAllOfMerge.ts';
 
-// Backstop for the resolveReference <-> retrieveSchemaInternal loop: with the path reconstructed from RJSF_REF_KEY
-// markers a pass over an already-resolved schema is a no-op, so a resolution that still changes after this many
-// passes over a single schema is not terminating; it collapses to the schema resolved so far, flagged as a cycle,
-// instead of overflowing the stack. The count is local to one fixpoint loop: nested allOf, then/else and
-// dependencies branches receive only the caller's re-walk status, so nesting depth alone cannot reach this limit.
-const MAX_RESOLUTION_PASSES = 100;
-
-// Marks the `allOf` that a key's `patternProperties` merge is left undone in, so the level that resolves its way back
-// here recognises its own work. `RJSF_REF_CYCLE_KEY` cannot say it: `resolveAllReferences()` sets that one on any
-// property whose `$ref` closes a cycle, and such a property travels with the marker through the expansion of that
-// `$ref`, so reading it here as a merge already made drops the patterns a key of a mutually recursive schema matches.
-// It stays private to this module, since the merge it describes is left and taken up in this one function.
-const PATTERN_MERGE_LEFT_UNDONE = Symbol('__rjsf_pattern_merge_left_undone');
-
-/** Retrieves an expanded schema that has had all of its conditions, additional properties, references and dependencies
- * resolved and merged into the `schema` given a `context`, `rootSchema` and `rawFormData` that is used to do the
- * potentially recursive resolution.
+/** Retrieves the schema of one field: the `schema` with its own `$ref`, `allOf`, `if`/`then`/`else`, `dependencies`
+ * and patterns merged in for the `rawFormData`, and the extra keys of that data stubbed among its `properties`. The
+ * schema is resolved one level at a time: a `$ref` under `properties`, `items` or an option is handed out as it stands,
+ * for the caller to retrieve when it renders that subschema.
+ *
+ * Every subschema handed out carries where it came from, so retrieving it resolves it as the field it is. A recursive
+ * `$ref` under `properties` is handed out flagged with `RJSF_REF_CYCLE_KEY`; retrieving a copy with that flag set to
+ * `false` expands it by one level. Retrieving a schema this function returned gives the same schema back, and a schema
+ * that carries nothing of the kind is resolved as a field of its own, from the top.
+ *
+ * A `schema` the root does not hold is parsed once per content and kept for as long as the root, so one built from form
+ * data keeps an entry for each distinct value until the root changes. Like the root, it must not be changed once handed
+ * in: calls handed the same content share its result.
  *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param schema - The schema for which retrieving a schema is desired
  * @param [rootSchema={}] - The root schema that will be forwarded to all the APIs
  * @param [rawFormData] - The current formData, if any, to assist retrieving a schema
- * @param [resolveAnyOfOrOneOfRefs = false] - Optional flag indicating whether to resolved refs in anyOf/oneOf lists
+ * @param [resolveAnyOfOrOneOfRefs = false] - Optional flag indicating whether to resolve the `anyOf`/`oneOf` options
+ *          too, each as `retrieveSchema()` resolves it
  * @returns - The schema having its conditions, additional properties, references and dependencies resolved
  */
 export default function retrieveSchema<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(
+>(context: SchemaContext<S, F>, schema: S, rootSchema?: S, rawFormData?: T, resolveAnyOfOrOneOfRefs = false): S {
+  if (!isObject(schema)) {
+    return schemaFrom(schema, {});
+  }
+  const graph = parseSchemaGraph<S>(rootSchema ?? schemaFrom(schema, {}));
+  const leaf = leafViews.get(schema);
+  if (leaf?.graph === graph && isSchemaObject<S>(leaf.view)) {
+    return leaf.view;
+  }
+  const view = buildView<S, F>(context, graph, fieldOf<S>(graph, schema), rawFormData, resolveAnyOfOrOneOfRefs);
+  if (isLeaf(graph, schema)) {
+    leafViews.set(schema, { graph, view });
+  }
+  return view;
+}
+
+/** The views of the schemas that merge nothing and hold no subschemas, by schema: a call root, or a subschema
+ * `retrieveSchema()` handed out for a field that merges nothing. Such a view reads neither the data nor the context, and
+ * `isSelect()` and `sanitizeDataForNewSchema()` retrieve every property of a form on every edit, so it is retrieved
+ * once per root rather than planned again on each call.
+ */
+const leafViews = new WeakMap<object, { readonly graph: object; readonly view: object }>();
+
+/** The keywords that merge a subschema in, hand one out, or stub the extra keys of the data */
+const NON_LEAF_KEYWORDS: readonly string[] = [
+  REF_KEY,
+  ALL_OF_KEY,
+  IF_KEY,
+  DEPENDENCIES_KEY,
+  ANY_OF_KEY,
+  ONE_OF_KEY,
+  PROPERTIES_KEY,
+  PATTERN_PROPERTIES_KEY,
+  ADDITIONAL_PROPERTIES_KEY,
+  UNEVALUATED_PROPERTIES_KEY,
+  ITEMS_KEY,
+  'prefixItems',
+  'additionalItems',
+];
+
+/** Whether `schema` merges nothing and holds no subschemas, so that what it resolves to depends on nothing but itself
+ *
+ * @param schema - The schema to check
+ * @returns - True when the schema holds none of the keywords that merge a subschema in, hand one out or stub the extra
+ *          keys of the data
+ */
+export function isLeafSchema(schema: object): boolean {
+  return !NON_LEAF_KEYWORDS.some((keyword) => Object.hasOwn(schema, keyword));
+}
+
+/** Whether `schema` is a leaf whose view depends on nothing but `schema`: a call root, or a subschema handed out as it
+ * stands for a field that merges nothing. A copy a caller made of a handed-out subschema is planned from its own
+ * keywords, so it is not one.
+ */
+function isLeaf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, schema: S): boolean {
+  if (!isLeafSchema(schema)) {
+    return false;
+  }
+  const stamped = readProvenance<S>(schema, graph);
+  return stamped === undefined || (handedOut.has(schema) && mergesNothing(stamped.graph, stamped.seeds));
+}
+
+/** The schemas `retrieveSchema()` handed out. A schema found here is one of them as it was handed out, so it is
+ * resolved from its provenance alone; one that only carries a provenance is a copy a caller made of one, possibly with
+ * keywords of its own, so it is resolved from its keywords.
+ */
+const handedOut = new WeakSet<object>();
+
+const OPTION_KEYWORDS: readonly ('anyOf' | 'oneOf')[] = [ANY_OF_KEY, ONE_OF_KEY];
+
+function handOut<S extends StrictRJSFSchema>(schema: S, provenance: Provenance<S>): S {
+  const stamped = stamp(schema, provenance);
+  handedOut.add(stamped);
+  return stamped;
+}
+
+/** The subschema last handed out for a field as it stands, by the field's provenance */
+const stubs = new WeakMap<object, { readonly value: unknown; readonly stub: object }>();
+
+/** Returns `value`, the subschema of the field `provenance` describes, handed out as it stands. It depends on nothing
+ * else, so the same object is handed out again while the field's subschema is the same, which spares the deep
+ * comparison that would otherwise find a new copy equal on every render of its parent.
+ */
+function stubOf<S extends StrictRJSFSchema>(value: S, provenance: Provenance<S>): S {
+  const cached = stubs.get(provenance);
+  if (cached?.value === value && isSchemaObject<S>(cached.stub)) {
+    return cached.stub;
+  }
+  const stub = handOut(value, provenance);
+  stubs.set(provenance, { value, stub });
+  return stub;
+}
+
+/** A view, with the checks that say whether it still holds for other data: one per property whose own plan read its
+ * data
+ */
+interface MemoizedView {
+  readonly view: object;
+  readonly holds: readonly ((data: unknown) => boolean)[];
+}
+
+/** The views that read the data only through some of its keys, by field, plan, whether options are resolved and
+ * whether there is data: an object field's data is a new object on every edit, so such a view is reused while each
+ * property that read its data would be handed out as before. A property handed out as it stands depends on its data
+ * only through whether it collapses, which is checked again against the data, so a caller that mutates that data in
+ * place gets an answer for what the data holds now. A property its patterns are merged into belongs to an object that
+ * stubs its extra keys, whose view is not memoized.
+ */
+const views = new KeyedMemo<MemoizedView>();
+
+/** Whether a field seeded by `seeds` merges nothing into its one subschema: a field that does, through a `$ref`, an
+ * `allOf`, a condition, `dependencies` or options, is the only kind the recursion rule can collapse
+ */
+function mergesNothing<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, seeds: readonly Seed[]): boolean {
+  const node = seeds.length === 1 ? graph.node(seeds[0].node) : undefined;
+  return (
+    node?.kind === 'schema' &&
+    node.ref === undefined &&
+    [ALL_OF_KEY, IF_KEY, DEPENDENCIES_KEY, ANY_OF_KEY, ONE_OF_KEY].every((keyword) => !Object.hasOwn(node.raw, keyword))
+  );
+}
+
+/** Retrieves the field `field` describes as `retrieveSchema()` retrieves a schema it handed out for that field: a schema
+ * merged from declarations in several resources holds subschemas no graph holds, which retrieving it as a call root
+ * would resolve against the root's base, where retrieving the field resolves each against its own resource
+ *
+ * @param context - The `SchemaContext` that will be forwarded to all the APIs
+ * @param field - The provenance of the field
+ * @param [data] - The field's data
+ * @returns - The field's schema
+ */
+export function retrieveField<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
-  schema: S,
-  rootSchema: S = {} as S,
-  rawFormData?: T,
-  resolveAnyOfOrOneOfRefs = false,
+  field: Provenance<S>,
+  data?: unknown,
 ): S {
-  return retrieveSchemaInternal<T, S, F>(
-    context,
-    schema,
-    rootSchema,
-    rawFormData,
-    undefined,
-    undefined,
-    resolveAnyOfOrOneOfRefs,
-  )[0];
+  return buildView<S, F>(context, parseSchemaGraph<S>(field.graph.rawRoot), field, data, false);
+}
+
+/** Returns the field `schema` is the schema of. An unstamped schema, or one stamped for another root, is a call root.
+ * A copy with `RJSF_REF_CYCLE_KEY` set to `false` is the expansion of the collapsed field it copies: its seeds restart,
+ * and so does the guard chain its children are checked against. Any other copy of a handed-out schema, such as an
+ * option merged with what it inherits or a custom field's spread with a keyword of its own, is planned from its own
+ * keywords, with the ref path and chain of the field it copies: restarting the ref path would let a field that copies
+ * its schema at every level recurse without end.
+ *
+ * @param graph - The graph of the current root
+ * @param schema - The schema whose field is wanted
+ * @returns - The provenance of the field
+ */
+export function fieldOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, schema: S): Provenance<S> {
+  const stamped = readProvenance<S>(schema, graph);
+  if (stamped === undefined) {
+    const adopted = graph.adopt(schema);
+    return rootProvenance(adopted.graph, [{ node: adopted.node, refPath: [] }]);
+  }
+  if (Reflect.get(schema, RJSF_REF_CYCLE_KEY) === false) {
+    return childProvenance(stamped, { seeds: restartSeeds(stamped.seeds) });
+  }
+  if (handedOut.has(schema)) {
+    return stamped;
+  }
+  const adopted = stamped.graph.adoptCopy(schema, stamped, stamped.seeds[0].node);
+  return childProvenance(
+    stamped,
+    { seeds: [{ node: adopted.node, refPath: stamped.seeds[0].refPath }], chain: stamped.chain },
+    adopted.graph,
+  );
+}
+
+/** The node of the option `option` a plan's merged `keyword` list holds at `index`: the one a chain providing the list
+ * holds there, which is the one parsed under the base of the resource that provider is in, since one object reached in
+ * two resources is a node in each. An option no node holds, such as one of the cross product a merge makes of two
+ * lists, is adopted, so that it is still handed out as an option of the field offering it, keeping the field's guard
+ * chain: handed out as a schema of its own, a recursion through it would start afresh at every level. The merge makes
+ * such an option anew for every plan, which the graph adopts once for what it holds, in the resource the lists merged
+ * into it sit in, so that the `$ref`s it holds resolve where they were written. Where the field's declarations offer
+ * lists under `keyword` in several resources it is adopted at the root's base, which is a known gap: that includes a
+ * list the option the field chose replaced, so an option that option's own merge rebuilds in a resource of its own is
+ * adopted at the root's base when the field offering the list it replaced sits in another.
+ *
+ * @param seeding - The graph and chains of the field offering the option
+ * @param keyword - The keyword holding the list
+ * @param index - The option's index in the list
+ * @param option - The option
+ * @returns - The option's node and the graph holding it
+ */
+export function optionNode<S extends StrictRJSFSchema>(
+  seeding: Seeding<S>,
+  keyword: string,
+  index: number,
+  option: S,
+): AdoptedSchema<S> {
+  const { graph, chains } = seeding;
+  const provided = seedsAt(seeding, keyword, String(index)).find((seed) => {
+    const node = graph.node(seed.node);
+    return node.kind === 'schema' && node.raw === option;
+  });
+  const node = provided?.node ?? graph.byObject(option);
+  if (node !== undefined) {
+    return { graph, node };
+  }
+  const bases = new Set(chains.flatMap((chain) => chain.get(keyword)?.node.baseUri ?? []));
+  return graph.adopt(option, bases.size === 1 ? [...bases][0] : undefined);
+}
+
+/** The policy views are planned with: every `allOf` is merged, and an option only where the schema offering it has
+ * `dependencies`, the one case resolution merges the option the data matches rather than leaving the choice to
+ * `MultiSchemaField`
+ */
+function renderPolicy<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  graph: SchemaGraph<S>,
+): PlanPolicy<S> {
+  const { validator, customMergeAllOf } = context;
+  return cachedPolicy<S, F>(context, graph, 'render', () => ({
+    allOf: true,
+    selectOption: (request) => dependencyOption({ validator, customMergeAllOf }, request, request.data),
+  }));
+}
+
+/** Returns the option of a list beside `dependencies` that `data` matches first, which is merged into the schema
+ * rather than left to `MultiSchemaField` to choose; none for any other list. Each option is matched with its own `$ref`
+ * resolved, a boolean option as the object it reads as.
+ *
+ * @param context - The context whose validator the options are matched with, and whose `customMergeAllOf` an option's
+ *        own `$ref` is read with
+ * @param request - The option list the plan met
+ * @param data - The data the option is matched against
+ * @returns - The index of the matching option, or undefined
+ */
+export function dependencyOption<S extends StrictRJSFSchema, F extends FormContextType>(
+  { validator, customMergeAllOf }: SchemaContext<S, F>,
+  { graph, options, dependencies, discriminator }: OptionRequest<S>,
+  data: unknown,
+): number | undefined {
+  if (!dependencies || options.length === 0) {
+    return undefined;
+  }
+  const resolved = options.map((option) => {
+    const node = graph.node(option);
+    return node.kind === 'schema'
+      ? resolveNodeOwnRef<S>(graph, node, customMergeAllOf)
+      : booleanSchema(node, graph.rawRoot);
+  });
+  return getFirstMatchingOption({ validator }, data, resolved, graph.rawRoot, discriminator);
+}
+
+/** The schemas `resolveOwnRef()` made, by graph, `customMergeAllOf` and the schema holding the reference, those
+ * `resolveNodeOwnRef()` made, by graph, `customMergeAllOf` and node, and those `resolveMergedOwnRef()` made, by graph,
+ * `customMergeAllOf`, the node declaring the reference and the schema holding it
+ */
+const ownRefs = new KeyedMemo<object>();
+
+/** Returns a schema's own `$ref` resolved and marked with it, as a schema an option's `$ref` stands for is scored and
+ * validated: the definition overridden by the keywords beside the reference where those only annotate, and otherwise
+ * the `allOf` of them and of the definition merged, as the form reads it, by the `customMergeAllOf` the form renders
+ * with, so that scoring, constant options and the `ui:definitions` walk read the keywords of both sides as the field
+ * renders them. The reference is resolved through the schema graph, from where the schema sits in the root, as the form
+ * resolves it. Only that reference is followed: the validator follows those below it against the root schema. The
+ * result is made once per schema and merge, and shared, so that a memo keyed on it hits across calls, and a caller
+ * copies it rather than changing it.
+ *
+ * @param schema - The schema whose own `$ref` is to be resolved
+ * @param rootSchema - The root schema the reference names a definition of
+ * @param [customMergeAllOf] - The merge of the context the form renders with, if it has one
+ * @returns - The schema with its own reference resolved, or the schema itself when it holds none
+ * @throws - An error for a reference that resolves to nothing or a chain of references that loops
+ */
+export function resolveOwnRef<S extends StrictRJSFSchema = RJSFSchema>(
+  schema: S,
+  rootSchema: S,
+  customMergeAllOf?: CustomMergeAllOf<S>,
+): S {
+  const ref = schema[REF_KEY];
+  if (typeof ref !== 'string') {
+    return schema;
+  }
+  const rootGraph = parseSchemaGraph<S>(rootSchema);
+  const keys = [rootGraph, customMergeAllOf, schema];
+  const known = ownRefs.peek(keys);
+  if (isSchemaObject<S>(known)) {
+    return known;
+  }
+  const { graph, node } = ownRefNode<S>(rootGraph, schema, ref);
+  const resolved = ownRefResolved(graph, node, schema, ref, customMergeAllOf);
+  ownRefs.set(keys, resolved);
+  return resolved;
+}
+
+/** Returns whether the own `$ref` of `schema` names a definition under `rootSchema`, so that `resolveOwnRef()` resolves
+ * it rather than throwing: a schema written for another root can hold a reference that names nothing under this one
+ *
+ * @param schema - The schema whose own `$ref` is looked up
+ * @param rootSchema - The root schema the reference is looked up in
+ * @returns - False for a reference that resolves to nothing or a chain of references that loops, and true otherwise
+ */
+export function ownRefResolves<S extends StrictRJSFSchema = RJSFSchema>(schema: S, rootSchema: S): boolean {
+  const ref = schema[REF_KEY];
+  if (typeof ref !== 'string') {
+    return true;
+  }
+  const { graph, node } = ownRefNode<S>(parseSchemaGraph<S>(rootSchema), schema, ref);
+  const declared = graph.node(node);
+  return declared.kind === 'schema' && declared.ref !== undefined && graph.node(declared.ref).kind !== 'invalid';
+}
+
+/** Returns the own `$ref` of `schema`, a schema merged from the subschemas `seeds` seed, resolved as `resolveOwnRef()`
+ * resolves it, from the seed declaring it. The merge is an object no graph holds, which `resolveOwnRef()` would read as
+ * a call root, its `$ref` resolved against the root, where one written in a resource of its own resolves against that
+ * resource. A `$ref` none of the seeds declares is resolved as `resolveOwnRef()` resolves it.
+ *
+ * @param graph - The graph holding the seeds
+ * @param seeds - The seeds of the field `schema` is the merged schema of
+ * @param schema - The merged schema whose own `$ref` is to be resolved
+ * @param [customMergeAllOf] - The merge of the context the form renders with, if it has one
+ * @returns - The schema with its own reference resolved, or the schema itself when it holds none
+ * @throws - An error for a reference that resolves to nothing or a chain of references that loops
+ */
+export function resolveMergedOwnRef<S extends StrictRJSFSchema = RJSFSchema>(
+  graph: SchemaGraph<S>,
+  seeds: readonly Seed[],
+  schema: S,
+  customMergeAllOf?: CustomMergeAllOf<S>,
+): S {
+  const ref = schema[REF_KEY];
+  if (typeof ref !== 'string') {
+    return schema;
+  }
+  const declaring = declaringSeed(graph, seeds, ref);
+  if (declaring === undefined) {
+    return resolveOwnRef<S>(schema, graph.rawRoot, customMergeAllOf);
+  }
+  const keys = [graph, customMergeAllOf, declaring.node, schema];
+  const known = ownRefs.peek(keys);
+  if (isSchemaObject<S>(known)) {
+    return known;
+  }
+  const resolved = ownRefResolved(graph, declaring.node, schema, ref, customMergeAllOf);
+  ownRefs.set(keys, resolved);
+  return resolved;
+}
+
+/** Returns the seed declaring `ref`, the own `$ref` of a schema merged from several declarations
+ *
+ * @param graph - The graph holding the seeds
+ * @param seeds - The seeds of the field the schema is the merged schema of
+ * @param ref - The `$ref` as the schema holds it
+ * @returns - The seed whose subschema writes that `$ref`, if one does
+ */
+export function declaringSeed<S extends StrictRJSFSchema>(
+  graph: SchemaGraph<S>,
+  seeds: readonly Seed[],
+  ref: string,
+): Seed | undefined {
+  return seeds.find(({ node }) => {
+    const seed = graph.node(node);
+    return seed.kind === 'schema' && seed.raw[REF_KEY] === ref;
+  });
+}
+
+/** Returns the node the own `$ref` of `schema` is read from: a stub merged from several declarations names the `$ref`
+ * of one of them, which is read from that one's node
+ */
+function ownRefNode<S extends StrictRJSFSchema>(rootGraph: SchemaGraph<S>, schema: S, ref: string): AdoptedSchema<S> {
+  const { graph, seeds } = fieldOf<S>(rootGraph, schema);
+  /* v8 ignore next -- a schema no seed declares the `$ref` of is adopted as a node of its own, which declares it */
+  return { graph, node: (declaringSeed(graph, seeds, ref) ?? seeds[0]).node };
+}
+
+/** Returns the own `$ref` of the node `node` resolved, as `resolveOwnRef()` resolves a schema's, from the node itself
+ * rather than from where its object is first found, since one object reached in two resources is a node in each
+ */
+function resolveNodeOwnRef<S extends StrictRJSFSchema>(
+  graph: SchemaGraph<S>,
+  node: ObjectNode<S>,
+  customMergeAllOf?: CustomMergeAllOf<S>,
+): S {
+  const ref = node.raw[REF_KEY];
+  if (typeof ref !== 'string') {
+    return node.raw;
+  }
+  const keys = [graph, customMergeAllOf, node.id];
+  const known = ownRefs.peek(keys);
+  if (isSchemaObject<S>(known)) {
+    return known;
+  }
+  const resolved = ownRefResolved(graph, node.id, node.raw, ref, customMergeAllOf);
+  ownRefs.set(keys, resolved);
+  return resolved;
+}
+
+function ownRefResolved<S extends StrictRJSFSchema>(
+  graph: SchemaGraph<S>,
+  id: NodeId,
+  schema: S,
+  ref: string,
+  customMergeAllOf: CustomMergeAllOf<S> | undefined,
+): S {
+  const definition = refDefinition<S>(graph, id, customMergeAllOf);
+  const siblings = withoutKeys(schema, REF_KEY);
+  return conjunctionOf<S>(graph, id) === undefined
+    ? { ...definition, ...siblings, [RJSF_REF_KEY]: ref }
+    : { ...conjoinDefinition(schema, siblings, definition, customMergeAllOf), [RJSF_REF_KEY]: ref };
+}
+
+/** Whether an option's plan adds nothing to the plan of the field offering it, beyond the option's own `$ref` */
+function addsNothing<S extends StrictRJSFSchema>(
+  plan: MergePlan<S>,
+  field: Provenance<S>,
+  offered: ReadonlySet<NodeId>,
+): boolean {
+  const [seed] = field.seeds;
+  const seedNode = field.graph.node(seed.node);
+  return [...plan.set].every(
+    (node) => offered.has(node) || (node === seed.node && seedNode.kind === 'schema' && seedNode.pureRef),
+  );
+}
+
+function valueOf(data: unknown, key: string): unknown {
+  return isObject(data) && Object.hasOwn(data, key) ? data[key] : undefined;
+}
+
+/** The check that a memoized view still holds for data whose `key` property collapses as it did when the view was
+ * built. It is built outside `buildView()` because a closure created there would share that call's scope, and so keep
+ * its data and merged schema alive for as long as the view is memoized.
+ *
+ * @param input - What the property's plan is built from, but its data
+ * @param key - The property's name
+ * @param position - Where the property sits, which decides whether its plan collapses
+ * @param collapsed - Whether the property collapsed for the data the view was built for
+ * @returns - The check, which takes the object's data
+ */
+function collapsesAsBefore<S extends StrictRJSFSchema, F extends FormContextType>(
+  input: PlanInput<S, F>,
+  key: string,
+  position: FieldPosition,
+  collapsed: boolean,
+): (data: unknown) => boolean {
+  return (data) => collapses(input.graph, buildPlan({ ...input, data: valueOf(data, key) }), position) === collapsed;
+}
+
+/** The options of a select `schema` offers through `$ref`s, each with its own reference resolved: where every option
+ * resolves to a constant, a select renders no field for them, so its readers take the constants as the view holds
+ * them rather than retrieving each. A reference that names nothing is left for the field retrieving that option to
+ * report
+ *
+ * @param schema - The view's merged schema
+ * @param rootSchema - The root schema the references name definitions of
+ * @returns - The keyword and the resolved options, or undefined where they are not such a select's
+ */
+function resolvedConstantOptions<S extends StrictRJSFSchema>(
+  schema: S,
+  rootSchema: S,
+): { key: 'anyOf' | 'oneOf'; options: S[] } | undefined {
+  const xxxOf = getXxxOfOptions<S>(schema);
+  const refs = xxxOf?.options.filter((option) => isSchemaObject<S>(option) && typeof option[REF_KEY] === 'string');
+  if (!xxxOf || !refs?.length || !refs.every((option) => ownRefResolves<S>(option, rootSchema))) {
+    return undefined;
+  }
+  const options = xxxOf.options.map((option) =>
+    isSchemaObject<S>(option) ? resolveOwnRef<S>(option, rootSchema) : option,
+  );
+  return isConstantOptionList<S>(options, true) ? { key: xxxOf.key, options } : undefined;
+}
+
+function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  root: SchemaGraph<S>,
+  field: Provenance<S>,
+  data: unknown,
+  resolveOptions: boolean,
+  planned?: MergePlan<S>,
+): S {
+  const { graph, seeds } = field;
+  const policy = renderPolicy(context, root);
+  const planOf = (seedsToPlan: readonly Seed[], dataToPlan: unknown) =>
+    buildPlan({ context, graph, seeds: seedsToPlan, data: dataToPlan, policy });
+  const plan = planned ?? planOf(seeds, data);
+  const viewKey = [field, plan, resolveOptions, data === undefined];
+  const memoized = views.peek(viewKey);
+  if (memoized?.holds.every((holds) => holds(data)) && isSchemaObject<S>(memoized.view)) {
+    return memoized.view;
+  }
+  const holds: ((dataToCheck: unknown) => boolean)[] = [];
+  const seedNode = graph.node(seeds[0].node);
+  if (field.optionOf !== undefined && seedNode.kind === 'schema' && addsNothing(plan, field, field.optionOf.set)) {
+    // An option such as a `$ref` back to the schema offering it: merged in, it would render that schema again inside
+    // itself, without end
+    return handOut(withoutKeys(seedNode.raw, REF_KEY), field);
+  }
+  const merged = withoutKeys(plan.schema, RJSF_REF_CYCLE_KEY);
+  // An option merged in is the one the data matches, so the choice it was is not offered again, unless the option
+  // declares options of its own, and an empty list beside `dependencies` offers no choice to merge one from
+  for (const { keyword, list, options, dependencies, selected } of plan.choices) {
+    if (list === merged[keyword] && (selected !== undefined || (dependencies && options.length === 0))) {
+      Reflect.deleteProperty(merged, keyword);
+    }
+  }
+  let extended: GuardChain | undefined;
+  const extendedChain = () => {
+    extended ??= extendChain(graph, field.chain, plan.setKey);
+    return extended;
+  };
+  const child = (seedsOfChild: readonly Seed[], edge: ContainmentEdge, inData: boolean) => {
+    const next = childField(extendedChain, { seeds: seedsOfChild, edge, inData });
+    return {
+      next,
+      provenance: childProvenance(field, { seeds: next.seeds, chain: next.chain }),
+    };
+  };
+  // A subschema already handed out was decided where it was handed out, and a stub for an extra key is a field of its
+  // own
+  const isDecided = (value: object) =>
+    readProvenance(value, root) !== undefined || Boolean(Reflect.get(value, ADDITIONAL_PROPERTY_FLAG));
+  const { properties } = merged;
+  if (PROPERTIES_KEY in merged && !isObject(properties)) {
+    // `properties` that holds no subschemas declares none
+    Reflect.set(merged, PROPERTIES_KEY, {});
+  } else if (isObject(properties)) {
+    const entries = Object.entries(properties).map(([key, value]): [string, unknown] => {
+      if (isObject(value) && isDecided(value)) {
+        return [key, value];
+      }
+      const found = childSeeds(plan, key);
+      if (found.edge !== 'property') {
+        return [key, value];
+      }
+      // A property its patterns are merged into is not the subschema it was declared as, so it is handed out merged
+      const { seeds: propertySeeds, edge, patterned } = found;
+      if (!patterned) {
+        if (!isSchemaObject<S>(value)) {
+          return [key, value];
+        }
+        if (mergesNothing(graph, propertySeeds)) {
+          return [key, stubOf(value, child(propertySeeds, edge, false).provenance)];
+        }
+      }
+      const { next, provenance } = child(propertySeeds, edge, isObject(data) && Object.hasOwn(data, key));
+      const own = valueOf(data, key);
+      const childPlan = planOf(next.seeds, own);
+      const position: FieldPosition = { edge, view: 'render', dataDriven: next.dataDriven, chain: next.chain };
+      const collapsed = collapses(graph, childPlan, position);
+      if (childPlan.readsData) {
+        holds.push(collapsesAsBefore({ context, graph, seeds: next.seeds, policy }, key, position, collapsed));
+      }
+      if (collapsed) {
+        // A boolean property collapses as the empty schema it stands for
+        const shown = isSchemaObject<S>(value) ? value : schemaFrom(graph.rawRoot, {});
+        return [key, handOut({ ...shown, [RJSF_REF_CYCLE_KEY]: true }, provenance)];
+      }
+      return [
+        key,
+        !patterned && isSchemaObject<S>(value)
+          ? stubOf(value, provenance)
+          : buildView(context, root, provenance, own, false, childPlan),
+      ];
+    });
+    Reflect.set(merged, PROPERTIES_KEY, Object.fromEntries(entries));
+  }
+  const item = (value: unknown, seedsOfItem: readonly Seed[], edge: ContainmentEdge) =>
+    seedsOfItem.length === 0 || !isSchemaObject<S>(value) || isDecided(value)
+      ? value
+      : stubOf(value, child(seedsOfItem, edge, true).provenance);
+  const tuple = (entries: unknown[]) =>
+    entries.map((entry, index) => item(entry, tupleSeeds(plan, index), 'tupleItem'));
+  // A view drops the row keywords that hold nothing, rather than holding them as undefined
+  const setRows = (keyword: 'items' | 'additionalItems', value: unknown) => {
+    if (value === undefined) {
+      Reflect.deleteProperty(merged, keyword);
+    } else {
+      Reflect.set(merged, keyword, value);
+    }
+  };
+  const { items, additionalItems } = merged;
+  setRows(ITEMS_KEY, Array.isArray(items) ? tuple(items) : item(items, seedsAt(plan, ITEMS_KEY), 'item'));
+  const prefixItems: unknown = Reflect.get(merged, 'prefixItems');
+  if (Array.isArray(prefixItems)) {
+    Reflect.set(merged, 'prefixItems', tuple(prefixItems));
+  }
+  setRows('additionalItems', item(additionalItems, seedsAt(plan, 'additionalItems'), 'item'));
+  for (const keyword of OPTION_KEYWORDS) {
+    const options = merged[keyword];
+    if (Array.isArray(options)) {
+      // `MultiSchemaField` renders the option as a schema of its own, so its ref path restarts. Where the field has
+      // data, the option restarts the guard chain too, as a row or key the data holds does: the data bounds how often
+      // that happens, and an option the user picks for a recursive field renders its own options rather than collapsing
+      const optionChain = data === undefined ? extendedChain() : undefined;
+      Reflect.set(
+        merged,
+        keyword,
+        options.map((option, index) => {
+          if (!isSchemaObject<S>(option) || isDecided(option)) {
+            return option;
+          }
+          const adopted = optionNode(plan, keyword, index, option);
+          const provenance = childProvenance(
+            field,
+            {
+              seeds: [{ node: adopted.node, refPath: [] }],
+              chain: optionChain,
+              optionOf: { setKey: plan.setKey, set: plan.set },
+            },
+            adopted.graph,
+          );
+          return resolveOptions ? buildView(context, root, provenance, data, false) : stubOf(option, provenance);
+        }),
+      );
+    }
+  }
+  const constants = resolvedConstantOptions<S>(merged, root.rawRoot);
+  if (constants) {
+    Reflect.set(merged, constants.key, constants.options);
+  }
+  const stubsExtraKeys = allowsAdditionalProperties<S>(merged);
+  const view = handOut(
+    stubsExtraKeys ? stubExistingAdditionalProperties<unknown, S, F>(context, merged, graph.rawRoot, data) : merged,
+    field,
+  );
+  const resolvedOptions = resolveOptions && OPTION_KEYWORDS.some((keyword) => Array.isArray(merged[keyword]));
+  // A view whose own plan read the data, or whose options or extra keys were resolved for it, holds for that data alone
+  if (!plan.readsData && !resolvedOptions && !stubsExtraKeys) {
+    views.set(viewKey, { view, holds });
+  }
+  return view;
 }
 
 /** Converts boolean schemas to equivalent object schemas for APIs that operate on `StrictRJSFSchema` objects.
@@ -102,11 +727,24 @@ export default function retrieveSchema<
  * @param schema - The schema or boolean schema to normalize
  * @returns - The original schema or an equivalent object schema
  */
-function normalizeBooleanSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: S | boolean): S {
-  if (typeof schema !== 'boolean') {
-    return schema;
-  }
+function normalizeBooleanSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: boolean): S {
   return (schema ? {} : { not: {} }) as S;
+}
+
+/** Merges a resolved `branch` of a `schema` into it, keeping the `RJSF_REF_KEY` that says where `schema` itself was
+ * resolved from, which `mergeSchemas()` would otherwise replace with the branch's
+ *
+ * @param schema - The schema the branch belongs to
+ * @param branch - The resolved branch to merge into it
+ * @returns - The merged schema
+ */
+function mergeBranch<S extends StrictRJSFSchema = RJSFSchema>(schema: S, branch: GenericObjectType): S {
+  const merged = schemaFrom(schema, mergeSchemas(schema, branch));
+  const ownRef: unknown = Reflect.get(schema, RJSF_REF_KEY);
+  if (ownRef !== undefined) {
+    Reflect.set(merged, RJSF_REF_KEY, ownRef);
+  }
+  return merged;
 }
 
 /** Resolves a conditional block (if/else/then) by removing the condition and merging the appropriate conditional branch
@@ -118,11 +756,8 @@ function normalizeBooleanSchema<S extends StrictRJSFSchema = RJSFSchema>(schema:
  * @param rootSchema - The root schema that will be forwarded to all the APIs
  * @param expandAllBranches - Flag, if true, will return all possible branches of conditions, any/oneOf and
  *          dependencies as a list of schemas
- * @param recurseList - The list of refs already expanded on the current resolution path, used to
- *          detect cycles
+ * @param enteredRefs - The `$ref`s already resolved into this schema, which a branch leaves as they stand
  * @param [formData] - The current formData to assist retrieving a schema
- * @param [preserveDependencies=false] - Leave dependencies unresolved for default computation
- * @param [passCount=0] - The pass of the `resolveReference` fixpoint loop this resolution belongs to
  * @returns - A list of schemas with the appropriate conditions resolved, possibly with all branches expanded
  */
 export function resolveCondition<
@@ -134,10 +769,8 @@ export function resolveCondition<
   schema: S,
   rootSchema: S,
   expandAllBranches: boolean,
-  recurseList: string[],
+  enteredRefs: readonly string[],
   formData?: T,
-  preserveDependencies = false,
-  passCount = 0,
 ): S[] {
   const { if: expression, then, else: otherwise, ...resolvedSchemaLessConditional } = schema;
 
@@ -146,76 +779,19 @@ export function resolveCondition<
   const conditionValue = context.validator.isValid(expression as S, formData ?? {}, rootSchema);
   const schemaLessConditional = resolvedSchemaLessConditional as S;
   let resolvedSchemas = [schemaLessConditional];
-  let schemas: S[] = [];
-  if (expandAllBranches) {
-    if (then && typeof then !== 'boolean') {
-      const thenSchema = then as unknown as S;
-      schemas = schemas.concat(
-        retrieveSchemaInternal<T, S, F>(
-          context,
-          thenSchema,
-          rootSchema,
-          formData,
-          expandAllBranches,
-          enclosingRefPath<S>(schema, recurseList, THEN_KEY),
-          undefined,
-          preserveDependencies,
-          passCount > 0 ? 1 : 0,
-        ),
-      );
-    }
-    if (otherwise && typeof otherwise !== 'boolean') {
-      const otherwiseSchema = otherwise as unknown as S;
-      schemas = schemas.concat(
-        retrieveSchemaInternal<T, S, F>(
-          context,
-          otherwiseSchema,
-          rootSchema,
-          formData,
-          expandAllBranches,
-          enclosingRefPath<S>(schema, recurseList, ELSE_KEY),
-          undefined,
-          preserveDependencies,
-          passCount > 0 ? 1 : 0,
-        ),
-      );
-    }
-  } else {
-    const conditionalBranch = (conditionValue ? then : otherwise) as S | boolean | undefined;
-    if (conditionalBranch !== undefined) {
-      const conditionalSchema = normalizeBooleanSchema<S>(conditionalBranch);
-      schemas = schemas.concat(
-        retrieveSchemaInternal<T, S, F>(
-          context,
-          conditionalSchema,
-          rootSchema,
-          formData,
-          expandAllBranches,
-          enclosingRefPath<S>(schema, recurseList, conditionValue ? THEN_KEY : ELSE_KEY),
-          undefined,
-          preserveDependencies,
-          passCount > 0 ? 1 : 0,
-        ),
-      );
-    }
-  }
+  const branches: unknown[] = expandAllBranches ? [then, otherwise] : [conditionValue ? then : otherwise];
+  // A boolean branch merges as the schema it reads as, where expanding every branch leaves it out
+  const schemas = branches.flatMap((branch) => {
+    const branchSchema = typeof branch === 'boolean' && !expandAllBranches ? normalizeBooleanSchema<S>(branch) : branch;
+    return isSchemaObject<S>(branchSchema)
+      ? retrieveSchemaInternal<T, S, F>(context, branchSchema, rootSchema, formData, expandAllBranches, enteredRefs)
+      : [];
+  });
   if (schemas.length) {
     resolvedSchemas = schemas.map((s) => mergeBranch<S>(schemaLessConditional, s));
   }
-  // As with `dependencies`, the merged result is re-walked as a follow-up pass so refs that were already expanded
-  // keep their fixpoint depth and a $ref already flagged as a cycle stays collapsed.
   return resolvedSchemas.flatMap((s) =>
-    retrieveSchemaInternal<T, S, F>(
-      context,
-      s,
-      rootSchema,
-      formData,
-      expandAllBranches,
-      recurseList,
-      undefined,
-      preserveDependencies,
-      passCount + 1,
-    ),
+    retrieveSchemaInternal<T, S, F>(context, s, rootSchema, formData, expandAllBranches, enteredRefs),
   );
 }
 
@@ -233,8 +809,8 @@ export function resolveCondition<
  * @param listOfLists - The list of lists of elements that represent the allOf, anyOf or oneOf resolved values in order
  * @returns - The list of all permutations of schemas for a set of `xxxOf`s
  */
-export function getAllPermutationsOfXxxOf<S extends StrictRJSFSchema = RJSFSchema>(listOfLists: S[][]) {
-  const allPermutations: S[][] = listOfLists.reduce<S[][]>(
+export function getAllPermutationsOfXxxOf<E = RJSFSchema>(listOfLists: E[][]) {
+  const allPermutations: E[][] = listOfLists.reduce<E[][]>(
     (permutations, list) => {
       // When there are more than one set of schemas for a row, duplicate the set of permutations and add in the values
       if (list.length > 1) {
@@ -286,54 +862,55 @@ export function getAdditionalPropertyType<S extends StrictRJSFSchema = RJSFSchem
   subSchema: S,
   rootSchema?: S,
 ): string | undefined {
-  return additionalPropertyType<S>(subSchema, rootSchema, new Set<string>());
+  return additionalPropertyType<S>(subSchema, rootSchema, new Set<NodeId>());
 }
 
 /** Returns the definition a `schema` is spelled as a `$ref` to, as far as one can be named without resolving the
  * schema. It is how a subschema says what it is without saying it in keywords of its own, and the lookup is what lets a
  * reader that only asks a question about the subschema -- what type it holds, what names it declares -- ask it of the
- * schema the reference names.
+ * schema the reference names. The reference is resolved through the schema graph from where the schema sits in the
+ * root, as the form resolves it.
  *
- * Only the keywords the referring schema leaves to it are read off the definition. `resolveAllReferences()` resolves a
- * reference as `{ ...definition, ...schema }`, so a keyword the referring schema declares itself replaces the
- * definition's rather than joining it: the shadowed one describes nothing the form renders, so counting the names it
- * declares would leave a key with no field at all, and putting a shadowed `if` to the validator would ask it about a
- * condition nothing that resolves the schema ever asks -- which a precompiled validator has no function for.
+ * The definition is read as resolution reads it beside the referring schema's own keywords. Keywords that constrain
+ * the data beside a `$ref` are read with the definition as the `allOf` of both, so the whole definition is read and
+ * the names both declare count. Where the keywords beside the `$ref` are annotations only, they replace the
+ * definition's, so only the keywords the referring schema leaves to it are read off the definition: a shadowed one
+ * describes nothing the form renders, so counting the names it declares would leave a key with no field at all.
  *
  * @param schema - The schema whose reference is to be looked up
  * @param rootSchema - The root schema the reference names a definition of, when there is one to look it up in
- * @param followedRefs - The references already followed on this walk, which this one is added to
- * @returns - The definition the reference names, less the keywords the referring schema shadows, or undefined where
+ * @param followed - The definitions already read on this walk, which the one `schema` names is added to
+ * @param [customMergeAllOf] - The merge of the context the form renders with, if it has one
+ * @returns - The definition the reference names, less any keywords the referring schema shadows, or undefined where
  *          there is none to name or it was followed already
  */
 function referencedDefinition<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
   rootSchema: S | undefined,
-  followedRefs: Set<string>,
+  followed: Set<NodeId>,
+  customMergeAllOf?: CustomMergeAllOf<S>,
 ): S | undefined {
-  const $ref = declaredRef<S>(schema);
-  if (rootSchema === undefined || $ref === undefined || followedRefs.has($ref)) {
+  if (rootSchema === undefined || schema[REF_KEY] === undefined) {
     return undefined;
   }
-  followedRefs.add($ref);
-  let definition: unknown;
+  const { graph, seeds } = fieldOf<S>(parseSchemaGraph<S>(rootSchema), schema);
+  const [{ node }] = seeds;
+  const target = ownRefTargets(graph, node).at(-1);
+  // Keyed on the definition rather than the schema naming it, so a walk reads each definition once along a path, however
+  // many references lead to it: by the referring schema, a graph of definitions offering one another is read along
+  // every trail through it, which grows exponentially with the definitions
+  if (target === undefined || graph.node(target).kind === 'boolean' || followed.has(target)) {
+    return undefined;
+  }
+  followed.add(target);
   try {
-    definition = findSchemaDefinition<S>($ref, rootSchema);
+    const definition = refDefinition<S>(graph, node, customMergeAllOf);
+    return conjunctionOf<S>(graph, node) === undefined ? withoutKeys(definition, ...Object.keys(schema)) : definition;
   } catch {
     // A reference that names no definition says nothing about the property, as the subschema holding it does until it
     // is resolved: whatever resolves that subschema to render it reports the broken reference on its own
     return undefined;
   }
-  if (!isObject(definition)) {
-    return undefined;
-  }
-  const unshadowed = { ...definition };
-  for (const keyword of Object.keys(schema)) {
-    if (keyword !== REF_KEY) {
-      delete unshadowed[keyword];
-    }
-  }
-  return unshadowed as S;
 }
 
 /** Reads the type for `getAdditionalPropertyType()`, carrying the references followed so far across the options and the
@@ -347,7 +924,7 @@ function referencedDefinition<S extends StrictRJSFSchema = RJSFSchema>(
 function additionalPropertyType<S extends StrictRJSFSchema = RJSFSchema>(
   subSchema: S,
   rootSchema: S | undefined,
-  followedRefs: Set<string>,
+  followedRefs: Set<NodeId>,
 ): string | undefined {
   const ownTypes = getSchemaOwnTypes<S>(subSchema);
   if (ownTypes) {
@@ -399,13 +976,8 @@ function additionalPropertyType<S extends StrictRJSFSchema = RJSFSchema>(
  * @param rootSchema - The root schema that will be forwarded to all the APIs
  * @param expandAllBranches - Flag, if true, will return all possible branches of conditions, any/oneOf and dependencies
  *          as a list of schemas
- * @param recurseList - The list of refs already expanded on the current resolution path, used to
- *          detect cycles
+ * @param enteredRefs - The `$ref`s already resolved into this schema, which a branch leaves as they stand
  * @param [formData] - The current formData, if any, to assist retrieving a schema
- * @param [resolveAnyOfOrOneOfRefs] - Optional flag indicating whether to resolved refs in anyOf/oneOf lists
- * @param [preserveDependencies=false] - Leave dependencies unresolved for default computation
- * @param [passCount=0] - Internal backstop counting the passes of the resolveReference fixpoint loop; resolution
- *          collapses to the schema resolved so far, flagged as a cycle, if it does not converge
  * @returns - The list of schemas having its references, dependencies and allOf schemas resolved
  */
 export function resolveSchema<
@@ -417,68 +989,46 @@ export function resolveSchema<
   schema: S,
   rootSchema: S,
   expandAllBranches: boolean,
-  recurseList: string[],
+  enteredRefs: readonly string[],
   formData?: T,
-  resolveAnyOfOrOneOfRefs?: boolean,
-  preserveDependencies = false,
-  passCount = 0,
 ): S[] {
   const updatedSchemas = resolveReference<T, S, F>(
     context,
     schema,
     rootSchema,
     expandAllBranches,
-    recurseList,
+    enteredRefs,
     formData,
-    resolveAnyOfOrOneOfRefs,
-    preserveDependencies,
-    passCount,
   );
   if (updatedSchemas.length > 1 || updatedSchemas[0] !== schema) {
     // return the updatedSchemas array if it has either multiple schemas within it
     // OR the first schema is not the same as the original schema
     return updatedSchemas;
   }
-  if (DEPENDENCIES_KEY in schema && !preserveDependencies) {
+  if (DEPENDENCIES_KEY in schema) {
     const resolvedSchemas = resolveDependencies<T, S, F>(
       context,
       schema,
       rootSchema,
       expandAllBranches,
-      recurseList,
+      enteredRefs,
       formData,
-      passCount,
     );
-    // The merged result is re-walked so refs introduced by the merge are resolved too. The re-walk runs as a
-    // follow-up pass (passCount + 1), so refs that were already expanded keep their fixpoint depth and a $ref
-    // already flagged as a cycle stays collapsed.
+    // The merged result is resolved again, so the references and conditions the merge brought in are resolved too
     return resolvedSchemas.flatMap((s) =>
-      retrieveSchemaInternal<T, S, F>(
-        context,
-        s,
-        rootSchema,
-        formData,
-        expandAllBranches,
-        recurseList,
-        undefined,
-        undefined,
-        passCount + 1,
-      ),
+      retrieveSchemaInternal<T, S, F>(context, s, rootSchema, formData, expandAllBranches, enteredRefs),
     );
   }
-  if (ALL_OF_KEY in schema && Array.isArray(schema[ALL_OF_KEY])) {
-    const allOfRecurseList = enclosingRefPath<S>(schema, recurseList, ALL_OF_KEY);
-    const allOfSchemaElements: S[][] = schema.allOf.map((allOfSubschema) =>
+  const { allOf } = schema;
+  if (Array.isArray(allOf)) {
+    const allOfSchemaElements: S[][] = allOf.map((allOfSubschema) =>
       retrieveSchemaInternal<T, S, F>(
         context,
-        allOfSubschema as S,
+        isSchemaObject<S>(allOfSubschema) ? allOfSubschema : schemaFrom(schema, {}),
         rootSchema,
         formData,
         expandAllBranches,
-        allOfRecurseList,
-        undefined,
-        preserveDependencies,
-        passCount > 0 ? 1 : 0,
+        enteredRefs,
       ),
     );
     const allPermutations = getAllPermutationsOfXxxOf<S>(allOfSchemaElements);
@@ -491,22 +1041,20 @@ export function resolveSchema<
   return [schema];
 }
 
-/** Resolves all references within a schema and then returns the `retrieveSchemaInternal()` if the resolved schema is
- * actually different than the original. Passes the `expandAllBranches` flag down to the `retrieveSchemaInternal()`
- * helper call.
+/** Resolves the schema's own `$ref`, the definition overridden by the keywords beside the reference, and returns the
+ * `retrieveSchemaInternal()` of that. Only that reference is followed: the ones under `properties` or `items` are left
+ * for the subschema holding them to be resolved when it is retrieved. A reference already resolved into the schema
+ * being retrieved, as one reached again through an `allOf` or a branch is, is left as it stands, which is what stops a
+ * schema that merges itself back in.
  *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param schema - The schema for which resolving a reference is desired
  * @param rootSchema - The root schema that will be forwarded to all the APIs
  * @param expandAllBranches - Flag, if true, will return all possible branches of conditions, any/oneOf and dependencies
  *          as a list of schemas
- * @param recurseList - The list of $refs already expanded on the current resolution path, used to detect cycles
+ * @param enteredRefs - The `$ref`s already resolved into this schema
  * @param [formData] - The current formData, if any, to assist retrieving a schema
- * @param [resolveAnyOfOrOneOfRefs] - Optional flag indicating whether to resolved refs in anyOf/oneOf lists
- * @param [preserveDependencies=false] - Leave dependencies unresolved for default computation
- * @param [passCount=0] - Internal backstop counting the passes of the fixpoint loop; resolution collapses to the
- *          schema resolved so far, flagged as a cycle, if it does not converge
- * @returns - The list schemas retrieved after having all references resolved
+ * @returns - The list schemas retrieved after having the reference resolved, or the schema when it has none to resolve
  */
 export function resolveReference<
   T = unknown,
@@ -517,247 +1065,21 @@ export function resolveReference<
   schema: S,
   rootSchema: S,
   expandAllBranches: boolean,
-  recurseList: string[],
+  enteredRefs: readonly string[],
   formData?: T,
-  resolveAnyOfOrOneOfRefs?: boolean,
-  preserveDependencies = false,
-  passCount = 0,
 ): S[] {
-  if (passCount > MAX_RESOLUTION_PASSES) {
-    // Backstop: termination is structural (see below), so reaching this many passes means a regression broke the
-    // fixpoint. Collapse to the schema resolved so far, flagged as a cycle, instead of throwing during render:
-    // `SchemaField` renders a cycle indicator for it, the way it does for other detected cycles.
-    return [{ ...schema, [RJSF_REF_CYCLE_KEY]: true }];
+  const ref = schema[REF_KEY];
+  if (typeof ref !== 'string' || enteredRefs.includes(ref)) {
+    return [schema];
   }
-  // Termination of the resolveReference -> retrieveSchemaInternal loop is structural: every expanded $ref leaves
-  // its source ref on the materialized subtree as RJSF_REF_KEY, and that marker goes back on the path - in
-  // resolveAllReferences for the subtree walk of a follow-up pass (passCount > 0), and via `enclosingRefPath` for
-  // the allOf, then/else and dependencies branch resolutions - so a ref already expanded on the current path is
-  // never expanded twice, the re-walk makes no changes, and the loop ends as soon as a pass makes no more
-  // changes. `passCount` is only a backstop that collapses the resolution if a regression ever breaks that
-  // structure.
-  const expandedRefs: string[] = [];
-  const updatedSchema = resolveAllReferences<S>(
-    schema,
+  return retrieveSchemaInternal<T, S, F>(
+    context,
+    resolveOwnRef<S>(schema, rootSchema, context.customMergeAllOf),
     rootSchema,
-    recurseList,
-    undefined,
-    resolveAnyOfOrOneOfRefs,
-    false,
-    expandedRefs,
-    passCount,
+    formData,
+    expandAllBranches,
+    [...enteredRefs, ref],
   );
-  if (updatedSchema !== schema) {
-    // Only call this if the schema was actually changed by the `resolveAllReferences()` function
-    return retrieveSchemaInternal<T, S, F>(
-      context,
-      updatedSchema,
-      rootSchema,
-      formData,
-      expandAllBranches,
-      recurseList,
-      resolveAnyOfOrOneOfRefs,
-      preserveDependencies,
-      passCount + 1,
-    );
-  }
-  return [schema];
-}
-
-/** How many times one `resolveAllReferences()` walk has replaced part of a schema with what it refers to. A level of
- * the walk hands back the schema it was given unless the count rose beneath it, which is what lets `resolveReference()`
- * tell by reference that a pass changed nothing. A cycle flag newly set counts too, since the flag is what stops the
- * next walk from expanding the `$ref` again.
- */
-class ReferenceTally {
-  resolved = 0;
-
-  count() {
-    this.resolved += 1;
-  }
-}
-
-/** Resolves all references within the schema itself as well as any of its properties and array items.
- *
- * @param schema - The schema for which resolving all references is desired
- * @param rootSchema - The root schema that will be forwarded to all the APIs
- * @param recurseList - List of $refs already expanded on the current resolution path, used to detect cycles
- * @param [baseURI] - The base URI to be used for resolving relative references
- * @param [resolveAnyOfOrOneOfRefs] - Optional flag indicating whether to resolved refs in anyOf/oneOf lists
- * @param [markCycleOnDetection=false] - When true and a recursive $ref is detected, the returned schema is tagged
- *   with `__rjsf_ref_cycle: true` so that `SchemaField` can render a cycle indicator instead of recursing.
- *   Should only be `true` when called from an **object-property** context, because object properties are always
- *   rendered (creating an infinite render loop), whereas array items and anyOf/oneOf branches are data-driven. It
- *   stays false in resolveAnyOfOrOneOfRefs mode because there a $ref already expanded by an earlier option is
- *   deliberately collapsed to the unexpanded skeleton via `optionsPath` (which keeps shared-ref DAGs linear), and
- *   marking those collapsed skeletons would render false cycle indicators.
- * @param [expandedRefs] - Walk-local collector of the refs materialized during this walk; used to keep later
- *   anyOf/oneOf options that reuse an already-expanded ref collapsed. Pass nothing to get the default behavior.
- * @param [passCount=0] - The pass of the `resolveReference` fixpoint loop this walk belongs to; re-walks
- *   (pass > 0) put materialized refs back on the path so they stay at their fixpoint depth. Callers should omit
- *   this.
- * @param [tally] - The `ReferenceTally` of the walk this call is a level of, which every level below it shares.
- *   Callers should omit this.
- * @returns - given schema will all references resolved or the original schema if no internal `$refs` were resolved
- */
-export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
-  schema: S,
-  rootSchema: S,
-  recurseList: string[],
-  baseURI?: string,
-  resolveAnyOfOrOneOfRefs?: boolean,
-  markCycleOnDetection = false,
-  expandedRefs?: string[],
-  passCount = 0,
-  tally = new ReferenceTally(),
-): S {
-  if (!isObject(schema)) {
-    return schema;
-  }
-  const resolvedBefore = tally.resolved;
-  let resolvedSchema: S = schema;
-  let currentBaseURI = baseURI;
-  // A keyword beside the `$ref` replaces the definition's whole, and was written in the referring schema, so the refs
-  // under it keep that schema's base rather than taking the definition's
-  let siblingKeywords: object = {};
-  let siblingBaseURI = baseURI;
-  const baseFor = (keyword: string) => (keyword in siblingKeywords ? siblingBaseURI : currentBaseURI);
-  // The recurse list is a path stack: entries are added only for the refs being expanded on the current resolution
-  // path and are never shared with sibling subtrees or back with the caller. A $ref is a cycle only when it already
-  // appears on the current path.
-  let pathList = recurseList;
-  // resolve top level ref
-  if (REF_KEY in resolvedSchema) {
-    const { $ref, ...localSchema } = resolvedSchema;
-    // Check for a recursive reference and stop the loop. On a re-walk (passCount > 0), a schema whose
-    // RJSF_REF_KEY marker equals its $ref was materialized from that ref by an earlier pass and had the
-    // collapsed $ref merged back onto it (e.g. by a dependencies or if/then merge): expanding it again would
-    // repeat the earlier pass forever, so it stays collapsed too. So does a $ref an earlier pass flagged as a
-    // cycle: a branch that was itself a $ref is merged without the marker of its definition, so the path
-    // rebuilt here no longer holds the ref a recursion inside that definition was stopped by.
-    if (
-      pathList.includes($ref!) ||
-      (passCount > 0 && (resolvedFromRef<S>(resolvedSchema) === $ref || RJSF_REF_CYCLE_KEY in resolvedSchema))
-    ) {
-      if (markCycleOnDetection && !(RJSF_REF_CYCLE_KEY in resolvedSchema)) {
-        // Counted when newly set, so the levels above hand the flagged copy back rather than the schema they were
-        // given: a recursion the flag alone stops would otherwise be expanded again at the next render, without end
-        tally.count();
-        return { ...resolvedSchema, [RJSF_REF_CYCLE_KEY]: true };
-      }
-      return resolvedSchema;
-    }
-    pathList = [...pathList, $ref!];
-    // Retrieve the referenced schema definition.
-    let refSchema: S;
-    siblingBaseURI = ownBaseURI(localSchema, rootSchema, baseURI);
-    [refSchema, currentBaseURI] = findSchemaDefinitionWithBase<S>($ref, rootSchema, [], siblingBaseURI);
-    siblingKeywords = localSchema;
-    resolvedSchema = resolvedSchemaOf<S>($ref, refSchema, localSchema);
-    tally.count();
-    expandedRefs?.push($ref!);
-  } else if (passCount > 0) {
-    // Only on fixpoint re-walks (pass > 0): a subtree materialized by a previous pass still carries its source
-    // $ref as RJSF_REF_KEY, and putting it back on the path keeps refs inside the subtree at their fixpoint
-    // depth, so the follow-up pass is a no-op. The first pass of a fresh resolution deliberately does NOT do
-    // this: a $ref flagged as a cycle by an earlier call is expanded one more level, which is what lets
-    // `CyclicSchemaField` reveal the next level of a cycle. The marker joins `expandedRefs` at most once per
-    // walk: re-collecting it on every re-walk would grow the walk-wide list (and the anyOf/oneOf options path
-    // built from it) with duplicates.
-    const sourceRef = resolvedFromRef<S>(resolvedSchema);
-    if (sourceRef !== undefined) {
-      pathList = [...pathList, sourceRef];
-      if (expandedRefs && !expandedRefs.includes(sourceRef)) {
-        expandedRefs.push(sourceRef);
-      }
-    }
-  }
-
-  if (PROPERTIES_KEY in resolvedSchema) {
-    const properties = resolvedSchema[PROPERTIES_KEY];
-    if (!isPlainObject(properties)) {
-      // Replaced below by the plain object the walk builds from its entries
-      tally.count();
-    }
-    const updatedProps: RJSFSchema = {};
-    for (const [key, value] of Object.entries(properties ?? {})) {
-      // Mark cycles only when NOT in resolveAnyOfOrOneOfRefs mode. In simple (non-anyOf) resolution, a $ref cycle
-      // in an object property always causes an infinite render loop and must be caught; in anyOf/oneOf mode a $ref
-      // already expanded by an earlier option is collapsed on purpose (see the optionsPath handling below), so it
-      // must not be marked.
-      const resolvedProperty = resolveAllReferences(
-        value as S,
-        rootSchema,
-        pathList,
-        baseFor(PROPERTIES_KEY),
-        resolveAnyOfOrOneOfRefs,
-        !resolveAnyOfOrOneOfRefs,
-        expandedRefs,
-        passCount,
-        tally,
-      );
-      setOwn(updatedProps, key, resolvedProperty);
-    }
-    resolvedSchema = { ...resolvedSchema, [PROPERTIES_KEY]: updatedProps };
-  }
-
-  if (
-    ITEMS_KEY in resolvedSchema &&
-    !Array.isArray(resolvedSchema.items) &&
-    typeof resolvedSchema.items !== 'boolean'
-  ) {
-    resolvedSchema = {
-      ...resolvedSchema,
-      // Array items are only rendered when data exists, so a $ref cycle here does NOT cause an infinite render.
-      items: resolveAllReferences(
-        resolvedSchema.items as S,
-        rootSchema,
-        pathList,
-        baseFor(ITEMS_KEY),
-        resolveAnyOfOrOneOfRefs,
-        false,
-        expandedRefs,
-        passCount,
-        tally,
-      ),
-    };
-  }
-
-  if (resolveAnyOfOrOneOfRefs) {
-    // Read from the resolved schema, which is what every reader of its options picks the keyword from
-    const key = getXxxOfKey<S>(resolvedSchema);
-    if (key) {
-      // Options are resolved in order, and refs materialized by one option stay on the path for the options after
-      // it: an option that reuses a ref an earlier option already expanded collapses to the unexpanded skeleton.
-      // This keeps the materialized result linear on DAGs of shared refs (two identical `$ref` options do not each
-      // materialize the whole subgraph) while the path scoping above still prevents the expansion from leaking
-      // into sibling subtrees.
-      let optionsPath = pathList;
-      resolvedSchema = {
-        ...resolvedSchema,
-        [key]: (resolvedSchema[key] as S[]).map((s: S) => {
-          const expandedBefore = expandedRefs?.length ?? 0;
-          const option = resolveAllReferences(
-            s,
-            rootSchema,
-            optionsPath,
-            baseFor(key),
-            resolveAnyOfOrOneOfRefs,
-            false,
-            expandedRefs,
-            passCount,
-            tally,
-          );
-          if (expandedRefs && expandedRefs.length > expandedBefore) {
-            optionsPath = [...optionsPath, ...expandedRefs.slice(expandedBefore)];
-          }
-          return option;
-        }),
-      };
-    }
-  }
-
-  return tally.resolved === resolvedBefore ? schema : resolvedSchema;
 }
 
 /** The keywords that constrain a value of a given type without naming the type itself. A typeless `additionalProperties`
@@ -977,20 +1299,33 @@ function dependencySubschemas<S extends StrictRJSFSchema = RJSFSchema, F extends
   if (!isObject(dependent)) {
     return [dependent];
   }
-  const { [ONE_OF_KEY]: ownOneOf, ...dependentWithoutOneOf } = dependent;
+  const ownOneOf = dependent[ONE_OF_KEY];
   // A dependency spelled as a `$ref` holds its `oneOf` behind that reference, and `withDependentSchema()` resolves the
   // dependency before it takes the `oneOf` off, so the branch is settled from the data for that spelling too. Read
   // without following the reference it offers no branches, and a name the matching branch declares would be stubbed
   // beside the field that branch renders it with, which is what the inline spelling no longer does
-  const oneOf = ownOneOf ?? referencedDefinition<S>(dependent, rootSchema, new Set<string>())?.[ONE_OF_KEY];
+  const referenced =
+    ownOneOf === undefined
+      ? referencedDefinition<S>(dependent, rootSchema, new Set<NodeId>(), context.customMergeAllOf)
+      : undefined;
+  const oneOf = ownOneOf ?? referenced?.[ONE_OF_KEY];
   if (!Array.isArray(oneOf)) {
     return [dependent];
   }
-  // An empty `oneOf` of the dependency's own is how the rest of it is read without those branches: a dependency spelled
-  // as a `$ref` leaves them behind that reference for `referencedDefinition()` to read as options beside the branch
-  // settled here, which strips whatever the referring schema declares itself. Read as options, a name every branch
-  // declares counts as one the form renders even where no single branch qualifies and none of the `oneOf` is merged in
-  const withoutOneOf = { ...dependentWithoutOneOf, [ONE_OF_KEY]: [] as S[] } as unknown as S;
+  // The rest of the dependency is read without those branches, which a dependency spelled as a `$ref` holds behind the
+  // reference: read as options, a name every branch declares would count as one the form renders even where no
+  // single branch qualifies and none of the `oneOf` is merged in. So the definition is read without its `oneOf`,
+  // conjoined with the keywords the dependency declares beside its `$ref` as the form merges them, so that a
+  // `properties` there adds its names to those the definition declares rather than replacing them
+  const withoutOneOf =
+    referenced === undefined
+      ? withoutKeys(dependent, ONE_OF_KEY)
+      : conjoinDefinition(
+          dependent,
+          withoutKeys(dependent, ONE_OF_KEY, REF_KEY),
+          withoutKeys(referenced, ONE_OF_KEY),
+          context.customMergeAllOf,
+        );
   const matching =
     rootSchema === undefined
       ? []
@@ -1004,7 +1339,8 @@ function dependencySubschemas<S extends StrictRJSFSchema = RJSFSchema, F extends
           // branch renders it with. `referencedDefinition()` strips whatever the branch shadows, which is how
           // resolution reads a reference, so a `properties` the branch declares itself answers on its own
           const branchProperties =
-            branch[PROPERTIES_KEY] ?? referencedDefinition<S>(branch, rootSchema, new Set<string>())?.[PROPERTIES_KEY];
+            branch[PROPERTIES_KEY] ??
+            referencedDefinition<S>(branch, rootSchema, new Set<NodeId>(), context.customMergeAllOf)?.[PROPERTIES_KEY];
           const conditionPropertySchema = getByPath(branchProperties, dependencyKey);
           if (!conditionPropertySchema) {
             return false;
@@ -1052,7 +1388,7 @@ function declaredPropertyNames<S extends StrictRJSFSchema = RJSFSchema, F extend
   schema: S,
   rootSchema: S | undefined,
   formData: GenericObjectType,
-  followedRefs: Set<string>,
+  followedRefs: Set<NodeId>,
   matchedOptionOnly: boolean,
 ): string[] | undefined {
   const merged: (S | boolean | undefined)[] = Array.isArray(schema[ALL_OF_KEY])
@@ -1061,7 +1397,7 @@ function declaredPropertyNames<S extends StrictRJSFSchema = RJSFSchema, F extend
   // The references followed to reach this schema, which this walk adds its own to without adding to the lists of the
   // walks beside it
   const refs = new Set(followedRefs);
-  merged.push(referencedDefinition<S>(schema, rootSchema, refs));
+  merged.push(referencedDefinition<S>(schema, rootSchema, refs, context.customMergeAllOf));
   if (IF_KEY in schema && rootSchema !== undefined) {
     const holds = context.validator.isValid(schema[IF_KEY] as S, formData, rootSchema);
     merged.push((holds ? schema[THEN_KEY] : schema[ELSE_KEY]) as S | boolean | undefined);
@@ -1120,7 +1456,7 @@ function namesOptionRenders<S extends StrictRJSFSchema = RJSFSchema, F extends F
   option: S,
   rootSchema: S | undefined,
   formData: GenericObjectType,
-  followedRefs: Set<string>,
+  followedRefs: Set<NodeId>,
   matchedOptionOnly: boolean,
 ): Set<string> | undefined {
   if (allowsAdditionalProperties<S>(option)) {
@@ -1187,7 +1523,7 @@ function namesTheOptionsRender<S extends StrictRJSFSchema = RJSFSchema, F extend
   schema: S,
   rootSchema: S | undefined,
   formData: GenericObjectType,
-  followedRefs: Set<string>,
+  followedRefs: Set<NodeId>,
   matchedOptionOnly: boolean,
 ): Set<string> | undefined {
   const options = getXxxOfOptions<S>(schema)?.options ?? [];
@@ -1215,11 +1551,12 @@ function namesTheOptionsRender<S extends StrictRJSFSchema = RJSFSchema, F extend
 /** Returns the one of an object's `options` that the `formData` matches, which is the option `MultiSchemaField`
  * renders for that data and so the only one evaluating anything the object holds.
  *
- * The references are resolved before the options are scored because that is the form `resolveAnyOrOneOfSchemas()`
- * scores them in, and a precompiled validator has a function compiled for the forms that pass through there. An option
- * whose reference names no definition, or names one circularly, is scored as it stands: it says as little about the
- * data as `referencedDefinition()` reads off such a reference, and whatever resolves the option to render it reports
- * the reference on its own, where a throw here would take down an object that asked nothing but which key to stub.
+ * Each option's own reference is resolved before the options are scored because that is the form
+ * `resolveAnyOrOneOfSchemas()` scores them in, and a precompiled validator has a function compiled for the forms that
+ * pass through there. An option whose reference names no definition, or names one circularly, is scored as it stands:
+ * it says as little about the data as `referencedDefinition()` reads off such a reference, and whatever resolves the
+ * option to render it reports the reference on its own, where a throw here would take down an object that asked
+ * nothing but which key to stub.
  *
  * @param context - The `SchemaContext` whose `validator` scores the options
  * @param schema - The object schema offering the options, read for the discriminator it names
@@ -1237,7 +1574,7 @@ function matchingOption<S extends StrictRJSFSchema = RJSFSchema, F extends FormC
 ): S {
   const resolved = options.map((option) => {
     try {
-      return resolveAllReferences(option, rootSchema, []);
+      return resolveOwnRef<S>(option, rootSchema, context.customMergeAllOf);
     } catch {
       return option;
     }
@@ -1290,7 +1627,7 @@ function namesRenderedElsewhere<S extends StrictRJSFSchema = RJSFSchema, F exten
     schema,
     rootSchema,
     formData,
-    new Set<string>(),
+    new Set<NodeId>(),
     matchedOptionOnly,
   );
   if (optionNames === undefined) {
@@ -1299,7 +1636,7 @@ function namesRenderedElsewhere<S extends StrictRJSFSchema = RJSFSchema, F exten
   // A subschema merged into this object that takes keys of its own is this object taking them, which is the case the
   // stub is for rather than one to leave to another schema, so the walk saying so names nothing rendered elsewhere
   const declaredNames =
-    declaredPropertyNames<S, F>(context, schema, rootSchema, formData, new Set<string>(), matchedOptionOnly) ?? [];
+    declaredPropertyNames<S, F>(context, schema, rootSchema, formData, new Set<NodeId>(), matchedOptionOnly) ?? [];
   return new Set([...declaredNames, ...optionNames]);
 }
 
@@ -1403,10 +1740,10 @@ export function mergeAllOf<S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   }
 }
 
-/** Internal handler that retrieves an expanded schema that has had all of its conditions, additional properties,
- * references and dependencies resolved and merged into the `schema` given a `context`, `rootSchema` and `rawFormData`
- * that is used to do the potentially recursive resolution. If `expandAllBranches` is true, then all possible branches
- * of the schema and its references, conditions and dependencies are returned.
+/** Internal handler that resolves a schema's own `$ref`, conditions, dependencies and `allOf`, merges its declared
+ * properties with the `patternProperties` they match and stubs the additional properties of the `rawFormData`. If
+ * `expandAllBranches` is true, then all possible branches of the schema and its references, conditions and dependencies
+ * are returned, which is what `schemaParser()` enumerates. A `$ref` under `properties` or `items` is left as it stands.
  *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param schema - The schema for which retrieving a schema is desired
@@ -1414,13 +1751,10 @@ export function mergeAllOf<S extends StrictRJSFSchema = RJSFSchema, F extends Fo
  * @param [rawFormData] - The current formData, if any, to assist retrieving a schema
  * @param [expandAllBranches=false] - Flag, if true, will return all possible branches of conditions, any/oneOf and
  *          dependencies as a list of schemas
- * @param [recurseList=[]] - The list of refs already expanded on the current resolution path, used to detect
- *          cycles; callers should omit this
- * @param [resolveAnyOfOrOneOfRefs] - Optional flag indicating whether to resolved refs in anyOf/oneOf lists
- * @param [preserveDependencies=false] - Leave dependencies unresolved for default computation
- * @param [passCount=0] - Internal backstop counting the passes of the `resolveReference` fixpoint loop;
- *          resolution collapses to the schema resolved so far, flagged as a cycle, if a schema ever stops
- *          terminating. Callers should omit this
+ * @param [enteredRefs=[]] - The `$ref`s already resolved into this schema, which are left as they stand where the
+ *          schema reaches them again
+ * @param [mergePatterns=true] - Whether the declared properties are merged with the patterns they match, which a
+ *          property being merged with its own patterns is not, as it is a level below the schema retrieved
  * @returns - The schema(s) resulting from having its conditions, additional properties, references and dependencies
  *          resolved. Multiple schemas may be returned if `expandAllBranches` is true.
  */
@@ -1434,24 +1768,20 @@ export function retrieveSchemaInternal<
   rootSchema: S,
   rawFormData?: T,
   expandAllBranches = false,
-  recurseList: string[] = [],
-  resolveAnyOfOrOneOfRefs?: boolean,
-  preserveDependencies = false,
-  passCount = 0,
+  enteredRefs: readonly string[] = [],
+  mergePatterns = true,
 ): S[] {
+  // A boolean `anyOf`/`oneOf` option reaches here as it is written, as `retrieveSchema()` reads one: as the empty schema
   if (!isObject(schema)) {
-    return [{} as S];
+    return [schemaFrom(rootSchema, {})];
   }
   const resolvedSchemas = resolveSchema<T, S, F>(
     context,
     schema,
     rootSchema,
     expandAllBranches,
-    recurseList,
+    enteredRefs,
     rawFormData,
-    resolveAnyOfOrOneOfRefs,
-    preserveDependencies,
-    passCount,
   );
   return resolvedSchemas.flatMap((s: S) => {
     let resolvedSchema = s;
@@ -1461,28 +1791,14 @@ export function retrieveSchemaInternal<
         resolvedSchema,
         rootSchema,
         expandAllBranches,
-        recurseList,
+        enteredRefs,
         rawFormData,
-        preserveDependencies,
-        passCount,
       );
     }
     if (ALL_OF_KEY in resolvedSchema) {
       // resolve allOf schemas. A form always merges an `allOf`, so even `expandAllBranches` merges it: the subschemas it
       // validates against are the merged schema's, which the unmerged branches need not hold -- a `customMergeAllOf` can
       // rewrite them, and only the merged schema has the properties its `patternProperties` apply to
-      // Collect Symbol-keyed properties from allOf subschemas before merging; shallowAllOfMerge
-      // (external library) only operates on string keys and will drop them.
-      const allOfSymbols: Record<symbol, unknown> = {};
-      // A boolean subschema carries no symbols
-      resolvedSchema.allOf?.filter(isObject).forEach((allOfItem) => {
-        for (const sym of Object.getOwnPropertySymbols(allOfItem)) {
-          if (!(sym in allOfSymbols)) {
-            // `Reflect.get` reads through a getter, and a schema's type has no symbol key to index it by
-            allOfSymbols[sym] = Reflect.get(allOfItem, sym);
-          }
-        }
-      });
       const { schema: mergedSchema, merged } = mergeAllOf<S, F>(context, resolvedSchema);
       if (!merged) {
         // The rest of this function describes a merged schema, so a failed merge stops here with the `allOf` already
@@ -1490,78 +1806,48 @@ export function retrieveSchemaInternal<
         return mergedSchema;
       }
       resolvedSchema = mergedSchema;
-      // Re-apply collected Symbol properties that the merge dropped.
-      Object.assign(resolvedSchema, allOfSymbols);
     }
     let withMergedProperties = [resolvedSchema];
     const { properties } = resolvedSchema;
-    if (properties && PATTERN_PROPERTIES_KEY in resolvedSchema) {
-      // Merging a property with its matching patterns resolves the result, which for a key holding a `$ref` back to
-      // this schema never terminates, so the reference this schema was itself reached through seeds that resolution
-      // and stops it. It is read off the schema before the merge first, since `mergeAllOf` drops the Symbol keys and
-      // the re-apply above recovers only the `allOf` entries'. That one reference seeds the merge rather than
-      // `recurseList`, which holds the path this schema was reached by and would read a key's own `$ref` as a cycle
-      const ownRef = refOf<S>(s) ?? refOf<S>(resolvedSchema);
-      const mergeRecurseList = ownRef === undefined ? [] : [ownRef];
+    if (mergePatterns && properties && PATTERN_PROPERTIES_KEY in resolvedSchema) {
+      // The reference this schema was reached through, read off it before the merge, which drops the Symbol keys
+      const reachedThrough = [s, resolvedSchema]
+        .flatMap((reached) => [reached[REF_KEY], Reflect.get(reached, RJSF_REF_KEY)])
+        .find((ref): ref is string => typeof ref === 'string');
       // A merged property's branches are each one a form can render it with, so `expandAllBranches` is passed on. They
       // are varied one property at a time rather than in every combination with the other properties': what reads a
       // branch reads one property, and the combinations grow as the product of the branch counts
       const branchesByKey = Object.keys(properties).flatMap((key) => {
         // A stub for an extra key is the merge of the patterns matching it already, with the keywords a stub leaves
-        // out left out, so merging it with those patterns a second time takes them back. The second time comes of
-        // retrieving a schema that has been retrieved before, which `SchemaField` and `ObjectField` do to the same
-        // object on every render: without this the key would take back the `$id` that routes every sibling to one
-        // registered field, or a `default` of the pattern's type over a value of another, that the stub dropped on
-        // purpose. The stubbing runs after this merge, so a key skipped here is one an earlier pass stubbed
+        // out left out, so merging it with those patterns a second time would take back what the stub dropped on
+        // purpose, such as an `$id` routing every sibling to one registered field. A key flagged as a cycle is one
+        // whose merge was left undone below, when this schema was resolved before
         const property = properties[key];
-        if (isObject(property) && (property as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG]) {
+        if (
+          isObject(property) &&
+          (Reflect.get(property, ADDITIONAL_PROPERTY_FLAG) || Reflect.get(property, RJSF_REF_CYCLE_KEY))
+        ) {
           return [];
         }
-        const matchingProperties = getMatchingPatternProperties(resolvedSchema, key);
-        if (Object.keys(matchingProperties).length === 0) {
+        const patternSchemas = Object.values(getMatchingPatternProperties(resolvedSchema, key));
+        if (patternSchemas.length === 0) {
           return [];
         }
-        const patternSchemas = Object.values(matchingProperties);
-        // Resolving the merge of a property that refers back to this schema is what the seed above stops, but
-        // stopping it leaves the `$ref` a literal, and a merge of a literal `$ref` with the patterns' keywords is
-        // read later by `resolveAllReferences()` as `{ ...target, ...merged }` -- a shallow spread, where a
-        // `properties` the patterns contribute replaces the target's own rather than joining it. The merge is left
-        // undone instead, flagged as the cycle it is: the key refers back to the schema that holds it, which only the
-        // `allOf` around it hides from `resolveAllReferences()`, and the flag is what tells `SchemaField` to render a
-        // cycle indicator rather than nesting the key's fields until the heap runs out. The marker alongside it is
-        // what an outer level reads, since the cycle flag is one resolution sets on keys this merge still applies to
-        const propertySchema = isObject(property) ? (property as S) : undefined;
-        const propertyRef = refOf<S>(propertySchema);
-        if (propertyRef !== undefined && mergeRecurseList.includes(propertyRef)) {
-          return [
-            {
-              key,
-              branches: [
-                {
-                  allOf: [property, ...patternSchemas],
-                  [RJSF_REF_CYCLE_KEY]: true,
-                  [PATTERN_MERGE_LEFT_UNDONE]: true,
-                } as unknown as S,
-              ],
-            },
-          ];
-        }
-        // This runs again at every level that resolves its way back here, so a key whose merge an inner level left
-        // undone is recognised by the marker that level set and left alone, rather than having the patterns added a
-        // second time. The marker says so rather than the shape doing: an `allOf` holding the patterns is one a schema
-        // may also declare itself, and reading that as a merge already made leaves the key unresolved
-        if (propertySchema !== undefined && (propertySchema as RJSFMarkedSchema)[PATTERN_MERGE_LEFT_UNDONE]) {
-          return [];
+        const merge = schemaFrom(resolvedSchema, { allOf: [property, ...patternSchemas] });
+        if (isObject(property) && reachedThrough !== undefined && property[REF_KEY] === reachedThrough) {
+          // A key referring back to the schema that holds it is the recursion itself: its merge is left undone,
+          // flagged as the cycle it is, as the `$ref` would be without the patterns
+          Reflect.set(merge, RJSF_REF_CYCLE_KEY, true);
+          return [{ key, branches: [merge] }];
         }
         const branches = retrieveSchemaInternal<T, S, F>(
           context,
-          { allOf: [property, ...patternSchemas] } as S,
+          merge,
           rootSchema,
           getByPath<T>(rawFormData, key),
           expandAllBranches,
-          mergeRecurseList,
-          undefined,
-          preserveDependencies,
+          enteredRefs,
+          false,
         );
         return [{ key, branches }];
       });
@@ -1588,19 +1874,6 @@ export function retrieveSchemaInternal<
   });
 }
 
-/** Returns the `$ref` the given schema holds or was resolved from, if any. A resolved schema no longer holds the
- * reference as a key, so the one `resolveAllReferences()` marked it with is what names it.
- *
- * @param schema - The schema to read the reference off, if there is one to read it off at all
- * @returns - The `$ref` the schema holds or was resolved from, or undefined when it has neither
- */
-function refOf<S extends StrictRJSFSchema = RJSFSchema>(schema: S | undefined): string | undefined {
-  // A reference the schema still holds comes first, since that is the one about to be resolved and so the one a
-  // merge of this schema would follow round again. `resolveUiSchema()` reads the same two the other way about, for
-  // the opposite reason: it is naming where a resolved schema came from, not what it is about to resolve
-  return declaredRef<S>(schema) ?? resolvedFromRef<S>(schema);
-}
-
 /** Resolves an `anyOf` or `oneOf` within a schema (if present) to the list of schemas returned from
  * `retrieveSchemaInternal()` for the best matching option. If `expandAllBranches` is true, then a list of schemas for ALL
  * options are retrieved and returned.
@@ -1611,7 +1884,7 @@ function refOf<S extends StrictRJSFSchema = RJSFSchema>(schema: S | undefined): 
  * @param expandAllBranches - Flag, if true, will return all possible branches of conditions, any/oneOf and dependencies
  *          as a list of schemas
  * @param [rawFormData] - The current formData, if any, to assist retrieving a schema, defaults to an empty object
- * @param [recurseList=[]] - The list of recursive references already processed
+ * @param [enteredRefs=[]] - The `$ref`s already resolved into this schema
  * @returns - Either an array containing the best matching option or all options if `expandAllBranches` is true
  */
 export function resolveAnyOrOneOfSchemas<
@@ -1624,7 +1897,7 @@ export function resolveAnyOrOneOfSchemas<
   rootSchema: S,
   expandAllBranches: boolean,
   rawFormData?: T,
-  recurseList: string[] = [],
+  enteredRefs: readonly string[] = [],
 ) {
   const xxxOfKey = getXxxOfKey<S>(schema);
   if (xxxOfKey) {
@@ -1643,7 +1916,7 @@ export function resolveAnyOrOneOfSchemas<
     // Ensure that during expand all branches we pass an object rather than undefined so that all options are interrogated
     const formData = rawFormData === undefined && expandAllBranches ? ({} as T) : rawFormData;
     const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
-    anyOrOneOf = anyOrOneOf.map((s) => resolveAllReferences(s, rootSchema, []));
+    anyOrOneOf = anyOrOneOf.map((s) => resolveOwnRef<S>(s, rootSchema, context.customMergeAllOf));
     // Call this to trigger the set of isValid() calls that the schema parser will need
     const option = getFirstMatchingOption<T, S, F>(context, formData, anyOrOneOf, rootSchema, discriminator);
     if (expandAllBranches) {
@@ -1661,10 +1934,8 @@ export function resolveAnyOrOneOfSchemas<
       // data is still reached only in the forms an empty retrieval produces: a key an option's `additionalProperties`
       // describes is stubbed into its `properties` once the user adds one, and no parse can enumerate those
       const retrievedOptions = anyOrOneOf.flatMap((item) =>
-        // The options share the list, since a `$ref` one of them resolves is not one a sibling has already been
-        // through: resolution extends the path it is given into a new list rather than appending to that one, which is
-        // also why the `properties` loop of `resolveAllReferences()` hands each property the same one
-        retrieveSchemaInternal<T, S, F>(context, item, rootSchema, formData, true, recurseList),
+        // The options share the list, since a `$ref` one of them resolves is not one a sibling has already been through
+        retrieveSchemaInternal<T, S, F>(context, item, rootSchema, formData, true, enteredRefs),
       );
       getFirstMatchingOption<T, S, F>(context, formData, retrievedOptions, rootSchema, discriminator);
       // `MultiSchemaField` also validates a retrieved option as it stands, rather than scoring it: when a parent
@@ -1692,16 +1963,16 @@ export function resolveAnyOrOneOfSchemas<
  * then scored by derives an `$id` of its own. The relaxed form depends on nothing but the option, and an option is
  * read rather than written wherever it is scored, so an entry stays the relaxation of what it is keyed by.
  *
- * It is keyed by the option as resolution leaves it rather than as the caller declared it, since that is what the
- * relaxation is of, so a call that resolves a `$ref` hands over a new object and misses: an option that is a `$ref`
- * is relaxed once per call. Keying by the declared option instead would hit, but the relaxation of a `$ref` depends
- * on the `rootSchema` it resolves against, which the key would not carry
+ * It is keyed by the option as resolution leaves it rather than as the caller declared it, since the relaxation of a
+ * `$ref` depends on the `rootSchema` it resolves against, which the declared option does not carry. `resolveOwnRef()`
+ * shares one resolution per schema, root and merge, so an option that is a `$ref` is keyed by the same object on
+ * every call
  */
 const relaxedOptions = new WeakMap<StrictRJSFSchema, StrictRJSFSchema>();
 
 /** Normalises a list of `oneOf`/`anyOf` options for use in option-scoring only (not for filtering).
  * Boolean schemas are converted to their object equivalents (`true` → `{}`, `false` → `{not:{}}`).
- * When `resolveRefs` is `true`, each object option is first passed through `resolveAllReferences`
+ * When `resolveRefs` is `true`, each object option has its own `$ref` resolved first
  * so that `$ref`-based options expose their `additionalProperties` constraint before relaxation.
  * Any option whose `additionalProperties` is `false` is widened to `true` so that
  * `getClosestMatchingOption` / `validator.isValid()` does not produce false negatives when the
@@ -1711,18 +1982,21 @@ const relaxedOptions = new WeakMap<StrictRJSFSchema, StrictRJSFSchema>();
  * @param [resolveRefs=false] - When `true`, resolve `$ref`s in each option before relaxing; pass
  *   `rootSchema` as well. Set `false` (default) when refs are already resolved at the call site.
  * @param [rootSchema] - Required when `resolveRefs` is `true`; the root schema used to look up `$ref`s
+ * @param [customMergeAllOf] - The merge of the context the form renders with, which a `$ref` with keywords beside it is
+ *   read with when `resolveRefs` is `true`
  * @returns - A new array of plain schema objects with `additionalProperties` relaxed where needed
  */
 export function relaxOptionsForScoring<S extends StrictRJSFSchema = RJSFSchema>(
   options: (S | boolean)[],
   resolveRefs = false,
   rootSchema?: S,
+  customMergeAllOf?: CustomMergeAllOf<S>,
 ): S[] {
   return options.map((d) => {
     if (!isObject(d)) {
       return normalizeBooleanSchema<S>(d);
     }
-    const schema = resolveRefs && rootSchema ? resolveAllReferences<S>(d, rootSchema, []) : d;
+    const schema = resolveRefs && rootSchema ? resolveOwnRef<S>(d, rootSchema, customMergeAllOf) : d;
     if (schema.additionalProperties !== false) {
       return schema;
     }
@@ -1746,10 +2020,8 @@ export function relaxOptionsForScoring<S extends StrictRJSFSchema = RJSFSchema>(
  * @param rootSchema - The root schema that will be forwarded to all the APIs
  * @param expandAllBranches - Flag, if true, will return all possible branches of conditions, any/oneOf and dependencies
  *          as a list of schemas
- * @param recurseList - The list of refs already expanded on the current resolution path, used to
- *          detect cycles
+ * @param enteredRefs - The `$ref`s already resolved into this schema
  * @param [formData] - The current formData, if any, to assist retrieving a schema
- * @param [passCount=0] - The pass of the `resolveReference` fixpoint loop this resolution belongs to
  * @returns - The list of schemas with their dependencies resolved
  */
 export function resolveDependencies<
@@ -1761,9 +2033,8 @@ export function resolveDependencies<
   schema: S,
   rootSchema: S,
   expandAllBranches: boolean,
-  recurseList: string[],
+  enteredRefs: readonly string[],
   formData?: T,
-  passCount = 0,
 ): S[] {
   // Drop the dependencies from the source schema.
   const { dependencies, ...remainingSchema } = schema;
@@ -1773,7 +2044,7 @@ export function resolveDependencies<
     rootSchema,
     expandAllBranches,
     formData,
-    recurseList,
+    enteredRefs,
   );
   return resolvedSchemas.flatMap((resolvedSchema) => {
     const applied = processDependencies<T, S, F>(
@@ -1782,9 +2053,8 @@ export function resolveDependencies<
       resolvedSchema,
       rootSchema,
       expandAllBranches,
-      recurseList,
+      enteredRefs,
       formData,
-      passCount,
     );
     // A dependency whose key the form data does not have is left unapplied, so a form renders -- and scores its
     // options against -- the schema with whichever subset of them the data has filled in, where expanding returns
@@ -1794,7 +2064,7 @@ export function resolveDependencies<
     }
     return [
       ...applied,
-      ...partiallyApplied<T, S, F>(context, dependencies, resolvedSchema, rootSchema, recurseList, formData, passCount),
+      ...partiallyApplied<T, S, F>(context, dependencies, resolvedSchema, rootSchema, enteredRefs, formData),
       resolvedSchema,
     ];
   });
@@ -1818,9 +2088,8 @@ const MAX_COMBINED_SCHEMA_DEPENDENCIES = 8;
  * @param dependencies - The `dependencies` of the schema being resolved
  * @param resolvedSchema - The schema the dependencies are applied to, with none of them applied
  * @param rootSchema - The root schema that will be forwarded to all the APIs
- * @param recurseList - The list of recursive references already processed
+ * @param enteredRefs - The `$ref`s already resolved into this schema
  * @param [formData] - The current formData, if any, to assist retrieving a schema
- * @param [passCount=0] - The pass of the `resolveReference` fixpoint loop this resolution belongs to
  * @returns - The schema with each proper, non-empty subset of its schema dependencies applied
  */
 function partiallyApplied<
@@ -1832,9 +2101,8 @@ function partiallyApplied<
   dependencies: S['dependencies'],
   resolvedSchema: S,
   rootSchema: S,
-  recurseList: string[],
+  enteredRefs: readonly string[],
   formData?: T,
-  passCount = 0,
 ): S[] {
   // Iterated rather than read through a default, since this is only reached for a schema that has `dependencies` and
   // a default for the one it cannot have would be a branch no test can take
@@ -1870,9 +2138,8 @@ function partiallyApplied<
         resolvedSchema,
         rootSchema,
         true,
-        recurseList,
+        enteredRefs,
         formData,
-        passCount,
       );
     });
 }
@@ -1886,10 +2153,8 @@ function partiallyApplied<
  * @param rootSchema - The root schema that will be forwarded to all the APIs
  * @param expandAllBranches - Flag, if true, will return all possible branches of conditions, any/oneOf and dependencies
  *          as a list of schemas
- * @param recurseList - The list of refs already expanded on the current resolution path, used to
- *          detect cycles
+ * @param enteredRefs - The `$ref`s already resolved into this schema
  * @param [formData] - The current formData, if any, to assist retrieving a schema
- * @param [passCount=0] - The pass of the `resolveReference` fixpoint loop this resolution belongs to
  * @returns - The schema with the `dependencies` resolved into it
  */
 export function processDependencies<
@@ -1902,9 +2167,8 @@ export function processDependencies<
   resolvedSchema: S,
   rootSchema: S,
   expandAllBranches: boolean,
-  recurseList: string[],
+  enteredRefs: readonly string[],
   formData?: T,
-  passCount = 0,
 ): S[] {
   let schemas = [resolvedSchema];
   // Process dependencies updating the local schema properties as appropriate.
@@ -1924,9 +2188,8 @@ export function processDependencies<
           dependencyKey,
           dependencyValue as S,
           expandAllBranches,
-          recurseList,
+          enteredRefs,
           formData,
-          passCount,
         );
       }
       return schemas.flatMap((schema) =>
@@ -1936,9 +2199,8 @@ export function processDependencies<
           schema,
           rootSchema,
           expandAllBranches,
-          recurseList,
+          enteredRefs,
           formData,
-          passCount,
         ),
       );
     }
@@ -1975,10 +2237,8 @@ export function withDependentProperties<S extends StrictRJSFSchema = RJSFSchema>
  * @param dependencyValue - The potentially dependent schema
  * @param expandAllBranches - Flag, if true, will return all possible branches of conditions, any/oneOf and dependencies
  *          as a list of schemas
- * @param recurseList - The list of refs already expanded on the current resolution path, used to
- *          detect cycles
+ * @param enteredRefs - The `$ref`s already resolved into this schema
  * @param [formData]- The current formData to assist retrieving a schema
- * @param [passCount=0] - The pass of the `resolveReference` fixpoint loop this resolution belongs to
  * @returns - The list of schemas with the dependent schema resolved into them
  */
 export function withDependentSchema<
@@ -1992,21 +2252,16 @@ export function withDependentSchema<
   dependencyKey: string,
   dependencyValue: S,
   expandAllBranches: boolean,
-  recurseList: string[],
+  enteredRefs: readonly string[],
   formData?: T,
-  passCount = 0,
 ): S[] {
-  const dependencyPath = enclosingRefPath<S>(schema, recurseList, DEPENDENCIES_KEY);
   const dependentSchemas = retrieveSchemaInternal<T, S, F>(
     context,
     dependencyValue,
     rootSchema,
     formData,
     expandAllBranches,
-    dependencyPath,
-    undefined,
-    undefined,
-    passCount > 0 ? 1 : 0,
+    enteredRefs,
   );
   return dependentSchemas.flatMap((dependent) => {
     const { oneOf, ...dependentSchema } = dependent;
@@ -2015,23 +2270,12 @@ export function withDependentSchema<
     if (oneOf === undefined) {
       return mergedSchema;
     }
-    // Resolve $refs inside oneOf. Branches are resolved against the caller's path plus the enclosing ref, if
-    // any; nothing here mutates the path.
+    // Resolve the $ref each branch is spelled as, so that its `properties` name the condition it is chosen by
     const resolvedOneOfs = oneOf.map((subschema) => {
-      if (typeof subschema === 'boolean' || !(REF_KEY in subschema)) {
-        return [subschema as S];
+      if (!isSchemaObject<S>(subschema) || !(REF_KEY in subschema)) {
+        return [subschema];
       }
-      return resolveReference<T, S, F>(
-        context,
-        subschema as S,
-        rootSchema,
-        expandAllBranches,
-        dependencyPath,
-        formData,
-        undefined,
-        undefined,
-        passCount > 0 ? 1 : 0,
-      );
+      return resolveReference<T, S, F>(context, subschema, rootSchema, expandAllBranches, enteredRefs, formData);
     });
     const allPermutations = getAllPermutationsOfXxxOf(resolvedOneOfs);
     return allPermutations.flatMap((resolvedOneOf) =>
@@ -2042,9 +2286,8 @@ export function withDependentSchema<
         dependencyKey,
         resolvedOneOf,
         expandAllBranches,
-        recurseList,
+        enteredRefs,
         formData,
-        passCount,
       ),
     );
   });
@@ -2061,10 +2304,8 @@ export function withDependentSchema<
  * @param oneOf - The list of schemas representing the oneOf options
  * @param expandAllBranches - Flag, if true, will return all possible branches of conditions, any/oneOf and dependencies
  *          as a list of schemas
- * @param recurseList - The list of refs already expanded on the current resolution path, used to
- *          detect cycles
+ * @param enteredRefs - The `$ref`s already resolved into this schema
  * @param [formData] - The current formData to assist retrieving a schema
- * @param [passCount=0] - The pass of the `resolveReference` fixpoint loop this resolution belongs to
  * @returns - Either an array containing the best matching option or all options if `expandAllBranches` is true
  */
 export function withExactlyOneSubschema<
@@ -2078,9 +2319,8 @@ export function withExactlyOneSubschema<
   dependencyKey: string,
   oneOf: S['oneOf'],
   expandAllBranches: boolean,
-  recurseList: string[],
+  enteredRefs: readonly string[],
   formData?: T,
-  passCount = 0,
 ): S[] {
   const validSubschemas = oneOf!.filter((subschema) => {
     if (typeof subschema === 'boolean' || !subschema?.properties) {
@@ -2107,7 +2347,6 @@ export function withExactlyOneSubschema<
     );
     return [schema];
   }
-  const dependencyPath = enclosingRefPath<S>(schema, recurseList, DEPENDENCIES_KEY);
   return validSubschemas.flatMap((s) => {
     const subschema: S = s as S;
     const [dependentSubschema] = splitKeyElementFromObject(dependencyKey, subschema.properties as GenericObjectType);
@@ -2118,10 +2357,7 @@ export function withExactlyOneSubschema<
       rootSchema,
       formData,
       expandAllBranches,
-      dependencyPath,
-      undefined,
-      undefined,
-      passCount > 0 ? 1 : 0,
+      enteredRefs,
     );
     return schemas.map((resolvedSubschema) => mergeBranch<S>(schema, resolvedSubschema));
   });

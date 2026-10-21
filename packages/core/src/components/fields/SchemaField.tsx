@@ -850,7 +850,7 @@ function SchemaFieldRender<
     [presentationBelow, optionsPresentation, isContainer, presentation],
   );
 
-  // Stop $ref cycles: when resolveAllReferences detects a repeated property $ref it tags the schema with this flag,
+  // Stop $ref cycles: `retrieveSchema()` hands out a property whose $ref leads back round a recursion with this flag,
   // which is when the field is left unresolved above. The check must come after all hook calls to satisfy React's
   // rules of hooks.
   if (!uiField || !fieldToRender) {
