@@ -1,7 +1,7 @@
-import { CONST_KEY, DEFAULT_KEY, PROPERTIES_KEY, REF_KEY } from '../constants.ts';
+import { CONST_KEY, DEFAULT_KEY } from '../constants.ts';
 import deepEquals from '../deepEquals.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
-import { isSchemaObject } from '../isObject.ts';
+import getOptionSelectorSchema from '../getOptionSelectorSchema.ts';
 import { getByPath } from '../pathUtils.ts';
 import type { FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
 import retrieveSchema from './retrieveSchema.ts';
@@ -38,16 +38,13 @@ export default function findSelectedOptionInXxxOf<
     const data = getByPath(formData, selectorField);
     if (data !== undefined) {
       return xxxOfs.find((xxxOfOption) => {
-        const property: unknown = xxxOfOption[PROPERTIES_KEY]?.[selectorField];
-        if (!isSchemaObject<S>(property)) {
+        // An option without a selector has no value to match
+        const selector = getOptionSelectorSchema<S>(xxxOfOption, selectorField, (written) =>
+          retrieveSchema<unknown, S, F>(context, written, rootSchema, data),
+        );
+        if (selector === undefined) {
           return false;
         }
-        // An option hands its properties out as written, so a selector written as a `$ref` is retrieved to be read. One
-        // written in place already holds its value, and an option without one has none to match
-        const selector =
-          typeof property[REF_KEY] === 'string'
-            ? retrieveSchema<unknown, S, F>(context, property, rootSchema, data)
-            : property;
         const constValue = getByPath(selector, CONST_KEY);
         return deepEquals(getByPath(selector, DEFAULT_KEY, constValue), data);
       });

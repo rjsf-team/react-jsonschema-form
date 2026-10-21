@@ -1372,6 +1372,22 @@ This function does not work with discriminators of `"type": "object"` and `"type
 
 - number | undefined: index of the matched option
 
+### getOptionSelectorSchema&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns the schema of the selector property of an `anyOf`/`oneOf` option, the one the options are told apart by, as it is read for the value, title and type that tell them apart.
+An option hands its properties out as written, so a selector written as a `$ref` is retrieved by `retrieve`; one written in place is read as it stands.
+`findSelectedOptionInXxxOf()` and `LayoutMultiSchemaField` both read a selector this way, so the option one selects is the one the other lists.
+
+#### Parameters
+
+- option: S - The option, retrieved for the field's data
+- selectorField: string - The name of the selector property
+- retrieve: (selector: S) => S - Retrieves a selector written as a `$ref`, such as `(selector) => schemaUtils.retrieveSchema(selector, selectorData)`
+
+#### Returns
+
+- S | undefined: The selector's schema, or `undefined` where the option declares no schema for it
+
 ### getOptionUiSchema&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Returns the uiSchema for the `oneOf`/`anyOf` option at `index`, resolved the way `AnyOfField` resolves it: `uiSchema[keyword][index]` when that keyword's uiSchema is declared as an array reaching `index`, falling back to `uiSchema` itself otherwise.
