@@ -9,6 +9,7 @@ const describedOptions = [
   { const: 'b', title: 'Blue' },
 ];
 const callerDescription = 'Pick one';
+const callerLabel = 'Shade';
 
 /** An id no element has adds no text to the accessible description, so it is looked for apart from it */
 function expectNoDanglingIds(element: Element | null) {
@@ -58,6 +59,51 @@ export function selectedOptionDescriptionTests(Form: ComponentType<FormProps>, w
       },
     );
 
+    /** Renders the form's `SelectWidget` from a custom field, so without a plan, described by an element of its own */
+    function renderWithoutPlan(hideLabel: boolean, ariaLabel?: string) {
+      function Planless({ registry }: FieldProps) {
+        const { SelectWidget } = registry.widgets;
+        return (
+          <>
+            <p id='ext'>{callerDescription}</p>
+            <SelectWidget
+              id='root_custom'
+              name='custom'
+              schema={{ type: 'string' }}
+              label='Color'
+              // oxlint-disable-next-line typescript/no-deprecated -- a widget rendered without a plan reads the deprecated prop
+              hideLabel={hideLabel}
+              aria-label={ariaLabel}
+              aria-describedby='ext'
+              options={{
+                enumOptions: [
+                  { label: 'Red', value: 'r', schema: { const: 'r', description: 'Warm' } },
+                  { label: 'Blue', value: 'b', schema: { const: 'b' } },
+                ],
+              }}
+              value='r'
+              disabled={false}
+              readonly={false}
+              autofocus={false}
+              onChange={() => {}}
+              onBlur={() => {}}
+              onFocus={() => {}}
+              registry={registry}
+            />
+          </>
+        );
+      }
+      const { container } = render(
+        <Form
+          schema={{ type: 'string' }}
+          uiSchema={{ 'ui:field': Planless }}
+          widgets={widgets}
+          validator={validator}
+        />,
+      );
+      return container.querySelector('#root_custom');
+    }
+
     // Without a plan only `hideLabel` decides, and the select keeps the ids its caller describes it by
     test.each([
       ['hidden', true, callerDescription],
@@ -65,51 +111,17 @@ export function selectedOptionDescriptionTests(Form: ComponentType<FormProps>, w
     ])(
       "shows a selected option's description exactly where it describes a select rendered without a plan, its label %s",
       (_, hideLabel, description) => {
-        function Planless({ registry }: FieldProps) {
-          const { SelectWidget } = registry.widgets;
-          return (
-            <>
-              <p id='ext'>{callerDescription}</p>
-              <SelectWidget
-                id='root_custom'
-                name='custom'
-                schema={{ type: 'string' }}
-                label='Color'
-                // oxlint-disable-next-line typescript/no-deprecated -- a widget rendered without a plan reads the deprecated prop
-                hideLabel={hideLabel}
-                aria-describedby='ext'
-                options={{
-                  enumOptions: [
-                    { label: 'Red', value: 'r', schema: { const: 'r', description: 'Warm' } },
-                    { label: 'Blue', value: 'b', schema: { const: 'b' } },
-                  ],
-                }}
-                value='r'
-                disabled={false}
-                readonly={false}
-                autofocus={false}
-                onChange={() => {}}
-                onBlur={() => {}}
-                onFocus={() => {}}
-                registry={registry}
-              />
-            </>
-          );
-        }
-        const { container } = render(
-          <Form
-            schema={{ type: 'string' }}
-            uiSchema={{ 'ui:field': Planless }}
-            widgets={widgets}
-            validator={validator}
-          />,
-        );
-        const select = container.querySelector('#root_custom');
+        const select = renderWithoutPlan(hideLabel);
 
         expect(screen.queryAllByText('Warm')).toHaveLength(hideLabel ? 0 : 1);
         expect(select).toHaveAccessibleDescription(description);
         expectNoDanglingIds(select);
       },
     );
+
+    // A label the widget draws can name the select over its caller's `aria-label`, so the label is hidden here
+    test("names a select rendered without a plan, its label hidden, by its caller's aria-label", () => {
+      expect(renderWithoutPlan(true, callerLabel)).toHaveAccessibleName(callerLabel);
+    });
   });
 }
