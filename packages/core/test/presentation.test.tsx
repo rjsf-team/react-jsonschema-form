@@ -951,7 +951,6 @@ describe("the fallback UI's label, however its ui:field is spelled (#5389)", () 
   it.each<[string, RJSFSchema, UiSchema]>([
     ['ui:field', val, { val: { 'ui:field': 'OwnFallback' } }],
     ['ui:options.field', val, { val: { 'ui:options': { field: 'OwnFallback' } } }],
-    ['ui:globalOptions.field', val, { 'ui:globalOptions': { field: 'OwnFallback' } }],
     ["the schema's $id", { ...val, $id: 'OwnFallback' }, {}],
     ['a ui:field it then removes', val, { val: { 'ui:field': 'StrippingFallback' } }],
   ])(

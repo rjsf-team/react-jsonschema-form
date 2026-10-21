@@ -54,7 +54,8 @@ There are 4 properties that exist in a `UiSchema` that will not be found in an i
 ### `ui:globalOptions`
 
 The set of globally relevant `UiSchema` options that are read from the root-level `UiSchema` and stored in the `registry` for use everywhere.
-Each field takes them beneath its own options, except `required`: `ui:required` applies to the field whose uiSchema sets it alone, since validation reads it from there.
+RJSF reads twelve options from it, as fallbacks for a field that sets none of its own: `addable`, `copyable`, `orderable`, `removable`, `label`, `allowClearTextInputs`, `duplicateKeySuffixSeparator`, `enableMarkdownInDescription`, `enableMarkdownInHelp`, `enableOptionalDataFieldForType`, `optionValueFormat` and `deprecatedHandling`.
+Every other option is read per field only.
 Neither `ui:globalOptions` nor `ui:definitions` is itself an option of the root field.
 
 ```ts
@@ -64,6 +65,27 @@ const uiSchema: UiSchema = {
   'ui:globalOptions': { copyable: true },
 };
 ```
+
+The `GlobalUISchemaOptions` type takes a `UserExtensions` parameter for options your own widgets, fields and templates read, whose keys may not reuse an option name RJSF reads for a field.
+Declare the options against it, then hand them to the uiSchema, and name their keys in the `Form`'s [`globalUiOptionsKeys`](form-props.md#globaluioptionskeys) prop, so every field hands them to its widget and templates in their `options`, beneath the field's own:
+
+```tsx
+import { Form } from '@rjsf/core';
+import { GlobalUISchemaOptions, UiSchema, WidgetProps } from '@rjsf/utils';
+
+const globalOptions: GlobalUISchemaOptions<{ density?: 'compact' | 'comfortable' }> = { density: 'compact' };
+const uiSchema: UiSchema = { 'ui:globalOptions': globalOptions };
+
+function DensityWidget({ options }: WidgetProps) {
+  const { density } = options;
+  // ...
+}
+
+<Form schema={schema} uiSchema={uiSchema} validator={validator} globalUiOptionsKeys={['density']} />;
+```
+
+[`getGlobalUiOptions()`](utility-functions.md#getglobaluioptions) reads them off the registry typed with the extension.
+A theme that reads options of its own globally declares their keys itself and exports a type for them, which takes your `UserExtensions` too, such as `@rjsf/mui`'s `MuiGlobalUISchemaOptions`, and a `UiSchema` type whose `ui:globalOptions` take them inline.
 
 ### `ui:definitions` {#ui-definitions}
 
@@ -172,7 +194,7 @@ Specify either the name of a field that is used to look up an implementation fro
 
 See [Custom Widgets and Fields](../advanced-customization/custom-widgets-fields.md#custom-field-components) for more information about how to use this property.
 
-A field's own `ui:field` comes first, then `ui:globalOptions.field`, then a field registered under the schema's [`$id`](../advanced-customization/custom-widgets-fields.md#custom-field-by-id).
+A field's own `ui:field` comes first, then a field registered under the schema's [`$id`](../advanced-customization/custom-widgets-fields.md#custom-field-by-id).
 The field they name is applied once per data path: a `SchemaField` the named field renders for its own data, and the selected `anyOf`/`oneOf` option, render as though no field were named, the option's own `ui:field` or `$id` included.
 The field's own `SchemaField` renders the extra key's input and remove button and the `anyOf`/`oneOf` option selector around the named field, and a `SchemaField` the named field renders for its own data renders none of them again.
 It draws the label, description and help the named field's [plan](form-props.md#presentation) hands down to it, so each renders once: a custom field draws its own label and description unless its `presentation` declaration leaves them to the template, and one that renders `SchemaField` for its own data leaves them to that field.
@@ -182,10 +204,10 @@ It draws the label, description and help the named field's [plan](form-props.md#
 
 By default, any field that is rendered for an `anyOf`/`oneOf` schema will be wrapped inside the `AnyOfField` or `OneOfField` component.
 This default behavior may be undesirable if your custom field already handles behavior related to choosing one or more subschemas contained in the `anyOf`/`oneOf` schema.
-By providing a `true` value for this flag in association with a custom `ui:field`, or a field named by `ui:globalOptions.field` or by the schema's `$id`, the wrapped components will be omitted, so just one instance of the custom field will be rendered.
+By providing a `true` value for this flag in association with a custom `ui:field`, or a field named by the schema's `$id`, the wrapped components will be omitted, so just one instance of the custom field will be rendered.
 If the flag is omitted or set to `false`, your custom field is rendered beside the `AnyOfField`/`OneOfField`, whose selected option renders the default field for its schema rather than the custom one again.
 
-The flag needs a `ui:field`, a `ui:globalOptions.field` or a `$id` that resolves to a field.
+The flag needs a `ui:field` or a `$id` that resolves to a field.
 A name no field is registered under names nothing for the `anyOf`/`oneOf` to give way to, so the options are rendered as though the flag were absent: dropping them would leave an object union with no way to reach the `properties` of any option while the validator still required them.
 A `ui:field` naming `SchemaField` names no custom field, so the options are rendered as without one, and a `ui:field` naming `FallbackField` does not take them away either, whatever [`useFallbackUiForUnsupportedType`](./form-props.md#usefallbackuiforunsupportedtype) says.
 With that prop on, the [fallback UI](../json-schema/single.md#multiple-types) renders the options itself, against the schema whose type its selector has pinned.
@@ -930,7 +952,7 @@ const uiSchema: UiSchema = {
 };
 ```
 
-`ui:required` must be set per field; it is **not** honored when set via `ui:globalOptions`. Unlike most global options, it also has to be seen by schema validation (which only ever looks at a field's own uiSchema), so a form-wide default would make the required indicator and validation disagree.
+`ui:required` must be set per field, as it isn't one of the options read from [`ui:globalOptions`](#uiglobaloptions).
 
 `ui:required` is enforced by walking the form the same way it's rendered — resolving each node's schema (`$ref`, `allOf`, `dependencies`, `if`/`then`/`else`, the selected `oneOf`/`anyOf` branch) and uiSchema (including a [`ui:definitions`](#ui-definitions) fragment) against the current `formData`, exactly as `SchemaField` does. Because of that, it's enforced everywhere a field can appear — nested objects, array items, a `ui:definitions` fragment, a field only reachable through `dependencies`/`$ref`/`allOf`, and inside the currently-selected `oneOf`/`anyOf` branch — on both the submit and `liveValidate` paths, and by precompiled validators (which never see the schema mutated, since it isn't). Under `liveValidate`, a change to `uiSchema` or `formContext` alone doesn't re-validate: if `ui:required` depends on state outside the form, the error appears on the next data change, blur or submit.
 

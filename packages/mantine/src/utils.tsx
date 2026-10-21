@@ -42,6 +42,9 @@ import {
   widgetDrawsLabel,
 } from '@rjsf/utils';
 
+import type { MantineGlobalUiOptionsKeys } from './globalUiOptions.ts';
+import { MANTINE_GLOBAL_UI_OPTIONS_KEYS } from './globalUiOptions.ts';
+
 /** The keys `T` declares. `keyof T` is `string` for a type with an index signature, as `UIOptionsType` and
  * `TemplatesType` have, so it would accept any name and require none.
  */
@@ -123,16 +126,12 @@ const rjsfOptionNameRecord: Record<RjsfOptionName, true> = {
 
 // The options rjsf's widgets, fields and templates read that no type declares, so they can't be derived either: the
 // alt-date widgets' `yearsRange`, `format`, `hideNowButton` and `hideClearButton`, the file widget's `accept`, the
-// rating widget's `stars` and `shape`, an object's `expandable`, and the `gridCols`, `gridSpacing` and
-// `gridVerticalSpacing` of this theme's `ObjectFieldTemplate`. `ColorWidget` and `FileWidget` pass `format` and `accept`
-// on themselves, since their Mantine components take options of those names.
+// rating widget's `stars` and `shape`, and an object's `expandable`. `ColorWidget` and `FileWidget` pass `format` and
+// `accept` on themselves, since their Mantine components take options of those names.
 const undeclaredOptionNames = [
   'accept',
   'expandable',
   'format',
-  'gridCols',
-  'gridSpacing',
-  'gridVerticalSpacing',
   'hideClearButton',
   'hideNowButton',
   'shape',
@@ -143,12 +142,17 @@ const undeclaredOptionNames = [
 // `fieldReplacesAnyOrOneOf` is the uiSchema's own `ui:fieldReplacesAnyOrOneOf`, which `getUiOptions()` also gives a
 // field as an option. It can't be derived like the rest, since `UiSchema`'s `ui:${string}` key, which every option
 // takes, absorbs it.
-type StrippedOptionName = RjsfOptionName | 'fieldReplacesAnyOrOneOf' | (typeof undeclaredOptionNames)[number];
+type StrippedOptionName =
+  | RjsfOptionName
+  | 'fieldReplacesAnyOrOneOf'
+  | (typeof undeclaredOptionNames)[number]
+  | keyof MantineGlobalUiOptionsKeys;
 
 const strippedOptionNames = new Set<string>([
   ...Object.keys(rjsfOptionNameRecord),
   'fieldReplacesAnyOrOneOf',
   ...undeclaredOptionNames,
+  ...MANTINE_GLOBAL_UI_OPTIONS_KEYS,
 ]);
 
 /** Builds the `error` prop Mantine's inputs render from a list of errors. Mantine's error element doesn't keep line

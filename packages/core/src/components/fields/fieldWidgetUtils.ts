@@ -115,10 +115,9 @@ export function resolveStringFieldWidget<
   return { widget, enumOptions };
 }
 
-/** Gets the widget `BooleanField` renders with: its `ui:widget`, `ui:globalOptions` included, or a checkbox for none
- * or a `null` one
+/** Gets the widget `BooleanField` renders with: its `ui:widget`, or a checkbox for none or a `null` one
  *
- * @param uiOptions - The field's ui options, read with the registry's `globalUiOptions`
+ * @param uiOptions - The field's ui options
  * @returns - The widget
  */
 export function getBooleanFieldWidget<
@@ -152,7 +151,6 @@ function getArrayFieldWidget<
   }
   const { widget = mode === 'customWidget' ? undefined : ARRAY_MODE_DEFAULT_WIDGETS[mode] } = getUiOptions<T, S, F>(
     uiSchema,
-    registry.globalUiOptions,
   );
   return widget;
 }
@@ -410,7 +408,7 @@ export default function getFieldWidget<
     return resolveStringFieldWidget<T, S, F>(schema, uiSchema, registry).widget;
   }
   if (field === fields.BooleanField) {
-    return getBooleanFieldWidget<T, S, F>(getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions));
+    return getBooleanFieldWidget<T, S, F>(getUiOptions<T, S, F>(uiSchema));
   }
   if (field === fields.ArrayField) {
     return getArrayFieldWidget<T, S, F>(schema, uiSchema, registry);

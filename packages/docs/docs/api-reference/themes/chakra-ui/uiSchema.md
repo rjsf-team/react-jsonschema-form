@@ -24,7 +24,7 @@ And, `uiSchema` allows for the use of a `"chakra"` `"ui:option"` to customize th
 ```
 
 It accepts Chakra's [style props](https://chakra-ui.com/docs/styling/overview#style-props), and anything else in it is ignored. Only the style props of Chakra's default system are recognized: a utility or condition that your own `createSystem()` adds is ignored too.
-Like any other option, it can also be written as the `"ui:chakra"` shorthand, or set for every field of the form under the root's `"ui:globalOptions"`.
+Like any other option, it can also be written as the `"ui:chakra"` shorthand. It can be set for every field of the form under the root's `"ui:globalOptions"` too, which the theme's `UiSchema` type and `ChakraGlobalUISchemaOptions` type with it.
 
 ### Limitations
 

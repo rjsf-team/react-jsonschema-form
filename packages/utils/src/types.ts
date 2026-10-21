@@ -623,11 +623,10 @@ export type TemplatesType<
   };
 } & Record<string, ComponentType<any> | Record<string, ComponentType<any>> | undefined>;
 
-/** The declared keys of `GlobalUISchemaOptions`, kept separate from its `GenericObjectType &` index signature so
- * a closed vocabulary (like `StrictUiSchema`'s) can pick up these keys without also reopening
- * itself to arbitrary ones.
+/** The options RJSF reads from `ui:globalOptions`, as fallbacks for a field that sets none of its own. These are the
+ * only ones it reads there: any other option is set per field, and a key outside this list belongs to an extension.
  */
-interface GlobalUISchemaOptionsKeys {
+export interface GlobalUISchemaOptionsKeys {
   /** Flag, if set to `false`, new items cannot be added to array fields, unless overridden (defaults to true) */
   addable?: boolean;
   /** Flag, if set to `true`, array items can be copied (defaults to false) */
@@ -683,11 +682,56 @@ interface GlobalUISchemaOptionsKeys {
   deprecatedHandling?: 'hide' | 'disable' | 'label';
 }
 
-/** The set of UiSchema options that can be set globally and used as fallbacks at an individual template, field or
- * widget level when no field-level value of the option is provided. Extends GenericObjectType to support allowing users
- * to provide any value they need for their customizations.
+/** Every option name RJSF reads for a field, which an extension of `GlobalUISchemaOptions` may not reuse: the
+ * registry hands an extension's keys to every field along with RJSF's own, so one of these names would act as the
+ * option RJSF reads per field. `ui:fieldReplacesAnyOrOneOf` is among them, since `getUiOptions()` returns it as an
+ * option too, and so is every template `getTemplates()` reads from a field's options, the ones `ui:options` doesn't
+ * declare included, and every option RJSF's widgets read that `ui:options` doesn't declare.
  */
-export type GlobalUISchemaOptions = GenericObjectType & GlobalUISchemaOptionsKeys;
+export type ReservedUiOptionName =
+  | keyof UIOptionsDeclaredType
+  | 'fieldReplacesAnyOrOneOf'
+  | 'ArrayFieldItemButtonsTemplate'
+  | 'CyclicSchemaExpandTemplate'
+  | 'FallbackFieldTemplate'
+  | 'GridTemplate'
+  | 'MarkdownTemplate'
+  | 'MultiSchemaFieldTemplate'
+  | 'OptionalDataControlsTemplate'
+  | 'accept'
+  | 'expandable'
+  | 'format'
+  | 'hideClearButton'
+  | 'hideNowButton'
+  | 'shape'
+  | 'stars'
+  | 'yearsRange';
+
+/** Checks the keys an extension of `GlobalUISchemaOptions` adds: each one also in `Reserved` is mapped to `never`, so
+ * an extension declaring one doesn't satisfy it, and so is an extension with a string index signature, which would
+ * cover every reserved key at once.
+ */
+export type GlobalUISchemaOptionsExtensions<
+  E,
+  Reserved extends PropertyKey = ReservedUiOptionName,
+> = string extends keyof E ? never : { [K in keyof E]: K extends Reserved ? never : E[K] };
+
+/** The `ui:globalOptions` RJSF reads, plus the `UserExtensions` a user's own components read, whose keys may not
+ * reuse any option name RJSF declares. A value with extensions is assignable to the plain `GlobalUISchemaOptions` every RJSF API takes, so
+ * check a literal against the extended type where it is declared, then hand it on.
+ */
+export type GlobalUISchemaOptions<
+  UserExtensions extends GlobalUISchemaOptionsExtensions<UserExtensions> = Record<never, never>,
+> = GlobalUISchemaOptionsKeys & UserExtensions;
+
+/** The `ui:globalOptions` of a theme that reads some of its own: its `ThemeExtensions` may not reuse an option name
+ * RJSF declares, and a user's `UserExtensions` may reuse neither those nor the theme's.
+ */
+export type ThemeGlobalUISchemaOptions<
+  ThemeExtensions extends GlobalUISchemaOptionsExtensions<ThemeExtensions>,
+  UserExtensions extends GlobalUISchemaOptionsExtensions<UserExtensions, ReservedUiOptionName | keyof ThemeExtensions> =
+    Record<never, never>,
+> = GlobalUISchemaOptionsKeys & ThemeExtensions & UserExtensions;
 
 /** The set of options from the `Form` that will be available on the `Registry` for use in everywhere the `registry` is
  * available.
@@ -1633,15 +1677,16 @@ type UIOptionsTemplateOverrides<T, S extends StrictRJSFSchema, F extends FormCon
   | 'WrapIfAdditionalTemplate'
 >;
 
-/** This type represents all the known supported options in the `ui:options` property, kept separate in order to
- * remap the keys. It also contains all the properties, optionally, of `TemplatesType` except "ButtonTemplates"
+/** This type represents all the known supported options in the `ui:options` property, without the open vocabulary
+ * `UIOptionsBaseType` adds, so that their names can be listed as `ReservedUiOptionName`. It also contains all the
+ * properties, optionally, of `TemplatesType` except "ButtonTemplates"
  */
-type UIOptionsBaseType<
+type UIOptionsDeclaredType<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 > = Partial<UIOptionsTemplateOverrides<T, S, F>> &
-  GlobalUISchemaOptions & {
+  GlobalUISchemaOptionsKeys & {
     /** Allows RJSF to override the default field implementation by specifying either the name of a field that is used
      * to look up an implementation from the `fields` list or an actual one-off `Field` component implementation itself
      */
@@ -1728,6 +1773,16 @@ type UIOptionsBaseType<
      */
     widget?: Widget<T, S, F> | string;
   };
+
+/** This type represents all the known supported options in the `ui:options` property, kept separate in order to
+ * remap the keys. Its `GenericObjectType` leaves the vocabulary open to any option a theme or custom component reads,
+ * which is also what gives `UiSchema` its `ui:${string}` keys once remapped
+ */
+type UIOptionsBaseType<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+> = UIOptionsDeclaredType<T, S, F> & GenericObjectType;
 
 /** The type that represents the Options potentially provided by `ui:options` */
 export type UIOptionsType<
@@ -2203,7 +2258,7 @@ export interface SchemaUtilsType<
    *
    * @param schema - The schema for which the display label flag is desired
    * @param [uiSchema] - The UI schema from which to derive potentially displayable information
-   * @param [globalOptions={}] - The Global UI Schema from which to get any fallback `xxx` options
+   * @param [globalOptions={}] - The Global UI Schema from which to get any fallback `xxx` options, as `pickGlobalUiOptions()` leaves them
    * @returns - True if the label should be displayed or false if it should not
    * @deprecated Kept through v7 for a field rendered without a plan, which says what draws its label
    */

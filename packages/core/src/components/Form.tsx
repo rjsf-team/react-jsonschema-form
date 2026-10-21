@@ -116,6 +116,12 @@ export interface FormProps<
    * which are layered over `core`'s
    */
   presentation?: ThemePresentation;
+  /** The keys of the extensions to `ui:globalOptions` the form's own widgets, fields and templates read, beyond the
+   * ones RJSF reads there, added to the ones the theme declares. The registry's `globalUiOptions` hold only those, so
+   * every field hands them to its widget and templates along with RJSF's own. A key that is an option name RJSF reads
+   * per field, such as `widget`, is not read from `ui:globalOptions`
+   */
+  globalUiOptionsKeys?: readonly string[];
   // Callbacks
   /** If you plan on being notified every time the form data are updated, you can pass an `onChange` handler, which will
    * receive the same args as `onSubmit` any time a value is updated in the form. Can also return the `id` of the field

@@ -63,14 +63,6 @@ describe('ArrayFieldItemTemplate', () => {
       fallbackUi: true,
     },
     {
-      named: 'a type list hidden by a global widget under the fallback UI, whose type selector is hidden with it',
-      items: { type: ['string', 'number'], title: 'Value' },
-      uiSchema: { 'ui:globalOptions': { widget: 'hidden' } },
-      formData: ['a', 'a'],
-      marginTop: '0px',
-      fallbackUi: true,
-    },
-    {
       named: 'a hidden text input, with no control on screen to draw a label above',
       items: { type: 'string', title: 'Tag' },
       uiSchema: { items: { 'ui:widget': 'hidden' } },

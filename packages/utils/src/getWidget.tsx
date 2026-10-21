@@ -279,7 +279,7 @@ export function getFieldTypeForWidget<S extends StrictRJSFSchema = RJSFSchema>(
 }
 
 /** Gets the type of the field `SchemaField` renders a `schema` by, as `getFieldTypeForWidget()` does for the field's
- * own `ui:widget` in `uiSchema`. Only that one picks the field, so `ui:globalOptions` is not read
+ * own `ui:widget` in `uiSchema`
  *
  * @param schema - The schema for the field
  * @param [uiSchema] - The uiSchema for the field

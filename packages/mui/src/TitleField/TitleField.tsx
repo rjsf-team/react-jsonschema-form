@@ -41,9 +41,9 @@ export default function TitleField<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: TitleFieldProps<T, S, F>) {
-  const { id, title, required, optionalDataControl, uiSchema } = props;
+  const { id, title, required, optionalDataControl, uiSchema, registry } = props;
 
-  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const uiOptions = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);
   const {
     rjsfSlotProps: {
       titleBox,

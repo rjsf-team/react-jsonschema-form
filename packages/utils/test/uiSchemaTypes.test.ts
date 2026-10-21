@@ -1,4 +1,11 @@
-import type { StrictUiSchema, UiOptionsCheck, UiSchema, UiSchemaDefinitions } from '../src/index.ts';
+import type {
+  GlobalUISchemaOptions,
+  StrictUiSchema,
+  ThemeGlobalUISchemaOptions,
+  UiOptionsCheck,
+  UiSchema,
+  UiSchemaDefinitions,
+} from '../src/index.ts';
 
 interface Data {
   name: string;
@@ -326,5 +333,50 @@ describe('StrictUiSchema (vocabulary narrowing)', () => {
     const ui: Checked = { active: { 'ui:widget': 'ToggleWidget' } };
 
     expect(ui.active?.['ui:widget']).toBe('ToggleWidget');
+  });
+});
+
+describe('GlobalUISchemaOptions (extensions)', () => {
+  it('accepts an extension declared ahead of the uiSchema it is handed to', () => {
+    const globalOptions: GlobalUISchemaOptions<{ myKey?: number }> = { label: false, myKey: 1 };
+    const ui: UiSchema = { 'ui:globalOptions': globalOptions };
+
+    expect(ui['ui:globalOptions']).toBe(globalOptions);
+  });
+
+  it("rejects a key outside RJSF's own in a ui:globalOptions literal", () => {
+    // @ts-expect-error a plain ui:globalOptions knows only the keys RJSF reads
+    const ui: UiSchema = { 'ui:globalOptions': { myKey: 1 } };
+
+    expect(ui).toBeDefined();
+  });
+
+  it("rejects an extension reusing one of RJSF's option names, or declaring an index signature", () => {
+    // @ts-expect-error `label` is one of RJSF's keys
+    expectTypeOf<GlobalUISchemaOptions<{ label?: string }>>().not.toBeNever();
+    // @ts-expect-error `widget` is an option RJSF reads per field, which every field would read as its own
+    expectTypeOf<GlobalUISchemaOptions<{ widget?: string }>>().not.toBeNever();
+    // @ts-expect-error `format` is an option RJSF's widgets read per field, though `ui:options` doesn't declare it
+    expectTypeOf<GlobalUISchemaOptions<{ format?: string }>>().not.toBeNever();
+    // @ts-expect-error an index signature would cover every one of RJSF's keys
+    expectTypeOf<GlobalUISchemaOptions<Record<string, unknown>>>().not.toBeNever();
+  });
+
+  it("rejects a theme's key reusing RJSF's, and a user's key reusing the theme's", () => {
+    // @ts-expect-error `addable` is one of RJSF's keys
+    expectTypeOf<ThemeGlobalUISchemaOptions<{ addable?: string }>>().not.toBeNever();
+    // @ts-expect-error `gridCols` is the theme's key
+    expectTypeOf<ThemeGlobalUISchemaOptions<{ gridCols?: number }, { gridCols?: string }>>().not.toBeNever();
+  });
+
+  it("hands a theme's options with a user's extension on to the plain type RJSF takes", () => {
+    const themeOptions: ThemeGlobalUISchemaOptions<{ gridCols?: number }, { myKey?: string }> = {
+      label: false,
+      gridCols: 2,
+      myKey: 'x',
+    };
+    const rjsfOptions: GlobalUISchemaOptions = themeOptions;
+
+    expect(rjsfOptions.label).toBe(false);
   });
 });

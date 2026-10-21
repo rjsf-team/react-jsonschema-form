@@ -1171,7 +1171,6 @@ A deprecated field's label is decorated with the `DeprecatedLabel` marker under 
 ### getFieldTypeForUiSchema&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getfieldtypeforuischema}
 
 Gets the type of the field `SchemaField` renders a schema by, as [getFieldTypeForWidget()](#getfieldtypeforwidget) does for the field's own `ui:widget` in its `uiSchema`.
-Only that one picks the field, so `ui:globalOptions` is not read.
 
 #### Parameters
 
@@ -1214,6 +1213,19 @@ A `propertyNames` written as a `$ref` reads as the former, since resolving one n
 #### Returns
 
 - string[] | undefined: The allowed names nothing has taken, or undefined when the schema enumerates none
+
+### getGlobalUiOptions&lt;UserExtensions extends GlobalUISchemaOptionsExtensions&lt;UserExtensions> = Record&lt;never, never>>() {#getglobaluioptions}
+
+Returns the registry's `globalUiOptions` typed with the `UserExtensions` a theme or custom component reads from them.
+The `Registry` only knows the options RJSF reads, so this is an unchecked cast: it is the caller's word that the root uiSchema's `ui:globalOptions` was written against the same extensions.
+
+#### Parameters
+
+- registry: Pick&lt;Registry, 'globalUiOptions'> - The `Registry` holding the `globalUiOptions`
+
+#### Returns
+
+- GlobalUISchemaOptions&lt;UserExtensions> | undefined: The registry's `globalUiOptions`, typed with `UserExtensions`, if the root uiSchema has any
 
 ### getGroupAttributes&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getgroupattributes}
 
@@ -1659,12 +1671,13 @@ This will allow you to use `TEST_IDS.examplePropertyName` within your tests, whi
 
 - TestIdShape: An object that auto-generates test ids upon request the first time and then returns the same value on subsequent calls
 
-### getUiOptions&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+### getUiOptions&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getuioptions}
 
 Get all passed options from ui:options, and ui:&lt;optionName>, returning them in an object with the `ui:` stripped off.
 Any `globalOptions` will always be returned, unless they are overridden by options in the `uiSchema`.
 A global `required` is left out: `ui:required` is a field's own, since validation reads it from the field's own uiSchema alone, so a form-wide one would mark fields required that validation doesn't require.
 `ui:definitions` and `ui:globalOptions` aren't options either.
+The registry's `globalUiOptions` hold only the options RJSF reads there and the extension keys the form declares, as [`pickGlobalUiOptions()`](#pickglobaluioptions) leaves them, so pass the root uiSchema's `ui:globalOptions` through it first.
 
 #### Parameters
 
@@ -2065,7 +2078,6 @@ otherwise leaves the `anyOf`/`oneOf` to decide. Unlike `isSelect()`, `schema` is
 ### isCustomWidget&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Checks to see if the `uiSchema` names a `widget` and that the widget is not `hidden`.
-A `widget` set to `undefined` names none: it is how a `uiSchema` shadows a `widget` in `ui:globalOptions`
 
 #### Parameters
 
@@ -2576,6 +2588,22 @@ Parses the `dateString` into a `DateObject`, including the time information when
 #### Throws
 
 - Error when the date cannot be parsed from the string
+
+### pickGlobalUiOptions() {#pickglobaluioptions}
+
+Picks the options a form reads from its root uiSchema's `ui:globalOptions`: the ones RJSF reads, which `GLOBAL_UI_OPTIONS_KEYS` lists, and the extension keys the form's theme and the `Form` itself declare.
+Every other key is left out, so a global option RJSF reads only per field, such as `widget` or `placeholder`, reaches no field.
+An extension key that is one of those per-field names, which `RESERVED_UI_OPTION_NAMES` lists, is left out too, with a warning: every field would otherwise read it as its own option.
+`Form` builds its registry's `globalUiOptions` with it.
+
+#### Parameters
+
+- [globalOptions]: GlobalUISchemaOptions | undefined - The root uiSchema's `ui:globalOptions`
+- [extensionKeys=[]]: readonly string[] - The extension keys the form's theme and the `Form` declare
+
+#### Returns
+
+- GlobalUISchemaOptions | undefined: The options picked, or undefined when `globalOptions` is not an object
 
 ### propertyToPath()
 
@@ -3489,7 +3517,7 @@ An `object` or `array` schema whose `anyOf`/`oneOf` is a list of constants rende
 - schema: S - The schema for which the display label flag is desired
 - [uiSchema={}]: UiSchema&lt;T, S, F> - The UI schema from which to derive potentially displayable information
 - [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
-- [globalOptions]: GlobalUISchemaOptions | undefined - The optional Global UI Schema from which to get any fallback `xxx` options
+- [globalOptions]: GlobalUISchemaOptions | undefined - The optional Global UI Schema from which to get any fallback `xxx` options, as `pickGlobalUiOptions()` leaves them
 
 #### Returns
 

@@ -23,6 +23,8 @@ The `@rjsf/mui` package looks for a `mui` key inside the `ui:options` of your `u
 }
 ```
 
+The `mui` key can be set for every field of the form under the root's `ui:globalOptions` too, where a field's own `mui` replaces it. The theme's `UiSchema` type, and its `MuiGlobalUISchemaOptions`, type it there.
+
 ## `slotProps` vs `rjsfSlotProps`
 
 `@rjsf/mui` distinguishes between two kinds of slot customization:

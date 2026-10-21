@@ -4,6 +4,7 @@ import { fieldLabelId, toFieldPath } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 
+import type { UiSchema as DaisyUiSchema } from '../src/index.ts';
 import Form, { generateTemplates } from '../src/index.ts';
 import DaisyFieldTemplate from '../src/templates/FieldTemplate/FieldTemplate.tsx';
 import DaisyCheckboxWidget from '../src/widgets/CheckboxWidget/CheckboxWidget.tsx';
@@ -644,6 +645,27 @@ describe('FieldTemplate', () => {
       const { wrapper, innerDiv } = agreeElements(container);
       expect(innerDiv?.getAttribute('style')).toBe('color: blue;');
       expect(wrapper).not.toHaveAttribute('style');
+    });
+
+    test("takes a ui:globalOptions daisy where the field's ui:options set none", () => {
+      const globalUiSchema: DaisyUiSchema = { 'ui:globalOptions': { daisy: { style: { color: 'green' } } } };
+      const { container: globalContainer } = renderForm({
+        ...globalUiSchema,
+        agree: { 'ui:classNames': 'custom-class' },
+      });
+      const { container: ownContainer } = renderForm({
+        ...globalUiSchema,
+        agree: { 'ui:classNames': 'custom-class', 'ui:options': { daisy: { style: { color: 'blue' } } } },
+      });
+      // As `getUiOptions()` layers them: a `daisy` key the field sets, even to `undefined`, shadows the global one
+      const { container: clearedContainer } = renderForm({
+        ...globalUiSchema,
+        agree: { 'ui:classNames': 'custom-class', 'ui:options': { daisy: undefined } },
+      });
+
+      expect(agreeElements(globalContainer).innerDiv?.getAttribute('style')).toBe('color: green;');
+      expect(agreeElements(ownContainer).innerDiv?.getAttribute('style')).toBe('color: blue;');
+      expect(agreeElements(clearedContainer).innerDiv).not.toHaveAttribute('style');
     });
   });
 

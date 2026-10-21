@@ -247,7 +247,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   );
 
   const { SchemaField: SchemaFieldComponent } = fields;
-  const { MultiSchemaFieldTemplate } = getTemplates<T, S, F>(registry, globalUiOptions);
+  const { MultiSchemaFieldTemplate } = getTemplates<T, S, F>(registry);
   const isOptionalRender = shouldRenderOptionalField<T, S, F>(registry, schema, required, uiSchema, fieldPath);
   const hasFormData = isFormDataAvailable<T>(formData);
 

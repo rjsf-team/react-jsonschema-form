@@ -1,18 +1,50 @@
 import type { JsxStyleProps } from '@chakra-ui/react';
 import { defaultSystem } from '@chakra-ui/react';
-import type { UiSchema } from '@rjsf/utils';
+import type {
+  GlobalUISchemaOptionsExtensions,
+  ReservedUiOptionName,
+  ThemeGlobalUISchemaOptions,
+  UiSchema,
+} from '@rjsf/utils';
 import { isObject } from '@rjsf/utils';
 
-/** A `UiSchema` whose `ui:options` are known to carry the theme's `chakra` prop bag.
+/** The options this theme reads from `ui:globalOptions`, beyond the ones RJSF reads */
+export interface ChakraGlobalUiOptionsKeys {
+  /** The style props for every field's Chakra components, as in a field's `ui:options` */
+  chakra?: JsxStyleProps;
+}
+
+/** The `ui:globalOptions` this theme reads, plus a user's own `UserExtensions` */
+export type ChakraGlobalUISchemaOptions<
+  UserExtensions extends GlobalUISchemaOptionsExtensions<
+    UserExtensions,
+    ReservedUiOptionName | keyof ChakraGlobalUiOptionsKeys
+  > = Record<never, never>,
+> = ThemeGlobalUISchemaOptions<ChakraGlobalUiOptionsKeys, UserExtensions>;
+
+/** The keys of `ChakraGlobalUiOptionsKeys`, which the theme declares as its `globalUiOptionsKeys` */
+export const CHAKRA_GLOBAL_UI_OPTIONS_KEYS = Object.keys({ chakra: true } satisfies Record<
+  keyof ChakraGlobalUiOptionsKeys,
+  true
+>);
+
+/** A `UiSchema` whose `ui:options` and `ui:globalOptions` are known to carry the theme's `chakra` prop bag, and whose
+ * `ui:globalOptions` carry a user's own `UserExtensions` too.
  *
  * NOTE: intersects rather than using `Omit`, whose `keyof UiSchema` includes `UiSchema`'s string index signature and so
  * erases every named member.
  */
-export type ChakraUiSchema = UiSchema & {
+export type ChakraUiSchema<
+  UserExtensions extends GlobalUISchemaOptionsExtensions<
+    UserExtensions,
+    ReservedUiOptionName | keyof ChakraGlobalUiOptionsKeys
+  > = Record<never, never>,
+> = UiSchema & {
   'ui:options'?: ChakraUiOptions;
+  'ui:globalOptions'?: ChakraGlobalUISchemaOptions<UserExtensions>;
 };
 
-type ChakraUiOptions = UiSchema['ui:options'] & { chakra?: JsxStyleProps };
+type ChakraUiOptions = UiSchema['ui:options'] & ChakraGlobalUiOptionsKeys;
 
 /** Reads the style props a widget's `options` carry under `chakra`. The `options` are the merged ones `getUiOptions()`
  * returns, so a `chakra` set through `ui:globalOptions` or the `ui:chakra` shorthand is read like one in `ui:options`.

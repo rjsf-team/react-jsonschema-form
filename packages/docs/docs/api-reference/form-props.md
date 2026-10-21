@@ -517,6 +517,27 @@ To change the data in place, keeping the errors and the fields' own state, call 
 
 Only `undefined` means "not passed". `null` seeds the schema's defaults the way `undefined` does. `false`, `0` and `''` are values.
 
+## globalUiOptionsKeys
+
+The keys of the extensions to [`ui:globalOptions`](uiSchema.md#uiglobaloptions) that your own widgets, fields and templates read, beyond the ones RJSF reads there.
+They are added to the ones the theme declares, and the registry's `globalUiOptions` hold only those and RJSF's own, so every field hands them to its widget and templates in their `options`, beneath the field's own.
+A key that is an option name RJSF reads per field, such as `widget` or `placeholder`, is not read from `ui:globalOptions`, and a warning says so.
+
+```tsx
+import { Form } from '@rjsf/core';
+import { GlobalUISchemaOptions, UiSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const globalOptions: GlobalUISchemaOptions<{ density?: 'compact' | 'comfortable' }> = { density: 'compact' };
+const uiSchema: UiSchema = { 'ui:globalOptions': globalOptions };
+
+// Each widget's `options.density` is 'compact', unless its own uiSchema sets another
+render(
+  <Form schema={schema} uiSchema={uiSchema} validator={validator} globalUiOptionsKeys={['density']} />,
+  document.getElementById('app'),
+);
+```
+
 ## id
 
 The value of this prop will be passed to the `id` [HTML attribute on the form](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form).

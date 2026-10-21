@@ -1213,21 +1213,13 @@ describe('BooleanField', () => {
     expect(texts(node)).toEqual(['', 'Yes', 'No', 'null']);
   });
 
-  it.each<[string, UiSchema, string[]]>([
-    [
-      'keep a ui:enumNames label spelled like its value rather than relabel it Yes/No',
-      { 'ui:widget': 'select', 'ui:enumNames': ['true', 'false'] },
-      ['', 'true', 'false'],
-    ],
-    [
-      'label an enum Yes/No when only ui:globalOptions sets ui:enumNames, which optionsList() ignores',
-      { 'ui:widget': 'select', 'ui:globalOptions': { enumNames: ['GA', 'GB'] } },
-      ['', 'Yes', 'No'],
-    ],
-  ])('should %s', (_, uiSchema, expected) => {
-    const { node } = createFormComponent({ schema: { type: 'boolean', enum: [true, false] }, uiSchema });
+  it('should keep a ui:enumNames label spelled like its value rather than relabel it Yes/No', () => {
+    const { node } = createFormComponent({
+      schema: { type: 'boolean', enum: [true, false] },
+      uiSchema: { 'ui:widget': 'select', 'ui:enumNames': ['true', 'false'] },
+    });
 
-    expect(texts(node)).toEqual(expected);
+    expect(texts(node)).toEqual(['', 'true', 'false']);
   });
 
   it.each<[string, UiSchema['ui:enumOrder'], string[]]>([

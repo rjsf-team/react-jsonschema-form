@@ -127,6 +127,28 @@ A declaration states what the theme's templates and widgets do.
 
 The theme's declarations are layered part by part over `@rjsf/core`'s, and the `Form`'s [`presentation`](../api-reference/form-props.md#presentation) prop over the theme's, by [`mergeThemePresentation()`](../api-reference/utility-functions.md#mergethemepresentation), so each layer declares only the parts it changes.
 
+### Global UI options
+
+A theme whose widgets or templates read an option of their own from [`ui:globalOptions`](../api-reference/uiSchema.md#uiglobaloptions), as `@rjsf/mui` reads `mui`, declares its key as `globalUiOptionsKeys`.
+RJSF reads only its own options from `ui:globalOptions` and the keys the theme and the `Form`'s [`globalUiOptionsKeys`](../api-reference/form-props.md#globaluioptionskeys) prop declare, so every field hands the theme's to its widget and templates in their `options`, beneath the field's own.
+A key may not be an option name RJSF reads per field, which `ReservedUiOptionName` lists.
+Type the keys with `ThemeGlobalUISchemaOptions`, which takes the user's own extensions too:
+
+```tsx
+import { ThemeProps } from '@rjsf/core';
+import { ThemeGlobalUISchemaOptions } from '@rjsf/utils';
+
+interface MyThemeGlobalUiOptionsKeys {
+  density?: 'compact' | 'comfortable';
+}
+export type MyThemeGlobalUISchemaOptions = ThemeGlobalUISchemaOptions<MyThemeGlobalUiOptionsKeys>;
+
+const ThemeObject: ThemeProps = {
+  widgets: myWidgets,
+  globalUiOptionsKeys: ['density'],
+};
+```
+
 ## Overriding other Form props
 
 Just as the theme can override **widgets**, **fields**, any of the **templates**, and set default values to properties like **showErrorList**, you can do the same with the instance of the withTheme() Form component.

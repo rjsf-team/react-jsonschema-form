@@ -1,6 +1,6 @@
 import { ADDITIONAL_PROPERTY_FLAG, UI_FIELD_KEY } from '../constants.ts';
 import getUiOptions from '../getUiOptions.ts';
-import { DEFAULT_BOOLEAN_WIDGET, getFieldTypeForUiSchema } from '../getWidget.tsx';
+import { DEFAULT_BOOLEAN_WIDGET, getFieldTypeForWidget } from '../getWidget.tsx';
 import isCustomWidget from '../isCustomWidget.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
 import type {
@@ -24,7 +24,7 @@ import resolveConstantOptions from './resolveConstantOptions.ts';
  * @param schema - The schema for which the display label flag is desired
  * @param [uiSchema={}] - The UI schema from which to derive potentially displayable information
  * @param [rootSchema] - The root schema, used to primarily to look up `$ref`s
- * @param [globalOptions={}] - The optional Global UI Schema from which to get any fallback `xxx` options
+ * @param [globalOptions={}] - The optional Global UI Schema from which to get any fallback `xxx` options, as `pickGlobalUiOptions()` leaves them
  * @returns - True if the label should be displayed or false if it should not
  * @deprecated Kept through v7 for a field rendered without a plan: a field's plan, from `resolveFieldPresentation()`,
  *   says what draws its label
@@ -43,9 +43,8 @@ export default function getDisplayLabel<
   const uiOptions = getUiOptions<T, S, F>(uiSchema, globalOptions);
   let displayLabel = uiBooleanOption(uiOptions.label) ?? true;
   if (displayLabel) {
-    // The label follows the field `SchemaField` renders: a `CheckboxWidget` on a `['number', 'boolean']` is a boolean's.
-    // Only the field's own `ui:widget` picks that field, so the `ui:globalOptions` one is left out
-    const schemaType = getFieldTypeForUiSchema<T, S, F>(schema, uiSchema);
+    // The label follows the field `SchemaField` renders: a `CheckboxWidget` on a `['number', 'boolean']` is a boolean's
+    const schemaType = getFieldTypeForWidget<S>(schema, uiOptions.widget);
     const addedByAdditionalProperty = Boolean((schema as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG]);
     // A schema handed in as written holds a select's constants as `$ref`s, so they are read resolved
     const isWholeValue = () =>

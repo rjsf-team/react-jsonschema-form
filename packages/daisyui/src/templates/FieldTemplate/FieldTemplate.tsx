@@ -132,7 +132,7 @@ export default function FieldTemplate<
   // without one
   const widgetRendersLabel =
     !presentation && widgetRendersOwnLabel<T, S, F>(schema, uiOptions.widget, registry.widgets);
-  const daisy = getDaisy<T, S, F>({ uiSchema });
+  const daisy = getDaisy<T, S, F>({ uiSchema, globalUiOptions: registry.globalUiOptions });
   const { WrapIfAdditionalTemplate } = getTemplates<T, S, F>(registry, uiOptions);
 
   return (

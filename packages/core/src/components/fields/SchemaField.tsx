@@ -194,7 +194,6 @@ const RenderNothing = () => null;
  *
  * @param schema - The schema from which to obtain the type
  * @param uiOptions - The UI Options that may affect the component decision
- * @param ownWidget - The field's own `ui:widget`, without `ui:globalOptions`, which picks a type list's field
  * @param namedField - The field `resolveNamedField()` resolved, if one is named
  * @param namedFieldKey - The registry key that field was named by, if it was named by one
  * @param registry - The registry from which fields and templates are obtained
@@ -217,7 +216,6 @@ function getFieldComponent<
 >(
   schema: S,
   uiOptions: UIOptionsType<T, S, F>,
-  ownWidget: UIOptionsType<T, S, F>['widget'],
   namedField: Field<T, S, F> | undefined,
   namedFieldKey: string | undefined,
   registry: Registry<T, S, F>,
@@ -242,9 +240,8 @@ function getFieldComponent<
   // the way NumberField turns `true` into `1`. Any other type list renders the field of another type it names when only
   // that type has the widget it renders with: a `textarea` on a `['null', 'number', 'string']` is rendered by
   // `StringField`, which keeps the `'007'` typed into it as it is rather than casting it to `7` the way `NumberField`
-  // would. `getFieldTypeForWidget()` answers both, so `getDisplayLabel()` and the defaults agree with the field. Only
-  // the field's own `ui:widget` picks it, as the defaults, which never see `ui:globalOptions`, can only follow that one
-  const type = getFieldTypeForWidget<S>(schema, ownWidget) ?? '';
+  // would. `getFieldTypeForWidget()` answers both, so `getDisplayLabel()` and the defaults agree with the field
+  const type = getFieldTypeForWidget<S>(schema, widget) ?? '';
 
   // Looked up as an own property, for the reason `lookUpUiField()` looks the `ui:field` up that way: a `type` such
   // as `constructor` or `toString` would otherwise resolve to something off `Object.prototype` rather than to no field
@@ -546,9 +543,9 @@ export function useSchemaFieldPlan<
       return undefined;
     }
     return namedAbove
-      ? { ignored: [], uiSchema: withoutNamedField<T, S, F>(ownUiSchema, globalUiOptions?.field) }
-      : resolveNamedField<T, S, F>(ownUiSchema, globalUiOptions?.field, schemaId, fields, fieldPath, globalFormOptions);
-  }, [isRefCycle, namedAbove, ownUiSchema, globalUiOptions, schemaId, fields, fieldPath, globalFormOptions]);
+      ? { ignored: [], uiSchema: withoutNamedField<T, S, F>(ownUiSchema) }
+      : resolveNamedField<T, S, F>(ownUiSchema, schemaId, fields, fieldPath, globalFormOptions);
+  }, [isRefCycle, namedAbove, ownUiSchema, schemaId, fields, fieldPath, globalFormOptions]);
   // `SchemaField` named for its own data is the field that renders it with no field named, so it is rendered that way.
   // `FallbackField` still renders, as it does for a schema whose type sends it there, within this field's template
   const namedField = uiField?.namedField === fields.SchemaField ? undefined : uiField?.namedField;
@@ -570,8 +567,8 @@ export function useSchemaFieldPlan<
     // `BooleanField` is the only field the widget is ever inferred for, and the only one that reads it, so another
     // field named through `ui:field` is handed the caller's `uiSchema` without a widget it never chose — which a field
     // following `BooleanField`'s lead would otherwise render in place of its own default. A field named through
-    // `ui:options.field` or `ui:globalOptions.field` still gets the widget, so one that wraps `BooleanField` keeps its
-    // select, as does whichever field renders in place of a `ui:field` that names nothing, as though none were given
+    // `ui:options.field` still gets the widget, so one that wraps `BooleanField` keeps its select, as does whichever
+    // field renders in place of a `ui:field` that names nothing, as though none were given
     if (isComponentType(rawUiField) && rawUiField !== fields.BooleanField) {
       return resolvedUiSchema;
     }
@@ -581,11 +578,10 @@ export function useSchemaFieldPlan<
   // Memoized so a child reading it past a `memo` boundary isn't re-rendered by a new object each render
   const fieldUiSchema = useMemo<UiSchema<T, S, F>>(() => omitConsumedStyling<T, S, F>(uiSchema), [uiSchema]);
   const ownUiOptions = useMemo(() => getUiOptions<T, S, F>(uiSchema), [uiSchema]);
-  // What `getUiOptions(uiSchema, globalUiOptions)` returns, without reading the `uiSchema`'s keys a second time, except
-  // that a global `required` it drops is kept: nothing reads `required` from these options, since `ui:required` is
-  // resolved from `ownUiOptions` alone below. Nothing compares either object by identity; both are memoized because the
-  // React Compiler (`react/preserve-manual-memoization`) refuses the options memo below when the flags it depends on
-  // derive from an object rebuilt each render, which it takes for one that may still be mutated
+  // What `getUiOptions(uiSchema, globalUiOptions)` returns, without reading the `uiSchema`'s keys a second time.
+  // Nothing compares either object by identity; both are memoized because the React Compiler
+  // (`react/preserve-manual-memoization`) refuses the options memo below when the flags it depends on derive from an
+  // object rebuilt each render, which it takes for one that may still be mutated
   const uiOptions = useMemo<UIOptionsType<T, S, F>>(
     () => ({ ...globalUiOptions, ...ownUiOptions }),
     [globalUiOptions, ownUiOptions],
@@ -595,7 +591,6 @@ export function useSchemaFieldPlan<
     getFieldComponent<T, S, F>(
       schema,
       uiOptions,
-      ownUiOptions.widget,
       namedField,
       uiField.namedFieldKey,
       registry,
@@ -619,10 +614,9 @@ export function useSchemaFieldPlan<
   // uiSchema, so a form-wide default here would make the required indicator and schema validation disagree
   const uiRequired = uiBooleanOption(ownUiOptions.required);
   const effectiveRequired = uiRequired ?? required;
-  // `ui:hideError` is resolved as the field's own, then the one the field above resolved to, then `ui:globalOptions`, so
-  // a parent's reaches its children even where a global one is set (#5490)
-  const hideError =
-    uiBooleanOption(ownUiOptions.hideError) ?? props.hideError ?? uiBooleanOption(globalUiOptions?.hideError);
+  // `ui:hideError` is resolved as the field's own, then the one the field above resolved to, so a parent's reaches its
+  // children (#5490)
+  const hideError = uiBooleanOption(uiOptions.hideError) ?? props.hideError;
   const hidden = uiOptions.widget === 'hidden' || deprecatedHandling === 'hide';
   const inheritedPresentation = useInheritedPresentation(fieldId);
   // The property name and the title a parent hands down label the field above, which a selected option or the fallback
@@ -667,9 +661,9 @@ export function useSchemaFieldPlan<
     shouldRenderOptionalField<T, S, F>(registry, schema, effectiveRequired, uiSchema, fieldPath) &&
     !isFormDataAvailable<T>(formData);
   const schemaDescription = props.schema.description || schema.description || '';
-  // A description a field below declares of its own, as a selected option does, says more about it than a form-wide
-  // `ui:globalOptions.description`, so it wins over that, though not over its own `ui:description`. The fallback UI's
-  // value carries its field's own description, which is not its own
+  // A description a field below declares of its own, as a selected option does, says more about it than the one the
+  // field above left undrawn, so it wins over that, though not over its own `ui:description`. The fallback UI's value
+  // carries its field's own description, which is not its own
   const ownSchemaDescription =
     inheritedPresentation && schemaDescription !== inheritedPresentation.schemaDescription ? schemaDescription : '';
   // The description of a field above with no control to draw its parts by is left undrawn there, as its label is, so a
@@ -681,13 +675,9 @@ export function useSchemaFieldPlan<
       ? inheritedPresentation.plan.description.text
       : '';
   const fieldDescription =
-    ownUiOptions.description ||
-    ownSchemaDescription ||
-    descriptionUndrawnAbove ||
-    uiOptions.description ||
-    schemaDescription;
-  // `ui:label` is resolved as `hideError` is: the field's own, then the one the field above rendering this id resolved
-  // to, then `ui:globalOptions`, since an option given a `uiSchema` of its own doesn't carry the field's
+    uiOptions.description || ownSchemaDescription || descriptionUndrawnAbove || schemaDescription;
+  // `ui:label` is resolved as `hideError` is, the field's own and then the one the field above rendering this id resolved
+  // to, and only then `ui:globalOptions`, since an option given a `uiSchema` of its own doesn't carry the field's
   const showLabel =
     uiBooleanOption(ownUiOptions.label) ??
     inheritedPresentation?.plan.showLabel ??
@@ -966,10 +956,9 @@ function SchemaFieldRender<
   // Falling back to the field for the schema is kept over throwing, but a caller who asked for their own field would
   // otherwise have no sign it was dropped.
   // The message describes the fallback the field renders, which its plan labels as it labels that field anywhere else.
-  // A `ui:globalOptions.field` reaches every field that sets none of its own, each with its own label, so it is warned
-  // about once for the form rather than once per field. An `items` entry reaches every item of its array the same way,
-  // so a field's own `ui:field` is named with the item's index left out, and every item the entry reaches shares one
-  // warning. A tuple's per-position entries and its `additionalItems` share it too, since nothing here tells them apart
+  // An `items` entry reaches every item of its array, so a field's own `ui:field` is named with the item's index left
+  // out, and every item the entry reaches shares one warning. A tuple's per-position entries and its `additionalItems`
+  // share it too, since nothing here tells them apart
   for (const message of uiField.ignored) {
     logOnce(message);
   }

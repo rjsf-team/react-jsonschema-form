@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react';
 import { forwardRef, lazy, memo, Suspense } from 'react';
-import type { GenericObjectType, RJSFSchema, UiSchema, Widget, WidgetProps } from '@rjsf/utils';
-import { noop } from '@rjsf/utils';
+import type { GenericObjectType, GlobalUISchemaOptions, RJSFSchema, UiSchema, Widget, WidgetProps } from '@rjsf/utils';
+import { errorId, noop } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, fireEvent, act, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -2445,7 +2445,7 @@ describe('uiSchema', () => {
           expect(disabled).toEqual([true, true]);
         });
 
-        it('should not mark as readonly even if globalOptions set readonly', () => {
+        it("should not mark as readonly a property whose ui:readonly is false, under an object's readOnly", () => {
           const schema: RJSFSchema = {
             type: 'object',
             properties: {
@@ -2460,9 +2460,6 @@ describe('uiSchema', () => {
           };
 
           const uiSchema: UiSchema = {
-            'ui:globalOptions': {
-              readonly: true,
-            },
             foo: {
               'ui:readonly': false,
             },
@@ -2667,6 +2664,159 @@ describe('uiSchema', () => {
         const readonly = [].map.call(node.querySelectorAll('select'), (node: Element) => node.hasAttribute('disabled'));
         expect(readonly).toEqual([true, true, true, true, true, true]);
       });
+    });
+  });
+
+  describe('ui:globalOptions in a LayoutGridField cell', () => {
+    const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' } } };
+    const refSchema: RJSFSchema = {
+      type: 'object',
+      definitions: { foo: { type: 'string' } },
+      properties: { foo: { $ref: '#/definitions/foo' } },
+    };
+    const gridUiSchema: UiSchema = {
+      'ui:field': 'LayoutGridField',
+      'ui:layoutGrid': { 'ui:row': { children: ['foo'] } },
+      'ui:globalOptions': { label: false },
+    };
+    const ownSpellings: [string, UiSchema][] = [
+      ['ui:options', { 'ui:options': { label: true } }],
+      ['ui:<name>', { 'ui:label': true }],
+    ];
+
+    it.each<[string, RJSFSchema, UiSchema]>(
+      ownSpellings.flatMap(([spelling, own]) => [
+        [`the cell's uiSchema, as ${spelling}`, schema, { ...gridUiSchema, foo: own }],
+        [
+          `the ui:definitions entry the cell's schema $refs, as ${spelling}`,
+          refSchema,
+          { ...gridUiSchema, 'ui:definitions': { '#/definitions/foo': own } },
+        ],
+      ]),
+    )('is beaten by the options in %s', (_, formSchema, uiSchema) => {
+      const { node } = createFormComponent({ schema: formSchema, uiSchema });
+
+      expect(node.querySelector('label[for="root_foo"]')).toBeInTheDocument();
+    });
+
+    it('still reaches a cell that sets none of its own', () => {
+      const { node } = createFormComponent({ schema, uiSchema: gridUiSchema });
+
+      expect(node.querySelector('label[for="root_foo"]')).not.toBeInTheDocument();
+    });
+
+    it("leaves the globals out of the cell's uiSchema, so its widget's options hold no globalOptions", () => {
+      const TextWidget = vi.fn<Widget>(() => null);
+      createFormComponent({ schema, uiSchema: gridUiSchema, widgets: { TextWidget } });
+
+      const { options, uiSchema } = TextWidget.mock.lastCall![0];
+      expect(options).toMatchObject({ label: false });
+      expect(options).not.toHaveProperty('globalOptions');
+      expect(uiSchema).toEqual({});
+    });
+
+    it("leaves a cell's errors shown under a global hideError, which RJSF reads only per field", () => {
+      // Untyped, as a JSON uiSchema is, since `hideError` is an option RJSF reads only per field
+      const globalOptions: GenericObjectType = { hideError: true };
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: { ...gridUiSchema, 'ui:globalOptions': globalOptions },
+        extraErrors: { foo: { __errors: ['foo is wrong'] } },
+      });
+
+      expect(node.querySelector(`#${errorId('root_foo')}`)).toHaveTextContent('foo is wrong');
+    });
+  });
+
+  describe('ui:globalOptions reaching a string or number widget', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { foo: { type: 'string' }, bar: { type: 'string' }, num: { type: 'number' } },
+    };
+
+    it("reach its options beneath the field's own", () => {
+      const TextWidget = vi.fn<Widget>(() => null);
+      createFormComponent({
+        schema,
+        uiSchema: { 'ui:globalOptions': { allowClearTextInputs: true }, bar: { 'ui:allowClearTextInputs': false } },
+        widgets: { TextWidget },
+      });
+
+      const optionsById = Object.fromEntries(TextWidget.mock.calls.map(([{ id, options }]) => [id, options]));
+      expect(optionsById.root_foo).toMatchObject({ allowClearTextInputs: true });
+      expect(optionsById.root_bar).toMatchObject({ allowClearTextInputs: false });
+      expect(optionsById.root_num).toMatchObject({ allowClearTextInputs: true });
+    });
+
+    it("reach its options with a key the Form declares in globalUiOptionsKeys, beneath the field's own", () => {
+      const TextWidget = vi.fn<Widget>(() => null);
+      const globalOptions: GlobalUISchemaOptions<{ density: string }> = { density: 'compact' };
+      createFormComponent({
+        schema,
+        uiSchema: { 'ui:globalOptions': globalOptions, bar: { 'ui:density': 'comfortable' } },
+        globalUiOptionsKeys: ['density'],
+        widgets: { TextWidget },
+      });
+
+      const optionsById = Object.fromEntries(TextWidget.mock.calls.map(([{ id, options }]) => [id, options]));
+      expect(optionsById.root_foo).toMatchObject({ density: 'compact' });
+      expect(optionsById.root_bar).toMatchObject({ density: 'comfortable' });
+    });
+
+    it.each<[string, RJSFSchema, string | number]>([
+      ['text', { type: 'string' }, 'x'],
+      ['number', { type: 'number' }, 4],
+    ])(
+      'give a %s input the clear button a global allowClearTextInputs turns on',
+      async (_, inputSchema, initialFormData) => {
+        const { node, onChange } = createFormComponent({
+          schema: inputSchema,
+          uiSchema: { 'ui:globalOptions': { allowClearTextInputs: true } },
+          initialFormData,
+        });
+
+        await user.click(node.querySelector('button.btn-clear')!);
+
+        expectToHaveBeenCalledWithFormData(onChange, undefined, 'root');
+      },
+    );
+
+    it.each<[string, RJSFSchema, string[]]>([
+      ['string', { type: 'string', enum: ['admin', 'editor'] }, ['', 'admin', 'editor']],
+      ['number', { type: 'number', enum: [3, 7] }, ['', '3', '7']],
+    ])("encode a %s enum's options by a global optionValueFormat", (_, enumSchema, expected) => {
+      const { node } = createFormComponent({
+        schema: enumSchema,
+        uiSchema: { 'ui:globalOptions': { optionValueFormat: 'realValue' } },
+      });
+
+      const values = Array.from(node.querySelectorAll('#root option'), (option) => option.getAttribute('value'));
+      expect(values).toEqual(expected);
+    });
+
+    it('leave out every option RJSF reads only per field', () => {
+      const TextWidget = vi.fn<Widget>(() => null);
+      const TextareaWidget = vi.fn<Widget>(() => null);
+      // Untyped, as a JSON uiSchema is, since none of these is an option RJSF reads from ui:globalOptions
+      const globalOptions: GenericObjectType = {
+        widget: 'textarea',
+        required: true,
+        inputType: 'tel',
+        placeholder: 'Global',
+        emptyValue: 'EMPTY',
+        label: false,
+      };
+      // A nested field, since the root field's own uiSchema is the one holding `ui:globalOptions` (#5527)
+      createFormComponent({
+        schema: { type: 'object', properties: { foo: { type: 'string' } } },
+        uiSchema: { 'ui:globalOptions': globalOptions },
+        widgets: { TextWidget, TextareaWidget },
+      });
+
+      expect(TextareaWidget).not.toHaveBeenCalled();
+      const { options, placeholder } = TextWidget.mock.lastCall![0];
+      expect(options).toEqual({ label: false });
+      expect(placeholder).toBe('');
     });
   });
 
@@ -3281,8 +3431,10 @@ describe('uiSchema', () => {
           foo: { type: 'string' },
         },
       };
+      // Untyped, as a JSON uiSchema is, since `required` is an option RJSF reads only per field
+      const globalOptions: GenericObjectType = { required: true };
       const uiSchema: UiSchema = {
-        'ui:globalOptions': { required: true },
+        'ui:globalOptions': globalOptions,
       };
       const { node, onSubmit } = createFormComponent({ schema, uiSchema });
       expect(node.querySelector('.rjsf-field-string span.required')).toBeNull();
@@ -3297,12 +3449,13 @@ describe('uiSchema', () => {
           foo: { type: 'string' },
         },
       };
+      const globalOptions: GenericObjectType = { required: true };
       const uiSchema: UiSchema = {
         'ui:field': 'LayoutGridField',
         'ui:layoutGrid': {
           'ui:row': { children: ['foo'] },
         },
-        'ui:globalOptions': { required: true },
+        'ui:globalOptions': globalOptions,
       };
       const { node, onSubmit } = createFormComponent({ schema, uiSchema });
       expect(node.querySelector('.rjsf-field-string span.required')).toBeNull();
@@ -3311,6 +3464,8 @@ describe('uiSchema', () => {
     });
 
     describe('a widget gets no options from the global required, ui:definitions or ui:globalOptions', () => {
+      // Untyped, as a JSON uiSchema is, since `required` is an option RJSF reads only per field
+      const requiredGlobally: GenericObjectType = { required: true };
       function optionsOf(widget: 'CheckboxWidget' | 'SelectWidget' | 'TextWidget', props: Partial<NoValFormProps>) {
         const seen: WidgetProps['options'][] = [];
         function SpyWidget({ options }: WidgetProps) {
@@ -3324,10 +3479,10 @@ describe('uiSchema', () => {
       it('a boolean field (#5527)', () => {
         const options = optionsOf('CheckboxWidget', {
           schema: { type: 'object', properties: { flag: { type: 'boolean' } } },
-          uiSchema: { 'ui:globalOptions': { required: true, inline: true } },
+          uiSchema: { 'ui:globalOptions': { ...requiredGlobally, enableMarkdownInDescription: true } },
         });
         expect(options).not.toHaveProperty('required');
-        expect(options).toHaveProperty('inline', true);
+        expect(options).toHaveProperty('enableMarkdownInDescription', true);
       });
 
       it("an array field's multi-select (#5527)", () => {
@@ -3336,7 +3491,7 @@ describe('uiSchema', () => {
             type: 'object',
             properties: { tags: { type: 'array', uniqueItems: true, items: { enum: ['a', 'b'] } } },
           },
-          uiSchema: { 'ui:globalOptions': { required: true }, tags: { 'ui:widget': 'select' } },
+          uiSchema: { 'ui:globalOptions': requiredGlobally, tags: { 'ui:widget': 'select' } },
         });
         expect(options).not.toHaveProperty('required');
       });
@@ -3344,7 +3499,7 @@ describe('uiSchema', () => {
       it("an anyOf field's option selector (#5527)", () => {
         const options = optionsOf('SelectWidget', {
           schema: { type: 'object', properties: { pet: { anyOf: [{ type: 'string' }, { type: 'number' }] } } },
-          uiSchema: { 'ui:globalOptions': { required: true } },
+          uiSchema: { 'ui:globalOptions': requiredGlobally },
         });
         expect(options).not.toHaveProperty('required');
       });
@@ -3368,9 +3523,10 @@ describe('uiSchema', () => {
       });
 
       it('keeps a field its own ui:required as an option', () => {
+        const notRequiredGlobally: GenericObjectType = { required: false };
         const options = optionsOf('CheckboxWidget', {
           schema: { type: 'object', properties: { flag: { type: 'boolean' } } },
-          uiSchema: { 'ui:globalOptions': { required: false }, flag: { 'ui:required': true } },
+          uiSchema: { 'ui:globalOptions': notRequiredGlobally, flag: { 'ui:required': true } },
         });
         expect(options).toHaveProperty('required', true);
       });

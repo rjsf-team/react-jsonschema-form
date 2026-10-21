@@ -2520,16 +2520,6 @@ describe('oneOf', () => {
       expect(screen.getAllByText('pick a region')).toHaveLength(1);
     });
 
-    it('renders a ui:globalOptions help once for an option with a uiSchema of its own', () => {
-      const { node } = createFormComponent({
-        schema,
-        initialFormData: formData,
-        uiSchema: { 'ui:globalOptions': { help: 'global help' }, region: { oneOf: [{}, {}] } },
-      });
-
-      expect(node.querySelectorAll('#root_region__help')).toHaveLength(1);
-    });
-
     it('renders the help an option declares for itself', () => {
       createFormComponent({
         schema,
@@ -2676,30 +2666,6 @@ describe('oneOf', () => {
       expect(screen.getAllByText('Yes or no')).toHaveLength(1);
     });
 
-    it('describes the option with its own description under a ui:globalOptions description', () => {
-      createFormComponent({
-        schema: regionSchema({ ...europe, description: 'A country in Europe' }),
-        uiSchema: { 'ui:globalOptions': { description: 'Every field' } },
-        initialFormData: formData,
-      });
-
-      expect(screen.getAllByText('A country in Europe')).toHaveLength(1);
-    });
-
-    it("keeps a fallback value from repeating its field's description over a ui:globalOptions description", () => {
-      createFormComponent({
-        schema: {
-          type: 'object',
-          properties: { x: { title: 'X', description: 'Field desc', type: ['string', 'number'] } },
-        },
-        uiSchema: { 'ui:globalOptions': { description: 'Every field' } },
-        initialFormData: { x: 'a' },
-        useFallbackUiForUnsupportedType: true,
-      });
-
-      expect(screen.queryByText('Field desc')).toBeNull();
-    });
-
     it('describes the option with the ui:description it declares for itself', () => {
       const { node } = createFormComponent({
         schema,
@@ -2787,55 +2753,27 @@ describe('oneOf', () => {
       expect(node.querySelector('input#root_a')).toBeInTheDocument();
     });
 
-    it.each([
-      ['inherits the uiSchema of its field', {}],
-      ['has a uiSchema of its own', { oneOf: [{}, {}] }],
-    ])('renders a ui:globalOptions field once when the option %s', (_, uiSchema) => {
+    it('renders an option whose uiSchema entry is null beside a named field', () => {
       const { node } = createFormComponent({
         schema: { oneOf: [{ type: 'number' }, { type: 'string' }] },
-        uiSchema: { ...uiSchema, 'ui:globalOptions': { field: CustomField } },
+        uiSchema: { 'ui:field': CustomField, oneOf: [null, {}] } as unknown as UiSchema,
       });
 
       expect(node.querySelectorAll('.custom-field')).toHaveLength(1);
       expect(node.querySelector('input#root')).toBeInTheDocument();
     });
 
-    it('renders a ui:globalOptions field for an option with its own uiSchema when the field clears it', () => {
-      const WrapperField = (props: FieldProps) => (
-        <div className='wrapper'>
-          <SchemaField {...props} uiSchema={{ ...props.uiSchema, 'ui:field': null } as unknown as UiSchema} />
-        </div>
-      );
-      const { node } = createFormComponent({
-        schema: { type: 'object', properties: { x: { oneOf: [{ type: 'number' }, { type: 'string' }] } } },
-        uiSchema: { 'ui:globalOptions': { field: WrapperField }, x: { 'ui:field': null, oneOf: [{}, {}] } },
-      });
-
-      expect(node.querySelectorAll('.wrapper')).toHaveLength(2);
-      expect(node.querySelector('.wrapper .wrapper input#root_x')).toBeInTheDocument();
-    });
-
-    it('renders an option whose uiSchema entry is null beside a ui:globalOptions field', () => {
-      const { node } = createFormComponent({
-        schema: { oneOf: [{ type: 'number' }, { type: 'string' }] },
-        uiSchema: { oneOf: [null, {}], 'ui:globalOptions': { field: CustomField } } as unknown as UiSchema,
-      });
-
-      expect(node.querySelectorAll('.custom-field')).toHaveLength(1);
-      expect(node.querySelector('input#root')).toBeInTheDocument();
-    });
-
-    it('renders a ui:globalOptions field once for a union nested in an option with its own uiSchema', () => {
+    it('renders a named field once for a union nested in an option with its own uiSchema', () => {
       const { node } = createFormComponent({
         schema: { oneOf: [{ oneOf: [{ type: 'number' }, { type: 'string' }] }, { type: 'boolean' }] },
-        uiSchema: { oneOf: [{ oneOf: [{}, {}] }, {}], 'ui:globalOptions': { field: CustomField } },
+        uiSchema: { 'ui:field': CustomField, oneOf: [{ oneOf: [{}, {}] }, {}] },
       });
 
       expect(node.querySelectorAll('.custom-field')).toHaveLength(1);
       expect(node.querySelector('input#root')).toBeInTheDocument();
     });
 
-    it('renders a ui:globalOptions field for a union under another id nested in an option', () => {
+    it('renders a field an option names for a union under another id, below a named field', () => {
       const { node } = createFormComponent({
         schema: {
           oneOf: [
@@ -2844,50 +2782,14 @@ describe('oneOf', () => {
           ],
         },
         uiSchema: {
-          oneOf: [{ x: { 'ui:field': null, oneOf: [{}, {}] } }, {}],
-          'ui:globalOptions': { field: CustomField },
+          'ui:field': CustomField,
+          oneOf: [{ x: { 'ui:field': CustomField, oneOf: [{}, {}] } }, {}],
         },
       });
 
       expect(node.querySelectorAll('.custom-field')).toHaveLength(2);
       expect(node.querySelector('select#root_x__oneof_select')).toBeInTheDocument();
-      expect(node.querySelector('input#root_x')).toBeNull();
-    });
-
-    describe('with a ui:field that names no registered field', () => {
-      const consoleWarnSuppression = setupConsoleWarnSuppression();
-
-      it.each<[string, UiSchema]>([
-        ['ui:field', { 'ui:field': 'NotRegistered' }],
-        ['ui:options.field', { 'ui:options': { field: 'NotRegistered' } }],
-      ])(
-        'renders a ui:globalOptions field once for an option with its own uiSchema when it is the field %s',
-        (_, uiSchema) => {
-          const { node } = createFormComponent({
-            schema: { oneOf: [{ type: 'number' }, { type: 'string' }] },
-            uiSchema: { ...uiSchema, oneOf: [{}, {}], 'ui:globalOptions': { field: CustomField } },
-          });
-
-          expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledWith(
-            expect.stringContaining("names no registered field ('NotRegistered')"),
-          );
-          expect(node.querySelectorAll('.custom-field')).toHaveLength(1);
-          expect(node.querySelector('input#root')).toBeInTheDocument();
-        },
-      );
-
-      it("renders a ui:globalOptions field once when it is the option's own ui:field", () => {
-        const { node } = createFormComponent({
-          schema: { oneOf: [{ type: 'number' }, { type: 'string' }] },
-          uiSchema: { oneOf: [{ 'ui:field': 'NotRegistered' }, {}], 'ui:globalOptions': { field: CustomField } },
-        });
-
-        expect(node.querySelectorAll('.custom-field')).toHaveLength(1);
-        expect(node.querySelector('input#root')).toBeInTheDocument();
-        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledWith(
-          expect.stringContaining('ui:field in uiSchema.oneOf[0] for "root" is ignored'),
-        );
-      });
+      expect(node.querySelector('input#root_x')).toBeInTheDocument();
     });
   });
 
@@ -3873,32 +3775,6 @@ describe('oneOf', () => {
       expect(node.querySelector('label[for=root]')).toHaveTextContent('Status');
       await user.selectOptions(select!, 'Disabled');
       expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: false }), 'root');
-    });
-
-    describe('with a ui:globalOptions.field', () => {
-      setupConsoleWarnSuppression();
-
-      it.each<[string, UiSchema]>([
-        ['alone', { 'ui:globalOptions': { field: 'MyGlobal' } }],
-        ['behind a ui:field that names nothing', { 'ui:globalOptions': { field: 'MyGlobal' }, 'ui:field': 'Typo' }],
-      ])('should hand the field it names the inferred select %s', (_, uiSchema) => {
-        const uiWidgets: unknown[] = [];
-        const MyGlobal = ({ uiSchema: fieldUiSchema }: FieldProps) => {
-          uiWidgets.push(fieldUiSchema?.['ui:widget']);
-          return null;
-        };
-        const schema: RJSFSchema = {
-          type: 'boolean',
-          oneOf: [
-            { const: true, title: 'On' },
-            { const: false, title: 'Off' },
-          ],
-        };
-        createFormComponent({ schema, uiSchema, fields: { MyGlobal } });
-
-        expect(uiWidgets.length).toBeGreaterThan(0);
-        expect(uiWidgets.every((widget) => widget === 'select')).toBe(true);
-      });
     });
 
     it('should render a select for an empty enum beside a oneOf of object constants', async () => {

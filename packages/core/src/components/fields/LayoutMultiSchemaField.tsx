@@ -241,7 +241,7 @@ export default function LayoutMultiSchemaField<
     title = '',
     placeholder = '',
     optionsSchemaSelector: selectorField = discriminator,
-    hideError: _hideError,
+    hideError: ownHideError,
     // See #439: the class names and style this field's `FieldTemplate` consumes must not reach the widget below, so
     // they are destructured out of the options it is handed and stripped from the `uiSchema` it is handed as well
     classNames: uiClassNames,
@@ -279,12 +279,8 @@ export default function LayoutMultiSchemaField<
   const optionSchema = useSelectorSchema<S>(enumOptions, selectorField, option?.type || baseType);
   const { Widget } = resolveWidget<T, S, F>(optionSchema, widget, widgets);
 
-  // Resolved as `SchemaField` resolves it: the field's own `ui:hideError`, then the one handed down, then
-  // `ui:globalOptions`
-  const hideFieldError =
-    uiBooleanOption(getUiOptions<T, S, F>(uiSchema).hideError) ??
-    hideError ??
-    uiBooleanOption(globalUiOptions?.hideError);
+  // Resolved as `SchemaField` resolves it: the field's own `ui:hideError`, then the one handed down
+  const hideFieldError = uiBooleanOption(ownHideError) ?? hideError;
 
   const ownErrors = errorSchema?.[ERRORS_KEY];
   const rawErrors = ownErrors ?? [];

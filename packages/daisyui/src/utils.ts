@@ -1,19 +1,55 @@
-import type { FieldPresentation, FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
+import type {
+  FieldPresentation,
+  FormContextType,
+  GlobalUISchemaOptionsExtensions,
+  ReservedUiOptionName,
+  RJSFSchema,
+  StrictRJSFSchema,
+  ThemeGlobalUISchemaOptions,
+  UiSchema,
+} from '@rjsf/utils';
 import { fieldLabelId, getGroupAttributes, isNamedByTemplateLabel, isObject } from '@rjsf/utils';
 
 import type { DaisyProps } from './types/DaisyProps.ts';
 
+/** A `UiSchema` whose `ui:options` and `ui:globalOptions` are known to carry the theme's `daisy` props, and whose
+ * `ui:globalOptions` carry a user's own `UserExtensions` too.
+ */
 export type DaisyUiSchema<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
+  UserExtensions extends GlobalUISchemaOptionsExtensions<
+    UserExtensions,
+    ReservedUiOptionName | keyof DaisyGlobalUiOptionsKeys
+  > = Record<never, never>,
 > = UiSchema<T, S, F> & {
   'ui:options'?: DaisyUiOptions<T, S, F>;
+  'ui:globalOptions'?: DaisyGlobalUISchemaOptions<UserExtensions>;
 };
 
-type DaisyUiOptions<T, S extends StrictRJSFSchema, F extends FormContextType> = UiSchema<T, S, F>['ui:options'] & {
+type DaisyUiOptions<T, S extends StrictRJSFSchema, F extends FormContextType> = UiSchema<T, S, F>['ui:options'] &
+  DaisyGlobalUiOptionsKeys;
+
+/** The options this theme reads from `ui:globalOptions`, beyond the ones RJSF reads */
+export interface DaisyGlobalUiOptionsKeys {
+  /** The DaisyUI theme, class name and style for every field's `FieldTemplate`, as in a field's `ui:options` */
   daisy?: DaisyProps;
-};
+}
+
+/** The `ui:globalOptions` this theme reads, plus a user's own `UserExtensions` */
+export type DaisyGlobalUISchemaOptions<
+  UserExtensions extends GlobalUISchemaOptionsExtensions<
+    UserExtensions,
+    ReservedUiOptionName | keyof DaisyGlobalUiOptionsKeys
+  > = Record<never, never>,
+> = ThemeGlobalUISchemaOptions<DaisyGlobalUiOptionsKeys, UserExtensions>;
+
+/** The keys of `DaisyGlobalUiOptionsKeys`, which the theme declares as its `globalUiOptionsKeys` */
+export const DAISY_GLOBAL_UI_OPTIONS_KEYS = Object.keys({ daisy: true } satisfies Record<
+  keyof DaisyGlobalUiOptionsKeys,
+  true
+>);
 
 interface GetDaisyProps<
   T = unknown,
@@ -21,14 +57,17 @@ interface GetDaisyProps<
   F extends FormContextType = FormContextType,
 > {
   uiSchema?: DaisyUiSchema<T, S, F>;
+  /** The registry's `globalUiOptions`, whose `daisy` is used where the `uiSchema`'s `ui:options` don't set one */
+  globalUiOptions?: DaisyGlobalUISchemaOptions;
 }
 
 export function getDaisy<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({ uiSchema }: GetDaisyProps<T, S, F>): DaisyProps {
-  const daisy: unknown = uiSchema?.['ui:options']?.daisy;
+>({ uiSchema, globalUiOptions }: GetDaisyProps<T, S, F>): DaisyProps {
+  const options = { ...globalUiOptions, ...uiSchema?.['ui:options'] };
+  const daisy: unknown = options.daisy;
   return isObject(daisy) ? daisy : {};
 }
 

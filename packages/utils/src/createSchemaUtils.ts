@@ -184,7 +184,7 @@ class SchemaUtils<
    *
    * @param schema - The schema for which the display label flag is desired
    * @param [uiSchema] - The UI schema from which to derive potentially displayable information
-   * @param [globalOptions={}] - The optional Global UI Schema from which to get any fallback `xxx` options
+   * @param [globalOptions={}] - The optional Global UI Schema from which to get any fallback `xxx` options, as `pickGlobalUiOptions()` leaves them
    * @returns - True if the label should be displayed or false if it should not
    */
   getDisplayLabel(schema: S, uiSchema?: UiSchema<T, S, F>, globalOptions?: GlobalUISchemaOptions) {

@@ -27,6 +27,8 @@ function isOptionKey(key: string): key is `ui:${string}` {
  * A global `required` is left out: `ui:required` is a field's own, since validation reads it from the field's own
  * uiSchema alone, so a form-wide one would mark fields required that validation doesn't require. `ui:definitions` and
  * `ui:globalOptions` aren't options either.
+ * The registry's `globalUiOptions` hold only the options RJSF reads there and the extension keys the form declares, as
+ * `pickGlobalUiOptions()` leaves them, so pass the root uiSchema's `ui:globalOptions` through it first.
  *
  * @param [uiSchema={}] - The UI Schema from which to get any `ui:xxx` options
  * @param [globalOptions={}] - The optional Global UI Schema from which to get any fallback `xxx` options
