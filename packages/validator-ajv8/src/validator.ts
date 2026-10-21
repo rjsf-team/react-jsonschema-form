@@ -63,6 +63,14 @@ export default class AJV8Validator<
    */
   private currentRootSchemaId?: string;
 
+  /** Whether each function `isValid()` validated with can change the data, see `changesData()`. Ajv compiles a keyword
+   * into a function only when it was registered before the function was compiled, so asking once, at the function's
+   * first check, covers every keyword the function runs
+   *
+   * @private
+   */
+  private readonly changesDataOf = new WeakMap<ValidateFunction, boolean>();
+
   /** Constructs an `AJV8Validator` instance using the `options`
    *
    * @param options - The `CustomValidatorOptionsType` options that are used to create the AJV instance
@@ -301,8 +309,9 @@ export default class AJV8Validator<
 
   /** Validates data against a schema, returning true if the data is valid, or
    * false otherwise. If the schema is invalid, then this function will return
-   * false. Where the Ajv options change the data validated (`useDefaults`, `coerceTypes` or `removeAdditional`), a
-   * copy of the `formData` is validated, so the `formData` itself never changes.
+   * false. Where Ajv can change the data validated, under `useDefaults`, `coerceTypes` or `removeAdditional` or with a
+   * keyword registered with `modifying: true`, a copy of the `formData` is validated, so the `formData` itself never
+   * changes.
    *
    * @param schema - The schema against which to validate the form data
    * @param formData - The form data to validate
@@ -332,7 +341,12 @@ export default class AJV8Validator<
         this.ajv.addSchema(schemaWithIdRefPrefix, schemaId).getSchema(schemaId) ??
         this.ajv.compile(schemaWithIdRefPrefix);
       compiled = true;
-      return compiledValidator(changesData(this.ajv.opts) ? copyForValidation(formData) : formData);
+      let changes = this.changesDataOf.get(compiledValidator);
+      if (changes === undefined) {
+        changes = changesData(this.ajv);
+        this.changesDataOf.set(compiledValidator, changes);
+      }
+      return compiledValidator(changes ? copyForValidation(formData) : formData);
     } catch (e) {
       // The schema is named so two schemas that fail with the same error text aren't deduped into one warning, and
       // `compiled` distinguishes a schema that wouldn't compile from one that did and then threw on the form data,

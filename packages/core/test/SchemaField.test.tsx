@@ -2659,6 +2659,35 @@ describe('SchemaField', () => {
           expect(node.querySelector('#root_p_info_kind_a')).toHaveValue('x');
         });
 
+        it('mounts with a list a merge rebuilt in a resource of its own, whose options hold $refs written there', () => {
+          // Each option of the cross product of the two lists is a `$ref` to the resource's `s` or `t` with a `title`
+          // beside it; the root defines an `s` of its own and no `t`
+          const schema: RJSFSchema = {
+            $schema: 'https://json-schema.org/draft/2020-12/schema',
+            $id: 'https://example.com/root.json',
+            $defs: {
+              s: { type: 'number' },
+              res: {
+                $id: 'res.json',
+                $defs: {
+                  s: { type: 'object', properties: { q: { type: 'string', default: 'Q' } }, required: ['q'] },
+                  t: { type: 'object', properties: { r: { type: 'string', default: 'R' } }, required: ['r'] },
+                  o: {
+                    type: 'object',
+                    if: {},
+                    then: {},
+                    allOf: [{ anyOf: [{ $ref: '#/$defs/s' }, { $ref: '#/$defs/t' }] }, { anyOf: [{ title: 'A' }] }],
+                  },
+                },
+              },
+            },
+            type: 'object',
+            properties: { p: { $ref: 'res.json#/$defs/o' } },
+          };
+          const { node } = createFormComponent({ schema });
+          expect(node.querySelector('#root_p_q')).toHaveValue('Q');
+        });
+
         it('expands a definition two others share at the first path that reaches it, and collapses it at the second', () => {
           const schema: RJSFSchema = {
             definitions: {
