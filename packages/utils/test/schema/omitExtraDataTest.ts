@@ -1,4 +1,4 @@
-import type { RJSFSchema } from '../../src/index.ts';
+import type { FormFieldState, RJSFSchema } from '../../src/index.ts';
 import { createSchemaUtils, isObject, isValueEmpty, noop, omitExtraData } from '../../src/index.ts';
 import shallowAllOfMerge from '../../src/schema/shallowAllOfMerge.ts';
 import { PET_RESOURCE_SCHEMA } from '../testUtils/testData.ts';
@@ -1701,6 +1701,97 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         expect(result).toBeDefined();
         // Result should only contain keys from the best-matching anyOf branch
         expect(result).not.toHaveProperty('extra');
+      });
+
+      it('keeps the data of the option the form state says a field shows', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            thing: {
+              anyOf: [
+                { type: 'object', properties: { a: { type: 'string' } } },
+                { type: 'object', properties: { a: { type: 'string' }, b: { type: 'string' } } },
+              ],
+            },
+          },
+        };
+        const asked: unknown[] = [];
+        const fieldState: FormFieldState = {
+          selectedOption: (fieldPath, options, formData) => {
+            asked.push([fieldPath, options.length, formData]);
+            return 0;
+          },
+          isExpanded: () => false,
+        };
+        const formData = { thing: { a: 'x', b: 'y' } };
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData, fieldState)).toEqual({
+          thing: { a: 'x' },
+        });
+        expect(asked).toEqual([['thing', 2, { a: 'x', b: 'y' }]]);
+      });
+
+      it('asks the form state among the options retrieved for the data, as the field renders them', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            thing: {
+              anyOf: [
+                false,
+                {
+                  type: 'object',
+                  properties: { a: { type: 'string' } },
+                  dependencies: { a: { properties: { b: { type: 'string' } } } },
+                },
+              ],
+            },
+          },
+        };
+        const asked: RJSFSchema[][] = [];
+        const fieldState: FormFieldState = {
+          selectedOption: (_fieldPath, options) => {
+            asked.push(options);
+            return 1;
+          },
+          isExpanded: () => false,
+        };
+        const formData = { thing: { a: 'x', b: 'y', c: 'z' } };
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData, fieldState)).toEqual({
+          thing: { a: 'x', b: 'y' },
+        });
+        expect(asked).toHaveLength(1);
+        const [rendered, dependent] = asked[0];
+        expect(rendered).toEqual({});
+        expect(Object.keys(dependent.properties ?? {})).toEqual(expect.arrayContaining(['a', 'b']));
+      });
+
+      it('hands the form state the same view of a boolean option on every call', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { thing: { anyOf: [true, { type: 'object', properties: { a: { type: 'string' } } }] } },
+        };
+        const asked: RJSFSchema[][] = [];
+        const fieldState: FormFieldState = {
+          selectedOption: (_fieldPath, options) => {
+            asked.push(options);
+            return 1;
+          },
+          isExpanded: () => false,
+        };
+        omitExtraData({ validator: testValidator }, schema, schema, { thing: { a: 'x' } }, fieldState);
+        omitExtraData({ validator: testValidator }, schema, schema, { thing: { a: 'y' } }, fieldState);
+        expect(asked).toHaveLength(2);
+        expect(asked[1][0]).toBe(asked[0][0]);
+      });
+
+      it('keeps the value under a false option the form state says the field shows', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { thing: { oneOf: [false, { type: 'object', properties: { a: { type: 'string' } } }] } },
+        };
+        const fieldState: FormFieldState = { selectedOption: () => 0, isExpanded: () => false };
+        expect(omitExtraData({ validator: testValidator }, schema, schema, { thing: { a: 1 } }, fieldState)).toEqual({
+          thing: { a: 1 },
+        });
       });
 
       it('applies all anyOf branches when source is an empty array', () => {

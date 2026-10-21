@@ -12,6 +12,7 @@ import type {
 import { createRootSchemaGuard, ID_KEY, REF_KEY, schemaKey } from '@rjsf/utils';
 import type { ErrorObject } from 'ajv';
 
+import { copyForValidation } from './dataForValidation.ts';
 import type { RawValidationErrorsType } from './processRawValidationErrors.ts';
 import processRawValidationErrors from './processRawValidationErrors.ts';
 import type {
@@ -198,18 +199,21 @@ export default class AJV8PrecompiledValidator<
   }
 
   /** Validates data against a schema, returning true if the data is valid, or false otherwise. If the schema is
-   * invalid, then this function will return false.
+   * invalid, then this function will return false. A function compiled to change the data it validates, which
+   * `compileSchemaValidatorsCode()` marks with `changesData`, validates a copy of the `formData`, so the `formData` itself
+   * never changes.
    *
    * @param schema - The schema against which to validate the form data
    * @param formData - The form data to validate
    * @param rootSchema - The root schema used to provide $ref resolutions
    * @returns - true if the formData validates against the schema, false otherwise
    * @throws - Error when the schema provided does not match the base schema of the precompiled validator OR if there
-   *        isn't a precompiled validator function associated with the schema
+   *        isn't a precompiled validator function associated with the schema OR, for a function marked `changesData`, if
+   *        the `formData` holds an object that can't be copied, such as a class instance holding a function
    */
   isValid(schema: S, formData: unknown, rootSchema: S) {
     this.ensureSameRootSchema(rootSchema, formData);
     const validator = this.getValidator(schema);
-    return validator(formData);
+    return validator(validator.changesData ? copyForValidation(formData) : formData);
   }
 }

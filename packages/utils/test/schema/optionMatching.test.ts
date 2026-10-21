@@ -9,6 +9,7 @@ import {
   retrieveSchema,
   schemaKey,
 } from '../../src/index.ts';
+import looseSchema from './graph/looseSchema.ts';
 import { miniValidator } from './graph/miniValidator.ts';
 
 const B_NUMBER: RJSFSchema = { properties: { b: { type: 'number' } } };
@@ -119,14 +120,250 @@ describe('matching options through the schema graph', () => {
     const rootSchema: RJSFSchema = { type: 'object', dependencies: { a: ['b'] }, oneOf: [] };
     expect(retrieveSchema({ validator: miniValidator() }, rootSchema, rootSchema, {})).not.toHaveProperty('oneOf');
   });
-  it('leaves unstubbed a key an option declares through the then of a boolean if', () => {
+  it('leaves unstubbed a key the selected option declares through the then of a boolean if', () => {
     const rootSchema: RJSFSchema = {
       type: 'object',
       additionalProperties: { type: 'string' },
       oneOf: [{ if: true, then: { properties: { x: { type: 'number' } } } }],
     };
-    const retrieved = retrieveSchema({ validator: miniValidator() }, rootSchema, rootSchema, { x: 1, y: 'y' });
+    const retrieved = retrieveSchema(
+      { validator: miniValidator() },
+      rootSchema,
+      rootSchema,
+      { x: 1, y: 'y' },
+      false,
+      0,
+    );
     expect(Object.keys(retrieved.properties ?? {})).toEqual(['y']);
+  });
+  it('scores the views retrieveSchema() hands out for the options apart from the options they were retrieved from', () => {
+    const conditional: RJSFSchema = {
+      type: 'object',
+      properties: { kind: { type: 'string' } },
+      if: { properties: { kind: { const: 'a' } } },
+      then: { properties: { n: { type: 'number' } } },
+    };
+    const declared: RJSFSchema = { type: 'object', properties: { kind: { type: 'string' }, n: { type: 'number' } } };
+    const rootSchema: RJSFSchema = { anyOf: [conditional, declared] };
+    const context = { validator: miniValidator() };
+    const formData = { kind: 'a', n: 1 };
+    // The raw option leaves `n` to its condition, which only its view takes, so the two score the data differently
+    expect(getClosestMatchingOption(context, rootSchema, formData, [conditional, declared], 0)).toBe(1);
+    const views = retrieveSchema(context, rootSchema, rootSchema, formData, true).anyOf ?? [];
+    const objectViews = views.filter((view): view is RJSFSchema => typeof view === 'object');
+    expect(objectViews).toHaveLength(2);
+    expect(getClosestMatchingOption(context, rootSchema, formData, objectViews, 0)).toBe(0);
+  });
+  it('picks for data mutated in place since the last call what it holds now, at any depth', () => {
+    const options: RJSFSchema[] = [
+      { type: 'object', properties: { a: { type: 'string' } }, required: ['a'] },
+      { type: 'object', properties: { b: { type: 'string' } }, required: ['b'] },
+    ];
+    const rootSchema: RJSFSchema = { type: 'object', properties: { v: { anyOf: options } } };
+    const context = { validator: miniValidator() };
+    const inner: Record<string, string> = { a: 'x' };
+    const formData = { v: inner };
+    const outer: RJSFSchema[] = [
+      { type: 'object', properties: { v: { anyOf: options } } },
+      { type: 'object', properties: { w: { type: 'string' } } },
+    ];
+    expect(getClosestMatchingOption(context, rootSchema, inner, options)).toBe(0);
+    expect(getClosestMatchingOption(context, rootSchema, formData, outer)).toBe(0);
+
+    delete inner.a;
+    inner.b = 'y';
+
+    expect(getClosestMatchingOption(context, rootSchema, inner, options)).toBe(1);
+    expect(getClosestMatchingOption(context, rootSchema, formData, outer)).toBe(0);
+  });
+  it.each([
+    { from: 'a plain object', to: 'one with no prototype', before: {}, after: Object.create(null), picks: [0, 1] },
+    {
+      from: 'an object with no prototype',
+      to: 'a plain object',
+      before: Object.create(null),
+      after: {},
+      picks: [1, 0],
+    },
+  ])('picks what it holds now for data in which $from was replaced in place by $to', ({ before, after, picks }) => {
+    // A validator reads a name the schema lists through the object's prototype, as Ajv does
+    const options: RJSFSchema[] = [
+      { type: 'object', properties: { c: { type: 'object', required: ['toString'] } }, required: ['c'] },
+      { type: 'object', properties: { c: { type: 'object', not: { required: ['toString'] } } }, required: ['c'] },
+    ];
+    const rootSchema: RJSFSchema = { anyOf: options };
+    const context = { validator: miniValidator() };
+    const formData = { c: before };
+    expect(getClosestMatchingOption(context, rootSchema, formData, options)).toBe(picks[0]);
+
+    formData.c = after;
+
+    expect(getClosestMatchingOption(context, rootSchema, formData, options)).toBe(picks[1]);
+  });
+  it('picks for data holding a Date changed in place since the last call what it holds now', () => {
+    const early = new Date(0);
+    const late = new Date(1000);
+    const options: RJSFSchema[] = [
+      { type: 'object', properties: { when: looseSchema({ const: early }) }, required: ['when'] },
+      { type: 'object', properties: { when: looseSchema({ const: late }) }, required: ['when'] },
+    ];
+    const rootSchema: RJSFSchema = { anyOf: options };
+    const context = { validator: miniValidator() };
+    const when = new Date(0);
+    const formData = { when };
+    expect(getClosestMatchingOption(context, rootSchema, formData, options)).toBe(0);
+
+    when.setTime(1000);
+
+    expect(getClosestMatchingOption(context, rootSchema, formData, options)).toBe(1);
+  });
+  it('reuses the pick for an array while it holds what it held, and picks for one changed in place what it holds now', () => {
+    const options: RJSFSchema[] = [
+      { type: 'array', items: { const: 'a' } },
+      { type: 'array', items: { const: 'b' } },
+    ];
+    const rootSchema: RJSFSchema = { anyOf: options };
+    const validator = miniValidator();
+    const formData = ['a'];
+    expect(getClosestMatchingOption({ validator }, rootSchema, formData, options)).toBe(0);
+    const { calls } = validator;
+    expect(getClosestMatchingOption({ validator }, rootSchema, formData, options)).toBe(0);
+    expect(validator.calls).toBe(calls);
+
+    formData[0] = 'b';
+    expect(getClosestMatchingOption({ validator }, rootSchema, formData, options)).toBe(1);
+
+    // Matching neither option, the two tie, and the tie goes to the first
+    formData.push('a');
+    expect(getClosestMatchingOption({ validator }, rootSchema, formData, options)).toBe(0);
+  });
+  it('picks for an array holding a Date changed in place since the last call what it holds now', () => {
+    const options: RJSFSchema[] = [
+      { type: 'array', items: looseSchema({ const: new Date(0) }) },
+      { type: 'array', items: looseSchema({ const: new Date(1000) }) },
+    ];
+    const rootSchema: RJSFSchema = { anyOf: options };
+    const context = { validator: miniValidator() };
+    const when = new Date(0);
+    const formData = [when];
+    expect(getClosestMatchingOption(context, rootSchema, formData, options)).toBe(0);
+
+    when.setTime(1000);
+
+    expect(getClosestMatchingOption(context, rootSchema, formData, options)).toBe(1);
+  });
+  it('reuses a pick within one call without reading the data below it again', () => {
+    // Every candidate scores `p` by the same option list. Nothing scores `watched`, so only copying the data for a pick
+    // and comparing the data with such a copy read it
+    const nested: RJSFSchema[] = [
+      { type: 'object', properties: { k: { type: 'string' } } },
+      { type: 'object', properties: { k: { type: 'number' } } },
+    ];
+    const readsWith = (candidates: number) => {
+      let reads = 0;
+      const watched = {
+        get value() {
+          reads += 1;
+          return 'x';
+        },
+      };
+      const options = Array.from({ length: candidates }, (_, index): RJSFSchema => ({
+        type: 'object',
+        properties: { p: { anyOf: nested }, [`own${index}`]: { type: 'string' } },
+      }));
+      const formData = { p: { k: 'x', watched } };
+      getClosestMatchingOption({ validator: miniValidator() }, { anyOf: options }, formData, options);
+      return reads;
+    };
+
+    expect(readsWith(5)).toBe(readsWith(2));
+  });
+  it('picks an option of a list two resources share for each resource, its $ref read in that resource', () => {
+    // The same option objects sit in both resources, whose `s` differ, and the same data object reaches both fields
+    const shared: RJSFSchema[] = [
+      { type: 'object', properties: { k: { $ref: '#/$defs/s' }, d: { default: 'zero' } } },
+      { type: 'object', properties: { k: { type: 'string' }, d: { default: 'one' } } },
+    ];
+    const rootSchema: RJSFSchema = {
+      $id: 'https://example.com/root.json',
+      $defs: {
+        r1: { $id: 'r1.json', $defs: { s: { type: 'string' } }, anyOf: shared },
+        r2: { $id: 'r2.json', $defs: { s: { type: 'number' } }, anyOf: shared },
+      },
+      type: 'object',
+      properties: { p: { $ref: 'r1.json' }, q: { $ref: 'r2.json' } },
+    };
+    // Neither option matches, so both are scored: under `r1` they tie and the first is kept, under `r2` only the second
+    // scores `k`
+    const validator = { ...miniValidator(), isValid: () => false };
+    const data = { k: 'x' };
+    expect(
+      getDefaultFormState({ validator }, { schema: rootSchema, formData: { p: data, q: data }, rootSchema }),
+    ).toEqual({
+      p: { k: 'x', d: 'zero' },
+      q: { k: 'x', d: 'one' },
+    });
+  });
+  describe('options that refer to one another across definitions (#4990)', () => {
+    const names = ['A', 'B', 'C', 'D', 'E'];
+    const definitions = Object.fromEntries(
+      names.map((name): [string, RJSFSchema] => [
+        name,
+        {
+          type: 'object',
+          properties: {
+            child: {
+              oneOf: [
+                { type: 'null' },
+                ...names.filter((other) => other !== name).map((other) => ({ $ref: `#/definitions/${other}` })),
+              ],
+            },
+          },
+        },
+      ]),
+    );
+    const options: RJSFSchema[] = [{ type: 'null' }, ...names.map((name) => ({ $ref: `#/definitions/${name}` }))];
+    const rootSchema: RJSFSchema = { definitions, oneOf: options };
+    const nested = (depth: number, value: unknown): unknown =>
+      depth === 1 ? { child: null, value } : { child: nested(depth - 1, value) };
+    const validationsOf = (dataAt: (depth: number) => unknown) =>
+      [3, 4, 5, 6].map((depth) => {
+        const validator = miniValidator();
+        getClosestMatchingOption({ validator }, rootSchema, dataAt(depth), options);
+        return validator.calls;
+      });
+    const validations = (value: unknown) => validationsOf((depth) => nested(depth, value));
+    /** Data `depth` levels deep, each level made by `level` around the one below it */
+    const levelsOf =
+      (level: (child: unknown) => object) =>
+      (depth: number): object =>
+        level(depth === 1 ? null : levelsOf(level)(depth - 1));
+
+    it('matches data holding a Date at its deepest level as often as data holding a string there', () => {
+      const counts = validations(new Date(0));
+      const steps = counts.slice(1).map((count, index) => count - counts[index]);
+
+      expect(counts).toEqual(validations('x'));
+      expect(new Set(steps).size).toBe(1);
+    });
+    it.each([
+      [
+        'objects with no prototype',
+        (child: unknown) => {
+          const level: Record<string, unknown> = Object.create(null);
+          level.child = child;
+          return level;
+        },
+        (child: unknown) => ({ child }),
+      ],
+      [
+        'objects holding an object under an own constructor key',
+        (child: unknown) => ({ child, constructor: { name: 'x' } }),
+        (child: unknown) => ({ child, other: { name: 'x' } }),
+      ],
+    ])('matches data of %s as often as plain data', (_name, level, plainLevel) => {
+      expect(validationsOf(levelsOf(level))).toEqual(validationsOf(levelsOf(plainLevel)));
+    });
   });
   describe('options sharing a base that declares a key the data holds', () => {
     const pet = {
@@ -190,7 +427,8 @@ describe('matching options through the schema graph', () => {
     expect(
       getClosestMatchingOption({ validator }, rootSchema, { name: 'x', other: 'y', parent: { name: 'p' } }, options),
     ).toBe(0);
-    expect(getClosestMatchingOption({ validator }, rootSchema, undefined, options)).toBe(-1);
+    // With no data every option ties, and the tie goes to the first candidate
+    expect(getClosestMatchingOption({ validator }, rootSchema, undefined, options)).toBe(0);
   });
   it.each([
     ['resolves to nothing', '#/definitions/missing'],
@@ -220,7 +458,8 @@ describe('matching options through the schema graph', () => {
     const field: RJSFSchema = { definitions: rootSchema.definitions, anyOf: options };
     // A validator fails a schema holding a `$ref` it cannot resolve, so neither option matches and both are scored
     const validator = { ...miniValidator(), isValid: () => false };
-    expect(getClosestMatchingOption({ validator }, rootSchema, { b: 1 }, options)).toBe(-1);
+    // Both options score nothing, so the tie goes to the first candidate: the broken entry adds nothing to the second
+    expect(getClosestMatchingOption({ validator }, rootSchema, { b: 1 }, options)).toBe(0);
     expect(omitExtraData({ validator }, field, field, { b: 1 })).toEqual({});
     expect(getDefaultFormState({ validator }, { schema: rootSchema, formData: { v: { b: 1 } }, rootSchema })).toEqual({
       v: { b: 1 },
@@ -251,7 +490,8 @@ describe('matching options through the schema graph', () => {
     const field: RJSFSchema = { definitions: rootSchema.definitions, anyOf: options };
     // A validator fails a schema holding a `$ref` it cannot resolve, so neither option matches and both are scored
     const validator = { ...miniValidator(), isValid: () => false };
-    expect(getClosestMatchingOption({ validator }, rootSchema, { b: 1 }, options)).toBe(-1);
+    // Both options score nothing, so the tie goes to the first candidate: the broken allOf adds nothing to the second
+    expect(getClosestMatchingOption({ validator }, rootSchema, { b: 1 }, options)).toBe(0);
     expect(omitExtraData({ validator }, field, field, { b: 1 })).toEqual({});
     expect(getDefaultFormState({ validator }, { schema: rootSchema, formData: { v: { b: 1 } }, rootSchema })).toEqual({
       v: { b: 1 },

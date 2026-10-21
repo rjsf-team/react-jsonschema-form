@@ -17,7 +17,7 @@ const ROOT = join(__dirname, '..', '..');
 const PACKAGES = {
   '@rjsf/core': {
     installed: '38 kB',
-    canaries: [{ label: 'Form', import: 'Form', limit: '37 kB' }],
+    canaries: [{ label: 'Form', import: 'Form', limit: '38 kB' }],
   },
   '@rjsf/utils': {
     installed: '46 kB',
@@ -26,7 +26,7 @@ const PACKAGES = {
   },
   '@rjsf/validator-ajv8': {
     installed: '39 kB',
-    own: '3 kB',
+    own: '4 kB',
     canaries: [{ label: 'createPrecompiledValidator', import: '{ createPrecompiledValidator }', limit: '2 kB' }],
     nodeOnly: ['./compileSchemaValidators'],
   },

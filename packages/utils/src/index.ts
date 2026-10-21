@@ -74,7 +74,7 @@ import getOptionValueFormat from './getOptionValueFormat.ts';
 import type { PresentationSource, PresentationSubject } from './getPresentationDeclaration.ts';
 import getPresentationDeclaration, { WIDGET_FIELD_PRESENTATION } from './getPresentationDeclaration.ts';
 import getPropertySchema from './getPropertySchema.ts';
-import getRenderedOptionSchema, { rendersOwnFieldBesideOption } from './getRenderedOptionSchema.ts';
+import getRenderedOptionSchema from './getRenderedOptionSchema.ts';
 import getSchemaOwnTypes from './getSchemaOwnTypes.ts';
 import getSchemaType from './getSchemaType.ts';
 import getSchemaTypeForValue from './getSchemaTypeForValue.ts';
@@ -162,13 +162,13 @@ import parseDateString from './parseDateString.ts';
 import { getByPath, hasByPath, propertyToPath, setByPath, toPath, unsetByPath } from './pathUtils.ts';
 import type { ObjectPath } from './pathUtils.ts';
 import rangeSpec from './rangeSpec.ts';
+import rendersOwnFieldBesideOption from './rendersOwnFieldBesideOption.ts';
 import replaceEqualDeep from './replaceEqualDeep.ts';
 import replaceStringParameters from './replaceStringParameters.ts';
 import resolveDefaultWidget from './resolveDefaultWidget.ts';
 import type { FieldPresentationInputs } from './resolveFieldPresentation.ts';
 import resolveFieldPresentation from './resolveFieldPresentation.ts';
 import resolveUiSchema from './resolveUiSchema.ts';
-import schemaHasNestedConditional from './schemaHasNestedConditional.ts';
 import schemaRequiresTrueValue from './schemaRequiresTrueValue.ts';
 import { keywordShape, normalizeUri, resolveUri } from './schemaUri.ts';
 import SelectedOptionDescription from './SelectedOptionDescription.tsx';
@@ -394,7 +394,6 @@ export {
   resolveFieldPresentation,
   resolveUiSchema,
   resolveWidget,
-  schemaHasNestedConditional,
   schemaKey,
   schemaRequiresTrueValue,
   setByPath,

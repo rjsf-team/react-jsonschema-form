@@ -18,7 +18,7 @@ import deepEquals from '../deepEquals.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getOptionUiSchema from '../getOptionUiSchema.ts';
 import getPropertySchema from '../getPropertySchema.ts';
-import getRenderedOptionSchema, { rendersOwnFieldBesideOption } from '../getRenderedOptionSchema.ts';
+import getRenderedOptionSchema from '../getRenderedOptionSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
 import getSchemaTypeForValue from '../getSchemaTypeForValue.ts';
 import getStaticItemsUiSchema from '../getStaticItemsUiSchema.ts';
@@ -39,6 +39,7 @@ import mergeObjects from '../mergeObjects.ts';
 import mergeSchemas from '../mergeSchemas.ts';
 import optionsList from '../optionsList.ts';
 import { getByPath } from '../pathUtils.ts';
+import rendersOwnFieldBesideOption from '../rendersOwnFieldBesideOption.ts';
 import resolveUiSchema from '../resolveUiSchema.ts';
 import setOwn from '../setOwn.ts';
 import { isOptionalDataControlsType } from '../shouldRenderOptionalField.ts';
@@ -56,7 +57,7 @@ import type {
   UiSchema,
   ValidatorType,
 } from '../types.ts';
-import { closestOption, listedAt } from './getClosestMatchingOption.ts';
+import { closestOption } from './getClosestMatchingOption.ts';
 import buildPlan, {
   asTarget,
   cachedPolicy,
@@ -1191,7 +1192,7 @@ function chooseOption<S extends StrictRJSFSchema, F extends FormContextType>(
           0,
           false,
           getDiscriminatorFieldFromSchema<S>(schema),
-          listedAt<S>(() => view, key, options),
+          { seeding: view, keyword: key },
         );
   return { context: optionContext, index, isWholeValue, wholeOptions };
 }

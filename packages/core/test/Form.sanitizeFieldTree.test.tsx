@@ -1,6 +1,6 @@
 import { createRef, useState } from 'react';
 import type { RJSFSchema } from '@rjsf/utils';
-import { buttonId } from '@rjsf/utils';
+import { buttonId, getByPath } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -17,8 +17,8 @@ interface ColorListData {
 
 const user = userEvent.setup();
 
-describe('settled snapshot sanitization', () => {
-  it('sees a top-level conditional flipped by an array write from the settled side (#5250)', async () => {
+describe('sanitize as a diff of the field trees before and after a change', () => {
+  it('judges a value an array write flips the constraints of (#5250)', async () => {
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -42,15 +42,40 @@ describe('settled snapshot sanitization', () => {
         onChange={(event) => events.push(event)}
       />,
     );
-    // The array write runs no sanitize, but it flips the conditional: the settled snapshot must remember the
-    // schema the settled data was resolved under, not the committed data's schema with the `then` merged in
+    // The array write flips the conditional, and its own sanitize judges `color` against the `then`
     await user.click(elementOf(container, `#${buttonId('root_list', 'add')}`));
     await user.type(input(container, 'root_name'), 'a');
     const last = events[events.length - 1].formData;
     expect(last?.color).toBe('r');
   });
 
-  it('settles each edit when a parent stores what onChange reports (#5250)', async () => {
+  it.each([
+    { property: true, expected: { kind: 't', a: 'x' }, holds: 'keeps the value of', which: 'any value' },
+    { property: false, expected: { kind: 't' }, holds: 'drops the value of', which: 'none' },
+  ])('$holds a property whose schema becomes $property, which holds $which', async ({ property, expected }) => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { kind: { type: 'string', enum: ['s', 't'] } },
+      if: { properties: { kind: { const: 's' } } },
+      then: { properties: { a: { type: 'string' } } },
+      else: { properties: { a: property } },
+    };
+    const events: IChangeEvent<{ kind?: string; a?: unknown }>[] = [];
+    const { container } = render(
+      <Form<{ kind?: string; a?: unknown }>
+        schema={schema}
+        validator={validator}
+        initialFormData={{ kind: 's', a: 'x' }}
+        onChange={(event) => events.push(event)}
+      />,
+    );
+
+    await user.selectOptions(elementOf(container, '#root_kind'), 't');
+
+    expect(events[events.length - 1].formData).toEqual(expected);
+  });
+
+  it('judges each edit against the data before it when a parent stores what onChange reports (#5250)', async () => {
     interface PetData {
       pet: { mode?: string; color?: string };
     }
@@ -82,7 +107,7 @@ describe('settled snapshot sanitization', () => {
     expect(log.value?.pet.color).toBe('r');
   });
 
-  it('settles the snapshot on reset, so a flip back to the restored branch filters again (#5250)', async () => {
+  it('judges a flip after a reset against the restored data (#5250)', async () => {
     interface FlipData {
       cond?: string;
       pick?: string;
@@ -108,10 +133,9 @@ describe('settled snapshot sanitization', () => {
         onChange={(event) => events.push(event)}
       />,
     );
-    // Flip to the else branch: 'a' is outside its enum and clears, and the snapshot settles there
+    // Flip to the else branch: 'a' is outside its enum and clears
     await user.selectOptions(elementOf(container, '#root_cond'), ['1']);
-    // The reset restores the initial data; the snapshot must settle on it, or the next flip is judged against
-    // the else branch the first flip left behind
+    // The reset restores the initial data, which the next flip is judged against
     act(() => handleOf(ref).reset());
     // Flip again: judged against the restored data on the then branch, 'a' is a real difference and clears
     await user.selectOptions(elementOf(container, '#root_cond'), ['1']);
@@ -119,7 +143,7 @@ describe('settled snapshot sanitization', () => {
     expect(last?.pick).toBeUndefined();
   });
 
-  it('settles each edit when a parent stores a copy of what onChange reports (#5250)', async () => {
+  it('judges each edit against the data before it when a parent stores a copy of what onChange reports (#5250)', async () => {
     interface PetData {
       pet: { mode?: string; color?: string };
     }
@@ -157,7 +181,7 @@ describe('settled snapshot sanitization', () => {
     expect(log.value?.pet.color).toBe('r');
   });
 
-  it('keeps settling edits after the parent changed the schema once (#5451)', async () => {
+  it('judges edits as usual after the parent changed the schema once (#5451)', async () => {
     interface PetData {
       pet: { mode?: string; color?: string };
     }
@@ -226,7 +250,7 @@ describe('settled snapshot sanitization', () => {
     expect(log.value?.pet.color).toBe('r');
   });
 
-  it('sanitizes against the settled data after the data replaced through the handle crossed a conditional branch (#5250)', async () => {
+  it('judges an edit against data setFieldValue set across a conditional branch (#5250)', async () => {
     interface ModeData {
       mode?: string;
       color?: string;
@@ -325,13 +349,58 @@ describe('settled snapshot sanitization', () => {
         onChange={(event) => events.push(event)}
       />,
     );
-    // The remove runs no sanitize, but the pairing view's rows move with the data's, so the surviving row
-    // still pairs with its own previous value: the sibling edit's sanitize finds no schema change for it and
-    // keeps the placeholders its branch offers
+    // The surviving row is paired with its own previous value through the announced move, so its constraints did
+    // not change and it keeps the placeholders its branch offers
     await user.click(elementOf(container, `#${buttonId('root_rows_0', 'remove')}`));
     await user.type(input(container, 'root_note'), 'n');
     const last = events[events.length - 1].formData;
     expect(last?.rows).toEqual([{ kind: 'y', tags: [null, null] }]);
+  });
+
+  it('pairs the surviving rows by the move only once when removing a row re-judges a sibling', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        mode: { type: 'string', enum: ['single', 'multi'] },
+        list: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: { kind: { type: 'string', enum: ['x', 'y'] }, v: {} },
+            if: { properties: { kind: { const: 'x' } } },
+            then: { properties: { v: { enum: [1, 2] } } },
+            else: { properties: { v: { type: 'string' } } },
+          },
+        },
+      },
+      if: { properties: { list: { maxItems: 2 } } },
+      then: { properties: { mode: { enum: ['single'] } } },
+    };
+    const events: IChangeEvent[] = [];
+    const { container } = render(
+      <Form
+        schema={schema}
+        validator={validator}
+        initialFormData={{
+          mode: 'multi',
+          list: [
+            { kind: 'x', v: 1 },
+            { kind: 'x', v: 2 },
+            { kind: 'y', v: 's' },
+          ],
+        }}
+        onChange={(event) => events.push(event)}
+      />,
+    );
+    // Re-judging `mode` takes the loop a second round, which judges the rows against the tree the first round built
+    await user.click(elementOf(container, `#${buttonId('root_list_0', 'remove')}`));
+    expect(events[events.length - 1].formData).toEqual({
+      mode: 'single',
+      list: [
+        { kind: 'x', v: 2 },
+        { kind: 'y', v: 's' },
+      ],
+    });
   });
 
   it('keeps the surviving row paired with its own previous value when a parent stores each edit (#5451)', async () => {
@@ -387,6 +456,79 @@ describe('settled snapshot sanitization', () => {
     expect(log.value?.rows).toEqual([{ kind: 'y', tags: [null, null] }]);
   });
 
+  it('keeps the rows setFieldValue set whose constraints an edit does not change (#5451)', async () => {
+    interface Row {
+      kind?: string;
+      tags?: (string | null)[];
+    }
+    interface PairData {
+      note?: string;
+      rows?: Row[];
+    }
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        note: { type: 'string' },
+        rows: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              kind: { type: 'string', enum: ['x', 'y'] },
+              tags: { type: 'array', items: { type: 'string' }, minItems: 2 },
+            },
+            allOf: [
+              {
+                if: { properties: { kind: { const: 'x' } } },
+                then: { properties: { tags: { items: { enum: ['a'] } } } },
+              },
+              {
+                if: { properties: { kind: { const: 'y' } } },
+                then: { properties: { tags: { items: { enum: ['b'] } } } },
+              },
+            ],
+          },
+        },
+      },
+    };
+    const events: IChangeEvent<PairData>[] = [];
+    const ref = createRef<FormRef<PairData>>();
+    const { container } = render(
+      <Form<PairData>
+        ref={ref}
+        schema={schema}
+        validator={validator}
+        initialFormData={{
+          rows: [
+            { kind: 'x', tags: [null, null] },
+            { kind: 'y', tags: [null, null] },
+            { kind: 'y', tags: [null, null] },
+          ],
+        }}
+        onChange={(event) => events.push(event)}
+      />,
+    );
+    // Data from outside the form's fields, which no sanitize runs on
+    act(() =>
+      handleOf(ref).setFieldValue('', {
+        rows: [
+          { kind: 'x', tags: [null, null] },
+          { kind: 'x', tags: [null, null] },
+          { kind: 'y', tags: [null, null] },
+          { kind: 'y', tags: [null, null] },
+        ],
+      }),
+    );
+    await user.click(elementOf(container, `#${buttonId('root_rows_0', 'remove')}`));
+    await user.type(input(container, 'root_note'), 'n');
+    // The remove is paired by its announced move, so no row's constraints change and every placeholder stays
+    expect(events[events.length - 1].formData.rows).toEqual([
+      { kind: 'x', tags: [null, null] },
+      { kind: 'y', tags: [null, null] },
+      { kind: 'y', tags: [null, null] },
+    ]);
+  });
+
   it('keeps an added row paired with its own starting value on the next sibling edit (#5451)', async () => {
     interface Row {
       kind?: string;
@@ -437,13 +579,11 @@ describe('settled snapshot sanitization', () => {
     expect(last?.rows).toEqual([{ kind: 'x', tags: [null, null] }, { tags: [undefined, undefined] }]);
   });
 
-  it('drops the settled data when the parent swaps the schema as it stores an edit', async () => {
+  it('replaces a value a schema the parent swapped in as it stored an edit rejects', async () => {
     interface SwapData {
       color?: string;
       name?: string;
     }
-    // The conditional on `name` makes every edit run the sanitize pass; without one an edit resolves the same
-    // schema and nothing is checked, the same as the existing swap tests
     const wideSchema: RJSFSchema = {
       type: 'object',
       properties: { color: { type: 'string', enum: ['r', 'g'] }, name: { type: 'string' } },
@@ -484,17 +624,15 @@ describe('settled snapshot sanitization', () => {
       );
     }
     const { container } = render(<SwappingParent />);
-    // The edit carrying 'g' settles under the wide schema, and the narrow one arrives as the parent stores it, so
-    // the settled data no longer describes the root
+    // The narrow schema arrives as the parent stores the first edit, and the form sanitizes the data it holds for the
+    // new schema's tree, as it does for any schema change, so `color` takes the option left
     await user.type(input(container, 'root_name'), 'a');
-    // The next edit sanitizes without a settled counterpart, so a value the narrow schema rejects is replaced
-    // with the option left, the way any schema swap is handled
     await user.type(input(container, 'root_name'), 'b');
     const last = events[events.length - 1].formData;
     expect(last).toEqual({ color: 'r', name: 'ab' });
   });
 
-  it('settles each edit in a live-validated form', async () => {
+  it('judges each edit of a live-validated form', async () => {
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -523,12 +661,12 @@ describe('settled snapshot sanitization', () => {
     );
     await user.selectOptions(elementOf(container, '#root_mode'), ['0']);
     await user.selectOptions(elementOf(container, '#root_color'), ['1']);
-    // The flip back narrows color against the snapshot the edits settled: 'g' cannot stand
+    // The flip back narrows color: 'g' cannot stand
     await user.selectOptions(elementOf(container, '#root_mode'), ['1']);
     expect(log.value?.color).toBe('r');
   });
 
-  it('settles the second of two edits made in one event', async () => {
+  it('judges the second of two edits in one event against the data the first one left', async () => {
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -567,19 +705,18 @@ describe('settled snapshot sanitization', () => {
       );
     }
     render(<StackedParent />);
-    // Two edits in one event: the second applies on top of the first, which the form already holds, before the
-    // parent has rendered either
+    // Two edits in one event: the second is built on the first's pending proposal, which is what it is judged
+    // against
     act(() => {
       handleOf(ref).setFieldValue('mode', 'open');
       handleOf(ref).setFieldValue('color', 'g');
     });
-    // With the second edit settled under 'open', flipping to strict filters 'g'; a snapshot stuck at
-    // construction resolves 'strict' on both sides and keeps it
+    // Flipping to strict narrows `color`, so 'g' goes
     act(() => handleOf(ref).setFieldValue('mode', 'strict'));
     expect(log.value).toEqual({ mode: 'strict', color: 'r' });
   });
 
-  it('settles the value actually sent when an edit clears a field', async () => {
+  it('judges an edit against the value sent when an edit clears a field', async () => {
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -601,16 +738,15 @@ describe('settled snapshot sanitization', () => {
     const { container } = render(
       <AcceptingParent<NoteData> schema={schema} initialValue={{ note: 'x', color: 'g' }} log={log} />,
     );
-    // Clearing the leaf writes `undefined` over a copy of the data the edit path first built; that copy, the
-    // value sent, is the one that must settle
+    // Clearing the leaf copies the proposal, so the parent answers a value that is not the one the edit path
+    // first built; the next edit is judged against that answered value
     await user.clear(input(container, 'root_note'));
-    // The conditional is off while the note is clear, so 'g' settles with it; writing the note back flips it
-    // on and the settled side still accepts 'g', so the filter replaces it
+    // The conditional is off while the note is clear; writing the note back flips it on and narrows `color`
     await user.type(input(container, 'root_note'), 'x');
     expect(log.value).toEqual({ note: 'x', color: 'r' });
   });
 
-  it('filters a flipped row against its own value when an unchecked insert left no trusted previous row', async () => {
+  it('judges a flipped row after an array write added another', async () => {
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -649,13 +785,42 @@ describe('settled snapshot sanitization', () => {
         onChange={(event) => events.push(event)}
       />,
     );
-    // The add is an array write, so no sanitize runs and the snapshot keeps its one row; the kind flip then
-    // faces two committed rows against one settled one, so the flipped row is filtered against its own
-    // value alone and the 'a' the y-branch rejects goes, the way v7 and 99229b1 removed it
+    // The kind flip narrows the row's tags, so the 'a' the y-branch rejects goes
     await user.click(elementOf(container, `#${buttonId('root_rows', 'add')}`));
     await user.selectOptions(elementOf(container, '#root_rows_0_kind'), ['1']);
     const last = events[events.length - 1].formData;
     expect(last?.rows?.[0]).toEqual({ kind: 'y', tags: [] });
+  });
+
+  it('judges a copied row the copy flips the constraints of, as it judges the row it copies', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        list: {
+          type: 'array',
+          items: { type: 'object', properties: { color: { type: 'string', enum: ['r', 'g'] } } },
+        },
+      },
+      allOf: [
+        {
+          if: { properties: { list: { minItems: 2 } } },
+          then: { properties: { list: { items: { properties: { color: { enum: ['r'] } } } } } },
+        },
+      ],
+    };
+    const events: IChangeEvent<{ list?: { color?: string }[] }>[] = [];
+    const { container } = render(
+      <Form<{ list?: { color?: string }[] }>
+        schema={schema}
+        validator={validator}
+        uiSchema={{ list: { 'ui:options': { copyable: true } } }}
+        initialFormData={{ list: [{ color: 'g' }] }}
+        onChange={(event) => events.push(event)}
+      />,
+    );
+    await user.click(elementOf(container, `#${buttonId('root_list_0', 'copy')}`));
+    const last = events[events.length - 1].formData;
+    expect(last).toEqual({ list: [{ color: 'r' }, { color: 'r' }] });
   });
 
   it('keeps each row paired with its own previous value across a reorder (#5451)', async () => {
@@ -707,9 +872,8 @@ describe('settled snapshot sanitization', () => {
         onChange={(event) => events.push(event)}
       />,
     );
-    // The reorder runs no sanitize, but the pairing view's rows move with the data's, so each row still pairs
-    // with its own previous value: the sibling edit's sanitize finds no schema change for either and keeps the
-    // placeholders their branches offer
+    // The reorder pairs each row with its own previous value through the announced move, so no row's constraints
+    // change and both keep the placeholders their branches offer
     await user.click(elementOf(container, `#${buttonId('root_rows_1', 'moveUp')}`));
     await user.type(input(container, 'root_note'), 'n');
     const last = events[events.length - 1].formData;
@@ -763,9 +927,8 @@ describe('settled snapshot sanitization', () => {
         onChange={(event) => events.push(event)}
       />,
     );
-    // The add runs no sanitize, but the pairing view's rows move with the data's: the first row still pairs with
-    // its own previous value, so the sibling edit's sanitize keeps its placeholders, and the added row has no
-    // previous value of its own
+    // The first row is paired with its own previous value, so it keeps its placeholders, and the added row has no
+    // previous value to be judged against
     await user.click(elementOf(container, `#${buttonId('root_rows', 'add')}`));
     await user.type(input(container, 'root_note'), 'n');
     const last = events[events.length - 1].formData;
@@ -773,7 +936,7 @@ describe('settled snapshot sanitization', () => {
     expect(last?.rows).toHaveLength(2);
   });
 
-  it('filters a row flipping into the narrowed branch when no previous array settled', async () => {
+  it('judges a row flipping into the narrowed branch', async () => {
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -812,10 +975,7 @@ describe('settled snapshot sanitization', () => {
         onChange={(event) => events.push(event)}
       />,
     );
-    // The row is added and filled without a settled array behind it, so its filter runs the way v7 ran every
-    // row's: the flip into the y-branch is a real difference and the 'a' it rejects goes. Resolving the old
-    // side against `undefined` instead would satisfy both `if`s vacuously, read the merge as agreement, and
-    // keep the stale value
+    // The flip into the y-branch narrows the tags, so the 'a' it rejects goes
     await user.click(elementOf(container, `#${buttonId('root_rows', 'add')}`));
     await user.selectOptions(elementOf(container, '#root_rows_0_kind'), ['0']);
     // The narrowed branch filters the placeholder items, so the 'a' goes in through an explicit add
@@ -879,8 +1039,8 @@ describe('settled snapshot sanitization', () => {
         }}
       />,
     );
-    // The rows set back are the ones from before the reorder, so the sibling edit pairs each row with its own
-    // previous value, and both rows keep the placeholders their branches offer
+    // The reorder is declined, so the sibling edit is judged against the rows as the parent kept them, and both
+    // rows keep the placeholders their branches offer
     await user.click(elementOf(container, `#${buttonId('root_rows_0', 'moveDown')}`));
     await user.type(input(container, 'root_note'), 'n');
     expect(handleOf(ref).getFormData().rows).toEqual([
@@ -889,166 +1049,21 @@ describe('settled snapshot sanitization', () => {
     ]);
   });
 
-  it('keeps each nested row paired with its own previous value when a write sets a nested reorder back (#5451)', async () => {
+  it('judges a row an edit inside it leaves equal to another row by its own previous value', async () => {
     interface Row {
       kind?: string;
       tags?: (string | null)[];
     }
-    interface Group {
-      label?: string;
-      rows?: Row[];
-    }
-    interface GroupData {
-      note?: string;
-      groups?: Group[];
-    }
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
-        note: { type: 'string' },
-        groups: {
-          type: 'array',
-          items: {
-            type: 'object',
-            properties: {
-              label: { type: 'string' },
-              rows: {
-                type: 'array',
-                items: {
-                  type: 'object',
-                  properties: {
-                    kind: { type: 'string', enum: ['x', 'y'] },
-                    tags: { type: 'array', items: { type: 'string' }, minItems: 2 },
-                  },
-                  allOf: [
-                    {
-                      if: { properties: { kind: { const: 'x' } } },
-                      then: { properties: { tags: { items: { enum: ['a'] } } } },
-                    },
-                    {
-                      if: { properties: { kind: { const: 'y' } } },
-                      then: { properties: { tags: { items: { enum: ['b'] } } } },
-                    },
-                  ],
-                },
-              },
-            },
-          },
-        },
-      },
-    };
-    const rows: Row[] = [
-      { kind: 'x', tags: [null, null] },
-      { kind: 'y', tags: [null, null] },
-    ];
-    const ref = createRef<FormRef<GroupData>>();
-    const { container } = render(
-      <Form<GroupData>
-        ref={ref}
-        schema={schema}
-        validator={validator}
-        initialFormData={{ groups: [{ label: 'g', rows }] }}
-      />,
-    );
-    await user.click(elementOf(container, `#${buttonId('root_groups_0_rows_0', 'moveDown')}`));
-
-    // The group is written back with its rows in their settled order and its label changed, so below the level
-    // the write starts at each row pairs with its own previous value, and both keep the placeholders their
-    // branches offer
-    act(() => handleOf(ref).setFieldValue('groups', [{ label: 'h', rows }]));
-    await user.type(input(container, 'root_note'), 'n');
-
-    expect(handleOf(ref).getFormData().groups).toEqual([{ label: 'h', rows }]);
-  });
-
-  it('keeps each nested row paired with its own previous value when a write below a reorder sets a nested reorder back (#5451)', async () => {
-    interface Row {
-      kind?: string;
-      tags?: (string | null)[];
-    }
-    interface Group {
-      rows?: Row[];
-    }
-    interface GroupData {
-      note?: string;
-      groups?: Group[];
-    }
-    const schema: RJSFSchema = {
-      type: 'object',
-      properties: {
-        note: { type: 'string' },
-        groups: {
-          type: 'array',
-          items: {
-            type: 'object',
-            properties: {
-              rows: {
-                type: 'array',
-                items: {
-                  type: 'object',
-                  properties: {
-                    kind: { type: 'string', enum: ['x', 'y'] },
-                    tags: { type: 'array', items: { type: 'string' }, minItems: 2 },
-                  },
-                  allOf: [
-                    {
-                      if: { properties: { kind: { const: 'x' } } },
-                      then: { properties: { tags: { items: { enum: ['a'] } } } },
-                    },
-                    {
-                      if: { properties: { kind: { const: 'y' } } },
-                      then: { properties: { tags: { items: { enum: ['b'] } } } },
-                    },
-                  ],
-                },
-              },
-            },
-          },
-        },
-      },
-    };
-    const x: Row = { kind: 'x', tags: [null, null] };
-    const y: Row = { kind: 'y', tags: [null, null] };
-    const ref = createRef<FormRef<GroupData>>();
-    const { container } = render(
-      <Form<GroupData>
-        ref={ref}
-        schema={schema}
-        validator={validator}
-        initialFormData={{ groups: [{ rows: [x, y] }, { rows: [y, x] }] }}
-      />,
-    );
-    await user.click(elementOf(container, `#${buttonId('root_groups_1', 'moveUp')}`));
-    await user.click(elementOf(container, `#${buttonId('root_groups_0_rows_0', 'moveDown')}`));
-
-    // The group the reorder moved to the front gets its rows back in the order it settled with, which is not the
-    // order of the group that settled at the front
-    act(() => handleOf(ref).setFieldValue('groups.0.rows', [y, x]));
-    await user.type(input(container, 'root_note'), 'n');
-
-    expect(handleOf(ref).getFormData().groups).toEqual([{ rows: [y, x] }, { rows: [x, y] }]);
-  });
-
-  describe('pairs a row a container write changes in place with its own previous value', () => {
-    interface Row {
-      kind?: string;
-      tags?: (string | null)[];
-    }
-    interface PairData {
-      note?: string;
-      rows?: Row[];
-    }
-    const schema: RJSFSchema = {
-      type: 'object',
-      properties: {
-        note: { type: 'string' },
         rows: {
           type: 'array',
           items: {
             type: 'object',
             properties: {
               kind: { type: 'string', enum: ['x', 'y'] },
-              tags: { type: 'array', items: { type: 'string' } },
+              tags: { type: 'array', items: { type: 'string' }, minItems: 2 },
             },
             allOf: [
               {
@@ -1064,47 +1079,31 @@ describe('settled snapshot sanitization', () => {
         },
       },
     };
-    const initialRows: Row[] = [
-      { kind: 'x', tags: ['a', 'a'] },
-      { kind: 'y', tags: ['b', 'b'] },
-    ];
+    const ref = createRef<FormRef<{ rows?: Row[] }>>();
+    const { container } = render(
+      <Form<{ rows?: Row[] }>
+        ref={ref}
+        schema={schema}
+        validator={validator}
+        initialFormData={{
+          rows: [
+            { kind: 'x', tags: [null, null] },
+            { kind: 'y', tags: [null, null] },
+          ],
+        }}
+      />,
+    );
 
-    it('after a reorder', async () => {
-      const ref = createRef<FormRef<PairData>>();
-      const { container } = render(
-        <Form<PairData> ref={ref} schema={schema} validator={validator} initialFormData={{ rows: initialRows }} />,
-      );
-      await user.click(elementOf(container, `#${buttonId('root_rows_0', 'moveDown')}`));
-      const moved = handleOf(ref).getFormData().rows ?? [];
+    await user.selectOptions(elementOf(container, '#root_rows_0_kind'), 'y');
 
-      // The leading row, the `y` row the reorder moved there, is written as an `x` row keeping its tags
-      act(() => handleOf(ref).setFieldValue('rows', [{ kind: 'x', tags: moved[0].tags }, moved[1]]));
-      await user.type(input(container, 'root_note'), 'n');
-
-      expect(handleOf(ref).getFormData().rows?.[0]).toEqual({ kind: 'x', tags: [] });
-    });
-
-    it('through a root write after the rows lost their pairing', async () => {
-      const ref = createRef<FormRef<PairData>>();
-      const { container } = render(
-        <Form<PairData> ref={ref} schema={schema} validator={validator} initialFormData={{ rows: initialRows }} />,
-      );
-      // A write of another length leaves the rows nothing to pair with, and a remove after it drops their pairing
-      act(() => handleOf(ref).setFieldValue('rows', [...initialRows, { kind: 'x', tags: ['a'] }]));
-      await user.click(elementOf(container, `#${buttonId('root_rows_0', 'remove')}`));
-      const data = handleOf(ref).getFormData();
-      const rows = data.rows ?? [];
-
-      act(() =>
-        handleOf(ref).setFieldValue('', { ...data, rows: [{ kind: 'x', tags: rows[0].tags }, ...rows.slice(1)] }),
-      );
-      await user.type(input(container, 'root_note'), 'n');
-
-      expect(handleOf(ref).getFormData().rows?.[0]).toEqual({ kind: 'x', tags: [] });
-    });
+    // The first row's kind changed, so its tags are judged, though the row now holds what the second one does
+    expect(handleOf(ref).getFormData().rows).toEqual([
+      { kind: 'y', tags: [] },
+      { kind: 'y', tags: [null, null] },
+    ]);
   });
 
-  it('filters a row the parent added instead of pairing it with a surviving row (#5451)', async () => {
+  it('leaves a row setFieldValue added as it is (#5451)', async () => {
     interface Row {
       kind?: string;
       tags?: (string | null)[];
@@ -1165,12 +1164,12 @@ describe('settled snapshot sanitization', () => {
     await user.click(elementOf(container, `#${buttonId('root_rows_0', 'remove')}`));
     await user.type(input(container, 'root_note'), 'n');
     const { rows } = handleOf(ref).getFormData();
-    // The added row has no previous value of its own, so it is filtered against its own branch: the tags 'y' never
-    // offered go
-    expect(rows?.[1]).toEqual({ kind: 'y', tags: [] });
+    // The row `setFieldValue()` added is taken as written, and no edit changes its constraints, so it keeps the tags its
+    // branch rejects for validation to report
+    expect(rows?.[1]).toEqual({ kind: 'y', tags: ['a', 'a'] });
   });
 
-  it('filters a root-level row the parent added (#5451)', async () => {
+  it('leaves a root-level row setFieldValue added as it is (#5451)', async () => {
     interface Row {
       kind?: string;
       note?: string;
@@ -1221,9 +1220,9 @@ describe('settled snapshot sanitization', () => {
     await user.click(elementOf(container, `#${buttonId('root_0', 'remove')}`));
     await user.type(input(container, 'root_0_note'), 'n');
     const rows = handleOf(ref).getFormData();
-    // The added row has no previous value of its own, so it is filtered against its own branch: the tags 'y' never
-    // offered go, as on v7
-    expect(rows[1]).toEqual({ kind: 'y', tags: [] });
+    // The row `setFieldValue()` added is taken as written, and no edit changes its constraints, so it keeps the tags its
+    // branch rejects for validation to report
+    expect(rows?.[1]).toEqual({ kind: 'y', tags: ['a', 'a'] });
   });
 
   it('keeps each row paired with its own previous value across a reorder at the document root (#5451)', async () => {
@@ -1296,5 +1295,99 @@ describe('settled snapshot sanitization', () => {
     );
     await user.selectOptions(elementOf(container, '#root_kind'), 'b');
     expect(events[events.length - 1].formData).toEqual({ kind: 'b', fixed: ['x'] });
+  });
+
+  it.each([
+    { spelling: 'inline', options: (one: RJSFSchema, two: RJSFSchema) => [one, two] },
+    {
+      spelling: 'as $refs',
+      options: () => [{ $ref: '#/definitions/one' }, { $ref: '#/definitions/two' }],
+    },
+  ])(
+    'keeps the constant a select offers with its options $spelling, whatever its conditionals default',
+    async ({ options }) => {
+      const one: RJSFSchema = { title: 'One', const: { x: 1, y: { z: 'a' } } };
+      const two: RJSFSchema = { title: 'Two', const: { x: 2, y: { z: 'a' } } };
+      const schema: RJSFSchema = {
+        type: 'object',
+        definitions: { one, two },
+        properties: {
+          sel: {
+            type: 'object',
+            properties: { x: { type: 'number' }, y: { type: 'object', properties: { z: { type: 'string' } } } },
+            if: { properties: { x: { const: 1 } } },
+            then: { properties: { y: { default: { z: 'a' } } } },
+            else: { properties: { y: { default: { z: 'b' } } } },
+            oneOf: options(one, two),
+          },
+        },
+      };
+      const events: IChangeEvent<{ sel?: unknown }>[] = [];
+      const { container } = render(
+        <Form<{ sel?: unknown }>
+          schema={schema}
+          validator={validator}
+          initialFormData={{ sel: { x: 1, y: { z: 'a' } } }}
+          onChange={(event) => events.push(event)}
+        />,
+      );
+
+      await user.selectOptions(elementOf(container, '#root_sel'), 'Two');
+
+      expect(events[events.length - 1].formData).toEqual({ sel: { x: 2, y: { z: 'a' } } });
+    },
+  );
+
+  describe('a schema change', () => {
+    const colorSchema = (colors: string[]): RJSFSchema => ({
+      type: 'object',
+      definitions: { Color: { type: 'string', enum: colors } },
+      properties: { color: { $ref: '#/definitions/Color' }, unrelated: { type: 'string' } },
+    });
+
+    it('sanitizes a self-owned form for the new schema as it arrives', () => {
+      const ref = createRef<FormRef<{ color?: string; unrelated?: string }>>();
+      const props = { validator, initialFormData: { color: 'b' } };
+      const { rerender } = render(<Form ref={ref} schema={colorSchema(['a', 'b'])} {...props} />);
+
+      rerender(<Form ref={ref} schema={colorSchema(['a'])} {...props} />);
+
+      expect(ref.current?.getFormData()).toEqual({ color: 'a' });
+    });
+
+    it.each([
+      { state: 'disabled', flags: { disabled: true } },
+      { state: 'readonly', flags: { readonly: true } },
+    ])('leaves the value of a $state self-owned form to it as the new schema arrives, as an edit does', ({ flags }) => {
+      const ref = createRef<FormRef<{ color?: string; unrelated?: string }>>();
+      const props = { validator, initialFormData: { color: 'b' }, ...flags };
+      const { rerender } = render(<Form ref={ref} schema={colorSchema(['a', 'b'])} {...props} />);
+
+      rerender(<Form ref={ref} schema={colorSchema(['a'])} {...props} />);
+
+      expect(ref.current?.getFormData()).toEqual({ color: 'b' });
+    });
+
+    it.each(['__proto__', 'toString'])(
+      'keeps the value of a property named %s when the default its parent declared for it goes',
+      (key) => {
+        const schemaWithDefault = (parentDefault: string) => {
+          const schema: RJSFSchema = JSON.parse(
+            `{"type":"object","properties":{"p":{"type":"object","default":${parentDefault},"properties":{"${key}":{"type":"object","properties":{"x":{"type":"string"}}},"y":{"type":"string"}}}}}`,
+          );
+          return schema;
+        };
+        const initialFormData: unknown = JSON.parse(`{"p":{"${key}":{"x":"d"},"y":"z"}}`);
+        const ref = createRef<FormRef>();
+        const props = { validator, initialFormData };
+        const { rerender } = render(<Form ref={ref} schema={schemaWithDefault(`{"${key}":{"x":"d"}}`)} {...props} />);
+
+        rerender(<Form ref={ref} schema={schemaWithDefault('{}')} {...props} />);
+
+        const p: unknown = getByPath(ref.current?.getFormData(), 'p');
+        expect(p).toEqual(JSON.parse(`{"${key}":{"x":"d"},"y":"z"}`));
+        expect(Object.getPrototypeOf(p)).toBe(Object.prototype);
+      },
+    );
   });
 });

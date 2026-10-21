@@ -1,4 +1,5 @@
 import { useCallback, useMemo, memo } from 'react';
+import type { ReactElement } from 'react';
 import type {
   ErrorSchema,
   Field,
@@ -19,9 +20,11 @@ import type {
 import {
   ANY_OF_KEY,
   fieldPathToId,
+  fieldPathToList,
   getByPath,
   getDeprecatedHandling,
   getDescribedControlAttributes,
+  getDiscriminatorFieldFromSchema,
   getFieldClassNames,
   getFieldLabel,
   getFieldTypeForWidget,
@@ -42,10 +45,10 @@ import {
   isLabelledByTemplate,
   logOnce,
   omitConsumedStyling,
+  rendersOwnFieldBesideOption,
   resolveUiSchema,
   RJSF_REF_CYCLE_KEY,
   shouldRenderOptionalField,
-  isObject,
   toConstant,
   toFieldPath,
   UI_FIELD_KEY,
@@ -57,6 +60,10 @@ import {
 import describeUnresolvedComponent from '../../describeUnresolvedComponent.ts';
 import fieldLabelForLog, { entryLabelForLog } from '../../fieldLabelForLog.ts';
 import hasOptionLabels from '../../hasOptionLabels.ts';
+import { useShownOption } from '../../hooks/useOptionSelection.ts';
+import useUiState from '../../hooks/useUiState.ts';
+import { retrievedOptionsOf } from '../uiState.ts';
+import UiStateContext from '../UiStateContext.ts';
 import {
   getDeprecatedTemplateProps,
   getFieldErrorProps,
@@ -64,6 +71,7 @@ import {
   withoutDescribers,
 } from './fieldWidgetUtils.ts';
 import PresentationContext, { useInheritedPresentation } from './PresentationContext.ts';
+import ShownOptionContext from './ShownOptionContext.ts';
 import useSchemaFieldPresentation from './useSchemaFieldPresentation.ts';
 
 /** The map of component type to FieldName */
@@ -587,17 +595,6 @@ function SchemaFieldRender<
   const { schemaUtils, globalFormOptions, globalUiOptions, fields } = registry;
   const { AnyOfField: _AnyOfField, OneOfField: _OneOfField, CyclicSchemaField } = fields;
 
-  /** Intermediary `onChange` handler for field components that will inject the `id` of the current field into the
-   * `onChange` chain if it is not already being provided from a deeper level in the hierarchy
-   */
-  const handleFieldComponentChange = useCallback(
-    (newFormData: T | undefined, changedFieldPath: FieldPath, newErrorSchema?: ErrorSchema<T>, id?: string) => {
-      const theId = id || fieldId;
-      onChange(newFormData, changedFieldPath, newErrorSchema, theId);
-    },
-    [fieldId, onChange],
-  );
-
   const resolvedUiSchema = useMemo(
     () => resolveUiSchema<T, S, F>(_schema, _uiSchema, registry),
     [_schema, _uiSchema, registry],
@@ -691,19 +688,65 @@ function SchemaFieldRender<
   // type in effect — and only the inner one would follow the type the user chose
   const retrievesOptions =
     fieldToRender !== undefined && fieldToRender.rendersOptionSelector && !fieldToRender.rendersOptionsItself;
-  // `xxxOfKey` is what `rendersOptionSelector` was decided from, so it is set whenever that is, which the narrowing
-  // here restates for the lookup below. This is the one place the options are retrieved: `MultiSchemaField` renders
-  // what it is handed. Memoized so a re-render that changed neither the schema nor the data hands it the same array,
-  // which its callbacks key on
+  // `MultiSchemaField` renders the options it is handed. Memoized so a re-render that changed neither the schema nor
+  // the data hands it the same array, which its callbacks key on
   const xxxOfOptions = useMemo(
-    () =>
-      retrievesOptions && xxxOfKey !== undefined
-        ? schema[xxxOfKey]?.map((xxxOfSchema) =>
-            schemaUtils.retrieveSchema(isObject(xxxOfSchema) ? (xxxOfSchema as S) : ({} as S), formData),
-          )
-        : undefined,
-    [retrievesOptions, xxxOfKey, schema, schemaUtils, formData],
+    () => (retrievesOptions ? retrievedOptionsOf<T, S, F>(schemaUtils, schema, formData) : undefined),
+    [retrievesOptions, schema, schemaUtils, formData],
   );
+
+  // The option shown is the form's state, which `AnyOfField`/`OneOfField` read and write too. An object renders its own
+  // field beside the option, whose extra keys are stubbed once, with the selected option: a key the option declares is
+  // left to it, and any other is described by the object's extra-key keywords and the option's together
+  const { uiState, isOwn: ownsUiState } = useUiState();
+  const { list, selectedOption, selectOption, keepSelection, editOwnProperty } = useShownOption<T, S, F>(
+    uiState,
+    registry,
+    fieldPath,
+    xxxOfOptions,
+    formData,
+    getDiscriminatorFieldFromSchema<S>(schema),
+  );
+  const fieldSchema = useMemo(
+    () =>
+      xxxOfOptions && selectedOption >= 0 && rendersOwnFieldBesideOption<S>(schema)
+        ? schemaUtils.retrieveSchema(_schema, formData, false, selectedOption)
+        : schema,
+    [xxxOfOptions, selectedOption, schema, schemaUtils, _schema, formData],
+  );
+  const hasOptions = xxxOfOptions !== undefined;
+  const shownOption = useMemo(
+    () => (xxxOfOptions ? { fieldPath, options: xxxOfOptions, list, selectedOption, selectOption } : undefined),
+    [xxxOfOptions, list, selectedOption, selectOption, fieldPath],
+  );
+
+  /** Intermediary `onChange` handler for field components that will inject the `id` of the current field into the
+   * `onChange` chain if it is not already being provided from a deeper level in the hierarchy. An edit to a property
+   * of the object's own that the options can disagree about, through a keyword naming it or one reading the object
+   * whole, may be a choice between them, so the data it leaves is matched again. Any other edit holds the option shown,
+   * as an edit inside the option does: every option says the same of the property, so the edit cannot be a choice
+   * between them
+   */
+  const handleFieldComponentChange = useCallback(
+    (newFormData: T | undefined, changedFieldPath: FieldPath, newErrorSchema?: ErrorSchema<T>, id?: string) => {
+      if (hasOptions) {
+        editOwnProperty(fieldPathToList(changedFieldPath)[fieldPathToList(fieldPath).length]);
+      }
+      onChange(newFormData, changedFieldPath, newErrorSchema, id || fieldId);
+    },
+    [fieldId, fieldPath, onChange, hasOptions, editOwnProperty],
+  );
+  const handleOptionFieldChange = useCallback(
+    (newFormData: T | undefined, changedFieldPath: FieldPath, newErrorSchema?: ErrorSchema<T>, id?: string) => {
+      keepSelection();
+      onChange(newFormData, changedFieldPath, newErrorSchema, id);
+    },
+    [onChange, keepSelection],
+  );
+
+  // Outside a `Form` the outermost field's store is the one of the whole tree, so the fields below share its selections
+  const withUiState = (node: ReactElement): ReactElement =>
+    ownsUiState ? <UiStateContext value={uiState}>{node}</UiStateContext> : node;
 
   const deprecatedHandling = getDeprecatedHandling<T, S, F>(schema, uiOptions);
   // ui:required is deliberately resolved from this field's own uiSchema only (no globalUiOptions fallback): unlike
@@ -854,7 +897,7 @@ function SchemaFieldRender<
   // which is when the field is left unresolved above. The check must come after all hook calls to satisfy React's
   // rules of hooks.
   if (!uiField || !fieldToRender) {
-    return <CyclicSchemaField {...props} />;
+    return withUiState(<CyclicSchemaField {...props} />);
   }
   const { ignoredOwnField, ignoredGlobalField } = uiField;
   const { FieldComponent, optionsReplaceNamedField } = fieldToRender;
@@ -925,7 +968,7 @@ function SchemaFieldRender<
       {...props}
       onChange={handleFieldComponentChange}
       id={fieldComponentId}
-      schema={schema}
+      schema={fieldSchema}
       uiSchema={fieldUiSchema}
       {...(fieldUiRequired !== undefined ? { required: effectiveRequired } : {})}
       disabled={disabled}
@@ -942,7 +985,9 @@ function SchemaFieldRender<
   // A container's properties and items render under ids of their own, so they inherit nothing from it, and are handed
   // no plan whose every change would re-render each of them past its `memo`
   const field = (
-    <PresentationContext value={isContainer ? undefined : presentationBelow}>{fieldComponent}</PresentationContext>
+    <ShownOptionContext value={shownOption}>
+      <PresentationContext value={isContainer ? undefined : presentationBelow}>{fieldComponent}</PresentationContext>
+    </ShownOptionContext>
   );
 
   const { description: templateDescription, help, errors: templateErrors } = getTemplateParts(presentation);
@@ -1014,35 +1059,37 @@ function SchemaFieldRender<
     registry,
   };
 
-  return (
+  return withUiState(
     <FieldTemplate {...fieldProps}>
       <>
         {field}
         {XxxOfField && (
-          <PresentationContext value={optionsBelow}>
-            <XxxOfField
-              name={name}
-              disabled={disabled}
-              readonly={readonly}
-              hideError={hideError}
-              errorSchema={errorSchema}
-              formData={formData}
-              fieldPath={fieldPath}
-              id={fieldId}
-              onBlur={props.onBlur}
-              onChange={props.onChange}
-              onFocus={props.onFocus}
-              options={xxxOfOptions}
-              registry={registry}
-              required={effectiveRequired}
-              schema={schema}
-              uiSchema={XxxOfUiSchema}
-              presentation={optionsPresentation}
-            />
-          </PresentationContext>
+          <ShownOptionContext value={shownOption}>
+            <PresentationContext value={optionsBelow}>
+              <XxxOfField
+                name={name}
+                disabled={disabled}
+                readonly={readonly}
+                hideError={hideError}
+                errorSchema={errorSchema}
+                formData={formData}
+                fieldPath={fieldPath}
+                id={fieldId}
+                onBlur={props.onBlur}
+                onChange={handleOptionFieldChange}
+                onFocus={props.onFocus}
+                options={xxxOfOptions}
+                registry={registry}
+                required={effectiveRequired}
+                schema={schema}
+                uiSchema={XxxOfUiSchema}
+                presentation={optionsPresentation}
+              />
+            </PresentationContext>
+          </ShownOptionContext>
         )}
       </>
-    </FieldTemplate>
+    </FieldTemplate>,
   );
 }
 

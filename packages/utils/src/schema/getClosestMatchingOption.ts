@@ -3,9 +3,11 @@ import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.
 import getXxxOfKey from '../getXxxOfKey.ts';
 import guessType from '../guessType.ts';
 import isObject, { isSchemaObject } from '../isObject.ts';
+import isPlainObject from '../isPlainObject.ts';
 import { getByPath } from '../pathUtils.ts';
 import type { FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
 import { optionMatches, optionNodeOf, simpleDiscriminatorMatch } from './getFirstMatchingOption.ts';
+import type { OptionNode } from './getFirstMatchingOption.ts';
 import { isHandedOut } from './graph/handedOut.ts';
 import KeyedMemo from './graph/keyedMemo.ts';
 import buildPlan, { seedsAt } from './graph/mergePlan.ts';
@@ -90,24 +92,25 @@ function propertyWhere<S extends StrictRJSFSchema>(parent: Scored<S>, rootSchema
   return whereOf<S>(value, rootSchema);
 }
 
-/** Returns where the option of `options`, the list `keyword` holds in the field `seeding` describes, at an index is
- * declared: where a declaration of the field holds it, or, for one a merge of lists rebuilt, where `optionNode()`
- * adopted it
- *
- * @param seeding - Returns the graph and chains of the field offering the options
- * @param keyword - The keyword holding the list
- * @param options - The options
- * @returns - Where the option at an index is declared
+/** Where a list of options is declared: the field offering it and the keyword holding it, which say where each option
+ * of the list is declared
  */
-export function listedAt<S extends StrictRJSFSchema>(
-  seeding: () => Seeding<S>,
-  keyword: string,
-  options: readonly S[],
-): (index: number) => Where<S> {
-  return (index) => {
-    const { graph, node } = optionNode<S>(seeding(), keyword, index, options[index]);
-    return { graph, seeds: [{ node, refPath: [] }] };
-  };
+interface Listing<S extends StrictRJSFSchema> {
+  readonly seeding: Seeding<S>;
+  readonly keyword: string;
+}
+
+/** Returns where the option `option`, at `index` of the list `listing` names, is declared: where a declaration of the
+ * field holds it, or, for one a merge of lists rebuilt, where `optionNode()` adopted it
+ *
+ * @param listing - The field offering the options and the keyword holding them
+ * @param index - The index of the option in the list
+ * @param option - The option
+ * @returns - Where the option is declared
+ */
+function listedAt<S extends StrictRJSFSchema>({ seeding, keyword }: Listing<S>, index: number, option: S): Where<S> {
+  const { graph, node } = optionNode<S>(seeding, keyword, index, option);
+  return { graph, seeds: [{ node, refPath: [] }] };
 }
 
 /** Returns the score of one property's `formValue` against the `value` schema describing it, as
@@ -115,8 +118,8 @@ export function listedAt<S extends StrictRJSFSchema>(
  * - If the `value` is a `$ref` and the formValue is neither `undefined` nor `null`, it is scored as the definition it
  *   names, with the keywords beside it, as though written in its place. A recursive `$ref` names a definition holding
  *   that same `$ref` one level down, so only the form data, consumed a key at a time, bounds the descent.
- * - If the `value` contains an `anyOf` or `oneOf` and the formValue is neither `undefined` nor `null`, then score based
- *   on the index returned from calling `getClosestMatchingOption()` of that `anyOf`/`oneOf`.
+ * - If the `value` contains an `anyOf` or `oneOf` and the formValue is neither `undefined` nor `null`, it scores what the
+ *   option `getClosestMatchingOption()` picks among them scores.
  * - If the type of the `value` is 'object', `calculateIndexScore()` is called recursively with the formValue and the
  *   `value` itself as the sub-schema, plus one when the formValue is an object too.
  * - If the type of the `value` matches the guessed-type of the `formValue`, the score is 1, UNLESS the value has a
@@ -146,18 +149,16 @@ function propertyScore<
   }
   const xxxOfKey = getXxxOfKey<S>(value);
   if (xxxOfKey && formValue != null) {
-    const discriminator = getDiscriminatorFieldFromSchema<S>(value);
-    const options = getByPath<S[]>(value, xxxOfKey);
-    return closestOption<S, F>(
+    return bestOption<unknown, S, F>(
       context,
       rootSchema,
       formValue,
-      options,
+      getByPath<unknown[]>(value, xxxOfKey),
       -1,
       false,
-      discriminator,
-      listedAt<S>(() => scored.plan ?? planAt<S, F>(context, where()), xxxOfKey, options),
-    );
+      getDiscriminatorFieldFromSchema<S>(value),
+      { seeding: scored.plan ?? planAt<S, F>(context, where()), keyword: xxxOfKey },
+    ).score();
   }
   if (value.type === 'object') {
     // If the structure is matching then give it a little boost in score
@@ -367,9 +368,41 @@ function scoredOption<S extends StrictRJSFSchema, F extends FormContextType>(
   return scoredAt<S, F>(context, where ?? whereOf<S>(option, rootSchema));
 }
 
+/** The option `bestOption()` picks, with the score it gets, computed once it is asked for */
+interface BestOption {
+  readonly index: number;
+  readonly score: () => number;
+}
+
+/** A pick `bestOption()` made, with a copy of the data it was made for */
+interface Pick {
+  readonly pick: BestOption;
+  readonly data: unknown;
+  /** Whether the copy keeps an object of the data as it is */
+  readonly keeps: boolean;
+}
+
+/** The options picked for data held in an object or array, by validator, merge, root, flags, where each option is
+ * declared, the option objects themselves, since an option's view scores the data apart from the option it was
+ * retrieved from, and the data itself, with a copy of what the data held. Scoring an option list reads the lists nested
+ * below it for each candidate, so without this every level of a recursion through options multiplies the matching done
+ * below it by the number of candidates (#4990). Nothing changes the data while a call scores it, since a validator must
+ * not change the data it checks (see `ValidatorType.isValid()`), so a pick made or found to hold during the outermost
+ * call is reused for the rest of it without comparing again. A caller may mutate the data in place between calls, at
+ * any depth, so a later call reuses a pick only where the data still holds what the copy holds. The copy keeps any
+ * object but an array or a plain object, such as a `Date` or a class instance, as it is, so it can't show that object
+ * changing in place: a pick whose copy keeps one is reused only during the outermost call that made it. Other data
+ * scores no nested list and is not kept.
+ */
+const picked = new KeyedMemo<Pick>();
+
+/** The picks made, or found to hold for their data, during the outermost `bestOption()` call running, undefined
+ * between calls
+ */
+let checkedPicks: WeakSet<Pick> | undefined;
+
 /** Returns the index of the option of `options` closest to `formData`, as `getClosestMatchingOption()` describes,
- * with each option matched as `optionMatches()` matches it under `relax`, and scored where `declaredAt` says it is
- * declared, such as where the merge rebuilding its list adopted it, or else where `retrieveSchema()` would read it
+ * with each option matched as `optionMatches()` matches it under `relax`, and that option's score
  *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param rootSchema - The root JSON schema of the entire form
@@ -378,8 +411,217 @@ function scoredOption<S extends StrictRJSFSchema, F extends FormContextType>(
  * @param selectedOption - The index of the currently selected option, -1 for none
  * @param relax - Whether an option's `additionalProperties: false` is relaxed for matching
  * @param [discriminatorField] - The name of the property the options are told apart by
- * @param [declaredAt] - Returns where the option at an index is declared
- * @returns - The index of the closest option, or the `selectedOption` if no option is closer
+ * @param [listing] - The field and keyword listing the options, where each is scored as declared, or else each is
+ *        scored where `retrieveSchema()` would read it
+ * @returns - The index of the closest option, and the score a list nested under a property contributes with it
+ */
+function bestOption<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
+  context: SchemaContext<S, F>,
+  rootSchema: S,
+  formData: T | undefined,
+  options: readonly unknown[],
+  selectedOption: number,
+  relax: boolean,
+  discriminatorField?: string,
+  listing?: Listing<S>,
+): BestOption {
+  const optionNodes = options.map((option) => optionNodeOf<S>(option, rootSchema));
+  const declaredAt = (index: number, option: S) =>
+    listing === undefined ? undefined : listedAt<S>(listing, index, option);
+  const compute = (whereDeclared: (index: number, option: S) => Where<S> | undefined) =>
+    scoreOptions<T, S, F>(
+      context,
+      rootSchema,
+      formData,
+      options,
+      optionNodes,
+      selectedOption,
+      relax,
+      discriminatorField,
+      whereDeclared,
+    );
+  if (typeof formData !== 'object' || formData === null) {
+    return compute(declaredAt);
+  }
+  // What an option scores depends on where it is declared as well as on the option, since one object can sit in two
+  // resources, each resolving the `$ref`s it holds against its own
+  const declared = options.map((option, index) => (isSchemaObject<S>(option) ? declaredAt(index, option) : undefined));
+  const keys = [
+    context.validator,
+    context.customMergeAllOf,
+    rootSchema,
+    relax,
+    discriminatorField,
+    selectedOption,
+    ...declared.flatMap((where) =>
+      where === undefined ? [undefined] : [where.graph, ...where.seeds.map((seed) => seed.node)],
+    ),
+    ...options,
+    formData,
+  ];
+  const isOutermost = checkedPicks === undefined;
+  const checked = checkedPicks ?? new WeakSet<Pick>();
+  checkedPicks = checked;
+  try {
+    const stored = picked.peek(keys);
+    if (stored && (checked.has(stored) || (!stored.keeps && holdsCopy(stored.data, formData)))) {
+      checked.add(stored);
+      return stored.pick;
+    }
+    const copy = copyOfData(formData);
+    const made = { pick: compute((index) => declared[index]), data: copy.data, keeps: copy.keeps };
+    picked.set(keys, made);
+    checked.add(made);
+    return made.pick;
+  } finally {
+    if (isOutermost) {
+      checkedPicks = undefined;
+    }
+  }
+}
+
+/** A copy of some data, see `copyOfData()` */
+interface DataCopy {
+  readonly data: unknown;
+  /** Whether the copy keeps an object of the data as it is */
+  readonly keeps: boolean;
+}
+
+/** A copy of `data` in which every array and plain object is copied, an object with no prototype keeping none, and any
+ * other object is kept as it is, since it can't be copied without knowing what kind of object it is
+ */
+function copyOfData(data: unknown): DataCopy {
+  if (Array.isArray(data)) {
+    const items: readonly unknown[] = data;
+    const copies = items.map(copyOfData);
+    return { data: copies.map((copy) => copy.data), keeps: copies.some((copy) => copy.keeps) };
+  }
+  if (isPlainObject(data)) {
+    const copies = Object.entries(data).map(([key, value]): [string, DataCopy] => [key, copyOfData(value)]);
+    // `fromEntries()` defines each key as the object's own, a `__proto__` included
+    const copy = Object.fromEntries(copies.map(([key, entry]) => [key, entry.data]));
+    if (Object.getPrototypeOf(data) === null) {
+      Object.setPrototypeOf(copy, null);
+    }
+    return { data: copy, keeps: copies.some(([, entry]) => entry.keeps) };
+  }
+  return { data, keeps: typeof data === 'object' && data !== null };
+}
+
+/** Whether `data` still holds what `copy`, a `copyOfData()` copy, holds: arrays item by item, plain objects key by key
+ * and by whether they have a prototype, and the objects the copy kept as they are, by identity. A validator reads a
+ * name the schema lists through the object's prototype, as Ajv does, so an object with no prototype and a plain one
+ * holding the same keys can match different options. A deep equality that compares constructors would never find a
+ * copy equal to an object holding an object under an own `constructor` key, and score such data afresh at every level
+ * of a recursion (#4990)
+ */
+function holdsCopy(copy: unknown, data: unknown): boolean {
+  if (Array.isArray(copy)) {
+    const items: readonly unknown[] = copy;
+    if (!Array.isArray(data) || data.length !== items.length) {
+      return false;
+    }
+    const dataItems: readonly unknown[] = data;
+    // Every index, a hole included, which `every()` would pass over
+    for (let index = 0; index < items.length; index += 1) {
+      if (!holdsCopy(items[index], dataItems[index])) {
+        return false;
+      }
+    }
+    return true;
+  }
+  if (isPlainObject(copy)) {
+    const keys = Object.keys(copy);
+    return (
+      isPlainObject(data) &&
+      Object.getPrototypeOf(data) === Object.getPrototypeOf(copy) &&
+      Object.keys(data).length === keys.length &&
+      keys.every((key) => Object.hasOwn(data, key) && holdsCopy(copy[key], data[key]))
+    );
+  }
+  return Object.is(copy, data);
+}
+
+/** Picks the option for `bestOption()`, see `getClosestMatchingOption()` */
+function scoreOptions<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  rootSchema: S,
+  formData: T | undefined,
+  options: readonly unknown[],
+  optionNodes: readonly OptionNode<S>[],
+  selectedOption: number,
+  relax: boolean,
+  discriminatorField: string | undefined,
+  declaredAt: (index: number, option: S) => Where<S> | undefined,
+): BestOption {
+  const optionScore = (index: number) => {
+    const option = options[index];
+    if (!isSchemaObject<S>(option)) {
+      return 0;
+    }
+    return scopeScore<T, S, F>(
+      context,
+      rootSchema,
+      scoredOption<S, F>(context, option, rootSchema, declaredAt(index, option)),
+      formData,
+      new Set(),
+    );
+  };
+  // The score a list of options nested under a property contributes: what the picked option scores, plus one where the
+  // data matches it, as the option picked here without scoring does
+  const scoreOfMatch = (index: number) => {
+    let score: number | undefined;
+    return () => {
+      score ??= 1 + optionScore(index);
+      return score;
+    };
+  };
+  const simpleMatch = simpleDiscriminatorMatch(optionNodes, formData, discriminatorField);
+  if (simpleMatch !== undefined) {
+    return { index: simpleMatch, score: scoreOfMatch(simpleMatch) };
+  }
+  const validIndexes =
+    formData === undefined
+      ? []
+      : optionNodes.flatMap((option, index) =>
+          optionMatches<S, F>(context, formData, option, relax, discriminatorField) ? [index] : [],
+        );
+  if (validIndexes.length === 1) {
+    return { index: validIndexes[0], score: scoreOfMatch(validIndexes[0]) };
+  }
+  // With no option matching, every option is a candidate, and the pick is always one of the candidates
+  const candidates = validIndexes.length > 0 ? validIndexes : [...options.keys()];
+  if (candidates.length === 0) {
+    return { index: selectedOption, score: () => 0 };
+  }
+  // A tie keeps the selected option where it is a candidate, and the first candidate otherwise
+  const first = candidates.includes(selectedOption) ? selectedOption : candidates[0];
+  let best = { index: first, score: optionScore(first) };
+  for (const index of candidates) {
+    if (index !== first) {
+      const score = optionScore(index);
+      if (score > best.score) {
+        best = { index, score };
+      }
+    }
+  }
+  const score = (validIndexes.includes(best.index) ? 1 : 0) + best.score;
+  return { index: best.index, score: () => score };
+}
+
+/** Returns the index of the option of `options` closest to `formData`, as `getClosestMatchingOption()` describes,
+ * with each option matched as `optionMatches()` matches it under `relax`, and scored where `listing` declares it, such
+ * as where the merge rebuilding its list adopted it, or else where `retrieveSchema()` would read it
+ *
+ * @param context - The `SchemaContext` that will be forwarded to all the APIs
+ * @param rootSchema - The root JSON schema of the entire form
+ * @param formData - The form data associated with the schema
+ * @param options - The list of options that can be selected from, boolean ones included
+ * @param selectedOption - The index of the currently selected option, -1 for none
+ * @param relax - Whether an option's `additionalProperties: false` is relaxed for matching
+ * @param [discriminatorField] - The name of the property the options are told apart by
+ * @param [listing] - The field offering the options and the keyword holding them
+ * @returns - The index of the closest option, or the `selectedOption` when there is none to pick
  */
 export function closestOption<S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
   context: SchemaContext<S, F>,
@@ -389,65 +631,28 @@ export function closestOption<S extends StrictRJSFSchema = RJSFSchema, F extends
   selectedOption: number,
   relax: boolean,
   discriminatorField?: string,
-  declaredAt?: (index: number) => Where<S>,
+  listing?: Listing<S>,
 ): number {
-  const optionNodes = options.map((option) => optionNodeOf<S>(option, rootSchema));
-  const simpleMatch = simpleDiscriminatorMatch(optionNodes, formData, discriminatorField);
-  if (simpleMatch !== undefined) {
-    return simpleMatch;
-  }
-  // Reduce the array of options down to a list of the indexes that are considered matching options
-  const allValidIndexes =
-    formData === undefined
-      ? []
-      : optionNodes.flatMap((option, index) =>
-          optionMatches<S, F>(context, formData, option, relax, discriminatorField) ? [index] : [],
-        );
-
-  // There is only one valid index, so return it!
-  if (allValidIndexes.length === 1) {
-    return allValidIndexes[0];
-  }
-  if (!allValidIndexes.length) {
-    // No indexes were valid, so we'll score all the options, add all the indexes
-    allValidIndexes.push(...options.keys());
-  }
-  const resolvedOptions = options.map((option, index) =>
-    isSchemaObject<S>(option) ? scoredOption<S, F>(context, option, rootSchema, declaredAt?.(index)) : undefined,
-  );
-  interface BestType {
-    bestIndex: number;
-    bestScore: number;
-  }
-  const scoreCount = new Set<number>();
-  // Score all the options in the list of valid indexes and return the index with the best score
-  const { bestIndex }: BestType = allValidIndexes.reduce(
-    (scoreData: BestType, index: number) => {
-      const { bestScore } = scoreData;
-      const option = resolvedOptions[index];
-      const score = option === undefined ? 0 : scopeScore(context, rootSchema, option, formData, new Set());
-      scoreCount.add(score);
-      if (score > bestScore) {
-        return { bestIndex: index, bestScore: score };
-      }
-      return scoreData;
-    },
-    { bestIndex: selectedOption, bestScore: 0 },
-  );
-  // if all scores are the same go with selectedOption
-  if (scoreCount.size === 1 && selectedOption >= 0) {
-    return selectedOption;
-  }
-
-  return bestIndex;
+  return bestOption<unknown, S, F>(
+    context,
+    rootSchema,
+    formData,
+    options,
+    selectedOption,
+    relax,
+    discriminatorField,
+    listing,
+  ).index;
 }
 
-/** Determines which of the given `options` provided most closely matches the `formData`. Returns the index of the one
- * option that matches the data, as `getFirstMatchingOption()` matches an option, when exactly one does.
+/** Determines which of the given `options` provided most closely matches the `formData`. An option whose
+ * discriminator property's `const` or `enum` holds the data's value wins outright. Otherwise the index of the one option
+ * that matches the data, as `getFirstMatchingOption()` matches an option, is returned when exactly one does.
  *
- * Otherwise the options that match, or all of them when none does, are scored by calling `calculateIndexScore()` on
- * each, and the index of the one with the best score is returned. The `selectedOption` is kept when no option scores
- * above it or every option scores the same.
+ * Otherwise the options that match, or all of them when none does, are the candidates: each is scored by calling
+ * `calculateIndexScore()` on it, and the candidate with the best score is returned. A tie goes to the `selectedOption`
+ * when it is a candidate and to the first candidate otherwise, so an option that does not match the data is never
+ * returned while one does.
  *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param rootSchema - The root JSON schema of the entire form
@@ -456,7 +661,8 @@ export function closestOption<S extends StrictRJSFSchema = RJSFSchema, F extends
  * @param [selectedOption=-1] - The index of the currently selected option, defaulted to -1 if not specified
  * @param [discriminatorField] - The optional name of the field within the options object whose value is used to
  *          determine which option is selected
- * @returns - The index of the option that is the closest match to the `formData` or the `selectedOption` if no match
+ * @returns - The index of the option that is the closest match to the `formData`, or the `selectedOption` when there
+ *          are no options
  */
 export default function getClosestMatchingOption<
   T = unknown,

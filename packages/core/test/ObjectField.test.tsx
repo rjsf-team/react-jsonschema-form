@@ -1217,11 +1217,12 @@ describe('ObjectField', () => {
     it('should re-seed an untouched new property when it is renamed, outside a Form whose parent stores each change', async () => {
       const schema: RJSFSchema = { type: 'object', patternProperties: { '^[a-z]+$': { type: 'number' } } };
       const registry = getTestRegistry(schema);
+      const { SchemaField } = registry.fields;
       const reported: unknown[] = [];
       function Parent() {
         const [data, setData] = useState<GenericObjectType>({});
         return (
-          <ObjectField
+          <SchemaField
             schema={schema}
             id='root'
             name=''

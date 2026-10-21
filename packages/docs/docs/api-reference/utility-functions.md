@@ -33,6 +33,8 @@ These types can be found on GitHub [here](https://github.com/rjsf-team/react-jso
 
 **`SchemaFieldPath`** — Used when navigating a JSON Schema subtree (for example with `getFromSchema` and `findFieldInSchema` on `SchemaUtilsType`, documented under [Validator-based utility functions](#validator-based-utility-functions)). It is `string | FieldPathList`: either a dotted path or an array of segments with the same rules as `FieldPathList` (`(string | number)[]`). A numeric segment denotes an array index or an object key that is numeric. Navigation skips only `undefined` or empty-string segments, so segment **`0`** is always honored (this avoids the bug from treating `0` as a falsy path unit).
 
+**`FormFieldState`** — What a form shows beyond its schema and data, which [`getUiRequiredErrorSchema()`](#getuirequirederrorschema) and [`omitExtraData()`](#omitextradata) read to walk the fields on screen: `selectedOption(fieldPath, options, formData, discriminator?)` returns the index of the `anyOf`/`oneOf` option the field at `fieldPath` shows among its `options`, each retrieved for `formData`, and `isExpanded(fieldPath)` whether the user expanded the collapsed `$ref` cycle there. `Form` passes its own option selections and cycle expansions.
+
 **`ThemePresentation`**, **`PresentationDeclaration`** and **`FieldPresentation`** — A theme's record of which parts of a field (the label, description, errors and help) each of its components draws itself, rather than leaving them to the `FieldTemplate`. A `PresentationDeclaration` names the owner of each part, `'template'`, `'self'` or, for a field that renders a single widget, `'widget'`, and `labelledBy`, whether a label the template draws reaches the control through its `for` or through the control's `aria-labelledby`; a widget's is a `WidgetPresentationDeclaration`, which has no `'widget'` owner. A `ThemePresentation` holds them by registry key under `widgets` and `fields`, plus `default`, what every widget draws for a part the layer's own entry for it doesn't declare, custom and unregistered widgets included, which [mergeThemePresentation()](#mergethemepresentation) layers beneath the layer's own entry for every key, so it overrides the parts it declares in the layers beneath, even under a key one of them declares, and `fieldDefault`, what every field draws for a part its merged entry doesn't declare, custom fields included, and what a part a field leaves to its widget falls back to when it renders none; unlike `default`, it sits beneath the merged entries rather than each layer's own, so it can't override a part a lower layer declares under a key. The merged result is a `MergedThemePresentation`. Nothing is declared on a component itself: one given directly, as a `ui:field` or `ui:widget`, takes the declaration for the first key it is registered under that declares it, so a wrapper such as `memo()` can't lose it. [getPresentationDeclaration()](#getpresentationdeclaration) resolves a field's declaration and [resolveFieldPresentation()](#resolvefieldpresentation) builds its `FieldPresentation`, the plan of where each part is drawn, under which id, and the attributes its control carries, linked as `inherited` to the plan of the field above it that renders the same id.
 
 ## Enums
@@ -231,6 +233,19 @@ A `schema.propertyNames.enum` caps the object in the same way: once every name i
 #### Returns
 
 - boolean: True if the schema element has additionalProperties or patternProperties keywords, is expandable, is not at the maxProperties limit and has a name its `propertyNames.enum` allows left to take
+
+### constrainsValue()
+
+Says whether `keyword` of a schema constrains the value the schema describes, either directly, as `enum`, `minLength` or `required` do, or by way of other subschemas, as `allOf`, `not` or `$ref` do.
+`type` does not count, nor does an annotation such as `title`, an identifier such as `$id`, a container such as `$defs`, a `discriminator` or a keyword outside JSON Schema's validation vocabulary, such as an `x-` extension: none of those rejects a value.
+
+#### Parameters
+
+- keyword: string - The keyword
+
+#### Returns
+
+- boolean: True when the keyword constrains the value
 
 ### createErrorHandler&lt;T = unknown>()
 
@@ -663,6 +678,21 @@ Return a consistent `id` for the expand button of a cyclic schema's expand contr
 
 - string: The consistent id for the expand button from the given `id`
 
+### expandRefCycle&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns the expansion of a field `retrieveSchema()` collapsed as a recursive `$ref`, flagging it with `RJSF_REF_CYCLE_KEY`: the schema to retrieve the field from, one level further, with its `$ref` path and the guard its children are checked against restarted at it, so its children collapse again at their next recurrence.
+`CyclicSchemaField` expands a field the user expanded with it; a custom field rendering collapsed fields does the same.
+A schema `retrieveSchema()` did not hand out is returned without the flag.
+
+#### Parameters
+
+- schema: S - The collapsed field's schema, as `retrieveSchema()` handed it out
+- rootSchema: S - The root schema it was handed out for
+
+#### Returns
+
+- S: The schema to retrieve the expanded field from
+
 ### fieldLabelId()
 
 Return a consistent `id` for the label a theme's `FieldTemplate` renders above a field's control.
@@ -807,16 +837,13 @@ The non-`null` type comes first, as it does for a nullable type: a value of it i
 An `anyOf`/`oneOf` of options that agree on a type has that type whichever option is chosen, each option read by this same function so that an option's own typeless `enum` speaks for it too.
 Options that disagree, or that name no type between them, say nothing here: choosing one is what would settle it, and a type one of them names alone would render a field for that type beside the options.
 
-A schema that says nothing about the type itself is read through the subschemas merged into it — the `allOf` entries it is composed of and the `$ref` it is spelled as, given a `rootSchema` to look the definition up in — since composition is how a schema usually names the object or the enum it is.
-The options are no exception: one of them naming a type is the option's answer, where a merged subschema's is the whole schema's, so a subschema whose options say nothing is still read through the `allOf` and the `$ref` beside them.
-The first of those to name a type answers, the merge holding the value to every entry at once.
-They are looked up rather than the schema resolved: the type is all that is wanted here, where resolving every option of every additional property would cost each render the merges `MultiSchemaField` already pays for the one option on screen.
-A reference followed once on a walk is not followed again, since a recursive option refers back to itself without end, and one naming no definition says nothing, as the option holding it does until it is resolved.
+A schema whose options say nothing is read through its `allOf` entries, the first of them to name a type answering for the merge.
+The schema is read as it stands: a `$ref` is not followed.
+`retrieveSchema()` with `resolveAnyOfOrOneOfRefs` resolves a subschema and its options, which is how the form reads a key's subschema before asking this.
 
 #### Parameters
 
 - subSchema: S - The schema describing the additional property, from `additionalProperties`, a matching pattern or `unevaluatedProperties`
-- [rootSchema]: S - The root schema a `$ref` names a definition of, when there is one to look it up in
 
 #### Returns
 
@@ -1443,6 +1470,7 @@ Callers treat the properties of a schema as schemas of the same type `S`, which 
 
 Returns the schema an `anyOf`/`oneOf` option of `parent` is rendered with. It is the one place that decides what an option inherits from the schema holding it, so `MultiSchemaField`, `getUiRequiredErrorSchema()` and the defaults `getDefaultFormState()` computes for a field that is not an object read the same option ([#5359](https://github.com/rjsf-team/react-jsonschema-form/issues/5359)).
 An object parent renders its own `ObjectField` beside the option, which shows the parent's properties and other keywords, so the option takes only the parent's `required` list and its type.
+That field also stubs the extra keys of the data, for the parent and the selected option together (see [`retrieveSchema()`](#retrieveschema)), so the option is rendered without its own `additionalProperties`, `patternProperties` and `unevaluatedProperties`.
 Every other parent renders nothing of its own and leaves the whole field to the option, so the option takes each of the parent's keywords that describes the value, such as an array's `items` and `uniqueItems` or a string's `format`.
 It leaves the parent's `anyOf`, `oneOf`, `discriminator`, `title`, `description`, `deprecated`, `default`, the identifiers `$id`, `$anchor`, `$dynamicAnchor`, `$schema` and `$vocabulary`, `$comment`, `$defs` and `definitions` on the parent, along with any Symbol-keyed marker.
 The two are met keyword by keyword, so an option's `items` adds to the parent's rather than replacing them.
@@ -2751,23 +2779,6 @@ So `http://example.com/root.json#foo` gives `http://example.com/root.json`.
 
 - string: The id the root is registered under
 
-### schemaHasNestedConditional&lt;S extends StrictRJSFSchema = RJSFSchema>()
-
-Recursively checks whether the given raw `schema` contains a `dependencies` or `if` keyword anywhere below its top level, e.g. inside a nested object's `properties`, a `$ref`, an array's tuple `items`, or an `additionalProperties`, `unevaluatedProperties` or `patternProperties` entry.
-`retrieveSchema()` only resolves the `dependencies`/`if` declared directly on the schema it is given, so a root-level retrieved schema never reflects a conditional branch switch that happens deeper in the tree.
-`Form` uses this to detect when a comparison of root-level retrieved schemas can't be trusted to decide whether sanitization is needed.
-
-#### Parameters
-
-- schema: S | boolean | undefined - The raw schema node to search
-- rootSchema: S - The root schema, used to resolve any `$ref`s encountered while searching
-- atRoot: boolean = true - Whether `schema` is the root of the search, whose own `dependencies`/`if` don't count
-- seenRefs: string[] = [] - The `$ref`s already resolved along this branch of the search, to guard against cycles
-
-#### Returns
-
-- boolean: True if a `dependencies` or `if` keyword exists below the root of the schema
-
 ### schemaKey&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Returns the key a validator caches a schema's compiled validation function under, and the key [getValidationSchemas()](#getvalidationschemassextendsstrictrjsfschemarjsfschema) maps it into the compiled set under: its `$id` when it names something, and the hash of its content otherwise.
@@ -3417,10 +3428,17 @@ Returns the superset of `formData` that includes the given set updated to includ
 ### getClosestMatchingOption&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Determines which of the given `options` provided most closely matches the `formData`.
-Returns the index of the option that is valid and is the closest match, or 0 if there is no match.
+An option whose discriminator property's `const` or `enum` holds the data's value wins outright; otherwise the one option the data matches is returned when exactly one does.
+Otherwise the options the data matches, or all of them when it matches none, are the candidates, and the one scoring best is returned.
+A tie goes to the `selectedOption` when it is a candidate and to the first candidate otherwise, so an option the data does not match is never returned while another matches it.
 
-The closest match is determined using the number of matching properties, and more heavily favors options with matching readOnly, default, or const values.
+The score is the number of matching properties, more heavily favoring options with matching default or const values.
 A property written as a `$ref` is scored as the definition it names, and each `$ref` scoring follows resolves in the resource of the declaration holding it, including one in a property declared both beside a `$ref` and in the definition it names.
+A property holding an `anyOf`/`oneOf` of its own scores what the option picked among those scores, plus one where the data matches it.
+The pick is remembered per option list and data object, so a recursion through option lists matches each level once.
+Within one call it is reused without looking at the data again, since a validator's `isValid()` must not change the data it checks.
+A later call reuses it only while the data still holds what a copy kept with it holds, so data mutated in place between calls is matched for what it holds now; that comparison costs time in proportion to the data below the option list, once per call.
+An object other than an array or a plain object, such as a `Date`, is kept in the copy as it is, so a pick for data holding one is reused only within the call that made it.
 
 #### Parameters
 
@@ -3433,7 +3451,7 @@ A property written as a `$ref` is scored as the definition it names, and each `$
 
 #### Returns
 
-- number: The index of the option that is the closest match to the `formData` or the `selectedOption` if no match
+- number: The index of the option that is the closest match to the `formData`, or the `selectedOption` when there are no options
 
 ### getDisplayLabel&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
@@ -3508,6 +3526,7 @@ The schema handed to the validator is left untouched, so this behaves identicall
 - [uiSchemaDefinitions=uiSchema['ui:definitions']]: UiSchemaDefinitions&lt;S, F> - The `ui:definitions` a `$ref`'d uiSchema is resolved through
 - [globalUiOptions]: GlobalUISchemaOptions - The global uiSchema options, read as the fields themselves read them
 - [formContext]: F - The formContext to pass to the function form of `uiSchema.items`
+- [fieldState]: FormFieldState&lt;S> - The option each field shows and the cycles the user expanded, so the walk follows the option on screen and descends into an expanded cycle. Without it, a field's option is the one its data matches best, and nothing below a collapsed cycle is walked
 
 #### Returns
 
@@ -3561,9 +3580,17 @@ When the schema has both keywords, `anyOf` is the one checked (see `getXxxOfKey(
 
 Retrieves the schema of one field: the `schema` with its own `$ref`, `allOf`, `if`/`then`/`else`, `dependencies` and the patterns its properties match merged in for the `rawFormData`, and the additional properties of that data stubbed among its `properties`.
 The schema is resolved one level at a time: a `$ref` under `properties`, `items` or an `anyOf`/`oneOf` option is handed out as it stands, for the caller to retrieve when it renders that subschema.
-Every subschema handed out carries where it came from, so retrieving it resolves it as the field it is: a recursive `$ref` under `properties` is handed out flagged with `RJSF_REF_CYCLE_KEY`, retrieving a copy with that flag set to `false` expands it by one level, and retrieving a schema `retrieveSchema()` returned gives the same schema back.
+Every subschema handed out carries where it came from, so retrieving it resolves it as the field it is: a recursive `$ref` under `properties` is handed out flagged with `RJSF_REF_CYCLE_KEY`, [`expandRefCycle()`](#expandrefcycle) expands it by one level, and retrieving a schema `retrieveSchema()` returned gives the same schema back.
+A copy carrying `RJSF_REF_CYCLE_KEY: false` is retrieved like any other copy of the field it was made from.
 A `schema` the root does not hold is parsed once per content and kept for as long as the root, so one built from form data keeps an entry for each distinct value until the root changes.
 Like the root, it must not be changed once handed in: calls handed the same content share its result.
+
+With a `selectedOption`, the extra keys of the data are stubbed once, for the field and the option selected among the options of the keyword `getXxxOfKey()` reads together.
+A key the option declares is left to the option, which renders it.
+The field takes the option's extra-key keywords beside its own: `additionalProperties` and `unevaluatedProperties` become the `allOf` of the two, one side's where the other declares none or allows any key, and `false` where either is, and the option's `patternProperties` join the field's, a pattern both declare becoming the `allOf` of its two subschemas.
+Every other key is stubbed as the field's keywords and the option's describe it, each side read on its own and the two `allOf`ed, so a key either side forbids is stubbed as `{ type: 'null' }` whatever the other allows.
+The options of an object field are handed out without stubs; a field of any other type renders no field of its own beside the option, so it leaves the option to stub its own extra keys.
+Without a `selectedOption`, the extra keys are stubbed for the field alone, a key an option declares included.
 
 #### Parameters
 
@@ -3572,6 +3599,7 @@ Like the root, it must not be changed once handed in: calls handed the same cont
 - [rootSchema={}]: S - The root schema that will be forwarded to all the APIs
 - [rawFormData]: T | undefined - The current formData, if any, to assist retrieving a schema
 - [resolveAnyOfOrOneOfRefs=false]: boolean - Whether to resolve the `anyOf`/`oneOf` options too, each as `retrieveSchema()` resolves it
+- [selectedOption]: number | undefined - The index of the `anyOf`/`oneOf` option selected for the field, whose extra keys are then stubbed with it
 
 #### Returns
 
@@ -3643,6 +3671,9 @@ console.log(filteredFormData);
 - schema: S - The schema to use for filtering the formData
 - [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
 - [formData]: T | undefined - The formData to filter
+- [fieldState]: FormFieldState&lt;S> - The option each field shows, so a field offering `anyOf`/`oneOf` options keeps the data its shown option describes. Without it, the option the data matches best
+
+An optional object whose filtered content is all empty is pruned, and an `anyOf` over empty data applies every branch.
 
 #### Returns
 
@@ -3656,9 +3687,8 @@ Due to the nature of schemas, this sanitization happens recursively for nested o
 Also, any properties in the old schema that are non-existent in the new schema are set to `undefined`.
 A property is considered to have changed schema when its type differs between the two, except when both types carry the `GUESSED_TYPE_FLAG`: those types were guessed from the data itself, so a difference means the data changed type rather than the schema, and the value is kept.
 A new schema that declares a type of its own is the type the data has to satisfy, so a value of the type the old schema merely happened to hold is still cleared.
-When the previous form data is passed as `oldData` (`Form` passes the data as it last settled under the current root schema), it feeds only the enum filter decision: the filter is skipped at a position whose old and new schemas, each resolved against its own data, agree, so values the schema offered when they were entered are kept.
-Without `oldData` the filter always runs, matching v6.
-`$ref`s on both sides resolve against the one `rootSchema`, so a change to a `$ref` target between the old and new root schemas is invisible to the comparison: pass `oldData` only when the root schema is unchanged, which is how `Form` calls it.
+A value outside the new `enum` or constant options is replaced with the new `default` when that is an option, with the only option when there is one, or cleared; array items outside them are dropped.
+`Form` does not call this to sanitize its data: it diffs the field trees before and after a change and judges only the fields whose constraints the change altered.
 
 #### Parameters
 
@@ -3666,10 +3696,7 @@ Without `oldData` the filter always runs, matching v6.
 - rootSchema: S - The root JSON schema of the entire form
 - [newSchema]: S | undefined - The new schema for which the data is being sanitized
 - [oldSchema]: S | undefined - The old schema from which the data originated
-- [data={}]: any - The form data associated with the schema, defaulting to an empty object when undefined
-- [oldData]: any - The previous form data, used only to decide whether the enum filter runs; when omitted, the filter always runs. Pass it only when the root schema is unchanged, since `$ref`s on both sides resolve against the one `rootSchema`
-- [resolvedOldSchema]: S | undefined - `oldSchema` already resolved for `oldData` at the root: the root frame's filter chain uses it directly instead of resolving `oldSchema` again
-- [oldDataForPairing]: any - The previous data array elements pair with, as the announced container writes moved it: a row follows its item across a remove or reorder, and an inserted row pairs with its own starting value; when omitted, elements pair with `oldData` by index
+- [data={}]: unknown - The form data associated with the schema, defaulting to an empty object when undefined
 
 #### Returns
 

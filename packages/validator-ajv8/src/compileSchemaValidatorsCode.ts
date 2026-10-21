@@ -7,6 +7,7 @@ import standaloneCode from 'ajv/dist/standalone/index.js';
 
 import ajvRootSchemaId from './ajvRootSchemaId.ts';
 import createAjvInstance from './createAjvInstance.ts';
+import { changesData } from './dataForValidation.ts';
 import type { CustomValidatorOptionsType } from './types.ts';
 
 /** Returns the schemas Ajv compiles for the `schemaMap`, by the id each is registered under, and what each function
@@ -47,7 +48,9 @@ export function compiledSchemas<S extends StrictRJSFSchema = RJSFSchema>(
 /** The function used to compile a schema into javascript code in the form that allows it to be used as a precompiled
  * validator. The main reasons for using a precompiled validator is reducing code size, improving validation speed and,
  * most importantly, avoiding dynamic code compilation when prohibited by a browser's Content Security Policy. For more
- * information about AJV code compilation see: https://ajv.js.org/standalone.html
+ * information about AJV code compilation see: https://ajv.js.org/standalone.html. Compiled with Ajv options that change
+ * the data validated, or with a keyword registered with `modifying: true`, every function the code exports is marked
+ * with `changesData`, since the code carries no options.
  *
  * @param schema - The schema to be compiled into a set of precompiled validators functions
  * @param [options={}] - The `CustomValidatorOptionsType` to compile with: the same options that are passed to the
@@ -86,5 +89,11 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
     extenderFn,
   );
 
-  return standaloneCode.default(ajv, exportNames);
+  const code = standaloneCode.default(ajv, exportNames);
+  if (!changesData(ajv)) {
+    return code;
+  }
+  // Each export is named as Ajv names it in the code: an ES module exports an identifier, CommonJS a property
+  const exported = (name: string) => (ajv.opts.code.esm ? name : `exports[${JSON.stringify(name)}]`);
+  return [code, ...Object.keys(exportNames).map((name) => `${exported(name)}.changesData = true;`)].join('\n');
 }

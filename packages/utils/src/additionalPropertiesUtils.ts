@@ -1,5 +1,5 @@
 import { ALL_OF_KEY, UNEVALUATED_PROPERTIES_KEY } from './constants.ts';
-import { isSchemaObject } from './isObject.ts';
+import isObject, { isSchemaObject } from './isObject.ts';
 import KeyedMemo from './schema/graph/keyedMemo.ts';
 import { schemaFrom } from './schema/graph/mergePlan.ts';
 import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
@@ -116,7 +116,7 @@ const patternConjunctions = new KeyedMemo<object>();
  * @param patterns - The pattern subschemas the key matches
  * @returns - The `allOf` of the patterns
  */
-function patternConjunction<S extends StrictRJSFSchema>(template: S, patterns: (S | boolean)[]): S {
+function patternConjunction<S extends StrictRJSFSchema>(template: S, patterns: readonly unknown[]): S {
   const known = patternConjunctions.peek(patterns);
   if (isSchemaObject<S>(known)) {
     return known;
@@ -124,6 +124,56 @@ function patternConjunction<S extends StrictRJSFSchema>(template: S, patterns: (
   const conjunction = schemaFrom(template, { [ALL_OF_KEY]: patterns });
   patternConjunctions.set(patterns, conjunction);
   return conjunction;
+}
+
+/** Returns the subschema a key has to meet under both `own` and `other`, which each describe it, allow it (`true`
+ * or `undefined`) or forbid it (`false`)
+ *
+ * @param own - What one schema says of the key
+ * @param other - What the other says of it
+ * @returns - What the two say of it together
+ */
+export function conjoin(own: unknown, other: unknown): unknown {
+  if (own === undefined || own === true) {
+    return other ?? own;
+  }
+  if (other === undefined || other === true) {
+    return own;
+  }
+  return own === false || other === false ? false : { [ALL_OF_KEY]: [own, other] };
+}
+
+/** The object schema and the option selected beside it that a schema joins the extra-key keywords of */
+const JOINED_SCHEMAS_KEY = Symbol('__rjsf_joined_schemas');
+
+/** Returns `joined`, which joins the extra-key keywords of an object schema, `own`, and of the option selected beside
+ * it, `option`, carrying the two so that `getAdditionalPropertySchema()` asks each of them about a key on its own: the
+ * keywords of one say nothing about a key the other's patterns or extra-key keywords evaluate, which no one set of
+ * keywords can say.
+ *
+ * @param joined - The schema with the two schemas' extra-key keywords joined
+ * @param own - The object schema's extra-key keywords
+ * @param option - The extra-key keywords of the option selected beside it
+ * @returns - The joined schema, carrying the two it joins
+ */
+export function withJoinedSchemas<S extends StrictRJSFSchema = RJSFSchema>(joined: S, own: S, option: S): S {
+  return { ...joined, [JOINED_SCHEMAS_KEY]: { own, option } };
+}
+
+/** Returns what `schema` says of a `key` its own `properties` don't name, or undefined where it names nothing that
+ * describes the key; `readsUnevaluated` is false where something beside the schema evaluates the key, which leaves its
+ * `unevaluatedProperties` nothing to say about it
+ */
+function describesKey<S extends StrictRJSFSchema>(schema: S, key: string, readsUnevaluated: boolean): unknown {
+  if (schema.patternProperties) {
+    const matchingPatterns: unknown[] = Object.values(getMatchingPatternProperties<S>(schema, key));
+    if (matchingPatterns.length > 0) {
+      return matchingPatterns.includes(false) ? false : patternConjunction<S>(schema, matchingPatterns);
+    }
+  }
+  return additionalPropertiesKeyword<S>(
+    readsUnevaluated ? schema : { ...schema, [UNEVALUATED_PROPERTIES_KEY]: undefined },
+  );
 }
 
 /** Returns the schema an object says applies to a `key` its own `properties` don't name, so that everything that
@@ -134,6 +184,9 @@ function patternConjunction<S extends StrictRJSFSchema>(template: S, patterns: (
  * is `additionalProperties`' to describe, `false` and `true` included, which `additionalPropertiesKeyword()` reads with
  * the precedence the keywords have.
  *
+ * A schema `retrieveSchema()` joined with the option selected beside it answers for the object and for the option
+ * apart, and conjoins the two: the object's `unevaluatedProperties` says nothing about a key the option evaluates.
+ *
  * @param schema - The object schema the `key` is a property of
  * @param key - The property name whose schema is desired
  * @returns - `false` for a key the object forbids, `true` for one it allows without describing, and otherwise the
@@ -143,11 +196,13 @@ export function getAdditionalPropertySchema<S extends StrictRJSFSchema = RJSFSch
   schema: S,
   key: string,
 ): S | boolean {
-  if (schema.patternProperties) {
-    const matchingPatterns = Object.values(getMatchingPatternProperties<S>(schema, key)) as (S | boolean)[];
-    if (matchingPatterns.length > 0) {
-      return matchingPatterns.includes(false) ? false : patternConjunction<S>(schema, matchingPatterns);
-    }
+  const joined: unknown = Reflect.get(schema, JOINED_SCHEMAS_KEY);
+  let answer: unknown;
+  if (isObject(joined) && isSchemaObject<S>(joined.own) && isSchemaObject<S>(joined.option)) {
+    const optionSays = describesKey<S>(joined.option, key, true);
+    answer = conjoin(describesKey<S>(joined.own, key, optionSays === undefined), optionSays);
+  } else {
+    answer = describesKey<S>(schema, key, true);
   }
-  return additionalPropertiesKeyword<S>(schema) ?? true;
+  return typeof answer === 'boolean' || isSchemaObject<S>(answer) ? answer : true;
 }

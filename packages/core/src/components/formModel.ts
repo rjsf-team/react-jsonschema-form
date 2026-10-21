@@ -9,6 +9,7 @@ import type {
 } from '@rjsf/utils';
 import {
   callWithDeferredThrow,
+  deepEquals,
   deepEqualsUndefinedAsMissing,
   propertyToPath,
   ROOT_FIELD_PATH,
@@ -16,12 +17,14 @@ import {
   fieldPathFromList,
   fieldPathToId,
   fieldPathToList,
+  getByPath,
 } from '@rjsf/utils';
 
 import isDevelopment from '../isDevelopment.ts';
+import { ADDITIONAL_PROPERTY_KEY_REMOVE } from './constants.ts';
 import type { FormProps, FormState } from './Form.tsx';
 import type { FormRef } from './FormRef.ts';
-import type { AnnouncedMove, FieldChange, MoveOutcome } from './formState.ts';
+import type { AnnouncedMove, FieldChange, KeyMove, MoveOutcome } from './formState.ts';
 import {
   applyBlur,
   applyChangeToData,
@@ -31,7 +34,6 @@ import {
   applyValidation,
   copyAlongPath,
   getAt,
-  asFieldValue,
   deriveState,
   freezeFormData,
   isBlurValidated,
@@ -40,6 +42,7 @@ import {
   toIChangeEvent,
   validateFormData,
 } from './formState.ts';
+import { asFieldValue, fieldStateOf } from './uiState.ts';
 
 /** How many of a scalar root's latest values the development warning about an ignored `formData` remembers */
 const HELD_SCALARS_LIMIT = 100;
@@ -113,6 +116,30 @@ function focusableForId(
   );
 }
 
+/** Where the change at `path` moves the selections and expansions `uiState` holds: under the keys of the container the
+ * move announced for it moved, where the errors raised there go, or out from under a property the change removes
+ *
+ * @param move - The key move announced for the change, if any
+ * @param newValue - The value the change sets
+ * @param path - The path of the change
+ * @returns - The container whose keys move and where each goes, or undefined for a change that moves none
+ */
+function uiStateMoveOf<T>(
+  move: AnnouncedMove | undefined,
+  newValue: T | undefined,
+  path: FieldPathList,
+): { container: FieldPath; newKeyOf: KeyMove } | undefined {
+  const newKeyOf = move?.newOwnKeyOf ?? move?.newKeyOf;
+  if (move && newKeyOf) {
+    return { container: move.fieldPath, newKeyOf };
+  }
+  if (newValue === ADDITIONAL_PROPERTY_KEY_REMOVE && path.length > 0) {
+    const removed = String(path[path.length - 1]);
+    return { container: fieldPathFromList(path.slice(0, -1)), newKeyOf: (key) => (key === removed ? undefined : key) };
+  }
+  return undefined;
+}
+
 /** The model holds the form's state between renders and performs every operation on it. An operation starts from the
  * current state and reads the props once, as it starts, so that everything it computes and reports belongs to one
  * moment.
@@ -142,6 +169,8 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   // that carried one
   let announced: AnnouncedMove | undefined;
   let moved: { move: AnnouncedMove; outcome: MoveOutcome } | undefined;
+  // The form's option selections and cycle expansions, which live as long as the form, see `createUiState()`
+  const { uiState } = initial;
   // A form an `<Activity>` hides is detached as an unmounted one is, the way React asks of hidden content, and drops
   // what reaches it then: a draft a widget flushes from an Effect cleanup, a timer or a file read that finishes late,
   // or a call through a handle kept past the unmount. Reported through the `onChange` of the last render, it would be
@@ -253,10 +282,12 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   /** The form's data without the fields the schema does not describe, when `omitExtraData` asks for it: what a submit
    * and `validateForm()` act on
    */
-  const withExtraDataOmitted = (props: FormProps<T, S, F>) =>
-    props.omitExtraData === true
-      ? current().schemaUtils.omitExtraData(current().schema, current().formData)
-      : current().formData;
+  const withExtraDataOmitted = (props: FormProps<T, S, F>) => {
+    const { schemaUtils, schema, formData } = current();
+    return props.omitExtraData === true
+      ? schemaUtils.omitExtraData(schema, formData, fieldStateOf(uiState, schemaUtils))
+      : formData;
+  };
 
   /** The window of the form element, whose classes the element and what it holds are instances of: a form rendered
    * into another document, such as an iframe's, is no instance of this window's `HTMLFormElement`
@@ -418,6 +449,8 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
    * @param [newErrorSchema] - The new `ErrorSchema` based on the field change
    * @param [id] - The id of the field that caused the change
    * @param [deliver] - How the change runs
+   * @param [isFieldEdit] - Whether a field made the change, whose option selections hold for what it leaves; data set
+   *        from outside, as `setFieldValue()` sets it, is matched again
    */
   const change = (
     newValue: T | undefined,
@@ -425,6 +458,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     newErrorSchema?: ErrorSchema<T>,
     id?: string,
     deliver: Deliver = deliverToCaller,
+    isFieldEdit = false,
   ) => {
     if (isDetached) {
       return;
@@ -437,38 +471,72 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       moved = { move, outcome: { kind: 'refused' } };
     }
     const path = fieldPathToList(fieldPath);
+    // The selections and expansions under keys the change moves, or under a property it removes, move before it is
+    // applied, so the sanitize reads them where the change puts the data; a change the form refuses puts them back
+    const uiMove = uiStateMoveOf(move, newValue, path);
+    const containerPath = uiMove && fieldPathToList(uiMove.container);
     deliver(() => {
-      let edit: { isRefused: boolean; edited?: FormState<T, S, F> } = { isRefused: false };
-      const committed = commit(
-        settled((base) => {
-          const { next, edited } = applyEdit(
-            base,
-            {
-              newValue,
-              fieldPath,
-              newErrorSchema,
-              newKeyOf: move?.newKeyOf,
-              newOwnKeyOf: move?.newOwnKeyOf,
-              dropsOwnErrors: move?.dropsOwnErrors,
-            },
-            props,
-          );
-          // `applyEdit()` hands `base` itself back only for an edit `transformChange` refused
-          edit = { isRefused: next === base, edited };
-          return next;
-        }),
-      );
-      if (move) {
-        const kept = getAt<unknown>(committed.formData, path);
-        let outcome: MoveOutcome = { kind: 'taken', kept };
-        if (edit.isRefused) {
-          outcome = { kind: 'refused' };
-        } else if (edit.edited) {
-          outcome = { kind: 'rewritten', kept, edited: getAt<unknown>(edit.edited.formData, path) };
-        }
-        moved = { move, outcome };
+      const before = containerPath && getAt<unknown>(current().formData, containerPath);
+      const unmoved = uiMove && uiState.save();
+      if (uiMove) {
+        uiState.move(uiMove.container, uiMove.newKeyOf);
       }
-      props.onChange?.(toIChangeEvent(committed), id);
+      // A change that throws, from `transformChange` or a validation callback, commits nothing, as a refused one does
+      let edit: { isRefused: boolean; edited?: FormState<T, S, F> } = { isRefused: true };
+      try {
+        const committed = commit(
+          settled((base) => {
+            const { next, edited } = applyEdit(
+              base,
+              {
+                newValue,
+                fieldPath,
+                newErrorSchema,
+                newKeyOf: move?.newKeyOf,
+                newOwnKeyOf: move?.newOwnKeyOf,
+                dropsOwnErrors: move?.dropsOwnErrors,
+              },
+              props,
+            );
+            // `applyEdit()` hands `base` itself back only for an edit `transformChange` refused
+            edit = { isRefused: next === base, edited };
+            return next;
+          }),
+        );
+        if (isFieldEdit && !edit.isRefused) {
+          uiState.edited(fieldPath, (at) => getAt(committed.formData, at));
+        }
+        if (move) {
+          const kept = getAt<unknown>(committed.formData, path);
+          let outcome: MoveOutcome = { kind: 'taken', kept };
+          if (edit.isRefused) {
+            outcome = { kind: 'refused' };
+          } else if (edit.edited) {
+            outcome = { kind: 'rewritten', kept, edited: getAt<unknown>(edit.edited.formData, path) };
+          }
+          moved = { move, outcome };
+        }
+        if (unmoved && edit.isRefused) {
+          uiState.restore(unmoved);
+        } else if (uiMove && unmoved && containerPath && edit.edited) {
+          // A rewritten move put the items where the rewrite says, which `ArrayField` reads the same way for its rows
+          const kept = getAt<unknown>(committed.formData, containerPath);
+          const movedItems = getAt<unknown>(edit.edited.formData, containerPath);
+          uiState.settleMove(uiMove.container, unmoved, (key) => {
+            const held = getByPath(kept, key);
+            if (deepEquals(held, getByPath(movedItems, key))) {
+              return 'moved';
+            }
+            return deepEquals(held, getByPath(before, key)) ? 'unmoved' : 'none';
+          });
+        }
+        props.onChange?.(toIChangeEvent(committed), id);
+      } catch (error) {
+        if (unmoved && edit.isRefused) {
+          uiState.restore(unmoved);
+        }
+        throw error;
+      }
     });
   };
 
@@ -644,6 +712,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     /** The latest value at `path`: an edit made since the form last rendered included */
     readField: <D>(path: FieldPath) => getAt<D>(current().formData, fieldPathToList(path)),
     readRenderedField: <D>(path: FieldPath) => getAt<D>(rendered.formData, fieldPathToList(path)),
+    uiState,
     getSnapshot: () => published,
     subscribe: (listener: () => void) => {
       listeners.add(listener);
@@ -673,6 +742,11 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       rendered = derived;
       renderedFrom = from;
       derivedCache = undefined;
+      // Only a commit of the store's latest state: an operation made since the render began has left data the selections
+      // already hold for, which a render of the data before it would release
+      if (from === published) {
+        uiState.rendered((at) => getAt(derived.formData, at));
+      }
     },
     /** Warns, once, that the `formData` prop changed after mount to a value the form ignores: neither data it has held
      * nor a copy of the data it holds. Called after the commit that passed it, in development only
@@ -714,7 +788,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     handle,
     handleSubmit,
     handleChange: (value: T | undefined, path: FieldPath, errors?: ErrorSchema<T>, id?: string) =>
-      change(value, path, errors, id, callWithDeferredThrow),
+      change(value, path, errors, id, callWithDeferredThrow, true),
     // A detached form drops a blur or a focus as it drops a change: its handlers are those of the last render
     handleBlur: (id: string, data: unknown) => {
       if (isDetached) {

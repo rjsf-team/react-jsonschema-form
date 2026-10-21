@@ -3633,7 +3633,8 @@ describe('AJV8Validator scoring an option whose allOf reaches a $ref naming noth
       properties: { v: { anyOf: options } },
     };
     const schemaUtils = createSchemaUtils({ validator: new AJV8Validator({}) }, rootSchema);
-    expect(schemaUtils.getClosestMatchingOption({ b: 1 }, options)).toBe(-1);
+    // Both options score nothing, so the tie goes to the first candidate
+    expect(schemaUtils.getClosestMatchingOption({ b: 1 }, options)).toBe(0);
     expect(schemaUtils.getDefaultFormState(rootSchema, { v: { b: 1 } })).toEqual({ v: { b: 1 } });
   });
 });

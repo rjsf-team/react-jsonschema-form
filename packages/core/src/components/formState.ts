@@ -22,19 +22,14 @@ import {
   deepEqualsUndefinedAsMissing,
   errorSchemaChild,
   getChangedFields,
-  getDiscriminatorFieldFromSchema,
   getSchemaType,
   getUiOptions,
-  getXxxOfKey,
   hashObject,
   isObject,
-  isWholeValueSelect,
   isPlainObject,
   mergeObjects,
   replaceEqualDeep,
-  schemaHasNestedConditional,
   toErrorList,
-  fieldPathFromList,
   fieldPathToList,
   UI_GLOBAL_OPTIONS_KEY,
   UI_OPTIONS_KEY,
@@ -49,7 +44,10 @@ import { buildRegistry } from '../Theme.ts';
 import { ADDITIONAL_PROPERTY_KEY_REMOVE } from './constants.ts';
 import type { FormProps, FormState } from './Form.tsx';
 import type { EventFormData, IChangeEvent } from './IChangeEvent.ts';
-import stalePathsForNewSchema from './stalePathsForNewSchema.ts';
+import type { FieldTree } from './sanitizeFieldTree.ts';
+import sanitizeFieldTree from './sanitizeFieldTree.ts';
+import setOwnKey from './setOwnKey.ts';
+import { createUiState, fieldStateOf, isPathPrefix } from './uiState.ts';
 
 /* The pure half of `Form`: what its state is derived from, and what each operation makes of it.
  *
@@ -83,15 +81,6 @@ function errorStateOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
 export function toEventFormData<T>(formData: T | undefined): EventFormData<T>;
 export function toEventFormData(formData: unknown): unknown {
   return formData;
-}
-
-/** `setFieldValue()`'s value, which its run-time path keeps `unknown`, in the type a field's `onChange` hands over.
- * The overload is the one trust point that the caller passes what the field at that path holds, the promise a field's
- * own `onChange` makes.
- */
-export function asFieldValue<V>(value: unknown): V | undefined;
-export function asFieldValue(value: unknown): unknown {
-  return value;
 }
 
 /** What `getDefaultFormState()` fills the root schema's defaults into, as the form's data. The overload is the one
@@ -169,7 +158,15 @@ export type MoveOutcome =
   | { kind: 'rewritten'; kept: unknown; edited: unknown };
 
 /** Where a change put what an array or object held under `key`: the new key, or `undefined` when it is gone */
-type KeyMove = (key: string) => string | undefined;
+export type KeyMove = (key: string) => string | undefined;
+
+/** A change being made to the data: its path, and where it moved the keys of the array or object there, if it moved
+ * any
+ */
+export interface FieldEdit {
+  path: FieldPathList;
+  newKeyOf?: KeyMove;
+}
 
 /** A `KeyMove` with the path of the array or object whose keys it moved */
 export interface AnnouncedMove {
@@ -210,32 +207,23 @@ type RenderContext<T, S extends StrictRJSFSchema, F extends FormContextType> = P
   | 'schema'
   | 'uiSchema'
   | 'retrievedSchema'
-  | 'hasNestedConditionalSchema'
+  | 'uiState'
   | 'registry'
   | 'validationProps'
   | 'defaultsBehavior'
 >;
 
-/** Keeps the previous `schemaUtils` unless the props it was built from changed, in which case both it and the
- * nested-conditional flag, a pure function of its root schema, are rebuilt.
- */
+/** Keeps the previous `schemaUtils` unless the props it was built from changed */
 function resolveSchemaUtils<T, S extends StrictRJSFSchema, F extends FormContextType>(
   props: FormProps<T, S, F>,
-  prev: Pick<RenderContext<T, S, F>, 'schemaUtils' | 'hasNestedConditionalSchema'> | undefined,
-): Pick<RenderContext<T, S, F>, 'schemaUtils' | 'hasNestedConditionalSchema'> {
+  prev: Pick<RenderContext<T, S, F>, 'schemaUtils'> | undefined,
+): SchemaUtilsType<T, S, F> {
   const { schema, validator, defaultFormStateBehavior, customMergeAllOf } = props;
   const schemaContext: SchemaContext<S, F> = { validator, defaultFormStateBehavior, customMergeAllOf };
   if (prev && !prev.schemaUtils.doesSchemaUtilsDiffer(schemaContext, schema)) {
-    return prev;
+    return prev.schemaUtils;
   }
-  const schemaUtils = createSchemaUtils<T, S, F>(schemaContext, schema);
-  // A `dependencies`/`if` branch switch nested inside an object property never changes the ROOT retrieved schema (only
-  // the schema's own top-level `dependencies`/`if` get resolved into it), so comparing the retrieved schema to the
-  // previous one can't detect it (#5250). `hasNestedConditionalSchema` lets sanitization run anyway when that's
-  // possible. It's a pure function of the root schema, so it only needs to be recomputed when `schemaUtils` (and thus
-  // the root schema) is rebuilt.
-  const rootSchema = schemaUtils.getRootSchema();
-  return { schemaUtils, hasNestedConditionalSchema: schemaHasNestedConditional(rootSchema, rootSchema) };
+  return createSchemaUtils<T, S, F>(schemaContext, schema);
 }
 
 const UI_EMPTY_VALUE_KEY = 'ui:emptyValue';
@@ -278,18 +266,17 @@ function emptyValuesOf(uiSchema: unknown): unknown {
  * @param props - The current props
  * @param retrievedSchema - The schema resolved for the data the context is derived for
  * @param prev - The previous context, or the state holding one, whose references are retained where possible
- * @param resolved - The schema utilities for `props`, already resolved by the caller
+ * @param schemaUtils - The schema utilities for `props`, already resolved by the caller
  * @returns - The render context for the inputs
  */
 function deriveRenderContext<T, S extends StrictRJSFSchema, F extends FormContextType>(
   props: FormProps<T, S, F>,
   retrievedSchema: S,
   prev: RenderContext<T, S, F> | undefined,
-  resolved: Pick<RenderContext<T, S, F>, 'schemaUtils' | 'hasNestedConditionalSchema'>,
+  schemaUtils: SchemaUtilsType<T, S, F>,
 ): RenderContext<T, S, F> {
   // Defaulted the way `doesSchemaUtilsDiffer()` defaults it, so going from no settings to `{}` is not a change either
   const { uiSchema = {}, customValidate, transformErrors, defaultFormStateBehavior = {} } = props;
-  const { schemaUtils, hasNestedConditionalSchema } = resolved;
   const rootSchema = schemaUtils.getRootSchema();
   // Shared before `replaceEqualDeep()` sees it, which compares a function by identity: an `arrayMinItems`
   // `computeSkipPopulate` written inline would then make every render look like a change of the settings. Settings
@@ -303,7 +290,7 @@ function deriveRenderContext<T, S extends StrictRJSFSchema, F extends FormContex
     schema: rootSchema,
     uiSchema,
     retrievedSchema,
-    hasNestedConditionalSchema,
+    uiState: prev?.uiState ?? createUiState(),
     registry: buildRegistry(props, rootSchema, schemaUtils),
     validationProps: { customValidate, transformErrors },
     defaultsBehavior,
@@ -338,12 +325,14 @@ function mergeErrors<T>(
  *          for the root is the caller's to decide, which is what the separate parameter below is for.
  * @param formData - The form data to validate
  * @param [retrievedSchema] - An optionally pre-resolved schema to validate against instead of the context's `schema`
+ * @param [editedPath] - The path of the edit `formData` carries, if any, see `fieldStateOf()`
  */
 export function validateFormData<T, S extends StrictRJSFSchema, F extends FormContextType>(
   props: FormProps<T, S, F>,
   context: RenderContext<T, S, F>,
   formData: T | undefined,
   retrievedSchema?: S,
+  editedPath?: FieldPathList,
 ): ValidationData<T> {
   const { schemaUtils, schema } = context;
   const { customValidate, transformErrors, uiSchema, formContext } = props;
@@ -385,6 +374,7 @@ export function validateFormData<T, S extends StrictRJSFSchema, F extends FormCo
     undefined,
     uiSchema?.[UI_GLOBAL_OPTIONS_KEY],
     formContext ?? ({} as F),
+    fieldStateOf(context.uiState, schemaUtils, editedPath),
   );
   return validationDataMerge<T>(schemaValidation, uiRequiredErrorSchema);
 }
@@ -403,6 +393,7 @@ export function validateFormData<T, S extends StrictRJSFSchema, F extends FormCo
  *          schema`, the `oneOf` miss) and may stand in only while it describes the data. Omitting extra data keeps
  *          that true, since the fields it drops are by definition not in the schema that selects the branch; a prop
  *          change does not, which is why the derivation passes it only when nothing that resolves it changed.
+ * @param [editedPath] - The path of the edit `formData` carries, if any, see `fieldStateOf()`
  * @returns - An object containing `errorSchema`, `errors`, `schemaValidationErrors` and `schemaValidationErrorSchema`
  */
 function runLiveValidation<T, S extends StrictRJSFSchema, F extends FormContextType>(
@@ -411,35 +402,12 @@ function runLiveValidation<T, S extends StrictRJSFSchema, F extends FormContextT
   formData: T | undefined,
   customErrors?: ErrorSchema<T>,
   retrievedSchema?: S,
+  editedPath?: FieldPathList,
 ) {
-  const schemaValidation = validateFormData(props, context, formData, retrievedSchema);
+  const schemaValidation = validateFormData(props, context, formData, retrievedSchema, editedPath);
   const { errors: schemaValidationErrors, errorSchema: schemaValidationErrorSchema } = schemaValidation;
   const mergedErrors = mergeErrors(schemaValidation, props.extraErrors, customErrors);
   return { ...mergedErrors, schemaValidationErrors, schemaValidationErrorSchema };
-}
-
-/** Whether `prefix` addresses `path` itself or a container holding it, comparing the segments the way `toPath()` spells
- * them, so a numeric array index and its string form are the same segment
- *
- * @param prefix - The path that may lead into `path`
- * @param path - The path being addressed
- * @returns - True when every segment of `prefix` opens `path`
- */
-function isPathPrefix(prefix: FieldPathList, path: FieldPathList): boolean {
-  return prefix.length <= path.length && prefix.every((segment, i) => String(segment) === String(path[i]));
-}
-
-/** Sets `value` under `key` as an own data property of the object `acc` being built. A JSON-sourced `__proto__` key is
- * a field name like any other, and a plain assignment would reach the setter and swap `acc`'s prototype for `value`.
- * Only that key is defined, since the prune walks the validator's whole `ErrorSchema` and a definition costs more than
- * an assignment
- */
-function setOwnKey(acc: Record<string, unknown>, key: string, value: unknown) {
-  if (key === '__proto__') {
-    Object.defineProperty(acc, key, { value, enumerable: true, writable: true, configurable: true });
-  } else {
-    acc[key] = value;
-  }
 }
 
 /** A copy of `errorSchema` without the `__errors` of the nodes `isDropped` names, and without the nodes that hold
@@ -554,213 +522,6 @@ function moveErrorSchemaKeys<T>(errorSchema: ErrorSchema<T>, path: FieldPathList
     }
   }
   return replaceErrorSchemaNode(errorSchema, path, moved);
-}
-
-/** The settled data as the container writes since the settle moved it, which the sanitize call pairs rows against,
- * with where each moved row settled
- */
-export interface PairingView {
-  /** The settled data with each array's rows moved where the container writes put them */
-  data: unknown;
-  /** For each array of `data` that a move or a container write rebuilt, the index in the settled array of the row it
-   * holds at each position: after a reorder that is another row's index, and an inserted row has none. An array not
-   * listed holds each row at the index it settled at. Comparing a written row with the data as it last settled needs
-   * the settled row the view put there, which `data`'s own rows, moved again below them, no longer are
-   */
-  settledIndexes: readonly SettledIndexes[];
-}
-
-/** The settled indexes of the rows of the pairing view's array at `path` */
-interface SettledIndexes {
-  path: FieldPathList;
-  indexes: readonly (number | undefined)[];
-}
-
-function indexesAt(settledIndexes: readonly SettledIndexes[], path: FieldPathList) {
-  return settledIndexes.find((entry) => entry.path.length === path.length && isPathPrefix(entry.path, path))?.indexes;
-}
-
-/** The data as it last settled for the value the pairing view holds at `path`: at each array along the way, the
- * settled row the view put at that index, so a path below a reorder reaches the row that moved there
- */
-function settledAtViewPath(settled: unknown, settledIndexes: readonly SettledIndexes[], path: FieldPathList): unknown {
-  let settledNode = settled;
-  for (let depth = 0; depth < path.length; depth++) {
-    const indexes = indexesAt(settledIndexes, path.slice(0, depth));
-    const segment = indexes === undefined ? path[depth] : indexes[Number(path[depth])];
-    if (segment === undefined) {
-      return undefined;
-    }
-    settledNode = getAt<unknown>(settledNode, [segment]);
-  }
-  return settledNode;
-}
-
-/** The settled snapshot with the items of the array at `path` moved the way `newKeyOf` moved the data's: a row
- * follows its item to its new index, and an index the move maps no row onto pairs with the row's own starting
- * value
- *
- * The view only describes the data as it was before the write: an unannounced change, such as a whole-form
- * `setFieldValue('', data)` or a reset, can leave an array's length apart from the data's, and rebuilding at the new length would
- * pair a row with a neighbour's previous value, the very thing the length check refuses. Only that array is
- * dropped then, so the next sanitize filters it with no previous value rather than a wrong one, and the rest
- * of the view keeps its recorded moves
- */
-function moveSettledArrayAtPath(
-  view: PairingView,
-  path: FieldPathList,
-  newKeyOf: KeyMove,
-  newArray: unknown[],
-  oldLength: number,
-): PairingView {
-  const { data, settledIndexes } = view;
-  const settled = getAt<unknown>(data, path);
-  if (!Array.isArray(settled)) {
-    return view;
-  }
-  // `setByPath()` walks the path to write through its containers, so a root-level array takes the value itself
-  const writeAtPath = (value: unknown) =>
-    path.length === 0 ? value : setByPath(copyAlongPath(data, path), path, value);
-  if (settled.length !== oldLength) {
-    // Drop only this array: this position holds no previous array, and the rest of the view keeps its moves
-    return {
-      data: writeAtPath(undefined),
-      settledIndexes: settledIndexes.filter((entry) => !isPathPrefix(path, entry.path)),
-    };
-  }
-  // The arrays inside a row keep their settled indexes, under the index the row moved to
-  const indexesBelow = settledIndexes.flatMap((entry) => {
-    if (!isPathPrefix(path, entry.path)) {
-      return [entry];
-    }
-    const newIndex = entry.path.length === path.length ? undefined : newKeyOf(String(entry.path[path.length]));
-    return newIndex === undefined
-      ? []
-      : [{ ...entry, path: [...path, newIndex, ...entry.path.slice(path.length + 1)] }];
-  });
-  const ownIndexes = indexesAt(settledIndexes, path);
-  const moved: unknown[] = new Array(newArray.length);
-  const indexes: (number | undefined)[] = Array.from({ length: newArray.length }, () => undefined);
-  settled.forEach((item, index) => {
-    const newIndex = newKeyOf(String(index));
-    if (newIndex !== undefined) {
-      moved[Number(newIndex)] = item;
-      indexes[Number(newIndex)] = ownIndexes === undefined ? index : ownIndexes[index];
-    }
-  });
-  // An index the move maps no row onto is an inserted one: pair the row with its own starting value, the
-  // value it was created with, just as a row that existed at mount pairs with itself
-  for (let index = 0; index < moved.length; index++) {
-    if (!(index in moved)) {
-      moved[index] = newArray[index];
-    }
-  }
-  return { data: writeAtPath(moved), settledIndexes: [...indexesBelow, { path, indexes }] };
-}
-
-/** What `writtenView()` reads and records of the settled indexes as it walks a write */
-interface WriteWalk {
-  /** The settled indexes of the view the write replaces */
-  settledIndexes: readonly SettledIndexes[];
-  /** The settled indexes of each array the walk rebuilt */
-  rebuilt: SettledIndexes[];
-  /** The rows set back to the data as it last settled, whose arrays hold their rows where they settled */
-  setBack: FieldPathList[];
-}
-
-/** The pairing view of a value written in place of `own` with no move announced, as `setFieldValue()` writes an array
- * or object, together with whether `written` holds what `own` does, decided in the one walk that builds the view: a
- * container is unchanged when its keys are and every child is, so no subtree is compared again at each level above it.
- * The moved `view` stays wherever the written value holds what `own` does, since the container writes that moved the
- * view moved those very rows. An item of an array that holds the data as it last `settled`, from before those writes,
- * at its index is the reorder set back (#5451), so it pairs with that. Any other value is the one `own` held there,
- * changed, so it pairs with the view's: the item a reorder moved there is the one it changed, and below it the walk
- * compares with the data that item last settled with. A position the view holds nothing for, which a move of another
- * length dropped, stays unpaired
- *
- * @param written - The value written
- * @param own - The data the value replaces
- * @param view - The pairing view of `own`
- * @param settled - The data as it last settled for the value the view holds here
- * @param path - Where `written` is in the data
- * @param walk - The settled indexes of the view, and those the walk rebuilt or set back
- * @returns - The pairing view of `written`, and whether `written` holds what `own` does
- */
-function writtenView(
-  written: unknown,
-  own: unknown,
-  view: unknown,
-  settled: unknown,
-  path: FieldPathList,
-  walk: WriteWalk,
-): [unknown, boolean] {
-  if (Object.is(written, own)) {
-    return [view, true];
-  }
-  if (view === undefined) {
-    return [undefined, deepEquals(written, own)];
-  }
-  if (
-    Array.isArray(written) &&
-    Array.isArray(own) &&
-    Array.isArray(view) &&
-    written.length === own.length &&
-    view.length === own.length
-  ) {
-    let isUnchanged = true;
-    const settledItems: unknown[] = Array.isArray(settled) ? settled : [];
-    const ownIndexes = indexesAt(walk.settledIndexes, path);
-    const indexes: (number | undefined)[] = [];
-    const items = Array.from(view, (item, index) => {
-      const settledIndex = ownIndexes === undefined ? index : ownIndexes[index];
-      // Whether the item changed is the walk's own answer, so its subtree is compared once
-      const [itemView, isItemUnchanged] = writtenView(
-        written[index],
-        own[index],
-        item,
-        settledIndex === undefined ? undefined : settledItems[settledIndex],
-        [...path, index],
-        walk,
-      );
-      const settledItem = settledItems[index];
-      if (!isItemUnchanged && settledItem !== undefined && deepEquals(written[index], settledItem)) {
-        isUnchanged = false;
-        indexes.push(index);
-        walk.setBack.push([...path, index]);
-        return settledItem;
-      }
-      isUnchanged &&= isItemUnchanged;
-      indexes.push(settledIndex);
-      return itemView;
-    });
-    if (isUnchanged) {
-      return [view, true];
-    }
-    walk.rebuilt.push({ path, indexes });
-    return [items, false];
-  }
-  if (isPlainObject(written) && isPlainObject(own) && isPlainObject(view)) {
-    const settledObject = isPlainObject(settled) ? settled : {};
-    const viewKeys = new Set(Object.keys(view));
-    // The keys the view does not hold are compared once here, where the walk does not reach them
-    let isUnchanged = [...new Set([...Object.keys(written), ...Object.keys(own)])].every(
-      (key) => viewKeys.has(key) || deepEquals(written[key], own[key]),
-    );
-    const entries = Object.entries(view).map(([key, value]) => {
-      const [childView, isChildUnchanged] = writtenView(
-        written[key],
-        own[key],
-        value,
-        settledObject[key],
-        [...path, key],
-        walk,
-      );
-      isUnchanged &&= isChildUnchanged;
-      return [key, childView];
-    });
-    return isUnchanged ? [view, true] : [Object.fromEntries(entries), false];
-  }
-  return [view, deepEquals(written, own)];
 }
 
 /** `validation` after the keys of the array or object at `path` moved, the list by the rule `moveErrorSchemaKeys()`
@@ -894,7 +655,7 @@ function applyChangeToErrors<T, S extends StrictRJSFSchema, F extends FormContex
 /** The data a derivation pass settles on, with what it took to get there */
 interface DerivedData<T, S extends StrictRJSFSchema, F extends FormContextType> {
   /** The data after defaults and, when asked for, sanitization */
-  formData: T;
+  formData: T | undefined;
   /** The render context for `formData`, carrying the schema resolved for it and the utilities that resolved it.
    * Every value in it is `current`'s own whenever nothing it is built from changed, so committing it always is
    * free; handing it back rather than the parts is what keeps state from holding a `retrievedSchema` resolved by
@@ -906,30 +667,12 @@ interface DerivedData<T, S extends StrictRJSFSchema, F extends FormContextType> 
    * for the root when validating; see `runLiveValidation()`
    */
   areSchemaUtilsReused: boolean;
-  /** The root schema the settled data settles under this pass; see `settledFormDataState()`
-   */
-  formDataSchema: S | undefined;
-  /** The data the marker vouches for: the data as of the last settle, so an unchecked change since then shows up as
-   * a real difference where the filter runs
-   */
-  settledFormData: T | undefined;
-  /** `settledFormData` as the container writes carried since the settle moved it: the sanitize call pairs an
-   * array's rows against this view, so a row follows its item to its new index and an inserted index pairs
-   * with the row's own starting value, while the old schema side keeps reading `settledFormData`, whose
-   * conditionals resolved the way the settled data saw them. Settles and resets together with `settledFormData`
-   */
-  settledFormDataForPairing: PairingView | undefined;
-  /** The schema the settling pass resolved for `settledFormData`: the previous-data side of the sanitize call
-   * resolves from it, since the committed data's resolved schema already carries the root's conditionals for
-   * data that can sit on the other side of a flip
-   */
-  settledRetrievedSchema: S | undefined;
 }
 
 /** The schema resolved for `formData`. Resolving walks the whole root schema, so it is skipped outright when the
  * utilities and the data they resolve for are both the ones `current.retrievedSchema` was resolved from. Otherwise the
  * result is shared against the committed schema, so rebuilt utilities handing back a deep-equal schema still compare
- * equal by identity instead of triggering a sanitize pass.
+ * equal by identity.
  *
  * @param current - The state the pass starts from; `undefined` on construction
  * @param schemaUtils - The utilities to resolve with
@@ -947,82 +690,23 @@ function resolveRetrievedSchema<T, S extends StrictRJSFSchema, F extends FormCon
   return replaceEqualDeep(current?.retrievedSchema, schemaUtils.retrieveSchema(schemaUtils.getRootSchema(), formData));
 }
 
-/** A value the stale-default search has dropped: where it was, what was there, and the schema that described the key
- * when that value was recorded, which is what a later iteration judges the fill's replacement against
- */
-type DroppedValue<S> = [path: FieldPathList, value: unknown, schema: S | undefined];
-
 /** How one data pass differs from the default, which just fills in the missing defaults */
-interface DeriveDataOptions<T, S extends StrictRJSFSchema, F extends FormContextType> {
-  /** Attempt to sanitize the data for a retrieved schema that changed. A function decides it only once the retrieved
-   * schema is known to have changed, so a check it makes costs nothing on the passes that never sanitize
-   */
-  shouldSanitize?: boolean | ((schemaUtils: SchemaUtilsType<T, S, F>, retrievedSchema: S, formData: T) => boolean);
+interface DeriveDataOptions {
+  /** Sanitize the data against the field tree of the state before this pass, see `sanitizeFieldTree()` */
+  isSanitized?: boolean;
+  /** The change this pass is for, if any: the value at its path is the user's */
+  edit?: FieldEdit;
   /** This pass originated from `reset()`: it computes defaults the same way an initial render does even though the
    * instance has generated defaults before
    */
   isReset?: boolean;
-  /** The path of the field whose change started this pass. Only a change has one, and `stalePathsForNewSchema()` is
-   * its only reader: the value at that path is the user's rather than any branch's default, and a pass with no path
-   * has no change to have swapped a subschema
-   */
-  changedPath?: FieldPathList;
-}
-
-/** The last settled form data and the root schema it settled under, for the `formDataSchema` marker pair: recorded
- * on construction and on every pass that sanitized, and otherwise carried untouched. A declined sanitize, a whole-form
- * `setFieldValue('', data)` or a reset leaves the snapshot alone, so no path needs its own clearing rule; a schema swap drops it
- * at the sanitize call, where the marker root no longer matches. The caller shares the root against the marker
- * through `replaceEqualDeep()`, so a deep-equal rebuild of the schema keeps the reference and matches by identity
- *
- * @param current - The state the pass starts from; `undefined` on construction
- * @param rootSchema - The root schema this pass settles under, shared against `current.formDataSchema` by the caller
- * @param sanitizeRan - Whether this pass sanitized the data
- * @param formData - The data this pass settled
- * @param retrievedSchema - The schema this pass resolved for `formData`
- * @returns - The marker triple to commit
- */
-function settledFormDataState<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  current: FormState<T, S, F> | undefined,
-  rootSchema: S,
-  sanitizeRan: boolean,
-  formData: T | undefined,
-  retrievedSchema: S | undefined,
-): {
-  formDataSchema: S | undefined;
-  settledFormData: T | undefined;
-  settledFormDataForPairing: PairingView | undefined;
-  settledRetrievedSchema: S | undefined;
-} {
-  if (sanitizeRan || current === undefined) {
-    return {
-      formDataSchema: rootSchema,
-      settledFormData: formData,
-      settledFormDataForPairing: { data: formData, settledIndexes: [] },
-      settledRetrievedSchema: retrievedSchema,
-    };
-  }
-  // A marker whose root no longer matches can never become usable again, so it is dropped rather than held for
-  // the form's whole life; an empty marker also fails `hasSettledData`, so the sanitize call is unaffected
-  if (current.formDataSchema !== undefined && rootSchema !== current.formDataSchema) {
-    return {
-      formDataSchema: undefined,
-      settledFormData: undefined,
-      settledFormDataForPairing: undefined,
-      settledRetrievedSchema: undefined,
-    };
-  }
-  return {
-    formDataSchema: current.formDataSchema,
-    settledFormData: current.settledFormData,
-    settledFormDataForPairing: current.settledFormDataForPairing,
-    settledRetrievedSchema: current.settledRetrievedSchema,
-  };
 }
 
 /** Settles the data for `props` and `inputFormData`: any missing required defaults are filled in, then, when asked,
- * the result is sanitized for its resolved schema until the two stop moving. Every caller that needs derived data
- * goes through here, so the resolved schema and the data it describes are always produced together.
+ * the result is sanitized for the field tree it builds against the tree before the change, and filled again, until the
+ * two stop moving. Each round diffs against the tree of the data the round before sanitized, so a value the loop
+ * wrote is judged against the schema it was written for. Every caller that needs derived data goes through here, so
+ * the resolved schema and the data it describes are always produced together.
  *
  * @param current - The state the pass starts from; `undefined` on construction
  * @param inputFormData - The data to settle; `undefined` computes defaults from nothing
@@ -1033,286 +717,64 @@ function settledFormDataState<T, S extends StrictRJSFSchema, F extends FormConte
 function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType>(
   current: FormState<T, S, F> | undefined,
   inputFormData: T | undefined,
-  options: DeriveDataOptions<T, S, F>,
+  options: DeriveDataOptions,
   props: FormProps<T, S, F>,
 ): DerivedData<T, S, F> {
-  const { shouldSanitize = false, isReset = false, changedPath } = options;
+  const { isSanitized = false, edit, isReset = false } = options;
   const { uiSchema = {} } = props;
-  const resolved = resolveSchemaUtils(props, current);
-  const { schemaUtils, hasNestedConditionalSchema } = resolved;
-  // Compared through `schemaUtils` rather than by the identity of `resolved` itself, which holds only because
-  // `resolveSchemaUtils()` hands `current` straight back: narrowing it to a copy would silently make this false
-  // forever, and with it every reuse below
-  const areSchemaUtilsReused = resolved.schemaUtils === current?.schemaUtils;
+  const schemaUtils = resolveSchemaUtils(props, current);
+  const areSchemaUtilsReused = schemaUtils === current?.schemaUtils;
   const rootSchema = schemaUtils.getRootSchema();
-
-  let defaultsFormData: T | undefined = inputFormData;
   // The data is shared against the committed data when there is some, so an unchanged subtree keeps the reference the
   // fields hold; on construction, against the caller's own value
-  const shareBase = current ? current.formData : defaultsFormData;
+  const shareBase = current ? current.formData : inputFormData;
   // A reset re-runs the same "initial" defaults pass a first render does, so `ui:initialValue` applies again even
   // though this instance has generated defaults before.
   const initialDefaultsGenerated = (current?.initialDefaultsGenerated ?? false) && !isReset;
-  const fillDefaults = (data: T | undefined) =>
+  const fill = (data: T | undefined) =>
     replaceEqualDeep(
       shareBase,
       asFilledFormData<T>(schemaUtils.getDefaultFormState(rootSchema, data, false, initialDefaultsGenerated, uiSchema)),
     );
-  let formData: T;
-  let retrievedSchema: S;
-  let wasSanitized = false;
-  let sanitizeRan = false;
-  const preventInfiniteSanitize: string[] = [];
-  // The settled snapshot is a valid previous counterpart only while the root it settled under matches this pass's
-  // root; shared once, so a deep-equal schema rebuild keeps the reference and the helper walks nothing twice
-  const sharedRoot =
-    current?.formDataSchema === undefined ? rootSchema : replaceEqualDeep(current.formDataSchema, rootSchema);
-  const hasSettledData = current?.formDataSchema !== undefined && sharedRoot === current.formDataSchema;
-  // A dropped pairing view (a root-level array whose length desynced drops the whole view) leaves the settled
-  // side nothing to pair by; handing the settled data over anyway would pair rows by index against it.
-  // Treat a dropped view as no settled data at the sanitize call, so the filter runs with no previous value
-  const hasSettledPairingView = hasSettledData && current?.settledFormDataForPairing?.data !== undefined;
-  let sanitize = shouldSanitize;
-  // Each value dropped as a swapped-away branch's default, keyed by its path: the keys let a repeat search skip a path
-  // it has already reported, the paths let a later iteration judge the refill the fill has since written there, the
-  // values let the pass put back one the fill never wrote, and the schemas say what the key held its value under
-  const droppedStaleValues = new Map<FieldPath, DroppedValue<S>>();
-  // The dropped paths that hold a value again, whether a fill wrote one or the restore below put the recorded one
-  // back for a fill to read, so each one buys exactly one further iteration and the restores leave it alone from then
-  // on: once the key holds something, the value the drop recorded is no longer the answer to it being empty — the
-  // loop rejecting what is there is, and that value is a schema movement or more out of date
-  const settledRefills = new Set<FieldPath>();
-  do {
-    formData = fillDefaults(defaultsFormData);
-    // A dropped path the fill above declined to write goes back before anything else in this iteration reads its
-    // absence. The drop has to be visible to that fill — deleting the key is what lets it write the newly selected
-    // branch's default — but nothing past it may see the key-absent state: the schema is resolved for this data
-    // next, and a key missing from it selects branches the real data never selects, which prunes a sibling the
-    // resolved-with-the-key schema declares and commits a `retrievedSchema` that omits the key, so live validation
-    // stops seeing it too
-    let hasNewRefill = false;
-    for (const [pathKey, [stalePath, droppedValue]] of droppedStaleValues) {
-      if (getByPath(formData, stalePath) !== undefined) {
-        if (!settledRefills.has(pathKey)) {
-          settledRefills.add(pathKey);
-          hasNewRefill = true;
-        }
-      } else if (!settledRefills.has(pathKey)) {
-        formData = putBackAt(formData, stalePath, droppedValue, (held) => held === undefined, current?.formData);
+  let formData = fill(inputFormData);
+  const treeOf = (data: T | undefined): FieldTree<T, S, F> => ({
+    schemaUtils,
+    formData: data,
+    retrievedSchema: resolveRetrievedSchema(current, schemaUtils, data),
+  });
+  let tree = treeOf(formData);
+  if (isSanitized && current) {
+    const seen: string[] = [];
+    let previous: FieldTree<T, S, F> = current;
+    let roundEdit = edit;
+    for (;;) {
+      const sanitized = replaceEqualDeep(formData, sanitizeFieldTree(previous, tree, current.uiState, roundEdit));
+      // Wrapped in an object to deal with a scalar or `undefined` value. Data a round has already produced would only
+      // produce it again, which ends a loop of conditions that flip each other. It ends filled, as every other pass
+      // does, so a default the round dropped is there again
+      if (sanitized === formData) {
+        break;
       }
-    }
-    retrievedSchema = resolveRetrievedSchema(current, schemaUtils, formData);
-    const mayNeedSanitizing = hasNestedConditionalSchema || retrievedSchema !== current?.retrievedSchema;
-    if (mayNeedSanitizing && typeof sanitize === 'function') {
-      // Asked once, since it decides about the change rather than about the data each pass settles
-      sanitize = sanitize(schemaUtils, retrievedSchema, formData);
-    }
-    const isSanitizing = mayNeedSanitizing && sanitize === true;
-    // Only hash when sanitizing, wrapping `formData` in an object to deal with a scalar/undefined value
-    const formHash = isSanitizing ? hashObject({ formData }) : '';
-    if (isSanitizing) {
-      sanitizeRan = true;
-      // Sanitizing itself is skipped for data already processed, but the stale-default search below is not: the
-      // iteration that makes a second swap visible is often one whose data the fill left untouched, so its hash is
-      // already here and the sanitize it would repeat is the only part worth skipping
-      const isFormDataSanitized = preventInfiniteSanitize.includes(formHash);
-      // Sanitize the form data if shouldSanitize is true, we haven't already processed this same formData AND
-      // either the retrieved schema changed or the schema has a nested conditional that the check above can't see
-      let sanitizedFormData = isFormDataSanitized
-        ? formData
-        : replaceEqualDeep(
-            formData,
-            // The previous-data side is the data as it last settled under the current root schema and the
-            // schema that settling resolved, so a change no sanitize checked (a declined pass, a whole-form
-            // `setFieldValue('', data)`, a reset) still reads as a real difference where the enum filter runs (#5451)
-            schemaUtils.sanitizeDataForNewSchema(
-              retrievedSchema,
-              current?.retrievedSchema,
-              formData,
-              hasSettledPairingView ? current?.settledFormData : undefined,
-              hasSettledPairingView ? current?.settledRetrievedSchema : undefined,
-              hasSettledPairingView ? current?.settledFormDataForPairing?.data : undefined,
-            ),
-          );
-      // A path dropped on an earlier iteration has been refilled above with the newly selected branch's own default,
-      // and the sanitize above is not the judge of it. It compares against `current.retrievedSchema` on every
-      // iteration, never against what the previous one settled, so wherever the swap changed a type it reads the
-      // refill as data the old branch could not hold and clears it — and the fill leaves an explicit `undefined`
-      // alone, so what it cleared would end the loop empty. That is the #5349 symptom for precisely the property
-      // this is meant to fix, hence judging the refills apart rather than widening what sanitize compares against.
-      //
-      // Each refill is judged at its own key, by the schema that describes it now against the one it was written
-      // under, which is what the drop recorded and every later iteration replaces. The root pair cannot answer for
-      // it: `retrieveSchema()` resolves the conditionals of the schema it is handed, so a swap decided inside a
-      // property leaves the root schema the same object, and a refill one level down would never be judged at all.
-      let withRefills = sanitizedFormData;
-      for (const [pathKey, [stalePath, droppedValue, writtenUnder]] of droppedStaleValues) {
-        const held = getByPath(formData, stalePath);
-        // Resolved level by level for this iteration's data, then shared, so a key whose schema did not move is the
-        // same object and costs nothing further. Only a key holding something is asked about: an empty one has
-        // nothing to judge, and its record is what the next fill's replacement will be judged against
-        const resolvedNow =
-          held === undefined ? undefined : resolveSchemaAt<T, S, F>(schemaUtils, retrievedSchema, stalePath, formData);
-        const keySchema = resolvedNow === undefined ? writtenUnder : replaceEqualDeep(writtenUnder, resolvedNow);
-        const isRejected =
-          writtenUnder !== undefined &&
-          keySchema !== undefined &&
-          keySchema !== writtenUnder &&
-          isRefillRejected<T, S, F>(schemaUtils, stalePath, keySchema, writtenUnder, held);
-        // A rejection takes the recorded value with it. The schema that now describes the key has moved off what was
-        // there, and the value the drop recorded is the one the swap moved away from, so neither restore below has
-        // anything left to put back: the key is the next fill's to answer, and if no fill answers it the data the
-        // loop settles holds nothing there rather than something its own schema rejects
-        droppedStaleValues.set(pathKey, [stalePath, isRejected ? undefined : droppedValue, keySchema]);
-        if (isRejected) {
-          // The schema this iteration settled rejects what is there, so the key goes rather than being reinstated
-          // under a schema that no longer describes it — replacing one dropped key can select a branch that retypes
-          // another. Deleted rather than left as the `undefined` sanitize wrote it, since an absent key is what the
-          // fill at the top of the next iteration answers
-          withRefills = copyAlongPath(withRefills, stalePath);
-          unsetByPath(withRefills, stalePath);
-        } else {
-          // Reinstated whole wherever sanitize altered it: a retyped leaf *inside* a refill is cleared by the same
-          // reasoning as a retyped key, and leaving that behind settles the key on a value neither branch declares.
-          // What is there is either what the fill wrote for the newly selected branch, which the schema the data
-          // arrived under has nothing to be right about, or the value the restore above put back for a drop no fill
-          // has answered, which is reinstated on the restore's own terms: this pass has nothing better to offer
-          withRefills = putBackAt(withRefills, stalePath, held, (value) => !deepEquals(value, held), current?.formData);
-        }
+      const hash = hashObject({ formData: sanitized });
+      if (seen.includes(hash)) {
+        formData = fill(sanitized);
+        break;
       }
-      if (withRefills !== sanitizedFormData) {
-        // Shared again, so an iteration whose only change was undone here compares equal and ends the loop
-        sanitizedFormData = replaceEqualDeep(formData, withRefills);
-      }
-      // Sanitizing leaves a value the branch just swapped away declared as its `default` in place, so the newly
-      // selected branch's own `default` never reaches the key (#5349). Dropping each such key lets the fill at the
-      // top of the next pass write the new one, which is why this runs here rather than after the loop.
-      //
-      // Searched on every sanitizing iteration, not just the first: the old side it compares against does not move
-      // between them, but the new side does, since replacing one key's default can select a different branch for
-      // another key one iteration later. What a repeat search must not do is report a path already dropped and drop
-      // the value the fill has since written there — and since the data is committed below before the hashes are
-      // consulted, that iteration could be the one whose hash ends the loop, leaving the key with no value at all.
-      // The recorded paths are what rules that out, so they go in as the search's own skip list, where a dropped key
-      // costs neither its two resolutions nor its two defaults computations rather than being reported for this loop
-      // to discard
-      if (areSchemaUtilsReused && changedPath !== undefined && current !== undefined) {
-        const committedFormData = current.formData;
-        const stalePaths = stalePathsForNewSchema(
-          schemaUtils,
-          retrievedSchema,
-          current.retrievedSchema,
-          formData,
-          committedFormData,
-          {
-            changedPath,
-            droppedPaths: droppedStaleValues,
-            initialDefaultsGenerated,
-            uiSchema,
-          },
-        );
-        for (const stalePath of stalePaths) {
-          const sanitizedValue = getByPath(sanitizedFormData, stalePath);
-          // Sanitize compares a key's two declared defaults itself wherever the key holds a scalar — the branch whose
-          // absence for a container is this whole fix's reason to exist — so a scalar it has already moved off what
-          // the data arrived holding is its to own. Dropping it again would cost two defaults computations and a
-          // refill to write the value that is there, and would record the new default rather than what the data
-          // arrived holding as the value to put back. A container it merely edited, by clearing a retyped leaf
-          // inside it, is not the same thing and is still this search's to report
-          const isSanitizeOwned =
-            sanitizedValue !== undefined &&
-            !isObject(sanitizedValue) &&
-            !Array.isArray(sanitizedValue) &&
-            !deepEquals(sanitizedValue, getByPath(committedFormData, stalePath));
-          if (!isSanitizeOwned) {
-            // Recorded with the schema that describes the key while it still holds this value, which is what the
-            // refill the next fill writes is judged against
-            droppedStaleValues.set(fieldPathFromList(stalePath), [
-              stalePath,
-              sanitizedValue,
-              resolveSchemaAt<T, S, F>(schemaUtils, retrievedSchema, stalePath, formData),
-            ]);
-            sanitizedFormData = copyAlongPath(sanitizedFormData, stalePath);
-            unsetByPath(sanitizedFormData, stalePath);
-          }
-        }
-      }
-      wasSanitized = sanitizedFormData !== formData;
-      if (wasSanitized) {
-        // Update both the formData AND defaultsFormData due to the sanitize so the loop works with the new data
-        formData = sanitizedFormData;
-        defaultsFormData = sanitizedFormData;
-        const sanitizedFormHash = hashObject({ formData: sanitizedFormData });
-        // If we've seen the sanitized data before, we are done
-        wasSanitized = !preventInfiniteSanitize.includes(sanitizedFormHash);
-        preventInfiniteSanitize.push(sanitizedFormHash);
-        if (!wasSanitized) {
-          // A round that repeats ends on the data its fill makes of what sanitize left, as every other exit does: the
-          // sanitize may have cleared a value only the fill writes, such as the `null` of a property a condition just
-          // retyped to `null`, which it judges against the schema before the change. The schema is resolved for that
-          // data too, as every other exit's is, since the round can repeat data an earlier pass held, which is not the
-          // data this pass resolved its schema for
-          formData = fillDefaults(sanitizedFormData);
-          retrievedSchema = resolveRetrievedSchema(current, schemaUtils, formData);
-        }
-      }
-      if (!isFormDataSanitized) {
-        preventInfiniteSanitize.push(formHash);
-      }
-    } else {
-      wasSanitized = false;
-    }
-    // A drop's key holds a value for the first time — the fill's replacement, or the one the restore above put back —
-    // so the loop goes round once more. Neither was seen by a fill that had the key: the fill ran with it deleted, so
-    // it resolved that key's own conditionals against no value, and an `if` on the key's schema is vacuously true for
-    // an absent key, which selects a `then` the value never selects and leaves whatever its `else` declares — a
-    // `required` property among it — unwritten. Only a pass starting from the value sees what the key's own
-    // conditionals declare for what is really there. Bounded, since each dropped path is counted once and the hash
-    // guard still ends the loop on data it has already settled
-    if (hasNewRefill) {
-      defaultsFormData = formData;
-      wasSanitized = true;
-    }
-  } while (wasSanitized);
-
-  // A value is dropped on the strength of the newly selected branch's defaults holding something for its key, which
-  // is what the fill normally writes there. It does not always get the chance: dropping the key can flip the very
-  // branch that would have declared its replacement, a stale default can sit under a key whose presence in the
-  // retrieved schema depended on the data holding it, and a nested level's defaults are computed as a root, where
-  // the real fill knows whether its parent was required. The restore at the top of each iteration answers all of
-  // those, since a drop is followed by a fill — except on the iteration that ends the loop. A drop makes the data
-  // differ, so the loop is ended there by its hash alone, and `hashObject()` drops an `undefined` entry, so a key
-  // sanitize cleared on an earlier iteration and the search has now dropped hashes to a pass already seen. That
-  // iteration never reaches a fill, which is what this last restore is for. No input in the suite reaches it: the
-  // restore at the top of each iteration answers every case the tests produce, so treat this one as a net rather
-  // than as an exercised path.
-  //
-  // Restored only where no fill ever answered the drop. A path a fill did answer is left as the loop left it: what
-  // emptied it is either the judge above rejecting the replacement, or a sanitize the replacement's own schema
-  // movement called for, and the value the drop recorded answers neither — it is the value the swap moved away from,
-  // a schema movement or more out of date, and writing it back would settle the key on data its schema rejects.
-  // `retrievedSchema` is deliberately not resolved again for the restored data — the loop above has settled, and a
-  // key the schema no longer describes is what the plain-object test on the parent guards against.
-  for (const [pathKey, [stalePath, droppedValue]] of droppedStaleValues) {
-    if (!settledRefills.has(pathKey)) {
-      formData = putBackAt(formData, stalePath, droppedValue, (held) => held === undefined, current?.formData);
+      seen.push(hash);
+      previous = tree;
+      // Only the first round diffs against the data before the move: every later one diffs against data already moved
+      roundEdit = edit && { path: edit.path };
+      formData = fill(sanitized);
+      tree = treeOf(formData);
     }
   }
-
+  const { retrievedSchema } = tree.formData === formData ? tree : treeOf(formData);
   // Always derived, never skipped on the grounds that the schema utilities were reused: the registry is built from
   // `idPrefix`, `widgets`, `templates`, `fields`, `formContext` and `uiSchema` too, none of which the utilities are
   // resolved from. `deriveRenderContext()` shares its result against `current`, so an unchanged context keeps every
   // reference the fields hold.
-  const context = deriveRenderContext(props, retrievedSchema, current, resolved);
-  return {
-    formData,
-    context,
-    areSchemaUtilsReused,
-    // A reset settles the way the first render does: the restored initial data is unchecked, but it is what
-    // every later edit must compare against, or a flip back to the branch the reset restored reads as settled
-    // on the wrong side. Passing no current state records the reset data and its resolved schema as the snapshot
-    ...settledFormDataState(isReset ? undefined : current, sharedRoot, sanitizeRan, formData, retrievedSchema),
-  };
+  const context = deriveRenderContext(props, retrievedSchema, current, schemaUtils);
+  return { formData, context, areSchemaUtilsReused };
 }
 
 /** What reconciling the errors of a derivation needs to know */
@@ -1516,15 +978,14 @@ function deriveDataState<T, S extends StrictRJSFSchema, F extends FormContextTyp
   inputFormData: T | undefined,
   props: FormProps<T, S, F>,
 ): FormState<T, S, F> {
-  const {
-    formData,
-    context,
-    areSchemaUtilsReused,
-    formDataSchema,
-    settledFormData,
-    settledFormDataForPairing,
-    settledRetrievedSchema,
-  } = deriveFormData(current, inputFormData, {}, props);
+  // A schema change sanitizes the data for the new schema's tree, as an edit does for the tree it leads to, and leaves
+  // the data of a disabled or read-only form as it is, as an edit there does
+  const { formData, context, areSchemaUtilsReused } = deriveFormData(
+    current,
+    inputFormData,
+    { isSanitized: !props.disabled && !props.readonly },
+    props,
+  );
   const { isSchemaChanged, isValidationPropChanged } = detectContextChanges(current, context);
   // Construction validates nothing: the errors of a seed the user has not touched are not shown until they are earned
   const isDataChanged = current !== undefined && formData !== current.formData;
@@ -1541,10 +1002,6 @@ function deriveDataState<T, S extends StrictRJSFSchema, F extends FormContextTyp
     ...current,
     ...context,
     formData,
-    formDataSchema,
-    settledFormData,
-    settledFormDataForPairing,
-    settledRetrievedSchema,
     isDataPassed,
     ...errors,
     initialDefaultsGenerated: true,
@@ -1599,195 +1056,6 @@ export function copyAlongPath<T>(data: T, path: FieldPathList): T {
   return root as T;
 }
 
-/** Returns `data` with `value` written back at `path`, or `data` unchanged where it must not be or need not be.
- *
- * Three callers put a dropped value back: the restore at the top of each sanitizing iteration and the one after the
- * loop, both undoing a drop no fill answered, and the reinstatement in between, which keeps the refill the fill has
- * since written. Nothing is written where there is no value to write, where `data` already holds it, or where the
- * container the path addresses is no longer an object. That last condition is what keeps the write honest:
- * `setByPath()` creates whatever the path is missing, so a sanitize that pruned or retyped an ancestor would
- * otherwise be answered by rebuilding a level the schema no longer describes.
- *
- * What differs between them is what counts as the value already being there, which is why the caller decides it: the
- * reinstatement writes its refill back wherever sanitize altered it at all, while the two restores only fill a gap
- * and must never overwrite what the fill chose to put there.
- *
- * `orderedLike` is where a re-added key's position among its siblings comes from, and only that key's: the object
- * keeps the order the fill gave it. Every object the fill produces carries its keys in the order the schema declares
- * them, whatever order they arrived in, so a `setByPath()` that appended would leave a value this fix means to leave
- * alone reported under a key order nothing else in `Form` produces — a change in its own right to a consumer that
- * serializes or diffs the data. Rebuilding in `orderedLike`'s order instead would move every sibling to make the one
- * key right.
- *
- * @param data - The data to write into
- * @param path - The path to write at
- * @param value - The value to write, where one is needed
- * @param isMissing - Reports, from the value `path` currently holds, whether `value` needs writing
- * @param orderedLike - The data to take the key order of a re-added key's object from
- * @returns - The data with `value` at `path`, or `data` itself when nothing was written
- */
-function putBackAt<T>(
-  data: T,
-  path: FieldPathList,
-  value: unknown,
-  isMissing: (held: unknown) => boolean,
-  orderedLike: unknown,
-): T {
-  if (value === undefined) {
-    return data;
-  }
-  const parentPath = path.slice(0, -1);
-  const parent = parentPath.length ? getByPath(data, parentPath) : data;
-  if (!isPlainObject(parent)) {
-    return data;
-  }
-  const key = path[path.length - 1];
-  // Off the parent just walked rather than from the root, and by identity before the caller's test: an untouched
-  // value is the same reference, which is the common case and the one `deepEquals()` allocates a cycle cache to answer
-  const held = getByPath(parent, key);
-  if (held === value || !isMissing(held)) {
-    return data;
-  }
-  const template = parentPath.length ? getByPath(orderedLike, parentPath) : orderedLike;
-  const arrivedOrder = isPlainObject(template) ? Object.keys(template) : [];
-  const arrivedAt = arrivedOrder.indexOf(String(key));
-  // A key the object still carries is written in place, which keeps its position, and is the common case: sanitize
-  // clears a value it rejects rather than removing the key. Where nothing records where the key sat, appending is all
-  // there is to do
-  if (Object.hasOwn(parent, key) || arrivedAt < 0) {
-    return setByPath(copyAlongPath(data, path), path, value);
-  }
-  // Ahead of the first sibling that followed the key in the data it arrived in, so the siblings keep the order the
-  // fill gave them and only the key moves. A sibling the arrived data did not carry cannot say which side it belongs
-  // on, so the key goes after it
-  const ordered: GenericObjectType = {};
-  let isWritten = false;
-  Object.keys(parent).forEach((name) => {
-    if (!isWritten && arrivedOrder.indexOf(name) > arrivedAt) {
-      ordered[key] = value;
-      isWritten = true;
-    }
-    ordered[name] = parent[name];
-  });
-  if (!isWritten) {
-    ordered[key] = value;
-  }
-  return parentPath.length ? setByPath(copyAlongPath(data, parentPath), parentPath, ordered) : (ordered as T);
-}
-
-/** Returns the schema of the `property` of an object `schema` as it is rendered: the schema's own, or else that of the
- * `oneOf`/`anyOf` option `MultiSchemaField` renders for `formData`, which it picks as the closest match to it, looked up
- * the same way
- *
- * @param schemaUtils - The schema utilities to retrieve the options and pick among them with
- * @param schema - The object schema, retrieved for `formData`
- * @param property - The name of the property
- * @param formData - The object's data
- * @returns - The property's schema, or undefined when neither the schema nor any option it renders declares it
- */
-function getPropertySchemaAt<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  schemaUtils: SchemaUtilsType<T, S, F>,
-  schema: S,
-  property: string,
-  formData: T,
-): S | undefined {
-  const ownSchema = schema.properties?.[property];
-  const xxxOfKey = getXxxOfKey<S>(schema);
-  if (ownSchema !== undefined || !xxxOfKey) {
-    return ownSchema as S | undefined;
-  }
-  const options = schema[xxxOfKey]!.map((option) => schemaUtils.retrieveSchema(option as S, formData));
-  const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
-  const option = options[schemaUtils.getClosestMatchingOption(formData, options, 0, discriminator)];
-  // The option is rendered by a `SchemaField` of its own, which renders the option's own `oneOf`/`anyOf` in turn
-  return option && getPropertySchemaAt<T, S, F>(schemaUtils, option, property, formData);
-}
-
-/** Returns the schema of the field at `path` as it is rendered. The schema is retrieved at every step of the path, so
- * a field an `allOf`, a condition or a `oneOf`/`anyOf` option declares is found as it is rendered, and an array index
- * is followed through `items`. Resolving per level is the only way to see a conditional declared below the root:
- * `retrieveSchema()` resolves the ones on the schema it is handed, so the root's own resolution says nothing about
- * what a property's conditionals select for the data under it.
- *
- * @param schemaUtils - The schema utilities to retrieve and search the schema with
- * @param schema - The root schema, retrieved for `formData`
- * @param path - The path of the field
- * @param formData - The data the schema was retrieved for, which holds the field's value
- * @returns - The field's resolved schema, or undefined where the path leads somewhere the schema does not describe
- */
-function resolveSchemaAt<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  schemaUtils: SchemaUtilsType<T, S, F>,
-  schema: S,
-  path: FieldPathList,
-  formData: T,
-): S | undefined {
-  let fieldSchema = schema;
-  let fieldData: unknown = formData;
-  for (const segment of path) {
-    let childSchema: S | undefined;
-    if (typeof segment === 'number') {
-      const { items, additionalItems } = fieldSchema;
-      childSchema = (Array.isArray(items) ? (items[segment] ?? additionalItems) : items) as S | undefined;
-    } else {
-      childSchema = getPropertySchemaAt<T, S, F>(schemaUtils, fieldSchema, segment, fieldData as T);
-    }
-    if (!isObject(childSchema)) {
-      return undefined;
-    }
-    fieldData = getByPath(fieldData, segment);
-    fieldSchema = schemaUtils.retrieveSchema(childSchema, fieldData as T);
-  }
-  return fieldSchema;
-}
-
-/** Whether the schema that now describes a refilled key rejects what is there. The value was written by a fill
- * running under `oldSchema`, so that is what it has to be judged against, and `sanitizeDataForNewSchema()` is the one
- * judge of what a schema movement does to a value — the same judge the pass applies to the data as a whole, asked
- * about one key. Both sides are wrapped as that key's declaration so it is asked as the per-key question it is: asked
- * about a bare scalar schema it would answer that a schema with no `properties` clears everything.
- *
- * @param schemaUtils - The schema utilities to sanitize with
- * @param path - The path of the refilled key
- * @param newSchema - The schema that describes the key now
- * @param oldSchema - The schema the value there was written under
- * @param value - The value the key holds
- * @returns - True when sanitizing for the new schema does not leave the value as it is
- */
-function isRefillRejected<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  schemaUtils: SchemaUtilsType<T, S, F>,
-  path: FieldPathList,
-  newSchema: S,
-  oldSchema: S,
-  value: unknown,
-): boolean {
-  const key = String(path[path.length - 1]);
-  const judged = schemaUtils.sanitizeDataForNewSchema(
-    { properties: { [key]: newSchema } } as unknown as S,
-    { properties: { [key]: oldSchema } } as unknown as S,
-    { [key]: value },
-  );
-  return !deepEquals(getByPath(judged, key), value);
-}
-
-/** Whether the field at `path` is a select over object or array constants. Changing one sets a single value, the way
- * changing a leaf does, rather than writing a container of values whose own fields raise their changes.
- *
- * @param schemaUtils - The schema utilities to retrieve and search the schema with
- * @param schema - The root schema, retrieved for `formData`
- * @param path - The path of the changed field
- * @param formData - The data the schema was retrieved for, which holds the field's new value
- * @returns - True when the field is such a select
- */
-function isWholeValueSelectAt<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  schemaUtils: SchemaUtilsType<T, S, F>,
-  schema: S,
-  path: FieldPathList,
-  formData: T,
-): boolean {
-  const fieldSchema = resolveSchemaAt<T, S, F>(schemaUtils, schema, path, formData);
-  return fieldSchema !== undefined && isWholeValueSelect<S>(fieldSchema);
-}
-
 /** Applies the data of one `change` to `current`, returning the next state with `current`'s errors. The `newValue` is
  * set at the change's path in the data, which is then run through `deriveFormData()` for any missing defaults and,
  * when the resolved schema changed, sanitization. If `omitExtraData` and `liveOmit` are turned on, the data is filtered
@@ -1813,8 +1081,6 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
   // The derivation below hands back the context for the data it settled on, resolved schema included, so committing
   // whatever it returns is what keeps state's resolved schema and the utilities that resolved it in step.
   let context: RenderContext<T, S, F> = current;
-  // Carried from the committed state unless the derivation below settles the data anew
-  let { formDataSchema, settledFormData, settledFormDataForPairing, settledRetrievedSchema } = current;
   const isRootPath = path.length === 0;
   let formData: T | undefined;
   if (isRootPath) {
@@ -1829,18 +1095,9 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
     formData = (typeof path[0] === 'number' ? [] : {}) as T;
   }
 
-  // When switching from null to an object option in oneOf, MultiSchemaField sends
-  // an object with property names but undefined values (e.g., {types: undefined, content: undefined}).
-  // In this case, pass undefined to deriveFormData to trigger fresh default computation.
-  // Only do this when the previous formData was null/undefined (switching FROM null).
-  const hasOnlyUndefinedValues =
-    isObject(formData) && Object.keys(formData).length > 0 && Object.values(formData).every((v) => v === undefined);
-  const wasPreviouslyNull = oldFormData === null || oldFormData === undefined;
-  const inputForDefaults = hasOnlyUndefinedValues && wasPreviouslyNull ? undefined : formData;
-
   if (isObject(formData) || Array.isArray(formData)) {
     // Tracks if the user cleared a plain (non-oneOf/anyOf) leaf field.
-    // The key is removed twice: once before deriveFormData so inputForDefaults
+    // The key is removed twice: once before deriveFormData so the data it derives from
     // reflects an empty field for conditional schema resolution, and once after so
     // the user's clear overrides any schema default deriveFormData re-applied (#5125)
     // and AJV never receives { key: undefined } for type:"string" fields (#4518).
@@ -1877,80 +1134,20 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
         setByPath(formData, path, valueForPath);
       }
     }
-    const shouldSanitize =
-      current.retrievedSchema !== undefined &&
-      (!isRootPath || change.editedPath !== undefined) &&
-      !disabled &&
-      !readonly &&
-      // An object or array is otherwise written by a container, whose own fields raise the changes to its values
-      (!isRootPath && (isObject(newValue) || Array.isArray(newValue))
-        ? (schemaUtils: SchemaUtilsType<T, S, F>, retrievedSchema: S, changedData: T) =>
-            isWholeValueSelectAt<T, S, F>(schemaUtils, retrievedSchema, path, changedData)
-        : true);
-    // Only the data and its context are derived here; the errors are reconciled below
+    // Only the data and its context are derived here; the errors are reconciled below. A root write is sanitized only
+    // where it stands for an edit, as the data a `transformChange` writes over one does
+    const editedPath = change.editedPath ?? (isRootPath ? undefined : path);
     const derived = deriveFormData(
       current,
-      inputForDefaults,
-      { shouldSanitize, changedPath: change.editedPath ?? path },
+      formData,
+      {
+        isSanitized: editedPath !== undefined && !disabled && !readonly,
+        edit: editedPath && { path: editedPath, newKeyOf: change.editedPath ? undefined : change.newKeyOf },
+      },
       props,
     );
     formData = derived.formData;
     context = derived.context;
-    formDataSchema = derived.formDataSchema;
-    settledFormData = derived.settledFormData;
-    settledFormDataForPairing = derived.settledFormDataForPairing;
-    settledRetrievedSchema = derived.settledRetrievedSchema;
-    // A container write announces where each item went but carries no sanitize of its own, so the snapshot it
-    // carried still holds the pre-move rows and the next edit would pair each row with another row's previous
-    // value. Move the pairing view's rows the same way; an inserted row pairs with its own starting value. The settled
-    // snapshot itself stays as it settled: the old-schema side of the next sanitize resolves its conditionals
-    // against it, and a flip the container write itself caused must still show up as a difference
-    if (change.newKeyOf && settledFormDataForPairing !== undefined && settledFormData === current.settledFormData) {
-      const newArray = (getAt<unknown>(formData, path) as unknown[]) ?? [];
-      const oldLength = (getAt<unknown>(current.formData, path) as unknown[])?.length ?? -1;
-      settledFormDataForPairing = moveSettledArrayAtPath(
-        settledFormDataForPairing,
-        path,
-        change.newKeyOf,
-        newArray,
-        oldLength,
-      );
-    } else if (
-      (isObject(newValue) || Array.isArray(newValue)) &&
-      settledFormDataForPairing !== undefined &&
-      settledFormData === current.settledFormData
-    ) {
-      // A container written with no move announced, as `setFieldValue()` puts a reorder back, may replace rows the view
-      // moved, so an item it sets back to the data as it last settled pairs with that, see `writtenView()`
-      const { data, settledIndexes } = settledFormDataForPairing;
-      const view = getAt<unknown>(data, path);
-      if (view !== undefined) {
-        const walk: WriteWalk = { settledIndexes, rebuilt: [], setBack: [] };
-        const [viewOfWrite] = writtenView(
-          getAt<unknown>(formData, path),
-          getAt<unknown>(current.formData, path),
-          view,
-          settledAtViewPath(settledFormData, settledIndexes, path),
-          path,
-          walk,
-        );
-        const isKept = (entry: SettledIndexes) =>
-          !walk.setBack.some((setBackPath) => isPathPrefix(setBackPath, entry.path));
-        settledFormDataForPairing = {
-          data: isRootPath ? viewOfWrite : setByPath(copyAlongPath(data, path), path, viewOfWrite),
-          settledIndexes: [
-            ...settledIndexes.filter(
-              (entry) =>
-                isKept(entry) &&
-                !walk.rebuilt.some(
-                  (rebuilt) => rebuilt.path.length === entry.path.length && isPathPrefix(rebuilt.path, entry.path),
-                ),
-            ),
-            ...walk.rebuilt.filter(isKept),
-          ],
-        };
-      }
-    }
 
     // Re-set to undefined after merging defaults so the user's clear is preserved in
     // state (#5125 regression: without this, clearing a second field re-applies the
@@ -1976,17 +1173,17 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
   let newFormData = formData;
 
   if (omitExtraData === true && liveOmit === 'onChange') {
-    newFormData = context.schemaUtils.omitExtraData(context.schema, formData);
+    newFormData = context.schemaUtils.omitExtraData(
+      context.schema,
+      formData,
+      fieldStateOf(context.uiState, context.schemaUtils, change.editedPath ?? path),
+    );
   }
 
   return {
     ...current,
     ...context,
     formData: newFormData,
-    formDataSchema,
-    settledFormData,
-    settledFormDataForPairing,
-    settledRetrievedSchema,
     // An edit is data the user made, whose errors they have earned, so a prop change live-validates it from now on
     isDataPassed: true,
   };
@@ -2016,7 +1213,14 @@ export function applyChangeToErrorsOf<T, S extends StrictRJSFSchema, F extends F
     const customErrors = ownErrorsAfterChange(changed, change);
     return {
       ...changed,
-      ...runLiveValidation(props, changed, formData, customErrors, changed.retrievedSchema),
+      ...runLiveValidation(
+        props,
+        changed,
+        formData,
+        customErrors,
+        changed.retrievedSchema,
+        change.editedPath ?? fieldPathToList(change.fieldPath),
+      ),
       customErrors,
     };
   }
@@ -2056,17 +1260,12 @@ export function applyReset<T, S extends StrictRJSFSchema, F extends FormContextT
   props: FormProps<T, S, F>,
 ): FormState<T, S, F> {
   const seed = seedOf(props);
-  const { formData, context, formDataSchema, settledFormData, settledFormDataForPairing, settledRetrievedSchema } =
-    deriveFormData(current, seed, { isReset: true }, props);
+  const { formData, context } = deriveFormData(current, seed, { isReset: true }, props);
   return {
     ...current,
     ...context,
     formData,
     isDataPassed: seed !== undefined,
-    formDataSchema,
-    settledFormData,
-    settledFormDataForPairing,
-    settledRetrievedSchema,
     ...extraErrorsAlone(props.extraErrors),
     // The reset pass has generated the initial defaults, so the next unrelated recompute is not an initial pass and
     // will not resurrect a `ui:initialValue` the user has since cleared
@@ -2090,7 +1289,7 @@ export function applyBlur<T, S extends StrictRJSFSchema, F extends FormContextTy
   const { schema, schemaUtils, customErrors, retrievedSchema } = current;
   const formData =
     omitExtraData === true && liveOmit === 'onBlur'
-      ? schemaUtils.omitExtraData(schema, current.formData)
+      ? schemaUtils.omitExtraData(schema, current.formData, fieldStateOf(current.uiState, schemaUtils))
       : current.formData;
   const validation = isBlurValidated(props)
     ? runLiveValidation(props, current, formData, customErrors, retrievedSchema)

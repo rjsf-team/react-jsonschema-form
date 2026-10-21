@@ -904,7 +904,7 @@ describe('anyOf', () => {
     ])('puts a declined switch back on the option the data fits, $title', async ({ moves }) => {
       const { container } = render(<SwitchedField moves={moves} />);
 
-      await user.selectOptions(container.querySelector('select')!, 'B');
+      await user.selectOptions(elementOf(container, 'select'), 'B');
 
       expect(container.querySelector('select')).toHaveValue('0');
       expect(container.querySelector('select')).toHaveAttribute('id', `root_${moves ? 1 : 0}__anyof_select`);
@@ -918,7 +918,7 @@ describe('anyOf', () => {
       async ({ moves }) => {
         const { container } = render(<SwitchedField answer={{ b: 'y' }} moves={moves} />);
 
-        await user.selectOptions(container.querySelector('select')!, 'B');
+        await user.selectOptions(elementOf(container, 'select'), 'B');
 
         expect(container.querySelector('select')).toHaveValue('1');
         expect(container.querySelector('select')).toHaveAttribute('id', `root_${moves ? 1 : 0}__anyof_select`);
