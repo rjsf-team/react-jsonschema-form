@@ -1,7 +1,9 @@
 import { ID_KEY, REF_KEY, ROOT_SCHEMA_PREFIX } from './constants.ts';
 import isObject from './isObject.ts';
 import parseSchemaGraph from './schema/graph/parseSchemaGraph.ts';
-import type { SchemaGraph } from './schema/graph/parseSchemaGraph.ts';
+import type { AdoptedSchema, SchemaGraph } from './schema/graph/parseSchemaGraph.ts';
+import { readProvenance } from './schema/graph/provenance.ts';
+import { declaringSeed } from './schema/retrieveSchema.ts';
 import { resolveUri } from './schemaUri.ts';
 import type { GenericObjectType, RJSFSchema, StrictRJSFSchema } from './types.ts';
 
@@ -24,6 +26,23 @@ function refTo(pointer: string): string {
   return `#${pointer.replace(/[^\uD800-\uDFFF]+/gu, (wellFormed) => encodeURI(wellFormed)).replaceAll('#', '%23')}`;
 }
 
+/** Returns the node of the subschema `holder` stands for in the root `graph` was parsed from, and the graph holding
+ * it. A subschema `retrieveSchema()` handed out is a copy no graph holds, merged from declarations that can sit in
+ * several resources, so its `$ref` is read from the declaration that wrote it, which its stamp names.
+ */
+function holderNode<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, holder: object): AdoptedSchema<S> | undefined {
+  const stamped = readProvenance<S>(holder, graph);
+  const ref: unknown = Reflect.get(holder, REF_KEY);
+  if (stamped !== undefined && typeof ref === 'string') {
+    const declaring = declaringSeed(stamped.graph, stamped.seeds, ref);
+    if (declaring !== undefined) {
+      return { graph: stamped.graph, node: declaring.node };
+    }
+  }
+  const id = graph.byObject(holder);
+  return id === undefined ? undefined : { graph, node: id };
+}
+
 /** Returns the `nestedRef` of a `RefRewrite` for the root `graph` was parsed from, registered under `rootId`. A
  * subschema of the root that sits in a resource of its own, below an `$id` of its own or one around it, holds a `$ref`
  * that resolves against that resource, but the subschema a validator is handed, such as an option or an `if`, no
@@ -41,13 +60,15 @@ function nestedRefOf<S extends StrictRJSFSchema>(
   /* v8 ignore next -- the root of a graph is the object node the root schema parsed to */
   const rootBase = root.kind === 'schema' ? root.baseUri : undefined;
   return (holder, scope) => {
-    const id = graph.byObject(holder);
-    const node = id === undefined ? undefined : graph.node(id);
-    if (node?.kind !== 'schema' || node.baseUri === rootBase || node.ref === undefined) {
+    const held = holderNode(graph, holder);
+    const node = held === undefined ? undefined : held.graph.node(held.node);
+    if (held === undefined || node?.kind !== 'schema' || node.baseUri === rootBase || node.ref === undefined) {
       return undefined;
     }
-    const target = graph.node(node.ref);
-    if (target.kind === 'invalid') {
+    const target = held.graph.node(node.ref);
+    // Only a pointer the root's own graph knows names the target in the root the validator registers: a target that
+    // a schema adopted from outside the root holds is known to the graph extending the root with it alone
+    if (target.kind === 'invalid' || graph.byPointer(target.pointer) === undefined) {
       return undefined;
     }
     const ref = `${rootId}${refTo(target.pointer)}`;

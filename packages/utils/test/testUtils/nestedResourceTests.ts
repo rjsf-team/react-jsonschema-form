@@ -1,5 +1,6 @@
 import type { RJSFSchema, ValidatorType } from '../../src/index.ts';
 import { createSchemaUtils, isSchemaObject } from '../../src/index.ts';
+import { PET_RESOURCE_SCHEMA } from './testData.ts';
 
 const DRAFT_2020_12 = 'https://json-schema.org/draft/2020-12/schema';
 
@@ -119,6 +120,107 @@ export default function nestedResourceTests(validatorFor: (rootSchema: RJSFSchem
       expect(schemaUtils.getDefaultFormState(rootSchema, { n: { kind: 'root' } })).toEqual({
         n: { kind: 'root', e: 'e' },
       });
+    });
+  });
+}
+
+/** Returns the options of the field `p` of the root as `retrieveSchema()` hands them out for `formData`, each retrieved
+ * for it as `MultiSchemaField` retrieves the option it renders
+ */
+function viewsOf(validator: ValidatorType, rootSchema: RJSFSchema, formData: unknown): RJSFSchema[] {
+  const schemaUtils = createSchemaUtils({ validator }, rootSchema);
+  const field = schemaUtils.retrieveSchema(rootSchema, { p: formData }).properties?.p;
+  const view = isSchemaObject(field) ? schemaUtils.retrieveSchema(field, formData) : {};
+  const options = [...(view.oneOf ?? []), ...(view.anyOf ?? [])].filter(isSchemaObject);
+  return options.map((option) => schemaUtils.retrieveSchema(option, formData));
+}
+
+/** Runs the cases where the validator is handed an option as `retrieveSchema()` hands it out, whose subschemas are
+ * merged from declarations in a resource of its own, holding a `$ref` written there: a property declared both beside a
+ * `$ref` and in the definition it names, and an option a merge of two lists rebuilds. Each validator package passes a
+ * validator for the root it is given, of the dialect the root names. The answers are those of the same schemas written
+ * without the resource.
+ *
+ * @param validatorFor - Returns a validator for the root schema it is given
+ */
+export function mergedResourceViewTests(validatorFor: (rootSchema: RJSFSchema) => ValidatorType) {
+  describe('a $ref a merged subschema of an option holds, written in a resource of its own', () => {
+    // The root's own `cat` is an object holding `b`, which a `$ref` resolved against the root would read
+    const homonym: RJSFSchema = {
+      ...PET_RESOURCE_SCHEMA,
+      $defs: { ...PET_RESOURCE_SCHEMA.$defs, cat: { type: 'object', properties: { b: { type: 'string' } } } },
+    };
+    // The same schema written without the resource, its `cat` a definition of the root's
+    const flat: RJSFSchema = {
+      ...PET_RESOURCE_SCHEMA,
+      $defs: {
+        petCat: { type: 'object', properties: { a: { type: 'string' } } },
+        pet: { type: 'object', properties: { kind: { $ref: '#/$defs/petCat' } } },
+        dog: PET_RESOURCE_SCHEMA.$defs?.dog ?? {},
+      },
+      properties: {
+        p: { oneOf: [{ $ref: '#/$defs/pet', properties: { kind: { title: 'Kind' } } }, { $ref: '#/$defs/dog' }] },
+      },
+    };
+    it.each<[string, RJSFSchema]>([
+      ['', PET_RESOURCE_SCHEMA],
+      [', where the root defines a definition of the same name', homonym],
+      [', as the same schema written without the resource does', flat],
+    ])("checks a merged property's $ref against the resource's definition%s", (_, rootSchema) => {
+      const validator = validatorFor(rootSchema);
+      const schemaUtils = createSchemaUtils({ validator }, rootSchema);
+      const check = (formData: { kind?: unknown }) => {
+        const views = viewsOf(validator, rootSchema, formData);
+        const kind = views[0]?.properties?.kind;
+        return {
+          kind: isSchemaObject(kind) && validator.isValid(kind, formData.kind, rootSchema),
+          first: schemaUtils.getFirstMatchingOption(formData, views),
+        };
+      };
+      expect(check({ kind: { a: 'x', b: 'y' } })).toEqual({ kind: true, first: 0 });
+      expect(check({ kind: { a: 1 } })).toEqual({ kind: false, first: 0 });
+      expect(check({ kind: 'woof' })).toEqual({ kind: false, first: 1 });
+    });
+    it('checks the $ref of an option a merge of two lists in the resource rebuilt against that resource', () => {
+      const option = (key: string, beside: RJSFSchema = { $ref: '#/$defs/s' }, required?: string): RJSFSchema => ({
+        properties: { [key]: beside },
+        ...(required === undefined ? {} : { required: [required] }),
+      });
+      // The root's own `s` is a number, where the resource's is a string
+      const rootSchema: RJSFSchema = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        $id: 'https://example.com/root.json',
+        $defs: {
+          s: { type: 'number' },
+          res: {
+            $id: 'res.json',
+            $defs: {
+              s: { type: 'string' },
+              o: {
+                type: 'object',
+                allOf: [
+                  { anyOf: [option('a', undefined, 'a'), option('b', undefined, 'b')] },
+                  { anyOf: [option('a', { title: 'A' }), option('c')] },
+                ],
+              },
+            },
+          },
+        },
+        type: 'object',
+        properties: { p: { $ref: 'res.json#/$defs/o' } },
+      };
+      const validator = validatorFor(rootSchema);
+      const schemaUtils = createSchemaUtils({ validator }, rootSchema);
+      const check = (formData: unknown) => {
+        const views = viewsOf(validator, rootSchema, formData);
+        return {
+          validity: views.map((view) => validator.isValid(view, formData, rootSchema)),
+          first: schemaUtils.getFirstMatchingOption(formData, views),
+        };
+      };
+      expect(check({ a: 'z' })).toEqual({ validity: [true, true, false, false], first: 0 });
+      expect(check({ b: 'z', c: 'y' })).toEqual({ validity: [false, false, true, true], first: 1 });
+      expect(check({ a: 1 })).toEqual({ validity: [false, false, false, false], first: 2 });
     });
   });
 }

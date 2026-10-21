@@ -24,7 +24,7 @@ import { Ajv2020 } from 'ajv/dist/2020.js';
 import metaSchemaDraft6 from 'ajv/lib/refs/json-schema-draft-06.json' with { type: 'json' };
 import type { Mock } from 'vitest';
 
-import nestedResourceTests from '../../utils/test/testUtils/nestedResourceTests.ts';
+import nestedResourceTests, { mergedResourceViewTests } from '../../utils/test/testUtils/nestedResourceTests.ts';
 import type { Localizer } from '../src/index.ts';
 import AJV8Validator from '../src/validator.ts';
 import { expectWarn } from './harness/testData.ts';
@@ -3496,7 +3496,8 @@ describe('AJV8Validator resolving a $ref local to the root', () => {
 });
 
 describe('AJV8Validator', () => {
-  nestedResourceTests(
-    (rootSchema) => new AJV8Validator(String(rootSchema.$schema).includes('2020-12') ? { AjvClass: Ajv2020 } : {}),
-  );
+  const validatorFor = (rootSchema: RJSFSchema) =>
+    new AJV8Validator(String(rootSchema.$schema).includes('2020-12') ? { AjvClass: Ajv2020 } : {});
+  nestedResourceTests(validatorFor);
+  mergedResourceViewTests(validatorFor);
 });

@@ -9,7 +9,7 @@ import type {
 } from '@rjsf/utils';
 import { ROOT_SCHEMA_PREFIX } from '@rjsf/utils';
 
-import nestedResourceTests from '../../utils/test/testUtils/nestedResourceTests.ts';
+import nestedResourceTests, { mergedResourceViewTests } from '../../utils/test/testUtils/nestedResourceTests.ts';
 import createCfworkerInstance, { installFormats } from '../src/createCfworkerInstance.ts';
 import customizeValidator from '../src/customizeValidator.ts';
 import * as pkg from '../src/index.ts';
@@ -303,7 +303,8 @@ describe('validateFormData() with a transformErrors that clears every message', 
 });
 
 describe('CFWorkerValidator', () => {
-  nestedResourceTests((rootSchema) =>
-    customizeValidator(String(rootSchema.$schema).includes('2020-12') ? { draft: '2020-12' } : {}),
-  );
+  const validatorFor = (rootSchema: RJSFSchema) =>
+    customizeValidator(String(rootSchema.$schema).includes('2020-12') ? { draft: '2020-12' } : {});
+  nestedResourceTests(validatorFor);
+  mergedResourceViewTests(validatorFor);
 });

@@ -434,8 +434,14 @@ export function resolveMergedOwnRef<S extends StrictRJSFSchema = RJSFSchema>(
   return resolved;
 }
 
-/** The seed declaring `ref`, the own `$ref` of a schema merged from several declarations */
-function declaringSeed<S extends StrictRJSFSchema>(
+/** Returns the seed declaring `ref`, the own `$ref` of a schema merged from several declarations
+ *
+ * @param graph - The graph holding the seeds
+ * @param seeds - The seeds of the field the schema is the merged schema of
+ * @param ref - The `$ref` as the schema holds it
+ * @returns - The seed whose subschema writes that `$ref`, if one does
+ */
+export function declaringSeed<S extends StrictRJSFSchema>(
   graph: SchemaGraph<S>,
   seeds: readonly Seed[],
   ref: string,
