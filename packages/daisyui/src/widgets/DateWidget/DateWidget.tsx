@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useLayoutEffect, useMemo } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { isNamedByTemplateLabel, TranslatableString } from '@rjsf/utils';
 import { format, startOfDay } from 'date-fns';
@@ -152,8 +152,10 @@ export default function DateWidget<
     containerRef.current.style.zIndex = '99999';
   }, [containerRef, triggerRef]);
 
-  // Handle window resize to reposition the calendar
-  useEffect(() => {
+  // A layout Effect, so the popup each opening mounts is in place before the browser first paints it; it then follows
+  // the trigger on resize and scroll. A scroll of an element around the field, such as a scrolling panel or dialog,
+  // doesn't bubble, so it reaches the window only in the capture phase
+  useLayoutEffect(() => {
     if (!isOpen) {
       return () => {};
     }
@@ -161,14 +163,13 @@ export default function DateWidget<
     // Position initially
     renderCalendar();
 
-    // Update position on resize
     const win = windowOf(triggerRef.current);
     win.addEventListener('resize', renderCalendar);
-    win.addEventListener('scroll', renderCalendar);
+    win.addEventListener('scroll', renderCalendar, { capture: true });
 
     return () => {
       win.removeEventListener('resize', renderCalendar);
-      win.removeEventListener('scroll', renderCalendar);
+      win.removeEventListener('scroll', renderCalendar, { capture: true });
     };
   }, [isOpen, renderCalendar, triggerRef]);
 
