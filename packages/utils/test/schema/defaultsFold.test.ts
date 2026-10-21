@@ -1219,6 +1219,28 @@ describe('getDefaultFormState() reading $ref, branches and extra keys as the for
       ['skipping empty defaults', { emptyObjectFields: 'skipEmptyDefaults' }],
     ];
     it.each(behaviors)(
+      "matches the data to a merged property's $ref in the resource, beside an allOf left unmerged, %s",
+      (_, behavior) => {
+        const option = (key: string, beside: RJSFSchema): RJSFSchema => ({ properties: { [key]: beside } });
+        const resource: RJSFSchema = {
+          $defs: {
+            o: {
+              allOf: [{ title: 'O' }],
+              properties: { k: { $ref: '#/$defs/s' } },
+              oneOf: [option('a', { type: 'string', default: 'a' }), option('b', { type: 'string' })],
+            },
+          },
+        };
+        const schema = rootOf(
+          { $ref: 'res.json#/$defs/o', properties: { k: { title: 'K' } } },
+          { const: 'c' },
+          resource,
+        );
+        expect(defaultsOf(schema, { p: { k: 'a' } }, behavior)).toEqual({ p: { k: 'a', a: 'a' } });
+        expect(defaultsOf(schema, { p: { a: 'z' } }, behavior)).toEqual({ p: { k: 'c', a: 'z' } });
+      },
+    );
+    it.each(behaviors)(
       "picks an option a dependency in the resource brings by the option's $ref there, %s",
       (_, behavior) => {
         const resource: RJSFSchema = {

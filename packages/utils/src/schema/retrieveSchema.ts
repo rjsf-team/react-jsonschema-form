@@ -216,6 +216,23 @@ function mergesNothing<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, seeds:
   );
 }
 
+/** Retrieves the field `field` describes as `retrieveSchema()` retrieves a schema it handed out for that field: a schema
+ * merged from declarations in several resources holds subschemas no graph holds, which retrieving it as a call root
+ * would resolve against the root's base, where retrieving the field resolves each against its own resource
+ *
+ * @param context - The `SchemaContext` that will be forwarded to all the APIs
+ * @param field - The provenance of the field
+ * @param [data] - The field's data
+ * @returns - The field's schema
+ */
+export function retrieveField<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  field: Provenance<S>,
+  data?: unknown,
+): S {
+  return buildView<S, F>(context, parseSchemaGraph<S>(field.graph.rawRoot), field, data, false);
+}
+
 /** Returns the field `schema` is the schema of. An unstamped schema, or one stamped for another root, is a call root.
  * A copy with `RJSF_REF_CYCLE_KEY` set to `false` is the expansion of the collapsed field it copies: its seeds restart,
  * and so does the guard chain its children are checked against. Any other copy of a handed-out schema, such as an
