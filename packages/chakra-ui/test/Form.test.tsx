@@ -61,7 +61,7 @@ describe('chakra-ui AltDateWidget', () => {
       <WrappedForm
         schema={{ type: 'string', format: 'date' }}
         uiSchema={{ 'ui:widget': 'alt-date', 'ui:readonly': true }}
-        formData='2020-01-02'
+        initialFormData='2020-01-02'
         validator={validator}
         onChange={onChange}
       />,
@@ -82,7 +82,7 @@ describe('chakra-ui AltDateWidget', () => {
         <WrappedForm
           schema={{ type: 'string', format: 'date' }}
           uiSchema={{ 'ui:widget': 'alt-date', 'ui:disabled': true }}
-          formData='2020-01-02'
+          initialFormData='2020-01-02'
           templates={{ FieldTemplate: BareFieldTemplate }}
           validator={validator}
           onChange={onChange}
@@ -230,7 +230,7 @@ describe('chakra-ui SelectWidget', () => {
           },
         }}
         uiSchema={{ 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] } }}
-        formData={{ pet: { name: 'Rex' } }}
+        initialFormData={{ pet: { name: 'Rex' } }}
         validator={validator}
       />,
     );
@@ -639,7 +639,7 @@ describe("chakra-ui widgets are named by their label and carry their field's id 
     render(
       <WrappedForm
         schema={{ type: 'object', additionalProperties: { type: 'string' } }}
-        formData={{ foo: 'a' }}
+        initialFormData={{ foo: 'a' }}
         validator={validator}
       />,
     );
@@ -958,7 +958,7 @@ describe('chakra-ui ArrayFieldTemplate', () => {
       <WrappedForm
         schema={{ type: 'object', properties: { tags: { type: 'array', title: 'Tags', items: { type: 'string' } } } }}
         uiSchema={{ tags: { 'ui:label': false }, 'ui:globalOptions': { enableOptionalDataFieldForType: ['array'] } }}
-        formData={{ tags: ['a'] }}
+        initialFormData={{ tags: ['a'] }}
         validator={validator}
       />,
     );
@@ -1097,7 +1097,7 @@ describe('chakra-ui ObjectFieldTemplate', () => {
           properties: { pet: { type: 'object', title: 'Pet', properties: { a: { type: 'string' } } } },
         }}
         uiSchema={{ 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] }, pet: { 'ui:label': false } }}
-        formData={{ pet: { a: 'x' } }}
+        initialFormData={{ pet: { a: 'x' } }}
         validator={validator}
       />,
     );
@@ -1199,7 +1199,7 @@ describe("chakra-ui draws a widget's own label under the id its plan gives it", 
         <WrappedForm
           schema={{ type: 'object', properties: { pet: { title: 'Pet', anyOf: [{ title: 'Kind', ...option }] } } }}
           uiSchema={{ pet: { 'ui:widget': 'radio', anyOf: [optionUiSchema] } }}
-          formData={{ pet: value }}
+          initialFormData={{ pet: value }}
           validator={validator}
         />,
       );
@@ -1225,7 +1225,7 @@ describe('chakra-ui WrapIfAdditionalTemplate', () => {
           additionalProperties: { type: 'string' },
         }}
         uiSchema={{ additionalProperties: { 'ui:label': false } }}
-        formData={{ foo: 'a' }}
+        initialFormData={{ foo: 'a' }}
         validator={validator}
       />,
     );

@@ -68,7 +68,7 @@ const oneOf: Sample = {
       },
     ],
   },
-  formData: {},
+  initialFormData: {},
 };
 
 export default oneOf;

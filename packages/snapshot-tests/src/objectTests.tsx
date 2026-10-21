@@ -51,7 +51,7 @@ export function objectTests(Form: ComponentType<FormProps>) {
         type: 'object',
         additionalProperties: true,
       };
-      const { asFragment } = render(<Form schema={schema} validator={validator} formData={{ foo: 'foo' }} />);
+      const { asFragment } = render(<Form schema={schema} validator={validator} initialFormData={{ foo: 'foo' }} />);
       expect(asFragment()).toMatchSnapshot();
     });
     test('additionalProperties, label off', async () => {
@@ -63,7 +63,7 @@ export function objectTests(Form: ComponentType<FormProps>) {
         'ui:label': false,
       };
       const { asFragment } = render(
-        <Form schema={schema} uiSchema={uiSchema} validator={validator} formData={{ foo: 'foo' }} />,
+        <Form schema={schema} uiSchema={uiSchema} validator={validator} initialFormData={{ foo: 'foo' }} />,
       );
       expect(asFragment()).toMatchSnapshot();
     });
@@ -75,7 +75,7 @@ export function objectTests(Form: ComponentType<FormProps>) {
           description: 'item description',
         },
       };
-      const { asFragment } = render(<Form schema={schema} validator={validator} formData={{ foo: 'foo' }} />);
+      const { asFragment } = render(<Form schema={schema} validator={validator} initialFormData={{ foo: 'foo' }} />);
       expect(asFragment()).toMatchSnapshot();
     });
     test('additionalProperties, object type', async () => {
@@ -90,7 +90,7 @@ export function objectTests(Form: ComponentType<FormProps>) {
           },
         },
       };
-      const { asFragment } = render(<Form schema={schema} validator={validator} formData={{ foo: 'foo' }} />);
+      const { asFragment } = render(<Form schema={schema} validator={validator} initialFormData={{ foo: 'foo' }} />);
       expect(asFragment()).toMatchSnapshot();
     });
     test('additionalProperties, array type', async () => {
@@ -103,7 +103,7 @@ export function objectTests(Form: ComponentType<FormProps>) {
           },
         },
       };
-      const { asFragment } = render(<Form schema={schema} validator={validator} formData={{ foo: 'foo' }} />);
+      const { asFragment } = render(<Form schema={schema} validator={validator} initialFormData={{ foo: 'foo' }} />);
       expect(asFragment()).toMatchSnapshot();
     });
     test('additionalProperties, propertyNames enum', async () => {
@@ -112,7 +112,7 @@ export function objectTests(Form: ComponentType<FormProps>) {
         additionalProperties: { type: 'string' },
         propertyNames: { enum: ['foo', 'bar', 'baz'] },
       };
-      const { asFragment } = render(<Form schema={schema} validator={validator} formData={{ foo: 'foo' }} />);
+      const { asFragment } = render(<Form schema={schema} validator={validator} initialFormData={{ foo: 'foo' }} />);
       expect(asFragment()).toMatchSnapshot();
     });
     test('additionalProperties with a description, propertyNames enum', async () => {
@@ -121,7 +121,7 @@ export function objectTests(Form: ComponentType<FormProps>) {
         additionalProperties: { type: 'string', description: 'A description' },
         propertyNames: { enum: ['foo', 'bar', 'baz'] },
       };
-      const { asFragment } = render(<Form schema={schema} validator={validator} formData={{ foo: 'foo' }} />);
+      const { asFragment } = render(<Form schema={schema} validator={validator} initialFormData={{ foo: 'foo' }} />);
       expect(asFragment()).toMatchSnapshot();
     });
     test('deprecated additionalProperties, propertyNames enum', async () => {
@@ -132,7 +132,7 @@ export function objectTests(Form: ComponentType<FormProps>) {
         additionalProperties: { type: 'string', deprecated: true },
         propertyNames: { enum: ['foo', 'bar', 'baz'] },
       };
-      const { asFragment } = render(<Form schema={schema} validator={validator} formData={{ foo: 'foo' }} />);
+      const { asFragment } = render(<Form schema={schema} validator={validator} initialFormData={{ foo: 'foo' }} />);
       expect(asFragment()).toMatchSnapshot();
     });
     test('show add button and fields if additionalProperties is true and not an object', async () => {
@@ -142,7 +142,7 @@ export function objectTests(Form: ComponentType<FormProps>) {
       const formData = {
         additionalProperty: 'should appear',
       };
-      const { asFragment } = render(<Form schema={schema} validator={validator} formData={formData} />);
+      const { asFragment } = render(<Form schema={schema} validator={validator} initialFormData={formData} />);
       expect(asFragment()).toMatchSnapshot();
     });
     describe('with title and description', () => {
@@ -164,7 +164,7 @@ export function objectTests(Form: ComponentType<FormProps>) {
           ...titleAndDesc,
           additionalProperties: true,
         };
-        const { asFragment } = render(<Form schema={schema} validator={validator} formData={{ foo: 'foo' }} />);
+        const { asFragment } = render(<Form schema={schema} validator={validator} initialFormData={{ foo: 'foo' }} />);
         expect(asFragment()).toMatchSnapshot();
       });
       test('show add button and fields if additionalProperties is true and not an object', async () => {
@@ -175,7 +175,7 @@ export function objectTests(Form: ComponentType<FormProps>) {
         const formData = {
           additionalProperty: 'should appear',
         };
-        const { asFragment } = render(<Form schema={schema} validator={validator} formData={formData} />);
+        const { asFragment } = render(<Form schema={schema} validator={validator} initialFormData={formData} />);
         expect(asFragment()).toMatchSnapshot();
       });
     });
@@ -197,7 +197,7 @@ export function objectTests(Form: ComponentType<FormProps>) {
           additionalProperties: true,
         };
         const { asFragment } = render(
-          <Form schema={schema} uiSchema={uiTitleAndDesc} validator={validator} formData={{ foo: 'foo' }} />,
+          <Form schema={schema} uiSchema={uiTitleAndDesc} validator={validator} initialFormData={{ foo: 'foo' }} />,
         );
         expect(asFragment()).toMatchSnapshot();
       });
@@ -209,7 +209,7 @@ export function objectTests(Form: ComponentType<FormProps>) {
           additionalProperty: 'should appear',
         };
         const { asFragment } = render(
-          <Form schema={schema} uiSchema={uiTitleAndDesc} validator={validator} formData={formData} />,
+          <Form schema={schema} uiSchema={uiTitleAndDesc} validator={validator} initialFormData={formData} />,
         );
         expect(asFragment()).toMatchSnapshot();
       });
@@ -234,7 +234,7 @@ export function objectTests(Form: ComponentType<FormProps>) {
           additionalProperties: true,
         };
         const { asFragment } = render(
-          <Form schema={schema} uiSchema={uiTitleAndDesc} validator={validator} formData={{ foo: 'foo' }} />,
+          <Form schema={schema} uiSchema={uiTitleAndDesc} validator={validator} initialFormData={{ foo: 'foo' }} />,
         );
         expect(asFragment()).toMatchSnapshot();
       });
@@ -259,7 +259,7 @@ export function objectTests(Form: ComponentType<FormProps>) {
           additionalProperties: true,
         };
         const { asFragment } = render(
-          <Form schema={schema} uiSchema={labelsOff} validator={validator} formData={{ foo: 'foo' }} />,
+          <Form schema={schema} uiSchema={labelsOff} validator={validator} initialFormData={{ foo: 'foo' }} />,
         );
         expect(asFragment()).toMatchSnapshot();
       });
@@ -272,7 +272,7 @@ export function objectTests(Form: ComponentType<FormProps>) {
           additionalProperty: 'should appear',
         };
         const { asFragment } = render(
-          <Form schema={schema} uiSchema={labelsOff} validator={validator} formData={formData} />,
+          <Form schema={schema} uiSchema={labelsOff} validator={validator} initialFormData={formData} />,
         );
         expect(asFragment()).toMatchSnapshot();
       });
@@ -335,7 +335,12 @@ export function objectTests(Form: ComponentType<FormProps>) {
           customField: 'customValue',
         };
         const { asFragment } = render(
-          <Form schema={schema} formData={formData} validator={validator} nameGenerator={bracketNameGenerator} />,
+          <Form
+            schema={schema}
+            initialFormData={formData}
+            validator={validator}
+            nameGenerator={bracketNameGenerator}
+          />,
         );
         expect(asFragment()).toMatchSnapshot();
       });
@@ -360,7 +365,12 @@ export function objectTests(Form: ComponentType<FormProps>) {
           tags: ['developer', 'designer'],
         };
         const { asFragment } = render(
-          <Form schema={schema} formData={formData} validator={validator} nameGenerator={bracketNameGenerator} />,
+          <Form
+            schema={schema}
+            initialFormData={formData}
+            validator={validator}
+            nameGenerator={bracketNameGenerator}
+          />,
         );
         expect(asFragment()).toMatchSnapshot();
       });
@@ -425,7 +435,12 @@ export function objectTests(Form: ComponentType<FormProps>) {
           items: ['a', 'b'],
         };
         const { asFragment } = render(
-          <Form schema={schema} formData={formData} validator={validator} nameGenerator={dotNotationNameGenerator} />,
+          <Form
+            schema={schema}
+            initialFormData={formData}
+            validator={validator}
+            nameGenerator={dotNotationNameGenerator}
+          />,
         );
         expect(asFragment()).toMatchSnapshot();
       });
@@ -448,7 +463,9 @@ export function objectTests(Form: ComponentType<FormProps>) {
           },
         },
       };
-      const { container } = render(<Form schema={schema} formData={{ tags: { name: 'a' } }} validator={validator} />);
+      const { container } = render(
+        <Form schema={schema} initialFormData={{ tags: { name: 'a' } }} validator={validator} />,
+      );
 
       // The ids RJSF gives, not those a library generates for its own parts. A theme's widget may list every part's id
       // whether or not it renders, so only the `tags` field's own description ids are required to exist

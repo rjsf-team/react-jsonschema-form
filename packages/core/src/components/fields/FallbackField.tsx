@@ -37,7 +37,6 @@ import type { JSONSchema7TypeName } from 'json-schema';
 
 import { displaysLabel } from './fieldWidgetUtils.ts';
 import OwnTitleAndDescription from './OwnTitleAndDescription.tsx';
-import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 
 /**
  * Get the types the type selection component offers for a schema: the ones the schema allows, or every JSON Schema
@@ -61,8 +60,8 @@ export function rendersTypeSelector<S extends StrictRJSFSchema = RJSFSchema>(sch
 /**
  * Get the type the selection starts on when the form data gives nothing to match: for a schema listing its types, the
  * type of the field its widget renders, and otherwise the first type the schema offers that can hold a value. Starting
- * on `null` would have `NullField` write a `null` into the form data for a field the user has not touched. A schema
- * that offers nothing but `null` starts there all the same, since it is the only value that schema allows.
+ * on `null` would show a `null` for a field the user has not touched, which the data does not hold. A schema that
+ * offers nothing but `null` starts there all the same, since it is the only value that schema allows.
  * @param schema - The schema being rendered by the fallback UI.
  * @param types - The types the selection offers.
  * @param [widget] - The `ui:widget` for the field, if any
@@ -366,7 +365,6 @@ function FallbackUiField<
   } = props;
   const { translateString, fields, templates, widgets, globalFormOptions, globalUiOptions, schemaUtils } = registry;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const readsFormData = useReadsFormData(FallbackField);
   const types = useMemo(() => getFallbackTypes<S>(schema), [schema]);
   const defaultType = useMemo(
     () => getDefaultType<S>(schema, types, uiOptions.widget),
@@ -463,12 +461,7 @@ function FallbackUiField<
   );
 
   const { SchemaField } = fields;
-  // The value field renders this field's own data; the type selector, which renders the type, is not vouched for
-  const valueField = (
-    <RawFormDataContext value={readsFormData ? SchemaField : undefined}>
-      <SchemaField {...props} schema={valueSchema} uiSchema={valueUiSchema} />
-    </RawFormDataContext>
-  );
+  const valueField = <SchemaField {...props} schema={valueSchema} uiSchema={valueUiSchema} />;
 
   // One type is not a choice to be made, so the value field renders alone: without a control that can only be left as
   // it is, and without the template that lays that control out above it, whose wrapper would otherwise put a theme's

@@ -74,7 +74,6 @@ import type { NamedFieldResolution } from './namedField.ts';
 import NamedFieldContext from './NamedFieldContext.ts';
 import type { NamedFieldPath } from './NamedFieldContext.ts';
 import PresentationContext, { useInheritedPresentation } from './PresentationContext.ts';
-import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 import ShownOptionContext from './ShownOptionContext.ts';
 import useSchemaFieldPresentation from './useSchemaFieldPresentation.ts';
 
@@ -780,7 +779,6 @@ function SchemaFieldRender<
   } = props;
   const { schemaUtils, fields } = registry;
   const { AnyOfField: _AnyOfField, OneOfField: _OneOfField, CyclicSchemaField } = fields;
-  const readsFormData = useReadsFormData(SchemaField);
   const {
     namedFieldAbove,
     namedAbove,
@@ -932,11 +930,7 @@ function SchemaFieldRender<
   // which is when the field is left unresolved above. The check must come after all hook calls to satisfy React's
   // rules of hooks.
   if (!uiField || !fieldToRender) {
-    return withUiState(
-      <RawFormDataContext value={readsFormData ? CyclicSchemaField : undefined}>
-        <CyclicSchemaField {...props} />
-      </RawFormDataContext>,
-    );
+    return withUiState(<CyclicSchemaField {...props} />);
   }
   const { FieldComponent } = fieldToRender;
 
@@ -1015,9 +1009,7 @@ function SchemaFieldRender<
   const field = (
     <NamedFieldContext value={namedFieldPath}>
       <ShownOptionContext value={fieldShownOption}>
-        <PresentationContext value={isContainer ? undefined : presentationBelow}>
-          <RawFormDataContext value={readsFormData ? FieldComponent : undefined}>{fieldComponent}</RawFormDataContext>
-        </PresentationContext>
+        <PresentationContext value={isContainer ? undefined : presentationBelow}>{fieldComponent}</PresentationContext>
       </ShownOptionContext>
     </NamedFieldContext>
   );
@@ -1091,46 +1083,41 @@ function SchemaFieldRender<
     registry,
   };
 
-  // The field component and the option field are each vouched for directly: a custom template may pass on a view of
-  // the data. The named-field context is provided whether or not a field is named here, since adding or removing a
-  // provider would remount everything below it
+  // The named-field context is provided whether or not a field is named here, since adding or removing a provider would
+  // remount everything below it
   return withUiState(
-    <RawFormDataContext value={undefined}>
-      <FieldTemplate {...fieldProps}>
-        <>
-          {field}
-          {XxxOfField && (
-            <NamedFieldContext value={ownNamedFieldPath}>
-              <ShownOptionContext value={shownOption}>
-                <PresentationContext value={optionsBelow}>
-                  <RawFormDataContext value={readsFormData ? XxxOfField : undefined}>
-                    <XxxOfField
-                      name={name}
-                      disabled={disabled}
-                      readonly={readonly}
-                      hideError={hideError}
-                      errorSchema={errorSchema}
-                      formData={formData}
-                      fieldPath={fieldPath}
-                      id={fieldId}
-                      onBlur={props.onBlur}
-                      onChange={handleOptionFieldChange}
-                      onFocus={props.onFocus}
-                      options={xxxOfOptions}
-                      registry={registry}
-                      required={effectiveRequired}
-                      schema={schema}
-                      uiSchema={uiSchema}
-                      presentation={optionsPresentation}
-                    />
-                  </RawFormDataContext>
-                </PresentationContext>
-              </ShownOptionContext>
-            </NamedFieldContext>
-          )}
-        </>
-      </FieldTemplate>
-    </RawFormDataContext>,
+    <FieldTemplate {...fieldProps}>
+      <>
+        {field}
+        {XxxOfField && (
+          <NamedFieldContext value={ownNamedFieldPath}>
+            <ShownOptionContext value={shownOption}>
+              <PresentationContext value={optionsBelow}>
+                <XxxOfField
+                  name={name}
+                  disabled={disabled}
+                  readonly={readonly}
+                  hideError={hideError}
+                  errorSchema={errorSchema}
+                  formData={formData}
+                  fieldPath={fieldPath}
+                  id={fieldId}
+                  onBlur={props.onBlur}
+                  onChange={handleOptionFieldChange}
+                  onFocus={props.onFocus}
+                  options={xxxOfOptions}
+                  registry={registry}
+                  required={effectiveRequired}
+                  schema={schema}
+                  uiSchema={uiSchema}
+                  presentation={optionsPresentation}
+                />
+              </PresentationContext>
+            </ShownOptionContext>
+          </NamedFieldContext>
+        )}
+      </>
+    </FieldTemplate>,
   );
 }
 

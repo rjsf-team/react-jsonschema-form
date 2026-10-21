@@ -1,4 +1,4 @@
-import { createRef, useEffect, useState } from 'react';
+import { createRef, useState } from 'react';
 import type { RJSFSchema } from '@rjsf/utils';
 import { buttonId, getByPath } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
@@ -43,7 +43,7 @@ describe('sanitize as a diff of the field trees before and after a change', () =
       />,
     );
     // The array write flips the conditional, and its own sanitize judges `color` against the `then`
-    await user.click(container.querySelector(`#${buttonId('root_list', 'add')}`)!);
+    await user.click(elementOf(container, `#${buttonId('root_list', 'add')}`));
     await user.type(input(container, 'root_name'), 'a');
     const last = events[events.length - 1].formData;
     expect(last?.color).toBe('r');
@@ -75,7 +75,7 @@ describe('sanitize as a diff of the field trees before and after a change', () =
     expect(events[events.length - 1].formData).toEqual(expected);
   });
 
-  it('judges each edit of a parent-owned form against the value the parent rendered (#5250 controlled)', async () => {
+  it('judges each edit against the data before it when a parent stores what onChange reports (#5250)', async () => {
     interface PetData {
       pet: { mode?: string; color?: string };
     }
@@ -101,9 +101,9 @@ describe('sanitize as a diff of the field trees before and after a change', () =
     const { container } = render(
       <AcceptingParent<PetData> schema={schema} initialValue={{ pet: { mode: 'strict', color: 'r' } }} log={log} />,
     );
-    await user.selectOptions(container.querySelector('#root_pet_mode')!, ['0']);
-    await user.selectOptions(container.querySelector('#root_pet_color')!, ['1']);
-    await user.selectOptions(container.querySelector('#root_pet_mode')!, ['1']);
+    await user.selectOptions(elementOf(container, '#root_pet_mode'), ['0']);
+    await user.selectOptions(elementOf(container, '#root_pet_color'), ['1']);
+    await user.selectOptions(elementOf(container, '#root_pet_mode'), ['1']);
     expect(log.value?.pet.color).toBe('r');
   });
 
@@ -134,16 +134,16 @@ describe('sanitize as a diff of the field trees before and after a change', () =
       />,
     );
     // Flip to the else branch: 'a' is outside its enum and clears
-    await user.selectOptions(container.querySelector('#root_cond')!, ['1']);
+    await user.selectOptions(elementOf(container, '#root_cond'), ['1']);
     // The reset restores the initial data, which the next flip is judged against
-    act(() => ref.current!.reset());
+    act(() => handleOf(ref).reset());
     // Flip again: judged against the restored data on the then branch, 'a' is a real difference and clears
-    await user.selectOptions(container.querySelector('#root_cond')!, ['1']);
+    await user.selectOptions(elementOf(container, '#root_cond'), ['1']);
     const last = events[events.length - 1].formData;
     expect(last?.pick).toBeUndefined();
   });
 
-  it('judges an edit against a proposal the parent accepted as a deep-equal copy (#5250 controlled)', async () => {
+  it('judges each edit against the data before it when a parent stores a copy of what onChange reports (#5250)', async () => {
     interface PetData {
       pet: { mode?: string; color?: string };
     }
@@ -166,18 +166,18 @@ describe('sanitize as a diff of the field trees before and after a change', () =
       },
     };
     const log = createParentLog<PetData>();
-    // A store that clones on write: the value handed back to the form is never the proposal's reference
+    // A store that clones on write: the form takes each copy as a new value, deep-equal to the data it holds
     const { container } = render(
       <TransformingParent<PetData>
         schema={schema}
         initialValue={{ pet: { mode: 'strict', color: 'r' } }}
         log={log}
-        transform={(proposal) => (proposal === undefined ? proposal : structuredClone(proposal))}
+        transform={(reported) => (reported === undefined ? reported : structuredClone(reported))}
       />,
     );
-    await user.selectOptions(container.querySelector('#root_pet_mode')!, ['0']);
-    await user.selectOptions(container.querySelector('#root_pet_color')!, ['1']);
-    await user.selectOptions(container.querySelector('#root_pet_mode')!, ['1']);
+    await user.selectOptions(elementOf(container, '#root_pet_mode'), ['0']);
+    await user.selectOptions(elementOf(container, '#root_pet_color'), ['1']);
+    await user.selectOptions(elementOf(container, '#root_pet_mode'), ['1']);
     expect(log.value?.pet.color).toBe('r');
   });
 
@@ -223,7 +223,7 @@ describe('sanitize as a diff of the field trees before and after a change', () =
       },
     };
     const log = createParentLog<PetData>();
-    // A parent that widens the schema in the same update that hands the first proposal back, then accepts as usual
+    // A parent that widens the schema in the same update that stores the first edit, then stores edits as usual
     function SwappingOnceParent() {
       const [value, setValue] = useState<PetData | undefined>({ pet: { mode: 'strict', color: 'r' } });
       const [schema, setSchema] = useState<RJSFSchema>(baseSchema);
@@ -232,9 +232,10 @@ describe('sanitize as a diff of the field trees before and after a change', () =
         <Form<PetData>
           schema={schema}
           validator={validator}
+          // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
           formData={value}
           onChange={(event) => {
-            log.proposals.push(event.formData);
+            log.reported.push(event.formData);
             log.events.push(event);
             setValue(event.formData);
             setSchema(widenedSchema);
@@ -243,13 +244,13 @@ describe('sanitize as a diff of the field trees before and after a change', () =
       );
     }
     const { container } = render(<SwappingOnceParent />);
-    await user.selectOptions(container.querySelector('#root_pet_mode')!, ['0']);
-    await user.selectOptions(container.querySelector('#root_pet_color')!, ['1']);
-    await user.selectOptions(container.querySelector('#root_pet_mode')!, ['1']);
+    await user.selectOptions(elementOf(container, '#root_pet_mode'), ['0']);
+    await user.selectOptions(elementOf(container, '#root_pet_color'), ['1']);
+    await user.selectOptions(elementOf(container, '#root_pet_mode'), ['1']);
     expect(log.value?.pet.color).toBe('r');
   });
 
-  it('judges an edit against the value a parent pushed across a conditional branch (#5250)', async () => {
+  it('judges an edit against data setFieldValue set across a conditional branch (#5250)', async () => {
     interface ModeData {
       mode?: string;
       color?: string;
@@ -281,16 +282,19 @@ describe('sanitize as a diff of the field trees before and after a change', () =
       ],
     };
     const events: IChangeEvent<ModeData>[] = [];
-    const onChange = (event: IChangeEvent<ModeData>) => events.push(event);
-    const props = {
-      schema,
-      validator,
-      onChange,
-    };
-    // A parent-owned form whose parent pushes a value of its own that matches no proposal
-    const { container, rerender } = render(<Form<ModeData> {...props} formData={{ mode: 'basic', colors: [] }} />);
-    rerender(<Form<ModeData> {...props} formData={{ mode: 'advanced', color: 'c', colors: ['c'] }} />);
-    await user.selectOptions(container.querySelector('#root_mode')!, ['0']);
+    const ref = createRef<FormRef<ModeData>>();
+    const { container } = render(
+      <Form<ModeData>
+        ref={ref}
+        schema={schema}
+        validator={validator}
+        initialFormData={{ mode: 'basic', colors: [] }}
+        onChange={(event) => events.push(event)}
+      />,
+    );
+    // Data from outside the form's fields, set on the advanced branch
+    act(() => handleOf(ref).setFieldValue('', { mode: 'advanced', color: 'c', colors: ['c'] }));
+    await user.selectOptions(elementOf(container, '#root_mode'), ['0']);
     const last = events[events.length - 1].formData;
     expect(last?.color).toBeUndefined();
     expect(last?.colors).toEqual([]);
@@ -347,7 +351,7 @@ describe('sanitize as a diff of the field trees before and after a change', () =
     );
     // The surviving row is paired with its own previous value through the announced move, so its constraints did
     // not change and it keeps the placeholders its branch offers
-    await user.click(container.querySelector(`#${buttonId('root_rows_0', 'remove')}`)!);
+    await user.click(elementOf(container, `#${buttonId('root_rows_0', 'remove')}`));
     await user.type(input(container, 'root_note'), 'n');
     const last = events[events.length - 1].formData;
     expect(last?.rows).toEqual([{ kind: 'y', tags: [null, null] }]);
@@ -399,7 +403,7 @@ describe('sanitize as a diff of the field trees before and after a change', () =
     });
   });
 
-  it('keeps the surviving row paired with its own previous value in a parent-owned form (#5451)', async () => {
+  it('keeps the surviving row paired with its own previous value when a parent stores each edit (#5451)', async () => {
     interface Row {
       kind?: string;
       tags?: (string | null)[];
@@ -447,12 +451,12 @@ describe('sanitize as a diff of the field trees before and after a change', () =
         log={log}
       />,
     );
-    await user.click(container.querySelector(`#${buttonId('root_rows_0', 'remove')}`)!);
+    await user.click(elementOf(container, `#${buttonId('root_rows_0', 'remove')}`));
     await user.type(input(container, 'root_note'), 'n');
     expect(log.value?.rows).toEqual([{ kind: 'y', tags: [null, null] }]);
   });
 
-  it('keeps the rows of a parent push whose constraints an edit does not change (#5451)', async () => {
+  it('keeps the rows setFieldValue set whose constraints an edit does not change (#5451)', async () => {
     interface Row {
       kind?: string;
       tags?: (string | null)[];
@@ -487,38 +491,26 @@ describe('sanitize as a diff of the field trees before and after a change', () =
         },
       },
     };
-    const log = createParentLog<PairData>();
-    const pusher: { push: (value: PairData | undefined) => void } = { push: () => undefined };
-    // A parent that accepts proposals as usual, then pushes a value of its own that matches none of them
-    function PushingParent() {
-      const [value, setValue] = useState<PairData | undefined>({
-        rows: [
-          { kind: 'x', tags: [null, null] },
-          { kind: 'y', tags: [null, null] },
-          { kind: 'y', tags: [null, null] },
-        ],
-      });
-      useEffect(() => {
-        pusher.push = setValue;
-      }, []);
-      Object.assign(log, { value });
-      return (
-        <Form<PairData>
-          schema={schema}
-          validator={validator}
-          formData={value}
-          onChange={(event) => {
-            log.proposals.push(event.formData);
-            log.events.push(event);
-            setValue(event.formData);
-          }}
-        />
-      );
-    }
-    const { container } = render(<PushingParent />);
-    // A push the form did not propose: the parent owns its value, and no sanitize runs on it
+    const events: IChangeEvent<PairData>[] = [];
+    const ref = createRef<FormRef<PairData>>();
+    const { container } = render(
+      <Form<PairData>
+        ref={ref}
+        schema={schema}
+        validator={validator}
+        initialFormData={{
+          rows: [
+            { kind: 'x', tags: [null, null] },
+            { kind: 'y', tags: [null, null] },
+            { kind: 'y', tags: [null, null] },
+          ],
+        }}
+        onChange={(event) => events.push(event)}
+      />,
+    );
+    // Data from outside the form's fields, which no sanitize runs on
     act(() =>
-      pusher.push({
+      handleOf(ref).setFieldValue('', {
         rows: [
           { kind: 'x', tags: [null, null] },
           { kind: 'x', tags: [null, null] },
@@ -527,10 +519,10 @@ describe('sanitize as a diff of the field trees before and after a change', () =
         ],
       }),
     );
-    await user.click(container.querySelector(`#${buttonId('root_rows_0', 'remove')}`)!);
+    await user.click(elementOf(container, `#${buttonId('root_rows_0', 'remove')}`));
     await user.type(input(container, 'root_note'), 'n');
     // The remove is paired by its announced move, so no row's constraints change and every placeholder stays
-    expect(log.value?.rows).toEqual([
+    expect(events[events.length - 1].formData.rows).toEqual([
       { kind: 'x', tags: [null, null] },
       { kind: 'y', tags: [null, null] },
       { kind: 'y', tags: [null, null] },
@@ -581,13 +573,13 @@ describe('sanitize as a diff of the field trees before and after a change', () =
         onChange={(event) => events.push(event)}
       />,
     );
-    await user.click(container.querySelector(`#${buttonId('root_rows', 'add')}`)!);
+    await user.click(elementOf(container, `#${buttonId('root_rows', 'add')}`));
     await user.type(input(container, 'root_note'), 'n');
     const last = events[events.length - 1].formData;
     expect(last?.rows).toEqual([{ kind: 'x', tags: [null, null] }, { tags: [undefined, undefined] }]);
   });
 
-  it('leaves a value a schema the parent swapped in rejects to the parent', async () => {
+  it('replaces a value a schema the parent swapped in as it stored an edit rejects', async () => {
     interface SwapData {
       color?: string;
       name?: string;
@@ -613,7 +605,7 @@ describe('sanitize as a diff of the field trees before and after a change', () =
       ],
     };
     const events: IChangeEvent<SwapData>[] = [];
-    // A parent that accepts every proposal and narrows color's enum in the same update that hands the first one back
+    // A parent that stores every edit and narrows color's enum in the same update that stores the first one
     function SwappingParent() {
       const [value, setValue] = useState<SwapData | undefined>({ color: 'g' });
       const [schema, setSchema] = useState<RJSFSchema>(wideSchema);
@@ -621,6 +613,7 @@ describe('sanitize as a diff of the field trees before and after a change', () =
         <Form<SwapData>
           schema={schema}
           validator={validator}
+          // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
           formData={value}
           onChange={(event) => {
             events.push(event);
@@ -631,15 +624,15 @@ describe('sanitize as a diff of the field trees before and after a change', () =
       );
     }
     const { container } = render(<SwappingParent />);
-    // The narrow schema arrives beside the parent's push, which no sanitize judges, and the next edit changes no
-    // constraint of `color`: the parent owns its value, and validation reports what the schema rejects
+    // The narrow schema arrives as the parent stores the first edit, and the form sanitizes the data it holds for the
+    // new schema's tree, as it does for any schema change, so `color` takes the option left
     await user.type(input(container, 'root_name'), 'a');
     await user.type(input(container, 'root_name'), 'b');
     const last = events[events.length - 1].formData;
-    expect(last).toEqual({ color: 'g', name: 'ab' });
+    expect(last).toEqual({ color: 'r', name: 'ab' });
   });
 
-  it('judges each edit of a live-validated parent-owned form', async () => {
+  it('judges each edit of a live-validated form', async () => {
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -666,14 +659,14 @@ describe('sanitize as a diff of the field trees before and after a change', () =
         liveValidate='onChange'
       />,
     );
-    await user.selectOptions(container.querySelector('#root_mode')!, ['0']);
-    await user.selectOptions(container.querySelector('#root_color')!, ['1']);
+    await user.selectOptions(elementOf(container, '#root_mode'), ['0']);
+    await user.selectOptions(elementOf(container, '#root_color'), ['1']);
     // The flip back narrows color: 'g' cannot stand
-    await user.selectOptions(container.querySelector('#root_mode')!, ['1']);
+    await user.selectOptions(elementOf(container, '#root_mode'), ['1']);
     expect(log.value?.color).toBe('r');
   });
 
-  it("judges the second of two edits in one event against the first one's proposal", async () => {
+  it('judges the second of two edits in one event against the data the first one left', async () => {
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -701,9 +694,10 @@ describe('sanitize as a diff of the field trees before and after a change', () =
           ref={ref}
           schema={schema}
           validator={validator}
+          // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
           formData={value}
           onChange={(event) => {
-            log?.proposals.push(event.formData);
+            log?.reported.push(event.formData);
             log?.events.push(event);
             setValue(event.formData);
           }}
@@ -792,8 +786,8 @@ describe('sanitize as a diff of the field trees before and after a change', () =
       />,
     );
     // The kind flip narrows the row's tags, so the 'a' the y-branch rejects goes
-    await user.click(container.querySelector(`#${buttonId('root_rows', 'add')}`)!);
-    await user.selectOptions(container.querySelector('#root_rows_0_kind')!, ['1']);
+    await user.click(elementOf(container, `#${buttonId('root_rows', 'add')}`));
+    await user.selectOptions(elementOf(container, '#root_rows_0_kind'), ['1']);
     const last = events[events.length - 1].formData;
     expect(last?.rows?.[0]).toEqual({ kind: 'y', tags: [] });
   });
@@ -880,7 +874,7 @@ describe('sanitize as a diff of the field trees before and after a change', () =
     );
     // The reorder pairs each row with its own previous value through the announced move, so no row's constraints
     // change and both keep the placeholders their branches offer
-    await user.click(container.querySelector(`#${buttonId('root_rows_1', 'moveUp')}`)!);
+    await user.click(elementOf(container, `#${buttonId('root_rows_1', 'moveUp')}`));
     await user.type(input(container, 'root_note'), 'n');
     const last = events[events.length - 1].formData;
     expect(last?.rows).toEqual([
@@ -935,7 +929,7 @@ describe('sanitize as a diff of the field trees before and after a change', () =
     );
     // The first row is paired with its own previous value, so it keeps its placeholders, and the added row has no
     // previous value to be judged against
-    await user.click(container.querySelector(`#${buttonId('root_rows', 'add')}`)!);
+    await user.click(elementOf(container, `#${buttonId('root_rows', 'add')}`));
     await user.type(input(container, 'root_note'), 'n');
     const last = events[events.length - 1].formData;
     expect(last?.rows?.[0]).toEqual({ kind: 'x', tags: [null, null] });
@@ -982,16 +976,16 @@ describe('sanitize as a diff of the field trees before and after a change', () =
       />,
     );
     // The flip into the y-branch narrows the tags, so the 'a' it rejects goes
-    await user.click(container.querySelector(`#${buttonId('root_rows', 'add')}`)!);
-    await user.selectOptions(container.querySelector('#root_rows_0_kind')!, ['0']);
+    await user.click(elementOf(container, `#${buttonId('root_rows', 'add')}`));
+    await user.selectOptions(elementOf(container, '#root_rows_0_kind'), ['0']);
     // The narrowed branch filters the placeholder items, so the 'a' goes in through an explicit add
-    await user.click(container.querySelector(`#${buttonId('root_rows_0_tags', 'add')}`)!);
-    await user.selectOptions(container.querySelector('#root_rows_0_tags_0')!, ['0']);
-    await user.selectOptions(container.querySelector('#root_rows_0_kind')!, ['1']);
+    await user.click(elementOf(container, `#${buttonId('root_rows_0_tags', 'add')}`));
+    await user.selectOptions(elementOf(container, '#root_rows_0_tags_0'), ['0']);
+    await user.selectOptions(elementOf(container, '#root_rows_0_kind'), ['1']);
     const last = events[events.length - 1].formData;
     expect(last?.rows?.[0]?.tags).toEqual([]);
   });
-  it('keeps each row paired with its own previous value when the parent declines a reorder (#5451)', async () => {
+  it('keeps each row paired with its own previous value when the parent sets a reorder back (#5451)', async () => {
     interface Row {
       kind?: string;
       tags?: (string | null)[];
@@ -1026,33 +1020,90 @@ describe('sanitize as a diff of the field trees before and after a change', () =
         },
       },
     };
-    const log = createParentLog<PairData>();
+    const rows: Row[] = [
+      { kind: 'x', tags: [null, null] },
+      { kind: 'y', tags: [null, null] },
+    ];
+    const ref = createRef<FormRef<PairData>>();
     const { container } = render(
-      <TransformingParent<PairData>
+      <Form<PairData>
+        ref={ref}
         schema={schema}
-        initialValue={{
-          rows: [
-            { kind: 'x', tags: [null, null] },
-            { kind: 'y', tags: [null, null] },
-          ],
+        validator={validator}
+        initialFormData={{ rows }}
+        // A parent that declines any change to the leading row's kind by setting the rows back
+        onChange={({ formData }) => {
+          if (formData.rows?.[0]?.kind !== 'x') {
+            handleOf(ref).setFieldValue('rows', rows);
+          }
         }}
-        log={log}
-        // A parent that declines any change to the leading row's kind, answering the reorder with the
-        // value it already held
-        transform={(proposal) => (proposal?.rows?.[0]?.kind !== log.value?.rows?.[0]?.kind ? log.value : proposal)}
       />,
     );
     // The reorder is declined, so the sibling edit is judged against the rows as the parent kept them, and both
     // rows keep the placeholders their branches offer
-    await user.click(container.querySelector(`#${buttonId('root_rows_0', 'moveDown')}`)!);
+    await user.click(elementOf(container, `#${buttonId('root_rows_0', 'moveDown')}`));
     await user.type(input(container, 'root_note'), 'n');
-    expect(log.value?.rows).toEqual([
+    expect(handleOf(ref).getFormData().rows).toEqual([
       { kind: 'x', tags: [null, null] },
       { kind: 'y', tags: [null, null] },
     ]);
   });
 
-  it('leaves a row the parent pushed unannounced to the parent (#5451)', async () => {
+  it('judges a row an edit inside it leaves equal to another row by its own previous value', async () => {
+    interface Row {
+      kind?: string;
+      tags?: (string | null)[];
+    }
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        rows: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              kind: { type: 'string', enum: ['x', 'y'] },
+              tags: { type: 'array', items: { type: 'string' }, minItems: 2 },
+            },
+            allOf: [
+              {
+                if: { properties: { kind: { const: 'x' } } },
+                then: { properties: { tags: { items: { enum: ['a'] } } } },
+              },
+              {
+                if: { properties: { kind: { const: 'y' } } },
+                then: { properties: { tags: { items: { enum: ['b'] } } } },
+              },
+            ],
+          },
+        },
+      },
+    };
+    const ref = createRef<FormRef<{ rows?: Row[] }>>();
+    const { container } = render(
+      <Form<{ rows?: Row[] }>
+        ref={ref}
+        schema={schema}
+        validator={validator}
+        initialFormData={{
+          rows: [
+            { kind: 'x', tags: [null, null] },
+            { kind: 'y', tags: [null, null] },
+          ],
+        }}
+      />,
+    );
+
+    await user.selectOptions(elementOf(container, '#root_rows_0_kind'), 'y');
+
+    // The first row's kind changed, so its tags are judged, though the row now holds what the second one does
+    expect(handleOf(ref).getFormData().rows).toEqual([
+      { kind: 'y', tags: [] },
+      { kind: 'y', tags: [null, null] },
+    ]);
+  });
+
+  it('leaves a row setFieldValue added as it is (#5451)', async () => {
     interface Row {
       kind?: string;
       tags?: (string | null)[];
@@ -1087,38 +1138,38 @@ describe('sanitize as a diff of the field trees before and after a change', () =
         },
       },
     };
-    const log = createParentLog<PairData>();
+    const ref = createRef<FormRef<PairData>>();
     let appended = false;
     const { container } = render(
-      <TransformingParent<PairData>
+      <Form<PairData>
+        ref={ref}
         schema={schema}
-        initialValue={{
+        validator={validator}
+        initialFormData={{
           rows: [
             { kind: 'x', tags: [null, null] },
             { kind: 'y', tags: [null, null] },
           ],
         }}
-        log={log}
-        // A parent that appends a row of its own, unannounced, on the first note edit
-        transform={(proposal) => {
-          if (!appended && proposal?.note !== undefined) {
+        // A parent that appends a row of its own on the first note edit
+        onChange={({ formData }) => {
+          if (!appended && formData.note !== undefined) {
             appended = true;
-            return { ...proposal, rows: [...(proposal.rows ?? []), { kind: 'y', tags: ['a', 'a'] }] };
+            handleOf(ref).setFieldValue('rows', [...(formData.rows ?? []), { kind: 'y', tags: ['a', 'a'] }]);
           }
-          return proposal;
         }}
       />,
     );
     await user.type(input(container, 'root_note'), 'n');
-    await user.click(container.querySelector(`#${buttonId('root_rows_0', 'remove')}`)!);
+    await user.click(elementOf(container, `#${buttonId('root_rows_0', 'remove')}`));
     await user.type(input(container, 'root_note'), 'n');
-    const rows = log.value?.rows;
-    // The parent owns the row it pushed, and no edit changes its constraints, so it keeps the tags its branch
-    // rejects for validation to report
+    const { rows } = handleOf(ref).getFormData();
+    // The row `setFieldValue()` added is taken as written, and no edit changes its constraints, so it keeps the tags its
+    // branch rejects for validation to report
     expect(rows?.[1]).toEqual({ kind: 'y', tags: ['a', 'a'] });
   });
 
-  it('leaves a root-level row the parent pushed unannounced to the parent (#5451)', async () => {
+  it('leaves a root-level row setFieldValue added as it is (#5451)', async () => {
     interface Row {
       kind?: string;
       note?: string;
@@ -1145,32 +1196,32 @@ describe('sanitize as a diff of the field trees before and after a change', () =
         ],
       },
     };
-    const log = createParentLog<Row[]>();
+    const ref = createRef<FormRef<Row[]>>();
     let appended = false;
     const { container } = render(
-      <TransformingParent<Row[]>
+      <Form<Row[]>
+        ref={ref}
         schema={schema}
-        initialValue={[
+        validator={validator}
+        initialFormData={[
           { kind: 'x', tags: [null, null] },
           { kind: 'y', tags: [null, null] },
         ]}
-        log={log}
-        // A parent that appends a row of its own, unannounced, on the first note edit
-        transform={(proposal) => {
-          if (!appended && proposal?.[0]?.note !== undefined) {
+        // A parent that appends a row of its own on the first note edit
+        onChange={({ formData }) => {
+          if (!appended && formData[0]?.note !== undefined) {
             appended = true;
-            return [...(proposal ?? []), { kind: 'y', tags: ['a', 'a'] }];
+            handleOf(ref).setFieldValue('', [...formData, { kind: 'y', tags: ['a', 'a'] }]);
           }
-          return proposal;
         }}
       />,
     );
     await user.type(input(container, 'root_0_note'), 'n');
-    await user.click(container.querySelector(`#${buttonId('root_0', 'remove')}`)!);
+    await user.click(elementOf(container, `#${buttonId('root_0', 'remove')}`));
     await user.type(input(container, 'root_0_note'), 'n');
-    const rows = log.value;
-    // The parent owns the row it pushed, and no edit changes its constraints, so it keeps the tags its branch
-    // rejects for validation to report
+    const rows = handleOf(ref).getFormData();
+    // The row `setFieldValue()` added is taken as written, and no edit changes its constraints, so it keeps the tags its
+    // branch rejects for validation to report
     expect(rows?.[1]).toEqual({ kind: 'y', tags: ['a', 'a'] });
   });
 
@@ -1213,7 +1264,7 @@ describe('sanitize as a diff of the field trees before and after a change', () =
         onChange={(event) => events.push(event)}
       />,
     );
-    await user.click(container.querySelector(`#${buttonId('root_0', 'moveDown')}`)!);
+    await user.click(elementOf(container, `#${buttonId('root_0', 'moveDown')}`));
     await user.type(input(container, 'root_0_note'), 'n');
     const last = events[events.length - 1].formData;
     expect(last?.[0]?.kind).toBe('y');
@@ -1242,7 +1293,7 @@ describe('sanitize as a diff of the field trees before and after a change', () =
         onChange={(event) => events.push(event)}
       />,
     );
-    await user.selectOptions(container.querySelector('#root_kind')!, 'b');
+    await user.selectOptions(elementOf(container, '#root_kind'), 'b');
     expect(events[events.length - 1].formData).toEqual({ kind: 'b', fixed: ['x'] });
   });
 
@@ -1315,22 +1366,6 @@ describe('sanitize as a diff of the field trees before and after a change', () =
       rerender(<Form ref={ref} schema={colorSchema(['a'])} {...props} />);
 
       expect(ref.current?.getFormData()).toEqual({ color: 'b' });
-    });
-
-    it('leaves the value of a parent-owned form to the parent, at the push and at the next edit', async () => {
-      const events: IChangeEvent<{ color?: string; unrelated?: string }>[] = [];
-      const props = {
-        validator,
-        onChange: (event: IChangeEvent<{ color?: string; unrelated?: string }>) => events.push(event),
-      };
-      const { container, rerender } = render(
-        <Form schema={colorSchema(['a', 'b'])} formData={{ color: 'b' }} {...props} />,
-      );
-
-      rerender(<Form schema={colorSchema(['a'])} formData={{ color: 'b' }} {...props} />);
-      await user.type(input(container, 'root_unrelated'), 'x');
-
-      expect(events[events.length - 1].formData).toEqual({ color: 'b', unrelated: 'x' });
     });
 
     it.each(['__proto__', 'toString'])(

@@ -573,7 +573,7 @@ describe('SchemaField', () => {
       ])(
         'warns once about an unusable ui:field in %s items entry, not once per item',
         (_, schema, uiSchema, formData, label) => {
-          const { node } = createFormComponent({ schema, uiSchema, formData });
+          const { node } = createFormComponent({ schema, uiSchema, initialFormData: formData });
 
           expect(node.querySelectorAll('input')).toHaveLength(3);
           expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
@@ -736,21 +736,21 @@ describe('SchemaField', () => {
         schema: { type: 'array', items: titled },
         named: { type: 'array', items: titled },
         uiSchema: { items: { 'ui:field': 'SchemaField' } },
-        props: { formData: ['x'] },
+        props: { initialFormData: ['x'] },
       },
       {
         spelling: "ui:field: 'SchemaField' on an anyOf array item",
         schema: { type: 'array', items: titledAnyOf },
         named: { type: 'array', items: titledAnyOf },
         uiSchema: { items: { 'ui:field': 'SchemaField' } },
-        props: { formData: ['x'] },
+        props: { initialFormData: ['x'] },
       },
       {
         spelling: "ui:field: 'SchemaField' on an extra key",
         schema: { type: 'object', additionalProperties: titled },
         named: { type: 'object', additionalProperties: titled },
         uiSchema: { additionalProperties: { 'ui:field': 'SchemaField' } },
-        props: { formData: { k: 'x' } },
+        props: { initialFormData: { k: 'x' } },
       },
       {
         spelling: "ui:field: 'SchemaField' on an object with errors",
@@ -799,7 +799,7 @@ describe('SchemaField', () => {
        * template rendered at the item's id is handed, in the order they render
        */
       function renderItemLabels({
-        formData = ['x'],
+        initialFormData = ['x'],
         presentation,
         ...props
       }: Omit<NoValFormProps, 'fields' | 'templates'>) {
@@ -818,7 +818,7 @@ describe('SchemaField', () => {
         }
         createFormComponent({
           ...props,
-          formData,
+          initialFormData,
           fields: {
             own: OwnField,
             declared: DeclaredField,
@@ -961,7 +961,7 @@ describe('SchemaField', () => {
                 ],
               },
             },
-            formData: [true],
+            initialFormData: [true],
           },
           displayLabel: true,
         },
@@ -972,7 +972,7 @@ describe('SchemaField', () => {
         },
         {
           named: 'a null item, which NullField titles',
-          props: { schema: { type: 'array', items: { type: 'null', title: 'Nothing' } }, formData: [null] },
+          props: { schema: { type: 'array', items: { type: 'null', title: 'Nothing' } }, initialFormData: [null] },
           displayLabel: false,
         },
         {
@@ -980,7 +980,7 @@ describe('SchemaField', () => {
           props: {
             schema: { type: 'array', items: { type: 'boolean', title: 'Flag' } },
             uiSchema: { items: { 'ui:widget': 'checkbox' } },
-            formData: [true],
+            initialFormData: [true],
           },
           displayLabel: false,
         },
@@ -995,7 +995,7 @@ describe('SchemaField', () => {
                 anyOf: [{ properties: { a: { type: 'string' } } }, { properties: { b: { type: 'string' } } }],
               },
             },
-            formData: [{}],
+            initialFormData: [{}],
           },
           displayLabel: true,
         },
@@ -1038,7 +1038,7 @@ describe('SchemaField', () => {
         const labels = renderItemLabels({
           schema: { type: 'array', items },
           uiSchema,
-          formData: [value],
+          initialFormData: [value],
           presentation: selfLabelled,
         });
 
@@ -1093,7 +1093,7 @@ describe('SchemaField', () => {
           const labels = renderItemLabels({
             schema: { type: 'array', items },
             uiSchema,
-            formData: ['a'],
+            initialFormData: ['a'],
             presentation,
             useFallbackUiForUnsupportedType: true,
           });
@@ -1235,10 +1235,10 @@ describe('SchemaField', () => {
         ],
       };
       const formData = { a: 'x', c: 'y' };
-      const { node: unnamedNode } = createFormComponent({ schema, formData });
+      const { node: unnamedNode } = createFormComponent({ schema, initialFormData: formData });
       const { node } = createFormComponent({
         schema,
-        formData,
+        initialFormData: formData,
         uiSchema: { 'ui:field': 'wrapping' },
         fields: { wrapping: WrappingField },
       });
@@ -1274,7 +1274,7 @@ describe('SchemaField', () => {
       const { node } = createFormComponent({
         schema,
         uiSchema,
-        formData: { foo: 'x' },
+        initialFormData: { foo: 'x' },
         fields: { wrapping: WrappingField },
       });
 
@@ -2538,7 +2538,7 @@ describe('SchemaField', () => {
             type: 'object',
             properties: { name: named, kids: { type: 'array', items: ref }, best: ref },
           });
-          const { node } = createFormComponent({ schema, formData: { kids: [{}] } });
+          const { node } = createFormComponent({ schema, initialFormData: { kids: [{}] } });
           expect(buttons(node)).toEqual(['root_kids_0_best-button', 'root_best-button']);
         });
 
@@ -2681,7 +2681,7 @@ describe('SchemaField', () => {
             type: 'object',
             properties: { c: { $ref: '#/$defs/child' } },
           };
-          const { node } = createFormComponent({ schema, formData: { c: { k: 'text' } } });
+          const { node } = createFormComponent({ schema, initialFormData: { c: { k: 'text' } } });
           expect(node.querySelector('#root_c_k')).toHaveAttribute('type', 'text');
           expect(node.querySelector('#root_c_k')).toHaveValue('text');
         });
@@ -2711,7 +2711,7 @@ describe('SchemaField', () => {
               },
             },
           };
-          const { node } = createFormComponent({ schema, formData: { p: { info: { kind: { a: 'x' } } } } });
+          const { node } = createFormComponent({ schema, initialFormData: { p: { info: { kind: { a: 'x' } } } } });
           expect(node.querySelector('#root_p_info_kind_a')).toHaveValue('x');
         });
 
@@ -2771,7 +2771,7 @@ describe('SchemaField', () => {
           ['under a root $ref', { definitions, $ref: '#/definitions/node' }],
           ['under a root that is not a $ref', { definitions, ...tree }],
         ])('renders every row the data has, %s', (_, schema) => {
-          const { node } = createFormComponent({ schema, formData: data });
+          const { node } = createFormComponent({ schema, initialFormData: data });
 
           expect(node.querySelector('#root_kids_0_kids_0_kids_0_v')).toHaveValue('d');
           expect(node.querySelectorAll('button[id$="-button"]')).toHaveLength(0);

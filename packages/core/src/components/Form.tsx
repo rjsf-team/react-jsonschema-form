@@ -31,12 +31,12 @@ import type {
 } from '@rjsf/utils';
 import { getTemplates, getUiOptions, SUBMIT_BTN_OPTIONS_KEY, ROOT_FIELD_PATH, UI_OPTIONS_KEY } from '@rjsf/utils';
 
+import isDevelopment from '../isDevelopment.ts';
 import NamedFieldContext from './fields/NamedFieldContext.ts';
-import RawFormDataContext from './fields/RawFormDataContext.ts';
 import FormDataContext from './FormDataContext.ts';
 import { createFormModel } from './formModel.ts';
 import type { FormRef } from './FormRef.ts';
-import { deriveState, initialState, isDevelopment } from './formState.ts';
+import { deriveState, initialState } from './formState.ts';
 import type { IChangeEvent } from './IChangeEvent.ts';
 import type { UiState } from './uiState.ts';
 import UiStateContext from './UiStateContext.ts';
@@ -63,16 +63,19 @@ export interface FormProps<
   children?: ReactNode;
   /** The uiSchema for the form */
   uiSchema?: UiSchema<Uninferred<T>, S, F>;
-  /** The data of a form whose value you own, like `value` on an `<input>`: the form renders exactly this, proposes
-   * each edit through `onChange`, and changes nothing until you pass the new value back. Ownership is decided at
-   * mount, so pass it from the first render (`record ?? {}` while loading, or mount once loaded) and seed any schema
-   * defaults yourself with `createSchemaUtils(...).getDefaultFormState()`. For an editable form that should own its
-   * data, use `initialFormData` instead.
+  /** Another name for `initialFormData`, taken over it when both are passed: the seed of the form's data, read when
+   * the form mounts and when `reset()` is called. It is only a seed: the form owns its data after that, so passing back
+   * what `onChange` reported changes nothing, and passing another value, such as a record that arrives after mount, is
+   * ignored, with a warning in development only. To show other data, remount the form with a `key`, or call
+   * `setFieldValue('', data)` on its ref.
+   *
+   * @deprecated Use `initialFormData`, which this is another name for. The form reads it only on mount and on
+   * `reset()`, which the name `formData` hides by reading as a controlled value.
    */
   formData?: T;
-  /** The seed of a form that owns its data, like `defaultValue` on an `<input>`: it is filled in with the schema's
-   * defaults on the initial render and again when `reset()` is called, and edits are the form's own, reported
-   * through `onChange`. Read the current value with `getFormData()`.
+  /** The seed of the form's data, like `defaultValue` on an `<input>`: read when the form mounts and when `reset()` is
+   * called, filled in with the schema's defaults, and ignored otherwise. Edits are reported through `onChange`; read
+   * the current value with `getFormData()`.
    */
   initialFormData?: T;
   // Form presentation and behavior modifiers
@@ -209,6 +212,20 @@ export interface FormProps<
    * Schema validation
    */
   transformErrors?: ErrorTransformer<Uninferred<T>, S, F>;
+  /** Returns the data an edit leaves the form with, given the data the edit produced and the data before it: `next` to
+   * take the edit as it is, `previous`, or a copy of it, to refuse it, or another value, such as `next` with a field
+   * trimmed. An edit that leaves the data as it was, such as an option switch whose data fits both options, is refused
+   * by `previous` itself alone, since a copy of it is a copy of `next` too. At a root holding a string, number or
+   * boolean, such an edit's `next` is `previous` itself, so it can't be refused. It runs for every edit, a field's change and `setFieldValue()` alike, and for those alone: what the form
+   * derives on its own, the defaults for a new schema, the live omit a blur runs and a `reset()`, is stored without it,
+   * and the last two are reported through `onChange`. It runs before the form stores the result, validates it and
+   * reports it.
+   * It must be pure, since the form may call it again for the same edit, and must not mutate `next` or `previous`,
+   * which are frozen in development; it should return `next`'s unchanged subtrees as they are, so their fields do not
+   * render again. `undefined` leaves the form with no data, and what it returns is
+   * filled in with the schema's defaults like any data the form holds.
+   */
+  transformChange?: (next: Uninferred<T> | undefined, previous: Uninferred<T> | undefined) => Uninferred<T> | undefined;
   /** If set to true, then the first field with an error will receive the focus when the form is submitted with errors
    */
   focusOnFirstError?: boolean | ((error: RJSFValidationError) => void);
@@ -237,7 +254,9 @@ export interface FormProps<
   ref?: Ref<FormRef<T>>;
 }
 
-/** The data that is contained within the state for the `Form` */
+/** The state of the `Form`: what its store holds between renders and what each render derives from the props.
+ * Internal to `@rjsf/core`; `IChangeEvent` is the public shape of what reaches a consumer.
+ */
 export interface FormState<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
@@ -249,12 +268,14 @@ export interface FormState<
   uiSchema: UiSchema<T, S, F>;
   /** The schemaUtils implementation used by the `Form`, created from the `validator` and the `schema` */
   schemaUtils: SchemaUtilsType<T, S, F>;
-  /** The current data for the form, computed from the `formData` prop and the changes made by the user */
-  formData?: T;
-  /** Whether there is data to live-validate: the `formData` prop is defined for a parent-owned form, `initialFormData`
-   * was passed at mount for a self-owned one
+  /** The current data for the form: the data the props last handed it, filled in with the schema's defaults, and the
+   * changes made since
    */
-  edit: boolean;
+  formData?: T;
+  /** Whether there is data to live-validate when a prop changes: the props seeded the form with data, rather than
+   * leaving it to the schema's defaults, or it has been edited since it mounted or was last reset
+   */
+  isDataPassed: boolean;
   /** The current list of errors for the form, includes `extraErrors` */
   errors: RJSFValidationError[];
   /** The current errors, in `ErrorSchema` format, for the form, includes `extraErrors` */
@@ -278,12 +299,6 @@ export interface FormState<
   initialDefaultsGenerated: boolean;
   /** The registry (re)computed only when props changed */
   registry: Registry<T, S, F>;
-  /** Whether the parent owns the data (a `formData` prop at mount) or the form does. Decided once, at construction */
-  isControlled: boolean;
-  /** Set by a parent-owned form's blur that validated a proposal the parent had not answered: the render that answers
-   * it validates the data the parent rendered instead, whether that is the proposal, a transformed value or the old one
-   */
-  isBlurValidationOwed?: boolean;
   /** The props that take part in validation without taking part in resolving the schema, kept in the render context so
    * a derivation can tell they changed by comparing with the committed state, functions by identity
    */
@@ -301,45 +316,30 @@ type ValidationProps<T, S extends StrictRJSFSchema, F extends FormContextType> =
   'customValidate' | 'transformErrors'
 >;
 
-/** What is wrong with how the form's data is owned, if anything: the first thing, since mending it may mend the rest
- *
- * @param state - The state the form renders
- * @param props - The props it was rendered with
- * @returns - The warning, or false
+/** Hands each commit's props and state to the model, see `committed()`, from an insertion Effect rendered first inside
+ * the form element. React runs every insertion Effect of a commit before any layout Effect in it, so a command from a
+ * layout Effect, a widget's or an earlier sibling's, starts from the props of the commit that runs it. It walks the tree
+ * in order as it does, and runs the layout cleanups of what the commit removes on the way, so being first inside the
+ * form element also has this run before the cleanup of any field the commit removes, which flushes a draft from it
+ * under the new props too. Only a removed child of an element the walk reaches after this one: React runs the
+ * cleanups of an element's removed children before it walks the children that stay, so everything the form renders
+ * besides this and the `Attachment` sits in a fragment after them, which adds nothing to the DOM. Hidden content
+ * renders, and runs its insertion Effects, so the model keeps up while an `<Activity>` hides the form
  */
-function ownershipWarning<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  state: FormState<T, S, F>,
-  props: FormProps<T, S, F>,
-): string | false {
-  if (!state.isControlled) {
-    return (
-      props.formData !== undefined &&
-      'Form: `formData` was set on a form that mounted without it. Ownership is decided at mount, so the form keeps its own data and ignores this value. To show data that arrives later, either mount the form only once the data is there (`key` it by the record to switch records), or mount it with a complete fallback such as `formData={record ?? {}}` and an `onChange` that stores each proposal.'
-    );
-  }
-  if (props.initialFormData !== undefined) {
-    return 'Form: both `formData` and `initialFormData` are set; `initialFormData` is ignored. Pass `formData` for a form whose value you own and update from `onChange`, or `initialFormData` for one the form owns.';
-  }
-  return (
-    !props.onChange &&
-    !props.readonly &&
-    !props.disabled &&
-    'Form: `formData` is set without an `onChange` handler, so the form will render this value and ignore every edit. Pass `initialFormData` to let the form own an editable value, `onChange` to accept its proposals into `formData`, or `readonly` for a fixed presentation.'
-  );
+function Handoff({ handOff }: { handOff: () => void }) {
+  useInsertionEffect(handOff);
+  return null;
 }
 
-/** Logs `warning` each time there comes to be one. From an Effect, because a warning is a side effect, which a render
- * must not have: React may render without committing, and such a render has nothing to warn about.
- *
- * @param warning - The warning, or false when there is nothing to warn about
+/** Attaches the form to its model for as long as it is shown, from the first layout Effect in the form's subtree: React
+ * runs a subtree's layout Effects children first and siblings in order, so this setup runs before any field's,
+ * including when an `<Activity>` shows the form again or StrictMode replays the Effects, and an edit a widget makes
+ * from a layout Effect then is taken. React runs the cleanups in the same order when the form unmounts or is hidden,
+ * so a field's layout cleanup finds the form detached and a draft it flushes is dropped, as the contract says
  */
-function useDevWarning(warning: string | false) {
-  useEffect(() => {
-    if (warning) {
-      // oxlint-disable-next-line no-console
-      console.warn(warning);
-    }
-  }, [warning]);
+function Attachment({ attach }: { attach: () => () => void }) {
+  useLayoutEffect(() => attach(), [attach]);
+  return null;
 }
 
 /** The model holds the state; rendering derives from it and the props what to show, and each commit hands that back */
@@ -347,49 +347,36 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   props: FormProps<T, S, F>,
 ) {
   const { ref } = props;
-  // The model is created once and kept in the render cache, so it lives exactly as long as the mounted form
+  // The model is created once and kept in the render cache, so the form has the one model for as long as it is mounted.
+  // The cache also holds what the last render derived, which React documents as storing information from previous
+  // renders: a render with the same props and no operation since reuses it rather than deriving it again
   const [cache, setCache] = useState(() => {
     const state = initialState(props);
-    const created = createFormModel(props, state);
-    return { model: created, snapshot: created.getSnapshot(), props, state };
+    return { model: createFormModel(props, state), published: state, props, state };
   });
   const { model } = cache;
   const { setFormElement } = model;
-  // Renders the form after each operation that changed its state, and after each proposal, whatever the parent does
-  // with it, so the commit settles the proposal. The server snapshot is the store's own: the render that reads it is
-  // the one that created the model, so nothing has been committed to it yet
-  const snapshot = useSyncExternalStore(model.subscribe, model.getSnapshot, model.getSnapshot);
-  // With no operation since the cached derivation, that derivation is the latest state, committed to the model or not
-  const base = snapshot.operations === cache.snapshot.operations ? cache.state : snapshot.state;
-  // `deriveState()` is pure, so the re-render that `setCache` triggers reuses its result instead of deriving the same
-  // state again
+  // Renders the form after each operation that changed its state. The server snapshot is the store's own: the render
+  // that reads it is the one that created the model, so nothing has been committed to it yet
+  const published = useSyncExternalStore(model.subscribe, model.getSnapshot, model.getSnapshot);
+  // With no operation since the cached derivation, that derivation is the latest state
+  const base = published === cache.published ? cache.state : published;
   const state = props === cache.props && base === cache.state ? cache.state : deriveState(props, base);
   if (state !== cache.state) {
-    setCache({ model, snapshot, props, state });
+    setCache({ model, published, props, state });
   }
-  useDevWarning(isDevelopment && ownershipWarning(state, props));
-  // Hands every commit to the model in the phase in which React switches its own event handlers to the new props:
-  // before the setup of any layout Effect, a callback ref being attached or a passive Effect can issue a command, and
-  // while an `<Activity>` hides the form too. What React does in that phase before it reaches the form runs earlier:
-  // the cleanup of a layout Effect, a ref being detached and a `componentWillUnmount`, in the form's subtree, in an
-  // earlier sibling's, and in anything removed from under an ancestor.
-  useInsertionEffect(() => {
-    model.committed(props, state, snapshot);
-  });
-  // Kept for the life of the form, which an `<Activity>` hiding it does not end: the cleanup is the unmount
-  useInsertionEffect(() => model.mount(), [model]);
-  // Installed before the form attaches, so a callback the model calls as it does finds the handle on the consumer's ref
+  // Each commit tells the model the props and the state it rendered, which operations start from, through the
+  // `Handoff` rendered below; the attachment is the `Attachment` after it
+  const handOff = () => model.committed(props, state, published);
+  // oxlint-disable-next-line typescript/no-deprecated -- the form still reads the deprecated alias
+  const { formData: formDataProp, initialFormData } = props;
+  useEffect(() => {
+    if (isDevelopment) {
+      model.warnIfFormDataIgnored(formDataProp);
+      model.warnIfBothSeedsPassed(formDataProp, initialFormData);
+    }
+  }, [model, formDataProp, initialFormData]);
   useImperativeHandle(ref, () => model.handle, [model]);
-  useLayoutEffect(() => {
-    model.attach();
-    return model.detach;
-  }, [model]);
-  // After every commit of a shown form, which may be the one a queued `submit()` waits for, or one that answered moves
-  // the form proposed, which `committed()` could not render for
-  useLayoutEffect(() => {
-    model.uiState.notifyRestored();
-    model.submitWhenRendered();
-  });
 
   const {
     children,
@@ -467,8 +454,10 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
         onSubmit={model.handleSubmit}
         ref={setFormElement}
       >
-        {showErrorList === 'top' && renderErrors()}
-        <RawFormDataContext value={SchemaFieldComponent}>
+        <Handoff handOff={handOff} />
+        <Attachment attach={model.attached} />
+        <>
+          {showErrorList === 'top' && renderErrors()}
           <NamedFieldContext value={undefined}>
             <UiStateContext value={model.uiState}>
               <SchemaFieldComponent
@@ -488,10 +477,10 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
               />
             </UiStateContext>
           </NamedFieldContext>
-        </RawFormDataContext>
 
-        {children || submitButton}
-        {showErrorList === 'bottom' && renderErrors()}
+          {children || submitButton}
+          {showErrorList === 'bottom' && renderErrors()}
+        </>
       </FormTag>
     </FormDataContext>
   );

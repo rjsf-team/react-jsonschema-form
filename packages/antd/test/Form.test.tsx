@@ -242,7 +242,7 @@ describe('antd specific tests', () => {
       anyOf: [{ minItems: 1 }, { maxItems: 3 }],
     };
     const { container } = render(
-      <Form schema={{ type: 'object', properties: { opt } }} validator={validator} formData={{ opt: ['x'] }} />,
+      <Form schema={{ type: 'object', properties: { opt } }} validator={validator} initialFormData={{ opt: ['x'] }} />,
     );
 
     expect(screen.getAllByText('Up to three')).toHaveLength(1);
@@ -342,7 +342,7 @@ describe('antd specific tests', () => {
       <Form
         schema={{ type: 'string', format: 'date' }}
         uiSchema={{ 'ui:widget': 'alt-date', [flag]: true }}
-        formData='2020-01-02'
+        initialFormData='2020-01-02'
         validator={validator}
         onChange={onChange}
       />,
@@ -370,7 +370,7 @@ describe('antd specific tests', () => {
             },
           },
         }}
-        formData={{ region: 'DE' }}
+        initialFormData={{ region: 'DE' }}
         validator={validator}
       />,
     );
@@ -394,7 +394,7 @@ describe('antd specific tests', () => {
           },
         }}
         uiSchema={{ region: { 'ui:description': 'Where you live' } }}
-        formData={{ region: 'a' }}
+        initialFormData={{ region: 'a' }}
         validator={validator}
       />,
     );
@@ -418,7 +418,7 @@ describe('antd specific tests', () => {
             },
           },
         }}
-        formData={{ x: 'a' }}
+        initialFormData={{ x: 'a' }}
         validator={validator}
         useFallbackUiForUnsupportedType
       />,
@@ -511,7 +511,7 @@ describe('antd specific tests', () => {
           properties: { pet: { type: 'object', title: 'Pet', properties: { a: { type: 'string' } } } },
         }}
         uiSchema={{ 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] }, pet: { 'ui:label': false } }}
-        formData={{ pet: { a: 'x' } }}
+        initialFormData={{ pet: { a: 'x' } }}
         validator={validator}
       />,
     );
@@ -554,7 +554,7 @@ describe('antd specific tests', () => {
           },
         }}
         uiSchema={{ 'ui:globalOptions': { enableOptionalDataFieldForType: ['array'] } }}
-        formData={{ tags: ['a'] }}
+        initialFormData={{ tags: ['a'] }}
         validator={validator}
       />,
     );
@@ -752,7 +752,7 @@ describe("antd widgets carry their field's plan on the element a user focuses", 
       <Form
         schema={{ type: 'object', additionalProperties: { type: 'string' } }}
         uiSchema={{ additionalProperties: { 'ui:label': false } }}
-        formData={{ first: 'a' }}
+        initialFormData={{ first: 'a' }}
         validator={validator}
       />,
     );
@@ -974,7 +974,7 @@ describe('antd read-only fields under readonlyAsDisabled: false', () => {
       <Form
         schema={{ type: 'object', additionalProperties: { type: 'string' } }}
         uiSchema={{ 'ui:readonly': true }}
-        formData={{ first: 'a' }}
+        initialFormData={{ first: 'a' }}
         formContext={{ readonlyAsDisabled: false }}
         validator={validator}
       />,
@@ -1102,7 +1102,7 @@ describe('antd renders a field a named field wraps once', () => {
       <Form
         schema={schema}
         uiSchema={uiSchema}
-        formData={{ foo: 'x' }}
+        initialFormData={{ foo: 'x' }}
         fields={{ wrapping: WrappingField }}
         validator={validator}
       />,

@@ -599,7 +599,7 @@ describe('single SelectWidget translated placeholder', () => {
         { const: 'red', title: 'Red' },
       ],
     };
-    render(<Form schema={schema} validator={validator} formData='none' />);
+    render(<Form schema={schema} validator={validator} initialFormData='none' />);
     const trigger = screen.getByRole('combobox', { expanded: false });
     expect(trigger).toHaveTextContent(/^$/);
   });

@@ -56,27 +56,53 @@ function isEdited<T, S extends StrictRJSFSchema, F extends FormContextType>(
 }
 
 /** Where the value of each key of the array or object at `path` was before the change: under the key the change moved
- * to it, where `path` is the edited path, and otherwise under the key itself
+ * to it, where `path` is the edited path, and otherwise under the key itself. An array written whole at the edited path
+ * with no move announced, as `setFieldValue()` writes one, has each item that holds what an item of the array held
+ * before paired with that item, the one at its own index first: equal data under the same item schema has the same
+ * constraints, so a reorder set back keeps the constraints its rows had (#5451). A tuple's items are paired by index,
+ * since each index has a schema of its own
+ *
+ * @param ctx - The diff's context
+ * @param path - The path of the array or object
+ * @param previous - What it held before the change
+ * @param [written] - For an array, the items it holds now, and whether its items are a tuple
+ * @returns - The key each key's value was under before the change, undefined for a value the change brought
  */
 function previousKeys<T, S extends StrictRJSFSchema, F extends FormContextType>(
   ctx: TreeContext<T, S, F>,
   path: FieldPathList,
   previous: unknown,
+  written?: { items: readonly unknown[]; isTuple: boolean },
 ): (key: string) => string | undefined {
   const { newKeyOf, editedPath } = ctx;
-  if (!newKeyOf || path.length !== editedPath?.length || !isEdited(ctx, path)) {
+  if (path.length !== editedPath?.length || !isEdited(ctx, path)) {
     return (key) => key;
   }
   const oldKeyOf = new Map<string, string>();
-  if (isObject(previous) || Array.isArray(previous)) {
-    for (const oldKey of Object.keys(previous)) {
-      const newKey = newKeyOf(oldKey);
-      if (newKey !== undefined && !oldKeyOf.has(newKey)) {
-        oldKeyOf.set(newKey, oldKey);
+  if (newKeyOf) {
+    if (isObject(previous) || Array.isArray(previous)) {
+      for (const oldKey of Object.keys(previous)) {
+        const newKey = newKeyOf(oldKey);
+        if (newKey !== undefined && !oldKeyOf.has(newKey)) {
+          oldKeyOf.set(newKey, oldKey);
+        }
       }
     }
+    return (key) => oldKeyOf.get(key);
   }
-  return (key) => oldKeyOf.get(key);
+  if (!written || written.isTuple || !Array.isArray(previous)) {
+    return (key) => key;
+  }
+  const paired = new Set<number>();
+  written.items.forEach((item, index) => {
+    const isOwn = index < previous.length && !paired.has(index) && deepEquals(item, previous[index]);
+    const oldIndex = isOwn ? index : previous.findIndex((old, at) => !paired.has(at) && deepEquals(item, old));
+    if (oldIndex >= 0) {
+      paired.add(oldIndex);
+      oldKeyOf.set(String(index), String(oldIndex));
+    }
+  });
+  return (key) => oldKeyOf.get(key) ?? key;
 }
 
 /** The value `container` holds under `key`, if any */
@@ -352,8 +378,12 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     return result;
   }
   if (Array.isArray(newValue)) {
-    const previousKeyOf = previousKeys(ctx, path, oldValue);
-    const items = newValue.map((item: unknown, index) => {
+    const previousKeyOf = previousKeys(ctx, path, oldValue, {
+      items: newValue,
+      isTuple: Array.isArray(keywordOf(newLayers, 'items')),
+    });
+    // Read slot by slot, so a hole a write past the array's end left keeps its place rather than being skipped
+    const items = Array.from(newValue, (item: unknown, index) => {
       const newItem = itemOf(newLayers, index);
       const previousIndex = previousKeyOf(String(index));
       const hasPrevious =
@@ -396,7 +426,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
  * schema declared takes the new one, written in place. A field whose constraints did not change keeps its value, so an
  * edit elsewhere never re-judges it. The value of the field being edited, and of the fields holding it, is the
  * user's, and only what they hold is judged. Both trees show the option the new data is shown under, so an option
- * switch, by the selector or by matching, changes no field's constraints: the data a switch proposes is
+ * switch, by the selector or by matching, changes no field's constraints: the data a switch sends is
  * `formDataForNewOption()`'s.
  *
  * @param previous - The previous tree: the schema utilities it is built with, its data, and the root schema retrieved

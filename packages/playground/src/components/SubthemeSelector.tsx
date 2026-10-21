@@ -54,7 +54,7 @@ export default function SubthemeSelector({ subtheme, subthemes, select }: Subthe
         idPrefix='rjsf_subthemeSelector'
         schema={schema}
         uiSchema={uiSchema}
-        formData={subtheme}
+        initialFormData={subtheme}
         validator={localValidator}
         onChange={handleChange}
       >

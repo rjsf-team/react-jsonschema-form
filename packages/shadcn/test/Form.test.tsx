@@ -83,7 +83,7 @@ describe("shadcn widgets carry their field's plan on the element a user focuses"
       <Form
         schema={{ type: 'object', required: ['volume'], properties: { volume: { type: 'integer', title: 'Volume' } } }}
         uiSchema={{ volume: { 'ui:widget': 'range' } }}
-        formData={{ volume: 3 }}
+        initialFormData={{ volume: 3 }}
         nameGenerator={bracketNameGenerator}
         validator={validator}
       />,
@@ -107,7 +107,7 @@ describe("shadcn widgets carry their field's plan on the element a user focuses"
         <Form
           schema={{ type: 'object', properties: { volume: { type: 'integer', title: 'Volume' } } }}
           uiSchema={{ volume: { 'ui:widget': 'range', 'ui:autofocus': true } }}
-          formData={{ volume: 3 }}
+          initialFormData={{ volume: 3 }}
           validator={validator}
         />,
       );
@@ -425,7 +425,7 @@ describe("shadcn widgets carry their field's plan on the element a user focuses"
       <Form
         schema={{ type: 'object', properties: { volume: { type: 'integer', title: 'Volume' } } }}
         uiSchema={{ volume: { 'ui:widget': 'range' } }}
-        formData={{ volume: 3 }}
+        initialFormData={{ volume: 3 }}
         onFocus={onFocus}
         onBlur={onBlur}
         validator={validator}
@@ -444,7 +444,7 @@ describe("shadcn widgets carry their field's plan on the element a user focuses"
       <Form
         schema={{ type: 'object', properties: { color: { type: 'string', title: 'Color', enum: ['red', 'blue'] } } }}
         uiSchema={{ color: { 'ui:widget': 'radio' } }}
-        formData={{ color: 'blue' }}
+        initialFormData={{ color: 'blue' }}
         nameGenerator={bracketNameGenerator}
         validator={validator}
       />,
@@ -631,7 +631,7 @@ describe('shadcn templates', () => {
           properties: { pet: { type: 'object', title: 'Pet', properties: { a: { type: 'string' } } } },
         }}
         uiSchema={{ 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] }, pet: { 'ui:label': false } }}
-        formData={{ pet: { a: 'x' } }}
+        initialFormData={{ pet: { a: 'x' } }}
         validator={validator}
       />,
     );
@@ -674,7 +674,7 @@ describe('shadcn templates', () => {
           },
         }}
         uiSchema={{ 'ui:globalOptions': { enableOptionalDataFieldForType: ['array'] } }}
-        formData={{ tags: ['a'] }}
+        initialFormData={{ tags: ['a'] }}
         validator={validator}
       />,
     );
@@ -770,7 +770,7 @@ describe('shadcn key inputs', () => {
       <Form
         schema={{ type: 'object', additionalProperties: { type: 'string' } }}
         uiSchema={{ additionalProperties: { 'ui:label': false } }}
-        formData={{ first: 'a' }}
+        initialFormData={{ first: 'a' }}
         validator={validator}
       />,
     );

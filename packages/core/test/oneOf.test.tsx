@@ -1,4 +1,3 @@
-import { createRef } from 'react';
 import type {
   FieldProps,
   FieldTemplateProps,
@@ -10,17 +9,25 @@ import type {
   UiSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { noop, optionDescriptionId } from '@rjsf/utils';
+import { isPlainObject, noop, optionDescriptionId } from '@rjsf/utils';
 import type { ValidatorFunctions } from '@rjsf/validator-ajv8';
 import { createPrecompiledValidator } from '@rjsf/validator-ajv8';
 import { compileSchemaValidatorsCode } from '@rjsf/validator-ajv8/compileSchemaValidators';
-import { screen } from '@testing-library/react';
+import { act, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { createRequire } from 'node:module';
 
 import SchemaField from '../src/components/fields/SchemaField.tsx';
 import SelectWidget from '../src/components/widgets/SelectWidget.tsx';
-import { createFormComponent, getSelectedOptionValue, setupConsoleWarnSuppression, submitForm } from './testUtils.tsx';
+import {
+  createFormComponent,
+  createFormRef,
+  elementOf,
+  getSelectedOptionValue,
+  handleOf,
+  setupConsoleWarnSuppression,
+  submitForm,
+} from './testUtils.tsx';
 
 const user = userEvent.setup();
 
@@ -453,7 +460,7 @@ describe('oneOf', () => {
       });
       const { node, onChange } = createFormComponent({
         schema: { oneOf: [optionFor('a'), optionFor('b')] },
-        formData: { kind: 'a', runner: { name: 'a' } },
+        initialFormData: { kind: 'a', runner: { name: 'a' } },
         defaultFormStateBehavior: { emptyObjectFields: 'skipDefaults' },
       });
 
@@ -507,7 +514,7 @@ describe('oneOf', () => {
           { title: 'b', type: 'array', items: { type: 'number' }, default: [2] },
         ],
       };
-      const { node, onChange } = createFormComponent({ schema, formData: [7, 8] });
+      const { node, onChange } = createFormComponent({ schema, initialFormData: [7, 8] });
 
       await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
 
@@ -533,7 +540,7 @@ describe('oneOf', () => {
     });
     const { node, onChange } = createFormComponent({
       schema: { oneOf: [optionFor('a'), optionFor('b')] },
-      formData: { kind: 'a', runner: { name: 'a', ratio: 0 } },
+      initialFormData: { kind: 'a', runner: { name: 'a', ratio: 0 } },
     });
 
     await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
@@ -636,7 +643,7 @@ describe('oneOf', () => {
         },
       ],
     };
-    const { node, onChange } = createFormComponent({ schema, formData: { kind: 'a', flag: false } });
+    const { node, onChange } = createFormComponent({ schema, initialFormData: { kind: 'a', flag: false } });
 
     await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
 
@@ -659,7 +666,7 @@ describe('oneOf', () => {
     });
     const { node, onChange } = createFormComponent({
       schema: { oneOf: [optionFor('a', 'MIT'), optionFor('b', 'Apache')] },
-      formData: { kind: 'a', license: 'custom' },
+      initialFormData: { kind: 'a', license: 'custom' },
     });
 
     await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
@@ -693,7 +700,10 @@ describe('oneOf', () => {
         },
       ],
     };
-    const { node, onChange } = createFormComponent({ schema, formData: { kind: 'a', runner: { name: 'typed' } } });
+    const { node, onChange } = createFormComponent({
+      schema,
+      initialFormData: { kind: 'a', runner: { name: 'typed' } },
+    });
 
     await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
 
@@ -1157,20 +1167,16 @@ describe('oneOf', () => {
       },
     };
 
-    const { rerender, node } = createFormComponent({
-      ref: createRef(),
+    const ref = createFormRef();
+    const { node } = createFormComponent({
+      ref,
       schema,
-      formData: {},
+      initialFormData: {},
     });
 
     expect(node.querySelector('select')).toHaveValue('0');
 
-    rerender({
-      schema,
-      formData: {
-        userId: 'foobarbaz',
-      },
-    });
+    act(() => handleOf(ref).setFieldValue('userId', 'foobarbaz'));
 
     expect(node.querySelector('select')).toHaveValue('1');
   });
@@ -2351,6 +2357,82 @@ describe('oneOf', () => {
       });
     });
   });
+  it('puts the selector on the option the data fits when a custom parent field writes other data in place of a switch', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        choice: {
+          oneOf: [
+            { title: 'A', type: 'object', properties: { a: { type: 'string' } } },
+            { title: 'B', type: 'object', properties: { b: { type: 'string' } }, required: ['b'] },
+          ],
+        },
+      },
+    };
+    // Passes its data through, but keeps `choice` as it was, writing that back at the path in place of what was sent
+    function KeepChoiceField(props: FieldProps<GenericObjectType>) {
+      const { ObjectField } = props.registry.fields;
+      return (
+        <ObjectField
+          {...props}
+          onChange={(value, fieldPath, errorSchema, id) =>
+            fieldPath === 'choice'
+              ? props.onChange(props.formData?.choice, fieldPath, errorSchema, id)
+              : props.onChange(value, fieldPath, errorSchema, id)
+          }
+        />
+      );
+    }
+    const { node, getFormData } = createFormComponent({
+      schema,
+      uiSchema: { 'ui:field': KeepChoiceField },
+      initialFormData: { choice: { a: 'x' } },
+    });
+    const select = elementOf(node, '#root_choice__oneof_select');
+
+    await user.selectOptions(select, 'B');
+
+    expect(getFormData()).toEqual({ choice: { a: 'x' } });
+    // The selector's option values are the option indexes: '0' is A
+    expect(select).toHaveValue('0');
+    expect(node.querySelector('#root_choice_a')).toHaveValue('x');
+  });
+
+  describe('keeps the option picked for a value its container stores in place of a cleared one', () => {
+    // Switching `'abc'` to `N` clears the value, which the string option would match again as its container stores it
+    const options: RJSFSchema[] = [
+      { title: 'S', type: ['string', 'null'] },
+      { title: 'N', type: 'number' },
+    ];
+
+    it('an array item, stored as null', async () => {
+      const { node, getFormData } = createFormComponent({
+        schema: { type: 'array', items: { oneOf: options } },
+        initialFormData: ['abc'],
+      });
+      const select = elementOf(node, '#root_0__oneof_select');
+
+      await user.selectOptions(select, 'N');
+
+      expect(getFormData()).toEqual([null]);
+      // The selector's option values are the option indexes: '1' is N
+      expect(select).toHaveValue('1');
+    });
+
+    it("an additional property, stored as ''", async () => {
+      const { node, getFormData } = createFormComponent({
+        schema: { type: 'object', additionalProperties: { oneOf: options } },
+        initialFormData: { k: 'abc' },
+      });
+      const select = elementOf(node, '#root_k__oneof_select');
+
+      await user.selectOptions(select, 'N');
+
+      expect(getFormData()).toEqual({ k: '' });
+      expect(select).toHaveValue('1');
+    });
+  });
+
   describe('Custom Field without ui:fieldReplacesAnyOrOneOf', () => {
     const schema: RJSFSchema = {
       oneOf: [
@@ -2398,7 +2480,7 @@ describe('oneOf', () => {
     const CustomField = () => <div className='custom-field'>Custom field</div>;
 
     it('labels the control once, with the field label', () => {
-      const { node } = createFormComponent({ schema, formData });
+      const { node } = createFormComponent({ schema, initialFormData: formData });
 
       expect(node.querySelectorAll('label[for="root_region"]')).toHaveLength(1);
       // The field's label names the option's control and, through `aria-labelledby`, the option selector
@@ -2416,7 +2498,7 @@ describe('oneOf', () => {
           properties: { x: { oneOf: [{ type: 'string', title: 'Text' }, { type: 'number' }] } },
         },
         uiSchema: { x: { 'ui:field': 'FallbackField' } },
-        formData: { x: 'a' },
+        initialFormData: { x: 'a' },
       });
 
       expect(node.querySelectorAll('label[for="root_x"]')).toHaveLength(1);
@@ -2430,7 +2512,7 @@ describe('oneOf', () => {
     it('renders the field help once', () => {
       const { node } = createFormComponent({
         schema,
-        formData,
+        initialFormData: formData,
         uiSchema: { region: { 'ui:help': 'pick a region' } },
       });
 
@@ -2441,7 +2523,7 @@ describe('oneOf', () => {
     it('renders a ui:globalOptions help once for an option with a uiSchema of its own', () => {
       const { node } = createFormComponent({
         schema,
-        formData,
+        initialFormData: formData,
         uiSchema: { 'ui:globalOptions': { help: 'global help' }, region: { oneOf: [{}, {}] } },
       });
 
@@ -2451,7 +2533,7 @@ describe('oneOf', () => {
     it('renders the help an option declares for itself', () => {
       createFormComponent({
         schema,
-        formData,
+        initialFormData: formData,
         uiSchema: { region: { oneOf: [{}, { 'ui:help': 'option help' }] } },
       });
 
@@ -2461,7 +2543,7 @@ describe('oneOf', () => {
     it('describes the option once, under the id its control is described by', () => {
       const { node } = createFormComponent({
         schema: regionSchema({ ...europe, description: 'A country in Europe' }),
-        formData,
+        initialFormData: formData,
       });
 
       expect(screen.getAllByText('A country in Europe')).toHaveLength(1);
@@ -2476,7 +2558,7 @@ describe('oneOf', () => {
       const { node } = createFormComponent({
         schema: regionSchema({ ...europe, description: 'A country in Europe' }),
         uiSchema: { region: { 'ui:description': 'Where you live' } },
-        formData,
+        initialFormData: formData,
       });
 
       expect(screen.getAllByText('Where you live')).toHaveLength(1);
@@ -2504,7 +2586,7 @@ describe('oneOf', () => {
             },
           },
         },
-        formData: { x: true },
+        initialFormData: { x: true },
       });
 
       expect(screen.getAllByText('Opt desc')).toHaveLength(1);
@@ -2526,7 +2608,7 @@ describe('oneOf', () => {
             },
           },
         },
-        formData: { x: true },
+        initialFormData: { x: true },
       });
 
       expect(screen.getAllByText('Opt desc')).toHaveLength(1);
@@ -2540,7 +2622,7 @@ describe('oneOf', () => {
       createFormComponent({
         schema: regionSchema({ ...europe, description: 'A country in Europe' }),
         uiSchema: { region: { ...fieldUiSchema, oneOf: [{}, { 'ui:label': false }] } },
-        formData,
+        initialFormData: formData,
       });
 
       expect(screen.queryByText('A country in Europe')).toBeNull();
@@ -2560,7 +2642,7 @@ describe('oneOf', () => {
             },
           },
         },
-        formData: { x: 'a' },
+        initialFormData: { x: 'a' },
         useFallbackUiForUnsupportedType: true,
       });
 
@@ -2588,7 +2670,7 @@ describe('oneOf', () => {
             },
           },
         },
-        formData: { region: true },
+        initialFormData: { region: true },
       });
 
       expect(screen.getAllByText('Yes or no')).toHaveLength(1);
@@ -2598,7 +2680,7 @@ describe('oneOf', () => {
       createFormComponent({
         schema: regionSchema({ ...europe, description: 'A country in Europe' }),
         uiSchema: { 'ui:globalOptions': { description: 'Every field' } },
-        formData,
+        initialFormData: formData,
       });
 
       expect(screen.getAllByText('A country in Europe')).toHaveLength(1);
@@ -2611,7 +2693,7 @@ describe('oneOf', () => {
           properties: { x: { title: 'X', description: 'Field desc', type: ['string', 'number'] } },
         },
         uiSchema: { 'ui:globalOptions': { description: 'Every field' } },
-        formData: { x: 'a' },
+        initialFormData: { x: 'a' },
         useFallbackUiForUnsupportedType: true,
       });
 
@@ -2621,7 +2703,7 @@ describe('oneOf', () => {
     it('describes the option with the ui:description it declares for itself', () => {
       const { node } = createFormComponent({
         schema,
-        formData,
+        initialFormData: formData,
         uiSchema: { region: { oneOf: [{}, { 'ui:description': 'Pick a European country' }] } },
       });
 
@@ -2629,7 +2711,11 @@ describe('oneOf', () => {
     });
 
     it('renders the field ui:description once', () => {
-      createFormComponent({ schema, formData, uiSchema: { region: { 'ui:description': 'Where you live' } } });
+      createFormComponent({
+        schema,
+        initialFormData: formData,
+        uiSchema: { region: { 'ui:description': 'Where you live' } },
+      });
 
       expect(screen.getAllByText('Where you live')).toHaveLength(1);
     });
@@ -2662,7 +2748,7 @@ describe('oneOf', () => {
           },
         },
         uiSchema: { x: { oneOf: [{}, {}] } },
-        formData: { x: 'a' },
+        initialFormData: { x: 'a' },
         useFallbackUiForUnsupportedType: true,
       });
 
@@ -2829,7 +2915,7 @@ describe('oneOf', () => {
           },
         },
       };
-      const { node } = createFormComponent({ schema, formData: { myprop: 'X' } });
+      const { node } = createFormComponent({ schema, initialFormData: { myprop: 'X' } });
 
       const select = node.querySelector<HTMLSelectElement>('select#root_myprop');
       expect(select).toBeInTheDocument();
@@ -2867,7 +2953,7 @@ describe('oneOf', () => {
           mylist: { oneOf: [{ const: 'foo' }, { const: 'bar' }] },
         },
       };
-      const { node, onChange } = createFormComponent({ schema, formData: { myprop: 'foo' } });
+      const { node, onChange } = createFormComponent({ schema, initialFormData: { myprop: 'foo' } });
 
       expect(node.querySelector('#root_myprop__oneof_select')).toHaveValue('2');
       const select = node.querySelector<HTMLSelectElement>('select#root_myprop');
@@ -3104,7 +3190,7 @@ describe('oneOf', () => {
 
     it('should not infer a type or write form data for an empty oneOf', () => {
       const schema: RJSFSchema = { type: 'object', properties: { myprop: { oneOf: [] } } };
-      const { node, onChange } = createFormComponent({ schema, formData: {} });
+      const { node, onChange } = createFormComponent({ schema, initialFormData: {} });
 
       expect(node.querySelector('.unsupported-field')).toBeInTheDocument();
       expect(onChange).not.toHaveBeenCalled();
@@ -3120,7 +3206,7 @@ describe('oneOf', () => {
         properties: { myprop: { oneOf: [{ title: 'none', type: 'object' }, { $ref: '#/$defs/falsy' }] } },
         $defs: { falsy: { title: 'falsy', const: value } },
       };
-      const { node } = createFormComponent({ schema, formData: { myprop: value } });
+      const { node } = createFormComponent({ schema, initialFormData: { myprop: value } });
 
       expect(node.querySelector('.unsupported-field')).not.toBeInTheDocument();
       expect(node.querySelector(selector)).toBeInTheDocument();
@@ -3131,7 +3217,7 @@ describe('oneOf', () => {
         type: 'object',
         properties: { myprop: { title: 'X', oneOf: [{ title: 'None', const: null }] } },
       };
-      const { node } = createFormComponent({ schema, formData: { myprop: null } });
+      const { node } = createFormComponent({ schema, initialFormData: { myprop: null } });
 
       const select = node.querySelector<HTMLSelectElement>('select#root_myprop');
       expect(select).toBeInTheDocument();
@@ -3154,7 +3240,7 @@ describe('oneOf', () => {
             },
           },
         };
-        const { node, onChange } = createFormComponent({ schema, uiSchema, formData: { v: { a: 1 } } });
+        const { node, onChange } = createFormComponent({ schema, uiSchema, initialFormData: { v: { a: 1 } } });
 
         expect(node.querySelector('.unsupported-field')).not.toBeInTheDocument();
         const select = node.querySelector<HTMLSelectElement>('select#root_v')!;
@@ -3168,7 +3254,7 @@ describe('oneOf', () => {
           type: 'object',
           properties: { v: { anyOf: [{ const: [1, 2] }, { const: [3] }, { const: null }] } },
         };
-        const { node, onChange } = createFormComponent({ schema, uiSchema, formData: {} });
+        const { node, onChange } = createFormComponent({ schema, uiSchema, initialFormData: {} });
 
         const select = node.querySelector<HTMLSelectElement>('select#root_v')!;
         expect([...select.options].map((option) => option.text)).toEqual(['', '[1,2]', '[3]', 'null']);
@@ -3181,7 +3267,7 @@ describe('oneOf', () => {
           type: 'object',
           properties: { v: { anyOf: [{ const: [1, 2] }, { const: [3] }] } },
         };
-        const { node } = createFormComponent({ schema, uiSchema, formData: { v: [3] } });
+        const { node } = createFormComponent({ schema, uiSchema, initialFormData: { v: [3] } });
 
         expect(getSelectedOptionValue(node.querySelector<HTMLSelectElement>('select#root_v')!)).toEqual('[3]');
       });
@@ -3284,7 +3370,7 @@ describe('oneOf', () => {
           },
         },
       };
-      const { node, onChange } = createFormComponent({ schema, formData: {} });
+      const { node, onChange } = createFormComponent({ schema, initialFormData: {} });
 
       const select = node.querySelector<HTMLSelectElement>('select#root_v')!;
       expect([...select.options].map((option) => option.text)).toEqual(['', 'None', 'One', 'Bee']);
@@ -3944,7 +4030,7 @@ describe('oneOf', () => {
       const fromType = createFormComponent({ schema: typeSchema });
 
       expect(fromConst.node.innerHTML).toEqual(fromType.node.innerHTML);
-      // The constant is a seed default, so it is in the data on mount; a self-owned form reports edits only, so no
+      // The constant is a seed default, so it is in the data on mount; the form reports edits only, so no
       // `onChange` fires for it
       expect(fromConst.getFormData()).toEqual({ note: null });
       expect(fromConst.onChange).not.toHaveBeenCalled();
@@ -4722,6 +4808,138 @@ describe('oneOf', () => {
     await user.click(screen.getByRole('button', { name: 'Clear' }));
 
     expect(onChange.mock.lastCall![0].errorSchema).toEqual({});
+  });
+
+  it('puts the selector back on the option the data fits when onChange answers a switch by setting the field back', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        status: {
+          oneOf: [
+            { title: 'Approved', type: 'object', properties: { by: { type: 'string' } }, required: ['by'] },
+            { title: 'Rejected', type: 'object', properties: { reason: { type: 'string' } }, required: ['reason'] },
+          ],
+        },
+      },
+    };
+    const ref = createFormRef();
+    let refuses = false;
+    const { node } = createFormComponent({
+      ref,
+      schema,
+      initialFormData: { status: { by: 'me' } },
+      onChange: () => {
+        if (refuses) {
+          refuses = false;
+          handleOf(ref).setFieldValue('status', { by: 'me' });
+        }
+      },
+    });
+    refuses = true;
+
+    await user.selectOptions(elementOf(node, 'select'), 'Rejected');
+
+    expect(handleOf(ref).getFormData()).toEqual({ status: { by: 'me' } });
+    expect(node.querySelector('select')).toHaveValue('0');
+    expect(node.querySelector('#root_status_by')).toBeInTheDocument();
+    expect(node.querySelector('#root_status_reason')).not.toBeInTheDocument();
+  });
+});
+
+describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes', (keyword) => {
+  it('keeps the chosen option when the defaults the switch brings in add to the data it sent', async () => {
+    // Option A describes data with a `kind` and a `note` better than option B does, so only the user's choice keeps B
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        status: {
+          [keyword]: [
+            {
+              title: 'A',
+              type: 'object',
+              properties: { kind: { type: 'string' }, note: { type: 'string' }, by: { type: 'string' } },
+              required: ['by'],
+            },
+            {
+              title: 'B',
+              type: 'object',
+              properties: { kind: { const: 'b' }, reason: { type: 'string' } },
+              required: ['reason'],
+            },
+          ],
+        },
+      },
+      // The switched value turns this on, so the form's own derivation adds `note` under the field's path
+      allOf: [
+        {
+          if: {
+            properties: { status: { properties: { kind: { const: 'b' } }, required: ['kind'] } },
+            required: ['status'],
+          },
+          then: { properties: { status: { properties: { note: { type: 'string', default: 'n' } } } } },
+        },
+      ],
+    };
+    const { node, onChange } = createFormComponent({ schema, initialFormData: { status: { by: 'me' } } });
+    const selector = elementOf(node, `#root_status__${keyword.toLowerCase()}_select`);
+
+    await user.selectOptions(selector, 'B');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { status: { kind: 'b', note: 'n' } } }),
+      `root_status__${keyword.toLowerCase()}_select`,
+    );
+    expect(selector).toHaveValue('1');
+    expect(node.querySelector('#root_status_reason')).toBeInTheDocument();
+  });
+  it('keeps the chosen option when transformChange rewrites only another part of the data', async () => {
+    // Option A describes data with a `kind` and a `note` better than option B does, so only the user's choice keeps B
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        stamp: { type: 'number' },
+        status: {
+          [keyword]: [
+            {
+              title: 'A',
+              type: 'object',
+              properties: { kind: { type: 'string' }, note: { type: 'string' }, by: { type: 'string' } },
+              required: ['by'],
+            },
+            {
+              title: 'B',
+              type: 'object',
+              properties: { kind: { const: 'b' }, reason: { type: 'string' } },
+              required: ['reason'],
+            },
+          ],
+        },
+      },
+      allOf: [
+        {
+          if: {
+            properties: { status: { properties: { kind: { const: 'b' } }, required: ['kind'] } },
+            required: ['status'],
+          },
+          then: { properties: { status: { properties: { note: { type: 'string', default: 'n' } } } } },
+        },
+      ],
+    };
+    const { node, onChange } = createFormComponent({
+      schema,
+      initialFormData: { status: { by: 'me' } },
+      transformChange: (next) => (isPlainObject(next) ? { ...next, stamp: 1 } : next),
+    });
+    const selector = elementOf(node, `#root_status__${keyword.toLowerCase()}_select`);
+
+    await user.selectOptions(selector, 'B');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { stamp: 1, status: { kind: 'b', note: 'n' } } }),
+      `root_status__${keyword.toLowerCase()}_select`,
+    );
+    expect(selector).toHaveValue('1');
+    expect(node.querySelector('#root_status_reason')).toBeInTheDocument();
   });
 });
 

@@ -90,7 +90,7 @@ describe('ArrayFieldItemTemplate', () => {
       <Form
         schema={{ type: 'array', items }}
         uiSchema={uiSchema}
-        formData={formData}
+        initialFormData={formData}
         validator={validator}
         useFallbackUiForUnsupportedType={fallbackUi}
       />,

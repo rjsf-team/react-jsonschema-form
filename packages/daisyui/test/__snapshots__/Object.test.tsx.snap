@@ -2117,7 +2117,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                         class="dropdown w-full"
                       >
                         <button
-                          aria-controls="_r_r_"
+                          aria-controls="_r_s_"
                           aria-expanded="false"
                           aria-haspopup="listbox"
                           class="btn btn-outline w-full text-left flex justify-between items-center "
@@ -2140,7 +2140,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                         </button>
                         <ul
                           class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-                          id="_r_r_"
+                          id="_r_s_"
                           role="listbox"
                         >
                           <li
@@ -3064,7 +3064,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                         class="dropdown w-full"
                       >
                         <button
-                          aria-controls="_r_m_"
+                          aria-controls="_r_n_"
                           aria-expanded="false"
                           aria-haspopup="listbox"
                           class="btn btn-outline w-full text-left flex justify-between items-center "
@@ -3087,7 +3087,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                         </button>
                         <ul
                           class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-                          id="_r_m_"
+                          id="_r_n_"
                           role="listbox"
                         >
                           <li
@@ -3296,7 +3296,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                         class="dropdown w-full"
                       >
                         <button
-                          aria-controls="_r_10_"
+                          aria-controls="_r_11_"
                           aria-expanded="false"
                           aria-haspopup="listbox"
                           class="btn btn-outline w-full text-left flex justify-between items-center "
@@ -3319,7 +3319,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                         </button>
                         <ul
                           class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-                          id="_r_10_"
+                          id="_r_11_"
                           role="listbox"
                         >
                           <li

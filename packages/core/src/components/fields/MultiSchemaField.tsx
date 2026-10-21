@@ -2,12 +2,14 @@ import { useCallback, useMemo } from 'react';
 import type { ErrorSchema, FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
 import {
   ANY_OF_KEY,
+  deepEquals,
   ERRORS_KEY,
   getDiscriminatorFieldFromSchema,
   getRenderedOptionSchema,
   getSelectorPresentation,
   getTemplates,
   getUiOptions,
+  getValidationTarget,
   getXxxOfKey,
   isFormDataAvailable,
   logOnce,
@@ -24,7 +26,6 @@ import useOptionSelection from '../../hooks/useOptionSelection.ts';
 import useSendOptionSwitch from '../../hooks/useSendOptionSwitch.ts';
 import { displaysLabel, getWidgetErrorProps, getWidgetLabelProps } from './fieldWidgetUtils.ts';
 import formDataForNewOption from './formDataForNewOption.ts';
-import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 
 /** Returns the field's `uiSchema` for an option that declares none of its own, without the field's title and
  * description, which the field's plan already carries to the option's, so the option keeps the title and description
@@ -83,7 +84,6 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     presentation,
   } = props;
   const { schemaUtils } = registry;
-  const readsFormData = useReadsFormData(AnyOfField);
   const sendOptionSwitch = useSendOptionSwitch(fieldPath);
 
   const { selectedOption, selectOption } = useOptionSelection<T, S, F>(
@@ -98,7 +98,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   const selectSuffix = xxxOfKey === ANY_OF_KEY ? '__anyof_select' : '__oneof_select';
   const fieldId = `${id}${selectSuffix}`;
 
-  const { widgets, fields, translateString, globalUiOptions, uiSchemaDefinitions } = registry;
+  const { widgets, fields, translateString, globalUiOptions, uiSchemaDefinitions, rootSchema } = registry;
   const {
     widget = 'select',
     placeholder,
@@ -164,10 +164,13 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
         newOptionUiSchema,
         oldOptionUiSchema: optionUiSchema,
         uiSchemaDefinitions,
+        globalUiOptions,
       });
 
+      // Selected before the switch is sent, so the change's sanitize and live omit read the option it switches to
       selectOption(intOption);
-      sendOptionSwitch(
+      let sentData: unknown;
+      const outcome = sendOptionSwitch(
         schema,
         {
           oldOption,
@@ -178,8 +181,29 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
         },
         formData,
         newFormData,
-        () => onChange(newFormData, fieldPath, undefined, fieldId),
+        (sent) => {
+          sentData = sent;
+          onChange(sent, fieldPath, undefined, fieldId);
+        },
       );
+      // A switch the form refused changed nothing, so the option shown before is shown again, even where the data fits
+      // the one picked. One the form took holds for what it stored, which the form records as it takes it, and one no
+      // form answered for what it sent. One `transformChange` rewrote here holds while the data the form kept still fits
+      // the chosen option, so data several options fit keeps the explicit choice, and is otherwise matched again
+      if (outcome === undefined) {
+        selectOption(intOption, [sentData]);
+      } else if (outcome.kind === 'refused') {
+        selectOption(selectedOption, [formData]);
+      } else if (
+        outcome.kind === 'rewritten' &&
+        !deepEquals(outcome.kept, outcome.edited) &&
+        !(
+          newOption !== undefined &&
+          schemaUtils.getValidator().isValid(getValidationTarget<S>(newOption, rootSchema), outcome.kept, rootSchema)
+        )
+      ) {
+        selectOption(intOption, []);
+      }
     },
     [
       selectedOption,
@@ -199,6 +223,8 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
       renderedOption,
       uiSchema,
       uiSchemaDefinitions,
+      globalUiOptions,
+      rootSchema,
     ],
   );
 
@@ -260,25 +286,19 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
 
   const optionsSchemaField =
     (renderedOption && renderedOption.type !== 'null' && (
-      <RawFormDataContext value={readsFormData ? SchemaFieldComponent : undefined}>
-        <SchemaFieldComponent {...props} schema={renderedOption} uiSchema={optionFieldUiSchema} />
-      </RawFormDataContext>
+      <SchemaFieldComponent {...props} schema={renderedOption} uiSchema={optionFieldUiSchema} />
     )) ||
     null;
 
-  // The option's field is handed this field's own data, and is vouched for directly; the template and the selector are
-  // not
   return (
-    <RawFormDataContext value={undefined}>
-      <MultiSchemaFieldTemplate
-        id={id}
-        schema={schema}
-        registry={registry}
-        uiSchema={uiSchema}
-        selector={selector}
-        optionSchemaField={optionsSchemaField}
-      />
-    </RawFormDataContext>
+    <MultiSchemaFieldTemplate
+      id={id}
+      schema={schema}
+      registry={registry}
+      uiSchema={uiSchema}
+      selector={selector}
+      optionSchemaField={optionsSchemaField}
+    />
   );
 }
 

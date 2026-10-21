@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import type { FieldProps, RJSFSchema, UiSchema } from '@rjsf/utils';
 import { ROOT_FIELD_PATH } from '@rjsf/utils';
-import validator, { customizeValidator } from '@rjsf/validator-ajv8';
+import { customizeValidator } from '@rjsf/validator-ajv8';
 import { act, render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
-import Form, { useOptionSelection } from '../src/index.ts';
+import { useOptionSelection } from '../src/index.ts';
 import { getTestRegistry } from '../src/testing.ts';
 import {
   createFormComponent,
@@ -617,7 +617,7 @@ describe('option selection as form state', () => {
       expect(selectOf(node, 'root__anyof_select')).toHaveValue('1');
     });
 
-    it('keeps the option shown, and submits under it, when the parent declines an edit to a property its options can disagree about', async () => {
+    it('keeps the option shown, and submits under it, when transformChange refuses an edit to a property its options can disagree about', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: { name: { type: 'string' } },
@@ -626,12 +626,17 @@ describe('option selection as form state', () => {
           { title: 'B', properties: { b: { type: 'string' } }, required: ['name'] },
         ],
       };
-      const props = { schema, formData: { a: 'v' }, onChange: () => undefined, omitExtraData: true };
-      const { node, rerender, onSubmit } = createFormComponent(props);
+      let refuses = false;
+      const { node, onSubmit } = createFormComponent({
+        schema,
+        initialFormData: { a: 'v' },
+        omitExtraData: true,
+        transformChange: (next, previous) => (refuses ? previous : next),
+      });
       await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
-      await user.type(elementOf(node, '#root_name'), 'x');
+      refuses = true;
 
-      rerender({ ...props, formData: { a: 'v' } });
+      await user.type(elementOf(node, '#root_name'), 'x');
 
       expect(selectOf(node, 'root__oneof_select')).toHaveValue('1');
       await submitForm(node, user);
@@ -660,7 +665,7 @@ describe('option selection as form state', () => {
     expect(selectOf(node, 'root_1__anyof_select')).toHaveValue('1');
   });
 
-  it('keeps the selections of array items on their items when the parent declines the reorder', async () => {
+  it('keeps the selections of array items on their items when transformChange refuses the reorder', async () => {
     const schema: RJSFSchema = {
       type: 'array',
       items: {
@@ -670,9 +675,14 @@ describe('option selection as form state', () => {
         ],
       },
     };
-    const formData = [{ name: 'first' }, { name: 'second' }];
-    const { node, rerender } = createFormComponent({ schema, formData, onChange: () => undefined });
+    let refuses = false;
+    const { node } = createFormComponent({
+      schema,
+      initialFormData: [{ name: 'first' }, { name: 'second' }],
+      transformChange: (next, previous) => (refuses ? previous : next),
+    });
     await user.selectOptions(selectOf(node, 'root_0__anyof_select'), 'B');
+    refuses = true;
 
     await user.click(node.querySelectorAll('.rjsf-array-item-move-down')[0]);
 
@@ -680,39 +690,9 @@ describe('option selection as form state', () => {
     expect(selectOf(node, 'root_0__anyof_select')).toHaveValue('1');
     expect(node.querySelector('#root_1_name')).toHaveValue('second');
     expect(selectOf(node, 'root_1__anyof_select')).toHaveValue('0');
-
-    // A parent answering with its own rows again declines the reorder the same way
-    await user.click(node.querySelectorAll('.rjsf-array-item-move-down')[0]);
-    rerender({ schema, formData: [{ name: 'first' }, { name: 'second' }], onChange: () => undefined });
-
-    expect(selectOf(node, 'root_0__anyof_select')).toHaveValue('1');
-    expect(selectOf(node, 'root_1__anyof_select')).toHaveValue('0');
   });
 
-  it('keeps the selections of array items where they are when a parent that declined the reorder changes the array otherwise', async () => {
-    const schema: RJSFSchema = {
-      type: 'array',
-      items: {
-        anyOf: [
-          { title: 'A', type: 'object', properties: { name: { type: 'string' } } },
-          { title: 'B', type: 'object', properties: { name: { type: 'string' }, more: { type: 'string' } } },
-        ],
-      },
-    };
-    const props = { schema, formData: [{ name: 'first' }, { name: 'second' }], onChange: () => undefined };
-    const { node, rerender } = createFormComponent(props);
-    await user.selectOptions(selectOf(node, 'root_0__anyof_select'), 'B');
-    await user.click(node.querySelectorAll('.rjsf-array-item-move-down')[0]);
-
-    rerender({ ...props, formData: [{ name: 'first' }, { name: 'second' }, { name: 'third' }] });
-
-    expect(node.querySelector('#root_0_name')).toHaveValue('first');
-    expect(selectOf(node, 'root_0__anyof_select')).toHaveValue('1');
-    expect(selectOf(node, 'root_1__anyof_select')).toHaveValue('0');
-    expect(selectOf(node, 'root_2__anyof_select')).toHaveValue('0');
-  });
-
-  it('keeps the selections of array items on their items when the parent takes an edit and declines the removal made on top of it', async () => {
+  it('keeps the selections of array items where they are when setFieldValue changes the array after a refused reorder', async () => {
     const schema: RJSFSchema = {
       type: 'array',
       items: {
@@ -723,41 +703,27 @@ describe('option selection as form state', () => {
       },
     };
     const ref = createFormRef();
-    let takes = Infinity;
-    function Parent() {
-      const [formData, setFormData] = useState<unknown>([{ name: 'first' }, { name: 'second' }]);
-      return (
-        <Form
-          ref={ref}
-          schema={schema}
-          validator={validator}
-          formData={formData}
-          onChange={(event) => {
-            if (takes > 0) {
-              takes -= 1;
-              setFormData(event.formData);
-            }
-          }}
-        />
-      );
-    }
-    const { container } = render(<Parent />);
-    await user.selectOptions(selectOf(container, 'root_1__anyof_select'), 'B');
-    takes = 1;
-
-    // Both before any commit, so the removal is proposed on top of the edit, which the parent takes alone
-    act(() => {
-      handleOf(ref).setFieldValue([1, 'name'], 'edited');
-      container.querySelectorAll<HTMLButtonElement>('.rjsf-array-item-remove')[0].click();
+    let refuses = false;
+    const { node } = createFormComponent({
+      ref,
+      schema,
+      initialFormData: [{ name: 'first' }, { name: 'second' }],
+      transformChange: (next, previous) => (refuses ? previous : next),
     });
+    await user.selectOptions(selectOf(node, 'root_0__anyof_select'), 'B');
+    refuses = true;
+    await user.click(node.querySelectorAll('.rjsf-array-item-move-down')[0]);
+    refuses = false;
 
-    expect(container.querySelector('#root_0_name')).toHaveValue('first');
-    expect(container.querySelector('#root_1_name')).toHaveValue('edited');
-    expect(selectOf(container, 'root_0__anyof_select')).toHaveValue('0');
-    expect(selectOf(container, 'root_1__anyof_select')).toHaveValue('1');
+    act(() => handleOf(ref).setFieldValue('', [{ name: 'first' }, { name: 'second' }, { name: 'third' }]));
+
+    expect(node.querySelector('#root_0_name')).toHaveValue('first');
+    expect(selectOf(node, 'root_0__anyof_select')).toHaveValue('1');
+    expect(selectOf(node, 'root_1__anyof_select')).toHaveValue('0');
+    expect(selectOf(node, 'root_2__anyof_select')).toHaveValue('0');
   });
 
-  it('moves the selections of array items with the items a parent renders only after a commit without them', async () => {
+  it('keeps the selections of array items on their items when transformChange takes an edit and refuses the removal made on top of it', async () => {
     const schema: RJSFSchema = {
       type: 'array',
       items: {
@@ -767,29 +733,27 @@ describe('option selection as form state', () => {
         ],
       },
     };
-    function LateParent() {
-      const [formData, setFormData] = useState<unknown>([{ name: 'first' }, { name: 'second' }]);
-      return (
-        <Form
-          schema={schema}
-          validator={validator}
-          formData={formData}
-          // Applied after the commit that renders the proposal, as a parent awaiting something first does
-          onChange={(event) => {
-            queueMicrotask(() => setFormData(event.formData));
-          }}
-        />
-      );
-    }
-    const { container } = render(<LateParent />);
-    await user.selectOptions(selectOf(container, 'root_0__anyof_select'), 'B');
+    const ref = createFormRef();
+    const { node } = createFormComponent({
+      ref,
+      schema,
+      initialFormData: [{ name: 'first' }, { name: 'second' }],
+      // Refuses any change that shortens the array
+      transformChange: (next, previous) =>
+        Array.isArray(next) && Array.isArray(previous) && next.length < previous.length ? previous : next,
+    });
+    await user.selectOptions(selectOf(node, 'root_1__anyof_select'), 'B');
 
-    await user.click(container.querySelectorAll('.rjsf-array-item-move-down')[0]);
+    // Both before any commit, so the removal is made on top of the edit
+    act(() => {
+      handleOf(ref).setFieldValue([1, 'name'], 'edited');
+      node.querySelectorAll<HTMLButtonElement>('.rjsf-array-item-remove')[0].click();
+    });
 
-    expect(container.querySelector('#root_0_name')).toHaveValue('second');
-    expect(selectOf(container, 'root_0__anyof_select')).toHaveValue('0');
-    expect(container.querySelector('#root_1_name')).toHaveValue('first');
-    expect(selectOf(container, 'root_1__anyof_select')).toHaveValue('1');
+    expect(node.querySelector('#root_0_name')).toHaveValue('first');
+    expect(node.querySelector('#root_1_name')).toHaveValue('edited');
+    expect(selectOf(node, 'root_0__anyof_select')).toHaveValue('0');
+    expect(selectOf(node, 'root_1__anyof_select')).toHaveValue('1');
   });
 
   it('drops the selection of an additional property with the property, so one added under its name starts over', async () => {
@@ -858,7 +822,7 @@ describe('option selection as form state', () => {
     expect(getSelected(selectOf(node, 'root_x__anyof_select'))).toBe('A2');
   });
 
-  it('keeps a switch the parent declines, and matches the data a parent pushes again, preferring the selection', async () => {
+  it('leaves the option shown when transformChange refuses a switch, and matches data setFieldValue sets again, preferring the selection', async () => {
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -870,29 +834,38 @@ describe('option selection as form state', () => {
         },
       },
     };
-    const { node, rerender } = createFormComponent({ schema, formData: { o: { a: 'x' } }, onChange: () => undefined });
+    const ref = createFormRef();
+    let refuses = true;
+    const { node } = createFormComponent({
+      ref,
+      schema,
+      initialFormData: { o: { a: 'x' } },
+      transformChange: (next, previous) => (refuses ? previous : next),
+    });
     await user.selectOptions(selectOf(node, 'root_o__anyof_select'), 'B');
-    // The parent ignores the switch, which leaves the data the selection was made with
-    expect(selectOf(node, 'root_o__anyof_select')).toHaveValue('1');
+    expect(selectOf(node, 'root_o__anyof_select')).toHaveValue('0');
+    refuses = false;
+    await user.selectOptions(selectOf(node, 'root_o__anyof_select'), 'B');
 
-    rerender({ schema, formData: { o: { a: 'v' } }, onChange: () => undefined });
+    act(() => handleOf(ref).setFieldValue('o', { a: 'v' }));
     expect(selectOf(node, 'root_o__anyof_select')).toHaveValue('0');
 
-    rerender({ schema, formData: { o: { b: 'z', a: 'w' } }, onChange: () => undefined });
+    act(() => handleOf(ref).setFieldValue('o', { b: 'z', a: 'w' }));
     expect(selectOf(node, 'root_o__anyof_select')).toHaveValue('1');
   });
 
-  it('shows a pushed value under the option it fits best, even when the selected option fits it too', async () => {
+  it('shows data setFieldValue sets under the option it fits best, even when the selected option fits it too', async () => {
     const schema: RJSFSchema = {
       oneOf: [
         { title: 'A', type: 'object', properties: { a: { type: 'string' } } },
         { title: 'B', type: 'object', properties: { b: { type: 'string' } } },
       ],
     };
-    const { node, rerender } = createFormComponent({ schema, formData: {}, onChange: () => undefined });
+    const ref = createFormRef();
+    const { node } = createFormComponent({ ref, schema, initialFormData: {} });
     await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
 
-    rerender({ schema, formData: { a: 'x' }, onChange: () => undefined });
+    act(() => handleOf(ref).setFieldValue('', { a: 'x' }));
 
     expect(selectOf(node, 'root__oneof_select')).toHaveValue('0');
     expect(node.querySelector('#root_a')).toHaveValue('x');
@@ -919,10 +892,11 @@ describe('option selection as form state', () => {
       expect(selectOf(node, 'root__anyof_select')).toHaveValue('0');
     });
 
-    it('shows the option after data a parent pushes matched the other', async () => {
-      const { node, rerender } = createFormComponent({ schema, formData: {}, onChange: () => undefined });
+    it('shows the option after data setFieldValue sets matched the other', async () => {
+      const ref = createFormRef();
+      const { node } = createFormComponent({ ref, schema, initialFormData: {} });
       await user.selectOptions(selectOf(node, 'root__anyof_select'), 'B');
-      rerender({ schema, formData: { x: 'abcd' }, onChange: () => undefined });
+      act(() => handleOf(ref).setFieldValue('', { x: 'abcd' }));
       expect(selectOf(node, 'root__anyof_select')).toHaveValue('0');
 
       await user.selectOptions(selectOf(node, 'root__anyof_select'), 'B');
@@ -957,19 +931,6 @@ describe('option selection as form state', () => {
       ],
     };
 
-    /** Accepts every proposal, and pushes `{ a: 'x' }` back when its button is clicked, as an undo would */
-    function UndoingParent() {
-      const [value, setValue] = useState<unknown>({ a: 'x' });
-      return (
-        <>
-          <Form schema={schema} validator={validator} formData={value} onChange={(event) => setValue(event.formData)} />
-          <button id='undo' type='button' onClick={() => setValue({ a: 'x' })}>
-            Undo
-          </button>
-        </>
-      );
-    }
-
     it('is matched again after a reset', async () => {
       const ref = createFormRef();
       const { node } = createFormComponent({ ref, schema, initialFormData: { a: 'x' } });
@@ -985,18 +946,19 @@ describe('option selection as form state', () => {
     it.each([
       { edits: false, title: 'right after the switch' },
       { edits: true, title: 'after an edit under the new option' },
-    ])('is matched again when an accepting parent pushes it back, $title', async ({ edits }) => {
-      const { container } = render(<UndoingParent />);
-      await user.selectOptions(selectOf(container, 'root__oneof_select'), 'B');
+    ])('is matched again when setFieldValue puts it back, $title', async ({ edits }) => {
+      const ref = createFormRef();
+      const { node } = createFormComponent({ ref, schema, initialFormData: { a: 'x' } });
+      await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
       if (edits) {
-        await user.type(elementOf(container, '#root_b'), 'q');
+        await user.type(elementOf(node, '#root_b'), 'q');
       }
-      expect(selectOf(container, 'root__oneof_select')).toHaveValue('1');
+      expect(selectOf(node, 'root__oneof_select')).toHaveValue('1');
 
-      await user.click(elementOf(container, '#undo'));
+      act(() => handleOf(ref).setFieldValue('', { a: 'x' }));
 
-      expect(selectOf(container, 'root__oneof_select')).toHaveValue('0');
-      expect(container.querySelector('#root_a')).toHaveValue('x');
+      expect(selectOf(node, 'root__oneof_select')).toHaveValue('0');
+      expect(node.querySelector('#root_a')).toHaveValue('x');
     });
   });
 
@@ -1006,8 +968,8 @@ describe('option selection as form state', () => {
       { title: 'B', type: 'object', properties: { b: { type: 'string' } } },
     ];
     const schemaOf = (oneOf: RJSFSchema[]): RJSFSchema => ({ type: 'object', properties: { o: { oneOf } } });
-    // The parent keeps `{ o: {} }`, which every option fits, so only the selection shows `B`
-    const props = { formData: { o: {} }, onChange: () => undefined };
+    // `{ o: {} }` fits every option, so only the selection shows `B`
+    const props = { initialFormData: { o: {} } };
     const { node, rerender } = createFormComponent({ schema: schemaOf(options), ...props });
     await user.selectOptions(selectOf(node, 'root_o__oneof_select'), 'B');
 
@@ -1257,11 +1219,11 @@ describe('cycle expansion as form state', () => {
     expect(node.querySelector('#root_1_child_name')).toBeInTheDocument();
   });
 
-  it('keeps an expansion on its array item when the parent declines the reorder', async () => {
+  it('keeps an expansion on its array item when transformChange refuses the reorder', async () => {
     const { node } = createFormComponent({
       schema,
-      formData: [{ name: 'a' }, { name: 'b' }],
-      onChange: () => undefined,
+      initialFormData: [{ name: 'a' }, { name: 'b' }],
+      transformChange: (_next, previous) => previous,
     });
     await user.click(elementOf(node, '#root_0_child-button'));
 
@@ -1272,25 +1234,14 @@ describe('cycle expansion as form state', () => {
     expect(node.querySelector('#root_1_child-button')).toBeInTheDocument();
   });
 
-  it('moves an expansion with its array item when the parent takes a reorder of items holding equal data', async () => {
-    function Parent() {
-      const [formData, setFormData] = useState<unknown>([{ name: 'a' }, { name: 'a' }]);
-      return (
-        <Form
-          schema={schema}
-          validator={validator}
-          formData={formData}
-          onChange={(event) => setFormData(event.formData)}
-        />
-      );
-    }
-    const { container } = render(<Parent />);
-    await user.click(elementOf(container, '#root_0_child-button'));
+  it('moves an expansion with its array item on a reorder of items holding equal data', async () => {
+    const { node } = createFormComponent({ schema, initialFormData: [{ name: 'a' }, { name: 'a' }] });
+    await user.click(elementOf(node, '#root_0_child-button'));
 
-    await user.click(container.querySelectorAll('.rjsf-array-item-move-down')[0]);
+    await user.click(node.querySelectorAll('.rjsf-array-item-move-down')[0]);
 
-    expect(container.querySelector('#root_0_child-button')).toBeInTheDocument();
-    expect(container.querySelector('#root_1_child_name')).toBeInTheDocument();
+    expect(node.querySelector('#root_0_child-button')).toBeInTheDocument();
+    expect(node.querySelector('#root_1_child_name')).toBeInTheDocument();
   });
 
   it('keeps an expansion through a reset', async () => {

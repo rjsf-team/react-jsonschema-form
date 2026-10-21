@@ -333,6 +333,8 @@ export type LoadedLiveSettings = Omit<LiveSettings, 'liveValidate' | 'liveOmit' 
 };
 
 interface OptionsDrawerProps {
+  /** Changes whenever the playground loads a sample or a shared link, which remounts the options forms it seeds */
+  loadKey: number;
   schema: RJSFSchema;
   uiSchema: UiSchema;
   formData: unknown;
@@ -349,6 +351,7 @@ interface OptionsDrawerProps {
 }
 
 export default function OptionsDrawer({
+  loadKey,
   schema,
   uiSchema,
   formData,
@@ -411,16 +414,22 @@ export default function OptionsDrawer({
       <OptionsButtons playGroundFormRef={playGroundFormRef} />
       <CopyLink shareURL={shareURL} onShare={onShare} />
       <Form
+        key={`options-${loadKey}`}
         idPrefix='rjsf_options'
         schema={liveSettingsBooleanSchema}
-        formData={liveSettings}
+        initialFormData={liveSettings}
         validator={localValidator}
         onChange={handleSetLiveSettings}
         uiSchema={liveSettingsBooleanUiSchema}
       >
         <span />
       </Form>
-      <ValidatorSelector validators={validators} validator={validator} select={onValidatorSelected} />
+      <ValidatorSelector
+        key={`validator-${loadKey}`}
+        validators={validators}
+        validator={validator}
+        select={onValidatorSelected}
+      />
       <RawValidatorTest validator={validators[validator]} schema={schema} formData={formData} />
     </Drawer>
   );
