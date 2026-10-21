@@ -192,6 +192,40 @@ describe('DaisyUIFrameProvider', () => {
     expect(screen.getByText('dark')).toBeInTheDocument();
   });
 
+  test('has useTheme() inside it name the theme it chose from the first render', () => {
+    localStorageMock['daisyui-theme'] = 'cupcake';
+    const rendered: string[] = [];
+    function ThemeName() {
+      const { theme } = useTheme();
+      rendered.push(theme);
+      return <span>{theme}</span>;
+    }
+    const DaisyUIFrame = __createDaisyUIFrameProvider({ children: <ThemeName />, subtheme: { dataTheme: 'dark' } });
+
+    render(<DaisyUIFrame />);
+
+    expect(new Set(rendered)).toEqual(new Set(['dark']));
+  });
+
+  test('has useTheme() inside it keep naming the theme it chose over one stored while it is chosen', async () => {
+    function LightButton() {
+      const { theme, setTheme } = useTheme();
+      return (
+        <button type='button' onClick={() => setTheme('light')}>
+          {theme}
+        </button>
+      );
+    }
+    const DaisyUIFrame = __createDaisyUIFrameProvider({ children: <LightButton />, subtheme: { dataTheme: 'dark' } });
+    const { container } = render(<DaisyUIFrame />);
+
+    await user.click(screen.getByRole('button', { name: 'dark' }));
+
+    expect(mockSetItem).toHaveBeenCalledWith('daisyui-theme', 'light');
+    expect(container.querySelector('[data-theme="dark"]')).not.toBeNull();
+    expect(screen.getByRole('button')).toHaveTextContent('dark');
+  });
+
   test("hands useTheme() another tab's stored theme through a ThemeProvider", () => {
     localStorageMock['daisyui-theme'] = 'cupcake';
     function ThemeName() {

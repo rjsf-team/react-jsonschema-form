@@ -19,6 +19,7 @@
 import type { ReactNode } from 'react';
 import { useEffect, useSyncExternalStore } from 'react';
 
+import { FrameThemeContext } from './theme/frameTheme.ts';
 import { DEFAULT_THEME, readStoredTheme, storeTheme, subscribeToStoredTheme } from './theme/storedTheme.ts';
 
 interface DaisyUIFrameProviderProps {
@@ -43,8 +44,9 @@ function DaisyUIFrameComponent(props: DaisyUIFrameProviderProps & { document?: D
     () => chosenTheme || DEFAULT_THEME,
   );
 
-  // Storing the chosen theme is a side effect, so it waits for the commit rather than happening while rendering. A
-  // storage that refuses it leaves the chosen theme shown all the same
+  // Storing the chosen theme is a side effect, so it waits for the commit rather than happening while rendering; the
+  // components inside get the theme shown through `FrameThemeContext` meanwhile. A storage that refuses it leaves the
+  // chosen theme shown all the same
   useEffect(() => {
     if (chosenTheme) {
       storeTheme(chosenTheme);
@@ -96,7 +98,7 @@ function DaisyUIFrameComponent(props: DaisyUIFrameProviderProps & { document?: D
 
   return (
     <div data-theme={theme} className='daisy-ui-theme'>
-      {children}
+      <FrameThemeContext value={theme}>{children}</FrameThemeContext>
     </div>
   );
 }

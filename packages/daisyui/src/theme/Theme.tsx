@@ -1,10 +1,11 @@
 import type { ReactNode } from 'react';
-import { useMemo, useSyncExternalStore } from 'react';
+import { use, useMemo, useSyncExternalStore } from 'react';
 import type { ThemeProps } from '@rjsf/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, ThemePresentation } from '@rjsf/utils';
 
 import { createTemplates } from '../templates/Templates.tsx';
 import { createWidgets } from '../widgets/Widgets.tsx';
+import { FrameThemeContext } from './frameTheme.ts';
 import { DEFAULT_THEME, readStoredTheme, storeTheme, subscribeToStoredTheme } from './storedTheme.ts';
 
 /** Which parts of a field this theme's fields and widgets draw themselves, over `@rjsf/core`'s: the toggle draws its
@@ -56,15 +57,17 @@ export function ThemeProvider({ children }: ThemeProviderProps): ReactNode {
   return children;
 }
 
-/** Custom hook for accessing the current theme and theme setter function. The stored theme is the one source of truth,
- * read as an external store, so every caller, inside a `ThemeProvider` or not, names the theme a `DaisyUIFrameProvider`
- * shows, and follows one any of them, a provider or another tab stores. The server has no storage, so it renders the
- * default
+/** Custom hook for accessing the current theme and theme setter function, inside a `ThemeProvider` or not. Inside a
+ * `DaisyUIFrameProvider` it names the theme that frame shows, its chosen `dataTheme` from the first render on.
+ * Elsewhere it reads the stored theme as an external store, so it follows one a caller, a frame provider or another tab
+ * stores. The server has no storage, so it renders a frame's chosen theme or the default
  *
- * @returns The current theme name, and the setter that stores a theme, where a storage that refuses one leaves the
- *          theme as it was
+ * @returns The current theme name, and the setter that stores a theme. A frame with a chosen `dataTheme` keeps showing
+ *          it, and a storage that refuses one leaves the theme as it was
  */
 export function useTheme() {
-  const theme = useSyncExternalStore(subscribeToStoredTheme, readStoredTheme, () => DEFAULT_THEME);
+  const frameTheme = use(FrameThemeContext);
+  const storedTheme = useSyncExternalStore(subscribeToStoredTheme, readStoredTheme, () => DEFAULT_THEME);
+  const theme = frameTheme ?? storedTheme;
   return useMemo(() => ({ theme, setTheme: storeTheme }), [theme]);
 }
