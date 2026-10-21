@@ -1054,3 +1054,49 @@ describe('antd CheckboxWidget required attribute', () => {
     expect(container.querySelector('input[type=checkbox]')).not.toHaveAttribute('required');
   });
 });
+
+describe("antd marks a deprecated field's label, as core does", () => {
+  test.each<[string, RJSFSchema, UiSchema, string]>([
+    ['text input', { type: 'string' }, {}, 'textbox'],
+    ['number input', { type: 'number' }, {}, 'spinbutton'],
+    ['textarea', { type: 'string' }, { 'ui:widget': 'textarea' }, 'textbox'],
+    ['date input', { type: 'string', format: 'date' }, {}, 'textbox'],
+    ['checkbox', { type: 'boolean' }, {}, 'checkbox'],
+    ['select', { type: 'string', enum: ['a', 'b'] }, {}, 'combobox'],
+    ['multi-select', { type: 'array', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true }, {}, 'combobox'],
+    ['radio group', { type: 'string', enum: ['a', 'b'] }, { 'ui:widget': 'radio' }, 'radiogroup'],
+    [
+      'checkboxes group',
+      { type: 'array', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true },
+      { 'ui:widget': 'checkboxes' },
+      'group',
+    ],
+  ])('names a deprecated %s by its label with the Deprecated marker', (_, x, ui, role) => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { x: { ...x, title: 'X', deprecated: true } } }}
+        uiSchema={{ x: ui }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole(role, { name: 'X (deprecated)' })).toHaveAttribute('id', 'root_x');
+    expect(container.innerHTML).not.toContain('(deprecated) (deprecated)');
+  });
+
+  // antd's slider handle, the element named by the label, carries no id: antd keeps the field's id on the slider's root
+  test('names a deprecated slider by its label with the Deprecated marker', () => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { x: { type: 'number', title: 'X', deprecated: true } } }}
+        uiSchema={{ x: { 'ui:widget': 'range' } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('slider', { name: 'X (deprecated)' })).toBe(
+      container.querySelector('#root_x [role="slider"]'),
+    );
+    expect(container.innerHTML).not.toContain('(deprecated) (deprecated)');
+  });
+});
