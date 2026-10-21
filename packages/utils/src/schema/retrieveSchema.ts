@@ -59,7 +59,7 @@ import buildPlan, {
   tupleSeeds,
   withoutKeys,
 } from './graph/mergePlan.ts';
-import type { MergePlan, OptionRequest, PlanPolicy, Seed, Seeding } from './graph/mergePlan.ts';
+import type { MergePlan, OptionRequest, PlanInput, PlanPolicy, Seed, Seeding } from './graph/mergePlan.ts';
 import parseSchemaGraph from './graph/parseSchemaGraph.ts';
 import type { AdoptedSchema, NodeId, ObjectNode, SchemaGraph } from './graph/parseSchemaGraph.ts';
 import { childProvenance, extendChain, readProvenance, rootProvenance, stamp } from './graph/provenance.ts';
@@ -514,6 +514,25 @@ function valueOf(data: unknown, key: string): unknown {
   return isObject(data) && Object.hasOwn(data, key) ? data[key] : undefined;
 }
 
+/** The check that a memoized view still holds for data whose `key` property collapses as it did when the view was
+ * built. It is built outside `buildView()` because a closure created there would share that call's scope, and so keep
+ * its data and merged schema alive for as long as the view is memoized.
+ *
+ * @param input - What the property's plan is built from, but its data
+ * @param key - The property's name
+ * @param position - Where the property sits, which decides whether its plan collapses
+ * @param collapsed - Whether the property collapsed for the data the view was built for
+ * @returns - The check, which takes the object's data
+ */
+function collapsesAsBefore<S extends StrictRJSFSchema, F extends FormContextType>(
+  input: PlanInput<S, F>,
+  key: string,
+  position: FieldPosition,
+  collapsed: boolean,
+): (data: unknown) => boolean {
+  return (data) => collapses(input.graph, buildPlan({ ...input, data: valueOf(data, key) }), position) === collapsed;
+}
+
 function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   root: SchemaGraph<S>,
@@ -590,9 +609,7 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
       const position: FieldPosition = { edge, view: 'render', dataDriven: next.dataDriven, chain: next.chain };
       const collapsed = collapses(graph, childPlan, position);
       if (childPlan.readsData) {
-        holds.push(
-          (dataToCheck) => collapses(graph, planOf(next.seeds, valueOf(dataToCheck, key)), position) === collapsed,
-        );
+        holds.push(collapsesAsBefore({ context, graph, seeds: next.seeds, policy }, key, position, collapsed));
       }
       if (collapsed) {
         // A boolean property collapses as the empty schema it stands for
