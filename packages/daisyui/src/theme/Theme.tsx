@@ -52,8 +52,8 @@ interface ThemeProviderProps {
  *
  * @param props - The props for the component
  */
-export function ThemeProvider({ children }: ThemeProviderProps) {
-  return <>{children}</>;
+export function ThemeProvider({ children }: ThemeProviderProps): ReactNode {
+  return children;
 }
 
 /** Custom hook for accessing the current theme and theme setter function. The stored theme is the one source of truth,
