@@ -31,7 +31,6 @@ import {
   isPlainObject,
   mergeObjects,
   replaceEqualDeep,
-  resolveConstantOptions,
   schemaHasNestedConditional,
   toErrorList,
   fieldPathFromList,
@@ -1639,10 +1638,7 @@ function isWholeValueSelectAt<T, S extends StrictRJSFSchema, F extends FormConte
   formData: T,
 ): boolean {
   const fieldSchema = resolveSchemaAt<T, S, F>(schemaUtils, schema, path, formData);
-  return (
-    fieldSchema !== undefined &&
-    isWholeValueSelect<S>(resolveConstantOptions<S>(fieldSchema, schemaUtils.getRootSchema()))
-  );
+  return fieldSchema !== undefined && isWholeValueSelect<S>(fieldSchema);
 }
 
 /** Applies one `change` to `current`, returning the next state. The `newValue` is set at the change's path in the
