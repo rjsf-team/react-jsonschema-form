@@ -1,4 +1,4 @@
-import { useCallback, useMemo, memo } from 'react';
+import { use, useCallback, useMemo, memo } from 'react';
 import type { ReactElement } from 'react';
 import type {
   ErrorSchema,
@@ -18,10 +18,10 @@ import type {
   UiSchema,
 } from '@rjsf/utils';
 import {
+  ADDITIONAL_PROPERTY_FLAG,
   ANY_OF_KEY,
   fieldPathToId,
   fieldPathToList,
-  getByPath,
   getDeprecatedHandling,
   getDescribedControlAttributes,
   getDiscriminatorFieldFromSchema,
@@ -57,8 +57,7 @@ import {
   uiBooleanOption,
 } from '@rjsf/utils';
 
-import describeUnresolvedComponent from '../../describeUnresolvedComponent.ts';
-import fieldLabelForLog, { entryLabelForLog } from '../../fieldLabelForLog.ts';
+import fieldLabelForLog from '../../fieldLabelForLog.ts';
 import hasOptionLabels from '../../hasOptionLabels.ts';
 import { useShownOption } from '../../hooks/useOptionSelection.ts';
 import useUiState from '../../hooks/useUiState.ts';
@@ -70,6 +69,10 @@ import {
   getTemplateParts,
   withoutDescribers,
 } from './fieldWidgetUtils.ts';
+import { lookUpUiField, resolveNamedField, withoutNamedField } from './namedField.ts';
+import type { NamedFieldResolution } from './namedField.ts';
+import NamedFieldContext from './NamedFieldContext.ts';
+import type { NamedFieldPath } from './NamedFieldContext.ts';
 import PresentationContext, { useInheritedPresentation } from './PresentationContext.ts';
 import ShownOptionContext from './ShownOptionContext.ts';
 import useSchemaFieldPresentation from './useSchemaFieldPresentation.ts';
@@ -166,89 +169,21 @@ function inferSelectWidget<
   return needsSelect ? 'select' : undefined;
 }
 
-/** Looks up what a `ui:field` refers to: the value registered under it when it is a name, otherwise the `ui:field`
- * itself. `getByPath()` reads own properties only, so a name such as `constructor` or `toString` resolves to nothing
- * rather than to something off `Object.prototype`, which rendered as a component threw "Objects are not valid as a
- * React child"
+/** Gets the schema the template of a field rendered by the named field above is handed, as a wrapper renders
+ * `SchemaField` for its own data: that field's template frames it, and has drawn the input and remove button of an
+ * extra key, so the flag asking for them is left off. The field's label and other parts are drawn as the plan handed
+ * down from above says
  *
- * @param field - The `field` from the UI options
- * @param fields - The registered fields
- * @returns - The value the `ui:field` refers to, which is not necessarily a component
+ * @param schema - The field's schema
+ * @returns - The schema without `ADDITIONAL_PROPERTY_FLAG`, or `schema` itself where it has none
  */
-function lookUpUiField<
-  T = unknown,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = FormContextType,
->(field: UIOptionsType<T, S, F>['field'], fields: Registry<T, S, F>['fields']): unknown {
-  return typeof field === 'string' ? getByPath(fields, field) : field;
-}
-
-/** The field a `ui:field` names, and what was ignored on the way to it */
-interface UiFieldResolution<
-  T = unknown,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = FormContextType,
-> {
-  /** The field `getFieldComponent()` renders in place of the one for the schema's type, if a `ui:field` names one */
-  namedField?: Field<T, S, F>;
-  /** The registry key the `ui:field` named it by, when it named it by one rather than giving the component */
-  namedFieldKey?: string;
-  /** What the field's own `ui:field` was, when it was given but names no field, for the warning that it was ignored */
-  ignoredOwnField?: string;
-  /** What `ui:globalOptions.field` was, when it applied to the field but names no field, for the same warning */
-  ignoredGlobalField?: string;
-}
-
-/** Resolves the field a `ui:field` names, given as a component or as the name of a registered field. A component is
- * either a function or one of the objects `memo()`, `forwardRef()` and `lazy()` return, all of which `Field`'s type
- * admits, and a registered value is checked the same way as one given directly, since `fields` can hold anything a
- * caller passes in.
- *
- * A field's own `ui:field` that names nothing is ignored, so the `ui:globalOptions.field` it would have shadowed applies
- * as though it were never given. An empty one — `undefined`, `null`, `false`, `''` or `0` — still shadows it, since it
- * asks for no field: `undefined` is how `SchemaField` shadows it for a schema's options, and a JSON uiSchema, which can't
- * spell `undefined`, clears it for one field with `null` or `false`. An empty `ui:globalOptions.field` asks for no field
- * the same way, so it isn't warned about either.
- *
- * @param ownUiOptions - The field's own UI options, without the global ones
- * @param globalField - The `field` from `ui:globalOptions`
- * @param fields - The registered fields
- * @returns - The field to render, if any, and a description of each `ui:field` that was ignored
- */
-function resolveUiField<
-  T = unknown,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = FormContextType,
->(
-  ownUiOptions: UIOptionsType<T, S, F>,
-  globalField: UIOptionsType<T, S, F>['field'],
-  fields: Registry<T, S, F>['fields'],
-): UiFieldResolution<T, S, F> {
-  const ownField = ownUiOptions.field;
-  const ownResolved = lookUpUiField<T, S, F>(ownField, fields);
-  if (isComponentType<FieldProps<T, S, F>>(ownResolved)) {
-    return { namedField: ownResolved, namedFieldKey: typeof ownField === 'string' ? ownField : undefined };
+function withoutAdditionalFlag<S extends StrictRJSFSchema = RJSFSchema>(schema: S): S {
+  if (!(ADDITIONAL_PROPERTY_FLAG in schema)) {
+    return schema;
   }
-  if (!ownField && Object.hasOwn(ownUiOptions, 'field')) {
-    return {};
-  }
-  const ignoredOwnField = ownField
-    ? describeUnresolvedComponent(ownField, ownResolved, 'registered field', 'MyField')
-    : undefined;
-  const globalResolved = lookUpUiField<T, S, F>(globalField, fields);
-  if (isComponentType<FieldProps<T, S, F>>(globalResolved)) {
-    return {
-      namedField: globalResolved,
-      namedFieldKey: typeof globalField === 'string' ? globalField : undefined,
-      ignoredOwnField,
-    };
-  }
-  return {
-    ignoredOwnField,
-    ignoredGlobalField: globalField
-      ? describeUnresolvedComponent(globalField, globalResolved, 'registered field', 'MyField')
-      : undefined,
-  };
+  const framed = { ...schema };
+  Reflect.deleteProperty(framed, ADDITIONAL_PROPERTY_FLAG);
+  return framed;
 }
 
 const RenderNothing = () => null;
@@ -260,8 +195,8 @@ const RenderNothing = () => null;
  * @param schema - The schema from which to obtain the type
  * @param uiOptions - The UI Options that may affect the component decision
  * @param ownWidget - The field's own `ui:widget`, without `ui:globalOptions`, which picks a type list's field
- * @param namedField - The field the `ui:field` resolved to through `resolveUiField()`, if it resolved to one
- * @param namedFieldKey - The registry key the `ui:field` named that field by, if it named it by one
+ * @param namedField - The field `resolveNamedField()` resolved, if one is named
+ * @param namedFieldKey - The registry key that field was named by, if it was named by one
  * @param registry - The registry from which fields and templates are obtained
  * @param xxxOfKey - The keyword the `schema`'s options are read from, if it has any
  * @param isSelectSchema - Whether the `schema` is an `enum` or a `oneOf`/`anyOf` that represents a select
@@ -271,8 +206,9 @@ const RenderNothing = () => null;
  *            option selector of. Both flags are decided here so that this function and `SchemaFieldRender` read the
  *            same answers, and `SchemaFieldRender` reads them together: when the fallback UI has the schema it renders
  *            those options itself, within the value field for the type it has pinned, so the selector it would render
- *            is left unrendered even though the schema calls for one. Also the component that renders the field, even
- *            when it is withheld for the options, and the registry key that named it, which the field is planned by
+ *            is left unrendered even though the schema calls for one. Also whether that component is a named field
+ *            written for the schema, which `FallbackField` is not, the component that renders the field, even when it
+ *            is withheld for the options, and the registry key that named it, which the field is planned by
  */
 function getFieldComponent<
   T = unknown,
@@ -290,9 +226,9 @@ function getFieldComponent<
   hasConstantOptions: boolean,
 ): {
   FieldComponent: Field<T, S, F>;
+  rendersNamedField: boolean;
   rendersOptionsItself: boolean;
   rendersOptionSelector: boolean;
-  optionsReplaceNamedField: boolean;
   plannedAsOptions: boolean;
   fieldKey: string | undefined;
   handsDownOwnParts: boolean;
@@ -309,8 +245,6 @@ function getFieldComponent<
   // would. `getFieldTypeForWidget()` answers both, so `getDisplayLabel()` and the defaults agree with the field. Only
   // the field's own `ui:widget` picks it, as the defaults, which never see `ui:globalOptions`, can only follow that one
   const type = getFieldTypeForWidget<S>(schema, ownWidget) ?? '';
-
-  const schemaId = schema.$id;
 
   // Looked up as an own property, for the reason `lookUpUiField()` looks the `ui:field` up that way: a `type` such
   // as `constructor` or `toString` would otherwise resolve to something off `Object.prototype` rather than to no field
@@ -349,13 +283,10 @@ function getFieldComponent<
   if (isDivertedToFallbackUi) {
     componentName = 'FallbackField';
   }
-  if (schemaId && Object.hasOwn(fields, schemaId)) {
-    componentName = schemaId;
-  }
 
-  /** The one component every answer below is derived from, so that none of them can describe another: the field a
-   * `ui:field` resolved to, or the field the type and the `$id` settled on a name for, or the fallback UI for a name
-   * no field is registered under — an unrecognized `type`, or no type at all
+  /** The one component every answer below is derived from, so that none of them can describe another: the named
+   * field, or the field the type settled on a name for, or the fallback UI for a name no field is registered under — an
+   * unrecognized `type`, or no type at all
    */
   const isRegisteredName = Object.hasOwn(fields, componentName);
   const FieldComponent = namedField ?? (isRegisteredName ? fields[componentName] : fields.FallbackField);
@@ -364,7 +295,7 @@ function getFieldComponent<
     fieldKey = isRegisteredName ? componentName : 'FallbackField';
   }
   /** Whether the component is this very field, whatever named it — the type having no field of its own, the opt-in
-   * diverting a union, a `ui:field` or a `$id`. What it renders depends on the opt-in; that it is not a field written
+   * diverting a union, or a `ui:field` or `$id`. What it renders depends on the opt-in; that it is not a field written
    * for the schema does not
    */
   const isFallbackField = FieldComponent === fields.FallbackField;
@@ -372,13 +303,12 @@ function getFieldComponent<
    * template, which takes no `anyOf`/`oneOf` over
    */
   const rendersFallbackUi = isFallbackField && Boolean(globalFormOptions.useFallbackUiForUnsupportedType);
-  /** A `ui:field` that resolves is the field `ui:fieldReplacesAnyOrOneOf` asks the options to give way to, whether it is
-   * the field's own or the `ui:globalOptions.field` that an own one naming no field falls back to. When none resolves
+  /** A named field is the field `ui:fieldReplacesAnyOrOneOf` asks the options to give way to. When none resolves
    * there is nothing to give way to and the options are rendered, which is what lets the form be completed: without
    * them an object union loses the `properties` of every option.
    * One naming this field is not a field the options can give way to either: with the opt-in on what it would add is a
    * type selector, which is the choice the options already offer, and without it an unsupported-field box in their
-   * place. Read from the component, so the `ui:field` spelling answers as the `$id` one does
+   * place
    */
   const optionsGiveWayToField =
     namedField !== undefined && !isFallbackField && uiOptions.fieldReplacesAnyOrOneOf === true;
@@ -394,8 +324,8 @@ function getFieldComponent<
   /** Whether the option selector is the only choice of type there is, because the schema names no type of its own for a
    * type selector to offer one of. An option naming its own type overrides whatever a type selector pinned, so such a
    * selector would leave the screen as it was while `castToNewType()` rewrote the value on every switch. What the
-   * schema names is read from the schema rather than from how the fallback UI was reached, so that a `ui:field` or a
-   * `$id` naming it gets the same answer as the schema's own type having no field of its own
+   * schema names is read from the schema rather than from how the fallback UI was reached, so that a named field gets
+   * the same answer as the schema's own type having no field of its own
    */
   const optionsSupplyTheTypes = rendersFallbackUi && rendersOptionSelector && ownTypes === undefined;
   /** Whether the value field the fallback UI would render the options within holds nothing for them to describe. A
@@ -415,18 +345,15 @@ function getFieldComponent<
   // properties, so the outer FieldComponent would only produce a spurious duplicate input.
   // A schema whose options the fallback UI renders is excluded alongside ObjectField, since returning nothing here
   // would drop its type selector and the options with it.
-  // A field a `ui:field` resolved to is excluded too: a field written for this schema renders beside the options, which
-  // is the asymmetry #5391 is about. This field is not, whether it was named by `ui:field`, by a `$id` or by the
-  // schema's own type having no field, since what it would add is the type selector the options replace.
+  // A named field is excluded too: a field written for this schema renders beside the options. This field is not,
+  // whether it was named or reached by the schema's own type having no field, since what it would add is the type
+  // selector the options replace.
   // A schema that lists its types keeps that selector even though a typed option overrides it there too, which is the
   // asymmetry #5390 is about
   const yieldsToOptions =
     rendersOptionSelector && !rendersOptionsItself && (namedField === undefined || isFallbackField);
-  /** Whether the options are rendered in place of the field a `ui:field` named. That `ui:field` has been declined for
-   * this schema, so `SchemaFieldRender` keeps it from reaching the options, which would otherwise inherit it and each
-   * render the field this one did not
-   */
-  const optionsReplaceNamedField = yieldsToOptions && namedField === fields.FallbackField;
+  /** A named field written for the schema, which never yields to the options */
+  const rendersNamedField = namedField !== undefined && !isFallbackField;
 
   const isWithheld = yieldsToOptions && FieldComponent !== fields.ObjectField;
   // An object with no properties of its own besides its options, a pure union, renders an empty field beside them, so
@@ -439,23 +366,20 @@ function getFieldComponent<
    * hands those parts down to the field below rather than keeping them. The fallback UI and the option fields relay
    * the plan to a field below that way and draw those parts themselves, and `ObjectField` and `ArrayField`, which a
    * `ui:field` can name too, draw their heading and description themselves, which the option beside them compares its
-   * own with. One withheld for its options, as a `$id` can name, is planned as the field rendering them, whose
-   * selector draws those parts
+   * own with
    */
   const handsDownOwnParts =
-    (namedField !== undefined || (schemaId !== undefined && componentName === schemaId)) &&
-    !plannedAsOptions &&
-    !isFallbackField &&
+    rendersNamedField &&
     FieldComponent !== fields.AnyOfField &&
     FieldComponent !== fields.OneOfField &&
     FieldComponent !== fields.ObjectField &&
     FieldComponent !== fields.ArrayField;
   return {
     FieldComponent: isWithheld ? RenderNothing : FieldComponent,
+    rendersNamedField,
     // `yieldsToOptions` requires `!rendersOptionsItself`, so the flags read the same whether or not the field is withheld
     rendersOptionsItself,
     rendersOptionSelector,
-    optionsReplaceNamedField,
     plannedAsOptions,
     fieldKey,
     handsDownOwnParts,
@@ -564,13 +488,14 @@ function isLabelUndrawnForLackOfControl({ label, control, showLabel }: FieldPres
   return label.by === 'none' && control === undefined && showLabel && label.text !== '';
 }
 
-/** The `SchemaFieldRender` component is the work-horse of react-jsonschema-form, determining what kind of real field to
- * render based on the `schema`, `uiSchema` and all the other props. It also deals with rendering the `anyOf` and
- * `oneOf` fields.
+/** Resolves the field a `SchemaField` renders and plans who draws its parts, from the props it is handed and from the
+ * fields above it rendering the same path or id. The array item holding a field plans it with the props it hands the
+ * item's `SchemaField`, so the item's template is laid out by the plan the field's own template draws by
  *
- * @param props - The `FieldProps` for this component
+ * @param props - The `FieldProps` the `SchemaField` is handed
+ * @returns - The field `SchemaField` renders, the schema and `uiSchema` it renders it with, and its plan
  */
-function SchemaFieldRender<
+export function useSchemaFieldPlan<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
@@ -583,19 +508,18 @@ function SchemaFieldRender<
     formData,
     errorSchema,
     name,
-    onChange,
-    onKeyRename,
-    onKeyRenameBlur,
-    onRemoveProperty,
-    propertyNamesEnum,
     required = false,
     registry,
     wasPropertyKeyModified = false,
   } = props;
   const { schemaUtils, globalFormOptions, globalUiOptions, fields } = registry;
-  const { AnyOfField: _AnyOfField, OneOfField: _OneOfField, CyclicSchemaField } = fields;
+  const namedFieldAbove = use(NamedFieldContext);
+  const namedHere = namedFieldAbove?.fieldPath === fieldPath ? namedFieldAbove : undefined;
+  const namedAbove = namedHere !== undefined;
+  const framedAbove = namedHere?.framedAbove === true;
+  const optionsRenderedAbove = namedHere?.optionsRendered === true;
 
-  const resolvedUiSchema = useMemo(
+  const ownUiSchema = useMemo(
     () => resolveUiSchema<T, S, F>(_schema, _uiSchema, registry),
     [_schema, _uiSchema, registry],
   );
@@ -610,6 +534,25 @@ function SchemaFieldRender<
   // hand a typeless select a new `schema` each time
   const selectSchemaInfo = useMemo(() => getSelectSchemaInfo<S>(retrievedSchema), [retrievedSchema]);
   const { schema, xxxOfKey, isSelectSchema, hasConstantOptions } = selectSchemaInfo;
+  // A `$ref` cycle returns below without rendering a field of its own, so neither the field nor the options are
+  // resolved for it. They are resolved up here, ahead of that return, because the options memo depends on them.
+  // Below a field named for this same path, nothing names one again. Memoized so the warnings it carries are logged
+  // from a value React Compiler knows is no longer mutated, as the options memo below depends on it, and keyed on the
+  // `$id` rather than the schema, which is retrieved afresh as the data changes, so the `uiSchema` it hands back keeps
+  // its identity
+  const schemaId = schema.$id;
+  const uiField = useMemo<NamedFieldResolution<T, S, F> | undefined>(() => {
+    if (isRefCycle) {
+      return undefined;
+    }
+    return namedAbove
+      ? { ignored: [], uiSchema: withoutNamedField<T, S, F>(ownUiSchema, globalUiOptions?.field) }
+      : resolveNamedField<T, S, F>(ownUiSchema, globalUiOptions?.field, schemaId, fields, fieldPath, globalFormOptions);
+  }, [isRefCycle, namedAbove, ownUiSchema, globalUiOptions, schemaId, fields, fieldPath, globalFormOptions]);
+  // `SchemaField` named for its own data is the field that renders it with no field named, so it is rendered that way.
+  // `FallbackField` still renders, as it does for a schema whose type sends it there, within this field's template
+  const namedField = uiField?.namedField === fields.SchemaField ? undefined : uiField?.namedField;
+  const resolvedUiSchema = uiField?.uiSchema ?? ownUiSchema;
   const inferredWidget = useMemo(
     () => inferSelectWidget<T, S, F>(selectSchemaInfo, resolvedUiSchema),
     [selectSchemaInfo, resolvedUiSchema],
@@ -623,13 +566,13 @@ function SchemaFieldRender<
     if (!inferredWidget) {
       return resolvedUiSchema;
     }
-    const uiField = lookUpUiField<T, S, F>(resolvedUiSchema[UI_FIELD_KEY], fields);
+    const rawUiField = lookUpUiField<T, S, F>(resolvedUiSchema[UI_FIELD_KEY], fields);
     // `BooleanField` is the only field the widget is ever inferred for, and the only one that reads it, so another
     // field named through `ui:field` is handed the caller's `uiSchema` without a widget it never chose — which a field
     // following `BooleanField`'s lead would otherwise render in place of its own default. A field named through
     // `ui:options.field` or `ui:globalOptions.field` still gets the widget, so one that wraps `BooleanField` keeps its
     // select, as does whichever field renders in place of a `ui:field` that names nothing, as though none were given
-    if (isComponentType(uiField) && uiField !== fields.BooleanField) {
+    if (isComponentType(rawUiField) && rawUiField !== fields.BooleanField) {
       return resolvedUiSchema;
     }
     const callerWidget = resolvedUiSchema[UI_WIDGET_KEY] ?? resolvedUiSchema[UI_OPTIONS_KEY]?.widget;
@@ -637,46 +580,23 @@ function SchemaFieldRender<
   }, [inferredWidget, resolvedUiSchema, fields]);
   // Memoized so a child reading it past a `memo` boundary isn't re-rendered by a new object each render
   const fieldUiSchema = useMemo<UiSchema<T, S, F>>(() => omitConsumedStyling<T, S, F>(uiSchema), [uiSchema]);
-  // The `uiSchema` the `anyOf`/`oneOf` options are rendered against when they are rendered in place of the field a
-  // `ui:field` named, see `optionsReplaceNamedField`. Memoized alongside the `uiSchema` it shadows the `field` of, since
-  // `MultiSchemaField` derives its per-option `uiSchema` array from this one and hands that array to a `useCallback`:
-  // a new object per render would rebuild both and re-render the option selector on every keystroke
-  const uiSchemaWithoutNamedField = useMemo<UiSchema<T, S, F>>(() => {
-    // Nothing names a field in any of the three spellings, so there is nothing to shadow: the caller's own `uiSchema` is
-    // what the options render against, and every field in a form that names none keeps the identity it already had
-    if (
-      uiSchema[UI_FIELD_KEY] === undefined &&
-      uiSchema[UI_OPTIONS_KEY]?.field === undefined &&
-      globalUiOptions?.field === undefined
-    ) {
-      return uiSchema;
-    }
-    const shadowedUiSchema: UiSchema<T, S, F> = {
-      ...uiSchema,
-      [UI_OPTIONS_KEY]: { ...uiSchema[UI_OPTIONS_KEY], field: undefined },
-    };
-    delete shadowedUiSchema[UI_FIELD_KEY];
-    return shadowedUiSchema;
-  }, [uiSchema, globalUiOptions]);
   const ownUiOptions = useMemo(() => getUiOptions<T, S, F>(uiSchema), [uiSchema]);
-  // What `getUiOptions(uiSchema, globalUiOptions)` returns, without reading the `uiSchema`'s keys a second time.
-  // Nothing compares either object by identity; both are memoized because the React Compiler
-  // (`react/preserve-manual-memoization`) refuses the options memo below when the flags it depends on derive from an
-  // object rebuilt each render, which it takes for one that may still be mutated
+  // What `getUiOptions(uiSchema, globalUiOptions)` returns, without reading the `uiSchema`'s keys a second time, except
+  // that a global `required` it drops is kept: nothing reads `required` from these options, since `ui:required` is
+  // resolved from `ownUiOptions` alone below. Nothing compares either object by identity; both are memoized because the
+  // React Compiler (`react/preserve-manual-memoization`) refuses the options memo below when the flags it depends on
+  // derive from an object rebuilt each render, which it takes for one that may still be mutated
   const uiOptions = useMemo<UIOptionsType<T, S, F>>(
     () => ({ ...globalUiOptions, ...ownUiOptions }),
     [globalUiOptions, ownUiOptions],
   );
-  // A `$ref` cycle returns below without rendering a field of its own, so neither the field nor the options are
-  // resolved for it. They are resolved up here, ahead of that return, because the options memo depends on them
-  const uiField = isRefCycle ? undefined : resolveUiField<T, S, F>(ownUiOptions, globalUiOptions?.field, fields);
   const fieldToRender =
     uiField &&
     getFieldComponent<T, S, F>(
       schema,
       uiOptions,
       ownUiOptions.widget,
-      uiField.namedField,
+      namedField,
       uiField.namedFieldKey,
       registry,
       xxxOfKey,
@@ -685,75 +605,19 @@ function SchemaFieldRender<
     );
   // The fallback UI renders the options itself, against the schema with its type pinned to the one its selector is on,
   // so rendering them here as well would show the same option selector twice — once for the union and once for the
-  // type in effect — and only the inner one would follow the type the user chose
+  // type in effect — and only the inner one would follow the type the user chose. Below a named field, the
+  // `SchemaField` that named it may have rendered them already
   const retrievesOptions =
-    fieldToRender !== undefined && fieldToRender.rendersOptionSelector && !fieldToRender.rendersOptionsItself;
-  // `MultiSchemaField` renders the options it is handed. Memoized so a re-render that changed neither the schema nor
-  // the data hands it the same array, which its callbacks key on
-  const xxxOfOptions = useMemo(
-    () => (retrievesOptions ? retrievedOptionsOf<T, S, F>(schemaUtils, schema, formData) : undefined),
-    [retrievesOptions, schema, schemaUtils, formData],
-  );
-
-  // The option shown is the form's state, which `AnyOfField`/`OneOfField` read and write too. An object renders its own
-  // field beside the option, whose extra keys are stubbed once, with the selected option: a key the option declares is
-  // left to it, and any other is described by the object's extra-key keywords and the option's together
-  const { uiState, isOwn: ownsUiState } = useUiState();
-  const { list, selectedOption, selectOption, keepSelection, editOwnProperty } = useShownOption<T, S, F>(
-    uiState,
-    registry,
-    fieldPath,
-    xxxOfOptions,
-    formData,
-    getDiscriminatorFieldFromSchema<S>(schema),
-  );
-  const fieldSchema = useMemo(
-    () =>
-      xxxOfOptions && selectedOption >= 0 && rendersOwnFieldBesideOption<S>(schema)
-        ? schemaUtils.retrieveSchema(_schema, formData, false, selectedOption)
-        : schema,
-    [xxxOfOptions, selectedOption, schema, schemaUtils, _schema, formData],
-  );
-  const hasOptions = xxxOfOptions !== undefined;
-  const shownOption = useMemo(
-    () => (xxxOfOptions ? { fieldPath, options: xxxOfOptions, list, selectedOption, selectOption } : undefined),
-    [xxxOfOptions, list, selectedOption, selectOption, fieldPath],
-  );
-
-  /** Intermediary `onChange` handler for field components that will inject the `id` of the current field into the
-   * `onChange` chain if it is not already being provided from a deeper level in the hierarchy. An edit to a property
-   * of the object's own that the options can disagree about, through a keyword naming it or one reading the object
-   * whole, may be a choice between them, so the data it leaves is matched again. Any other edit holds the option shown,
-   * as an edit inside the option does: every option says the same of the property, so the edit cannot be a choice
-   * between them
-   */
-  const handleFieldComponentChange = useCallback(
-    (newFormData: T | undefined, changedFieldPath: FieldPath, newErrorSchema?: ErrorSchema<T>, id?: string) => {
-      if (hasOptions) {
-        editOwnProperty(fieldPathToList(changedFieldPath)[fieldPathToList(fieldPath).length]);
-      }
-      onChange(newFormData, changedFieldPath, newErrorSchema, id || fieldId);
-    },
-    [fieldId, fieldPath, onChange, hasOptions, editOwnProperty],
-  );
-  const handleOptionFieldChange = useCallback(
-    (newFormData: T | undefined, changedFieldPath: FieldPath, newErrorSchema?: ErrorSchema<T>, id?: string) => {
-      keepSelection();
-      onChange(newFormData, changedFieldPath, newErrorSchema, id);
-    },
-    [onChange, keepSelection],
-  );
-
-  // Outside a `Form` the outermost field's store is the one of the whole tree, so the fields below share its selections
-  const withUiState = (node: ReactElement): ReactElement =>
-    ownsUiState ? <UiStateContext value={uiState}>{node}</UiStateContext> : node;
+    !optionsRenderedAbove &&
+    fieldToRender !== undefined &&
+    fieldToRender.rendersOptionSelector &&
+    !fieldToRender.rendersOptionsItself;
 
   const deprecatedHandling = getDeprecatedHandling<T, S, F>(schema, uiOptions);
   // ui:required is deliberately resolved from this field's own uiSchema only (no globalUiOptions fallback): unlike
   // most ui:options, it has to be seen by getUiRequiredErrorSchema() too, which resolves a field's own uiSchema
   // uiSchema, so a form-wide default here would make the required indicator and schema validation disagree
-  const { required: fieldUiRequired, initialValue: fieldInitialValue, emptyValue: fieldEmptyValue } = ownUiOptions;
-  const uiRequired = uiBooleanOption(fieldUiRequired);
+  const uiRequired = uiBooleanOption(ownUiOptions.required);
   const effectiveRequired = uiRequired ?? required;
   // `ui:hideError` is resolved as the field's own, then the one the field above resolved to, then `ui:globalOptions`, so
   // a parent's reaches its children even where a global one is set (#5490)
@@ -832,10 +696,12 @@ function SchemaFieldRender<
   // When the options render, the field component renders beside them under the id a child named `XxxOf` would have,
   // to avoid DOM id duplication with the rendering of the same data address by the `XxxOfField`. The `fieldPath`
   // stays the truthful data address either way
-  const fieldComponentId = xxxOfOptions ? fieldPathToId(toFieldPath('XxxOf', fieldPath), globalFormOptions) : fieldId;
+  const fieldComponentId = retrievesOptions
+    ? fieldPathToId(toFieldPath('XxxOf', fieldPath), globalFormOptions)
+    : fieldId;
   const plannedAsOptions = fieldToRender?.plannedAsOptions;
   const renderedComponent = fieldToRender?.FieldComponent;
-  const presentation = useSchemaFieldPresentation<T, S, F>({
+  const { presentation, labelPlacement } = useSchemaFieldPresentation<T, S, F>({
     id: fieldId,
     // The parts the field draws itself render under its own id, unless it is planned as the field rendering the options
     componentId: plannedAsOptions ? undefined : fieldComponentId,
@@ -855,6 +721,173 @@ function SchemaFieldRender<
     required: effectiveRequired,
     inherited: inheritedPresentation?.plan,
   });
+  return {
+    namedFieldAbove,
+    namedAbove,
+    framedAbove,
+    optionsRenderedAbove,
+    schema,
+    xxxOfKey,
+    uiField,
+    uiSchema,
+    fieldUiSchema,
+    ownUiOptions,
+    uiOptions,
+    fieldToRender,
+    retrievesOptions,
+    deprecatedHandling,
+    uiRequired,
+    effectiveRequired,
+    hideError,
+    hidden,
+    title,
+    label,
+    schemaDescription,
+    fieldComponentId,
+    plannedAsOptions,
+    renderedComponent,
+    presentation,
+    labelPlacement,
+  };
+}
+
+/** The `SchemaFieldRender` component is the work-horse of react-jsonschema-form, determining what kind of real field to
+ * render based on the `schema`, `uiSchema` and all the other props. It also deals with rendering the `anyOf` and
+ * `oneOf` fields.
+ *
+ * @param props - The `FieldProps` for this component
+ */
+function SchemaFieldRender<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: FieldProps<T, S, F>) {
+  const {
+    schema: _schema,
+    fieldPath,
+    id: fieldId,
+    formData,
+    errorSchema,
+    name,
+    onChange,
+    onKeyRename,
+    onKeyRenameBlur,
+    onRemoveProperty,
+    propertyNamesEnum,
+    required = false,
+    registry,
+  } = props;
+  const { schemaUtils, fields } = registry;
+  const { AnyOfField: _AnyOfField, OneOfField: _OneOfField, CyclicSchemaField } = fields;
+  const {
+    namedFieldAbove,
+    namedAbove,
+    framedAbove,
+    optionsRenderedAbove,
+    schema,
+    xxxOfKey,
+    uiField,
+    uiSchema,
+    fieldUiSchema,
+    ownUiOptions,
+    uiOptions,
+    fieldToRender,
+    retrievesOptions,
+    deprecatedHandling,
+    uiRequired,
+    effectiveRequired,
+    hideError,
+    hidden,
+    title,
+    label,
+    schemaDescription,
+    fieldComponentId,
+    plannedAsOptions,
+    renderedComponent,
+    presentation,
+  } = useSchemaFieldPlan<T, S, F>(props);
+  const { required: fieldUiRequired, initialValue: fieldInitialValue, emptyValue: fieldEmptyValue } = ownUiOptions;
+
+  // `MultiSchemaField` renders the options it is handed. Memoized so a re-render that changed neither the schema nor
+  // the data hands it the same array, which its callbacks key on
+  const xxxOfOptions = useMemo(
+    () => (retrievesOptions ? retrievedOptionsOf<T, S, F>(schemaUtils, schema, formData) : undefined),
+    [retrievesOptions, schema, schemaUtils, formData],
+  );
+
+  // The option shown is the form's state, which `AnyOfField`/`OneOfField` read and write too. An object renders its own
+  // field beside the option, whose extra keys are stubbed once, with the selected option: a key the option declares is
+  // left to it, and any other is described by the object's extra-key keywords and the option's together
+  const { uiState, isOwn: ownsUiState } = useUiState();
+  const { list, selectedOption, selectOption, keepSelection, editOwnProperty } = useShownOption<T, S, F>(
+    uiState,
+    registry,
+    fieldPath,
+    xxxOfOptions,
+    formData,
+    getDiscriminatorFieldFromSchema<S>(schema),
+  );
+  const hasOptions = xxxOfOptions !== undefined;
+  const shownOption = useMemo(
+    () => (xxxOfOptions ? { fieldPath, options: xxxOfOptions, list, selectedOption, selectOption } : undefined),
+    [xxxOfOptions, list, selectedOption, selectOption, fieldPath],
+  );
+  // The field below a named one is the field beside the options the `SchemaField` that named it renders. Read there
+  // alone: the options are retrieved afresh with every change of the data, so a field reading them re-renders with
+  // every keystroke in a field beside them, past its `memo`
+  const fieldShownOption = optionsRenderedAbove ? use(ShownOptionContext) : shownOption;
+  // An object below a named field stubs its extra keys with the option shown beside it there, as one rendering the
+  // options does, so a key the option declares is left to the option rather than rendered twice
+  const optionBeside = fieldShownOption?.selectedOption ?? -1;
+  const fieldSchema = useMemo(
+    () =>
+      optionBeside >= 0 && rendersOwnFieldBesideOption<S>(schema)
+        ? schemaUtils.retrieveSchema(_schema, formData, false, optionBeside)
+        : schema,
+    [optionBeside, schema, schemaUtils, _schema, formData],
+  );
+
+  const rendersNamedField = fieldToRender?.rendersNamedField === true;
+  // The selected option, and whatever renders this field's data below a field that is not named here, renders as a
+  // field of its own; only the named field renders inside this one's template
+  const ownNamedFieldPath = useMemo<NamedFieldPath | undefined>(
+    () =>
+      namedAbove || rendersNamedField ? { fieldPath, framedAbove: false, optionsRendered: false } : namedFieldAbove,
+    [namedAbove, rendersNamedField, fieldPath, namedFieldAbove],
+  );
+  const namedFieldPath = useMemo<NamedFieldPath | undefined>(
+    () => (rendersNamedField ? { fieldPath, framedAbove: true, optionsRendered: hasOptions } : ownNamedFieldPath),
+    [rendersNamedField, fieldPath, hasOptions, ownNamedFieldPath],
+  );
+
+  /** Intermediary `onChange` handler for field components that will inject the `id` of the current field into the
+   * `onChange` chain if it is not already being provided from a deeper level in the hierarchy. An edit to a property
+   * of the object's own that the options can disagree about, through a keyword naming it or one reading the object
+   * whole, may be a choice between them, so the data it leaves is matched again. Any other edit holds the option shown,
+   * as an edit inside the option does: every option says the same of the property, so the edit cannot be a choice
+   * between them
+   */
+  const handleFieldComponentChange = useCallback(
+    (newFormData: T | undefined, changedFieldPath: FieldPath, newErrorSchema?: ErrorSchema<T>, id?: string) => {
+      if (hasOptions) {
+        editOwnProperty(fieldPathToList(changedFieldPath)[fieldPathToList(fieldPath).length]);
+      }
+      onChange(newFormData, changedFieldPath, newErrorSchema, id || fieldId);
+    },
+    [fieldId, fieldPath, onChange, hasOptions, editOwnProperty],
+  );
+  const handleOptionFieldChange = useCallback(
+    (newFormData: T | undefined, changedFieldPath: FieldPath, newErrorSchema?: ErrorSchema<T>, id?: string) => {
+      keepSelection();
+      onChange(newFormData, changedFieldPath, newErrorSchema, id);
+    },
+    [onChange, keepSelection],
+  );
+
+  // Outside a `Form` the outermost field's store is the one of the whole tree, so the fields below share its selections
+  const withUiState = (node: ReactElement): ReactElement =>
+    ownsUiState ? <UiStateContext value={uiState}>{node}</UiStateContext> : node;
+
   // What the field below rendering this same id inherits: the option field, the fallback UI's value field, or the field
   // a custom field wrapping `SchemaField` renders
   const handsDownOwnParts = fieldToRender?.handsDownOwnParts;
@@ -899,8 +932,7 @@ function SchemaFieldRender<
   if (!uiField || !fieldToRender) {
     return withUiState(<CyclicSchemaField {...props} />);
   }
-  const { ignoredOwnField, ignoredGlobalField } = uiField;
-  const { FieldComponent, optionsReplaceNamedField } = fieldToRender;
+  const { FieldComponent } = fieldToRender;
 
   const { FieldTemplate, DescriptionFieldTemplate, FieldHelpTemplate, FieldErrorTemplate } = getTemplates<T, S, F>(
     registry,
@@ -938,30 +970,20 @@ function SchemaFieldRender<
   // about once for the form rather than once per field. An `items` entry reaches every item of its array the same way,
   // so a field's own `ui:field` is named with the item's index left out, and every item the entry reaches shares one
   // warning. A tuple's per-position entries and its `additionalItems` share it too, since nothing here tells them apart
-  if (ignoredOwnField) {
-    logOnce(
-      `ui:field for ${entryLabelForLog(fieldPath, globalFormOptions)} ${ignoredOwnField}, so it is ignored and the ` +
-        'field is rendered as though no ui:field were given.',
-    );
-  }
-  if (ignoredGlobalField) {
-    logOnce(
-      `ui:globalOptions.field ${ignoredGlobalField}, so it is ignored and the fields it applies to are rendered as ` +
-        'though no ui:field were given.',
-    );
+  for (const message of uiField.ignored) {
+    logOnce(message);
   }
 
   let XxxOfField: Field<T, S, F> | undefined;
   if (xxxOfOptions) {
     XxxOfField = xxxOfKey === ANY_OF_KEY ? _AnyOfField : _OneOfField;
   }
-  // An option that declares no `uiSchema` of its own is rendered against this one, so a `ui:field` the options are
-  // rendered in place of would reach every option and have each render the field this schema declined. Shadowed rather
-  // than deleted, for the reason `FallbackField` shadows the same key: `getUiOptions()` layers a
-  // `ui:globalOptions.field` under the local entry, so deleting the local one leaves the global showing through
-  const XxxOfUiSchema: UiSchema<T, S, F> = optionsReplaceNamedField ? uiSchemaWithoutNamedField : uiSchema;
 
-  const { __errors, ...fieldErrorSchema } = errorSchema ?? {};
+  const { __errors: ownErrorSchemaErrors, ...fieldErrorSchema } = errorSchema ?? {};
+  // The `SchemaField` that named the field hands it the field's own errors as `rawErrors`, taken out of its
+  // `errorSchema`, and that is how a named field passes them on to the field it renders
+  // oxlint-disable-next-line typescript/no-deprecated -- the one prop a named field hands the field's own errors on in
+  const __errors = framedAbove ? props.rawErrors : ownErrorSchemaErrors;
 
   const fieldComponent = (
     <FieldComponent
@@ -985,9 +1007,11 @@ function SchemaFieldRender<
   // A container's properties and items render under ids of their own, so they inherit nothing from it, and are handed
   // no plan whose every change would re-render each of them past its `memo`
   const field = (
-    <ShownOptionContext value={shownOption}>
-      <PresentationContext value={isContainer ? undefined : presentationBelow}>{fieldComponent}</PresentationContext>
-    </ShownOptionContext>
+    <NamedFieldContext value={namedFieldPath}>
+      <ShownOptionContext value={fieldShownOption}>
+        <PresentationContext value={isContainer ? undefined : presentationBelow}>{fieldComponent}</PresentationContext>
+      </ShownOptionContext>
+    </NamedFieldContext>
   );
 
   const { description: templateDescription, help, errors: templateErrors } = getTemplateParts(presentation);
@@ -1054,39 +1078,43 @@ function SchemaFieldRender<
     classNames: getFieldClassNames<S>(schema, hasErrors, uiOptions.classNames),
     style: uiOptions.style,
     formData,
-    schema,
+    schema: framedAbove ? withoutAdditionalFlag<S>(schema) : schema,
     uiSchema,
     registry,
   };
 
+  // The named-field context is provided whether or not a field is named here, since adding or removing a provider would
+  // remount everything below it
   return withUiState(
     <FieldTemplate {...fieldProps}>
       <>
         {field}
         {XxxOfField && (
-          <ShownOptionContext value={shownOption}>
-            <PresentationContext value={optionsBelow}>
-              <XxxOfField
-                name={name}
-                disabled={disabled}
-                readonly={readonly}
-                hideError={hideError}
-                errorSchema={errorSchema}
-                formData={formData}
-                fieldPath={fieldPath}
-                id={fieldId}
-                onBlur={props.onBlur}
-                onChange={handleOptionFieldChange}
-                onFocus={props.onFocus}
-                options={xxxOfOptions}
-                registry={registry}
-                required={effectiveRequired}
-                schema={schema}
-                uiSchema={XxxOfUiSchema}
-                presentation={optionsPresentation}
-              />
-            </PresentationContext>
-          </ShownOptionContext>
+          <NamedFieldContext value={ownNamedFieldPath}>
+            <ShownOptionContext value={shownOption}>
+              <PresentationContext value={optionsBelow}>
+                <XxxOfField
+                  name={name}
+                  disabled={disabled}
+                  readonly={readonly}
+                  hideError={hideError}
+                  errorSchema={errorSchema}
+                  formData={formData}
+                  fieldPath={fieldPath}
+                  id={fieldId}
+                  onBlur={props.onBlur}
+                  onChange={handleOptionFieldChange}
+                  onFocus={props.onFocus}
+                  options={xxxOfOptions}
+                  registry={registry}
+                  required={effectiveRequired}
+                  schema={schema}
+                  uiSchema={uiSchema}
+                  presentation={optionsPresentation}
+                />
+              </PresentationContext>
+            </ShownOptionContext>
+          </NamedFieldContext>
         )}
       </>
     </FieldTemplate>,

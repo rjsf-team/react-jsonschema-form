@@ -44987,7 +44987,7 @@ exports[`single fields > select widget with selected oneOf option description be
           class="fieldset__legend emotion-1"
           data-part="legend"
           data-scope="fieldset"
-          id="fieldset::_r_es_::legend"
+          id="fieldset::_r_fa_::legend"
         >
           <sup
             class="emotion-2"

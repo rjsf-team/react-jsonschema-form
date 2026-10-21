@@ -137,7 +137,7 @@ exports[`array fields > array icons 1`] = `
                     >
                       <div
                         class="flex gap-2"
-                        style="margin-left: 5px; margin-top: 22px;"
+                        style="margin-left: 5px;"
                       >
                         <button
                           class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-move-up"
@@ -299,7 +299,7 @@ exports[`array fields > array icons 1`] = `
                     >
                       <div
                         class="flex gap-2"
-                        style="margin-left: 5px; margin-top: 22px;"
+                        style="margin-left: 5px;"
                       >
                         <button
                           class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-move-up"
@@ -1476,7 +1476,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                     >
                       <div
                         class="flex gap-2"
-                        style="margin-left: 5px; margin-top: 22px;"
+                        style="margin-left: 5px;"
                       >
                         <button
                           class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-move-up"
@@ -1605,7 +1605,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                     >
                       <div
                         class="flex gap-2"
-                        style="margin-left: 5px; margin-top: 22px;"
+                        style="margin-left: 5px;"
                       >
                         <button
                           class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-move-up"
@@ -2097,7 +2097,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                       >
                                         <div
                                           class="flex gap-2"
-                                          style="margin-left: 5px; margin-top: 22px;"
+                                          style="margin-left: 5px;"
                                         >
                                           <button
                                             class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-move-up"
@@ -2226,7 +2226,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                       >
                                         <div
                                           class="flex gap-2"
-                                          style="margin-left: 5px; margin-top: 22px;"
+                                          style="margin-left: 5px;"
                                         >
                                           <button
                                             class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-move-up"
@@ -2525,7 +2525,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                       >
                                         <div
                                           class="flex gap-2"
-                                          style="margin-left: 5px; margin-top: 22px;"
+                                          style="margin-left: 5px;"
                                         >
                                           <button
                                             class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-move-up"
@@ -2654,7 +2654,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                       >
                                         <div
                                           class="flex gap-2"
-                                          style="margin-left: 5px; margin-top: 22px;"
+                                          style="margin-left: 5px;"
                                         >
                                           <button
                                             class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-move-up"
@@ -3492,7 +3492,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                     >
                       <div
                         class="flex gap-2"
-                        style="margin-left: 5px; margin-top: 22px;"
+                        style="margin-left: 5px;"
                       >
                         <button
                           class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-move-up"
@@ -3621,7 +3621,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                     >
                       <div
                         class="flex gap-2"
-                        style="margin-left: 5px; margin-top: 22px;"
+                        style="margin-left: 5px;"
                       >
                         <button
                           class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-move-up"

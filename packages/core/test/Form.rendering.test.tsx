@@ -1918,6 +1918,67 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       },
     );
 
+    const describedTypeList: RJSFSchema = { type: ['string', 'number'], title: 'Val', description: 'Desc' };
+
+    // A `ui:globalOptions.field` names the fallback field for the root object too, whose field is otherwise ObjectField
+    it.each(FALLBACK_FIELD_ROUTES.slice(0, 2))(
+      'renders a type list the fallback field is named for through %s exactly as one its types send there',
+      (_, uiSchema, schemaKeys) => {
+        const { node: byType } = createFormComponent({
+          schema: { type: 'object', properties: { val: describedTypeList } },
+          useFallbackUiForUnsupportedType: true,
+        });
+        const { node: byName } = createFormComponent({
+          schema: { type: 'object', properties: { val: { ...describedTypeList, ...schemaKeys } } },
+          uiSchema,
+          useFallbackUiForUnsupportedType: true,
+        });
+
+        expect(byName.innerHTML).toBe(byType.innerHTML);
+      },
+    );
+
+    it.each(FALLBACK_FIELD_ROUTES)(
+      'renders the title and description of a single type the fallback field is named for through %s once',
+      (_, uiSchema, schemaKeys) => {
+        const { node } = createFormComponent({
+          schema: {
+            type: 'object',
+            properties: { val: { type: 'string', title: 'Val', description: 'Desc', ...schemaKeys } },
+          },
+          uiSchema,
+          useFallbackUiForUnsupportedType: true,
+        });
+
+        expect(screen.getByLabelText('Val')).toBe(node.querySelector('input#root_val'));
+        expect(node.querySelectorAll('label[for="root_val"]')).toHaveLength(1);
+        expect(node.querySelectorAll('#root_val__description')).toHaveLength(1);
+      },
+    );
+
+    // For the reason above, a `ui:globalOptions.field` replaces the root's field and everything below it
+    it.each(FALLBACK_FIELD_ROUTES.slice(0, 2))(
+      'keeps the focused input of a type list mounted as %s names the fallback field for it',
+      async (_, uiSchema, schemaKeys) => {
+        const props = { useFallbackUiForUnsupportedType: true, formData: { val: 'ab' } };
+        const { node, rerender } = createFormComponent({
+          ...props,
+          schema: { type: 'object', properties: { val: { type: ['string', 'number'] } } },
+        });
+        const input = node.querySelector('input#root_val');
+        await user.click(screen.getByRole('textbox'));
+
+        rerender({
+          ...props,
+          schema: { type: 'object', properties: { val: { type: ['string', 'number'], ...schemaKeys } } },
+          uiSchema,
+        });
+
+        expect(node.querySelector('input#root_val')).toBe(input);
+        expect(input).toHaveFocus();
+      },
+    );
+
     it.each(FALLBACK_FIELD_ROUTES.slice(0, 2))(
       'leaves the types to the options of a schema naming none, reached through %s',
       (_, uiSchema, schemaKeys) => {

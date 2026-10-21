@@ -845,6 +845,12 @@ export interface PresentationDeclaration<Owner extends PartOwner = PartOwner> {
    * a group of controls needs since `for` names a single element
    */
   labelledBy?: 'for' | 'aria-labelledby';
+  /** Where a label the component draws itself sits: `'above'` its control, as a theme's text input draws its label over
+   * the input, or `'beside'` it, as a checkbox draws its own. It says nothing of a label the template draws. Left out, a
+   * self-drawn label isn't taken to sit above the control. `@rjsf/core` reads it for one thing only: an array item's
+   * `displayLabel`, which lays the item's buttons out level with the control below a label above it
+   */
+  labelPlacement?: 'above' | 'beside';
   /** Whether the control, left alone, already holds `false`, as an unchecked checkbox or switch does where its field
    * renders a `boolean`, which `getDefaultFormState()` seeds a required one with. A native `required` would then fail a
    * value the schema accepts, so `@rjsf/core` plans the control as required only where the schema demands `true`
@@ -859,10 +865,13 @@ export interface PresentationDeclaration<Owner extends PartOwner = PartOwner> {
 export type WidgetPresentationDeclaration = PresentationDeclaration<Exclude<PartOwner, 'widget'>>;
 
 /** A `PresentationDeclaration` with every part settled on the template or the component, as
- * `getPresentationDeclaration()` returns it, and `uncheckedIsFalse` left out where nothing declares it
+ * `getPresentationDeclaration()` returns it, with `uncheckedIsFalse` left out where nothing declares it, and
+ * `labelPlacement` where nothing declares it or the template draws the label
  */
-export type ResolvedPresentationDeclaration = Required<Omit<WidgetPresentationDeclaration, 'uncheckedIsFalse'>> &
-  Pick<WidgetPresentationDeclaration, 'uncheckedIsFalse'>;
+export type ResolvedPresentationDeclaration = Required<
+  Omit<WidgetPresentationDeclaration, 'uncheckedIsFalse' | 'labelPlacement'>
+> &
+  Pick<WidgetPresentationDeclaration, 'uncheckedIsFalse' | 'labelPlacement'>;
 
 /** The declarations a theme registers for the components it provides, keyed by the registry key each is registered
  * under, so a component replacing another under the same key draws what that key declares. A component given
@@ -1238,7 +1247,13 @@ export type ArrayFieldItemTemplateProps<
    * customization in some themes
    */
   parentUiSchema?: UiSchema<T, S, F>;
-  /** A boolean flag indicating whether the label for the field is being shown, used to assist buttons placement */
+  /** Whether a label sits above the item's control: one the item's `FieldTemplate` draws, as the plan `SchemaField`
+   * builds for the item says, which is the `displayLabel` that template is handed, or one the item's field or widget
+   * draws itself where its declaration places it `labelPlacement: 'above'`, for which that template is handed
+   * `displayLabel: false`. Under the fallback UI with a choice of types, the item's first control is the type selector,
+   * whose label names the type, so a label sits above it whatever the item's title, unless `ui:label` is false or
+   * the item is hidden, which hides the selector with it. Used to assist buttons placement
+   */
   displayLabel?: boolean;
   /** A boolean flag indicating whether there is a description for the field, used to assist buttons placement */
   hasDescription?: boolean;

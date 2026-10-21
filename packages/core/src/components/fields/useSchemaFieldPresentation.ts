@@ -6,6 +6,7 @@ import type {
   FormContextType,
   ONE_OF_KEY,
   Registry,
+  ResolvedPresentationDeclaration,
   RJSFSchema,
   StrictRJSFSchema,
   UiSchema,
@@ -144,13 +145,16 @@ function rendersControl<
  * hands every template and widget the same plan (#5490 decision 19)
  *
  * @param inputs - What `SchemaField` has decided about the field
- * @returns - The plan, or undefined when no field renders
+ * @returns - The plan, or undefined when no field renders, and where its declaration places a label the field or its
+ *   widget draws itself, which no template or widget reads, only the array item holding the field
  */
 export default function useSchemaFieldPresentation<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(inputs: SchemaFieldPresentationInputs<T, S, F>): FieldPresentation | undefined {
+>(
+  inputs: SchemaFieldPresentationInputs<T, S, F>,
+): { presentation: FieldPresentation | undefined; labelPlacement: ResolvedPresentationDeclaration['labelPlacement'] } {
   const {
     id,
     componentId,
@@ -241,7 +245,7 @@ export default function useSchemaFieldPresentation<
         schemaRequiresTrueValue<S>(schema)),
     [required, declaration, schema, uiSchema],
   );
-  return useMemo(() => {
+  const presentation = useMemo(() => {
     if (!declaration) {
       return undefined;
     }
@@ -284,4 +288,5 @@ export default function useSchemaFieldPresentation<
     inherited,
     handsLabelDown,
   ]);
+  return { presentation, labelPlacement: declaration?.labelPlacement };
 }

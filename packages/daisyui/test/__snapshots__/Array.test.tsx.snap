@@ -124,7 +124,7 @@ exports[`array fields > array icons 1`] = `
                   </div>
                 </div>
                 <div
-                  class="flex justify-end mt-5"
+                  class="flex justify-end mt-1"
                 >
                   <div
                     class="join"
@@ -246,7 +246,7 @@ exports[`array fields > array icons 1`] = `
                   </div>
                 </div>
                 <div
-                  class="flex justify-end mt-5"
+                  class="flex justify-end mt-1"
                 >
                   <div
                     class="join"
@@ -1344,7 +1344,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                   </div>
                 </div>
                 <div
-                  class="flex justify-end mt-5"
+                  class="flex justify-end mt-1"
                 >
                   <div
                     class="join"
@@ -1445,7 +1445,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                   </div>
                 </div>
                 <div
-                  class="flex justify-end mt-5"
+                  class="flex justify-end mt-1"
                 >
                   <div
                     class="join"
@@ -1885,7 +1885,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                               </div>
                             </div>
                             <div
-                              class="flex justify-end mt-5"
+                              class="flex justify-end mt-1"
                             >
                               <div
                                 class="join"
@@ -1986,7 +1986,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                               </div>
                             </div>
                             <div
-                              class="flex justify-end mt-5"
+                              class="flex justify-end mt-1"
                             >
                               <div
                                 class="join"
@@ -2216,7 +2216,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                               </div>
                             </div>
                             <div
-                              class="flex justify-end mt-5"
+                              class="flex justify-end mt-1"
                             >
                               <div
                                 class="join"
@@ -2317,7 +2317,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                               </div>
                             </div>
                             <div
-                              class="flex justify-end mt-5"
+                              class="flex justify-end mt-1"
                             >
                               <div
                                 class="join"
@@ -3027,7 +3027,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                   </div>
                 </div>
                 <div
-                  class="flex justify-end mt-5"
+                  class="flex justify-end mt-1"
                 >
                   <div
                     class="join"
@@ -3128,7 +3128,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                   </div>
                 </div>
                 <div
-                  class="flex justify-end mt-5"
+                  class="flex justify-end mt-1"
                 >
                   <div
                     class="join"

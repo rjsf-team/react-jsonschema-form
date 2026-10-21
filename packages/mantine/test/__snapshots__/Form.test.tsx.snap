@@ -19001,7 +19001,7 @@ exports[`single fields > select widget with selected oneOf option description be
                       data-checked="true"
                       data-combobox-active="true"
                       data-combobox-option="true"
-                      id="_r_28s_"
+                      id="_r_2aj_"
                       role="option"
                       value="0"
                     >
@@ -19027,7 +19027,7 @@ exports[`single fields > select widget with selected oneOf option description be
                       aria-selected="false"
                       class="m_92253aa5 mantine-Select-option m_390b5f4"
                       data-combobox-option="true"
-                      id="_r_28u_"
+                      id="_r_2al_"
                       role="option"
                       value="1"
                     >

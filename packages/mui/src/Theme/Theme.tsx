@@ -10,7 +10,8 @@ import { createWidgets } from '../Widgets/index.ts';
  * fallback UI's value field labels itself. `@rjsf/core`'s rating and date parts draw no label, so the template draws
  * theirs, which `@rjsf/core` declares names them by reference. MUI's select names its combobox only through its
  * `labelId`, so a label the template draws for it, as for a `SelectWidget` declared `label: 'template'`, names it by
- * reference too
+ * reference too. A text input or select draws its label inside its outline, so only the radio and checkbox groups and
+ * the slider, which draw theirs above the control, declare so
  */
 function createPresentation(): ThemePresentation {
   return {
@@ -18,6 +19,9 @@ function createPresentation(): ThemePresentation {
     widgets: {
       CheckboxWidget: { label: 'self', description: 'self' },
       SelectWidget: { labelledBy: 'aria-labelledby' },
+      RadioWidget: { labelPlacement: 'above' },
+      CheckboxesWidget: { labelPlacement: 'above' },
+      RangeWidget: { labelPlacement: 'above' },
       RatingWidget: { label: 'template' },
       AltDateWidget: { label: 'template' },
       AltDateTimeWidget: { label: 'template' },

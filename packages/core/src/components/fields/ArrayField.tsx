@@ -39,6 +39,7 @@ import useSendMove from '../../hooks/useSendMove.ts';
 import useWarnIfFormDataNotPassedThrough from '../../hooks/useWarnIfFormDataNotPassedThrough.ts';
 import { EMPTY_UI_SCHEMA } from '../constants.ts';
 import { moveOfItems } from '../formState.ts';
+import { rendersTypeSelector } from './FallbackField.tsx';
 import {
   ARRAY_MODE_DEFAULT_WIDGETS,
   displaysLabel,
@@ -53,6 +54,7 @@ import {
   withGlobalUiOptions,
 } from './fieldWidgetUtils.ts';
 import OwnTitleAndDescription from './OwnTitleAndDescription.tsx';
+import { useSchemaFieldPlan } from './SchemaField.tsx';
 
 /** A row's stable React `key`, and its `order`: when the row was added, relative to the other rows of its array */
 interface RowId {
@@ -683,7 +685,47 @@ function ArrayFieldItemInner<
   const fieldId = fieldPathToId(fieldPath, globalFormOptions);
   const ItemSchemaField = ArraySchemaField || SchemaField;
   const { ArrayFieldItemTemplate } = getTemplates<T[], S, F>(registry, uiOptions);
-  const displayLabel = displaysLabel<T[], S, F>(registry, itemSchema, itemUiSchema);
+  const itemFieldProps: FieldProps<T[], S, F> = {
+    name,
+    title,
+    index,
+    schema: itemSchema,
+    uiSchema: itemUiSchema,
+    formData: itemData,
+    errorSchema: asItemErrorSchema(itemErrorSchema),
+    fieldPath,
+    id: fieldId,
+    required: isItemRequired<S>(itemSchema),
+    onChange,
+    onBlur,
+    onFocus,
+    registry,
+    disabled,
+    readonly,
+    hideError,
+    autofocus,
+    ...getFieldErrorProps<T, S, F>(rawErrors),
+  };
+  // The toolbar is laid out level with the item's first control below a label above it: one its template draws, as the
+  // plan the item's `SchemaField` builds from these same props says, so the two can't disagree about it however the
+  // field is named, or one its field or widget draws itself where its declaration places that label above the control.
+  // A hidden item has no control on screen, so nothing draws a label above it: its template hides the fallback UI's type
+  // selector with the value. A shown type selector comes first, and its label names the type rather than the item, so
+  // it is drawn above it whatever the item's title, wherever `ui:label` leaves the field's labels shown
+  const {
+    schema: plannedSchema,
+    fieldToRender,
+    presentation,
+    labelPlacement,
+  } = useSchemaFieldPlan<T[], S, F>(itemFieldProps);
+  const typeSelectorFirst =
+    fieldToRender?.FieldComponent === registry.fields.FallbackField &&
+    Boolean(globalFormOptions.useFallbackUiForUnsupportedType) &&
+    rendersTypeSelector<S>(plannedSchema);
+  const labelBy = presentation?.control && presentation.label.by;
+  const displayLabel = typeSelectorFirst
+    ? Boolean(presentation?.control) && presentation?.showLabel === true
+    : labelBy === 'template' || (labelBy === 'self' && labelPlacement === 'above');
   const { description } = getUiOptions(itemUiSchema);
   const hasDescription = !!description || !!itemSchema.description;
   const { orderable, removable, copyable } = itemButtonOptions(uiOptions);
@@ -755,29 +797,7 @@ function ArrayFieldItemInner<
   );
 
   const templateProps = {
-    children: (
-      <ItemSchemaField
-        name={name}
-        title={title}
-        index={index}
-        schema={itemSchema}
-        uiSchema={itemUiSchema}
-        formData={itemData}
-        errorSchema={asItemErrorSchema(itemErrorSchema)}
-        fieldPath={fieldPath}
-        id={fieldId}
-        required={isItemRequired<S>(itemSchema)}
-        onChange={onChange}
-        onBlur={onBlur}
-        onFocus={onFocus}
-        registry={registry}
-        disabled={disabled}
-        readonly={readonly}
-        hideError={hideError}
-        autofocus={autofocus}
-        {...getFieldErrorProps<T, S, F>(rawErrors)}
-      />
-    ),
+    children: <ItemSchemaField {...itemFieldProps} />,
     buttonsProps: {
       id: fieldId,
       disabled,

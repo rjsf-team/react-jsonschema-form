@@ -12782,7 +12782,7 @@ exports[`single fields > select widget with selected oneOf option description be
             class="dropdown w-full"
           >
             <button
-              aria-controls="_r_6d_"
+              aria-controls="_r_6e_"
               aria-describedby="root__description root__selectedOptionDescription"
               aria-expanded="false"
               aria-haspopup="listbox"
@@ -12807,7 +12807,7 @@ exports[`single fields > select widget with selected oneOf option description be
             </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-              id="_r_6d_"
+              id="_r_6e_"
               role="listbox"
             >
               <li

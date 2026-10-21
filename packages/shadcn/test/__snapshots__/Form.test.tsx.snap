@@ -13608,12 +13608,12 @@ exports[`single fields > select widget with selected oneOf option description be
           >
             <label
               cmdk-label=""
-              for="radix-_r_54_"
-              id="radix-_r_53_"
+              for="radix-_r_58_"
+              id="radix-_r_57_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
-              aria-controls="_r_51_"
+              aria-controls="_r_55_"
               aria-describedby="root__description root__selectedOptionDescription"
               aria-expanded="false"
               aria-haspopup="listbox"
@@ -13648,7 +13648,7 @@ exports[`single fields > select widget with selected oneOf option description be
             </button>
             <div
               class="relative"
-              id="_r_51_"
+              id="_r_55_"
             />
           </div>
           <div>

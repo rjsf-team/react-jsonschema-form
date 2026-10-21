@@ -32,6 +32,7 @@ import type {
 import { getTemplates, getUiOptions, SUBMIT_BTN_OPTIONS_KEY, ROOT_FIELD_PATH, UI_OPTIONS_KEY } from '@rjsf/utils';
 
 import isDevelopment from '../isDevelopment.ts';
+import NamedFieldContext from './fields/NamedFieldContext.ts';
 import FormDataContext from './FormDataContext.ts';
 import { createFormModel } from './formModel.ts';
 import type { FormRef } from './FormRef.ts';
@@ -457,23 +458,25 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
         <Attachment attach={model.attached} />
         <>
           {showErrorList === 'top' && renderErrors()}
-          <UiStateContext value={model.uiState}>
-            <SchemaFieldComponent
-              name=''
-              schema={schema}
-              uiSchema={uiSchema}
-              errorSchema={errorSchema}
-              fieldPath={ROOT_FIELD_PATH}
-              id={registry.globalFormOptions.idPrefix}
-              formData={formData}
-              onChange={model.handleChange}
-              onBlur={model.handleBlur}
-              onFocus={model.handleFocus}
-              registry={registry}
-              disabled={disabled}
-              readonly={readonly}
-            />
-          </UiStateContext>
+          <NamedFieldContext value={undefined}>
+            <UiStateContext value={model.uiState}>
+              <SchemaFieldComponent
+                name=''
+                schema={schema}
+                uiSchema={uiSchema}
+                errorSchema={errorSchema}
+                fieldPath={ROOT_FIELD_PATH}
+                id={registry.globalFormOptions.idPrefix}
+                formData={formData}
+                onChange={model.handleChange}
+                onBlur={model.handleBlur}
+                onFocus={model.handleFocus}
+                registry={registry}
+                disabled={disabled}
+                readonly={readonly}
+              />
+            </UiStateContext>
+          </NamedFieldContext>
 
           {children || submitButton}
           {showErrorList === 'bottom' && renderErrors()}

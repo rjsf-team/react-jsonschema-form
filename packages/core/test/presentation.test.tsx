@@ -955,17 +955,14 @@ describe('a ui:field wrapping SchemaField under its own id', () => {
 });
 
 describe('a field a $id names that yields to its anyOf options', () => {
-  function Custom() {
-    return null;
-  }
-
+  // `FallbackField` is the field a name can pick that yields to the options; a custom field renders beside them (#5391)
   it("hands the selected option its field's plan, with the parts the selector draws drawn above it", () => {
     const { widgetPlans } = renderPlans(
       {
         type: 'object',
         properties: {
           foo: {
-            $id: 'Custom',
+            $id: 'FallbackField',
             title: 'Foo',
             description: 'About foo',
             anyOf: [{ type: 'string' }, { type: 'number' }],
@@ -974,7 +971,6 @@ describe('a field a $id names that yields to its anyOf options', () => {
       },
       {
         formData: { foo: 'a' },
-        fields: { Custom },
         presentation: {
           default: { label: 'self', description: 'self' },
           fields: { AnyOfField: { label: 'self', description: 'self' } },
