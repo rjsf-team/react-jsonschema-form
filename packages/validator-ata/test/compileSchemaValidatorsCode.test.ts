@@ -1,4 +1,6 @@
 import type { RJSFSchema } from '@rjsf/utils';
+import { createRequire } from 'node:module';
+import { dirname, join } from 'node:path';
 
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
 import { createPrecompiledValidator, customizeValidator } from '../src/index.ts';
@@ -245,49 +247,19 @@ describe('compileSchemaValidatorsCode', () => {
     }
   });
 
-  // The meta-schemas ata ships, as in SHIPPED_META_SCHEMA.
-  const shippedIds = [
-    'json-schema.org/draft-04/schema',
-    'json-schema.org/draft-06/schema',
-    'json-schema.org/draft-07/schema',
-    'json-schema.org/draft/2019-09/schema',
-    ...['core', 'applicator', 'validation', 'meta-data', 'format', 'content'].map(
-      (m) => `json-schema.org/draft/2019-09/meta/${m}`,
-    ),
-    'json-schema.org/draft/2020-12/schema',
-    ...['core', 'applicator', 'validation', 'meta-data', 'format-annotation', 'content', 'unevaluated'].map(
-      (m) => `json-schema.org/draft/2020-12/meta/${m}`,
-    ),
-  ];
-  const forms = shippedIds.flatMap((id) =>
-    ['http://', 'https://'].flatMap((scheme) => [`${scheme}${id}`, `${scheme}${id}#`]),
-  );
-
-  test('ships the 18 meta-schema ids in four forms each', () => {
-    expect(shippedIds).toHaveLength(18);
-    expect(forms).toHaveLength(72);
-  });
-
-  test.each(forms)('leaves %s out of the module, since ata already knows it', (id) => {
-    const stand = { $id: id, type: ['object', 'boolean'] };
-    expect(compileSchemaValidatorsCode(schema, { additionalMetaSchemas: [stand] })).toBe(
-      compileSchemaValidatorsCode(schema),
-    );
-  });
-
-  test.each([
-    'https://json-schema.org/draft/2020-12/meta/format-assertion',
-    'http://json-schema.org/draft-05/schema#',
-    'https://json-schema.org/draft/next/schema',
-    'http://json-schema.org/draft-07/hyper-schema#',
-    'https://json-schema.org/draft/2020-12/schema/extra',
-    'https://example.com/json-schema.org/draft-07/schema#',
-  ])('compiles %s into the module, since ata does not ship it', (id) => {
-    const stand = { $id: id, type: ['object', 'boolean'] };
-    expect(compileSchemaValidatorsCode(schema, { additionalMetaSchemas: [stand] })).not.toBe(
-      compileSchemaValidatorsCode(schema),
-    );
-  });
+  // ata's own copies of the official meta-schemas, read from its file by path since ata does not
+  // export them, so these tests follow whatever the installed ata ships.
+  const requireHere = createRequire(import.meta.url);
+  const { METASCHEMAS } = requireHere(
+    join(dirname(requireHere.resolve('ata-validator/package.json')), 'lib', 'metaschemas.js'),
+  ) as { METASCHEMAS: Map<string, Record<string, unknown>> };
+  const shipped = [...METASCHEMAS];
+  // Each id under http and https, with and without a trailing `#`.
+  const forms = (id: string) => {
+    const bare = id.replace(/#$/, '').replace(/^https?:/, '');
+    return ['http:', 'https:'].flatMap((scheme) => [`${scheme}${bare}`, `${scheme}${bare}#`]);
+  };
+  const baseline = compileSchemaValidatorsCode(schema);
 
   // The runtime validator and the module, on the same form, data and options.
   const agree = (form: RJSFSchema, data: unknown, options: Parameters<typeof compileSchemaValidatorsCode>[1]) => {
@@ -296,6 +268,66 @@ describe('compileSchemaValidatorsCode', () => {
     expect(module).toBe(runtime);
     return module;
   };
+  // A form that reaches the document under `id` through `not`, where `schemaParser` leaves the
+  // `$ref` for the validator to resolve.
+  const refersTo = (id: string): RJSFSchema => ({
+    $id: 'refers',
+    type: 'object',
+    properties: { x: { type: 'string', not: { $ref: id } } },
+  });
+
+  test.each(shipped.map(([id]) => id))("leaves ata's own copy of %s out of the module", (id) => {
+    expect(compileSchemaValidatorsCode(schema, { additionalMetaSchemas: [METASCHEMAS.get(id)!] })).toBe(baseline);
+  });
+
+  test.each(shipped.flatMap(([id]) => forms(id)))(
+    'answers as the runtime validator for a different document under %s',
+    (id) => {
+      // Under `not`, the caller's document makes 'abc' valid and 'ab' invalid.
+      const options = { additionalMetaSchemas: [{ $id: id, maxLength: 2 }] };
+      expect(agree(refersTo(id), { x: 'abc' }, options)).toBe(true);
+      expect(agree(refersTo(id), { x: 'ab' }, options)).toBe(false);
+    },
+  );
+
+  test.each(shipped.flatMap(([id]) => forms(id)))("answers as the runtime validator for ata's copy under %s", (id) => {
+    const doc = METASCHEMAS.get(shipped.find(([shippedId]) => forms(shippedId).includes(id))![0])!;
+    const options = { additionalMetaSchemas: [{ ...doc, $id: id }] };
+    agree(refersTo(id), { x: 'abc' }, options);
+  });
+
+  test.each(['https://json-schema.org/draft-07/schema#', 'https://json-schema.org/draft/next/schema'])(
+    'compiles a copy of draft-07 under %s into the module, since ata keeps none under that id',
+    (id) => {
+      const draft07 = METASCHEMAS.get('http://json-schema.org/draft-07/schema#')!;
+      expect(compileSchemaValidatorsCode(schema, { additionalMetaSchemas: [{ ...draft07, $id: id }] })).not.toBe(
+        baseline,
+      );
+    },
+  );
+
+  test('compiles every extra in where ata cannot be asked for its copy', async () => {
+    // A later ata could change what the probe reads. Then nothing is left out, which only costs size.
+    const { Validator } = await import('ata-validator');
+    // The names of ata's internals, kept in strings since they are not public API.
+    const compileKey = '_ensureCompiled';
+    const rawKey = '_rawSchema';
+    const proto = Validator.prototype as unknown as Record<string, (this: object) => unknown>;
+    const original = proto[compileKey];
+    const spy = vi.spyOn(proto, compileKey).mockImplementation(function (this: object) {
+      const raw = Reflect.get(this, rawKey) as { $ref?: unknown } | undefined;
+      if (raw && typeof raw.$ref === 'string') {
+        throw new Error('probe unavailable');
+      }
+      return original.call(this);
+    });
+    try {
+      const draft07 = METASCHEMAS.get('http://json-schema.org/draft-07/schema#')!;
+      expect(compileSchemaValidatorsCode(schema, { additionalMetaSchemas: [draft07] })).not.toBe(baseline);
+    } finally {
+      spy.mockRestore();
+    }
+  });
 
   test.each([
     'https://json-schema.org/draft/next/schema',
@@ -315,18 +347,6 @@ describe('compileSchemaValidatorsCode', () => {
       properties: { n: { type: 'number', minimum: 5 } },
     };
     expect(agree(loose, { n: 1 }, { additionalMetaSchemas: [meta] })).toBe(true);
-  });
-
-  test('answers as the runtime validator where a shipped id is left out', () => {
-    const draft07 = { $id: 'http://json-schema.org/draft-07/schema#', type: ['object', 'boolean'] };
-    const form: RJSFSchema = {
-      $id: 'plain',
-      $schema: 'http://json-schema.org/draft-07/schema#',
-      type: 'object',
-      properties: { n: { type: 'number', minimum: 5 } },
-    };
-    expect(agree(form, { n: 1 }, { additionalMetaSchemas: [draft07] })).toBe(false);
-    expect(agree(form, { n: 9 }, { additionalMetaSchemas: [draft07] })).toBe(true);
   });
 
   test('does not fill in defaults, unlike the runtime validator', () => {

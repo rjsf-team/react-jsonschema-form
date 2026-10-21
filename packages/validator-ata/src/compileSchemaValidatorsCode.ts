@@ -1,5 +1,5 @@
 import type { RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { schemaParser } from '@rjsf/utils';
+import { deepEquals, schemaParser } from '@rjsf/utils';
 import { Validator } from 'ata-validator';
 
 import { ATA_CONFIG, COLOR_FORMAT_REGEX, DATA_URL_FORMAT_REGEX } from './createAtaInstance.ts';
@@ -18,13 +18,30 @@ function warnOnce(message: string) {
   }
 }
 
-/** The meta-schemas ata ships, in the forms it resolves them by: http or https, with or without
- * a trailing `#`. Any other json-schema.org `$id`, such as a draft ata does not know yet, is
- * compiled into the module like a custom meta-schema. The same in ata-validator 1.56.0 to 1.58.0
- * (`lib/metaschemas.js`, which ata does not export): a later ata that ships another document
- * only makes the module larger here, since that document is then compiled in, not wrong. */
-const SHIPPED_META_SCHEMA =
-  /^https?:\/\/json-schema\.org\/(?:draft-0[467]\/schema|draft\/2019-09\/(?:schema|meta\/(?:core|applicator|validation|meta-data|format|content))|draft\/2020-12\/(?:schema|meta\/(?:core|applicator|validation|meta-data|format-annotation|content|unevaluated)))#?$/;
+/** The document ata itself uses under `id` when the caller passes none: its own copy of an
+ * official meta-schema, under the keys ata registers those copies by. Read from a validator for
+ * `{ $ref: id }`, which loads them. `undefined` where ata has no copy under that key, or where
+ * this cannot be read (`_schemaMap` is not public API); the extra schema is then compiled in,
+ * which only costs size. */
+function shippedCopy(id: string): unknown {
+  // ata keeps copies only of json-schema.org documents.
+  if (!id.includes('json-schema.org/')) {
+    return undefined;
+  }
+  try {
+    const probe = new Validator({ $ref: id }) as unknown as {
+      _ensureCompiled?: () => void;
+      _schemaMap?: Map<string, unknown>;
+    };
+    // Not public API, read on purpose: it is the map the runtime validator resolves against.
+    // oxlint-disable-next-line no-underscore-dangle
+    probe._ensureCompiled?.();
+    // oxlint-disable-next-line no-underscore-dangle
+    return probe._schemaMap?.get(id);
+  } catch {
+    return undefined;
+  }
+}
 
 /** The `$id` ata registers a schema under: a non-empty string that is not just a fragment. */
 function declaredId(schema: object) {
@@ -42,8 +59,7 @@ function declaredId(schema: object) {
  * `customFormats` (as RegExps or pattern strings) and `ataOptionsOverrides` are passed to
  * ata. `additionalMetaSchemas` and `ataOptionsOverrides.schemas` that have an `$id` are
  * compiled into the module, so a custom meta-schema named in `$schema` applies there too;
- * the official meta-schemas ata ships (draft-04 to 2020-12) are left out, since ata already knows them,
- * unless the caller's document under that id has a `$vocabulary`.
+ * one identical to the copy ata ships under the same `$id` is left out, since ata already has it.
  * Extra schemas without an `$id` are left out with a `console.warn`, as ata requires one.
  * A few options cannot be carried into a standalone module: `extenderFn` and the
  * `ataOptionsOverrides` keys `coerceTypes`, `removeAdditional` and `keywords`. Those are left
@@ -87,14 +103,15 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
         })),
   ];
   const withId = extras.filter((extra) => declaredId(extra) !== undefined);
-  // ata already knows the official meta-schemas, so bundling one only adds dead code (about 90 KB
-  // for draft-07's). But the runtime validator uses the caller's document under a shipped id, not
-  // its own copy, so one is left out only where its content cannot change an answer: without a
-  // `$vocabulary`, the only way ata lets a meta-schema change what `$schema` validates. (A `$ref`
-  // into it cannot come from a form: `schemaParser` resolves only references inside the form.)
-  const bundled = withId.filter(
-    (extra) => !SHIPPED_META_SCHEMA.test((extra as { $id: string }).$id) || '$vocabulary' in extra,
-  );
+  // An extra schema the runtime validator would use goes into the module, so both answer the same.
+  // The one exception is a document identical to the copy ata already has under the same `$id`:
+  // ata loads its copy where a schema refers to it, so leaving it out changes no answer and saves
+  // its size (about 92 KB for draft-07's). A document that differs from ata's copy in any way, or
+  // sits under an id ata keeps no copy under, is compiled in.
+  const bundled = withId.filter((extra) => {
+    const copy = shippedCopy((extra as { $id: string }).$id);
+    return copy === undefined || !deepEquals(extra, copy);
+  });
   if (withId.length < extras.length) {
     warnOnce(
       '@rjsf/validator-ata: additionalMetaSchemas and ataOptionsOverrides.schemas entries without an $id are ignored; ata requires an $id, so customizeValidator() throws for them',
