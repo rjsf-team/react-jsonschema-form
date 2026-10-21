@@ -1215,11 +1215,14 @@ export default function ArrayField<
    * them, and saying where each item went, so the form moves the items' errors along. Where that is, is read off the
    * rows themselves, so the errors go nowhere the items did not. A change `transformChange` refused leaves the items
    * where they were, so the rows go back to `rows`: kept, a refused reorder, which leaves the length as it was, would
-   * hand each row's instance, and the state it holds, to another item. Otherwise the form may hold other items than
-   * the change put there: `transformChange` rewrote them, the defaults put one back, or `setFieldValue()` set the field back.
-   * A row then keeps its key only where the form holds the item the change put there, as the form made it, with the
-   * defaults it filled in and the extra data it omitted, so an item the form only derived keeps its row. An item past
-   * the rows the change sent, as one the defaults put back, gets a row of its own, as does every other item
+   * hand each row's instance, and the state it holds, to another item. So do the rows of a change a custom parent field
+   * kept, for later as a debounced `onChange` does or for good, wherever the form holds other items than the change
+   * sent: a second change before the next render would key the form's items by them. Otherwise the form may hold other
+   * items than the change put there: `transformChange` rewrote them, the defaults put one back, or `setFieldValue()`
+   * set the field back. A row then keeps its key only where the form holds the item the change put there, as the form
+   * made it, with the defaults it filled in and the extra data it omitted, so an item the form only derived keeps its
+   * row. An item past the rows the change sent, as one the defaults put back, gets a row of its own, as does every
+   * other item
    */
   const commitRows = useCallback(
     (rows: KeyedFormDataType<T>[], newKeyedFormData: KeyedFormDataType<T>[]) => {
@@ -1229,6 +1232,9 @@ export default function ArrayField<
         onChange(value, fieldPath),
       );
       if (outcome === undefined) {
+        if (!deepEquals(readItems(), value)) {
+          updateKeyedFormData(rows);
+        }
         return;
       }
       if (outcome.kind === 'refused') {

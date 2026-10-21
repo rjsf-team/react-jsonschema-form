@@ -5067,6 +5067,28 @@ describe('ArrayField', () => {
         expect(keepsItsItem(before, shown(node))).toBe(true);
       });
 
+      it('when a custom parent keeps each change for later and one click makes two', async () => {
+        const held: unknown[] = [];
+        // A custom field that keeps each change for later instead of passing it on, as a debounced onChange does
+        function HoldingField(props: FieldProps<string[]>) {
+          const { ArrayField: InnerArrayField } = props.registry.fields;
+          return <InnerArrayField {...props} onChange={(value) => held.push(value)} />;
+        }
+        const { node, getFormData } = createFormComponent({
+          schema: { type: 'array', items: { type: 'string' } },
+          uiSchema: { 'ui:field': HoldingField, items: { 'ui:widget': InstanceWidget } },
+          initialFormData: ['a', 'b', 'c'],
+          templates: { ArrayFieldItemTemplate: RemoveThenMoveUpItemTemplate },
+        });
+        const before = shown(node);
+
+        await user.click(node.querySelectorAll('.remove-then-move-up')[1]);
+
+        expect(held).toHaveLength(2);
+        expect(getFormData()).toEqual(['a', 'b', 'c']);
+        expect(keepsItsItem(before, shown(node))).toBe(true);
+      });
+
       it('when onChange sets a reorder back', async () => {
         const ref = createFormRef<string[]>();
         let previous: string[] | undefined = ['a', 'b'];
