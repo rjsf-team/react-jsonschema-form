@@ -425,11 +425,26 @@ describe('mantine ArrayFieldItemTemplate', () => {
       displayLabel: true,
     },
     {
-      named: "a type list with a hidden value under the fallback UI, whose type selector's label sits above it",
+      named: 'a type list with a hidden value under the fallback UI, whose type selector is hidden with it',
       items: { type: ['string', 'number'], title: 'Value' },
       uiSchema: { items: { 'ui:widget': 'hidden' } },
       value: 'a',
-      displayLabel: true,
+      displayLabel: false,
+    },
+    {
+      named:
+        'a deprecated type list hidden by ui:deprecatedHandling under the fallback UI, whose type selector is hidden with it',
+      items: { type: ['string', 'number'], title: 'Value', deprecated: true },
+      uiSchema: { items: { 'ui:deprecatedHandling': 'hide' } },
+      value: 'a',
+      displayLabel: false,
+    },
+    {
+      named: 'a type list hidden by a global widget under the fallback UI, whose type selector is hidden with it',
+      items: { type: ['string', 'number'], title: 'Value' },
+      uiSchema: { 'ui:globalOptions': { widget: 'hidden' } },
+      value: 'a',
+      displayLabel: false,
     },
     {
       named: 'a hidden text input, with no control on screen to draw a label above',

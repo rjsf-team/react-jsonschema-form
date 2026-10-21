@@ -46,11 +46,28 @@ describe('ArrayFieldItemTemplate', () => {
       fallbackUi: true,
     },
     {
-      named: "a type list with a hidden value under the fallback UI, whose type selector's label sits above it",
+      named: 'a type list with a hidden value under the fallback UI, whose type selector is hidden with it',
       items: { type: ['string', 'number'], title: 'Value' },
       uiSchema: { items: { 'ui:widget': 'hidden' } },
       formData: ['a', 'a'],
-      marginTop: '26px',
+      marginTop: '0px',
+      fallbackUi: true,
+    },
+    {
+      named:
+        'a deprecated type list hidden by ui:deprecatedHandling under the fallback UI, whose type selector is hidden with it',
+      items: { type: ['string', 'number'], title: 'Value', deprecated: true },
+      uiSchema: { items: { 'ui:deprecatedHandling': 'hide' } },
+      formData: ['a', 'a'],
+      marginTop: '0px',
+      fallbackUi: true,
+    },
+    {
+      named: 'a type list hidden by a global widget under the fallback UI, whose type selector is hidden with it',
+      items: { type: ['string', 'number'], title: 'Value' },
+      uiSchema: { 'ui:globalOptions': { widget: 'hidden' } },
+      formData: ['a', 'a'],
+      marginTop: '0px',
       fallbackUi: true,
     },
     {

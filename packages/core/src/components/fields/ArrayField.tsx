@@ -672,9 +672,9 @@ function ArrayFieldItemInner<
   // The toolbar is laid out level with the item's first control below a label above it: one its template draws, as the
   // plan the item's `SchemaField` builds from these same props says, so the two can't disagree about it however the
   // field is named, or one its field or widget draws itself where its declaration places that label above the control.
-  // A hidden item has no control on screen, so nothing draws a label above it. The fallback UI's type selector is a
-  // control of its own, rendered above the value whatever the value's widget, and its label names the type rather than
-  // the item, so it is drawn above it whatever the item's title, wherever `ui:label` leaves the field's labels shown
+  // A hidden item has no control on screen, so nothing draws a label above it: its template hides the fallback UI's type
+  // selector with the value. A shown type selector comes first, and its label names the type rather than the item, so
+  // it is drawn above it whatever the item's title, wherever `ui:label` leaves the field's labels shown
   const {
     schema: plannedSchema,
     fieldToRender,
@@ -687,7 +687,7 @@ function ArrayFieldItemInner<
     rendersTypeSelector<S>(plannedSchema);
   const labelBy = presentation?.control && presentation.label.by;
   const displayLabel = typeSelectorFirst
-    ? presentation?.showLabel === true
+    ? Boolean(presentation?.control) && presentation?.showLabel === true
     : labelBy === 'template' || (labelBy === 'self' && labelPlacement === 'above');
   const { description } = getUiOptions(itemUiSchema);
   const hasDescription = !!description || !!itemSchema.description;

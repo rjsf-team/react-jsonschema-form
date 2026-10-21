@@ -1060,10 +1060,22 @@ describe('SchemaField', () => {
           { named: 'a titled type list', items: { ...typeList, title: 'Value' }, displayLabel: true },
           { named: 'an untitled type list', items: typeList, displayLabel: true },
           {
-            named: 'a type list with a hidden value',
+            named: 'a type list with a hidden value, whose type selector is hidden with it',
             items: { ...typeList, title: 'Value' },
             uiSchema: { items: { 'ui:widget': 'hidden' } },
-            displayLabel: true,
+            displayLabel: false,
+          },
+          {
+            named: 'a deprecated type list hidden by ui:deprecatedHandling, whose type selector is hidden with it',
+            items: { ...typeList, title: 'Value', deprecated: true },
+            uiSchema: { items: { 'ui:deprecatedHandling': 'hide' } },
+            displayLabel: false,
+          },
+          {
+            named: 'a type list hidden by a global widget, whose type selector is hidden with it',
+            items: { ...typeList, title: 'Value' },
+            uiSchema: { 'ui:globalOptions': { widget: 'hidden' } },
+            displayLabel: false,
           },
           {
             named: "a type list with ui:label false, which turns the selector's label off too",
