@@ -268,6 +268,22 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       consoleWarnSpy.mockClear();
       testValidator.reset?.();
     });
+    it('resolves the constant options of a select written as $refs, and leaves a list holding a boolean option as written', () => {
+      const definitions = { red: { const: 'red', title: 'Red' }, blue: { const: 'blue', title: 'Blue' } };
+      const select: RJSFSchema = {
+        definitions,
+        type: 'string',
+        oneOf: [{ $ref: '#/definitions/red' }, { $ref: '#/definitions/blue' }],
+      };
+      expect(retrieveSchema({ validator: testValidator }, select, select).oneOf).toMatchObject([
+        { const: 'red', title: 'Red' },
+        { const: 'blue', title: 'Blue' },
+      ]);
+      const withBoolean: RJSFSchema = { definitions, type: 'string', oneOf: [{ $ref: '#/definitions/red' }, true] };
+      const retrieved = retrieveSchema({ validator: testValidator }, withBoolean, withBoolean);
+      expect(retrieved.oneOf?.[0]).toMatchObject({ $ref: '#/definitions/red' });
+      expect(retrieved.oneOf?.[1]).toBe(true);
+    });
     it('returns empty object when schema is not an object', () => {
       expect(retrieveSchema({ validator: testValidator }, [] as RJSFSchema)).toEqual({});
     });

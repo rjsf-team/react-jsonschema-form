@@ -194,8 +194,6 @@ export default function sanitizeDataForNewSchema<
         oldRawKeyedSchema === newRawKeyedSchema
           ? oldKeyedSchema
           : retrieveSchema<unknown, S, F>(context, newRawKeyedSchema, rootSchema, formValue);
-      // `retrieveSchema()` hands a select's options out as written, so constants written as `$ref`s are read resolved
-      const newKeyedSelect = resolveConstantOptions<S>(newKeyedSchema, rootSchema);
       // Now get types and see if they are the same. A type that was guessed from the data of an `additionalProperties`
       // entry the schema puts no constraint on describes what that data was rather than what the schema requires, so
       // it is treated as no type at all: the data changing type is a change of data, not a change of schema. That only
@@ -220,7 +218,7 @@ export default function sanitizeDataForNewSchema<
         const isArrayValue = containerType === 'array' && Array.isArray(formValue);
         const isObjectValue =
           newSchemaTypeForKey === 'object' || (containerType === 'object' && isPlainObject(formValue));
-        const isContainer = (isObjectValue || isArrayValue) && !isWholeValueSelect<S>(newKeyedSelect);
+        const isContainer = (isObjectValue || isArrayValue) && !isWholeValueSelect<S>(newKeyedSchema);
         if (isContainer) {
           // SIDE-EFFECT: process the new schema type of object recursively to save iterations. A position the
           // old schema does not cover borrows the new schema as its old side (an array property the new schema
@@ -267,7 +265,7 @@ export default function sanitizeDataForNewSchema<
           }
 
           if (hasByPath(data, key)) {
-            const enumReplacement = replacementForInvalidEnumValue(newKeyedSelect, formValue);
+            const enumReplacement = replacementForInvalidEnumValue(newKeyedSchema, formValue);
             if (enumReplacement !== NO_VALUE) {
               removeOldSchemaData[key] = enumReplacement;
             }
@@ -332,7 +330,6 @@ export default function sanitizeDataForNewSchema<
         ? oldItemsSchema
         : retrieveSchema<unknown, S, F>(context, newSchemaItemsRaw, rootSchema, data);
       newSchemaItems = newItemsSchema;
-      const newItemsSelect = resolveConstantOptions<S>(newItemsSchema, rootSchema);
       // Now get types and see if they are the same
       const oldSchemaType = getByPath(oldSchemaItems, 'type');
       const newSchemaType = getByPath(newSchemaItems, 'type');
@@ -344,7 +341,7 @@ export default function sanitizeDataForNewSchema<
         const itemsType = newSchemaType === undefined ? undefined : getSchemaType<S>(newItemsSchema);
         // An item picked from object constants is one of them as a whole, so it's filtered against the options below
         // rather than sanitized property by property, which would find no properties and drop it
-        if (itemsType === 'object' && !isWholeValueSelect<S>(newItemsSelect)) {
+        if (itemsType === 'object' && !isWholeValueSelect<S>(newItemsSchema)) {
           newFormData = data.reduce<unknown[]>((newValue, aValue: T) => {
             let itemValue: unknown = aValue;
             if (newSchemaType === 'object' || isPlainObject(aValue)) {
@@ -363,7 +360,7 @@ export default function sanitizeDataForNewSchema<
           }, []);
         } else {
           // Filter out items that are no longer valid in the new items schema (e.g., enum values that changed)
-          const newItemEnumValues = enumValuesForSchema(newItemsSelect);
+          const newItemEnumValues = enumValuesForSchema(newItemsSchema);
           const filteredData = newItemEnumValues
             ? data.filter((item: unknown) => newItemEnumValues.some((v) => deepEquals(v, item)))
             : data;
