@@ -521,10 +521,10 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
         } else if (uiMove && unmoved && containerPath && edit.edited) {
           // A rewritten move put the items where the rewrite says, which `ArrayField` reads the same way for its rows
           const kept = getAt<unknown>(committed.formData, containerPath);
-          const moved = getAt<unknown>(edit.edited.formData, containerPath);
+          const movedItems = getAt<unknown>(edit.edited.formData, containerPath);
           uiState.settleMove(uiMove.container, unmoved, (key) => {
             const held = getByPath(kept, key);
-            if (deepEquals(held, getByPath(moved, key))) {
+            if (deepEquals(held, getByPath(movedItems, key))) {
               return 'moved';
             }
             return deepEquals(held, getByPath(before, key)) ? 'unmoved' : 'none';
