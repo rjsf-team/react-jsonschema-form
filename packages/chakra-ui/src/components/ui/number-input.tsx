@@ -1,10 +1,8 @@
 import type { ComponentProps } from 'react';
-import { useEffect, useRef } from 'react';
 import { NumberInput as ChakraNumberInput } from '@chakra-ui/react';
 
 export interface NumberInputProps extends ComponentProps<typeof ChakraNumberInput.Root> {
-  /** Its `ref` is left out, since the input's own ref keeps its value in step with `value` */
-  inputProps?: Omit<ComponentProps<typeof ChakraNumberInput.Input>, 'ref'>;
+  inputProps?: ComponentProps<typeof ChakraNumberInput.Input>;
 }
 
 /**
@@ -15,22 +13,12 @@ export interface NumberInputProps extends ComponentProps<typeof ChakraNumberInpu
  * @param [props.inputProps] - Additional props for the input element.
  * @returns The rendered number input component.
  */
-export const NumberInputRoot = ({ ref, inputProps, ...props }: NumberInputProps) => {
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.value = props.value || '';
-    }
-  }, [props.value]);
-
-  return (
-    <ChakraNumberInput.Root ref={ref} variant='outline' {...props}>
-      <ChakraNumberInput.Control>
-        <ChakraNumberInput.IncrementTrigger />
-        <ChakraNumberInput.DecrementTrigger />
-      </ChakraNumberInput.Control>
-      <ChakraNumberInput.Input ref={inputRef} {...inputProps} />
-    </ChakraNumberInput.Root>
-  );
-};
+export const NumberInputRoot = ({ ref, inputProps, ...props }: NumberInputProps) => (
+  <ChakraNumberInput.Root ref={ref} variant='outline' {...props}>
+    <ChakraNumberInput.Control>
+      <ChakraNumberInput.IncrementTrigger />
+      <ChakraNumberInput.DecrementTrigger />
+    </ChakraNumberInput.Control>
+    <ChakraNumberInput.Input {...inputProps} />
+  </ChakraNumberInput.Root>
+);
