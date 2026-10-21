@@ -165,8 +165,7 @@ function propertyScore<
     const structureBoost = typeof formValue === 'object' && formValue !== null ? 1 : 0;
     const planned = scored.plan ?? planAt<S, F>(context, where());
     return (
-      structureBoost +
-      scopeScore<T, S, F>(context, rootSchema, { schema: value, plan: planned }, formValue, new Set()).score
+      structureBoost + scopeScore<T, S, F>(context, rootSchema, { schema: value, plan: planned }, formValue, new Set())
     );
   }
   if (value.type !== guessType(formValue)) {
@@ -194,9 +193,9 @@ function propertyScore<
  * the scores are added up. A schema without `properties` scores 1 when its `type` is the guessed-type of `formData`.
  * The score of each `allOf` entry, read through its `$ref`, is added to the schema's own, so options sharing a base
  * through a `$ref` beside their own keywords or through an `allOf` are told apart by the properties each adds. An
- * entry that is a `$ref` scores 0 where the `formData` is `undefined` or `null`, as a property's `$ref` does. An entry
- * scores 0 too where its reference, or one the `allOf` entries of the definition it names reach, resolves to nothing
- * or loops, which leaves the form nothing to merge the entry with.
+ * entry that is a `$ref` scores 0 where the `formData` is `undefined` or `null`, as a property's `$ref` does. Where an
+ * entry reaches a reference that resolves to nothing or loops, through its `$ref`, its `allOf` entries or its
+ * properties, the form has nothing to merge the `allOf` with, so none of its entries adds to the score.
  *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param rootSchema - The root JSON schema of the entire form
@@ -212,8 +211,7 @@ export function calculateIndexScore<
   if (!schema) {
     return 0;
   }
-  return scopeScore<T, S, F>(context, rootSchema, scoredOption<S, F>(context, schema, rootSchema), formData, new Set())
-    .score;
+  return scopeScore<T, S, F>(context, rootSchema, scoredOption<S, F>(context, schema, rootSchema), formData, new Set());
 }
 
 /** Returns the `allOf` entries of a scored schema, each with where it is declared: those of the chains of its plan,
@@ -244,12 +242,36 @@ function allOfEntries<S extends StrictRJSFSchema>(scored: Scored<S>, rootSchema:
   });
 }
 
-/** What `scopeScore()` adds up for a scope: its score, and whether its `allOf` entries reach a reference that resolves
- * to nothing or loops, through the definitions they name, which leaves the form nothing to merge the scope with
+const brokenReach = new KeyedMemo<boolean>();
+
+/** Returns whether the subschema at `node` reaches a `$ref` that resolves to nothing or loops, through its `$ref`, its
+ * `allOf` entries or its properties: the subschemas a merge of it enters, which then throws, whatever the data
+ *
+ * @param graph - The graph the node is in
+ * @param node - The subschema
+ * @returns - Whether a reference it reaches names nothing
  */
-interface ScopeScore {
-  readonly score: number;
-  readonly reachesNothing: boolean;
+function reachesBrokenRef<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, node: NodeId): boolean {
+  return brokenReach.get([graph, node], () => {
+    const seen = new Set<NodeId>();
+    const reaches = (id: NodeId): boolean => {
+      if (seen.has(id)) {
+        return false;
+      }
+      seen.add(id);
+      const found = graph.node(id);
+      if (found.kind !== 'schema') {
+        return found.kind === 'invalid';
+      }
+      return (
+        (found.ref !== undefined && reaches(found.ref)) ||
+        [ALL_OF_KEY, PROPERTIES_KEY].some((keyword) =>
+          graph.subschemas(id, keyword).some(([, child]) => reaches(child)),
+        )
+      );
+    };
+    return reaches(node);
+  });
 }
 
 /** Returns the score `calculateIndexScore()` describes, counting a definition at this level of the data once however
@@ -262,7 +284,7 @@ interface ScopeScore {
  * @param scored - The schema for which the score is being calculated, and its plan where it was read from one
  * @param formData - The form data associated with the schema
  * @param counted - The definitions already scored at this level of the data, which this adds to
- * @returns - The score, and whether the scope's `allOf` entries reach a reference naming nothing
+ * @returns - The score
  */
 function scopeScore<T, S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
@@ -270,7 +292,7 @@ function scopeScore<T, S extends StrictRJSFSchema, F extends FormContextType>(
   scored: Scored<S>,
   formData: unknown,
   counted: Set<object>,
-): ScopeScore {
+): number {
   const { schema, plan } = scored;
   if (plan !== undefined) {
     for (const id of plan.set) {
@@ -298,35 +320,30 @@ function scopeScore<T, S extends StrictRJSFSchema, F extends FormContextType>(
         0,
       )
     : Number(typeof schema.type === 'string' && schema.type === guessType(formData));
-  return allOfEntries<S>(scored, rootSchema).reduce<ScopeScore>(
-    (total, [entry, where]) => {
-      // An entry's `$ref` is followed only for data to score, as a property's own `$ref` is: a property typed `object`
-      // is scored from a fresh plan for its value, so for a recursive definition reached through the entry, only the
-      // data, consumed a key at a time, bounds the descent
-      if (typeof entry[REF_KEY] === 'string' && formData == null) {
+  const entries = allOfEntries<S>(scored, rootSchema);
+  // A reference naming nothing says nothing about the data: whatever resolves the option to render it reports the broken
+  // reference on its own
+  if (entries.some(([, where]) => reachesBrokenRef<S>(where.graph, where.seeds[0].node))) {
+    return own;
+  }
+  return entries.reduce((total, [entry, where]) => {
+    // An entry's `$ref` is followed only for data to score, as a property's own `$ref` is: a property typed `object` is
+    // scored from a fresh plan for its value, so for a recursive definition reached through the entry, only the data,
+    // consumed a key at a time, bounds the descent
+    if (typeof entry[REF_KEY] === 'string' && formData == null) {
+      return total;
+    }
+    const declaring = where.graph.node(where.seeds[0].node);
+    const target =
+      declaring.kind === 'schema' && declaring.ref !== undefined ? where.graph.node(declaring.ref) : undefined;
+    if (target?.kind === 'schema') {
+      if (counted.has(target.raw)) {
         return total;
       }
-      const declaring = where.graph.node(where.seeds[0].node);
-      const target =
-        declaring.kind === 'schema' && declaring.ref !== undefined ? where.graph.node(declaring.ref) : undefined;
-      // A reference naming nothing says nothing about the data, and nor does a definition whose own entries reach one:
-      // whatever resolves the option to render it reports the broken reference on its own
-      if (target?.kind === 'invalid') {
-        return { score: total.score, reachesNothing: true };
-      }
-      if (target?.kind === 'schema') {
-        if (counted.has(target.raw)) {
-          return total;
-        }
-        counted.add(target.raw);
-      }
-      const inner = scopeScore<T, S, F>(context, rootSchema, scoredAt<S, F>(context, where), formData, counted);
-      return inner.reachesNothing
-        ? { score: total.score, reachesNothing: true }
-        : { score: total.score + inner.score, reachesNothing: total.reachesNothing };
-    },
-    { score: own, reachesNothing: false },
-  );
+      counted.add(target.raw);
+    }
+    return total + scopeScore<T, S, F>(context, rootSchema, scoredAt<S, F>(context, where), formData, counted);
+  }, own);
 }
 
 /** Returns an option as scoring reads it: a schema `retrieveSchema()` handed out as it stands, and any other through
@@ -541,7 +558,7 @@ function scoreOptions<T, S extends StrictRJSFSchema, F extends FormContextType>(
       scoredOption<S, F>(context, option, rootSchema, declaredAt(index, option)),
       formData,
       new Set(),
-    ).score;
+    );
   };
   // The score a list of options nested under a property contributes: what the picked option scores, plus one where the
   // data matches it, as the option picked here without scoring does
