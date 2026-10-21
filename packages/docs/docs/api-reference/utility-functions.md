@@ -3331,11 +3331,13 @@ Recursively prefixes every `$ref` local to the root document, one starting with 
 So `withRootIdRefPrefix({ $ref: '#/if' }, { $id: 'http://example.com/root.json#' })` gives `{ $ref: 'http://example.com/root.json#/if' }`.
 A relative `$ref`, such as `kinds.json#/definitions/cat`, is resolved against that id, unless the id is `ROOT_SCHEMA_PREFIX`, so it names the resource the root embeds rather than one beside the schema holding it.
 A validator applies it to a schema it validates beside `rootSchema`, so that a `$ref` local to the root resolves against the root whatever the schema holding it is registered as.
+A `$ref` that a subschema of `rootSchema` holds below an `$id` of its own, the subschema's or its resource's, resolves against that resource, which the subschema handed over no longer sits under, so it is spelled as the pointer to its target in the root, prefixed with the id: with `$id: 'https://example.com/root.json'` and `$defs: { pet: { $id: 'pet.json', $defs: { cat: { const: 'cat' } }, properties: { kind: { $ref: '#/$defs/cat' } } } }`, the `kind` subschema gives `{ $ref: 'https://example.com/root.json#/$defs/pet/$defs/cat' }`.
 
 #### Parameters
 
 - schemaNode: S - The object node to which the prefix is added when a `$ref` is part of it
 - rootSchema: S - The root schema the local `$ref`s name
+- [rootId=rootSchemaIdOf(rootSchema)]: string - The id the validator registers `rootSchema` under, where it is not the one `rootSchemaIdOf()` gives
 
 #### Returns
 
@@ -3417,6 +3419,7 @@ Otherwise the options the data matches, or all of them when it matches none, are
 A tie goes to the `selectedOption` when it is a candidate and to the first candidate otherwise, so an option the data does not match is never returned while another matches it.
 
 The score is the number of matching properties, more heavily favoring options with matching default or const values.
+A property written as a `$ref` is scored as the definition it names, and each `$ref` scoring follows resolves in the resource of the declaration holding it, including one in a property declared both beside a `$ref` and in the definition it names.
 A property holding an `anyOf`/`oneOf` of its own scores what the option picked among those scores, plus one where the data matches it.
 The pick is remembered per option list and data object, so a recursion through option lists matches each level once.
 Within one call it is reused without looking at the data again, since a validator's `isValid()` must not change the data it checks.
@@ -3598,6 +3601,9 @@ Any keyword that asserts nothing, such as an annotation, an identifier, `$defs`,
 Takes a schema and formData and returns a copy of the formData with any fields not defined in the schema removed.
 This is useful for ensuring that only data that is relevant to the schema is preserved.
 Objects with `additionalProperties` keyword set to `true` will not have their extra fields removed.
+
+Known limitation: a property declared both beside a `$ref` and in the definition it names, or an option an `allOf` merge rebuilds, is a schema no `$id` resource holds, so a `$ref` inside it that a resource of its own wrote is resolved against the root.
+Filtering through it throws `Could not find a definition for …`, or reads the root's definition of the same name.
 
 ```ts
 const schema = {

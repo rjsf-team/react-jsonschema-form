@@ -3,7 +3,7 @@ import { schemaKey, getValidationSchemas } from '@rjsf/utils';
 import { Ajv2020 } from 'ajv/dist/2020.js';
 import uri from 'ajv/dist/runtime/uri.js';
 
-import nestedResourceTests from '../../utils/test/testUtils/nestedResourceTests.ts';
+import nestedResourceTests, { mergedResourceViewTests } from '../../utils/test/testUtils/nestedResourceTests.ts';
 import pointerValidationTests, {
   sharedObjectValidationTests,
   sharedSubschemaValidationTests,
@@ -112,8 +112,10 @@ describe('compileSchemaValidatorsCode()', () => {
   sharedSubschemaValidationTests((compiledFrom, runWith) =>
     createPrecompiledValidator(evalValidatorCode(compileSchemaValidatorsCode(compiledFrom)), runWith),
   );
-  nestedResourceTests((rootSchema) => {
+  const precompiledFor = (rootSchema: RJSFSchema) => {
     const options = String(rootSchema.$schema).includes('2020-12') ? { AjvClass: Ajv2020 } : {};
     return createPrecompiledValidator(evalValidatorCode(compileSchemaValidatorsCode(rootSchema, options)), rootSchema);
-  });
+  };
+  nestedResourceTests(precompiledFor);
+  mergedResourceViewTests(precompiledFor, false);
 });

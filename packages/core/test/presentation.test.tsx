@@ -1218,9 +1218,7 @@ describe('the label a field hands its widget', () => {
     return Object.fromEntries(labels);
   }
 
-  // An empty `title` falls through to the property name, so the template is handed a label. A widget is handed the
-  // same label, whoever draws it
-  it.each<[string, RJSFSchema, string, Widget, UiSchema?]>([
+  const widgetRows: [string, RJSFSchema, string, Widget, UiSchema?][] = [
     ['string', { type: 'string' }, 'TextWidget', CoreTextWidget],
     ['number', { type: 'number' }, 'TextWidget', CoreTextWidget],
     ['boolean', { type: 'boolean' }, 'CheckboxWidget', CoreCheckboxWidget],
@@ -1238,11 +1236,25 @@ describe('the label a field hands its widget', () => {
       ArrayWidget,
       { 'ui:widget': 'ArrayWidget' },
     ],
-  ])(
+  ];
+
+  // An empty `title` falls through to the property name, so the template is handed a label. A widget is handed the
+  // same label, whoever draws it
+  it.each(widgetRows)(
     "hands a %s field's widget the property name its template is handed for an empty title",
     (_, foo, widgetKey, InnerWidget, fooUi) => {
       const labels = renderLabels({ ...foo, title: '' }, widgetKey, InnerWidget, fooUi);
       expect(labels).toEqual({ template: 'foo', widget: 'foo' });
+    },
+  );
+
+  // An empty `ui:title` falls through to the schema's `title` as an empty `title` does, rather than hiding the label
+  // the way `ui:label: false` does
+  it.each(widgetRows)(
+    "hands a %s field's widget the schema title its template is handed for an empty ui:title",
+    (_, foo, widgetKey, InnerWidget, fooUi) => {
+      const labels = renderLabels({ ...foo, title: 'Foo' }, widgetKey, InnerWidget, { ...fooUi, 'ui:title': '' });
+      expect(labels).toEqual({ template: 'Foo', widget: 'Foo' });
     },
   );
 });

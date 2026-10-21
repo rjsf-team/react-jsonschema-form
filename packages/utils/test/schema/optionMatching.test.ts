@@ -252,6 +252,32 @@ describe('matching options through the schema graph', () => {
 
     expect(readsWith(5)).toBe(readsWith(2));
   });
+  it('picks an option of a list two resources share for each resource, its $ref read in that resource', () => {
+    // The same option objects sit in both resources, whose `s` differ, and the same data object reaches both fields
+    const shared: RJSFSchema[] = [
+      { type: 'object', properties: { k: { $ref: '#/$defs/s' }, d: { default: 'zero' } } },
+      { type: 'object', properties: { k: { type: 'string' }, d: { default: 'one' } } },
+    ];
+    const rootSchema: RJSFSchema = {
+      $id: 'https://example.com/root.json',
+      $defs: {
+        r1: { $id: 'r1.json', $defs: { s: { type: 'string' } }, anyOf: shared },
+        r2: { $id: 'r2.json', $defs: { s: { type: 'number' } }, anyOf: shared },
+      },
+      type: 'object',
+      properties: { p: { $ref: 'r1.json' }, q: { $ref: 'r2.json' } },
+    };
+    // Neither option matches, so both are scored: under `r1` they tie and the first is kept, under `r2` only the second
+    // scores `k`
+    const validator = { ...miniValidator(), isValid: () => false };
+    const data = { k: 'x' };
+    expect(
+      getDefaultFormState({ validator }, { schema: rootSchema, formData: { p: data, q: data }, rootSchema }),
+    ).toEqual({
+      p: { k: 'x', d: 'zero' },
+      q: { k: 'x', d: 'one' },
+    });
+  });
   describe('options that refer to one another across definitions (#4990)', () => {
     const names = ['A', 'B', 'C', 'D', 'E'];
     const definitions = Object.fromEntries(
@@ -381,10 +407,25 @@ describe('matching options through the schema graph', () => {
   it.each([
     ['resolves to nothing', '#/definitions/missing'],
     ['loops', '#/definitions/a'],
+    ['names a definition whose own allOf entry resolves to nothing', '#/definitions/ok'],
+    [
+      'names a definition whose own allOf entry is written in place beside one resolving to nothing',
+      '#/definitions/beside',
+    ],
+    [
+      'names a definition reaching one that resolves to nothing through the allOf entries below it',
+      '#/definitions/deep',
+    ],
   ])('scores an allOf entry whose $ref %s as nothing, without throwing', (_name, $ref) => {
     const options: RJSFSchema[] = [{ type: 'object', properties: { a: { type: 'string' } } }, { allOf: [{ $ref }] }];
     const rootSchema: RJSFSchema = {
-      definitions: { a: { $ref: '#/definitions/b' }, b: { $ref: '#/definitions/a' } },
+      definitions: {
+        a: { $ref: '#/definitions/b' },
+        b: { $ref: '#/definitions/a' },
+        ok: { allOf: [{ $ref: '#/definitions/missing' }], properties: { b: { type: 'number' } } },
+        beside: { allOf: [{ $ref: '#/definitions/missing', title: 'B' }], properties: { b: { type: 'number' } } },
+        deep: { allOf: [{ $ref: '#/definitions/ok' }], properties: { c: { type: 'number' } } },
+      },
       type: 'object',
       properties: { v: { anyOf: options } },
     };
@@ -396,6 +437,38 @@ describe('matching options through the schema graph', () => {
     expect(omitExtraData({ validator }, field, field, { b: 1 })).toEqual({});
     expect(getDefaultFormState({ validator }, { schema: rootSchema, formData: { v: { b: 1 } }, rootSchema })).toEqual({
       v: { b: 1 },
+    });
+  });
+  describe('options a customMergeAllOf merges', () => {
+    // Neither option matches, so both are scored
+    const validator = { ...miniValidator(), isValid: () => false };
+    it("scores a property the merge adds to the keywords beside an option's $ref as it stands", () => {
+      const customMergeAllOf = (): RJSFSchema => ({
+        type: 'object',
+        properties: { z: { type: 'object', properties: { w: { type: 'string' } } } },
+      });
+      const options: RJSFSchema[] = [
+        { $ref: '#/definitions/A', properties: { x: { type: 'number' } } },
+        { type: 'object', properties: { y: { type: 'number' } } },
+      ];
+      const rootSchema: RJSFSchema = { definitions: { A: { type: 'object' } }, properties: { v: { anyOf: options } } };
+      const formData = { z: { w: 's' } };
+      expect(getClosestMatchingOption({ validator, customMergeAllOf }, rootSchema, formData, options)).toBe(0);
+    });
+    it('scores the allOf entries of an option retrieveSchema() handed out, where the merge left them unmerged', () => {
+      const customMergeAllOf = (schema: RJSFSchema): RJSFSchema => schema;
+      const options: RJSFSchema[] = [
+        { allOf: [{ $ref: '#/definitions/Base' }, { properties: { x: { type: 'string' } } }] },
+        { properties: { y: { type: 'string' } } },
+      ];
+      const rootSchema: RJSFSchema = {
+        definitions: { Base: { type: 'object', properties: { id: { type: 'string' } } } },
+        properties: { v: { anyOf: options } },
+      };
+      const context = { validator, customMergeAllOf };
+      const views = options.map((option) => retrieveSchema(context, option, rootSchema, { id: 'a' }));
+      expect(views[0].allOf).toHaveLength(2);
+      expect(getClosestMatchingOption(context, rootSchema, { id: 'a' }, views)).toBe(0);
     });
   });
   it.each([

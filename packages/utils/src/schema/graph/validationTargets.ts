@@ -415,6 +415,9 @@ interface Loosening {
   additionalProperties: boolean;
 }
 
+/** The `Loosening` that drops nothing, for a subschema outside an option's scope */
+const KEPT: Loosening = { required: false, additionalProperties: false };
+
 function loosens(node: ObjectNode, loosening: Loosening): boolean {
   const { raw } = node;
   return (
@@ -427,7 +430,7 @@ function loosens(node: ObjectNode, loosening: Loosening): boolean {
 
 /** Returns the value the keyword `key` holds in a subschema reached at `place`, whose `$ref`s resolve against `base`,
  * with each subschema it holds replaced by `{ $ref }` naming its place below `place`, or, for a subschema with no
- * place, by what `targetOf()` hands a validator for its node, looked up under `base`, since an object reached in two
+ * place, by what `unplaced` hands a validator for its node, looked up under `base`, since an object reached in two
  * resources is a node in each
  */
 function pointed<S extends StrictRJSFSchema>(
@@ -436,13 +439,14 @@ function pointed<S extends StrictRJSFSchema>(
   value: unknown,
   place: Place,
   base: string,
+  unplaced: (sub: unknown, id: NodeId) => unknown,
 ): unknown {
   const name = (sub: unknown, tokens: string[]) => {
     const id = isObject(sub) ? graph.byObject(sub, base) : undefined;
-    if (place !== undefined && id !== undefined) {
-      return refAt(childPointer(place, tokens));
+    if (id === undefined) {
+      return sub;
     }
-    return id === undefined ? sub : targetOf(graph, id);
+    return place === undefined ? unplaced(sub, id) : refAt(childPointer(place, tokens));
   };
   const shape = keywordShape(key, value);
   if (shape === 'single') {
@@ -457,13 +461,16 @@ function pointed<S extends StrictRJSFSchema>(
   return value;
 }
 
-/** Returns a copy of the node `id` reached at `place` without what `loosening` drops, from the node and from the
- * nodes `scopeOf()` lists, a dropped `additionalProperties: false` turned into `true`. A `$ref` among them is read as
- * JSON Schema reads one, as an `allOf` entry beside the keywords next to it, since a pointer cannot subtract from what
- * it names. The subschemas under the copy's other keywords are named by `pointed()` at their places below `place`, so
- * each `$ref` below them resolves against the `$id`s above it there, and the copy drops its `$id`, which would rebase
- * them. A subschema reached again at a place on the way to it, `path`, or below itself, `above`, which only a root
- * holding itself through its own objects does, is named rather than copied without end.
+/** Returns a copy of the node `id` reached at `place` without what `loosening` drops, from the node and from the nodes
+ * `scopeOf()` lists, a dropped `additionalProperties: false` turned into `true`. A `$ref` among them is read as JSON
+ * Schema reads one, as an `allOf` entry beside the keywords next to it, since a pointer cannot subtract from what it
+ * names. The subschemas under the copy's other keywords are named by `pointed()` at their places below `place`, so each
+ * `$ref` below them resolves against the `$id`s above it there, and the copy drops its `$id`, which would rebase them.
+ * One with no place, such as a property of an option a merge of two lists rebuilt in a resource of its own, is named
+ * where the root holds its node, or else copied as well, keeping all it states: the validator would resolve the `$ref`s
+ * of the subschema as written against the root rather than against that resource. A subschema reached again at a place
+ * on the way to it, `path`, or below itself, `above`, which only a root holding itself through its own objects does, is
+ * named rather than copied without end.
  */
 function derive<S extends StrictRJSFSchema>(
   graph: SchemaGraph<S>,
@@ -476,15 +483,17 @@ function derive<S extends StrictRJSFSchema>(
   const { id } = node;
   const innerPath = new Set(path).add(placeKey(id, place));
   const innerAbove = new Set(above).add(id);
-  const sub = (value: unknown, child: NodeId | undefined, at: Place, viaRef = false) => {
+  const sub = (value: unknown, child: NodeId | undefined, at: Place, viaRef = false, as = loosening) => {
     const childNode = child === undefined ? undefined : graph.node(child);
     if (childNode?.kind !== 'schema') {
       return value;
     }
     return innerPath.has(placeKey(childNode.id, at)) || (!viaRef && innerAbove.has(childNode.id))
       ? targetAt(graph, childNode.id, at)
-      : derive(graph, childNode, at, loosening, innerPath, viaRef ? new Set() : innerAbove);
+      : derive(graph, childNode, at, as, innerPath, viaRef ? new Set() : innerAbove);
   };
+  const unplaced = (value: unknown, child: NodeId) =>
+    pointerTo(graph, child) ?? sub(value, child, undefined, false, KEPT);
   const {
     [ID_KEY]: _id,
     [REQUIRED_KEY]: required,
@@ -496,7 +505,7 @@ function derive<S extends StrictRJSFSchema>(
     ...rest
   }: GenericObjectType = node.raw;
   const copy: GenericObjectType = Object.fromEntries(
-    Object.entries(rest).map(([key, value]) => [key, pointed(graph, key, value, place, node.baseUri)]),
+    Object.entries(rest).map(([key, value]) => [key, pointed(graph, key, value, place, node.baseUri, unplaced)]),
   );
   if (!loosening.required && required !== undefined) {
     copy[REQUIRED_KEY] = required;

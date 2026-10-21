@@ -58,6 +58,10 @@ function dataOf(value: unknown): unknown {
  * properties whose schema-filtered content is entirely empty (per `isValueEmpty`) are pruned; required
  * properties and scalar values are always kept when schema-defined.
  *
+ * A property declared both beside a `$ref` and in the definition it names, or an option an `allOf` merge here rebuilds,
+ * is a schema no `$id` resource holds, so a `$ref` inside it that a resource of its own wrote is resolved against the
+ * root: filtering through it throws or reads the root's definition of the same name.
+ *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param schema - The schema for which to filter the formData
  * @param [rootSchema] - The root schema, used primarily to look up `$ref`s

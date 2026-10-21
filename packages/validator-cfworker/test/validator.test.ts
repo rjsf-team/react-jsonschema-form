@@ -9,7 +9,7 @@ import type {
 } from '@rjsf/utils';
 import { ROOT_SCHEMA_PREFIX, getValidationTarget } from '@rjsf/utils';
 
-import nestedResourceTests from '../../utils/test/testUtils/nestedResourceTests.ts';
+import nestedResourceTests, { mergedResourceViewTests } from '../../utils/test/testUtils/nestedResourceTests.ts';
 import pointerValidationTests, {
   absoluteRefValidationTests,
   sharedObjectValidationTests,
@@ -461,7 +461,8 @@ absoluteRefValidationTests(() => customizeValidator());
 sharedObjectValidationTests(() => customizeValidator());
 
 describe('CFWorkerValidator', () => {
-  nestedResourceTests((rootSchema) =>
-    customizeValidator(String(rootSchema.$schema).includes('2020-12') ? { draft: '2020-12' } : {}),
-  );
+  const validatorFor = (rootSchema: RJSFSchema) =>
+    customizeValidator(String(rootSchema.$schema).includes('2020-12') ? { draft: '2020-12' } : {});
+  nestedResourceTests(validatorFor);
+  mergedResourceViewTests(validatorFor);
 });

@@ -2630,6 +2630,35 @@ describe('SchemaField', () => {
           expect(node.querySelector('#root_c_k')).toHaveValue('text');
         });
 
+        it('picks an option by the $ref a merged property two levels down holds in a resource of its own', () => {
+          // The option merges `info.kind` with the resource's own, a `$ref` to the resource's `cat`, which the root
+          // does not define
+          const schema: RJSFSchema = {
+            $schema: 'https://json-schema.org/draft/2020-12/schema',
+            $id: 'https://example.com/root.json',
+            $defs: {
+              pet: {
+                $id: 'pet.json',
+                $defs: { cat: { type: 'object', properties: { a: { type: 'string' } } } },
+                type: 'object',
+                properties: { info: { type: 'object', properties: { kind: { $ref: '#/$defs/cat' } } } },
+              },
+              dog: { type: 'object', properties: { bark: { type: 'string' } } },
+            },
+            type: 'object',
+            properties: {
+              p: {
+                oneOf: [
+                  { $ref: 'pet.json', properties: { info: { properties: { kind: { title: 'Kind' } } } } },
+                  { $ref: '#/$defs/dog' },
+                ],
+              },
+            },
+          };
+          const { node } = createFormComponent({ schema, formData: { p: { info: { kind: { a: 'x' } } } } });
+          expect(node.querySelector('#root_p_info_kind_a')).toHaveValue('x');
+        });
+
         it('expands a definition two others share at the first path that reaches it, and collapses it at the second', () => {
           const schema: RJSFSchema = {
             definitions: {
