@@ -193,10 +193,25 @@ describe('matching options through the schema graph', () => {
   it.each([
     ['resolves to nothing', '#/definitions/missing'],
     ['loops', '#/definitions/a'],
+    ['names a definition whose own allOf entry resolves to nothing', '#/definitions/ok'],
+    [
+      'names a definition whose own allOf entry is written in place beside one resolving to nothing',
+      '#/definitions/beside',
+    ],
+    [
+      'names a definition reaching one that resolves to nothing through the allOf entries below it',
+      '#/definitions/deep',
+    ],
   ])('scores an allOf entry whose $ref %s as nothing, without throwing', (_name, $ref) => {
     const options: RJSFSchema[] = [{ type: 'object', properties: { a: { type: 'string' } } }, { allOf: [{ $ref }] }];
     const rootSchema: RJSFSchema = {
-      definitions: { a: { $ref: '#/definitions/b' }, b: { $ref: '#/definitions/a' } },
+      definitions: {
+        a: { $ref: '#/definitions/b' },
+        b: { $ref: '#/definitions/a' },
+        ok: { allOf: [{ $ref: '#/definitions/missing' }], properties: { b: { type: 'number' } } },
+        beside: { allOf: [{ $ref: '#/definitions/missing', title: 'B' }], properties: { b: { type: 'number' } } },
+        deep: { allOf: [{ $ref: '#/definitions/ok' }], properties: { c: { type: 'number' } } },
+      },
       type: 'object',
       properties: { v: { anyOf: options } },
     };
