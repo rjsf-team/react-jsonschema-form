@@ -504,4 +504,18 @@ describe('useAltDateWidgetProps()', () => {
       expect(select).toHaveDisplayValue('[minute]');
     });
   });
+  test('DateElement hands its SelectWidget an unset element as undefined, and a set one as it is', () => {
+    const SpySelectWidget = vi.fn((props: WidgetProps) => SelectWidget(props));
+    const registry = { ...REGISTRY, widgets: { SelectWidget: SpySelectWidget } } as unknown as Registry;
+    const elementProps = { rootId: 'root', select: vi.fn(), registry, onBlur: vi.fn(), onFocus: vi.fn() };
+    render(
+      <>
+        <DateElement {...elementProps} type='year' range={[2000, 2030]} value={-1} />
+        <DateElement {...elementProps} type='month' range={[1, 12]} value={10} />
+      </>,
+    );
+    const valueOf = (id: string): unknown => SpySelectWidget.mock.calls.find(([props]) => props.id === id)?.[0].value;
+    expect(valueOf('root_year')).toBeUndefined();
+    expect(valueOf('root_month')).toBe(10);
+  });
 });

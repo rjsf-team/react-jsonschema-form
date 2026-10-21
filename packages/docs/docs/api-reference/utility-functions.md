@@ -83,7 +83,7 @@ The `useAltDateWidgetProps()` hook returns the props for each of them, so a them
 
 #### Props
 
-- value: any - The value currently selected for this element
+- value: any - The value currently selected for this element, or `-1` for none, which it hands the `SelectWidget` as `undefined`
 - [name]: string - Deprecated and ignored: the element takes [dateElementId()](#dateelementid) as its name
 - rootId: string - The id of the field, from which the element derives its own id with [dateElementId()](#dateelementid)
 - select: (property: keyof DateObject, value: any) => void - Records a value for one property of the `DateObject`

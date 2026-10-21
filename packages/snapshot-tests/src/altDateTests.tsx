@@ -3,7 +3,7 @@ import type { FormProps } from '@rjsf/core';
 import type { ErrorSchema, RJSFSchema, UiSchema } from '@rjsf/utils';
 import { englishStringTranslator, errorId, TranslatableString } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 
 const DATE_PARTS = ['year', 'month', 'day'];
 const TIME_PARTS = ['hour', 'minute', 'second'];
@@ -36,8 +36,9 @@ function getPart(name: string) {
 }
 
 /** Pins the accessible name and description of each select an `AltDateWidget` renders, which no theme's `SelectWidget`
- * receives as a label, and that its Now and Clear buttons are disabled while the form is disabled or read-only and
- * hidden by `hideNowButton` and `hideClearButton`, in every theme.
+ * receives as a label, that its Now and Clear buttons are disabled while the form is disabled or read-only and hidden
+ * by `hideNowButton` and `hideClearButton`, and that an unset part reaches `onFocus` and `onBlur` as `undefined` and a
+ * set one as its number, in every theme.
  *
  * These live in their own file rather than alongside `formTests()` because every render advances React's `useId`
  * counter for the rest of the module, so running them there would renumber the ids in that suite's snapshots across
@@ -183,6 +184,44 @@ export function altDateTests(Form: ComponentType<FormProps>) {
       render(<Form schema={bareSchema} uiSchema={hiding} validator={validator} />);
       expect(screen.getAllByRole('button', { name: hidden })).toHaveLength(1);
       expect(screen.getAllByRole('button', { name: shown })).toHaveLength(2);
+    });
+
+    // The case above only counts buttons, which a check reading the option inverted passes too
+    test.each(['hideNowButton', 'hideClearButton'])('%s false on both fields hides no button', (option) => {
+      const showing: UiSchema = {
+        when: { ...bareUiSchema.when, 'ui:options': { ...bareUiSchema.when['ui:options'], [option]: false } },
+        at: { ...bareUiSchema.at, 'ui:options': { ...bareUiSchema.at['ui:options'], [option]: false } },
+      };
+      render(<Form schema={bareSchema} uiSchema={showing} validator={validator} />);
+      expect(screen.getAllByRole('button', { name: 'Now' })).toHaveLength(2);
+      expect(screen.getAllByRole('button', { name: 'Clear' })).toHaveLength(2);
+    });
+  });
+
+  // Focused through the DOM rather than user-event, which isn't among this package's peer dependencies
+  test('alt-date reports an unset part to onFocus and onBlur as undefined, and a set one as its number', () => {
+    const onFocus = vi.fn();
+    const onBlur = vi.fn();
+    render(
+      <Form
+        schema={bareSchema}
+        uiSchema={bareUiSchema}
+        validator={validator}
+        initialFormData={{ at: '2021-06-15T12:00:00.000Z' }}
+        onFocus={onFocus}
+        onBlur={onBlur}
+      />,
+    );
+    const cases: [string, string, number | undefined][] = [
+      ['When, year', 'root_when_year', undefined],
+      ['At, year', 'root_at_year', 2021],
+    ];
+    cases.forEach(([name, partId, reported]) => {
+      const part = getPart(name);
+      act(() => part.focus());
+      act(() => part.blur());
+      expect(onFocus).toHaveBeenCalledWith(partId, reported);
+      expect(onBlur).toHaveBeenCalledWith(partId, reported);
     });
   });
 }
