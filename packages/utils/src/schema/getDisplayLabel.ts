@@ -71,9 +71,8 @@ export default function getDisplayLabel<
     // naming it through `ui:widget`. The `checkbox` alias is deliberately not matched here: a theme's `FieldTemplate`
     // keys its own checkbox layout on that exact spelling, taking over the field's description along with its label.
     // Under a plan, `getPresentationDeclaration()` finds the widget by its alias, its key or the component itself, and
-    // its declaration, not this name match, says who draws the field's label. Two layout decisions still ask this:
-    // whether the fallback UI's template or its value field draws the label, and `ArrayFieldItemTemplate`'s
-    // `displayLabel`, which also reads the item's `ui:field` below however it is spelled (#5581)
+    // its declaration, not this name match, says who draws the field's label. One layout decision under a plan asks
+    // this: whether the fallback UI's template or its value field draws the label (#5581)
     if (schemaType === 'boolean' && (!uiOptions.widget || uiOptions.widget === DEFAULT_BOOLEAN_WIDGET)) {
       displayLabel = false;
     }

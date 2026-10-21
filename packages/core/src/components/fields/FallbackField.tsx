@@ -28,7 +28,6 @@ import {
   toFieldPath,
   fieldPathToId,
   TranslatableString,
-  UI_FIELD_KEY,
   UI_OPTIONS_KEY,
   UI_WIDGET_KEY,
   uiBooleanOption,
@@ -36,7 +35,6 @@ import {
 } from '@rjsf/utils';
 import type { JSONSchema7TypeName } from 'json-schema';
 
-import { displaysLabel } from './fieldWidgetUtils.ts';
 import OwnTitleAndDescription from './OwnTitleAndDescription.tsx';
 
 /**
@@ -181,7 +179,7 @@ function getValueSchema<S extends StrictRJSFSchema = RJSFSchema>(
   delete valueSchema[RJSF_REF_KEY];
   delete valueSchema.$id;
   // A field around the value that renders the schema's title and description leaves the value field naming nothing but
-  // its own role, which `getValueUiSchema()` then has it render nothing of. One that renders neither — an `object` or
+  // its own role, which the plan it inherits then has it render nothing of. One that renders neither — an `object` or
   // `boolean` union resolves to a type whose field renders no label — leaves the value field the only place the
   // schema's own title and description can appear, so both are left as they are. Naming the role there instead would
   // put it where the heading goes, renaming a property the schema gives no title of its own to fall back on
@@ -233,13 +231,12 @@ const HELP_UI_OPTION = 'help';
  * @param uiSchema - The uiSchema for the field being rendered.
  * @param keepsWidget - Whether a widget implements the `ui:widget`, its own or a `ui:globalOptions` one, for the type
  * the selector is on.
- * @param hidesLabel - Whether the field around the value labels it with no plan for the value field to read that from.
  */
 function getValueUiSchema<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(uiSchema: UiSchema<T, S, F> | undefined, keepsWidget: boolean, hidesLabel: boolean): UiSchema<T, S, F> {
+>(uiSchema: UiSchema<T, S, F> | undefined, keepsWidget: boolean): UiSchema<T, S, F> {
   const noUiSchema: UiSchema<T, S, F> = {};
   const valueUiSchema = { ...(uiSchema ?? noUiSchema) };
   delete valueUiSchema[HELP_UI_KEY];
@@ -253,16 +250,6 @@ function getValueUiSchema<
   // Set rather than deleted, for the reason `help` is: a global `widget` would otherwise show through
   if (!keepsWidget) {
     uiOptions.widget = undefined;
-  }
-  // A field around the value that labels it labels the very same control, since the value field renders for the same
-  // `id`, so a label here would be a second one pointing at it — read out as one run-on name, and both focusing the
-  // same input — over a second copy of the description under the DOM id the first one's `aria-describedby` names.
-  // Turning the label off is what the templates read to render neither, whichever type the selector is on. One that
-  // renders no label of its own leaves the value field the only place either of them can appear, so they render there.
-  // A value field built under its field's plan already has that label above it and the repeated description drawn
-  // there, and turning its label off would hide the description of an option it renders too
-  if (hidesLabel) {
-    uiOptions.label = false;
   }
   valueUiSchema[UI_OPTIONS_KEY] = uiOptions;
   return valueUiSchema;
@@ -341,8 +328,7 @@ function castToNewType<T = unknown>(formData: T, newType: JSONSchema7TypeName): 
 /**
  * The `FallbackUiField` component renders the opt-in fallback UI: a selector for the type the value is entered as, and
  * the field for the type it is on. It is a component of its own so that a form without the opt-in builds none of what
- * it takes to render — the schemas, the `uiSchema` and the `getDisplayLabel()` call behind them — for every typeless
- * or unknown-type field it has.
+ * it takes to render — the schemas and the `uiSchema` — for every typeless or unknown-type field it has.
  */
 function FallbackUiField<
   T = unknown,
@@ -364,7 +350,7 @@ function FallbackUiField<
     onChange,
     presentation,
   } = props;
-  const { translateString, fields, templates, widgets, globalFormOptions, globalUiOptions, schemaUtils } = registry;
+  const { translateString, fields, templates, widgets, globalFormOptions, globalUiOptions } = registry;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const types = useMemo(() => getFallbackTypes<S>(schema), [schema]);
   const defaultType = useMemo(
@@ -443,25 +429,17 @@ function FallbackUiField<
 
   // Exactly one of the two fields renders the title: the outer one where a template's label names the value, which its
   // plan gives a control only where the value is one, and the value field otherwise, as where the theme declares the
-  // field drawing its own label. Without a plan, the call the plan is built by decides it
-  const isLabelled = useMemo(
-    () =>
-      presentation
-        ? presentation.control !== undefined && isLabelledByTemplate(presentation)
-        : displaysLabel<T, S, F>({ schemaUtils, globalUiOptions }, schema, {
-            ...uiSchema,
-            [UI_FIELD_KEY]: getUiOptions<T, S, F>(uiSchema, globalUiOptions).field,
-          } as UiSchema<T, S, F>),
-    [presentation, schemaUtils, schema, uiSchema, globalUiOptions],
-  );
+  // field drawing its own label. Only a custom field renders this one without a plan, however the form reached it, and
+  // that field draws no label of its own, so the value field draws it
+  const isLabelled = presentation?.control !== undefined && isLabelledByTemplate(presentation);
   const valueSchema = useMemo(
     () => getValueSchema<S>(schema, type, translateString(TranslatableString.Value), isLabelled),
     [schema, type, translateString, isLabelled],
   );
   const valueKeepsWidget = useMemo(() => keepsWidget(type), [keepsWidget, type]);
   const valueUiSchema = useMemo(
-    () => getValueUiSchema<T, S, F>(uiSchema, valueKeepsWidget, isLabelled && !presentation),
-    [uiSchema, valueKeepsWidget, isLabelled, presentation],
+    () => getValueUiSchema<T, S, F>(uiSchema, valueKeepsWidget),
+    [uiSchema, valueKeepsWidget],
   );
 
   const { SchemaField } = fields;

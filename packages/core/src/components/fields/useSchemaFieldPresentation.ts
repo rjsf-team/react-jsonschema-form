@@ -22,7 +22,6 @@ import {
   REF_KEY,
   resolveFieldPresentation,
   schemaRequiresTrueValue,
-  UI_FIELD_KEY,
 } from '@rjsf/utils';
 
 import getFieldWidget, { displaysLabel, withoutDescribers } from './fieldWidgetUtils.ts';
@@ -133,15 +132,10 @@ function rendersControl<
     return widget !== undefined;
   }
   if (field === fields.FallbackField) {
-    // The fallback UI labels its value from outside by the same call it makes to decide that, and otherwise leaves the
-    // value field to draw its own heading or label. That call takes any `ui:field` for a custom field drawing its own
-    // label, but this field is already the one it resolved to, which a `ui:field` naming nothing renders too, so this
-    // call clears the key and its spelling doesn't move the label. `FallbackField`'s own call passes any field named in
-    // `ui:field`, `ui:options.field` or `ui:globalOptions.field` as the key, since only a caller's own field renders it
-    // without a plan, and that field draws no label of its own. The call still matches `ui:widget` by name (#5581)
+    // The fallback UI labels its value from outside where this call says the value is a control, and otherwise leaves
+    // the value field to draw its own heading or label. The call matches `ui:widget` by name (#5581)
     return (
-      Boolean(globalFormOptions.useFallbackUiForUnsupportedType) &&
-      displaysLabel<T, S, F>(registry, schema, { ...uiSchema, [UI_FIELD_KEY]: undefined })
+      Boolean(globalFormOptions.useFallbackUiForUnsupportedType) && displaysLabel<T, S, F>(registry, schema, uiSchema)
     );
   }
   return !CONTROLLESS_FIELD_KEYS.some((key) => fields[key] === field);

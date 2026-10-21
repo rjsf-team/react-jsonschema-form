@@ -27,8 +27,9 @@ function expectOneLabelAndDescription(container: HTMLElement) {
 
 /** Pins that however `ui:widget` names a boolean's checkbox, one label and one description are drawn (#5389). A count
  * alone passes for a plan that ignores the widget altogether, so the field's plan is read too: every spelling that
- * reaches the registered checkbox has it draw the label itself. An unregistered wrapper has no declaration of its own
- * and takes the theme's `default`, which differs between themes, so only its count is pinned.
+ * reaches the registered checkbox has it draw the label itself, and the description wherever the theme's merged
+ * `CheckboxWidget` declaration puts it. An unregistered wrapper has no declaration of its own and takes the theme's
+ * `default`, which differs between themes, so only its count is pinned.
  *
  * @param Form - The theme's `Form` component
  * @param generators - The theme's `generateTemplates` and `generateWidgets`
@@ -54,8 +55,10 @@ export function checkboxLabelTests(
       ],
     ])('has the checkbox draw the label and the description once, named by %s', (_, agreeUiSchema, widgets) => {
       const plans = new Map<string, FieldPresentation | undefined>();
+      const declaredDescriptions = new Map<string, string | undefined>();
       function RecordingFieldTemplate(props: FieldTemplateProps) {
         plans.set(props.id, props.presentation);
+        declaredDescriptions.set(props.id, props.registry.presentation.widgets.CheckboxWidget?.description);
         return <FieldTemplate {...props} />;
       }
       const { container } = render(
@@ -70,6 +73,9 @@ export function checkboxLabelTests(
 
       expectOneLabelAndDescription(container);
       expect(plans.get('root_agree')?.label.by).toBe('self');
+      expect(plans.get('root_agree')?.description.by).toBe(
+        declaredDescriptions.get('root_agree') === 'self' ? 'self' : 'template',
+      );
     });
 
     test('draws the label and the description once, named by an unregistered wrapper passed as a component', () => {
