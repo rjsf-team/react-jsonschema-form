@@ -36,9 +36,8 @@ function getPart(name: string) {
 }
 
 /** Pins the accessible name and description of each select an `AltDateWidget` renders, which no theme's `SelectWidget`
- * receives as a label, that its Now and Clear buttons are disabled while the form is disabled or read-only and hidden
- * by `hideNowButton` and `hideClearButton`, and that an unset part reaches `onFocus` and `onBlur` as `undefined` and a
- * set one as its number, in every theme.
+ * receives as a label, when its Now and Clear buttons show and are enabled, and what its parts report to `onFocus`
+ * and `onBlur`, in every theme.
  *
  * These live in their own file rather than alongside `formTests()` because every render advances React's `useId`
  * counter for the rest of the module, so running them there would renumber the ids in that suite's snapshots across
@@ -155,6 +154,11 @@ export function altDateTests(Form: ComponentType<FormProps>) {
   });
 
   describe('alt-date Now and Clear buttons', () => {
+    const withOptions = (whenOptions: UiSchema['ui:options'], atOptions: UiSchema['ui:options']): UiSchema => ({
+      when: { ...bareUiSchema.when, 'ui:options': { ...bareUiSchema.when['ui:options'], ...whenOptions } },
+      at: { ...bareUiSchema.at, 'ui:options': { ...bareUiSchema.at['ui:options'], ...atOptions } },
+    });
+
     test('are enabled by default', () => {
       render(<Form schema={bareSchema} uiSchema={bareUiSchema} validator={validator} />);
       ['Now', 'Clear'].forEach((name) => {
@@ -177,22 +181,26 @@ export function altDateTests(Form: ComponentType<FormProps>) {
       ['hideNowButton', 'Now', 'Clear'],
       ['hideClearButton', 'Clear', 'Now'],
     ])('%s hides the %s button where it is true, and not where it is false', (option, hidden, shown) => {
-      const hiding: UiSchema = {
-        when: { ...bareUiSchema.when, 'ui:options': { ...bareUiSchema.when['ui:options'], [option]: true } },
-        at: { ...bareUiSchema.at, 'ui:options': { ...bareUiSchema.at['ui:options'], [option]: false } },
-      };
-      render(<Form schema={bareSchema} uiSchema={hiding} validator={validator} />);
+      render(
+        <Form
+          schema={bareSchema}
+          uiSchema={withOptions({ [option]: true }, { [option]: false })}
+          validator={validator}
+        />,
+      );
       expect(screen.getAllByRole('button', { name: hidden })).toHaveLength(1);
       expect(screen.getAllByRole('button', { name: shown })).toHaveLength(2);
     });
 
     // The case above only counts buttons, which a check reading the option inverted passes too
     test.each(['hideNowButton', 'hideClearButton'])('%s false on both fields hides no button', (option) => {
-      const showing: UiSchema = {
-        when: { ...bareUiSchema.when, 'ui:options': { ...bareUiSchema.when['ui:options'], [option]: false } },
-        at: { ...bareUiSchema.at, 'ui:options': { ...bareUiSchema.at['ui:options'], [option]: false } },
-      };
-      render(<Form schema={bareSchema} uiSchema={showing} validator={validator} />);
+      render(
+        <Form
+          schema={bareSchema}
+          uiSchema={withOptions({ [option]: false }, { [option]: false })}
+          validator={validator}
+        />,
+      );
       expect(screen.getAllByRole('button', { name: 'Now' })).toHaveLength(2);
       expect(screen.getAllByRole('button', { name: 'Clear' })).toHaveLength(2);
     });

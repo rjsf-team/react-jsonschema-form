@@ -71,7 +71,8 @@ export type DateElementProps<
  * it hands it a plan of its own, through which `widgetAriaProps()` describes it by the field's parts that render and
  * marks it `aria-invalid` while the field's errors show, without the field's `aria-labelledby`, which would outrank its
  * own name. Without one, it describes it by `ariaDescribedByIds(rootId)`. An unset element, which the hook stores as
- * -1, is handed to the `SelectWidget` as an `undefined` value.
+ * -1, is no option, so it is handed to the `SelectWidget` as an `undefined` value, which a native select reports to
+ * `onFocus` and `onBlur` as `undefined` and every other built-in `SelectWidget` reports as it is handed.
  *
  * @param props - The `DateElementProps` for the date element
  */
@@ -115,8 +116,6 @@ export function DateElement<
       className={className}
       options={{ enumOptions: dateRangeOptions<S>(range[0], range[1]) }}
       placeholder={elementLabel}
-      // The hook stores an unset part as -1, which is no option, so it is handed on as no value, which a native select
-      // reports as `undefined` and every other `SelectWidget` reports to `onFocus` and `onBlur` as it is handed
       value={typeof value === 'number' && value < 0 ? undefined : value}
       disabled={disabled}
       readonly={readonly}
