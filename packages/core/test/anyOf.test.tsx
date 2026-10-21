@@ -1,7 +1,9 @@
 import { createRef, StrictMode, useEffect, useState } from 'react';
 import type { FieldProps, FormValidation, RJSFSchema, WidgetProps } from '@rjsf/utils';
 import { noop, toFieldPath } from '@rjsf/utils';
-import validator from '@rjsf/validator-ajv8';
+import type { ValidatorFunctions } from '@rjsf/validator-ajv8';
+import validator, { createPrecompiledValidator } from '@rjsf/validator-ajv8';
+import { compileSchemaValidatorsCode } from '@rjsf/validator-ajv8/compileSchemaValidators';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
@@ -2387,5 +2389,27 @@ describe('anyOf', () => {
       // AnyOf selector
       expect(node.querySelector('select')).toBeInTheDocument();
     });
+  });
+});
+
+describe('anyOf with a precompiled validator', () => {
+  it('renders and scores a boolean option, which SchemaField retrieves as {}', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { a: { anyOf: [false, { type: 'object', properties: { y: { type: 'number' } } }, true] } },
+    };
+    const validateFns: ValidatorFunctions = {};
+    // The compiled module is CommonJS that writes its functions to `exports`, which is how a bundler would load it
+    // oxlint-disable-next-line no-new-func, typescript/no-implied-eval
+    new Function('exports', compileSchemaValidatorsCode(schema)).call(undefined, validateFns);
+    const { container } = render(
+      <Form
+        schema={schema}
+        validator={createPrecompiledValidator(validateFns, schema)}
+        initialFormData={{ a: { y: 1 } }}
+      />,
+    );
+
+    expect(container.querySelector('#root_a_y')).toHaveValue('1');
   });
 });

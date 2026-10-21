@@ -57,6 +57,32 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
       };
       expect(calculateIndexScore({ validator: testValidator }, rootSchema, option, { d: { name: 'x' } })).toEqual(2);
     });
+    it('scores an option written as a $ref naming a boolean definition as the empty schema it reads as', () => {
+      const rootSchema: RJSFSchema = { definitions: { anything: true } };
+      const option: RJSFSchema = { $ref: '#/definitions/anything' };
+      expect(calculateIndexScore({ validator: testValidator }, rootSchema, option, 'x')).toEqual(0);
+    });
+    it('scores a $ref property naming a boolean definition as the empty schema it reads as', () => {
+      const rootSchema: RJSFSchema = { definitions: { anything: true } };
+      const option: RJSFSchema = { properties: { p: { $ref: '#/definitions/anything' } } };
+      expect(calculateIndexScore({ validator: testValidator }, rootSchema, option, { p: 'x' })).toEqual(0);
+    });
+    it('scores a base that two allOf entries share once, so it cannot outweigh a property only the other option declares', () => {
+      const Cat: RJSFSchema = { allOf: [{ $ref: '#/definitions/Pet' }, { $ref: '#/definitions/Named' }] };
+      const Dog: RJSFSchema = { allOf: [{ $ref: '#/definitions/Pet' }, { properties: { bark: { type: 'string' } } }] };
+      const rootSchema: RJSFSchema = {
+        definitions: {
+          Base: { type: 'object', properties: { id: { type: 'string' }, name: { type: 'string' } } },
+          Pet: { allOf: [{ $ref: '#/definitions/Base' }] },
+          Named: { allOf: [{ $ref: '#/definitions/Base' }] },
+          Cat,
+          Dog,
+        },
+      };
+      const formData = { id: '1', name: 'n', bark: 'b' };
+      expect(calculateIndexScore({ validator: testValidator }, rootSchema, Cat, formData)).toEqual(2);
+      expect(calculateIndexScore({ validator: testValidator }, rootSchema, Dog, formData)).toEqual(3);
+    });
     it('returns 2 for first option in oneOf schema, scoring its $ref property as the definition it names', () => {
       expect(calculateIndexScore({ validator: testValidator }, oneOfSchema, firstOption, ONE_OF_SCHEMA_DATA)).toEqual(
         2,
@@ -73,7 +99,7 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
           foo: { anyOf: [{ const: 'a' }, { const: 'b' }], oneOf: [{ const: 'b' }] },
         },
       };
-      testValidator.setReturnValues({ isValid: [false, false, false, true] });
+      testValidator.setReturnValues({ isValid: [false, true] });
       expect(calculateIndexScore({ validator: testValidator }, oneOfSchema, schema, { foo: 'b' })).toEqual(1);
     });
     it('returns 1 for a schema that has a type matching the formData type', () => {
@@ -410,12 +436,11 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
         { type: 'object', properties: { name: { type: 'string' }, other: { type: 'string' } } },
       ];
       beforeEach(() => {
-        // Without mocked results every option matches the junk option too, so none is the single match and all of
-        // them get scored, which is the only path that reaches the recursive $ref
         testValidator.setReturnValues({ isValid: [] });
       });
       it('terminates when the recursion runs out of form data', () => {
         // Neither option matches `{ child: 5 }` and both score 0, so the tie falls back to the selectedOption
+        testValidator.setReturnValues({ isValid: [false] });
         expect(getClosestMatchingOption({ validator: testValidator }, schema, { child: 5 }, options)).toEqual(-1);
       });
       it('scores the recursive option as deep as the form data goes', () => {

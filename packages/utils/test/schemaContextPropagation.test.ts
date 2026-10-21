@@ -108,12 +108,13 @@ const CASES: PropagationCase[] = [
     callSchemaUtils: (schemaUtils) => schemaUtils.findFieldInSchema(schemaUtils.getRootSchema(), 'a.b'),
   },
   {
+    // Data both options validate, which only scoring tells apart
     name: 'getClosestMatchingOption through an option with keywords beside its $ref',
     rootSchema: objectDefinitions,
     callFunction: (context, rootSchema) =>
-      getClosestMatchingOption(context, rootSchema, { b: 'x', c: 'y' }, [refBesideProperties, oldObjectSchema]),
+      getClosestMatchingOption(context, rootSchema, { a: 'z', b: 'x', c: 'y' }, [refBesideProperties, oldObjectSchema]),
     callSchemaUtils: (schemaUtils) =>
-      schemaUtils.getClosestMatchingOption({ b: 'x', c: 'y' }, [refBesideProperties, oldObjectSchema]),
+      schemaUtils.getClosestMatchingOption({ a: 'z', b: 'x', c: 'y' }, [refBesideProperties, oldObjectSchema]),
   },
   {
     name: 'omitExtraData through a property with keywords beside its $ref',

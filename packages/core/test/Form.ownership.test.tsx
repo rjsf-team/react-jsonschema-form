@@ -1652,6 +1652,44 @@ describe('form data ownership', () => {
       expect(input(container, 'root_status_reason')).toHaveValue('');
     });
 
+    it('a oneOf switch that transformChange rewrites checks the chosen option without the stubs of its additional keys', async () => {
+      // The chosen option's stub for `k` is a guessed `{ type: 'string' }`, which takes `'x'`, but the option's own
+      // `additionalProperties` rejects it. The rewrite gives the status an `id` beside that `k`, so the data no longer
+      // fits the choice and the selector goes back to option 0
+      const stubbed: RJSFSchema = {
+        type: 'object',
+        properties: {
+          note: { type: 'string' },
+          status: {
+            type: 'object',
+            oneOf: [
+              { title: 'Fixed', type: 'object', properties: { k: { const: 'x' } } },
+              {
+                title: 'Open',
+                type: 'object',
+                properties: { id: { type: 'string' } },
+                additionalProperties: { not: { const: 'x' } },
+              },
+            ],
+          },
+        },
+      };
+      render(
+        <Form
+          schema={stubbed}
+          validator={validator}
+          initialFormData={{ status: { k: 'x' } }}
+          transformChange={(next) => ({ ...next, status: { k: 'x', id: 'a' } })}
+        />,
+      );
+      const select = screen.getByDisplayValue('Fixed');
+      expect(select).toHaveValue('0');
+
+      await user.selectOptions(select, '1');
+
+      expect(select).toHaveValue('0');
+    });
+
     it('a oneOf switch that leaves the data unchanged keeps the chosen option the data does not fit yet', async () => {
       const rangeSchema: RJSFSchema = {
         type: 'object',

@@ -10,8 +10,12 @@ import type {
   WidgetProps,
 } from '@rjsf/utils';
 import { isPlainObject, noop, optionDescriptionId } from '@rjsf/utils';
+import type { ValidatorFunctions } from '@rjsf/validator-ajv8';
+import { createPrecompiledValidator } from '@rjsf/validator-ajv8';
+import { compileSchemaValidatorsCode } from '@rjsf/validator-ajv8/compileSchemaValidators';
 import { act, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
+import { createRequire } from 'node:module';
 
 import SchemaField from '../src/components/fields/SchemaField.tsx';
 import SelectWidget from '../src/components/widgets/SelectWidget.tsx';
@@ -4935,5 +4939,94 @@ describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes',
     );
     expect(selector).toHaveValue('1');
     expect(node.querySelector('#root_status_reason')).toBeInTheDocument();
+  });
+});
+
+describe('oneOf with a precompiled validator', () => {
+  function precompiledValidator(schema: RJSFSchema) {
+    const validateFns: ValidatorFunctions = {};
+    // The compiled module is CommonJS that writes its functions to `exports` and loads Ajv's runtime helpers, such as
+    // the one a `minLength` counts characters with, through `require`, which is how a bundler would load it
+    // oxlint-disable-next-line no-new-func, typescript/no-implied-eval
+    new Function('exports', 'require', compileSchemaValidatorsCode(schema)).call(
+      undefined,
+      validateFns,
+      createRequire(import.meta.url),
+    );
+    return createPrecompiledValidator(validateFns, schema);
+  }
+  function oneOfField(option: RJSFSchema): RJSFSchema {
+    return { type: 'object', properties: { v: { oneOf: [option, { type: 'number' }] } } };
+  }
+  function input(node: Element, id: string): HTMLInputElement {
+    const element = node.querySelector(`#${id}`);
+    if (!(element instanceof HTMLInputElement)) {
+      throw new Error(`No input #${id}`);
+    }
+    return element;
+  }
+
+  it('renders an option whose if has no else before the if holds, and adds the then once it does (#5453)', async () => {
+    const schema = oneOfField({
+      type: 'object',
+      properties: { a: { type: 'string' } },
+      if: { properties: { a: { const: 'x' } }, required: ['a'] },
+      then: { properties: { extra: { type: 'string' } } },
+    });
+    const { node, onChange } = createFormComponent(
+      { schema, initialFormData: { v: { a: 'y' } } },
+      precompiledValidator(schema),
+    );
+    expect(input(node, 'root_v_a')).toHaveValue('y');
+    expect(node.querySelector('#root_v_extra')).toBeNull();
+
+    await user.type(input(node, 'root_v_a'), 'x', { initialSelectionStart: 0, initialSelectionEnd: 1 });
+    await user.type(input(node, 'root_v_extra'), 'e');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { v: { a: 'x', extra: 'e' } } }),
+      'root_v_extra',
+    );
+  });
+  it("renders and edits an option whose own patternProperties match the data's keys (#5454)", async () => {
+    const schema = oneOfField({
+      type: 'object',
+      properties: { id: { type: 'string' } },
+      patternProperties: { '^s_': { type: 'string' }, '^s_n': { minLength: 2 } },
+    });
+    const { node, onChange } = createFormComponent(
+      { schema, initialFormData: { v: { id: 'a', s_na: 'xx' } } },
+      precompiledValidator(schema),
+    );
+    expect(input(node, 'root_v_id')).toHaveValue('a');
+    expect(input(node, 'root_v_s_na')).toHaveValue('xx');
+
+    await user.type(input(node, 'root_v_s_na'), 'y');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { v: { id: 'a', s_na: 'xxy' } } }),
+      'root_v_s_na',
+    );
+  });
+  it('renders and edits an option that carries an $id, with a key its additionalProperties match (#5455)', async () => {
+    const schema = oneOfField({
+      $id: 'myOption',
+      type: 'object',
+      properties: { id: { type: 'string' } },
+      additionalProperties: { type: 'string' },
+    });
+    const { node, onChange } = createFormComponent(
+      { schema, initialFormData: { v: { id: 'a', extra: 'x' } } },
+      precompiledValidator(schema),
+    );
+    expect(input(node, 'root_v_extra')).toHaveValue('x');
+    expect(input(node, 'root_v_id')).toHaveValue('a');
+
+    await user.type(input(node, 'root_v_id'), 'b');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { v: { id: 'ab', extra: 'x' } } }),
+      'root_v_id',
+    );
   });
 });

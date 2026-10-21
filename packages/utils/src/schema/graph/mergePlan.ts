@@ -1,3 +1,5 @@
+import type { JSONSchema7Definition } from 'json-schema';
+
 import { patternRegExp } from '../../additionalPropertiesUtils.ts';
 import {
   ADDITIONAL_PROPERTIES_KEY,
@@ -23,6 +25,7 @@ import shallowAllOfMerge from '../shallowAllOfMerge.ts';
 import KeyedMemo from './keyedMemo.ts';
 import { stringKeyword } from './parseSchemaGraph.ts';
 import type { NodeId, ObjectNode, SchemaGraph, SchemaNode } from './parseSchemaGraph.ts';
+import { dependencyCondition, targetOf } from './validationTargets.ts';
 
 /** The `$ref` targets entered on the way to a plan entry, from the nearest point the recursion rule restarts it at */
 export type RefPath = readonly NodeId[];
@@ -207,6 +210,27 @@ export function schemaFrom<S extends StrictRJSFSchema, U>(template: S, source: U
   return Object.assign(schema, source);
 }
 
+/** Merges an `allOf` schema into a single flat schema, delegating to the context's `customMergeAllOf` when it has one
+ * and falling back to @x0k/json-schema-merge's shallow `allOf` merge otherwise, which merges an `allOf` holding a
+ * `false` to that `false`. A `customMergeAllOf` may reject subschemas it considers irreconcilable, so this never
+ * throws: it warns once and returns the schema without its `allOf`.
+ *
+ * The entries are expected to have their `$ref`s resolved already. The shallow merge hoists an entry's `$ref` onto the
+ * merged schema rather than following it, so an unresolved entry loses the referenced schema's properties and hands a
+ * `customMergeAllOf` a `$ref` the form's own merge never sees.
+ */
+export function mergeAllOf<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  schema: S,
+): S | JSONSchema7Definition {
+  try {
+    return context.customMergeAllOf ? context.customMergeAllOf(schema) : shallowAllOfMerge(schema);
+  } catch (error) {
+    logOnce('could not merge subschemas in allOf:\n', 'warn', error);
+    return withoutKeys(schema, ALL_OF_KEY);
+  }
+}
+
 /** The keys of the seed lists, which are never changed once made, so a list a plan hands out is keyed once */
 const seedKeys = new WeakMap<readonly Seed[], string>();
 
@@ -313,25 +337,23 @@ function isPolicy<S extends StrictRJSFSchema>(value: unknown): value is PlanPoli
   return typeof value === 'object' && value !== null && 'allOf' in value;
 }
 
-/** Returns the policy `create` makes for `key`, made once per validator, `customMergeAllOf` and graph: a plan is
- * memoized under its policy object, so a view asking for the same policy again must be handed the same object. A policy
- * reads nothing of the context but those two, which is what lets views called with a new context object each time
- * share one.
+/** Returns the policy `create` makes for `key`, made once per validator and graph: a plan is memoized under its policy
+ * object, so a view asking for the same policy again must be handed the same object. A policy reads nothing of the
+ * context but its validator, which is what lets views called with a new context object each time share one.
  *
- * @param context - The context whose validator the policy's option choice validates with, and whose `customMergeAllOf`
- *        it reads an option's own `$ref` with
+ * @param validator - The validator the policy's option choice validates with
  * @param graph - The graph the policy plans in, whose node ids a key may name
  * @param key - Names the policy among the validator's
  * @param create - Makes the policy the first time it is asked for
  * @returns - The policy
  */
-export function cachedPolicy<S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
-  { validator, customMergeAllOf }: SchemaContext<S, F>,
+export function cachedPolicy<S extends StrictRJSFSchema = RJSFSchema>(
+  validator: object,
   graph: SchemaGraph<S>,
   key: string,
   create: () => PlanPolicy<S>,
 ): PlanPolicy<S> {
-  const keys = [validator, customMergeAllOf, graph, key];
+  const keys = [validator, graph, key];
   const cached = policies.peek(keys);
   if (isPolicy<S>(cached)) {
     return cached;
@@ -751,12 +773,8 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
   }
 
   private mergeAll(schema: S): S {
-    try {
-      return mergedAllOf(schema, this.context.customMergeAllOf);
-    } catch (error) {
-      logOnce('could not merge subschemas in allOf:\n', 'warn', error);
-      return withoutKeys(schema, ALL_OF_KEY);
-    }
+    const merged = mergeAllOf(this.context, schema);
+    return isSchemaObject<S>(merged) && this.context.customMergeAllOf ? merged : schemaFrom(schema, merged);
   }
 
   private holds(key: string, condition: S, data: unknown): boolean {
@@ -800,7 +818,11 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     // function for the schema it reads as
     const satisfied =
       conditionNode.kind === 'schema'
-        ? this.holds(`if:${condition}`, conditionNode.raw, dependencyKey === undefined ? this.data : this.depData)
+        ? this.holds(
+            `if:${condition}`,
+            targetOf(this.graph, condition),
+            dependencyKey === undefined ? this.data : this.depData,
+          )
         : conditionNode.kind !== 'boolean' || conditionNode.value;
     const branchKey = satisfied ? THEN_KEY : ELSE_KEY;
     const branchProvider = keywords.get(branchKey);
@@ -877,34 +899,6 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     return next;
   }
 
-  /** The subschema an option of a dependency's `oneOf` names its condition with: its `properties[key]`, read off the
-   * option as written, or, for an option spelled as a `$ref`, off the schema it resolves to. That schema is planned
-   * from the ref path the list was entered with, its recursive `$ref`s left unfollowed, since one leading back to the
-   * schema declaring the dependency would otherwise read the same condition again without end
-   */
-  private dependencyCondition(option: NodeId, key: string, refPath: RefPath): unknown {
-    const node = this.graph.node(option);
-    if (node.kind !== 'schema') {
-      return undefined;
-    }
-    if (node.ref === undefined) {
-      const condition = this.graph.child(option, PROPERTIES_KEY, key);
-      if (condition === undefined) {
-        return undefined;
-      }
-      const conditionNode = this.graph.node(condition);
-      return conditionNode.kind === 'schema'
-        ? conditionNode.raw
-        : conditionNode.kind === 'boolean' && conditionNode.value;
-    }
-    const resolved = new PlanBuilder(this.context, this.graph, this.data, this.depData, {
-      ...this.policy,
-      allOf: true,
-      cutRecursion: true,
-    }).build([{ node: option, refPath }]);
-    return getByPath(resolved.schema.properties, key);
-  }
-
   /** Applies the one option of a dependency's `oneOf` whose `properties[key]` the data satisfies, less that property;
    * with no such option or several, none is applied. The list is chosen from rather than offered, so it is dropped
    * before the option is merged in, which keeps an `anyOf` or `oneOf` the option offers itself
@@ -918,12 +912,8 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       .subschemas(provider.node.id, ONE_OF_KEY)
       .map(([, option]) => option)
       .filter((option) => {
-        const condition = this.dependencyCondition(option, key, provider.refPath);
-        if (!condition) {
-          return false;
-        }
-        const conditionSchema = schemaFrom(this.graph.rawRoot, { type: 'object', properties: { [key]: condition } });
-        return this.holds(`dependency:${option}:${key}`, conditionSchema, this.depData);
+        const condition = dependencyCondition(this.graph, option, key);
+        return condition !== undefined && this.holds(`dependency:${option}:${key}`, condition, this.depData);
       });
     if (valid.length !== 1) {
       logOnce(`ignoring oneOf in dependencies of "${key}" because there isn't exactly one subschema that is valid`);
@@ -985,7 +975,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     if (optionPolicy === undefined) {
       return this.expand(id, refPath, 'option');
     }
-    const { mergeAllOf, conditions } = this;
+    const outer = { mergeAllOf: this.mergeAllOf, conditions: this.conditions };
     // The option is merged into the field, so an `if` of its own counts as the field's
     this.mergeAllOf =
       optionPolicy.allOf === true ||
@@ -994,8 +984,8 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     try {
       return this.expand(id, refPath, 'option');
     } finally {
-      this.mergeAllOf = mergeAllOf;
-      this.conditions = conditions;
+      this.mergeAllOf = outer.mergeAllOf;
+      this.conditions = outer.conditions;
     }
   }
 }

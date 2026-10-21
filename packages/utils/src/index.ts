@@ -68,7 +68,6 @@ import getInputProps from './getInputProps.ts';
 import getItemUiSchemaForItem from './getItemUiSchemaForItem.ts';
 import getLabelId from './getLabelId.ts';
 import getNumericInputTitle from './getNumericInputTitle.ts';
-import getOptionMatchingSimpleDiscriminator from './getOptionMatchingSimpleDiscriminator.ts';
 import getOptionSelectorSchema from './getOptionSelectorSchema.ts';
 import getOptionUiSchema, { selectOptionUiSchema } from './getOptionUiSchema.ts';
 import getOptionValueFormat from './getOptionValueFormat.ts';
@@ -171,6 +170,7 @@ import resolveFieldPresentation from './resolveFieldPresentation.ts';
 import resolveUiSchema from './resolveUiSchema.ts';
 import schemaHasNestedConditional from './schemaHasNestedConditional.ts';
 import schemaRequiresTrueValue from './schemaRequiresTrueValue.ts';
+import { keywordShape, normalizeUri, resolveUri } from './schemaUri.ts';
 import SelectedOptionDescription from './SelectedOptionDescription.tsx';
 import type { SelectedOptionDescriptionProps } from './SelectedOptionDescription.tsx';
 import shouldRenderOptionalField, { getOptionalDataControlsType } from './shouldRenderOptionalField.ts';
@@ -308,7 +308,6 @@ export {
   getMatchingPatternProperties,
   getNumericInputTitle,
   getOptionalDataControlsType,
-  getOptionMatchingSimpleDiscriminator,
   getOptionSelectorSchema,
   getOptionUiSchema,
   getPresentationDeclaration,
@@ -441,6 +440,9 @@ export {
   withIdRefPrefix,
   withRootIdRefPrefix,
   rootSchemaIdOf,
+  keywordShape,
+  normalizeUri,
+  resolveUri,
   bracketNameGenerator,
   dotNotationNameGenerator,
 };

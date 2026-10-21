@@ -188,22 +188,23 @@ function prefixRefs(schemaNode: unknown, rewrite: RefRewrite, scope = '', isData
 }
 
 /** Returns the id a validator registers `rootSchema` under, and so the prefix `withRootIdRefPrefix()` gives the local
- * `$ref`s it rewrites: the root's own `$id`, or `ROOT_SCHEMA_PREFIX` where it has none, since an empty `$id` names
- * nothing a `$ref` could resolve against
+ * `$ref`s it rewrites: the root's own `$id` less any fragment, which names a place in the document rather than the
+ * document a pointer is read in, or `ROOT_SCHEMA_PREFIX` where that leaves nothing, as for no `$id`, an empty one, one
+ * that is only a fragment, such as `#root`, or one that is not a string, which an untyped caller may hand over
  *
  * @param rootSchema - The root schema
  * @returns - The id the root is registered under
  */
 export function rootSchemaIdOf<S extends StrictRJSFSchema = RJSFSchema>(rootSchema: S): string {
-  return rootSchema[ID_KEY] || ROOT_SCHEMA_PREFIX;
+  const id: unknown = rootSchema[ID_KEY];
+  const [document] = typeof id === 'string' ? id.split('#', 1) : [];
+  return document || ROOT_SCHEMA_PREFIX;
 }
 
 /** Recursively prefixes every `$ref` local to the root document, one starting with `#`, with the id `rootSchema` is
  * registered under, as `rootSchemaIdOf()` returns it, and resolves every relative one against that id where the root
- * has an `$id`. An id ending in an empty fragment, as `http://example.com/root.json#` does, names the same document as
- * one without it, so that `#` is left out of the prefix rather than doubled. This is what a validator applies to a
- * schema it validates beside `rootSchema`, so that a `$ref` written in the root resolves against the root whatever the
- * schema holding it is registered as.
+ * has an `$id`. This is what a validator applies to a schema it validates beside `rootSchema`, so that a `$ref`
+ * written in the root resolves against the root whatever the schema holding it is registered as.
  *
  * A `$ref` a subschema of the root holds where it sits in a resource of its own, below its own `$id` or one around
  * it, resolves against that resource rather than the root, so it is spelled as the pointer to its target in the root,

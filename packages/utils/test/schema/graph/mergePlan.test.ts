@@ -324,7 +324,7 @@ describe('buildPlan()', () => {
       const isValid = vi.spyOn(validator, 'isValid');
       const plan = planOf(schema, { context: { validator } });
       expect(plan.schema.properties).toEqual({ a: { type: 'string' }, e: { type: 'string' } });
-      expect(isValid).toHaveBeenCalledWith(schema.if, {}, schema);
+      expect(isValid).toHaveBeenCalledWith({ $ref: '#/if' }, {}, schema);
     });
     it("keeps the field's own RJSF_REF_KEY over a branch's", () => {
       const plan = planOf({

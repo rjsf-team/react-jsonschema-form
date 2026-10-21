@@ -9,7 +9,7 @@ import type {
   ValidationData,
   ValidatorType,
 } from '@rjsf/utils';
-import { createRootSchemaGuard, ID_KEY, JUNK_OPTION_ID, schemaKey } from '@rjsf/utils';
+import { createRootSchemaGuard, ID_KEY, REF_KEY, schemaKey } from '@rjsf/utils';
 import type { ValidationError } from 'ata-validator';
 
 import type { RawValidationErrorsType } from './processRawValidationErrors.ts';
@@ -21,6 +21,22 @@ import type {
   SuppressDuplicateFilteringType,
   ValidatorFunctions,
 } from './types.ts';
+
+/** Returns what a miss's message names besides the lookup key: the place a pointer into the root points at, or the
+ * `$id` of the subschema the first `allOf` entry wraps, since the key is a hash a reader can't map back to a schema
+ *
+ * @param schema - The schema no validator function was compiled for
+ * @returns - The text naming it, or an empty string where it carries nothing to name
+ */
+function missedSchemaName<S extends StrictRJSFSchema>(schema: S): string {
+  const ref = schema[REF_KEY];
+  if (typeof ref === 'string') {
+    return ` (the subschema at "${ref}")`;
+  }
+  const contained = schema.allOf?.[0];
+  const containedId = typeof contained === 'object' ? contained[ID_KEY] : undefined;
+  return typeof containedId === 'string' && containedId !== '' ? ` (contained schema "${containedId}")` : '';
+}
 
 /** `ValidatorType` implementation that uses an ata precompiled validator as created by the
  * `compileSchemaValidators()` function provided by the `@rjsf/validator-ata` library.
@@ -103,7 +119,9 @@ export default class ATAPrecompiledValidator<
     const key = schemaKey(schema);
     const validator = this.validateFns[key];
     if (!validator) {
-      throw new Error(`No precompiled validator function was found for the given schema for "${key}"`);
+      throw new Error(
+        `No precompiled validator function was found for the given schema for "${key}"${missedSchemaName(schema)}`,
+      );
     }
     return validator;
   }
@@ -192,9 +210,6 @@ export default class ATAPrecompiledValidator<
    */
   isValid(schema: S, formData: unknown, rootSchema: S) {
     this.ensureSameRootSchema(rootSchema, formData);
-    if (schema[ID_KEY] === JUNK_OPTION_ID) {
-      return false;
-    }
     const validator = this.getValidator(schema);
     return validator(formData);
   }

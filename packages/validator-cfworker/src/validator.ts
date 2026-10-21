@@ -9,7 +9,7 @@ import type {
   ValidationData,
   ValidatorType,
 } from '@rjsf/utils';
-import { deepEquals, logOnce, ID_KEY, ROOT_SCHEMA_PREFIX, schemaKey, withRootIdRefPrefix } from '@rjsf/utils';
+import { deepEquals, logOnce, ID_KEY, rootSchemaIdOf, schemaKey, withRootIdRefPrefix } from '@rjsf/utils';
 
 import createCfworkerInstance from './createCfworkerInstance.ts';
 import type { RawValidationErrorsType } from './processRawValidationErrors.ts';
@@ -52,6 +52,22 @@ export function normalizeFormDataForValidation(data: unknown): unknown {
   return data;
 }
 
+/** Returns `schema` carrying the `$id` the engine is handed it under: the `$id` less any fragment, as
+ * `rootSchemaIdOf()` registers a root, so a schema is compared and built as the root it may be, the root as it is handed
+ * included. A schema whose `$id` is only a fragment, which names a place in the resource around it, is handed as it is.
+ *
+ * @param schema - The schema the engine is handed
+ * @returns - The schema with its `$id` as registered
+ */
+function asRegistered(schema: object): object {
+  const id: unknown = Reflect.get(schema, ID_KEY);
+  if (typeof id !== 'string') {
+    return schema;
+  }
+  const [document] = id.split('#', 1);
+  return document === '' || document === id ? schema : { ...schema, [ID_KEY]: document };
+}
+
 /** `ValidatorType` implementation backed by `@cfworker/json-schema`. */
 export default class CFWorkerValidator<
   S extends StrictRJSFSchema = RJSFSchema,
@@ -71,7 +87,8 @@ export default class CFWorkerValidator<
    */
   private readonly validators = new Map<string, CachedValidator>();
 
-  /** The root schema registered under `ROOT_SCHEMA_PREFIX`, used to resolve prefixed `$ref` values.
+  /** The root schema registered under its `$id`, or `ROOT_SCHEMA_PREFIX` without one, used to resolve prefixed `$ref`
+   * values.
    *
    * @private
    */
@@ -105,15 +122,18 @@ export default class CFWorkerValidator<
     this.hasRegisteredRootSchema = false;
   }
 
-  /** Returns a cached schema-bound validator or builds and caches a new one.
+  /** Returns a cached schema-bound validator or builds and caches a new one. The root is bound beside the schema unless
+   * the schema is registered under the root's own `$id`, which makes it the document the root is: the engine takes one
+   * schema per URI, and the schema's `$ref`s into that document resolve against the schema itself.
    *
    * @param id - The cache key for the schema
-   * @param schema - The schema to bind to the validator
+   * @param handed - The schema to bind to the validator, bound with its `$id` as `asRegistered()` gives it
    * @returns - The cached or newly constructed validator
    */
-  private getOrBuild(id: string, schema: object): Validator {
-    const rootSchema =
-      this.cachedRootSchema && !deepEquals(this.cachedRootSchema, schema) ? this.cachedRootSchema : undefined;
+  private getOrBuild(id: string, handed: object): Validator {
+    const schema = asRegistered(handed);
+    const rootId: unknown = this.cachedRootSchema && Reflect.get(this.cachedRootSchema, ID_KEY);
+    const rootSchema = Reflect.get(schema, ID_KEY) === rootId ? undefined : this.cachedRootSchema;
     const cached = this.validators.get(id);
     if (
       cached &&
@@ -189,9 +209,9 @@ export default class CFWorkerValidator<
     if (this.lastSeenRootSchema === rootSchema && this.hasRegisteredRootSchema) {
       return;
     }
-    // `withRootIdRefPrefix()` is handed ROOT_SCHEMA_PREFIX as the root's id below, so the
-    // root must be registered under that alias even when it has its own $id.
-    const rootSchemaId = ROOT_SCHEMA_PREFIX;
+    // Registered under its own `$id`, a root is what both its own `$ref`s, which resolve against that `$id`, and the
+    // local `$ref`s `withRootIdRefPrefix()` prefixes with it resolve into
+    const rootSchemaId = rootSchemaIdOf(rootSchema);
     const rootWithId =
       rootSchema[ID_KEY] === rootSchemaId
         ? (rootSchema as object)
@@ -218,7 +238,7 @@ export default class CFWorkerValidator<
     let id: string | undefined;
     try {
       this.handleSchemaUpdate(rootSchema);
-      const schemaWithIdRefPrefix = withRootIdRefPrefix<S>(schema, rootSchema, ROOT_SCHEMA_PREFIX);
+      const schemaWithIdRefPrefix = withRootIdRefPrefix<S>(schema, rootSchema);
       id = schemaKey(schemaWithIdRefPrefix);
       const validator = this.getOrBuild(id, schemaWithIdRefPrefix);
       return validator.validate(normalizeFormDataForValidation(formData)).valid;

@@ -353,6 +353,36 @@ describe('parseSchemaGraph()', () => {
     expect(target(graph, '/properties/p').pointer).toBe('/$defs/a');
     expect(at(graph, '/$defs/m').conjunction).toBeDefined();
   });
+  it('records the place a $ref names, where the root first holds the subschema it resolves to elsewhere', () => {
+    const shared: RJSFSchema = { $id: 'https://example.com/shared.json', $anchor: 'shared', type: 'string' };
+    const graph = parseSchemaGraph({
+      $schema: JSON_SCHEMA_DRAFT_2020_12,
+      properties: { first: shared },
+      $defs: {
+        again: shared,
+        byPointer: { $ref: '#/$defs/again' },
+        byId: { $ref: 'https://example.com/shared.json' },
+        byAnchor: { $ref: 'https://example.com/shared.json#shared' },
+        withSiblings: { $ref: '#/$defs/again', minLength: 1 },
+      },
+    });
+    const sharedNode = graph.byPointer('/properties/first');
+    expect(target(graph, '/$defs/byPointer').id).toBe(sharedNode);
+    expect(at(graph, '/$defs/byPointer').refPointer).toBe('/$defs/again');
+    expect(at(graph, '/$defs/byId').refPointer).toBe('/properties/first');
+    expect(at(graph, '/$defs/byAnchor').refPointer).toBe('/properties/first');
+    const withSiblings = at(graph, '/$defs/withSiblings');
+    const reference = objectNode(graph, graph.child(withSiblings.conjunction ?? -1, 'allOf', '1'));
+    expect(reference.refPointer).toBe('/$defs/again');
+  });
+  it('keeps an $anchor on the first subschema declaring it, as an $id keeps its resource', () => {
+    const graph = parseSchemaGraph({
+      $schema: JSON_SCHEMA_DRAFT_2020_12,
+      $defs: { a: { $anchor: 'foo', type: 'string' }, b: { $anchor: 'foo', type: 'string' } },
+      properties: { p: { $ref: '#foo' } },
+    });
+    expect(target(graph, '/properties/p').pointer).toBe('/$defs/a');
+  });
   it('reads $anchor as no keyword under a draft-07 root', () => {
     const graph = parseSchemaGraph({
       $schema: 'http://json-schema.org/draft-07/schema#',

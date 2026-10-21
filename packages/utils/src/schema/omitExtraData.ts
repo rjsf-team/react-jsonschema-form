@@ -14,9 +14,9 @@ import isWholeValueSelect from '../isWholeValueSelect.ts';
 import setOwn from '../setOwn.ts';
 import type { FormContextType, GenericObjectType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
 import { closestOption } from './getClosestMatchingOption.ts';
-import parseSchemaGraph from './graph/parseSchemaGraph.ts';
+import { mergeAllOf, schemaOfBoolean } from './graph/mergePlan.ts';
 import resolveConstantOptions from './resolveConstantOptions.ts';
-import { fieldOf, mergeAllOf, relaxOptionsForScoring, resolveOwnRef } from './retrieveSchema.ts';
+import { conditionHolds, resolveOwnRef } from './retrieveSchema.ts';
 
 /** Returns true when a form value is considered empty: null/undefined/'', an empty array, or a plain
  * object whose every own value is itself empty (recursive). Scalars like `0` and `false` are not empty.
@@ -58,7 +58,6 @@ export default function omitExtraData<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(context: SchemaContext<S, F>, schema: S, rootSchema: S = {} as S, formData?: T): T | undefined {
-  const { validator } = context;
   /** Reads `key` off `obj` only when it is an own property, returning `undefined` for a missing or
    * inherited key, so an `Object.prototype` member is never mistaken for form data.
    *
@@ -127,10 +126,7 @@ export default function omitExtraData<
         // A key the `patternProperties` match is described by the `allOf` of every pattern matching it, which is where
         // the names it requires live: read off the wrapper around them it requires nothing, and a required child
         // holding an empty value would take the whole object down with it
-        if (sd.allOf) {
-          sd = mergeAllOfOnce(sd, sd.allOf);
-        }
-        const innerRequired = new Set(sd.required ?? []);
+        const innerRequired = new Set((sd.allOf ? mergeAllOfOnce(sd, sd.allOf) : sd)?.required);
         // Drop this optional object when every key in v is both optional in the inner schema
         // and has an empty value. Vacuously true for {} so empty objects are always dropped.
         const shouldDrop = Object.entries(v).every(([k, val]) => !innerRequired.has(k) && isValueEmpty(val));
@@ -256,8 +252,7 @@ export default function omitExtraData<
     if (condition === undefined) {
       return target;
     }
-    const isThenBranch = isSchemaObject<S>(condition) ? validator.isValid(condition, source, rootSchema) : condition;
-    const branch = isThenBranch ? then : otherwise;
+    const branch = conditionHolds<S, F>(context, condition, source, rootSchema) ? then : otherwise;
     return branch === undefined ? target : omit(branch as S | boolean, source, target, false);
   }
 
@@ -278,30 +273,21 @@ export default function omitExtraData<
     if (!Array.isArray(oneOf) || Array.isArray(childSchema.enum) || isConstantOptionList<S>(oneOf)) {
       return target;
     }
-    // Resolve $refs and relax additionalProperties:false → true in one pass for scoring only.
-    // The unrelaxed resolved schema is re-derived for the winning option so that omit() still
-    // respects additionalProperties:false during filtering.
-    // An option that is no schema object is read as the boolean schema it stands for, as scoring reads it
-    const options = oneOf.map((option: unknown): S | boolean => (isSchemaObject<S>(option) ? option : Boolean(option)));
-    const scoringOptions = relaxOptionsForScoring<S>(options, true, rootSchema, context.customMergeAllOf);
-    // Each option is scored where it is declared, since the subschemas a `$ref` option resolves to can hold `$ref`s
-    // written in other resources
-    const declared = options.map((option, index) => (isSchemaObject<S>(option) ? option : scoringOptions[index]));
-    const bestIndex = closestOption<unknown, S, F>(
+    // `additionalProperties: false` is relaxed for matching only, so the data's extra keys don't rule out the option
+    // that is then applied with it, to omit them
+    const bestIndex = closestOption<S, F>(
       context,
       rootSchema,
       source,
-      scoringOptions,
-      (index) => fieldOf<S>(parseSchemaGraph<S>(rootSchema), declared[index]),
+      oneOf,
       0,
+      true,
       getDiscriminatorFieldFromSchema<S>(childSchema),
     );
-    const winning = options[bestIndex];
-    // For object options, re-resolve without relaxation so additionalProperties:false is respected.
-    // For boolean options, scoringOptions already holds the converted schema (true→{}, false→{not:{}}).
+    const winning: unknown = oneOf[bestIndex];
     const resolved: S = isSchemaObject<S>(winning)
       ? resolveOwnRef<S>(winning, rootSchema, context.customMergeAllOf)
-      : scoringOptions[bestIndex];
+      : schemaOfBoolean(Boolean(winning), rootSchema);
     return omit(resolved, source, target, false);
   }
 
@@ -365,7 +351,7 @@ export default function omitExtraData<
    * object property: a 200-row array merged the same schema once a row. Keyed on the schema, so it is only valid for
    * this call's `rootSchema`, which is why it lives here rather than at module scope
    */
-  const mergedAllOfSchemas = new WeakMap<object, S>();
+  const mergedAllOfSchemas = new WeakMap<object, S | JSONSchema7Definition>();
 
   /** Resolves the reference of one `allOf` entry. Only its own `$ref` needs resolving: the merge would hoist it rather
    * than follow it, where the ones below are resolved as `omit()` reaches them
@@ -379,22 +365,22 @@ export default function omitExtraData<
 
   /** Returns the merge of a schema's `allOf`, made once per schema object and remembered for the rest of this call.
    *
-   * Each entry's references are resolved before merging, the way `resolveSchema()` runs every `allOf` entry through
-   * `retrieveSchemaInternal()` before the parent is merged. The shallow merge hoists an entry's `$ref` onto the merged
+   * Each entry's own reference is resolved before merging, as the merge plan follows an entry's `$ref` before it merges
+   * the entry into the parent. The shallow merge hoists an entry's `$ref` onto the merged
    * schema rather than following it, so the referenced schema's properties would be taken for extra data, and a
    * `customMergeAllOf` would be handed a `$ref` the form's own merge never sees.
    *
    * @param schemaDef - The schema carrying the `allOf`, which is what the merge is remembered under
    * @param allOf - The `allOf` entries to merge into it
-   * @returns - The merged schema
+   * @returns - The merged schema, or `undefined` for an `allOf` merged to `false`
    */
-  function mergeAllOfOnce(schemaDef: S, allOf: NonNullable<S['allOf']>): S {
+  function mergeAllOfOnce(schemaDef: S, allOf: NonNullable<S['allOf']>): S | undefined {
     let merged = mergedAllOfSchemas.get(schemaDef);
     if (merged === undefined) {
-      merged = mergeAllOf<S, F>(context, { ...schemaDef, allOf: allOf.map(resolveAllOfEntry) }).schema;
+      merged = mergeAllOf<S, F>(context, { ...schemaDef, allOf: allOf.map(resolveAllOfEntry) });
       mergedAllOfSchemas.set(schemaDef, merged);
     }
-    return merged;
+    return isSchemaObject<S>(merged) ? merged : undefined;
   }
 
   /** Core recursive filter. Resolves `$ref`s, merges `allOf`, then delegates to the type-specific
@@ -436,14 +422,15 @@ export default function omitExtraData<
       );
     }
     if (allOf) {
-      localSchema = mergeAllOfOnce(localSchema, allOf);
+      const merged = mergeAllOfOnce(localSchema, allOf);
       // An `allOf` holding a `false` merges to that `false`, the one boolean a merge yields — a `true` entry merges to
       // `{}` — and no value satisfies it. The keyword handlers below read nothing off a boolean, so the value would
       // otherwise reach the fallback that returns `source`, keeping even the keys the entries beside the `false`
       // describe nothing about
-      if (!isSchemaObject<S>(localSchema)) {
+      if (merged === undefined) {
         return undefined;
       }
+      localSchema = merged;
       // Schemas whose allOf entries contain if/then/else keywords may not fully merge: the merger
       // can only hoist one if/then/else triple to the parent level, so additional entries stay in
       // allOf. Process any that remain so their conditional properties are not silently dropped.

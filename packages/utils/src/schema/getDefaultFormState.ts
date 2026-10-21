@@ -54,6 +54,7 @@ import type {
   SchemaContext,
   StrictRJSFSchema,
   UiSchema,
+  ValidatorType,
 } from '../types.ts';
 import { closestOption, listedAt } from './getClosestMatchingOption.ts';
 import buildPlan, {
@@ -569,7 +570,7 @@ interface ViewProps<T, S extends StrictRJSFSchema, F extends FormContextType> ex
  * merged as selected. Every other option list is left on the schema for the fold to select from.
  */
 function policyFor<S extends StrictRJSFSchema, F extends FormContextType>(
-  context: SchemaContext<S, F>,
+  validator: ValidatorType<S, F>,
   graph: SchemaGraph<S>,
   allOf: boolean | 'if',
   conditions: boolean,
@@ -581,13 +582,12 @@ function policyFor<S extends StrictRJSFSchema, F extends FormContextType>(
   for (const [provider, index] of selections) {
     key += `|${provider}:${index}`;
   }
-  const { validator, customMergeAllOf } = context;
-  return cachedPolicy<S, F>(context, graph, key, () => ({
+  return cachedPolicy<S>(validator, graph, key, () => ({
     allOf,
     conditions,
     cutRecursion,
     selectOption: (request) =>
-      selections.get(request.provider) ?? dependencyOption({ validator, customMergeAllOf }, request, request.depData),
+      selections.get(request.provider) ?? dependencyOption(validator, request, request.depData),
     // An option the fold selects keeps the ref path of the node offering it: restarting it, as render does, would
     // restart it at every level of a recursion through an option chosen without data, which nothing then bounds
     optionsInheritRefPath: true,
@@ -711,7 +711,7 @@ function planWith<S extends StrictRJSFSchema, F extends FormContextType>(
   { allOf, conditions }: OptionPolicy,
   optionPolicy?: OptionPolicy,
 ): PlannedField<S> {
-  const policy = policyFor(context, graph, allOf, conditions, selections, cutRecursion, optionPolicy);
+  const policy = policyFor(context.validator, graph, allOf, conditions, selections, cutRecursion, optionPolicy);
   return { plan: buildPlan<S, F>({ context, graph, seeds, data, depData, policy }), allOf, conditions, optionPolicy };
 }
 
@@ -1183,14 +1183,15 @@ function chooseOption<S extends StrictRJSFSchema, F extends FormContextType>(
   const index =
     equalOptionIndex !== -1
       ? equalOptionIndex
-      : closestOption<unknown, S, F>(
+      : closestOption<S, F>(
           context,
           rootSchema,
           valueToMatch,
           options,
-          listedAt<S>(() => view, key, options),
           0,
+          false,
           getDiscriminatorFieldFromSchema<S>(schema),
+          listedAt<S>(() => view, key, options),
         );
   return { context: optionContext, index, isWholeValue, wholeOptions };
 }
@@ -1314,7 +1315,7 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
     data: view.data,
     depData: view.depData,
     policy: policyFor(
-      context,
+      context.validator,
       graph,
       inherited.optionPolicy?.allOf ?? view.allOf,
       inherited.optionPolicy?.conditions ?? view.conditions,

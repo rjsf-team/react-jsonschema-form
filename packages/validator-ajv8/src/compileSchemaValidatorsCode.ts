@@ -1,10 +1,48 @@
 import type { RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { ID_KEY, schemaKey, schemaParser, withRootIdRefPrefix } from '@rjsf/utils';
+import { ID_KEY, REF_KEY, schemaKey, getValidationSchemas, withRootIdRefPrefix } from '@rjsf/utils';
+import type { Ajv } from 'ajv';
 // Node's ESM resolver has no directory-index lookup, so the file has to be named explicitly.
+import uri from 'ajv/dist/runtime/uri.js';
 import standaloneCode from 'ajv/dist/standalone/index.js';
 
+import ajvRootSchemaId from './ajvRootSchemaId.ts';
 import createAjvInstance from './createAjvInstance.ts';
-import type { CompileValidatorOptionsType } from './types.ts';
+import type { CustomValidatorOptionsType } from './types.ts';
+
+/** Returns the schemas Ajv compiles for the `schemaMap`, by the id each is registered under, and what each function
+ * the module exports is compiled from, by the key a precompiled validator looks it up under. The root is registered
+ * under the id `ajvRootSchemaId()` gives for it, which its own `$id` need not be. A `{ $ref }` naming a subschema of
+ * the root is exported as the function Ajv compiles for that subschema of the root, so nothing is compiled for it on
+ * its own; every other schema is compiled under its key, with the `$ref`s local to the root naming it by that id.
+ *
+ * @param schemaMap - The schemas `getValidationSchemas()` lists
+ * @param rootKey - The key the root is listed under
+ * @param uriResolver - The `uriResolver` of the Ajv instance compiling them
+ * @returns - The schemas to compile and the export names
+ */
+export function compiledSchemas<S extends StrictRJSFSchema = RJSFSchema>(
+  schemaMap: Record<string, S>,
+  rootKey: string,
+  uriResolver: Ajv['opts']['uriResolver'],
+): { schemas: Record<string, S>; exportNames: Record<string, string> } {
+  const rootSchema = schemaMap[rootKey];
+  const rootId = ajvRootSchemaId(rootSchema, uriResolver);
+  const schemas: Record<string, S> = {};
+  const exportNames: Record<string, string> = {};
+  for (const [key, listed] of Object.entries(schemaMap)) {
+    const { [ID_KEY]: _id, [REF_KEY]: ref, ...rest } = listed;
+    if (key === rootKey) {
+      schemas[rootId] = listed;
+      exportNames[key] = rootId;
+    } else if (typeof ref === 'string' && ref.startsWith('#') && Object.keys(rest).length === 0) {
+      exportNames[key] = `${rootId}${ref}`;
+    } else {
+      schemas[key] = withRootIdRefPrefix<S>(listed, rootSchema, rootId);
+      exportNames[key] = key;
+    }
+  }
+  return { schemas, exportNames };
+}
 
 /** The function used to compile a schema into javascript code in the form that allows it to be used as a precompiled
  * validator. The main reasons for using a precompiled validator is reducing code size, improving validation speed and,
@@ -12,14 +50,12 @@ import type { CompileValidatorOptionsType } from './types.ts';
  * information about AJV code compilation see: https://ajv.js.org/standalone.html
  *
  * @param schema - The schema to be compiled into a set of precompiled validators functions
- * @param [options={}] - The `CompileValidatorOptionsType` to compile with: the same options that are passed to the
- *        `customizeValidator()` function to modify the behavior of the regular AJV-based validator, plus the form's
- *        `customMergeAllOf`, which must merge the same way as the one passed to the form or the form can validate
- *        against sub-schemas that were not compiled
+ * @param [options={}] - The `CustomValidatorOptionsType` to compile with: the same options that are passed to the
+ *        `customizeValidator()` function to modify the behavior of the regular AJV-based validator
  */
 export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
-  options: CompileValidatorOptionsType<S> = {},
+  options: CustomValidatorOptionsType = {},
 ) {
   const {
     additionalMetaSchemas,
@@ -28,14 +64,11 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
     ajvFormatOptions,
     AjvClass,
     extenderFn,
-    customMergeAllOf,
   } = options;
-  const schemaMaps = schemaParser(schema, { customMergeAllOf });
-  // A sub-schema the form validates can keep a `$ref` local to the root, which compiled under an `$id` of its own would
-  // resolve against itself, so it names the root by the id the root is compiled under
-  const rootId = schemaKey(schema);
-  const schemas = Object.values(schemaMaps).map((parsed) =>
-    parsed[ID_KEY] === rootId ? parsed : withRootIdRefPrefix<StrictRJSFSchema>(parsed, schema, rootId),
+  const { schemas, exportNames } = compiledSchemas(
+    getValidationSchemas(schema),
+    schemaKey(schema),
+    ajvOptionsOverrides.uriResolver ?? uri.default,
   );
 
   // Allow users to turn off the `lines: true` feature in their own overrides, but NOT the `source: true`
@@ -53,5 +86,5 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
     extenderFn,
   );
 
-  return standaloneCode.default(ajv);
+  return standaloneCode.default(ajv, exportNames);
 }
