@@ -25,7 +25,6 @@ import {
   isFormDataAvailable,
   isObject,
   optionsList,
-  resolveConstantOptions,
   resolveWidget,
   shouldRenderOptionalField,
   toFieldPath,
@@ -239,7 +238,7 @@ function ArrayAsMultiSelect<
   // Avoids a breaking change reported in https://github.com/rjsf-team/react-jsonschema-form/issues/4985
   const itemsUiSchema = (uiSchema?.items ?? uiSchema) as UiSchema<T[], S, F>;
   const enumOptions = optionsList<T[], S, F>(
-    resolveConstantOptions<S>(itemsSchema, registry.rootSchema),
+    itemsSchema,
     itemsUiSchema,
   );
   const {

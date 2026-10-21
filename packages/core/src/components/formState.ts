@@ -31,7 +31,6 @@ import {
   isPlainObject,
   mergeObjects,
   replaceEqualDeep,
-  resolveConstantOptions,
   schemaHasNestedConditional,
   toErrorList,
   fieldPathFromList,
@@ -1641,7 +1640,7 @@ function isWholeValueSelectAt<T, S extends StrictRJSFSchema, F extends FormConte
   const fieldSchema = resolveSchemaAt<T, S, F>(schemaUtils, schema, path, formData);
   return (
     fieldSchema !== undefined &&
-    isWholeValueSelect<S>(resolveConstantOptions<S>(fieldSchema, schemaUtils.getRootSchema()))
+    isWholeValueSelect<S>(fieldSchema)
   );
 }
 

@@ -30,6 +30,7 @@ import getSchemaOwnTypes from '../getSchemaOwnTypes.ts';
 import getXxxOfKey from '../getXxxOfKey.ts';
 import getXxxOfOptions from '../getXxxOfOptions.ts';
 import guessType from '../guessType.ts';
+import isConstantOptionList from '../isConstantOptionList.ts';
 import isObject, { isSchemaObject } from '../isObject.ts';
 import logOnce from '../logOnce.ts';
 import mergeSchemas from '../mergeSchemas.ts';
@@ -533,6 +534,30 @@ function collapsesAsBefore<S extends StrictRJSFSchema, F extends FormContextType
   return (data) => collapses(input.graph, buildPlan({ ...input, data: valueOf(data, key) }), position) === collapsed;
 }
 
+/** The options of a select `schema` offers through `$ref`s, each with its own reference resolved: where every option
+ * resolves to a constant, a select renders no field for them, so its readers take the constants as the view holds
+ * them rather than retrieving each. A reference that names nothing is left for the field retrieving that option to
+ * report
+ *
+ * @param schema - The view's merged schema
+ * @param rootSchema - The root schema the references name definitions of
+ * @returns - The keyword and the resolved options, or undefined where they are not such a select's
+ */
+function resolvedConstantOptions<S extends StrictRJSFSchema>(
+  schema: S,
+  rootSchema: S,
+): { key: 'anyOf' | 'oneOf'; options: S[] } | undefined {
+  const xxxOf = getXxxOfOptions<S>(schema);
+  const refs = xxxOf?.options.filter((option) => isSchemaObject<S>(option) && typeof option[REF_KEY] === 'string');
+  if (!xxxOf || !refs?.length || !refs.every((option) => ownRefResolves<S>(option, rootSchema))) {
+    return undefined;
+  }
+  const options = xxxOf.options.map((option) =>
+    isSchemaObject<S>(option) ? resolveOwnRef<S>(option, rootSchema) : option,
+  );
+  return isConstantOptionList<S>(options, true) ? { key: xxxOf.key, options } : undefined;
+}
+
 function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   root: SchemaGraph<S>,
@@ -676,6 +701,10 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
         }),
       );
     }
+  }
+  const constants = resolvedConstantOptions<S>(merged, root.rawRoot);
+  if (constants) {
+    Reflect.set(merged, constants.key, constants.options);
   }
   const stubsExtraKeys = allowsAdditionalProperties<S>(merged);
   const view = handOut(

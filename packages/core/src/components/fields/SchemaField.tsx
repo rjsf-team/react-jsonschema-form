@@ -42,7 +42,6 @@ import {
   isLabelledByTemplate,
   logOnce,
   omitConsumedStyling,
-  resolveConstantOptions,
   resolveUiSchema,
   RJSF_REF_CYCLE_KEY,
   shouldRenderOptionalField,
@@ -100,15 +99,10 @@ interface SelectSchemaInfo<S extends StrictRJSFSchema> {
  * schema's `type`, but JSON Schema doesn't require that `type`, and without it neither a field nor a widget can be
  * resolved, so it is inferred from the constant values.
  *
- * @param fieldSchema - The retrieved schema for the field
- * @param rootSchema - The root schema the `$ref`s of its options name definitions of
+ * @param retrievedSchema - The retrieved schema for the field
  * @returns - The `SelectSchemaInfo` for the schema
  */
-function getSelectSchemaInfo<S extends StrictRJSFSchema = RJSFSchema>(
-  fieldSchema: S,
-  rootSchema: S,
-): SelectSchemaInfo<S> {
-  const retrievedSchema = resolveConstantOptions<S>(fieldSchema, rootSchema);
+function getSelectSchemaInfo<S extends StrictRJSFSchema = RJSFSchema>(retrievedSchema: S): SelectSchemaInfo<S> {
   const xxxOfKey = getXxxOfKey<S>(retrievedSchema);
   const options = xxxOfKey && retrievedSchema[xxxOfKey];
   const constantOptions = isConstantOptionList<S>(options, true) ? options : undefined;
@@ -619,11 +613,7 @@ function SchemaFieldRender<
   );
   // Kept apart from the widget below, which alone reads the `uiSchema`, so a `uiSchema` rebuilt on every render doesn't
   // hand a typeless select a new `schema` each time
-  const { rootSchema } = registry;
-  const selectSchemaInfo = useMemo(
-    () => getSelectSchemaInfo<S>(retrievedSchema, rootSchema),
-    [retrievedSchema, rootSchema],
-  );
+  const selectSchemaInfo = useMemo(() => getSelectSchemaInfo<S>(retrievedSchema), [retrievedSchema]);
   const { schema, xxxOfKey, isSelectSchema, hasConstantOptions } = selectSchemaInfo;
   const inferredWidget = useMemo(
     () => inferSelectWidget<T, S, F>(selectSchemaInfo, resolvedUiSchema),
