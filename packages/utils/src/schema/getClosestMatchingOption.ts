@@ -12,7 +12,7 @@ import type { MergePlan, Seed, Seeding } from './graph/mergePlan.ts';
 import parseSchemaGraph from './graph/parseSchemaGraph.ts';
 import type { SchemaGraph } from './graph/parseSchemaGraph.ts';
 import { readProvenance } from './graph/provenance.ts';
-import { fieldOf, optionNode, resolveOwnRef } from './retrieveSchema.ts';
+import { fieldOf, optionNode, resolveMergedOwnRef } from './retrieveSchema.ts';
 
 /** A junk option used to determine when the getFirstMatchingOption call really matches an option rather than returning
  * the first item
@@ -302,9 +302,10 @@ export default function getClosestMatchingOption<
 }
 
 /** Returns the index of the option of `options` closest to `formData`, as `getClosestMatchingOption()` describes, each
- * option scored where `declaredAt` says it is declared: a caller that matches each option with a schema made from it,
- * such as `omitExtraData()` relaxing an option's `additionalProperties`, scores it where the option it was made from
- * sits, and one offered by a list a merge rebuilt, where the merge adopted it.
+ * option's own `$ref` resolved, and the option scored, where `declaredAt` says it is declared: a caller that matches each
+ * option with a schema made from it, such as `omitExtraData()` relaxing an option's `additionalProperties`, scores it
+ * where the option it was made from sits, and one offered by a list a merge rebuilt, which no graph holds, where the
+ * merge adopted it.
  *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param rootSchema - The root JSON schema of the entire form
@@ -324,7 +325,13 @@ export function closestOption<T, S extends StrictRJSFSchema, F extends FormConte
   selectedOption: number,
   discriminatorField?: string,
 ): number {
-  const resolvedOptions = options.map((option) => resolveOwnRef<S>(option, rootSchema, context.customMergeAllOf));
+  const resolvedOptions = options.map((option, index) => {
+    if (!isSchemaObject<S>(option) || typeof option[REF_KEY] !== 'string') {
+      return option;
+    }
+    const { graph, seeds } = declaredAt(index);
+    return resolveMergedOwnRef<S>(graph, seeds, option, context.customMergeAllOf);
+  });
 
   const simpleDiscriminatorMatch = getOptionMatchingSimpleDiscriminator(formData, options, discriminatorField);
   if (typeof simpleDiscriminatorMatch === 'number') {
