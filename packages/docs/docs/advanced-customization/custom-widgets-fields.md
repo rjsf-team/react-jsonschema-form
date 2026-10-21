@@ -574,3 +574,5 @@ function MyObjectField(props: FieldProps) {
 
 A wrapper registered under the key of the field it wraps, as `fields={{ ObjectField: MyObjectField }}`, keeps that key's [`presentation`](../api-reference/form-props.md#presentation) declaration, so it is labelled as the field it wraps.
 One registered under a key of its own, or given as `ui:field` directly, is a custom field, which draws its own label: a wrapper around `StringField` in a theme whose template draws the label declares `{ label: 'template', description: 'template' }` under its key, so the field it renders is labelled as before.
+
+Pass the `formData` through unchanged. `ArrayField` and `ObjectField` add, remove, rename and reorder by reading the form's current value at their `fieldPath`, not the `formData` they were rendered with, so that several edits in one event build on each other. A wrapper that hands them a transformed view of the data, such as a sorted copy, makes those operations act on positions the form does not hold.

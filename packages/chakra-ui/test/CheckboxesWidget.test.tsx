@@ -21,7 +21,7 @@ describe('CheckboxesWidget invalid state', () => {
       <Form
         schema={schema}
         uiSchema={{ picks: { 'ui:widget': 'checkboxes', ...(hideError ? { 'ui:hideError': true } : {}) } }}
-        formData={{ picks: [] }}
+        initialFormData={{ picks: [] }}
         validator={validator}
       />,
     );

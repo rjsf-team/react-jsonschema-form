@@ -67,7 +67,7 @@ const propertyDependencies: Sample = {
       },
     },
   },
-  formData: {
+  initialFormData: {
     unidirectional: {
       name: 'Tim',
     },

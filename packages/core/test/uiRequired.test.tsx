@@ -3,13 +3,13 @@ import { noop, toPath } from '@rjsf/utils';
 import { userEvent } from '@testing-library/user-event';
 import type { MockInstance } from 'vitest';
 
-import { describeOwnerships, submitForm } from './testUtils.tsx';
+import { createFormComponent, submitForm } from './testUtils.tsx';
 
 const user = userEvent.setup();
 
-describeOwnerships('ui:required enforcement', (createFormComponent) => {
+describe('ui:required enforcement', () => {
   async function expectSubmitBlocked(schema: RJSFSchema, uiSchema: UiSchema, formData?: unknown) {
-    const { node, onSubmit, onError } = createFormComponent({ schema, uiSchema, formData });
+    const { node, onSubmit, onError } = createFormComponent({ schema, uiSchema, initialFormData: formData });
     await submitForm(node, user, true);
     expect(onSubmit).not.toHaveBeenCalled();
     expect(onError).toHaveBeenCalled();

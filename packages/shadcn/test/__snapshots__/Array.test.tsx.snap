@@ -509,8 +509,8 @@ exports[`array fields > checkboxes 1`] = `
           >
             <label
               cmdk-label=""
-              for="radix-_r_2_"
-              id="radix-_r_1_"
+              for="radix-_r_5_"
+              id="radix-_r_4_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             >
               Select ...
@@ -523,14 +523,14 @@ exports[`array fields > checkboxes 1`] = `
               >
                 <input
                   aria-autocomplete="list"
-                  aria-controls="radix-_r_0_"
+                  aria-controls="radix-_r_3_"
                   aria-expanded="true"
-                  aria-labelledby="radix-_r_1_"
+                  aria-labelledby="radix-_r_4_"
                   autocomplete="off"
                   autocorrect="off"
                   class="rtl:mr-2 ltr:ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1"
                   cmdk-input=""
-                  id="radix-_r_2_"
+                  id="radix-_r_5_"
                   placeholder="Select ..."
                   role="combobox"
                   spellcheck="false"
@@ -1782,8 +1782,8 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
           >
             <label
               cmdk-label=""
-              for="radix-_r_h_"
-              id="radix-_r_g_"
+              for="radix-_r_1c_"
+              id="radix-_r_1b_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             >
               Select ...
@@ -1796,14 +1796,14 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
               >
                 <input
                   aria-autocomplete="list"
-                  aria-controls="radix-_r_f_"
+                  aria-controls="radix-_r_1a_"
                   aria-expanded="true"
-                  aria-labelledby="radix-_r_g_"
+                  aria-labelledby="radix-_r_1b_"
                   autocomplete="off"
                   autocorrect="off"
                   class="rtl:mr-2 ltr:ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1"
                   cmdk-input=""
-                  id="radix-_r_h_"
+                  id="radix-_r_1c_"
                   placeholder="Select ..."
                   role="combobox"
                   spellcheck="false"
@@ -4859,8 +4859,8 @@ exports[`with title and description > checkboxes 1`] = `
           >
             <label
               cmdk-label=""
-              for="radix-_r_5_"
-              id="radix-_r_4_"
+              for="radix-_r_c_"
+              id="radix-_r_b_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             >
               Test field
@@ -4873,15 +4873,15 @@ exports[`with title and description > checkboxes 1`] = `
               >
                 <input
                   aria-autocomplete="list"
-                  aria-controls="radix-_r_3_"
+                  aria-controls="radix-_r_a_"
                   aria-describedby="root__description"
                   aria-expanded="true"
-                  aria-labelledby="radix-_r_4_"
+                  aria-labelledby="radix-_r_b_"
                   autocomplete="off"
                   autocorrect="off"
                   class="rtl:mr-2 ltr:ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1"
                   cmdk-input=""
-                  id="radix-_r_5_"
+                  id="radix-_r_c_"
                   placeholder="Select ..."
                   role="combobox"
                   spellcheck="false"
@@ -5728,8 +5728,8 @@ exports[`with title and description from both > checkboxes 1`] = `
           >
             <label
               cmdk-label=""
-              for="radix-_r_b_"
-              id="radix-_r_a_"
+              for="radix-_r_q_"
+              id="radix-_r_p_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             >
               My Field
@@ -5742,15 +5742,15 @@ exports[`with title and description from both > checkboxes 1`] = `
               >
                 <input
                   aria-autocomplete="list"
-                  aria-controls="radix-_r_9_"
+                  aria-controls="radix-_r_o_"
                   aria-describedby="root__description"
                   aria-expanded="true"
-                  aria-labelledby="radix-_r_a_"
+                  aria-labelledby="radix-_r_p_"
                   autocomplete="off"
                   autocorrect="off"
                   class="rtl:mr-2 ltr:ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1"
                   cmdk-input=""
-                  id="radix-_r_b_"
+                  id="radix-_r_q_"
                   placeholder="Select ..."
                   role="combobox"
                   spellcheck="false"
@@ -6597,8 +6597,8 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
           >
             <label
               cmdk-label=""
-              for="radix-_r_8_"
-              id="radix-_r_7_"
+              for="radix-_r_j_"
+              id="radix-_r_i_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             >
               My Field
@@ -6611,15 +6611,15 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
               >
                 <input
                   aria-autocomplete="list"
-                  aria-controls="radix-_r_6_"
+                  aria-controls="radix-_r_h_"
                   aria-describedby="root__description"
                   aria-expanded="true"
-                  aria-labelledby="radix-_r_7_"
+                  aria-labelledby="radix-_r_i_"
                   autocomplete="off"
                   autocorrect="off"
                   class="rtl:mr-2 ltr:ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1"
                   cmdk-input=""
-                  id="radix-_r_8_"
+                  id="radix-_r_j_"
                   placeholder="Select ..."
                   role="combobox"
                   spellcheck="false"
@@ -7356,8 +7356,8 @@ exports[`with title and description with global label off > checkboxes 1`] = `
           >
             <label
               cmdk-label=""
-              for="radix-_r_e_"
-              id="radix-_r_d_"
+              for="radix-_r_11_"
+              id="radix-_r_10_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             >
               Test field
@@ -7370,14 +7370,14 @@ exports[`with title and description with global label off > checkboxes 1`] = `
               >
                 <input
                   aria-autocomplete="list"
-                  aria-controls="radix-_r_c_"
+                  aria-controls="radix-_r_v_"
                   aria-expanded="true"
-                  aria-labelledby="radix-_r_d_"
+                  aria-labelledby="radix-_r_10_"
                   autocomplete="off"
                   autocorrect="off"
                   class="rtl:mr-2 ltr:ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1"
                   cmdk-input=""
-                  id="radix-_r_e_"
+                  id="radix-_r_11_"
                   placeholder="Select ..."
                   role="combobox"
                   spellcheck="false"

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type {
   EnumValue,
   RJSFSchema,
@@ -12,20 +13,23 @@ import type {
   PartPlacement,
   UiSchema,
 } from '@rjsf/utils';
-import { fieldLabelId, UI_GLOBAL_OPTIONS_KEY } from '@rjsf/utils';
+import { fieldLabelId, isObject, isPlainObject, noop, ROOT_FIELD_PATH, UI_GLOBAL_OPTIONS_KEY } from '@rjsf/utils';
 import { act, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import ObjectField from '../src/components/fields/ObjectField.tsx';
 import SchemaField from '../src/components/fields/SchemaField.tsx';
+import type { IChangeEvent } from '../src/index.ts';
 import MarkdownTemplate from '../src/markdown.tsx';
+import { getTestRegistry } from '../src/testing.ts';
 import {
   createFormComponent,
   createFormRef,
-  createParentLog,
+  elementOf,
   expectToHaveBeenCalledWithFormData,
+  handleOf,
+  input,
   submitForm,
-  TransformingParent,
 } from './testUtils.tsx';
 import { TextWidgetTest } from './TextWidgetTest.tsx';
 
@@ -229,7 +233,7 @@ describe('ObjectField', () => {
         foo: 'heyyou',
         bar: true,
       };
-      const { node } = createFormComponent({ schema, formData });
+      const { node } = createFormComponent({ schema, initialFormData: formData });
 
       expect(node.querySelector('.rjsf-field input[type=text]')).toHaveValue(formData.foo);
       expect(node.querySelector('.rjsf-field input[type=checkbox]')).toBeChecked();
@@ -377,7 +381,7 @@ describe('ObjectField', () => {
       };
       const { node, rerender } = createFormComponent({
         schema,
-        formData: {
+        initialFormData: {
           email: 'Appie@hotmail.com',
           emailConfirm: 'wrong@wrong.com',
         },
@@ -392,7 +396,7 @@ describe('ObjectField', () => {
 
       rerender({
         schema,
-        formData: {
+        initialFormData: {
           email: 'Appie@hotmail.com',
           emailConfirm: 'Appie@hotmail.com',
         },
@@ -403,9 +407,11 @@ describe('ObjectField', () => {
     });
 
     it('Check that when formData changes, the form should re-validate', async () => {
-      const { node, rerender } = createFormComponent({
+      const ref = createFormRef();
+      const { node } = createFormComponent({
+        ref,
         schema,
-        formData: {
+        initialFormData: {
           foo: null,
         },
         liveValidate: 'onChange',
@@ -421,7 +427,7 @@ describe('ObjectField', () => {
       const errorMessageContent = node.querySelector('#root_foo__error .text-danger');
       expect(errorMessageContent).toHaveTextContent('must be string');
 
-      rerender({ schema, formData: { foo: 'test' }, liveValidate: 'onChange' });
+      act(() => handleOf(ref).setFieldValue('', { foo: 'test' }));
 
       expect(node.querySelectorAll('#root_foo__error')).toHaveLength(0);
     });
@@ -579,7 +585,7 @@ describe('ObjectField', () => {
           Bar: 'B',
         },
       };
-      const { node } = createFormComponent({ schema, formData });
+      const { node } = createFormComponent({ schema, initialFormData: formData });
       // click submit
       await submitForm(node, user);
       const fooDotBarErrors = node.querySelectorAll('#root_Foo.Bar__error');
@@ -1208,6 +1214,47 @@ describe('ObjectField', () => {
       expect(node.querySelector('#root_abc')).toHaveValue('0');
     });
 
+    it('should re-seed an untouched new property when it is renamed, outside a Form whose parent stores each change', async () => {
+      const schema: RJSFSchema = { type: 'object', patternProperties: { '^[a-z]+$': { type: 'number' } } };
+      const registry = getTestRegistry(schema);
+      const reported: unknown[] = [];
+      function Parent() {
+        const [data, setData] = useState<GenericObjectType>({});
+        return (
+          <ObjectField
+            schema={schema}
+            id='root'
+            name=''
+            fieldPath={ROOT_FIELD_PATH}
+            formData={data}
+            errorSchema={{}}
+            registry={registry}
+            onBlur={noop}
+            onFocus={noop}
+            disabled={false}
+            readonly={false}
+            autofocus={false}
+            required={false}
+            onChange={(value) => {
+              reported.push(value);
+              if (isObject(value)) {
+                setData(value);
+              }
+            }}
+          />
+        );
+      }
+      const { container } = render(<Parent />);
+
+      await user.click(elementOf(container, '.rjsf-object-property-expand button'));
+      const keyInput = elementOf(container, '#root_newKey-key');
+      await user.clear(keyInput);
+      await user.type(keyInput, 'abc');
+      await user.tab();
+
+      expect(reported.at(-1)).toEqual({ abc: 0 });
+    });
+
     it('should keep a value the user entered when the renamed key is described by another schema', async () => {
       // The seed is the form's to replace until the user enters something; what they entered is theirs to keep, even
       // where the schema describing the new name would have seeded something else
@@ -1237,7 +1284,7 @@ describe('ObjectField', () => {
           additionalProperties: { type: 'number' },
           patternProperties: { '^pct_': { type: 'number', default: 50 } },
         },
-        formData: { score: 0 },
+        initialFormData: { score: 0 },
       });
 
       const keyInput = node.querySelector('#root_score-key')!;
@@ -1274,97 +1321,327 @@ describe('ObjectField', () => {
       expectToHaveBeenCalledWithFormData(onChange, { s_x: 0, newKey: undefined }, 'root');
     });
 
-    it('should keep a value a controlled parent wrote over the seed when the key is renamed', async () => {
-      // The add button's seed is a proposal, so the value the property holds is the parent's answer to it rather than
-      // the seed itself: a parent that rewrites or declines what the button proposed leaves a value of its own under
-      // that name, which is no more the form's to replace on a rename than one the user typed
-      const log = createParentLog<GenericObjectType>();
-      const { container } = render(
-        <TransformingParent<GenericObjectType>
-          schema={{
-            type: 'object',
-            additionalProperties: { type: 'string' },
-            patternProperties: { '^num': { type: 'number' } },
-          }}
-          initialValue={{}}
-          log={log}
-          transform={(proposal) =>
-            proposal && 'newKey' in proposal ? { ...proposal, newKey: 'the parent wrote this' } : proposal
+    /** A form whose parent writes over the data an edit leaves, the way a parent can once the form owns its data: from
+     * `onChange`, through the form's handle. `writeOver` returns the data to write, or `undefined` to keep the edit
+     */
+    function renderWritingParent(
+      schema: RJSFSchema,
+      writeOver: (edit: GenericObjectType) => GenericObjectType | undefined,
+    ) {
+      const ref = createFormRef<GenericObjectType>();
+      const { node } = createFormComponent({
+        ref,
+        schema,
+        onChange: ({ formData }: IChangeEvent) => {
+          const written = isPlainObject(formData) ? writeOver(formData) : undefined;
+          if (written) {
+            handleOf(ref).setFieldValue('', written);
           }
-        />,
+        },
+      });
+      return { node, readData: () => handleOf(ref).getFormData() };
+    }
+
+    it('should keep a value a parent wrote over the seed when the key is renamed', async () => {
+      // A parent may write a value of its own over what the add button seeded, and that value is no more the form's
+      // to replace on a rename than one the user typed
+      const { node, readData } = renderWritingParent(
+        {
+          type: 'object',
+          additionalProperties: { type: 'string' },
+          patternProperties: { '^num': { type: 'number' } },
+        },
+        (edit) =>
+          'newKey' in edit && edit.newKey !== 'the parent wrote this'
+            ? { ...edit, newKey: 'the parent wrote this' }
+            : undefined,
       );
 
-      await user.click(container.querySelector('.rjsf-object-property-expand button')!);
-      expect(log.value).toEqual({ newKey: 'the parent wrote this' });
+      await user.click(elementOf(node, '.rjsf-object-property-expand button'));
+      expect(readData()).toEqual({ newKey: 'the parent wrote this' });
 
-      const keyInput = container.querySelector('#root_newKey-key')!;
+      const keyInput = elementOf(node, '#root_newKey-key');
       await user.clear(keyInput);
       await user.type(keyInput, 'num1');
       await user.tab();
 
-      expect(log.value).toEqual({ num1: 'the parent wrote this' });
+      expect(readData()).toEqual({ num1: 'the parent wrote this' });
     });
 
-    it('should re-seed an untouched new property after a rename the parent declined', async () => {
-      // The record a rename writes under the new name is a proposal like the add itself, so the one under the old name
-      // stays until the data says which of them it holds. Moving it would leave the property, still holding the seed
-      // under the name it never left, with no history to re-seed from
-      const log = createParentLog<GenericObjectType>();
-      const { container } = render(
-        <TransformingParent<GenericObjectType>
-          schema={{ type: 'object', patternProperties: { '^[0-9]+$': { type: 'number' } } }}
-          initialValue={{}}
-          log={log}
-          transform={(proposal) => (proposal && 'abc' in proposal ? { newKey: 'New Value' } : proposal)}
-        />,
+    it('should re-seed an untouched new property after a rename the parent put back', async () => {
+      // The record under the old name stays until the data says which of the two names the property holds: a parent
+      // that puts the old name back leaves the property, still holding the seed, where it was, and moving the record
+      // would leave it with no history to re-seed from
+      const { node, readData } = renderWritingParent(
+        { type: 'object', patternProperties: { '^[0-9]+$': { type: 'number' } } },
+        (edit) => ('abc' in edit ? { newKey: 'New Value' } : undefined),
       );
 
-      await user.click(container.querySelector('.rjsf-object-property-expand button')!);
-      expect(log.value).toEqual({ newKey: 'New Value' });
+      await user.click(elementOf(node, '.rjsf-object-property-expand button'));
+      expect(readData()).toEqual({ newKey: 'New Value' });
 
       const renameTo = async (from: string, to: string) => {
-        const keyInput = container.querySelector(`#root_${from}-key`)!;
+        const keyInput = elementOf(node, `#root_${from}-key`);
         await user.clear(keyInput);
         await user.type(keyInput, to);
         await user.tab();
       };
 
       await renameTo('newKey', 'abc');
-      expect(log.value).toEqual({ newKey: 'New Value' });
+      expect(readData()).toEqual({ newKey: 'New Value' });
 
       await renameTo('newKey', '12');
-      expect(log.value).toEqual({ '12': 0 });
+      expect(readData()).toEqual({ '12': 0 });
     });
 
-    it('should re-seed an untouched new property after a change the parent declined', async () => {
-      // A change is a proposal too, and one the parent turns down leaves the property holding the seed the add button
-      // wrote: nothing has written to it, so the rename re-seeds it as it would one the user never touched
-      const log = createParentLog<GenericObjectType>();
-      const { container } = render(
-        <TransformingParent<GenericObjectType>
-          schema={{
-            type: 'object',
-            additionalProperties: { type: 'string' },
-            patternProperties: { '^num': { type: 'number' } },
-          }}
-          initialValue={{}}
-          log={log}
-          transform={(proposal) => (proposal?.newKey !== undefined ? { ...proposal, newKey: 'New Value' } : proposal)}
-        />,
+    it('should re-seed an untouched new property after a change the parent wrote the seed back over', async () => {
+      // A parent that writes the seed back over a change leaves the property holding what the add button wrote:
+      // nothing else has written to it, so the rename re-seeds it as it would one the user never touched
+      const { node, readData } = renderWritingParent(
+        {
+          type: 'object',
+          additionalProperties: { type: 'string' },
+          patternProperties: { '^num': { type: 'number' } },
+        },
+        (edit) =>
+          edit.newKey !== undefined && edit.newKey !== 'New Value' ? { ...edit, newKey: 'New Value' } : undefined,
       );
 
-      await user.click(container.querySelector('.rjsf-object-property-expand button')!);
-      expect(log.value).toEqual({ newKey: 'New Value' });
+      await user.click(elementOf(node, '.rjsf-object-property-expand button'));
+      expect(readData()).toEqual({ newKey: 'New Value' });
 
-      await user.type(container.querySelector('#root_newKey')!, 'typed');
-      expect(log.value).toEqual({ newKey: 'New Value' });
+      await user.type(input(node, 'root_newKey'), 'typed');
+      expect(readData()).toEqual({ newKey: 'New Value' });
 
-      const keyInput = container.querySelector('#root_newKey-key')!;
+      const keyInput = elementOf(node, '#root_newKey-key');
       await user.clear(keyInput);
       await user.type(keyInput, 'num1');
       await user.tab();
 
-      expect(log.value).toEqual({ num1: 0 });
+      expect(readData()).toEqual({ num1: 0 });
+    });
+
+    it('should re-seed an untouched new property after transformChange refused a change to it', async () => {
+      // The refused change never reaches the data, so the property still holds what the add button wrote
+      const ref = createFormRef<GenericObjectType>();
+      const { node } = createFormComponent({
+        ref,
+        schema: {
+          type: 'object',
+          additionalProperties: { type: 'string' },
+          patternProperties: { '^num': { type: 'number' } },
+        },
+        transformChange: (next, previous) =>
+          isPlainObject(next) &&
+          isPlainObject(previous) &&
+          'newKey' in next &&
+          'newKey' in previous &&
+          next.newKey !== previous.newKey
+            ? previous
+            : next,
+      });
+
+      await user.click(elementOf(node, '.rjsf-object-property-expand button'));
+      await user.type(input(node, 'root_newKey'), 'typed');
+      expect(handleOf(ref).getFormData()).toEqual({ newKey: 'New Value' });
+
+      const keyInput = elementOf(node, '#root_newKey-key');
+      await user.clear(keyInput);
+      await user.type(keyInput, 'num1');
+      await user.tab();
+
+      expect(handleOf(ref).getFormData()).toEqual({ num1: 0 });
+    });
+
+    it('should keep a property in its place when transformChange refuses its rename with a copy of the data before', async () => {
+      const ref = createFormRef<GenericObjectType>();
+      const { node } = createFormComponent({
+        ref,
+        schema: { type: 'object', additionalProperties: { type: 'string' } },
+        initialFormData: { first: 'a', second: 'b' },
+        transformChange: (next, previous) =>
+          isPlainObject(next) && 'renamed' in next && isPlainObject(previous) ? { ...previous } : next,
+      });
+
+      const keyInput = elementOf(node, '#root_first-key');
+      await user.clear(keyInput);
+      await user.type(keyInput, 'renamed');
+      await user.tab();
+
+      expect(handleOf(ref).getFormData()).toEqual({ first: 'a', second: 'b' });
+      expect([...node.querySelectorAll('input[id$="-key"]')].map((keyField) => keyField.id)).toEqual([
+        'root_first-key',
+        'root_second-key',
+      ]);
+    });
+
+    it('should keep the instance of the last renamed property when transformChange refuses another rename', async () => {
+      const ref = createFormRef<GenericObjectType>();
+      const { node } = createFormComponent({
+        ref,
+        schema: { type: 'object', additionalProperties: { type: 'string' } },
+        initialFormData: { A: 'a', C: 'c' },
+        transformChange: (next, previous) => (isPlainObject(next) && 'D' in next ? previous : next),
+      });
+      const keyA = elementOf(node, '#root_A-key');
+      await user.clear(keyA);
+      await user.type(keyA, 'B');
+      await user.tab();
+      const valueB = elementOf(node, '#root_B');
+
+      const keyC = elementOf(node, '#root_C-key');
+      await user.clear(keyC);
+      await user.type(keyC, 'D');
+      await user.tab();
+
+      expect(handleOf(ref).getFormData()).toEqual({ B: 'a', C: 'c' });
+      // The same element: the refused rename did not move the React key the accepted one gave the property
+      expect(elementOf(node, '#root_B')).toBe(valueB);
+    });
+
+    it('should keep the instance of the last renamed property when transformChange refuses an add', async () => {
+      const ref = createFormRef<GenericObjectType>();
+      const { node } = createFormComponent({
+        ref,
+        schema: { type: 'object', additionalProperties: { type: 'string' } },
+        initialFormData: { newKey: 'a' },
+        transformChange: (next, previous) =>
+          isPlainObject(next) && isPlainObject(previous) && Object.keys(next).length > Object.keys(previous).length
+            ? previous
+            : next,
+      });
+      const keyInput = elementOf(node, '#root_newKey-key');
+      await user.clear(keyInput);
+      await user.type(keyInput, 'foo');
+      await user.tab();
+      const valueFoo = elementOf(node, '#root_foo');
+
+      await user.click(elementOf(node, '.rjsf-object-property-expand button'));
+
+      expect(handleOf(ref).getFormData()).toEqual({ foo: 'a' });
+      // The same element: the refused add did not take the React key the rename gave the property
+      expect(elementOf(node, '#root_foo')).toBe(valueFoo);
+    });
+
+    it('should keep a property in its place when transformChange refuses its rename', async () => {
+      const ref = createFormRef<GenericObjectType>();
+      const { node } = createFormComponent({
+        ref,
+        schema: { type: 'object', additionalProperties: { type: 'string' } },
+        initialFormData: { first: 'a', second: 'b' },
+        transformChange: (next, previous) => (isPlainObject(next) && 'renamed' in next ? previous : next),
+      });
+
+      const keyInput = elementOf(node, '#root_first-key');
+      await user.clear(keyInput);
+      await user.type(keyInput, 'renamed');
+      await user.tab();
+
+      expect(handleOf(ref).getFormData()).toEqual({ first: 'a', second: 'b' });
+      expect([...node.querySelectorAll('input[id$="-key"]')].map((keyField) => keyField.id)).toEqual([
+        'root_first-key',
+        'root_second-key',
+      ]);
+    });
+
+    it('should keep a property in its place when transformChange rewrites the name it is renamed to', async () => {
+      const ref = createFormRef<GenericObjectType>();
+      const { node } = createFormComponent({
+        ref,
+        schema: { type: 'object', additionalProperties: { type: 'string' } },
+        initialFormData: { first: 'a', second: 'b' },
+        transformChange: (next) =>
+          isPlainObject(next)
+            ? Object.fromEntries(Object.entries(next).map(([key, value]) => [key.toLowerCase(), value]))
+            : next,
+      });
+
+      const keyInput = elementOf(node, '#root_first-key');
+      await user.clear(keyInput);
+      await user.type(keyInput, 'RENAMED');
+      await user.tab();
+
+      expect(handleOf(ref).getFormData()).toEqual({ renamed: 'a', second: 'b' });
+      expect([...node.querySelectorAll('input[id$="-key"]')].map((keyField) => keyField.id)).toEqual([
+        'root_renamed-key',
+        'root_second-key',
+      ]);
+    });
+
+    it('should give the renamed property its own instance when transformChange puts the old name back', async () => {
+      const ref = createFormRef<GenericObjectType>();
+      const consoleError = vi.spyOn(console, 'error');
+      const { node } = createFormComponent({
+        ref,
+        schema: { type: 'object', additionalProperties: { type: 'string' } },
+        initialFormData: { A: 'a' },
+        transformChange: (next) => (isPlainObject(next) && !('A' in next) ? { ...next, A: '' } : next),
+      });
+      const valueA = elementOf(node, '#root_A');
+
+      const keyInput = elementOf(node, '#root_A-key');
+      await user.clear(keyInput);
+      await user.type(keyInput, 'B');
+      await user.tab();
+
+      expect(handleOf(ref).getFormData()).toEqual({ B: 'a', A: '' });
+      expect(elementOf(node, '#root_B')).toHaveValue('a');
+      expect(elementOf(node, '#root_A')).toBe(valueA);
+      expect(consoleError).not.toHaveBeenCalled();
+      consoleError.mockRestore();
+    });
+
+    it('should keep a property in its place when transformChange refuses its removal', async () => {
+      const ref = createFormRef<GenericObjectType>();
+      const { node } = createFormComponent({
+        ref,
+        schema: { type: 'object', additionalProperties: { type: 'string' } },
+        initialFormData: { first: 'a', second: 'b', third: 'c' },
+        transformChange: (next, previous) => (isPlainObject(next) && !('first' in next) ? previous : next),
+      });
+
+      await user.click(node.querySelectorAll('.rjsf-object-property-remove')[0]);
+
+      expect(handleOf(ref).getFormData()).toEqual({ first: 'a', second: 'b', third: 'c' });
+      expect([...node.querySelectorAll('input[id$="-key"]')].map((keyField) => keyField.id)).toEqual([
+        'root_first-key',
+        'root_second-key',
+        'root_third-key',
+      ]);
+    });
+
+    it('should render a property added again after its removal last when a parent field stores the removal later', async () => {
+      // Passes every change on a microtask later, as a parent field that debounces `onChange` does, so the form still
+      // holds the removed property when the removal is sent
+      function DeferringField(props: FieldProps<GenericObjectType>) {
+        const { ObjectField: ObjectFieldComponent } = props.registry.fields;
+        return (
+          <ObjectFieldComponent
+            {...props}
+            onChange={(value, fieldPath, errorSchema, id) =>
+              queueMicrotask(() => props.onChange(value, fieldPath, errorSchema, id))
+            }
+          />
+        );
+      }
+      const ref = createFormRef<GenericObjectType>();
+      const { node } = createFormComponent({
+        ref,
+        schema: { type: 'object', additionalProperties: { type: 'string' } },
+        uiSchema: { 'ui:field': DeferringField },
+      });
+      const addButton = () => elementOf(node, '.rjsf-object-property-expand button');
+      await user.click(addButton());
+      await user.click(addButton());
+
+      await user.click(node.querySelectorAll('.rjsf-object-property-remove')[0]);
+      await user.click(addButton());
+
+      expect(Object.keys(handleOf(ref).getFormData() ?? {})).toEqual(['newKey-1', 'newKey']);
+      expect([...node.querySelectorAll('input[id$="-key"]')].map((keyField) => keyField.id)).toEqual([
+        'root_newKey-1-key',
+        'root_newKey-key',
+      ]);
     });
 
     it('should seed from the uiSchema entry of a declared name a property is renamed onto', async () => {
@@ -1931,12 +2208,12 @@ describe('ObjectField', () => {
       const formData = { first: 'one', promoted: 'two' };
       const { node, rerender } = createFormComponent({
         schema: initialSchema,
-        formData,
+        initialFormData: formData,
       });
 
       rerender({
         schema: updatedSchema,
-        formData,
+        initialFormData: formData,
       });
 
       const promotedInputs = node.querySelectorAll<HTMLInputElement>('input[id="root_promoted"]');
@@ -2109,7 +2386,7 @@ describe('ObjectField', () => {
       // `deprecatedHandling` defaults to `label`, so the property's label carries a marker its key must not pick up
       const { node, onChange } = createFormComponent({
         schema: { type: 'object', additionalProperties: { type: 'string', deprecated: true } },
-        formData: { first: 'a value' },
+        initialFormData: { first: 'a value' },
       });
 
       const keyInput = node.querySelector<HTMLInputElement>('#root_first-key')!;
@@ -2563,7 +2840,7 @@ describe('ObjectField', () => {
     it('should start a new object rather than spread a string held by a type list naming object', async () => {
       const { onChange } = createFormComponent({
         schema: { type: ['null', 'object', 'string'], additionalProperties: { type: 'string' } },
-        formData: 'abc',
+        initialFormData: 'abc',
       });
 
       await user.click(screen.getByRole('button', { name: 'Add' }));
@@ -3143,7 +3420,7 @@ describe('ObjectField', () => {
     };
 
     it('should render the additional property key as a select of the allowed names', () => {
-      const { node } = createFormComponent({ schema, formData: { a: 'first' } });
+      const { node } = createFormComponent({ schema, initialFormData: { a: 'first' } });
 
       const keySelect = node.querySelector<HTMLSelectElement>('select#root_a-key')!;
       expect(keySelect).not.toBeNull();
@@ -3153,7 +3430,7 @@ describe('ObjectField', () => {
     });
 
     it('should leave the names sibling properties already hold out of the select', () => {
-      const { node } = createFormComponent({ schema, formData: { a: 'first', c: 'second' } });
+      const { node } = createFormComponent({ schema, initialFormData: { a: 'first', c: 'second' } });
 
       const optionsFor = (key: string) =>
         [...node.querySelector<HTMLSelectElement>(`select#root_${key}-key`)!.options]
@@ -3164,7 +3441,7 @@ describe('ObjectField', () => {
     });
 
     it('should rename the property as soon as a name is selected', async () => {
-      const { node, onChange } = createFormComponent({ schema, formData: { a: 'first' } });
+      const { node, onChange } = createFormComponent({ schema, initialFormData: { a: 'first' } });
 
       await user.selectOptions(node.querySelector('select#root_a-key')!, 'd');
 
@@ -3172,7 +3449,7 @@ describe('ObjectField', () => {
     });
 
     it('should add a new property under the first allowed name that is still free', async () => {
-      const { node, onChange } = createFormComponent({ schema, formData: { a: 'first' } });
+      const { node, onChange } = createFormComponent({ schema, initialFormData: { a: 'first' } });
 
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
 
@@ -3182,7 +3459,7 @@ describe('ObjectField', () => {
     it('should skip a name the schema declares as a property of its own when adding', async () => {
       const { node, onChange } = createFormComponent({
         schema: { ...schema, properties: { a: { type: 'string' } } },
-        formData: {},
+        initialFormData: {},
       });
 
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
@@ -3199,7 +3476,7 @@ describe('ObjectField', () => {
           patternProperties: { '^a': { type: 'string' } },
           propertyNames: { enum: ['xyz', 'abc'] },
         },
-        formData: { xyz: 'first' },
+        initialFormData: { xyz: 'first' },
       });
 
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
@@ -3254,7 +3531,7 @@ describe('ObjectField', () => {
           additionalProperties: false,
           propertyNames: { enum: ['xyz', 'abc'] },
         },
-        formData: {},
+        initialFormData: {},
       });
 
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
@@ -3274,7 +3551,7 @@ describe('ObjectField', () => {
           additionalProperties: false,
           propertyNames: { enum: ['xyz'] },
         },
-        formData: {},
+        initialFormData: {},
       });
 
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
@@ -3292,7 +3569,7 @@ describe('ObjectField', () => {
           unevaluatedProperties: false,
           propertyNames: { enum: ['xyz'] },
         },
-        formData: {},
+        initialFormData: {},
       });
 
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
@@ -3331,7 +3608,7 @@ describe('ObjectField', () => {
           patternProperties: { '^a': false },
           propertyNames: { enum: ['abc', 'zzz'] },
         },
-        formData: {},
+        initialFormData: {},
       });
 
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
@@ -3350,7 +3627,7 @@ describe('ObjectField', () => {
           additionalProperties: { type: 'number' },
           propertyNames: { enum: ['abc', 'zzz'] },
         },
-        formData: {},
+        initialFormData: {},
       });
 
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
@@ -3369,7 +3646,7 @@ describe('ObjectField', () => {
           unevaluatedProperties: { type: 'number' },
           propertyNames: { enum: ['zzz', 'abc'] },
         },
-        formData: {},
+        initialFormData: {},
       });
 
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
@@ -3385,7 +3662,7 @@ describe('ObjectField', () => {
           additionalProperties: { type: 'string' },
           propertyNames: { enum: ['xyz', 'abc'] },
         },
-        formData: {},
+        initialFormData: {},
       });
 
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
@@ -3402,7 +3679,7 @@ describe('ObjectField', () => {
           additionalProperties: { type: 'string', deprecated: true },
           propertyNames: { enum: ['a', 'b'] },
         },
-        formData: { a: 'first' },
+        initialFormData: { a: 'first' },
       });
 
       const keySelect = node.querySelector<HTMLSelectElement>('select#root_a-key')!;
@@ -3417,7 +3694,7 @@ describe('ObjectField', () => {
     it('should offer no add button once every allowed name is taken', () => {
       const { node } = createFormComponent({
         schema,
-        formData: { a: '1', b: '2', c: '3', d: '4' },
+        initialFormData: { a: '1', b: '2', c: '3', d: '4' },
       });
 
       expect(node.querySelector('.rjsf-object-property-expand button')).toBeNull();
@@ -3427,7 +3704,7 @@ describe('ObjectField', () => {
       // An empty `enum` matches nothing, so no key could validate and the object has to stay as it is
       const { node } = createFormComponent({
         schema: { ...schema, propertyNames: { enum: [] } },
-        formData: {},
+        initialFormData: {},
       });
 
       expect(node.querySelector('.rjsf-object-property-expand button')).toBeNull();
@@ -3436,7 +3713,7 @@ describe('ObjectField', () => {
     it('should offer no add button once every allowed name is taken by a declared property', () => {
       const { node } = createFormComponent({
         schema: { ...schema, properties: { a: {}, b: {}, c: {}, d: {} } },
-        formData: {},
+        initialFormData: {},
       });
 
       expect(node.querySelector('.rjsf-object-property-expand button')).toBeNull();
@@ -3450,7 +3727,7 @@ describe('ObjectField', () => {
           additionalProperties: { type: 'string' },
           propertyNames: { $ref: '#/definitions/keys' },
         },
-        formData: { a: '1', b: '2' },
+        initialFormData: { a: '1', b: '2' },
       });
 
       expect(node.querySelector('.rjsf-object-property-expand button')).toBeNull();
@@ -3459,7 +3736,7 @@ describe('ObjectField', () => {
     it('should keep the text input for a property with no name left to offer', () => {
       const { node } = createFormComponent({
         schema,
-        formData: { a: '1', b: '2', c: '3', d: '4', zzz: '5' },
+        initialFormData: { a: '1', b: '2', c: '3', d: '4', zzz: '5' },
       });
 
       expect(node.querySelector('select#root_zzz-key')).toBeNull();
@@ -3467,7 +3744,7 @@ describe('ObjectField', () => {
     });
 
     it('should show a key the enum no longer allows as a disabled option rather than a blank select', () => {
-      const { node } = createFormComponent({ schema, formData: { a: '1', zzz: '2' } });
+      const { node } = createFormComponent({ schema, initialFormData: { a: '1', zzz: '2' } });
 
       const keySelect = node.querySelector<HTMLSelectElement>('select#root_zzz-key')!;
       expect([...keySelect.options].map((option) => option.textContent).filter(Boolean)).toEqual([
@@ -3481,7 +3758,7 @@ describe('ObjectField', () => {
     });
 
     it('should offer no blank placeholder option to select', () => {
-      const { node } = createFormComponent({ schema, formData: { a: 'first' } });
+      const { node } = createFormComponent({ schema, initialFormData: { a: 'first' } });
 
       const keySelect = node.querySelector<HTMLSelectElement>('select#root_a-key')!;
       expect([...keySelect.options].some((option) => option.value === '')).toBe(false);
@@ -3494,7 +3771,7 @@ describe('ObjectField', () => {
         additionalProperties: { type: 'string' },
         propertyNames: { $ref: '#/definitions/keys' },
       };
-      const { node } = createFormComponent({ schema: refSchema, formData: { a: 'first' } });
+      const { node } = createFormComponent({ schema: refSchema, initialFormData: { a: 'first' } });
 
       const keySelect = node.querySelector<HTMLSelectElement>('select#root_a-key')!;
       expect([...keySelect.options].map((option) => option.textContent).filter(Boolean)).toEqual(['a', 'b']);
@@ -3508,7 +3785,7 @@ describe('ObjectField', () => {
         propertyNames: { $ref: '#/definitions/missing' },
       };
 
-      const { node } = createFormComponent({ schema: brokenRefSchema, formData: { a: 'first' } });
+      const { node } = createFormComponent({ schema: brokenRefSchema, initialFormData: { a: 'first' } });
 
       expect(node.querySelector('select#root_a-key')).toBeNull();
       expect(node.querySelector('input#root_a-key')).toHaveValue('a');
@@ -3517,7 +3794,7 @@ describe('ObjectField', () => {
     it('should keep the text input when propertyNames carries no enum', () => {
       const { node } = createFormComponent({
         schema: { ...schema, propertyNames: { maxLength: 3 } },
-        formData: { a: 'first' },
+        initialFormData: { a: 'first' },
       });
 
       expect(node.querySelector('select#root_a-key')).toBeNull();
@@ -3532,7 +3809,7 @@ describe('ObjectField', () => {
           additionalProperties: { type: 'string' },
           propertyNames: { enum: ['a', 'b'] },
         },
-        formData: { a: 'first', b: 'second' },
+        initialFormData: { a: 'first', b: 'second' },
       });
 
       expect(node.querySelector('#root_a-key')).toBeNull();
@@ -3608,7 +3885,7 @@ describe('ObjectField', () => {
         properties: { pet: { type: 'object', title: 'Pet', properties: { a: { type: 'string' } } } },
       },
       uiSchema: { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] }, pet: { 'ui:label': false } },
-      formData: { pet: { a: 'x' } },
+      initialFormData: { pet: { a: 'x' } },
     });
 
     expect(node.querySelector('#root_pet__title')).not.toBeInTheDocument();

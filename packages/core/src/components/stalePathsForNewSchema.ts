@@ -20,9 +20,11 @@ import {
   REF_KEY,
   replaceEqualDeep,
   UI_DEFINITIONS_KEY,
+  UI_GLOBAL_OPTIONS_KEY,
 } from '@rjsf/utils';
 
 import { declaresValueFor } from './declaresValue.ts';
+import { withGlobalUiOptions } from './fields/fieldWidgetUtils.ts';
 
 /** What the walk below needs that does not change as it descends */
 interface StaleSearchOptions<T, S extends StrictRJSFSchema, F extends FormContextType> {
@@ -243,8 +245,9 @@ function swappedKeys<T, S extends StrictRJSFSchema, F extends FormContextType>(
  *
  * Only paths are reported, and nothing here writes to the data: the caller deletes each one and lets the fill it
  * already runs produce the replacement. Deleting is what makes the replacement happen at all, since
- * `getDefaultFormState()` fills a key the data lacks but leaves one explicitly set to `undefined` alone, and it also
- * means the value written is the form's own computation rather than a copy of some schema's `default`.
+ * `getDefaultFormState()` fills a key the data lacks but leaves one explicitly set to `undefined` alone, unless it is
+ * the field of a `null` schema, whose one value it fills in, and it also means the value written is the form's own
+ * computation rather than a copy of some schema's `default`.
  *
  * Staleness is judged against the data **as it arrived**. The fill at the top of the caller's pass has already merged
  * the newly selected branch's own leaf defaults into the value, so a key whose new branch declares a property the old
@@ -374,7 +377,12 @@ export default function stalePathsForNewSchema<
       // The old side only differs where the level itself re-resolved, and asking costs a resolution per `$ref` option
       (newLevel === oldLevel || !optionsDeclareProperties<T, S, F>(schemaUtils, oldLevel))
     ) {
-      const levelUiSchema = levelPath.length ? getByPath<UiSchema<T, S, F> | undefined>(uiSchema, levelPath) : uiSchema;
+      const levelUiSchema = levelPath.length
+        ? withGlobalUiOptions<T, S, F>(
+            getByPath<UiSchema<T, S, F> | undefined>(uiSchema, levelPath),
+            uiSchema?.[UI_GLOBAL_OPTIONS_KEY],
+          )
+        : uiSchema;
       const computeFor = (level: S, keys: string[]) => {
         const defaults = schemaUtils.getDefaultFormState(
           onlyProperties<S>(level, level === newLevel ? newProperties : oldProperties, keys),

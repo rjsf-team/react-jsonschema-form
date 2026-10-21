@@ -78,7 +78,7 @@ const optionsSample: Sample = {
       'ui:required': true,
     },
   },
-  formData: {
+  initialFormData: {
     lastName: 'Norris',
     age: 75,
     bio: 'Roundhouse kicking asses since 1940',

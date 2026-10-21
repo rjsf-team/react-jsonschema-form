@@ -72,7 +72,7 @@ describe('conditional items', () => {
 
     const { node } = createFormComponent({
       schema,
-      formData,
+      initialFormData: formData,
     });
 
     expect(node.querySelector('input[label=zipcode]')).not.toBeNull();
@@ -86,7 +86,7 @@ describe('conditional items', () => {
 
     const { node } = createFormComponent({
       schema,
-      formData,
+      initialFormData: formData,
     });
 
     expect(node.querySelector('input[label=zipcode]')).toBeNull();
@@ -98,7 +98,7 @@ describe('conditional items', () => {
 
     const { node } = createFormComponent({
       schema,
-      formData,
+      initialFormData: formData,
     });
 
     // An empty formData will make the conditional evaluate to true because no properties are required in the if statement
@@ -114,7 +114,7 @@ describe('conditional items', () => {
 
     const { node } = createFormComponent({
       schema: schemaWithRef,
-      formData,
+      initialFormData: formData,
     });
 
     expect(node.querySelector('input[label=zip_code]')).not.toBeNull();
@@ -128,7 +128,7 @@ describe('conditional items', () => {
 
     const { node } = createFormComponent({
       schema: schemaWithRef,
-      formData,
+      initialFormData: formData,
     });
 
     expect(node.querySelector('input[label=zip_code]')).toBeNull();
@@ -181,7 +181,7 @@ describe('conditional items', () => {
 
       const { node } = createFormComponent({
         schema: schemaWithAllOf,
-        formData,
+        initialFormData: formData,
       });
 
       expect(node.querySelector('input[label=zipcode]')).not.toBeNull();
@@ -194,7 +194,7 @@ describe('conditional items', () => {
 
       const { node } = createFormComponent({
         schema: schemaWithAllOf,
-        formData,
+        initialFormData: formData,
       });
 
       expect(node.querySelector('input[label=zipcode]')).toBeNull();
@@ -207,7 +207,7 @@ describe('conditional items', () => {
 
       const { node } = createFormComponent({
         schema: schemaWithAllOf,
-        formData,
+        initialFormData: formData,
       });
 
       expect(node.querySelector('input[label=postcode]')).not.toBeNull();
@@ -222,7 +222,7 @@ describe('conditional items', () => {
 
       const { node } = createFormComponent({
         schema: schemaWithAllOf,
-        formData,
+        initialFormData: formData,
       });
 
       expect(node.querySelector('input[label=postcode]')).toBeNull();
@@ -264,7 +264,7 @@ describe('conditional items', () => {
 
       const { node } = createFormComponent({
         schema: schemaWithAllOfRef,
-        formData,
+        initialFormData: formData,
       });
 
       expect(node.querySelector('input[label=postcode]')).not.toBeNull();
@@ -287,7 +287,7 @@ describe('conditional items', () => {
         ...schema,
         additionalProperties: true,
       },
-      formData,
+      initialFormData: formData,
     });
 
     // The zipcode field exists, but not as an additional property

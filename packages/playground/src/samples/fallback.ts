@@ -22,7 +22,7 @@ const fallback: Sample = {
       },
     },
   },
-  formData: {
+  initialFormData: {
     noType: 1234,
     multipleTypes: 'a string',
     anything: { aKey: 'a value' },

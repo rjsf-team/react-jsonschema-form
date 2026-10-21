@@ -35,7 +35,7 @@ const errors: Sample = {
     },
   },
   uiSchema: {},
-  formData: {
+  initialFormData: {
     firstName: 'Chuck',
     active: 'wrong',
     skills: ['karate', 'budo', 'aikido'],

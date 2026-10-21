@@ -570,7 +570,7 @@ describe('SchemaField', () => {
       ])(
         'warns once about an unusable ui:field in %s items entry, not once per item',
         (_, schema, uiSchema, formData, label) => {
-          const { node } = createFormComponent({ schema, uiSchema, formData });
+          const { node } = createFormComponent({ schema, uiSchema, initialFormData: formData });
 
           expect(node.querySelectorAll('input')).toHaveLength(3);
           expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
@@ -1674,7 +1674,7 @@ describe('SchemaField', () => {
             type: 'object',
             properties: { name: named, kids: { type: 'array', items: ref }, best: ref },
           });
-          const { node } = createFormComponent({ schema, formData: { kids: [{}] } });
+          const { node } = createFormComponent({ schema, initialFormData: { kids: [{}] } });
           expect(buttons(node)).toEqual(['root_kids_0_best-button', 'root_best-button']);
         });
 
@@ -1817,7 +1817,7 @@ describe('SchemaField', () => {
             type: 'object',
             properties: { c: { $ref: '#/$defs/child' } },
           };
-          const { node } = createFormComponent({ schema, formData: { c: { k: 'text' } } });
+          const { node } = createFormComponent({ schema, initialFormData: { c: { k: 'text' } } });
           expect(node.querySelector('#root_c_k')).toHaveAttribute('type', 'text');
           expect(node.querySelector('#root_c_k')).toHaveValue('text');
         });
@@ -1847,7 +1847,7 @@ describe('SchemaField', () => {
               },
             },
           };
-          const { node } = createFormComponent({ schema, formData: { p: { info: { kind: { a: 'x' } } } } });
+          const { node } = createFormComponent({ schema, initialFormData: { p: { info: { kind: { a: 'x' } } } } });
           expect(node.querySelector('#root_p_info_kind_a')).toHaveValue('x');
         });
 
@@ -1907,7 +1907,7 @@ describe('SchemaField', () => {
           ['under a root $ref', { definitions, $ref: '#/definitions/node' }],
           ['under a root that is not a $ref', { definitions, ...tree }],
         ])('renders every row the data has, %s', (_, schema) => {
-          const { node } = createFormComponent({ schema, formData: data });
+          const { node } = createFormComponent({ schema, initialFormData: data });
 
           expect(node.querySelector('#root_kids_0_kids_0_kids_0_v')).toHaveValue('d');
           expect(node.querySelectorAll('button[id$="-button"]')).toHaveLength(0);
