@@ -1,5 +1,5 @@
 import type { MouseEvent } from 'react';
-import { memo, useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useId, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type {
   ArrayFieldItemButtonProps,
   ArrayFieldTemplateProps,
@@ -69,12 +69,13 @@ interface KeyedFormDataType<T> extends RowId {
  * no way to tell which rows survived: keyed by `generation`, which each such pass raises, so no row of an earlier pass
  * hands its instance to one of these, and ordered as the items are
  *
+ * @param keyPrefix - The field's own prefix for its rows' keys
  * @param length - The number of items
  * @param generation - The pass the rows are made in
  * @returns - The rows
  */
-function renderedRows(length: number, generation: number): RowId[] {
-  return Array.from({ length }, (_, index) => ({ key: `rjsf-array-item-${generation}-${index}`, order: index }));
+function renderedRows(keyPrefix: string, length: number, generation: number): RowId[] {
+  return Array.from({ length }, (_, index) => ({ key: `${keyPrefix}-${generation}-${index}`, order: index }));
 }
 
 /** The highest `order` among `rows`, or `-1` for none */
@@ -1115,12 +1116,12 @@ const NO_ITEMS: never[] = [];
  * a layout Effect, which React runs children first: a handler called from a layout Effect of a row or a template in
  * the same commit still reads the rows of the commit before, under the keys of which it reads the form's current items.
  */
-function useKeyedFormData<T = unknown>(formData: T[] = NO_ITEMS): KeyedFormDataState<T> {
+function useKeyedFormData<T = unknown>(keyPrefix: string, formData: T[] = NO_ITEMS): KeyedFormDataState<T> {
   const items: T[] = Array.isArray(formData) ? formData : NO_ITEMS;
   // `keys` are the rows of the field's latest change, and `confirmed` those of the last data that matched them;
   // `generation` counts the passes that made rows while rendering, see `renderedRows()`
   const [rows, setRows] = useState<{ keys: RowId[]; confirmed: RowId[]; generation: number }>(() => {
-    const keys = renderedRows(items.length, 0);
+    const keys = renderedRows(keyPrefix, items.length, 0);
     return { keys, confirmed: keys, generation: 0 };
   });
 
@@ -1137,7 +1138,7 @@ function useKeyedFormData<T = unknown>(formData: T[] = NO_ITEMS): KeyedFormDataS
     itemKeys = rows.confirmed;
   } else {
     const generation = rows.generation + 1;
-    itemKeys = renderedRows(items.length, generation);
+    itemKeys = renderedRows(keyPrefix, items.length, generation);
     setRows({ keys: itemKeys, confirmed: itemKeys, generation });
   }
 
@@ -1174,7 +1175,14 @@ export default function ArrayField<
 >(props: FieldProps<T[], S, F>) {
   const { schema, uiSchema, fieldPath, id: fieldId, registry, formData, onChange } = props;
   const { globalFormOptions, translateString } = registry;
-  const { keyedFormData, readSentRows, readSentItems, updateKeyedFormData } = useKeyedFormData<T>(formData);
+  // Each field's own, so a row's `itemKey` is unique beyond its array, among the rows of an array nested in it or of
+  // another form, as a template that uses it as a DOM id needs; the field's id would not do, since it moves with the
+  // row it is in
+  const rowKeyPrefix = `rjsf-array-item-${useId()}`;
+  const { keyedFormData, readSentRows, readSentItems, updateKeyedFormData } = useKeyedFormData<T>(
+    rowKeyPrefix,
+    formData,
+  );
   const readItems = useReadFieldData(fieldPath, readSentItems);
   useWarnIfFormDataNotPassedThrough('ArrayField', fieldId, fieldPath, formData);
   const sendMove = useSendMove(fieldPath);
@@ -1182,10 +1190,13 @@ export default function ArrayField<
   // event, whose instance React would then reuse; mutated by handlers only, so rendering stays pure
   const handlerRowCount = useRef(0);
   /** A row a handler adds next to `rows`, ordered after every one of them, as the newest */
-  const newRowId = useCallback((rows: readonly RowId[]): RowId => {
-    handlerRowCount.current += 1;
-    return { key: `rjsf-array-item-added-${handlerRowCount.current}`, order: maxOrder(rows) + 1 };
-  }, []);
+  const newRowId = useCallback(
+    (rows: readonly RowId[]): RowId => {
+      handlerRowCount.current += 1;
+      return { key: `${rowKeyPrefix}-added-${handlerRowCount.current}`, order: maxOrder(rows) + 1 };
+    },
+    [rowKeyPrefix],
+  );
 
   /** The rows as a handler sees them: the form's current items at this path, edits made since the form last rendered
    * included, under the keys of the rows rendered or sent since, with a fresh key for an item those do not cover.

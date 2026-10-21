@@ -547,9 +547,45 @@ describe('ArrayField', () => {
       const first = render(keyedForm());
       const second = render(keyedForm());
 
-      // Rendering makes the rows' keys from the data alone, so it is pure: no count kept outside the render moves
-      expect(rowKeys(first.container)).toEqual(rowKeys(second.container));
+      // Rendering makes the rows' keys from the field's own id and the data alone, so it is pure: no count kept outside
+      // the render moves, and the second form keys its rows as the first does but for the field's id
+      const withoutFieldId = (keys: (string | null)[]) => keys.map((key) => key?.split('-').slice(-2).join('-'));
+      expect(withoutFieldId(rowKeys(first.container))).toEqual(withoutFieldId(rowKeys(second.container)));
       expect(new Set(rowKeys(first.container)).size).toBe(2);
+    });
+
+    it('keys every row apart from the rows of other arrays, nested in it or in another form', async () => {
+      const nestedSchema: RJSFSchema = {
+        type: 'array',
+        items: { type: 'object', properties: { inner: { type: 'array', items: { type: 'string' } } } },
+      };
+      const templates = {
+        ArrayFieldTemplate: ExposedArrayKeyTemplate,
+        ArrayFieldItemTemplate: ExposedArrayKeyItemTemplate,
+      };
+      const { container } = render(
+        <>
+          <Form
+            schema={nestedSchema}
+            validator={validator}
+            initialFormData={[{ inner: ['a', 'b'] }]}
+            templates={templates}
+          />
+          <Form
+            schema={nestedSchema}
+            validator={validator}
+            initialFormData={[{ inner: ['c'] }]}
+            templates={templates}
+            idPrefix='other'
+          />
+        </>,
+      );
+
+      await user.click(elementOf(container, '.rjsf-array-item-add button'));
+
+      const keys = rowKeys(container);
+      expect(keys).toHaveLength(6);
+      expect(new Set(keys).size).toBe(keys.length);
     });
 
     it('gives a row added after a remove a key no row of the field has had', async () => {
