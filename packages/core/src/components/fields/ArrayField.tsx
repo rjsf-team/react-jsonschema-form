@@ -25,7 +25,6 @@ import {
   isFormDataAvailable,
   isObject,
   optionsList,
-  resolveConstantOptions,
   resolveWidget,
   shouldRenderOptionalField,
   toFieldPath,
@@ -239,10 +238,7 @@ function ArrayAsMultiSelect<
   // For computing `enumOptions`, fallback to the array property's uiSchema if there is no `items` schema
   // Avoids a breaking change reported in https://github.com/rjsf-team/react-jsonschema-form/issues/4985
   const itemsUiSchema = (uiSchema?.items ?? uiSchema) as UiSchema<T[], S, F>;
-  const enumOptions = optionsList<T[], S, F>(
-    resolveConstantOptions<S>(itemsSchema, registry.rootSchema),
-    itemsUiSchema,
-  );
+  const enumOptions = optionsList<T[], S, F>(itemsSchema, itemsUiSchema);
   const {
     widget = ARRAY_MODE_DEFAULT_WIDGETS.multiSelect,
     title: uiTitle,

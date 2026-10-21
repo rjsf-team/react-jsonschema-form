@@ -47,7 +47,7 @@ export default function getDisplayLabel<
     // Only the field's own `ui:widget` picks that field, so the `ui:globalOptions` one is left out
     const schemaType = getFieldTypeForUiSchema<T, S, F>(schema, uiSchema);
     const addedByAdditionalProperty = Boolean((schema as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG]);
-    // `retrieveSchema()` hands a select's options out as written, so constants written as `$ref`s are read resolved
+    // A schema handed in as written holds a select's constants as `$ref`s, so they are read resolved
     const isWholeValue = () =>
       isWholeValueSelect<S>(rootSchema === undefined ? schema : resolveConstantOptions<S>(schema, rootSchema));
 

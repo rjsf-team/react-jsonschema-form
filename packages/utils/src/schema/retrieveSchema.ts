@@ -25,6 +25,7 @@ import {
 import getSchemaOwnTypes from '../getSchemaOwnTypes.ts';
 import getXxxOfOptions from '../getXxxOfOptions.ts';
 import guessType from '../guessType.ts';
+import isConstantOptionList from '../isConstantOptionList.ts';
 import isObject, { isSchemaObject } from '../isObject.ts';
 import rendersOwnFieldBesideOption from '../rendersOwnFieldBesideOption.ts';
 import setOwn from '../setOwn.ts';
@@ -53,7 +54,7 @@ import buildPlan, {
   tupleSeeds,
   withoutKeys,
 } from './graph/mergePlan.ts';
-import type { MergePlan, OptionRequest, PlanPolicy, Seed, Seeding } from './graph/mergePlan.ts';
+import type { MergePlan, OptionRequest, PlanInput, PlanPolicy, Seed, Seeding } from './graph/mergePlan.ts';
 import parseSchemaGraph from './graph/parseSchemaGraph.ts';
 import type { AdoptedSchema, NodeId, SchemaGraph } from './graph/parseSchemaGraph.ts';
 import { childProvenance, extendChain, readProvenance, rootProvenance, stamp } from './graph/provenance.ts';
@@ -184,12 +185,12 @@ const stubs = new WeakMap<object, { readonly value: unknown; readonly stub: obje
  * else, so the same object is handed out again while the field's subschema is the same, which spares the deep
  * comparison that would otherwise find a new copy equal on every render of its parent.
  */
-function stubOf<S extends StrictRJSFSchema>(rawRoot: S, value: unknown, provenance: Provenance<S>): S {
+function stubOf<S extends StrictRJSFSchema>(value: S, provenance: Provenance<S>): S {
   const cached = stubs.get(provenance);
-  if (cached !== undefined && cached.value === value && isSchemaObject<S>(cached.stub)) {
+  if (cached?.value === value && isSchemaObject<S>(cached.stub)) {
     return cached.stub;
   }
-  const stub = handOut(schemaFrom(rawRoot, value), provenance);
+  const stub = handOut(value, provenance);
   stubs.set(provenance, { value, stub });
   return stub;
 }
@@ -640,6 +641,49 @@ function valueOf(data: unknown, key: string): unknown {
   return isObject(data) && Object.hasOwn(data, key) ? data[key] : undefined;
 }
 
+/** The check that a memoized view still holds for data whose `key` property collapses as it did when the view was
+ * built. It is built outside `buildView()` because a closure created there would share that call's scope, and so keep
+ * its data and merged schema alive for as long as the view is memoized.
+ *
+ * @param input - What the property's plan is built from, but its data
+ * @param key - The property's name
+ * @param position - Where the property sits, which decides whether its plan collapses
+ * @param collapsed - Whether the property collapsed for the data the view was built for
+ * @returns - The check, which takes the object's data
+ */
+function collapsesAsBefore<S extends StrictRJSFSchema, F extends FormContextType>(
+  input: PlanInput<S, F>,
+  key: string,
+  position: FieldPosition,
+  collapsed: boolean,
+): (data: unknown) => boolean {
+  return (data) => collapses(input.graph, buildPlan({ ...input, data: valueOf(data, key) }), position) === collapsed;
+}
+
+/** The options of a select `schema` offers through `$ref`s, each with its own reference resolved: where every option
+ * resolves to a constant, a select renders no field for them, so its readers take the constants as the view holds
+ * them rather than retrieving each. A reference that names nothing is left for the field retrieving that option to
+ * report
+ *
+ * @param schema - The view's merged schema
+ * @param rootSchema - The root schema the references name definitions of
+ * @returns - The keyword and the resolved options, or undefined where they are not such a select's
+ */
+function resolvedConstantOptions<S extends StrictRJSFSchema>(
+  schema: S,
+  rootSchema: S,
+): { key: 'anyOf' | 'oneOf'; options: S[] } | undefined {
+  const xxxOf = getXxxOfOptions<S>(schema);
+  const refs = xxxOf?.options.filter((option) => isSchemaObject<S>(option) && typeof option[REF_KEY] === 'string');
+  if (!xxxOf || !refs?.length || !refs.every((option) => ownRefResolves<S>(option, rootSchema))) {
+    return undefined;
+  }
+  const options = xxxOf.options.map((option) =>
+    isSchemaObject<S>(option) ? resolveOwnRef<S>(option, rootSchema) : option,
+  );
+  return isConstantOptionList<S>(options, true) ? { key: xxxOf.key, options } : undefined;
+}
+
 function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   root: SchemaGraph<S>,
@@ -705,11 +749,13 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
       }
       // A property its patterns are merged into is not the subschema it was declared as, so it is handed out merged
       const { seeds: propertySeeds, edge, patterned } = found;
-      if (!patterned && !isSchemaObject<S>(value)) {
-        return [key, value];
-      }
-      if (!patterned && mergesNothing(graph, propertySeeds)) {
-        return [key, stubOf(graph.rawRoot, value, child(propertySeeds, edge, false).provenance)];
+      if (!patterned) {
+        if (!isSchemaObject<S>(value)) {
+          return [key, value];
+        }
+        if (mergesNothing(graph, propertySeeds)) {
+          return [key, stubOf(value, child(propertySeeds, edge, false).provenance)];
+        }
       }
       const { next, provenance } = child(propertySeeds, edge, isObject(data) && Object.hasOwn(data, key));
       const own = valueOf(data, key);
@@ -717,9 +763,7 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
       const position: FieldPosition = { edge, view: 'render', dataDriven: next.dataDriven, chain: next.chain };
       const collapsed = collapses(graph, childPlan, position);
       if (childPlan.readsData) {
-        holds.push(
-          (dataToCheck) => collapses(graph, planOf(next.seeds, valueOf(dataToCheck, key)), position) === collapsed,
-        );
+        holds.push(collapsesAsBefore({ context, graph, seeds: next.seeds, policy }, key, position, collapsed));
       }
       if (collapsed) {
         // A boolean property collapses as the empty schema it stands for
@@ -728,9 +772,9 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
       }
       return [
         key,
-        patterned
-          ? buildView(context, root, provenance, own, false, childPlan)
-          : stubOf(graph.rawRoot, value, provenance),
+        !patterned && isSchemaObject<S>(value)
+          ? stubOf(value, provenance)
+          : buildView(context, root, provenance, own, false, childPlan),
       ];
     });
     Reflect.set(merged, PROPERTIES_KEY, Object.fromEntries(entries));
@@ -738,7 +782,7 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
   const item = (value: unknown, seedsOfItem: readonly Seed[], edge: ContainmentEdge) =>
     seedsOfItem.length === 0 || !isSchemaObject<S>(value) || isDecided(value)
       ? value
-      : stubOf(graph.rawRoot, value, child(seedsOfItem, edge, true).provenance);
+      : stubOf(value, child(seedsOfItem, edge, true).provenance);
   const tuple = (entries: unknown[]) =>
     entries.map((entry, index) => item(entry, tupleSeeds(plan, index), 'tupleItem'));
   // A view drops the row keywords that hold nothing, rather than holding them as undefined
@@ -784,9 +828,7 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
             },
             adopted.graph,
           );
-          return resolveOptions
-            ? buildView(context, root, provenance, data, false)
-            : stubOf(graph.rawRoot, option, provenance);
+          return resolveOptions ? buildView(context, root, provenance, data, false) : stubOf(option, provenance);
         }),
       );
     }
@@ -798,6 +840,10 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
     option = retrieveSchema<unknown, S, F>(context, selected, graph.rawRoot, data);
   } else if (selected !== undefined) {
     option = schemaOfBoolean(Boolean(selected), graph.rawRoot);
+  }
+  const constants = resolvedConstantOptions<S>(merged, root.rawRoot);
+  if (constants) {
+    Reflect.set(merged, constants.key, constants.options);
   }
   // An option's own extra keys are stubbed with the field offering it, which knows which option is selected
   const fieldSchema = option === undefined ? merged : withOptionExtraKeys<S>(merged, option);
