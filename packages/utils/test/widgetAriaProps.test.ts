@@ -26,23 +26,28 @@ describe('widgetAriaProps()', () => {
   it('names the widget as its caller asked', () => {
     expect(widgetAriaProps({ ...colorProps, 'aria-label': 'When, year' })['aria-label']).toBe('When, year');
   });
+  const hiddenLabelPlan = resolveFieldPresentation({
+    id: 'root_color',
+    declaration: {
+      label: 'template',
+      description: 'template',
+      errors: 'template',
+      help: 'template',
+      labelledBy: 'for',
+    },
+    label: 'Color',
+    showLabel: false,
+  });
   it('names the widget by the label text its plan hides, unless its caller names it', () => {
-    const presentation = resolveFieldPresentation({
-      id: 'root_color',
-      declaration: {
-        label: 'template',
-        description: 'template',
-        errors: 'template',
-        help: 'template',
-        labelledBy: 'for',
-      },
-      label: 'Color',
-      showLabel: false,
-    });
-    const props = { ...colorProps, 'aria-describedby': undefined, presentation };
+    const props = { ...colorProps, 'aria-describedby': undefined, presentation: hiddenLabelPlan };
     expect(widgetAriaProps(props)['aria-label']).toBe('Color');
     expect(widgetAriaProps({ ...props, 'aria-label': 'Paint' })['aria-label']).toBe('Paint');
     expect(widgetAriaProps({ ...props, 'aria-label': '' })['aria-label']).toBe('Color');
+  });
+  it("leaves out the selected option's description when its plan hides the label, though hideLabel is false", () => {
+    expect(
+      widgetAriaProps({ ...colorProps, hideLabel: false, presentation: hiddenLabelPlan })['aria-describedby'],
+    ).toBe('ext');
   });
   it("follows the caller's ids with the description of the selected option", () => {
     expect(widgetAriaProps(colorProps)['aria-describedby']).toBe('ext root_color__description');
@@ -83,6 +88,12 @@ describe('widgetAriaProps()', () => {
         'aria-describedby': 'root_color__error root_color__help root_color__selectedOptionDescription',
         'aria-invalid': true,
       });
+    });
+    // `hideLabel` is true wherever the template draws the label, which the plan, not `hideLabel`, decides
+    it('describes the widget by the selected option description its plan shows, whatever hideLabel says', () => {
+      expect(widgetAriaProps({ ...colorProps, hideLabel: true, presentation })['aria-describedby']).toBe(
+        'root_color__error root_color__help ext root_color__selectedOptionDescription',
+      );
     });
     it("adds the caller's ids to the plan's, keeping the rest of the plan's attributes", () => {
       expect(widgetAriaProps({ ...colorProps, presentation, value: 'b' })).toEqual({
