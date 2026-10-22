@@ -1,7 +1,6 @@
 import type { FormContextType, ObjectFieldTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
   buttonId,
-  canExpand,
   descriptionId,
   getTemplates,
   getUiOptions,
@@ -38,6 +37,7 @@ export default function ObjectFieldTemplate<
   const {
     ButtonTemplates: { AddButton },
   } = registry.templates;
+  const { schemaUtils } = registry;
   return (
     <>
       {title && (
@@ -67,7 +67,7 @@ export default function ObjectFieldTemplate<
             <Col xs={12}> {element.content}</Col>
           </Row>
         ))}
-        {canExpand(schema, uiSchema, formData) ? (
+        {schemaUtils.canExpand(schema, uiSchema, formData) ? (
           <Row>
             <Col xs={{ offset: 11, span: 1 }} className='py-0.5'>
               <AddButton

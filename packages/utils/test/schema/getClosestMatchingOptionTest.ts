@@ -435,6 +435,18 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
       const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
       expect(schemaUtils.getClosestMatchingOption(formData, options, 0, 'code')).toEqual(1);
     });
+    it('picks for the additionalPropertiesWhenAbsent it is asked under, whichever it was asked under first for the same data', () => {
+      testValidator.reset?.();
+      const options: RJSFSchema[] = [
+        { type: 'object', properties: { x: { type: 'string' } } },
+        { type: 'object', properties: {} },
+      ];
+      const rootSchema: RJSFSchema = { type: 'object', oneOf: options };
+      const formData = { a: 1 };
+      const allowing = { validator: testValidator, additionalPropertiesWhenAbsent: 'allow' } as const;
+      expect(getClosestMatchingOption(allowing, rootSchema, formData, options)).toEqual(1);
+      expect(getClosestMatchingOption({ validator: testValidator }, rootSchema, formData, options)).toEqual(0);
+    });
     describe('recursive $ref in an option, see https://github.com/rjsf-team/react-jsonschema-form/issues/5337', () => {
       const schema: RJSFSchema = {
         definitions: {

@@ -1,6 +1,7 @@
 import type { JSONSchema7Definition } from 'json-schema';
 
 import {
+  absentKeywordAllows,
   additionalPropertiesKeyword,
   getAdditionalPropertySchema,
   getMatchingPatternProperties,
@@ -129,8 +130,10 @@ export default function omitExtraData<
     const { properties, patternProperties } = childSchema;
     // Read with the precedence `getAdditionalPropertySchema()` reads the two keywords with, so a key the form renders
     // a field for, and the add button seeds, through an `unevaluatedProperties` is one this keeps rather than prunes
-    // out from under it
-    const additionalProperties = additionalPropertiesKeyword<S>(childSchema);
+    // out from under it, and with neither of them named, as the context says an absent one reads
+    const additionalProperties = absentKeywordAllows<S, F>(childSchema, context)
+      ? true
+      : additionalPropertiesKeyword<S>(childSchema);
     const requiredSet = new Set(childSchema.required ?? []);
 
     /** Recursively omits extra data from `value` via `omit`, then conditionally writes the result to
@@ -200,8 +203,9 @@ export default function omitExtraData<
       }
     }
 
-    // JSON Schema spec: absent additionalProperties defaults to true (allow all extra keys). Here
-    // we treat it as false so omitExtraData never inadvertently passes through undescribed keys.
+    // JSON Schema spec: absent additionalProperties defaults to true (allow all extra keys). Unless the context's
+    // `additionalPropertiesWhenAbsent` is 'allow', we treat it as false so omitExtraData never inadvertently passes
+    // through undescribed keys.
     if (additionalProperties !== undefined && additionalProperties !== false) {
       const addlSchema = additionalProperties as S | boolean;
       if (patternPropertiesRest !== undefined) {

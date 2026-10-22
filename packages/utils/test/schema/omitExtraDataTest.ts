@@ -45,6 +45,33 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
   });
 
   describe('omitExtraData()', () => {
+    describe('an object naming no additionalProperties', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { a: { type: 'string' } },
+        patternProperties: { '^n_': { type: 'number' } },
+      };
+      const formData = { a: 'x', n_1: 1, extra: 'y' };
+      const allowing = createSchemaUtils({ validator: testValidator, additionalPropertiesWhenAbsent: 'allow' }, schema);
+      it('keeps the keys no property or pattern names where the context allows them', () => {
+        expect(allowing.omitExtraData(schema, formData)).toEqual(formData);
+      });
+      it('omits them where the context forbids them, as it does by default', () => {
+        const forbidding = createSchemaUtils(
+          { validator: testValidator, additionalPropertiesWhenAbsent: 'forbid' },
+          schema,
+        );
+        expect(forbidding.omitExtraData(schema, formData)).toEqual({ a: 'x', n_1: 1 });
+        expect(createSchemaUtils({ validator: testValidator }, schema).omitExtraData(schema, formData)).toEqual({
+          a: 'x',
+          n_1: 1,
+        });
+      });
+      it('omits them where an unevaluatedProperties forbids them, whatever the context allows', () => {
+        const closed: RJSFSchema = { ...schema, unevaluatedProperties: false };
+        expect(allowing.omitExtraData(closed, formData)).toEqual({ a: 'x', n_1: 1 });
+      });
+    });
     it('drops a property whose $ref names a false definition', () => {
       const schema: RJSFSchema = {
         type: 'object',

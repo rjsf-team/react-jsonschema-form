@@ -1,4 +1,4 @@
-import { allowsAdditionalProperties } from '../additionalPropertiesUtils.ts';
+import { absentKeywordAllows, allowsAdditionalProperties } from '../additionalPropertiesUtils.ts';
 import {
   ADDITIONAL_PROPERTIES_KEY,
   ADDITIONAL_PROPERTY_FLAG,
@@ -1512,7 +1512,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   // A field resolved the way `retrieveSchema()` resolves a schema has the extra keys of its data stubbed among its
   // `properties`
   const schema =
-    view.stubs && allowsAdditionalProperties<S>(view.schema)
+    view.stubs && allowsAdditionalProperties<S, F>(view.schema, context)
       ? stubExistingAdditionalProperties<unknown, S, F>(context, view.schema, rootSchema, formData)
       : view.schema;
   const parentConst = schema[CONST_KEY];
@@ -1638,7 +1638,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
       onNullFill?.();
     });
   }
-  const { additionalProperties } = schema;
+  const additionalProperties = absentKeywordAllows<S, F>(schema, context) || schema.additionalProperties;
   if (additionalProperties && !initialDefaultsGenerated) {
     // as per spec additionalProperties may be either schema or boolean
     const additionalPropertiesSchema = schemaFrom(
@@ -1747,7 +1747,7 @@ function branchNullFills<T, S extends StrictRJSFSchema, F extends FormContextTyp
   const { rawFormData, uiSchema, uiSchemaDefinitions, nullFills } = props;
   const formData = isObject(rawFormData) ? rawFormData : {};
   const retrieved = settle(context, { ...view.field, retrieves: true }, view.data, view.depData, view.options);
-  const rendered = allowsAdditionalProperties<S>(retrieved.schema)
+  const rendered = allowsAdditionalProperties<S, F>(retrieved.schema, context)
     ? stubExistingAdditionalProperties<unknown, S, F>(context, retrieved.schema, view.graph.rawRoot, formData)
     : retrieved.schema;
   const nullsOnly = nullsOnlyContext(context);

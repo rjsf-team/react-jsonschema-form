@@ -369,20 +369,26 @@ describe('getRenderedOptionSchema()', () => {
 
   describe('an object parent', () => {
     const properties: RJSFSchema['properties'] = { a: { type: 'string' }, b: { type: 'string' } };
-    test('passes on only its required list and its type, since its own ObjectField renders the rest', () => {
+    test('passes on only its required list and its type, closing the option to extra keys, since its own ObjectField renders the rest', () => {
       const parent: RJSFSchema = { type: 'object', properties, required: ['a'], minProperties: 1 };
-      expect(getRenderedOptionSchema(parent, { required: ['b'] })).toEqual({ type: 'object', required: ['a', 'b'] });
+      expect(getRenderedOptionSchema(parent, { required: ['b'] })).toEqual({
+        type: 'object',
+        required: ['a', 'b'],
+        additionalProperties: false,
+      });
     });
     test('passes on the object type it was read as when it names no type of its own', () => {
       expect(getRenderedOptionSchema({ properties }, { required: ['a'] })).toEqual({
         type: 'object',
         required: ['a'],
+        additionalProperties: false,
       });
     });
     test("leaves an option naming its own type with that type, over the parent's", () => {
       expect(getRenderedOptionSchema({ properties }, { type: 'object', required: ['a'] })).toEqual({
         type: 'object',
         required: ['a'],
+        additionalProperties: false,
       });
     });
     test("reads an option's type or required list holding undefined as declaring nothing, passing on the parent's", () => {
@@ -391,25 +397,37 @@ describe('getRenderedOptionSchema()', () => {
       expect(getRenderedOptionSchema(parent, option)).toStrictEqual({
         type: 'object',
         required: ['a'],
+        additionalProperties: false,
         properties: { b: { minLength: 1 } },
       });
     });
-    test("leaves the extra keys to the parent's field, which stubs them with the selected option", () => {
+    test("leaves the extra keys to the parent's field, which stubs them with the selected option, and takes none itself", () => {
       const option: RJSFSchema = {
         properties: { b: { type: 'string' } },
         additionalProperties: { type: 'number' },
         patternProperties: { '^x': { type: 'string' } },
         unevaluatedProperties: false,
       };
+      // Stated as `false` rather than left out: a form reading an absent keyword as taking any key would otherwise give
+      // the option's field an add button beside the parent's
       expect(getRenderedOptionSchema({ type: 'object', properties }, option)).toEqual({
         type: 'object',
         properties: { b: { type: 'string' } },
+        additionalProperties: false,
       });
+    });
+    test('returns the same object for the same parent and option, rather than a copy on every call', () => {
+      const parent: RJSFSchema = { type: 'object', properties };
+      const option: RJSFSchema = { type: 'object', properties: { b: { type: 'string' } } };
+      const rendered = getRenderedOptionSchema(parent, option);
+      expect(getRenderedOptionSchema(parent, option)).toBe(rendered);
+      expect(getRenderedOptionSchema({ ...parent }, option)).not.toBe(rendered);
     });
     test('passes on the type list of a nullable object', () => {
       expect(getRenderedOptionSchema({ type: ['object', 'null'], properties }, { required: ['a'] })).toEqual({
         type: ['object', 'null'],
         required: ['a'],
+        additionalProperties: false,
       });
     });
   });

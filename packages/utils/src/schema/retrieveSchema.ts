@@ -1,4 +1,5 @@
 import {
+  absentKeywordAllows,
   additionalPropertiesKeyword,
   allowsAdditionalProperties,
   conjoin,
@@ -105,7 +106,9 @@ export default function retrieveSchema<
     return schemaFrom(schema, {});
   }
   const graph = parseSchemaGraph<S>(rootSchema ?? schemaFrom(schema, {}));
-  const leaf = leafViews.get(schema);
+  // An object the context opens to any extra key stubs those of the data, keywords or not, so its view reads the data
+  const isMemoized = !absentKeywordAllows<S, F>(schema, context);
+  const leaf = isMemoized ? leafViews.get(schema) : undefined;
   if (leaf?.graph === graph && isSchemaObject<S>(leaf.view)) {
     return leaf.view;
   }
@@ -118,14 +121,15 @@ export default function retrieveSchema<
     undefined,
     selectedOption,
   );
-  if (isLeaf(graph, schema)) {
+  if (isMemoized && isLeaf(graph, schema)) {
     leafViews.set(schema, { graph, view });
   }
   return view;
 }
 
 /** The views of the schemas that merge nothing and hold no subschemas, by schema: a call root, or a subschema
- * `retrieveSchema()` handed out for a field that merges nothing. Such a view reads neither the data nor the context, and
+ * `retrieveSchema()` handed out for a field that merges nothing. Such a view reads neither the data nor the context,
+ * except for an object the context opens to extra keys, which stubs those of the data and is never kept here, and
  * `isSelect()` and `sanitizeDataForNewSchema()` retrieve every property of a form on every edit, so it is retrieved
  * once per root rather than planned again on each call.
  */
@@ -698,7 +702,15 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
   const planOf = (seedsToPlan: readonly Seed[], dataToPlan: unknown) =>
     buildPlan({ context, graph, seeds: seedsToPlan, data: dataToPlan, policy });
   const plan = planned ?? planOf(seeds, data);
-  const viewKey = [field, plan, resolveOptions, data === undefined, selectedOption];
+  // Keyed on what an absent `additionalProperties` means too, which decides whether the view stubs its extra keys
+  const viewKey = [
+    field,
+    plan,
+    resolveOptions,
+    data === undefined,
+    selectedOption,
+    context.additionalPropertiesWhenAbsent === 'allow',
+  ];
   const memoized = views.peek(viewKey);
   if (memoized?.holds.every((holds) => holds(data)) && isSchemaObject<S>(memoized.view)) {
     return memoized.view;
@@ -848,7 +860,8 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
   // An option's own extra keys are stubbed with the field offering it, which knows which option is selected
   const fieldSchema = option === undefined ? merged : withOptionExtraKeys<S>(merged, option);
   const stubsExtraKeys =
-    (field.optionOf === undefined || field.stubsOwnExtraKeys === true) && allowsAdditionalProperties<S>(fieldSchema);
+    (field.optionOf === undefined || field.stubsOwnExtraKeys === true) &&
+    allowsAdditionalProperties<S, F>(fieldSchema, context);
   const view = handOut(
     stubsExtraKeys
       ? stubExistingAdditionalProperties<unknown, S, F>(context, merged, graph.rawRoot, data, option)

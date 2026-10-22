@@ -3445,6 +3445,77 @@ describe('ObjectField', () => {
     });
   });
 
+  describe('additionalPropertiesWhenAbsent', () => {
+    const addButtonOf = (node: Element) => node.querySelector('.rjsf-object-property-expand button');
+
+    it('offers no add button for an object naming no additionalProperties by default (#2137)', () => {
+      const { node } = createFormComponent({ schema: { type: 'object' } });
+
+      expect(addButtonOf(node)).toBeNull();
+    });
+
+    it("adds a property to an object naming no additionalProperties under 'allow' (#2137)", async () => {
+      const { node, onChange } = createFormComponent({
+        schema: { type: 'object' },
+        additionalPropertiesWhenAbsent: 'allow',
+      });
+
+      await user.click(elementOf(node, '.rjsf-object-property-expand button'));
+
+      expectToHaveBeenCalledWithFormData(onChange, { newKey: 'New Value' }, 'root');
+      expect(node.querySelector('#root_newKey-key')).toHaveValue('newKey');
+    });
+
+    it("renders the extra keys of the data with key inputs under 'allow', and none under 'forbid'", () => {
+      const schema: RJSFSchema = { type: 'object', properties: { a: { type: 'string' } } };
+      const initialFormData = { a: 'x', extra: 'y' };
+      const forbidding = createFormComponent({ schema, initialFormData, additionalPropertiesWhenAbsent: 'forbid' });
+      expect(forbidding.node.querySelector('#root_extra')).toBeNull();
+      forbidding.unmount();
+
+      const { node } = createFormComponent({ schema, initialFormData, additionalPropertiesWhenAbsent: 'allow' });
+
+      expect(node.querySelector('#root_extra-key')).toHaveValue('extra');
+      expect(node.querySelector('#root_extra')).toHaveValue('y');
+    });
+
+    it("keeps a property added under 'allow' through a live omit", async () => {
+      const { node, onChange } = createFormComponent({
+        schema: { type: 'object', properties: { a: { type: 'string' } } },
+        additionalPropertiesWhenAbsent: 'allow',
+        omitExtraData: true,
+        liveOmit: 'onChange',
+      });
+
+      await user.click(elementOf(node, '.rjsf-object-property-expand button'));
+      await user.clear(elementOf(node, '#root_newKey'));
+      await user.type(elementOf(node, '#root_newKey'), 'v');
+
+      expectToHaveBeenCalledWithFormData(onChange, { newKey: 'v' }, 'root_newKey');
+    });
+
+    it("offers no add button for an object whose unevaluatedProperties forbids extra keys, even under 'allow'", () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { a: { type: 'string' } },
+        unevaluatedProperties: false,
+      };
+      const { node } = createFormComponent({ schema, additionalPropertiesWhenAbsent: 'allow' });
+
+      expect(addButtonOf(node)).toBeNull();
+    });
+
+    it('offers the add button once the setting changes to allow', () => {
+      const schema: RJSFSchema = { type: 'object' };
+      const { node, rerender } = createFormComponent({ schema });
+      expect(addButtonOf(node)).toBeNull();
+
+      rerender({ schema, additionalPropertiesWhenAbsent: 'allow' });
+
+      expect(addButtonOf(node)).not.toBeNull();
+    });
+  });
+
   describe('propertyNames', () => {
     const schema: RJSFSchema = {
       type: 'object',

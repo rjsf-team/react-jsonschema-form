@@ -278,6 +278,53 @@ describe('option selection as form state', () => {
     expect(onChange.mock.lastCall?.[0].formData).toEqual({ b: undefined });
   });
 
+  it("gives an object union one heading and one add button of its own under additionalPropertiesWhenAbsent 'allow'", async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      title: 'Outer',
+      oneOf: [
+        { title: 'A', type: 'object', properties: { a: { type: 'string' } } },
+        { title: 'B', type: 'object', properties: { b: { type: 'string' } } },
+      ],
+    };
+    const forbidding = createFormComponent({ schema });
+    expect(forbidding.node.querySelectorAll('.rjsf-object-property-expand')).toHaveLength(0);
+    forbidding.unmount();
+
+    const { node, onChange } = createFormComponent({ schema, additionalPropertiesWhenAbsent: 'allow' });
+    // The union's own `ObjectField` takes the extra keys, so the option it shows, an object naming no
+    // `additionalProperties` either, offers none of its own
+    expect(node.querySelectorAll('.rjsf-object-property-expand')).toHaveLength(1);
+    expect(elementOf(node, '#root_XxxOf__title')).toHaveTextContent('Outer');
+
+    await user.type(node.querySelector('#root_a')!, 'x');
+    await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
+
+    expect(node.querySelector('#root_a-key')).toBeNull();
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ b: undefined });
+  });
+
+  it("lays out an object union whose shown option is closed as it does under 'forbid', under additionalPropertiesWhenAbsent 'allow'", () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      title: 'Outer',
+      oneOf: [
+        { title: 'A', type: 'object', properties: { a: { type: 'string' } }, additionalProperties: false },
+        { title: 'B', type: 'object', properties: { b: { type: 'string' } }, additionalProperties: false },
+      ],
+    };
+    const forbidding = createFormComponent({ schema });
+    const forbiddingMarkup = forbidding.node.innerHTML;
+    forbidding.unmount();
+
+    // The object itself names no `additionalProperties`, but joined with the option it shows it takes no extra key, as
+    // its add button reads it, so it renders no heading of its own beside the option
+    const { node } = createFormComponent({ schema, additionalPropertiesWhenAbsent: 'allow' });
+
+    expect(node.querySelector('#root_XxxOf__title')).toBeNull();
+    expect(node.innerHTML).toBe(forbiddingMarkup);
+  });
+
   it('renders a key the selected option declares once outside a Form, where the outermost field keeps the selection (#5461)', async () => {
     const schema: RJSFSchema = {
       type: 'object',

@@ -1,3 +1,5 @@
+import { allowsAdditionalProperties } from './additionalPropertiesUtils.ts';
+import canExpand from './canExpand.ts';
 import deepEquals from './deepEquals.ts';
 import logOnce from './logOnce.ts';
 import replaceEqualDeep from './replaceEqualDeep.ts';
@@ -112,8 +114,32 @@ class SchemaUtils<
       this.context.validator !== context.validator ||
       !deepEquals(this.rootSchema, rootSchema) ||
       !deepEquals(this.context.defaultFormStateBehavior ?? {}, context.defaultFormStateBehavior ?? {}) ||
-      this.context.customMergeAllOf !== context.customMergeAllOf
+      this.context.customMergeAllOf !== context.customMergeAllOf ||
+      (this.context.additionalPropertiesWhenAbsent === 'allow') !== (context.additionalPropertiesWhenAbsent === 'allow')
     );
+  }
+
+  /** Returns whether the object `schema` takes keys its own `properties` don't name, an absent `additionalProperties`
+   * read as the `context`'s `additionalPropertiesWhenAbsent` says
+   *
+   * @param schema - The object schema to check
+   * @returns - True when the object takes keys beyond the ones its `properties` name
+   */
+  allowsAdditionalProperties(schema: S): boolean {
+    return allowsAdditionalProperties<S, F>(schema, this.context);
+  }
+
+  /** Checks whether the field described by `schema`, having the `uiSchema` and `formData`, supports expanding, an
+   * absent `additionalProperties` read as the `context`'s `additionalPropertiesWhenAbsent` says
+   *
+   * @param schema - The schema for the field that is being checked
+   * @param [uiSchema] - The uiSchema for the field
+   * @param [formData] - The formData for the field
+   * @returns - True if the schema element has additionalProperties, is expandable, is not at the maxProperties limit
+   *          and has an allowed property name left to take
+   */
+  canExpand(schema: S, uiSchema?: UiSchema<T, S, F>, formData?: T): boolean {
+    return canExpand<T, S, F>(this.context, schema, uiSchema, formData);
   }
 
   /** Finds the field specified by the `path` within the root or recursed `schema`. If there is no field for the specified

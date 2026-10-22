@@ -14,6 +14,32 @@ The value of this prop will be passed to the `action` [HTML attribute on the for
 
 Note that this just renders the `action` attribute in the HTML markup. There is no real network request being sent to this `action` on submit. Instead, react-jsonschema-form catches the submit event with `event.preventDefault()` and then calls the [`onSubmit`](#onSubmit) function, where you could send a request programmatically with `fetch` or similar.
 
+## additionalPropertiesWhenAbsent
+
+What an object schema naming neither `additionalProperties` nor `unevaluatedProperties` says about the keys its `properties` and `patternProperties` leave over: `'forbid'`, the default, or `'allow'`.
+
+JSON Schema reads such an object as taking any extra key, as `additionalProperties: true` does, and `'allow'` has the form follow it ([#2137](https://github.com/rjsf-team/react-jsonschema-form/issues/2137)):
+
+- the object gets an add button, and the extra keys of its data render with their key input and remove button, each as a field for the value it holds
+- `omitExtraData` keeps those keys rather than dropping them
+- an object `anyOf`/`oneOf` union, such as `{ type: 'object', oneOf: [...] }`, renders its own field beside the option it shows, with its title and add button, unless the option it shows names `additionalProperties: false`
+
+A keyword the schema names is read as it stands either way, so an `additionalProperties: false` or an `unevaluatedProperties: false` still closes the object.
+To keep a union closed under `'allow'`, give it `additionalProperties: false`, or hide its add button with the [`expandable` option](../json-schema/objects.md#expandable-option).
+A schema that is no object, an untyped `{}` included, gets no add button.
+
+```tsx
+import { Form } from '@rjsf/core';
+import validator from '@rjsf/validator-ajv8';
+
+render(
+  <Form schema={{ type: 'object' }} validator={validator} additionalPropertiesWhenAbsent='allow' />,
+  document.getElementById('app'),
+);
+```
+
+See [Objects naming no `additionalProperties`](../json-schema/objects.md#objects-naming-no-additionalproperties) for more.
+
 ## autoComplete
 
 The value of this prop will be passed to the `autocomplete` [HTML attribute on the form](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form#attr-autocomplete).

@@ -15,9 +15,10 @@ import {
   THEN_KEY,
   UNEVALUATED_PROPERTIES_KEY,
 } from './constants.ts';
-import isObject from './isObject.ts';
+import isObject, { isSchemaObject } from './isObject.ts';
 import mergeSchemas from './mergeSchemas.ts';
 import rendersOwnFieldBesideOption from './rendersOwnFieldBesideOption.ts';
+import KeyedMemo from './schema/graph/keyedMemo.ts';
 import { withoutKeys } from './schema/graph/mergePlan.ts';
 import { CONTAINER_KEYWORDS, IDENTIFIER_KEYWORDS } from './schema/retrieveSchema.ts';
 import { isSubschemaKeyword, keywordShape } from './schemaUri.ts';
@@ -233,7 +234,8 @@ function meetSubschema(parent: unknown, option: unknown): unknown {
  * shows the parent's properties and other keywords, so the option takes only its `required` list and its type. That
  * field also stubs the extra keys of the data, for the parent and the selected option together (see
  * `retrieveSchema()`'s `selectedOption`), so the option is rendered without its own `additionalProperties`,
- * `patternProperties` and `unevaluatedProperties`, which would stub the same keys a second time. Every
+ * `patternProperties` and `unevaluatedProperties`, which would stub the same keys a second time, and with
+ * `additionalProperties: false`, so its field offers no extra key of its own beside the parent's. Every
  * other parent renders nothing of its own and leaves the whole field to the option, so the option takes each of the
  * parent's keywords that describes the value, such as an array's `items` and `uniqueItems` or a string's `format`.
  * The two are met with `meetSchemas()`, so an option's `items` adds to the parent's rather than replacing them. A
@@ -247,17 +249,40 @@ function meetSubschema(parent: unknown, option: unknown): unknown {
  * such as `getInputProps()`, which withholds the numeric `pattern` from a union precisely because the other types do
  * not have to match it, would otherwise be told the value is of a type the parent never pinned it to.
  *
+ * The result is the same object for the same `parent` and `option`, so a reader keying its work on the schema it is
+ * handed, as `retrieveSchema()` does, finds it again rather than taking a new copy for content to compare.
+ *
  * @param parent - The schema holding the `anyOf`/`oneOf`, with its `$ref`s and `allOf` resolved
  * @param option - The option, with its own `$ref` resolved
  * @returns - The option as it is rendered, or `option` itself when the parent has nothing to pass on
  */
 export default function getRenderedOptionSchema<S extends StrictRJSFSchema = RJSFSchema>(parent: S, option: S): S {
+  const keys = [parent, option];
+  const known = renderedOptions.peek(keys);
+  if (isSchemaObject<S>(known)) {
+    return known;
+  }
+  const rendered = renderOption<S>(parent, option);
+  renderedOptions.set(keys, rendered);
+  return rendered;
+}
+
+/** The options `getRenderedOptionSchema()` rendered, by parent and option: the option of an object parent is a copy
+ * on every call, and the sanitize walk and `MultiSchemaField` render each option again on every edit
+ */
+const renderedOptions = new KeyedMemo<object>();
+
+/** Renders `option` as `getRenderedOptionSchema()` describes */
+function renderOption<S extends StrictRJSFSchema>(parent: S, option: S): S {
   const rendersOwnField = rendersOwnFieldBesideOption<S>(parent);
   if (rendersOwnField && EXTRA_KEY_KEYWORDS.some((keyword) => Object.hasOwn(option, keyword))) {
-    return getRenderedOptionSchema<S>(parent, withoutKeys<S>(option, ...EXTRA_KEY_KEYWORDS));
+    return renderOption<S>(parent, withoutKeys<S>(option, ...EXTRA_KEY_KEYWORDS));
   }
   const inherited: GenericObjectType = {};
   if (rendersOwnField) {
+    // Stated rather than left out, since a form whose `additionalPropertiesWhenAbsent` is `'allow'` reads an object
+    // naming no `additionalProperties` as taking any key, which would give the option an add button of its own
+    inherited[ADDITIONAL_PROPERTIES_KEY] = false;
     if (parent.required) {
       inherited[REQUIRED_KEY] = parent.required;
     }

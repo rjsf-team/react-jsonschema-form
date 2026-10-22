@@ -1,8 +1,9 @@
 import { ALL_OF_KEY, UNEVALUATED_PROPERTIES_KEY } from './constants.ts';
+import getSchemaType from './getSchemaType.ts';
 import isObject, { isSchemaObject } from './isObject.ts';
 import KeyedMemo from './schema/graph/keyedMemo.ts';
 import { schemaFrom } from './schema/graph/mergePlan.ts';
-import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
+import type { FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from './types.ts';
 
 /** The compiled form of every `patternProperties` pattern seen so far, so that testing a key against one costs no
  * compile of its own. A schema names a small, fixed set of patterns, where the keys they are tested against are the
@@ -82,6 +83,26 @@ export function additionalPropertiesKeyword<S extends StrictRJSFSchema = RJSFSch
   return typedSchema.additionalProperties ?? typedSchema[UNEVALUATED_PROPERTIES_KEY];
 }
 
+/** Returns whether the form reads an object naming neither `additionalProperties` nor `unevaluatedProperties` as
+ * taking any key its other keywords leave over, as `additionalProperties: true` does: the JSON Schema spec reads it that
+ * way, and the context's `additionalPropertiesWhenAbsent: 'allow'` has the form follow it. A schema that is no object,
+ * an untyped `{}` included, has no keys for the form to offer or keep.
+ *
+ * @param schema - The schema to check
+ * @param context - The `SchemaContext` whose `additionalPropertiesWhenAbsent` decides
+ * @returns - True when the object's absent keyword takes any extra key
+ */
+export function absentKeywordAllows<
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(schema: S, context: SchemaContext<S, F>): boolean {
+  return (
+    context.additionalPropertiesWhenAbsent === 'allow' &&
+    additionalPropertiesKeyword<S>(schema) === undefined &&
+    getSchemaType<S>(schema) === 'object'
+  );
+}
+
 /** Returns whether an object takes keys its own `properties` don't name, which is what makes asking
  * `getAdditionalPropertySchema()` about such a key worth it at all: `retrieveSchema()` stubs the extra keys the form
  * data holds only for an object that takes them, `canExpand()` offers the add button only for one, and `ObjectField`
@@ -89,20 +110,25 @@ export function additionalPropertiesKeyword<S extends StrictRJSFSchema = RJSFSch
  *
  * A `patternProperties` naming a pattern says the object takes them, whatever an `additionalProperties: false` beside
  * it says about the names no pattern matches, since the names a pattern matches are the object's to take all the same.
- * Otherwise the keyword that describes those names answers, as long as it neither rejects them nor is missing: an
- * object naming none of the three keywords takes any key as far as a validator is concerned, but the form has no schema
- * to render one with and no name to add one under, so it offers none. An empty `patternProperties` names no pattern, so
- * it matches no name and describes no key the object could take, the way an empty `properties` declares none.
+ * Otherwise the keyword that describes those names answers, as long as it does not reject them. An object naming none
+ * of the three keywords takes any key as far as a validator is concerned, which the form follows only where the
+ * context's `additionalPropertiesWhenAbsent` is `'allow'`, see `absentKeywordAllows()`. An empty `patternProperties`
+ * names no pattern, so it matches no name and describes no key the object could take, the way an empty `properties`
+ * declares none.
  *
  * @param schema - The object schema to check
+ * @param context - The `SchemaContext` whose `additionalPropertiesWhenAbsent` says what an absent keyword means
  * @returns - True when the object takes keys beyond the ones its `properties` name
  */
-export function allowsAdditionalProperties<S extends StrictRJSFSchema = RJSFSchema>(schema: S): boolean {
+export function allowsAdditionalProperties<
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(schema: S, context: SchemaContext<S, F>): boolean {
   if (Object.keys(schema.patternProperties ?? {}).length > 0) {
     return true;
   }
   const keyword = additionalPropertiesKeyword<S>(schema);
-  return keyword !== undefined && keyword !== false;
+  return keyword === undefined ? absentKeywordAllows<S, F>(schema, context) : keyword !== false;
 }
 
 /** The `allOf` of the patterns a key matches, by those patterns */

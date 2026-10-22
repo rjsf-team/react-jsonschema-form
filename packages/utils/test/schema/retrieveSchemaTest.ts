@@ -2784,6 +2784,36 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         expect(retrieveSchema({ validator: testValidator }, once, undefined, formData)).toEqual(once);
       });
     });
+    describe('an object naming no additionalProperties', () => {
+      const schema: RJSFSchema = { type: 'object', properties: { a: { type: 'string' } } };
+      const formData = { a: 'x', extra: 'y' };
+      const allowing = { validator: testValidator, additionalPropertiesWhenAbsent: 'allow' } as const;
+      it('stubs the extra keys of the data only where the context allows them, whichever it was asked under first', () => {
+        // The view of an object that stubs nothing is memoized, so asking under 'forbid' first would otherwise hand
+        // the same view back under 'allow'
+        expect(Object.keys(retrieveSchema({ validator: testValidator }, schema, schema, formData).properties!)).toEqual(
+          ['a'],
+        );
+        expect(retrieveSchema(allowing, schema, schema, formData).properties).toEqual({
+          a: { type: 'string' },
+          extra: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true, [GUESSED_TYPE_FLAG]: true },
+        });
+        expect(Object.keys(retrieveSchema({ validator: testValidator }, schema, schema, formData).properties!)).toEqual(
+          ['a'],
+        );
+      });
+      it('stubs the extra keys of each data for an object naming no keyword at all, rather than the first it saw', () => {
+        // Such a schema merges nothing and holds no subschemas, so its view would otherwise be memoized by schema alone
+        const bare: RJSFSchema = { type: 'object' };
+        expect(Object.keys(retrieveSchema(allowing, bare, bare, { k: 'v' }).properties!)).toEqual(['k']);
+        expect(Object.keys(retrieveSchema(allowing, bare, bare, { j: 'v' }).properties!)).toEqual(['j']);
+        expect(retrieveSchema({ validator: testValidator }, bare, bare, { j: 'v' })).toEqual(bare);
+      });
+      it('stubs no extra key of an object whose unevaluatedProperties forbids them, whatever the context allows', () => {
+        const closed: RJSFSchema = { ...schema, unevaluatedProperties: false };
+        expect(Object.keys(retrieveSchema(allowing, closed, closed, formData).properties!)).toEqual(['a']);
+      });
+    });
     describe('stubExistingAdditionalProperties()', () => {
       it('stubs a key an option declares when no option is selected', () => {
         const schema: RJSFSchema = {

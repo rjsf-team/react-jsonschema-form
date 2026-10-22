@@ -6,7 +6,6 @@ import type {
   StrictRJSFSchema,
 } from '@rjsf/utils';
 import {
-  canExpand,
   descriptionId,
   getTemplates,
   getUiOptions,
@@ -59,6 +58,7 @@ export default function ObjectFieldTemplate<
   const {
     ButtonTemplates: { AddButton },
   } = registry.templates;
+  const { schemaUtils } = registry;
   return (
     <fieldset className={className} id={id}>
       {title && (
@@ -83,7 +83,7 @@ export default function ObjectFieldTemplate<
       )}
       {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
       {properties.map((prop: ObjectFieldTemplatePropertyType<T, S, F>) => prop.content)}
-      {canExpand<T, S, F>(schema, uiSchema, formData) && (
+      {schemaUtils.canExpand(schema, uiSchema, formData) && (
         <AddButton
           id={buttonId(id, 'add')}
           className='rjsf-object-property-expand'

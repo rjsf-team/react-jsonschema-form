@@ -449,6 +449,8 @@ function bestOption<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   const keys = [
     context.validator,
     context.customMergeAllOf,
+    // Decides whether an option whose `properties` name nothing matches the extra keys of the data
+    context.additionalPropertiesWhenAbsent === 'allow',
     rootSchema,
     relax,
     discriminatorField,

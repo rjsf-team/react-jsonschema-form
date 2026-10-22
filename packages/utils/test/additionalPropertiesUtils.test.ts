@@ -4,7 +4,11 @@ import {
   getAdditionalPropertySchema,
   getMatchingPatternProperties,
 } from '../src/additionalPropertiesUtils.ts';
-import type { RJSFSchema } from '../src/index.ts';
+import type { RJSFSchema, SchemaContext } from '../src/index.ts';
+import getTestValidator from './testUtils/getTestValidator.ts';
+
+const forbidding: SchemaContext = { validator: getTestValidator({}) };
+const allowing: SchemaContext = { ...forbidding, additionalPropertiesWhenAbsent: 'allow' };
 
 describe('getMatchingPatternProperties()', () => {
   it('returns an empty object when the schema has no patternProperties', () => {
@@ -49,31 +53,45 @@ describe('additionalPropertiesKeyword()', () => {
 });
 describe('allowsAdditionalProperties()', () => {
   it('returns true for a patternProperties naming a pattern, whatever an additionalProperties beside it forbids', () => {
-    expect(allowsAdditionalProperties({ patternProperties: { '^a': { type: 'string' } } })).toBe(true);
+    expect(allowsAdditionalProperties({ patternProperties: { '^a': { type: 'string' } } }, forbidding)).toBe(true);
     expect(
-      allowsAdditionalProperties({ patternProperties: { '^a': { type: 'string' } }, additionalProperties: false }),
+      allowsAdditionalProperties(
+        { patternProperties: { '^a': { type: 'string' } }, additionalProperties: false },
+        forbidding,
+      ),
     ).toBe(true);
     // An empty `patternProperties` names no pattern, so it matches no name and describes no key to take
-    expect(allowsAdditionalProperties({ patternProperties: {} })).toBe(false);
+    expect(allowsAdditionalProperties({ patternProperties: {} }, forbidding)).toBe(false);
   });
   it('returns what the keyword describing the unmatched names says', () => {
-    expect(allowsAdditionalProperties({ additionalProperties: true })).toBe(true);
-    expect(allowsAdditionalProperties({ additionalProperties: { type: 'string' } })).toBe(true);
-    expect(allowsAdditionalProperties({ additionalProperties: false })).toBe(false);
+    expect(allowsAdditionalProperties({ additionalProperties: true }, forbidding)).toBe(true);
+    expect(allowsAdditionalProperties({ additionalProperties: { type: 'string' } }, forbidding)).toBe(true);
+    expect(allowsAdditionalProperties({ additionalProperties: false }, forbidding)).toBe(false);
     const describedSchema: RJSFSchema = { unevaluatedProperties: { type: 'string' } };
     const forbiddenSchema: RJSFSchema = { unevaluatedProperties: false };
-    expect(allowsAdditionalProperties(describedSchema)).toBe(true);
-    expect(allowsAdditionalProperties(forbiddenSchema)).toBe(false);
+    expect(allowsAdditionalProperties(describedSchema, forbidding)).toBe(true);
+    expect(allowsAdditionalProperties(forbiddenSchema, forbidding)).toBe(false);
     // The same precedence `getAdditionalPropertySchema()` reads the two keywords with
     const evaluatedSchema: RJSFSchema = { additionalProperties: false, unevaluatedProperties: { type: 'string' } };
-    expect(allowsAdditionalProperties(evaluatedSchema)).toBe(false);
+    expect(allowsAdditionalProperties(evaluatedSchema, forbidding)).toBe(false);
   });
-  it('returns false for an object that names none of the keywords', () => {
-    // A validator takes any key for such an object, but the form has no schema to render one with and no name to
-    // add one under, so it offers none
-    expect(allowsAdditionalProperties({ type: 'object', properties: { a: { type: 'string' } } })).toBe(false);
+  it('returns false for an object that names none of the keywords, unless the context allows them', () => {
+    const schema: RJSFSchema = { type: 'object', properties: { a: { type: 'string' } } };
+    expect(allowsAdditionalProperties(schema, forbidding)).toBe(false);
     const spreadSchema: RJSFSchema = { patternProperties: undefined, additionalProperties: undefined };
-    expect(allowsAdditionalProperties(spreadSchema)).toBe(false);
+    expect(allowsAdditionalProperties(spreadSchema, forbidding)).toBe(false);
+    // The JSON Schema spec reads the absent keyword as `true`, which `additionalPropertiesWhenAbsent: 'allow'` follows
+    expect(allowsAdditionalProperties(schema, allowing)).toBe(true);
+    expect(allowsAdditionalProperties({ properties: {} }, allowing)).toBe(true);
+  });
+  it('reads a keyword the object names as it stands, whatever the context says about an absent one', () => {
+    expect(allowsAdditionalProperties({ type: 'object', additionalProperties: false }, allowing)).toBe(false);
+    const forbiddenSchema: RJSFSchema = { type: 'object', unevaluatedProperties: false };
+    expect(allowsAdditionalProperties(forbiddenSchema, allowing)).toBe(false);
+  });
+  it('returns false for a schema that is no object, even where the context allows an absent keyword', () => {
+    expect(allowsAdditionalProperties({}, allowing)).toBe(false);
+    expect(allowsAdditionalProperties({ type: 'string' }, allowing)).toBe(false);
   });
 });
 describe('getAdditionalPropertySchema()', () => {

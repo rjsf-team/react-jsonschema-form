@@ -54,6 +54,23 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
       });
       return { validator, isValid };
     }
+    describe('an object naming no additionalProperties', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { a: { type: 'string' } },
+        default: { a: 'x', extra: 'y' },
+      };
+      it('seeds the extra keys of its default where the context allows them', () => {
+        const allowing = createSchemaUtils(
+          { validator: testValidator, additionalPropertiesWhenAbsent: 'allow' },
+          schema,
+        );
+        expect(allowing.getDefaultFormState(schema)).toEqual({ a: 'x', extra: 'y' });
+      });
+      it('seeds none of them where the context forbids them', () => {
+        expect(createSchemaUtils({ validator: testValidator }, schema).getDefaultFormState(schema)).toEqual({ a: 'x' });
+      });
+    });
     describe('an explicitly undefined property schema', () => {
       // A JS-authored schema can conditionally omit a property with `{ properties: { foo: cond ? {...} : undefined } }`
       const schema = {

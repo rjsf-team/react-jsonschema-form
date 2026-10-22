@@ -211,7 +211,8 @@ function getFieldComponent<
   rendersOptionsItself: boolean;
   rendersOptionSelector: boolean;
   optionsGiveWayToField: boolean;
-  plannedAsOptions: boolean;
+  yieldsToOptions: boolean;
+  isWithheld: boolean;
   fieldKey: string | undefined;
   handsDownOwnParts: boolean;
 } {
@@ -337,11 +338,6 @@ function getFieldComponent<
   const rendersNamedField = namedField !== undefined && !isFallbackField;
 
   const isWithheld = yieldsToOptions && FieldComponent !== fields.ObjectField;
-  // An object with no properties of its own besides its options, a pure union, renders an empty field beside them, so
-  // like a withheld field it is planned as the field that renders its options, whose template labels it
-  const isPureUnion =
-    yieldsToOptions && !schema.properties && !schema.additionalProperties && !schema.patternProperties;
-  const plannedAsOptions = isWithheld || isPureUnion;
   /** A field the form's author supplies, through a `ui:field` or a `$id`, may render `SchemaField` under its own id
    * without drawing the parts it was planned to draw itself, as a wrapper adding markup around the field does, so it
    * hands those parts down to the field below rather than keeping them. The fallback UI and the option fields relay
@@ -362,7 +358,8 @@ function getFieldComponent<
     rendersOptionsItself,
     rendersOptionSelector,
     optionsGiveWayToField,
-    plannedAsOptions,
+    yieldsToOptions,
+    isWithheld,
     fieldKey,
     handsDownOwnParts,
   };
@@ -675,7 +672,52 @@ export function useSchemaFieldPlan<
   const fieldComponentId = retrievesOptions
     ? fieldPathToId(toFieldPath('XxxOf', fieldPath), globalFormOptions)
     : fieldId;
-  const plannedAsOptions = fieldToRender?.plannedAsOptions;
+  // `MultiSchemaField` renders the options it is handed. Memoized so a re-render that changed neither the schema nor
+  // the data hands it the same array, which its callbacks key on
+  const xxxOfOptions = useMemo(
+    () => (retrievesOptions ? retrievedOptionsOf<T, S, F>(schemaUtils, schema, formData) : undefined),
+    [retrievesOptions, schema, schemaUtils, formData],
+  );
+
+  // The option shown is the form's state, which `AnyOfField`/`OneOfField` read and write too. An object renders its own
+  // field beside the option, whose extra keys are stubbed once, with the selected option: a key the option declares is
+  // left to it, and any other is described by the object's extra-key keywords and the option's together
+  const { uiState, isOwn: ownsUiState } = useUiState();
+  const { list, selectedOption, selectOption, keepSelection, editOwnProperty } = useShownOption<T, S, F>(
+    uiState,
+    registry,
+    fieldPath,
+    xxxOfOptions,
+    formData,
+    getDiscriminatorFieldFromSchema<S>(schema),
+  );
+  const shownOption = useMemo(
+    () => (xxxOfOptions ? { fieldPath, options: xxxOfOptions, list, selectedOption, selectOption } : undefined),
+    [xxxOfOptions, list, selectedOption, selectOption, fieldPath],
+  );
+  // The field below a named one is the field beside the options the `SchemaField` that named it renders. Read there
+  // alone: the options are retrieved afresh with every change of the data, so a field reading them re-renders with
+  // every keystroke in a field beside them, past its `memo`
+  const fieldShownOption = optionsRenderedAbove ? use(ShownOptionContext) : shownOption;
+  // An object below a named field stubs its extra keys with the option shown beside it there, as one rendering the
+  // options does, so a key the option declares is left to the option rather than rendered twice
+  const optionBeside = fieldShownOption?.selectedOption ?? -1;
+  const fieldSchema = useMemo(
+    () =>
+      optionBeside >= 0 && rendersOwnFieldBesideOption<S>(schema)
+        ? schemaUtils.retrieveSchema(_schema, formData, false, optionBeside)
+        : schema,
+    [optionBeside, schema, schemaUtils, _schema, formData],
+  );
+  // An object with no properties of its own besides its options, a pure union, renders an empty field beside them, so
+  // like a withheld field it is planned as the field that renders its options, whose template labels it. One taking
+  // extra keys renders its own heading and add button beside them: read joined with the option shown, as its add button
+  // reads them, so an object whose every option is closed stays a pure union however its own keywords read
+  const isPureUnion =
+    fieldToRender?.yieldsToOptions === true &&
+    !fieldSchema.properties &&
+    !schemaUtils.allowsAdditionalProperties(fieldSchema);
+  const plannedAsOptions = fieldToRender?.isWithheld === true || isPureUnion;
   const renderedComponent = fieldToRender?.FieldComponent;
   const { presentation, labelPlacement } = useSchemaFieldPresentation<T, S, F>({
     id: fieldId,
@@ -724,6 +766,14 @@ export function useSchemaFieldPlan<
     renderedComponent,
     presentation,
     labelPlacement,
+    xxxOfOptions,
+    uiState,
+    ownsUiState,
+    keepSelection,
+    editOwnProperty,
+    shownOption,
+    fieldShownOption,
+    fieldSchema,
   };
 }
 
@@ -753,13 +803,12 @@ function SchemaFieldRender<
     required = false,
     registry,
   } = props;
-  const { schemaUtils, fields } = registry;
+  const { fields } = registry;
   const { AnyOfField: _AnyOfField, OneOfField: _OneOfField, CyclicSchemaField } = fields;
   const {
     namedFieldAbove,
     namedAbove,
     framedAbove,
-    optionsRenderedAbove,
     schema,
     xxxOfKey,
     uiField,
@@ -768,7 +817,6 @@ function SchemaFieldRender<
     ownUiOptions,
     uiOptions,
     fieldToRender,
-    retrievesOptions,
     deprecatedHandling,
     uiRequired,
     effectiveRequired,
@@ -781,47 +829,17 @@ function SchemaFieldRender<
     plannedAsOptions,
     renderedComponent,
     presentation,
-  } = useSchemaFieldPlan<T, S, F>(props);
-  const { required: fieldUiRequired, initialValue: fieldInitialValue, emptyValue: fieldEmptyValue } = ownUiOptions;
-
-  // `MultiSchemaField` renders the options it is handed. Memoized so a re-render that changed neither the schema nor
-  // the data hands it the same array, which its callbacks key on
-  const xxxOfOptions = useMemo(
-    () => (retrievesOptions ? retrievedOptionsOf<T, S, F>(schemaUtils, schema, formData) : undefined),
-    [retrievesOptions, schema, schemaUtils, formData],
-  );
-
-  // The option shown is the form's state, which `AnyOfField`/`OneOfField` read and write too. An object renders its own
-  // field beside the option, whose extra keys are stubbed once, with the selected option: a key the option declares is
-  // left to it, and any other is described by the object's extra-key keywords and the option's together
-  const { uiState, isOwn: ownsUiState } = useUiState();
-  const { list, selectedOption, selectOption, keepSelection, editOwnProperty } = useShownOption<T, S, F>(
-    uiState,
-    registry,
-    fieldPath,
     xxxOfOptions,
-    formData,
-    getDiscriminatorFieldFromSchema<S>(schema),
-  );
+    uiState,
+    ownsUiState,
+    keepSelection,
+    editOwnProperty,
+    shownOption,
+    fieldShownOption,
+    fieldSchema,
+  } = useSchemaFieldPlan<T, S, F>(props);
   const hasOptions = xxxOfOptions !== undefined;
-  const shownOption = useMemo(
-    () => (xxxOfOptions ? { fieldPath, options: xxxOfOptions, list, selectedOption, selectOption } : undefined),
-    [xxxOfOptions, list, selectedOption, selectOption, fieldPath],
-  );
-  // The field below a named one is the field beside the options the `SchemaField` that named it renders. Read there
-  // alone: the options are retrieved afresh with every change of the data, so a field reading them re-renders with
-  // every keystroke in a field beside them, past its `memo`
-  const fieldShownOption = optionsRenderedAbove ? use(ShownOptionContext) : shownOption;
-  // An object below a named field stubs its extra keys with the option shown beside it there, as one rendering the
-  // options does, so a key the option declares is left to the option rather than rendered twice
-  const optionBeside = fieldShownOption?.selectedOption ?? -1;
-  const fieldSchema = useMemo(
-    () =>
-      optionBeside >= 0 && rendersOwnFieldBesideOption<S>(schema)
-        ? schemaUtils.retrieveSchema(_schema, formData, false, optionBeside)
-        : schema,
-    [optionBeside, schema, schemaUtils, _schema, formData],
-  );
+  const { required: fieldUiRequired, initialValue: fieldInitialValue, emptyValue: fieldEmptyValue } = ownUiOptions;
 
   const rendersNamedField = fieldToRender?.rendersNamedField === true;
   // The selected option, and whatever renders this field's data below a field that is not named here, renders as a

@@ -19,7 +19,6 @@ import {
   setByPath,
   setOwn,
   ADDITIONAL_PROPERTIES_KEY,
-  allowsAdditionalProperties,
   deepEquals,
   getAdditionalPropertySchema,
   getAdditionalPropertyType,
@@ -136,7 +135,8 @@ function getAdditionalPropertyOrder<S extends StrictRJSFSchema = RJSFSchema>(
  * they don't match is left to `additionalProperties`: an `additionalProperties: false` forbids it, an
  * `unevaluatedProperties: false` forbids it where no `additionalProperties` evaluates it, and an
  * `additionalProperties` that is `true`, or absent and so read as `true`, describes it no better than the data it comes
- * to hold — and, where it is absent, `omitExtraData` prunes it, since patterns describe no key they don't match. So a
+ * to hold — and, where it is absent and the form's `additionalPropertiesWhenAbsent` is not `'allow'`, `omitExtraData`
+ * prunes it, since patterns describe no key they don't match. So a
  * described name is worth more to the user than the first one the `enum` happens to list, unless an
  * `additionalProperties` schema describes the unmatched name as fully as a pattern would, leaving a matching pattern
  * nothing to add.
@@ -672,7 +672,7 @@ export default function ObjectField<
    * default data for that field has been added to the formData.
    */
   const onAddProperty = useCallback(() => {
-    if (!allowsAdditionalProperties<S>(schema)) {
+    if (!schemaUtils.allowsAdditionalProperties(schema)) {
       return;
     }
     const currentFormData = readData();
@@ -712,6 +712,7 @@ export default function ObjectField<
     fieldPath,
     getAvailableKey,
     schema,
+    schemaUtils,
     resolvedSchema,
     seedForKey,
     forgetChangedSeeds,
