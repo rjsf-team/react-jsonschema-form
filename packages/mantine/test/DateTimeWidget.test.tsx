@@ -181,6 +181,7 @@ describe('DateTimeWidget', () => {
     test('describes the hours input by the field ids and marks it invalid when there are errors', () => {
       renderWidget({
         options: { description: 'Test description' },
+        // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated prop a component without a plan reads
         rawErrors: ['An error'],
       });
 
