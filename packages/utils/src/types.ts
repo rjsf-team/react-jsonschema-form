@@ -682,22 +682,27 @@ export interface GlobalUISchemaOptionsKeys {
   deprecatedHandling?: 'hide' | 'disable' | 'label';
 }
 
+/** The templates `getTemplate()` reads from a field's options: every one `TemplatesType` declares but `ButtonTemplates`.
+ * Derived rather than listed, so that a template a later release declares fails typecheck until
+ * `RESERVED_UI_OPTION_NAMES` lists it. `TemplatesType`'s index signature is filtered out, or `keyof` would be `string`
+ */
+type OverridableTemplateName = Exclude<
+  keyof { [K in keyof TemplatesType as string extends K ? never : K]: unknown },
+  'ButtonTemplates'
+>;
+
 /** Every option name RJSF reads for a field, which an extension of `GlobalUISchemaOptions` may not reuse: the
  * registry hands an extension's keys to every field along with RJSF's own, so one of these names would act as the
  * option RJSF reads per field. `ui:fieldReplacesAnyOrOneOf` is among them, since `getUiOptions()` returns it as an
- * option too, and so is every template `getTemplates()` reads from a field's options, the ones `ui:options` doesn't
- * declare included, and every option RJSF's widgets read that `ui:options` doesn't declare.
+ * option too, and so is `enumOptions`, which a field computes and hands its widget beside the options, every template
+ * `getTemplates()` reads from a field's options, the ones `ui:options` doesn't declare included, and every option RJSF's
+ * widgets read that `ui:options` doesn't declare.
  */
 export type ReservedUiOptionName =
   | keyof UIOptionsDeclaredType
   | 'fieldReplacesAnyOrOneOf'
-  | 'ArrayFieldItemButtonsTemplate'
-  | 'CyclicSchemaExpandTemplate'
-  | 'FallbackFieldTemplate'
-  | 'GridTemplate'
-  | 'MarkdownTemplate'
-  | 'MultiSchemaFieldTemplate'
-  | 'OptionalDataControlsTemplate'
+  | 'enumOptions'
+  | OverridableTemplateName
   | 'accept'
   | 'expandable'
   | 'format'

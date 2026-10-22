@@ -130,7 +130,7 @@ The theme's declarations are layered part by part over `@rjsf/core`'s, and the `
 ### Global UI options
 
 A theme whose widgets or templates read an option of their own from [`ui:globalOptions`](../api-reference/uiSchema.md#uiglobaloptions), as `@rjsf/mui` reads `mui`, declares its key as `globalUiOptionsKeys`.
-RJSF reads only its own options from `ui:globalOptions` and the keys the theme and the `Form`'s [`globalUiOptionsKeys`](../api-reference/form-props.md#globaluioptionskeys) prop declare, so every field hands the theme's to its widget and templates in their `options`, beneath the field's own.
+RJSF reads only its own options from `ui:globalOptions` and the keys the theme and the `Form`'s [`globalUiOptionsKeys`](../api-reference/form-props.md#globaluioptionskeys) prop declare, so every field hands the theme's to its widget in its `options`, beneath the field's own, and a template reads them with `getUiOptions(uiSchema, registry.globalUiOptions)`.
 A key may not be an option name RJSF reads per field, which `ReservedUiOptionName` lists.
 Type the keys with `ThemeGlobalUISchemaOptions`, which takes the user's own extensions too:
 

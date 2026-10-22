@@ -22,9 +22,9 @@ import type {
   ControlAttributes,
   FormContextType,
   GenericObjectType,
+  ReservedUiOptionName,
   RJSFSchema,
   StrictRJSFSchema,
-  TemplatesType,
   WidgetProps,
 } from '@rjsf/utils';
 import {
@@ -38,6 +38,7 @@ import {
   isLabelledByTemplate,
   isObject,
   labelValue,
+  RESERVED_UI_OPTION_NAMES,
   titleId,
   widgetDrawsLabel,
 } from '@rjsf/utils';
@@ -50,108 +51,17 @@ import { MANTINE_GLOBAL_UI_OPTIONS_KEYS } from './globalUiOptions.ts';
  */
 type DeclaredKeys<T> = keyof { [K in keyof T as string extends K ? never : K]: T[K] };
 
-/** The options rjsf reads from a widget's `options`: those `WidgetProps` declares, and a per-field override of any
- * template, which `getTemplates()` matches in `ui:options` by name. That includes `ButtonTemplates`, though
- * `getTemplate()` ignores an override of it.
+/** The options rjsf reads from a widget's `options`, which `ReservedUiOptionName` lists: those `ui:options` declares,
+ * `enumOptions`, every template `getTemplates()` matches in `ui:options` by name, `ui:fieldReplacesAnyOrOneOf` and the
+ * options rjsf's widgets read that no type declares. `ButtonTemplates` is added, which `TemplatesType` declares though
+ * `getTemplate()` ignores an override of it, and so are the theme's own global options. `ColorWidget` and `FileWidget`
+ * pass `format` and `accept` on themselves, since their Mantine components take options of those names.
  */
-type RjsfOptionName = DeclaredKeys<WidgetProps['options']> | DeclaredKeys<TemplatesType>;
-
-// A record, not a list, so that an option or template a later release declares fails typecheck until it is listed here
-const rjsfOptionNameRecord: Record<RjsfOptionName, true> = {
-  emptyValue: true,
-  initialValue: true,
-  classNames: true,
-  style: true,
-  title: true,
-  description: true,
-  placeholder: true,
-  label: true,
-  help: true,
-  autofocus: true,
-  autocomplete: true,
-  autocapitalize: true,
-  disabled: true,
-  readonly: true,
-  required: true,
-  enumDisabled: true,
-  enumNames: true,
-  enumOrder: true,
-  optgroups: true,
-  hideError: true,
-  order: true,
-  filePreview: true,
-  inline: true,
-  inputType: true,
-  rows: true,
-  submitButtonOptions: true,
-  widget: true,
-  field: true,
-  addable: true,
-  copyable: true,
-  itemLabel: true,
-  orderable: true,
-  removable: true,
-  duplicateKeySuffixSeparator: true,
-  enumOptions: true,
-  enableMarkdownInDescription: true,
-  enableMarkdownInHelp: true,
-  enableOptionalDataFieldForType: true,
-  allowClearTextInputs: true,
-  optionValueFormat: true,
-  optionsSchemaSelector: true,
-  deprecatedHandling: true,
-  ArrayFieldDescriptionTemplate: true,
-  ArrayFieldItemButtonsTemplate: true,
-  ArrayFieldItemTemplate: true,
-  ArrayFieldTemplate: true,
-  ArrayFieldTitleTemplate: true,
-  BaseInputTemplate: true,
-  ButtonTemplates: true,
-  CyclicSchemaExpandTemplate: true,
-  DescriptionFieldTemplate: true,
-  ErrorListTemplate: true,
-  FallbackFieldTemplate: true,
-  FieldErrorTemplate: true,
-  FieldHelpTemplate: true,
-  FieldTemplate: true,
-  GridTemplate: true,
-  MarkdownTemplate: true,
-  MultiSchemaFieldTemplate: true,
-  ObjectFieldTemplate: true,
-  OptionalDataControlsTemplate: true,
-  TitleFieldTemplate: true,
-  UnsupportedFieldTemplate: true,
-  WrapIfAdditionalTemplate: true,
-};
-
-// The options rjsf's widgets, fields and templates read that no type declares, so they can't be derived either: the
-// alt-date widgets' `yearsRange`, `format`, `hideNowButton` and `hideClearButton`, the file widget's `accept`, the
-// rating widget's `stars` and `shape`, and an object's `expandable`. `ColorWidget` and `FileWidget` pass `format` and
-// `accept` on themselves, since their Mantine components take options of those names.
-const undeclaredOptionNames = [
-  'accept',
-  'expandable',
-  'format',
-  'hideClearButton',
-  'hideNowButton',
-  'shape',
-  'stars',
-  'yearsRange',
-] as const;
-
-// `fieldReplacesAnyOrOneOf` is the uiSchema's own `ui:fieldReplacesAnyOrOneOf`, which `getUiOptions()` also gives a
-// field as an option. It can't be derived like the rest, since `UiSchema`'s `ui:${string}` key, which every option
-// takes, absorbs it.
-type StrippedOptionName =
-  | RjsfOptionName
-  | 'fieldReplacesAnyOrOneOf'
-  | (typeof undeclaredOptionNames)[number]
-  | keyof MantineGlobalUiOptionsKeys;
+type StrippedOptionName = ReservedUiOptionName | 'ButtonTemplates' | keyof MantineGlobalUiOptionsKeys;
 
 const strippedOptionNames = new Set<string>([
-  ...Object.keys(rjsfOptionNameRecord),
-  'fieldReplacesAnyOrOneOf',
-  ...undeclaredOptionNames,
+  ...RESERVED_UI_OPTION_NAMES,
+  'ButtonTemplates',
   ...MANTINE_GLOBAL_UI_OPTIONS_KEYS,
 ]);
 

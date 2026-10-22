@@ -2806,7 +2806,6 @@ describe('uiSchema', () => {
         emptyValue: 'EMPTY',
         label: false,
       };
-      // A nested field, since the root field's own uiSchema is the one holding `ui:globalOptions` (#5527)
       createFormComponent({
         schema: { type: 'object', properties: { foo: { type: 'string' } } },
         uiSchema: { 'ui:globalOptions': globalOptions },

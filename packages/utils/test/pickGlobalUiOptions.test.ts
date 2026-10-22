@@ -46,6 +46,14 @@ describe('pickGlobalUiOptions()', () => {
       'globalUiOptionsKeys names format, an option RJSF reads per field, so it is not read from ui:globalOptions.',
     );
   });
+  it('drops an extension key naming the enumOptions a field computes for its widget', () => {
+    const withEnumOptions: GenericObjectType = { enumOptions: [{ label: 'X', value: 0 }] };
+
+    expect(pickGlobalUiOptions(withEnumOptions, ['enumOptions'])).toEqual({});
+    expect(consoleWarnSpy).toHaveBeenCalledExactlyOnceWith(
+      'globalUiOptionsKeys names enumOptions, an option RJSF reads per field, so it is not read from ui:globalOptions.',
+    );
+  });
   it('takes an extension key that is one of the options RJSF reads there without a warning', () => {
     expect(pickGlobalUiOptions(globalOptions, ['label'])).toEqual({ label: false });
     expect(consoleWarnSpy).not.toHaveBeenCalled();

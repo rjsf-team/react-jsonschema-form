@@ -79,6 +79,7 @@ export const RESERVED_UI_OPTION_NAMES = Object.keys({
   submitButtonOptions: true,
   widget: true,
   fieldReplacesAnyOrOneOf: true,
+  enumOptions: true,
   accept: true,
   expandable: true,
   format: true,

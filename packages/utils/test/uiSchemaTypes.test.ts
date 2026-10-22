@@ -358,6 +358,8 @@ describe('GlobalUISchemaOptions (extensions)', () => {
     expectTypeOf<GlobalUISchemaOptions<{ widget?: string }>>().not.toBeNever();
     // @ts-expect-error `format` is an option RJSF's widgets read per field, though `ui:options` doesn't declare it
     expectTypeOf<GlobalUISchemaOptions<{ format?: string }>>().not.toBeNever();
+    // @ts-expect-error `enumOptions` is the list a field computes for its widget, which a global one would replace
+    expectTypeOf<GlobalUISchemaOptions<{ enumOptions?: string[] }>>().not.toBeNever();
     // @ts-expect-error an index signature would cover every one of RJSF's keys
     expectTypeOf<GlobalUISchemaOptions<Record<string, unknown>>>().not.toBeNever();
   });
