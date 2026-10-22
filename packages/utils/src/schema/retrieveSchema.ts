@@ -38,7 +38,6 @@ import type {
   RJSFSchema,
   SchemaContext,
   StrictRJSFSchema,
-  ValidatorType,
 } from '../types.ts';
 import { firstMatchingOption } from './getFirstMatchingOption.ts';
 import { markHandedOut, isHandedOut } from './graph/handedOut.ts';
@@ -336,25 +335,39 @@ export function expandRefCycle<S extends StrictRJSFSchema = RJSFSchema>(schema: 
  * `MultiSchemaField`
  */
 function renderPolicy<S extends StrictRJSFSchema, F extends FormContextType>(
-  validator: ValidatorType<S, F>,
+  context: SchemaContext<S, F>,
   graph: SchemaGraph<S>,
 ): PlanPolicy<S> {
-  return cachedPolicy<S>(validator, graph, 'render', () => ({
+  const matchContext = optionMatchContext(context);
+  return cachedPolicy<S>(matchContext.validator, graph, `render|${matchContext.key}`, () => ({
     allOf: true,
-    selectOption: (request) => dependencyOption(validator, request, request.data),
+    selectOption: (request) => dependencyOption(matchContext, request, request.data),
   }));
+}
+
+/** The part of a context a policy matches `dependencies` options with, and the key naming it beside the validator.
+ * A policy is cached across contexts, so it must keep no more of the one it was made in than its key names.
+ *
+ * @param context - The `SchemaContext` the policy is asked for in
+ * @returns - The context options are matched in, with its key
+ */
+export function optionMatchContext<S extends StrictRJSFSchema, F extends FormContextType>({
+  validator,
+  additionalPropertiesWhenAbsent,
+}: SchemaContext<S, F>): SchemaContext<S, F> & { key: string } {
+  return { validator, additionalPropertiesWhenAbsent, key: `absent:${additionalPropertiesWhenAbsent === 'allow'}` };
 }
 
 /** Returns the option of a list beside `dependencies` that `data` matches first, which is merged into the schema
  * rather than left to `MultiSchemaField` to choose; none for any other list
  *
- * @param validator - The validator the options are matched with
+ * @param context - The `SchemaContext` the options are matched in
  * @param request - The option list the plan met
  * @param data - The data the option is matched against
  * @returns - The index of the matching option, or undefined
  */
 export function dependencyOption<S extends StrictRJSFSchema, F extends FormContextType>(
-  validator: ValidatorType<S, F>,
+  context: SchemaContext<S, F>,
   { graph, options, dependencies, discriminator }: OptionRequest<S>,
   data: unknown,
 ): number | undefined {
@@ -362,7 +375,7 @@ export function dependencyOption<S extends StrictRJSFSchema, F extends FormConte
     return undefined;
   }
   return firstMatchingOption<S, F>(
-    { validator },
+    context,
     data,
     options.map((node) => ({ graph, node })),
     discriminator,
@@ -698,7 +711,7 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
   selectedOption?: number,
 ): S {
   const { graph, seeds } = field;
-  const policy = renderPolicy(context.validator, root);
+  const policy = renderPolicy(context, root);
   const planOf = (seedsToPlan: readonly Seed[], dataToPlan: unknown) =>
     buildPlan({ context, graph, seeds: seedsToPlan, data: dataToPlan, policy });
   const plan = planned ?? planOf(seeds, data);

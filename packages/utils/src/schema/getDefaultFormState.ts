@@ -57,7 +57,6 @@ import type {
   SchemaContext,
   StrictRJSFSchema,
   UiSchema,
-  ValidatorType,
 } from '../types.ts';
 import fieldShownOption, { rendersOptionsAsSelect } from './fieldShownOption.ts';
 import { closestOption } from './getClosestMatchingOption.ts';
@@ -96,6 +95,7 @@ import retrieveSchema, {
   dependencyOption,
   fieldOf,
   isLeafSchema,
+  optionMatchContext,
   optionNode as offeredOption,
   resolveMergedOwnRef,
   retrieveField,
@@ -607,7 +607,7 @@ interface ViewProps<T, S extends StrictRJSFSchema, F extends FormContextType> ex
  * merged as selected. Every other option list is left on the schema for the fold to select from.
  */
 function policyFor<S extends StrictRJSFSchema, F extends FormContextType>(
-  validator: ValidatorType<S, F>,
+  context: SchemaContext<S, F>,
   graph: SchemaGraph<S>,
   allOf: boolean | 'if',
   conditions: boolean,
@@ -615,16 +615,17 @@ function policyFor<S extends StrictRJSFSchema, F extends FormContextType>(
   cutRecursion = false,
   optionPolicy?: OptionPolicy,
 ): PlanPolicy<S> {
-  let key = `defaults|${allOf}|${conditions}|${cutRecursion}|${optionPolicy?.allOf}|${optionPolicy?.conditions}`;
+  const matchContext = optionMatchContext(context);
+  let key = `defaults|${matchContext.key}|${allOf}|${conditions}|${cutRecursion}|${optionPolicy?.allOf}|${optionPolicy?.conditions}`;
   for (const [provider, index] of selections) {
     key += `|${provider}:${index}`;
   }
-  return cachedPolicy<S>(validator, graph, key, () => ({
+  return cachedPolicy<S>(matchContext.validator, graph, key, () => ({
     allOf,
     conditions,
     cutRecursion,
     selectOption: (request) =>
-      selections.get(request.provider) ?? dependencyOption(validator, request, request.depData),
+      selections.get(request.provider) ?? dependencyOption(matchContext, request, request.depData),
     // An option the fold selects keeps the ref path of the node offering it: restarting it, as render does, would
     // restart it at every level of a recursion through an option chosen without data, which nothing then bounds
     optionsInheritRefPath: true,
@@ -748,7 +749,7 @@ function planWith<S extends StrictRJSFSchema, F extends FormContextType>(
   { allOf, conditions }: OptionPolicy,
   optionPolicy?: OptionPolicy,
 ): PlannedField<S> {
-  const policy = policyFor(context.validator, graph, allOf, conditions, selections, cutRecursion, optionPolicy);
+  const policy = policyFor(context, graph, allOf, conditions, selections, cutRecursion, optionPolicy);
   return { plan: buildPlan<S, F>({ context, graph, seeds, data, depData, policy }), allOf, conditions, optionPolicy };
 }
 
@@ -1386,7 +1387,7 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
     data: view.data,
     depData: view.depData,
     policy: policyFor(
-      context.validator,
+      context,
       graph,
       inherited.optionPolicy?.allOf ?? view.allOf,
       inherited.optionPolicy?.conditions ?? view.conditions,

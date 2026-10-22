@@ -70,6 +70,25 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
       it('seeds none of them where the context forbids them', () => {
         expect(createSchemaUtils({ validator: testValidator }, schema).getDefaultFormState(schema)).toEqual({ a: 'x' });
       });
+      it('fills the defaults of an option beside dependencies whose properties name nothing only where it forbids extra keys', () => {
+        const dependent: RJSFSchema = {
+          type: 'object',
+          properties: { kind: { type: 'string' } },
+          dependencies: { kind: ['kind'] },
+          oneOf: [
+            { properties: {} },
+            { properties: { b: { type: 'string' }, c: { type: 'string', default: 'filled' } } },
+          ],
+        };
+        const forbidding = createSchemaUtils({ validator: testValidator }, dependent);
+        const allowing = createSchemaUtils(
+          { validator: testValidator, additionalPropertiesWhenAbsent: 'allow' },
+          dependent,
+        );
+        expect(forbidding.getDefaultFormState(dependent, { b: 'x' })).toEqual({ b: 'x', c: 'filled' });
+        expect(allowing.getDefaultFormState(dependent, { b: 'x' })).toEqual({ b: 'x' });
+        expect(forbidding.getDefaultFormState(dependent, { b: 'x' })).toEqual({ b: 'x', c: 'filled' });
+      });
     });
     describe('an explicitly undefined property schema', () => {
       // A JS-authored schema can conditionally omit a property with `{ properties: { foo: cond ? {...} : undefined } }`

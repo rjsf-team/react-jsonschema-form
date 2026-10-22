@@ -2813,6 +2813,24 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         const closed: RJSFSchema = { ...schema, unevaluatedProperties: false };
         expect(Object.keys(retrieveSchema(allowing, closed, closed, formData).properties!)).toEqual(['a']);
       });
+      it('merges an option beside dependencies whose properties name nothing only where the context allows extra keys', () => {
+        const dependent: RJSFSchema = {
+          type: 'object',
+          properties: { kind: { type: 'string' } },
+          dependencies: { kind: ['kind'] },
+          oneOf: [
+            { title: 'open', properties: {} },
+            { title: 'b', properties: { b: { type: 'string' } } },
+          ],
+        };
+        const data = { b: 'x' };
+        const forbidding = { validator: testValidator };
+        // Each setting is asked twice, so a plan memoized under the other would hand back its option
+        expect(retrieveSchema(forbidding, dependent, dependent, data).title).toBe('b');
+        expect(retrieveSchema(allowing, dependent, dependent, data).title).toBe('open');
+        expect(retrieveSchema(forbidding, dependent, dependent, data).title).toBe('b');
+        expect(retrieveSchema(allowing, dependent, dependent, data).title).toBe('open');
+      });
     });
     describe('stubExistingAdditionalProperties()', () => {
       it('stubs a key an option declares when no option is selected', () => {
