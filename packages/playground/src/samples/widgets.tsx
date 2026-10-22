@@ -144,6 +144,12 @@ const widgets: Sample = {
         default: 'I am also read-only.',
         readOnly: true,
       },
+      confirmation: {
+        type: 'string',
+        title: 'Confirmation (checkbox for a string const)',
+        description: 'Checking it sets the value to "confirmed"; unchecking removes it',
+        const: 'confirmed',
+      },
       widgetOptions: {
         title: 'Custom widget with options',
         type: 'string',
@@ -227,6 +233,9 @@ const widgets: Sample = {
     },
     readonly: {
       'ui:readonly': true,
+    },
+    confirmation: {
+      'ui:widget': 'checkbox',
     },
     widgetOptions: {
       'ui:widget': ({
