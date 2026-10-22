@@ -13,7 +13,6 @@
     },
     "./lib": "./lib/index.js",
     "./lib/describeElementGivenAsComponent.js": null,
-    "./lib/loggedMessages.js": null,
     "./lib/templateOverrideWarnings.js": null,
     "./lib/*.js": "./lib/*.js"
   },

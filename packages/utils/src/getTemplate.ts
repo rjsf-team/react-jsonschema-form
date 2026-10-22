@@ -1,5 +1,5 @@
 import isComponentType from './isComponentType.ts';
-import { isTemplateName, warnOnInvalidOverride, warnOnInvalidRegistryTemplate } from './templateOverrideWarnings.ts';
+import { isTemplateName, warnOnInvalidOverride } from './templateOverrideWarnings.ts';
 import type { FormContextType, TemplatesType, Registry, UIOptionsType, StrictRJSFSchema, RJSFSchema } from './types.ts';
 
 /** The field a template-override warning should name, passed by the one caller that renders every field
@@ -19,14 +19,18 @@ export interface TemplateWarnSource<
   ownUiOptions: UIOptionsType<T, S, F>;
 }
 
+/** Returns the registry template `name` refers to, or `undefined` when the registry holds nothing under it */
+function lookupTemplate(customTemplates: Record<string, unknown>, name: string): unknown {
+  return Object.hasOwn(customTemplates, name) ? customTemplates[name] : undefined;
+}
+
 /** Returns the template with the given `name` from either the `uiSchema` if it is defined or from the `registry`
  * otherwise. NOTE, since `ButtonTemplates` are not overridden in `uiSchema` only those in the `registry` are returned.
  *
  * An override that is not a component is ignored, warning when a `warnSource` is given: a string naming no registered
  * template, a React element, or any other non-component value falls back to a valid `ui:globalOptions` template before
- * the registry's own, as `resolveUiField()` does for `ui:field`. A registry template that is not a component is warned
- * about once per registry. An explicit own `null` is not a mistake: it opts the field out of any override,
- * `ui:globalOptions` included, so the registry's own template renders without a warning.
+ * the registry's own, as `resolveUiField()` does for `ui:field`. An explicit own `null` is not a mistake: it opts the
+ * field out of any override, `ui:globalOptions` included, so the registry's own template renders without a warning.
  *
  * @param name - The name of the template to fetch, restricted to the keys of `TemplatesType`
  * @param registry - The `Registry` from which to read the template
@@ -53,18 +57,16 @@ export default function getTemplate<
   const customTemplates: Record<string, unknown> = templates;
   const uiOverrides: Record<string, unknown> = uiOptions;
   const override = uiOverrides[name] ?? undefined;
-  // No override, or an explicit own `null` that opts out of any override (including `ui:globalOptions`, as a falsy own
-  // `ui:field` does): the registry's own template renders. The check on it is cached per registry, so this common path
-  // does not re-validate a static registry on every render of every field and widget.
+  // No override, or an explicit own `null` that opts out of any override (including `ui:globalOptions`, as an own
+  // `null` `ui:field` does, though here `''`, `0` and `false` still warn): the registry's own template renders
   if (override === undefined) {
-    warnOnInvalidRegistryTemplate(name, customTemplates);
     return templates[name];
   }
   // Allow templates to be customized per-field by using string keys from the registry; a string naming no registered
   // template is not a component, so it falls through to the fallback below
   let template: unknown = override;
   if (typeof override === 'string') {
-    template = Object.hasOwn(customTemplates, override) ? customTemplates[override] : undefined;
+    template = lookupTemplate(customTemplates, override);
   }
   if (isComponentType(template)) {
     // Indexing templates or uiOptions by a generic key results in TS2590: Expression produces a union type that is too
@@ -81,12 +83,11 @@ export default function getTemplate<
   if (globalOverride !== undefined && globalOverride !== override) {
     let globalTemplate: unknown = globalOverride;
     if (typeof globalOverride === 'string') {
-      globalTemplate = Object.hasOwn(customTemplates, globalOverride) ? customTemplates[globalOverride] : undefined;
+      globalTemplate = lookupTemplate(customTemplates, globalOverride);
     }
     if (isComponentType(globalTemplate)) {
       return globalTemplate as TemplatesType<T, S, F>[Name];
     }
   }
-  warnOnInvalidRegistryTemplate(name, customTemplates);
   return templates[name];
 }

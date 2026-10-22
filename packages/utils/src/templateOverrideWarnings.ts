@@ -1,9 +1,5 @@
-import { isValidElement } from 'react';
-
 import describeUnresolvedComponent from './describeUnresolvedComponent.ts';
 import type { TemplateWarnSource } from './getTemplate.ts';
-import isComponentType from './isComponentType.ts';
-import { rememberLogged } from './loggedMessages.ts';
 import logOnce from './logOnce.ts';
 import type { FormContextType, TemplatesType, Registry, StrictRJSFSchema, RJSFSchema } from './types.ts';
 
@@ -49,40 +45,8 @@ export function isTemplateName(name: string): boolean {
   return Object.hasOwn(TEMPLATE_NAMES, name);
 }
 
-/** `isComponentType()` results for each registry's `templates` object. The registry is static for the form's
- * lifetime, so its templates are checked once each rather than on every override-free render. */
-const registryTemplateChecks = new WeakMap<Record<string, unknown>, Map<string, boolean>>();
-
-/** Logs once when the registry's own `name` template is not a component, checking each registry template at most once */
-export function warnOnInvalidRegistryTemplate(name: string, customTemplates: Record<string, unknown>): void {
-  if (!isTemplateName(name)) {
-    return;
-  }
-  let perName = registryTemplateChecks.get(customTemplates);
-  if (perName === undefined) {
-    perName = new Map();
-    registryTemplateChecks.set(customTemplates, perName);
-  }
-  let valid = perName.get(name);
-  if (valid === undefined) {
-    valid = isComponentType(customTemplates[name]);
-    perName.set(name, valid);
-  }
-  if (!valid) {
-    const fallback = customTemplates[name];
-    // A registry entry is used as given, never looked up by name, so a string one is described as the value it is
-    const description = describeUnresolvedComponent(
-      typeof fallback === 'string' ? undefined : fallback,
-      fallback,
-      'registered template',
-      'MyTemplate',
-    );
-    logOnce(`The registry's ${name} ${description}.`);
-  }
-}
-
-/** Logs the invalid-override warning once per uiSchema entry, naming the field's entry for an own `ui:` option and
- * `ui:globalOptions` for an inherited one */
+/** Logs the invalid-override warning once per message, naming the field's entry for an own `ui:` option and
+ * `ui:globalOptions` for an inherited one, so a changed value logs again */
 export function warnOnInvalidOverride<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
@@ -98,16 +62,8 @@ export function warnOnInvalidOverride<
   // The merged options spread the field's own entries last, so a key the field set itself is its own mistake even
   // when it repeats the global value
   const fromGlobal = !Object.hasOwn(warnSource.ownUiOptions, name) && Object.hasOwn(globalOverrides, name);
-  // The key keeps the distinctions the message makes (a string's text, an element, the type) so a changed value
-  // logs again, and is remembered alongside `logOnce()`'s own messages so `resetLogOnce()` clears it and it is capped the
-  // same way, while the message is still built only the first time
-  const source = fromGlobal ? 'global' : warnSource.entryLabel();
-  const key = `${name}\0${source}\0${typeof override}\0${typeof override === 'string' && override}\0${isValidElement(override)}`;
-  if (!rememberLogged(key)) {
-    return;
-  }
+  // `entryLabel()` runs only for an own override, so the label of a field without one is never built
+  const target = fromGlobal ? `ui:globalOptions.${name}` : `ui:${name} for ${warnSource.entryLabel()}`;
   const description = describeUnresolvedComponent(override, template, 'registered template', 'MyTemplate');
-  const target = fromGlobal ? `ui:globalOptions.${name}` : `ui:${name} for ${source}`;
-  // oxlint-disable-next-line no-console
-  console.warn(`${target} ${description}, so it is ignored.`);
+  logOnce(`${target} ${description}, so it is ignored.`);
 }

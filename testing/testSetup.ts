@@ -12,9 +12,6 @@ if (typeof window !== 'undefined') {
   mockResizeObserver();
 }
 
-// logOnce() only logs a message the first time it's seen, and so does getTemplate() for each override warning, so
-// without this reset a test asserting on a warning would pass or fail depending on whether an earlier
-// test in the same file had already triggered it.
-beforeEach(() => {
-  resetLogOnce();
-});
+// logOnce() only logs a message the first time it's seen, so without this a test asserting on a warning would pass or
+// fail depending on whether an earlier test in the same file had already triggered it.
+beforeEach(resetLogOnce);

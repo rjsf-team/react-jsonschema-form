@@ -150,31 +150,6 @@ describe('getTemplate', () => {
     );
   });
 
-  it('describes a string registry entry as the value it is, not as a name to look up', () => {
-    const invalidRegistry: Registry = { ...registry, templates: { ...registry.templates } };
-    const customTemplates: Record<string, unknown> = invalidRegistry.templates;
-    customTemplates.FieldTemplate = 'Foo';
-    expect(getTemplate('FieldTemplate', invalidRegistry)).toBe('Foo');
-    expect(warnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
-      "The registry's FieldTemplate is not a component (got string).",
-    );
-  });
-
-  it('warns when the registry template is not a component either', () => {
-    const invalidRegistry: Registry = { ...registry, templates: { ...registry.templates } };
-    const customTemplates: Record<string, unknown> = invalidRegistry.templates;
-    customTemplates.FieldTemplate = createElement(FakeTemplate);
-    const options: UIOptionsType = { FieldTemplate: 42 as unknown as UIOptionsType['FieldTemplate'] };
-    const warnSource = { entryLabel: () => '"root"', ownUiOptions: options };
-    getTemplate('FieldTemplate', invalidRegistry, options, warnSource);
-    expect(warnSuppression.consoleSpy.mock.calls).toEqual([
-      ['ui:FieldTemplate for "root" is not a component (got number), so it is ignored.'],
-      [
-        "The registry's FieldTemplate is a React element rather than a component (pass MyTemplate, not <MyTemplate />).",
-      ],
-    ]);
-  });
-
   it('names the field in the warning when given its label', () => {
     const fieldOptions: UIOptionsType = {
       FieldTemplate: 'Typo' as unknown as UIOptionsType['FieldTemplate'],
