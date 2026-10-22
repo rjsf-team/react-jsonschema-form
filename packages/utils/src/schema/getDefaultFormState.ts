@@ -18,7 +18,7 @@ import deepEquals from '../deepEquals.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getOptionUiSchema from '../getOptionUiSchema.ts';
 import getPropertySchema from '../getPropertySchema.ts';
-import getRenderedOptionSchema from '../getRenderedOptionSchema.ts';
+import { renderOption } from '../getRenderedOptionSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
 import getSchemaTypeForValue from '../getSchemaTypeForValue.ts';
 import getStaticItemsUiSchema from '../getStaticItemsUiSchema.ts';
@@ -1316,7 +1316,7 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
       ? mergeSchemas(remaining, option)
       : withDefaultOf(
           remaining,
-          getRenderedOptionSchema<S>(
+          renderOption<S>(
             remaining,
             offered === undefined
               ? option
@@ -1394,7 +1394,7 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
       merged.collapsed,
     ),
   });
-  const rendered = getRenderedOptionSchema<S>(remaining, optionAlone.schema);
+  const rendered = renderOption<S>(remaining, optionAlone.schema);
   return foldView<T, S, F>(
     context,
     { ...merged, schema: schemaFrom(rootSchema, withDefaultOf(remaining, rendered)) },

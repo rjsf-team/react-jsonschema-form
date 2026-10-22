@@ -272,8 +272,14 @@ export default function getRenderedOptionSchema<S extends StrictRJSFSchema = RJS
  */
 const renderedOptions = new KeyedMemo<object>();
 
-/** Renders `option` as `getRenderedOptionSchema()` describes */
-function renderOption<S extends StrictRJSFSchema>(parent: S, option: S): S {
+/** Renders `option` as `getRenderedOptionSchema()` describes, without keeping it: for a caller whose `parent` is a
+ * copy it made for the call, which no later call would find again
+ *
+ * @param parent - The schema holding the `anyOf`/`oneOf`, with its `$ref`s and `allOf` resolved
+ * @param option - The option, with its own `$ref` resolved
+ * @returns - The option as it is rendered, or `option` itself when the parent has nothing to pass on
+ */
+export function renderOption<S extends StrictRJSFSchema>(parent: S, option: S): S {
   const rendersOwnField = rendersOwnFieldBesideOption<S>(parent);
   if (rendersOwnField && EXTRA_KEY_KEYWORDS.some((keyword) => Object.hasOwn(option, keyword))) {
     return renderOption<S>(parent, withoutKeys<S>(option, ...EXTRA_KEY_KEYWORDS));
