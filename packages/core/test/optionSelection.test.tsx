@@ -148,6 +148,25 @@ describe('option selection as form state', () => {
     expect(formData).toEqual({ b: undefined });
   });
 
+  it('computes the defaults of a root switch from the option switched to, where the old one takes the new key as an extra one', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      additionalProperties: true,
+      oneOf: [
+        { title: 'A', properties: { a: { type: 'string' } }, additionalProperties: true },
+        { title: 'B', properties: { b: { type: 'string' } }, additionalProperties: true },
+      ],
+    };
+    const { node, onChange } = createFormComponent({ schema });
+
+    await user.type(node.querySelector('#root_a')!, 'x');
+    await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
+
+    // `{ b: undefined }` fits A too, as an extra key of A whose `null` fills it, so matching the data again would pick
+    // A. `toEqual()` reads a key holding `undefined` as missing, so that `null` fails it
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ b: undefined });
+  });
+
   it('renders a key the selected option declares once outside a Form, where the outermost field keeps the selection (#5461)', async () => {
     const schema: RJSFSchema = {
       type: 'object',

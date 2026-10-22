@@ -146,6 +146,10 @@ export interface FieldChange<T> {
    * at that path the user's. Any other root write, such as `setFieldValue('', data)`, is taken as written
    */
   editedPath?: FieldPathList;
+  /** Whether a field made the change, so the fields above it, the root's included, keep the options they show for the
+   * data it leaves; data set from outside, as `setFieldValue()` sets it, is matched again
+   */
+  isFieldEdit?: boolean;
 }
 
 /** What became of a change that moved keys, see `FormDataAccess.sendMove()`: refused by `transformChange`, which leaves
@@ -707,6 +711,10 @@ interface DeriveDataOptions {
   isSanitized?: boolean;
   /** The change this pass is for, if any: the value at its path is the user's */
   edit?: FieldEdit;
+  /** The path of the change this pass is for, if any, whose field and the fields above it keep the options they show.
+   * A root write is no `edit`, but the root field's own holds the root's option all the same
+   */
+  heldPath?: FieldPathList;
   /** This pass originated from `reset()`: it computes defaults the same way an initial render does even though the
    * instance has generated defaults before
    */
@@ -731,7 +739,7 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
   options: DeriveDataOptions,
   props: FormProps<T, S, F>,
 ): DerivedData<T, S, F> {
-  const { isSanitized = false, edit, isReset = false } = options;
+  const { isSanitized = false, edit, heldPath = edit?.path, isReset = false } = options;
   const { uiSchema = {} } = props;
   const schemaUtils = resolveSchemaUtils(props, current);
   const areSchemaUtilsReused = schemaUtils === current?.schemaUtils;
@@ -743,7 +751,7 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
   // though this instance has generated defaults before.
   const initialDefaultsGenerated = (current?.initialDefaultsGenerated ?? false) && !isReset;
   // The defaults of a field offering options are those of the option it shows, which is the form's to keep
-  const fieldState = current && fieldStateOf(current.uiState, schemaUtils, edit?.path);
+  const fieldState = current && fieldStateOf(current.uiState, schemaUtils, heldPath);
   const fill = (data: T | undefined) =>
     replaceEqualDeep(
       shareBase,
@@ -1166,6 +1174,7 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
       {
         isSanitized: editedPath !== undefined && !disabled && !readonly,
         edit: editedPath && { path: editedPath, newKeyOf: change.editedPath ? undefined : change.newKeyOf },
+        heldPath: editedPath ?? (change.isFieldEdit ? path : undefined),
       },
       props,
     );

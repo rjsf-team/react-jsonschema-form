@@ -495,6 +495,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
                 newKeyOf: move?.newKeyOf,
                 newOwnKeyOf: move?.newOwnKeyOf,
                 dropsOwnErrors: move?.dropsOwnErrors,
+                isFieldEdit,
               },
               props,
             );
