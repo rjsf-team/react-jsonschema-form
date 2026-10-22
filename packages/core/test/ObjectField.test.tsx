@@ -14,6 +14,7 @@ import type {
   UiSchema,
 } from '@rjsf/utils';
 import { fieldLabelId, isObject, isPlainObject, noop, ROOT_FIELD_PATH, UI_GLOBAL_OPTIONS_KEY } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
 import { act, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
@@ -2936,6 +2937,29 @@ describe('ObjectField', () => {
 
       expectToHaveBeenCalledWithFormData(onChange, { newKey: ['preset'] }, 'root');
     });
+
+    it.each<{ additionalProperties: RJSFSchema; expected: unknown }>([
+      { additionalProperties: { anyOf: [{ type: 'integer' }, { type: 'null' }] }, expected: 0 },
+      { additionalProperties: { oneOf: [{ type: 'number' }, { type: 'null' }] }, expected: 0 },
+      { additionalProperties: { type: 'integer', enum: [3, 4] }, expected: 3 },
+      { additionalProperties: { type: 'number', enum: [3, 4] }, expected: 3 },
+      { additionalProperties: { anyOf: [{ type: 'string', enum: ['a', 'b'] }, { type: 'null' }] }, expected: 'a' },
+      { additionalProperties: { oneOf: [{ type: 'integer', enum: [3, 4] }, { type: 'null' }] }, expected: 3 },
+      { additionalProperties: { anyOf: [{ type: 'integer' }, { type: 'null' }], const: null }, expected: null },
+      { additionalProperties: { anyOf: [{ type: 'integer' }, { type: 'null' }], default: null }, expected: null },
+      { additionalProperties: { type: 'integer', enum: [3, 4], default: 4 }, expected: 4 },
+    ])(
+      'should add a value valid for additionalProperties $additionalProperties (#5441)',
+      async ({ additionalProperties, expected }) => {
+        const customSchema: RJSFSchema = { ...schema, additionalProperties };
+        const { node, onChange } = createFormComponent({ schema: customSchema, initialFormData: {} });
+
+        await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+        expectToHaveBeenCalledWithFormData(onChange, { newKey: expected }, 'root');
+        expect(validator.isValid(customSchema, { newKey: expected }, customSchema)).toBe(true);
+      },
+    );
 
     it("should add a new default item if default is provided in the additionalProperties' schema", async () => {
       const customSchema: RJSFSchema = {

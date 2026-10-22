@@ -641,20 +641,32 @@ export default function ObjectField<
         rootSchema,
         uiSchemaDefinitions,
       });
-      const { widget, enumDisabled } = getUiOptions<T, S, F>(resolvedKeyUiSchema);
+      const { widget } = getUiOptions<T, S, F>(resolvedKeyUiSchema);
       // A schema naming a `type` list is stubbed with that list, so the field rendering the new value is the one the
       // widget picks out of it: a `textarea` on a `['null', 'number', 'string']` starts as a string rather than as a
       // `0` in the textarea. One that names no list is seeded as the field it is stubbed into renders it, which reads
       // a typeless `enum` of numbers as the number its values hold where a field's own type would call it a string
+      const optionsResolvedKeySchema = schemaUtils.retrieveSchema(resolvedKeySchema, undefined, true);
       const type = Array.isArray(resolvedKeySchema.type)
         ? getFieldTypeForWidget(resolvedKeySchema, widget)
-        : getSeedType<S>(schemaUtils.retrieveSchema(resolvedKeySchema, undefined, true));
+        : getSeedType<S>(optionsResolvedKeySchema);
+      // A subschema that is no select itself is rendered by `MultiSchemaField` on its first `anyOf`/`oneOf` option, so a
+      // select that option is, such as the `X` of an `X | null`, is the one whose options the seed must be among
+      let selectSchema = resolvedKeySchema;
+      let selectUiSchema: UiSchema<T, S, F> | undefined = resolvedKeyUiSchema;
+      const xxxOf = getXxxOfOptions<S>(optionsResolvedKeySchema);
+      const [firstXxxOfOption] = xxxOf?.options ?? [];
+      if (xxxOf && !isConstantSelect<S>(resolvedKeySchema) && isSchemaObject<S>(firstXxxOfOption)) {
+        selectSchema = firstXxxOfOption;
+        selectUiSchema = getOptionUiSchema<T, S, F>(resolvedKeyUiSchema, xxxOf.key, 0);
+      }
       // A select starts on its type's zero value only when that is an option the user can pick: neither a string's
       // `'New Value'` nor a number's `0` need be, so otherwise it starts on the first one it shows enabled
       let firstOption: EnumOptionsType<S> | undefined;
-      if (isConstantSelect<S>(resolvedKeySchema)) {
-        const enabledOptions = (optionsList<T, S, F>(resolvedKeySchema, resolvedKeyUiSchema) ?? []).filter(
-          (option) => !enumOptionsIsDisabled(option.value, enumDisabled),
+      if (isConstantSelect<S>(selectSchema)) {
+        const { enumDisabled: selectEnumDisabled } = getUiOptions<T, S, F>(selectUiSchema);
+        const enabledOptions = (optionsList<T, S, F>(selectSchema, selectUiSchema) ?? []).filter(
+          (option) => !enumOptionsIsDisabled(option.value, selectEnumDisabled),
         );
         const zeroValue = getDefaultValue<T, S, F>(translateString, type);
         firstOption = enabledOptions.some((option) => deepEquals(option.value, zeroValue))
