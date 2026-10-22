@@ -8,9 +8,10 @@ const RESERVED_NAMES: ReadonlySet<string> = new Set(RESERVED_UI_OPTION_NAMES);
 
 /** Picks the options a form reads from its root uiSchema's `ui:globalOptions`: the ones RJSF reads, which
  * `GLOBAL_UI_OPTIONS_KEYS` lists, and the extension keys the form's theme and the `Form` itself declare. Every other key
- * is left out, so a global option RJSF reads only per field, such as `widget` or `placeholder`, reaches no field. An
- * extension key that is one of those per-field names, which `RESERVED_UI_OPTION_NAMES` lists, is left out too, with a
- * warning: every field would otherwise read it as its own option.
+ * is left out, so a global option RJSF reads only per field, such as `widget` or `placeholder`, reaches no field. Such
+ * an option is warned about once, since a form that set one, such as a global `readonly`, would otherwise change with
+ * no sign of why. An extension key that is one of those per-field names, which `RESERVED_UI_OPTION_NAMES` lists, is
+ * left out too, with a warning of its own: every field would otherwise read it as its own option.
  *
  * @param [globalOptions] - The root uiSchema's `ui:globalOptions`
  * @param [extensionKeys=[]] - The extension keys the form's theme and the `Form` declare
@@ -39,6 +40,11 @@ export default function pickGlobalUiOptions(
       );
     } else if (Object.hasOwn(globals, key)) {
       picked[key] = globals[key];
+    }
+  }
+  for (const key of Object.keys(globals)) {
+    if (RESERVED_NAMES.has(key) && !GLOBAL_NAMES.has(key) && !extensionKeys.includes(key)) {
+      logOnce(`ui:globalOptions.${key} is not read: RJSF reads ${key} per field only.`);
     }
   }
   return picked;

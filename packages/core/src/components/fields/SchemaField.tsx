@@ -193,7 +193,7 @@ const RenderNothing = () => null;
  * appropriate `Field` implementation can be found then a wrapper around `UnsupportedFieldTemplate` is used.
  *
  * @param schema - The schema from which to obtain the type
- * @param uiOptions - The UI Options that may affect the component decision
+ * @param uiOptions - The field's own UI Options that may affect the component decision
  * @param namedField - The field `resolveNamedField()` resolved, if one is named
  * @param namedFieldKey - The registry key that field was named by, if it was named by one
  * @param registry - The registry from which fields and templates are obtained
@@ -586,11 +586,12 @@ export function useSchemaFieldPlan<
     () => ({ ...globalUiOptions, ...ownUiOptions }),
     [globalUiOptions, ownUiOptions],
   );
+  // The field's own options pick the field, since `getDisplayLabel()` and the defaults read only its own `ui:widget`
   const fieldToRender =
     uiField &&
     getFieldComponent<T, S, F>(
       schema,
-      uiOptions,
+      ownUiOptions,
       namedField,
       uiField.namedFieldKey,
       registry,
@@ -616,8 +617,8 @@ export function useSchemaFieldPlan<
   const effectiveRequired = uiRequired ?? required;
   // `ui:hideError` is resolved as the field's own, then the one the field above resolved to, so a parent's reaches its
   // children (#5490)
-  const hideError = uiBooleanOption(uiOptions.hideError) ?? props.hideError;
-  const hidden = uiOptions.widget === 'hidden' || deprecatedHandling === 'hide';
+  const hideError = uiBooleanOption(ownUiOptions.hideError) ?? props.hideError;
+  const hidden = ownUiOptions.widget === 'hidden' || deprecatedHandling === 'hide';
   const inheritedPresentation = useInheritedPresentation(fieldId);
   // The property name and the title a parent hands down label the field above, which a selected option or the fallback
   // UI's value renders the value of, so a field below with no title of its own isn't labelled by them a second time
@@ -675,7 +676,7 @@ export function useSchemaFieldPlan<
       ? inheritedPresentation.plan.description.text
       : '';
   const fieldDescription =
-    uiOptions.description || ownSchemaDescription || descriptionUndrawnAbove || schemaDescription;
+    ownUiOptions.description || ownSchemaDescription || descriptionUndrawnAbove || schemaDescription;
   // `ui:label` is resolved as `hideError` is, the field's own and then the one the field above rendering this id resolved
   // to, and only then `ui:globalOptions`, since an option given a `uiSchema` of its own doesn't carry the field's
   const showLabel =
@@ -704,7 +705,7 @@ export function useSchemaFieldPlan<
     label,
     showLabel,
     description: fieldDescription,
-    help: uiOptions.help,
+    help: ownUiOptions.help,
     errors: errorSchema?.__errors,
     hideError,
     hidden: hidden || isOptedOut,
@@ -929,8 +930,8 @@ function SchemaFieldRender<
     uiOptions,
   );
 
-  const disabled = Boolean(uiOptions.disabled ?? props.disabled) || deprecatedHandling === 'disable';
-  const readonly = Boolean(uiOptions.readonly ?? (props.readonly || props.schema.readOnly || schema.readOnly));
+  const disabled = Boolean(ownUiOptions.disabled ?? props.disabled) || deprecatedHandling === 'disable';
+  const readonly = Boolean(ownUiOptions.readonly ?? (props.readonly || props.schema.readOnly || schema.readOnly));
   if (
     uiRequired === false &&
     required &&
@@ -949,7 +950,7 @@ function SchemaFieldRender<
         'will still fail if it is left empty.',
     );
   }
-  const autofocus = Boolean(uiOptions.autofocus ?? props.autofocus);
+  const autofocus = Boolean(ownUiOptions.autofocus ?? props.autofocus);
   if (Object.keys(schema).length === 0) {
     return null;
   }

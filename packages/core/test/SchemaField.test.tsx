@@ -22,6 +22,7 @@ import {
   englishStringTranslator,
   errorId,
   mergeThemePresentation,
+  toFieldPath,
 } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen, waitFor } from '@testing-library/react';
@@ -119,6 +120,72 @@ describe('SchemaField', () => {
           useFallbackUiForUnsupportedType: false,
         },
         uiSchemaDefinitions: {},
+      });
+    });
+
+    describe('a registry whose globalUiOptions skipped pickGlobalUiOptions()', () => {
+      // A per-field name such as these can only reach the registry when it is built by hand
+      const unpickedGlobals: GenericObjectType = {
+        hideError: true,
+        description: 'Global description',
+        widget: 'textarea',
+        readonly: true,
+        help: 'Global help',
+      };
+      const NumberFieldMarker = () => <div id='number-field' />;
+
+      function renderWithUnpickedGlobals(fieldProps: Partial<FieldProps>) {
+        return createFormComponent({
+          schema: { type: 'object' },
+          uiSchema: {
+            'ui:field': (props: FieldProps) => (
+              <SchemaField
+                {...props}
+                name='child'
+                fieldPath={toFieldPath('child')}
+                id='root_child'
+                formData={undefined}
+                uiSchema={{}}
+                {...fieldProps}
+                registry={{
+                  ...props.registry,
+                  fields: { ...props.registry.fields, NumberField: NumberFieldMarker },
+                  globalUiOptions: unpickedGlobals,
+                }}
+              />
+            ),
+          },
+        });
+      }
+
+      it("keeps the parent's hideError over a global one", () => {
+        const { node } = renderWithUnpickedGlobals({
+          schema: { type: 'string' },
+          errorSchema: { __errors: ['Boom'] },
+          hideError: false,
+        });
+
+        expect(node).toHaveTextContent('Boom');
+      });
+
+      it("renders the field's own schema description over a global one", () => {
+        const { node } = renderWithUnpickedGlobals({ schema: { type: 'string', description: 'Own description' } });
+
+        expect(node).toHaveTextContent('Own description');
+        expect(node).not.toHaveTextContent('Global description');
+      });
+
+      it("keeps the parent's readonly over a global one, and renders no global help", () => {
+        const { node } = renderWithUnpickedGlobals({ schema: { type: 'string' }, readonly: false });
+
+        expect(node.querySelector('#root_child')).not.toHaveAttribute('readonly');
+        expect(node).not.toHaveTextContent('Global help');
+      });
+
+      it("picks a type list's field by the field's own widget only", () => {
+        const { node } = renderWithUnpickedGlobals({ schema: { type: ['null', 'number', 'string'] } });
+
+        expect(node.querySelector('#number-field')).toBeInTheDocument();
       });
     });
   });

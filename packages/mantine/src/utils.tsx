@@ -204,13 +204,18 @@ export function cleanupOptions<
 ): CleanedOptions<O> {
   const extraKeySet = 'has' in extraKeys ? extraKeys : new Set(extraKeys);
   const { globalUiOptions } = registry;
-  const ownOptions = globalUiOptions ? getUiOptions<T, S, F>(uiSchema) : {};
+  // Read only once a key the globals hold reaches the check, since a form's globals rarely hold one
+  let ownOptions: GenericObjectType | undefined;
   const result: GenericObjectType = {};
   for (const key in options) {
     if (
       !strippedOptionNames.has(key) &&
       !extraKeySet.has(key) &&
-      !(globalUiOptions && Object.hasOwn(globalUiOptions, key) && !Object.hasOwn(ownOptions, key))
+      !(
+        globalUiOptions &&
+        Object.hasOwn(globalUiOptions, key) &&
+        !Object.hasOwn((ownOptions ??= getUiOptions<T, S, F>(uiSchema)), key)
+      )
     ) {
       result[key] = options[key];
     }

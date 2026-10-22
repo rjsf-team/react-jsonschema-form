@@ -23,8 +23,10 @@ describe('pickGlobalUiOptions()', () => {
     expect(pickGlobalUiOptions(globalOptions, ['density', 'absent'])).toEqual({ label: false, density: 1 });
   });
   it('drops an extension key that is an option RJSF reads per field, and warns once', () => {
-    expect(pickGlobalUiOptions(globalOptions, ['widget'])).toEqual({ label: false });
-    pickGlobalUiOptions(globalOptions, ['widget']);
+    const withWidget: GenericObjectType = { label: false, widget: 'textarea' };
+
+    expect(pickGlobalUiOptions(withWidget, ['widget'])).toEqual({ label: false });
+    pickGlobalUiOptions(withWidget, ['widget']);
 
     expect(consoleWarnSpy).toHaveBeenCalledExactlyOnceWith(
       'globalUiOptionsKeys names widget, an option RJSF reads per field, so it is not read from ui:globalOptions.',
@@ -54,8 +56,20 @@ describe('pickGlobalUiOptions()', () => {
       'globalUiOptionsKeys names enumOptions, an option RJSF reads per field, so it is not read from ui:globalOptions.',
     );
   });
+  it('warns once about each option RJSF reads per field that the options hold', () => {
+    pickGlobalUiOptions(globalOptions);
+    pickGlobalUiOptions(globalOptions);
+
+    expect(consoleWarnSpy).toHaveBeenCalledTimes(2);
+    expect(consoleWarnSpy).toHaveBeenCalledWith(
+      'ui:globalOptions.widget is not read: RJSF reads widget per field only.',
+    );
+    expect(consoleWarnSpy).toHaveBeenCalledWith(
+      'ui:globalOptions.placeholder is not read: RJSF reads placeholder per field only.',
+    );
+  });
   it('takes an extension key that is one of the options RJSF reads there without a warning', () => {
-    expect(pickGlobalUiOptions(globalOptions, ['label'])).toEqual({ label: false });
+    expect(pickGlobalUiOptions({ label: false }, ['label'])).toEqual({ label: false });
     expect(consoleWarnSpy).not.toHaveBeenCalled();
   });
   it('returns undefined for options that are not an object, as a JSON uiSchema can give', () => {
