@@ -28,7 +28,7 @@ import {
 import { render, screen, waitFor, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
-import { computeEnumOptions, getSelectedOption } from '../src/components/fields/layoutMultiSchemaFieldSelector.ts';
+import { computeEnumOptions, getSelectedOptionIndex } from '../src/components/fields/layoutMultiSchemaFieldSelector.ts';
 import SchemaField from '../src/components/fields/SchemaField.tsx';
 import RadioWidget from '../src/components/widgets/RadioWidget.tsx';
 import SelectWidget from '../src/components/widgets/SelectWidget.tsx';
@@ -991,7 +991,7 @@ describe('LayoutMultiSchemaField', () => {
         { label: 'Dog', value: 'dog' },
       ]);
       expect(getPropertySchema(enumOptions[1].schema, 'kind')).toEqual(expect.objectContaining({ type: 'string' }));
-      expect(getSelectedOption(enumOptions, 'kind', 'dog')).toBe(enumOptions[1].schema);
+      expect(getSelectedOptionIndex(enumOptions, 'kind', 'dog')).toBe(1);
     });
     test('hands out each option as retrieving it gives, across changes of the data, when its selector is written in place', () => {
       const options: RJSFSchema[] = [
@@ -1012,23 +1012,21 @@ describe('LayoutMultiSchemaField', () => {
       expect(() => computeEnumOptions({}, schemaUtils)).toThrow('No enumOptions were computed from the schema {}');
     });
   });
-  describe('getSelectedOption', () => {
+  describe('getSelectedOptionIndex', () => {
     let selectorField: string;
     let enumOptions: EnumOptionsType[];
     beforeAll(() => {
       selectorField = getDiscriminatorFieldFromSchema(SIMPLE_ONEOF)!;
       enumOptions = optionsList(SIMPLE_ONEOF)!;
     });
-    test('no value, returns undefined', () => {
-      expect(getSelectedOption(enumOptions, selectorField, undefined)).toBeUndefined();
+    test('no value, returns -1', () => {
+      expect(getSelectedOptionIndex(enumOptions, selectorField, undefined)).toBe(-1);
     });
-    test('existing value,returns option with existing value', () => {
-      expect(getSelectedOption(enumOptions, selectorField, SIMPLE_ONEOF_OPTIONS[0].value)).toBe(
-        SIMPLE_ONEOF[ONE_OF_KEY]![0],
-      );
+    test('existing value, returns the index of the option with that value', () => {
+      expect(getSelectedOptionIndex(enumOptions, selectorField, SIMPLE_ONEOF_OPTIONS[1].value)).toBe(1);
     });
-    test('non-existing value, returns undefined', () => {
-      expect(getSelectedOption(enumOptions, selectorField, 'randomValue')).toBeUndefined();
+    test('non-existing value, returns -1', () => {
+      expect(getSelectedOptionIndex(enumOptions, selectorField, 'randomValue')).toBe(-1);
     });
   });
 });

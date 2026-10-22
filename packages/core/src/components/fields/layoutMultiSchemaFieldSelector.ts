@@ -25,7 +25,8 @@ import {
   resolveWidget,
 } from '@rjsf/utils';
 
-/** Gets the index of the selected option in the list of `options`, the way `getSelectedOption()` finds the option
+/** Gets the index of the selected option in the list of `options`, using the `selectorField` to search inside each
+ * `option` for the `properties[selectorField].default(or const)` that matches the given `value`
  *
  * @param options - The list of schemas each representing a choice in the `oneOf`
  * @param selectorField - The name of the field that is common in all of the schemas that represents the selector field
@@ -43,21 +44,6 @@ export function getSelectedOptionIndex<S extends StrictRJSFSchema = RJSFSchema>(
     const result = getByPath(selector, DEFAULT_KEY, getByPath(selector, CONST_KEY, defaultValue));
     return result === value;
   });
-}
-
-/** Gets the selected option from the list of `options`, using the `selectorField` to search inside each `option` for
- * the `properties[selectorField].default(or const)` that matches the given `value`.
- *
- * @param options - The list of schemas each representing a choice in the `oneOf`
- * @param selectorField - The name of the field that is common in all of the schemas that represents the selector field
- * @param value - The current value of the selector field from the data
- */
-export function getSelectedOption<S extends StrictRJSFSchema = RJSFSchema>(
-  options: EnumOptionsType<S>[],
-  selectorField: string,
-  value: unknown,
-): S | undefined {
-  return options[getSelectedOptionIndex<S>(options, selectorField, value)]?.schema;
 }
 
 /** Returns the `option` with its selector property read as `getOptionSelectorSchema()` reads it, so a selector written
@@ -95,11 +81,7 @@ export function computeEnumOptions<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(schema: S, schemaUtils: SchemaUtilsType<T, S, F>, uiSchema?: UiSchema<T, S, F>, formData?: T): EnumOptionsType<S>[] {
-  let selectorField = getDiscriminatorFieldFromSchema<S>(schema);
-  if (uiSchema) {
-    const { optionsSchemaSelector = selectorField } = getUiOptions<T, S, F>(uiSchema);
-    selectorField = optionsSchemaSelector;
-  }
+  const selectorField = getSelectorField<T, S, F>(schema, getUiOptions<T, S, F>(uiSchema));
   let tempSchema = schema;
   const xxxOfKey = getXxxOfKey<S>(schema);
   if (xxxOfKey) {

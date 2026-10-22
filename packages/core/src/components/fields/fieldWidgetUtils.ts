@@ -311,6 +311,21 @@ export function isAdditionalPropertySchema(schema: unknown) {
   return Boolean((schema as RJSFMarkedSchema)?.[ADDITIONAL_PROPERTY_FLAG]);
 }
 
+/** Returns `schema` without the `ADDITIONAL_PROPERTY_FLAG` that has its template draw the input and remove button of
+ * an extra key, for a field whose key is edited elsewhere or not at all
+ *
+ * @param schema - The field's schema
+ * @returns - The schema without `ADDITIONAL_PROPERTY_FLAG`, or `schema` itself where it has none
+ */
+export function withoutAdditionalFlag<S extends StrictRJSFSchema = RJSFSchema>(schema: S): S {
+  if (!(ADDITIONAL_PROPERTY_FLAG in schema)) {
+    return schema;
+  }
+  const unflagged = { ...schema };
+  Reflect.deleteProperty(unflagged, ADDITIONAL_PROPERTY_FLAG);
+  return unflagged;
+}
+
 /** The value a container field stores for what its child at `fieldPath` sends. A cleared child sends `undefined`,
  * which would take its slot out of the data, so an array item is stored as `null`, which keeps its index and gives the
  * validator an item to check (https://github.com/tdegrunt/jsonschema/issues/206), and an `additionalProperties` entry

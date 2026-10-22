@@ -1,5 +1,5 @@
 import type { ComponentType, JSXElementConstructor, ReactNode } from 'react';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import type {
   FieldProps,
   FieldPath,
@@ -39,6 +39,7 @@ import {
 
 import describeUnresolvedComponent from '../../describeUnresolvedComponent.ts';
 import fieldLabelForLog from '../../fieldLabelForLog.ts';
+import { isAdditionalPropertySchema, storedValue, withoutAdditionalFlag } from './fieldWidgetUtils.ts';
 
 /** The enumeration of the three different Layout GridTemplate type values
  */
@@ -716,10 +717,20 @@ function LayoutGridFieldComponent<
     [registry, gridSchema],
   );
   const { name, UIComponent, uiProps } = uiComponentProps;
-  const { schema, isRequired, isReadonly, optionsInfo, fieldPath } = useMemo(
+  const {
+    schema: flaggedSchema,
+    isRequired,
+    isReadonly,
+    optionsInfo,
+    fieldPath,
+  } = useMemo(
     () => getSchemaDetailsForField<T, S, F>(registry, name, initialSchema, formData, parentFieldPath),
     [registry, name, initialSchema, formData, parentFieldPath],
   );
+  const isAdditionalProperty = isAdditionalPropertySchema(flaggedSchema);
+  // A cell the layout names by an `additionalProperties` key keeps that key, since renaming or removing it would take
+  // the cell out of the layout, so its template draws no key input or remove button
+  const schema = useMemo(() => flaggedSchema && withoutAdditionalFlag<S>(flaggedSchema), [flaggedSchema]);
   // Memoized so the cell's `SchemaField` keeps its uiSchema reference while nothing it is built from changed
   const { fieldUiSchema, uiReadonly } = useMemo(
     () => computeFieldUiSchema<T, S, F>(name, uiProps, uiSchema, isReadonly, readonly),
@@ -746,6 +757,21 @@ function LayoutGridFieldComponent<
           }
         : fieldUiSchema,
     [hasDiscriminator, fieldUiSchema],
+  );
+  // The cell is cleared as `ObjectField` clears an `additionalProperties` entry, see `storedValue()`, so its key and the
+  // cell with it outlive a round trip through JSON. A `oneOf`/`anyOf` cell's option switch announces its key moves with
+  // the value it sends, which a form takes only unchanged, and a discriminated cell's `''` would fail every option's
+  // object
+  const storesAsAdditional = isAdditionalProperty && schema !== undefined && getXxxOfKey<S>(schema) === undefined;
+  const onCellChange = useCallback<FieldProps<T, S, F>['onChange']>(
+    (value, path, newErrorSchema, changedId) =>
+      onChange(
+        storesAsAdditional && path === fieldPath ? storedValue(value, path, true) : value,
+        path,
+        newErrorSchema,
+        changedId,
+      ),
+    [onChange, storesAsAdditional, fieldPath],
   );
 
   if (uiComponentProps.rendered) {
@@ -787,7 +813,7 @@ function LayoutGridFieldComponent<
         fieldPath={fieldPath}
         id={fieldPathToId(fieldPath, registry.globalFormOptions)}
         formData={getByPath(formData, namePath)}
-        onChange={onChange}
+        onChange={onCellChange}
         onBlur={onBlur}
         onFocus={onFocus}
         registry={registry}

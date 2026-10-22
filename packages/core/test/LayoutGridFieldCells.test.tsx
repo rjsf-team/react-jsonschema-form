@@ -1,5 +1,6 @@
 import type { FieldProps, FieldTemplateProps, GenericObjectType, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
-import { screen } from '@testing-library/react';
+import { ADDITIONAL_PROPERTY_FLAG } from '@rjsf/utils';
+import { cleanup, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import FieldTemplate from '../src/components/templates/FieldTemplate/index.ts';
@@ -280,6 +281,94 @@ describe('a discriminated cell of a layout grid', () => {
       expect(cell?.onKeyRenameBlur).toBeUndefined();
       expect(cell?.onRemoveProperty).toBeUndefined();
       expect(cell?.propertyNamesEnum).toBeUndefined();
+    });
+  });
+
+  it('draws no key input or remove button for a cell the layout names by an additionalProperties key', () => {
+    const { templateProps } = renderGrid(
+      { 'ui:field': 'LayoutGridField', 'ui:layoutGrid': { 'ui:row': [{ 'ui:col': ['extra'] }] } },
+      { type: 'object', additionalProperties: { type: 'string', title: 'Extra' }, default: { extra: 'x' } },
+    );
+
+    expect(ADDITIONAL_PROPERTY_FLAG in templateProps.get('root_extra')!.schema).toBe(false);
+    expect(screen.getByRole('textbox', { name: 'Extra' })).toHaveValue('x');
+    expect(screen.queryByRole('textbox', { name: /Key/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Remove' })).not.toBeInTheDocument();
+  });
+
+  describe('a cleared cell the layout names by an additionalProperties key', () => {
+    const extraUiSchema = (cell: UiSchema = {}): UiSchema => ({
+      'ui:field': 'LayoutGridField',
+      'ui:layoutGrid': { 'ui:row': [{ 'ui:col': ['extra'] }] },
+      extra: cell,
+    });
+    const stringEntries: RJSFSchema = { type: 'object', additionalProperties: { type: 'string', title: 'Extra' } };
+
+    it('is stored as an object stores it, so its key and the cell outlive a round trip through JSON', async () => {
+      const { onChange } = createFormComponent({
+        schema: stringEntries,
+        initialFormData: { extra: 'x' },
+        uiSchema: extraUiSchema(),
+      });
+
+      await user.clear(screen.getByRole('textbox', { name: 'Extra' }));
+
+      const { formData } = onChange.mock.lastCall![0];
+      expect(formData).toStrictEqual({ extra: '' });
+      cleanup();
+      createFormComponent({
+        schema: stringEntries,
+        initialFormData: JSON.parse(JSON.stringify(formData)),
+        uiSchema: extraUiSchema(),
+      });
+      expect(screen.getByRole('textbox', { name: 'Extra' })).toHaveValue('');
+    });
+
+    it('is stored as its ui:emptyValue', async () => {
+      const { onChange } = createFormComponent({
+        schema: stringEntries,
+        initialFormData: { extra: 'x' },
+        uiSchema: extraUiSchema({ 'ui:emptyValue': 'none' }),
+      });
+
+      await user.clear(screen.getByRole('textbox', { name: 'Extra' }));
+
+      expect(onChange.mock.lastCall![0].formData).toStrictEqual({ extra: 'none' });
+    });
+
+    it('is stored as its option switch sends it when discriminated, without the empty string no option takes', async () => {
+      const { onChange } = createFormComponent({
+        schema: { type: 'object', additionalProperties: SIMPLE_ONEOF },
+        initialFormData: { extra: { answer: '2' } },
+        uiSchema: extraUiSchema({ 'ui:widget': 'select' }),
+      });
+      const select = screen.getByRole('combobox');
+
+      await user.selectOptions(select, within(select).getByRole('option', { name: '' }));
+
+      expect(onChange.mock.lastCall![0].formData).toStrictEqual({ extra: undefined });
+    });
+
+    it('keeps the option an anyOf cell switches to, as its option switch sends it', async () => {
+      createFormComponent({
+        schema: {
+          type: 'object',
+          additionalProperties: {
+            title: 'Extra',
+            anyOf: [
+              { type: 'string', title: 'Text' },
+              { type: 'number', title: 'Num' },
+            ],
+          },
+        },
+        initialFormData: { extra: 'abc' },
+        uiSchema: extraUiSchema(),
+      });
+      const select = screen.getByRole('combobox');
+
+      await user.selectOptions(select, 'Num');
+
+      expect(screen.getByRole('combobox')).toHaveDisplayValue('Num');
     });
   });
 

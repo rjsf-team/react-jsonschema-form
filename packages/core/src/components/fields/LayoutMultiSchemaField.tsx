@@ -5,11 +5,9 @@ import {
   setByPath,
   getOptionUiSchema,
   fieldPathToName,
-  isObject,
   ONE_OF_KEY,
   getUiOptions,
   getXxxOfKey,
-  UI_FIELD_KEY,
   UI_OPTIONS_KEY,
 } from '@rjsf/utils';
 
@@ -23,13 +21,14 @@ import {
   getSelectorField,
   resolveSelectorWidget,
 } from './layoutMultiSchemaFieldSelector.ts';
+import { withoutNamedField } from './namedField.ts';
 
 /** Returns the field's `uiSchema` without the `field` and `fieldReplacesAnyOrOneOf` that had `SchemaField` render this
  * field in place of the options, in either spelling. A layout grid writes them into a cell's `uiSchema` itself, and
  * they mean nothing to the selector widget or to the option a switch selects, whose uiSchema falls back to this one
  *
  * @param uiSchema - The uiSchema of the field
- * @returns - The uiSchema without the directives that named this field
+ * @returns - `uiSchema` itself when it holds neither directive, else a copy without them
  */
 function omitFieldDirectives<T, S extends StrictRJSFSchema, F extends FormContextType>(
   uiSchema: UiSchema<T, S, F> | undefined,
@@ -37,14 +36,13 @@ function omitFieldDirectives<T, S extends StrictRJSFSchema, F extends FormContex
   if (!uiSchema) {
     return uiSchema;
   }
-  const uiOptions = uiSchema[UI_OPTIONS_KEY];
-  const strippedUiSchema: UiSchema<T, S, F> = { ...uiSchema };
-  delete strippedUiSchema[UI_FIELD_KEY];
-  delete strippedUiSchema['ui:fieldReplacesAnyOrOneOf'];
-  if (isObject(uiOptions)) {
-    const { field: _field, fieldReplacesAnyOrOneOf: _fieldReplacesAnyOrOneOf, ...selectorUiOptions } = uiOptions;
-    strippedUiSchema[UI_OPTIONS_KEY] = selectorUiOptions;
+  const withoutField = withoutNamedField<T, S, F>(uiSchema);
+  const { fieldReplacesAnyOrOneOf, ...selectorUiOptions } = withoutField[UI_OPTIONS_KEY] ?? {};
+  if (withoutField['ui:fieldReplacesAnyOrOneOf'] === undefined && fieldReplacesAnyOrOneOf === undefined) {
+    return withoutField;
   }
+  const strippedUiSchema: UiSchema<T, S, F> = { ...withoutField, [UI_OPTIONS_KEY]: selectorUiOptions };
+  delete strippedUiSchema['ui:fieldReplacesAnyOrOneOf'];
   return strippedUiSchema;
 }
 
