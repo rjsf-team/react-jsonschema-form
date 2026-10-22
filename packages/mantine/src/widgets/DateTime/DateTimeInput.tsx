@@ -5,9 +5,9 @@ import { assignTime, DateInput, TimePicker } from '@mantine/dates';
 import type { DateStringValue, TimePickerProps } from '@mantine/dates';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
   dateElementAriaLabel,
   dateElementLabel,
+  getControlDescribedBy,
   getDateTimeLocalValue,
   labelValue,
   TranslatableString,
@@ -189,6 +189,7 @@ export default function DateTimeInput<
     (typeof displayFormat === 'string' && hasSeconds(displayFormat)) ||
     (typeof valueFormat === 'string' && hasSeconds(valueFormat));
   const successId = useShownSuccessId(id);
+  const describedBy = getControlDescribedBy<T, S, F>(props);
   const timeContainer = useCallback(
     (children: ReactNode) =>
       ariaContainer(
@@ -218,7 +219,7 @@ export default function DateTimeInput<
             secondsInputLabel={dateElementLabel(TranslatableString.SecondLabel, translateString)}
             hoursInputProps={{
               id: `${id}-time`,
-              'aria-describedby': [ariaDescribedByIds(id), successId].filter(Boolean).join(' '),
+              'aria-describedby': [describedBy, successId].filter(Boolean).join(' '),
               'aria-invalid': !!error || undefined,
               ...timePickerOptions?.hoursInputProps,
             }}
@@ -253,6 +254,7 @@ export default function DateTimeInput<
       translateString,
       withSeconds,
       successId,
+      describedBy,
       size,
       radius,
       variant,
