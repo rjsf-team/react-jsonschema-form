@@ -254,6 +254,8 @@ describe('compileSchemaValidatorsCode', () => {
     join(dirname(requireHere.resolve('ata-validator/package.json')), 'lib', 'metaschemas.js'),
   ) as { METASCHEMAS: Map<string, Record<string, unknown>> };
   const shipped = [...METASCHEMAS];
+  // draft-04's copy names itself with `id`, not `$id`, so it is not a document a caller can pass in.
+  const withDollarId = shipped.filter(([, doc]) => typeof doc.$id === 'string');
   // Each id under http and https, with and without a trailing `#`.
   const forms = (id: string) => {
     const bare = id.replace(/#$/, '').replace(/^https?:/, '');
@@ -276,8 +278,14 @@ describe('compileSchemaValidatorsCode', () => {
     properties: { x: { type: 'string', not: { $ref: id } } },
   });
 
-  test.each(shipped.map(([id]) => id))("leaves ata's own copy of %s out of the module", (id) => {
-    expect(compileSchemaValidatorsCode(schema, { additionalMetaSchemas: [METASCHEMAS.get(id)!] })).toBe(baseline);
+  test.each(withDollarId.map(([id]) => id))("compiles ata's own copy of %s in, with a warning", (id) => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      expect(compileSchemaValidatorsCode(schema, { additionalMetaSchemas: [METASCHEMAS.get(id)!] })).not.toBe(baseline);
+      expect(warn.mock.calls.flat().join('\n')).toContain(id);
+    } finally {
+      warn.mockRestore();
+    }
   });
 
   test.each(shipped.flatMap(([id]) => forms(id)))(
@@ -290,39 +298,14 @@ describe('compileSchemaValidatorsCode', () => {
     },
   );
 
-  test.each(shipped.flatMap(([id]) => forms(id)))("answers as the runtime validator for ata's copy under %s", (id) => {
-    const doc = METASCHEMAS.get(shipped.find(([shippedId]) => forms(shippedId).includes(id))![0])!;
-    const options = { additionalMetaSchemas: [{ ...doc, $id: id }] };
-    agree(refersTo(id), { x: 'abc' }, options);
-  });
-
-  test.each(['https://json-schema.org/draft-07/schema#', 'https://json-schema.org/draft/next/schema'])(
-    'compiles a copy of draft-07 under %s into the module, since ata keeps none under that id',
+  test.each(withDollarId.flatMap(([id]) => forms(id)))(
+    "answers as the runtime validator for ata's copy under %s",
     (id) => {
-      const draft07 = METASCHEMAS.get('http://json-schema.org/draft-07/schema#')!;
-      expect(compileSchemaValidatorsCode(schema, { additionalMetaSchemas: [{ ...draft07, $id: id }] })).not.toBe(
-        baseline,
-      );
+      const doc = METASCHEMAS.get(shipped.find(([shippedId]) => forms(shippedId).includes(id))![0])!;
+      const options = { additionalMetaSchemas: [{ ...doc, $id: id }] };
+      agree(refersTo(id), { x: 'abc' }, options);
     },
   );
-
-  test('compiles every extra in where ata cannot be asked for its copy', async () => {
-    // A later ata could change what the probe reads. Then nothing is left out, which only costs
-    // size. A fresh module graph, so no answer is cached, and the first compile is the probe's.
-    vi.resetModules();
-    const { Validator } = await import('ata-validator');
-    const { compileSchemaValidatorsCode: compileFresh } = await import('../src/compileSchemaValidators.ts');
-    // oxlint-disable-next-line no-underscore-dangle
-    const spy = vi.spyOn(Validator.prototype, '_ensureCompiled').mockImplementationOnce(() => {
-      throw new Error('probe unavailable');
-    });
-    try {
-      const draft07 = METASCHEMAS.get('http://json-schema.org/draft-07/schema#')!;
-      expect(compileFresh(schema, { additionalMetaSchemas: [draft07] })).not.toBe(compileFresh(schema));
-    } finally {
-      spy.mockRestore();
-    }
-  });
 
   test('answers as the runtime validator when two extras share a shipped $id', () => {
     // At runtime `additionalMetaSchemas` is added last, so ata's copy there replaces the other one.
@@ -353,6 +336,53 @@ describe('compileSchemaValidatorsCode', () => {
     const options = { additionalMetaSchemas: [draft07, a] };
     expect(agree(form, { x: { type: 42 } }, options)).toBe(false);
     expect(agree(form, { x: { type: 'string' } }, options)).toBe(true);
+  });
+
+  test('answers as the runtime validator for a copy reached only through $schema', () => {
+    // 2019-09 has no prefixItems, so its $vocabulary strips the keyword at runtime.
+    const id = 'https://json-schema.org/draft/2019-09/schema';
+    const form: RJSFSchema = {
+      $id: 'f',
+      $schema: id,
+      type: 'object',
+      properties: { a: { type: 'array', prefixItems: [{ type: 'string' }] } },
+    };
+    agree(form, { a: [1] }, { additionalMetaSchemas: [METASCHEMAS.get(id)!] });
+  });
+
+  test('answers as the runtime validator for a reference under a nested $id', () => {
+    const a = {
+      $id: 'https://example.com/a',
+      $defs: { d: { $id: 'http://json-schema.org/draft-07/', not: { $ref: 'schema#' } } },
+    };
+    const form: RJSFSchema = {
+      $id: 'f',
+      type: 'object',
+      // Under `not`, which schemaParser leaves for the validator to resolve.
+      properties: { x: { not: { $ref: 'https://example.com/a#/$defs/d' } } },
+    };
+    const options = { additionalMetaSchemas: [METASCHEMAS.get('http://json-schema.org/draft-07/schema#')!, a] };
+    agree(form, { x: { type: 42 } }, options);
+    agree(form, { x: { type: 'string' } }, options);
+  });
+
+  test('answers as the runtime validator for a meta-schema in ataOptionsOverrides.schemas and a form without an $id', () => {
+    const meta = {
+      $id: 'https://example.com/loose',
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $vocabulary: { 'https://json-schema.org/draft/2020-12/vocab/applicator': true },
+    };
+    const form: RJSFSchema = {
+      $schema: 'https://example.com/loose',
+      type: 'object',
+      properties: { n: { type: 'number', minimum: 5 } },
+    };
+    const options = { ataOptionsOverrides: { schemas: [meta] } };
+    const runtime = customizeValidator(options).isValid(form, { n: 1 }, form);
+    const fns = loadModule(compileSchemaValidatorsCode(form, options));
+    const validator = createPrecompiledValidator(fns, form);
+    expect(validator.isValid(form, { n: 1 }, form)).toBe(runtime);
+    expect(runtime).toBe(true);
   });
 
   test.each([

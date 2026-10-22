@@ -14,6 +14,7 @@ import type { ValidationError, Validator } from 'ata-validator';
 import createAtaInstance from './createAtaInstance.ts';
 import type { RawValidationErrorsType } from './processRawValidationErrors.ts';
 import processRawValidationErrors from './processRawValidationErrors.ts';
+import { schemaList } from './schemaList.ts';
 import type { CustomValidatorOptionsType, Localizer, SuppressDuplicateFilteringType } from './types.ts';
 
 /** `ValidatorType` implementation backed by `ata-validator`.
@@ -113,11 +114,15 @@ export default class ATAValidator<
     // Skip when the schema itself is the root, otherwise ata sees a
     // self-referential addition.
     const siblingRoots = this.cachedRootSchema && this.cachedRootSchema !== schema ? [this.cachedRootSchema] : [];
+    // The root goes in ahead of the caller's own `schemas`, not in place of them: replacing them
+    // dropped every schema the caller registered, a custom meta-schema too, for any form whose
+    // root differs from the schema being compiled.
+    const overrides = this.options.ataOptionsOverrides || {};
     const optionsWithSchemas = {
       ...this.options,
       ataOptionsOverrides: {
-        ...(this.options.ataOptionsOverrides || {}),
-        ...(siblingRoots.length ? { schemas: siblingRoots } : {}),
+        ...overrides,
+        ...(siblingRoots.length ? { schemas: [...siblingRoots, ...schemaList(overrides.schemas)] } : {}),
       },
     };
     const validator = createAtaInstance(schema, optionsWithSchemas);

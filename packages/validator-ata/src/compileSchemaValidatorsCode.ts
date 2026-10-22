@@ -1,8 +1,9 @@
 import type { RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { deepEquals, schemaParser } from '@rjsf/utils';
+import { schemaParser } from '@rjsf/utils';
 import { Validator } from 'ata-validator';
 
 import { ATA_CONFIG, COLOR_FORMAT_REGEX, DATA_URL_FORMAT_REGEX } from './createAtaInstance.ts';
+import { declaredId, schemaList } from './schemaList.ts';
 import type { CustomValidatorOptionsType } from './types.ts';
 
 const warned = new Set<string>();
@@ -18,77 +19,6 @@ function warnOnce(message: string) {
   }
 }
 
-/** ata's own copies, by `$id`, once asked: each answer costs a compile of the meta-schema. */
-const shippedCopies = new Map<string, unknown>();
-
-/** The document ata itself uses under `id` when the caller passes none: its own copy of an
- * official meta-schema, under the keys ata registers those copies by. Read from a validator for
- * `{ $ref: id }`, which loads them. `undefined` where ata has no copy under that key, or where
- * this cannot be read (`_schemaMap` is not public API); the extra schema is then compiled in,
- * which only costs size. */
-function shippedCopy(id: string): unknown {
-  // ata keeps copies only of json-schema.org documents.
-  if (!id.includes('json-schema.org/')) {
-    return undefined;
-  }
-  if (shippedCopies.has(id)) {
-    return shippedCopies.get(id);
-  }
-  let copy: unknown;
-  try {
-    const probe = new Validator({ $ref: id }) as unknown as {
-      _ensureCompiled?: () => void;
-      _schemaMap?: Map<string, unknown>;
-    };
-    // Not public API, read on purpose: it is the map the runtime validator resolves against.
-    // oxlint-disable-next-line no-underscore-dangle
-    probe._ensureCompiled?.();
-    // oxlint-disable-next-line no-underscore-dangle
-    copy = probe._schemaMap?.get(id);
-  } catch {
-    copy = undefined;
-  }
-  shippedCopies.set(id, copy);
-  return copy;
-}
-
-/** A document's address with its fragment and scheme left off, so that the forms ata may resolve
- * one id by (http or https, with or without `#`) compare equal. */
-function addressOf(url: string) {
-  return url.replace(/#.*$/, '').replace(/^https?:/, '');
-}
-
-/** The addresses of the documents `doc` refers to through `$ref`, `$dynamicRef` or `$recursiveRef`,
- * resolved against its own `$id`. */
-function referencedFrom(doc: object) {
-  const out = new Set<string>();
-  const base = (doc as { $id: string }).$id;
-  const walk = (node: unknown) => {
-    if (node === null || typeof node !== 'object') {
-      return;
-    }
-    for (const [key, value] of Object.entries(node)) {
-      if ((key === '$ref' || key === '$dynamicRef' || key === '$recursiveRef') && typeof value === 'string') {
-        try {
-          out.add(addressOf(new URL(value, base).href));
-        } catch {
-          // Not a URL even against the base: it cannot name another document.
-        }
-      } else {
-        walk(value);
-      }
-    }
-  };
-  walk(doc);
-  return out;
-}
-
-/** The `$id` ata registers a schema under: a non-empty string that is not just a fragment. */
-function declaredId(schema: object) {
-  const id = (schema as { $id?: unknown }).$id;
-  return typeof id === 'string' && id !== '' && !id.startsWith('#') ? id : undefined;
-}
-
 /** Compiles a schema into a precompiled validator module. ata's
  * `bundleStandalone` emits `module.exports = [fn, ...]`, one validator per
  * schema in order, where each `fn(data)` returns `{ valid, errors }`. This wraps
@@ -99,9 +29,9 @@ function declaredId(schema: object) {
  * `customFormats` (as RegExps or pattern strings) and `ataOptionsOverrides` are passed to
  * ata. `additionalMetaSchemas` and `ataOptionsOverrides.schemas` that have an `$id` are
  * compiled into the module as the runtime validator ends up with them (a later one replacing an
- * earlier one with the same `$id`), so a custom meta-schema named in `$schema` applies there too;
- * one identical to the copy ata ships under the same `$id` is left out, since ata already has it,
- * unless another document in the module refers to it.
+ * earlier one with the same `$id`), so a custom meta-schema named in `$schema` applies there too.
+ * An official json-schema.org meta-schema passed in explicitly is compiled in as well, with a
+ * `console.warn`, since ata already ships them and one adds about 92 KB for draft-07's.
  * Extra schemas without an `$id` are left out with a `console.warn`, as ata requires one.
  * A few options cannot be carried into a standalone module: `extenderFn` and the
  * `ataOptionsOverrides` keys `coerceTypes`, `removeAdditional` and `keywords`. Those are left
@@ -137,50 +67,27 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
   // ata registers a record entry under its key and under its own `$id`, so both are compiled.
   // In the order the runtime validator registers them: `ataOptionsOverrides.schemas` when it is
   // built, then each of `additionalMetaSchemas` through `addSchema`.
-  const extras = [
-    ...(Array.isArray(extraSchemas)
-      ? extraSchemas
-      : Object.entries(extraSchemas).flatMap(([id, extra]) => {
-          const ownId = declaredId(extra);
-          return ownId && ownId !== id ? [{ ...extra, $id: id }, extra] : [{ ...extra, $id: id }];
-        })),
-    ...additionalMetaSchemas,
-  ];
+  const extras = [...schemaList(extraSchemas), ...additionalMetaSchemas];
   const withId = extras.filter((extra) => declaredId(extra) !== undefined);
-  // The module carries the documents the runtime validator ends up with, so both answer the same.
-  // A later document replaces an earlier one with the same `$id` there, so only the last one of
-  // each `$id` is kept. Of those, one identical to the copy ata has under the same `$id` is left
-  // out, saving its size (about 92 KB for draft-07's), as long as no document in the module
-  // refers to it: ata loads its own copy only for a form whose own text has such a reference, not
-  // for a reference inside another document. Leaving nothing else out keeps that true.
+  // Every document the runtime validator ends up with goes into the module, so the two resolve the
+  // same documents by construction. A later document replaces an earlier one with the same `$id`
+  // there, so only the last one of each `$id` is kept.
   const winners = new Map<string, object>();
   for (const extra of withId) {
     const id = (extra as { $id: string }).$id;
     winners.delete(id);
     winners.set(id, extra);
   }
-  const leftOut = new Set(
-    [...winners.values()].filter((extra) => {
-      const copy = shippedCopy((extra as { $id: string }).$id);
-      return copy !== undefined && deepEquals(extra, copy);
-    }),
-  );
-  for (let changed = leftOut.size > 0; changed; ) {
-    changed = false;
-    const reached = new Set<string>();
-    for (const extra of winners.values()) {
-      if (!leftOut.has(extra)) {
-        referencedFrom(extra).forEach((address) => reached.add(address));
-      }
-    }
-    for (const extra of leftOut) {
-      if (reached.has(addressOf((extra as { $id: string }).$id))) {
-        leftOut.delete(extra);
-        changed = true;
-      }
+  const bundled = [...winners.values()];
+  // An official meta-schema passed in explicitly is compiled in too, about 92 KB for draft-07's.
+  // ata ships its own copies, so one is only worth passing when it has been changed.
+  for (const id of winners.keys()) {
+    if (/^https?:\/\/json-schema\.org\//.test(id)) {
+      warnOnce(
+        `@rjsf/validator-ata: ${id} is compiled into the precompiled module (about 92 KB for draft-07's); ata already ships the official meta-schemas, so pass one only if you changed it`,
+      );
     }
   }
-  const bundled = [...winners.values()].filter((extra) => !leftOut.has(extra));
   if (withId.length < extras.length) {
     warnOnce(
       '@rjsf/validator-ata: additionalMetaSchemas and ataOptionsOverrides.schemas entries without an $id are ignored; ata requires an $id, so customizeValidator() throws for them',
