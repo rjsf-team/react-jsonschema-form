@@ -414,6 +414,16 @@ describe('a discriminated cell of a layout grid', () => {
     screen.getAllByRole('radio').forEach((radio) => expect(radio).toBeDisabled());
   });
 
+  // Unlike a `oneOf` field's selector, which picks an option index, this one writes the discriminator into the form data,
+  // which can be missing, so it's the cell's required control (#5527)
+  it("requires its selector when the cell is required, marking only the cell's label", () => {
+    const { node } = renderGrid(gridUiSchema(), { ...schema, required: ['pick'] });
+
+    screen.getAllByRole('radio').forEach((radio) => expect(radio).toBeRequired());
+    expect(node.querySelectorAll('span.required')).toHaveLength(1);
+    expect(node.querySelector('#root_pick__label + span.required')).toBeInTheDocument();
+  });
+
   describe('a ui:required read from JSON', () => {
     // `SchemaField` warns about a `ui:required` that turns a schema-required field optional with nothing to fill it
     setupConsoleWarnSuppression();

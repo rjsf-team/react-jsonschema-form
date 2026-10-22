@@ -113,6 +113,29 @@ describe('oneOf', () => {
     expect(node.querySelectorAll('span.required')).toHaveLength(2);
   });
 
+  // The selector picks an option index, which isn't form data, and always holds one, so it's neither required nor marked
+  // so (#5527); the field's own label carries the marker
+  it("leaves a required field's option selector unrequired, marking only the field's label", () => {
+    const { node } = createFormComponent({
+      schema: {
+        type: 'object',
+        required: ['pet'],
+        properties: {
+          pet: {
+            oneOf: [
+              { title: 'Cat', type: 'string' },
+              { title: 'Dog', type: 'number' },
+            ],
+          },
+        },
+      },
+    });
+
+    expect(screen.getByRole('combobox', { name: /pet/ })).not.toBeRequired();
+    expect(node.querySelectorAll('span.required')).toHaveLength(1);
+    expect(node.querySelector('label[for="root_pet"] span.required')).toBeInTheDocument();
+  });
+
   it('should assign a default value and set defaults on option change', async () => {
     const { node, onChange, getFormData } = createFormComponent({
       schema: {
