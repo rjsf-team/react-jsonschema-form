@@ -47,7 +47,7 @@ function FirstOrSecond({ fieldPath, formData, options, registry, onChange }: Fie
 }
 
 describe('option selection as form state', () => {
-  it('renders a key the selected option declares once, and one only another option declares as an extra key (#5461)', async () => {
+  it('renders a key the selected option declares once, and nothing for it once a switch discards its value (#5461)', async () => {
     const schema: RJSFSchema = {
       type: 'object',
       unevaluatedProperties: { type: 'string' },
@@ -64,9 +64,65 @@ describe('option selection as form state', () => {
 
     await user.selectOptions(selectOf(node, 'root__anyof_select'), 'A');
 
+    // The switch leaves `b` holding `undefined`, which is no entry for the extra-key keyword to render a row for
+    expect(node.querySelector('#root_b-key')).toBeNull();
+    expect(ids(node, '#root_b')).toHaveLength(0);
+  });
+
+  it('renders a key only another option declares as an extra key (#5461)', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      unevaluatedProperties: { type: 'string' },
+      anyOf: [
+        { title: 'A', properties: { a: { type: 'string' } } },
+        { title: 'B', properties: { a: { type: 'string' }, b: { type: 'number' } } },
+      ],
+    };
+    // `b` holds a string, which B's number rejects, so A is the option on screen
+    const { node } = createFormComponent({ schema, initialFormData: { a: 'x', b: 'y' } });
+
+    expect(selectOf(node, 'root__anyof_select')).toHaveValue('0');
     // Under A nothing evaluates `b`, so the keyword describing the extra keys renders it, with its key and remove button
     expect(node.querySelector('#root_b-key')).toHaveValue('b');
     expect(ids(node, '#root_b')).toHaveLength(1);
+  });
+
+  it('counts no key a switch of options discards against maxProperties', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      additionalProperties: { type: 'string' },
+      maxProperties: 2,
+      anyOf: [
+        { title: 'A', properties: { a: { type: 'string' } } },
+        { title: 'B', properties: { b: { type: 'string' } } },
+      ],
+    };
+    const { node } = createFormComponent({ schema });
+
+    await user.type(node.querySelector('#root_a')!, 'x');
+    await user.selectOptions(selectOf(node, 'root__anyof_select'), 'B');
+
+    expect(node.querySelector('#root_a-key')).toBeNull();
+    expect(node.querySelector('.rjsf-object-property-expand button')).not.toBeNull();
+  });
+
+  it('renders no field for a key a switch of options discards from an object allowing any extra key', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      additionalProperties: true,
+      oneOf: [
+        { title: 'A', properties: { a: { type: 'string' } } },
+        { title: 'B', properties: { b: { type: 'string' } } },
+      ],
+    };
+    const { node, onChange } = createFormComponent({ schema });
+
+    await user.type(node.querySelector('#root_a')!, 'x');
+    await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
+
+    expect(node.querySelector('#root_a-key')).toBeNull();
+    expect(ids(node, '#root_a')).toHaveLength(0);
+    expect(onChange.mock.lastCall?.[0].formData).not.toHaveProperty('a');
   });
 
   it('renders a key the selected option declares once outside a Form, where the outermost field keeps the selection (#5461)', async () => {
