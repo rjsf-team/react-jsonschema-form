@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { FieldProps, RJSFSchema, UiSchema } from '@rjsf/utils';
+import type { CustomValidator, FieldProps, RJSFSchema, UiSchema } from '@rjsf/utils';
 import { ROOT_FIELD_PATH } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import { act, render } from '@testing-library/react';
@@ -85,6 +85,25 @@ describe('option selection as form state', () => {
     // Under A nothing evaluates `b`, so the keyword describing the extra keys renders it, with its key and remove button
     expect(node.querySelector('#root_b-key')).toHaveValue('b');
     expect(ids(node, '#root_b')).toHaveLength(1);
+  });
+
+  it('hands customValidate the defaults of the option on screen', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      oneOf: [
+        { title: 'A', properties: { a: { type: 'string', default: 'x' } } },
+        { title: 'B', properties: { b: { type: 'string', default: 'y' } } },
+      ],
+    };
+    const customValidate = vi.fn<CustomValidator>((_formData, errors) => errors);
+    const { node } = createFormComponent({ schema, liveValidate: 'onChange', customValidate });
+
+    await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
+    await user.clear(node.querySelector('#root_b')!);
+
+    // The cleared field reaches customValidate holding its default, as it does outside options, and that default is
+    // B's: `{}` fits A as well, whose `a` would come back with A's
+    expect(customValidate.mock.lastCall?.[0]).toEqual({ b: 'y' });
   });
 
   it('counts no key a switch of options discards against maxProperties', async () => {
