@@ -106,6 +106,34 @@ describe('option selection as form state', () => {
     expect(customValidate.mock.lastCall?.[0]).toEqual({ b: 'y' });
   });
 
+  it('matches the root data setFieldValue sets again for customValidate and liveOmit, as the render does', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      oneOf: [
+        { title: 'A', properties: { a: { type: 'string', default: 'x' } } },
+        { title: 'B', properties: { b: { type: 'string', default: 'y' } } },
+      ],
+    };
+    const ref = createFormRef();
+    const customValidate = vi.fn<CustomValidator>((_formData, errors) => errors);
+    const { node, onChange } = createFormComponent({
+      ref,
+      schema,
+      liveValidate: 'onChange',
+      customValidate,
+      omitExtraData: true,
+      liveOmit: 'onChange',
+    });
+
+    await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
+    act(() => handleOf(ref).setFieldValue('', { a: 'q' }));
+
+    // `{ a: 'q' }` fits only A, which the form now shows: holding B would prune `a` and hand customValidate B's `b`
+    expect(getSelectedOptionValue(selectOf(node, 'root__oneof_select'))).toBe('A');
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ a: 'q' });
+    expect(customValidate.mock.lastCall?.[0]).toEqual({ a: 'q' });
+  });
+
   it('counts no key a switch of options discards against maxProperties', async () => {
     const schema: RJSFSchema = {
       type: 'object',

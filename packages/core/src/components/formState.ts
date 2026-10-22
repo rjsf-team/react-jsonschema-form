@@ -1087,6 +1087,15 @@ export function copyAlongPath<T>(data: T, path: FieldPathList): T {
   return root as T;
 }
 
+/** The path whose field and the fields above it keep the options they show for the data `change` leaves, see
+ * `fieldStateOf()`: the edit's, the root's included for a change a field made there. A root write from outside, as
+ * `setFieldValue('', data)` makes, holds none, so its data is matched again, as the render matches it
+ */
+function heldPathOf<T>(change: FieldChange<T>): FieldPathList | undefined {
+  const path = fieldPathToList(change.fieldPath);
+  return change.editedPath ?? (path.length > 0 || change.isFieldEdit ? path : undefined);
+}
+
 /** Applies the data of one `change` to `current`, returning the next state with `current`'s errors. The `newValue` is
  * set at the change's path in the data, which is then run through `deriveFormData()` for any missing defaults and,
  * when the resolved schema changed, sanitization. If `omitExtraData` and `liveOmit` are turned on, the data is filtered
@@ -1174,7 +1183,7 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
       {
         isSanitized: editedPath !== undefined && !disabled && !readonly,
         edit: editedPath && { path: editedPath, newKeyOf: change.editedPath ? undefined : change.newKeyOf },
-        heldPath: editedPath ?? (change.isFieldEdit ? path : undefined),
+        heldPath: heldPathOf(change),
       },
       props,
     );
@@ -1208,7 +1217,7 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
     newFormData = context.schemaUtils.omitExtraData(
       context.schema,
       formData,
-      fieldStateOf(context.uiState, context.schemaUtils, change.editedPath ?? path),
+      fieldStateOf(context.uiState, context.schemaUtils, heldPathOf(change)),
     );
   }
 
@@ -1245,14 +1254,7 @@ export function applyChangeToErrorsOf<T, S extends StrictRJSFSchema, F extends F
     const customErrors = ownErrorsAfterChange(changed, change);
     return {
       ...changed,
-      ...runLiveValidation(
-        props,
-        changed,
-        formData,
-        customErrors,
-        changed.retrievedSchema,
-        change.editedPath ?? fieldPathToList(change.fieldPath),
-      ),
+      ...runLiveValidation(props, changed, formData, customErrors, changed.retrievedSchema, heldPathOf(change)),
       customErrors,
     };
   }
