@@ -1,5 +1,5 @@
 import { getTestRegistry } from '@rjsf/core/testing';
-import { checkboxLabelTests, formTests, themeTests } from '@rjsf/snapshot-tests';
+import { checkboxLabelTests, fallbackDescriptionTests, formTests, themeTests } from '@rjsf/snapshot-tests';
 import type { ErrorSchema, FieldProps, FormValidation, RJSFSchema, UiSchema } from '@rjsf/utils';
 import { errorId, fieldLabelId, helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
@@ -1226,4 +1226,5 @@ describe("antd marks a deprecated field's label, as core does", () => {
   });
 });
 
-checkboxLabelTests(Form, { generateTemplates, generateWidgets });
+checkboxLabelTests(Form, { generateTemplates, generateWidgets, descriptionBy: 'template' });
+fallbackDescriptionTests(Form, false);

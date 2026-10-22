@@ -2,14 +2,13 @@ import type { ReactNode } from 'react';
 import { Activity, useState } from 'react';
 import { ChakraProvider, defaultSystem } from '@chakra-ui/react';
 import { getTestRegistry } from '@rjsf/core/testing';
-import { checkboxLabelTests, formTests, themeTests } from '@rjsf/snapshot-tests';
+import { checkboxLabelTests, fallbackDescriptionTests, formTests, themeTests } from '@rjsf/snapshot-tests';
 import type { ArrayFieldItemTemplateProps, FormValidation, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { bracketNameGenerator, errorId, fieldLabelId, helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
-import { setupConsoleWarnSuppression } from '../../../testing/consoleSuppression.ts';
 import CheckboxWidget from '../src/CheckboxWidget/index.ts';
 import { generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
 import WrappedForm from './WrappedForm.tsx';
@@ -1318,34 +1317,5 @@ describe('chakra-ui CheckboxWidget required attribute', () => {
   });
 });
 
-// chakra-ui leaves the fallback UI's label to its value field, but its template still draws the field's description
-// above the type selector, which a `ui:field` naming FallbackField or nothing must not move down to the value field
-describe("chakra-ui fallback UI's description, however its ui:field is spelled (#5389)", () => {
-  setupConsoleWarnSuppression();
-
-  test.each<[string, UiSchema]>([
-    ['no ui:field', {}],
-    ['a ui:field naming FallbackField', { 'ui:field': 'FallbackField' }],
-    ['a ui:field naming nothing', { 'ui:field': 'Nope' }],
-  ])('is drawn once, above the type selector, under %s', (_, valUiSchema) => {
-    render(
-      <WrappedForm
-        schema={{
-          type: 'object',
-          properties: { val: { type: ['string', 'number'], title: 'Val', description: 'Desc' } },
-        }}
-        uiSchema={{ val: valUiSchema }}
-        validator={validator}
-        useFallbackUiForUnsupportedType
-      />,
-    );
-
-    const descriptions = screen.getAllByText('Desc');
-    expect(descriptions).toHaveLength(1);
-    expect(descriptions[0]).toHaveAttribute('id', 'root_val__description');
-    const typeSelector = document.getElementById('root_val___internal_type_selector')!;
-    expect(descriptions[0].compareDocumentPosition(typeSelector)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
-  });
-});
-
-checkboxLabelTests(WrappedForm, { generateTemplates, generateWidgets });
+checkboxLabelTests(WrappedForm, { generateTemplates, generateWidgets, descriptionBy: 'self' });
+fallbackDescriptionTests(WrappedForm, true);

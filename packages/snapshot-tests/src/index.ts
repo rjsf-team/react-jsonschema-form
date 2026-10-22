@@ -6,6 +6,8 @@ export { checkboxLabelTests } from './checkboxLabelTests.tsx';
 
 export { deprecatedLabelTests } from './deprecatedLabelTests.tsx';
 
+export { fallbackDescriptionTests } from './fallbackDescriptionTests.tsx';
+
 export { formTests } from './formTests.tsx';
 
 export { hideErrorTests } from './hideErrorTests.tsx';

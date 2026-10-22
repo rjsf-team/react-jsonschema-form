@@ -1,6 +1,6 @@
 import { Switch } from '@fluentui/react-components';
 import { getTestRegistry } from '@rjsf/core/testing';
-import { checkboxLabelTests, formTests, themeTests } from '@rjsf/snapshot-tests';
+import { checkboxLabelTests, fallbackDescriptionTests, formTests, themeTests } from '@rjsf/snapshot-tests';
 import type { FormValidation, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { bracketNameGenerator, errorId, helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
@@ -747,4 +747,5 @@ describe('fluentui-rc CheckboxWidget required attribute', () => {
   });
 });
 
-checkboxLabelTests(Form, { generateTemplates, generateWidgets });
+checkboxLabelTests(Form, { generateTemplates, generateWidgets, descriptionBy: 'self' });
+fallbackDescriptionTests(Form, false);

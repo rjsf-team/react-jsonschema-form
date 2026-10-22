@@ -430,7 +430,7 @@ function FallbackUiField<
   // Exactly one of the two fields renders the title: the outer one where a template's label names the value, which its
   // plan gives a control only where the value is one, and the value field otherwise, as where the theme declares the
   // field drawing its own label. Only a custom field renders this one without a plan, however the form reached it, and
-  // that field draws no label of its own, so the value field draws it
+  // that field is taken to draw no label of its own, so the value field draws it
   const isLabelled = presentation?.control !== undefined && isLabelledByTemplate(presentation);
   const valueSchema = useMemo(
     () => getValueSchema<S>(schema, type, translateString(TranslatableString.Value), isLabelled),

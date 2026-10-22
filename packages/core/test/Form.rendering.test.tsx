@@ -1691,8 +1691,8 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
 
       const { node } = createFormComponent({ schema, uiSchema, useFallbackUiForUnsupportedType: true });
 
-      // The option selector the label names is withheld until there is data, and the value field around it is already
-      // labelled `false`, so this is the one field either label could come from
+      // The option selector the label names is withheld until there is data, and the value field around it draws no
+      // label of its own under the plan it inherits, so this is the one field either label could come from
       expect(Array.from(node.querySelectorAll('label')).map((label) => label.textContent)).not.toContain('TITLE');
     });
 
