@@ -1435,6 +1435,101 @@ describe('SchemaField', () => {
     });
   });
 
+  describe("an option's own ui:field below a named field", () => {
+    const consoleWarnSuppression = setupConsoleWarnSuppression();
+    function MyField() {
+      return <div className='my-field' />;
+    }
+    function OptionField() {
+      return <div className='option-field' />;
+    }
+    const fields = { MyField, OptionField };
+    const anyOfSchema: RJSFSchema = { type: 'string', anyOf: [{ minLength: 2 }, { maxLength: 5 }] };
+
+    it.each<[string, UiSchema]>([
+      ['a registered field through ui:field', { 'ui:field': 'OptionField' }],
+      ['a registered field through ui:options.field', { 'ui:options': { field: 'OptionField' } }],
+      ['no registered field', { 'ui:field': 'NotRegistered' }],
+    ])('warns that an option entry naming %s is ignored', (_, optionUiSchema) => {
+      const { node } = createFormComponent({
+        schema: anyOfSchema,
+        uiSchema: { 'ui:field': 'MyField', anyOf: [optionUiSchema, {}] },
+        fields,
+      });
+
+      expect(node.querySelector('.option-field')).not.toBeInTheDocument();
+      expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+        'ui:field in uiSchema.anyOf[0] for "root" is ignored, since a field is already named for that path, so the ' +
+          'option is rendered as though no ui:field were given.',
+      );
+    });
+
+    it.each<[string, UiSchema]>([
+      ['an option inheriting the uiSchema of its field', { 'ui:field': 'MyField' }],
+      [
+        'an option entry clearing its ui:field',
+        // A JSON uiSchema clears a field with `null`, which the type doesn't admit
+        { 'ui:field': 'MyField', anyOf: [{ 'ui:field': null } as unknown as UiSchema, {}] },
+      ],
+      [
+        'an option entry naming SchemaField, which renders the option the same either way',
+        { 'ui:field': 'MyField', anyOf: [{ 'ui:field': 'SchemaField' }, {}] },
+      ],
+    ])('does not warn for %s', (_, uiSchema) => {
+      const { node } = createFormComponent({ schema: anyOfSchema, uiSchema, fields });
+
+      expect(node.querySelector('#root__anyof_select')).toBeInTheDocument();
+      expect(node.querySelectorAll('input#root')).toHaveLength(1);
+      expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalled();
+    });
+
+    it('applies an option entry below FallbackField without a warning', () => {
+      const { node } = createFormComponent({
+        schema: anyOfSchema,
+        uiSchema: { 'ui:field': 'FallbackField', anyOf: [{ 'ui:field': 'OptionField' }, {}] },
+        fields,
+      });
+
+      expect(node.querySelector('.option-field')).toBeInTheDocument();
+      expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalled();
+    });
+
+    it('does not warn for a null option, which renders no field', () => {
+      const { node } = createFormComponent({
+        schema: { anyOf: [{ type: 'null' }, { type: 'string' }] },
+        uiSchema: { 'ui:field': 'MyField', anyOf: [{ 'ui:field': 'OptionField' }, {}] },
+        initialFormData: null,
+        fields,
+      });
+
+      expect(node.querySelector('#root__anyof_select')).toBeInTheDocument();
+      expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalled();
+    });
+
+    it('warns once for an option entry below a wrapper that renders SchemaField for its own data', () => {
+      function Wrapper(props: FieldProps) {
+        const { SchemaField: InnerSchemaField } = props.registry.fields;
+        return (
+          <div className='wrapper'>
+            <InnerSchemaField {...props} />
+          </div>
+        );
+      }
+      const { node } = createFormComponent({
+        schema: anyOfSchema,
+        uiSchema: { 'ui:field': 'Wrapper', anyOf: [{ 'ui:field': 'OptionField' }, {}] },
+        fields: { Wrapper, OptionField },
+      });
+
+      expect(node.querySelectorAll('.wrapper')).toHaveLength(1);
+      expect(node.querySelector('.option-field')).not.toBeInTheDocument();
+      expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+        'ui:field in uiSchema.anyOf[0] for "root" is ignored, since a field is already named for that path, so the ' +
+          'option is rendered as though no ui:field were given.',
+      );
+    });
+  });
+
   describe('a field registered under a $id that is not a component', () => {
     const consoleWarnSuppression = setupConsoleWarnSuppression();
 
