@@ -635,3 +635,36 @@ describe('daisyui RangeWidget and TimeWidget', () => {
     expect(container.querySelector('#root_x')).toHaveAttribute('name', 'root[x]');
   });
 });
+
+describe("daisyui marks a deprecated field's label, as core does", () => {
+  test.each<[string, RJSFSchema, UiSchema, string]>([
+    ['text input', { type: 'string' }, {}, 'textbox'],
+    ['number input', { type: 'number' }, {}, 'textbox'],
+    ['textarea', { type: 'string' }, { 'ui:widget': 'textarea' }, 'textbox'],
+    ['range input', { type: 'number' }, { 'ui:widget': 'range' }, 'slider'],
+    ['toggle', { type: 'boolean' }, {}, 'checkbox'],
+    ['checkbox', { type: 'boolean' }, { 'ui:widget': 'checkbox' }, 'checkbox'],
+    ['select', { type: 'string', enum: ['a', 'b'] }, {}, 'combobox'],
+    ['multi-select', { type: 'array', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true }, {}, 'combobox'],
+    ['date picker', { type: 'string', format: 'date' }, {}, 'combobox'],
+    ['date-time picker', { type: 'string', format: 'date-time' }, {}, 'combobox'],
+    ['radio group', { type: 'string', enum: ['a', 'b'] }, { 'ui:widget': 'radio' }, 'radiogroup'],
+    [
+      'checkboxes group',
+      { type: 'array', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true },
+      { 'ui:widget': 'checkboxes' },
+      'group',
+    ],
+  ])('names a deprecated %s by its label with the Deprecated marker', (_, x, ui, role) => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { x: { ...x, title: 'X', deprecated: true } } }}
+        uiSchema={{ x: ui }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole(role, { name: 'X (deprecated)' })).toHaveAttribute('id', 'root_x');
+    expect(container.innerHTML).not.toContain('(deprecated) (deprecated)');
+  });
+});

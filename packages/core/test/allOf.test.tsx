@@ -63,7 +63,7 @@ describe('allOf', () => {
     }
     const { node } = createFormComponent({
       schema,
-      formData: { userId: 'foobarbaz' },
+      initialFormData: { userId: 'foobarbaz' },
       formContext,
       fields: { SchemaField: CustomSchemaField },
     });

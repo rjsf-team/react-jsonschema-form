@@ -1,13 +1,15 @@
 import type { ErrorSchema, FieldPath, FieldProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { parseDateString, toDateString, TranslatableString, utcToLocal } from '@rjsf/utils';
-import { fireEvent, act } from '@testing-library/react';
+import { fireEvent, act, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import StringField from '../src/components/fields/StringField.tsx';
 import MarkdownTemplate from '../src/markdown.tsx';
 import {
   createFormComponent,
+  createFormRef,
   getSelectedOptionValue,
+  handleOf,
   setupConsoleErrorSuppression,
   submitForm,
   expectToHaveBeenCalledWithFormData,
@@ -372,9 +374,11 @@ describe('StringField', () => {
     });
 
     it('Check that when formData changes, the form should re-validate', async () => {
-      const { node, rerender } = createFormComponent({
+      const ref = createFormRef();
+      const { node } = createFormComponent({
+        ref,
         schema: { type: 'string' },
-        formData: null,
+        initialFormData: null,
         liveValidate: 'onChange',
       });
 
@@ -386,7 +390,7 @@ describe('StringField', () => {
       const errorMessageContent = node.querySelector('#root__error .text-danger');
       expect(errorMessageContent).toHaveTextContent('must be string');
 
-      rerender({ schema: { type: 'string' }, formData: 'hello', liveValidate: 'onChange' });
+      act(() => handleOf(ref).setFieldValue('', 'hello'));
 
       expect(node.querySelectorAll('#root__error')).toHaveLength(0);
     });
@@ -519,6 +523,41 @@ describe('StringField', () => {
 
       expect(node).not.toHaveTextContent('Foo description');
       expect(node).toHaveTextContent('Bar description');
+    });
+
+    it('should render constant options written as $refs as a select with their titles', async () => {
+      const { onChange } = createFormComponent({
+        schema: {
+          definitions: { red: { const: 'red', title: 'Red' }, blue: { const: 'blue', title: 'Blue' } },
+          type: 'object',
+          properties: {
+            color: { type: 'string', oneOf: [{ $ref: '#/definitions/red' }, { $ref: '#/definitions/blue' }] },
+          },
+        },
+      });
+      const select = screen.getByRole('combobox');
+      expect(Array.from(select.querySelectorAll('option'), (option) => option.textContent)).toEqual([
+        '',
+        'Red',
+        'Blue',
+      ]);
+      await user.selectOptions(select, 'Blue');
+      expectToHaveBeenCalledWithFormData(onChange, { color: 'blue' }, 'root_color');
+    });
+
+    it('should render a typeless anyOf of a constant and a constant written as a $ref as a select', () => {
+      const { node } = createFormComponent({
+        schema: {
+          definitions: { red: { const: 'red', title: 'Red' } },
+          type: 'object',
+          properties: { color: { anyOf: [{ $ref: '#/definitions/red' }, { const: 'green', title: 'Green' }] } },
+        },
+      });
+      expect(Array.from(node.querySelectorAll('select#root_color option'), (option) => option.textContent)).toEqual([
+        '',
+        'Red',
+        'Green',
+      ]);
     });
 
     it('should render a string field', () => {
@@ -2802,7 +2841,7 @@ describe('StringField', () => {
         uiSchema: {
           'ui:options': { filePreview: true },
         },
-        formData,
+        initialFormData: formData,
       });
 
       const preview = node.querySelector<HTMLImageElement>('img.file-preview');
@@ -2820,7 +2859,7 @@ describe('StringField', () => {
         uiSchema: {
           'ui:options': { filePreview: true },
         },
-        formData,
+        initialFormData: formData,
       });
 
       const download = node.querySelector<HTMLLinkElement>('a.file-download');
@@ -2852,7 +2891,7 @@ describe('StringField', () => {
           type: 'string',
           format: 'data-url',
         },
-        formData,
+        initialFormData: formData,
       });
 
       // Find the delete button

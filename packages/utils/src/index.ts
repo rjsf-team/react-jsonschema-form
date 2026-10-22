@@ -69,13 +69,13 @@ import getInputProps from './getInputProps.ts';
 import getItemUiSchemaForItem from './getItemUiSchemaForItem.ts';
 import getLabelId from './getLabelId.ts';
 import getNumericInputTitle from './getNumericInputTitle.ts';
-import getOptionMatchingSimpleDiscriminator from './getOptionMatchingSimpleDiscriminator.ts';
+import getOptionSelectorSchema from './getOptionSelectorSchema.ts';
 import getOptionUiSchema, { selectOptionUiSchema } from './getOptionUiSchema.ts';
 import getOptionValueFormat from './getOptionValueFormat.ts';
 import type { PresentationSource, PresentationSubject } from './getPresentationDeclaration.ts';
 import getPresentationDeclaration, { WIDGET_FIELD_PRESENTATION } from './getPresentationDeclaration.ts';
 import getPropertySchema from './getPropertySchema.ts';
-import getRenderedOptionSchema, { rendersOwnFieldBesideOption } from './getRenderedOptionSchema.ts';
+import getRenderedOptionSchema from './getRenderedOptionSchema.ts';
 import getSchemaOwnTypes from './getSchemaOwnTypes.ts';
 import getSchemaType from './getSchemaType.ts';
 import getSchemaTypeForValue from './getSchemaTypeForValue.ts';
@@ -163,14 +163,15 @@ import parseDateString from './parseDateString.ts';
 import { getByPath, hasByPath, propertyToPath, setByPath, toPath, unsetByPath } from './pathUtils.ts';
 import type { ObjectPath } from './pathUtils.ts';
 import rangeSpec from './rangeSpec.ts';
+import rendersOwnFieldBesideOption from './rendersOwnFieldBesideOption.ts';
 import replaceEqualDeep from './replaceEqualDeep.ts';
 import replaceStringParameters from './replaceStringParameters.ts';
 import resolveDefaultWidget from './resolveDefaultWidget.ts';
 import type { FieldPresentationInputs } from './resolveFieldPresentation.ts';
 import resolveFieldPresentation from './resolveFieldPresentation.ts';
 import resolveUiSchema from './resolveUiSchema.ts';
-import schemaHasNestedConditional from './schemaHasNestedConditional.ts';
 import schemaRequiresTrueValue from './schemaRequiresTrueValue.ts';
+import { keywordShape, normalizeUri, resolveUri } from './schemaUri.ts';
 import SelectedOptionDescription from './SelectedOptionDescription.tsx';
 import type { SelectedOptionDescriptionProps } from './SelectedOptionDescription.tsx';
 import shouldRenderOptionalField, { getOptionalDataControlsType } from './shouldRenderOptionalField.ts';
@@ -202,7 +203,7 @@ import type { WidgetAriaPropsInput } from './widgetAriaProps.ts';
 import widgetAriaProps from './widgetAriaProps.ts';
 import widgetDrawsLabel from './widgetDrawsLabel.ts';
 import widgetDrawsLabelText from './widgetDrawsLabelText.ts';
-import withIdRefPrefix from './withIdRefPrefix.ts';
+import withIdRefPrefix, { rootSchemaIdOf, withRootIdRefPrefix } from './withIdRefPrefix.ts';
 
 export type * from './types.ts';
 export type { TemplateWarnSource } from './getTemplate.ts';
@@ -279,6 +280,7 @@ export {
   expandButtonId,
   ErrorSchemaBuilder,
   fieldLabelId,
+  // oxlint-disable-next-line typescript/no-deprecated -- re-exported for callers written against 6.x
   findSchemaDefinition,
   flattenGroupedOptions,
   getAdditionalPropertySchema,
@@ -309,7 +311,7 @@ export {
   getMatchingPatternProperties,
   getNumericInputTitle,
   getOptionalDataControlsType,
-  getOptionMatchingSimpleDiscriminator,
+  getOptionSelectorSchema,
   getOptionUiSchema,
   getPresentationDeclaration,
   getPropertySchema,
@@ -395,7 +397,6 @@ export {
   resolveFieldPresentation,
   resolveUiSchema,
   resolveWidget,
-  schemaHasNestedConditional,
   schemaKey,
   schemaRequiresTrueValue,
   setByPath,
@@ -439,6 +440,11 @@ export {
   widgetDrawsLabel,
   widgetDrawsLabelText,
   withIdRefPrefix,
+  withRootIdRefPrefix,
+  rootSchemaIdOf,
+  keywordShape,
+  normalizeUri,
+  resolveUri,
   bracketNameGenerator,
   dotNotationNameGenerator,
 };

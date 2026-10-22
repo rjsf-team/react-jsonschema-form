@@ -6,11 +6,11 @@ import type { Mock } from 'vitest';
 
 import type { FormProps } from '../src/index.ts';
 import type { NoValFormProps } from './testUtils.tsx';
-import { describeOwnerships, submitForm } from './testUtils.tsx';
+import { createFormComponent, elementOf, errorListMessages, submitForm } from './testUtils.tsx';
 
 const user = userEvent.setup();
 
-describeOwnerships('Validation', (createFormComponent) => {
+describe('Validation', () => {
   describe('Form integration, v8 validator', () => {
     describe('JSONSchema validation', () => {
       it('should block submit when a matched if/then branch resolves to false', async () => {
@@ -187,7 +187,27 @@ describeOwnerships('Validation', (createFormComponent) => {
         );
       });
 
-      it('re-validates a controlled form when the customValidate prop changes', () => {
+      it.each<[string, RJSFSchema]>([
+        ['a schema change', { type: 'string', minLength: 3, title: 'Name' }],
+        ['a customValidate change', { type: 'string', minLength: 3 }],
+      ])('keeps live validating an edit in a form with no seed across %s', async (change, nextSchema) => {
+        const schema: RJSFSchema = { type: 'string', minLength: 3 };
+        const { node, rerender } = createFormComponent({ schema, liveValidate: 'onChange' });
+        await user.type(elementOf(node, 'input'), 'x');
+        const tooShort = 'must NOT have fewer than 3 characters';
+        expect(errorListMessages(node)).toEqual([tooShort]);
+
+        rerender({
+          schema: nextSchema,
+          liveValidate: 'onChange',
+          customValidate: change === 'a customValidate change' ? (_, errors) => errors : undefined,
+        });
+
+        // The schema's title names the field in the message
+        expect(errorListMessages(node)).toEqual([expect.stringContaining(tooShort)]);
+      });
+
+      it('re-validates when the customValidate prop changes', () => {
         const schema: RJSFSchema = { type: 'string' };
         function rejectEverything(_: FormProps['formData'], errors: FormValidation) {
           errors.addError('Invalid');
@@ -196,7 +216,7 @@ describeOwnerships('Validation', (createFormComponent) => {
         function acceptEverything(_: FormProps['formData'], errors: FormValidation) {
           return errors;
         }
-        const props: NoValFormProps = { schema, formData: 'a', liveValidate: 'onChange' };
+        const props: NoValFormProps = { schema, initialFormData: 'a', liveValidate: 'onChange' };
         const { node, rerender } = createFormComponent({ ...props, customValidate: acceptEverything });
         expect(node.textContent).not.toContain('Invalid');
 
@@ -426,7 +446,7 @@ describeOwnerships('Validation', (createFormComponent) => {
         });
 
         it('renders the error list after the fields when showErrorList is bottom', async () => {
-          const { node: bottomNode } = createFormComponent({ schema, formData: {}, showErrorList: 'bottom' });
+          const { node: bottomNode } = createFormComponent({ schema, initialFormData: {}, showErrorList: 'bottom' });
           await submitForm(bottomNode, user, true);
 
           expect(bottomNode.firstElementChild).not.toHaveClass('errors');

@@ -3,7 +3,7 @@ import type { FormProps } from '@rjsf/core';
 import type { ErrorSchema, RJSFSchema, UiSchema } from '@rjsf/utils';
 import { englishStringTranslator, errorId, TranslatableString } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 
 const DATE_PARTS = ['year', 'month', 'day'];
 const TIME_PARTS = ['hour', 'minute', 'second'];
@@ -35,8 +35,9 @@ function getPart(name: string) {
   return screen.queryByRole('combobox', { name }) ?? screen.getByRole('button', { name });
 }
 
-/** Pins the accessible name and description of each select an `AltDateWidget` renders, which no theme's `SelectWidget`
- * receives as a label, in every theme.
+/** Pins, in every theme, the accessible name and description of each select an `AltDateWidget` renders, which no
+ * theme's `SelectWidget` receives as a label; whether its Now and Clear buttons show and are enabled; and what its parts
+ * report to `onFocus` and `onBlur`.
  *
  * These live in their own file rather than alongside `formTests()` because every render advances React's `useId`
  * counter for the rest of the module, so running them there would renumber the ids in that suite's snapshots across
@@ -149,6 +150,87 @@ export function altDateTests(Form: ComponentType<FormProps>) {
           }),
         );
       });
+    });
+  });
+
+  describe('alt-date Now and Clear buttons', () => {
+    const withOptions = (whenOptions: UiSchema['ui:options'], atOptions: UiSchema['ui:options']): UiSchema => ({
+      when: { ...bareUiSchema.when, 'ui:options': { ...bareUiSchema.when['ui:options'], ...whenOptions } },
+      at: { ...bareUiSchema.at, 'ui:options': { ...bareUiSchema.at['ui:options'], ...atOptions } },
+    });
+
+    test('are enabled by default', () => {
+      render(<Form schema={bareSchema} uiSchema={bareUiSchema} validator={validator} />);
+      ['Now', 'Clear'].forEach((name) => {
+        const buttons = screen.getAllByRole('button', { name });
+        expect(buttons).toHaveLength(2);
+        buttons.forEach((button) => expect(button).toBeEnabled());
+      });
+    });
+
+    test.each(['disabled', 'readonly'])('are disabled when the form is %s', (flag) => {
+      render(<Form schema={bareSchema} uiSchema={bareUiSchema} validator={validator} {...{ [flag]: true }} />);
+      ['Now', 'Clear'].forEach((name) => {
+        const buttons = screen.getAllByRole('button', { name });
+        expect(buttons).toHaveLength(2);
+        buttons.forEach((button) => expect(button).toBeDisabled());
+      });
+    });
+
+    test.each([
+      ['hideNowButton', 'Now', 'Clear'],
+      ['hideClearButton', 'Clear', 'Now'],
+    ])('%s hides the %s button where it is true, and not where it is false', (option, hidden, shown) => {
+      render(
+        <Form
+          schema={bareSchema}
+          uiSchema={withOptions({ [option]: true }, { [option]: false })}
+          validator={validator}
+        />,
+      );
+      expect(screen.getAllByRole('button', { name: hidden })).toHaveLength(1);
+      expect(screen.getAllByRole('button', { name: shown })).toHaveLength(2);
+    });
+
+    // The case above only counts buttons, which a check reading the option inverted passes too
+    test.each(['hideNowButton', 'hideClearButton'])('%s false on both fields hides no button', (option) => {
+      render(
+        <Form
+          schema={bareSchema}
+          uiSchema={withOptions({ [option]: false }, { [option]: false })}
+          validator={validator}
+        />,
+      );
+      expect(screen.getAllByRole('button', { name: 'Now' })).toHaveLength(2);
+      expect(screen.getAllByRole('button', { name: 'Clear' })).toHaveLength(2);
+    });
+  });
+
+  // Focused through the DOM rather than user-event, which isn't among this package's peer dependencies
+  test('alt-date reports an unset part to onFocus and onBlur as undefined, and a set one as its number, 0 included', () => {
+    const onFocus = vi.fn();
+    const onBlur = vi.fn();
+    render(
+      <Form
+        schema={bareSchema}
+        uiSchema={bareUiSchema}
+        validator={validator}
+        initialFormData={{ at: '2021-06-15T12:00:00.000Z' }}
+        onFocus={onFocus}
+        onBlur={onBlur}
+      />,
+    );
+    const cases: [string, string, number | undefined][] = [
+      ['When, year', 'root_when_year', undefined],
+      ['At, year', 'root_at_year', 2021],
+      ['At, minute', 'root_at_minute', 0],
+    ];
+    cases.forEach(([name, partId, reported]) => {
+      const part = getPart(name);
+      act(() => part.focus());
+      act(() => part.blur());
+      expect(onFocus).toHaveBeenCalledWith(partId, reported);
+      expect(onBlur).toHaveBeenCalledWith(partId, reported);
     });
   });
 }

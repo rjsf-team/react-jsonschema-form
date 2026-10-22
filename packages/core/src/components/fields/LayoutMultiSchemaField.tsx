@@ -20,6 +20,7 @@ import {
   DEFAULT_KEY,
   ERRORS_KEY,
   getDiscriminatorFieldFromSchema,
+  getOptionSelectorSchema,
   getOptionUiSchema,
   fieldPathToName,
   ONE_OF_KEY,
@@ -105,7 +106,25 @@ export function computeEnumOptions<
   uiSchema?: UiSchema<T, S, F>,
   formData?: T,
 ): EnumOptionsType<S>[] {
-  const realOptions = options.map((opt: S) => schemaUtils.retrieveSchema(opt, formData));
+  let selectorField = getDiscriminatorFieldFromSchema<S>(schema);
+  if (uiSchema) {
+    const { optionsSchemaSelector = selectorField } = getUiOptions<T, S, F>(uiSchema);
+    selectorField = optionsSchemaSelector;
+  }
+  const realOptions = options.map((opt: S) => {
+    const option = schemaUtils.retrieveSchema(opt, formData);
+    if (!selectorField) {
+      return option;
+    }
+    const written = option[PROPERTIES_KEY]?.[selectorField];
+    const selector = getOptionSelectorSchema<S>(option, selectorField, (ref) =>
+      schemaUtils.retrieveSchema(ref, getByPath(formData, selectorField)),
+    );
+    // The option keeps the identity `retrieveSchema()` gives it where its selector is read as written
+    return selector === undefined || selector === written
+      ? option
+      : { ...option, [PROPERTIES_KEY]: { ...option[PROPERTIES_KEY], [selectorField]: selector } };
+  });
   let tempSchema = schema;
   const xxxOfKey = getXxxOfKey<S>(schema);
   if (xxxOfKey) {
@@ -302,6 +321,7 @@ export default function LayoutMultiSchemaField<
       newOptionUiSchema,
       oldOptionUiSchema,
       uiSchemaDefinitions,
+      globalUiOptions,
     });
     if (newFormData) {
       setByPath(newFormData, selectorField, opt);
@@ -312,7 +332,7 @@ export default function LayoutMultiSchemaField<
       { oldOption, newOption, oldUiSchema: oldOptionUiSchema, newUiSchema: newOptionUiSchema },
       formData,
       newFormData,
-      () => onChange(newFormData, fieldPath, undefined, id),
+      (sent) => onChange(sent, fieldPath, undefined, id),
     );
   };
 

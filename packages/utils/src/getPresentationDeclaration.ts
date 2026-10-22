@@ -142,11 +142,13 @@ function getWidgetDeclaration<
  * each layer's `default`, or the merged `default` for a widget no layer declares. A part a field leaves to its widget,
  * with no widget given, falls back to the field default, and a part nothing declares is drawn by the template. A
  * field leaving its label to the widget it renders takes that widget's `labelledBy`, or else its own entry's, never the
- * `fieldDefault`'s.
+ * `fieldDefault`'s. A label drawn by the component takes the `labelPlacement` of the declaration that settled it on
+ * `'self'`: the widget's when the field leaves its label to one, or else the field's.
  *
  * @param source - The registry's fields and widgets, and the merged `presentation`
  * @param subject - The field's schema and the components that render it
- * @returns - The owner of each part, and how a label the template draws reaches the control
+ * @returns - The owner of each part, how a label the template draws reaches the control, and where a label the
+ *   component draws sits, where that is declared
  */
 export default function getPresentationDeclaration<
   T = unknown,
@@ -163,8 +165,14 @@ export default function getPresentationDeclaration<
   // A fact about the control, which the widget alone speaks for when the field renders one: a field declaring it for its
   // checkbox says nothing about the radios a `ui:widget` swaps in
   const uncheckedIsFalse = widget === undefined ? ownDeclaration?.uncheckedIsFalse : widgetDeclaration.uncheckedIsFalse;
+  const label = ownerOf('label', fieldDeclaration, widgetDeclaration);
+  // Where a self-drawn label sits is declared by whoever draws it: the declaration that settled the label on `'self'`
+  const labelPlacement =
+    label === 'self'
+      ? (fieldDeclaration.label === 'widget' ? widgetDeclaration : fieldDeclaration).labelPlacement
+      : undefined;
   return {
-    label: ownerOf('label', fieldDeclaration, widgetDeclaration),
+    label,
     description: ownerOf('description', fieldDeclaration, widgetDeclaration),
     errors: ownerOf('errors', fieldDeclaration, widgetDeclaration),
     help: ownerOf('help', fieldDeclaration, widgetDeclaration),
@@ -175,5 +183,6 @@ export default function getPresentationDeclaration<
         ? (widgetDeclaration.labelledBy ?? ownDeclaration?.labelledBy)
         : fieldDeclaration.labelledBy) ?? 'for',
     ...(uncheckedIsFalse && { uncheckedIsFalse }),
+    ...(labelPlacement && { labelPlacement }),
   };
 }

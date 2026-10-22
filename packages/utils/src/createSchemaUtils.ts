@@ -1,6 +1,4 @@
-import { JSON_SCHEMA_DRAFT_2020_12, SCHEMA_KEY } from './constants.ts';
 import deepEquals from './deepEquals.ts';
-import { makeAllReferencesAbsolute } from './findSchemaDefinition.ts';
 import logOnce from './logOnce.ts';
 import replaceEqualDeep from './replaceEqualDeep.ts';
 import {
@@ -21,6 +19,7 @@ import {
 } from './schema/index.ts';
 import type {
   FormContextType,
+  FormFieldState,
   FoundFieldType,
   GenericObjectType,
   GlobalUISchemaOptions,
@@ -45,18 +44,13 @@ class SchemaUtils<
 > implements SchemaUtilsType<T, S, F> {
   private readonly context: SchemaContext<S, F>;
   rootSchema: S;
-  /** The `rootSchema` exactly as the caller passed it. A draft 2020-12 root is stored above with every relative `$ref`
-   * rewritten against its `$id`, so comparing that rewritten copy with what a caller passes back would never match and
-   * `doesSchemaUtilsDiffer()` would report a difference on every render
-   */
-  private readonly rawRootSchema: S;
   /** The last `retrieveSchema()` result per schema object, used only as the base for `replaceEqualDeep()` so a
    * recomputed schema keeps the identity of every subschema that did not change. Nothing is served from it directly,
    * so a `rawFormData` object mutated in place after a call is still resolved afresh. Resolving the `anyOf`/`oneOf`
-   * refs yields a differently shaped result, so it gets a slot of its own rather than evicting the plain one.
+   * refs, or stubbing the extra keys with a selected option, yields a differently shaped result, so each gets a slot of
+   * its own rather than evicting the plain one.
    */
-  private lastRetrievedSchemas = new WeakMap<object, S>();
-  private lastRetrievedSchemasWithRefs = new WeakMap<object, S>();
+  private readonly lastRetrievedSchemas = new WeakMap<object, Map<string, S>>();
 
   /** Constructs the `SchemaUtils` instance with the given `context` and `rootSchema` stored as instance variables
    *
@@ -64,12 +58,7 @@ class SchemaUtils<
    * @param rootSchema - The root schema that will be forwarded to all the APIs
    */
   constructor(context: SchemaContext<S, F>, rootSchema: S) {
-    if (rootSchema?.[SCHEMA_KEY] === JSON_SCHEMA_DRAFT_2020_12) {
-      this.rootSchema = makeAllReferencesAbsolute(rootSchema, '#');
-    } else {
-      this.rootSchema = rootSchema;
-    }
-    this.rawRootSchema = rootSchema;
+    this.rootSchema = rootSchema;
     // A v6 caller passing the validator here leaves `validator` undefined, which surfaces only as a `TypeError` from
     // inside `retrieveSchema()` that names nothing. Warned rather than thrown, since TypeScript already rejects it
     if (context && !('validator' in context) && typeof (context as GenericObjectType).isValid === 'function') {
@@ -83,7 +72,8 @@ class SchemaUtils<
     this.context = Object.freeze({ ...context });
   }
 
-  /** Returns the `rootSchema` in the `SchemaUtilsType`
+  /** Returns the `rootSchema` in the `SchemaUtilsType`: the object the `SchemaUtilsType` was created with, its `$ref`s
+   * as written, since each one is resolved against the `$id`s around it where it is looked up
    *
    * @returns - The `rootSchema`
    */
@@ -120,7 +110,7 @@ class SchemaUtils<
     // the `retrieveSchema()` caches, so the stale read is the deliberate trade
     return (
       this.context.validator !== context.validator ||
-      !deepEquals(this.rawRootSchema, rootSchema) ||
+      !deepEquals(this.rootSchema, rootSchema) ||
       !deepEquals(this.context.defaultFormStateBehavior ?? {}, context.defaultFormStateBehavior ?? {}) ||
       this.context.customMergeAllOf !== context.customMergeAllOf
     );
@@ -177,7 +167,7 @@ class SchemaUtils<
     initialDefaultsGenerated?: boolean,
     uiSchema?: UiSchema<T, S, F>,
     uiSchemaDefinitions?: UiSchemaDefinitions<S, F>,
-  ): T | T[] | undefined {
+  ): T | T[] | null | undefined {
     return getDefaultFormState<T, S, F>(this.context, {
       schema,
       formData,
@@ -299,10 +289,11 @@ class SchemaUtils<
    *
    * @param schema - The schema to use for filtering the `formData`
    * @param [formData] - The formData to filter
+   * @param [fieldState] - The option each field shows
    * @returns The new form data, with any fields not defined in the schema removed
    */
-  omitExtraData(schema: S, formData?: T): T | undefined {
-    return omitExtraData<T, S, F>(this.context, schema, this.rootSchema, formData);
+  omitExtraData(schema: S, formData?: T, fieldState?: FormFieldState<S>): T | undefined {
+    return omitExtraData<T, S, F>(this.context, schema, this.rootSchema, formData, fieldState);
   }
 
   /** Retrieves an expanded schema that has had all of its conditions, additional properties, references and
@@ -312,19 +303,30 @@ class SchemaUtils<
    * @param schema - The schema for which retrieving a schema is desired
    * @param [rawFormData] - The current formData, if any, to assist retrieving a schema
    * @param [resolveAnyOfOrOneOfRefs] - Optional flag indicating whether to resolved refs in anyOf/oneOf lists
+   * @param [selectedOption] - The index of the `anyOf`/`oneOf` option selected for the field, see `retrieveSchema()`
    * @returns - The schema having its conditions, additional properties, references and dependencies resolved
    */
-  retrieveSchema(schema: S, rawFormData?: T, resolveAnyOfOrOneOfRefs?: boolean) {
+  retrieveSchema(schema: S, rawFormData?: T, resolveAnyOfOrOneOfRefs?: boolean, selectedOption?: number) {
     // `Form` renders an error for a non-object schema instead of throwing, so one reaches here despite the type, and a
     // `WeakMap` refuses it as a key
     const cacheKey = schema !== null && typeof schema === 'object' ? schema : undefined;
-    const cache = resolveAnyOfOrOneOfRefs ? this.lastRetrievedSchemasWithRefs : this.lastRetrievedSchemas;
+    const slot = `${Boolean(resolveAnyOfOrOneOfRefs)}|${selectedOption}`;
+    const results = cacheKey && this.lastRetrievedSchemas.get(cacheKey);
     const result = replaceEqualDeep(
-      cacheKey && cache.get(cacheKey),
-      retrieveSchema<T, S, F>(this.context, schema, this.rootSchema, rawFormData, resolveAnyOfOrOneOfRefs),
+      results?.get(slot),
+      retrieveSchema<T, S, F>(
+        this.context,
+        schema,
+        this.rootSchema,
+        rawFormData,
+        resolveAnyOfOrOneOfRefs,
+        selectedOption,
+      ),
     );
-    if (cacheKey) {
-      cache.set(cacheKey, result);
+    if (results) {
+      results.set(slot, result);
+    } else if (cacheKey) {
+      this.lastRetrievedSchemas.set(cacheKey, new Map([[slot, result]]));
     }
     return result;
   }
@@ -337,6 +339,7 @@ class SchemaUtils<
    * @param [uiSchemaDefinitions] - Optional uiSchema fragments keyed by $ref path, resolved via `ui:definitions`
    * @param [globalUiOptions] - Optional global ui:options applied to every field
    * @param [formContext] - Optional formContext passed to the function form of `uiSchema.items`
+   * @param [fieldState] - The option each field shows and the `$ref` cycles the user expanded
    * @returns - An `ErrorSchema` with a required error for every missing `ui:required` field
    */
   getUiRequiredErrorSchema(
@@ -345,6 +348,7 @@ class SchemaUtils<
     uiSchemaDefinitions?: UiSchemaDefinitions<S, F>,
     globalUiOptions?: GlobalUISchemaOptions,
     formContext?: F,
+    fieldState?: FormFieldState<S>,
   ) {
     return getUiRequiredErrorSchema<T, S, F>(
       this.context,
@@ -354,6 +358,7 @@ class SchemaUtils<
       uiSchemaDefinitions,
       globalUiOptions,
       formContext,
+      fieldState,
     );
   }
 
@@ -365,36 +370,11 @@ class SchemaUtils<
    * @param [newSchema] - The new schema for which the data is being sanitized
    * @param [oldSchema] - The old schema from which the data originated
    * @param [data={}] - The form data associated with the schema, defaulting to an empty object when undefined
-   * @param [oldData] - The previous form data, used only to decide whether the enum filter runs; `Form`
-   *      passes the data as it last settled under the current root schema. When omitted, the filter always
-   *      runs. `$ref`s on both sides resolve against the one root schema, so pass `oldData` only when the
-   *      root schema is unchanged
-   * @param [resolvedOldSchema] - `oldSchema` already resolved for `oldData` at the root: the root frame's
-   *      filter chain uses it directly instead of resolving `oldSchema` again
-   * @param [oldDataForPairing] - `oldData` as the container writes since the settle moved it, used only to
-   *      pair an array's rows with their previous values; the old-schema side keeps reading `oldData`.
-   *      Defaults to `oldData`
    * @returns - The new form data, with all the fields uniquely associated with the old schema set
    *      to `undefined`. Will return `undefined` if the new schema is not an object containing properties.
    */
-  sanitizeDataForNewSchema(
-    newSchema?: S,
-    oldSchema?: S,
-    data?: any,
-    oldData?: any,
-    resolvedOldSchema?: S,
-    oldDataForPairing?: any,
-  ): T {
-    return sanitizeDataForNewSchema(
-      this.context,
-      this.rootSchema,
-      newSchema,
-      oldSchema,
-      data,
-      oldData,
-      resolvedOldSchema,
-      oldDataForPairing,
-    );
+  sanitizeDataForNewSchema(newSchema?: S, oldSchema?: S, data?: unknown): T {
+    return sanitizeDataForNewSchema(this.context, this.rootSchema, newSchema, oldSchema, data);
   }
 }
 
@@ -402,7 +382,9 @@ class SchemaUtils<
  * resulting interface implementation will forward the `context` and `rootSchema` to all the wrapped APIs.
  *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
- * @param rootSchema - The root schema that will be forwarded to all the APIs
+ * @param rootSchema - The root schema that will be forwarded to all the APIs. It is parsed once per object and treated
+ *        as immutable, so a change made to it in place is not seen, even by a new `createSchemaUtils()`: pass a new
+ *        object to change it
  * @returns - An implementation of a `SchemaUtilsType` interface
  */
 export default function createSchemaUtils<

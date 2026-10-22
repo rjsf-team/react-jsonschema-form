@@ -1,9 +1,10 @@
 // oxlint-disable no-console
 import type { SubmitEvent } from 'react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
+import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
-import type { FormProps, FormRef, IChangeEvent } from '@rjsf/core';
+import type { FormProps, IChangeEvent } from '@rjsf/core';
 import { withTheme } from '@rjsf/core';
 import MarkdownTemplate from '@rjsf/core/markdown';
 import type {
@@ -28,6 +29,7 @@ import OptionsDrawer from './OptionsDrawer.tsx';
 import SampleSelector from './SampleSelector.tsx';
 import SpecialInput from './SpecialInput.tsx';
 import type { ThemesType } from './ThemeSelector.tsx';
+import useFormDataReadBack from './useFormDataReadBack.ts';
 
 export interface PlaygroundProps {
   themes: Record<string, ThemesType>;
@@ -118,6 +120,8 @@ const INITIAL_LIVE_SETTINGS: LiveSettings = {
 };
 
 type LoadData = Sample & {
+  /** The data of a shared link, which carries it under this name */
+  formData?: unknown;
   theme?: string;
   liveSettings: LoadedLiveSettings;
   sampleName?: string;
@@ -146,6 +150,9 @@ export function readSharedSetup(hash: string): { setup?: LoadData; error?: unkno
 const { setup: sharedSetup, error: sharedSetupError } = readSharedSetup(
   typeof document === 'undefined' ? '' : document.location.hash.slice(1),
 );
+if (sharedSetupError !== undefined) {
+  console.error(sharedSetupError);
+}
 
 /** The playground state that loading `data` sets: for the page's first render, a picked sample, or a shared link.
  * `currentTheme` stands in for a theme the data doesn't name. `sampleName` and `validator` are `undefined` when the
@@ -165,7 +172,8 @@ export function loadedState(
     // Always reset templates and fields
     templates = {},
     fields = {},
-    formData: loadedFormData,
+    formData: sharedFormData,
+    initialFormData: sampleFormData,
     theme: dataTheme = currentTheme,
     extraErrors,
     liveSettings: loadedLiveSettings,
@@ -186,7 +194,8 @@ export function loadedState(
   const knownValidator =
     validator !== undefined && Object.hasOwn(validators, validator) ? validator : DEFAULT_VALIDATOR;
 
-  // The playground owns the form data, so it seeds the schema defaults itself, the way any controlled parent does
+  // Seeded with the schema defaults here, so the formData editor and a share link show the data the form mounts with
+  const loadedFormData = sharedFormData ?? sampleFormData;
   let formData = loadedFormData;
   try {
     // A sample passes the current validator and a shared link carries its own
@@ -243,7 +252,11 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
   const [uiSchemaGenerator, setUiSchemaGenerator] = useState<{ generator: UiSchemaForTheme } | undefined>(
     initial.uiSchemaGenerator,
   );
+  // `formData` follows every `onChange`, for the formData editor and the share link. The form is seeded apart from it,
+  // so `reset()` goes back to the data it was loaded with: a sample or a shared link, the formData editor's edit, or,
+  // for a theme switch, which remounts it, the data it held then
   const [formData, setFormData] = useState<unknown>(initial.formData);
+  const [seedFormData, setSeedFormData] = useState<unknown>(initial.formData);
   const [extraErrors, setExtraErrors] = useState<ErrorSchema | undefined>(initial.extraErrors);
   const [shareURL, setShareURL] = useState<string | null>(null);
   const [theme, setTheme] = useState<string>(initial.theme);
@@ -251,19 +264,19 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
   const [subtheme, setSubtheme] = useState<string | null>(null);
   const [stylesheet, setStylesheet] = useState<string | null>(initial.stylesheet ?? null);
   const [validator, setValidator] = useState<string>(initial.validator ?? DEFAULT_VALIDATOR);
-  const [formKey, setFormKey] = useState(0);
+  // A load remounts every form the playground seeds, the selectors and the options drawer's included. The form owns
+  // its data once it has mounted, so data edited in the formData editor reaches it by remounting the main form alone
+  const [loadKey, setLoadKey] = useState(0);
+  const [editKey, setEditKey] = useState(0);
+  const setEditedFormData = useCallback((data: unknown) => {
+    setFormData(data);
+    setSeedFormData(data);
+    setEditKey((key) => key + 1);
+  }, []);
   const [liveSettings, setLiveSettings] = useState<LiveSettings>(initial.liveSettings);
   const [otherFormProps, setOtherFormProps] = useState<Partial<FormProps>>(initial.otherFormProps);
 
-  const playGroundFormRef = useRef<FormRef>(null);
-
-  useEffect(() => {
-    if (sharedSetupError !== undefined) {
-      // oxlint-disable-next-line no-alert
-      alert('Unable to load form setup data.');
-      console.error(sharedSetupError);
-    }
-  }, []);
+  const { attachForm, formRef: playGroundFormRef } = useFormDataReadBack(setFormData, schema, uiSchema, liveSettings);
 
   // One themed Form per theme, so switching other settings doesn't remount it. It's returned inside an object
   // because react/static-components can't tell a memoized component from one created during render
@@ -273,11 +286,17 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
     (newTheme: string, { stylesheet: newStylesheet }: ThemesType) => {
       setTheme(newTheme);
       setStylesheet(newStylesheet);
+      // Read from the form at the switch rather than from `formData`, which changes with every edit and would rebuild
+      // the theme selector each time
+      const form = playGroundFormRef.current;
+      if (form) {
+        setSeedFormData(form.getFormData());
+      }
       if (uiSchemaGenerator) {
         setUiSchema(uiSchemaGenerator.generator(newTheme));
       }
     },
-    [uiSchemaGenerator, setTheme, setStylesheet],
+    [uiSchemaGenerator, setTheme, setStylesheet, playGroundFormRef],
   );
 
   const load = useCallback(
@@ -293,10 +312,11 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
         setSampleName(next.sampleName);
         setUiSchemaGenerator(next.uiSchemaGenerator);
       }
-      setFormKey((key) => key + 1);
+      setLoadKey((key) => key + 1);
       setSchema(next.schema);
       setUiSchema(next.uiSchema);
       setFormData(next.formData);
+      setSeedFormData(next.formData);
       setExtraErrors(next.extraErrors);
       setLiveSettings(next.liveSettings);
       if (next.validator !== undefined) {
@@ -348,7 +368,9 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
     <Box sx={{ display: 'flex', width: '100%' }}>
       <SampleSelector onSelected={onSampleSelected} selectedSample={sampleName} />
       <Box sx={{ width: '100%' }}>
+        {sharedSetupError !== undefined && <Alert severity='error'>Unable to load form setup data.</Alert>}
         <Editors
+          loadKey={loadKey}
           themes={themes}
           theme={theme}
           subtheme={subtheme}
@@ -356,7 +378,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
           setSubtheme={setSubtheme}
           setStylesheet={setStylesheet}
           formData={formData}
-          setFormData={setFormData}
+          setFormData={setEditedFormData}
           schema={schema}
           setSchema={setSchema}
           uiSchema={uiSchema}
@@ -379,7 +401,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
             subtheme={subtheme || 'light'}
           >
             <FormComponent
-              key={formKey}
+              key={`${loadKey}-${editKey}`}
               {...otherFormProps}
               {...liveSettings}
               liveValidate={toLiveSetting(liveSettings.liveValidate)}
@@ -387,7 +409,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
               extraErrors={extraErrors}
               schema={schema}
               uiSchema={uiSchema}
-              formData={formData}
+              initialFormData={seedFormData}
               templates={{ MarkdownTemplate, ...otherFormProps.templates }}
               fields={{
                 ...otherFormProps.fields,
@@ -400,12 +422,13 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
               onBlur={(id: string, value: unknown) => console.log(`Blurred ${id} with value`, value)}
               onFocus={(id: string, value: unknown) => console.log(`Focused ${id} with value`, value)}
               onError={(errorList: RJSFValidationError[]) => console.log('errors', errorList)}
-              ref={playGroundFormRef}
+              ref={attachForm}
             />
           </DemoFrame>
         </ErrorBoundary>
       </Box>
       <OptionsDrawer
+        loadKey={loadKey}
         schema={schema}
         uiSchema={uiSchema}
         formData={formData}

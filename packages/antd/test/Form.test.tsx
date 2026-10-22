@@ -1,6 +1,6 @@
 import { getTestRegistry } from '@rjsf/core/testing';
 import { formTests, themeTests } from '@rjsf/snapshot-tests';
-import type { ErrorSchema, FormValidation, RJSFSchema, UiSchema } from '@rjsf/utils';
+import type { ErrorSchema, FieldProps, FormValidation, RJSFSchema, UiSchema } from '@rjsf/utils';
 import { errorId, fieldLabelId, helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
@@ -242,7 +242,7 @@ describe('antd specific tests', () => {
       anyOf: [{ minItems: 1 }, { maxItems: 3 }],
     };
     const { container } = render(
-      <Form schema={{ type: 'object', properties: { opt } }} validator={validator} formData={{ opt: ['x'] }} />,
+      <Form schema={{ type: 'object', properties: { opt } }} validator={validator} initialFormData={{ opt: ['x'] }} />,
     );
 
     expect(screen.getAllByText('Up to three')).toHaveLength(1);
@@ -342,7 +342,7 @@ describe('antd specific tests', () => {
       <Form
         schema={{ type: 'string', format: 'date' }}
         uiSchema={{ 'ui:widget': 'alt-date', [flag]: true }}
-        formData='2020-01-02'
+        initialFormData='2020-01-02'
         validator={validator}
         onChange={onChange}
       />,
@@ -370,7 +370,7 @@ describe('antd specific tests', () => {
             },
           },
         }}
-        formData={{ region: 'DE' }}
+        initialFormData={{ region: 'DE' }}
         validator={validator}
       />,
     );
@@ -394,7 +394,7 @@ describe('antd specific tests', () => {
           },
         }}
         uiSchema={{ region: { 'ui:description': 'Where you live' } }}
-        formData={{ region: 'a' }}
+        initialFormData={{ region: 'a' }}
         validator={validator}
       />,
     );
@@ -418,7 +418,7 @@ describe('antd specific tests', () => {
             },
           },
         }}
-        formData={{ x: 'a' }}
+        initialFormData={{ x: 'a' }}
         validator={validator}
         useFallbackUiForUnsupportedType
       />,
@@ -511,7 +511,7 @@ describe('antd specific tests', () => {
           properties: { pet: { type: 'object', title: 'Pet', properties: { a: { type: 'string' } } } },
         }}
         uiSchema={{ 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] }, pet: { 'ui:label': false } }}
-        formData={{ pet: { a: 'x' } }}
+        initialFormData={{ pet: { a: 'x' } }}
         validator={validator}
       />,
     );
@@ -554,7 +554,7 @@ describe('antd specific tests', () => {
           },
         }}
         uiSchema={{ 'ui:globalOptions': { enableOptionalDataFieldForType: ['array'] } }}
-        formData={{ tags: ['a'] }}
+        initialFormData={{ tags: ['a'] }}
         validator={validator}
       />,
     );
@@ -752,7 +752,7 @@ describe("antd widgets carry their field's plan on the element a user focuses", 
       <Form
         schema={{ type: 'object', additionalProperties: { type: 'string' } }}
         uiSchema={{ additionalProperties: { 'ui:label': false } }}
-        formData={{ first: 'a' }}
+        initialFormData={{ first: 'a' }}
         validator={validator}
       />,
     );
@@ -974,7 +974,7 @@ describe('antd read-only fields under readonlyAsDisabled: false', () => {
       <Form
         schema={{ type: 'object', additionalProperties: { type: 'string' } }}
         uiSchema={{ 'ui:readonly': true }}
-        formData={{ first: 'a' }}
+        initialFormData={{ first: 'a' }}
         formContext={{ readonlyAsDisabled: false }}
         validator={validator}
       />,
@@ -986,6 +986,131 @@ describe('antd read-only fields under readonlyAsDisabled: false', () => {
     expect(keyInput).toHaveAttribute('readonly');
     expect(keyInput).not.toBeDisabled();
     expect(keyInput).toHaveValue('first');
+  });
+});
+
+describe('antd renders a field a named field wraps once', () => {
+  function WrappingField(props: FieldProps) {
+    const { SchemaField } = props.registry.fields;
+    return <SchemaField {...props} />;
+  }
+  const describedSchema: RJSFSchema = {
+    type: 'object',
+    properties: { val: { type: 'string', title: 'Value', description: 'Desc' } },
+  };
+
+  test.each<[string, RJSFSchema, UiSchema]>([
+    ["ui:field: 'SchemaField'", describedSchema, { val: { 'ui:field': 'SchemaField', 'ui:help': 'Help' } }],
+    [
+      "ui:options.field: 'SchemaField'",
+      describedSchema,
+      { val: { 'ui:options': { field: 'SchemaField' }, 'ui:help': 'Help' } },
+    ],
+    [
+      "ui:globalOptions.field: 'SchemaField'",
+      describedSchema,
+      { 'ui:globalOptions': { field: 'SchemaField' }, val: { 'ui:help': 'Help' } },
+    ],
+    [
+      'a ui:options.field wrapping SchemaField',
+      describedSchema,
+      { val: { 'ui:options': { field: 'wrapping' }, 'ui:help': 'Help' } },
+    ],
+    [
+      'a ui:globalOptions.field wrapping SchemaField',
+      describedSchema,
+      { 'ui:globalOptions': { field: 'wrapping' }, val: { 'ui:help': 'Help' } },
+    ],
+    [
+      'a $id wrapping SchemaField',
+      {
+        type: 'object',
+        properties: { val: { $id: 'wrapping', type: 'string', title: 'Value', description: 'Desc' } },
+      },
+      { val: { 'ui:help': 'Help' } },
+    ],
+  ])('renders one label, description and help for the field %s names', (_, schema, uiSchema) => {
+    const { container } = render(
+      <Form schema={schema} uiSchema={uiSchema} fields={{ wrapping: WrappingField }} validator={validator} />,
+    );
+
+    expect(container.querySelectorAll('input#root_val')).toHaveLength(1);
+    expect(container.querySelectorAll('label[for="root_val"]')).toHaveLength(1);
+    expect(container.querySelectorAll('#root_val__description')).toHaveLength(1);
+    expect(container.querySelectorAll('#root_val__help')).toHaveLength(1);
+  });
+
+  test('hands the label and description of a field a ui:field names that wraps SchemaField down to the field it wraps, rendering each once', () => {
+    const { container } = render(
+      <Form
+        schema={describedSchema}
+        uiSchema={{ val: { 'ui:field': 'wrapping', 'ui:help': 'Help' } }}
+        fields={{ wrapping: WrappingField }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelectorAll('input#root_val')).toHaveLength(1);
+    expect(container.querySelectorAll('label[for="root_val"]')).toHaveLength(1);
+    expect(container.querySelectorAll('#root_val__description')).toHaveLength(1);
+    expect(container.querySelectorAll('#root_val__help')).toHaveLength(1);
+  });
+
+  const anyOfSchema: RJSFSchema = {
+    type: 'object',
+    properties: { val: { type: 'string', anyOf: [{ minLength: 2 }, { maxLength: 5 }] } },
+  };
+
+  test.each<[string, RJSFSchema, UiSchema]>([
+    ["ui:field: 'SchemaField'", anyOfSchema, { val: { 'ui:field': 'SchemaField' } }],
+    ["ui:options.field: 'SchemaField'", anyOfSchema, { val: { 'ui:options': { field: 'SchemaField' } } }],
+    ["ui:globalOptions.field: 'SchemaField'", anyOfSchema, { 'ui:globalOptions': { field: 'SchemaField' } }],
+    ['a ui:field wrapping SchemaField', anyOfSchema, { val: { 'ui:field': 'wrapping' } }],
+    ['a ui:options.field wrapping SchemaField', anyOfSchema, { val: { 'ui:options': { field: 'wrapping' } } }],
+    [
+      'a $id wrapping SchemaField',
+      { type: 'object', properties: { val: { $id: 'wrapping', anyOf: [{ type: 'string' }, { type: 'number' }] } } },
+      {},
+    ],
+  ])('renders one option selector and one input for an anyOf the field %s names', (_, schema, uiSchema) => {
+    const { container } = render(
+      <Form schema={schema} uiSchema={uiSchema} fields={{ wrapping: WrappingField }} validator={validator} />,
+    );
+
+    expect(container.querySelectorAll('#root_val__anyof_select')).toHaveLength(1);
+    expect(container.querySelectorAll('input#root_val')).toHaveLength(1);
+  });
+
+  const extraKeySchema: RJSFSchema = { type: 'object', additionalProperties: { type: 'string' } };
+
+  test.each<[string, RJSFSchema, UiSchema]>([
+    ["ui:field: 'SchemaField'", extraKeySchema, { additionalProperties: { 'ui:field': 'SchemaField' } }],
+    [
+      "ui:options.field: 'SchemaField'",
+      extraKeySchema,
+      { additionalProperties: { 'ui:options': { field: 'SchemaField' } } },
+    ],
+    ['a ui:field wrapping SchemaField', extraKeySchema, { additionalProperties: { 'ui:field': 'wrapping' } }],
+    [
+      'a ui:options.field wrapping SchemaField',
+      extraKeySchema,
+      { additionalProperties: { 'ui:options': { field: 'wrapping' } } },
+    ],
+    ['a $id wrapping SchemaField', { type: 'object', additionalProperties: { $id: 'wrapping', type: 'string' } }, {}],
+  ])('renders one key input and one remove button for an extra key the field %s names', (_, schema, uiSchema) => {
+    const { container } = render(
+      <Form
+        schema={schema}
+        uiSchema={uiSchema}
+        initialFormData={{ foo: 'x' }}
+        fields={{ wrapping: WrappingField }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelectorAll('input#root_foo-key')).toHaveLength(1);
+    expect(container.querySelectorAll('input#root_foo')).toHaveLength(1);
+    expect(container.querySelectorAll('button#root_foo__remove')).toHaveLength(1);
   });
 });
 
@@ -1052,5 +1177,51 @@ describe('antd CheckboxWidget required attribute', () => {
     );
 
     expect(container.querySelector('input[type=checkbox]')).not.toHaveAttribute('required');
+  });
+});
+
+describe("antd marks a deprecated field's label, as core does", () => {
+  test.each<[string, RJSFSchema, UiSchema, string]>([
+    ['text input', { type: 'string' }, {}, 'textbox'],
+    ['number input', { type: 'number' }, {}, 'spinbutton'],
+    ['textarea', { type: 'string' }, { 'ui:widget': 'textarea' }, 'textbox'],
+    ['date input', { type: 'string', format: 'date' }, {}, 'textbox'],
+    ['checkbox', { type: 'boolean' }, {}, 'checkbox'],
+    ['select', { type: 'string', enum: ['a', 'b'] }, {}, 'combobox'],
+    ['multi-select', { type: 'array', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true }, {}, 'combobox'],
+    ['radio group', { type: 'string', enum: ['a', 'b'] }, { 'ui:widget': 'radio' }, 'radiogroup'],
+    [
+      'checkboxes group',
+      { type: 'array', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true },
+      { 'ui:widget': 'checkboxes' },
+      'group',
+    ],
+  ])('names a deprecated %s by its label with the Deprecated marker', (_, x, ui, role) => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { x: { ...x, title: 'X', deprecated: true } } }}
+        uiSchema={{ x: ui }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole(role, { name: 'X (deprecated)' })).toHaveAttribute('id', 'root_x');
+    expect(container.innerHTML).not.toContain('(deprecated) (deprecated)');
+  });
+
+  // antd's slider handle, the element named by the label, carries no id: antd keeps the field's id on the slider's root
+  test('names a deprecated slider by its label with the Deprecated marker', () => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { x: { type: 'number', title: 'X', deprecated: true } } }}
+        uiSchema={{ x: { 'ui:widget': 'range' } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('slider', { name: 'X (deprecated)' })).toBe(
+      container.querySelector('#root_x [role="slider"]'),
+    );
+    expect(container.innerHTML).not.toContain('(deprecated) (deprecated)');
   });
 });

@@ -1,5 +1,5 @@
 import type { RJSFSchema, SchemaUtilsType } from '../../src/index.ts';
-import { createSchemaUtils, getByPath, getClosestMatchingOption } from '../../src/index.ts';
+import { createSchemaUtils, getByPath, getClosestMatchingOption, isSchemaObject } from '../../src/index.ts';
 import { calculateIndexScore } from '../../src/schema/getClosestMatchingOption.ts';
 import {
   oneOfData,
@@ -9,6 +9,8 @@ import {
   OPTIONAL_ONE_OF_SCHEMA,
   ONE_OF_SCHEMA_OPTIONS,
   OPTIONAL_ONE_OF_SCHEMA_ONEOF,
+  PET_RESOURCE_DEEP_SCHEMA,
+  PET_RESOURCE_SCHEMA,
 } from '../testUtils/testData.ts';
 import type { TestValidatorType } from './types.ts';
 
@@ -44,14 +46,51 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
     it('returns 0 when formData is empty object', () => {
       expect(calculateIndexScore({ validator: testValidator }, oneOfSchema, firstOption, {})).toEqual(0);
     });
-    it('returns 1 for first option in oneOf schema', () => {
+    it('scores a $ref property beside keywords of its own once, when the definition merges itself in through its allOf', () => {
+      const rootSchema: RJSFSchema = {
+        definitions: {
+          node: { type: 'object', properties: { name: { type: 'string' } }, allOf: [{ $ref: '#/definitions/node' }] },
+        },
+      };
+      const option: RJSFSchema = {
+        properties: { d: { $ref: '#/definitions/node', properties: { sib: { type: 'string' } } } },
+      };
+      expect(calculateIndexScore({ validator: testValidator }, rootSchema, option, { d: { name: 'x' } })).toEqual(2);
+    });
+    it('scores an option written as a $ref naming a boolean definition as the empty schema it reads as', () => {
+      const rootSchema: RJSFSchema = { definitions: { anything: true } };
+      const option: RJSFSchema = { $ref: '#/definitions/anything' };
+      expect(calculateIndexScore({ validator: testValidator }, rootSchema, option, 'x')).toEqual(0);
+    });
+    it('scores a $ref property naming a boolean definition as the empty schema it reads as', () => {
+      const rootSchema: RJSFSchema = { definitions: { anything: true } };
+      const option: RJSFSchema = { properties: { p: { $ref: '#/definitions/anything' } } };
+      expect(calculateIndexScore({ validator: testValidator }, rootSchema, option, { p: 'x' })).toEqual(0);
+    });
+    it('scores a base that two allOf entries share once, so it cannot outweigh a property only the other option declares', () => {
+      const Cat: RJSFSchema = { allOf: [{ $ref: '#/definitions/Pet' }, { $ref: '#/definitions/Named' }] };
+      const Dog: RJSFSchema = { allOf: [{ $ref: '#/definitions/Pet' }, { properties: { bark: { type: 'string' } } }] };
+      const rootSchema: RJSFSchema = {
+        definitions: {
+          Base: { type: 'object', properties: { id: { type: 'string' }, name: { type: 'string' } } },
+          Pet: { allOf: [{ $ref: '#/definitions/Base' }] },
+          Named: { allOf: [{ $ref: '#/definitions/Base' }] },
+          Cat,
+          Dog,
+        },
+      };
+      const formData = { id: '1', name: 'n', bark: 'b' };
+      expect(calculateIndexScore({ validator: testValidator }, rootSchema, Cat, formData)).toEqual(2);
+      expect(calculateIndexScore({ validator: testValidator }, rootSchema, Dog, formData)).toEqual(3);
+    });
+    it('returns 2 for first option in oneOf schema, scoring its $ref property as the definition it names', () => {
       expect(calculateIndexScore({ validator: testValidator }, oneOfSchema, firstOption, ONE_OF_SCHEMA_DATA)).toEqual(
-        1,
+        2,
       );
     });
-    it('returns 8 for second option in oneOf schema', () => {
+    it('returns 10 for second option in oneOf schema', () => {
       expect(calculateIndexScore({ validator: testValidator }, oneOfSchema, secondOption, ONE_OF_SCHEMA_DATA)).toEqual(
-        9,
+        10,
       );
     });
     it('scores a property by the anyOf of a schema that also has a oneOf', () => {
@@ -60,7 +99,7 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
           foo: { anyOf: [{ const: 'a' }, { const: 'b' }], oneOf: [{ const: 'b' }] },
         },
       };
-      testValidator.setReturnValues({ isValid: [false, false, false, true] });
+      testValidator.setReturnValues({ isValid: [false, true] });
       expect(calculateIndexScore({ validator: testValidator }, oneOfSchema, schema, { foo: 'b' })).toEqual(1);
     });
     it('returns 1 for a schema that has a type matching the formData type', () => {
@@ -120,8 +159,13 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
     });
     it('scores a nested oneOf holding a falsy value the way it scores a truthy one', () => {
       const schema: RJSFSchema = { properties: { value: { oneOf: [{ type: 'string' }, { type: 'number' }] } } };
-      expect(calculateIndexScore({ validator: testValidator }, oneOfSchema, schema, { value: 0 })).toEqual(1);
-      expect(calculateIndexScore({ validator: testValidator }, oneOfSchema, schema, { value: 5 })).toEqual(1);
+      // The number option matches and its type is the value's: one for each, rather than its index
+      expect(calculateIndexScore({ validator: testValidator }, oneOfSchema, schema, { value: 0 })).toEqual(2);
+      expect(calculateIndexScore({ validator: testValidator }, oneOfSchema, schema, { value: 5 })).toEqual(2);
+    });
+    it('scores nothing for a nested oneOf with no options', () => {
+      const schema: RJSFSchema = { properties: { value: { oneOf: [] } } };
+      expect(calculateIndexScore({ validator: testValidator }, oneOfSchema, schema, { value: 5 })).toEqual(0);
     });
     it('does not score a nested oneOf against a null value', () => {
       const schema: RJSFSchema = {
@@ -142,14 +186,27 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
     it('oneOfSchema, oneOfData data, no options, returns -1', () => {
       expect(schemaUtils.getClosestMatchingOption(oneOfData, [])).toEqual(-1);
     });
-    it('oneOfSchema, no data, 2 options, returns -1', () => {
-      expect(schemaUtils.getClosestMatchingOption(undefined, [{ type: 'string' }, { type: 'number' }])).toEqual(-1);
+    it('oneOfSchema, no data, 2 options, returns the first option', () => {
+      expect(schemaUtils.getClosestMatchingOption(undefined, [{ type: 'string' }, { type: 'number' }])).toEqual(0);
     });
     it('oneOfSchema, oneOfData, no options, selectedOption 2, returns 2', () => {
       expect(schemaUtils.getClosestMatchingOption(oneOfData, [], 2)).toEqual(2);
     });
-    it('oneOfSchema, no data, 2 options, returns -1', () => {
-      expect(schemaUtils.getClosestMatchingOption(undefined, [{ type: 'string' }, { type: 'number' }], 2)).toEqual(2);
+    it('oneOfSchema, no data, 2 options, selectedOption 2 past the options, returns the first option', () => {
+      expect(schemaUtils.getClosestMatchingOption(undefined, [{ type: 'string' }, { type: 'number' }], 2)).toEqual(0);
+    });
+    it('keeps a selected option that ties with the others, where it is one of the candidates', () => {
+      expect(schemaUtils.getClosestMatchingOption(undefined, [{ type: 'string' }, { type: 'number' }], 1)).toEqual(1);
+    });
+    it('never returns a selected option the data does not match while another option matches it', () => {
+      // The second and third options match, and score the same, where the selected first one does not match
+      testValidator.setReturnValues({ isValid: [true, true] });
+      const options: RJSFSchema[] = [
+        { type: 'object', properties: { a: { type: 'string' } }, required: ['a'] },
+        { type: 'object', properties: { b: { type: 'string' } } },
+        { type: 'object', properties: { c: { type: 'string' } } },
+      ];
+      expect(schemaUtils.getClosestMatchingOption({ b: 'x', c: 'y' }, options, 0)).toEqual(1);
     });
     it('returns the first option, which kind of matches the data', () => {
       expect(
@@ -334,9 +391,7 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
         oneOf: [{ $ref: '#/definitions/Foo' }, { $ref: '#/definitions/Bar' }],
       };
       const options = [schema.definitions!.Foo, schema.definitions!.Bar] as RJSFSchema[];
-      expect(getClosestMatchingOption({ validator: testValidator }, schema, undefined, options, -1, 'code')).toEqual(
-        -1,
-      );
+      expect(getClosestMatchingOption({ validator: testValidator }, schema, undefined, options, -1, 'code')).toEqual(0);
     });
     it('should return Bar when schema has discriminator for bar', () => {
       // Mock isValid to pass the second value
@@ -397,13 +452,12 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
         { type: 'object', properties: { name: { type: 'string' }, other: { type: 'string' } } },
       ];
       beforeEach(() => {
-        // Without mocked results every option matches the junk option too, so none is the single match and all of
-        // them get scored, which is the only path that reaches the recursive $ref
         testValidator.setReturnValues({ isValid: [] });
       });
       it('terminates when the recursion runs out of form data', () => {
-        // Neither option matches `{ child: 5 }` and both score 0, so the tie falls back to the selectedOption
-        expect(getClosestMatchingOption({ validator: testValidator }, schema, { child: 5 }, options)).toEqual(-1);
+        // Neither option matches `{ child: 5 }` and both score 0, so the tie falls to the first option
+        testValidator.setReturnValues({ isValid: [false] });
+        expect(getClosestMatchingOption({ validator: testValidator }, schema, { child: 5 }, options)).toEqual(0);
       });
       it('scores the recursive option as deep as the form data goes', () => {
         // The recursive option scores `name` at both levels, the flat one only at the top
@@ -429,6 +483,148 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
             mutualOptions,
           ),
         ).toEqual(0);
+      });
+      it('scores a property written as a recursive $ref as the definition it names, as far as the data goes', () => {
+        const rootSchema: RJSFSchema = {
+          definitions: { Node: { type: 'object', properties: { next: { $ref: '#/definitions/Node' } } } },
+        };
+        const nodeOptions: RJSFSchema[] = [
+          { properties: { a: { $ref: '#/definitions/Node' } } },
+          { properties: { a: { type: 'object', properties: { next: { type: 'object' }, z: { type: 'string' } } } } },
+        ];
+        expect(
+          getClosestMatchingOption(
+            { validator: testValidator },
+            rootSchema,
+            { a: { next: { next: {} } } },
+            nodeOptions,
+          ),
+        ).toEqual(0);
+      });
+    });
+    it('reads the keywords beside a $ref that an option reaches through another $ref in place of its target', () => {
+      const rootSchema: RJSFSchema = {
+        definitions: {
+          O: { properties: { a: { type: 'string' } } },
+          M: { $ref: '#/definitions/O', properties: { b: { type: 'string' } } },
+        },
+      };
+      const options: RJSFSchema[] = [
+        { type: 'object', properties: { a: { type: 'string' } } },
+        { $ref: '#/definitions/M' },
+      ];
+      expect(getClosestMatchingOption({ validator: testValidator }, rootSchema, { b: 'y' }, options)).toEqual(1);
+      expect(getClosestMatchingOption({ validator: testValidator }, rootSchema, { a: 'y' }, options)).toEqual(0);
+    });
+    it('scores an option and a property written as a $ref with constraints beside it as the allOf of both', () => {
+      const rootSchema: RJSFSchema = {
+        definitions: {
+          O: { properties: { a: { type: 'string' } } },
+          Dog: { type: 'object', properties: { bark: { type: 'string' }, name: { type: 'string' } } },
+        },
+      };
+      const options: RJSFSchema[] = [
+        { type: 'object', properties: { a: { type: 'string' } } },
+        { $ref: '#/definitions/O', properties: { b: { type: 'string' } } },
+      ];
+      expect(getClosestMatchingOption({ validator: testValidator }, rootSchema, { b: 'y' }, options)).toEqual(1);
+      const pets: RJSFSchema[] = [
+        { properties: { pet: { $ref: '#/definitions/Dog', required: ['bark'] } } },
+        { properties: { pet: { type: 'object', properties: { meow: { type: 'string' } } } } },
+      ];
+      expect(
+        getClosestMatchingOption(
+          { validator: testValidator },
+          rootSchema,
+          { pet: { bark: 'woof', name: 'Rex' } },
+          pets,
+        ),
+      ).toEqual(0);
+    });
+    it.each([undefined, 'https://json-schema.org/draft/2020-12/schema'])(
+      'under %s, scores an option written as a $ref beside only annotations as its target',
+      ($schema) => {
+        const rootSchema: RJSFSchema = {
+          ...($schema === undefined ? {} : { $schema }),
+          $defs: {
+            a: { type: 'object', properties: { x: { type: 'string' }, z: { type: 'string' } }, required: ['q'] },
+            b: { type: 'object', properties: { y: { type: 'number' }, w: { type: 'string' } }, required: ['q'] },
+          },
+        };
+        const options: RJSFSchema[] = [
+          { $ref: '#/$defs/a', title: 'A' },
+          { $ref: '#/$defs/b', title: 'B' },
+        ];
+        expect(getClosestMatchingOption({ validator: testValidator }, rootSchema, { y: 1, w: 'w' }, options)).toEqual(
+          1,
+        );
+      },
+    );
+    describe('a property merged with one a resource of its own declares, holding a $ref written there', () => {
+      const optionsOf = (rootSchema: RJSFSchema): RJSFSchema[] => {
+        const field = rootSchema.properties?.p;
+        return isSchemaObject(field) && Array.isArray(field.oneOf) ? field.oneOf.filter(isSchemaObject) : [];
+      };
+      const views = (rootSchema: RJSFSchema, formData: unknown) => {
+        const resourceUtils = createSchemaUtils({ validator: testValidator }, rootSchema);
+        return optionsOf(rootSchema).map((option) => resourceUtils.retrieveSchema(option, formData));
+      };
+      it.each<[string, unknown, number]>([
+        ['the definition it names', { kind: { a: 'x' } }, 0],
+        ['the other option', { kind: 'woof', bark: 5 }, 1],
+      ])('scores the $ref in the resource for data matching %s', (_, formData, expected) => {
+        const rootSchema = PET_RESOURCE_SCHEMA;
+        const context = { validator: testValidator };
+        expect(getClosestMatchingOption(context, rootSchema, formData, optionsOf(rootSchema))).toBe(expected);
+        expect(getClosestMatchingOption(context, rootSchema, formData, views(rootSchema, formData))).toBe(expected);
+      });
+      it('scores an extra key of an option retrieved for the data by the schema its additionalProperties give it', () => {
+        const rootSchema: RJSFSchema = { definitions: { n: { type: 'number' } } };
+        const entry = (x: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { x } });
+        const options: RJSFSchema[] = [
+          { type: 'object', additionalProperties: entry({ $ref: '#/definitions/n' }) },
+          { type: 'object', additionalProperties: entry({ type: 'string' }) },
+        ];
+        const formData = { k: { x: 5 } };
+        const resourceUtils = createSchemaUtils({ validator: testValidator }, rootSchema);
+        const retrieved = options.map((option) => resourceUtils.retrieveSchema(option, formData));
+        expect(getClosestMatchingOption({ validator: testValidator }, rootSchema, formData, retrieved)).toBe(0);
+      });
+      it('scores the $ref in the resource a level further down, for the options and for their views', () => {
+        const rootSchema = PET_RESOURCE_DEEP_SCHEMA;
+        const formData = { info: { kind: 5 } };
+        const context = { validator: testValidator };
+        expect(getClosestMatchingOption(context, rootSchema, formData, optionsOf(rootSchema))).toBe(0);
+        expect(getClosestMatchingOption(context, rootSchema, formData, views(rootSchema, formData))).toBe(0);
+      });
+      it('scores the options of a list a merge rebuilt in the resource by the $ref each holds there', () => {
+        // `k` conjoins the list `l` names with the list beside it, which makes each option of `l` anew; the root defines
+        // an `s` of its own and no `t`
+        const definitions: RJSFSchema = {
+          s: { type: 'object', properties: { q: { type: 'string' } }, required: ['q'] },
+          t: { type: 'object', properties: { r: { type: 'string' } }, required: ['r'] },
+          l: { anyOf: [{ $ref: '#/$defs/s' }, { $ref: '#/$defs/t' }] },
+          w: { type: 'object', properties: { k: { $ref: '#/$defs/l', anyOf: [{ title: 'A' }] } } },
+        };
+        const rootOf = (inResource: boolean): RJSFSchema => ({
+          $schema: 'https://json-schema.org/draft/2020-12/schema',
+          $id: 'https://example.com/root.json',
+          $defs: inResource ? { s: { type: 'number' }, res: { $id: 'res.json', $defs: definitions } } : definitions,
+          type: 'object',
+          properties: {
+            p: {
+              oneOf: [
+                { $ref: inResource ? 'res.json#/$defs/w' : '#/$defs/w' },
+                { type: 'object', properties: { k: {} } },
+              ],
+            },
+          },
+        });
+        const formData = { k: { r: 'y' } };
+        const context = { validator: testValidator };
+        for (const rootSchema of [rootOf(false), rootOf(true)]) {
+          expect(getClosestMatchingOption(context, rootSchema, formData, optionsOf(rootSchema))).toBe(0);
+        }
       });
     });
   });

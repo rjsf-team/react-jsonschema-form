@@ -48,7 +48,14 @@ export default function UpDownWidget<
       {...chakraProps}
     >
       <NumberInputRoot
-        value={value}
+        // Zag's number input is uncontrolled while `value` is `undefined`, and would go on showing the last number
+        // after the form clears the value, so a missing value is passed as the empty input it is. Its value is the
+        // input's text, which it compares by identity with the text it formats on blur and Enter, so a stored number
+        // is passed as its text too, or that comparison would report a change nobody made. The widget hands Zag no
+        // `min` or `max`, so its blur would clamp a number past the safe integers to them, and only on blur, not Enter;
+        // the schema's own bounds are the form's to validate, so that clamp is turned off
+        value={value == null ? '' : String(value)}
+        clampValueOnBlur={false}
         onValueChange={handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}

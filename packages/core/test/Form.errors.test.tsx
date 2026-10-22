@@ -16,8 +16,10 @@ import { userEvent } from '@testing-library/user-event';
 import type { FormProps } from '../src/index.ts';
 import {
   AcceptingParent,
+  createFormComponent,
   createFormRef,
   describeRepeated,
+  elementOf,
   errorListMessages,
   expectToHaveBeenCalledWithFormData,
   fieldErrorsById,
@@ -115,8 +117,6 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
             required: ['foo', 'bar'],
           };
 
-          // The form has to be controlled, since the errors are cleared by comparing the incoming
-          // `formData` prop against the previous one.
           const { container } = render(
             <AcceptingParent<Record<string, unknown>>
               schema={altSchema}
@@ -294,10 +294,13 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
             "must have required property 'qux'",
           ]);
 
-          // Moving the first item down leaves neither item holding a `qux`, so both of those errors are still the
-          // errors of the values sitting at those paths and only the `corge` that moved loses its own
+          // The errors follow the items they describe: the item lacking both moved down, and its two errors with it
           await user.click(node.querySelector<HTMLButtonElement>('.rjsf-array-item-move-down')!);
-          expect(shownErrors()).toEqual(["must have required property 'qux'", "must have required property 'qux'"]);
+          expect(shownErrors()).toEqual([
+            "must have required property 'qux'",
+            "must have required property 'qux'",
+            "must have required property 'corge'",
+          ]);
         });
       });
 
@@ -413,7 +416,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
           schema: { type: 'number', minimum: 5 },
           uiSchema: { 'ui:widget': 'SliderWidget' },
           widgets: { SliderWidget },
-          formData: 1,
+          initialFormData: 1,
           focusOnFirstError: true,
         });
 
@@ -433,7 +436,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
           schema: { type: 'number', minimum: 5 },
           uiSchema: { 'ui:widget': 'SliderWidget' },
           widgets: { SliderWidget },
-          formData: 1,
+          initialFormData: 1,
           focusOnFirstError: true,
         });
 
@@ -469,7 +472,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
             },
           },
           uiSchema: { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] } },
-          formData: { pet: { name: 'Rex' } },
+          initialFormData: { pet: { name: 'Rex' } },
           focusOnFirstError: true,
         });
 
@@ -496,7 +499,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
           schema: { type: 'array', items: { type: 'string', enum: ['a', 'b'] }, minItems: 1, uniqueItems: true },
           uiSchema: { 'ui:widget': 'ChecksWidget' },
           widgets: { ChecksWidget },
-          formData: [],
+          initialFormData: [],
           focusOnFirstError: true,
         });
 
@@ -522,7 +525,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
           schema: { type: 'number', minimum: 5 },
           uiSchema: { 'ui:widget': 'SliderWidget' },
           widgets: { SliderWidget },
-          formData: 1,
+          initialFormData: 1,
           focusOnFirstError: true,
         });
 
@@ -543,7 +546,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
           schema: { type: 'number', minimum: 5 },
           uiSchema: { 'ui:widget': 'SliderWidget' },
           widgets: { SliderWidget },
-          formData: 1,
+          initialFormData: 1,
           focusOnFirstError: true,
         });
 
@@ -556,7 +559,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         const { node } = createFormComponent({
           schema: { type: 'integer', minimum: 3, maximum: 5 },
           uiSchema: { 'ui:widget': 'RatingWidget' },
-          formData: 1,
+          initialFormData: 1,
           focusOnFirstError: true,
         });
 
@@ -569,7 +572,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         const { node } = createFormComponent({
           schema: { type: 'string', minLength: 100 },
           uiSchema: { 'ui:widget': widget },
-          formData: '2020-01-01',
+          initialFormData: '2020-01-01',
           focusOnFirstError: true,
         });
 
@@ -591,7 +594,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
           schema: { type: 'number', minimum: 5 },
           uiSchema: { 'ui:widget': 'ChoiceWidget' },
           widgets: { ChoiceWidget },
-          formData: 1,
+          initialFormData: 1,
           focusOnFirstError: true,
         });
 
@@ -627,7 +630,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         try {
           const { node } = createFormComponent({
             schema: { type: 'string', minLength: 5 },
-            formData: 'a',
+            initialFormData: 'a',
             focusOnFirstError: true,
           });
 
@@ -642,7 +645,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
       it('focuses the field whose property name holds characters a CSS selector would read as syntax', async () => {
         const { node } = createFormComponent({
           schema: { type: 'object', properties: { 'say "hi"\\': { type: 'string', minLength: 5 } } },
-          formData: { 'say "hi"\\': 'a' },
+          initialFormData: { 'say "hi"\\': 'a' },
           focusOnFirstError: true,
         });
 
@@ -1499,76 +1502,8 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         expectToHaveBeenCalledWithFormData(onChange, { list: [null, null], pick: 'x' }, 'root_pick');
       });
 
-      it('should replace a value a swapped-in schema narrows out of a $ref target enum on the next edit', async () => {
-        const makeSchema = (colorEnum: string[]): RJSFSchema => ({
-          type: 'object',
-          definitions: {
-            Color: { type: 'string', enum: colorEnum },
-          },
-          properties: {
-            color: { $ref: '#/definitions/Color' },
-            unrelated: { type: 'string' },
-          },
-          // A nested conditional, so any edit runs the sanitize pass
-          allOf: [
-            {
-              if: { properties: { unrelated: { const: 'z' } }, required: ['unrelated'] },
-              then: { properties: { extra: { type: 'string' } } },
-            },
-          ],
-        });
-        const { node, rerender, getFormData } = createFormComponent({
-          schema: makeSchema(['a', 'b']),
-          initialFormData: { color: 'b' },
-        });
-
-        expect(getFormData()).toEqual({ color: 'b' });
-
-        // The swap alone does not sanitize; the next edit does, and the value the narrowed `$ref` target enum
-        // rejects is replaced then, since the previous data settled under the old root schema
-        rerender({ schema: makeSchema(['a']) });
-        await user.type(node.querySelector<HTMLInputElement>('#root_unrelated')!, 'x');
-
-        expect(getFormData()).toEqual({ color: 'a', unrelated: 'x' });
-      });
-
-      it('should not re-settle the data on a non-sanitizing edit after a swap', async () => {
-        // A top-level `if` folds into the root retrieved schema, so an edit that keeps it false resolves the same
-        // schema and sanitizes nothing; the data must stay unsettled until a pass actually checks it
-        const makeSchema = (colorEnum: string[]): RJSFSchema => ({
-          type: 'object',
-          definitions: {
-            Color: { type: 'string', enum: colorEnum },
-          },
-          properties: {
-            color: { $ref: '#/definitions/Color' },
-            unrelated: { type: 'string' },
-          },
-          if: { properties: { unrelated: { const: 'z' } }, required: ['unrelated'] },
-          then: { properties: { extra: { type: 'string' } } },
-        });
-        const { node, rerender, getFormData } = createFormComponent({
-          schema: makeSchema(['a', 'b']),
-          initialFormData: { color: 'b' },
-        });
-
-        rerender({ schema: makeSchema(['a']) });
-        await user.type(node.querySelector<HTMLInputElement>('#root_unrelated')!, 'x');
-
-        // No sanitize ran, so the narrowed-out value is still there, still unchecked
-        expect(getFormData()).toEqual({ color: 'b', unrelated: 'x' });
-
-        // Flipping the `if` changes the retrieved schema; the sanitize then still sees data that never settled
-        // under the narrowed root, so the rejected value is replaced rather than kept
-        await user.clear(node.querySelector<HTMLInputElement>('#root_unrelated')!);
-        await user.type(node.querySelector<HTMLInputElement>('#root_unrelated')!, 'z');
-
-        expect(getFormData()).toEqual({ color: 'a', unrelated: 'z' });
-      });
-
-      it('should not treat data changed by a declined sanitize as checked', async () => {
-        // Adding a row is a container write whose sanitize is declined, but it flips the `then` onto `color`;
-        // the next sanitize must not get that post-flip data as its previous counterpart
+      it('should sanitize what an array write flips', async () => {
+        // Adding a row flips the `then` onto `color`, so the write's own sanitize judges `color` against it
         const schema: RJSFSchema = {
           type: 'object',
           properties: {
@@ -1593,20 +1528,14 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
           initialFormData: { pet: { color: 'g', list: ['x'] } },
         });
 
-        // Add a row: the `then` starts applying, but the array write sanitizes nothing
         await user.click(node.querySelector<HTMLButtonElement>('button[title="Add"]')!);
 
-        expect(getFormData()).toEqual({ pet: { color: 'g', list: ['x', undefined] } });
-
-        // The sibling edit sanitizes; 'g' never settled under the flipped schema, so it is replaced
-        await user.type(node.querySelector<HTMLInputElement>('#root_name')!, 'n');
-
-        expect(getFormData()).toEqual({ pet: { color: 'r', list: ['x', undefined] }, name: 'n' });
+        expect(getFormData()).toEqual({ pet: { color: 'r', list: ['x', undefined] } });
       });
 
       it('should keep prior data available when only the validator instance changed', async () => {
-        // Rebuilding the schema utilities from an inline prop does not change the root schema the data settled
-        // under, so the next sanitize still receives it and the unchanged-enum placeholders survive
+        // Rebuilding the schema utilities from an inline prop changes no field's constraints, so the placeholders the
+        // unchanged enum rejects survive the next edit
         const schema: RJSFSchema = {
           type: 'object',
           properties: {
@@ -1660,13 +1589,13 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         expect(getFormData()).toEqual({ list: [null, null], name: 'nm' });
       });
 
-      it('should keep placeholders through a declined sanitize and a sibling edit', async () => {
+      it('should keep placeholders through an array write and a sibling edit', async () => {
         const { node, getFormData } = createFormComponent({
           schema: placeholdersSchema,
           initialFormData: { list: [null, null] },
         });
 
-        // The array write sanitizes nothing, and it changes nothing a conditional reads
+        // The array write changes nothing a conditional reads, so no field's constraints change
         await user.click(node.querySelector<HTMLButtonElement>('button[title="Add"]')!);
         await user.type(node.querySelector<HTMLInputElement>('#root_name')!, 'n');
 
@@ -1728,10 +1657,10 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         );
       });
 
-      // Live validation runs against the `retrievedSchema` the derivation commits. A dropped key makes the schema
-      // resolve without it — here the dependency keyed on its presence declares nothing — so a schema committed from
-      // that resolution describes no constraint for the key, and the value put back is validated against nothing
-      it('validates a restored key against a schema that still declares it (#5349)', async () => {
+      // Live validation runs against the `retrievedSchema` the derivation commits. The key's declaration lives in a
+      // dependency keyed on its presence, and the replacement is written in place, so the schema committed still
+      // declares the key and validates the value written for it
+      it('validates a replaced key against a schema that still declares it (#5349)', async () => {
         const cfgMin = (name: string, minLength?: number): RJSFSchema => ({
           type: 'object',
           default: { name },
@@ -1748,7 +1677,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
             then: withCfg('a'),
             else: withCfg('b', 5),
           },
-          formData: { mode: 'a', cfg: { name: 'a' } },
+          initialFormData: { mode: 'a', cfg: { name: 'a' } },
           liveValidate: 'onChange',
         });
 
@@ -1756,7 +1685,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
 
         expect(onChange).toHaveBeenLastCalledWith(
           expect.objectContaining({
-            formData: { mode: 'b', cfg: { name: 'a' } },
+            formData: { mode: 'b', cfg: { name: 'b' } },
             errors: [expect.objectContaining({ message: 'must NOT have fewer than 5 characters' })],
           }),
           'root_mode',
@@ -1915,7 +1844,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         // ui:required anywhere in the uiSchema, getUiRequiredErrorSchema() also returns `{}` — an empty-but-truthy
         // object that must not be treated the same as "nothing to merge".
         const transformErrors = (errors: RJSFValidationError[]) => errors.map((error) => ({ ...error, message: '' }));
-        const { node, onError } = createFormComponent({ schema, formData: {}, transformErrors });
+        const { node, onError } = createFormComponent({ schema, initialFormData: {}, transformErrors });
         await submitForm(node, user, true);
         expect(onError).toHaveBeenCalled();
         expect(onError.mock.calls[0][0]).toHaveLength(1);
@@ -1987,7 +1916,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
       const extraErrors: ErrorSchema = { list: [{ name: { __errors: ['taken'] } }] };
 
       it('blocks the submit, shows and lists the error and passes it to onError', async () => {
-        const { node, onError, onSubmit } = createFormComponent({ schema, formData, extraErrors });
+        const { node, onError, onSubmit } = createFormComponent({ schema, initialFormData: formData, extraErrors });
 
         await submitForm(node, user);
 
@@ -2000,7 +1929,12 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
       });
 
       it("focuses the item's field on submit with focusOnFirstError", async () => {
-        const { node } = createFormComponent({ schema, formData, extraErrors, focusOnFirstError: true });
+        const { node } = createFormComponent({
+          schema,
+          initialFormData: formData,
+          extraErrors,
+          focusOnFirstError: true,
+        });
 
         await submitForm(node, user);
 
@@ -2009,7 +1943,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
 
       it('passes the error to a focusOnFirstError callback', async () => {
         const focusOnFirstError = vi.fn();
-        const { node } = createFormComponent({ schema, formData, extraErrors, focusOnFirstError });
+        const { node } = createFormComponent({ schema, initialFormData: formData, extraErrors, focusOnFirstError });
 
         await submitForm(node, user);
 
@@ -2021,7 +1955,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
       it("keeps the validator's errors for the other items", async () => {
         const { node } = createFormComponent({
           schema,
-          formData: { list: [{ name: 'abc' }, { name: 'a' }] },
+          initialFormData: { list: [{ name: 'abc' }, { name: 'a' }] },
           extraErrors,
         });
 
@@ -2034,7 +1968,12 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
       });
 
       it('passes the error keyed by index to onSubmit when it does not block', async () => {
-        const { node, onSubmit } = createFormComponent({ schema, formData, extraErrors, extraErrorsAreWarnings: true });
+        const { node, onSubmit } = createFormComponent({
+          schema,
+          initialFormData: formData,
+          extraErrors,
+          extraErrorsAreWarnings: true,
+        });
 
         await submitForm(node, user);
 
@@ -2061,7 +2000,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         }
         const { node, onError, onSubmit } = createFormComponent({
           schema: { type: 'object', properties: { list: { type: 'array', items: { type: 'string' } } } },
-          formData: { list: ['a'] },
+          initialFormData: { list: ['a'] },
           uiSchema: { 'ui:field': RaisingField },
         });
 
@@ -2079,5 +2018,97 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         expect(onError).toHaveBeenCalledTimes(1);
       });
     });
+  });
+});
+
+describe('the errors a field raises for the items of an array', () => {
+  /** A field that raises `errorSchema` for its own data through the Raise button, and renders the object below it */
+  function raisingField(errorSchema: ErrorSchema) {
+    return function RaisingField(props: FieldProps) {
+      const { ObjectField } = props.registry.fields;
+      return (
+        <>
+          <button type='button' onClick={() => props.onChange(props.formData, props.fieldPath, errorSchema)}>
+            Raise
+          </button>
+          <ObjectField {...props} />
+        </>
+      );
+    };
+  }
+
+  it('leave no node behind for the items a raised array holds nothing for, once the rest are dropped', async () => {
+    const { node, onChange } = createFormComponent({
+      schema: { type: 'object', properties: { list: { type: 'array', items: { type: 'string' } } } },
+      initialFormData: { list: ['a', 'b'] },
+      uiSchema: { 'ui:field': raisingField({ list: [undefined, { __errors: ['taken'] }] }) },
+    });
+
+    await user.click(screen.getByRole('button', { name: 'Raise' }));
+    expect(onChange.mock.lastCall?.[0].errorSchema).toEqual({ list: { 1: { __errors: ['taken'] } } });
+    await user.type(elementOf(node, '#root_list_1'), 'c');
+
+    expect(onChange.mock.lastCall?.[0].errorSchema).toEqual({});
+  });
+
+  it('keep the errors of a property named __proto__ in a raised array as that property', async () => {
+    const { onChange } = createFormComponent({
+      schema: { type: 'object', properties: { list: { type: 'array', items: { type: 'object' } } } },
+      initialFormData: { list: [{}] },
+      uiSchema: { 'ui:field': raisingField({ list: [JSON.parse('{"__proto__": {"__errors": ["taken"]}}')] }) },
+    });
+
+    await user.click(screen.getByRole('button', { name: 'Raise' }));
+
+    const [event] = onChange.mock.lastCall ?? [];
+    expect(Object.getPrototypeOf(event?.errorSchema.list[0])).toBe(Object.prototype);
+    expect(event?.errors).toEqual([
+      { property: '.list.0.__proto__', message: 'taken', stack: '.list.0.__proto__ taken' },
+    ]);
+  });
+
+  it('keep the errors of a property named __proto__ as that property when a sibling is renamed', async () => {
+    const { node, onChange } = createFormComponent({
+      schema: { type: 'object', properties: { obj: { type: 'object', additionalProperties: { type: 'string' } } } },
+      initialFormData: { obj: { a: 'x' } },
+      uiSchema: {
+        'ui:field': raisingField({
+          obj: JSON.parse('{"__proto__": {"__errors": ["proto"]}, "a": {"__errors": ["renamed"]}}'),
+        }),
+      },
+    });
+
+    await user.click(screen.getByRole('button', { name: 'Raise' }));
+    const keyInput = elementOf(node, '#root_obj_a-key');
+    await user.clear(keyInput);
+    await user.type(keyInput, 'c');
+    await user.tab();
+
+    const [event] = onChange.mock.lastCall ?? [];
+    expect(Object.getPrototypeOf(event?.errorSchema.obj)).toBe(Object.prototype);
+    expect(event?.errors).toEqual([
+      { property: '.obj.__proto__', message: 'proto', stack: '.obj.__proto__ proto' },
+      { property: '.obj.c', message: 'renamed', stack: '.obj.c renamed' },
+    ]);
+  });
+
+  it('report no error for a property named __proto__ once renaming a sibling leaves the data without it', async () => {
+    const { node, onChange } = createFormComponent({
+      schema: {
+        type: 'object',
+        properties: { obj: { type: 'object', additionalProperties: { type: 'string', minLength: 3 } } },
+      },
+      initialFormData: JSON.parse('{"obj": {"__proto__": "x", "a": "yyyy"}}'),
+    });
+
+    await submitForm(node, user);
+    const keyInput = elementOf(node, '#root_obj_a-key');
+    await user.clear(keyInput);
+    await user.type(keyInput, 'c');
+    await user.tab();
+
+    const [event] = onChange.mock.lastCall ?? [];
+    expect(Object.keys(event?.formData.obj)).toEqual(['c']);
+    expect(event?.errors).toEqual([]);
   });
 });

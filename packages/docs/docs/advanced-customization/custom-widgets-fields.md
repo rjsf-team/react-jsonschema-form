@@ -430,6 +430,32 @@ A field component will always be passed the following props:
   );
   ```
 
+The option a union field shows is the form's state, not the field's: `SchemaField` reads it too, to stub the extra keys of an object once, with the selected option, and it outlives the field's components and follows the moves the form makes, of array items and of additional properties renamed or removed.
+A custom `AnyOfField` or `OneOfField` reads and writes it with `useOptionSelection()` from `@rjsf/core`, rather than keeping its own, and sends the data for a newly selected option through `onChange` as before:
+
+```tsx
+import { useOptionSelection } from '@rjsf/core';
+
+function MyAnyOfField(props: FieldProps & { options: RJSFSchema[] }) {
+  const { fieldPath, formData, options, registry, schema } = props;
+  const { selectedOption, selectOption } = useOptionSelection(
+    registry,
+    fieldPath,
+    options,
+    formData,
+    getDiscriminatorFieldFromSchema(schema),
+  );
+  // render the selector on `selectedOption`; on a pick, `selectOption(index)` and then `onChange(newData, fieldPath)`
+}
+```
+
+With no selection, the option shown is the one `getClosestMatchingOption()` picks for the data.
+A selection holds for the data the form last rendered under it and for the data the form's own changes inside the option leave at the field, whatever those edits made of it, so a switch or an edit `transformChange` refuses keeps it too.
+Other data, such as `setFieldValue()`'s, a reset, a parent field answering a switch with data of its own, or an edit to a property the object declares beside its options that the options can disagree about, one an option names under `properties`, such as with a `const` that tells the options apart, or under `required`, or any such property where an option carries a keyword that reads the object whole, such as `minProperties`, `not` or `additionalProperties`, is shown under the option `getClosestMatchingOption()` picks for it, the selection winning a tie, even when it is the data the field showed before the switch; that pick does not replace the selection.
+An edit to a property every option is silent about, where each carries only `type`, annotations such as `title`, and `properties` and `required` that leave the property out, holds the option shown, as an edit inside the option does.
+Outside a `Form`, the outermost `SchemaField` keeps the selections of the fields below it, and a component with no `SchemaField` or `Form` above it keeps its own.
+The selection is kept by the place of the option list in the root schema, so a condition that swaps the list the field offers starts the choice over and finds it again when it swaps back, while a schema that changes the list in place, such as by adding an option, keeps it.
+
 ## The `registry` object
 
 The `registry` is an object containing the registered core, theme and custom fields and widgets as well as the root schema, form context, schema utils.
@@ -542,6 +568,9 @@ const schema: RJSFSchema = {
 render(<Form schema={schema} validator={validator} fields={fields} />, document.getElementById('app'));
 ```
 
+A `$id` names the field the way [`ui:field`](../api-reference/uiSchema.md#uifield) does, after the field's own `ui:field` and `ui:globalOptions.field`: the field renders beside an `anyOf`/`oneOf` option selector, or in place of the options with `ui:fieldReplacesAnyOrOneOf`.
+A named field is applied once per data path, so one that renders `registry.fields.SchemaField` for its own data gets the default field for the schema there, whatever the `uiSchema` it passes names. That field draws the label, description and help the named field's [`presentation`](../api-reference/form-props.md#presentation) plan hands down to it, and the extra key's input and remove button and the option selector stay with the field's own `SchemaField`, so each renders once. Naming `SchemaField` or `FallbackField` names no custom field: `SchemaField` renders as though no field were named, and `FallbackField` as it does when the schema's type picks it.
+
 ### Wrapping an existing field to customize it
 
 Sometimes you just need to customize the properties that are passed to an existing field.
@@ -574,3 +603,5 @@ function MyObjectField(props: FieldProps) {
 
 A wrapper registered under the key of the field it wraps, as `fields={{ ObjectField: MyObjectField }}`, keeps that key's [`presentation`](../api-reference/form-props.md#presentation) declaration, so it is labelled as the field it wraps.
 One registered under a key of its own, or given as `ui:field` directly, is a custom field, which draws its own label: a wrapper around `StringField` in a theme whose template draws the label declares `{ label: 'template', description: 'template' }` under its key, so the field it renders is labelled as before.
+
+Pass the `formData` through unchanged. `ArrayField` and `ObjectField` add, remove, rename and reorder by reading the form's current value at their `fieldPath`, not the `formData` they were rendered with, so that several edits in one event build on each other. A wrapper that hands them a transformed view of the data, such as a sorted copy, makes those operations act on positions the form does not hold.

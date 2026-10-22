@@ -14,6 +14,8 @@ import {
   TranslatableString,
 } from '@rjsf/utils';
 
+import { withGlobalUiOptions } from './fieldWidgetUtils.ts';
+
 /** The `OptionalDataControlsField` component is used to render the optional data controls for the field associated
  * with the given props.
  *
@@ -67,13 +69,13 @@ export default function OptionalDataControlsField<
           undefined,
           'excludeObjectChildren',
           undefined,
-          uiSchema,
+          withGlobalUiOptions<T, S, F>(uiSchema, globalUiOptions),
           uiSchemaDefinitions,
         );
         if (newFormData === undefined) {
           // getDefaultFormState() returns undefined for an optional array (and can for an object), so Add has to supply
           // the empty container itself, of the type shouldRenderOptionalField() rendered the controls for
-          newFormData = getOptionalDataControlsType<S>(schema) === 'array' ? [] : {};
+          newFormData = getOptionalDataControlsType<S>(schema, registry.rootSchema) === 'array' ? [] : {};
         }
         onChange(newFormData as T, fieldPath);
       };

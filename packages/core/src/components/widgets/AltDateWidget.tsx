@@ -26,7 +26,7 @@ function AltDateWidget<
   } = props;
   const { translateString } = registry;
   const { group } = getGroupAttributes<T, S, F>({ id, presentation }, 'group');
-  const { elements, handleChange, handleClear, handleSetNow } = useAltDateWidgetProps(props);
+  const { elements, handleChange, handleClear, handleSetNow, buttonsDisabled } = useAltDateWidgetProps(props);
 
   return (
     <div id={id} {...group}>
@@ -51,12 +51,7 @@ function AltDateWidget<
         ))}
         {!options.hideNowButton && (
           <li className='list-inline-item'>
-            <button
-              type='button'
-              className='btn btn-info btn-now'
-              onClick={handleSetNow}
-              disabled={disabled || readonly}
-            >
+            <button type='button' className='btn btn-info btn-now' onClick={handleSetNow} disabled={buttonsDisabled}>
               {translateString(TranslatableString.NowLabel)}
             </button>
           </li>
@@ -67,7 +62,7 @@ function AltDateWidget<
               type='button'
               className='btn btn-warning btn-clear'
               onClick={handleClear}
-              disabled={disabled || readonly}
+              disabled={buttonsDisabled}
             >
               {translateString(TranslatableString.ClearLabel)}
             </button>

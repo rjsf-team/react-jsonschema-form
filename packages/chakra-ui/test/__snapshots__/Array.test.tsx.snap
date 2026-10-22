@@ -10576,7 +10576,7 @@ exports[`with title and description > array icons 1`] = `
                           class="fieldset__legend emotion-10"
                           data-part="legend"
                           data-scope="fieldset"
-                          id="fieldset::_r_11_::legend"
+                          id="fieldset::_r_19_::legend"
                         >
                           <sup
                             class="emotion-5"
@@ -10776,7 +10776,7 @@ exports[`with title and description > array icons 1`] = `
                           class="fieldset__legend emotion-10"
                           data-part="legend"
                           data-scope="fieldset"
-                          id="fieldset::_r_13_::legend"
+                          id="fieldset::_r_1b_::legend"
                         >
                           <sup
                             class="emotion-5"
@@ -11522,7 +11522,7 @@ exports[`with title and description > checkboxes 1`] = `
           class="fieldset__legend emotion-1"
           data-part="legend"
           data-scope="fieldset"
-          id="fieldset::_r_t_::legend"
+          id="fieldset::_r_13_::legend"
         >
           <sup
             class="emotion-2"
@@ -12130,7 +12130,7 @@ exports[`with title and description > fixed array 1`] = `
                           class="fieldset__legend emotion-10"
                           data-part="legend"
                           data-scope="fieldset"
-                          id="fieldset::_r_p_::legend"
+                          id="fieldset::_r_v_::legend"
                         >
                           <sup
                             class="emotion-5"
@@ -12203,7 +12203,7 @@ exports[`with title and description > fixed array 1`] = `
                           class="fieldset__legend emotion-10"
                           data-part="legend"
                           data-scope="fieldset"
-                          id="fieldset::_r_r_::legend"
+                          id="fieldset::_r_11_::legend"
                         >
                           <sup
                             class="emotion-5"
@@ -13053,7 +13053,7 @@ exports[`with title and description from both > array icons 1`] = `
                           class="fieldset__legend emotion-10"
                           data-part="legend"
                           data-scope="fieldset"
-                          id="fieldset::_r_1t_::legend"
+                          id="fieldset::_r_2d_::legend"
                         >
                           <sup
                             class="emotion-5"
@@ -13253,7 +13253,7 @@ exports[`with title and description from both > array icons 1`] = `
                           class="fieldset__legend emotion-10"
                           data-part="legend"
                           data-scope="fieldset"
-                          id="fieldset::_r_1v_::legend"
+                          id="fieldset::_r_2f_::legend"
                         >
                           <sup
                             class="emotion-5"
@@ -13999,7 +13999,7 @@ exports[`with title and description from both > checkboxes 1`] = `
           class="fieldset__legend emotion-1"
           data-part="legend"
           data-scope="fieldset"
-          id="fieldset::_r_1p_::legend"
+          id="fieldset::_r_27_::legend"
         >
           <sup
             class="emotion-2"
@@ -14607,7 +14607,7 @@ exports[`with title and description from both > fixed array 1`] = `
                           class="fieldset__legend emotion-10"
                           data-part="legend"
                           data-scope="fieldset"
-                          id="fieldset::_r_1l_::legend"
+                          id="fieldset::_r_23_::legend"
                         >
                           <sup
                             class="emotion-5"
@@ -14680,7 +14680,7 @@ exports[`with title and description from both > fixed array 1`] = `
                           class="fieldset__legend emotion-10"
                           data-part="legend"
                           data-scope="fieldset"
-                          id="fieldset::_r_1n_::legend"
+                          id="fieldset::_r_25_::legend"
                         >
                           <sup
                             class="emotion-5"
@@ -15530,7 +15530,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                           class="fieldset__legend emotion-10"
                           data-part="legend"
                           data-scope="fieldset"
-                          id="fieldset::_r_1f_::legend"
+                          id="fieldset::_r_1r_::legend"
                         >
                           <sup
                             class="emotion-5"
@@ -15730,7 +15730,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                           class="fieldset__legend emotion-10"
                           data-part="legend"
                           data-scope="fieldset"
-                          id="fieldset::_r_1h_::legend"
+                          id="fieldset::_r_1t_::legend"
                         >
                           <sup
                             class="emotion-5"
@@ -16476,7 +16476,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
           class="fieldset__legend emotion-1"
           data-part="legend"
           data-scope="fieldset"
-          id="fieldset::_r_1b_::legend"
+          id="fieldset::_r_1l_::legend"
         >
           <sup
             class="emotion-2"
@@ -17084,7 +17084,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                           class="fieldset__legend emotion-10"
                           data-part="legend"
                           data-scope="fieldset"
-                          id="fieldset::_r_17_::legend"
+                          id="fieldset::_r_1h_::legend"
                         >
                           <sup
                             class="emotion-5"
@@ -17157,7 +17157,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                           class="fieldset__legend emotion-10"
                           data-part="legend"
                           data-scope="fieldset"
-                          id="fieldset::_r_19_::legend"
+                          id="fieldset::_r_1j_::legend"
                         >
                           <sup
                             class="emotion-5"

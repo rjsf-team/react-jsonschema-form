@@ -11,18 +11,18 @@ import type {
 /** The form data a change, a submit or `FormRef.getFormData()` hands back. No change below an object or array root
  * replaces it with `undefined` (the change writes into it, and defaults are computed from an object), so its type is
  * `T` itself; a scalar root is `undefined` whenever its field is cleared. A write at the root itself can still leave an
- * object or array root `undefined`, which this type does not reflect: `setFieldValue('', undefined)`, or a root-level
- * custom field or widget calling `onChange(undefined, ROOT_FIELD_PATH)`.
+ * object or array root `undefined`, which this type does not reflect: `setFieldValue('', undefined)`, a root-level
+ * custom field or widget calling `onChange(undefined, ROOT_FIELD_PATH)`, or a `transformChange` that returns `undefined`.
  */
 export type EventFormData<T> = T extends object ? T : T | undefined;
 
 /** The event handed to `onChange` and `onSubmit`. It is declared on its own rather than as a `Pick` of `FormState`
  * because it is the public contract while `FormState` is an implementation detail: the state's layout is free to change
- * as long as `toIChangeEvent()` in `Form.tsx`, the only place an event is built, still produces this shape.
+ * as long as `toIChangeEvent()` in `formState.ts`, the only place an event is built, still produces this shape.
  *
- * Every member is `readonly`. The event's `formData` shares its unchanged subtrees with the value the change was
- * applied to, which for a parent-owned form is the parent's own object, so writing into the event writes into that
- * data. Copy what you need out of the event instead.
+ * Every member is `readonly`. The event's `formData` is the form's own data, which shares its unchanged subtrees with
+ * the value the change was applied to, the `formData` you passed included, so writing into the event writes into the
+ * form's data and yours. Copy what you need out of the event instead.
  */
 export interface IChangeEvent<
   T = unknown,

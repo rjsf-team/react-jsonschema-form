@@ -123,7 +123,7 @@ exports[`array fields > array icons 1`] = `
                       </div>
                     </div>
                     <div
-                      class="pt-4 mt-2 col-lg-2 col-md-3 col-4"
+                      class="py-4 col-lg-2 col-md-3 col-4"
                     >
                       <div
                         class="d-flex flex-row"
@@ -243,7 +243,7 @@ exports[`array fields > array icons 1`] = `
                       </div>
                     </div>
                     <div
-                      class="pt-4 mt-2 col-lg-2 col-md-3 col-4"
+                      class="py-4 col-lg-2 col-md-3 col-4"
                     >
                       <div
                         class="d-flex flex-row"
@@ -549,7 +549,7 @@ exports[`array fields > fixed array 1`] = `
                       </div>
                     </div>
                     <div
-                      class="pt-4 mt-2 col-lg-2 col-md-3 col-4"
+                      class="py-4 col-lg-2 col-md-3 col-4"
                     />
                   </div>
                 </div>
@@ -580,7 +580,7 @@ exports[`array fields > fixed array 1`] = `
                       </div>
                     </div>
                     <div
-                      class="pt-4 mt-2 col-lg-2 col-md-3 col-4"
+                      class="py-4 col-lg-2 col-md-3 col-4"
                     />
                   </div>
                 </div>
@@ -1207,7 +1207,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                       </div>
                     </div>
                     <div
-                      class="pt-4 mt-2 col-lg-2 col-md-3 col-4"
+                      class="py-4 col-lg-2 col-md-3 col-4"
                     >
                       <div
                         class="d-flex flex-row"
@@ -1301,7 +1301,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                       </div>
                     </div>
                     <div
-                      class="pt-4 mt-2 col-lg-2 col-md-3 col-4"
+                      class="py-4 col-lg-2 col-md-3 col-4"
                     >
                       <div
                         class="d-flex flex-row"
@@ -1520,7 +1520,7 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                       </div>
                     </div>
                     <div
-                      class="pt-4 mt-2 col-lg-2 col-md-3 col-4"
+                      class="py-4 col-lg-2 col-md-3 col-4"
                     />
                   </div>
                 </div>
@@ -1551,7 +1551,7 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                       </div>
                     </div>
                     <div
-                      class="pt-4 mt-2 col-lg-2 col-md-3 col-4"
+                      class="py-4 col-lg-2 col-md-3 col-4"
                     />
                   </div>
                 </div>
@@ -1671,7 +1671,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                         </div>
                                       </div>
                                       <div
-                                        class="pt-4 mt-2 col-lg-2 col-md-3 col-4"
+                                        class="py-4 col-lg-2 col-md-3 col-4"
                                       >
                                         <div
                                           class="d-flex flex-row"
@@ -1765,7 +1765,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                         </div>
                                       </div>
                                       <div
-                                        class="pt-4 mt-2 col-lg-2 col-md-3 col-4"
+                                        class="py-4 col-lg-2 col-md-3 col-4"
                                       >
                                         <div
                                           class="d-flex flex-row"
@@ -2001,7 +2001,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                         </div>
                                       </div>
                                       <div
-                                        class="pt-4 mt-2 col-lg-2 col-md-3 col-4"
+                                        class="py-4 col-lg-2 col-md-3 col-4"
                                       >
                                         <div
                                           class="d-flex flex-row"
@@ -2095,7 +2095,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                         </div>
                                       </div>
                                       <div
-                                        class="pt-4 mt-2 col-lg-2 col-md-3 col-4"
+                                        class="py-4 col-lg-2 col-md-3 col-4"
                                       >
                                         <div
                                           class="d-flex flex-row"
@@ -2790,7 +2790,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                       </div>
                     </div>
                     <div
-                      class="pt-4 mt-2 col-lg-2 col-md-3 col-4"
+                      class="py-4 col-lg-2 col-md-3 col-4"
                     >
                       <div
                         class="d-flex flex-row"
@@ -2884,7 +2884,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                       </div>
                     </div>
                     <div
-                      class="pt-4 mt-2 col-lg-2 col-md-3 col-4"
+                      class="py-4 col-lg-2 col-md-3 col-4"
                     >
                       <div
                         class="d-flex flex-row"

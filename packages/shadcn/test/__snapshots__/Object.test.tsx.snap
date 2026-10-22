@@ -2291,12 +2291,12 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                         >
                           <label
                             cmdk-label=""
-                            for="radix-_r_7_"
-                            id="radix-_r_6_"
+                            for="radix-_r_8_"
+                            id="radix-_r_7_"
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
                           <button
-                            aria-controls="_r_4_"
+                            aria-controls="_r_5_"
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -2329,7 +2329,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                           </button>
                           <div
                             class="relative"
-                            id="_r_4_"
+                            id="_r_5_"
                           />
                         </div>
                       </div>
@@ -3416,12 +3416,12 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                         >
                           <label
                             cmdk-label=""
-                            for="radix-_r_3_"
-                            id="radix-_r_2_"
+                            for="radix-_r_4_"
+                            id="radix-_r_3_"
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
                           <button
-                            aria-controls="_r_0_"
+                            aria-controls="_r_1_"
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -3454,7 +3454,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                           </button>
                           <div
                             class="relative"
-                            id="_r_0_"
+                            id="_r_1_"
                           />
                         </div>
                       </div>
@@ -3651,12 +3651,12 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                         >
                           <label
                             cmdk-label=""
-                            for="radix-_r_b_"
-                            id="radix-_r_a_"
+                            for="radix-_r_c_"
+                            id="radix-_r_b_"
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
                           <button
-                            aria-controls="_r_8_"
+                            aria-controls="_r_9_"
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -3689,7 +3689,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                           </button>
                           <div
                             class="relative"
-                            id="_r_8_"
+                            id="_r_9_"
                           />
                         </div>
                       </div>

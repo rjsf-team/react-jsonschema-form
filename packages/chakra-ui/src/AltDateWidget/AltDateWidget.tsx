@@ -21,7 +21,7 @@ function AltDateWidget<
     presentation,
   } = props;
   const { translateString } = registry;
-  const { elements, handleChange, handleClear, handleSetNow } = useAltDateWidgetProps(props);
+  const { elements, handleChange, handleClear, handleSetNow, buttonsDisabled } = useAltDateWidgetProps(props);
 
   const chakraProps = getChakra(options);
   const { group } = getGroupAttributes<T, S, F>({ id, presentation }, 'group');
@@ -50,7 +50,6 @@ function AltDateWidget<
                 readonly={readonly}
                 registry={registry}
                 select={handleChange}
-                value={elemProps.value && elemProps.value < 0 ? '' : elemProps.value}
               />
             </Box>
           );
@@ -58,12 +57,12 @@ function AltDateWidget<
       </Box>
       <Box display='flex'>
         {!options.hideNowButton && (
-          <Button onClick={handleSetNow} mr='2' disabled={disabled || readonly}>
+          <Button onClick={handleSetNow} mr='2' disabled={buttonsDisabled}>
             {translateString(TranslatableString.NowLabel)}
           </Button>
         )}
         {!options.hideClearButton && (
-          <Button onClick={handleClear} disabled={disabled || readonly}>
+          <Button onClick={handleClear} disabled={buttonsDisabled}>
             {translateString(TranslatableString.ClearLabel)}
           </Button>
         )}

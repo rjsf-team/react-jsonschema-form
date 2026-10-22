@@ -144,14 +144,11 @@ export interface DefaultFormStateBehavior {
    * while an `if-then-else` placed directly in a nested object schema is resolved, along with any `allOf` next to it,
    * unless `emptyObjectFields` is `skipEmptyDefaults`. With one `allOf` entry per `enum` value and no `formData`, the
    * default `allOf` merger merges the `then` defaults of all the entries, and the first entry that defaults a property
-   * wins, while a `customMergeAllOf` that throws on the conflicting `default`s drops the whole `allOf`. A
-   * `customMergeAllOf` built on a deep merger also turns a property's `allOf: [{ if, then }]` into a direct
-   * `if-then-else` wherever it merges an `allOf` (the root's own, or one next to a direct `if` in a nested object
-   * schema, but not a nested `allOf` on its own), so that property's `then` default is filled in under `skipDefaults`
-   * too, unless `emptyObjectFields` is `skipEmptyDefaults`. The `allOf` and `if-then-else` of a nested object's
-   * `dependencies` entry are resolved once its property has a value, even when `emptyObjectFields` is
-   * `skipEmptyDefaults`, and a default counts as that value, so the entry's `if` is checked against it. A root
-   * `dependencies` entry counts a default only while `formData` is empty.
+   * wins, while a `customMergeAllOf` that throws on the conflicting `default`s drops the whole `allOf`. Each property's
+   * defaults are computed from the property as the schema declares it, so a `customMergeAllOf` built on a deep merger
+   * leaves a property's `allOf` skipped too. The `allOf` and `if-then-else` of a `dependencies` entry are resolved
+   * once its property has a value, even when `emptyObjectFields` is `skipEmptyDefaults`, and a default counts as that
+   * value, so the entry's `if` is checked against it.
    * See the `allOf` section of `defaultFormStateBehavior` in the form props docs for examples of each case.
    */
   allOf?: 'populateDefaults' | 'skipDefaults';
@@ -209,12 +206,6 @@ export interface SchemaContext<S extends StrictRJSFSchema = RJSFSchema, F extend
   /** Optional configuration object, if provided, allows users to override default form state behavior */
   readonly defaultFormStateBehavior?: DefaultFormStateBehavior;
 }
-
-/** The settings of a `SchemaContext` that decide which sub-schemas a form validates against, which `schemaParser()`
- * parses a schema with; they must match the ones the form's `SchemaContext` holds, so the parsed sub-schemas are the
- * ones the form validates against
- */
-export type SchemaParserOptions<S extends StrictRJSFSchema = RJSFSchema> = Pick<SchemaContext<S>, 'customMergeAllOf'>;
 
 /** The props for the `getDefaultFormState()` schema function */
 export interface GetDefaultFormStateProps<
@@ -305,6 +296,16 @@ export type FieldPathList = (string | number)[];
 
 /** Dot string or segment list for `getFromSchema` / `findFieldInSchema` (same segment rules as {@link FieldPathList}). */
 export type SchemaFieldPath = string | FieldPathList;
+
+/** What a form shows beyond its schema and data, which a walk of its fields reads to see the fields on screen: the
+ * option each field offering `anyOf`/`oneOf` options shows, and the collapsed `$ref` cycles the user expanded
+ */
+export interface FormFieldState<S extends StrictRJSFSchema = RJSFSchema> {
+  /** The index of the option the field at `fieldPath` shows among its `options`, each retrieved for `formData` */
+  selectedOption(fieldPath: FieldPath, options: S[], formData: unknown, discriminator?: string): number;
+  /** Whether the user expanded the collapsed `$ref` cycle at `fieldPath` */
+  isExpanded(fieldPath: FieldPath): boolean;
+}
 
 declare const FIELD_PATH_BRAND: unique symbol;
 
@@ -844,6 +845,12 @@ export interface PresentationDeclaration<Owner extends PartOwner = PartOwner> {
    * a group of controls needs since `for` names a single element
    */
   labelledBy?: 'for' | 'aria-labelledby';
+  /** Where a label the component draws itself sits: `'above'` its control, as a theme's text input draws its label over
+   * the input, or `'beside'` it, as a checkbox draws its own. It says nothing of a label the template draws. Left out, a
+   * self-drawn label isn't taken to sit above the control. `@rjsf/core` reads it for one thing only: an array item's
+   * `displayLabel`, which lays the item's buttons out level with the control below a label above it
+   */
+  labelPlacement?: 'above' | 'beside';
   /** Whether the control, left alone, already holds `false`, as an unchecked checkbox or switch does where its field
    * renders a `boolean`, which `getDefaultFormState()` seeds a required one with. A native `required` would then fail a
    * value the schema accepts, so `@rjsf/core` plans the control as required only where the schema demands `true`
@@ -858,10 +865,13 @@ export interface PresentationDeclaration<Owner extends PartOwner = PartOwner> {
 export type WidgetPresentationDeclaration = PresentationDeclaration<Exclude<PartOwner, 'widget'>>;
 
 /** A `PresentationDeclaration` with every part settled on the template or the component, as
- * `getPresentationDeclaration()` returns it, and `uncheckedIsFalse` left out where nothing declares it
+ * `getPresentationDeclaration()` returns it, with `uncheckedIsFalse` left out where nothing declares it, and
+ * `labelPlacement` where nothing declares it or the template draws the label
  */
-export type ResolvedPresentationDeclaration = Required<Omit<WidgetPresentationDeclaration, 'uncheckedIsFalse'>> &
-  Pick<WidgetPresentationDeclaration, 'uncheckedIsFalse'>;
+export type ResolvedPresentationDeclaration = Required<
+  Omit<WidgetPresentationDeclaration, 'uncheckedIsFalse' | 'labelPlacement'>
+> &
+  Pick<WidgetPresentationDeclaration, 'uncheckedIsFalse' | 'labelPlacement'>;
 
 /** The declarations a theme registers for the components it provides, keyed by the registry key each is registered
  * under, so a component replacing another under the same key draws what that key declares. A component given
@@ -1237,7 +1247,13 @@ export type ArrayFieldItemTemplateProps<
    * customization in some themes
    */
   parentUiSchema?: UiSchema<T, S, F>;
-  /** A boolean flag indicating whether the label for the field is being shown, used to assist buttons placement */
+  /** Whether a label sits above the item's control: one the item's `FieldTemplate` draws, as the plan `SchemaField`
+   * builds for the item says, which is the `displayLabel` that template is handed, or one the item's field or widget
+   * draws itself where its declaration places it `labelPlacement: 'above'`, for which that template is handed
+   * `displayLabel: false`. Under the fallback UI with a choice of types, the item's first control is the type selector,
+   * whose label names the type, so a label sits above it whatever the item's title, unless `ui:label` is false or
+   * the item is hidden, which hides the selector with it. Used to assist buttons placement
+   */
   displayLabel?: boolean;
   /** A boolean flag indicating whether there is a description for the field, used to assist buttons placement */
   hasDescription?: boolean;
@@ -2070,11 +2086,18 @@ export interface ValidatorType<S extends StrictRJSFSchema = RJSFSchema, F extend
   ): ValidationData<T>;
   /** Validates data against a schema, returning true if the data is valid, or
    * false otherwise. If the schema is invalid, then this function will return
-   * false.
+   * false. The form checks a condition or an option by handing `{ $ref: '#/<pointer>' }` naming where it sits in the
+   * `rootSchema`, so a `$ref` local to the root has to be resolved against the `rootSchema`, wherever it appears.
    *
-   * @param schema - The schema against which to validate the form data
+   * It must not change the `formData`, at any depth: the form checks the same data against many conditions and
+   * options, and `getClosestMatchingOption()` reuses what it found for data it already checked during the same call
+   * without looking at the data again. An engine that fills defaults in, coerces values or removes properties as it
+   * validates, as Ajv does with `useDefaults`, `coerceTypes` or `removeAdditional` or with a keyword that writes into
+   * the data, such as ajv-keywords' `transform`, has to be handed a copy.
+   *
+   * @param schema - The schema against which to validate the form data, often a `$ref` local to the `rootSchema`
    * @param formData - The form data to validate
-   * @param rootSchema - The root schema used to provide $ref resolutions
+   * @param rootSchema - The root schema that a `$ref` starting with `#` in the `schema` names
    */
   isValid(schema: S, formData: unknown, rootSchema: S): boolean;
   /** Runs the pure validation of the `schema` and `formData` without any of the RJSF functionality. Provided for use
@@ -2109,7 +2132,8 @@ export interface SchemaUtilsType<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 > {
-  /** Returns the `rootSchema` in the `SchemaUtilsType`
+  /** Returns the `rootSchema` in the `SchemaUtilsType`: the object the `SchemaUtilsType` was created with, its `$ref`s
+   * as written, since each one is resolved against the `$id`s around it where it is looked up
    *
    * @returns - The rootSchema
    */
@@ -2173,7 +2197,7 @@ export interface SchemaUtilsType<
     initialDefaultsGenerated?: boolean,
     uiSchema?: UiSchema<T, S, F>,
     uiSchemaDefinitions?: UiSchemaDefinitions<S, F>,
-  ): T | T[] | undefined;
+  ): T | T[] | null | undefined;
   /** Determines whether the combination of `schema` and `uiSchema` properties indicates that the label for the `schema`
    * should be displayed in a UI.
    *
@@ -2250,9 +2274,11 @@ export interface SchemaUtilsType<
    *
    * @param schema - The schema to use for filtering the `formData`
    * @param [formData] - The formData to filter
+   * @param [fieldState] - The option each field shows, so a field offering `anyOf`/`oneOf` options keeps the data its
+   *        shown option describes. Without it, the option the data matches best
    * @returns The new form data, with any fields not defined in the schema removed
    */
-  omitExtraData(schema: S, formData?: T): T | undefined;
+  omitExtraData(schema: S, formData?: T, fieldState?: FormFieldState<S>): T | undefined;
   /** Retrieves an expanded schema that has had all of its conditions, additional properties, references and
    * dependencies resolved and merged into the `schema` given a `rawFormData` that is used to do the potentially
    * recursive resolution.
@@ -2260,9 +2286,11 @@ export interface SchemaUtilsType<
    * @param schema - The schema for which retrieving a schema is desired
    * @param [formData] - The current formData, if any, to assist retrieving a schema
    * @param [resolveAnyOfOrOneOfRefs] - Optional flag indicating whether to resolved refs in anyOf/oneOf lists
+   * @param [selectedOption] - The index of the `anyOf`/`oneOf` option selected for the field, whose declared
+   *        properties are left to it and whose extra-key keywords describe the extra keys with the field's own
    * @returns - The schema having its conditions, additional properties, references and dependencies resolved
    */
-  retrieveSchema(schema: S, formData?: T, resolveAnyOfOrOneOfRefs?: boolean): S;
+  retrieveSchema(schema: S, formData?: T, resolveAnyOfOrOneOfRefs?: boolean, selectedOption?: number): S;
   /** Returns an `ErrorSchema` holding a required error for every field marked `ui:required: true` (via
    * `ui:options.required` or its shorthand) in `uiSchema` whose value is missing from `formData`.
    *
@@ -2271,6 +2299,9 @@ export interface SchemaUtilsType<
    * @param [uiSchemaDefinitions] - Optional uiSchema fragments keyed by $ref path, resolved via `ui:definitions`
    * @param [globalUiOptions] - Optional global ui:options applied to every field
    * @param [formContext] - Optional formContext passed to the function form of `uiSchema.items`
+   * @param [fieldState] - The option each field shows and the `$ref` cycles the user expanded, so the fields walked
+   *        are the ones on screen. Without it, a field shows the option its data matches best, and nothing below a
+   *        collapsed cycle is walked
    * @returns - An `ErrorSchema` with a required error for every missing `ui:required` field
    */
   getUiRequiredErrorSchema(
@@ -2279,6 +2310,7 @@ export interface SchemaUtilsType<
     uiSchemaDefinitions?: UiSchemaDefinitions<S, F>,
     globalUiOptions?: GlobalUISchemaOptions,
     formContext?: F,
+    fieldState?: FormFieldState<S>,
   ): ErrorSchema<T>;
   /** Sanitize the `data` associated with the `oldSchema` so it is considered appropriate for the `newSchema`. If the
    * new schema does not contain any properties, then `undefined` is returned to clear all the form data. Due to the
@@ -2288,28 +2320,8 @@ export interface SchemaUtilsType<
    * @param [newSchema] - The new schema for which the data is being sanitized
    * @param [oldSchema] - The old schema from which the data originated
    * @param [data={}] - The form data associated with the schema, defaulting to an empty object when undefined
-   * @param [oldData] - The previous form data. The old schema itself resolves against the current `data`;
-   *      a separate chain resolved against `oldData` feeds only the enum filter decision, so a branch flip
-   *      between the previous and current data still filters a value the current data no longer resolves to.
-   *      `Form` passes the data as it last settled under the current root schema. `$ref`s on both sides
-   *      resolve against the one root schema, so pass `oldData` only when the root schema is unchanged,
-   *      which is how `Form` calls it
-   * @param [resolvedOldSchema] - `oldSchema` already resolved for `oldData` at the root: the root frame's
-   *      filter chain uses it directly instead of resolving `oldSchema` again. `Form` passes the schema its
-   *      settled snapshot was resolved under
-   * @param [oldDataForPairing] - The previous data array elements pair with, as the announced container
-   *      writes moved it: a row follows its item across a remove or reorder, and an inserted row pairs with
-   *      its own starting value. `Form` passes the settled data as its container writes moved it; omitted,
-   *      elements pair with `oldData` by index
    * @returns - The new form data, with all of the fields uniquely associated with the old schema set
    *      to `undefined`. Will return `undefined` if the new schema is not an object containing properties.
    */
-  sanitizeDataForNewSchema(
-    newSchema?: S,
-    oldSchema?: S,
-    data?: any,
-    oldData?: any,
-    resolvedOldSchema?: S,
-    oldDataForPairing?: any,
-  ): T;
+  sanitizeDataForNewSchema(newSchema?: S, oldSchema?: S, data?: unknown): T;
 }

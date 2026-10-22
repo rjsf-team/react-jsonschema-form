@@ -1,6 +1,6 @@
 import { englishStringTranslator, TranslatableString } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { render, screen, within } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import Form from '../src/index.ts';
@@ -298,7 +298,7 @@ describe('DateWidget', () => {
     const { container } = render(
       <Form
         schema={{ type: 'object', properties: { birthday: { ...schema, title: 'Birthday' } } }}
-        formData={{ birthday: '2020-05-03' }}
+        initialFormData={{ birthday: '2020-05-03' }}
         validator={validator}
         onChange={onChange}
       />,
@@ -512,7 +512,7 @@ describe('DateWidget', () => {
 
     // The label names the combobox through `htmlFor`, and the day it displays is its value
     test('holds the selected date as its value', () => {
-      render(<Form schema={dateSchema} formData={{ birthday: '2020-05-03' }} validator={validator} />);
+      render(<Form schema={dateSchema} initialFormData={{ birthday: '2020-05-03' }} validator={validator} />);
 
       const trigger = screen.getByRole('combobox', { name: 'Birthday' });
       expect(trigger).toHaveTextContent('May 3, 2020');
@@ -525,7 +525,7 @@ describe('DateWidget', () => {
       render(
         <Form
           schema={dateSchema}
-          formData={{ birthday: '2020-05-03' }}
+          initialFormData={{ birthday: '2020-05-03' }}
           validator={validator}
           templates={{
             FieldTemplate: ({ id, label, children }) => (
@@ -570,7 +570,12 @@ describe('DateWidget', () => {
     ])('is closed again, committing its day, by a second click on the %s', async (_, press) => {
       const onChange = vi.fn();
       const { container } = render(
-        <Form schema={dateSchema} formData={{ birthday: '2020-05-03' }} validator={validator} onChange={onChange} />,
+        <Form
+          schema={dateSchema}
+          initialFormData={{ birthday: '2020-05-03' }}
+          validator={validator}
+          onChange={onChange}
+        />,
       );
 
       await openPicker(container);
@@ -593,7 +598,7 @@ describe('DateWidget', () => {
 
     // With no label, and no title to name it by, the translated prompt names it, and the date is its value
     test('is named by the translated prompt where nothing else names it', () => {
-      const { container } = render(<Form schema={schema} formData='2020-05-03' validator={validator} />);
+      const { container } = render(<Form schema={schema} initialFormData='2020-05-03' validator={validator} />);
 
       const trigger = container.querySelector('button[aria-haspopup]')!;
       expect(trigger).toHaveAccessibleName(englishStringTranslator(TranslatableString.AriaDateLabel));
@@ -627,6 +632,62 @@ describe('DateWidget', () => {
       render(<Form schema={dateSchema} uiSchema={{ birthday: { 'ui:title': 'DOB' } }} validator={validator} />);
 
       expect(screen.getByRole('combobox', { name: 'DOB' })).toBeInTheDocument();
+    });
+  });
+
+  describe('the calendar it places', () => {
+    /** A trigger 20px high whose bottom edge is `bottom` pixels down the viewport */
+    function triggerRect(bottom: number): DOMRect {
+      return {
+        x: 10,
+        y: bottom - 20,
+        width: 90,
+        height: 20,
+        top: bottom - 20,
+        right: 100,
+        bottom,
+        left: 10,
+        toJSON() {},
+      };
+    }
+
+    test('is in place before the day a key opens it onto takes the focus', async () => {
+      render(<DateWidget {...makeWidgetMockProps({ value: '2020-05-03', schema, autofocus: false })} />);
+      let topAtDayFocus: string | undefined;
+      const record = ({ target }: FocusEvent) => {
+        if (target instanceof HTMLElement && target.closest('[role="grid"]')) {
+          topAtDayFocus = target.closest<HTMLElement>('.date-picker-popup')?.style.top;
+        }
+      };
+      document.addEventListener('focusin', record);
+      onTestFinished(() => document.removeEventListener('focusin', record));
+
+      await user.tab();
+      await user.keyboard('{ArrowDown}');
+
+      // jsdom measures the trigger as an empty box at the top of the viewport, so the calendar goes 5px below it
+      expect(topAtDayFocus).toBe('5px');
+    });
+
+    test('follows the trigger when an element around the field scrolls', async () => {
+      render(
+        <div data-testid='panel'>
+          <DateWidget {...makeWidgetMockProps({ value: '2020-05-03', schema, autofocus: false })} />
+        </div>,
+      );
+      const trigger = screen.getByRole('combobox');
+      let bottom = 50;
+      vi.spyOn(trigger, 'getBoundingClientRect').mockImplementation(() => triggerRect(bottom));
+      await user.click(trigger);
+      const popup = screen.getByText('Done').closest<HTMLElement>('.date-picker-popup');
+      expect(popup).toHaveStyle({ top: '55px' });
+
+      bottom = 10;
+      // user-event has no scrolling. A browser dispatches a scroll at the element that scrolled, without bubbling, as
+      // `fireEvent.scroll` does
+      fireEvent.scroll(screen.getByTestId('panel'));
+
+      expect(popup).toHaveStyle({ top: '15px' });
     });
   });
 

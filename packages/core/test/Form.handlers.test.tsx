@@ -14,6 +14,8 @@ import {
   fieldErrorsById,
   submitForm,
   createFormRef,
+  input,
+  setupConsoleWarnSuppression,
 } from './testUtils.tsx';
 
 const user = userEvent.setup();
@@ -33,7 +35,7 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
       const { node, onSubmit } = createFormComponent({
         ref: createRef(),
         schema,
-        formData,
+        initialFormData: formData,
       });
 
       await submitForm(node, user);
@@ -56,7 +58,7 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
       const { node, onSubmit, onError } = createFormComponent({
         ref: createRef(),
         schema,
-        formData,
+        initialFormData: formData,
       });
 
       await submitForm(node, user);
@@ -75,7 +77,7 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
       const { node, onSubmit, onError } = createFormComponent({
         ref: createRef(),
         schema: { type },
-        formData,
+        initialFormData: formData,
       });
 
       await submitForm(node, user);
@@ -89,7 +91,7 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
       const { node, onSubmit, onError } = createFormComponent({
         ref: createRef(),
         schema: { type: 'boolean' },
-        formData: 0,
+        initialFormData: 0,
       });
 
       await submitForm(node, user);
@@ -100,6 +102,7 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
   });
 
   describe('Change handler', () => {
+    const warnings = setupConsoleWarnSuppression();
     it('should call provided change handler on form state change with schema and uiSchema', async () => {
       const schema: RJSFSchema = {
         type: 'object',
@@ -221,7 +224,7 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
         expect(ids).toHaveLength(2);
       });
 
-      // Both owners keep both: a parent-owned form builds the second proposal on the first
+      // The second edit builds on the first
       expect(formData).toEqual({ foo: 'bar2', baz: 'blah2' });
       // One id per updated component; the defaults the seed was given are not reported
       expect(ids).toEqual(['root_foo', 'root_baz']);
@@ -449,7 +452,6 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
     it('should allow switching to null option in oneOf', async () => {
       // This test verifies that switching to a null option in oneOf works correctly.
       // Without the fix, the form would revert back to the previous option.
-      // NOTE: This bug only manifests in controlled forms where parent updates formData prop.
       const schema: RJSFSchema = {
         type: 'object',
         title: 'Configuration',
@@ -497,11 +499,10 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
       // Switch to "No Configuration" (null option, index 2)
       await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '2');
 
-      // Simulate controlled form behavior by re-rendering with new formData
       rerender({
         ref: createRef(),
         schema,
-        formData: currentFormData,
+        initialFormData: currentFormData,
         defaultFormStateBehavior: { emptyObjectFields: 'populateAllDefaults' },
       });
 
@@ -557,8 +558,8 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
         expect(node.querySelector<HTMLInputElement>('#root_other')).toHaveValue('x');
       });
       it('keeping the errors the option it switched to earned', async () => {
-        // The option sits under a required property so the switch leaves data to validate under either owner: at the
-        // root it leaves `undefined`, which a parent-owned form does not validate, so there would be no errors to keep
+        // The option sits under a required property so the switch leaves data to validate: at the root it leaves
+        // `undefined`, and there would be no errors to keep
         const invalidDefaultSchema: RJSFSchema = {
           type: 'object',
           properties: {
@@ -605,50 +606,23 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
 
       expect(node.querySelector<HTMLInputElement>('#root_name')).toHaveValue('x');
     });
-    it('should apply a formData prop change from a parent that ignores onChange', async () => {
+    it('should keep the edits, and warn, when a parent that ignores onChange passes another formData', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: { name: { type: 'string' }, other: { type: 'string', default: 'defaulted' } },
       };
+      // oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias: a `formData` passed after mount is ignored with a warning
       const { node, rerender } = createFormComponent({ schema, formData: { name: 'a' }, onChange: () => {} });
 
-      await user.type(node.querySelector<HTMLInputElement>('#root_name')!, 'x');
+      await user.type(input(node, 'root_name'), 'x');
+      // oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias: a `formData` passed after mount is ignored with a warning
       rerender({ schema, formData: { name: 'loaded' }, onChange: () => {} });
 
-      expect(node.querySelector<HTMLInputElement>('#root_name')).toHaveValue('loaded');
+      expect(input(node, 'root_name')).toHaveValue('ax');
+      expect(warnings.consoleSpy).toHaveBeenCalledTimes(1);
+      expect(warnings.consoleSpy.mock.lastCall?.[0]).toMatch(/`formData` changed after the form mounted/);
     });
-    it('should apply a formData prop change matching data reported before the parent took over', async () => {
-      const schema: RJSFSchema = {
-        type: 'object',
-        properties: {
-          other: { type: 'string', title: 'Other' },
-          cfg: {
-            type: 'object',
-            oneOf: [
-              { title: 'Advanced Configuration', type: 'object', properties: { types: { const: 'advanced' } } },
-              { title: 'No Configuration', type: 'null' },
-            ],
-            default: { types: 'advanced' },
-          },
-        },
-      };
-      const props = {
-        schema,
-        defaultFormStateBehavior: { emptyObjectFields: 'populateAllDefaults' } as const,
-        onChange: () => {},
-      };
-      const { node, rerender } = createFormComponent({
-        ...props,
-        formData: { other: 'A', cfg: { types: 'advanced' } },
-      });
-
-      await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_cfg__oneof_select')!, '1');
-      rerender({ ...props, formData: { other: 'B', cfg: { types: 'advanced' } } });
-      rerender({ ...props, formData: { other: 'A' } });
-
-      expect(node.querySelector<HTMLInputElement>('#root_other')).toHaveValue('A');
-    });
-    it('should clear the errors of an uncontrolled form when noValidate is turned on', () => {
+    it('should clear the errors when noValidate is turned on', () => {
       const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string' } }, required: ['name'] };
       const ref = createFormRef();
       const { node, rerender } = createFormComponent({ schema, ref });
@@ -966,7 +940,7 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
       const formData = {
         foo: '',
       };
-      const { node, onError } = createFormComponent({ schema, formData });
+      const { node, onError } = createFormComponent({ schema, initialFormData: formData });
 
       await submitForm(node, user);
 
@@ -975,9 +949,7 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
   });
 });
 
-// A parent-owned form generates no default, on mount or on any later prop change: the parent owns the value and the
-// value includes its defaults, so re-deriving the data is the self-owned form's alone and runs under that owner only
-describe('Form: the prop changes a self-owned form re-derives its data for', () => {
+describe('Form: the prop changes the form re-derives its data for', () => {
   it('should apply a schema change that adds a property with a default after a change', async () => {
     const schema: RJSFSchema = {
       type: 'object',

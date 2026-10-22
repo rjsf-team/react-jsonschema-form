@@ -83,7 +83,7 @@ describe("shadcn widgets carry their field's plan on the element a user focuses"
       <Form
         schema={{ type: 'object', required: ['volume'], properties: { volume: { type: 'integer', title: 'Volume' } } }}
         uiSchema={{ volume: { 'ui:widget': 'range' } }}
-        formData={{ volume: 3 }}
+        initialFormData={{ volume: 3 }}
         nameGenerator={bracketNameGenerator}
         validator={validator}
       />,
@@ -107,7 +107,7 @@ describe("shadcn widgets carry their field's plan on the element a user focuses"
         <Form
           schema={{ type: 'object', properties: { volume: { type: 'integer', title: 'Volume' } } }}
           uiSchema={{ volume: { 'ui:widget': 'range', 'ui:autofocus': true } }}
-          formData={{ volume: 3 }}
+          initialFormData={{ volume: 3 }}
           validator={validator}
         />,
       );
@@ -425,7 +425,7 @@ describe("shadcn widgets carry their field's plan on the element a user focuses"
       <Form
         schema={{ type: 'object', properties: { volume: { type: 'integer', title: 'Volume' } } }}
         uiSchema={{ volume: { 'ui:widget': 'range' } }}
-        formData={{ volume: 3 }}
+        initialFormData={{ volume: 3 }}
         onFocus={onFocus}
         onBlur={onBlur}
         validator={validator}
@@ -444,7 +444,7 @@ describe("shadcn widgets carry their field's plan on the element a user focuses"
       <Form
         schema={{ type: 'object', properties: { color: { type: 'string', title: 'Color', enum: ['red', 'blue'] } } }}
         uiSchema={{ color: { 'ui:widget': 'radio' } }}
-        formData={{ color: 'blue' }}
+        initialFormData={{ color: 'blue' }}
         nameGenerator={bracketNameGenerator}
         validator={validator}
       />,
@@ -631,7 +631,7 @@ describe('shadcn templates', () => {
           properties: { pet: { type: 'object', title: 'Pet', properties: { a: { type: 'string' } } } },
         }}
         uiSchema={{ 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] }, pet: { 'ui:label': false } }}
-        formData={{ pet: { a: 'x' } }}
+        initialFormData={{ pet: { a: 'x' } }}
         validator={validator}
       />,
     );
@@ -674,7 +674,7 @@ describe('shadcn templates', () => {
           },
         }}
         uiSchema={{ 'ui:globalOptions': { enableOptionalDataFieldForType: ['array'] } }}
-        formData={{ tags: ['a'] }}
+        initialFormData={{ tags: ['a'] }}
         validator={validator}
       />,
     );
@@ -770,7 +770,7 @@ describe('shadcn key inputs', () => {
       <Form
         schema={{ type: 'object', additionalProperties: { type: 'string' } }}
         uiSchema={{ additionalProperties: { 'ui:label': false } }}
-        formData={{ first: 'a' }}
+        initialFormData={{ first: 'a' }}
         validator={validator}
       />,
     );
@@ -859,5 +859,58 @@ describe('shadcn CheckboxWidget required attribute', () => {
     );
 
     expect(container.querySelector('input[type=checkbox]')).not.toHaveAttribute('required');
+  });
+});
+
+describe("shadcn marks a deprecated field's label, as core does", () => {
+  test.each<[string, RJSFSchema, UiSchema, string]>([
+    ['text input', { type: 'string' }, {}, 'textbox'],
+    ['number input', { type: 'number' }, {}, 'textbox'],
+    ['textarea', { type: 'string' }, { 'ui:widget': 'textarea' }, 'textbox'],
+    ['range', { type: 'number' }, { 'ui:widget': 'range' }, 'slider'],
+    ['checkbox', { type: 'boolean' }, {}, 'checkbox'],
+    ['select', { type: 'string', enum: ['a', 'b'] }, {}, 'combobox'],
+    ['radio group', { type: 'string', enum: ['a', 'b'] }, { 'ui:widget': 'radio' }, 'radiogroup'],
+    [
+      'checkboxes group',
+      { type: 'array', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true },
+      { 'ui:widget': 'checkboxes' },
+      'group',
+    ],
+  ])('names a deprecated %s by its label with the Deprecated marker', (_, x, ui, role) => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { x: { ...x, title: 'X', deprecated: true } } }}
+        uiSchema={{ x: ui }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole(role, { name: 'X (deprecated)' })).toHaveAttribute('id', 'root_x');
+    expect(container.innerHTML).not.toContain('(deprecated) (deprecated)');
+  });
+
+  // cmdk replaces the id of the multiple select's input with one of its own (#5478), so only its name is checked
+  test('names a deprecated multi-select by its label with the Deprecated marker', () => {
+    const { container } = render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: {
+            x: {
+              type: 'array',
+              title: 'X',
+              deprecated: true,
+              items: { type: 'string', enum: ['a', 'b'] },
+              uniqueItems: true,
+            },
+          },
+        }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('combobox', { name: 'X (deprecated)' })).toBeInTheDocument();
+    expect(container.innerHTML).not.toContain('(deprecated) (deprecated)');
   });
 });

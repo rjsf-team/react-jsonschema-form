@@ -349,7 +349,7 @@ describe('the plan SchemaField builds', () => {
         schema,
         // An option given a uiSchema of its own renders its own field rather than the custom one (#5391)
         uiSchema: { foo: { 'ui:field': MyField, anyOf: [{}, {}] } },
-        formData: { foo: 'a' },
+        initialFormData: { foo: 'a' },
       });
 
       for (const control of [node.querySelector('#root_foo__anyof_select')!, node.querySelector('input#root_foo')!]) {
@@ -544,7 +544,7 @@ describe('the plan SchemaField builds', () => {
       const { node } = createFormComponent({
         schema: { type: 'object', properties: { pet: schema }, required },
         uiSchema: { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] } },
-        formData: { pet: { name: 'Rex' } },
+        initialFormData: { pet: { name: 'Rex' } },
       });
 
       const title = node.querySelector('#root_pet_XxxOf__title');
@@ -589,7 +589,7 @@ describe('the plan SchemaField builds', () => {
           },
         },
       },
-      formData: { color: 'r' },
+      initialFormData: { color: 'r' },
     });
 
     expect(node.querySelectorAll('#root_color__description')).toHaveLength(1);
@@ -955,17 +955,14 @@ describe('a ui:field wrapping SchemaField under its own id', () => {
 });
 
 describe('a field a $id names that yields to its anyOf options', () => {
-  function Custom() {
-    return null;
-  }
-
+  // `FallbackField` is the field a name can pick that yields to the options; a custom field renders beside them (#5391)
   it("hands the selected option its field's plan, with the parts the selector draws drawn above it", () => {
     const { widgetPlans } = renderPlans(
       {
         type: 'object',
         properties: {
           foo: {
-            $id: 'Custom',
+            $id: 'FallbackField',
             title: 'Foo',
             description: 'About foo',
             anyOf: [{ type: 'string' }, { type: 'number' }],
@@ -974,7 +971,6 @@ describe('a field a $id names that yields to its anyOf options', () => {
       },
       {
         formData: { foo: 'a' },
-        fields: { Custom },
         presentation: {
           default: { label: 'self', description: 'self' },
           fields: { AnyOfField: { label: 'self', description: 'self' } },
@@ -1072,7 +1068,7 @@ describe('a widget rendering a group of controls', () => {
     createFormComponent({
       schema: { type: 'object', properties: { foo: { type: 'integer', title: 'Foo' } } },
       uiSchema: { foo: { 'ui:widget': 'RatingWidget', 'ui:autofocus': true } },
-      formData: value === undefined ? {} : { foo: value },
+      initialFormData: value === undefined ? {} : { foo: value },
     });
     expect(screen.getByRole('radio', { name })).toHaveFocus();
   });
@@ -1083,7 +1079,7 @@ describe('a widget rendering a group of controls', () => {
       createFormComponent({
         schema: { type: 'object', properties: { foo: { type: 'integer', title: 'Foo' } } },
         uiSchema: { foo: { 'ui:widget': 'RatingWidget', 'ui:autofocus': true, [key]: true } },
-        formData: { foo: 3 },
+        initialFormData: { foo: 3 },
       });
       expect(document.body).toHaveFocus();
     },
@@ -1222,9 +1218,7 @@ describe('the label a field hands its widget', () => {
     return Object.fromEntries(labels);
   }
 
-  // An empty `title` falls through to the property name, so the template is handed a label. A widget is handed the
-  // same label, whoever draws it
-  it.each<[string, RJSFSchema, string, Widget, UiSchema?]>([
+  const widgetRows: [string, RJSFSchema, string, Widget, UiSchema?][] = [
     ['string', { type: 'string' }, 'TextWidget', CoreTextWidget],
     ['number', { type: 'number' }, 'TextWidget', CoreTextWidget],
     ['boolean', { type: 'boolean' }, 'CheckboxWidget', CoreCheckboxWidget],
@@ -1242,11 +1236,25 @@ describe('the label a field hands its widget', () => {
       ArrayWidget,
       { 'ui:widget': 'ArrayWidget' },
     ],
-  ])(
+  ];
+
+  // An empty `title` falls through to the property name, so the template is handed a label. A widget is handed the
+  // same label, whoever draws it
+  it.each(widgetRows)(
     "hands a %s field's widget the property name its template is handed for an empty title",
     (_, foo, widgetKey, InnerWidget, fooUi) => {
       const labels = renderLabels({ ...foo, title: '' }, widgetKey, InnerWidget, fooUi);
       expect(labels).toEqual({ template: 'foo', widget: 'foo' });
+    },
+  );
+
+  // An empty `ui:title` falls through to the schema's `title` as an empty `title` does, rather than hiding the label
+  // the way `ui:label: false` does
+  it.each(widgetRows)(
+    "hands a %s field's widget the schema title its template is handed for an empty ui:title",
+    (_, foo, widgetKey, InnerWidget, fooUi) => {
+      const labels = renderLabels({ ...foo, title: 'Foo' }, widgetKey, InnerWidget, { ...fooUi, 'ui:title': '' });
+      expect(labels).toEqual({ template: 'Foo', widget: 'Foo' });
     },
   );
 });

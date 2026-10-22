@@ -44,7 +44,7 @@ describe('typed form data', () => {
       <Form
         schema={schema}
         validator={validator}
-        formData={data}
+        initialFormData={data}
         onChange={({ formData }) => expectTypeOf(formData).toEqualTypeOf<Data>()}
       />,
     );
@@ -53,7 +53,7 @@ describe('typed form data', () => {
 
   it('the default Theme serves a typed withTheme() form', () => {
     const TypedForm = withTheme<Data>(Theme);
-    const { container } = render(<TypedForm schema={schema} validator={validator} formData={{ name: 'b' }} />);
+    const { container } = render(<TypedForm schema={schema} validator={validator} initialFormData={{ name: 'b' }} />);
     expect(container.querySelector<HTMLInputElement>('#root_name')?.value).toBe('b');
   });
 });
@@ -145,7 +145,7 @@ describe('the fallback UI', () => {
     const { container } = render(
       <Form
         schema={{ type: 'object', properties: { x: { title: 'X', description: 'An x', type: ['string', 'number'] } } }}
-        formData={{ x: 'a' }}
+        initialFormData={{ x: 'a' }}
         validator={validator}
         useFallbackUiForUnsupportedType
       />,
@@ -263,6 +263,18 @@ describe("mui widgets are named by their label and carry the field's id on the e
 
     expect(screen.getByRole(role, { name: 'X' })).toHaveAttribute('id', 'root_x');
     expectReferencesResolve(container);
+  });
+
+  test.each(widgets)('names a deprecated %s by its label with the Deprecated marker', (_, x, ui, role) => {
+    render(
+      <Form
+        schema={{ type: 'object', properties: { x: { ...x, title: 'X', deprecated: true } } }}
+        uiSchema={{ x: ui }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole(role, { name: 'X (deprecated)' })).toHaveAttribute('id', 'root_x');
   });
 
   test.each(widgets)(

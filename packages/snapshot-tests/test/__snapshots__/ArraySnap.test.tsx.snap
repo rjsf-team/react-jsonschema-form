@@ -64,7 +64,7 @@ exports[`array fields > array icons 1`] = `
         >
           <div
             class="rjsf-array-item"
-            style="display: flex; align-items: center;"
+            style="display: flex; align-items: baseline;"
           >
             <div
               class="col-xs-9 col-md-10 col-xl-11"
@@ -89,7 +89,7 @@ exports[`array fields > array icons 1`] = `
             >
               <div
                 class="btn-group"
-                style="display: flex; justify-content: flex-end; margin-top: 9px;"
+                style="display: flex; justify-content: flex-end; margin-top: 0px;"
               >
                 <button
                   class="btn btn-default rjsf-array-item-move-up"
@@ -137,7 +137,7 @@ exports[`array fields > array icons 1`] = `
           </div>
           <div
             class="rjsf-array-item"
-            style="display: flex; align-items: center;"
+            style="display: flex; align-items: baseline;"
           >
             <div
               class="col-xs-9 col-md-10 col-xl-11"
@@ -162,7 +162,7 @@ exports[`array fields > array icons 1`] = `
             >
               <div
                 class="btn-group"
-                style="display: flex; justify-content: flex-end; margin-top: 9px;"
+                style="display: flex; justify-content: flex-end; margin-top: 0px;"
               >
                 <button
                   class="btn btn-default rjsf-array-item-move-up"
@@ -349,7 +349,7 @@ exports[`array fields > fixed array 1`] = `
         >
           <div
             class="rjsf-array-item"
-            style="display: flex; align-items: center;"
+            style="display: flex; align-items: baseline;"
           >
             <div
               class="col-xs-12"
@@ -372,7 +372,7 @@ exports[`array fields > fixed array 1`] = `
           </div>
           <div
             class="rjsf-array-item"
-            style="display: flex; align-items: center;"
+            style="display: flex; align-items: baseline;"
           >
             <div
               class="col-xs-12"
@@ -820,7 +820,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
         >
           <div
             class="rjsf-array-item"
-            style="display: flex; align-items: center;"
+            style="display: flex; align-items: baseline;"
           >
             <div
               class="col-xs-9 col-md-10 col-xl-11"
@@ -845,7 +845,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
             >
               <div
                 class="btn-group"
-                style="display: flex; justify-content: flex-end; margin-top: 9px;"
+                style="display: flex; justify-content: flex-end; margin-top: 0px;"
               >
                 <button
                   class="btn btn-default rjsf-array-item-move-up"
@@ -883,7 +883,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
           </div>
           <div
             class="rjsf-array-item"
-            style="display: flex; align-items: center;"
+            style="display: flex; align-items: baseline;"
           >
             <div
               class="col-xs-9 col-md-10 col-xl-11"
@@ -908,7 +908,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
             >
               <div
                 class="btn-group"
-                style="display: flex; justify-content: flex-end; margin-top: 9px;"
+                style="display: flex; justify-content: flex-end; margin-top: 0px;"
               >
                 <button
                   class="btn btn-default rjsf-array-item-move-up"
@@ -1037,7 +1037,7 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
         >
           <div
             class="rjsf-array-item"
-            style="display: flex; align-items: center;"
+            style="display: flex; align-items: baseline;"
           >
             <div
               class="col-xs-12"
@@ -1060,7 +1060,7 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
           </div>
           <div
             class="rjsf-array-item"
-            style="display: flex; align-items: center;"
+            style="display: flex; align-items: baseline;"
           >
             <div
               class="col-xs-12"
@@ -1158,7 +1158,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                   >
                     <div
                       class="rjsf-array-item"
-                      style="display: flex; align-items: center;"
+                      style="display: flex; align-items: baseline;"
                     >
                       <div
                         class="col-xs-9 col-md-10 col-xl-11"
@@ -1183,7 +1183,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                       >
                         <div
                           class="btn-group"
-                          style="display: flex; justify-content: flex-end; margin-top: 9px;"
+                          style="display: flex; justify-content: flex-end; margin-top: 0px;"
                         >
                           <button
                             class="btn btn-default rjsf-array-item-move-up"
@@ -1221,7 +1221,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                     </div>
                     <div
                       class="rjsf-array-item"
-                      style="display: flex; align-items: center;"
+                      style="display: flex; align-items: baseline;"
                     >
                       <div
                         class="col-xs-9 col-md-10 col-xl-11"
@@ -1246,7 +1246,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                       >
                         <div
                           class="btn-group"
-                          style="display: flex; justify-content: flex-end; margin-top: 9px;"
+                          style="display: flex; justify-content: flex-end; margin-top: 0px;"
                         >
                           <button
                             class="btn btn-default rjsf-array-item-move-up"
@@ -1364,7 +1364,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                   >
                     <div
                       class="rjsf-array-item"
-                      style="display: flex; align-items: center;"
+                      style="display: flex; align-items: baseline;"
                     >
                       <div
                         class="col-xs-9 col-md-10 col-xl-11"
@@ -1389,7 +1389,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                       >
                         <div
                           class="btn-group"
-                          style="display: flex; justify-content: flex-end; margin-top: 9px;"
+                          style="display: flex; justify-content: flex-end; margin-top: 0px;"
                         >
                           <button
                             class="btn btn-default rjsf-array-item-move-up"
@@ -1427,7 +1427,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                     </div>
                     <div
                       class="rjsf-array-item"
-                      style="display: flex; align-items: center;"
+                      style="display: flex; align-items: baseline;"
                     >
                       <div
                         class="col-xs-9 col-md-10 col-xl-11"
@@ -1452,7 +1452,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                       >
                         <div
                           class="btn-group"
-                          style="display: flex; justify-content: flex-end; margin-top: 9px;"
+                          style="display: flex; justify-content: flex-end; margin-top: 0px;"
                         >
                           <button
                             class="btn btn-default rjsf-array-item-move-up"
@@ -1861,7 +1861,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
         >
           <div
             class="rjsf-array-item"
-            style="display: flex; align-items: center;"
+            style="display: flex; align-items: baseline;"
           >
             <div
               class="col-xs-9 col-md-10 col-xl-11"
@@ -1886,7 +1886,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
             >
               <div
                 class="btn-group"
-                style="display: flex; justify-content: flex-end; margin-top: 9px;"
+                style="display: flex; justify-content: flex-end; margin-top: 0px;"
               >
                 <button
                   class="btn btn-default rjsf-array-item-move-up"
@@ -1924,7 +1924,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
           </div>
           <div
             class="rjsf-array-item"
-            style="display: flex; align-items: center;"
+            style="display: flex; align-items: baseline;"
           >
             <div
               class="col-xs-9 col-md-10 col-xl-11"
@@ -1949,7 +1949,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
             >
               <div
                 class="btn-group"
-                style="display: flex; justify-content: flex-end; margin-top: 9px;"
+                style="display: flex; justify-content: flex-end; margin-top: 0px;"
               >
                 <button
                   class="btn btn-default rjsf-array-item-move-up"

@@ -39,7 +39,6 @@ import {
 } from '@rjsf/utils';
 
 import fieldLabelForLog from '../../fieldLabelForLog.ts';
-import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 
 /** The enumeration of the three different Layout GridTemplate type values
  */
@@ -410,7 +409,8 @@ export function getSchemaDetailsForField<
     const result = computeArraySchemasIfPresent<S>(schema, leafPath);
     fieldPath = toFieldPath(result.index ?? leafPath, fieldPath);
     if (result.rawSchema) {
-      schema = result.rawSchema;
+      // An array hands its items out as written, so items written as a `$ref` are retrieved for the item's data
+      schema = schemaUtils.retrieveSchema(result.rawSchema, getByPath<T>(innerData, leafPath));
     } else {
       // Now grab the schema from the leafPath of the current schema properties
       schema = schema?.[PROPERTIES_KEY]?.[leafPath] as S | undefined;
@@ -706,9 +706,6 @@ function LayoutGridFieldComponent<
   const { onChange } = otherProps;
   const { fields } = registry;
   const { SchemaField, LayoutMultiSchemaField } = fields;
-  // The grid's own rows, columns and conditions pass the grid's data on as it is, and its templates are handed none,
-  // so the context still names the grid here
-  const readsFormData = useReadsFormData(LayoutGridField);
 
   const uiComponentProps = useMemo(
     () => computeUIComponentPropsFromGridSchema<T, S, F>(registry, gridSchema),
@@ -742,30 +739,28 @@ function LayoutGridFieldComponent<
     const namePath = toPath(name);
 
     return (
-      <RawFormDataContext value={readsFormData ? Field : undefined}>
-        <Field
-          data-testid={
-            optionsInfo?.hasDiscriminator
-              ? LAYOUT_GRID_FIELD_TEST_IDS.layoutMultiSchemaField
-              : LAYOUT_GRID_FIELD_TEST_IDS.field
-          }
-          {...otherProps}
-          name={name}
-          required={requiredForField}
-          readonly={uiReadonly}
-          schema={schema}
-          uiSchema={fieldUiSchema}
-          errorSchema={getByPath(errorSchema, namePath)}
-          fieldPath={fieldPath}
-          id={fieldPathToId(fieldPath, registry.globalFormOptions)}
-          formData={getByPath(formData, namePath)}
-          onChange={onChange}
-          onBlur={onBlur}
-          onFocus={onFocus}
-          options={optionsInfo?.options}
-          registry={registry}
-        />
-      </RawFormDataContext>
+      <Field
+        data-testid={
+          optionsInfo?.hasDiscriminator
+            ? LAYOUT_GRID_FIELD_TEST_IDS.layoutMultiSchemaField
+            : LAYOUT_GRID_FIELD_TEST_IDS.field
+        }
+        {...otherProps}
+        name={name}
+        required={requiredForField}
+        readonly={uiReadonly}
+        schema={schema}
+        uiSchema={fieldUiSchema}
+        errorSchema={getByPath(errorSchema, namePath)}
+        fieldPath={fieldPath}
+        id={fieldPathToId(fieldPath, registry.globalFormOptions)}
+        formData={getByPath(formData, namePath)}
+        onChange={onChange}
+        onBlur={onBlur}
+        onFocus={onFocus}
+        options={optionsInfo?.options}
+        registry={registry}
+      />
     );
   }
 
@@ -774,25 +769,23 @@ function LayoutGridFieldComponent<
     // plain component props, unconnected to schema validation — so `required` isn't stripped out here: a custom
     // component may read it for its own purposes, and `uiProps` is otherwise passed through untouched.
     return (
-      <RawFormDataContext value={undefined}>
-        <UIComponent
-          data-testid={LAYOUT_GRID_FIELD_TEST_IDS.uiComponent}
-          {...otherProps}
-          name={name}
-          required={isRequired}
-          formData={formData}
-          readOnly={!!isReadonly || readonly}
-          errorSchema={errorSchema}
-          uiSchema={uiSchema}
-          schema={initialSchema}
-          fieldPath={parentFieldPath}
-          id={id}
-          onBlur={onBlur}
-          onFocus={onFocus}
-          registry={registry}
-          {...uiProps}
-        />
-      </RawFormDataContext>
+      <UIComponent
+        data-testid={LAYOUT_GRID_FIELD_TEST_IDS.uiComponent}
+        {...otherProps}
+        name={name}
+        required={isRequired}
+        formData={formData}
+        readOnly={!!isReadonly || readonly}
+        errorSchema={errorSchema}
+        uiSchema={uiSchema}
+        schema={initialSchema}
+        fieldPath={parentFieldPath}
+        id={id}
+        onBlur={onBlur}
+        onFocus={onFocus}
+        registry={registry}
+        {...uiProps}
+      />
     );
   }
   // Warned about here, where the cell has nothing else to render, rather than wherever the `render` is looked up: a cell

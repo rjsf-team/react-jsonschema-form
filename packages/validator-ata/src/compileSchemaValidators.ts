@@ -2,7 +2,7 @@ import type { RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import fs from 'fs';
 
 import { compileSchemaValidatorsCode } from './compileSchemaValidatorsCode.ts';
-import type { CompileValidatorOptionsType } from './types.ts';
+import type { CustomValidatorOptionsType } from './types.ts';
 
 export { compileSchemaValidatorsCode };
 
@@ -13,10 +13,8 @@ export { compileSchemaValidatorsCode };
  *
  * @param schema - The schema to be compiled into a set of precompiled validators functions
  * @param output - The name of the file into which the precompiled validator functions will be generated
- * @param [options={}] - The `CompileValidatorOptionsType` to compile with: the options of `customizeValidator()`, plus
- *        the form's `customMergeAllOf`, which must merge the same way as the one passed to the form or the form can
- *        validate against sub-schemas that were not compiled. The `customizeValidator()` options have limits:
- *        `extenderFn`, extra schemas without an `$id` and the `ataOptionsOverrides` keys `coerceTypes`,
+ * @param [options={}] - The `CustomValidatorOptionsType` to compile with: the options of `customizeValidator()`, which
+ *        have limits: `extenderFn`, extra schemas without an `$id` and the `ataOptionsOverrides` keys `coerceTypes`,
  *        `removeAdditional` and `keywords` cannot be carried into the generated file and are ignored with a warning,
  *        the generated file never fills in `default` values, and `suppressDuplicateFiltering` belongs to
  *        `createPrecompiledValidator()`. See `compileSchemaValidatorsCode()` for details.
@@ -24,7 +22,7 @@ export { compileSchemaValidatorsCode };
 export default function compileSchemaValidators<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
   output: string,
-  options: CompileValidatorOptionsType<S> = {},
+  options: CustomValidatorOptionsType = {},
 ) {
   // oxlint-disable-next-line no-console
   console.log('parsing the schema');

@@ -1,8 +1,9 @@
 import type { ErrorSchema, FormValidation, RJSFSchema, RJSFValidationError, UiSchema } from '@rjsf/utils';
 import {
+  createSchemaUtils,
   ErrorSchemaBuilder,
-  JUNK_OPTION_ID,
-  RJSF_REF_KEY,
+  getFirstMatchingOption,
+  getValidationTarget,
   hashForSchema,
   mergeSchemas,
   noop,
@@ -80,47 +81,19 @@ describe('ATAPrecompiledValidator', () => {
       });
     });
     describe('validator.isValid()', () => {
-      it('should return true if the data is valid against the schema', () => {
-        const schema: RJSFSchema = {
-          type: 'object',
-          properties: {
-            name: { type: 'string' },
-          },
-          anyOf: [
-            {
-              required: ['name'],
-            },
-          ],
-          [RJSF_REF_KEY]: '#/definitions/foo',
-        };
-
-        expect(validator.isValid(schema, { name: 'bar' }, rootSchema)).toBe(true);
+      it('should return true if the data is valid against the subschema a pointer names', () => {
+        expect(validator.isValid({ $ref: '#/properties/multi/anyOf/0' }, { name: 'bar' }, rootSchema)).toBe(true);
       });
-      it('should return false if the data is not valid against the schema', () => {
-        const schema: RJSFSchema = {
-          type: 'object',
-          properties: {
-            name: { type: 'string' },
-          },
-          anyOf: [
-            {
-              required: ['name'],
-            },
-          ],
-          [RJSF_REF_KEY]: '#/definitions/foo',
-        };
-
-        expect(validator.isValid(schema, { name: 12345 }, rootSchema)).toBe(false);
+      it('should return false if the data is not valid against the subschema a pointer names', () => {
+        expect(validator.isValid({ $ref: '#/properties/multi/anyOf/0' }, { name: 12345 }, rootSchema)).toBe(false);
       });
-      it('should return false if junk option id is passed', () => {
-        const schema: RJSFSchema = {
-          type: 'object',
-          properties: {
-            name: { type: 'string' },
-          },
-          $id: JUNK_OPTION_ID,
-        };
-        expect(validator.isValid(schema, { name: 'foo' }, rootSchema)).toBe(false);
+      it('should name the subschema of a pointer it has no function for', () => {
+        const schema: RJSFSchema = { $ref: '#/definitions/notListed' };
+        expect(() => validator.isValid(schema, {}, rootSchema)).toThrow(
+          new Error(
+            `No precompiled validator function was found for the given schema for "${hashForSchema(schema)}" (the subschema at "#/definitions/notListed")`,
+          ),
+        );
       });
       it('should throw if the schema is not recognized', () => {
         const schema: RJSFSchema = 'foobarbaz' as unknown as RJSFSchema;
@@ -519,5 +492,36 @@ describe('ATAPrecompiledValidator with a customMergeAllOf', () => {
     expect(() => validator.rawValidation(resolvedRootSchema, formData)).toThrow(
       'The schema associated with the precompiled validator differs from the rootSchema provided for validation',
     );
+  });
+});
+
+describe('an option whose patternProperties or additionalProperties take keys from the form data', () => {
+  // Retrieving the option against the data stubs each key the patterns take into its `properties`. Options are
+  // scored and checked without those stubs, so the schema validated is one the parse compiled
+  const options: RJSFSchema[] = [
+    {
+      type: 'object',
+      properties: { id: { type: 'string' } },
+      patternProperties: { '^s_': { type: 'string' }, '^s_n': { enum: ['xx', 'yy'] } },
+    },
+    { type: 'object', properties: { s_na: { type: 'string' } } },
+  ];
+  const schema: RJSFSchema = { type: 'object', properties: { v: { oneOf: options } } };
+  const validator = new ATAPrecompiledValidator(loadModule(compileSchemaValidatorsCode(schema)), schema);
+  const schemaUtils = createSchemaUtils({ validator }, schema);
+
+  it.each([
+    [{ id: 'a', s_na: 'xx' }, true, 0],
+    [{ id: 'a', s_na: 'x' }, false, 1],
+  ])('validates and scores the option retrieved against %j', (subFormData, valid, picked) => {
+    const retrieved = options.map((option) => schemaUtils.retrieveSchema(option, subFormData));
+    const checked = getValidationTarget(retrieved[0], schema);
+    expect(validator.isValid(checked, subFormData, schema)).toBe(valid);
+    // option 1 also takes the data, so the pick says whether option 0 matched rather than falling back to it
+    expect(getFirstMatchingOption({ validator }, subFormData, retrieved, schema)).toBe(picked);
+  });
+  it('throws for the stubbed schema as it stands', () => {
+    const stubbed = schemaUtils.retrieveSchema(options[0], { s_a: 'x' });
+    expect(() => validator.isValid(stubbed, { s_a: 'x' }, schema)).toThrow(/No precompiled validator function/);
   });
 });

@@ -461,7 +461,7 @@ export function gridTests(Form: ComponentType<FormProps>, customOptions: GridRen
           schema={schema}
           uiSchema={customOptions.ComplexUiSchema}
           validator={validator}
-          formData={{
+          initialFormData={{
             employment: {
               job_type: 'company',
             },
@@ -477,7 +477,7 @@ export function gridTests(Form: ComponentType<FormProps>, customOptions: GridRen
           schema={schema}
           uiSchema={customOptions.ComplexUiSchema}
           validator={validator}
-          formData={{
+          initialFormData={{
             employment: {
               job_type: 'education',
             },
@@ -493,7 +493,7 @@ export function gridTests(Form: ComponentType<FormProps>, customOptions: GridRen
           schema={schema}
           uiSchema={customOptions.ComplexUiSchema}
           validator={validator}
-          formData={{
+          initialFormData={{
             employment: {
               job_type: 'other',
             },

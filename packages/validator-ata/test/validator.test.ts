@@ -6,13 +6,31 @@ import type {
   RJSFValidationError,
   UiSchema,
 } from '@rjsf/utils';
-import { ErrorSchemaBuilder, ID_KEY, ROOT_SCHEMA_PREFIX, noop } from '@rjsf/utils';
+import {
+  createSchemaUtils,
+  ErrorSchemaBuilder,
+  ID_KEY,
+  ROOT_SCHEMA_PREFIX,
+  getValidationTarget,
+  noop,
+} from '@rjsf/utils';
 import type { Validator } from 'ata-validator';
 
+import nestedResourceTests, {
+  handedResourceTests,
+  mergedResourceViewTests,
+} from '../../utils/test/testUtils/nestedResourceTests.ts';
+import pointerValidationTests, {
+  absoluteRefValidationTests,
+  sharedObjectValidationTests,
+} from '../../utils/test/testUtils/pointerValidationTests.ts';
+import relativeOptionScoringTests from '../../utils/test/testUtils/relativeOptionScoringTests.ts';
 import customizeValidator from '../src/customizeValidator.ts';
 // Static import of the package surface so its top-level evaluation
 // (`export default customizeValidator()`) is included in coverage.
 import * as pkg from '../src/index.ts';
+
+relativeOptionScoringTests(() => customizeValidator());
 
 /** ATAValidator behavior tests. The shared `@rjsf/utils` schema test suite
  * (see `test/utilsTests/schema.test.ts`) exercises the full ValidatorType
@@ -340,6 +358,24 @@ describe('ATAValidator', () => {
       expect(v.isValid(schema, {}, schema)).toBe(true);
     });
 
+    it('resolves a relative $ref under an option of its own $id against that $id, as a schema beside the root', () => {
+      const ext = { $id: 'https://ex.com/schemas/ext.json', type: 'string', minLength: 3 };
+      const options: RJSFSchema[] = [
+        { type: 'number' },
+        {
+          $id: 'https://ex.com/schemas/a.json',
+          type: 'object',
+          properties: { s: { $ref: 'ext.json' } },
+          required: ['s'],
+        },
+      ];
+      const rootSchema: RJSFSchema = { $id: 'https://ex.com/root.json', properties: { q: { oneOf: options } } };
+      const v = customizeValidator({ additionalMetaSchemas: [ext] });
+      const schemaUtils = createSchemaUtils({ validator: v }, rootSchema);
+      expect(schemaUtils.getFirstMatchingOption({ s: 'abcd' }, options)).toBe(1);
+      expect(v.isValid(options[1], { s: 'ab' }, rootSchema)).toBe(false);
+    });
+
     it('passes the constructed Validator through extenderFn', () => {
       const extenderFn = vi.fn((validator: Validator) => validator);
       const v = customizeValidator({ extenderFn });
@@ -516,4 +552,145 @@ describe('validateFormData() with a transformErrors that clears every message', 
     expect(errors).not.toEqual([]);
     expect(validator.validateFormData({ a: 'short' }, schema, customValidate, transformErrors).errors).toEqual(errors);
   });
+});
+
+describe('ATAValidator resolving a $ref local to the root', () => {
+  const optionRoot = (extra: RJSFSchema): RJSFSchema => ({
+    ...extra,
+    type: 'object',
+    definitions: { a: { const: 'a' }, b: { const: 'b' } },
+    properties: {
+      v: {
+        type: 'object',
+        oneOf: [
+          {
+            properties: { kind: { $ref: '#/definitions/a' }, x: { type: 'string', default: 'X' } },
+            required: ['kind'],
+          },
+          {
+            properties: { kind: { $ref: '#/definitions/b' }, y: { type: 'string', default: 'Y' } },
+            required: ['kind'],
+          },
+        ],
+      },
+    },
+  });
+  it.each([
+    ['an absolute $id', { $id: 'https://example.com/root.json' }],
+    ['a relative $id', { $id: 'root.json' }],
+    ['no $id', {}],
+  ])('picks the option a nested $ref matches under a root with %s, the validator shared', (_name, extra) => {
+    const rootSchema = optionRoot(extra);
+    const schemaUtils = createSchemaUtils({ validator: pkg.default }, rootSchema);
+    expect(schemaUtils.getDefaultFormState(rootSchema, { v: { kind: 'b' } })).toEqual({ v: { kind: 'b', y: 'Y' } });
+  });
+  it('does not answer a $ref with what it built against an earlier root under the same id', () => {
+    const validator = customizeValidator();
+    const ref: RJSFSchema = { $ref: '#/definitions/x' };
+    expect(validator.isValid(ref, 's', { definitions: { x: { type: 'string' } } })).toBe(true);
+    const numberRoot: RJSFSchema = { definitions: { x: { type: 'number' } } };
+    expect(validator.isValid(ref, 's', numberRoot)).toBe(false);
+    expect(validator.isValid(ref, 5, numberRoot)).toBe(true);
+  });
+  it('resolves a $ref into a root that carries an $id', () => {
+    const validator = customizeValidator();
+    const rootSchema: RJSFSchema = { $id: 'https://example.com/root.json', definitions: { x: { type: 'string' } } };
+    expect(validator.isValid({ $ref: '#/definitions/x' }, 's', rootSchema)).toBe(true);
+    expect(validator.isValid({ $ref: '#/definitions/x' }, 5, rootSchema)).toBe(false);
+  });
+  it('resolves against the root it is handed after validating that root while another was registered', () => {
+    const validator = customizeValidator();
+    const rootA: RJSFSchema = { $id: 'http://a.example/root.json', definitions: { x: { type: 'string' } } };
+    const rootB: RJSFSchema = { $id: 'http://b.example/root.json', definitions: { x: { type: 'number' } } };
+    const ref: RJSFSchema = { $ref: '#/definitions/x' };
+    expect(validator.isValid(ref, 's', rootA)).toBe(true);
+    expect(validator.isValid(ref, 1, rootB)).toBe(true);
+    validator.validateFormData({}, rootA);
+    expect(validator.isValid(ref, 's', rootA)).toBe(true);
+    expect(validator.isValid(ref, 1, rootA)).toBe(false);
+  });
+  it('resolves against an edited root under the same $id that was validated before it was registered', () => {
+    const validator = customizeValidator();
+    const rootSchema: RJSFSchema = { $id: 'http://a.example/root.json', definitions: { x: { type: 'string' } } };
+    const ref: RJSFSchema = { $ref: '#/definitions/x' };
+    expect(validator.isValid(ref, 's', rootSchema)).toBe(true);
+    const edited: RJSFSchema = { ...rootSchema, definitions: { x: { type: 'number' } } };
+    validator.validateFormData({}, edited);
+    expect(validator.isValid(ref, 1, edited)).toBe(true);
+    expect(validator.isValid(ref, 's', edited)).toBe(false);
+  });
+});
+
+describe('ATAValidator validating a subschema by its place in the root', () => {
+  it('does not answer a pointer with what it compiled for an earlier root', () => {
+    const validator = customizeValidator();
+    const pointer: RJSFSchema = { $ref: '#/definitions/X' };
+    expect(validator.isValid(pointer, 's', { definitions: { X: { type: 'string' } } })).toBe(true);
+    const numberRoot: RJSFSchema = { definitions: { X: { type: 'number' } } };
+    expect(validator.isValid(pointer, 's', numberRoot)).toBe(false);
+    expect(validator.isValid(pointer, 5, numberRoot)).toBe(true);
+  });
+  it('resolves a pointer into a root that carries an $id', () => {
+    const validator = customizeValidator();
+    const rootSchema: RJSFSchema = { $id: 'http://example.com/root.json', definitions: { X: { type: 'string' } } };
+    expect(validator.isValid({ $ref: '#/definitions/X' }, 's', rootSchema)).toBe(true);
+    expect(validator.isValid({ $ref: '#/definitions/X' }, 5, rootSchema)).toBe(false);
+  });
+  it.each([
+    ['5', 5],
+    ['true', true],
+    ['{}', {}],
+  ])('resolves a pointer into a root whose $id is %s, as into one without an $id', (_written, id) => {
+    const validator = customizeValidator();
+    const rootSchema: RJSFSchema = { definitions: { X: { type: 'number' } } };
+    // An untyped caller may hand over an `$id` that is no string
+    Reflect.set(rootSchema, '$id', id);
+    const pointer: RJSFSchema = { $ref: '#/definitions/X' };
+    expect(validator.isValid(pointer, 1, rootSchema)).toBe(true);
+    expect(validator.isValid(pointer, 's', rootSchema)).toBe(false);
+  });
+  it('resolves a pointer into a root whose $id ends in an empty fragment', () => {
+    const validator = customizeValidator();
+    const rootSchema: RJSFSchema = { $id: 'http://example.com/root.json#', definitions: { X: { type: 'string' } } };
+    expect(validator.isValid({ $ref: '#/definitions/X' }, 's', rootSchema)).toBe(true);
+    expect(validator.isValid({ $ref: '#/definitions/X' }, 5, rootSchema)).toBe(false);
+  });
+  it('resolves a pointer under $defs to a property whose name holds characters a fragment may and may not hold, a # ending it', () => {
+    const validator = customizeValidator();
+    const property: RJSFSchema = { type: 'string' };
+    const rootSchema: RJSFSchema = { $defs: { X: { properties: { 'a$b:c@d+e#f g%h#': property } } } };
+    const pointer = getValidationTarget(property, rootSchema);
+    expect(pointer).toEqual({ $ref: '#/$defs/X/properties/a$b:c@d+e%23f%20g%25h%23' });
+    expect(validator.isValid(pointer, 's', rootSchema)).toBe(true);
+    expect(validator.isValid(pointer, 5, rootSchema)).toBe(false);
+  });
+  it('resolves a pointer below a property whose name holds a lone surrogate, which has no URI encoding', () => {
+    const validator = customizeValidator();
+    const condition: RJSFSchema = { properties: { v: { const: 'x' } }, required: ['v'] };
+    const rootSchema: RJSFSchema = { properties: { 'a\uD800b': { if: condition } } };
+    const pointer = getValidationTarget(condition, rootSchema);
+    expect(pointer).toEqual({ $ref: '#/properties/a\uD800b/if' });
+    expect(validator.isValid(pointer, { v: 'x' }, rootSchema)).toBe(true);
+    expect(validator.isValid(pointer, { v: 'y' }, rootSchema)).toBe(false);
+  });
+  it('resolves a pointer into a dependencies entry named like a keyword', () => {
+    const validator = customizeValidator();
+    const rootSchema: RJSFSchema = {
+      properties: { type: { type: 'string' } },
+      dependencies: { type: { oneOf: [{ properties: { type: { const: 'a' } } }] } },
+    };
+    const pointer: RJSFSchema = { $ref: '#/dependencies/type/oneOf/0/properties/type' };
+    expect(validator.isValid(pointer, 'a', rootSchema)).toBe(true);
+    expect(validator.isValid(pointer, 'b', rootSchema)).toBe(false);
+  });
+});
+
+pointerValidationTests(() => customizeValidator());
+absoluteRefValidationTests(() => customizeValidator());
+sharedObjectValidationTests(() => customizeValidator());
+
+describe('ATAValidator', () => {
+  nestedResourceTests(() => customizeValidator());
+  mergedResourceViewTests(() => customizeValidator());
+  handedResourceTests(() => customizeValidator());
 });

@@ -1,15 +1,24 @@
 import { createRef, StrictMode, useEffect, useState } from 'react';
-import type { FieldProps, FormValidation, RJSFSchema, WidgetProps } from '@rjsf/utils';
-import { noop, toFieldPath } from '@rjsf/utils';
-import validator from '@rjsf/validator-ajv8';
-import { render, screen, waitFor } from '@testing-library/react';
+import type { FieldProps, FieldTemplateProps, FormValidation, RJSFSchema, WidgetProps } from '@rjsf/utils';
+import { descriptionId, noop, toFieldPath } from '@rjsf/utils';
+import type { ValidatorFunctions } from '@rjsf/validator-ajv8';
+import validator, { createPrecompiledValidator } from '@rjsf/validator-ajv8';
+import { compileSchemaValidatorsCode } from '@rjsf/validator-ajv8/compileSchemaValidators';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import AnyOfField from '../src/components/fields/MultiSchemaField.tsx';
 import SelectWidget from '../src/components/widgets/SelectWidget.tsx';
 import Form from '../src/index.ts';
 import { getTestRegistry } from '../src/testing.ts';
-import { createFormComponent, getSelectedOptionValue, submitForm } from './testUtils.tsx';
+import {
+  createFormComponent,
+  createFormRef,
+  elementOf,
+  getSelectedOptionValue,
+  handleOf,
+  submitForm,
+} from './testUtils.tsx';
 
 const user = userEvent.setup();
 
@@ -728,15 +737,16 @@ describe('anyOf', () => {
       },
     };
 
-    const { rerender, node } = createFormComponent({
-      ref: createRef(),
+    const ref = createFormRef();
+    const { node } = createFormComponent({
+      ref,
       schema,
-      formData: {},
+      initialFormData: {},
     });
 
     expect(node.querySelector('select')).toHaveValue('0');
 
-    rerender({ schema, formData: { userId: 'foobarbaz' } });
+    act(() => handleOf(ref).setFieldValue('userId', 'foobarbaz'));
 
     expect(node.querySelector('select')).toHaveValue('1');
   });
@@ -754,12 +764,14 @@ describe('anyOf', () => {
       return null;
     }
 
-    const { rerender } = createFormComponent({
+    const ref = createFormRef();
+    createFormComponent({
+      ref,
       schema,
-      formData: { userId: 5 },
+      initialFormData: { userId: 5 },
       widgets: { TextWidget: CommitProbe },
     });
-    rerender({ schema, formData: { userId: 'foobarbaz' }, widgets: { TextWidget: CommitProbe } });
+    act(() => handleOf(ref).setFieldValue('userId', 'foobarbaz'));
 
     expect(commits).toContainEqual({ type: 'string', value: 'foobarbaz' });
     expect(commits).not.toContainEqual({ type: 'number', value: 'foobarbaz' });
@@ -771,7 +783,7 @@ describe('anyOf', () => {
       properties: { userId: { anyOf: [{ type: 'number' }, { type: 'string' }] } },
     };
 
-    const { node } = createFormComponent({ schema, formData: { userId: NaN } });
+    const { node } = createFormComponent({ schema, initialFormData: { userId: NaN } });
 
     expect(node.querySelector('select')).toBeInTheDocument();
   });
@@ -859,12 +871,17 @@ describe('anyOf', () => {
     ];
     const schema: RJSFSchema = { anyOf: options };
     const fieldPath = toFieldPath('');
+    interface Ab {
+      a?: string;
+      b?: string;
+    }
 
-    /** An `AnyOfField` whose parent answers an option switch with data of its own that still fits `A` alone, or by
-     * keeping the data it had, and that moves the field to another id in the same render when `moves` is set
+    /** An `AnyOfField` whose parent answers an option switch with `answer` in place of the data the switch sent, or by
+     * keeping the data it had when there is none, and that moves the field to another id in the same render when
+     * `moves` is set
      */
-    function SwitchedField({ answers, moves }: { answers: boolean; moves: boolean }) {
-      const [field, setField] = useState({ id: 'root_0', formData: { a: 'x' } });
+    function SwitchedField({ answer, moves }: { answer?: Ab; moves: boolean }) {
+      const [field, setField] = useState<{ id: string; formData: Ab }>({ id: 'root_0', formData: { a: 'x' } });
       return (
         <AnyOfField
           name=''
@@ -876,9 +893,7 @@ describe('anyOf', () => {
           registry={getTestRegistry(schema)}
           onBlur={noop}
           onFocus={noop}
-          onChange={() =>
-            setField({ id: moves ? 'root_1' : field.id, formData: answers ? { a: 'y' } : field.formData })
-          }
+          onChange={() => setField({ id: moves ? 'root_1' : field.id, formData: answer ?? field.formData })}
         />
       );
     }
@@ -887,9 +902,9 @@ describe('anyOf', () => {
       { moves: false, title: 'under the same id' },
       { moves: true, title: 'moved to another id in the same render' },
     ])('puts a declined switch back on the option the data fits, $title', async ({ moves }) => {
-      const { container } = render(<SwitchedField answers={false} moves={moves} />);
+      const { container } = render(<SwitchedField moves={moves} />);
 
-      await user.selectOptions(container.querySelector('select')!, 'B');
+      await user.selectOptions(elementOf(container, 'select'), 'B');
 
       expect(container.querySelector('select')).toHaveValue('0');
       expect(container.querySelector('select')).toHaveAttribute('id', `root_${moves ? 1 : 0}__anyof_select`);
@@ -901,14 +916,26 @@ describe('anyOf', () => {
     ])(
       'keeps a switch the parent answered with new data, though that data fits the option that was left, $title',
       async ({ moves }) => {
-        const { container } = render(<SwitchedField answers moves={moves} />);
+        const { container } = render(<SwitchedField answer={{ b: 'y' }} moves={moves} />);
 
-        await user.selectOptions(container.querySelector('select')!, 'B');
+        await user.selectOptions(elementOf(container, 'select'), 'B');
 
         expect(container.querySelector('select')).toHaveValue('1');
         expect(container.querySelector('select')).toHaveAttribute('id', `root_${moves ? 1 : 0}__anyof_select`);
       },
     );
+
+    it.each([
+      { moves: false, title: 'under the same id' },
+      { moves: true, title: 'moved to another id in the same render' },
+    ])('puts a switch the parent rewrote to data only the option left fits back on it, $title', async ({ moves }) => {
+      const { container } = render(<SwitchedField answer={{ a: 'y' }} moves={moves} />);
+
+      await user.selectOptions(elementOf(container, 'select'), 'B');
+
+      expect(container.querySelector('select')).toHaveValue('0');
+      expect(container.querySelector('select')).toHaveAttribute('id', `root_${moves ? 1 : 0}__anyof_select`);
+    });
 
     it('retrieves none of the options it is handed', () => {
       const registry = getTestRegistry(schema, { SchemaField: () => null });
@@ -1980,15 +2007,51 @@ describe('anyOf', () => {
     const uiSchema = {
       'ui:field': () => <div className='custom-field'>Custom field</div>,
     };
-    it('should be rendered twice', () => {
+    it('should be rendered once, beside the selected option, which renders its own field (#5358)', () => {
       const { node } = createFormComponent({ schema, uiSchema });
       const fields = node.querySelectorAll('.custom-field');
-      expect(fields).toHaveLength(2);
+      expect(fields).toHaveLength(1);
+      expect(node.querySelectorAll('.rjsf-field-number input#root')).toHaveLength(1);
     });
     it('should render <select>', () => {
       const { node } = createFormComponent({ schema, uiSchema });
       const selects = node.querySelectorAll('select');
       expect(selects).toHaveLength(1);
+    });
+    it("should render the field's description once where its declaration leaves it to a template that renders every description it is handed", () => {
+      const FieldTemplate = ({ id, rawDescription, children }: FieldTemplateProps) => (
+        <div>
+          {rawDescription && <div id={descriptionId(id)}>{rawDescription}</div>}
+          {children}
+        </div>
+      );
+      const { node } = createFormComponent({
+        schema: {
+          type: 'string',
+          description: 'DESCRIPTION',
+          anyOf: [
+            { title: 'A', minLength: 1 },
+            { title: 'B', maxLength: 3 },
+          ],
+        },
+        uiSchema: { 'ui:field': 'Custom' },
+        fields: { Custom: uiSchema['ui:field'] },
+        presentation: { fields: { Custom: { description: 'template' } } },
+        templates: { FieldTemplate },
+      });
+
+      // The selected option renders at the same id, so its template rendering the description as well as the one of
+      // the field holding the options would repeat the DOM id that `aria-describedby` points at
+      expect(screen.getAllByText('DESCRIPTION')).toHaveLength(1);
+      expect(node.querySelectorAll('[id="root__description"]')).toHaveLength(1);
+    });
+    it('should render a ui:globalOptions field once for a union nested in an option with its own uiSchema', () => {
+      const { node } = createFormComponent({
+        schema: { anyOf: [{ anyOf: [{ type: 'number' }, { type: 'string' }] }, { type: 'boolean' }] },
+        uiSchema: { anyOf: [{ anyOf: [{}, {}] }, {}], 'ui:globalOptions': { field: uiSchema['ui:field'] } },
+      });
+      expect(node.querySelectorAll('.custom-field')).toHaveLength(1);
+      expect(node.querySelector('input#root')).toBeInTheDocument();
     });
   });
 
@@ -2011,7 +2074,7 @@ describe('anyOf', () => {
     };
 
     it('labels the control once, and describes the option under the id its control is described by', () => {
-      const { node } = createFormComponent({ schema, formData: { region: 'DE' } });
+      const { node } = createFormComponent({ schema, initialFormData: { region: 'DE' } });
 
       expect(node.querySelectorAll('label[for="root_region"]')).toHaveLength(1);
       // The field's label names the option's control and, through `aria-labelledby`, the option selector
@@ -2252,7 +2315,7 @@ describe('anyOf', () => {
       const schema: RJSFSchema = {
         anyOf: [{ const: 0 }, { const: 1 }],
       };
-      const { node, onChange } = createFormComponent({ schema, formData: 1 });
+      const { node, onChange } = createFormComponent({ schema, initialFormData: 1 });
 
       const select = node.querySelector<HTMLSelectElement>('select#root');
       expect(select).toBeInTheDocument();
@@ -2362,5 +2425,27 @@ describe('anyOf', () => {
       // AnyOf selector
       expect(node.querySelector('select')).toBeInTheDocument();
     });
+  });
+});
+
+describe('anyOf with a precompiled validator', () => {
+  it('renders and scores a boolean option, which SchemaField retrieves as {}', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { a: { anyOf: [false, { type: 'object', properties: { y: { type: 'number' } } }, true] } },
+    };
+    const validateFns: ValidatorFunctions = {};
+    // The compiled module is CommonJS that writes its functions to `exports`, which is how a bundler would load it
+    // oxlint-disable-next-line no-new-func, typescript/no-implied-eval
+    new Function('exports', compileSchemaValidatorsCode(schema)).call(undefined, validateFns);
+    const { container } = render(
+      <Form
+        schema={schema}
+        validator={createPrecompiledValidator(validateFns, schema)}
+        initialFormData={{ a: { y: 1 } }}
+      />,
+    );
+
+    expect(container.querySelector('#root_a_y')).toHaveValue('1');
   });
 });

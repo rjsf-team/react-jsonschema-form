@@ -9,9 +9,10 @@ import type {
   ValidationData,
   ValidatorType,
 } from '@rjsf/utils';
-import { createRootSchemaGuard, ID_KEY, JUNK_OPTION_ID, schemaKey } from '@rjsf/utils';
+import { createRootSchemaGuard, ID_KEY, REF_KEY, schemaKey } from '@rjsf/utils';
 import type { ErrorObject } from 'ajv';
 
+import { copyForValidation } from './dataForValidation.ts';
 import type { RawValidationErrorsType } from './processRawValidationErrors.ts';
 import processRawValidationErrors from './processRawValidationErrors.ts';
 import type {
@@ -21,6 +22,22 @@ import type {
   SuppressDuplicateFilteringType,
   ValidatorFunctions,
 } from './types.ts';
+
+/** Returns what a miss's message names besides the lookup key: the place a pointer into the root points at, or the
+ * `$id` of the subschema the first `allOf` entry wraps, since the key is a hash a reader can't map back to a schema
+ *
+ * @param schema - The schema no validator function was compiled for
+ * @returns - The text naming it, or an empty string where it carries nothing to name
+ */
+function missedSchemaName<S extends StrictRJSFSchema>(schema: S): string {
+  const ref = schema[REF_KEY];
+  if (typeof ref === 'string') {
+    return ` (the subschema at "${ref}")`;
+  }
+  const contained = schema.allOf?.[0];
+  const containedId = typeof contained === 'object' ? contained[ID_KEY] : undefined;
+  return typeof containedId === 'string' && containedId !== '' ? ` (contained schema "${containedId}")` : '';
+}
 
 /** `ValidatorType` implementation that uses an AJV 8 precompiled validator as created by the
  * `compileSchemaValidators()` function provided by the `@rjsf/validator-ajv8` library.
@@ -102,7 +119,9 @@ export default class AJV8PrecompiledValidator<
     const key = schemaKey(schema);
     const validator = this.validateFns[key];
     if (!validator) {
-      throw new Error(`No precompiled validator function was found for the given schema for "${key}"`);
+      throw new Error(
+        `No precompiled validator function was found for the given schema for "${key}"${missedSchemaName(schema)}`,
+      );
     }
     return validator;
   }
@@ -180,21 +199,21 @@ export default class AJV8PrecompiledValidator<
   }
 
   /** Validates data against a schema, returning true if the data is valid, or false otherwise. If the schema is
-   * invalid, then this function will return false.
+   * invalid, then this function will return false. A function compiled to change the data it validates, which
+   * `compileSchemaValidatorsCode()` marks with `changesData`, validates a copy of the `formData`, so the `formData` itself
+   * never changes.
    *
    * @param schema - The schema against which to validate the form data
    * @param formData - The form data to validate
    * @param rootSchema - The root schema used to provide $ref resolutions
    * @returns - true if the formData validates against the schema, false otherwise
    * @throws - Error when the schema provided does not match the base schema of the precompiled validator OR if there
-   *        isn't a precompiled validator function associated with the schema
+   *        isn't a precompiled validator function associated with the schema OR, for a function marked `changesData`, if
+   *        the `formData` holds an object that can't be copied, such as a class instance holding a function
    */
   isValid(schema: S, formData: unknown, rootSchema: S) {
     this.ensureSameRootSchema(rootSchema, formData);
-    if (schema[ID_KEY] === JUNK_OPTION_ID) {
-      return false;
-    }
     const validator = this.getValidator(schema);
-    return validator(formData);
+    return validator(validator.changesData ? copyForValidation(formData) : formData);
   }
 }

@@ -16,17 +16,17 @@ const ROOT = join(__dirname, '..', '..');
  */
 const PACKAGES = {
   '@rjsf/core': {
-    installed: '36 kB',
-    canaries: [{ label: 'Form', import: 'Form', limit: '36 kB' }],
+    installed: '39 kB',
+    canaries: [{ label: 'Form', import: 'Form', limit: '39 kB' }],
   },
   '@rjsf/utils': {
-    installed: '36 kB',
-    own: '30 kB',
+    installed: '46 kB',
+    own: '41 kB',
     canaries: [{ label: 'getUiOptions', import: '{ getUiOptions }', limit: '1 kB' }],
   },
   '@rjsf/validator-ajv8': {
     installed: '39 kB',
-    own: '3 kB',
+    own: '4 kB',
     canaries: [{ label: 'createPrecompiledValidator', import: '{ createPrecompiledValidator }', limit: '2 kB' }],
     nodeOnly: ['./compileSchemaValidators'],
   },

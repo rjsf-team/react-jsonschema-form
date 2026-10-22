@@ -8,10 +8,12 @@ import type {
   ValidationData,
   ValidatorType,
 } from '@rjsf/utils';
-import { deepEquals, logOnce, ID_KEY, ROOT_SCHEMA_PREFIX, schemaKey, withIdRefPrefix } from '@rjsf/utils';
+import { deepEquals, isObject, logOnce, ID_KEY, schemaKey, withRootIdRefPrefix } from '@rjsf/utils';
 import type { ErrorObject, ValidateFunction, Ajv } from 'ajv';
 
+import ajvRootSchemaId from './ajvRootSchemaId.ts';
 import createAjvInstance from './createAjvInstance.ts';
+import { changesData, copyForValidation } from './dataForValidation.ts';
 import type { RawValidationErrorsType } from './processRawValidationErrors.ts';
 import processRawValidationErrors from './processRawValidationErrors.ts';
 import type { CustomValidatorOptionsType, Localizer, SuppressDuplicateFilteringType } from './types.ts';
@@ -46,11 +48,28 @@ export default class AJV8Validator<
    */
   private lastSeenRootSchema?: S;
 
-  /** True once a `rootSchema` has been registered with Ajv in this lifecycle.
+  /** The keys `isValid()` added schemas to Ajv under. A schema such as `{ $ref: '#/definitions/x' }` means something
+   * else under every root, and one with an `$id` of its own is keyed by that `$id` whatever root it names, so they are
+   * removed whenever another root is checked against or the one registered under the same id is replaced.
    *
    * @private
    */
-  private hasRegisteredRootSchema = false;
+  private readonly subschemaIds = new Set<string>();
+
+  /** The id the root `isValid()` last checked against is registered under, once one has been registered in this
+   * lifecycle
+   *
+   * @private
+   */
+  private currentRootSchemaId?: string;
+
+  /** Whether each function `isValid()` validated with can change the data, see `changesData()`. Ajv compiles a keyword
+   * into a function only when it was registered before the function was compiled, so asking once, at the function's
+   * first check, covers every keyword the function runs
+   *
+   * @private
+   */
+  private readonly changesDataOf = new WeakMap<ValidateFunction, boolean>();
 
   /** Constructs an `AJV8Validator` instance using the `options`
    *
@@ -83,8 +102,37 @@ export default class AJV8Validator<
    */
   reset() {
     this.ajv.removeSchema();
+    this.subschemaIds.clear();
+    this.currentRootSchemaId = undefined;
     this.lastSeenRootSchema = undefined;
-    this.hasRegisteredRootSchema = false;
+  }
+
+  /** Replaces the root registered under `rootSchemaId` with `rootSchema`, dropping the subschemas compiled against the
+   * one it replaces. Ajv also registers a root under its own `$id`, less an empty fragment, which is not
+   * `rootSchemaId` where the `uriResolver` normalizes it, so that registration is dropped too: left in place, it
+   * answers a lookup by that `$id` with the root it replaced.
+   *
+   * @param rootSchema - The root schema to register
+   * @param rootSchemaId - The id to register it under
+   * @param validate - Whether Ajv validates the root against its meta-schema
+   */
+  private replaceRootSchema(rootSchema: S, rootSchemaId: string, validate: boolean) {
+    const replaced = this.ajv.schemas[rootSchemaId]?.schema;
+    const ownId = isObject(replaced) ? replaced[ID_KEY] : undefined;
+    if (typeof ownId === 'string') {
+      this.ajv.removeSchema(ownId.replace(/#$/, ''));
+    }
+    this.ajv.removeSchema(rootSchemaId);
+    this.removeSubschemas();
+    if (isObject(rootSchema)) {
+      this.ajv.addSchema(rootSchema, rootSchemaId, undefined, validate);
+    }
+  }
+
+  /** Removes the schemas `isValid()` added, which were compiled against the root registered when they were added */
+  private removeSubschemas() {
+    this.subschemaIds.forEach((id) => this.ajv.removeSchema(id));
+    this.subschemaIds.clear();
   }
 
   /** Runs the pure validation of the `schema` and `formData` without any of the RJSF functionality. Provided for use
@@ -221,28 +269,49 @@ export default class AJV8Validator<
    * @param rootSchema - The root schema used to provide $ref resolutions
    */
   handleSchemaUpdate(rootSchema: S): void {
-    if (this.lastSeenRootSchema === rootSchema && this.hasRegisteredRootSchema) {
-      return;
+    this.registerRootSchema(rootSchema);
+  }
+
+  /** Registers `rootSchema` as `handleSchemaUpdate()` describes, returning the id it is registered under. The id is
+   * normalized through the `uriResolver` only when the root changes, since `isValid()` names the root by it on every
+   * call.
+   *
+   * @param rootSchema - The root schema used to provide $ref resolutions
+   * @returns - The id the root is registered under
+   */
+  private registerRootSchema(rootSchema: S): string {
+    if (this.lastSeenRootSchema === rootSchema && this.currentRootSchemaId !== undefined) {
+      return this.currentRootSchemaId;
     }
-    // An empty `$id` names nothing, so the root is registered under `ROOT_SCHEMA_PREFIX` instead: that is the
-    // base `withIdRefPrefix()` rewrites a local `$ref` against, and nothing would resolve it under an empty name
-    const rootSchemaId = rootSchema[ID_KEY] || ROOT_SCHEMA_PREFIX;
+    const rootSchemaId = ajvRootSchemaId(rootSchema, this.ajv.opts.uriResolver);
     // add the rootSchema ROOT_SCHEMA_PREFIX as id.
     // if schema validator instance doesn't exist, add it.
     // else if the root schemas don't match, we should remove and add the root schema so we don't have to remove and recompile the schema every run.
-    if (this.ajv.getSchema(rootSchemaId) === undefined) {
-      this.ajv.addSchema(rootSchema, rootSchemaId);
-    } else if (!deepEquals(rootSchema, this.ajv.getSchema(rootSchemaId)?.schema)) {
-      this.ajv.removeSchema(rootSchemaId);
-      this.ajv.addSchema(rootSchema, rootSchemaId);
+    try {
+      if (this.ajv.getSchema(rootSchemaId) === undefined) {
+        this.ajv.addSchema(rootSchema, rootSchemaId);
+      } else if (!deepEquals(rootSchema, this.ajv.getSchema(rootSchemaId)?.schema)) {
+        this.replaceRootSchema(rootSchema, rootSchemaId, true);
+      }
+    } catch {
+      // A root this instance's dialect rejects, such as a 2020-12 root under the default draft-07 Ajv, is still
+      // registered, unvalidated, so a `$ref` into its definitions resolves from the first call on. The old root is
+      // dropped first because comparing against it compiles it, which throws for a rejected root.
+      this.replaceRootSchema(rootSchema, rootSchemaId, false);
+    }
+    if (this.currentRootSchemaId !== rootSchemaId) {
+      this.removeSubschemas();
+      this.currentRootSchemaId = rootSchemaId;
     }
     this.lastSeenRootSchema = rootSchema;
-    this.hasRegisteredRootSchema = true;
+    return rootSchemaId;
   }
 
   /** Validates data against a schema, returning true if the data is valid, or
    * false otherwise. If the schema is invalid, then this function will return
-   * false.
+   * false. Where Ajv can change the data validated, under `useDefaults`, `coerceTypes` or `removeAdditional` or with a
+   * keyword registered with `modifying: true`, a copy of the `formData` is validated, so the `formData` itself never
+   * changes.
    *
    * @param schema - The schema against which to validate the form data
    * @param formData - The form data to validate
@@ -254,22 +323,30 @@ export default class AJV8Validator<
     let schemaId: string | undefined;
     let compiled = false;
     try {
-      this.handleSchemaUpdate(rootSchema);
-      // then rewrite the schema ref's to point to the rootSchema
-      // this accounts for the case where schema have references to models
-      // that lives in the rootSchema but not in the schema in question.
-      const schemaWithIdRefPrefix = withIdRefPrefix<S>(schema);
+      const rootSchemaId = this.registerRootSchema(rootSchema);
+      // A `$ref` local to the root, such as the `{ $ref: '#/properties/a/if' }` a form validates a condition with,
+      // names the root by the id it is registered under, whatever the schema holding it is registered as
+      const schemaWithIdRefPrefix = withRootIdRefPrefix<S>(schema, rootSchema, rootSchemaId);
       schemaId = schemaKey(schemaWithIdRefPrefix);
       // Add schema by an explicit ID so it can be fetched later
       // Fall back to using compile if necessary
       // https://ajv.js.org/guide/managing-schemas.html#pre-adding-all-schemas-vs-adding-on-demand
+      const registered = this.ajv.getSchema(schemaId);
+      if (registered === undefined) {
+        // Ajv keys a schema by its `$id` without an empty trailing fragment, so it is removed under that key
+        this.subschemaIds.add(schemaId.replace(/#$/, ''));
+      }
       const compiledValidator =
-        this.ajv.getSchema(schemaId) ??
+        registered ??
         this.ajv.addSchema(schemaWithIdRefPrefix, schemaId).getSchema(schemaId) ??
         this.ajv.compile(schemaWithIdRefPrefix);
       compiled = true;
-      const result = compiledValidator(formData);
-      return result;
+      let changes = this.changesDataOf.get(compiledValidator);
+      if (changes === undefined) {
+        changes = changesData(this.ajv);
+        this.changesDataOf.set(compiledValidator, changes);
+      }
+      return compiledValidator(changes ? copyForValidation(formData) : formData);
     } catch (e) {
       // The schema is named so two schemas that fail with the same error text aren't deduped into one warning, and
       // `compiled` distinguishes a schema that wouldn't compile from one that did and then threw on the form data,

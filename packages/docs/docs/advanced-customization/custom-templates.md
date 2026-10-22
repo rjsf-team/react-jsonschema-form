@@ -233,6 +233,7 @@ The following props are passed to each `ArrayFieldItemTemplate`:
 - `uiSchema`: The uiSchema object for this array item.
 - `registry`: The `registry` object.
 - `parentUiSchema`: The UI schema of the array item's parent array field, used for customization in some themes
+- `displayLabel`: Whether a label sits above the item's control: one the item's `FieldTemplate` draws, as the plan `SchemaField` builds for the item says, which is the `displayLabel` that template is handed, or one the item's field or widget draws itself where its theme declares it `labelPlacement: 'above'`, as a theme whose widgets draw their own label above the control does. Used to place the item's buttons beside its control rather than beside its label.
 
 ## ArrayFieldItemButtonTemplate
 
@@ -503,6 +504,7 @@ The following props are passed to the `BaseInputTemplate`:
 The `CyclicSchemaExpandTemplate` is the template rendered by `CyclicSchemaField` when a circular `$ref` cycle is detected in the schema.
 RJSF automatically detects when a `$ref` would recurse indefinitely (e.g. a schema whose property references its own root) and stops rendering at the cycle boundary.
 At that point `CyclicSchemaField` renders this template, which shows a warning message and an expand button that the user can click to render one additional level of the recursive structure.
+Which fields are expanded is the form's state, by field path, so an expansion survives the field unmounting and mounting again and follows the moves the form makes, of array items and of additional properties renamed or removed; `CyclicSchemaField` renders an expanded field from [`expandRefCycle()`](../api-reference/utility-functions.md#expandrefcycle).
 
 Each theme provides its own implementation.
 You can replace the template globally via the `templates` prop on `Form`, or per-field via `ui:CyclicSchemaExpandTemplate` in the `uiSchema`.

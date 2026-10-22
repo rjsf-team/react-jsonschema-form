@@ -4,7 +4,7 @@
  * itself -- so these verify that the assertion does not reach the children the option describes through such a
  * reference, where it would reject data the option itself accepts.
  *
- * Only AJV resolves a reference like that: `findSchemaDefinition()` has no base URI to resolve it against and throws
+ * Only AJV resolves a reference like that: `retrieveSchema()` has no base URI to resolve it against and throws
  * `Could not find a definition for .`, so a schema holding one reaches scoring through a direct call rather than
  * through `retrieveSchema()` or a parse. The last test covers the wrapping that scoring now does for every option
  * carrying an `$id`, which a precompiled validator has to have compiled.

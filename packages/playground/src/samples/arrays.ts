@@ -195,7 +195,7 @@ const arrays: Sample = {
       },
     },
   },
-  formData: {
+  initialFormData: {
     listOfStrings: ['foo', 'bar'],
     multipleChoicesList: ['foo', 'bar'],
     fixedItemsList: ['Some text', true, 123],

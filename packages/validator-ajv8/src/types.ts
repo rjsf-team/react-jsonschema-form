@@ -1,4 +1,4 @@
-import type { Bivariant, CustomMergeAllOf, RJSFSchema, SchemaParserOptions, StrictRJSFSchema } from '@rjsf/utils';
+import type { Bivariant, CustomMergeAllOf, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import type { Options, ErrorObject, Ajv } from 'ajv';
 import type { FormatsPluginOptions } from 'ajv-formats';
 
@@ -29,13 +29,6 @@ export interface CustomValidatorOptionsType {
   suppressDuplicateFiltering?: SuppressDuplicateFilteringType;
 }
 
-/** The options a schema is compiled into precompiled validator functions with: everything `customizeValidator()` takes,
- * plus the `SchemaParserOptions` the schema is parsed for its sub-schemas with. Those options are shared with
- * `schemaParser()` rather than restated, so an option added there needs no mirroring in the validators
- */
-export type CompileValidatorOptionsType<S extends StrictRJSFSchema = RJSFSchema> = CustomValidatorOptionsType &
-  SchemaParserOptions<S>;
-
 /** The options a precompiled validator is constructed with, all optional */
 export interface PrecompiledValidatorOptionsType<S extends StrictRJSFSchema = RJSFSchema> {
   /** If provided, is used to localize a list of Ajv `ErrorObject`s */
@@ -62,6 +55,13 @@ export type Localizer = (errors?: null | ErrorObject[]) => void;
 export interface CompiledValidateFunction extends Bivariant<[data: unknown], boolean> {
   /** The errors produced by the precompiled validator */
   errors?: null | ErrorObject[];
+  /** Whether the function changes the data it validates, as one compiled with Ajv's `useDefaults`, `coerceTypes` or
+   * `removeAdditional`, or with a keyword registered with `modifying: true`, may. `compileSchemaValidatorsCode()` sets it
+   * on each function it compiles with one of them, and a precompiled validator's `isValid()` hands such a function a
+   * copy of the data, since `isValid()` must not change the data it checks. A hand-written function that changes the
+   * data it validates sets it too.
+   */
+  changesData?: boolean;
 }
 
 /** The definition of precompiled validator functions

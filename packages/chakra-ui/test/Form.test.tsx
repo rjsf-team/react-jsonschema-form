@@ -3,7 +3,7 @@ import { Activity, useState } from 'react';
 import { ChakraProvider, defaultSystem } from '@chakra-ui/react';
 import { getTestRegistry } from '@rjsf/core/testing';
 import { formTests, themeTests } from '@rjsf/snapshot-tests';
-import type { FormValidation, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import type { ArrayFieldItemTemplateProps, FormValidation, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { bracketNameGenerator, errorId, fieldLabelId, helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
@@ -61,7 +61,7 @@ describe('chakra-ui AltDateWidget', () => {
       <WrappedForm
         schema={{ type: 'string', format: 'date' }}
         uiSchema={{ 'ui:widget': 'alt-date', 'ui:readonly': true }}
-        formData='2020-01-02'
+        initialFormData='2020-01-02'
         validator={validator}
         onChange={onChange}
       />,
@@ -82,7 +82,7 @@ describe('chakra-ui AltDateWidget', () => {
         <WrappedForm
           schema={{ type: 'string', format: 'date' }}
           uiSchema={{ 'ui:widget': 'alt-date', 'ui:disabled': true }}
-          formData='2020-01-02'
+          initialFormData='2020-01-02'
           templates={{ FieldTemplate: BareFieldTemplate }}
           validator={validator}
           onChange={onChange}
@@ -230,7 +230,7 @@ describe('chakra-ui SelectWidget', () => {
           },
         }}
         uiSchema={{ 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] } }}
-        formData={{ pet: { name: 'Rex' } }}
+        initialFormData={{ pet: { name: 'Rex' } }}
         validator={validator}
       />,
     );
@@ -534,6 +534,18 @@ describe("chakra-ui widgets are named by their label and carry their field's id 
     expectReferencesResolve(container);
   });
 
+  test.each(widgets)('names a deprecated %s by its label with the Deprecated marker', (_, x, ui, role) => {
+    render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { x: { ...x, title: 'X', deprecated: true } } }}
+        uiSchema={{ x: ui }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole(role, { name: 'X (deprecated)' })).toHaveAttribute('id', 'root_x');
+  });
+
   test.each(widgets)(
     'moves focus to a %s with errors when focusOnFirstError is set',
     async (_, x, ui, _role, focusedId) => {
@@ -627,12 +639,41 @@ describe("chakra-ui widgets are named by their label and carry their field's id 
     render(
       <WrappedForm
         schema={{ type: 'object', additionalProperties: { type: 'string' } }}
-        formData={{ foo: 'a' }}
+        initialFormData={{ foo: 'a' }}
         validator={validator}
       />,
     );
 
     expect(screen.getByRole('textbox', { name: 'foo Key' })).toHaveAttribute('id', 'root_foo-key');
+  });
+});
+
+describe("chakra-ui marks a deprecated field's label, as core does", () => {
+  // The widgets table has no array widget, so nothing else in this file renders a deprecated one
+  test.each<[string, UiSchema, string]>([
+    ['checkboxes group', { 'ui:widget': 'checkboxes' }, 'group'],
+    ['multi-select', {}, 'combobox'],
+  ])('names a deprecated %s by its label with the Deprecated marker', (_, ui, role) => {
+    render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          properties: {
+            x: {
+              type: 'array',
+              title: 'X',
+              deprecated: true,
+              items: { type: 'string', enum: ['a', 'b'] },
+              uniqueItems: true,
+            },
+          },
+        }}
+        uiSchema={{ x: ui }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole(role, { name: 'X (deprecated)' })).toHaveAttribute('id', 'root_x');
   });
 });
 
@@ -917,13 +958,90 @@ describe('chakra-ui ArrayFieldTemplate', () => {
       <WrappedForm
         schema={{ type: 'object', properties: { tags: { type: 'array', title: 'Tags', items: { type: 'string' } } } }}
         uiSchema={{ tags: { 'ui:label': false }, 'ui:globalOptions': { enableOptionalDataFieldForType: ['array'] } }}
-        formData={{ tags: ['a'] }}
+        initialFormData={{ tags: ['a'] }}
         validator={validator}
       />,
     );
 
     expect(screen.queryByRole('heading')).not.toBeInTheDocument();
     expect(container.querySelector('#root_tags__optionalRemove')).toBeInTheDocument();
+  });
+});
+
+describe('chakra-ui ArrayFieldItemTemplate', () => {
+  // This theme's own item template doesn't lay its buttons out by `displayLabel`, so a custom one records it
+  test.each<{ named: string; items: RJSFSchema; uiSchema?: UiSchema; value: unknown; displayLabel: boolean }>([
+    {
+      named: 'a text input, whose label sits above it',
+      items: { type: 'string', title: 'Tag' },
+      value: 'a',
+      displayLabel: true,
+    },
+    {
+      named: 'a checkbox, whose label sits beside it',
+      items: { type: 'boolean', title: 'Flag' },
+      value: true,
+      displayLabel: false,
+    },
+    {
+      named: "a type list under the fallback UI, whose type selector's label sits above it",
+      items: { type: ['string', 'number'], title: 'Value' },
+      value: 'a',
+      displayLabel: true,
+    },
+    {
+      named: "an untitled type list under the fallback UI, whose type selector's label sits above it",
+      items: { type: ['string', 'number'] },
+      value: 'a',
+      displayLabel: true,
+    },
+    {
+      named: 'a type list with a hidden value under the fallback UI, whose type selector is hidden with it',
+      items: { type: ['string', 'number'], title: 'Value' },
+      uiSchema: { items: { 'ui:widget': 'hidden' } },
+      value: 'a',
+      displayLabel: false,
+    },
+    {
+      named:
+        'a deprecated type list hidden by ui:deprecatedHandling under the fallback UI, whose type selector is hidden with it',
+      items: { type: ['string', 'number'], title: 'Value', deprecated: true },
+      uiSchema: { items: { 'ui:deprecatedHandling': 'hide' } },
+      value: 'a',
+      displayLabel: false,
+    },
+    {
+      named: 'a type list hidden by a global widget under the fallback UI, whose type selector is hidden with it',
+      items: { type: ['string', 'number'], title: 'Value' },
+      uiSchema: { 'ui:globalOptions': { widget: 'hidden' } },
+      value: 'a',
+      displayLabel: false,
+    },
+    {
+      named: 'a hidden text input, with no control on screen to draw a label above',
+      items: { type: 'string', title: 'Tag' },
+      uiSchema: { items: { 'ui:widget': 'hidden' } },
+      value: 'a',
+      displayLabel: false,
+    },
+  ])('hands a custom template whether a label sits above $named', ({ items, uiSchema, value, displayLabel }) => {
+    const displayLabels: (boolean | undefined)[] = [];
+    function ArrayFieldItemTemplate(props: ArrayFieldItemTemplateProps) {
+      displayLabels.push(props.displayLabel);
+      return <div>{props.children}</div>;
+    }
+    render(
+      <WrappedForm
+        schema={{ type: 'array', items }}
+        uiSchema={uiSchema}
+        initialFormData={[value]}
+        templates={{ ArrayFieldItemTemplate }}
+        validator={validator}
+        useFallbackUiForUnsupportedType
+      />,
+    );
+
+    expect(displayLabels.at(-1)).toBe(displayLabel);
   });
 });
 
@@ -979,7 +1097,7 @@ describe('chakra-ui ObjectFieldTemplate', () => {
           properties: { pet: { type: 'object', title: 'Pet', properties: { a: { type: 'string' } } } },
         }}
         uiSchema={{ 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] }, pet: { 'ui:label': false } }}
-        formData={{ pet: { a: 'x' } }}
+        initialFormData={{ pet: { a: 'x' } }}
         validator={validator}
       />,
     );
@@ -1081,7 +1199,7 @@ describe("chakra-ui draws a widget's own label under the id its plan gives it", 
         <WrappedForm
           schema={{ type: 'object', properties: { pet: { title: 'Pet', anyOf: [{ title: 'Kind', ...option }] } } }}
           uiSchema={{ pet: { 'ui:widget': 'radio', anyOf: [optionUiSchema] } }}
-          formData={{ pet: value }}
+          initialFormData={{ pet: value }}
           validator={validator}
         />,
       );
@@ -1107,7 +1225,7 @@ describe('chakra-ui WrapIfAdditionalTemplate', () => {
           additionalProperties: { type: 'string' },
         }}
         uiSchema={{ additionalProperties: { 'ui:label': false } }}
-        formData={{ foo: 'a' }}
+        initialFormData={{ foo: 'a' }}
         validator={validator}
       />,
     );

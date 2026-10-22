@@ -9,6 +9,7 @@ import type {
 } from '../src/index.ts';
 import {
   createSchemaUtils,
+  getValidationTarget,
   ID_KEY,
   JSON_SCHEMA_DRAFT_2020_12,
   noop,
@@ -16,6 +17,7 @@ import {
   REF_KEY,
   SCHEMA_KEY,
 } from '../src/index.ts';
+import { miniValidator } from './schema/graph/miniValidator.ts';
 import getTestValidator from './testUtils/getTestValidator.ts';
 
 describe('createSchemaUtils()', () => {
@@ -65,29 +67,20 @@ describe('createSchemaUtils()', () => {
       rootSchema2020,
     );
 
-    it('getRootSchema()', () => {
-      expect(schemaUtils2020.getRootSchema()).toEqual({
-        ...rootSchema2020,
-        [PROPERTIES_KEY]: {
-          ref: {
-            [REF_KEY]: 'https://example.com/2020-12.json#/$defs/example',
-          },
-        },
-      });
+    it('getRootSchema() returns the root as the caller passed it, its $refs as written (#5529)', () => {
+      expect(schemaUtils2020.getRootSchema()).toBe(rootSchema2020);
     });
 
-    it('getRootSchema() falls back to `#` as the base URI when the schema has no $id', () => {
-      const noIdSchema: RJSFSchema = {
+    it('resolves a $ref under a relative root $id against that $id once', () => {
+      const c: RJSFSchema = { [REF_KEY]: 'child.json' };
+      const relativeRoot: RJSFSchema = {
         [SCHEMA_KEY]: JSON_SCHEMA_DRAFT_2020_12,
-        type: 'object',
-        $defs: { example: { type: 'integer' } },
-        [PROPERTIES_KEY]: { ref: { [REF_KEY]: '#/$defs/example' } },
+        [ID_KEY]: 'nested/root.json',
+        $defs: { c: { [ID_KEY]: 'child.json', type: 'object', [PROPERTIES_KEY]: { v: { type: 'string' } } } },
+        [PROPERTIES_KEY]: { c },
       };
-      const schemaUtilsNoId: SchemaUtilsType = createSchemaUtils(
-        { validator: testValidator, defaultFormStateBehavior },
-        noIdSchema,
-      );
-      expect(schemaUtilsNoId.getRootSchema()).toEqual(noIdSchema);
+      const schemaUtilsRelative = createSchemaUtils({ validator: testValidator }, relativeRoot);
+      expect(schemaUtilsRelative.retrieveSchema(c)).toMatchObject({ [ID_KEY]: 'child.json', type: 'object' });
     });
 
     // A key under `properties` names a property of the data, so a property named `$ref` is not a reference
@@ -212,9 +205,8 @@ describe('createSchemaUtils()', () => {
     });
 
     describe('constructed from a draft 2020-12 root schema with an $id', () => {
-      // The constructor stores the root with every relative `$ref` rewritten against the `$id`, so comparing that
-      // rewritten copy against the schema a caller passes back would never match and `Form` would rebuild its
-      // `SchemaUtils` on every render, discarding the `retrieveSchema()` caches and re-validating a `liveValidate` form
+      // A difference reported for the root a caller passes back would make `Form` rebuild its `SchemaUtils` on every
+      // render, discarding the `retrieveSchema()` caches and re-validating a `liveValidate` form
       const schema2020: RJSFSchema = {
         $schema: JSON_SCHEMA_DRAFT_2020_12,
         $id: 'https://example.com/root',
@@ -284,6 +276,25 @@ describe('createSchemaUtils()', () => {
       expect(resolved).not.toEqual(plain);
       expect(utils.retrieveSchema(withRefs, {})).toBe(plain);
       expect(utils.retrieveSchema(withRefs, {}, true)).toBe(resolved);
+    });
+
+    it('keeps a result that shares subtrees with the previous one standing for the subschema it was retrieved from', () => {
+      const option: RJSFSchema = {
+        type: 'object',
+        allOf: [{ required: ['kind'] }],
+        required: ['id'],
+        properties: { kind: { type: 'string' }, id: { type: 'string' } },
+        if: { properties: { kind: { const: 'a' } } },
+        then: { properties: { extra: { type: 'string' } } },
+      };
+      const root: RJSFSchema = { type: 'object', properties: { pet: { oneOf: [option, { type: 'object' }] } } };
+      const utils = createSchemaUtils({ validator: miniValidator() }, root);
+      const first = utils.retrieveSchema(option, { kind: 'a' });
+      const second = utils.retrieveSchema(option, { kind: 'x' });
+      expect(second.required).toBe(first.required);
+      expect(second.properties).not.toHaveProperty('extra');
+      expect(getValidationTarget(first, root)).toEqual({ $ref: '#/properties/pet/oneOf/0' });
+      expect(getValidationTarget(second, root)).toEqual({ $ref: '#/properties/pet/oneOf/0' });
     });
 
     it('resolves a non-object schema, which cannot be a cache key, afresh each time', () => {

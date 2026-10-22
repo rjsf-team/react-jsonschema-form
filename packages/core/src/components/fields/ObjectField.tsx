@@ -1,4 +1,4 @@
-import type { FocusEvent, ReactNode } from 'react';
+import type { FocusEvent } from 'react';
 import { memo, useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type {
   EnumOptionsType,
@@ -25,9 +25,11 @@ import {
   getFreePropertyNames,
   getMatchingPatternProperties,
   getFieldTypeForWidget,
+  getOptionUiSchema,
   getTemplates,
   getPropertySchema,
   getUiOptions,
+  getXxxOfKey,
   getXxxOfOptions,
   isConstantSelect,
   isFormDataAvailable,
@@ -35,6 +37,7 @@ import {
   optionsList,
   orderProperties,
   shouldRenderOptionalField,
+  fieldPathToList,
   toFieldPath,
   fieldPathToId,
   resolveUiSchema,
@@ -43,11 +46,19 @@ import {
   uiBooleanOption,
 } from '@rjsf/utils';
 
-import useFieldView from '../../hooks/useFieldView.ts';
-import { ADDITIONAL_PROPERTY_KEY_REMOVE, EMPTY_UI_SCHEMA } from '../constants.ts';
+import useReadFieldData from '../../hooks/useReadFieldData.ts';
+import useSendMove from '../../hooks/useSendMove.ts';
+import useWarnIfFormDataNotPassedThrough from '../../hooks/useWarnIfFormDataNotPassedThrough.ts';
+import { additionalPropertyRemoval, EMPTY_UI_SCHEMA } from '../constants.ts';
 import RichDescription from '../RichDescription.tsx';
-import { getContainerErrorProps, getContainerHeading, isAdditionalPropertySchema } from './fieldWidgetUtils.ts';
-import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
+import {
+  getContainerErrorProps,
+  getContainerHeading,
+  isAdditionalPropertySchema,
+  storedValue,
+  withGlobalUiOptions,
+} from './fieldWidgetUtils.ts';
+import { useShownOptionBeside } from './ShownOptionContext.ts';
 
 /** Returns a flag indicating whether the `name` field is required in the object schema
  *
@@ -95,22 +106,21 @@ function getDefaultValue<
  * matches another one, so that option's type is the one the field the user is handed renders and a seed of any other
  * type is a value that field cannot show.
  *
- * Both reads are given the `rootSchema`, so an option spelled as a `$ref` -- which names no type of its own, where the
- * field `MultiSchemaField` renders for it takes the type of what it refers to -- is read through the definition it
+ * The subschema is read with its options resolved, so an option spelled as a `$ref` -- which names no type of its own,
+ * where the field `MultiSchemaField` renders for it takes the type of what it refers to -- is read as the definition it
  * names, as `retrieveSchema()` reads the very same options when it stubs the property. An option that leaves the type
  * to options that disagree again leaves the seed to the `New Value` a property no schema names a type for starts at.
  *
- * @param subSchema - The schema describing the additional property, with its own `$ref`s resolved
- * @param rootSchema - The root schema an option's `$ref` names a definition of
+ * @param subSchema - The schema describing the additional property, resolved with its options
  * @returns - The type to seed the new property with, or undefined when no option names one either
  */
-function getSeedType<S extends StrictRJSFSchema = RJSFSchema>(subSchema: S, rootSchema: S): string | undefined {
-  const type = getAdditionalPropertyType<S>(subSchema, rootSchema);
+function getSeedType<S extends StrictRJSFSchema = RJSFSchema>(subSchema: S): string | undefined {
+  const type = getAdditionalPropertyType<S>(subSchema);
   if (type !== undefined) {
     return type;
   }
   const [firstOption] = getXxxOfOptions<S>(subSchema)?.options ?? [];
-  return isObject(firstOption) ? getAdditionalPropertyType<S>(firstOption, rootSchema) : undefined;
+  return isObject(firstOption) ? getAdditionalPropertyType<S>(firstOption) : undefined;
 }
 
 /** Returns whether the object declares `key` in its own `properties`, which is what decides whose schema and whose
@@ -257,29 +267,21 @@ function ObjectFieldPropertyFn<
   const [wasPropertyKeyModified, setWasPropertyKeyModified] = useState(false);
   const { globalFormOptions, fields } = registry;
   const { SchemaField } = fields;
-  const readsFormData = useReadsFormData(ObjectFieldProperty);
   const innerFieldPath = toFieldPath(propertyName, fieldPath);
   const innerFieldId = fieldPathToId(innerFieldPath, globalFormOptions);
 
-  /** The `onChange` handler installed on this property's `SchemaField`. Handles the special case where the user
-   * clears a value at this property's own path when it was added as an additional property, coercing `undefined`
-   * to the empty string so the property's key input survives. Every other change, including any change to a
-   * descendant of this property, is forwarded to `onChange()` untouched.
+  /** The `onChange` handler installed on this property's `SchemaField`. A change at this property's own path is
+   * stored as `storedValue()` says, so a cleared `additionalProperties` entry keeps its key and its key input. Every
+   * other change, including any change to a descendant of this property, is forwarded to `onChange()` untouched.
    */
   const onPropertyChange = useCallback(
     (value: T | undefined, path: FieldPath, newErrorSchema?: ErrorSchema<T>, id?: string) => {
-      // An `additionalProperties` value lives at this property's own path, so clearing its widget to `undefined`
-      // would drop the key from the formData and take the key input with it. Coerce that one case to the empty
-      // string.
-      // A descendant's path is this property's path plus at least one segment, so comparing to this
-      // property's own path (rather than merely its length) tells apart "this property changed" from "a
-      // descendant changed"; a cleared descendant must stay `undefined` so it is omitted from the formData
-      // exactly like a cleared property declared in `properties` (#5222).
-      let normalizedValue = value;
-      if (value === undefined && addedByAdditionalProperties && path === innerFieldPath) {
-        normalizedValue = '' as unknown as T;
-      }
-      onChange(normalizedValue, path, newErrorSchema, id);
+      // A descendant's path is this property's path plus at least one segment, so comparing to this property's own
+      // path (rather than merely its length) tells apart "this property changed" from "a descendant changed"; a
+      // cleared descendant must stay `undefined` so it is omitted from the formData exactly like a cleared property
+      // declared in `properties` (#5222).
+      const sent = path === innerFieldPath ? storedValue(value, path, addedByAdditionalProperties) : value;
+      onChange(sent, path, newErrorSchema, id);
     },
     [onChange, addedByAdditionalProperties, innerFieldPath],
   );
@@ -317,30 +319,28 @@ function ObjectFieldPropertyFn<
   }, [propertyName, handleRemoveProperty]);
 
   return (
-    <RawFormDataContext value={readsFormData ? SchemaField : undefined}>
-      <SchemaField
-        name={propertyName}
-        required={required}
-        schema={schema}
-        uiSchema={uiSchema}
-        errorSchema={errorSchema}
-        fieldPath={innerFieldPath}
-        id={innerFieldId}
-        formData={formData}
-        wasPropertyKeyModified={wasPropertyKeyModified}
-        onKeyRename={onKeyRename}
-        onKeyRenameBlur={onKeyRenameBlur}
-        onRemoveProperty={onRemoveProperty}
-        propertyNamesEnum={propertyNamesEnum}
-        onChange={onPropertyChange}
-        onBlur={onBlur}
-        onFocus={onFocus}
-        registry={registry}
-        disabled={disabled}
-        readonly={readonly}
-        hideError={hideError}
-      />
-    </RawFormDataContext>
+    <SchemaField
+      name={propertyName}
+      required={required}
+      schema={schema}
+      uiSchema={uiSchema}
+      errorSchema={errorSchema}
+      fieldPath={innerFieldPath}
+      id={innerFieldId}
+      formData={formData}
+      wasPropertyKeyModified={wasPropertyKeyModified}
+      onKeyRename={onKeyRename}
+      onKeyRenameBlur={onKeyRenameBlur}
+      onRemoveProperty={onRemoveProperty}
+      propertyNamesEnum={propertyNamesEnum}
+      onChange={onPropertyChange}
+      onBlur={onBlur}
+      onFocus={onFocus}
+      registry={registry}
+      disabled={disabled}
+      readonly={readonly}
+      hideError={hideError}
+    />
   );
 }
 
@@ -357,7 +357,7 @@ export default function ObjectField<
   F extends FormContextType = FormContextType,
 >(props: FieldProps<T, S, F>) {
   const {
-    schema: rawSchema,
+    schema,
     uiSchema: rawUiSchema,
     formData,
     errorSchema,
@@ -380,26 +380,32 @@ export default function ObjectField<
   const uiSchema: UiSchema<T, S, F> = rawUiSchema ?? EMPTY_UI_SCHEMA;
   const { fields, schemaUtils, translateString, globalUiOptions, rootSchema, uiSchemaDefinitions } = registry;
   const { OptionalDataControlsField } = fields;
-  const view = useFieldView(fieldPath, formData, ObjectField);
-  /** Every return renders through this, so a template below never inherits what was said of this field */
-  const vouchForProperties = (content: ReactNode) => (
-    <RawFormDataContext value={view.readsFormData ? ObjectFieldProperty : undefined}>{content}</RawFormDataContext>
-  );
-  const readData = useCallback(() => view.readData(view.read()), [view]);
+  // The data a handler reads outside a `Form`, where there is no current data to read instead: what the last commit
+  // rendered, or what a handler has sent since, so that what it does after sending reads the data it sent. Installed
+  // from a layout Effect of every commit, which React runs children first, so a handler a property calls from its own
+  // layout Effect in the same commit reads the data of the commit before, and data a parent never stored does not
+  // outlive the render that shows it did not
+  const sentFormData = useRef(formData);
+  useLayoutEffect(() => {
+    sentFormData.current = formData;
+  });
+  const readRenderedData = useCallback(() => sentFormData.current, []);
+  const readData = useReadFieldData(fieldPath, readRenderedData);
+  const sendMove = useSendMove(fieldPath);
+  useWarnIfFormDataNotPassedThrough('ObjectField', id, fieldPath, formData);
 
-  const schema: S = useMemo(
-    () => schemaUtils.retrieveSchema(rawSchema, formData, true),
-    [schemaUtils, rawSchema, formData],
-  );
-  // Read by the callbacks a property template holds onto rather than closed over by them, as the form data is above:
-  // the resolved schema changes identity whenever a key is added, renamed or removed, and a callback that changed with
-  // it would re-render every property beside the one that did. Written once the render it belongs to has committed, so
-  // that a render React starts and throws away cannot leave the callbacks answering from a schema resolved for form
-  // data the user never saw -- they run from an event handler, which is after the commit either way
+  // Read by the callbacks a property template holds onto rather than closed over by them: the resolved schema changes
+  // identity whenever a key is added, renamed or removed, and a callback that changed with it would re-render every
+  // property beside the one that did. Written once the render it belongs to has committed, so that a render React
+  // starts and throws away cannot leave the callbacks answering from a schema resolved for form data the user never saw
+  // -- they run from an event handler, which is after the commit either way
+  const shownOption = useShownOptionBeside(fieldPath);
   const schemaRef = useRef(schema);
+  const shownOptionRef = useRef(shownOption);
   useLayoutEffect(() => {
     schemaRef.current = schema;
-  }, [schema]);
+    shownOptionRef.current = shownOption;
+  }, [schema, shownOption]);
   const uiOptions = useMemo(() => getUiOptions<T, S, F>(uiSchema, globalUiOptions), [uiSchema, globalUiOptions]);
   const schemaProperties = useMemo(() => schema.properties ?? {}, [schema.properties]);
   const [lastRenamedProperty, setLastRenamedProperty] = useState<{ previousKey: string; currentKey?: string }>({
@@ -412,20 +418,45 @@ export default function ObjectField<
    * holds that seed under that name, which is the one question the effect below puts to every record.
    */
   const seededProperties = useRef(new Map<string, unknown>());
-  // Every write to a property this object holds is a proposal: the parent may decline it, write a value of its own
-  // over it, or accept it, and which of those happened is only known once the form data has come back. A record whose
-  // name the data no longer holds that seed under is no longer the property's history, whatever became of it -- a
-  // value the user entered, one a parent wrote, or a name a declined rename never took -- so it is dropped here rather
-  // than where the proposal was made. The record a rename leaves behind under the old name is what a declined rename
-  // falls back on, and it goes the moment the rename is the data's
-  useLayoutEffect(() => {
-    const properties = isObject(formData) ? (formData as GenericObjectType) : {};
-    for (const [key, seed] of seededProperties.current) {
-      if (!deepEquals(properties[key], seed)) {
-        seededProperties.current.delete(key);
+  /** Drops the records of `keys` the form's data no longer holds the seed under, once a write has reached it. A record
+   * whose name the data no longer holds that seed under is no longer the property's history, whatever became of it --
+   * a value the user entered, one a parent wrote, or a name the property left. It is read off the data the write left,
+   * not the write itself, so a write the form refused, or one a parent wrote the seed back over, keeps the record
+   */
+  const forgetChangedSeeds = useCallback(
+    (...keys: string[]) => {
+      if (seededProperties.current.size === 0) {
+        return;
       }
-    }
-  }, [formData]);
+      const data = readData();
+      const properties: GenericObjectType = isObject(data) ? data : {};
+      for (const key of keys) {
+        if (seededProperties.current.has(key) && !deepEquals(properties[key], seededProperties.current.get(key))) {
+          seededProperties.current.delete(key);
+        }
+      }
+    },
+    [readData],
+  );
+  // The depth of this object's properties in a `FieldPath`, to tell which property a write below this field is at
+  const ownDepth = useMemo(() => fieldPathToList(fieldPath).length, [fieldPath]);
+  /** The `onChange` the properties report through: a child's write reaches the form through it, and the record of the
+   * property it wrote to is checked against the data it left
+   */
+  const onPropertyChange = useCallback(
+    (value: T | undefined, path: FieldPath, newErrorSchema?: ErrorSchema<T>, changedId?: string) => {
+      onChange(value, path, newErrorSchema, changedId);
+      // Checked before the path is parsed, since most objects hold no seeded property and this runs on every keystroke
+      if (seededProperties.current.size === 0) {
+        return;
+      }
+      const key = fieldPathToList(path)[ownDepth];
+      if (key !== undefined) {
+        forgetChangedSeeds(String(key));
+      }
+    },
+    [onChange, ownDepth, forgetChangedSeeds],
+  );
   const schemaAdditionalProperties = useMemo(() => getAdditionalPropertyOrder<S>(schemaProperties), [schemaProperties]);
   const [additionalPropertyOrder, setAdditionalPropertyOrder] = useState(schemaAdditionalProperties);
   const definedPropertyOrder = useMemo(() => {
@@ -506,38 +537,72 @@ export default function ObjectField<
     [uiOptions],
   );
 
-  /** Returns the schema the object says describes `key`: the one it declares under that name, where it declares one,
-   * and otherwise what `getAdditionalPropertySchema()` says of a name its `properties` don't name. The key input is
-   * free text, so a property can be renamed onto a declared name, and the field that name then renders is the declared
-   * property's -- reading the keywords for the undeclared names instead would seed a value that field cannot show.
-   *
-   * `declaresProperty()` is what tells the two apart, as it does for the `uiSchema` entry below and for the one the
-   * property's field is rendered with, so none of them can disagree about whose name it is.
+  /** Returns the properties that declare `key`, with the `uiSchema` their fields are rendered with: the object's own,
+   * or else those of the `anyOf`/`oneOf` option `SchemaField` shows beside them, which renders the key in its own
+   * field, with the option's entry of the `uiSchema`'s option list as `MultiSchemaField` hands it over, and leaves the
+   * key unstubbed here; undefined where neither does
    */
-  const schemaForKey = useCallback((key: string): S | boolean => {
-    const currentSchema = schemaRef.current;
-    const properties = currentSchema.properties ?? {};
-    if (declaresProperty<S>(properties, key)) {
-      return properties[key] as S | boolean;
-    }
-    return getAdditionalPropertySchema<S>(currentSchema, key);
-  }, []);
+  const declarationOf = useCallback(
+    (
+      key: string,
+    ): { properties: NonNullable<S['properties']>; uiSchema: UiSchema<T, S, F> | undefined } | undefined => {
+      const currentSchema = schemaRef.current;
+      const properties = currentSchema.properties ?? {};
+      if (declaresProperty<S>(properties, key)) {
+        return { properties, uiSchema };
+      }
+      const shown = shownOptionRef.current;
+      if (shown === undefined || !isSchemaObject<S>(shown.option)) {
+        return undefined;
+      }
+      const optionProperties = shown.option.properties;
+      if (!optionProperties || !declaresProperty<S>(optionProperties, key)) {
+        return undefined;
+      }
+      const xxxOfKey = getXxxOfKey<S>(currentSchema);
+      return {
+        properties: optionProperties,
+        uiSchema: xxxOfKey ? getOptionUiSchema<T, S, F>(uiSchema, xxxOfKey, shown.index) : uiSchema,
+      };
+    },
+    [uiSchema],
+  );
 
-  /** Returns the `uiSchema` entry the field for `key` is rendered with: the one under that name where the object
-   * declares it, and the `additionalProperties` entry otherwise, read the same way the property's `SchemaField` is
-   * handed its own below. A rename onto a declared name brings up the declared property's field, which reads the entry
-   * under that name, so seeding from the `additionalProperties` entry instead would hand that field a
-   * `ui:initialValue` written for a different schema.
+  /** Returns the schema the object says describes `key`: the one it, or the option it shows, declares under that name,
+   * where one does, and otherwise what `getAdditionalPropertySchema()` says of a name its `properties` don't name. The
+   * key input is free text, so a property can be renamed onto a declared name, and the field that name then renders is
+   * the declared property's -- reading the keywords for the undeclared names instead would seed a value that field
+   * cannot show.
+   *
+   * `declarationOf()` is what tells the two apart, as it does for the `uiSchema` entry below, so they cannot disagree
+   * about whose name it is.
+   */
+  const schemaForKey = useCallback(
+    (key: string): S | boolean => {
+      const declared = declarationOf(key)?.properties[key];
+      if (typeof declared === 'boolean' || isSchemaObject<S>(declared)) {
+        return declared;
+      }
+      return getAdditionalPropertySchema<S>(schemaRef.current, key);
+    },
+    [declarationOf],
+  );
+
+  /** Returns the `uiSchema` entry the field for `key` is rendered with: the one under that name in the `uiSchema` of
+   * the object or of the option it shows, whichever declares it, and the `additionalProperties` entry otherwise, read
+   * the same way the property's `SchemaField` is handed its own below. A rename onto a declared name brings up the
+   * declared property's field, which reads the entry under that name, so seeding from the `additionalProperties` entry
+   * instead would hand that field a `ui:initialValue` written for a different schema.
    */
   const uiSchemaForKey = useCallback(
     (key: string) => {
-      const properties = schemaRef.current.properties ?? {};
+      const declaration = declarationOf(key);
       return getByPath<UiSchema<T, S, F> | undefined>(
-        uiSchema,
-        declaresProperty<S>(properties, key) ? key : ADDITIONAL_PROPERTIES_KEY,
+        declaration ? declaration.uiSchema : uiSchema,
+        declaration ? key : ADDITIONAL_PROPERTIES_KEY,
       );
     },
-    [uiSchema],
+    [uiSchema, declarationOf],
   );
 
   /** Returns the value a property added or renamed to `key` starts out holding, read from the very schema the object
@@ -583,7 +648,7 @@ export default function ObjectField<
       // a typeless `enum` of numbers as the number its values hold where a field's own type would call it a string
       const type = Array.isArray(resolvedKeySchema.type)
         ? getFieldTypeForWidget(resolvedKeySchema, widget)
-        : getSeedType<S>(resolvedKeySchema, rootSchema);
+        : getSeedType<S>(schemaUtils.retrieveSchema(resolvedKeySchema, undefined, true));
       // A select starts on its type's zero value only when that is an option the user can pick: neither a string's
       // `'New Value'` nor a number's `0` need be, so otherwise it starts on the first one it shows enabled
       let firstOption: EnumOptionsType<S> | undefined;
@@ -606,7 +671,7 @@ export default function ObjectField<
         resolvedKeySchema.default as T,
         undefined,
         undefined,
-        keyUiSchema,
+        withGlobalUiOptions<T, S, F>(keyUiSchema, globalUiOptions),
         uiSchemaDefinitions,
       ) as RJSFSchema['default'];
       const newValue = resolvedKeySchema.const !== undefined ? resolvedKeySchema.const : defaultValue;
@@ -615,7 +680,7 @@ export default function ObjectField<
       }
       return firstOption ? firstOption.value : getDefaultValue<T, S, F>(translateString, type);
     },
-    [rootSchema, schemaForKey, schemaUtils, translateString, uiSchemaForKey, uiSchemaDefinitions],
+    [rootSchema, schemaForKey, schemaUtils, translateString, uiSchemaForKey, uiSchemaDefinitions, globalUiOptions],
   );
 
   /** Handles the adding of a new additional property on the given `schema`. Calls the `onChange` callback once the new
@@ -643,14 +708,29 @@ export default function ObjectField<
     // of the user's that happens to equal one
     seededProperties.current.set(newKey, seed);
 
-    setLastRenamedProperty((previous) =>
-      previous.previousKey === newKey
-        ? { currentKey: newKey, previousKey: getAvailableKey(newKey, newFormData) }
-        : previous,
-    );
-    setAdditionalPropertyOrder((order) => [...order, newKey]);
-    view.propose(newFormData, () => onChange(newFormData, fieldPath));
-  }, [readData, view, onChange, fieldPath, getAvailableKey, schema, resolvedSchema, seedForKey]);
+    sentFormData.current = newFormData;
+    const outcome = sendMove({ value: newFormData }, () => onChange(newFormData, fieldPath));
+    // A refused add leaves the order as it was, and the React key the last rename gave a property with that property
+    if (outcome?.kind !== 'refused') {
+      setLastRenamedProperty((previous) =>
+        previous.previousKey === newKey
+          ? { currentKey: newKey, previousKey: getAvailableKey(newKey, newFormData) }
+          : previous,
+      );
+      setAdditionalPropertyOrder((order) => [...order, newKey]);
+    }
+    forgetChangedSeeds(newKey);
+  }, [
+    readData,
+    sendMove,
+    onChange,
+    fieldPath,
+    getAvailableKey,
+    schema,
+    resolvedSchema,
+    seedForKey,
+    forgetChangedSeeds,
+  ]);
 
   /** Returns a callback function that deals with the rename of a key for an additional property for a schema. That
    * callback will attempt to rename the key and move the existing data to that key, calling `onChange` when it does.
@@ -673,10 +753,10 @@ export default function ObjectField<
         // numeric pattern describes is a value that pattern's field cannot show. Which properties those are is what
         // `seededProperties` has recorded since they were added, rather than a value that merely equals what the seed
         // would be now -- any `0`, `false` or defaulted entry equals that, the data the form mounted with included, and
-        // every one of those is the user's to keep. The record goes under the new name without leaving the old one,
-        // since this rename is a proposal too: a parent that declines it leaves the property under the name it already
-        // had, where the record it kept lets the next rename re-seed it. The reconciliation above drops whichever of
-        // the two the data turns out not to hold, so renaming a property on twice re-seeds it twice
+        // every one of those is the user's to keep. The record goes under the new name without leaving the old one: a
+        // parent that puts the old name back leaves the property where it was, with the record that lets the next
+        // rename re-seed it. Once the rename is sent, whichever of the two the data does not hold is dropped, so
+        // renaming a property on twice re-seeds it twice
         const seed = seededProperties.current.get(oldKey);
         const wasSeeded = seededProperties.current.has(oldKey) && deepEquals(newFormData[oldKey], seed);
         if (wasSeeded) {
@@ -691,31 +771,57 @@ export default function ObjectField<
         });
         const renamedObj = Object.assign({}, ...keyValues);
 
-        setLastRenamedProperty((previous) => ({
-          previousKey: oldKey !== previous.currentKey ? oldKey : previous.previousKey,
-          currentKey: actualNewKey,
-        }));
-        setAdditionalPropertyOrder((order) => order.map((property) => (property === oldKey ? actualNewKey : property)));
         // The errors the form holds under the old name describe the property, so they go to its new name with it
-        view.propose(
-          renamedObj,
-          () => onChange(renamedObj, fieldPath),
-          (key) => (key === oldKey ? actualNewKey : key),
+        sentFormData.current = renamedObj;
+        const outcome = sendMove({ value: renamedObj, newKeyOf: (key) => (key === oldKey ? actualNewKey : key) }, () =>
+          onChange(renamedObj, fieldPath),
         );
+        // A rewrite decided the object's keys itself, so the properties take the order of the data it kept, and the
+        // renamed one keeps its instance only where the kept data holds it under the new name and not the old one
+        const rewrittenKeys =
+          outcome?.kind === 'rewritten' ? Object.keys(isObject(outcome.kept) ? outcome.kept : {}) : undefined;
+        // Recorded once the rename is taken: a refused one leaves the property its name, its place among the others
+        // and the React key the last rename gave another property, so that property keeps its instance
+        if (
+          outcome?.kind !== 'refused' &&
+          (!rewrittenKeys || (rewrittenKeys.includes(actualNewKey) && !rewrittenKeys.includes(oldKey)))
+        ) {
+          setLastRenamedProperty((previous) => ({
+            previousKey: oldKey !== previous.currentKey ? oldKey : previous.previousKey,
+            currentKey: actualNewKey,
+          }));
+        }
+        if (rewrittenKeys) {
+          setAdditionalPropertyOrder(rewrittenKeys);
+        } else if (outcome?.kind !== 'refused') {
+          setAdditionalPropertyOrder((order) =>
+            order.map((property) => (property === oldKey ? actualNewKey : property)),
+          );
+        }
+        forgetChangedSeeds(oldKey, actualNewKey);
       }
     },
-    [onChange, fieldPath, getAvailableKey, seedForKey, view, readData],
+    [sendMove, onChange, fieldPath, getAvailableKey, seedForKey, readData, forgetChangedSeeds],
   );
 
-  /** Handles the remove click which calls the `onChange` callback with the special ADDITIONAL_PROPERTY_FIELD_REMOVE
-   * value for the path plus the key to be removed
+  /** Handles the remove click, proposing the object without the property, and saying the property is gone, so the form
+   * drops what it holds for it, its errors and its option selection among them, rather than leaving them to a property
+   * added under its name
    */
   const handleRemoveProperty = useCallback(
     (key: string) => {
-      setAdditionalPropertyOrder((order) => order.filter((property) => property !== key));
-      onChange(ADDITIONAL_PROPERTY_KEY_REMOVE as T, toFieldPath(key, fieldPath));
+      const removedPath = toFieldPath(key, fieldPath);
+      const removal = additionalPropertyRemoval<T>();
+      // Announced, though it moves no key, for what became of it: a removal `transformChange` refused, or a rewrite
+      // that kept the property, leaves the property in its place. One no form answered as it was sent, as outside a
+      // `Form` or under a parent field that stores it later, is the field's own to make, so the property leaves the order
+      const outcome = sendMove({ fieldPath: removedPath, value: removal }, () => onChange(removal, removedPath));
+      if (outcome?.kind !== 'refused' && (outcome?.kind !== 'rewritten' || outcome.kept === undefined)) {
+        setAdditionalPropertyOrder((order) => order.filter((property) => property !== key));
+      }
+      forgetChangedSeeds(key);
     },
-    [onChange, fieldPath],
+    [sendMove, onChange, fieldPath, forgetChangedSeeds],
   );
 
   /** Returns the stable React key for a property. For the most recently renamed
@@ -736,22 +842,21 @@ export default function ObjectField<
   if (!renderOptionalField || hasFormData) {
     try {
       const definedPropertySet = new Set(definedPropertyOrder);
-      // A set, since an add or rename the parent declined leaves its key in the order, and proposing that key again
-      // appends it a second time
+      // A set, since an add that never reaches the data, as under a custom field that keeps the change to itself, leaves
+      // its key in the order, and the next add picks that key again
       const orderedSet = new Set(additionalPropertyOrder);
       const currentAdditionalProperties = [...orderedSet].filter(
         (property) => Object.hasOwn(schemaProperties, property) && !definedPropertySet.has(property),
       );
-      // A property in the data but not in the order was not added or renamed here: the parent supplied it, or it kept
-      // the name a rename proposed away because the parent declined the rename. Either way it renders, after the ones
-      // whose order is known
+      // A property in the data but not in the order was not added or renamed here: the parent supplied it, or put the
+      // name a rename took away back. Either way it renders, after the ones whose order is known
       const unorderedAdditionalProperties = schemaAdditionalProperties.filter((property) => !orderedSet.has(property));
       orderedProperties = orderProperties(
         [...definedPropertyOrder, ...currentAdditionalProperties, ...unorderedAdditionalProperties],
         uiOptions.order,
       );
     } catch (err) {
-      return vouchForProperties(
+      return (
         <div>
           <p className='rjsf-config-error' style={{ color: 'red' }}>
             <RichDescription
@@ -764,7 +869,7 @@ export default function ObjectField<
             />
           </p>
           <pre>{JSON.stringify(schema)}</pre>
-        </div>,
+        </div>
       );
     }
   }
@@ -809,7 +914,7 @@ export default function ObjectField<
           handleRemoveProperty={handleRemoveProperty}
           addedByAdditionalProperties={addedByAdditionalProperties}
           propertyNamesEnum={addedByAdditionalProperties ? allowedPropertyNames?.get(propertyName) : undefined}
-          onChange={onChange}
+          onChange={onPropertyChange}
           onBlur={onBlur}
           onFocus={onFocus}
           registry={registry}
@@ -841,5 +946,5 @@ export default function ObjectField<
     optionalDataControl,
     className: renderOptionalField ? 'rjsf-optional-object-field' : undefined,
   };
-  return vouchForProperties(<Template {...templateProps} onAddProperty={onAddProperty} />);
+  return <Template {...templateProps} onAddProperty={onAddProperty} />;
 }

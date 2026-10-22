@@ -19,15 +19,29 @@ function mountWithHandle(props: Parameters<typeof createFormComponent>[0]) {
 
 const user = userEvent.setup();
 
+/** A container in the document of an iframe, whose window has classes of its own, the way a form is rendered by a
+ * portal into a frame
+ */
+function frameContainer() {
+  const frame = document.createElement('iframe');
+  document.body.append(frame);
+  onTestFinished(() => frame.remove());
+  const frameDocument = frame.contentDocument;
+  if (!frameDocument) {
+    throw new Error('The iframe has no document');
+  }
+  return frameDocument.body.appendChild(frameDocument.createElement('div'));
+}
+
 describe('FormRef', () => {
   describe('getFormData()', () => {
-    it('returns the seed of an uncontrolled form', () => {
+    it('returns the seed', () => {
       const { handle } = mountWithHandle({ schema, initialFormData: { name: 'seed' } });
 
       expect(handle.getFormData()).toEqual({ name: 'seed' });
     });
 
-    it('reflects an edit committed by an uncontrolled form', async () => {
+    it('reflects an edit', async () => {
       const { node, handle } = mountWithHandle({ schema, initialFormData: { name: 'seed' } });
 
       const input = node.querySelector('input')!;
@@ -37,8 +51,8 @@ describe('FormRef', () => {
       expect(handle.getFormData()).toEqual({ name: 'edited' });
     });
 
-    it('returns the rendered value of a controlled form', () => {
-      const { handle } = mountWithHandle({ schema, formData: { name: 'parent' }, onChange: () => {} });
+    it('returns the formData passed', () => {
+      const { handle } = mountWithHandle({ schema, initialFormData: { name: 'parent' }, onChange: () => {} });
 
       expect(handle.getFormData()).toEqual({ name: 'parent' });
     });
@@ -88,13 +102,84 @@ describe('FormRef', () => {
       expect(() => act(() => handle.submit())).not.toThrow();
     });
 
-    it('cannot submit when tagName renders something other than a form', () => {
-      // Only a `<form>` has `requestSubmit()`; the documented cost of another `tagName` is that native submission is
-      // gone, and the programmatic one goes with it
+    it.each<[string, FormProps['tagName']]>([
+      ['a form', undefined],
+      ['an element other than a form', 'div'],
+    ])('throws an error from onSubmit out of submit() for %s, as the other handle methods do', (_, tagName) => {
+      const { handle } = mountWithHandle({
+        schema,
+        initialFormData: { name: 'a' },
+        tagName,
+        onSubmit: () => {
+          throw new Error('from onSubmit');
+        },
+      });
+
+      expect(() => act(() => handle.submit())).toThrow('from onSubmit');
+    });
+
+    it('throws an error from onError out of submit()', () => {
+      const { handle } = mountWithHandle({
+        schema: requiredSchema,
+        initialFormData: {},
+        noHtml5Validate: true,
+        onError: () => {
+          throw new Error('from onError');
+        },
+      });
+
+      expect(() => act(() => handle.submit())).toThrow('from onError');
+    });
+
+    it('throws an error from customValidate out of submit()', () => {
+      const { handle, onSubmit } = mountWithHandle({
+        schema,
+        initialFormData: { name: 'a' },
+        customValidate: () => {
+          throw new Error('from customValidate');
+        },
+      });
+
+      expect(() => act(() => handle.submit())).toThrow('from customValidate');
+      expect(onSubmit).not.toHaveBeenCalled();
+    });
+
+    it('submits through a dispatched submit event when tagName renders something other than a form', () => {
+      // Only a `<form>` has `requestSubmit()`, so the element gets the submit event the form's handler takes instead
       const { handle, onSubmit } = mountWithHandle({ schema, initialFormData: { name: 'a' }, tagName: 'div' });
 
-      expect(() => act(() => handle.submit())).not.toThrow();
-      expect(onSubmit).not.toHaveBeenCalled();
+      act(() => handle.submit());
+
+      expect(onSubmit).toHaveBeenCalledTimes(1);
+      expect(onSubmit.mock.lastCall?.[0].formData).toEqual({ name: 'a' });
+    });
+
+    it('keeps the submit event it dispatches to an element other than a form from an enclosing form', () => {
+      const ref = createFormRef();
+      const onSubmit = vi.fn();
+      const outerSubmit = vi.fn();
+      render(
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            outerSubmit();
+          }}
+        >
+          <Form
+            ref={ref}
+            schema={schema}
+            validator={validator}
+            initialFormData={{ name: 'a' }}
+            tagName='div'
+            onSubmit={onSubmit}
+          />
+        </form>,
+      );
+
+      act(() => handleOf(ref).submit());
+
+      expect(onSubmit).toHaveBeenCalledTimes(1);
+      expect(outerSubmit).not.toHaveBeenCalled();
     });
 
     it('does nothing once the form is unmounted', () => {
@@ -103,6 +188,19 @@ describe('FormRef', () => {
 
       expect(() => handle.submit()).not.toThrow();
       expect(onSubmit).not.toHaveBeenCalled();
+    });
+
+    it('submits a form rendered into the document of an iframe', () => {
+      const ref = createFormRef();
+      const onSubmit = vi.fn();
+      render(
+        <Form ref={ref} schema={schema} validator={validator} initialFormData={{ name: 'a' }} onSubmit={onSubmit} />,
+        { container: frameContainer() },
+      );
+
+      act(() => handleOf(ref).submit());
+
+      expect(onSubmit).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -134,6 +232,38 @@ describe('FormRef', () => {
       act(() => handle.focusOnError(error('.choice')));
 
       expect(node.querySelector('#root_choice-0')).toHaveFocus();
+    });
+
+    it.each(['say "hi"', 'back\\slash', 'line\nbreak'])(
+      'falls back to the first control whose id starts with a field id holding a character a selector quotes: %j',
+      (name) => {
+        function ButtonGroup({ id }: WidgetProps) {
+          return (
+            <>
+              <button type='button' id={`${id}-0`} aria-label='a' />
+              <button type='button' id={`${id}-1`} aria-label='b' />
+            </>
+          );
+        }
+        const { node, handle } = mountWithHandle({
+          schema: { type: 'object', properties: { [name]: { type: 'string', enum: ['a', 'b'] } } },
+          uiSchema: { [name]: { 'ui:widget': ButtonGroup } },
+        });
+
+        act(() => handle.focusOnError(error(`.${name}`)));
+
+        expect(node.ownerDocument.activeElement).toBe(node.ownerDocument.getElementById(`root_${name}-0`));
+      },
+    );
+
+    it('focuses the input of a form rendered into the document of an iframe', () => {
+      const ref = createFormRef();
+      const container = frameContainer();
+      render(<Form ref={ref} schema={schema} validator={validator} />, { container });
+
+      act(() => handleOf(ref).focusOnError(error('.name')));
+
+      expect(container.ownerDocument.activeElement).toBe(container.querySelector('#root_name'));
     });
 
     it('treats a missing property as the root field', () => {

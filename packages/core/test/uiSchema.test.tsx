@@ -2400,7 +2400,7 @@ describe('uiSchema', () => {
           const uiSchema: UiSchema = {};
           const formData = ['a', 'b'];
 
-          const rendered = createFormComponent({ schema, uiSchema, formData });
+          const rendered = createFormComponent({ schema, uiSchema, initialFormData: formData });
           node = rendered.node;
         });
 
@@ -2833,7 +2833,7 @@ describe('uiSchema', () => {
         ],
       };
 
-      const { node } = createFormComponent({ schema, uiSchema, formData });
+      const { node } = createFormComponent({ schema, uiSchema, initialFormData: formData });
 
       expect(node.querySelectorAll("input[placeholder='Node name']")).toHaveLength(5);
     });
@@ -2873,7 +2873,7 @@ describe('uiSchema', () => {
         tree: [{ name: 'L0', children: [{ name: 'L1', children: [] }] }],
       };
 
-      const { node } = createFormComponent({ schema, uiSchema, formData });
+      const { node } = createFormComponent({ schema, uiSchema, initialFormData: formData });
 
       const selects = node.querySelectorAll('select');
       expect(selects.length).toBeGreaterThanOrEqual(2);
@@ -3209,7 +3209,7 @@ describe('uiSchema', () => {
         a_b: { 'ui:required': false },
         a: { b: { 'ui:required': false } },
       };
-      createFormComponent({ schema, uiSchema, formData: { a: {} } });
+      createFormComponent({ schema, uiSchema, initialFormData: { a: {} } });
       expect(consoleWarnSpy).toHaveBeenCalledTimes(2);
       expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('"root_a_b" (a_b)'));
       expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('"root_a_b" (a.b)'));
@@ -3308,6 +3308,72 @@ describe('uiSchema', () => {
       expect(node.querySelector('.rjsf-field-string span.required')).toBeNull();
       await submitForm(node, user);
       expect(onSubmit).toHaveBeenCalled();
+    });
+
+    describe('a widget gets no options from the global required, ui:definitions or ui:globalOptions', () => {
+      function optionsOf(widget: 'CheckboxWidget' | 'SelectWidget' | 'TextWidget', props: Partial<NoValFormProps>) {
+        const seen: WidgetProps['options'][] = [];
+        function SpyWidget({ options }: WidgetProps) {
+          seen.push(options);
+          return null;
+        }
+        createFormComponent({ schema: { type: 'string' }, ...props, widgets: { [widget]: SpyWidget } });
+        return seen[seen.length - 1];
+      }
+
+      it('a boolean field (#5527)', () => {
+        const options = optionsOf('CheckboxWidget', {
+          schema: { type: 'object', properties: { flag: { type: 'boolean' } } },
+          uiSchema: { 'ui:globalOptions': { required: true, inline: true } },
+        });
+        expect(options).not.toHaveProperty('required');
+        expect(options).toHaveProperty('inline', true);
+      });
+
+      it("an array field's multi-select (#5527)", () => {
+        const options = optionsOf('SelectWidget', {
+          schema: {
+            type: 'object',
+            properties: { tags: { type: 'array', uniqueItems: true, items: { enum: ['a', 'b'] } } },
+          },
+          uiSchema: { 'ui:globalOptions': { required: true }, tags: { 'ui:widget': 'select' } },
+        });
+        expect(options).not.toHaveProperty('required');
+      });
+
+      it("an anyOf field's option selector (#5527)", () => {
+        const options = optionsOf('SelectWidget', {
+          schema: { type: 'object', properties: { pet: { anyOf: [{ type: 'string' }, { type: 'number' }] } } },
+          uiSchema: { 'ui:globalOptions': { required: true } },
+        });
+        expect(options).not.toHaveProperty('required');
+      });
+
+      it('a root field, which carries ui:definitions (#5527)', () => {
+        const options = optionsOf('TextWidget', { uiSchema: { 'ui:definitions': {}, 'ui:placeholder': 'p' } });
+        expect(options).not.toHaveProperty('definitions');
+      });
+
+      it('a field LayoutGridField renders (#5527)', () => {
+        const options = optionsOf('TextWidget', {
+          schema: { type: 'object', properties: { foo: { type: 'string' } } },
+          uiSchema: {
+            'ui:field': 'LayoutGridField',
+            'ui:layoutGrid': { 'ui:row': { children: ['foo'] } },
+            'ui:globalOptions': { label: false },
+          },
+        });
+        expect(options).not.toHaveProperty('globalOptions');
+        expect(options).toHaveProperty('label', false);
+      });
+
+      it('keeps a field its own ui:required as an option', () => {
+        const options = optionsOf('CheckboxWidget', {
+          schema: { type: 'object', properties: { flag: { type: 'boolean' } } },
+          uiSchema: { 'ui:globalOptions': { required: false }, flag: { 'ui:required': true } },
+        });
+        expect(options).toHaveProperty('required', true);
+      });
     });
 
     it('does not honor required set via the grid config uiProps for a cell', async () => {

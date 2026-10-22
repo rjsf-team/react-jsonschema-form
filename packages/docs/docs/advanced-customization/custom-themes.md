@@ -100,6 +100,7 @@ export default ThemeObject;
 ### Presentation
 
 A theme's **presentation** is a `ThemePresentation` declaring which parts of a field its fields and widgets draw themselves: the `label`, `description`, `errors` and `help`, each owned by the `'template'` (the `FieldTemplate`) or by the component itself (`'self'`), and `labelledBy`, how a label the template draws reaches the control.
+A component drawing its label itself says where that label sits with `labelPlacement`: `'above'` its control, as a text input's label drawn over the input, or `'beside'` it, as a checkbox's. `@rjsf/core` reads it only to lay out an array item's buttons, which line up with the item's control below a label above it, whether the template draws that label or a component declared `'above'` does; a self-drawn label left undeclared isn't taken to sit above its control. A theme whose widgets draw their label above declares it in its `default`, and `'beside'` for its checkbox, which would take that `default` otherwise.
 A widget whose control holds `false` left alone, as a checkbox or a switch does, declares `uncheckedIsFalse: true`, so a required boolean the schema lets be `false` isn't given a native `required` that would stop the browser submitting it ([#5388](https://github.com/rjsf-team/react-jsonschema-form/issues/5388)); `@rjsf/core` declares it for its `CheckboxWidget`. It describes one control, so it is declared under that widget's key: `default` and `fieldDefault` don't take it, since a blanket would also mark the `select` or `radio` a boolean can render.
 Declarations are keyed by the name a field or widget is registered under, so a wrapper registered under the same name keeps them.
 A `default` covers every part the theme's own entry for a widget leaves out, for every widget, custom ones included, so it also overrides what `@rjsf/core` declares for those parts; a `fieldDefault` covers every part a field's merged entry leaves out.
@@ -110,9 +111,10 @@ import { ThemeProps } from '@rjsf/core';
 const ThemeObject: ThemeProps = {
   widgets: myWidgets,
   presentation: {
-    // Every widget built on this library draws its own label, its checkbox its description too
-    default: { label: 'self' },
-    widgets: { CheckboxWidget: { label: 'self', description: 'self' } },
+    // Every widget built on this library draws its own label above its control, its checkbox beside it and its
+    // description too
+    default: { label: 'self', labelPlacement: 'above' },
+    widgets: { CheckboxWidget: { label: 'self', description: 'self', labelPlacement: 'beside' } },
     // This theme's template draws no label, so an `anyOf`/`oneOf` field is named by its option selector
     fields: { AnyOfField: { label: 'self' }, OneOfField: { label: 'self' } },
   },

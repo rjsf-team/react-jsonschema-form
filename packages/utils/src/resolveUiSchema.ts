@@ -1,9 +1,9 @@
-import { ANY_OF_KEY, ONE_OF_KEY, UI_OPTIONS_KEY } from './constants.ts';
-import findSchemaDefinition from './findSchemaDefinition.ts';
+import { ANY_OF_KEY, ONE_OF_KEY, REF_KEY, RJSF_REF_KEY, UI_OPTIONS_KEY } from './constants.ts';
 import isObject from './isObject.ts';
 import logOnce from './logOnce.ts';
 import mergeObjects from './mergeObjects.ts';
-import { declaredRef, resolvedFromRef } from './refOf.ts';
+import { stringKeyword } from './schema/graph/parseSchemaGraph.ts';
+import { resolveOwnRef } from './schema/retrieveSchema.ts';
 import type { FormContextType, GenericObjectType, Registry, RJSFSchema, StrictRJSFSchema, UiSchema } from './types.ts';
 
 /** Merges a `ui:definitions` entry under the local uiSchema of a field whose schema `$ref`s it. A definition is typed
@@ -16,6 +16,13 @@ function mergeDefinition<T, S extends StrictRJSFSchema, F extends FormContextTyp
   localUiSchema: UiSchema<T, S, F>,
 ): UiSchema<T, S, F> {
   return mergeObjects(definition, localUiSchema) as UiSchema<T, S, F>;
+}
+
+/** Returns the name a `ui:definitions` entry for `schema` is keyed by. The marker comes first: a schema resolved from a
+ * definition is named by the definition it came from, where a `$ref` it still holds is one nothing has followed yet.
+ */
+function definitionRef(schema: unknown): string | undefined {
+  return stringKeyword(schema, RJSF_REF_KEY) ?? stringKeyword(schema, REF_KEY);
 }
 
 /** Resolves the uiSchema for a given schema, considering `ui:definitions` stored in the registry.
@@ -43,10 +50,7 @@ export default function resolveUiSchema<
   rawLocalUiSchema: UiSchema<T, S, F> | undefined,
   registry: Pick<Registry<T, S, F>, 'rootSchema' | 'uiSchemaDefinitions'>,
 ): UiSchema<T, S, F> {
-  // The marker comes first: a schema resolved from a definition is named by the definition it came from, which is
-  // the name a `ui:definitions` entry is keyed by, where a `$ref` it still holds is one nothing has followed yet.
-  // `refOf()` in `retrieveSchema.ts` reads the same two the other way about, for the opposite reason
-  const ref = resolvedFromRef<S>(schema) ?? declaredRef<S>(schema);
+  const ref = definitionRef(schema);
   const definitions = registry.uiSchemaDefinitions;
   const definitionUiSchema = ref && definitions ? definitions[ref] : undefined;
 
@@ -71,9 +75,9 @@ export default function resolveUiSchema<
   // can read dropdown option titles at the parent level.
   if (definitions) {
     let resolvedSchema: S = schema;
-    if (ref && declaredRef<S>(schema) && !resolvedFromRef<S>(schema)) {
+    if (ref && stringKeyword(schema, REF_KEY) && !stringKeyword(schema, RJSF_REF_KEY)) {
       try {
-        resolvedSchema = findSchemaDefinition<S>(ref, registry.rootSchema);
+        resolvedSchema = resolveOwnRef<S>(schema, registry.rootSchema);
       } catch (e) {
         logOnce('could not resolve $ref in resolveUiSchema:\n', 'warn', e);
         return result;
@@ -88,8 +92,7 @@ export default function resolveUiSchema<
 
         let hasExpanded = false;
         for (let i = 0; i < schemaOptions.length; i++) {
-          const option = schemaOptions[i] as S | undefined;
-          const optionRef = resolvedFromRef<S>(option) ?? declaredRef<S>(option);
+          const optionRef = definitionRef(schemaOptions[i]);
           if (optionRef && optionRef in definitions) {
             uiSchemaArray[i] = mergeDefinition(definitions[optionRef], uiSchemaArray[i] || {});
             hasExpanded = true;

@@ -17,7 +17,7 @@ const custom: Sample = {
   uiSchema: {
     'ui:field': 'geo',
   },
-  formData: {
+  initialFormData: {
     lat: 0,
     lon: 0,
   },
