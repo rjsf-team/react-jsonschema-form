@@ -156,7 +156,7 @@ describe('compileSchemaValidatorsCode', () => {
       expect(typeof loadModule(code).root).toBe('function');
       expect(warn).toHaveBeenCalledTimes(2);
       expect(warn.mock.calls[0][0]).toMatch(
-        /entries without an \$id are left out of the precompiled module; ata needs an \$id to register one/,
+        /entries without an \$id are left out of the precompiled module; ata needs an \$id to register one, so the runtime validator rejects them too/,
       );
       expect(warn.mock.calls[1][0]).toMatch(
         /extenderFn, ataOptionsOverrides\.coerceTypes, ataOptionsOverrides\.removeAdditional cannot be carried into a precompiled validator and are ignored; the precompiled and runtime validators may disagree/,
@@ -316,11 +316,72 @@ describe('compileSchemaValidatorsCode', () => {
       expect(agree(refersTo('https://e.com/d4'), { x: 'ab' }, options)).toBe(false);
     });
 
-    test('compiles an extra with a fragment $id in, as ata registers it', () => {
-      const frag = { $id: '#frag', type: 'string' };
-      expect(compileSchemaValidatorsCode(schema, { additionalMetaSchemas: [frag] })).not.toBe(
+    test('leaves out an extra with only a fragment $id, which no $ref reaches at runtime', () => {
+      // ata keeps it under `#frag`, but `$ref: '#frag'` is read as a fragment of the referring
+      // document, so the runtime validator never applies it, from the root or a sub-schema.
+      const frag = { $id: '#frag', maxLength: 2 };
+      const form = { type: 'object', properties: { x: { type: 'string', not: { $ref: '#frag' } } } } as RJSFSchema;
+      const sub = { type: 'string', not: { $ref: '#frag' } } as RJSFSchema;
+      for (const options of [
+        { additionalMetaSchemas: [frag] },
+        { ataOptionsOverrides: { schemas: [frag] } },
+        { ataOptionsOverrides: { schemas: { 'urn:k': frag } } },
+      ]) {
+        const runtime = customizeValidator(options);
+        expect(runtime.isValid(form, { x: 'ab' }, form)).toBe(true);
+        expect(runtime.isValid(sub, 'ab' as any, form)).toBe(true);
+      }
+      expect(compileSchemaValidatorsCode(schema, { additionalMetaSchemas: [frag] })).toBe(
         compileSchemaValidatorsCode(schema),
       );
+      expect(compileSchemaValidatorsCode(schema, { ataOptionsOverrides: { schemas: [frag] } })).toBe(
+        compileSchemaValidatorsCode(schema),
+      );
+    });
+
+    test('leaves out a list entry that is not an object, with a warning', async () => {
+      // ata cannot give a boolean an $id in a list, so the runtime validator rejects it too.
+      vi.resetModules();
+      const { compileSchemaValidatorsCode: compileFresh } = await import('../src/compileSchemaValidatorsCode.ts');
+      const options = { additionalMetaSchemas: [false], ataOptionsOverrides: { schemas: [true] } } as any;
+      expect(compileFresh(schema, options)).toBe(compileFresh(schema));
+      expect(warn.mock.calls.flat().join('\n')).toMatch(/entries without an \$id are left out/);
+    });
+
+    test('registers a draft-04 id only where the entry is read as draft-04', () => {
+      // Under a draft-04 form an entry without a $schema of its own is read as draft-04 too.
+      const d4Form = { ...refersTo('urn:x'), $schema: 'http://json-schema.org/draft-04/schema#' } as RJSFSchema;
+      const inherited = { ataOptionsOverrides: { schemas: [{ id: 'urn:x', maxLength: 2 }] } };
+      expect(agree(d4Form, { x: 'abc' }, inherited)).toBe(true);
+      expect(agree(d4Form, { x: 'ab' }, inherited)).toBe(false);
+      // Elsewhere ata cannot register it: the module leaves it out with a warning instead of throwing.
+      expect(() => compileSchemaValidatorsCode(schema, inherited)).not.toThrow();
+    });
+
+    test('keeps a boolean record entry what it is', () => {
+      // rjsf's types take only objects in `schemas`; ata takes boolean schemas too.
+      const options = { ataOptionsOverrides: { schemas: { 'urn:never': false, 'urn:any': true } } } as any;
+      expect(agree(refersTo('urn:never'), { x: 'a' }, options)).toBe(true);
+      expect(agree(refersTo('urn:any'), { x: 'a' }, options)).toBe(false);
+    });
+
+    test("leaves out an extra with the $id of one of the form's schemas, which wins at runtime", () => {
+      const form = { $id: 'root', type: 'object', properties: { n: { type: 'integer' } } } as RJSFSchema;
+      const stale = { $id: 'root', type: 'object', properties: { n: { type: 'string' } } };
+      expect(compileSchemaValidatorsCode(form, { ataOptionsOverrides: { schemas: [stale] } })).toBe(
+        compileSchemaValidatorsCode(form),
+      );
+      expect(agree(form, { n: 1 }, { ataOptionsOverrides: { schemas: [stale] } })).toBe(true);
+    });
+
+    test('gives the size of a small json-schema.org document in its warning', async () => {
+      vi.resetModules();
+      const { compileSchemaValidatorsCode: compileFresh } = await import('../src/compileSchemaValidatorsCode.ts');
+      const next = { $id: 'https://json-schema.org/draft/next/schema', $vocabulary: {} };
+      compileFresh(schema, { additionalMetaSchemas: [next] });
+      const message = warn.mock.calls.flat().join('\n');
+      expect(message).toMatch(/draft\/next\/schema is compiled into the precompiled module \(\d+ bytes of JSON\)/);
+      expect(message).not.toMatch(/92 KB/);
     });
 
     test.each(shipped.flatMap(([id]) => forms(id)))(

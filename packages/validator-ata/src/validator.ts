@@ -14,7 +14,7 @@ import type { ValidationError, Validator } from 'ata-validator';
 import createAtaInstance from './createAtaInstance.ts';
 import type { RawValidationErrorsType } from './processRawValidationErrors.ts';
 import processRawValidationErrors from './processRawValidationErrors.ts';
-import { schemaList } from './schemaList.ts';
+import { isDraft04, schemaList } from './schemaList.ts';
 import type { CustomValidatorOptionsType, Localizer, SuppressDuplicateFilteringType } from './types.ts';
 
 /** `ValidatorType` implementation backed by `ata-validator`.
@@ -86,11 +86,9 @@ export default class ATAValidator<
    */
   private cachedRootSchema?: object;
 
-  /** The root that `schemasCache` was built for. */
-  private schemasFor?: object;
-
-  /** The `schemas` given to sub-schema validators for `schemasFor` (see `schemasWithRoot`). */
-  private schemasCache?: object[];
+  /** The `schemas` given to sub-schema validators, and the root they were built for (see
+   * `schemasWithRoot`). */
+  private rootSchemas?: { root: object; schemas: object[] };
 
   /** Returns a structural copy of `formData` so ata's default-applier
    * (which writes `default` values into the input object during validation)
@@ -108,19 +106,20 @@ export default class ATAValidator<
 
   /** The `schemas` given to a sub-schema's validator: the caller's own `ataOptionsOverrides.schemas`
    * and then the root, so the root wins over an entry with its `$id` and a custom meta-schema still
-   * applies to every sub-schema. A record entry under the empty key is left out: in a list it would
-   * need an empty `$id`, which ata rejects. Built once per root, so ata's caches, which are kept per
-   * object, are reused across sub-schemas.
+   * applies to every sub-schema. Each entry carries the `$id` ata registers it under (see
+   * `schemaList`), which depends on whether the root is draft-04, so the list is built per root and
+   * reused for every sub-schema of it, which also lets ata reuse its caches, kept per object. A
+   * record entry under the empty key is left out: in a list it would need an empty `$id`, which ata
+   * rejects.
    */
   private schemasWithRoot(root: object): object[] {
-    if (this.schemasFor !== root || this.schemasCache === undefined) {
-      const own = schemaList(this.options.ataOptionsOverrides?.schemas).filter(
-        (extra) => (extra as { $id?: unknown }).$id !== '',
+    if (this.rootSchemas?.root !== root) {
+      const own = schemaList(this.options.ataOptionsOverrides?.schemas, isDraft04(root, false)).filter(
+        (extra) => (extra as { $id?: unknown } | null)?.$id !== '',
       );
-      this.schemasCache = [...own, root];
-      this.schemasFor = root;
+      this.rootSchemas = { root, schemas: [...own, root] };
     }
-    return this.schemasCache;
+    return this.rootSchemas.schemas;
   }
 
   /** Returns the cached ata `Validator` for the given id, or builds and
