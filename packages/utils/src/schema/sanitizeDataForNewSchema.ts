@@ -166,8 +166,10 @@ export default function sanitizeDataForNewSchema<
   const newProperties = newSchema?.[PROPERTIES_KEY];
   // If the new schema is of type object and that object contains a list of properties
   if (newProperties) {
-    // Create an object containing root-level keys in the old schema, setting each key to undefined to remove the data
-    const removeOldSchemaData: GenericObjectType = {};
+    // Create an object containing root-level keys in the old schema, setting each key to undefined to remove the data.
+    // It and `nestedData` are without a prototype, so that a `__proto__` key is written as a plain key, and the spread
+    // into `newFormData` copies it as an own one
+    const removeOldSchemaData: GenericObjectType = Object.create(null);
     const oldProperties = oldSchema?.[PROPERTIES_KEY];
     if (oldProperties) {
       Object.keys(oldProperties).forEach((key) => {
@@ -178,7 +180,7 @@ export default function sanitizeDataForNewSchema<
     }
     const keys: string[] = Object.keys(newProperties);
     // Create a place to store nested data that will be a side-effect of the filter
-    const nestedData: GenericObjectType = {};
+    const nestedData: GenericObjectType = Object.create(null);
     keys.forEach((key) => {
       const formValue = getByPath(data, key);
       const isNewProperty = !hasByPath(oldSchema, [PROPERTIES_KEY, key]);
@@ -204,7 +206,7 @@ export default function sanitizeDataForNewSchema<
       const newSchemaTypeForKey = newKeyedSchema.type;
       // Check if the old option has the same key with the same type
       if (!oldSchemaTypeForKey || isSameType(oldSchemaTypeForKey, newSchemaTypeForKey)) {
-        if (key in removeOldSchemaData) {
+        if (Object.hasOwn(removeOldSchemaData, key)) {
           // SIDE-EFFECT: remove the undefined value for a key that has the same type between the old and new schemas
           delete removeOldSchemaData[key];
         }

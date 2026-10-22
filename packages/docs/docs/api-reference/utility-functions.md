@@ -1387,6 +1387,7 @@ The type of an `anyOf`/`oneOf` schema whose options name no type of their own is
 
 Returns the schema of the selector property of an `anyOf`/`oneOf` option, the one the options are told apart by, as it is read for the value, title and type that tell them apart.
 An option hands its properties out as written, so a selector written as a `$ref` is retrieved by `retrieve`; one written in place is read as it stands.
+Only an own property counts, so a selector named `__proto__` that the option doesn't declare gives `undefined` rather than `Object.prototype`.
 `findSelectedOptionInXxxOf()` and `LayoutMultiSchemaField` both read a selector this way, so the option one selects is the one the other lists.
 
 #### Parameters
@@ -1455,7 +1456,8 @@ A part nothing declares is drawn by the template. A widget `getWidget()` rejects
 
 ### getPropertySchema&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
-Returns the sub-schema declared for `property` in the `properties` of `schema`, falling back to an empty schema when the schema has no such property.
+Returns the sub-schema declared for `property` in the `properties` of `schema`, falling back to an empty schema when the schema has no such property, or declares it as `null`.
+Only an own property counts, so a property named like an `Object.prototype` member, such as `toString`, that the schema doesn't declare isn't read as the inherited function.
 Callers treat the properties of a schema as schemas of the same type `S`, which the `JSONSchema7` typing of `properties` cannot express, so this function owns that single assertion rather than repeating it at every lookup.
 
 #### Parameters
@@ -2859,7 +2861,7 @@ This is the lookup half of `getOptionUiSchema()`, split out for a caller that ha
 Sets `value` at `path` of `obj`, mutating and returning `obj`.
 A bare string `path` is a single literal key, not a dotted path; use [toPath()](#topath) to split a dotted path string into segments first.
 Missing intermediate containers are created: arrays when the next segment is a valid array index, plain objects otherwise, or always plain objects when `createIntermediateObjects` is true.
-A path containing a `__proto__` segment is refused and `obj` is returned unmodified, preventing prototype pollution. `constructor` and `prototype` are legal JSON Schema property names and are written normally: intermediate containers are read as own properties only, so `['constructor', 'prototype', 'x']` shadows `constructor` with a fresh object instead of reaching `Object.prototype`.
+Every key of a plain object is written as an own property, a `__proto__` segment in any position included, which is defined through [setOwn()](#setown) rather than assigned, so no write reaches the prototype setter. `constructor` and `prototype` are legal JSON Schema property names and are written normally: intermediate containers are read as own properties only, so `['constructor', 'prototype', 'x']` shadows `constructor` with a fresh object instead of reaching `Object.prototype`.
 
 #### Parameters
 
@@ -2879,6 +2881,24 @@ setByPath({}, ['a', 'b'], 1); // { a: { b: 1 } }
 setByPath({}, ['a', 0], 1); // { a: [1] }, a numeric next segment creates an array
 setByPath({}, ['a', 0], 1, true); // { a: { 0: 1 } }, createIntermediateObjects forces an object
 setByPath({}, 'a.b', 1); // { 'a.b': 1 }, a bare string is one literal key
+```
+
+### setOwn()
+
+Writes `value` at `key` of a plain object `obj` as an own, enumerable data property, mutating `obj`.
+A plain assignment to a `__proto__` key, which JSON-sourced data can hold, would reach the prototype setter and re-point `obj`'s prototype instead of adding the key, so that key is written through `Object.defineProperty`; every other key is assigned, so on an object whose prototype has a setter for the key, or that already holds the key as a non-enumerable property, it runs that setter or keeps those attributes.
+
+#### Parameters
+
+- obj: GenericObjectType - The object to write to
+- key: string | number - The key to write, a path segment's array index included
+- value: unknown - The value to store at `key`
+
+#### Example
+
+```typescript
+const data = {};
+setOwn(data, '__proto__', { x: 1 }); // data has an own __proto__ key, and its prototype is still Object.prototype
 ```
 
 ### shouldRenderOptionalField&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()

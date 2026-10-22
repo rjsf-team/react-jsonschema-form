@@ -981,6 +981,34 @@ describe('LayoutGridField', () => {
         fieldPathToId(toFieldPath('0', FIELD_PATH), arraySchemaRegistry.globalFormOptions),
       );
     });
+    describe('a tuple', () => {
+      const first: RJSFSchema = { type: 'string' };
+      const second: RJSFSchema = { type: 'number' };
+      const additional: RJSFSchema = { type: 'boolean' };
+      const tuple: RJSFSchema = { type: 'array', items: [first, second], additionalItems: additional };
+
+      test('returns the item schema at an index the tuple covers', () => {
+        expect(computeArraySchemasIfPresent(tuple, '1')).toEqual({ rawSchema: second, index: 1 });
+      });
+      test.each(['2', '3'])('returns the additionalItems schema at index %s, past the tuple', (index) => {
+        expect(computeArraySchemasIfPresent(tuple, index)).toEqual({
+          rawSchema: additional,
+          index: Number(index),
+          isAdditionalItem: true,
+        });
+      });
+      test('returns an empty additionalItems schema past the tuple, for the caller to treat as no schema', () => {
+        const open: RJSFSchema = { type: 'array', items: [first, second], additionalItems: {} };
+        expect(computeArraySchemasIfPresent(open, '3')).toEqual({ rawSchema: {}, index: 3, isAdditionalItem: true });
+      });
+      test.each<[string, RJSFSchema]>([
+        ['has no additionalItems', { type: 'array', items: [first, second] }],
+        ['allows any additional item', { type: 'array', items: [first, second], additionalItems: true }],
+        ['allows no additional item', { type: 'array', items: [first, second], additionalItems: false }],
+      ])('returns no schema past a tuple that %s', (_, open) => {
+        expect(computeArraySchemasIfPresent(open, '3')).toEqual({ rawSchema: undefined, index: 3 });
+      });
+    });
   });
   describe('getSchemaDetailsForField(), array items written as a $ref', () => {
     test('reads the options of an array item through the $ref of its items', () => {
@@ -1007,6 +1035,42 @@ describe('LayoutGridField', () => {
       expect(details.optionsInfo).toEqual({ options: expect.any(Array), hasDiscriminator: true });
       expect(details.optionsInfo?.options).toHaveLength(2);
       expect(details.isReadonly).toBe(true);
+    });
+  });
+  describe('getSchemaDetailsForField(), a tuple', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      definitions: { Flag: { type: 'boolean', readOnly: true } },
+      properties: {
+        tuple: { type: 'array', items: [{ type: 'string' }], additionalItems: { $ref: '#/definitions/Flag' } },
+      },
+    };
+    test('reads the additionalItems schema, through its $ref, at an index past the tuple', () => {
+      const details = getSchemaDetailsForField(
+        getTestRegistry(schema),
+        'tuple.2',
+        schema,
+        { tuple: ['a', true, false] },
+        FIELD_PATH,
+      );
+      expect(details.schema).toMatchObject({ type: 'boolean', readOnly: true });
+      expect(details.isReadonly).toBe(true);
+      expect(fieldPathToList(details.fieldPath)).toEqual([DEFAULT_ID, 'tuple', 2]);
+    });
+    test('reads no schema at an index past a tuple without additionalItems', () => {
+      const closed: RJSFSchema = {
+        type: 'object',
+        properties: { tuple: { type: 'array', items: [{ type: 'string' }] } },
+      };
+      const details = getSchemaDetailsForField(
+        getTestRegistry(closed),
+        'tuple.1',
+        closed,
+        { tuple: ['a', 1] },
+        FIELD_PATH,
+      );
+      expect(details.schema).toBeUndefined();
+      expect(fieldPathToList(details.fieldPath)).toEqual([DEFAULT_ID, 'tuple', 1]);
     });
   });
   describe('getSchemaDetailsForField(), blank schema', () => {
@@ -1061,6 +1125,13 @@ describe('LayoutGridField', () => {
         fieldPath,
       }); // `path` digs into `fieldPath`
       expect(retrieveSchemaSpy).toHaveBeenCalledTimes(1);
+    });
+    test('returns no schema or options when the leaf field is named like an Object.prototype member the schema lacks', () => {
+      const fieldPath = toFieldPath('toString', FIELD_PATH);
+      expect(getSchemaDetailsForField(sampleSchemaRegistry, 'toString', SAMPLE_SCHEMA, {}, FIELD_PATH)).toEqual({
+        ...NO_SCHEMA_OR_OPTIONS,
+        fieldPath,
+      });
     });
     test('returns schema, isRequired: true, isReadonly: undefined, options: undefined, and fieldPath when simple schema is used', () => {
       const path = 'ranges';
@@ -1498,6 +1569,35 @@ describe('LayoutGridField', () => {
     // Renders the uiComponent with the props and options forwarded
     const uiComponent = screen.getByTestId(LayoutGridField.TEST_IDS.uiComponent);
     expect(uiComponent).toHaveTextContent(stringifyProps(expectedProps));
+  });
+  test('renderField with render=TestRenderer for an index past a tuple without additionalItems', () => {
+    const options = { name: 'tuple.1' };
+    const props = getProps({
+      schema: { type: 'object', properties: { tuple: { type: 'array', items: [{ type: 'string' }] } } },
+      formData: { tuple: ['a'] },
+      uiSchema: { [LAYOUT_GRID_OPTION]: { ...options, render: TestRenderer } },
+    });
+    render(<LayoutGridField {...props} />);
+    expect(screen.getByTestId(LayoutGridField.TEST_IDS.uiComponent)).toBeInTheDocument();
+    expect(screen.queryByTestId(LayoutGridField.TEST_IDS.field)).not.toBeInTheDocument();
+  });
+  test.each<[string, RJSFSchema]>([
+    ['a $ref to {}', { $ref: '#/definitions/Any' }],
+    ['{}', {}],
+  ])('renderField with render=TestRenderer past a tuple whose additionalItems is %s', (_, additionalItems) => {
+    const options = { name: 'tuple.1' };
+    const props = getProps({
+      schema: {
+        type: 'object',
+        definitions: { Any: {} },
+        properties: { tuple: { type: 'array', items: [{ type: 'string' }], additionalItems } },
+      },
+      formData: { tuple: ['a', 'b'] },
+      uiSchema: { [LAYOUT_GRID_OPTION]: { ...options, render: TestRenderer } },
+    });
+    render(<LayoutGridField {...props} />);
+    expect(screen.getByTestId(LayoutGridField.TEST_IDS.uiComponent)).toBeInTheDocument();
+    expect(screen.queryByTestId(LayoutGridField.TEST_IDS.field)).not.toBeInTheDocument();
   });
   test('renderField with a memo() render via LAYOUT_GRID_OPTION and name is not provided', () => {
     const options = { myProp: true };

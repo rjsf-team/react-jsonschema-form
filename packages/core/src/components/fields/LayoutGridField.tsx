@@ -24,6 +24,7 @@ import {
   isComponentType,
   isObject,
   isPlainObject,
+  isSchemaObject,
   logOnce,
   lookupFromFormContext,
   LOOKUP_MAP_NAME,
@@ -294,14 +295,17 @@ export function findChildrenAndProps<
 /** Computes the `rawSchema` and array `index` for a `schema` and a `potentialIndex`. If the `schema` is of type
  * array, has an `ITEMS_KEY` element and `potentialIndex` represents a numeric value, the element at `ITEMS_KEY` is
  * checked to see if it is an array. If it is AND the `potentialIndex`th element is available, it is used as the
- * `rawSchema`, otherwise the last value of the element is used. If it is not, then the element is used as the
- * `rawSchema`. In either case, the numeric `index` is returned so the caller can record the path segment as a number,
- * addressing an array element rather than an object key. If the `schema` does not represent an array or the
- * `potentialIndex` is not a numeric value, then both are returned as undefined.
+ * `rawSchema`, otherwise the `additionalItems` schema is, as `ArrayField` renders the items past a tuple, flagged by
+ * `isAdditionalItem` so the caller can treat one that resolves to the empty schema as no schema, or no `rawSchema`
+ * where `additionalItems` isn't a schema. If the element is not an array, it is used as the `rawSchema`. In either
+ * case, the numeric `index` is returned so the caller can record the path segment as a number, addressing an array
+ * element rather than an object key. If the `schema` does not represent an array or the `potentialIndex` is not a
+ * numeric value, then all are returned as undefined.
  *
  * @param schema - The schema to check for an array item schema
  * @param potentialIndex - A string containing a potential index
- * @returns - An object containing the `rawSchema` and numeric `index` of an array item, otherwise both undefined
+ * @returns - An object containing the numeric `index` of an array item, its `rawSchema` where one describes it and
+ *            whether that is the `additionalItems` schema, otherwise all undefined
  */
 export function computeArraySchemasIfPresent<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S | undefined,
@@ -309,23 +313,26 @@ export function computeArraySchemasIfPresent<S extends StrictRJSFSchema = RJSFSc
 ): {
   rawSchema?: S;
   index?: number;
+  isAdditionalItem?: boolean;
 } {
   let rawSchema: S | undefined;
   let index: number | undefined;
+  let isAdditionalItem: boolean | undefined;
   if (isNumericIndex(potentialIndex) && schema && schema?.type === 'array' && ITEMS_KEY in schema) {
     index = Number(potentialIndex);
     const items = schema[ITEMS_KEY];
     if (Array.isArray(items)) {
-      if (index > items.length) {
-        rawSchema = items.at(-1) as S;
-      } else {
+      if (index < items.length) {
         rawSchema = items[index] as S;
+      } else if (isSchemaObject<S>(schema.additionalItems)) {
+        rawSchema = schema.additionalItems;
+        isAdditionalItem = true;
       }
     } else {
       rawSchema = items as S;
     }
   }
-  return { rawSchema, index };
+  return { rawSchema, index, isAdditionalItem };
 }
 
 /** Given a `dottedPath` to a field in the `initialSchema`, iterate through each individual path in the schema until
@@ -374,7 +381,7 @@ export function getSchemaDetailsForField<
     const schemaProperties = schema?.[PROPERTIES_KEY];
     const xxx = schema && getXxxOfKey<S>(schema);
     if (schemaProperties) {
-      rawSchema = (schemaProperties[part] ?? {}) as S;
+      rawSchema = getPropertySchema<S>(schema, part);
     } else if (schema && xxx) {
       // When the schema represents a oneOf/anyOf, find the selected schema for it and grab the inner part
       const selectedSchema = schemaUtils.findSelectedOptionInXxxOf(schema, part, xxx, innerData);
@@ -411,9 +418,15 @@ export function getSchemaDetailsForField<
     if (result.rawSchema) {
       // An array hands its items out as written, so items written as a `$ref` are retrieved for the item's data
       schema = schemaUtils.retrieveSchema(result.rawSchema, getByPath<T>(innerData, leafPath));
+      // An `additionalItems` that resolves to the empty schema gives no schema, as a missing one does, so the cell
+      // falls back to its `render`; the parts above the leaf treat an empty schema the same way
+      if (result.isAdditionalItem && Object.keys(schema).length === 0) {
+        schema = undefined;
+      }
     } else {
-      // Now grab the schema from the leafPath of the current schema properties
-      schema = schema?.[PROPERTIES_KEY]?.[leafPath] as S | undefined;
+      // Now grab the schema from the leafPath of the current schema properties, by own key, so a leaf named like an
+      // `Object.prototype` member that the schema doesn't declare finds no schema rather than the inherited function
+      schema = getByPath<S>(schema?.[PROPERTIES_KEY], leafPath);
       // Resolve any `$ref`s for the current schema
       schema = schema ? schemaUtils.retrieveSchema(schema) : schema;
     }
