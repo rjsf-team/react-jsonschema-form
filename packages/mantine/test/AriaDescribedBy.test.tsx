@@ -93,7 +93,7 @@ const widgetCases: [string, RJSFSchema, UiSchema?, number?][] = [
   ['file', { type: 'string', format: 'data-url' }],
   ['time', { type: 'string', format: 'time' }],
   ['date', { type: 'string', format: 'date' }],
-  ['date-time', { type: 'string', format: 'date-time' }],
+  ['date-time', { type: 'string', format: 'date-time' }, {}, 2],
   ['alt-date', { type: 'string' }, { 'ui:widget': 'alt-date' }, 3],
   ['alt-datetime', { type: 'string' }, { 'ui:widget': 'alt-datetime' }, 6],
 ];
@@ -115,25 +115,7 @@ function expectReferencesResolve(container: HTMLElement) {
 }
 
 describe('aria-describedby', () => {
-  test.each<[string, RJSFSchema, UiSchema?, number?]>([
-    ['text', { type: 'string' }],
-    ['number', { type: 'number' }],
-    ['textarea', { type: 'string' }, { 'ui:widget': 'textarea' }],
-    ['password', { type: 'string' }, { 'ui:widget': 'password' }],
-    ['select', enumSchema],
-    ['multi-select', { type: 'array', items: enumSchema, uniqueItems: true }],
-    ['checkboxes', { type: 'array', items: enumSchema, uniqueItems: true }, { 'ui:widget': 'checkboxes' }, 2],
-    ['radio', enumSchema, { 'ui:widget': 'radio' }, 2],
-    ['range', { type: 'integer' }, { 'ui:widget': 'range' }],
-    ['checkbox', { type: 'boolean' }],
-    ['color', { type: 'string', format: 'color' }],
-    ['file', { type: 'string', format: 'data-url' }],
-    ['time', { type: 'string', format: 'time' }],
-    ['date', { type: 'string', format: 'date' }],
-    ['date-time', { type: 'string', format: 'date-time' }, {}, 2],
-    ['alt-date', { type: 'string' }, { 'ui:widget': 'alt-date' }, 3],
-    ['alt-datetime', { type: 'string' }, { 'ui:widget': 'alt-datetime' }, 6],
-  ])(
+  test.each(widgetCases)(
     '%s widget describes its input by the field description, error and help',
     (_, schema, uiSchema, describedCount) => {
       expectDescribedByFieldIds(schema, uiSchema, describedCount);

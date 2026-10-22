@@ -16,6 +16,7 @@ import { Ajv2020 } from 'ajv/dist/2020.js';
 import type { PlaygroundProps } from './components/index.ts';
 import Playground from './components/index.ts';
 import Layout from './layout/index.ts';
+import mantineStyles from './themes/mantine.css?url';
 import shadcnAmethystHaze from './themes/shadcn/amethyst-haze.css?url';
 import shadcnCaffeine from './themes/shadcn/caffeine.css?url';
 import shadcnClaude from './themes/shadcn/claude.css?url';
@@ -165,7 +166,7 @@ const themes: PlaygroundProps['themes'] = {
     theme: FluentUIRCTheme,
   },
   mantine: {
-    stylesheet: '//mantine-rjsf.pages.dev/styles.css',
+    stylesheet: mantineStyles,
     theme: MantineTheme,
   },
   mui: {

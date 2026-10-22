@@ -215,5 +215,50 @@ describe('DateTimeWidget', () => {
       expect(hours).toHaveValue('10');
       expect(onChange).not.toHaveBeenCalled();
     });
+
+    test('clearable time does not commit value when cleared', async () => {
+      const onChange = vi.fn();
+      const onClearBtnClick = vi.fn();
+      renderWidget({
+        onChange,
+        value: '2024-01-01T10:30:00',
+        options: {
+          clearable: true,
+          timePickerProps: { clearButtonProps: { 'aria-label': 'clear-btn', onClick: onClearBtnClick } },
+        },
+      });
+
+      const clearButton = screen.getByRole('button', { name: 'clear-btn' });
+      await user.click(clearButton);
+
+      expect(onClearBtnClick).toHaveBeenCalled();
+      expect(onChange).not.toHaveBeenCalled();
+    });
+
+    test('time input is cleared when date input is cleared', async () => {
+      const onChange = vi.fn();
+      const props = {
+        onChange,
+        value: '2024-01-01T10:30:00',
+        options: { clearable: true, clearButtonProps: { 'aria-label': 'clear-btn' } },
+      };
+
+      const { rerender } = renderWidget(props);
+
+      const clearButton = screen.getByRole('button', { name: 'clear-btn' });
+      await user.click(clearButton);
+
+      expect(onChange).toHaveBeenCalledWith('');
+
+      rerender(
+        <MantineProvider>
+          <DateTimeWidget {...makeProps({ ...props, value: '' })} />
+        </MantineProvider>,
+      );
+
+      expect(screen.getByRole('spinbutton', { name: 'hour' })).toHaveValue('');
+      expect(screen.getByRole('spinbutton', { name: 'minute' })).toHaveValue('');
+      expect(screen.getByRole('spinbutton', { name: 'second' })).toHaveValue('');
+    });
   });
 });
