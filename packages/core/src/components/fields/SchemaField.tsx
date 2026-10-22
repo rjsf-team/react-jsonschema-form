@@ -659,8 +659,8 @@ export function useSchemaFieldPlan<
   }
   // When the option selector is an optional data control AND it does not have form data, the control is not on screen
   // yet. This is decided here rather than with the `XxxOfField` below because the fallback UI renders that same selector
-  // for the type it has pinned, and the value field it renders it within is already labelled `false`, which leaves this
-  // the only field either label can come from
+  // for the type it has pinned, within its value field, and where this field's template labels the value, the plan the
+  // value field inherits has it draw no label of its own, which leaves this the only field either label can come from
   const isOptedOut =
     fieldToRender !== undefined &&
     fieldToRender.rendersOptionSelector &&

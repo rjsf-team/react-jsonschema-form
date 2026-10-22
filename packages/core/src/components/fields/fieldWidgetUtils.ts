@@ -171,9 +171,9 @@ function hidesWidgetLabel({ label, description }: FieldPresentation): boolean {
   return label.by !== 'self';
 }
 
-/** Whether a field rendered without a plan shows its label, as the deprecated `getDisplayLabel()` decides. The one
- * place core asks it, for the deprecated props a field without a plan hands on, the fallback UI's labelling and the
- * `displayLabel` an `ArrayFieldItemTemplate` lays its toolbar out by
+/** Whether a field shows its label, as the deprecated `getDisplayLabel()` decides. The one place core asks it, for the
+ * deprecated props a field without a plan hands on and, while planning, whether the fallback UI labels its value from
+ * outside (#5581)
  *
  * @param registry - The registry's `schemaUtils` and `globalUiOptions`
  * @param schema - The field's schema
