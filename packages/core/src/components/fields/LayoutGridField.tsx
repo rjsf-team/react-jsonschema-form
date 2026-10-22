@@ -22,6 +22,7 @@ import {
   getXxxOfKey,
   hashObject,
   isComponentType,
+  isConstantSelect,
   isObject,
   isPlainObject,
   isSchemaObject,
@@ -30,6 +31,7 @@ import {
   LOOKUP_MAP_NAME,
   PROPERTIES_KEY,
   READONLY_KEY,
+  resolveUiSchema,
   toFieldPath,
   fieldPathToId,
   UI_FIELD_KEY,
@@ -40,6 +42,7 @@ import {
 import describeUnresolvedComponent from '../../describeUnresolvedComponent.ts';
 import fieldLabelForLog from '../../fieldLabelForLog.ts';
 import { isAdditionalPropertySchema, storedValue, withoutAdditionalFlag } from './fieldWidgetUtils.ts';
+import { lookUpUiField } from './namedField.ts';
 
 /** The enumeration of the three different Layout GridTemplate type values
  */
@@ -758,11 +761,32 @@ function LayoutGridFieldComponent<
         : fieldUiSchema,
     [hasDiscriminator, fieldUiSchema],
   );
+  // A field the cell names never renders, since the grid names `LayoutMultiSchemaField` over it, so it is warned about,
+  // as `MultiSchemaField` warns about an option's. Naming `SchemaField` is not: `SchemaField` reads a `ui:field` naming
+  // itself as naming no field, so a cell naming it asks for its default rendering, which for a discriminated cell is the
+  // selector, as it is for a cell naming no field, and nothing it asked for goes unrendered. `MultiSchemaField` exempts
+  // `SchemaField` for the same reason. Read as `SchemaField` reads the cell's `uiSchema`, with its `ui:definitions`
+  // entry merged beneath, so a field named there is found too
+  const namesIgnoredField = useMemo(() => {
+    if (!hasDiscriminator || !schema) {
+      return false;
+    }
+    const { field } = getUiOptions<T, S, F>(resolveUiSchema<T, S, F>(schema, fieldUiSchema, registry));
+    if (!field) {
+      return false;
+    }
+    const namedField = lookUpUiField<T, S, F>(field, fields);
+    return namedField !== fields.LayoutMultiSchemaField && namedField !== fields.SchemaField;
+  }, [hasDiscriminator, schema, fieldUiSchema, registry, fields]);
   // The cell is cleared as `ObjectField` clears an `additionalProperties` entry, see `storedValue()`, so its key and the
   // cell with it outlive a round trip through JSON. A `oneOf`/`anyOf` cell's option switch announces its key moves with
   // the value it sends, which a form takes only unchanged, and a discriminated cell's `''` would fail every option's
-  // object
-  const storesAsAdditional = isAdditionalProperty && schema !== undefined && getXxxOfKey<S>(schema) === undefined;
+  // object. A `oneOf`/`anyOf` of constants renders as a select, as an `enum` does, with no option switch
+  const storesAsAdditional =
+    isAdditionalProperty &&
+    !hasDiscriminator &&
+    schema !== undefined &&
+    (getXxxOfKey<S>(schema) === undefined || isConstantSelect<S>(schema, true));
   const onCellChange = useCallback<FieldProps<T, S, F>['onChange']>(
     (value, path, newErrorSchema, changedId) =>
       onChange(
@@ -779,6 +803,12 @@ function LayoutGridFieldComponent<
   }
 
   if (schema) {
+    if (namesIgnoredField) {
+      logOnce(
+        `ui:field for cell '${name}' in ${fieldLabelForLog(id, parentFieldPath)} is ignored, since a cell with ` +
+          'discriminated oneOf/anyOf options renders only its option selector.',
+      );
+    }
     const namePath = toPath(name);
     // The grid's own title, such as the one `ArrayField` gives an item, and a renamed `additionalProperties` key label
     // the grid, not each cell it lays out, which `SchemaField` would otherwise label by the title ahead of the cell's

@@ -67,13 +67,13 @@ function withOptionSelectorSchema<S extends StrictRJSFSchema = RJSFSchema>(
     : { ...option, [PROPERTIES_KEY]: { ...option[PROPERTIES_KEY], [selectorField]: selector } };
 }
 
-/** Computes the `enumOptions` array from the schema and options.
+/** Computes the `enumOptions` array from the schema.
  *
  * @param schema - The schema whose `oneOf`/`anyOf` holds the options
  * @param schemaUtils - The SchemaUtilsType object used to call retrieveSchema,
  * @param [uiSchema] - The optional uiSchema for the schema
  * @param [formData] - The optional formData associated with the schema
- * @returns - The list of enumOptions for the `schema` and `options`
+ * @returns - The list of enumOptions for the `schema`
  * @throws - Error when no enum options were computed
  */
 export function computeEnumOptions<
@@ -173,6 +173,6 @@ export function resolveSelectorWidget<
   const propertySchema = getPropertySchema<S>(firstOption, selectorField);
   const selectorSchema = getSchemaType<S>(propertySchema)
     ? propertySchema
-    : { ...propertySchema, type: firstOption?.type ?? (firstOption && getSchemaType<S>(firstOption)) ?? 'object' };
+    : { ...propertySchema, type: (firstOption && getSchemaType<S>(firstOption)) ?? 'object' };
   return resolveWidget<T, S, F>(selectorSchema, widget, widgets);
 }
