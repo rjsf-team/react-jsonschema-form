@@ -9,7 +9,7 @@ import { userEvent } from '@testing-library/user-event';
 // `DateInput`'s `onChange` passes a plain `YYYY-MM-DD` string (Mantine's `DateStringValue`) for the primary
 // calendar-click and preset interactions, not a `Date`; only the typed-input path (exercised in
 // DateTimeWidget.test.tsx) produces a real `Date`. Driving the real popover isn't practical in this test
-// environment, so `DateInput` and it's `inputContainer` and `TimePicker` are mocked to invoke `onChange` the
+// environment, so `DateInput` and its `inputContainer` and `TimePicker` are mocked to invoke `onChange` the
 // way the calendar-click path actually does. This lives in its own file since `vi.mock` is hoisted module-wide
 // and would affect DateTimeWidget.test.tsx's other tests, which rely on the real `DateInput`.
 vi.mock('@mantine/dates', async (importOriginal) => {
