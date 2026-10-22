@@ -75,7 +75,7 @@ exports[`format iso-date-time 1`] = `
                     class="m_d6bb0a54 mantine-TimePicker-fieldsGroup"
                   >
                     <input
-                      aria-describedby="root__error root__description root__help"
+                      aria-describedby=""
                       aria-label="hour"
                       aria-valuemax="23"
                       aria-valuemin="0"
@@ -8351,7 +8351,7 @@ exports[`single fields > format datetime 1`] = `
                     class="m_d6bb0a54 mantine-TimePicker-fieldsGroup"
                   >
                     <input
-                      aria-describedby="root__error root__description root__help"
+                      aria-describedby=""
                       aria-label="hour"
                       aria-valuemax="23"
                       aria-valuemin="0"
