@@ -122,7 +122,11 @@ describe('option selection as form state', () => {
 
     expect(node.querySelector('#root_a-key')).toBeNull();
     expect(ids(node, '#root_a')).toHaveLength(0);
-    expect(onChange.mock.lastCall?.[0].formData).not.toHaveProperty('a');
+    const { formData } = onChange.mock.lastCall?.[0] ?? {};
+    expect(formData).not.toHaveProperty('a');
+    // The defaults are B's, the option on screen: under A, which `b` fits as well, `b` is an extra key whose `null`
+    // fills it. `toEqual()` reads a key holding `undefined` as missing, so that `null` fails it
+    expect(formData).toEqual({ b: undefined });
   });
 
   it('renders a key the selected option declares once outside a Form, where the outermost field keeps the selection (#5461)', async () => {

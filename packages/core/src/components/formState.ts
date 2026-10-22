@@ -732,10 +732,22 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
   // A reset re-runs the same "initial" defaults pass a first render does, so `ui:initialValue` applies again even
   // though this instance has generated defaults before.
   const initialDefaultsGenerated = (current?.initialDefaultsGenerated ?? false) && !isReset;
+  // The defaults of a field offering options are those of the option it shows, which is the form's to keep
+  const fieldState = current && fieldStateOf(current.uiState, schemaUtils, edit?.path);
   const fill = (data: T | undefined) =>
     replaceEqualDeep(
       shareBase,
-      asFilledFormData<T>(schemaUtils.getDefaultFormState(rootSchema, data, false, initialDefaultsGenerated, uiSchema)),
+      asFilledFormData<T>(
+        schemaUtils.getDefaultFormState(
+          rootSchema,
+          data,
+          false,
+          initialDefaultsGenerated,
+          uiSchema,
+          undefined,
+          fieldState,
+        ),
+      ),
     );
   let formData = fill(inputFormData);
   const treeOf = (data: T | undefined): FieldTree<T, S, F> => ({

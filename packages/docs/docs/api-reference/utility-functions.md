@@ -3473,6 +3473,7 @@ Returns the superset of `formData` that includes the given set updated to includ
   - [initialDefaultsGenerated]: boolean - Optional flag, indicates whether or not initial defaults have been generated
   - [uiSchema]: UiSchema&lt;T, S, F> - Optional uiSchema, used to apply `ui:emptyValue` and `ui:initialValue` as defaults
   - [uiSchemaDefinitions]: UiSchemaDefinitions&lt;S, F> - Optional `ui:definitions`, defaulting to `uiSchema['ui:definitions']`; pass it explicitly when `uiSchema` is a sub-uiSchema that doesn't carry the root's own `ui:definitions`
+  - [fieldState]: FormFieldState&lt;S> - The option each field shows, by its path from `schema`, so a field offering `anyOf`/`oneOf` options that holds data computes its defaults from its shown option. Without it, or for a field holding no data yet, the option the data, or the field's `default`, matches best
 
 #### Returns
 

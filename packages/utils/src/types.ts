@@ -233,6 +233,10 @@ export interface GetDefaultFormStateProps<
    * item, a `oneOf`/`anyOf` option, `additionalProperties`, ...) that doesn't carry the root's own `ui:definitions`.
    */
   uiSchemaDefinitions?: UiSchemaDefinitions<S, F>;
+  /** Optional option each field shows, by its path from `schema`, so a field offering `anyOf`/`oneOf` options computes
+   * its defaults from its shown option. Without it, the option the data matches best
+   */
+  fieldState?: FormFieldState<S>;
 }
 
 /** The interface representing a Date object that contains an optional time */
@@ -2249,6 +2253,8 @@ export interface SchemaUtilsType<
    *          `SchemaField` applies them. Defaults to `uiSchema['ui:definitions']`; pass it explicitly when `uiSchema`
    *          is itself a sub-uiSchema (an array item, a `oneOf`/`anyOf` option, `additionalProperties`, ...) that
    *          doesn't carry the root's own `ui:definitions`.
+   * @param [fieldState] - The option each field shows, by its path from `schema`, so a field offering `anyOf`/`oneOf`
+   *        options computes its defaults from its shown option. Without it, the option the data matches best
    * @returns - The resulting `formData` with all the defaults provided
    */
   getDefaultFormState(
@@ -2258,6 +2264,7 @@ export interface SchemaUtilsType<
     initialDefaultsGenerated?: boolean,
     uiSchema?: UiSchema<T, S, F>,
     uiSchemaDefinitions?: UiSchemaDefinitions<S, F>,
+    fieldState?: FormFieldState<S>,
   ): T | T[] | null | undefined;
   /** Determines whether the combination of `schema` and `uiSchema` properties indicates that the label for the `schema`
    * should be displayed in a UI.

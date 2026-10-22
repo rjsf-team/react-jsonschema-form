@@ -4,11 +4,12 @@ import type { MockInstance } from 'vitest';
 import type {
   CustomMergeAllOf,
   DefaultFormStateBehavior,
+  FormFieldState,
   GenericObjectType,
   RJSFSchema,
   UiSchema,
 } from '../../src/index.ts';
-import { createSchemaUtils, getDefaultFormState, isObject, noop } from '../../src/index.ts';
+import { createSchemaUtils, fieldPathFromList, getDefaultFormState, isObject, noop } from '../../src/index.ts';
 import {
   AdditionalItemsHandling,
   computeDefaultBasedOnSchemaTypeAndDefaults,
@@ -9924,6 +9925,99 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         const result = ensureFormDataMatchingSchema({ validator: testValidator }, schema, schema, { a: 'y' });
         expect(Object.getPrototypeOf(result)).toBe(Object.prototype);
         expect(result).toEqual({ a: 'y' });
+      });
+    });
+
+    describe('the option a field shows, from a fieldState', () => {
+      const a: RJSFSchema = { title: 'A', properties: { a: { type: 'string', default: 'x' } } };
+      const b: RJSFSchema = { title: 'B', properties: { b: { type: 'string', default: 'y' } } };
+      /** A `fieldState` showing the option at `index` of every field it is asked about, recording each field's path */
+      const showing = (index: number) => {
+        const paths: string[] = [];
+        const fieldState: FormFieldState = {
+          selectedOption: (fieldPath) => {
+            paths.push(fieldPath);
+            return index;
+          },
+          isExpanded: () => false,
+        };
+        return { fieldState, paths };
+      };
+
+      it("computes a field's defaults from the option it shows rather than the one its data matches", () => {
+        const schema: RJSFSchema = { type: 'object', oneOf: [a, b] };
+        const { fieldState, paths } = showing(1);
+        expect(
+          getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema, formData: {}, fieldState }),
+        ).toEqual({ b: 'y' });
+        expect(paths).toEqual([fieldPathFromList([])]);
+        expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema, formData: {} })).toEqual(
+          { a: 'x' },
+        );
+        expect(
+          createSchemaUtils({ validator: testValidator }, schema).getDefaultFormState(
+            schema,
+            {},
+            false,
+            undefined,
+            undefined,
+            undefined,
+            fieldState,
+          ),
+        ).toEqual({ b: 'y' });
+      });
+
+      it('asks for each field by its path: a property, an array item, a tuple item and an additional property', () => {
+        const optionField: RJSFSchema = { type: 'object', oneOf: [a, b] };
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            o: optionField,
+            list: { type: 'array', items: optionField },
+            tuple: { type: 'array', items: [optionField] },
+          },
+          additionalProperties: optionField,
+        };
+        const { fieldState, paths } = showing(1);
+        const formData = { o: {}, list: [{}], tuple: [{}], k: {} };
+        expect(
+          getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema, formData, fieldState }),
+        ).toEqual({ o: { b: 'y' }, list: [{ b: 'y' }], tuple: [{ b: 'y' }], k: { b: 'y' } });
+        expect(paths).toEqual(
+          expect.arrayContaining([['o'], ['list', 0], ['tuple', 0], ['k']].map((path) => fieldPathFromList(path))),
+        );
+      });
+
+      it('reads an option written as a boolean as an option allowing anything', () => {
+        const schema: RJSFSchema = { type: 'object', oneOf: [true, b] };
+        const { fieldState } = showing(1);
+        expect(
+          getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema, formData: {}, fieldState }),
+        ).toEqual({ b: 'y' });
+      });
+
+      it('falls back to the option the data matches where the fieldState shows none', () => {
+        const schema: RJSFSchema = { type: 'object', oneOf: [a, b] };
+        const { fieldState } = showing(-1);
+        expect(
+          getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema, formData: {}, fieldState }),
+        ).toEqual({ a: 'x' });
+      });
+
+      it('asks nothing of a select over constants, nor of a field holding no data, which its default matches', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            kind: { oneOf: [{ const: 'p' }, { const: 'q' }] },
+            o: { type: 'object', oneOf: [a, b] },
+          },
+        };
+        const { fieldState, paths } = showing(0);
+        const formData = { kind: 'q' };
+        expect(
+          getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema, formData, fieldState }),
+        ).toEqual({ kind: 'q', o: { a: 'x' } });
+        expect(paths).toEqual([]);
       });
     });
   });
