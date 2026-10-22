@@ -15,6 +15,7 @@ import type {
 import {
   enumOptionsIsDisabled,
   getByPath,
+  getDeprecatedHandling,
   hasByPath,
   setByPath,
   setOwn,
@@ -936,20 +937,30 @@ export default function ObjectField<
         uiSchema,
         addedByAdditionalProperties ? ADDITIONAL_PROPERTIES_KEY : propertyName,
       );
-      const hidden = getUiOptions<T, S, F>(fieldUiSchema).widget === 'hidden';
+      const propertySchema = getPropertySchema<S>(schema, propertyName);
+      const propertyFormData = getByPath<T>(formData, propertyName);
+      // Resolved the way `SchemaField` resolves the property's own `hidden`, so the template and the property agree
+      const fieldUiOptions = getUiOptions<T, S, F>(
+        resolveUiSchema<T, S, F>(propertySchema, fieldUiSchema, registry),
+        globalUiOptions,
+      );
+      const hidden =
+        fieldUiOptions.widget === 'hidden' ||
+        getDeprecatedHandling<T, S, F>(schemaUtils.retrieveSchema(propertySchema, propertyFormData), fieldUiOptions) ===
+          'hide';
       const content = (
         <ObjectFieldProperty<T, S, F>
           key={getStableKey(propertyName)}
           propertyName={propertyName}
           required={isRequired<S>(schema, propertyName)}
-          schema={getPropertySchema<S>(schema, propertyName)}
+          schema={propertySchema}
           uiSchema={fieldUiSchema}
           errorSchema={getByPath(errorSchema, propertyName)}
           // Derived from the schema rather than raised on rename, so the error can't follow the property to a name that
           // is allowed, and shows without waiting for validation, which ajv8 and ata report on the object, not the key
           keyNotAllowed={addedByAdditionalProperties && getAdditionalPropertySchema<S>(schema, propertyName) === false}
           fieldPath={fieldPath}
-          formData={getByPath(formData, propertyName)}
+          formData={propertyFormData}
           handleKeyRename={handleKeyRename}
           handleRemoveProperty={handleRemoveProperty}
           addedByAdditionalProperties={addedByAdditionalProperties}

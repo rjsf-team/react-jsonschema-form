@@ -405,6 +405,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Add `data-disabled` to a disabled or read-only checkbox or radio option, so a theme can style it ([#5637](https://github.com/rjsf-team/react-jsonschema-form/pull/5637), [#5616](https://github.com/rjsf-team/react-jsonschema-form/issues/5616))
 - Add `data-display-label` and `data-has-description` to an array item whose field draws a label above its control or has a description, so a theme can line the item's buttons up with its control ([#5637](https://github.com/rjsf-team/react-jsonschema-form/pull/5637), [#5616](https://github.com/rjsf-team/react-jsonschema-form/issues/5616))
 - Fix `TitleField` rendering a `<legend>` outside a `<fieldset>`, in a layout grid's header, where it now renders a `<div class="rjsf-title">` ([#5637](https://github.com/rjsf-team/react-jsonschema-form/pull/5637), [#5616](https://github.com/rjsf-team/react-jsonschema-form/issues/5616))
+- `ObjectField` hands `ObjectFieldTemplate` `hidden: true` for a deprecated property that `SchemaField` hides through `deprecatedHandling: 'hide'`, reading the property's `ui:definitions` entry and `ui:globalOptions` as `SchemaField` does, so themes that lay out properties by `hidden` no longer give it a grid column ([#5507](https://github.com/rjsf-team/react-jsonschema-form/issues/5507))
 
 ## @rjsf/daisyui
 
