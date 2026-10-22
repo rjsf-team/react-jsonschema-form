@@ -1,23 +1,36 @@
+import type { ReactNode } from 'react';
 import { MantineProvider } from '@mantine/core';
 import type * as MantineDates from '@mantine/dates';
 import { getTestRegistry } from '@rjsf/core/testing';
 import type { WidgetProps } from '@rjsf/utils';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 // `DateInput`'s `onChange` passes a plain `YYYY-MM-DD` string (Mantine's `DateStringValue`) for the primary
 // calendar-click and preset interactions, not a `Date`; only the typed-input path (exercised in
 // DateTimeWidget.test.tsx) produces a real `Date`. Driving the real popover isn't practical in this test
-// environment, so `DateInput` is mocked to invoke `onChange` the way the calendar-click path actually does.
-// This lives in its own file since `vi.mock` is hoisted module-wide and would affect DateTimeWidget.test.tsx's
-// other tests, which rely on the real `DateInput`.
+// environment, so `DateInput` and its `inputContainer` and `TimePicker` are mocked to invoke `onChange` the
+// way the calendar-click path actually does. This lives in its own file since `vi.mock` is hoisted module-wide
+// and would affect DateTimeWidget.test.tsx's other tests, which rely on the real `DateInput`.
 vi.mock('@mantine/dates', async (importOriginal) => {
   const actual = await importOriginal<typeof MantineDates>();
   return {
     ...actual,
-    DateInput: (props: { onChange?: (value: string | null) => void }) => (
-      <button type='button' onClick={() => props.onChange?.('2024-01-15')}>
-        pick date
+    DateInput: ({
+      onChange,
+      inputContainer = (children) => children,
+    }: {
+      onChange?: (value: string | null) => void;
+      inputContainer?: (children: ReactNode) => ReactNode;
+    }) =>
+      inputContainer(
+        <button type='button' onClick={() => onChange?.('2024-01-15')}>
+          pick date
+        </button>,
+      ),
+    TimePicker: ({ onChange }: { onChange?: (value: string) => void }) => (
+      <button type='button' onClick={() => onChange?.('10:30:15')}>
+        pick time
       </button>
     ),
   };
@@ -61,5 +74,46 @@ describe('DateTimeWidget calendar-click onChange', () => {
     await user.click(getByText('pick date'));
 
     expect(onChange).toHaveBeenCalledWith(expect.stringMatching(/^2024-01-1[45]T\d{2}:\d{2}:00(?:\.\d{3})?Z$/));
+  });
+
+  test('keeps the time of the stored value when the calendar passes a date string', async () => {
+    const onChange = vi.fn();
+    render(
+      <MantineProvider>
+        <DateTimeWidget
+          {...makeProps({
+            onChange,
+            value: '2024-01-01T10:30:15',
+            schema: { type: 'string', format: 'iso-date-time' },
+          })}
+        />
+      </MantineProvider>,
+    );
+
+    await user.click(screen.getByText('pick date'));
+
+    expect(onChange).toHaveBeenCalledWith('2024-01-15T10:30:15');
+  });
+
+  test('commits the correct date-time when a time is picked before a date', async () => {
+    const onChange = vi.fn();
+    render(
+      <MantineProvider>
+        <DateTimeWidget
+          {...makeProps({
+            onChange,
+            schema: { type: 'string', format: 'iso-date-time' },
+          })}
+        />
+      </MantineProvider>,
+    );
+
+    await user.click(screen.getByText('pick time'));
+
+    expect(onChange).not.toHaveBeenCalled();
+
+    await user.click(screen.getByText('pick date'));
+
+    expect(onChange).toHaveBeenCalledWith('2024-01-15T10:30:15');
   });
 });
