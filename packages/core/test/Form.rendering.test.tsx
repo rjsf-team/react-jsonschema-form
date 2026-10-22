@@ -2113,27 +2113,45 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       const translateString = (str: TranslatableString, params?: string[]) =>
         str === TranslatableString.Value ? 'VALUE-OVERRIDE' : englishStringTranslator(str, params);
 
-      it('reaches a custom FieldTemplate as the label it is not asked to display, and as the schema title', () => {
-        const seen: { label: string; drawsLabel: boolean; title: unknown }[] = [];
-        function RecordingFieldTemplate(props: FieldTemplateProps) {
-          if (props.id === 'root_val') {
-            seen.push({ label: props.label, drawsLabel: templateDrawsLabel(props), title: props.schema.title });
+      const cases: [string, RJSFSchema, UiSchema | undefined][] = [
+        ['beneath a type selector', schema, undefined],
+        [
+          'with no type selector',
+          { type: 'object', properties: { val: { title: 'Val', type: 'string' } } },
+          { val: { 'ui:field': 'FallbackField' } },
+        ],
+      ];
+
+      it.each(cases)(
+        'reaches a custom FieldTemplate %s as the label it is not asked to display, and as the schema title',
+        (_, fieldSchema, uiSchema) => {
+          const seen: { label: string; drawsLabel: boolean; title: unknown }[] = [];
+          function RecordingFieldTemplate(props: FieldTemplateProps) {
+            if (props.id === 'root_val') {
+              seen.push({ label: props.label, drawsLabel: templateDrawsLabel(props), title: props.schema.title });
+            }
+            return <div>{props.children}</div>;
           }
-          return <div>{props.children}</div>;
-        }
-        createFormComponent({
-          schema,
-          templates: { FieldTemplate: RecordingFieldTemplate },
+          createFormComponent({
+            schema: fieldSchema,
+            uiSchema,
+            templates: { FieldTemplate: RecordingFieldTemplate },
+            translateString,
+            useFallbackUiForUnsupportedType: true,
+          });
+
+          expect(seen).toContainEqual({ label: 'Val', drawsLabel: true, title: 'Val' });
+          expect(seen).toContainEqual({ label: 'VALUE-OVERRIDE', drawsLabel: false, title: 'VALUE-OVERRIDE' });
+        },
+      );
+
+      it.each(cases)('is not rendered by the default templates %s', (_, fieldSchema, uiSchema) => {
+        const { node } = createFormComponent({
+          schema: fieldSchema,
+          uiSchema,
           translateString,
           useFallbackUiForUnsupportedType: true,
         });
-
-        expect(seen).toContainEqual({ label: 'Val', drawsLabel: true, title: 'Val' });
-        expect(seen).toContainEqual({ label: 'VALUE-OVERRIDE', drawsLabel: false, title: 'VALUE-OVERRIDE' });
-      });
-
-      it('is not rendered by the default templates', () => {
-        const { node } = createFormComponent({ schema, translateString, useFallbackUiForUnsupportedType: true });
 
         expect(screen.getByRole('textbox', { name: 'Val' })).toBeInTheDocument();
         expect(node.innerHTML).not.toContain('VALUE-OVERRIDE');

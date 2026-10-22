@@ -1472,17 +1472,41 @@ describe('SchemaField', () => {
         { 'ui:field': 'MyField', anyOf: [{ 'ui:field': null } as unknown as UiSchema, {}] },
       ],
       [
-        'an option entry below FallbackField, which applies it',
-        { 'ui:field': 'FallbackField', anyOf: [{ 'ui:field': 'OptionField' }, {}] },
+        'an option entry naming SchemaField, which renders the option the same either way',
+        { 'ui:field': 'MyField', anyOf: [{ 'ui:field': 'SchemaField' }, {}] },
       ],
     ])('does not warn for %s', (_, uiSchema) => {
       const { node } = createFormComponent({ schema: anyOfSchema, uiSchema, fields });
 
       expect(node.querySelector('#root__anyof_select')).toBeInTheDocument();
+      expect(node.querySelectorAll('input#root')).toHaveLength(1);
       expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalled();
     });
 
-    it('does not warn for a wrapper that renders SchemaField for its own data', () => {
+    it('applies an option entry below FallbackField without a warning', () => {
+      const { node } = createFormComponent({
+        schema: anyOfSchema,
+        uiSchema: { 'ui:field': 'FallbackField', anyOf: [{ 'ui:field': 'OptionField' }, {}] },
+        fields,
+      });
+
+      expect(node.querySelector('.option-field')).toBeInTheDocument();
+      expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalled();
+    });
+
+    it('does not warn for a null option, which renders no field', () => {
+      const { node } = createFormComponent({
+        schema: { anyOf: [{ type: 'null' }, { type: 'string' }] },
+        uiSchema: { 'ui:field': 'MyField', anyOf: [{ 'ui:field': 'OptionField' }, {}] },
+        initialFormData: null,
+        fields,
+      });
+
+      expect(node.querySelector('#root__anyof_select')).toBeInTheDocument();
+      expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalled();
+    });
+
+    it('warns once for an option entry below a wrapper that renders SchemaField for its own data', () => {
       function Wrapper(props: FieldProps) {
         const { SchemaField: InnerSchemaField } = props.registry.fields;
         return (
@@ -1493,12 +1517,16 @@ describe('SchemaField', () => {
       }
       const { node } = createFormComponent({
         schema: anyOfSchema,
-        uiSchema: { 'ui:field': 'Wrapper', anyOf: [{}, {}] },
-        fields: { Wrapper },
+        uiSchema: { 'ui:field': 'Wrapper', anyOf: [{ 'ui:field': 'OptionField' }, {}] },
+        fields: { Wrapper, OptionField },
       });
 
       expect(node.querySelectorAll('.wrapper')).toHaveLength(1);
-      expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalled();
+      expect(node.querySelector('.option-field')).not.toBeInTheDocument();
+      expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+        'ui:field in uiSchema.anyOf[0] for "root" is ignored, since a field is already named for that path, so the ' +
+          'option is rendered as though no ui:field were given.',
+      );
     });
   });
 

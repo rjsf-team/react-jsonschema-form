@@ -26,6 +26,7 @@ import useOptionSelection from '../../hooks/useOptionSelection.ts';
 import useSendOptionSwitch from '../../hooks/useSendOptionSwitch.ts';
 import { displaysLabel, getWidgetErrorProps, getWidgetLabelProps } from './fieldWidgetUtils.ts';
 import formDataForNewOption from './formDataForNewOption.ts';
+import { lookUpUiField } from './namedField.ts';
 import NamedFieldContext from './NamedFieldContext.ts';
 
 /** Returns the field's `uiSchema` for an option that declares none of its own, without the field's title and
@@ -128,16 +129,6 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
 
   // Then we pick the one that matches the selected option index, if one exists otherwise default to the main uiSchema
   const optionUiSchema = selectOptionUiSchema<T, S, F>(optionsUiSchema, uiSchema, selectedOption);
-  // Below a field named for this path the option renders as though no field were named, which its `SchemaField` can't
-  // tell apart from a `uiSchema` it inherits, so a field the option's own entry names is warned about here instead
-  const namedForPath = use(NamedFieldContext)?.fieldPath === fieldPath;
-  if (namedForPath && optionUiSchema !== uiSchema && getUiOptions<T, S, F>(optionUiSchema).field) {
-    logOnce(
-      `ui:field in uiSchema.${xxxOfKey}[${selectedOption}] for ${entryLabelForLog(fieldPath, globalFormOptions)} is ` +
-        'ignored, since a field is already named for that path, so the option is rendered as though no ui:field were ' +
-        'given.',
-    );
-  }
 
   const option = selectedOption >= 0 ? options[selectedOption] || null : null;
   // A parent allowing several types passes all of them on: when the fallback UI is on, it pins one type on the schema
@@ -145,6 +136,21 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   // Memoized, since the meet walks every subschema the two share. `SchemaField` retrieves the options afresh when the
   // data changes, so this only spares a render that leaves the data as it was, and the switch away from the option
   const renderedOption = useMemo(() => (option ? getRenderedOptionSchema<S>(schema, option) : null), [schema, option]);
+  const rendersOption = renderedOption !== null && renderedOption.type !== 'null';
+  // Below a field named for this path the option renders as though no field were named, which its `SchemaField` can't
+  // tell apart from a `uiSchema` it inherits, so a field the option's own entry names is warned about here instead,
+  // unless it is `SchemaField`, which renders the option the same either way
+  const namedForPath = use(NamedFieldContext)?.fieldPath === fieldPath;
+  if (rendersOption && namedForPath && optionUiSchema !== uiSchema) {
+    const optionField = getUiOptions<T, S, F>(optionUiSchema).field;
+    if (optionField && lookUpUiField<T, S, F>(optionField, fields) !== fields.SchemaField) {
+      logOnce(
+        `ui:field in uiSchema.${xxxOfKey}[${selectedOption}] for ${entryLabelForLog(fieldPath, globalFormOptions)} is ` +
+          'ignored, since a field is already named for that path, so the option is rendered as though no ui:field ' +
+          'were given.',
+      );
+    }
+  }
   // Memoized, since the option's `SchemaField` keys its own memos on the uiSchema it is handed
   const optionFieldUiSchema = useMemo(
     () => (uiSchema && optionUiSchema === uiSchema ? withoutFieldText<T, S, F>(uiSchema) : optionUiSchema),
@@ -296,11 +302,9 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
       />
     ) : undefined;
 
-  const optionsSchemaField =
-    (renderedOption && renderedOption.type !== 'null' && (
-      <SchemaFieldComponent {...props} schema={renderedOption} uiSchema={optionFieldUiSchema} />
-    )) ||
-    null;
+  const optionsSchemaField = rendersOption ? (
+    <SchemaFieldComponent {...props} schema={renderedOption} uiSchema={optionFieldUiSchema} />
+  ) : null;
 
   return (
     <MultiSchemaFieldTemplate

@@ -92,9 +92,9 @@ export const TranslatableString = {
   OptionalObjectEmptyMsg: 'No data for optional field',
   /** Label for the schema type selector, used by FallbackField */
   Type: 'Type',
-  /** Title of the value field beneath FallbackField's type selector, where the field around it labels the value. The
-   * value field then draws no label of its own, so no built-in template renders this; a custom `FieldTemplate` gets it
-   * as `label`, with `templateDrawsLabel()` false, and as `schema.title`
+  /** Title of the value field the fallback UI renders, with or without a type selector above it, where the field around
+   * it labels the value. The value field then draws no label of its own, so no built-in template renders this; a custom
+   * `FieldTemplate` gets it as `label`, with `templateDrawsLabel()` false, and as `schema.title`
    */
   Value: 'Value',
   /** Clear button title, used by IconButton */
