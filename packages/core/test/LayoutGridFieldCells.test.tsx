@@ -171,11 +171,21 @@ describe('a discriminated cell of a layout grid', () => {
     expect(screen.getByRole(role, { name: 'Simple' })).toBeInTheDocument();
   });
 
-  // A boolean option holds no selector property to type the selector by, so it is typed as an object, as for no options
+  // A boolean option holds no selector property to type the selector by, so the selector is typed by the first option
+  // that isn't one
   it('renders a radio group for a union whose first option is a boolean schema', () => {
     renderGrid(gridUiSchema(), schemaWithPick({ ...SIMPLE_ONEOF, oneOf: [false, ...SIMPLE_ONEOF_SCHEMAS] }));
 
     expect(screen.getByRole('radiogroup')).toHaveAttribute('aria-labelledby', 'root_pick__label');
+  });
+
+  it('renders the text widget it names for a union whose first option is a boolean schema', () => {
+    renderGrid(
+      gridUiSchema({ pick: { 'ui:widget': 'text' } }),
+      schemaWithPick({ ...SIMPLE_ONEOF, oneOf: [false, ...SIMPLE_ONEOF_SCHEMAS] }),
+    );
+
+    expect(screen.getByRole('textbox', { name: 'Simple' })).toBeInTheDocument();
   });
 
   it('renders a widget registered under the radio alias as its default selector', () => {
@@ -247,6 +257,30 @@ describe('a discriminated cell of a layout grid', () => {
 
     expect(templateProps.get('root_renamed_note')?.label).toBe('Note');
     expect(templateProps.get('root_renamed_pick')?.label).toBe('Simple');
+  });
+
+  it("hands neither its template nor a plain cell's the key editing of the additionalProperties entry they're in", () => {
+    const { templateProps } = renderGrid(
+      { additionalProperties: gridUiSchema() },
+      {
+        type: 'object',
+        propertyNames: { enum: ['first', 'second'] },
+        additionalProperties: schema,
+        default: { first: {} },
+      },
+    );
+
+    const entry = templateProps.get('root_first');
+    expect(entry?.onKeyRename).toBeDefined();
+    expect(entry?.propertyNamesEnum).toBeDefined();
+    ['root_first_note', 'root_first_pick'].forEach((id) => {
+      const cell = templateProps.get(id);
+      expect(cell).toBeDefined();
+      expect(cell?.onKeyRename).toBeUndefined();
+      expect(cell?.onKeyRenameBlur).toBeUndefined();
+      expect(cell?.onRemoveProperty).toBeUndefined();
+      expect(cell?.propertyNamesEnum).toBeUndefined();
+    });
   });
 
   it('resolves its own ui:required, ui:readonly and ui:disabled', () => {

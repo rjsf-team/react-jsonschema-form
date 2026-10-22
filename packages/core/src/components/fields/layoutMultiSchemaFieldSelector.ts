@@ -135,14 +135,15 @@ export function getSelectorField<
   return uiOptions.optionsSchemaSelector ?? getDiscriminatorFieldFromSchema<S>(schema);
 }
 
-/** Gets the first of the schema's options, retrieved without the data, which the selector's widget is resolved against
- * by both `SchemaField`'s plan and `LayoutMultiSchemaField`, so the two can't resolve different widgets. Its selector
- * property is retrieved as `computeEnumOptions()` retrieves it, so a selector written as a `$ref` is typed by its target
+/** Gets the first of the schema's options that isn't a boolean schema, which holds no selector property to type the
+ * selector by, retrieved without the data. Both `SchemaField`'s plan and `LayoutMultiSchemaField` resolve the selector's
+ * widget against it, so the two can't resolve different widgets. Its selector property is retrieved as
+ * `computeEnumOptions()` retrieves it, so a selector written as a `$ref` is typed by its target
  *
  * @param schema - The schema of the field
  * @param schemaUtils - The SchemaUtilsType object used to call retrieveSchema
  * @param selectorField - The name of the selector property
- * @returns - The first option, retrieved, if the schema has one that isn't a boolean schema
+ * @returns - The first option that isn't a boolean schema, retrieved, if the schema has one
  */
 export function getFirstOption<
   T = unknown,
@@ -150,8 +151,8 @@ export function getFirstOption<
   F extends FormContextType = FormContextType,
 >(schema: S, schemaUtils: SchemaUtilsType<T, S, F>, selectorField: string): S | undefined {
   const xxxOfKey = getXxxOfKey<S>(schema);
-  const [firstOption] = ((xxxOfKey && schema[xxxOfKey]) ?? []) as S[];
-  if (!isObject(firstOption)) {
+  const firstOption = (((xxxOfKey && schema[xxxOfKey]) ?? []) as S[]).find((option) => isObject(option));
+  if (!firstOption) {
     return undefined;
   }
   return withOptionSelectorSchema<S>(schemaUtils.retrieveSchema(firstOption), selectorField, (ref) =>

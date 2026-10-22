@@ -756,12 +756,19 @@ function LayoutGridFieldComponent<
     const namePath = toPath(name);
     // The grid's own title, such as the one `ArrayField` gives an item, and a renamed `additionalProperties` key label
     // the grid, not each cell it lays out, which `SchemaField` would otherwise label by the title ahead of the cell's
-    // name, and by the cell's name ahead of its own title. The grid's own `ui:autofocus` would likewise autofocus every
-    // cell, leaving the focus on whichever rendered last; a cell is focused by its own
+    // name, and by the cell's name ahead of its own title. An autofocus handed to the grid, from its own `ui:autofocus`
+    // or the array whose item it lays out, would likewise autofocus every cell, leaving the focus on whichever rendered
+    // last, so it focuses no cell, as an object's focuses none of its properties; a cell is focused by its own. The
+    // handlers and names for an `additionalProperties` entry's key edit the grid's key, not a cell's, so its cells'
+    // templates aren't handed them
     const {
       title: _gridTitle,
       wasPropertyKeyModified: _gridKeyModified,
       autofocus: _gridAutofocus,
+      onKeyRename: _onKeyRename,
+      onKeyRenameBlur: _onKeyRenameBlur,
+      onRemoveProperty: _onRemoveProperty,
+      propertyNamesEnum: _propertyNamesEnum,
       ...cellProps
     } = otherProps;
 
