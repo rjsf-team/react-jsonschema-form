@@ -2,8 +2,8 @@ import type { ReactNode } from 'react';
 import { useCallback, useMemo, useState } from 'react';
 import { Box, Group } from '@mantine/core';
 import { assignTime, DateInput, TimePicker } from '@mantine/dates';
-import type { DateStringValue } from '@mantine/dates';
-import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import type { DateStringValue, TimePickerProps } from '@mantine/dates';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   dateElementAriaLabel,
@@ -16,7 +16,13 @@ import {
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat.js';
 
-import { cleanupOptions, getDescriptionProps, getWidgetError, useInputAriaProps } from '../../utils.tsx';
+import {
+  cleanupOptions,
+  getDescriptionProps,
+  getWidgetError,
+  useInputAriaProps,
+  useShownSuccessId,
+} from '../../utils.tsx';
 
 // This plugin is needed to support the parsing of date and time values in the `DateWidget` and `DateTimeWidget`
 dayjs.extend(customParseFormat);
@@ -61,6 +67,12 @@ const withTimeOfDay = (date: DateStringValue | Date, time: string) => {
   return dayjs(assignTime(dateString, time)).toDate();
 };
 
+function hasSeconds(format: string) {
+  const unescaped = format.replace(/\[[^\]]*\]/g, '');
+  // Future-proofing in case the dayjs localized format extension is included (`LTS`)
+  return /s|LTS/.test(unescaped);
+}
+
 /** The `DateTimeInput` is a base component that used by other Date-Time widget components. When `schema.format` is
  * `date-time` (or `datetime`), the value is converted to/from a UTC ISO string instead of the naive `valueFormat`
  * string, since that format requires a timezone offset (unlike `date` and `iso-date-time`, whose timezone is
@@ -103,8 +115,10 @@ export default function DateTimeInput<
 
   const { requiresOffset, localValue } = useMemo(() => getDateTimeLocalValue(schema, value), [schema, value]);
   const themeProps = cleanupOptions(options, ['timePickerProps']);
-  const { timePickerProps } = options;
+  const { timePickerProps, size, radius, variant, clearable } = options;
+  const timePickerOptions = timePickerProps as TimePickerProps | undefined;
   const [pendingTime, setPendingTime] = useState('');
+  const [prevTimeValue, setPrevTimeValue] = useState('');
 
   const parsedValue = useMemo(
     () =>
@@ -113,7 +127,15 @@ export default function DateTimeInput<
         : dateParser(localValue, valueFormat as string),
     [requiresOffset, value, localValue, valueFormat],
   );
-  const timeValue = parsedValue ? dayjs(parsedValue).format(TIME_FORMAT) : pendingTime;
+
+  const timeValue = useMemo(
+    () => (parsedValue ? dayjs(parsedValue).format(TIME_FORMAT) : pendingTime),
+    [parsedValue, pendingTime],
+  );
+  if (prevTimeValue !== timeValue) {
+    setPrevTimeValue(timeValue);
+    setPendingTime(timeValue);
+  }
 
   const commit = useCallback(
     (nextValue: DateStringValue | Date | null) => {
@@ -164,22 +186,25 @@ export default function DateTimeInput<
   const ariaContainer = ariaDescribedByProps.inputContainer;
   const { translateString } = registry;
   const withSeconds =
-    (typeof displayFormat === 'string' && displayFormat.includes('s')) ||
-    (typeof valueFormat === 'string' && valueFormat.includes('s'));
+    (typeof displayFormat === 'string' && hasSeconds(displayFormat)) ||
+    (typeof valueFormat === 'string' && hasSeconds(valueFormat));
+  const successId = useShownSuccessId(id);
   const timeContainer = useCallback(
     (children: ReactNode) =>
       ariaContainer(
         <Group gap='xs' wrap='nowrap' align='flex-start'>
           <Box flex={1}>{children}</Box>
           <TimePicker
-            {...themeProps}
-            {...(timePickerProps as GenericObjectType | undefined)}
+            {...timePickerOptions}
+            size={size}
+            radius={radius}
+            variant={variant}
             value={timeValue}
             onChange={handleTimeChange}
             onFocus={handleFocus}
             onBlur={handleBlur}
             withSeconds={withSeconds}
-            disabled={disabled}
+            disabled={disabled || readonly}
             readOnly={readonly}
             error={!!error}
             role='group'
@@ -193,11 +218,23 @@ export default function DateTimeInput<
             secondsInputLabel={dateElementLabel(TranslatableString.SecondLabel, translateString)}
             hoursInputProps={{
               id: `${id}-time`,
-              'aria-describedby': ariaDescribedByIds(id),
+              'aria-describedby': [ariaDescribedByIds(id), successId].filter(Boolean).join(' '),
               'aria-invalid': !!error || undefined,
-              ...timePickerProps?.hoursInputProps,
+              ...timePickerOptions?.hoursInputProps,
             }}
-            popoverProps={{ withinPortal: false, ...timePickerProps?.popoverProps }}
+            popoverProps={{ withinPortal: false, ...timePickerOptions?.popoverProps }}
+            clearable={clearable}
+            clearButtonProps={
+              clearable
+                ? {
+                    ...timePickerOptions?.clearButtonProps,
+                    onClick: (event) => {
+                      handleTimeChange('');
+                      timePickerOptions?.clearButtonProps?.onClick?.(event);
+                    },
+                  }
+                : undefined
+            }
           />
         </Group>,
       ),
@@ -212,10 +249,14 @@ export default function DateTimeInput<
       readonly,
       error,
       label,
-      timePickerProps,
-      themeProps,
+      timePickerOptions,
       translateString,
       withSeconds,
+      successId,
+      size,
+      radius,
+      variant,
+      clearable,
     ],
   );
   const containerProps = useMemo(
@@ -239,6 +280,7 @@ export default function DateTimeInput<
       placeholder={placeholder || undefined}
       required={required}
       disabled={disabled || readonly}
+      readOnly={readonly}
       autoFocus={autofocus}
       label={labelValue(label || undefined, hideLabel, false)}
       onChange={handleChange}
