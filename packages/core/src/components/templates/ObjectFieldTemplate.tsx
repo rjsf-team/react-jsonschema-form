@@ -45,14 +45,6 @@ export default function ObjectFieldTemplate<
   const options = getUiOptions<T, S, F>(uiSchema);
   const { TitleFieldTemplate, DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
 
-  // For "pure union" schemas (oneOf/anyOf without properties), skip rendering the empty fieldset wrapper.
-  // The AnyOfField/OneOfField will handle rendering the union selector and selected variant's content directly.
-  const isPureUnionSchema = (schema.oneOf ?? schema.anyOf) && !schema.properties && properties.length === 0;
-
-  if (isPureUnionSchema) {
-    return null;
-  }
-
   const showOptionalDataControlInTitle = titleDrawsOptionalDataControl<T, S, F>(props);
   // Button templates are not overridden in the uiSchema
   const {

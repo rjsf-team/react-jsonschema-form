@@ -365,27 +365,6 @@ function getFieldComponent<
   };
 }
 
-/** Gets the plan the field component of a pure union is handed: it renders beside the options of the field the plan
- * was built for, which draws each of its parts, so every part drawn at all is drawn above it and it has no control of
- * its own
- *
- * @param presentation - The plan of the field rendering the options
- * @returns - The plan of the field component rendered beside them
- */
-function getPresentationBesideOptions(presentation: FieldPresentation): FieldPresentation {
-  const { label, description, help, errors, describedBy, showLabel } = presentation;
-  const above = <P extends PartPresentation>(part: P): P => (part.by === 'none' ? part : { ...part, by: 'above' });
-  return {
-    label: above(label),
-    description: above(description),
-    help: above(help),
-    errors: above(errors),
-    describedBy,
-    showLabel,
-    inherited: presentation,
-  };
-}
-
 /** Gets a part of a field's plan with the field's own drawing of it taken away, so nothing draws a part the field was
  * planned to draw itself
  *
@@ -709,7 +688,7 @@ export function useSchemaFieldPlan<
         : schema,
     [optionBeside, schema, schemaUtils, _schema, formData],
   );
-  // An object with no properties of its own besides its options, a pure union, renders an empty field beside them, so
+  // An object with no properties of its own besides its options, a pure union, has nothing to render beside them, so
   // like a withheld field it is planned as the field that renders its options, whose template labels it. One taking
   // extra keys renders its own heading and add button beside them: read joined with the option shown, as its add button
   // reads them, so an object whose every option is closed stays a pure union however its own keywords read
@@ -893,10 +872,6 @@ function SchemaFieldRender<
       },
     [fieldId, presentation, handsDownOwnParts, title, schemaDescription],
   );
-  const fieldComponentPresentation = useMemo(
-    () => (plannedAsOptions && presentation ? getPresentationBesideOptions(presentation) : presentation),
-    [plannedAsOptions, presentation],
-  );
   const isContainer = renderedComponent === fields.ObjectField || renderedComponent === fields.ArrayField;
   // Keyed on whether the options render rather than on their array, which is retrieved afresh with every change of the
   // data, so a keystroke beside the options hands the selector the same plan
@@ -924,7 +899,10 @@ function SchemaFieldRender<
   if (!uiField || !fieldToRender) {
     return withUiState(<CyclicSchemaField {...props} />);
   }
-  const { FieldComponent, optionsGiveWayToField } = fieldToRender;
+  const { optionsGiveWayToField } = fieldToRender;
+  // A pure union's object has nothing of its own beside its options, so like a withheld field it renders nothing, rather
+  // than leave each theme's `ObjectFieldTemplate` to tell that an object it is handed is one and drop its empty frame
+  const FieldComponent = plannedAsOptions ? RenderNothing : fieldToRender.FieldComponent;
 
   const { FieldTemplate, DescriptionFieldTemplate, FieldHelpTemplate, FieldErrorTemplate } = getTemplates<T, S, F>(
     registry,
@@ -995,7 +973,7 @@ function SchemaFieldRender<
       errorSchema={fieldErrorSchema as ErrorSchema}
       // The `XxxOfField` hands the field's own errors to the selected option and its selector
       {...getFieldErrorProps<T, S, F>(XxxOfField ? undefined : __errors)}
-      presentation={fieldComponentPresentation}
+      presentation={presentation}
     />
   );
   // Always wrapped, since switching between a wrapped and a bare field component remounts it and everything below it.
