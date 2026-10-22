@@ -566,9 +566,10 @@ interface FoldProps<T, S extends StrictRJSFSchema, F extends FormContextType> ex
   fieldPath?: FieldPathList;
 }
 
-/** The `fieldState` and path the child at `key` of a field is folded with, none without a `fieldState`. A child's
- * path is fixed by its key, so a child memoized across the passes of its field's fixed point keeps its path, and a
- * leaf memoized across calls offers no options to ask about
+/** The `fieldState` and path the child at `key` of a field is folded with, none without a `fieldState`. The memos key
+ * no child by its path, which they need not: a child memoized across the passes of its field's fixed point is
+ * memoized by its key, which fixes its path, except a `minItems` filler, which holds no data and so is never asked
+ * which option it shows, and a leaf memoized across calls offers no options to ask about
  */
 function childPathProps<T, S extends StrictRJSFSchema, F extends FormContextType>(
   { fieldState, fieldPath = [] }: FoldProps<T, S, F>,
@@ -1158,8 +1159,9 @@ function ownValue<V>(value: V): V {
 }
 
 /** Returns the index of the option a field offering `options` shows, as `fieldState` says, or -1 without a
- * `fieldState` or for a list of constants, which renders as one select rather than as an option field. The field picks
- * among its options as it renders them, each retrieved for its data, as `omitExtraData()` asks it.
+ * `fieldState` or for a select, an `enum` beside the options or a list of constants, which renders as one select
+ * rather than as an option field. The field picks among its options as it renders them, each retrieved for its data,
+ * as `omitExtraData()` asks it.
  */
 function shownOptionIndex<T, S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
@@ -1168,7 +1170,7 @@ function shownOptionIndex<T, S extends StrictRJSFSchema, F extends FormContextTy
   rawFormData: unknown,
   { fieldState, fieldPath = [] }: FoldProps<T, S, F>,
 ): number {
-  if (!fieldState || isConstantOptionList<S>(options)) {
+  if (!fieldState || Array.isArray(view.schema.enum) || isConstantOptionList<S>(options)) {
     return -1;
   }
   const rootSchema = view.graph.rawRoot;
@@ -1185,8 +1187,9 @@ function shownOptionIndex<T, S extends StrictRJSFSchema, F extends FormContextTy
 }
 
 /** Picks the option of a field offering `anyOf`/`oneOf` options that it shows, or else the one its data, or its
- * default, matches, and the context the option's defaults are computed in. Each option is scored where it is declared,
- * or where the merge that rebuilt its list adopted it.
+ * default, matches, and the context the option's defaults are computed in. The option a `fieldState` says the field
+ * shows is matched as the field on screen matches it, over its options retrieved for its data; otherwise each option
+ * is scored where it is declared, or where the merge that rebuilt its list adopted it.
  */
 function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
@@ -1235,8 +1238,7 @@ function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
     picksWholeOption || rawFormData === undefined
       ? -1
       : shownOptionIndex<T, S, F>(context, view, options, rawFormData, props);
-  // At most one of the two names an option, since a whole-value select is not asked which option it shows
-  const pickedIndex = equalOptionIndex !== -1 ? equalOptionIndex : shownIndex;
+  const pickedIndex = picksWholeOption ? equalOptionIndex : shownIndex;
   const index =
     pickedIndex !== -1
       ? pickedIndex

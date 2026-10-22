@@ -233,8 +233,9 @@ export interface GetDefaultFormStateProps<
    * item, a `oneOf`/`anyOf` option, `additionalProperties`, ...) that doesn't carry the root's own `ui:definitions`.
    */
   uiSchemaDefinitions?: UiSchemaDefinitions<S, F>;
-  /** Optional option each field shows, by its path from `schema`, so a field offering `anyOf`/`oneOf` options computes
-   * its defaults from its shown option. Without it, the option the data matches best
+  /** Optional option each field shows, by its path from `schema`, so a field offering `anyOf`/`oneOf` options that
+   * holds data computes its defaults from its shown option. Without it, or for a field holding no data yet, the option
+   * the data, or the field's `default`, matches best
    */
   fieldState?: FormFieldState<S>;
 }
@@ -2254,7 +2255,8 @@ export interface SchemaUtilsType<
    *          is itself a sub-uiSchema (an array item, a `oneOf`/`anyOf` option, `additionalProperties`, ...) that
    *          doesn't carry the root's own `ui:definitions`.
    * @param [fieldState] - The option each field shows, by its path from `schema`, so a field offering `anyOf`/`oneOf`
-   *        options computes its defaults from its shown option. Without it, the option the data matches best
+   *        options that holds data computes its defaults from its shown option. Without it, or for a field holding no
+   *        data yet, the option the data, or the field's `default`, matches best
    * @returns - The resulting `formData` with all the defaults provided
    */
   getDefaultFormState(

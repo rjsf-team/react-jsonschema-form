@@ -10004,19 +10004,20 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         ).toEqual({ a: 'x' });
       });
 
-      it('asks nothing of a select over constants, nor of a field holding no data, which its default matches', () => {
+      it('asks nothing of a select, over constants or an enum, nor of a field holding no data, which its default matches', () => {
         const schema: RJSFSchema = {
           type: 'object',
           properties: {
             kind: { oneOf: [{ const: 'p' }, { const: 'q' }] },
+            size: { type: 'string', enum: ['s', 'm'], oneOf: [{ minLength: 1 }, { maxLength: 1 }] },
             o: { type: 'object', oneOf: [a, b] },
           },
         };
         const { fieldState, paths } = showing(0);
-        const formData = { kind: 'q' };
+        const formData = { kind: 'q', size: 'm' };
         expect(
           getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema, formData, fieldState }),
-        ).toEqual({ kind: 'q', o: { a: 'x' } });
+        ).toEqual({ kind: 'q', size: 'm', o: { a: 'x' } });
         expect(paths).toEqual([]);
       });
     });
