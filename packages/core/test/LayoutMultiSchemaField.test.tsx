@@ -464,16 +464,29 @@ describe('LayoutMultiSchemaField', () => {
     );
   });
   test('applies ui:initialValue from registry.uiSchemaDefinitions when a new option is selected', async () => {
-    // `oneOf[1]` (`second_option_def`) is only ever reached via its own `$ref`, so `unique_to_second`'s
-    // `ui:initialValue` lives in `ui:definitions` rather than directly on the field's own uiSchema - this only
-    // resolves if onOptionChange threads the root's `ui:definitions` (via the registry) into getDefaultFormState().
+    // `unique_to_second` is reached through a `$ref` inside `oneOf[1]`, which `SchemaField`'s `resolveUiSchema()`
+    // doesn't copy into `uiSchema.oneOf[1]` the way it copies the entry for the option's own `$ref`, so its
+    // `ui:initialValue` only resolves if onOptionChange threads the root's `ui:definitions` (via the registry) into
+    // getDefaultFormState().
+    const { second_option_def: secondOption, ...definitions } = oneOfSchema.definitions;
+    const schema = {
+      ...oneOfSchema,
+      definitions: {
+        ...definitions,
+        unique_to_second_def: { type: 'integer' },
+        second_option_def: {
+          ...secondOption,
+          properties: { ...secondOption.properties, unique_to_second: { $ref: '#/definitions/unique_to_second_def' } },
+        },
+      },
+    } as RJSFSchema;
     const selectorField = 'name';
     const uiSchema = {
       [UI_OPTIONS_KEY]: { optionsSchemaSelector: selectorField },
       [UI_WIDGET_KEY]: 'select',
     };
     const baseProps = getProps({
-      schema: oneOfSchema,
+      schema,
       formData: { name: 'first_option', flag: true },
       uiSchema,
     });
@@ -483,7 +496,7 @@ describe('LayoutMultiSchemaField', () => {
       registry: {
         ...baseProps.registry,
         uiSchemaDefinitions: {
-          '#/definitions/second_option_def': { unique_to_second: { 'ui:initialValue': 42 } },
+          '#/definitions/unique_to_second_def': { 'ui:initialValue': 42 },
         },
       },
     };

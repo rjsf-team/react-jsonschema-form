@@ -93,9 +93,12 @@ export default function LayoutMultiSchemaField<
     () => computeEnumOptions(schema, schemaUtils, uiSchema, formData),
     [schema, schemaUtils, uiSchema, formData],
   );
-  const firstOption = useMemo(() => getFirstOption<T, S, F>(schema, schemaUtils), [schema, schemaUtils]);
-  const allUiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
+  const allUiOptions = useMemo(() => getUiOptions<T, S, F>(uiSchema, globalUiOptions), [uiSchema, globalUiOptions]);
   const selectorField = getSelectorField<T, S, F>(schema, allUiOptions);
+  const firstOption = useMemo(
+    () => (selectorField ? getFirstOption<T, S, F>(schema, schemaUtils, selectorField) : undefined),
+    [schema, schemaUtils, selectorField],
+  );
   const {
     widget: _widget,
     title = '',

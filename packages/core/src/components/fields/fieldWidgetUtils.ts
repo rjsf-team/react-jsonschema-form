@@ -176,7 +176,7 @@ function getLayoutSelectorWidget<
   if (!selectorField) {
     return undefined;
   }
-  const firstOption = getFirstOption<T, S, F>(schema, registry.schemaUtils);
+  const firstOption = getFirstOption<T, S, F>(schema, registry.schemaUtils, selectorField);
   return resolveSelectorWidget<T, S, F>(schema, firstOption, selectorField, uiOptions, registry.widgets).Widget;
 }
 

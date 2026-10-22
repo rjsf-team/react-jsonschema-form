@@ -751,7 +751,7 @@ const nestedSchemaRegistry = getTestRegistry(nestedSchema, REGISTRY_FIELDS, {}, 
 
 /** The list of props that will always be forwarded to fields
  */
-const FORWARDED_PROPS = ['disabled', 'autofocus', 'readonly', 'formContext'];
+const FORWARDED_PROPS = ['disabled', 'readonly', 'formContext'];
 
 /** Children for rows and columns
  */

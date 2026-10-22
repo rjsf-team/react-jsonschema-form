@@ -754,13 +754,23 @@ function LayoutGridFieldComponent<
 
   if (schema) {
     const namePath = toPath(name);
+    // The grid's own title, such as the one `ArrayField` gives an item, and a renamed `additionalProperties` key label
+    // the grid, not each cell it lays out, which `SchemaField` would otherwise label by the title ahead of the cell's
+    // name, and by the cell's name ahead of its own title. The grid's own `ui:autofocus` would likewise autofocus every
+    // cell, leaving the focus on whichever rendered last; a cell is focused by its own
+    const {
+      title: _gridTitle,
+      wasPropertyKeyModified: _gridKeyModified,
+      autofocus: _gridAutofocus,
+      ...cellProps
+    } = otherProps;
 
     return (
       <SchemaField
         data-testid={
           hasDiscriminator ? LAYOUT_GRID_FIELD_TEST_IDS.layoutMultiSchemaField : LAYOUT_GRID_FIELD_TEST_IDS.field
         }
-        {...otherProps}
+        {...cellProps}
         name={name}
         required={isRequired}
         readonly={uiReadonly}

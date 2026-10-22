@@ -60,6 +60,27 @@ export function getSelectedOption<S extends StrictRJSFSchema = RJSFSchema>(
   return options[getSelectedOptionIndex<S>(options, selectorField, value)]?.schema;
 }
 
+/** Returns the `option` with its selector property read as `getOptionSelectorSchema()` reads it, so a selector written
+ * as a `$ref` is retrieved
+ *
+ * @param option - The option, retrieved
+ * @param selectorField - The name of the selector property
+ * @param retrieve - Retrieves a selector written as a `$ref`
+ * @returns - The option, with its selector retrieved
+ */
+function withOptionSelectorSchema<S extends StrictRJSFSchema = RJSFSchema>(
+  option: S,
+  selectorField: string,
+  retrieve: (selector: S) => S,
+): S {
+  const written = option[PROPERTIES_KEY]?.[selectorField];
+  const selector = getOptionSelectorSchema<S>(option, selectorField, retrieve);
+  // The option keeps the identity `retrieveSchema()` gives it where its selector is read as written
+  return selector === undefined || selector === written
+    ? option
+    : { ...option, [PROPERTIES_KEY]: { ...option[PROPERTIES_KEY], [selectorField]: selector } };
+}
+
 /** Computes the `enumOptions` array from the schema and options.
  *
  * @param schema - The schema whose `oneOf`/`anyOf` holds the options
@@ -87,14 +108,9 @@ export function computeEnumOptions<
       if (!selectorField) {
         return option;
       }
-      const written = option[PROPERTIES_KEY]?.[selectorField];
-      const selector = getOptionSelectorSchema<S>(option, selectorField, (ref) =>
+      return withOptionSelectorSchema<S>(option, selectorField, (ref) =>
         schemaUtils.retrieveSchema(ref, getByPath(formData, selectorField)),
       );
-      // The option keeps the identity `retrieveSchema()` gives it where its selector is read as written
-      return selector === undefined || selector === written
-        ? option
-        : { ...option, [PROPERTIES_KEY]: { ...option[PROPERTIES_KEY], [selectorField]: selector } };
     });
     tempSchema = { ...schema, [xxxOfKey]: realOptions };
   }
@@ -120,20 +136,27 @@ export function getSelectorField<
 }
 
 /** Gets the first of the schema's options, retrieved without the data, which the selector's widget is resolved against
- * by both `SchemaField`'s plan and `LayoutMultiSchemaField`, so the two can't resolve different widgets
+ * by both `SchemaField`'s plan and `LayoutMultiSchemaField`, so the two can't resolve different widgets. Its selector
+ * property is retrieved as `computeEnumOptions()` retrieves it, so a selector written as a `$ref` is typed by its target
  *
  * @param schema - The schema of the field
  * @param schemaUtils - The SchemaUtilsType object used to call retrieveSchema
+ * @param selectorField - The name of the selector property
  * @returns - The first option, retrieved, if the schema has one that isn't a boolean schema
  */
 export function getFirstOption<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(schema: S, schemaUtils: SchemaUtilsType<T, S, F>): S | undefined {
+>(schema: S, schemaUtils: SchemaUtilsType<T, S, F>, selectorField: string): S | undefined {
   const xxxOfKey = getXxxOfKey<S>(schema);
   const [firstOption] = ((xxxOfKey && schema[xxxOfKey]) ?? []) as S[];
-  return isObject(firstOption) ? schemaUtils.retrieveSchema(firstOption) : undefined;
+  if (!isObject(firstOption)) {
+    return undefined;
+  }
+  return withOptionSelectorSchema<S>(schemaUtils.retrieveSchema(firstOption), selectorField, (ref) =>
+    schemaUtils.retrieveSchema(ref),
+  );
 }
 
 /** Gets the widget `LayoutMultiSchemaField` renders its option selector with, which `SchemaField` plans the field with

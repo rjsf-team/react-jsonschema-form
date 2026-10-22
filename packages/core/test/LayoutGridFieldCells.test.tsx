@@ -1,10 +1,13 @@
 import type { FieldProps, FieldTemplateProps, GenericObjectType, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { screen } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 
 import FieldTemplate from '../src/components/templates/FieldTemplate/index.ts';
 import RadioWidget from '../src/components/widgets/RadioWidget.tsx';
 import { SIMPLE_ONEOF, SIMPLE_ONEOF_SCHEMAS, withTypelessSelector } from './testData/layoutData.ts';
 import { createFormComponent, setupConsoleWarnSuppression } from './testUtils.tsx';
+
+const user = userEvent.setup();
 
 const schema: RJSFSchema = {
   type: 'object',
@@ -148,6 +151,26 @@ describe('a discriminated cell of a layout grid', () => {
     expect(screen.getByRole('combobox')).toBeInTheDocument();
   });
 
+  // An option hands its properties out as written, so the selector is typed by the schema its `$ref` names, which
+  // `getWidget()` maps the alias through
+  it.each<[string, string, RJSFSchema, string]>([
+    ['text', 'a string', { type: 'string', const: '1' }, 'textbox'],
+    ['updown', 'an integer', { type: 'integer', const: 1 }, 'spinbutton'],
+  ])('renders the %s widget it names for a selector property written as a $ref to %s', (widget, _, answer, role) => {
+    createFormComponent({
+      schema: {
+        ...schemaWithPick({
+          ...SIMPLE_ONEOF,
+          oneOf: [{ type: 'object', properties: { answer: { $ref: '#/definitions/Answer' } } }],
+        }),
+        definitions: { Answer: answer },
+      },
+      uiSchema: gridUiSchema({ pick: { 'ui:widget': widget } }),
+    });
+
+    expect(screen.getByRole(role, { name: 'Simple' })).toBeInTheDocument();
+  });
+
   // A boolean option holds no selector property to type the selector by, so it is typed as an object, as for no options
   it('renders a radio group for a union whose first option is a boolean schema', () => {
     renderGrid(gridUiSchema(), schemaWithPick({ ...SIMPLE_ONEOF, oneOf: [false, ...SIMPLE_ONEOF_SCHEMAS] }));
@@ -187,6 +210,43 @@ describe('a discriminated cell of a layout grid', () => {
     expect(templateProps.get('root_note')?.label).toBe('note');
     expect(templateProps.get('root_pick')?.label).toBe('pick');
     expect(screen.getByRole('radiogroup')).toHaveAccessibleName('pick');
+  });
+
+  it("is labelled by its property name in an array item when it has no title, as a plain cell is, not by the item's", () => {
+    const { templateProps } = renderGrid(
+      { things: { items: gridUiSchema() } },
+      {
+        type: 'object',
+        properties: {
+          things: {
+            type: 'array',
+            title: 'Things',
+            minItems: 1,
+            items: { ...schema, properties: { note: { type: 'string' }, pick: { ...SIMPLE_ONEOF, title: undefined } } },
+          },
+        },
+      },
+    );
+
+    expect(templateProps.get('root_things_0_note')?.label).toBe('note');
+    expect(templateProps.get('root_things_0_pick')?.label).toBe('pick');
+    expect(screen.getByRole('radiogroup')).toHaveAccessibleName('pick');
+  });
+
+  it("keeps its title, as a plain cell does, once the key of the additionalProperties entry it's in is renamed", async () => {
+    const { templateProps } = renderGrid(
+      { additionalProperties: gridUiSchema() },
+      { type: 'object', additionalProperties: schema },
+    );
+    await user.click(screen.getByRole('button', { name: 'Add' }));
+
+    const keyInput = screen.getByDisplayValue('newKey');
+    await user.clear(keyInput);
+    await user.type(keyInput, 'renamed');
+    await user.tab();
+
+    expect(templateProps.get('root_renamed_note')?.label).toBe('Note');
+    expect(templateProps.get('root_renamed_pick')?.label).toBe('Simple');
   });
 
   it('resolves its own ui:required, ui:readonly and ui:disabled', () => {
@@ -299,5 +359,12 @@ describe('a discriminated cell of a layout grid', () => {
     renderGrid(gridUiSchema({ pick: { 'ui:autofocus': true } }));
 
     expect(screen.getAllByRole('radio')[0]).toHaveFocus();
+  });
+
+  it("autofocuses no cell for the grid's own ui:autofocus", () => {
+    renderGrid({ ...gridUiSchema(), 'ui:autofocus': true });
+
+    expect(screen.getByRole('textbox')).not.toHaveFocus();
+    screen.getAllByRole('radio').forEach((radio) => expect(radio).not.toHaveFocus());
   });
 });
