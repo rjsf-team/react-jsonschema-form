@@ -86,6 +86,12 @@ export default class ATAValidator<
    */
   private cachedRootSchema?: object;
 
+  /** The root that `schemasCache` was built for. */
+  private schemasFor?: object;
+
+  /** The `schemas` given to sub-schema validators for `schemasFor` (see `schemasWithRoot`). */
+  private schemasCache?: object[];
+
   /** Returns a structural copy of `formData` so ata's default-applier
    * (which writes `default` values into the input object during validation)
    * doesn't leak a mutation back to the caller. RJSF probes the same data
@@ -98,6 +104,23 @@ export default class ATAValidator<
       return data;
     }
     return structuredClone(data);
+  }
+
+  /** The `schemas` given to a sub-schema's validator: the caller's own `ataOptionsOverrides.schemas`
+   * and then the root, so the root wins over an entry with its `$id` and a custom meta-schema still
+   * applies to every sub-schema. A record entry under the empty key is left out: in a list it would
+   * need an empty `$id`, which ata rejects. Built once per root, so ata's caches, which are kept per
+   * object, are reused across sub-schemas.
+   */
+  private schemasWithRoot(root: object): object[] {
+    if (this.schemasFor !== root || this.schemasCache === undefined) {
+      const own = schemaList(this.options.ataOptionsOverrides?.schemas).filter(
+        (extra) => (extra as { $id?: unknown }).$id !== '',
+      );
+      this.schemasCache = [...own, root];
+      this.schemasFor = root;
+    }
+    return this.schemasCache;
   }
 
   /** Returns the cached ata `Validator` for the given id, or builds and
@@ -113,16 +136,12 @@ export default class ATAValidator<
     // Pass the rootSchema as a sibling so `$ref` to its definitions resolves.
     // Skip when the schema itself is the root, otherwise ata sees a
     // self-referential addition.
-    const siblingRoots = this.cachedRootSchema && this.cachedRootSchema !== schema ? [this.cachedRootSchema] : [];
-    // The root goes in ahead of the caller's own `schemas`, not in place of them: replacing them
-    // dropped every schema the caller registered, a custom meta-schema too, for any form whose
-    // root differs from the schema being compiled.
-    const overrides = this.options.ataOptionsOverrides || {};
+    const root = this.cachedRootSchema && this.cachedRootSchema !== schema ? this.cachedRootSchema : undefined;
     const optionsWithSchemas = {
       ...this.options,
       ataOptionsOverrides: {
-        ...overrides,
-        ...(siblingRoots.length ? { schemas: [...siblingRoots, ...schemaList(overrides.schemas)] } : {}),
+        ...this.options.ataOptionsOverrides,
+        ...(root ? { schemas: this.schemasWithRoot(root) } : {}),
       },
     };
     const validator = createAtaInstance(schema, optionsWithSchemas);

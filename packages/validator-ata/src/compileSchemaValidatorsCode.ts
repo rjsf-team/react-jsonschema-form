@@ -3,7 +3,7 @@ import { schemaParser } from '@rjsf/utils';
 import { Validator } from 'ata-validator';
 
 import { ATA_CONFIG, COLOR_FORMAT_REGEX, DATA_URL_FORMAT_REGEX } from './createAtaInstance.ts';
-import { declaredId, schemaList } from './schemaList.ts';
+import { schemaList } from './schemaList.ts';
 import type { CustomValidatorOptionsType } from './types.ts';
 
 const warned = new Set<string>();
@@ -19,6 +19,17 @@ function warnOnce(message: string) {
   }
 }
 
+/** The `$id` ata registers an extra schema under, or `undefined` where it registers none.
+ * `addSchema`, which takes `additionalMetaSchemas`, needs a non-empty `$id`; the `schemas` option
+ * also takes a draft-04 `id`. A fragment `$id` such as `#frag` counts in both. */
+function registeredId(schema: object, fromSchemasOption: boolean) {
+  const { $id, id } = schema as { $id?: unknown; id?: unknown };
+  if (typeof $id === 'string' && $id !== '') {
+    return $id;
+  }
+  return fromSchemasOption && typeof id === 'string' && id !== '' ? id : undefined;
+}
+
 /** Compiles a schema into a precompiled validator module. ata's
  * `bundleStandalone` emits `module.exports = [fn, ...]`, one validator per
  * schema in order, where each `fn(data)` returns `{ valid, errors }`. This wraps
@@ -27,11 +38,11 @@ function warnOnce(message: string) {
  * the schemas so the precompiled validator can look each one up.
  *
  * `customFormats` (as RegExps or pattern strings) and `ataOptionsOverrides` are passed to
- * ata. `additionalMetaSchemas` and `ataOptionsOverrides.schemas` that have an `$id` are
- * compiled into the module as the runtime validator ends up with them (a later one replacing an
- * earlier one with the same `$id`), so a custom meta-schema named in `$schema` applies there too.
- * An official json-schema.org meta-schema passed in explicitly is compiled in as well, with a
- * `console.warn`, since ata already ships them and one adds about 92 KB for draft-07's.
+ * ata. `additionalMetaSchemas` and `ataOptionsOverrides.schemas` are compiled into the module
+ * under the `$id` ata registers each by, as the runtime validator ends up with them (a later one
+ * replacing an earlier one with the same `$id`), so a custom meta-schema named in `$schema`
+ * applies there too. A json-schema.org meta-schema passed in is compiled in as well, with a
+ * `console.warn`, since one adds about 92 KB for draft-07's and ata ships the official ones.
  * Extra schemas without an `$id` are left out with a `console.warn`, as ata requires one.
  * A few options cannot be carried into a standalone module: `extenderFn` and the
  * `ataOptionsOverrides` keys `coerceTypes`, `removeAdditional` and `keywords`. Those are left
@@ -58,39 +69,31 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
     coerceTypes,
     removeAdditional,
     keywords,
-    schemas: extraSchemas = {},
+    schemas: extraSchemas,
     engine: _engine,
     ...carried
   } = ataOptionsOverrides;
-  // Extra schemas with an `$id` go into the bundle after the form's own schemas, so a custom
-  // meta-schema or a `$ref` between them resolves there too. They get no entry in the exported map.
-  // ata registers a record entry under its key and under its own `$id`, so both are compiled.
-  // In the order the runtime validator registers them: `ataOptionsOverrides.schemas` when it is
-  // built, then each of `additionalMetaSchemas` through `addSchema`.
-  const extras = [...schemaList(extraSchemas), ...additionalMetaSchemas];
-  const withId = extras.filter((extra) => declaredId(extra) !== undefined);
-  // Every document the runtime validator ends up with goes into the module, so the two resolve the
-  // same documents by construction. A later document replaces an earlier one with the same `$id`
-  // there, so only the last one of each `$id` is kept.
-  const winners = new Map<string, object>();
-  for (const extra of withId) {
-    const id = (extra as { $id: string }).$id;
-    winners.delete(id);
-    winners.set(id, extra);
-  }
+  // Extra schemas go into the bundle after the form's own schemas, so a custom meta-schema or a
+  // `$ref` between them resolves there too. They get no entry in the exported map. Every document
+  // the runtime validator ends up with goes in, so the two resolve the same documents by
+  // construction: `ataOptionsOverrides.schemas` and then `additionalMetaSchemas`, each under the
+  // `$id` ata registers it by, the last one of each `$id` replacing the others.
+  const extras = [
+    ...schemaList(extraSchemas).map((extra) => [registeredId(extra, true), extra] as const),
+    ...additionalMetaSchemas.map((extra) => [registeredId(extra, false), extra] as const),
+  ];
+  const winners = new Map(extras.filter((entry): entry is readonly [string, object] => entry[0] !== undefined));
   const bundled = [...winners.values()];
-  // An official meta-schema passed in explicitly is compiled in too, about 92 KB for draft-07's.
-  // ata ships its own copies, so one is only worth passing when it has been changed.
   for (const id of winners.keys()) {
     if (/^https?:\/\/json-schema\.org\//.test(id)) {
       warnOnce(
-        `@rjsf/validator-ata: ${id} is compiled into the precompiled module (about 92 KB for draft-07's); ata already ships the official meta-schemas, so pass one only if you changed it`,
+        `@rjsf/validator-ata: ${id} is compiled into the precompiled module, about 92 KB for draft-07's. ata already ships the draft-04, draft-06, draft-07, 2019-09 and 2020-12 meta-schemas, so an unchanged copy of one of those does not need to be passed`,
       );
     }
   }
-  if (withId.length < extras.length) {
+  if (extras.some(([id]) => id === undefined)) {
     warnOnce(
-      '@rjsf/validator-ata: additionalMetaSchemas and ataOptionsOverrides.schemas entries without an $id are ignored; ata requires an $id, so customizeValidator() throws for them',
+      '@rjsf/validator-ata: additionalMetaSchemas and ataOptionsOverrides.schemas entries without an $id are left out of the precompiled module; ata needs an $id to register one',
     );
   }
   const dropped = [
