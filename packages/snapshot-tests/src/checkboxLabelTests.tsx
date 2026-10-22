@@ -58,26 +58,29 @@ export function checkboxLabelTests(
         { 'ui:widget': 'CheckboxWidget' },
         { CheckboxWidget: CheckboxWrapper },
       ],
-    ])('has the checkbox draw the label and the description once, named by %s', (_, agreeUiSchema, widgets) => {
-      const plans = new Map<string, FieldPresentation | undefined>();
-      function RecordingFieldTemplate(props: FieldTemplateProps) {
-        plans.set(props.id, props.presentation);
-        return <FieldTemplate {...props} />;
-      }
-      const { container } = render(
-        <Form
-          schema={schema}
-          uiSchema={{ agree: agreeUiSchema }}
-          widgets={widgets}
-          templates={{ FieldTemplate: RecordingFieldTemplate }}
-          validator={validator}
-        />,
-      );
+    ])(
+      'draws the label and the description once, the checkbox drawing the label, named by %s',
+      (_, agreeUiSchema, widgets) => {
+        const plans = new Map<string, FieldPresentation | undefined>();
+        function RecordingFieldTemplate(props: FieldTemplateProps) {
+          plans.set(props.id, props.presentation);
+          return <FieldTemplate {...props} />;
+        }
+        const { container } = render(
+          <Form
+            schema={schema}
+            uiSchema={{ agree: agreeUiSchema }}
+            widgets={widgets}
+            templates={{ FieldTemplate: RecordingFieldTemplate }}
+            validator={validator}
+          />,
+        );
 
-      expectOneLabelAndDescription(container);
-      expect(plans.get('root_agree')?.label.by).toBe('self');
-      expect(plans.get('root_agree')?.description.by).toBe(descriptionBy);
-    });
+        expectOneLabelAndDescription(container);
+        expect(plans.get('root_agree')?.label.by).toBe('self');
+        expect(plans.get('root_agree')?.description.by).toBe(descriptionBy);
+      },
+    );
 
     test('draws the label and the description once, named by an unregistered wrapper passed as a component', () => {
       const { container } = render(

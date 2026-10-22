@@ -3,7 +3,6 @@ import type { FormProps } from '@rjsf/core';
 import type { UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
-import type { MockInstance } from 'vitest';
 
 /** Pins that a field's own `ui:field` naming `FallbackField` or nothing leaves the fallback UI's description where the
  * theme draws it with no `ui:field` at all, rather than moving it between the template above the type selector and the
@@ -15,14 +14,19 @@ import type { MockInstance } from 'vitest';
 export function fallbackDescriptionTests(Form: ComponentType<FormProps>, descriptionAbove: boolean) {
   describe("the fallback UI's description, however its ui:field is spelled (#5389)", () => {
     // A `ui:field` naming nothing warns that no such field is registered. `setupConsoleWarnSuppression()` lives in the
-    // repo's `testing/` directory, which this published package can't import. Only this spy is restored, so a spy the
-    // caller's file installs for every test survives these
-    let warnSpy: MockInstance;
+    // repo's `testing/` directory, which this published package can't import. `vi.spyOn()` hands back a spy the caller's
+    // file already installed, and restoring that would remove it for the caller's later tests, so whatever
+    // `console.warn` was is put back as it was
+    let warn: typeof console.warn;
     beforeEach(() => {
-      warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+      // oxlint-disable-next-line no-console
+      warn = console.warn;
+      // oxlint-disable-next-line no-console
+      console.warn = () => undefined;
     });
     afterEach(() => {
-      warnSpy.mockRestore();
+      // oxlint-disable-next-line no-console
+      console.warn = warn;
     });
 
     test.each<[string, UiSchema]>([
