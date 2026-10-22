@@ -4720,6 +4720,23 @@ describe('oneOf', () => {
     expect(node.querySelector('.multi')).toHaveAttribute('data-id', 'root_foo');
   });
 
+  it("renders the field's own ui:MultiSchemaFieldTemplate", () => {
+    function OwnMultiSchemaFieldTemplate({ selector, optionSchemaField }: MultiSchemaFieldTemplateProps) {
+      return (
+        <div className='own-multi'>
+          {selector}
+          {optionSchemaField}
+        </div>
+      );
+    }
+    const { node } = createFormComponent({
+      schema: { type: 'object', properties: { foo: { oneOf: [{ type: 'string' }, { type: 'number' }] } } },
+      uiSchema: { foo: { 'ui:MultiSchemaFieldTemplate': OwnMultiSchemaFieldTemplate } },
+    });
+
+    expect(node.querySelector('.own-multi select#root_foo__oneof_select')).toBeInTheDocument();
+  });
+
   it.each([
     ['rendered beside its selector', 'root_XxxOf__add'],
     ['rendered as the selected option', 'root__add'],

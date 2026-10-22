@@ -247,7 +247,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   );
 
   const { SchemaField: SchemaFieldComponent } = fields;
-  const { MultiSchemaFieldTemplate } = getTemplates<T, S, F>(registry);
+  const { MultiSchemaFieldTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   const isOptionalRender = shouldRenderOptionalField<T, S, F>(registry, schema, required, uiSchema, fieldPath);
   const hasFormData = isFormDataAvailable<T>(formData);
 
@@ -292,6 +292,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
         errorSchema={fieldErrorSchema}
         value={selectedOption >= 0 ? selectedOption : undefined}
         options={{ enumOptions, ...uiOptions }}
+        uiSchema={uiSchema}
         registry={registry}
         placeholder={placeholder}
         autocomplete={autocomplete}

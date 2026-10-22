@@ -43,8 +43,10 @@ export default function getDisplayLabel<
   const uiOptions = getUiOptions<T, S, F>(uiSchema, globalOptions);
   let displayLabel = uiBooleanOption(uiOptions.label) ?? true;
   if (displayLabel) {
-    // The label follows the field `SchemaField` renders: a `CheckboxWidget` on a `['number', 'boolean']` is a boolean's
-    const schemaType = getFieldTypeForWidget<S>(schema, uiOptions.widget);
+    // The label follows the field `SchemaField` renders: a `CheckboxWidget` on a `['number', 'boolean']` is a boolean's.
+    // Only the field's own `ui:widget` picks that field, so a `widget` in `globalOptions` is left out
+    const { widget } = getUiOptions<T, S, F>(uiSchema);
+    const schemaType = getFieldTypeForWidget<S>(schema, widget);
     const addedByAdditionalProperty = Boolean((schema as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG]);
     // A schema handed in as written holds a select's constants as `$ref`s, so they are read resolved
     const isWholeValue = () =>
@@ -72,7 +74,7 @@ export default function getDisplayLabel<
     // Under a plan, `getPresentationDeclaration()` finds the widget by its alias, its key or the component itself, and
     // its declaration, not this name match, says who draws the field's label. One layout decision under a plan asks
     // this: whether the fallback UI's template or its value field draws the label (#5581)
-    if (schemaType === 'boolean' && (!uiOptions.widget || uiOptions.widget === DEFAULT_BOOLEAN_WIDGET)) {
+    if (schemaType === 'boolean' && (!widget || widget === DEFAULT_BOOLEAN_WIDGET)) {
       displayLabel = false;
     }
     if (uiSchema[UI_FIELD_KEY]) {

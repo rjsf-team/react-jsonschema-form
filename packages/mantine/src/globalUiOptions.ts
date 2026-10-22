@@ -6,6 +6,8 @@ import type {
   UiSchema,
 } from '@rjsf/utils';
 
+import type { FieldWrapperOptionKey } from './utils.tsx';
+
 /** The options this theme reads from `ui:globalOptions`, beyond the ones RJSF reads */
 export interface MantineGlobalUiOptionsKeys {
   /** The number of columns every object's `ObjectFieldTemplate` lays its properties out in, as in its `ui:options` */
@@ -16,12 +18,28 @@ export interface MantineGlobalUiOptionsKeys {
   gridVerticalSpacing?: MantineSpacing;
 }
 
+/** The option names a user's extension may not reuse: RJSF's, the theme's own, and the ones its widgets read that
+ * RJSF doesn't reserve, since every field hands its widget the extension keys a form declares.
+ * `useFieldWrapperProps()` and the aria hooks read `wrapperProps` and the `InputWrapper` options, such as `size` and
+ * `labelProps`, `RangeWidget` reads `thumbProps` and `thumbLabel`, and `DateWidget` and `DateTimeWidget` read
+ * `valueFormat` and `displayFormat`
+ */
+type MantineReservedUiOptionName =
+  | ReservedUiOptionName
+  | keyof MantineGlobalUiOptionsKeys
+  | FieldWrapperOptionKey
+  | 'wrapperProps'
+  | 'thumbProps'
+  | 'thumbLabel'
+  | 'valueFormat'
+  | 'displayFormat';
+
 /** The `ui:globalOptions` this theme reads, plus a user's own `UserExtensions` */
 export type MantineGlobalUISchemaOptions<
-  UserExtensions extends GlobalUISchemaOptionsExtensions<
-    UserExtensions,
-    ReservedUiOptionName | keyof MantineGlobalUiOptionsKeys
-  > = Record<never, never>,
+  UserExtensions extends GlobalUISchemaOptionsExtensions<UserExtensions, MantineReservedUiOptionName> = Record<
+    never,
+    never
+  >,
 > = ThemeGlobalUISchemaOptions<MantineGlobalUiOptionsKeys, UserExtensions>;
 
 /** A `UiSchema` whose `ui:options` and `ui:globalOptions` are known to carry the theme's grid options, and whose
@@ -31,10 +49,10 @@ export type MantineGlobalUISchemaOptions<
  * erases every named member.
  */
 export type MantineUiSchema<
-  UserExtensions extends GlobalUISchemaOptionsExtensions<
-    UserExtensions,
-    ReservedUiOptionName | keyof MantineGlobalUiOptionsKeys
-  > = Record<never, never>,
+  UserExtensions extends GlobalUISchemaOptionsExtensions<UserExtensions, MantineReservedUiOptionName> = Record<
+    never,
+    never
+  >,
 > = UiSchema & {
   'ui:options'?: UiSchema['ui:options'] & MantineGlobalUiOptionsKeys;
   'ui:globalOptions'?: MantineGlobalUISchemaOptions<UserExtensions>;

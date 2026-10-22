@@ -22,9 +22,11 @@ import type {
   ControlAttributes,
   FormContextType,
   GenericObjectType,
+  Registry,
   ReservedUiOptionName,
   RJSFSchema,
   StrictRJSFSchema,
+  UiSchema,
   WidgetProps,
 } from '@rjsf/utils';
 import {
@@ -33,6 +35,7 @@ import {
   getErrorsToDraw,
   getGroupAttributes,
   getTemplates,
+  getUiOptions,
   getWidgetDescription,
   hasWidgetErrors,
   isLabelledByTemplate,
@@ -179,20 +182,36 @@ type CleanedOptions<T> = {
 const noExtraKeys: ReadonlySet<string> = new Set();
 
 /** Leaves out of a widget's `options` the ones rjsf reads, so that the rest, Mantine's own props, can be spread onto
- * its Mantine component
+ * its Mantine component. A key of the registry's `globalUiOptions` is left out too unless the field sets it itself:
+ * every field hands its widget the extension keys a form declares, which are meant for the user's own components
+ * rather than Mantine's, while a field's own option of the same name is a Mantine prop like any other
  *
  * @param options - The widget's options
+ * @param source - The widget's `registry`, whose `globalUiOptions` are left out, and its `uiSchema`, whose own options
+ *   are kept
  * @param [extraKeys] - Further keys to leave out, as a `Set` or an array
- * @returns - The options that aren't rjsf's or in `extraKeys`
+ * @returns - The options that aren't rjsf's, a global one the field doesn't set or in `extraKeys`
  */
-export function cleanupOptions<T extends object>(
-  options: T,
+export function cleanupOptions<
+  O extends object,
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
+  options: O,
+  { registry, uiSchema }: { registry: Pick<Registry<T, S, F>, 'globalUiOptions'>; uiSchema?: UiSchema<T, S, F> },
   extraKeys: ReadonlySet<string> | readonly string[] = noExtraKeys,
-): CleanedOptions<T> {
+): CleanedOptions<O> {
   const extraKeySet = 'has' in extraKeys ? extraKeys : new Set(extraKeys);
+  const { globalUiOptions } = registry;
+  const ownOptions = globalUiOptions ? getUiOptions<T, S, F>(uiSchema) : {};
   const result: GenericObjectType = {};
   for (const key in options) {
-    if (!strippedOptionNames.has(key) && !extraKeySet.has(key)) {
+    if (
+      !strippedOptionNames.has(key) &&
+      !extraKeySet.has(key) &&
+      !(globalUiOptions && Object.hasOwn(globalUiOptions, key) && !Object.hasOwn(ownOptions, key))
+    ) {
       result[key] = options[key];
     }
   }
@@ -503,7 +522,7 @@ export function useHiddenTitle(
 export type OwnKeys<P, Base> = Exclude<keyof P, keyof Base>;
 
 /** The `InputWrapper` options a widget's options can set; rjsf renders the title, description and errors itself */
-type FieldWrapperOptionKey = Exclude<
+export type FieldWrapperOptionKey = Exclude<
   OwnKeys<InputWrapperProps, BoxProps & StylesApiProps<InputWrapperFactory> & ElementProps<'div'>>,
   `__${string}` | 'label' | 'description' | 'error' | 'required'
 >;

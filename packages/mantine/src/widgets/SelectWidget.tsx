@@ -58,7 +58,7 @@ export default function SelectWidget<
     () => enumOptionsDomValues<S>(enumOptions, optionValueFormat),
     [enumOptions, optionValueFormat],
   );
-  const themeProps = cleanupOptions(options);
+  const themeProps = cleanupOptions(options, props);
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
 
   const handleChange = useCallback(

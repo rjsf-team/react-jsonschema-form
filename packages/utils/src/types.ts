@@ -695,8 +695,9 @@ type OverridableTemplateName = Exclude<
  * registry hands an extension's keys to every field along with RJSF's own, so one of these names would act as the
  * option RJSF reads per field. `ui:fieldReplacesAnyOrOneOf` is among them, since `getUiOptions()` returns it as an
  * option too, and so is `enumOptions`, which a field computes and hands its widget beside the options, every template
- * `getTemplates()` reads from a field's options, the ones `ui:options` doesn't declare included, and every option RJSF's
- * widgets read that `ui:options` doesn't declare.
+ * `getTemplates()` reads from a field's options, the ones `ui:options` doesn't declare included, and every option
+ * `@rjsf/core`'s widgets read that `ui:options` doesn't declare. A theme whose widgets read more lists them in the
+ * `Reserved` its `<Theme>GlobalUISchemaOptions` checks a user's extension against.
  */
 export type ReservedUiOptionName =
   | keyof UIOptionsDeclaredType

@@ -76,7 +76,7 @@ export default function DateTimeInput<
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
 
   const { requiresOffset, localValue } = useMemo(() => getDateTimeLocalValue(schema, value), [schema, value]);
-  const themeProps = cleanupOptions(options);
+  const themeProps = cleanupOptions(options, props);
 
   const handleChange = useCallback(
     (nextValue: DateStringValue | null) => {

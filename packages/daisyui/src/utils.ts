@@ -19,10 +19,10 @@ export type DaisyUiSchema<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
-  UserExtensions extends GlobalUISchemaOptionsExtensions<
-    UserExtensions,
-    ReservedUiOptionName | keyof DaisyGlobalUiOptionsKeys
-  > = Record<never, never>,
+  UserExtensions extends GlobalUISchemaOptionsExtensions<UserExtensions, DaisyReservedUiOptionName> = Record<
+    never,
+    never
+  >,
 > = UiSchema<T, S, F> & {
   'ui:options'?: DaisyUiOptions<T, S, F>;
   'ui:globalOptions'?: DaisyGlobalUISchemaOptions<UserExtensions>;
@@ -37,12 +37,24 @@ export interface DaisyGlobalUiOptionsKeys {
   daisy?: DaisyProps;
 }
 
+/** The option names a user's extension may not reuse: RJSF's, the theme's own, and the ones its widgets read that
+ * RJSF doesn't reserve, since every field hands its widget the extension keys a form declares. `BaseInputTemplate`
+ * reads `multiple`, and `RatingWidget` reads `color`, `size` and `colorGradient`
+ */
+type DaisyReservedUiOptionName =
+  | ReservedUiOptionName
+  | keyof DaisyGlobalUiOptionsKeys
+  | 'multiple'
+  | 'color'
+  | 'size'
+  | 'colorGradient';
+
 /** The `ui:globalOptions` this theme reads, plus a user's own `UserExtensions` */
 export type DaisyGlobalUISchemaOptions<
-  UserExtensions extends GlobalUISchemaOptionsExtensions<
-    UserExtensions,
-    ReservedUiOptionName | keyof DaisyGlobalUiOptionsKeys
-  > = Record<never, never>,
+  UserExtensions extends GlobalUISchemaOptionsExtensions<UserExtensions, DaisyReservedUiOptionName> = Record<
+    never,
+    never
+  >,
 > = ThemeGlobalUISchemaOptions<DaisyGlobalUiOptionsKeys, UserExtensions>;
 
 /** The keys of `DaisyGlobalUiOptionsKeys`, which the theme declares as its `globalUiOptionsKeys` */
@@ -51,23 +63,18 @@ export const DAISY_GLOBAL_UI_OPTIONS_KEYS = Object.keys({ daisy: true } satisfie
   true
 >);
 
-interface GetDaisyProps<
-  T = unknown,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = FormContextType,
-> {
-  uiSchema?: DaisyUiSchema<T, S, F>;
-  /** The registry's `globalUiOptions`, whose `daisy` is used where the `uiSchema`'s `ui:options` don't set one */
-  globalUiOptions?: DaisyGlobalUISchemaOptions;
-}
-
+/** Reads the `daisy` props from a field's options, as `getUiOptions(uiSchema, registry.globalUiOptions)` returns them,
+ * so the field's own `ui:daisy` or `ui:options.daisy` is used over a `ui:globalOptions` one
+ *
+ * @param uiOptions - The field's options, with the registry's `globalUiOptions` beneath them
+ * @returns - The `daisy` props, or none when they aren't an object
+ */
 export function getDaisy<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({ uiSchema, globalUiOptions }: GetDaisyProps<T, S, F>): DaisyProps {
-  const options = { ...globalUiOptions, ...uiSchema?.['ui:options'] };
-  const daisy: unknown = options.daisy;
+>(uiOptions: DaisyUiOptions<T, S, F>): DaisyProps {
+  const daisy: unknown = uiOptions.daisy;
   return isObject(daisy) ? daisy : {};
 }
 
