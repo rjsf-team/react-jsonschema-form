@@ -1,4 +1,5 @@
-const DRAFT_04 = /^https?:\/\/json-schema\.org\/draft-04\/schema#?$/;
+// The spellings ata reads as draft-04 (`DRAFT4_SCHEMAS` in its lib/dialect.js): http only.
+const DRAFT_04 = /^http:\/\/json-schema\.org\/draft-04\/schema#?$/;
 
 /** Whether a schema is read as draft-04: by its own `$schema`, or, without one, by `inherited`. */
 export function isDraft04(schema: unknown, inherited: boolean) {
@@ -25,7 +26,8 @@ function asObjectSchema(schema: boolean): object {
  * - a record entry becomes one document under its key and, when its own `$id` differs, the document
  *   itself after it, since ata registers it under both;
  * - a boolean record entry becomes the object schema that means the same (`{}` for true,
- *   `{ not: {} }` for false), since an `$id` cannot be put on a boolean;
+ *   `{ not: {} }` for false), since an `$id` cannot be put on a boolean, and one that is not a
+ *   schema at all (`null`) is left out;
  * - a document read as draft-04 (`draft04` is whether the root it is read under is) without an
  *   `$id` gets its `id` as `$id`, as ata does for draft-04.
  */
@@ -33,9 +35,15 @@ export function schemaList(schemas: object | object[] | undefined, draft04 = fal
   if (schemas === undefined) {
     return [];
   }
+  // As ata's draft-04 reading does (lib/draft7.js): `id` becomes `$id` when there is no `$id`, and no
+  // `$ref`, next to which a draft-04 keyword does not count.
   const withDraft04Id = (doc: object) => {
-    const { id } = doc as { id?: unknown };
-    return ownId(doc) === undefined && typeof id === 'string' && id !== '' && isDraft04(doc, draft04)
+    const { id, $id, $ref } = doc as { id?: unknown; $id?: unknown; $ref?: unknown };
+    return $id === undefined &&
+      typeof id === 'string' &&
+      id !== '' &&
+      typeof $ref !== 'string' &&
+      isDraft04(doc, draft04)
       ? { ...doc, $id: id }
       : doc;
   };
@@ -43,7 +51,10 @@ export function schemaList(schemas: object | object[] | undefined, draft04 = fal
     return schemas.map((doc) => (doc !== null && typeof doc === 'object' ? withDraft04Id(doc) : doc));
   }
   return Object.entries(schemas).flatMap(([key, entry]: [string, unknown]) => {
-    const doc = typeof entry === 'boolean' ? asObjectSchema(entry) : withDraft04Id(entry as object);
+    if (entry === null || (typeof entry !== 'object' && typeof entry !== 'boolean')) {
+      return [];
+    }
+    const doc = typeof entry === 'boolean' ? asObjectSchema(entry) : withDraft04Id(entry);
     const own = ownId(doc);
     return own && own !== key ? [{ ...doc, $id: key }, doc] : [{ ...doc, $id: key }];
   });

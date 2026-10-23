@@ -9,13 +9,13 @@ import type { CustomValidatorOptionsType } from './types.ts';
 const warned = new Set<string>();
 
 /** Logs each distinct warning once per process, so compiling on every request does not
- * repeat it.
+ * repeat it. A message given as a function is built only when it is shown, under `key`.
  */
-function warnOnce(message: string) {
-  if (!warned.has(message)) {
-    warned.add(message);
+function warnOnce(message: string | (() => string), key = message as string) {
+  if (!warned.has(key)) {
+    warned.add(key);
     // oxlint-disable-next-line no-console
-    console.warn(message);
+    console.warn(typeof message === 'function' ? message() : message);
   }
 }
 
@@ -65,30 +65,30 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
   // Extra schemas go into the bundle after the form's own schemas, so a custom meta-schema or a
   // `$ref` between them resolves there too. They get no entry in the exported map. Every document
   // the runtime validator ends up with goes in, so the two resolve the same documents by
-  // construction: `ataOptionsOverrides.schemas` and then `additionalMetaSchemas` (through `addSchema`,
-  // which needs a plain `$id`), each under the `$id` a `$ref` reaches it by, a later one replacing an
-  // earlier one with the same `$id` and taking its place in the order, as ata's registry does.
-  // One with the `$id` of one of the form's own schemas is left out: at runtime the form's schema
-  // goes in last and wins.
+  // construction: `ataOptionsOverrides.schemas`, as the list the runtime validators get (see
+  // `schemaList`), and then `additionalMetaSchemas` (through `addSchema`, which needs a plain
+  // `$id`), each under the `$id` a `$ref` reaches it by, a later one replacing an earlier one with
+  // the same `$id`. One with the `$id` of one of the form's own schemas is left out: at runtime the
+  // form's schema wins. A record entry under the empty key is left out, as at runtime.
   const formIds = new Set(schemas.map((s) => (s as { $id?: unknown }).$id).filter((id) => typeof id === 'string'));
-  const extras = [...schemaList(extraSchemas, isDraft04(schema, false)), ...additionalMetaSchemas].map(
-    (extra) => [extra !== null && typeof extra === 'object' ? ownId(extra) : undefined, extra] as const,
-  );
+  const extras = [
+    ...schemaList(extraSchemas, isDraft04(schema, false)).filter((extra) => (extra as { $id?: unknown }).$id !== ''),
+    ...additionalMetaSchemas,
+  ].map((extra) => [extra !== null && typeof extra === 'object' ? ownId(extra) : undefined, extra] as const);
   const winners = new Map<string, object>();
   for (const [id, extra] of extras) {
     if (id !== undefined && !formIds.has(id)) {
-      winners.delete(id);
       winners.set(id, extra);
     }
   }
   const bundled = [...winners.values()];
   for (const [id, extra] of winners) {
     if (/^https?:\/\/json-schema\.org\//.test(id)) {
-      const bytes = JSON.stringify(extra).length;
-      const size = bytes < 1024 ? `${bytes} bytes` : `about ${Math.round(bytes / 1024)} KB`;
-      warnOnce(
-        `@rjsf/validator-ata: ${id} is compiled into the precompiled module (${size} of JSON). ata ships its own copies of the draft-04, draft-06, draft-07, 2019-09 and 2020-12 meta-schemas, so an unchanged copy of one of those does not need to be passed`,
-      );
+      warnOnce(() => {
+        const bytes = new TextEncoder().encode(JSON.stringify(extra)).length;
+        const size = bytes < 1024 ? `${bytes} bytes` : `about ${Math.round(bytes / 1024)} KB`;
+        return `@rjsf/validator-ata: ${id} is compiled into the precompiled module (${size} of JSON). ata ships its own copies of the draft-04, draft-06, draft-07, 2019-09 and 2020-12 meta-schemas, so an unchanged copy of one of those does not need to be passed`;
+      }, `size:${id}`);
     }
   }
   // One with only a fragment `$id` is left out without a warning: no `$ref` reaches it at runtime.

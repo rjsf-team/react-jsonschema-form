@@ -86,9 +86,8 @@ export default class ATAValidator<
    */
   private cachedRootSchema?: object;
 
-  /** The `schemas` given to sub-schema validators, and the root they were built for (see
-   * `schemasWithRoot`). */
-  private rootSchemas?: { root: object; schemas: object[] };
+  /** The extra schemas given to the validators of one root (see `extrasFor`). */
+  private extras?: { base: object; own: object[]; withRoot: object[]; metas?: object[] };
 
   /** Returns a structural copy of `formData` so ata's default-applier
    * (which writes `default` values into the input object during validation)
@@ -104,22 +103,29 @@ export default class ATAValidator<
     return structuredClone(data);
   }
 
-  /** The `schemas` given to a sub-schema's validator: the caller's own `ataOptionsOverrides.schemas`
-   * and then the root, so the root wins over an entry with its `$id` and a custom meta-schema still
-   * applies to every sub-schema. Each entry carries the `$id` ata registers it under (see
-   * `schemaList`), which depends on whether the root is draft-04, so the list is built per root and
-   * reused for every sub-schema of it, which also lets ata reuse its caches, kept per object. A
-   * record entry under the empty key is left out: in a list it would need an empty `$id`, which ata
+  /** The extra schemas for the validators of a form whose root is `base`, all of them built from
+   * one list, so the root and every sub-schema read the caller's documents by the same rules, the
+   * module's too (see `schemaList`): `own`, the caller's `ataOptionsOverrides.schemas` as a list,
+   * for the root's validator; `withRoot`, the same and then the root, for a sub-schema's, so the
+   * root wins over an entry with its `$id`; and `metas`, the caller's `additionalMetaSchemas`
+   * without one that has the root's `$id`, since a sub-schema's validator adds those after the root
+   * and one would replace it. The list depends on the root (whether it is draft-04), so it is
+   * built once per root and reused, which also lets ata reuse its caches, kept per object. A record
+   * entry under the empty key is left out: in a list it would need an empty `$id`, which ata
    * rejects.
    */
-  private schemasWithRoot(root: object): object[] {
-    if (this.rootSchemas?.root !== root) {
-      const own = schemaList(this.options.ataOptionsOverrides?.schemas, isDraft04(root, false)).filter(
+  private extrasFor(base: object) {
+    if (this.extras?.base !== base) {
+      const own = schemaList(this.options.ataOptionsOverrides?.schemas, isDraft04(base, false)).filter(
         (extra) => (extra as { $id?: unknown } | null)?.$id !== '',
       );
-      this.rootSchemas = { root, schemas: [...own, root] };
+      const baseId = (base as { $id?: unknown }).$id;
+      const metas = this.options.additionalMetaSchemas?.filter(
+        (meta) => (meta as { $id?: unknown } | null)?.$id !== baseId,
+      );
+      this.extras = { base, own, withRoot: [...own, base], metas };
     }
-    return this.rootSchemas.schemas;
+    return this.extras;
   }
 
   /** Returns the cached ata `Validator` for the given id, or builds and
@@ -136,12 +142,17 @@ export default class ATAValidator<
     // Skip when the schema itself is the root, otherwise ata sees a
     // self-referential addition.
     const root = this.cachedRootSchema && this.cachedRootSchema !== schema ? this.cachedRootSchema : undefined;
+    const extras = this.extrasFor(root ?? schema);
+    let schemas: object[] | undefined;
+    if (root) {
+      schemas = extras.withRoot;
+    } else if (this.options.ataOptionsOverrides?.schemas !== undefined) {
+      schemas = extras.own;
+    }
     const optionsWithSchemas = {
       ...this.options,
-      ataOptionsOverrides: {
-        ...this.options.ataOptionsOverrides,
-        ...(root ? { schemas: this.schemasWithRoot(root) } : {}),
-      },
+      ...(root ? { additionalMetaSchemas: extras.metas } : {}),
+      ataOptionsOverrides: { ...this.options.ataOptionsOverrides, ...(schemas ? { schemas } : {}) },
     };
     const validator = createAtaInstance(schema, optionsWithSchemas);
     this.validators.set(id, { validator, schema });
