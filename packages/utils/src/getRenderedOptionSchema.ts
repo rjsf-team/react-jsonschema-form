@@ -283,9 +283,6 @@ export function renderOption<S extends StrictRJSFSchema>(parent: S, option: S): 
   // Such an option's own field takes the extra keys the parent's field leaves to it (see `withOptionExtraKeys()` in
   // `retrieveSchema()`), described by the parent's extra-key keywords and the option's together
   const takesParentExtraKeys = rendersOwnField && rendersOwnFieldBesideOwnOptions<S>(option);
-  const parentExtraKeywords = takesParentExtraKeys
-    ? EXTRA_KEY_KEYWORDS.filter((keyword) => Object.hasOwn(parent, keyword))
-    : [];
   if (
     rendersOwnField &&
     !takesParentExtraKeys &&
@@ -317,7 +314,11 @@ export function renderOption<S extends StrictRJSFSchema>(parent: S, option: S): 
       }
     }
   }
-  if (Reflect.ownKeys(inherited).length === 0 && parentExtraKeywords.length === 0) {
+  // An option taking the parent's extra keys is a new schema even where the parent names no extra-key keyword: its
+  // field stubs the extra keys in the parent's field's place, which `retrieveSchema()` reads the option itself as
+  // leaving to the parent's, and it carries the names the fields above declare, which it would otherwise stub as extra
+  // keys of its own
+  if (Reflect.ownKeys(inherited).length === 0 && !takesParentExtraKeys) {
     return option;
   }
   if (!rendersOwnField) {
@@ -331,12 +332,14 @@ export function renderOption<S extends StrictRJSFSchema>(parent: S, option: S): 
       merged[key] = inherited[key];
     }
   }
-  if (parentExtraKeywords.length === 0) {
+  if (!takesParentExtraKeys) {
     return merged as S;
   }
   const withParentExtraKeys: GenericObjectType = withoutKeys<S>(merged as S, ...EXTRA_KEY_KEYWORDS);
-  for (const keyword of parentExtraKeywords) {
-    withParentExtraKeys[keyword] = Reflect.get(parent, keyword);
+  for (const keyword of EXTRA_KEY_KEYWORDS) {
+    if (Object.hasOwn(parent, keyword)) {
+      withParentExtraKeys[keyword] = Reflect.get(parent, keyword);
+    }
   }
   // A parent taking the extra keys of a field above it in turn describes a key by each of the schemas it joins apart
   copyJoinedSchemas(parent, withParentExtraKeys);

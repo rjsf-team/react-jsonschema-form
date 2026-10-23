@@ -443,9 +443,14 @@ describe('getRenderedOptionSchema()', () => {
       expect(declared({ type: 'object', additionalProperties: true })).toEqual([]);
       expect(declared({ type: 'object', properties: { b: true }, additionalProperties: true })).toEqual(['b']);
     });
-    test('returns an option offering options of its own as it is, where the parent has nothing to pass on', () => {
+    test('renders an option offering options of its own anew, where the parent names no extra-key keyword', () => {
+      // The option's field stubs the extra keys in the parent's field's place, so it carries the names the parent
+      // declares, which it would otherwise stub as extra keys of its own
       const option: RJSFSchema = { type: 'object', oneOf: [{ properties: { x: { type: 'string' } } }] };
-      expect(getRenderedOptionSchema({ type: 'object', properties }, option)).toBe(option);
+      const rendered = getRenderedOptionSchema({ type: 'object', properties }, option);
+      expect(rendered).not.toBe(option);
+      expect(rendered).toMatchObject(option);
+      expect(Reflect.get(rendered, DECLARED_ABOVE_KEY)).toEqual(['a', 'b']);
     });
     test('returns the same object for the same parent and option, rather than a copy on every call', () => {
       const parent: RJSFSchema = { type: 'object', properties };
