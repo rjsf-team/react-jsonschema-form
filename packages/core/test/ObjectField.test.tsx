@@ -3463,7 +3463,7 @@ describe('ObjectField', () => {
       await user.click(elementOf(node, '.rjsf-object-property-expand button'));
 
       expectToHaveBeenCalledWithFormData(onChange, { newKey: 'New Value' }, 'root');
-      expect(node.querySelector('#root_newKey-key')).toHaveValue('newKey');
+      expect(node.querySelector('#root_newKey__key')).toHaveValue('newKey');
     });
 
     it("renders the extra keys of the data with key inputs under 'allow', and none under 'forbid'", () => {
@@ -3475,7 +3475,7 @@ describe('ObjectField', () => {
 
       const { node } = createFormComponent({ schema, initialFormData, additionalPropertiesWhenAbsent: 'allow' });
 
-      expect(node.querySelector('#root_extra-key')).toHaveValue('extra');
+      expect(node.querySelector('#root_extra__key')).toHaveValue('extra');
       expect(node.querySelector('#root_extra')).toHaveValue('y');
     });
 
@@ -3521,7 +3521,7 @@ describe('ObjectField', () => {
         // A1 declares `x`, where the object's read `x` and `extra` as its own beside A's
         expect(node.querySelectorAll('.rjsf-object-property-expand button')).toHaveLength(1);
         expect(node.querySelectorAll('#root_x')).toHaveLength(1);
-        expect(node.querySelectorAll('#root_extra-key')).toHaveLength(1);
+        expect(node.querySelectorAll('#root_extra__key')).toHaveLength(1);
         await user.click(elementOf(node, '.rjsf-object-property-expand button'));
 
         expectToHaveBeenCalledWithFormData(onChange, { x: 'a', extra: 'e', newKey: 'New Value' }, 'root');
@@ -3550,10 +3550,10 @@ describe('ObjectField', () => {
 
         // The object names no extra-key keyword, and A's field takes the extra keys all the same, leaving `p` to the
         // object's
-        for (const id of ['root_p', 'root_x', 'root_extra-key']) {
+        for (const id of ['root_p', 'root_x', 'root_extra__key']) {
           expect(node.querySelectorAll(`#${id}`)).toHaveLength(1);
         }
-        expect(node.querySelector('#root_p-key')).toBeNull();
+        expect(node.querySelector('#root_p__key')).toBeNull();
         expect(node.querySelectorAll('.rjsf-object-property-expand button')).toHaveLength(1);
       },
     );
@@ -3572,10 +3572,10 @@ describe('ObjectField', () => {
       const { node } = createFormComponent({ schema, initialFormData: { p: '1', x: 'a', extra: 'e' } });
 
       // A takes the object's type, so its field renders beside A1's and takes A1's extra keys
-      for (const id of ['root_p', 'root_x', 'root_extra-key']) {
+      for (const id of ['root_p', 'root_x', 'root_extra__key']) {
         expect(node.querySelectorAll(`#${id}`)).toHaveLength(1);
       }
-      expect(node.querySelector('#root_p-key')).toBeNull();
+      expect(node.querySelector('#root_p__key')).toBeNull();
       expect(node.querySelectorAll('.rjsf-object-property-expand button')).toHaveLength(1);
     });
 
@@ -3589,8 +3589,8 @@ describe('ObjectField', () => {
       const { node } = createFormComponent({ schema, initialFormData: { p: '1', x: 'a', extra: 'e' } });
 
       expect(node.querySelectorAll('#root_p')).toHaveLength(1);
-      expect(node.querySelector('#root_p-key')).toBeNull();
-      expect(node.querySelectorAll('#root_extra-key')).toHaveLength(1);
+      expect(node.querySelector('#root_p__key')).toBeNull();
+      expect(node.querySelectorAll('#root_extra__key')).toHaveLength(1);
     });
 
     it('forbids an extra key an option forbids, though the object above it describes the key, where the option takes them', () => {
@@ -3605,7 +3605,7 @@ describe('ObjectField', () => {
 
       // Judged by the object's keywords and the option's apart, as validation judges it: A rejects the key
       expect(node.querySelector('input#root_p1')).toBeNull();
-      expect(node.querySelector('#root_p1-key')).toHaveValue('p1');
+      expect(node.querySelector('#root_p1__key')).toHaveValue('p1');
     });
 
     it('renders the extra keys once, in the innermost field, through options offering options two levels down', () => {
@@ -3623,7 +3623,7 @@ describe('ObjectField', () => {
       };
       const { node } = createFormComponent({ schema, initialFormData: { p: '1', q: '2', x: 'a', extra: 'e' } });
 
-      for (const id of ['root_p', 'root_q', 'root_x', 'root_extra-key']) {
+      for (const id of ['root_p', 'root_q', 'root_x', 'root_extra__key']) {
         expect(node.querySelectorAll(`#${id}`)).toHaveLength(1);
       }
       expect(node.querySelectorAll('.rjsf-object-property-expand button')).toHaveLength(1);
@@ -3652,7 +3652,7 @@ describe('ObjectField', () => {
           initialFormData: { a: 'x' },
         });
 
-        expect(node.querySelector('#root_XxxOf')).not.toBeInTheDocument();
+        expect(node.querySelector('#root__XxxOf')).not.toBeInTheDocument();
         expect(screen.getAllByText('Thing')).toHaveLength(1);
       });
       it('renders its own field beside the option while the data holds an extra key', () => {
@@ -3663,19 +3663,19 @@ describe('ObjectField', () => {
           initialFormData: { a: 'x', extra: 'e' },
         });
 
-        expect(node.querySelector('#root_XxxOf')).toBeInTheDocument();
-        expect(node.querySelector('#root_extra-key')).toBeInTheDocument();
+        expect(node.querySelector('#root__XxxOf')).toBeInTheDocument();
+        expect(node.querySelector('#root_extra__key')).toBeInTheDocument();
       });
       it("drops its own field once the data reaches the object's maxProperties", async () => {
         const { node } = createFormComponent({
           schema: union({ maxProperties: 1 }),
           additionalPropertiesWhenAbsent: 'allow',
         });
-        expect(node.querySelector('#root_XxxOf')).toBeInTheDocument();
+        expect(node.querySelector('#root__XxxOf')).toBeInTheDocument();
 
         await user.type(node.querySelector('#root_a')!, 'x');
 
-        expect(node.querySelector('#root_XxxOf')).not.toBeInTheDocument();
+        expect(node.querySelector('#root__XxxOf')).not.toBeInTheDocument();
         expect(node.querySelector('#root_a')).toHaveFocus();
       });
     });
