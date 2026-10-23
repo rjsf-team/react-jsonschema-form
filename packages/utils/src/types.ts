@@ -1520,17 +1520,23 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
    */
   retrieveSchema(schema: S, formData?: T, resolveAnyOfOrOneOfRefs?: boolean): S;
   /** Sanitize the `data` associated with the `oldSchema` so it is considered appropriate for the `newSchema`. If the
-   * new schema does not contain any properties, then `undefined` is returned to clear all the form data. Due to the
-   * nature of schemas, this sanitization happens recursively for nested objects of data. Also, any properties in the
-   * old schema that are non-existent in the new schema are set to `undefined`.
+   * new schema does not contain any properties, then `undefined` is returned to clear all the form data, unless it is
+   * not an array and has the same `oneOf`/`anyOf` options as the old schema. That data is sanitized against the
+   * selected option instead, or returned as is when there is no `oldData`, when it is not known which option is
+   * selected or when that option has nothing to sanitize against. Due to the nature of schemas, this sanitization
+   * happens recursively for nested objects of data. Also, any properties in the old schema that are non-existent in
+   * the new schema are set to `undefined`.
    *
    * @param [newSchema] - The new schema for which the data is being sanitized
    * @param [oldSchema] - The old schema from which the data originated
-   * @param [data={}] - The form data associated with the schema, defaulting to an empty object when undefined
-   * @returns - The new form data, with all of the fields uniquely associated with the old schema set
-   *      to `undefined`. Will return `undefined` if the new schema is not an object containing properties.
+   * @param [data] - The form data associated with the schema; undefined data stays undefined
+   * @param [oldData] - The form data the `oldSchema` was resolved against. Only used to resolve a `oneOf`/`anyOf`
+   *      option as it was for that data, and without it the data of such an option is returned as is
+   * @returns - The new form data, with all of the fields uniquely associated with the old schema set to `undefined`.
+   *      Will return `undefined` if the new schema is not an object containing properties, unless it has the same
+   *      `oneOf`/`anyOf` options as the old schema
    */
-  sanitizeDataForNewSchema(newSchema?: S, oldSchema?: S, data?: any): T;
+  sanitizeDataForNewSchema(newSchema?: S, oldSchema?: S, data?: any, oldData?: any): T;
   /** Generates an `PathSchema` object for the `schema`, recursively
    *
    * @param schema - The schema for which the display label flag is desired

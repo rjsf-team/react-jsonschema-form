@@ -1799,6 +1799,11 @@ console.log(filteredFormData);
 
 Sanitize the `data` associated with the `oldSchema` so it is considered appropriate for the `newSchema`.
 If the new schema does not contain any properties, then `undefined` is returned to clear all the form data.
+The exception is a new schema that is not an array and has the same `oneOf`/`anyOf` options as the old schema, such as a root `oneOf` that is not resolved to an option.
+Its data is sanitized against the selected option: the option the `data` singles out by a discriminator, as the only valid option or by the best score, or else the option the `oldData` singled out.
+It is sanitized from the option the `oldData` singled out, so the fields of another option the `oldData` matched are cleared.
+When there is no `oldData`, when neither singles out an option, or when the selected option has nothing to sanitize against (such as a free-form object or a scalar option), the data is returned as is.
+An `undefined` `data` stays `undefined` rather than being sanitized against an option.
 Due to the nature of schemas, this sanitization happens recursively for nested objects of data.
 Also, any properties in the old schema that are non-existent in the new schema are set to `undefined`.
 
@@ -1808,12 +1813,13 @@ Also, any properties in the old schema that are non-existent in the new schema a
 - rootSchema: S - The root JSON schema of the entire form
 - [newSchema]: S | undefined - The new schema for which the data is being sanitized
 - [oldSchema]: S | undefined - The old schema from which the data originated
-- [data={}]: any - The form data associated with the schema, defaulting to an empty object when undefined
+- [data]: any - The form data associated with the schema; undefined data stays undefined
 - [experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [experimental_customMergeAllOf](./form-props.md#experimental_custommergeallof) prop
+- [oldData]: any - The form data the `oldSchema` was resolved against. Only used to resolve a `oneOf`/`anyOf` option as it was for that data, and without it the data of such an option is returned as is
 
 #### Returns
 
-- T: The new form data, with all the fields uniquely associated with the old schema set to `undefined`. Will return `undefined` if the new schema is not an object containing properties.
+- T: The new form data, with all the fields uniquely associated with the old schema set to `undefined`. Will return `undefined` if the new schema is not an object containing properties, unless it is not an array and has the same `oneOf`/`anyOf` options as the old schema.
 
 ### toPathSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 

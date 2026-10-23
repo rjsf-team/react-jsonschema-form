@@ -131,6 +131,89 @@ export function calculateIndexScore<T = any, S extends StrictRJSFSchema = RJSFSc
   return totalScore;
 }
 
+/** Determines which of the given `options` the `formData` singles out on its own, without regard to any option that is
+ * already selected. The steps are those of `getClosestMatchingOption()`, which falls back to its `selectedOption` when
+ * the `formData` does not single out an option:
+ *
+ * - An option a simple discriminator matches is singled out
+ * - Otherwise, an option that is the only valid one is singled out
+ * - Otherwise, the valid options (all the options when none is valid) are scored with `calculateIndexScore()`, and the
+ *   first option with the best score is singled out, provided that score is above zero and the options do not all have
+ *   the same score
+ *
+ * @param validator - An implementation of the `ValidatorType` interface that will be used when necessary
+ * @param rootSchema - The root JSON schema of the entire form
+ * @param formData - The form data associated with the schema
+ * @param options - The list of options that can be selected from
+ * @param [discriminatorField] - The optional name of the field within the options object whose value is used to
+ *          determine which option is selected
+ * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
+ * @returns - An object holding the `index` of the option the `formData` singles out, `undefined` when it does not
+ *          single out one, and the `bestIndex` of the first option scored with the best score above zero, `undefined`
+ *          when no option was scored above zero
+ */
+export function findClosestMatchingOption<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+>(
+  validator: ValidatorType<T, S, F>,
+  rootSchema: S,
+  formData: T | undefined,
+  options: S[],
+  discriminatorField?: string,
+  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
+): { index?: number; bestIndex?: number } {
+  // First resolve any refs in the options
+  const resolvedOptions = options.map((option) => resolveAllReferences<S>(option, rootSchema, []));
+
+  const simpleDiscriminatorMatch = getOptionMatchingSimpleDiscriminator(formData, options, discriminatorField);
+  if (typeof simpleDiscriminatorMatch === 'number') {
+    return { index: simpleDiscriminatorMatch };
+  }
+
+  // Reduce the array of options down to a list of the indexes that are considered matching options
+  const allValidIndexes = resolvedOptions.reduce((validList: number[], option, index: number) => {
+    const testOptions: S[] = [JUNK_OPTION as S, option];
+    const match = getFirstMatchingOption<T, S, F>(validator, formData, testOptions, rootSchema, discriminatorField);
+    // The match is the real option, so add its index to list of valid indexes
+    if (match === 1) {
+      validList.push(index);
+    }
+    return validList;
+  }, []);
+
+  // There is only one valid index, so return it!
+  if (allValidIndexes.length === 1) {
+    return { index: allValidIndexes[0] };
+  }
+  if (!allValidIndexes.length) {
+    // No indexes were valid, so we'll score all the options, add all the indexes
+    allValidIndexes.push(...resolvedOptions.keys());
+  }
+  interface BestType {
+    bestIndex?: number;
+    bestScore: number;
+  }
+  const scoreCount = new Set<number>();
+  // Score all the options in the list of valid indexes and find the first index with the best score above zero
+  const { bestIndex }: BestType = allValidIndexes.reduce(
+    (scoreData: BestType, index: number) => {
+      const { bestScore } = scoreData;
+      const option = resolvedOptions[index];
+      const score = calculateIndexScore(validator, rootSchema, option, formData, experimental_customMergeAllOf);
+      scoreCount.add(score);
+      if (score > bestScore) {
+        return { bestIndex: index, bestScore: score };
+      }
+      return scoreData;
+    },
+    { bestScore: 0 },
+  );
+  // When all the scores are the same, no option is singled out
+  return { index: scoreCount.size === 1 ? undefined : bestIndex, bestIndex };
+}
+
 /** Determines which of the given `options` provided most closely matches the `formData`. Using
  * `getFirstMatchingOption()` to match two schemas that differ only by the readOnly, default or const value of a field
  * based on the `formData` and returns 0 when there is no match. Rather than passing in all the `options` at once to
@@ -142,7 +225,9 @@ export function calculateIndexScore<T = any, S extends StrictRJSFSchema = RJSFSc
  * no valid indexes, then fill the valid indexes array with the indexes of all the options. Next, the index of the
  * option with the highest score is determined by iterating over the list of valid options, calling
  * `calculateIndexScore()` on each, comparing it against the current best score, and returning the index of the one that
- * eventually has the best score.
+ * eventually has the best score. These steps are done by `findClosestMatchingOption()`. When they do not single out an
+ * option, because all the scores are the same or none is above zero, the `selectedOption` is returned, or, when it is
+ * negative, the first option with the best score above zero, if any.
  *
  * @param validator - An implementation of the `ValidatorType` interface that will be used when necessary
  * @param rootSchema - The root JSON schema of the entire form
@@ -167,56 +252,17 @@ export default function getClosestMatchingOption<
   discriminatorField?: string,
   experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ): number {
-  // First resolve any refs in the options
-  const resolvedOptions = options.map((option) => resolveAllReferences<S>(option, rootSchema, []));
-
-  const simpleDiscriminatorMatch = getOptionMatchingSimpleDiscriminator(formData, options, discriminatorField);
-  if (typeof simpleDiscriminatorMatch === 'number') {
-    return simpleDiscriminatorMatch;
-  }
-
-  // Reduce the array of options down to a list of the indexes that are considered matching options
-  const allValidIndexes = resolvedOptions.reduce((validList: number[], option, index: number) => {
-    const testOptions: S[] = [JUNK_OPTION as S, option];
-    const match = getFirstMatchingOption<T, S, F>(validator, formData, testOptions, rootSchema, discriminatorField);
-    // The match is the real option, so add its index to list of valid indexes
-    if (match === 1) {
-      validList.push(index);
-    }
-    return validList;
-  }, []);
-
-  // There is only one valid index, so return it!
-  if (allValidIndexes.length === 1) {
-    return allValidIndexes[0];
-  }
-  if (!allValidIndexes.length) {
-    // No indexes were valid, so we'll score all the options, add all the indexes
-    allValidIndexes.push(...resolvedOptions.keys());
-  }
-  interface BestType {
-    bestIndex: number;
-    bestScore: number;
-  }
-  const scoreCount = new Set<number>();
-  // Score all the options in the list of valid indexes and return the index with the best score
-  const { bestIndex }: BestType = allValidIndexes.reduce(
-    (scoreData: BestType, index: number) => {
-      const { bestScore } = scoreData;
-      const option = resolvedOptions[index];
-      const score = calculateIndexScore(validator, rootSchema, option, formData, experimental_customMergeAllOf);
-      scoreCount.add(score);
-      if (score > bestScore) {
-        return { bestIndex: index, bestScore: score };
-      }
-      return scoreData;
-    },
-    { bestIndex: selectedOption, bestScore: 0 },
+  const { index, bestIndex } = findClosestMatchingOption<T, S, F>(
+    validator,
+    rootSchema,
+    formData,
+    options,
+    discriminatorField,
+    experimental_customMergeAllOf,
   );
-  // if all scores are the same go with selectedOption
-  if (scoreCount.size === 1 && selectedOption >= 0) {
-    return selectedOption;
+  if (index !== undefined) {
+    return index;
   }
-
-  return bestIndex;
+  // The `formData` does not single out an option, so keep the selected option, or else go with the best scored one
+  return selectedOption >= 0 ? selectedOption : (bestIndex ?? selectedOption);
 }
