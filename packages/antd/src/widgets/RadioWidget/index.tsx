@@ -1,5 +1,5 @@
 import type { FocusEvent } from 'react';
-import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   enumOptionSelectedValue,
   enumOptionsAutofocusIndex,
@@ -12,6 +12,8 @@ import {
 } from '@rjsf/utils';
 import type { RadioChangeEvent } from 'antd';
 import { Radio } from 'antd';
+
+import getControlState from '../../controlState.ts';
 
 /** The `RadioWidget` is a widget for rendering a radio group.
  *  It is typically used with a string property constrained with enum options.
@@ -37,9 +39,7 @@ export default function RadioWidget<
   value,
   presentation,
 }: WidgetProps<T, S, F>) {
-  const { formContext } = registry;
-  const { readonlyAsDisabled = true } = formContext as GenericObjectType;
-  const fieldDisabled = disabled || (readonlyAsDisabled && readonly);
+  const control = getControlState<T, S, F>({ disabled, readonly, required, registry });
 
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
@@ -72,6 +72,7 @@ export default function RadioWidget<
       // enabled, checks nothing the form doesn't hold
       value={selectValue ?? null}
       {...groupAttributes}
+      aria-readonly={control.ariaReadonly}
     >
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, i) => (
@@ -81,12 +82,10 @@ export default function RadioWidget<
             autoFocus={i === autofocusIndex}
             // `undefined` rather than `false` for an enabled option, since antd reads its `DisabledContext` only when
             // the radio leaves `disabled` unset
-            disabled={fieldDisabled || enumOptionsIsDisabled(option.value, enumDisabled) || undefined}
+            disabled={control.disabled || enumOptionsIsDisabled(option.value, enumDisabled) || undefined}
             // oxlint-disable-next-line react/no-array-index-key
             key={i}
-            // A radio has no read-only state to exempt it from the browser's check, so a read-only one the form leaves
-            // enabled takes no `required`, which would block the submit of a field its user can't answer
-            required={required && !readonly}
+            required={control.toggleRequired}
             value={domValues[i]}
             {...optionAttributes}
           >

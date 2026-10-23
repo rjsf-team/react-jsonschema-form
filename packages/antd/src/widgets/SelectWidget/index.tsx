@@ -1,12 +1,5 @@
 import { useMemo, useState } from 'react';
-import type {
-  FormContextType,
-  GenericObjectType,
-  IndexedEnumOptionType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
-} from '@rjsf/utils';
+import type { FormContextType, IndexedEnumOptionType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   enumOptionSelectedValue,
   enumOptionValueDecoder,
@@ -23,6 +16,8 @@ import {
 import type { SelectProps } from 'antd';
 import { Select } from 'antd';
 import type { DefaultOptionType } from 'antd/es/select/index.js';
+
+import getControlState from '../../controlState.ts';
 
 const SELECT_STYLE = {
   width: '100%',
@@ -59,8 +54,7 @@ export default function SelectWidget<
   } = props;
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const [open, setOpen] = useState(false);
-  const { formContext } = registry;
-  const { readonlyAsDisabled = true } = formContext as GenericObjectType;
+  const control = getControlState<T, S, F>({ disabled, readonly, registry });
 
   const { enumOptions, enumDisabled, emptyValue, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
@@ -91,11 +85,12 @@ export default function SelectWidget<
 
   const selectValue = enumOptionSelectedValue(value, enumOptions, !!multiple, optionValueFormat, emptyValue);
 
-  // Antd's typescript definitions do not contain the following props that are actually necessary and, if provided,
-  // they are used, so hacking them in via by spreading `extraProps` on the component to avoid typescript errors
-  const extraProps = {
-    name: htmlName || id,
-  };
+  let postedValues: string[] = [typeof selectValue === 'string' ? selectValue : ''];
+  if (multiple) {
+    postedValues = Array.isArray(selectValue)
+      ? selectValue.filter((domValue): domValue is string => typeof domValue === 'string')
+      : [];
+  }
 
   const showPlaceholderOption = !multiple && schema.default === undefined;
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
@@ -128,7 +123,7 @@ export default function SelectWidget<
       <Select
         open={open}
         autoFocus={autofocus}
-        disabled={disabled || (readonlyAsDisabled && readonly)}
+        disabled={control.disabled}
         getPopupContainer={getPopupContainer}
         id={id}
         mode={multiple ? 'multiple' : undefined}
@@ -138,7 +133,6 @@ export default function SelectWidget<
         placeholder={placeholder}
         style={SELECT_STYLE}
         value={selectValue}
-        {...extraProps}
         // When the open change is called, set the open state, needed so that the select opens properly in the playground
         onOpenChange={setOpen}
         showSearch={{ filterOption }}
@@ -146,6 +140,11 @@ export default function SelectWidget<
         aria-required={required || undefined}
         options={selectOptions}
       />
+      {/* antd's `Select` renders no native control, so the value a native submit or `FormData` reads is carried by
+      hidden inputs, as a native `<select>` posts one entry per selected option, or its empty placeholder */}
+      {postedValues.map((domValue) => (
+        <input key={domValue} type='hidden' name={htmlName || id} value={domValue} disabled={control.disabled} />
+      ))}
       <SelectedOptionDescription
         id={id}
         multiple={multiple}

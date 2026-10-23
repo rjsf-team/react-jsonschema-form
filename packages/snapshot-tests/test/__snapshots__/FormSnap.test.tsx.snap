@@ -11,7 +11,6 @@ exports[`format iso-date-time 1`] = `
       <input
         class="form-control"
         id="root"
-        label=""
         name="root"
         placeholder=""
         type="datetime-local"
@@ -41,7 +40,6 @@ exports[`format iso-time 1`] = `
       <input
         class="form-control"
         id="root"
-        label=""
         name="root"
         placeholder=""
         type="time"
@@ -129,7 +127,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                         <input
                           class="form-control"
                           id="root_tasks_0_title"
-                          label="title"
                           name="root[tasks][0][title]"
                           placeholder=""
                           type="text"
@@ -239,7 +236,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                         <input
                           class="form-control"
                           id="root_tasks_1_title"
-                          label="title"
                           name="root[tasks][1][title]"
                           placeholder=""
                           type="text"
@@ -400,7 +396,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                     <input
                       class="form-control"
                       id="root_tags_0"
-                      label="tags-1"
                       name="root[tags][0]"
                       placeholder=""
                       required=""
@@ -478,7 +473,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                     <input
                       class="form-control"
                       id="root_tags_1"
-                      label="tags-2"
                       name="root[tags][1]"
                       placeholder=""
                       required=""
@@ -699,7 +693,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
               <input
                 class="form-control"
                 id="root_person_firstName"
-                label="firstName"
                 name="root[person][firstName]"
                 placeholder=""
                 type="text"
@@ -722,7 +715,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
               <input
                 class="form-control"
                 id="root_person_lastName"
-                label="lastName"
                 name="root[person][lastName]"
                 placeholder=""
                 type="text"
@@ -758,7 +750,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                   <input
                     class="form-control"
                     id="root_person_address_street"
-                    label="street"
                     name="root[person][address][street]"
                     placeholder=""
                     type="text"
@@ -781,7 +772,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                   <input
                     class="form-control"
                     id="root_person_address_city"
-                    label="city"
                     name="root[person][address][city]"
                     placeholder=""
                     type="text"
@@ -975,7 +965,6 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
           <input
             class="form-control"
             id="root_firstName"
-            label="firstName"
             name="root[firstName]"
             placeholder=""
             type="text"
@@ -999,7 +988,6 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
             class="form-control"
             id="root_age"
             inputmode="decimal"
-            label="age"
             name="root[age]"
             pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
             placeholder=""
@@ -1154,7 +1142,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                         <input
                           class="form-control"
                           id="root_tasks_0_title"
-                          label="title"
                           name="root.tasks.0.title"
                           placeholder=""
                           type="text"
@@ -1264,7 +1251,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                         <input
                           class="form-control"
                           id="root_tasks_1_title"
-                          label="title"
                           name="root.tasks.1.title"
                           placeholder=""
                           type="text"
@@ -1425,7 +1411,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                     <input
                       class="form-control"
                       id="root_tags_0"
-                      label="tags-1"
                       name="root.tags.0"
                       placeholder=""
                       required=""
@@ -1503,7 +1488,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                     <input
                       class="form-control"
                       id="root_tags_1"
-                      label="tags-2"
                       name="root.tags.1"
                       placeholder=""
                       required=""
@@ -1628,7 +1612,6 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
               <input
                 class="form-control"
                 id="root_person_firstName"
-                label="firstName"
                 name="root.person.firstName"
                 placeholder=""
                 type="text"
@@ -1651,7 +1634,6 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
               <input
                 class="form-control"
                 id="root_person_lastName"
-                label="lastName"
                 name="root.person.lastName"
                 placeholder=""
                 type="text"
@@ -1687,7 +1669,6 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                   <input
                     class="form-control"
                     id="root_person_address_street"
-                    label="street"
                     name="root.person.address.street"
                     placeholder=""
                     type="text"
@@ -1710,7 +1691,6 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                   <input
                     class="form-control"
                     id="root_person_address_city"
-                    label="city"
                     name="root.person.address.city"
                     placeholder=""
                     type="text"
@@ -1825,7 +1805,6 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
           <input
             class="form-control"
             id="root_firstName"
-            label="firstName"
             name="root.firstName"
             placeholder=""
             type="text"
@@ -1849,7 +1828,6 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
             class="form-control"
             id="root_age"
             inputmode="decimal"
-            label="age"
             name="root.age"
             pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
             placeholder=""
@@ -2897,7 +2875,6 @@ exports[`single fields > field with description 1`] = `
             aria-describedby="root_my-field__description"
             class="form-control"
             id="root_my-field"
-            label="my-field"
             name="root_my-field"
             placeholder=""
             type="text"
@@ -2952,7 +2929,6 @@ exports[`single fields > field with description in uiSchema 1`] = `
             aria-describedby="root_my-field__description"
             class="form-control"
             id="root_my-field"
-            label="my-field"
             name="root_my-field"
             placeholder=""
             type="text"
@@ -3013,7 +2989,6 @@ exports[`single fields > field with markdown description 1`] = `
             aria-describedby="root_my-field__description"
             class="form-control"
             id="root_my-field"
-            label="my-field"
             name="root_my-field"
             placeholder=""
             type="text"
@@ -3068,7 +3043,6 @@ exports[`single fields > field with markdown description in uiSchema 1`] = `
             aria-describedby="root_my-field__description"
             class="form-control"
             id="root_my-field"
-            label="my-field"
             name="root_my-field"
             placeholder=""
             type="text"
@@ -3100,7 +3074,6 @@ exports[`single fields > format color 1`] = `
       <input
         class="form-control"
         id="root"
-        label=""
         name="root"
         placeholder=""
         type="color"
@@ -3130,7 +3103,6 @@ exports[`single fields > format date 1`] = `
       <input
         class="form-control"
         id="root"
-        label=""
         name="root"
         placeholder=""
         type="date"
@@ -3160,7 +3132,6 @@ exports[`single fields > format datetime 1`] = `
       <input
         class="form-control"
         id="root"
-        label=""
         name="root"
         placeholder=""
         type="datetime-local"
@@ -3190,7 +3161,6 @@ exports[`single fields > format time 1`] = `
       <input
         class="form-control"
         id="root"
-        label=""
         name="root"
         placeholder=""
         type="time"
@@ -3244,7 +3214,6 @@ exports[`single fields > help and error display 1`] = `
         aria-invalid="true"
         class="form-control"
         id="root"
-        label=""
         name="root"
         placeholder=""
         type="text"
@@ -3327,7 +3296,6 @@ exports[`single fields > hidden label 1`] = `
       <input
         class="form-control"
         id="root"
-        label=""
         name="root"
         placeholder=""
         type="text"
@@ -3378,7 +3346,6 @@ exports[`single fields > number field 0 1`] = `
         class="form-control"
         id="root"
         inputmode="decimal"
-        label=""
         name="root"
         pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
         placeholder=""
@@ -3411,7 +3378,6 @@ exports[`single fields > number field 1`] = `
         class="form-control"
         id="root"
         inputmode="decimal"
-        label=""
         name="root"
         pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
         placeholder=""
@@ -3479,7 +3445,6 @@ exports[`single fields > optional data controls > does not show optional control
               <input
                 class="form-control"
                 id="root_nestedObjectOptional_test"
-                label="test"
                 name="root_nestedObjectOptional_test"
                 placeholder=""
                 type="text"
@@ -3515,7 +3480,6 @@ exports[`single fields > optional data controls > does not show optional control
                   <input
                     class="form-control"
                     id="root_nestedObjectOptional_deepObjectOptional_deepTest"
-                    label="deepTest"
                     name="root_nestedObjectOptional_deepObjectOptional_deepTest"
                     placeholder=""
                     type="text"
@@ -3558,7 +3522,6 @@ exports[`single fields > optional data controls > does not show optional control
                   <input
                     class="form-control"
                     id="root_nestedObjectOptional_deepObject_deepTest"
-                    label="deepTest"
                     name="root_nestedObjectOptional_deepObject_deepTest"
                     placeholder=""
                     type="text"
@@ -3756,7 +3719,6 @@ exports[`single fields > optional data controls > does not show optional control
               <input
                 class="form-control"
                 id="root_nestedObject_test"
-                label="test"
                 name="root_nestedObject_test"
                 placeholder=""
                 type="text"
@@ -3870,7 +3832,6 @@ exports[`single fields > optional data controls > does not show optional control
                   <input
                     class="form-control"
                     id="root_optionalObjectWithOneofs_name"
-                    label="name"
                     name="root_optionalObjectWithOneofs_name"
                     placeholder=""
                     readonly=""
@@ -4016,7 +3977,6 @@ exports[`single fields > optional data controls > does not show optional control
               <input
                 class="form-control"
                 id="root_nestedObjectOptional_test"
-                label="test"
                 name="root_nestedObjectOptional_test"
                 placeholder=""
                 readonly=""
@@ -4053,7 +4013,6 @@ exports[`single fields > optional data controls > does not show optional control
                   <input
                     class="form-control"
                     id="root_nestedObjectOptional_deepObjectOptional_deepTest"
-                    label="deepTest"
                     name="root_nestedObjectOptional_deepObjectOptional_deepTest"
                     placeholder=""
                     readonly=""
@@ -4097,7 +4056,6 @@ exports[`single fields > optional data controls > does not show optional control
                   <input
                     class="form-control"
                     id="root_nestedObjectOptional_deepObject_deepTest"
-                    label="deepTest"
                     name="root_nestedObjectOptional_deepObject_deepTest"
                     placeholder=""
                     readonly=""
@@ -4300,7 +4258,6 @@ exports[`single fields > optional data controls > does not show optional control
               <input
                 class="form-control"
                 id="root_nestedObject_test"
-                label="test"
                 name="root_nestedObject_test"
                 placeholder=""
                 readonly=""
@@ -4417,7 +4374,6 @@ exports[`single fields > optional data controls > does not show optional control
                   <input
                     class="form-control"
                     id="root_optionalObjectWithOneofs_name"
-                    label="name"
                     name="root_optionalObjectWithOneofs_name"
                     placeholder=""
                     readonly=""
@@ -4581,7 +4537,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               <input
                 class="form-control"
                 id="root_nestedObjectOptional_test"
-                label="test"
                 name="root_nestedObjectOptional_test"
                 placeholder=""
                 type="text"
@@ -4653,7 +4608,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   <input
                     class="form-control"
                     id="root_nestedObjectOptional_deepObject_deepTest"
-                    label="deepTest"
                     name="root_nestedObjectOptional_deepObject_deepTest"
                     placeholder=""
                     type="text"
@@ -4837,7 +4791,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     <input
                       class="form-control"
                       id="root_nestedArrayOptional_0"
-                      label="nestedArrayOptional-1"
                       name="root_nestedArrayOptional_0"
                       placeholder=""
                       required=""
@@ -4921,7 +4874,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               <input
                 class="form-control"
                 id="root_nestedObject_test"
-                label="test"
                 name="root_nestedObject_test"
                 placeholder=""
                 type="text"
@@ -5115,7 +5067,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               <input
                 class="form-control"
                 id="root_nestedObjectOptional_test"
-                label="test"
                 name="root_nestedObjectOptional_test"
                 placeholder=""
                 readonly=""
@@ -5178,7 +5129,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   <input
                     class="form-control"
                     id="root_nestedObjectOptional_deepObject_deepTest"
-                    label="deepTest"
                     name="root_nestedObjectOptional_deepObject_deepTest"
                     placeholder=""
                     readonly=""
@@ -5340,7 +5290,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     <input
                       class="form-control"
                       id="root_nestedArrayOptional_0"
-                      label="nestedArrayOptional-1"
                       name="root_nestedArrayOptional_0"
                       placeholder=""
                       readonly=""
@@ -5427,7 +5376,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               <input
                 class="form-control"
                 id="root_nestedObject_test"
-                label="test"
                 name="root_nestedObject_test"
                 placeholder=""
                 readonly=""
@@ -5672,7 +5620,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
               <input
                 class="form-control"
                 id="root_nestedObject_test"
-                label="test"
                 name="root_nestedObject_test"
                 placeholder=""
                 type="text"
@@ -5916,7 +5863,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                 class="form-control"
                 disabled=""
                 id="root_nestedObject_test"
-                label="test"
                 name="root_nestedObject_test"
                 placeholder=""
                 type="text"
@@ -6055,7 +6001,6 @@ exports[`single fields > password field 1`] = `
       <input
         class="form-control"
         id="root"
-        label=""
         name="root"
         placeholder=""
         type="password"
@@ -6313,7 +6258,6 @@ exports[`single fields > schema examples 1`] = `
         aria-describedby="root__examples"
         class="form-control"
         id="root"
-        label=""
         list="root__examples"
         name="root"
         placeholder=""
@@ -6365,7 +6309,6 @@ exports[`single fields > schema examples with mixed types (string examples and n
         class="form-control"
         id="root"
         inputmode="numeric"
-        label=""
         list="root__examples"
         name="root"
         pattern="[+\\-]?([0-9]+[.][0-9]+[eE]\\+?[0-9]+|[0-9]+([eE]\\+?[0-9]+|[.]0*)?|[.])"
@@ -7322,7 +7265,6 @@ exports[`single fields > slider field 1`] = `
         <input
           class="form-control"
           id="root"
-          label=""
           max="100"
           min="42"
           name="root"
@@ -7386,7 +7328,6 @@ exports[`single fields > string field > field with markdown help and description
         aria-describedby="root__description root__help"
         class="form-control"
         id="root"
-        label="Markdown Help and Description"
         name="root"
         placeholder=""
         type="text"
@@ -7450,7 +7391,6 @@ exports[`single fields > string field > field with markdown help text 1`] = `
         aria-describedby="root__description root__help"
         class="form-control"
         id="root"
-        label="Markdown Help Test"
         name="root"
         placeholder=""
         type="text"
@@ -7514,7 +7454,6 @@ exports[`single fields > string field > field with markdown help text without a 
         aria-describedby="root__description root__help"
         class="form-control"
         id="root"
-        label="Raw Help Test"
         name="root"
         placeholder=""
         type="text"
@@ -7551,7 +7490,6 @@ exports[`single fields > string field > format data-url 1`] = `
         <input
           class="form-control"
           id="root"
-          label=""
           name="root"
           placeholder=""
           type="file"
@@ -7582,7 +7520,6 @@ exports[`single fields > string field > format email 1`] = `
       <input
         class="form-control"
         id="root"
-        label=""
         name="root"
         placeholder=""
         type="email"
@@ -7612,7 +7549,6 @@ exports[`single fields > string field > format uri 1`] = `
       <input
         class="form-control"
         id="root"
-        label=""
         name="root"
         placeholder=""
         type="url"
@@ -7642,7 +7578,6 @@ exports[`single fields > string field > regular 1`] = `
       <input
         class="form-control"
         id="root"
-        label=""
         name="root"
         placeholder=""
         type="text"
@@ -7689,7 +7624,6 @@ exports[`single fields > string field > required field with markdown help 1`] = 
         aria-describedby="root__description root__help"
         class="form-control"
         id="root"
-        label="Required Field with Markdown Help"
         name="root"
         placeholder=""
         type="text"
@@ -7731,7 +7665,6 @@ exports[`single fields > string field > string field with allowClearTextInputs a
       <input
         class="form-control"
         id="root"
-        label=""
         name="root"
         placeholder=""
         readonly=""
@@ -7762,7 +7695,6 @@ exports[`single fields > string field > string field with allowClearTextInputs a
       <input
         class="form-control"
         id="root"
-        label=""
         name="root"
         placeholder=""
         type="text"
@@ -7801,7 +7733,6 @@ exports[`single fields > string field > string field with placeholder 1`] = `
       <input
         class="form-control"
         id="root"
-        label=""
         name="root"
         placeholder="placeholder"
         type="text"
@@ -7881,7 +7812,6 @@ exports[`single fields > title field 1`] = `
           <input
             class="form-control"
             id="root_title"
-            label="Titre 2"
             name="root_title"
             placeholder=""
             type="text"
@@ -7944,7 +7874,6 @@ exports[`single fields > up/down field 1`] = `
       <input
         class="form-control"
         id="root"
-        label=""
         name="root"
         placeholder=""
         step="any"
@@ -7975,7 +7904,6 @@ exports[`single fields > using custom tagName 1`] = `
       <input
         class="form-control"
         id="root"
-        label=""
         name="root"
         placeholder=""
         type="text"
@@ -8006,7 +7934,6 @@ exports[`string field with autocapitalize 1`] = `
         autocapitalize="words"
         class="form-control"
         id="root"
-        label=""
         name="root"
         placeholder=""
         type="text"
