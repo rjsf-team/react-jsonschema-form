@@ -1,8 +1,10 @@
-import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps, GenericObjectType } from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { getControlAttributes, getDateTimeLocalValue } from '@rjsf/utils';
 import { DatePicker } from 'antd';
 import dayjs from 'dayjs';
 import type { Dayjs } from 'dayjs';
+
+import getControlState from '../../controlState.ts';
 
 const DATE_PICKER_STYLE = {
   width: '100%',
@@ -26,6 +28,7 @@ export default function DateWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >({
+  autofocus,
   disabled,
   registry,
   id,
@@ -41,8 +44,7 @@ export default function DateWidget<
   schema,
   presentation,
 }: DateWidgetProps<T, S, F>) {
-  const { formContext } = registry;
-  const { readonlyAsDisabled = true } = formContext as GenericObjectType;
+  const control = getControlState<T, S, F>({ disabled, readonly, registry });
   const { isIsoDateTime, localValue } = getDateTimeLocalValue(schema, value);
 
   const handleChange = (nextValue: Dayjs | null) => {
@@ -65,7 +67,8 @@ export default function DateWidget<
 
   return (
     <DatePicker
-      disabled={disabled || (readonlyAsDisabled && readonly)}
+      autoFocus={autofocus}
+      disabled={control.disabled}
       getPopupContainer={getPopupContainer}
       id={id}
       name={htmlName || id}

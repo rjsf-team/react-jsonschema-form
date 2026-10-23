@@ -633,7 +633,6 @@ function ArrayFieldItemInner<
   onBlur: FieldProps<T[], S, F>['onBlur'];
   onFocus: FieldProps<T[], S, F>['onFocus'];
   onChange: FieldProps<T[], S, F>['onChange'];
-  rawErrors?: string[];
   totalItems: number;
   handleAddItem: (event: MouseEvent, index?: number) => void;
   handleCopyItem: (event: MouseEvent, index: number) => void;
@@ -663,7 +662,6 @@ function ArrayFieldItemInner<
     onBlur,
     onFocus,
     onChange,
-    rawErrors,
     totalItems,
     title,
     itemName,
@@ -704,7 +702,7 @@ function ArrayFieldItemInner<
     readonly,
     hideError,
     autofocus,
-    ...getFieldErrorProps<T, S, F>(rawErrors),
+    ...getFieldErrorProps<T, S, F>(itemErrorSchema?.__errors),
   };
   // The toolbar is laid out level with the item's first control below a label above it: one its template draws, as the
   // plan the item's `SchemaField` builds from these same props says, so the two can't disagree about it however the
@@ -941,7 +939,6 @@ function NormalArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
         autofocus: autofocus && index === 0,
         onBlur,
         onFocus,
-        rawErrors,
         totalItems: keyedFormData.length,
         handleAddItem,
         handleCopyItem,
@@ -1079,7 +1076,6 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
         autofocus: autofocus && index === 0,
         onBlur,
         onFocus,
-        rawErrors,
         totalItems: keyedFormData.length,
         onChange,
         handleAddItem,

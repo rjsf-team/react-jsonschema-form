@@ -1,15 +1,11 @@
 import type { ChangeEvent, FocusEvent, MouseEvent } from 'react';
 import { useCallback } from 'react';
 import { SchemaExamples } from '@rjsf/core';
-import type {
-  BaseInputTemplateProps,
-  FormContextType,
-  GenericObjectType,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from '@rjsf/utils';
+import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { examplesId, getControlAttributes, getExampleSuggestions, getInputProps } from '@rjsf/utils';
 import { Input, InputNumber } from 'antd';
+
+import getControlState from '../../controlState.ts';
 
 const INPUT_STYLE = {
   width: '100%',
@@ -27,6 +23,7 @@ export default function BaseInputTemplate<
   F extends FormContextType = FormContextType,
 >(props: BaseInputTemplateProps<T, S, F>) {
   const {
+    autofocus,
     disabled,
     registry,
     id,
@@ -44,11 +41,10 @@ export default function BaseInputTemplate<
     type,
     presentation,
   } = props;
-  const { formContext } = registry;
   // InputNumber doesn't use a native <input type="number"> directly - it wraps it and controls the stepping behavior
   // through its own props. The step prop in Ant Design expects a number, not the string "any"
   const inputProps = getInputProps<T, S, F>(schema, type, options, false);
-  const { readonlyAsDisabled = true } = formContext as GenericObjectType;
+  const control = getControlState<T, S, F>({ disabled, readonly, registry });
   const { ClearButton } = registry.templates.ButtonTemplates;
 
   const handleNumberChange = (nextValue: number | null) => onChange(nextValue ?? options.emptyValue);
@@ -81,7 +77,8 @@ export default function BaseInputTemplate<
   const controlAttributes = getControlAttributes<T, S, F>({ id, presentation }, hasExamples ? [examplesId(id)] : []);
   const input = isNumeric ? (
     <InputNumber
-      disabled={disabled || (readonlyAsDisabled && readonly)}
+      autoFocus={autofocus}
+      disabled={control.disabled}
       id={id}
       name={htmlName || id}
       onBlur={!readonly ? handleBlur : undefined}
@@ -102,7 +99,8 @@ export default function BaseInputTemplate<
     />
   ) : (
     <Input
-      disabled={disabled || (readonlyAsDisabled && readonly)}
+      autoFocus={autofocus}
+      disabled={control.disabled}
       id={id}
       name={htmlName || id}
       onBlur={!readonly ? handleBlur : undefined}

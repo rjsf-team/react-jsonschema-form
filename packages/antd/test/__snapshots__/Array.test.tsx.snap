@@ -606,7 +606,6 @@ exports[`array fields > checkboxes 1`] = `
               >
                 <div
                   class="ant-select ant-select-outlined ant-select-in-form-item css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-multiple ant-select-show-arrow ant-select-show-search"
-                  name="root"
                   style="width: 100%;"
                 >
                   <div
@@ -2538,7 +2537,6 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
               >
                 <div
                   class="ant-select ant-select-outlined ant-select-in-form-item css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-multiple ant-select-show-arrow ant-select-show-search"
-                  name="root"
                   style="width: 100%;"
                 >
                   <div
@@ -6511,7 +6509,6 @@ exports[`with title and description > checkboxes 1`] = `
               >
                 <div
                   class="ant-select ant-select-outlined ant-select-in-form-item css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-multiple ant-select-show-arrow ant-select-show-search"
-                  name="root"
                   style="width: 100%;"
                 >
                   <div
@@ -7653,7 +7650,6 @@ exports[`with title and description from both > checkboxes 1`] = `
               >
                 <div
                   class="ant-select ant-select-outlined ant-select-in-form-item css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-multiple ant-select-show-arrow ant-select-show-search"
-                  name="root"
                   style="width: 100%;"
                 >
                   <div
@@ -8795,7 +8791,6 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
               >
                 <div
                   class="ant-select ant-select-outlined ant-select-in-form-item css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-multiple ant-select-show-arrow ant-select-show-search"
-                  name="root"
                   style="width: 100%;"
                 >
                   <div
@@ -9800,7 +9795,6 @@ exports[`with title and description with global label off > checkboxes 1`] = `
               >
                 <div
                   class="ant-select ant-select-outlined ant-select-in-form-item css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-multiple ant-select-show-arrow ant-select-show-search"
-                  name="root"
                   style="width: 100%;"
                 >
                   <div

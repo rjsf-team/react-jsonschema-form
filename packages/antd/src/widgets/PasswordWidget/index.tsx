@@ -1,7 +1,9 @@
 import type { ChangeEvent, FocusEvent } from 'react';
-import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps, GenericObjectType } from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { getControlAttributes } from '@rjsf/utils';
 import { Input } from 'antd';
+
+import getControlState from '../../controlState.ts';
 
 /** The `PasswordWidget` component uses the `BaseInputTemplate` changing the type to `password`.
  *
@@ -13,6 +15,7 @@ export default function PasswordWidget<
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
   const {
+    autofocus,
     disabled,
     registry,
     id,
@@ -27,8 +30,7 @@ export default function PasswordWidget<
     value,
     presentation,
   } = props;
-  const { formContext } = registry;
-  const { readonlyAsDisabled = true } = formContext as GenericObjectType;
+  const control = getControlState<T, S, F>({ disabled, readonly, registry });
 
   const emptyValue = options.emptyValue || '';
 
@@ -41,7 +43,8 @@ export default function PasswordWidget<
 
   return (
     <Input.Password
-      disabled={disabled || (readonlyAsDisabled && readonly)}
+      autoFocus={autofocus}
+      disabled={control.disabled}
       id={id}
       name={htmlName || id}
       onBlur={!readonly ? handleBlur : undefined}

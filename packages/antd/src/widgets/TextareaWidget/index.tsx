@@ -1,7 +1,9 @@
 import type { ChangeEvent, FocusEvent } from 'react';
-import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { getControlAttributes } from '@rjsf/utils';
 import { Input } from 'antd';
+
+import getControlState from '../../controlState.ts';
 
 const INPUT_STYLE = {
   width: '100%',
@@ -16,6 +18,7 @@ export default function TextareaWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >({
+  autofocus,
   disabled,
   registry,
   id,
@@ -30,8 +33,7 @@ export default function TextareaWidget<
   required,
   value,
 }: WidgetProps<T, S, F>) {
-  const { formContext } = registry;
-  const { readonlyAsDisabled = true } = formContext as GenericObjectType;
+  const control = getControlState<T, S, F>({ disabled, readonly, registry });
 
   const handleChange = ({ target }: ChangeEvent<HTMLTextAreaElement>) =>
     onChange(target.value === '' ? options.emptyValue : target.value);
@@ -48,7 +50,8 @@ export default function TextareaWidget<
 
   return (
     <Input.TextArea
-      disabled={disabled || (readonlyAsDisabled && readonly)}
+      autoFocus={autofocus}
+      disabled={control.disabled}
       id={id}
       name={htmlName || id}
       onBlur={!readonly ? handleBlur : undefined}

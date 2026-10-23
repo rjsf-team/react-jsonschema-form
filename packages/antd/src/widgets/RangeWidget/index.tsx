@@ -1,6 +1,8 @@
-import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps, GenericObjectType } from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { getControlAttributes, rangeSpec } from '@rjsf/utils';
 import { Slider } from 'antd';
+
+import getControlState from '../../controlState.ts';
 
 /** The `RangeWidget` component uses the `BaseInputTemplate` changing the type to `range` and wrapping the result
  * in a div, with the value along side it.
@@ -17,6 +19,7 @@ export default function RangeWidget<
     disabled,
     registry,
     id,
+    htmlName,
     onBlur,
     onChange,
     onFocus,
@@ -26,8 +29,7 @@ export default function RangeWidget<
     value,
     presentation,
   } = props;
-  const { formContext } = registry;
-  const { readonlyAsDisabled = true } = formContext as GenericObjectType;
+  const control = getControlState<T, S, F>({ disabled, readonly, registry });
 
   const { min, max, step } = rangeSpec(schema);
 
@@ -51,23 +53,28 @@ export default function RangeWidget<
   };
 
   return (
-    <Slider
-      autoFocus={autofocus}
-      disabled={disabled || (readonlyAsDisabled && readonly)}
-      id={id}
-      max={max}
-      min={min}
-      onChange={!readonly ? handleChange : undefined}
-      range={false}
-      step={step}
-      value={value}
-      {...extraProps}
-      // The slider's handle is what takes focus, and it takes no `aria-describedby` or `aria-invalid`, nor a
-      // `handleRender` to add them, so it is only named, by the label a `for` can't reach or by the text of one
-      // `ui:label: false` hides. It isn't marked required: a slider always holds a value, and ARIA allows no
-      // `aria-required` on one
-      ariaLabelledByForHandle={ariaLabelledBy}
-      ariaLabelForHandle={ariaLabel}
-    />
+    <>
+      <Slider
+        autoFocus={autofocus}
+        disabled={control.disabled}
+        id={id}
+        max={max}
+        min={min}
+        onChange={!readonly ? handleChange : undefined}
+        range={false}
+        step={step}
+        value={value}
+        {...extraProps}
+        // The slider's handle is what takes focus, and it takes no `aria-describedby` or `aria-invalid`, nor a
+        // `handleRender` to add them, so it is only named, by the label a `for` can't reach or by the text of one
+        // `ui:label: false` hides. It isn't marked required: a slider always holds a value, and ARIA allows no
+        // `aria-required` on one
+        ariaLabelledByForHandle={ariaLabelledBy}
+        ariaLabelForHandle={ariaLabel}
+      />
+      {/* antd's `Slider` renders no native control, so the value a native submit or `FormData` reads is carried by a
+      hidden input, as the native range input of the other themes carries it */}
+      <input type='hidden' name={htmlName || id} value={value ?? ''} disabled={control.disabled} />
+    </>
   );
 }
