@@ -4902,6 +4902,23 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         const experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior = {
           nestedDefaultsPrecedence: 'ancestorWins',
         };
+        it.each([0, false, null, ''])('should keep a falsy ancestor default of %j over a nested default', (falsy) => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            default: { value: falsy },
+            properties: { value: { type: 'integer', default: 1 } },
+          };
+          expect(
+            getDefaultFormState(
+              testValidator,
+              schema,
+              undefined,
+              undefined,
+              undefined,
+              experimental_defaultFormStateBehavior,
+            ),
+          ).toEqual({ value: falsy });
+        });
         it('should default to empty object if no properties are defined', () => {
           expect(
             getDefaultFormState(

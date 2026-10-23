@@ -285,7 +285,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
   // Compute the defaults recursively: give highest priority to deepest nodes unless nestedDefaultsPrecedence is ancestorWins.
   let defaults: T | T[] | undefined = parentDefaults;
   const preferParentDefaults =
-    defaults && experimental_defaultFormStateBehavior?.nestedDefaultsPrecedence === 'ancestorWins';
+    defaults !== undefined && experimental_defaultFormStateBehavior?.nestedDefaultsPrecedence === 'ancestorWins';
   // If we get a new schema, then we need to recompute defaults again for the new schema found.
   let schemaToCompute: S | null = null;
   let experimental_dfsb_to_compute = experimental_defaultFormStateBehavior;
