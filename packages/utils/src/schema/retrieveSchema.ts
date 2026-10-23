@@ -3,8 +3,8 @@ import {
   additionalPropertiesKeyword,
   allowsAdditionalProperties,
   conjoin,
+  copyJoinedSchemas,
   getAdditionalPropertySchema,
-  JOINED_SCHEMAS_KEY,
   withJoinedSchemas,
 } from '../additionalPropertiesUtils.ts';
 import {
@@ -354,7 +354,8 @@ function renderPolicy<S extends StrictRJSFSchema, F extends FormContextType>(
 const RENDER_POLICY_KEYS = { 'absent:true': 'render|absent:true', 'absent:false': 'render|absent:false' } as const;
 
 /** The key naming, beside the validator, what `optionMatchContext()` keeps of a context, which a policy matching
- * `dependencies` options is cached under. A constant per setting, so asking for it allocates nothing.
+ * `dependencies` options and `getClosestMatchingOption()`'s scores are cached under. A constant per setting, so asking
+ * for it allocates nothing.
  *
  * @param context - The `SchemaContext` the policy is asked for in
  * @returns - The key of the context's `additionalPropertiesWhenAbsent`
@@ -1215,13 +1216,10 @@ export function joinOptionExtraKeys<S extends StrictRJSFSchema = RJSFSchema>(sch
  */
 function extraKeyKeywords<S extends StrictRJSFSchema>(schema: S): S {
   const keywords: GenericObjectType = {};
-  for (const keyword of [ADDITIONAL_PROPERTIES_KEY, UNEVALUATED_PROPERTIES_KEY, PATTERN_PROPERTIES_KEY]) {
+  for (const keyword of EXTRA_KEY_KEYWORDS) {
     keywords[keyword] = Reflect.get(schema, keyword);
   }
-  const joined: unknown = Reflect.get(schema, JOINED_SCHEMAS_KEY);
-  if (joined !== undefined) {
-    Reflect.set(keywords, JOINED_SCHEMAS_KEY, joined);
-  }
+  copyJoinedSchemas(schema, keywords);
   return schemaFrom(schema, keywords);
 }
 

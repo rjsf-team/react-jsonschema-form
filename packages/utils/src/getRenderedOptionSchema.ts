@@ -1,4 +1,4 @@
-import { JOINED_SCHEMAS_KEY } from './additionalPropertiesUtils.ts';
+import { copyJoinedSchemas } from './additionalPropertiesUtils.ts';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   ALL_OF_KEY,
@@ -15,7 +15,7 @@ import {
   REQUIRED_KEY,
   THEN_KEY,
 } from './constants.ts';
-import isObject, { isSchemaObject } from './isObject.ts';
+import isObject from './isObject.ts';
 import mergeSchemas from './mergeSchemas.ts';
 import rendersOwnFieldBesideOption, { rendersOwnFieldBesideOwnOptions } from './rendersOwnFieldBesideOption.ts';
 import KeyedMemo from './schema/graph/keyedMemo.ts';
@@ -263,14 +263,7 @@ function meetSubschema(parent: unknown, option: unknown): unknown {
  * @returns - The option as it is rendered, or `option` itself when the parent has nothing to pass on
  */
 export default function getRenderedOptionSchema<S extends StrictRJSFSchema = RJSFSchema>(parent: S, option: S): S {
-  const keys = [parent, option];
-  const known = renderedOptions.peek(keys);
-  if (isSchemaObject<S>(known)) {
-    return known;
-  }
-  const rendered = renderOption<S>(parent, option);
-  renderedOptions.set(keys, rendered);
-  return rendered;
+  return renderedOptions.get([parent, option], () => renderOption<S>(parent, option)) as S;
 }
 
 /** The options `getRenderedOptionSchema()` rendered, by parent and option: the option of an object parent is a copy
@@ -346,10 +339,7 @@ export function renderOption<S extends StrictRJSFSchema>(parent: S, option: S): 
     withParentExtraKeys[keyword] = Reflect.get(parent, keyword);
   }
   // A parent taking the extra keys of a field above it in turn describes a key by each of the schemas it joins apart
-  const parentJoined: unknown = Reflect.get(parent, JOINED_SCHEMAS_KEY);
-  if (parentJoined !== undefined) {
-    Reflect.set(withParentExtraKeys, JOINED_SCHEMAS_KEY, parentJoined);
-  }
+  copyJoinedSchemas(parent, withParentExtraKeys);
   Reflect.set(withParentExtraKeys, DECLARED_ABOVE_KEY, declaredAbove<S>(parent));
   return joinOptionExtraKeys<S>(withParentExtraKeys as S, option);
 }

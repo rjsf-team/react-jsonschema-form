@@ -172,7 +172,7 @@ export function conjoin(own: unknown, other: unknown): unknown {
 }
 
 /** The object schema and the option selected beside it that a schema joins the extra-key keywords of */
-export const JOINED_SCHEMAS_KEY = Symbol('__rjsf_joined_schemas');
+const JOINED_SCHEMAS_KEY = Symbol('__rjsf_joined_schemas');
 
 /** Returns `joined`, which joins the extra-key keywords of an object schema, `own`, and of the option selected beside
  * it, `option`, carrying the two so that `getAdditionalPropertySchema()` asks each of them about a key on its own: the
@@ -186,6 +186,18 @@ export const JOINED_SCHEMAS_KEY = Symbol('__rjsf_joined_schemas');
  */
 export function withJoinedSchemas<S extends StrictRJSFSchema = RJSFSchema>(joined: S, own: S, option: S): S {
   return { ...joined, [JOINED_SCHEMAS_KEY]: { own, option } };
+}
+
+/** Carries the schemas `from` joins, if it is a join, onto `to`, which takes `from`'s extra-key keywords as they stand
+ *
+ * @param from - The schema whose extra-key keywords `to` takes
+ * @param to - The schema to carry them on, which is changed in place
+ */
+export function copyJoinedSchemas(from: object, to: object) {
+  const joined: unknown = Reflect.get(from, JOINED_SCHEMAS_KEY);
+  if (joined !== undefined) {
+    Reflect.set(to, JOINED_SCHEMAS_KEY, joined);
+  }
 }
 
 /** Returns what `schema` says of a `key` its own `properties` don't name, or undefined where it names nothing that

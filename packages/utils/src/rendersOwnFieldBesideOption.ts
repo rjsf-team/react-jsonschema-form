@@ -1,6 +1,6 @@
 import getSchemaType from './getSchemaType.ts';
 import getXxxOfOptions from './getXxxOfOptions.ts';
-import isConstantOptionList from './isConstantOptionList.ts';
+import isConstantSelect from './isConstantSelect.ts';
 import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
 
 /** Whether the field of `schema` renders a field of its own beside its selected `anyOf`/`oneOf` option, as an object's
@@ -25,11 +25,10 @@ export default function rendersOwnFieldBesideOption<S extends StrictRJSFSchema =
  * @returns - True when the option renders a field of its own beside options of its own
  */
 export function rendersOwnFieldBesideOwnOptions<S extends StrictRJSFSchema = RJSFSchema>(option: S): boolean {
-  const offered = getXxxOfOptions<S>(option);
+  // The same test of a select `SchemaField` renders the options with, so the two agree on which field this is
   return (
-    offered !== undefined &&
-    !Array.isArray(option.enum) &&
-    !isConstantOptionList<S>(offered.options) &&
+    getXxxOfOptions<S>(option) !== undefined &&
+    !isConstantSelect<S>(option, true) &&
     (option.type === undefined || rendersOwnFieldBesideOption<S>(option))
   );
 }
