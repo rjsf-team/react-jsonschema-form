@@ -2021,7 +2021,7 @@ describe('setFieldValue()', () => {
     const { node } = createFormComponent({ schema });
     const ids = Array.from(node.querySelectorAll('[id]')).map((element) => element.id);
 
-    expect(node.querySelector('input[id="root_obj_%00"]')).toBeInTheDocument();
+    expect(node.querySelector('input#root_obj_-_FF')).toBeInTheDocument();
     expect(new Set(ids).size).toBe(ids.length);
   });
   it('keeps a root-level property named the empty string apart from the form itself', async () => {
@@ -2031,13 +2031,13 @@ describe('setFieldValue()', () => {
     };
     const { node, onChange } = createFormComponent({ schema, initialFormData: { other: 'kept' } });
 
-    const input = node.querySelector('input[id="root_%00"]');
+    const input = node.querySelector('input#root_-_FF');
     expect(input).toBeInTheDocument();
     await user.type(input!, 'x');
 
     expect(onChange).toHaveBeenLastCalledWith(
       expect.objectContaining({ formData: { '': 'x', other: 'kept' } }),
-      'root_%00',
+      'root_-_FF',
     );
   });
   it('Sets a field whose property name is the empty string', () => {
@@ -2063,7 +2063,7 @@ describe('setFieldValue()', () => {
 
     expect(onChange).toHaveBeenLastCalledWith(
       expect.objectContaining({ formData: { foo: { '': { bar: 'populated value' } } } }),
-      'root_foo_%00_bar',
+      'root_foo_-_FF_bar',
     );
   });
 });

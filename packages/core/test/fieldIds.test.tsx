@@ -38,8 +38,24 @@ describe('field ids', () => {
     });
 
     const ids = listedIds(node);
-    expect(ids).toContain('root_Do%20you%20have%20any%20pets?__description');
+    expect(ids).toContain('root_Do-_20you-_20have-_20any-_20pets-_3F__description');
     expect(ids.filter((id) => node.ownerDocument.getElementById(id) === null)).toEqual([]);
+  });
+
+  it.each([
+    ['first name', 'root_first-_20name'],
+    ['a.b', 'root_a-_2Eb'],
+    ['100%', 'root_100-_25'],
+    ['_id', 'root_-_5Fid'],
+    ['prénom', 'root_prénom'],
+    ['名前', 'root_名前'],
+  ])('gives the field of a property named %j an id a # selector finds with no escaping', (name, id) => {
+    const schema: RJSFSchema = { type: 'object', properties: { [name]: { type: 'string', title: 'Field' } } };
+    const { node } = createFormComponent({ schema });
+
+    const control = screen.getByRole('textbox', { name: 'Field' });
+    expect(control).toHaveAttribute('id', id);
+    expect(node.ownerDocument.querySelector(`#${id}`)).toBe(control);
   });
 
   it('focuses the field of an error whose property name has spaces', async () => {

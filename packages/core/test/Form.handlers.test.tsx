@@ -1008,7 +1008,7 @@ describe('Form: the prop changes the form re-derives its data for', () => {
 
     rerender({ schema, uiSchema: JSON.parse('{"__proto__": {"ui:emptyValue": "empty"}}') });
 
-    expect(node.querySelector<HTMLInputElement>('[id="root_%5F%5Fproto%5F%5F"]')).toHaveValue('empty');
+    expect(node.querySelector<HTMLInputElement>('#root_-_5F-_5Fproto-_5F-_5F')).toHaveValue('empty');
   });
   it('should not re-derive it for a uiSchema holding a function written inline', async () => {
     const uiSchema = (): UiSchema => ({ 'ui:options': { onSomething: () => undefined } });

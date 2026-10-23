@@ -1135,17 +1135,17 @@ describe('ObjectField', () => {
         initialFormData: { 'Custom title': 1 },
       });
 
-      const textNode = elementOf(node, '[id="root_Custom%20title__key"]');
+      const textNode = elementOf(node, '#root_Custom-_20title__key');
       await user.clear(textNode);
       await user.type(textNode, 'Renamed custom title');
       await user.tab();
 
       expectToHaveBeenCalledWithFormData(onChange, { 'Renamed custom title': 1 }, 'root');
 
-      const keyInput = node.querySelector('[id="root_Renamed%20custom%20title__key"]');
+      const keyInput = node.querySelector('#root_Renamed-_20custom-_20title__key');
       expect(keyInput).toHaveValue('Renamed custom title');
 
-      const keyInputLabel = node.querySelector('label[for="root_Renamed%20custom%20title__key"]');
+      const keyInputLabel = node.querySelector('label[for="root_Renamed-_20custom-_20title__key"]');
       expect(keyInputLabel).toHaveTextContent('Renamed custom title Key');
     });
 
@@ -1161,7 +1161,7 @@ describe('ObjectField', () => {
         initialFormData: { 'Custom title': 1 },
       });
 
-      const textNode = elementOf(node, '[id="root_Custom%20title__key"]');
+      const textNode = elementOf(node, '#root_Custom-_20title__key');
       await user.clear(textNode);
       await user.type(textNode, 'Renamed custom title');
       await user.tab();

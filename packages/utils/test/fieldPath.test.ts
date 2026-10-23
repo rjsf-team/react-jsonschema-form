@@ -147,34 +147,68 @@ describe('fieldPathToId()', () => {
   });
   test('writes no whitespace into the id, so it stays one id in a space-separated id list (#5558)', () => {
     const id = fieldPathToId(toFieldPath('Do you have any pets?', toFieldPath('petOwner')), GLOBAL_FORM_OPTIONS);
-    expect(id).toBe('root_petOwner_Do%20you%20have%20any%20pets?');
-    expect(fieldPathToId(toFieldPath('a\tb\nc\fd\re'), GLOBAL_FORM_OPTIONS)).toBe('root_a%09b%0Ac%0Cd%0De');
+    expect(id).toBe('root_petOwner_Do-_20you-_20have-_20any-_20pets-_3F');
+    expect(fieldPathToId(toFieldPath('a\tb\nc\fd\re'), GLOBAL_FORM_OPTIONS)).toBe('root_a-_09b-_0Ac-_0Cd-_0De');
+    expect(fieldPathToId(toFieldPath('a\u00a0b\u3000c'), GLOBAL_FORM_OPTIONS)).toBe('root_a-_U00A0b-_U3000c');
   });
-  test('writes different property names as different ids, the escape character included', () => {
-    const ids = ['a b', 'a%20b', 'a_b', 'a%5Fb', '', '%00', '_', '%'].map((name) =>
+  test('writes every character a CSS identifier holds escaped as an escape, and the rest as it is', () => {
+    const ids = ['a.b', 'a:b', 'a/b', 'a#b', 'a[0]', '100%', 'café', '名前', 'emoji😀'].map((name) =>
       fieldPathToId(toFieldPath(name), GLOBAL_FORM_OPTIONS),
     );
     expect(ids).toEqual([
-      'root_a%20b',
-      'root_a%2520b',
-      'root_a_b',
-      'root_a%255Fb',
-      'root_%00',
-      'root_%2500',
-      'root_%5F',
-      'root_%25',
+      'root_a-_2Eb',
+      'root_a-_3Ab',
+      'root_a-_2Fb',
+      'root_a-_23b',
+      'root_a-_5B0-_5D',
+      'root_100-_25',
+      'root_café',
+      'root_名前',
+      'root_emoji😀',
     ]);
+    for (const id of ids) {
+      expect(id).toMatch(/^[A-Za-z0-9_\-\u0080-\uffff]+$/);
+    }
+  });
+  test('writes camelCase, kebab-case and snake_case names as they are', () => {
+    const ids = ['firstName', 'first-name', 'snake_case_name', 'a1-b2_c3'].map((name) =>
+      fieldPathToId(toFieldPath(name), GLOBAL_FORM_OPTIONS),
+    );
+    expect(ids).toEqual(['root_firstName', 'root_first-name', 'root_snake_case_name', 'root_a1-b2_c3']);
+  });
+  test('writes different property names as different ids, the escape token included', () => {
+    const names = ['a b', 'a-_20b', 'a_b', 'a-_5Fb', '', '-_FF', '_', '-', '-_', 'a-_b', 'a--b', 'a-'];
+    const ids = names.map((name) => fieldPathToId(toFieldPath(name), GLOBAL_FORM_OPTIONS));
+    expect(ids).toEqual([
+      'root_a-_20b',
+      'root_a--_5F20b',
+      'root_a_b',
+      'root_a--_5F5Fb',
+      'root_-_FF',
+      'root_--_5FFF',
+      'root_-_5F',
+      'root_-_2D',
+      'root_--_5F',
+      'root_a--_5Fb',
+      'root_a--b',
+      'root_a-_2D',
+    ]);
+    expect(new Set(ids).size).toBe(names.length);
   });
   test('writes no `__`, which joins a field id to the name of one of its parts', () => {
     expect(fieldPathToId(toFieldPath('_description', toFieldPath('a')), GLOBAL_FORM_OPTIONS)).toBe(
-      'root_a_%5Fdescription',
+      'root_a_-_5Fdescription',
     );
-    expect(fieldPathToId(toFieldPath('b', toFieldPath('a_')), GLOBAL_FORM_OPTIONS)).toBe('root_a%5F_b');
-    expect(fieldPathToId(toFieldPath('a__b'), GLOBAL_FORM_OPTIONS)).toBe('root_a%5F%5Fb');
+    expect(fieldPathToId(toFieldPath('b', toFieldPath('a_')), GLOBAL_FORM_OPTIONS)).toBe('root_a-_5F_b');
+    expect(fieldPathToId(toFieldPath('a__b'), GLOBAL_FORM_OPTIONS)).toBe('root_a-_5F-_5Fb');
     expect(fieldPathToId(toFieldPath('description', toFieldPath('')), GLOBAL_FORM_OPTIONS)).toBe(
-      'root_%00_description',
+      'root_-_FF_description',
     );
-    expect(fieldPathToId(toFieldPath('snake_case_name'), GLOBAL_FORM_OPTIONS)).toBe('root_snake_case_name');
+    expect(fieldPathToId(toFieldPath('_id'), GLOBAL_FORM_OPTIONS)).toBe('root_-_5Fid');
+  });
+  test('writes no `-_` but where an escape starts, a name ending in `-` before the separator included', () => {
+    expect(fieldPathToId(toFieldPath('b', toFieldPath('a-')), GLOBAL_FORM_OPTIONS)).toBe('root_a-_2D_b');
+    expect(fieldPathToId(toFieldPath('2D_b', toFieldPath('a')), GLOBAL_FORM_OPTIONS)).toBe('root_a_2D_b');
   });
 });
 
