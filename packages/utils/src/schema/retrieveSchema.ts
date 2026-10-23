@@ -108,7 +108,7 @@ export default function retrieveSchema<
   }
   const graph = parseSchemaGraph<S>(rootSchema ?? schemaFrom(schema, {}));
   // An object the context opens to any extra key stubs those of the data, keywords or not, so its view reads the data
-  const isMemoized = !absentKeywordAllows<S, F>(schema, context);
+  const isMemoized = !absentKeywordAllows<S, F>(context, schema);
   const leaf = isMemoized ? leafViews.get(schema) : undefined;
   if (leaf?.graph === graph && isSchemaObject<S>(leaf.view)) {
     return leaf.view;
@@ -340,24 +340,43 @@ function renderPolicy<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   graph: SchemaGraph<S>,
 ): PlanPolicy<S> {
-  const matchContext = optionMatchContext(context);
-  return cachedPolicy<S>(matchContext.validator, graph, `render|${matchContext.key}`, () => ({
-    allOf: true,
-    selectOption: (request) => dependencyOption(matchContext, request, request.data),
-  }));
+  // A constant per setting, since this runs on every view the leaf memo misses
+  return cachedPolicy<S>(context.validator, graph, RENDER_POLICY_KEYS[optionMatchKey(context)], () => {
+    const matchContext = optionMatchContext(context);
+    return {
+      allOf: true,
+      selectOption: (request) => dependencyOption(matchContext, request, request.data),
+    };
+  });
 }
 
-/** The part of a context a policy matches `dependencies` options with, and the key naming it beside the validator.
- * A policy is cached across contexts, so it must keep no more of the one it was made in than its key names.
+/** The keys `renderPolicy()` caches its policy under, by `optionMatchKey()` */
+const RENDER_POLICY_KEYS = { 'absent:true': 'render|absent:true', 'absent:false': 'render|absent:false' } as const;
+
+/** The key naming, beside the validator, what `optionMatchContext()` keeps of a context, which a policy matching
+ * `dependencies` options is cached under. A constant per setting, so asking for it allocates nothing.
  *
  * @param context - The `SchemaContext` the policy is asked for in
- * @returns - The context options are matched in, with its key
+ * @returns - The key of the context's `additionalPropertiesWhenAbsent`
+ */
+export function optionMatchKey<S extends StrictRJSFSchema, F extends FormContextType>({
+  additionalPropertiesWhenAbsent,
+}: SchemaContext<S, F>): keyof typeof RENDER_POLICY_KEYS {
+  return additionalPropertiesWhenAbsent === 'allow' ? 'absent:true' : 'absent:false';
+}
+
+/** The part of a context a policy matches `dependencies` options with. A policy is cached across contexts, so it must
+ * keep no more of the one it was made in than `optionMatchKey()` names beside the validator; a field kept here is named
+ * there too.
+ *
+ * @param context - The `SchemaContext` the policy is asked for in
+ * @returns - The context options are matched in
  */
 export function optionMatchContext<S extends StrictRJSFSchema, F extends FormContextType>({
   validator,
   additionalPropertiesWhenAbsent,
-}: SchemaContext<S, F>): SchemaContext<S, F> & { key: string } {
-  return { validator, additionalPropertiesWhenAbsent, key: `absent:${additionalPropertiesWhenAbsent === 'allow'}` };
+}: SchemaContext<S, F>): SchemaContext<S, F> {
+  return { validator, additionalPropertiesWhenAbsent };
 }
 
 /** Returns the option of a list beside `dependencies` that `data` matches first, which is merged into the schema
@@ -876,7 +895,7 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
   const fieldSchema = option === undefined ? merged : withOptionExtraKeys<S>(merged, option);
   const stubsExtraKeys =
     (field.optionOf === undefined || field.stubsOwnExtraKeys === true) &&
-    allowsAdditionalProperties<S, F>(fieldSchema, context);
+    allowsAdditionalProperties<S, F>(context, fieldSchema);
   const view = handOut(
     stubsExtraKeys
       ? stubExistingAdditionalProperties<unknown, S, F>(context, merged, graph.rawRoot, data, option)

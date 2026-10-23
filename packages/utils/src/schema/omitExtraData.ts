@@ -131,7 +131,7 @@ export default function omitExtraData<
     // Read with the precedence `getAdditionalPropertySchema()` reads the two keywords with, so a key the form renders
     // a field for, and the add button seeds, through an `unevaluatedProperties` is one this keeps rather than prunes
     // out from under it, and with neither of them named, as the context says an absent one reads
-    const additionalProperties = absentKeywordAllows<S, F>(childSchema, context)
+    const additionalProperties = absentKeywordAllows<S, F>(context, childSchema)
       ? true
       : additionalPropertiesKeyword<S>(childSchema);
     const requiredSet = new Set(childSchema.required ?? []);

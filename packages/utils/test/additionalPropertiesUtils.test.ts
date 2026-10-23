@@ -54,54 +54,54 @@ describe('additionalPropertiesKeyword()', () => {
 });
 describe('allowsAdditionalProperties()', () => {
   it('returns true for a patternProperties naming a pattern, whatever an additionalProperties beside it forbids', () => {
-    expect(allowsAdditionalProperties({ patternProperties: { '^a': { type: 'string' } } }, forbidding)).toBe(true);
+    expect(allowsAdditionalProperties(forbidding, { patternProperties: { '^a': { type: 'string' } } })).toBe(true);
     expect(
-      allowsAdditionalProperties(
-        { patternProperties: { '^a': { type: 'string' } }, additionalProperties: false },
-        forbidding,
-      ),
+      allowsAdditionalProperties(forbidding, {
+        patternProperties: { '^a': { type: 'string' } },
+        additionalProperties: false,
+      }),
     ).toBe(true);
     // An empty `patternProperties` names no pattern, so it matches no name and describes no key to take
-    expect(allowsAdditionalProperties({ patternProperties: {} }, forbidding)).toBe(false);
+    expect(allowsAdditionalProperties(forbidding, { patternProperties: {} })).toBe(false);
   });
   it('returns what the keyword describing the unmatched names says', () => {
-    expect(allowsAdditionalProperties({ additionalProperties: true }, forbidding)).toBe(true);
-    expect(allowsAdditionalProperties({ additionalProperties: { type: 'string' } }, forbidding)).toBe(true);
-    expect(allowsAdditionalProperties({ additionalProperties: false }, forbidding)).toBe(false);
+    expect(allowsAdditionalProperties(forbidding, { additionalProperties: true })).toBe(true);
+    expect(allowsAdditionalProperties(forbidding, { additionalProperties: { type: 'string' } })).toBe(true);
+    expect(allowsAdditionalProperties(forbidding, { additionalProperties: false })).toBe(false);
     const describedSchema: RJSFSchema = { unevaluatedProperties: { type: 'string' } };
     const forbiddenSchema: RJSFSchema = { unevaluatedProperties: false };
-    expect(allowsAdditionalProperties(describedSchema, forbidding)).toBe(true);
-    expect(allowsAdditionalProperties(forbiddenSchema, forbidding)).toBe(false);
+    expect(allowsAdditionalProperties(forbidding, describedSchema)).toBe(true);
+    expect(allowsAdditionalProperties(forbidding, forbiddenSchema)).toBe(false);
     // The same precedence `getAdditionalPropertySchema()` reads the two keywords with
     const evaluatedSchema: RJSFSchema = { additionalProperties: false, unevaluatedProperties: { type: 'string' } };
-    expect(allowsAdditionalProperties(evaluatedSchema, forbidding)).toBe(false);
+    expect(allowsAdditionalProperties(forbidding, evaluatedSchema)).toBe(false);
   });
   it('returns false for an object that names none of the keywords, unless the context allows them', () => {
     const schema: RJSFSchema = { type: 'object', properties: { a: { type: 'string' } } };
-    expect(allowsAdditionalProperties(schema, forbidding)).toBe(false);
+    expect(allowsAdditionalProperties(forbidding, schema)).toBe(false);
     const spreadSchema: RJSFSchema = { patternProperties: undefined, additionalProperties: undefined };
-    expect(allowsAdditionalProperties(spreadSchema, forbidding)).toBe(false);
+    expect(allowsAdditionalProperties(forbidding, spreadSchema)).toBe(false);
     // The JSON Schema spec reads the absent keyword as `true`, which `additionalPropertiesWhenAbsent: 'allow'` follows
-    expect(allowsAdditionalProperties(schema, allowing)).toBe(true);
-    expect(allowsAdditionalProperties({ properties: {} }, allowing)).toBe(true);
+    expect(allowsAdditionalProperties(allowing, schema)).toBe(true);
+    expect(allowsAdditionalProperties(allowing, { properties: {} })).toBe(true);
   });
   it('reads a keyword the object names as it stands, whatever the context says about an absent one', () => {
-    expect(allowsAdditionalProperties({ type: 'object', additionalProperties: false }, allowing)).toBe(false);
+    expect(allowsAdditionalProperties(allowing, { type: 'object', additionalProperties: false })).toBe(false);
     const forbiddenSchema: RJSFSchema = { type: 'object', unevaluatedProperties: false };
-    expect(allowsAdditionalProperties(forbiddenSchema, allowing)).toBe(false);
+    expect(allowsAdditionalProperties(allowing, forbiddenSchema)).toBe(false);
   });
   it('returns false for a schema that is no object, even where the context allows an absent keyword', () => {
-    expect(allowsAdditionalProperties({}, allowing)).toBe(false);
-    expect(allowsAdditionalProperties({ type: 'string' }, allowing)).toBe(false);
+    expect(allowsAdditionalProperties(allowing, {})).toBe(false);
+    expect(allowsAdditionalProperties(allowing, { type: 'string' })).toBe(false);
   });
   it("leaves the extra keys of an option rendered beside its parent's field to that field, even where the context allows an absent keyword", () => {
     const rendered = getRenderedOptionSchema(
       { type: 'object', properties: { a: { type: 'string' } } },
       { properties: { b: { type: 'string' } } },
     );
-    expect(allowsAdditionalProperties(rendered, allowing)).toBe(false);
+    expect(allowsAdditionalProperties(allowing, rendered)).toBe(false);
     // A keyword joined in from an option it offers in turn is read as it stands
-    expect(allowsAdditionalProperties({ ...rendered, additionalProperties: { type: 'string' } }, forbidding)).toBe(
+    expect(allowsAdditionalProperties(forbidding, { ...rendered, additionalProperties: { type: 'string' } })).toBe(
       true,
     );
   });

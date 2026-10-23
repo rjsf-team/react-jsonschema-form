@@ -145,8 +145,8 @@ An empty `patternProperties` names no pattern, so it matches no name and describ
 
 #### Parameters
 
-- schema: S - The object schema to check
 - context: SchemaContext&lt;S, F> - The `SchemaContext` whose `additionalPropertiesWhenAbsent` says what an absent keyword means
+- schema: S - The object schema to check
 
 #### Returns
 

@@ -96,6 +96,7 @@ import retrieveSchema, {
   fieldOf,
   isLeafSchema,
   optionMatchContext,
+  optionMatchKey,
   optionNode as offeredOption,
   resolveMergedOwnRef,
   retrieveField,
@@ -615,22 +616,24 @@ function policyFor<S extends StrictRJSFSchema, F extends FormContextType>(
   cutRecursion = false,
   optionPolicy?: OptionPolicy,
 ): PlanPolicy<S> {
-  const matchContext = optionMatchContext(context);
-  let key = `defaults|${matchContext.key}|${allOf}|${conditions}|${cutRecursion}|${optionPolicy?.allOf}|${optionPolicy?.conditions}`;
+  let key = `defaults|${optionMatchKey(context)}|${allOf}|${conditions}|${cutRecursion}|${optionPolicy?.allOf}|${optionPolicy?.conditions}`;
   for (const [provider, index] of selections) {
     key += `|${provider}:${index}`;
   }
-  return cachedPolicy<S>(matchContext.validator, graph, key, () => ({
-    allOf,
-    conditions,
-    cutRecursion,
-    selectOption: (request) =>
-      selections.get(request.provider) ?? dependencyOption(matchContext, request, request.depData),
-    // An option the fold selects keeps the ref path of the node offering it: restarting it, as render does, would
-    // restart it at every level of a recursion through an option chosen without data, which nothing then bounds
-    optionsInheritRefPath: true,
-    optionPolicy,
-  }));
+  return cachedPolicy<S>(context.validator, graph, key, () => {
+    const matchContext = optionMatchContext(context);
+    return {
+      allOf,
+      conditions,
+      cutRecursion,
+      selectOption: (request) =>
+        selections.get(request.provider) ?? dependencyOption(matchContext, request, request.depData),
+      // An option the fold selects keeps the ref path of the node offering it: restarting it, as render does, would
+      // restart it at every level of a recursion through an option chosen without data, which nothing then bounds
+      optionsInheritRefPath: true,
+      optionPolicy,
+    };
+  });
 }
 
 /** The keywords `ownKeywords()` read, by plan, which a plan never changes once made */
@@ -1513,7 +1516,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   // A field resolved the way `retrieveSchema()` resolves a schema has the extra keys of its data stubbed among its
   // `properties`
   const schema =
-    view.stubs && allowsAdditionalProperties<S, F>(view.schema, context)
+    view.stubs && allowsAdditionalProperties<S, F>(context, view.schema)
       ? stubExistingAdditionalProperties<unknown, S, F>(context, view.schema, rootSchema, formData)
       : view.schema;
   const parentConst = schema[CONST_KEY];
@@ -1639,7 +1642,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
       onNullFill?.();
     });
   }
-  const additionalProperties = absentKeywordAllows<S, F>(schema, context) || schema.additionalProperties;
+  const additionalProperties = absentKeywordAllows<S, F>(context, schema) || schema.additionalProperties;
   if (additionalProperties && !initialDefaultsGenerated) {
     // as per spec additionalProperties may be either schema or boolean
     const additionalPropertiesSchema = schemaFrom(
@@ -1748,7 +1751,7 @@ function branchNullFills<T, S extends StrictRJSFSchema, F extends FormContextTyp
   const { rawFormData, uiSchema, uiSchemaDefinitions, nullFills } = props;
   const formData = isObject(rawFormData) ? rawFormData : {};
   const retrieved = settle(context, { ...view.field, retrieves: true }, view.data, view.depData, view.options);
-  const rendered = allowsAdditionalProperties<S, F>(retrieved.schema, context)
+  const rendered = allowsAdditionalProperties<S, F>(context, retrieved.schema)
     ? stubExistingAdditionalProperties<unknown, S, F>(context, retrieved.schema, view.graph.rawRoot, formData)
     : retrieved.schema;
   const nullsOnly = nullsOnlyContext(context);

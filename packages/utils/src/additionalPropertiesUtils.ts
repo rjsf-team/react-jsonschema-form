@@ -89,14 +89,14 @@ export function additionalPropertiesKeyword<S extends StrictRJSFSchema = RJSFSch
  * an untyped `{}` included, has no keys for the form to offer or keep, and an option `getRenderedOptionSchema()` marked
  * `EXTRA_KEYS_ELSEWHERE_FLAG` leaves them to its parent's own field.
  *
- * @param schema - The schema to check
  * @param context - The `SchemaContext` whose `additionalPropertiesWhenAbsent` decides
+ * @param schema - The schema to check
  * @returns - True when the object's absent keyword takes any extra key
  */
 export function absentKeywordAllows<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(schema: S, context: SchemaContext<S, F>): boolean {
+>(context: SchemaContext<S, F>, schema: S): boolean {
   return (
     context.additionalPropertiesWhenAbsent === 'allow' &&
     !Reflect.get(schema, EXTRA_KEYS_ELSEWHERE_FLAG) &&
@@ -118,19 +118,19 @@ export function absentKeywordAllows<
  * names no pattern, so it matches no name and describes no key the object could take, the way an empty `properties`
  * declares none.
  *
- * @param schema - The object schema to check
  * @param context - The `SchemaContext` whose `additionalPropertiesWhenAbsent` says what an absent keyword means
+ * @param schema - The object schema to check
  * @returns - True when the object takes keys beyond the ones its `properties` name
  */
 export function allowsAdditionalProperties<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(schema: S, context: SchemaContext<S, F>): boolean {
+>(context: SchemaContext<S, F>, schema: S): boolean {
   if (Object.keys(schema.patternProperties ?? {}).length > 0) {
     return true;
   }
   const keyword = additionalPropertiesKeyword<S>(schema);
-  return keyword === undefined ? absentKeywordAllows<S, F>(schema, context) : keyword !== false;
+  return keyword === undefined ? absentKeywordAllows<S, F>(context, schema) : keyword !== false;
 }
 
 /** The `allOf` of the patterns a key matches, by those patterns */

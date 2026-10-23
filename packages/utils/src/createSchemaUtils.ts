@@ -126,7 +126,7 @@ class SchemaUtils<
    * @returns - True when the object takes keys beyond the ones its `properties` name
    */
   allowsAdditionalProperties(schema: S): boolean {
-    return allowsAdditionalProperties<S, F>(schema, this.context);
+    return allowsAdditionalProperties<S, F>(this.context, schema);
   }
 
   /** Checks whether the field described by `schema`, having the `uiSchema` and `formData`, supports expanding, an

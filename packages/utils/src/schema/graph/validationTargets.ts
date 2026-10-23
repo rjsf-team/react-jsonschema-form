@@ -650,7 +650,7 @@ function readDeclaredKeys<S extends StrictRJSFSchema, F extends FormContextType>
   }
   const names = new Set(declaring.flat());
   if (names.size === 0) {
-    return scope.some((node) => allowsAdditionalProperties<S, F>(node.raw, context));
+    return scope.some((node) => allowsAdditionalProperties<S, F>(context, node.raw));
   }
   const patterns = scope
     .flatMap((node) => graph.subschemas(node.id, PATTERN_PROPERTIES_KEY))

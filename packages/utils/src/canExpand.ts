@@ -22,7 +22,7 @@ export default function canExpand<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(context: SchemaContext<S, F>, schema: S, uiSchema: UiSchema<T, S, F> = {}, formData?: T) {
-  if (!allowsAdditionalProperties<S, F>(schema, context)) {
+  if (!allowsAdditionalProperties<S, F>(context, schema)) {
     return false;
   }
   const { expandable = true } = getUiOptions<T, S, F>(uiSchema);
