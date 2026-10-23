@@ -39,6 +39,22 @@ describe('createSchemaUtils()', () => {
     expect(schemaUtils.getValidator()).toBe(testValidator);
   });
 
+  describe('allowsAdditionalProperties() and canExpand()', () => {
+    const objectSchema: RJSFSchema = { type: 'object', properties: { a: { type: 'string' } } };
+    it('read an absent additionalProperties as the context says', () => {
+      const allowing = createSchemaUtils(
+        { validator: testValidator, additionalPropertiesWhenAbsent: 'allow' },
+        rootSchema,
+      );
+      expect(schemaUtils.allowsAdditionalProperties(objectSchema)).toBe(false);
+      expect(schemaUtils.canExpand(objectSchema)).toBe(false);
+      expect(allowing.allowsAdditionalProperties(objectSchema)).toBe(true);
+      expect(allowing.canExpand(objectSchema)).toBe(true);
+      expect(allowing.canExpand(objectSchema, { 'ui:options': { expandable: false } })).toBe(false);
+      expect(allowing.canExpand({ ...objectSchema, maxProperties: 1 }, {}, { a: 'x' })).toBe(false);
+    });
+  });
+
   it('getUiRequiredErrorSchema()', () => {
     const requiredSchema: RJSFSchema = { type: 'object', properties: { nick: { type: 'string' } } };
     const requiredUtils = createSchemaUtils({ validator: testValidator }, requiredSchema);
@@ -156,6 +172,22 @@ describe('createSchemaUtils()', () => {
             rootSchema,
           ),
         ).toBe(true);
+      });
+      it('returns true when passing an additionalPropertiesWhenAbsent of allow', () => {
+        expect(
+          schemaUtils.doesSchemaUtilsDiffer(
+            { validator: testValidator, additionalPropertiesWhenAbsent: 'allow' },
+            rootSchema,
+          ),
+        ).toBe(true);
+      });
+      it('returns false when passing an additionalPropertiesWhenAbsent of forbid, the default', () => {
+        expect(
+          schemaUtils.doesSchemaUtilsDiffer(
+            { validator: testValidator, additionalPropertiesWhenAbsent: 'forbid' },
+            rootSchema,
+          ),
+        ).toBe(false);
       });
     });
 

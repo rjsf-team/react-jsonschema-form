@@ -19,7 +19,6 @@ import {
   setByPath,
   setOwn,
   ADDITIONAL_PROPERTIES_KEY,
-  allowsAdditionalProperties,
   deepEquals,
   getAdditionalPropertySchema,
   getAdditionalPropertyType,
@@ -54,6 +53,7 @@ import useWarnIfFormDataNotPassedThrough from '../../hooks/useWarnIfFormDataNotP
 import { additionalPropertyRemoval, EMPTY_UI_SCHEMA } from '../constants.ts';
 import RichDescription from '../RichDescription.tsx';
 import {
+  declaresProperty,
   getContainerErrorProps,
   getContainerHeading,
   isAdditionalPropertySchema,
@@ -101,23 +101,6 @@ function getDefaultValue<
   }
 }
 
-/** Returns whether the object declares `key` in its own `properties`, which is what decides whose schema and whose
- * `uiSchema` entry the property is rendered and seeded from. `retrieveSchema()` stubs every additional key the form
- * data holds in among the `properties` too, so a stub is told from a declared property by the flag it carries and left
- * to the keyword that described it. The name is read as an own property, since a key called `constructor` or
- * `toString` would otherwise be answered for by `Object.prototype`.
- *
- * @param schemaProperties - The `properties` of the resolved object schema
- * @param key - The property name to check
- * @returns - True when the object declares the name itself, rather than taking it as an additional property
- */
-function declaresProperty<S extends StrictRJSFSchema = RJSFSchema>(
-  schemaProperties: NonNullable<S['properties']>,
-  key: string,
-) {
-  return Object.hasOwn(schemaProperties, key) && !isAdditionalPropertySchema(schemaProperties[key]);
-}
-
 function getAdditionalPropertyOrder<S extends StrictRJSFSchema = RJSFSchema>(
   schemaProperties: NonNullable<S['properties']>,
 ) {
@@ -129,7 +112,8 @@ function getAdditionalPropertyOrder<S extends StrictRJSFSchema = RJSFSchema>(
  * they don't match is left to `additionalProperties`: an `additionalProperties: false` forbids it, an
  * `unevaluatedProperties: false` forbids it where no `additionalProperties` evaluates it, and an
  * `additionalProperties` that is `true`, or absent and so read as `true`, describes it no better than the data it comes
- * to hold — and, where it is absent, `omitExtraData` prunes it, since patterns describe no key they don't match. So a
+ * to hold — and, where it is absent and the form's `additionalPropertiesWhenAbsent` is not `'allow'`, `omitExtraData`
+ * prunes it, since patterns describe no key they don't match. So a
  * described name is worth more to the user than the first one the `enum` happens to list, unless an
  * `additionalProperties` schema describes the unmatched name as fully as a pattern would, leaving a matching pattern
  * nothing to add.
@@ -695,7 +679,7 @@ export default function ObjectField<
    * default data for that field has been added to the formData.
    */
   const onAddProperty = useCallback(() => {
-    if (!allowsAdditionalProperties<S>(schema)) {
+    if (!schemaUtils.allowsAdditionalProperties(schema)) {
       return;
     }
     const currentFormData = readData();
@@ -735,6 +719,7 @@ export default function ObjectField<
     fieldPath,
     getAvailableKey,
     schema,
+    schemaUtils,
     resolvedSchema,
     seedForKey,
     forgetChangedSeeds,

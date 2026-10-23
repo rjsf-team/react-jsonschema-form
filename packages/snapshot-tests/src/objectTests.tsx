@@ -145,6 +145,18 @@ export function objectTests(Form: ComponentType<FormProps>) {
       const { asFragment } = render(<Form schema={schema} validator={validator} initialFormData={formData} />);
       expect(asFragment()).toMatchSnapshot();
     });
+    test('pure anyOf union, with no frame of its own beside the option', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        title: 'Pet',
+        anyOf: [
+          { title: 'Dog', properties: { bark: { type: 'string' } } },
+          { title: 'Cat', properties: { meow: { type: 'string' } } },
+        ],
+      };
+      const { asFragment } = render(<Form schema={schema} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
+    });
     describe('with title and description', () => {
       test('object', async () => {
         const schema: RJSFSchema = {

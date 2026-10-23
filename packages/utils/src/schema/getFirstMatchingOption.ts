@@ -183,7 +183,7 @@ export function optionMatches<S extends StrictRJSFSchema = RJSFSchema, F extends
     }
   }
   return (
-    holdsDeclaredKey(graph, node, formData) &&
+    holdsDeclaredKey(context, graph, node, formData) &&
     context.validator.isValid(scoringTarget(graph, node, relax), formData, graph.rawRoot)
   );
 }

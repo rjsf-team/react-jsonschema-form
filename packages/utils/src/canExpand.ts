@@ -1,13 +1,16 @@
 import { allowsAdditionalProperties } from './additionalPropertiesUtils.ts';
 import getFreePropertyNames from './getFreePropertyNames.ts';
 import getUiOptions from './getUiOptions.ts';
-import type { FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from './types.ts';
+import type { FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema, UiSchema } from './types.ts';
 
 /** Checks whether the field described by `schema`, having the `uiSchema` and `formData` supports expanding. The UI for
  * the field can expand if it has additional properties, is not forced as non-expandable by the `uiSchema`, the
  * `formData` object doesn't already have `schema.maxProperties` elements and the names `schema.propertyNames`
- * enumerates are not all taken.
+ * enumerates are not all taken. A form's templates ask `registry.schemaUtils.canExpand()`, which passes the form's own
+ * `context`.
  *
+ * @param context - The `SchemaContext` whose `additionalPropertiesWhenAbsent` says whether an object naming no
+ *        `additionalProperties` takes extra keys
  * @param schema - The schema for the field that is being checked
  * @param [uiSchema={}] - The uiSchema for the field
  * @param [formData] - The formData for the field
@@ -18,8 +21,8 @@ export default function canExpand<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(schema: RJSFSchema, uiSchema: UiSchema<T, S, F> = {}, formData?: T) {
-  if (!allowsAdditionalProperties(schema)) {
+>(context: SchemaContext<S, F>, schema: S, uiSchema: UiSchema<T, S, F> = {}, formData?: T) {
+  if (!allowsAdditionalProperties<S, F>(context, schema)) {
     return false;
   }
   const { expandable = true } = getUiOptions<T, S, F>(uiSchema);

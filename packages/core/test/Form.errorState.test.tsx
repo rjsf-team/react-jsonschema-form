@@ -1033,6 +1033,67 @@ describe('Error state consistency when deriving from new props', () => {
     });
   });
 
+  it("drops the errors of a key an anyOf's switch deletes on an object that takes extra keys, and keeps an extra key's", async () => {
+    const { container } = render(
+      <Form
+        schema={{
+          type: 'object',
+          additionalProperties: { type: 'string' },
+          anyOf: [
+            { title: 'Card', properties: { holder: { type: 'string' } } },
+            { title: 'Invoice', properties: { reference: { type: 'string' } } },
+          ],
+        }}
+        validator={validator}
+        widgets={errorRaisingWidgets}
+        initialFormData={{ holder: 'a', extra: 'b' }}
+      />,
+    );
+    await user.type(input(container, 'root_holder'), 'x');
+    await user.type(input(container, 'root_extra'), 'y');
+    expect(errorListMessages(container)).toEqual(['.holder custom:ax', '.extra custom:by']);
+
+    await user.selectOptions(screen.getByRole('combobox'), 'Invoice');
+
+    // The switch deletes `holder`, which only Card declares, while `extra` stays an extra key of the object
+    expect(container.querySelector('#root_holder')).toBeNull();
+    expect(errorListMessages(container)).toEqual(['.extra custom:by']);
+    expect(fieldErrorsById(container)).toEqual({ root_extra: ['custom:by'] });
+  });
+
+  it('clears the errors raised below a property both options of an anyOf declare on an object that takes extra keys', async () => {
+    const onSubmit = vi.fn();
+    const addrWith = (key: string): RJSFSchema => ({
+      type: 'object',
+      properties: { addr: { type: 'object', properties: { [key]: { type: 'string' } } } },
+    });
+    const { container } = render(
+      <Form
+        schema={{
+          type: 'object',
+          additionalProperties: true,
+          anyOf: [
+            { title: 'Post', ...addrWith('zip') },
+            { title: 'Visit', ...addrWith('city') },
+          ],
+        }}
+        validator={validator}
+        widgets={errorRaisingWidgets}
+        initialFormData={{ addr: { zip: '1' } }}
+        onSubmit={onSubmit}
+      />,
+    );
+    await user.type(input(container, 'root_addr_zip'), '2');
+    expect(errorListMessages(container)).toEqual(['.addr.zip custom:12']);
+
+    await user.selectOptions(screen.getByRole('combobox'), 'Visit');
+
+    // `addr` reaches the switch as an extra key the object stubs, yet both options declare it, so its field is Visit's
+    expect(errorListMessages(container)).toEqual([]);
+    await submitForm(container, user);
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+  });
+
   it('keeps the validator errors under a property the new option of an anyOf declares too when the option is switched', async () => {
     const withName = (title: string, key: string): RJSFSchema => ({
       title,

@@ -3,6 +3,7 @@ import type { MockInstance } from 'vitest';
 import type { RJSFSchema } from '../../src/index.ts';
 import {
   ADDITIONAL_PROPERTY_FLAG,
+  EXTRA_KEYS_ELSEWHERE_FLAG,
   GUESSED_TYPE_FLAG,
   getAdditionalPropertySchema,
   createSchemaUtils,
@@ -2784,6 +2785,65 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         expect(retrieveSchema({ validator: testValidator }, once, undefined, formData)).toEqual(once);
       });
     });
+    describe('an object naming no additionalProperties', () => {
+      const schema: RJSFSchema = { type: 'object', properties: { a: { type: 'string' } } };
+      const formData = { a: 'x', extra: 'y' };
+      const allowing = { validator: testValidator, additionalPropertiesWhenAbsent: 'allow' } as const;
+      it('stubs the extra keys of the data only where the context allows them, whichever it was asked under first', () => {
+        // The view of an object that stubs nothing is memoized, so asking under 'forbid' first would otherwise hand
+        // the same view back under 'allow'
+        expect(Object.keys(retrieveSchema({ validator: testValidator }, schema, schema, formData).properties!)).toEqual(
+          ['a'],
+        );
+        expect(retrieveSchema(allowing, schema, schema, formData).properties).toEqual({
+          a: { type: 'string' },
+          extra: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true, [GUESSED_TYPE_FLAG]: true },
+        });
+        expect(Object.keys(retrieveSchema({ validator: testValidator }, schema, schema, formData).properties!)).toEqual(
+          ['a'],
+        );
+      });
+      it('stubs the extra keys of each data for an object naming no keyword at all, rather than the first it saw', () => {
+        // Such a schema merges nothing and holds no subschemas, so its view would otherwise be memoized by schema alone
+        const bare: RJSFSchema = { type: 'object' };
+        expect(Object.keys(retrieveSchema(allowing, bare, bare, { k: 'v' }).properties!)).toEqual(['k']);
+        expect(Object.keys(retrieveSchema(allowing, bare, bare, { j: 'v' }).properties!)).toEqual(['j']);
+        expect(retrieveSchema({ validator: testValidator }, bare, bare, { j: 'v' })).toEqual(bare);
+      });
+      it('keeps one view for the data holding no extra key, and stubs the keys of data holding some', () => {
+        const object: RJSFSchema = { type: 'object', properties: { a: { type: 'string' }, b: { type: 'string' } } };
+        const view = retrieveSchema(allowing, object, object, { a: 'x' });
+        expect(retrieveSchema(allowing, object, object, { a: 'y', b: 'z' })).toBe(view);
+        expect(Object.keys(retrieveSchema(allowing, object, object, { a: 'y', e: 'z' }).properties!)).toEqual([
+          'a',
+          'b',
+          'e',
+        ]);
+        expect(retrieveSchema(allowing, object, object, { b: 'z' })).toBe(view);
+      });
+      it('stubs no extra key of an object whose unevaluatedProperties forbids them, whatever the context allows', () => {
+        const closed: RJSFSchema = { ...schema, unevaluatedProperties: false };
+        expect(Object.keys(retrieveSchema(allowing, closed, closed, formData).properties!)).toEqual(['a']);
+      });
+      it('merges an option beside dependencies whose properties name nothing only where the context allows extra keys', () => {
+        const dependent: RJSFSchema = {
+          type: 'object',
+          properties: { kind: { type: 'string' } },
+          dependencies: { kind: ['kind'] },
+          oneOf: [
+            { title: 'open', properties: {} },
+            { title: 'b', properties: { b: { type: 'string' } } },
+          ],
+        };
+        const data = { b: 'x' };
+        const forbidding = { validator: testValidator };
+        // Each setting is asked twice, so a plan memoized under the other would hand back its option
+        expect(retrieveSchema(forbidding, dependent, dependent, data).title).toBe('b');
+        expect(retrieveSchema(allowing, dependent, dependent, data).title).toBe('open');
+        expect(retrieveSchema(forbidding, dependent, dependent, data).title).toBe('b');
+        expect(retrieveSchema(allowing, dependent, dependent, data).title).toBe('open');
+      });
+    });
     describe('stubExistingAdditionalProperties()', () => {
       it('stubs a key an option declares when no option is selected', () => {
         const schema: RJSFSchema = {
@@ -2830,6 +2890,76 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         expect(retrieveSchema({ validator: testValidator }, schema, schema, formData, false, 0).properties).toEqual({
           b: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true },
         });
+      });
+      it('leaves the extra keys to a selected option offering options of its own, whose own field takes them', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          additionalProperties: true,
+          patternProperties: { '^p': { type: 'number' } },
+          oneOf: [{ title: 'A', oneOf: [{ title: 'A1', properties: { x: { type: 'string' } } }] }],
+        };
+        const view = retrieveSchema({ validator: testValidator }, schema, schema, { x: 'a', p1: 1 }, false, 0);
+        // A's field renders beside A1, and does not know `x` from an extra key until A1 is selected there
+        expect(view.properties).toBeUndefined();
+        expect(view.additionalProperties).toBeUndefined();
+        expect(view.patternProperties).toBeUndefined();
+        expect(Reflect.get(view, EXTRA_KEYS_ELSEWHERE_FLAG)).toBe(true);
+      });
+      it("leaves the extra keys of an option's options to the option where it names no type, as an object's option", () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { p: { type: 'string' } },
+          oneOf: [{ title: 'A', oneOf: [{ title: 'A1', additionalProperties: { type: 'string' } }] }],
+        };
+        const formData = { p: '1', extra: 'e' };
+        const context = { validator: testValidator };
+        // As `SchemaField` reads it: each option retrieved out of the view of the field offering it
+        const view = retrieveSchema(context, schema, schema, formData);
+        const a = retrieveSchema(context, schemaOf(view.oneOf?.[0]), schema, formData);
+        const a1 = retrieveSchema(context, schemaOf(a.oneOf?.[0]), schema, formData);
+        // A is rendered with the object's type, so its field renders beside A1 and stubs the extra keys of the two
+        expect(a1.properties).toBeUndefined();
+      });
+      it('leaves the properties the fields above declare to them, in the field of an option taking their extra keys', () => {
+        const nested: RJSFSchema = {
+          title: 'A',
+          properties: { q: { type: 'string' } },
+          oneOf: [{ title: 'A1', oneOf: [{ title: 'A2', properties: { x: { type: 'string' } } }] }],
+        };
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { p: { type: 'string' } },
+          additionalProperties: true,
+          oneOf: [nested],
+        };
+        const formData = { p: '1', q: '2', x: 'a', extra: 'e' };
+        const context = { validator: testValidator };
+        // Retrieved without an option, as the field holding the options is, so its own view stubs every extra key
+        const parent = retrieveSchema(context, schema, schema, formData);
+        const a = retrieveSchema(context, getRenderedOptionSchema(parent, nested), schema, formData);
+        const a1 = retrieveSchema(
+          context,
+          getRenderedOptionSchema(a, a.oneOf![0] as RJSFSchema),
+          schema,
+          formData,
+          false,
+          0,
+        );
+        expect(Object.keys(a1.properties!)).toEqual(['extra']);
+      });
+      it('describes an extra key by each level apart, in the field of an option taking the extra keys of the object', () => {
+        const nested: RJSFSchema = {
+          title: 'A',
+          additionalProperties: false,
+          oneOf: [{ title: 'A1', properties: { x: { type: 'string' } } }],
+        };
+        const schema: RJSFSchema = { type: 'object', patternProperties: { '^p': { type: 'number' } }, oneOf: [nested] };
+        const formData = { x: 'a', p1: 1 };
+        const context = { validator: testValidator };
+        const parent = retrieveSchema(context, schema, schema, formData);
+        const a = retrieveSchema(context, getRenderedOptionSchema(parent, nested), schema, formData, false, 0);
+        // The object's pattern describes `p1`, but A forbids it, as validation does
+        expect(a.properties!.p1).toEqual({ type: 'null', [ADDITIONAL_PROPERTY_FLAG]: true });
       });
       it("describes a key the option allows without describing it by the object's own keyword (#5462)", () => {
         const db: RJSFSchema = {

@@ -8,7 +8,6 @@ import type {
   UiSchema,
 } from '@rjsf/utils';
 import {
-  canExpand,
   getByPath,
   getFieldTypeForWidget,
   getTemplates,
@@ -55,7 +54,7 @@ export default function ObjectFieldTemplate<
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const { TitleFieldTemplate } = getTemplates<T, S, F>(registry, uiOptions);
-  const { formContext } = registry;
+  const { formContext, schemaUtils } = registry;
   const showOptionalDataControlInTitle = titleDrawsOptionalDataControl<T, S, F>(props);
   // Button templates are not overridden in the uiSchema
   const {
@@ -141,7 +140,7 @@ export default function ObjectFieldTemplate<
           </Col>
         ))}
       </Row>
-      {canExpand(schema, uiSchema, formData) && (
+      {schemaUtils.canExpand(schema, uiSchema, formData) && (
         <Col span={24}>
           <Row gutter={rowGutter} justify='end'>
             <Col flex='120px'>

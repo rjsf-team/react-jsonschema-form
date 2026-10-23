@@ -1,6 +1,5 @@
 import type { FormContextType, ObjectFieldTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
-  canExpand,
   descriptionId,
   getTemplates,
   getUiOptions,
@@ -48,6 +47,7 @@ export default function ObjectFieldTemplate<
   const {
     ButtonTemplates: { AddButton },
   } = registry.templates;
+  const { schemaUtils } = registry;
 
   // Check if this is the root object
   const isRoot = id === 'root';
@@ -85,7 +85,7 @@ export default function ObjectFieldTemplate<
             </div>
           ),
         )}
-        {canExpand<T, S, F>(schema, uiSchema, formData) && (
+        {schemaUtils.canExpand(schema, uiSchema, formData) && (
           <div className='flex justify-end'>
             <AddButton
               id={buttonId(id, 'add')}
