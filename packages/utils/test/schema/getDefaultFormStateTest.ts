@@ -28,6 +28,8 @@ import {
 } from '../testUtils/testData.ts';
 import type { TestValidatorType } from './types.ts';
 
+const ENUM_WITH_DEFAULT: RJSFSchema = { type: 'string', enum: ['x', 'y'], default: 'x' };
+
 /** Runs the `getDefaultFormState()` suite against `testValidator`
  *
  * @param testValidator - The validator the suite runs against
@@ -2086,6 +2088,40 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             });
           });
         });
+      });
+
+      it.each<[string, RJSFSchema, GenericObjectType, GenericObjectType]>([
+        ['at the top', { b: ENUM_WITH_DEFAULT }, { b: 'zz' }, { b: 'x' }],
+        [
+          'one level down',
+          { a: { type: 'object', properties: { b: ENUM_WITH_DEFAULT } } },
+          { a: { b: 'zz' } },
+          { a: { b: 'x' } },
+        ],
+        [
+          'two levels down',
+          { a: { type: 'object', properties: { c: { type: 'object', properties: { b: ENUM_WITH_DEFAULT } } } } },
+          { a: { c: { b: 'zz' } } },
+          { a: { c: { b: 'x' } } },
+        ],
+      ])(
+        'replaces a value its enum no longer offers with the default %s (#5523)',
+        (_, properties, formData, expected) => {
+          const schema: RJSFSchema = { type: 'object', properties };
+          expect(getDefaultFormState({ validator: testValidator }, { schema, formData })).toEqual(expected);
+        },
+      );
+
+      it('replaces an object value its enum no longer offers with the default one level down (#5523)', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            test: { type: 'string', enum: [{ label: 'a' }, { label: 'b' }], default: { label: 'a' } },
+          },
+        };
+        expect(
+          getDefaultFormState({ validator: testValidator }, { schema, formData: { test: { label: 'z' } } }),
+        ).toEqual({ test: { label: 'a' } });
       });
 
       describe('an object with a valid formData and enum property with default value', () => {

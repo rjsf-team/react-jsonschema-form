@@ -955,7 +955,6 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
     ? resolveUiSchema<T, S, F>(schema, localUiSchema, { rootSchema, uiSchemaDefinitions })
     : localUiSchema;
   const props = uiSchema === localUiSchema ? inputProps : { ...inputProps, uiSchema };
-  const formData = isObject(rawFormData) ? rawFormData : {};
   // Compute the defaults recursively: give highest priority to deepest nodes unless nestedDefaultsPrecedence is ancestorWins.
   let defaults: unknown = parentDefaults;
   const preferParentDefaults =
@@ -1000,7 +999,7 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
         {
           includeUndefinedValues,
           parentDefaults: Array.isArray(parentDefaults) ? parentDefaults[idx] : undefined,
-          rawFormData: formData,
+          rawFormData: Array.isArray(rawFormData) ? rawFormData[idx] : undefined,
           required,
           shouldMergeDefaultsIntoFormData,
           initialDefaultsGenerated,
@@ -1042,7 +1041,8 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
     }
   }
 
-  const defaultBasedOnSchemaType = typeDefaults<T, S, F>(context, view, props, defaults, isWholeValue);
+  const wholeValue = isWholeValue ?? isWholeValueSelect<S>(resolveDeclaredConstantOptions<S>(schema, () => view));
+  const defaultBasedOnSchemaType = typeDefaults<T, S, F>(context, view, props, defaults, wholeValue);
 
   let defaultsWithFormData = defaultBasedOnSchemaType ?? defaults;
   if ((defaultsWithFormData === undefined || defaultsWithFormData === null) && rendersNull(context, view, props)) {
@@ -1061,14 +1061,27 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
       (!view.field.retrieves &&
         view.keywords.has(ALL_OF_KEY) &&
         !(defaultFormStateBehavior?.allOf === 'populateDefaults' && getSchemaType<S>(schema) !== 'object'));
-    if (!isObject(rawFormData) || mergedAllOf) {
+    const foldedType = isObject(rawFormData) ? foldedTypeOf<T, S, F>(view, props, defaults, wholeValue) : undefined;
+    if (foldedType !== undefined && foldedType !== 'object') {
+      // Object data of a field whose defaults are a whole value or one of another type is the field's value as a whole,
+      // so it is kept as it is where the field takes it and its defaults stand otherwise, rather than blended with them
+      // key by key
+      const matching = viewFormDataMatching<unknown, S, F>(context, view, rawFormData);
+      if (matching !== undefined) {
+        defaultsWithFormData = matching;
+      } else if (wholeValue) {
+        defaultsWithFormData = defaults;
+      }
+    } else if (!isObject(rawFormData) || mergedAllOf) {
       // If the formData is not an object which means it's a primitive field, then we need to merge the defaults into the formData.
       // Or if the schema has allOf, we need to merge the defaults into the formData because we don't compute the defaults for allOf.
+      // The properties of object data were merged with their own defaults already, so those win over the data here
       defaultsWithFormData = mergeDefaultsWithFormData(
         defaultsWithFormData,
         viewFormDataMatching<unknown, S, F>(context, view, rawFormData),
         mergeExtraDefaults,
         true,
+        isObject(rawFormData),
       );
     }
   }
@@ -1894,6 +1907,47 @@ function arrayDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>
   return computeDefaultBasedOnSchemaTypeAndDefaults<unknown, S>(schema, arrayDefault);
 }
 
+/** How a field's defaults are computed: `'whole'` for a select over object or array constants, which holds one of
+ * them as a whole, the field type `SchemaField` renders it as otherwise, or `undefined` for a `type` list holding, or
+ * defaulting to, a value of another listed type than the object or array it renders, which is left as it is.
+ *
+ * @param view - The field's view
+ * @param props - The props of the field
+ * @param defaults - The defaults computed for the field so far
+ * @param isWholeValue - Whether the field is a select over whole object or array values
+ * @returns - The kind of value the field's defaults are computed as
+ */
+function foldedTypeOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  view: DefaultsView<S>,
+  { uiSchema, rawFormData }: FoldProps<T, S, F>,
+  defaults: unknown,
+  isWholeValue: boolean,
+): string | undefined {
+  // A select over object or array constants picks one of them as a whole, so it has no contents of its own to fill in,
+  // and an empty object or array would be a value none of its options allow
+  if (isWholeValue) {
+    return 'whole';
+  }
+  // A `ui:widget` that `SchemaField` renders through another listed type's field takes that type's default, so a
+  // required `['null', 'boolean', 'string']` shown as a `textarea` isn't seeded with a `false` the textarea can't show
+  const { schema } = view;
+  const type = getFieldTypeForUiSchema<T, S, F>(schema, uiSchema);
+  // A value of another type a `type` list names is left as it is, as `omitExtraData()` and
+  // `getUiRequiredErrorSchema()` leave it: an object held by a `['null', 'array', 'object']` has no array items spread
+  // into it, and a `null` held by a `['null', 'object']` is not filled in with the object's defaults. With no value,
+  // a default of another listed type is kept the same way, so a `default: 'abc'` on a `['null', 'object', 'string']`
+  // isn't replaced by the object's. A `null` default is left to `computeDefaultBasedOnSchemaTypeAndDefaults()`
+  const value = rawFormData === undefined && defaults !== null ? defaults : rawFormData;
+  if (
+    Array.isArray(schema.type) &&
+    (type === 'object' || type === 'array') &&
+    getSchemaTypeForValue<S>(schema, value) !== type
+  ) {
+    return undefined;
+  }
+  return type;
+}
+
 /** Computes the default value based on the schema type.
  *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
@@ -1910,27 +1964,12 @@ function typeDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>(
   defaults: unknown,
   isWholeValue = isWholeValueSelect<S>(resolveDeclaredConstantOptions<S>(view.schema, () => view)),
 ): unknown {
-  const { uiSchema, rawFormData } = props;
-  // A select over object or array constants picks one of them as a whole, so it has no contents of its own to fill in,
-  // and an empty object or array would be a value none of its options allow. A value already picked is kept as it is,
-  // since the form data is merged over the defaults key by key, which would blend it with the default constant
-  if (isWholeValue) {
+  const type = foldedTypeOf<T, S, F>(view, props, defaults, isWholeValue);
+  // A value already picked is kept as it is, since the form data is merged over the defaults key by key, which would
+  // blend it with the default constant
+  if (type === 'whole') {
     // A `null` value is one the user picked, so only a missing one falls back to the default
-    return rawFormData === undefined ? defaults : rawFormData;
-  }
-  // A `ui:widget` that `SchemaField` renders through another listed type's field takes that type's default, so a
-  // required `['null', 'boolean', 'string']` shown as a `textarea` isn't seeded with a `false` the textarea can't show
-  const { schema } = view;
-  const isTypeList = Array.isArray(schema.type);
-  const type = getFieldTypeForUiSchema<T, S, F>(schema, uiSchema);
-  // A value of another type a `type` list names is left as it is, as `omitExtraData()` and
-  // `getUiRequiredErrorSchema()` leave it: an object held by a `['null', 'array', 'object']` has no array items spread
-  // into it, and a `null` held by a `['null', 'object']` is not filled in with the object's defaults. With no value,
-  // a default of another listed type is kept the same way, so a `default: 'abc'` on a `['null', 'object', 'string']`
-  // isn't replaced by the object's. A `null` default is left to `computeDefaultBasedOnSchemaTypeAndDefaults()`
-  const value = rawFormData === undefined && defaults !== null ? defaults : rawFormData;
-  if (isTypeList && (type === 'object' || type === 'array') && getSchemaTypeForValue<S>(schema, value) !== type) {
-    return undefined;
+    return props.rawFormData === undefined ? defaults : props.rawFormData;
   }
   switch (type) {
     // We need to recurse for object schema inner default values.
