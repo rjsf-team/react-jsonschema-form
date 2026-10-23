@@ -324,7 +324,7 @@ If you have provided an `onError` callback it will be called with the list of er
 
 ```tsx
 import { createRef } from 'react';
-import Form from '@rjsf/core';
+import Form, { type FormRef } from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
