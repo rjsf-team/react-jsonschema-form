@@ -66,7 +66,7 @@ describe('option selection as form state', () => {
 
     // The switch deletes `b`, which only B declares, so the extra-key keyword has no entry to render a row for
     expect(onChange.mock.lastCall?.[0].formData).not.toHaveProperty('b');
-    expect(node.querySelector('#root_b-key')).toBeNull();
+    expect(node.querySelector('#root_b__key')).toBeNull();
     expect(ids(node, '#root_b')).toHaveLength(0);
   });
 
@@ -232,7 +232,7 @@ describe('option selection as form state', () => {
     await user.type(elementOf(node, '#root_a'), 'x');
     await user.selectOptions(selectOf(node, 'root__anyof_select'), 'B');
 
-    expect(node.querySelector('#root_a-key')).toBeNull();
+    expect(node.querySelector('#root_a__key')).toBeNull();
     expect(node.querySelector('.rjsf-object-property-expand button')).not.toBeNull();
   });
 
@@ -250,7 +250,7 @@ describe('option selection as form state', () => {
     await user.type(elementOf(node, '#root_a'), 'x');
     await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
 
-    expect(node.querySelector('#root_a-key')).toBeNull();
+    expect(node.querySelector('#root_a__key')).toBeNull();
     expect(ids(node, '#root_a')).toHaveLength(0);
     const { formData } = onChange.mock.lastCall?.[0] ?? {};
     expect(formData).not.toHaveProperty('a');
@@ -295,12 +295,12 @@ describe('option selection as form state', () => {
     // The union's own `ObjectField` takes the extra keys, so the option it shows, an object naming no
     // `additionalProperties` either, offers none of its own
     expect(node.querySelectorAll('.rjsf-object-property-expand')).toHaveLength(1);
-    expect(elementOf(node, '#root_XxxOf__title')).toHaveTextContent('Outer');
+    expect(elementOf(node, '#root__XxxOf__title')).toHaveTextContent('Outer');
 
     await user.type(node.querySelector('#root_a')!, 'x');
     await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
 
-    expect(node.querySelector('#root_a-key')).toBeNull();
+    expect(node.querySelector('#root_a__key')).toBeNull();
     expect(onChange.mock.lastCall?.[0].formData).toEqual({ b: undefined });
   });
 
@@ -324,7 +324,7 @@ describe('option selection as form state', () => {
 
       // An untyped union renders no field of its own beside the option, so B itself takes the extra keys
       expect(onChange.mock.lastCall?.[0].formData).toEqual({ a: 'x' });
-      expect(node.querySelector('#root_a-key')).toHaveValue('a');
+      expect(node.querySelector('#root_a__key')).toHaveValue('a');
     },
   );
 
@@ -345,7 +345,7 @@ describe('option selection as form state', () => {
     // its add button reads it, so it renders no heading of its own beside the option
     const { node } = createFormComponent({ schema, additionalPropertiesWhenAbsent: 'allow' });
 
-    expect(node.querySelector('#root_XxxOf__title')).toBeNull();
+    expect(node.querySelector('#root__XxxOf__title')).toBeNull();
     expect(node.innerHTML).toBe(forbiddingMarkup);
   });
 
