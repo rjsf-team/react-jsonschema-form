@@ -1,11 +1,13 @@
 import { MantineProvider } from '@mantine/core';
 import { getTestRegistry } from '@rjsf/core/testing';
 import type { RJSFSchema, WidgetProps } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import Templates from '../src/templates/index.ts';
 import SelectWidget from '../src/widgets/SelectWidget.tsx';
+import WrappedForm from './WrappedForm.tsx';
 
 const user = userEvent.setup();
 
@@ -171,6 +173,62 @@ describe('mantine SelectWidget optgroups', () => {
       },
     });
     expect(queryByText('Test description')).not.toBeInTheDocument();
+  });
+});
+
+describe('mantine SelectWidget clicking its selected option', () => {
+  const enumOptions = [
+    { label: 'Foo', value: 'foo' },
+    { label: 'Bar', value: 'bar' },
+  ];
+
+  // A schema default leaves out the empty choice, as the other themes' placeholder option, so an `anyOf`/`oneOf` field's
+  // option selector, whose schema has one, can't be cleared (#5527)
+  test.each<[string, RJSFSchema, WidgetProps['options'], unknown[][]]>([
+    ['keeps it under a schema default', { type: 'string', default: 'foo' }, {}, []],
+    ['clears it without one', { type: 'string' }, {}, [[undefined]]],
+    [
+      'clears it under a schema default where its options set allowDeselect',
+      { type: 'string', default: 'foo' },
+      { allowDeselect: true },
+      [[undefined]],
+    ],
+  ])('%s', (_, widgetSchema, widgetOptions, changes) => {
+    const onChange = vi.fn();
+    renderWidget({ schema: widgetSchema, value: 'foo', onChange, options: { enumOptions, ...widgetOptions } });
+
+    // See the fireEvent.click comment in the optgroups tests
+    fireEvent.click(screen.getByRole('combobox'));
+    fireEvent.click(screen.getByRole('option', { name: 'Foo' }));
+
+    expect(onChange.mock.calls).toStrictEqual(changes);
+  });
+
+  test("keeps an anyOf/oneOf field's selected option, which MultiSchemaField gives its selector as a schema default", () => {
+    render(
+      <WrappedForm
+        validator={validator}
+        schema={{
+          type: 'object',
+          required: ['pet'],
+          properties: {
+            pet: {
+              oneOf: [
+                { title: 'Cat', type: 'string' },
+                { title: 'Dog', type: 'number' },
+              ],
+            },
+          },
+        }}
+      />,
+    );
+
+    // See the fireEvent.click comment in the optgroups tests
+    fireEvent.click(screen.getByRole('combobox', { name: 'pet' }));
+    fireEvent.click(screen.getByRole('option', { name: 'Cat' }));
+
+    expect(screen.getByRole('combobox', { name: 'pet' })).toHaveValue('Cat');
+    expect(screen.getByRole('textbox', { name: 'Cat' })).toBeInTheDocument();
   });
 });
 
