@@ -52,7 +52,7 @@ If you are working with a simple, unchanging JSON Schema and you have defined a 
 ```tsx
 import { RJSFSchema } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 
 interface FormData {
   foo?: string;
@@ -83,7 +83,7 @@ If you are using something like the [Ajv utility types for schemas](https://ajv.
 import { JSONSchemaType } from 'ajv';
 import { RJSFSchema } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 
 interface FormData {
   foo?: string;
@@ -120,7 +120,7 @@ If you have a type for this data, you can override this generic as follows:
 ```tsx
 import { RJSFSchema } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 
 interface FormContext {
   myCustomWidgetData: object;
@@ -156,7 +156,7 @@ Using the `withTheme()` function is just as easy:
 ```tsx
 import { RJSFSchema } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
-import { withTheme, ThemeProps } from '@rjsf/core';
+import { withTheme, type ThemeProps } from '@rjsf/core';
 
 interface FormData {
   foo?: string;
@@ -201,7 +201,7 @@ If you are doing something like the following to create a new theme based on `@r
 ```tsx
 import React from 'react';
 import { WidgetProps } from '@rjsf/utils';
-import { ThemeProps, withTheme } from '@rjsf/core';
+import { type ThemeProps, withTheme } from '@rjsf/core';
 import validator from '@rjsf/validator-ajv8';
 import { Theme } from '@rjsf/mui';
 
@@ -230,7 +230,7 @@ Then you would use the new `generateTheme()` and `generateForm()` functions as f
 ```tsx
 import React from 'react';
 import { WidgetProps } from '@rjsf/utils';
-import { ThemeProps, withTheme } from '@rjsf/core';
+import { type ThemeProps, withTheme } from '@rjsf/core';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import { Templates, generateTheme } from '@rjsf/mui';
 

@@ -8,7 +8,7 @@ This theme-defining object is passed as the only parameter to the HOC (`withThem
 ```tsx
 import React, { Component } from 'react';
 import validator from '@rjsf/validator-ajv8';
-import { withTheme, ThemeProps } from '@rjsf/core';
+import { withTheme, type ThemeProps } from '@rjsf/core';
 
 const theme: ThemeProps = { widgets: { test: () => <div>test</div> } };
 
@@ -34,7 +34,7 @@ Example theme with custom widget:
 
 ```tsx
 import { WidgetProps, RegistryWidgetsType } from '@rjsf/utils';
-import { ThemeProps } from '@rjsf/core';
+import type { ThemeProps } from '@rjsf/core';
 
 const MyCustomWidget = (props: WidgetProps) => {
   return (
@@ -64,7 +64,7 @@ Each template should be passed into the theme object via the **templates** objec
 
 ```tsx
 import { ArrayFieldTemplateProps, ErrorListProps } from '@rjsf/utils';
-import { ThemeProps } from '@rjsf/core';
+import type { ThemeProps } from '@rjsf/core';
 
 function MyArrayFieldTemplate(props: ArrayFieldTemplateProps) {
   return (
@@ -106,7 +106,7 @@ Declarations are keyed by the name a field or widget is registered under, so a w
 A `default` covers every part the theme's own entry for a widget leaves out, for every widget, custom ones included, so it also overrides what `@rjsf/core` declares for those parts; a `fieldDefault` covers every part a field's merged entry leaves out.
 
 ```tsx
-import { ThemeProps } from '@rjsf/core';
+import type { ThemeProps } from '@rjsf/core';
 
 const ThemeObject: ThemeProps = {
   widgets: myWidgets,
@@ -155,7 +155,7 @@ const ThemeObject: ThemeProps = {
 Just as the theme can override **widgets**, **fields**, any of the **templates**, and set default values to properties like **showErrorList**, you can do the same with the instance of the withTheme() Form component.
 
 ```tsx
-import { ThemeProps } from '@rjsf/core';
+import type { ThemeProps } from '@rjsf/core';
 
 const ThemeObject: ThemeProps = {
   templates: {

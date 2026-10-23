@@ -913,7 +913,7 @@ The core default renders them as plain text, so no markdown library is bundled.
 Register it and enable markdown for descriptions or help independently:
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import MarkdownTemplate from '@rjsf/core/markdown';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';

@@ -5,7 +5,7 @@
 Objects are defined with a type equal to `object` and properties specified in the `properties` keyword.
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -31,7 +31,7 @@ render(<Form schema={schema} validator={validator} />, document.getElementById('
 You can specify which properties are required using the `required` attribute:
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -58,7 +58,7 @@ render(<Form schema={schema} validator={validator} />, document.getElementById('
 Since the order of object properties in Javascript and JSON is not guaranteed, the `uiSchema` object spec allows you to define the order in which properties are rendered using the `ui:order` property:
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -92,7 +92,7 @@ const uiSchema: UiSchema = {
 The `additionalProperties` keyword allows the user to add properties with arbitrary key names. Set this keyword equal to a schema object:
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -119,7 +119,7 @@ You can also define `uiSchema` options for `additionalProperties` by setting the
 The `patternProperties` keyword allows the user to add properties with names that match one or more of the specified regular expressions
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -170,7 +170,7 @@ The `propertyNames` keyword constrains the names a key may take.
 When it enumerates those names, the key is rendered as a dropdown of the allowed names instead of a free-text input, so the user can only pick a name the schema accepts.
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
