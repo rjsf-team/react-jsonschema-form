@@ -1,4 +1,4 @@
-import { allowsAdditionalProperties, patternRegExp } from '../../additionalPropertiesUtils.ts';
+import { allowsAdditionalProperties, patternRegExp, readsAbsentAsAllowed } from '../../additionalPropertiesUtils.ts';
 import {
   ADDITIONAL_PROPERTIES_KEY,
   ALL_OF_KEY,
@@ -621,7 +621,7 @@ function declaredKeys<S extends StrictRJSFSchema, F extends FormContextType>(
   graph: SchemaGraph<S>,
   id: NodeId,
 ): DeclaredKeys {
-  return declaredKeysMemo.get([graph, id, context.additionalPropertiesWhenAbsent === 'allow'], () =>
+  return declaredKeysMemo.get([graph, id, readsAbsentAsAllowed<S, F>(context)], () =>
     readDeclaredKeys(context, graph, id),
   );
 }

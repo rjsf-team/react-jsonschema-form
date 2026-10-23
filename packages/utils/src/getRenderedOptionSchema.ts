@@ -1,4 +1,4 @@
-import { copyJoinedSchemas } from './additionalPropertiesUtils.ts';
+import { conjoin, copyJoinedSchemas } from './additionalPropertiesUtils.ts';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   ALL_OF_KEY,
@@ -22,11 +22,11 @@ import KeyedMemo from './schema/graph/keyedMemo.ts';
 import { withoutKeys } from './schema/graph/mergePlan.ts';
 import {
   CONTAINER_KEYWORDS,
-  DECLARED_ABOVE_KEY,
   EXTRA_KEY_KEYWORDS,
   IDENTIFIER_KEYWORDS,
   joinOptionExtraKeys,
 } from './schema/retrieveSchema.ts';
+import { DECLARED_ABOVE_KEY } from './schemaMarkers.ts';
 import { isSubschemaKeyword, keywordShape } from './schemaUri.ts';
 import type { GenericObjectType, RJSFMarkedSchema, RJSFSchema, StrictRJSFSchema } from './types.ts';
 
@@ -340,6 +340,19 @@ export function renderOption<S extends StrictRJSFSchema>(parent: S, option: S): 
     if (Object.hasOwn(parent, keyword)) {
       withParentExtraKeys[keyword] = Reflect.get(parent, keyword);
     }
+  }
+  // The option's field offers the add button in the parent's field's place, so it takes the parent's bounds on the
+  // object's keys too, which a value has to meet beside the option's own: the stricter `maxProperties`, and both
+  // `propertyNames`
+  if (typeof parent.maxProperties === 'number') {
+    withParentExtraKeys.maxProperties =
+      typeof option.maxProperties === 'number'
+        ? Math.min(parent.maxProperties, option.maxProperties)
+        : parent.maxProperties;
+  }
+  const propertyNames = conjoin(parent.propertyNames, option.propertyNames);
+  if (propertyNames !== undefined) {
+    withParentExtraKeys.propertyNames = propertyNames;
   }
   // A parent taking the extra keys of a field above it in turn describes a key by each of the schemas it joins apart
   copyJoinedSchemas(parent, withParentExtraKeys);

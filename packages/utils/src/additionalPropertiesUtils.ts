@@ -3,6 +3,7 @@ import getSchemaType from './getSchemaType.ts';
 import isObject, { isSchemaObject } from './isObject.ts';
 import KeyedMemo from './schema/graph/keyedMemo.ts';
 import { schemaFrom } from './schema/graph/mergePlan.ts';
+import { JOINED_SCHEMAS_KEY } from './schemaMarkers.ts';
 import type { FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from './types.ts';
 
 /** The compiled form of every `patternProperties` pattern seen so far, so that testing a key against one costs no
@@ -83,6 +84,19 @@ export function additionalPropertiesKeyword<S extends StrictRJSFSchema = RJSFSch
   return typedSchema.additionalProperties ?? typedSchema[UNEVALUATED_PROPERTIES_KEY];
 }
 
+/** Returns whether the context's `additionalPropertiesWhenAbsent` reads an absent extra-key keyword as taking any key,
+ * the one reading of the setting that the rule below and every memo keyed on the setting share
+ *
+ * @param context - The `SchemaContext` whose `additionalPropertiesWhenAbsent` is read
+ * @returns - True where the setting is `'allow'`
+ */
+export function readsAbsentAsAllowed<
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({ additionalPropertiesWhenAbsent }: Pick<SchemaContext<S, F>, 'additionalPropertiesWhenAbsent'>): boolean {
+  return additionalPropertiesWhenAbsent === 'allow';
+}
+
 /** Returns whether the form reads an object naming neither `additionalProperties` nor `unevaluatedProperties` as
  * taking any key its other keywords leave over, as `additionalProperties: true` does: the JSON Schema spec reads it that
  * way, and the context's `additionalPropertiesWhenAbsent: 'allow'` has the form follow it. A schema that is no object,
@@ -98,7 +112,7 @@ export function absentKeywordAllows<
   F extends FormContextType = FormContextType,
 >(context: SchemaContext<S, F>, schema: S): boolean {
   return (
-    context.additionalPropertiesWhenAbsent === 'allow' &&
+    readsAbsentAsAllowed<S, F>(context) &&
     !Reflect.get(schema, EXTRA_KEYS_ELSEWHERE_FLAG) &&
     additionalPropertiesKeyword<S>(schema) === undefined &&
     getSchemaType<S>(schema) === 'object'
@@ -170,9 +184,6 @@ export function conjoin(own: unknown, other: unknown): unknown {
   }
   return own === false || other === false ? false : { [ALL_OF_KEY]: [own, other] };
 }
-
-/** The object schema and the option selected beside it that a schema joins the extra-key keywords of */
-const JOINED_SCHEMAS_KEY = Symbol('__rjsf_joined_schemas');
 
 /** Returns `joined`, which joins the extra-key keywords of an object schema, `own`, and of the option selected beside
  * it, `option`, carrying the two so that `getAdditionalPropertySchema()` asks each of them about a key on its own: the

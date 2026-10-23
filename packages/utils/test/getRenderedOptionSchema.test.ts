@@ -7,7 +7,7 @@ import {
   RJSF_REF_KEY,
 } from '../src/index.ts';
 import { rendersOwnFieldBesideOwnOptions } from '../src/rendersOwnFieldBesideOption.ts';
-import { DECLARED_ABOVE_KEY } from '../src/schema/retrieveSchema.ts';
+import { DECLARED_ABOVE_KEY } from '../src/schemaMarkers.ts';
 
 describe('getRenderedOptionSchema()', () => {
   describe('a non-object parent', () => {
@@ -442,6 +442,23 @@ describe('getRenderedOptionSchema()', () => {
         Reflect.get(getRenderedOptionSchema(parent, { oneOf }), DECLARED_ABOVE_KEY) as string[];
       expect(declared({ type: 'object', additionalProperties: true })).toEqual([]);
       expect(declared({ type: 'object', properties: { b: true }, additionalProperties: true })).toEqual(['b']);
+    });
+    test("hands an option offering options of its own the parent's bounds on the object's keys, beside its own", () => {
+      const oneOf: RJSFSchema[] = [{ properties: { x: { type: 'string' } } }];
+      const parent: RJSFSchema = {
+        type: 'object',
+        additionalProperties: true,
+        maxProperties: 3,
+        propertyNames: { enum: ['p', 'q'] },
+      };
+      expect(getRenderedOptionSchema(parent, { oneOf })).toMatchObject({
+        maxProperties: 3,
+        propertyNames: { enum: ['p', 'q'] },
+      });
+      expect(
+        getRenderedOptionSchema(parent, { oneOf, maxProperties: 2, propertyNames: { maxLength: 1 } }),
+      ).toMatchObject({ maxProperties: 2, propertyNames: { allOf: [{ enum: ['p', 'q'] }, { maxLength: 1 }] } });
+      expect(getRenderedOptionSchema(parent, { oneOf, maxProperties: 5 }).maxProperties).toBe(3);
     });
     test('renders an option offering options of its own anew, where the parent names no extra-key keyword', () => {
       // The option's field stubs the extra keys in the parent's field's place, so it carries the names the parent

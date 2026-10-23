@@ -4,6 +4,7 @@ import {
   ANY_OF_KEY,
   deepEquals,
   ERRORS_KEY,
+  EXTRA_KEYS_ELSEWHERE_FLAG,
   getDiscriminatorFieldFromSchema,
   getRenderedOptionSchema,
   getSelectorPresentation,
@@ -14,6 +15,7 @@ import {
   isFormDataAvailable,
   logOnce,
   ONE_OF_KEY,
+  rendersOwnFieldBesideOption,
   resolveWidget,
   selectOptionUiSchema,
   shouldRenderOptionalField,
@@ -28,6 +30,29 @@ import { displaysLabel, getWidgetErrorProps, getWidgetLabelProps } from './field
 import formDataForNewOption from './formDataForNewOption.ts';
 import { lookUpUiField } from './namedField.ts';
 import NamedFieldContext from './NamedFieldContext.ts';
+
+/** Returns the uiSchema of an option whose field takes the extra keys of the object offering it in that object's
+ * field's place (see `getRenderedOptionSchema()`), with the object's `expandable` and `additionalProperties` entry,
+ * which say whether a key can be added and how each renders, beneath the option's own
+ *
+ * @param optionUiSchema - The option's own uiSchema
+ * @param uiSchema - The uiSchema of the object offering the option
+ * @returns - The uiSchema the option renders with
+ */
+function withParentExtraKeysUi<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  optionUiSchema: UiSchema<T, S, F>,
+  uiSchema: UiSchema<T, S, F>,
+): UiSchema<T, S, F> {
+  const { expandable } = getUiOptions<T, S, F>(uiSchema);
+  const layered: UiSchema<T, S, F> = { ...optionUiSchema };
+  if (expandable !== undefined && getUiOptions<T, S, F>(optionUiSchema).expandable === undefined) {
+    layered[UI_OPTIONS_KEY] = { ...optionUiSchema[UI_OPTIONS_KEY], expandable };
+  }
+  if (uiSchema.additionalProperties !== undefined && optionUiSchema.additionalProperties === undefined) {
+    layered.additionalProperties = uiSchema.additionalProperties;
+  }
+  return layered;
+}
 
 /** Returns the field's `uiSchema` for an option that declares none of its own, without the field's title and
  * description, which the field's plan already carries to the option's, so the option keeps the title and description
@@ -151,11 +176,20 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
       );
     }
   }
+  // An object parent's option is marked as leaving the extra keys to the parent's field, unless it takes them itself
+  const takesParentExtraKeys =
+    renderedOption !== null &&
+    rendersOwnFieldBesideOption<S>(schema) &&
+    !Reflect.get(renderedOption, EXTRA_KEYS_ELSEWHERE_FLAG);
   // Memoized, since the option's `SchemaField` keys its own memos on the uiSchema it is handed
-  const optionFieldUiSchema = useMemo(
-    () => (uiSchema && optionUiSchema === uiSchema ? withoutFieldText<T, S, F>(uiSchema) : optionUiSchema),
-    [optionUiSchema, uiSchema],
-  );
+  const optionFieldUiSchema = useMemo(() => {
+    if (uiSchema && optionUiSchema === uiSchema) {
+      return withoutFieldText<T, S, F>(uiSchema);
+    }
+    return uiSchema && optionUiSchema && takesParentExtraKeys
+      ? withParentExtraKeysUi<T, S, F>(optionUiSchema, uiSchema)
+      : optionUiSchema;
+  }, [optionUiSchema, uiSchema, takesParentExtraKeys]);
 
   /** Callback handler to remember what the currently selected option is. In addition to that the `formData` is updated
    * to remove properties that are not part of the newly selected option schema, and then the updated data is passed to

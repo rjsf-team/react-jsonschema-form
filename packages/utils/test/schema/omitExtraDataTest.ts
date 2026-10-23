@@ -71,6 +71,24 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         const closed: RJSFSchema = { ...schema, unevaluatedProperties: false };
         expect(allowing.omitExtraData(closed, formData)).toEqual({ a: 'x', n_1: 1 });
       });
+      it('reads it joined with the option the object shows, which renders no key a closed option leaves over', () => {
+        const offering: RJSFSchema = {
+          type: 'object',
+          oneOf: [
+            { properties: { b: { type: 'string' } }, additionalProperties: false },
+            { properties: { c: { type: 'string' } } },
+          ],
+        };
+        const utils = createSchemaUtils(
+          { validator: testValidator, additionalPropertiesWhenAbsent: 'allow' },
+          offering,
+        );
+        const showing = (index: number): FormFieldState => ({ selectedOption: () => index, isExpanded: () => false });
+        expect(utils.omitExtraData(offering, { b: 'x', e: 'y' }, showing(0))).toEqual({ b: 'x' });
+        expect(utils.omitExtraData(offering, { c: 'x', e: 'y' }, showing(1))).toEqual({ c: 'x', e: 'y' });
+        // The option the data matches best without a fieldState is the one read
+        expect(utils.omitExtraData(offering, { b: 'x', e: 'y' })).toEqual({ b: 'x' });
+      });
     });
     it('drops a property whose $ref names a false definition', () => {
       const schema: RJSFSchema = {

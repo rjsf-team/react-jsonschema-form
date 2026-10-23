@@ -349,6 +349,27 @@ describe('option selection as form state', () => {
     expect(node.innerHTML).toBe(forbiddingMarkup);
   });
 
+  it("omits the extra keys an object union's closed shown option renders no field for, under additionalPropertiesWhenAbsent 'allow'", async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      oneOf: [{ properties: { b: { type: 'string' } }, additionalProperties: false }],
+    };
+    const { node, onChange, onSubmit } = createFormComponent({
+      schema,
+      additionalPropertiesWhenAbsent: 'allow',
+      initialFormData: { b: 'x', e: 'y' },
+      omitExtraData: true,
+      liveOmit: 'onChange',
+    });
+    expect(node.querySelector('#root_e')).toBeNull();
+
+    await user.type(elementOf(node, '#root_b'), 'z');
+
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ b: 'xz' });
+    await submitForm(node, user);
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+  });
+
   it('renders a key the selected option declares once outside a Form, where the outermost field keeps the selection (#5461)', async () => {
     const schema: RJSFSchema = {
       type: 'object',

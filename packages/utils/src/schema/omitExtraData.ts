@@ -25,7 +25,12 @@ import fieldShownOption, { rendersOptionsAsSelect } from './fieldShownOption.ts'
 import { closestOption } from './getClosestMatchingOption.ts';
 import { mergeAllOf, schemaFrom, schemaOfBoolean } from './graph/mergePlan.ts';
 import resolveConstantOptions from './resolveConstantOptions.ts';
-import { conditionHolds, resolveOwnRef } from './retrieveSchema.ts';
+import { conditionHolds, joinOptionExtraKeys, resolveOwnRef } from './retrieveSchema.ts';
+
+/** The `anyOf`/`oneOf` option `omitExtraData()` applied to a value, as the field holding it shows it */
+interface ShownOption<S extends StrictRJSFSchema> {
+  option?: S;
+}
 
 /** Returns true when a form value is considered empty: null/undefined/'', an empty array, or a plain
  * object whose every own value is itself empty (recursive). Scalars like `0` and `false` are not empty.
@@ -119,6 +124,7 @@ export default function omitExtraData<
    * @param source - The source form data object to read values from
    * @param target - The accumulator object to write filtered values into
    * @param path - The path of the object
+   * @param [shownOption] - The `anyOf`/`oneOf` option the object shows, whose result is already in `target`
    * @returns - `target` after all schema-defined properties have been processed
    */
   function handleObject(
@@ -126,14 +132,20 @@ export default function omitExtraData<
     source: GenericObjectType,
     target: GenericObjectType,
     path: FieldPathList,
+    shownOption?: S,
   ): GenericObjectType {
     const { properties, patternProperties } = childSchema;
     // Read with the precedence `getAdditionalPropertySchema()` reads the two keywords with, so a key the form renders
     // a field for, and the add button seeds, through an `unevaluatedProperties` is one this keeps rather than prunes
-    // out from under it, and with neither of them named, as the context says an absent one reads
-    const additionalProperties = absentKeywordAllows<S, F>(context, childSchema)
-      ? true
-      : additionalPropertiesKeyword<S>(childSchema);
+    // out from under it, and with neither of them named, as the context says an absent one reads. The field reads an
+    // absent one joined with the option it shows, so an option naming either keyword decides the keys it leaves over,
+    // and a closed one renders none to keep
+    const additionalProperties =
+      absentKeywordAllows<S, F>(context, childSchema) &&
+      (shownOption === undefined ||
+        absentKeywordAllows<S, F>(context, joinOptionExtraKeys<S>(childSchema, shownOption)))
+        ? true
+        : additionalPropertiesKeyword<S>(childSchema);
     const requiredSet = new Set(childSchema.required ?? []);
 
     /** Recursively omits extra data from `value` via `omit`, then conditionally writes the result to
@@ -305,6 +317,7 @@ export default function omitExtraData<
    * @param source - The current form data value used to score each option
    * @param target - The already-filtered value to merge the winning option's result into
    * @param path - The path of the value
+   * @param shown - Where the option applied is recorded
    * @returns - The result of applying the best-matching option, or `target` when no matching applies
    */
   function handleOneOf(
@@ -313,6 +326,7 @@ export default function omitExtraData<
     source: unknown,
     target: unknown,
     path: FieldPathList,
+    shown: ShownOption<S>,
   ): unknown {
     // A select's value has no branch to omit extra data by
     if (!Array.isArray(oneOf) || rendersOptionsAsSelect<S>(childSchema, oneOf)) {
@@ -330,7 +344,9 @@ export default function omitExtraData<
       winning = oneOf[closestOption<S, F>(context, rootSchema, source, oneOf, 0, true, discriminator)];
     }
     // An index naming no option, as -1 does for none shown, keeps nothing the options describe, as a `false` option does
-    return omit(resolveOwnRef<S>(asOption(winning), rootSchema, context.customMergeAllOf), source, path, target, false);
+    // oxlint-disable-next-line no-param-reassign
+    shown.option = resolveOwnRef<S>(asOption(winning), rootSchema, context.customMergeAllOf);
+    return omit(shown.option, source, path, target, false);
   }
 
   /** Applies `anyOf` branches from `schema` to `source`, merging results into `target`. When `anyOf`
@@ -342,9 +358,16 @@ export default function omitExtraData<
    * @param source - The current form data value; empty or undefined triggers all-branch application
    * @param target - The already-filtered value to merge branch results into
    * @param path - The path of the value
+   * @param shown - Where the option applied is recorded, when one is picked
    * @returns - The result after applying the relevant `anyOf` branch(es), or `target` when inapplicable
    */
-  function handleAnyOf(childSchema: S, source: unknown, target: unknown, path: FieldPathList): unknown {
+  function handleAnyOf(
+    childSchema: S,
+    source: unknown,
+    target: unknown,
+    path: FieldPathList,
+    shown: ShownOption<S>,
+  ): unknown {
     const { anyOf } = childSchema;
     if (!Array.isArray(anyOf)) {
       return target;
@@ -361,7 +384,7 @@ export default function omitExtraData<
       }
       return result;
     }
-    return handleOneOf(anyOf, childSchema, source, target, path);
+    return handleOneOf(anyOf, childSchema, source, target, path, shown);
   }
 
   /** Applies schema-based `dependencies` from `schema` to `source`, merging each active dependency's
@@ -498,11 +521,15 @@ export default function omitExtraData<
 
     // The options of a select are read as the constants they name, as the form renders them, `$ref`s included
     localSchema = resolveConstantOptions<S>(localSchema, rootSchema);
+    // An `anyOf` is the list the field reads over a `oneOf` beside it (see `getXxxOfKey()`), so its option, applied
+    // second, is the one recorded
+    const shown: ShownOption<S> = {};
     let filtered = handleAnyOf(
       localSchema,
       source,
-      handleOneOf(localSchema.oneOf, localSchema, source, target, path),
+      handleOneOf(localSchema.oneOf, localSchema, source, target, path, shown),
       path,
+      shown,
     );
 
     // A select holds one of its constants as a whole, so an `object` or `array` one has no contents to prune. A value of
@@ -516,7 +543,7 @@ export default function omitExtraData<
       if (!isObjectValue(source)) {
         return undefined;
       }
-      filtered = handleObject(localSchema, source, isObjectValue(filtered) ? filtered : {}, path);
+      filtered = handleObject(localSchema, source, isObjectValue(filtered) ? filtered : {}, path, shown.option);
     } else if (type === 'array') {
       if (!Array.isArray(source)) {
         return undefined;

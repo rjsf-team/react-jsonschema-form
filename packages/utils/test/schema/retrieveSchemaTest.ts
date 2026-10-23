@@ -2810,6 +2810,17 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         expect(Object.keys(retrieveSchema(allowing, bare, bare, { j: 'v' }).properties!)).toEqual(['j']);
         expect(retrieveSchema({ validator: testValidator }, bare, bare, { j: 'v' })).toEqual(bare);
       });
+      it('keeps one view for the data holding no extra key, and stubs the keys of data holding some', () => {
+        const object: RJSFSchema = { type: 'object', properties: { a: { type: 'string' }, b: { type: 'string' } } };
+        const view = retrieveSchema(allowing, object, object, { a: 'x' });
+        expect(retrieveSchema(allowing, object, object, { a: 'y', b: 'z' })).toBe(view);
+        expect(Object.keys(retrieveSchema(allowing, object, object, { a: 'y', e: 'z' }).properties!)).toEqual([
+          'a',
+          'b',
+          'e',
+        ]);
+        expect(retrieveSchema(allowing, object, object, { b: 'z' })).toBe(view);
+      });
       it('stubs no extra key of an object whose unevaluatedProperties forbids them, whatever the context allows', () => {
         const closed: RJSFSchema = { ...schema, unevaluatedProperties: false };
         expect(Object.keys(retrieveSchema(allowing, closed, closed, formData).properties!)).toEqual(['a']);

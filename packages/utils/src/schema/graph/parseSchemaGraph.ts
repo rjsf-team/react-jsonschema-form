@@ -13,6 +13,7 @@ import {
   SCHEMA_KEY,
 } from '../../constants.ts';
 import isObject, { isSchemaObject } from '../../isObject.ts';
+import { DECLARED_ABOVE_KEY, JOINED_SCHEMAS_KEY } from '../../schemaMarkers.ts';
 import { isSubschemaKeyword, keywordShape, normalizeUri, resolveUri } from '../../schemaUri.ts';
 import type { RJSFSchema, StrictRJSFSchema } from '../../types.ts';
 import { schemaFrom } from './mergePlan.ts';
@@ -796,6 +797,8 @@ const MARKERS: readonly symbol[] = [
   GUESSED_TYPE_FLAG,
   RJSF_REF_KEY,
   EXTRA_KEYS_ELSEWHERE_FLAG,
+  DECLARED_ABOVE_KEY,
+  JOINED_SCHEMAS_KEY,
 ];
 
 /** The key of a primitive in a `contentKey()`, apart from a string, which is quoted there to set it apart from these;

@@ -3629,6 +3629,49 @@ describe('ObjectField', () => {
       expect(node.querySelectorAll('.rjsf-object-property-expand button')).toHaveLength(1);
     });
 
+    describe("an option taking the extra keys in its object's place keeps the object's bounds on them", () => {
+      const nested = (bounds: RJSFSchema): RJSFSchema => ({
+        type: 'object',
+        additionalProperties: true,
+        ...bounds,
+        oneOf: [{ title: 'A', oneOf: [{ properties: { x: { type: 'string' } } }] }],
+      });
+
+      it('offers no add button once the maxProperties of the object is reached', () => {
+        const schema = nested({ maxProperties: 2 });
+        expect(addButtonOf(createFormComponent({ schema, initialFormData: { x: 'a' } }).node)).not.toBeNull();
+        expect(addButtonOf(createFormComponent({ schema, initialFormData: { x: 'a', p: '1' } }).node)).toBeNull();
+      });
+
+      it("adds a key under a name the object's propertyNames allows", async () => {
+        const { node, onChange } = createFormComponent({
+          schema: nested({ propertyNames: { enum: ['p', 'q'] } }),
+          initialFormData: { x: 'a', p: '1' },
+        });
+
+        await user.click(elementOf(node, '.rjsf-object-property-expand button'));
+
+        expect(Object.keys(onChange.mock.lastCall?.[0].formData)).toEqual(['x', 'p', 'q']);
+      });
+
+      it("reads the object's expandable and additionalProperties entry where the option has a uiSchema of its own", () => {
+        const schema = nested({});
+        const closed = createFormComponent({
+          schema,
+          initialFormData: { x: 'a' },
+          uiSchema: { 'ui:options': { expandable: false }, oneOf: [{}] },
+        });
+        expect(addButtonOf(closed.node)).toBeNull();
+
+        const { node } = createFormComponent({
+          schema,
+          initialFormData: { x: 'a', p: 'v' },
+          uiSchema: { additionalProperties: { 'ui:widget': 'textarea' }, oneOf: [{}] },
+        });
+        expect(elementOf(node, '#root_p').tagName).toBe('TEXTAREA');
+      });
+    });
+
     it("offers no add button for an object whose unevaluatedProperties forbids extra keys, even under 'allow'", () => {
       const schema: RJSFSchema = {
         type: 'object',

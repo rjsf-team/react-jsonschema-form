@@ -1,4 +1,4 @@
-import { allowsAdditionalProperties } from './additionalPropertiesUtils.ts';
+import { allowsAdditionalProperties, readsAbsentAsAllowed } from './additionalPropertiesUtils.ts';
 import canExpand from './canExpand.ts';
 import deepEquals from './deepEquals.ts';
 import logOnce from './logOnce.ts';
@@ -115,7 +115,7 @@ class SchemaUtils<
       !deepEquals(this.rootSchema, rootSchema) ||
       !deepEquals(this.context.defaultFormStateBehavior ?? {}, context.defaultFormStateBehavior ?? {}) ||
       this.context.customMergeAllOf !== context.customMergeAllOf ||
-      (this.context.additionalPropertiesWhenAbsent === 'allow') !== (context.additionalPropertiesWhenAbsent === 'allow')
+      readsAbsentAsAllowed<S, F>(this.context) !== readsAbsentAsAllowed<S, F>(context)
     );
   }
 
