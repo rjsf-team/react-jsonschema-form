@@ -2131,6 +2131,8 @@ export function getDefaultBasedOnSchemaType<
 
 /**
  * Ensure that the formData matches the given schema. If it's not matching in the case of a selectField, we change it to match the schema.
+ * Object data a schema whose types leave out `object` holds can never match it, so it is dropped, at the top and at
+ * any depth of object data, where the property is left out for the defaults to fill in.
  *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param schema - The schema for which the formData state is desired
