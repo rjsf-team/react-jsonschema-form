@@ -47,7 +47,9 @@ import toConstant from '../toConstant.ts';
 import type {
   CustomMergeAllOf,
   DefaultFormStateBehavior,
+  FieldPathList,
   FormContextType,
+  FormFieldState,
   GenericObjectType,
   GetDefaultFormStateProps,
   GlobalUISchemaOptions,
@@ -57,6 +59,7 @@ import type {
   UiSchema,
   ValidatorType,
 } from '../types.ts';
+import fieldShownOption, { rendersOptionsAsSelect } from './fieldShownOption.ts';
 import { closestOption } from './getClosestMatchingOption.ts';
 import buildPlan, {
   asTarget,
@@ -556,6 +559,39 @@ interface FoldProps<T, S extends StrictRJSFSchema, F extends FormContextType> ex
    * would be computed from the same inputs again
    */
   memo?: Map<string, MemoEntry>;
+  /** The option each field shows, which a field offering `anyOf`/`oneOf` options computes its defaults from */
+  fieldState?: FormFieldState<S>;
+  /** The path of the field, which only `fieldState` is asked about, so without one none is built */
+  fieldPath?: FoldPath;
+}
+
+/** A field's path as its parent's and its own key, so a child's is made without copying its parent's, and is spelled
+ * out only for a field `fieldState` is asked about, see `pathListOf()`
+ */
+interface FoldPath {
+  parent?: FoldPath;
+  key: string | number;
+}
+
+/** Returns the segments of `path`, none for the root */
+function pathListOf(path?: FoldPath): FieldPathList {
+  const list: FieldPathList = [];
+  for (let at = path; at; at = at.parent) {
+    list.push(at.key);
+  }
+  return list.reverse();
+}
+
+/** The `fieldState` and path the child at `key` of a field is folded with, none without a `fieldState`. The memos key
+ * no child by its path, which they need not: a child memoized across the passes of its field's fixed point is
+ * memoized by its key, which fixes its path, except a `minItems` filler, which holds no data and so is never asked
+ * which option it shows, and a leaf memoized across calls offers no options to ask about
+ */
+function childPathProps<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  { fieldState, fieldPath }: FoldProps<T, S, F>,
+  key: string | number,
+): Pick<FoldProps<T, S, F>, 'fieldState' | 'fieldPath'> {
+  return fieldState ? { fieldState, fieldPath: { parent: fieldPath, key } } : {};
 }
 
 /** The props `foldView()` computes a field with: the field's own, with what it reports the last view it computed the
@@ -1007,12 +1043,13 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
           uiSchema: getStaticItemsUiSchema<T, S, F>(uiSchema, idx),
           uiSchemaDefinitions,
           nullFills: props.nullFills,
+          ...childPathProps<T, S, F>(props, idx),
         },
         props.memo,
       ),
     );
   } else if (xxxOf) {
-    const choice = chooseOption<S, F>(context, view, xxxOf, rawFormData, defaults, preferParentDefaults);
+    const choice = chooseOption<T, S, F>(context, view, xxxOf, rawFormData, defaults, preferParentDefaults, props);
     isWholeValue = choice.isWholeValue;
     if (choice.wholeOptions === undefined) {
       return foldOption<T, S, F>(choice.context, view, xxxOf, choice.index, { ...props, parentDefaults: defaults });
@@ -1137,17 +1174,43 @@ function ownValue<V>(value: V): V {
   return asDeclared<V>(copiedValue(value, new WeakMap()));
 }
 
-/** Picks the option of a field offering `anyOf`/`oneOf` options that its data, or its default, matches, and the context
- * the option's defaults are computed in. Each option is scored where it is declared, or where the merge that rebuilt
- * its list adopted it.
+/** Returns the index of the option a field offering `options` shows, as `fieldState` says, or -1 without a
+ * `fieldState`, for a select, or for an index naming none of the options, see `fieldShownOption()`
  */
-function chooseOption<S extends StrictRJSFSchema, F extends FormContextType>(
+function shownOptionIndex<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  view: DefaultsView<S>,
+  options: readonly S[],
+  rawFormData: unknown,
+  { fieldState, fieldPath }: FoldProps<T, S, F>,
+): number {
+  if (!fieldState || rendersOptionsAsSelect<S>(view.schema, options)) {
+    return -1;
+  }
+  return fieldShownOption<S, F>(
+    context,
+    fieldState,
+    pathListOf(fieldPath),
+    view.schema,
+    options,
+    view.graph.rawRoot,
+    rawFormData,
+  );
+}
+
+/** Picks the option of a field offering `anyOf`/`oneOf` options that it shows, or else the one its data, or its
+ * default, matches, and the context the option's defaults are computed in. The option a `fieldState` says the field
+ * shows is matched as the field on screen matches it, over its options retrieved for its data; otherwise each option
+ * is scored where it is declared, or where the merge that rebuilt its list adopted it.
+ */
+function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   view: DefaultsView<S>,
   { key, options }: XxxOfOptions<S>,
   rawFormData: unknown,
   defaults: unknown,
   preferParentDefaults: boolean,
+  props: FoldProps<T, S, F>,
 ): { context: SchemaContext<S, F>; index: number; isWholeValue: boolean; wholeOptions: S[] | undefined } {
   const { defaultFormStateBehavior } = context;
   const { schema } = view;
@@ -1181,9 +1244,16 @@ function chooseOption<S extends StrictRJSFSchema, F extends FormContextType>(
   const equalOptionIndex = picksWholeOption
     ? wholeOptions.findIndex((option) => deepEquals(toConstant<S>(option), valueToMatch))
     : -1;
+  // The option a field shows is the one it renders, which can be another than its data matches, as after a switch to
+  // an option the data fits no better than the one before. A field holding no data yet is matched by its `default`
+  const shownIndex =
+    picksWholeOption || rawFormData === undefined
+      ? -1
+      : shownOptionIndex<T, S, F>(context, view, options, rawFormData, props);
+  const pickedIndex = picksWholeOption ? equalOptionIndex : shownIndex;
   const index =
-    equalOptionIndex !== -1
-      ? equalOptionIndex
+    pickedIndex !== -1
+      ? pickedIndex
       : closestOption<S, F>(
           context,
           rootSchema,
@@ -1457,6 +1527,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     uiSchema: getByPath<UiSchema<T, S, F> | undefined>(uiSchema, uiSchemaKey),
     uiSchemaDefinitions,
     nullFills,
+    ...childPathProps<T, S, F>(props, key),
   });
   // Computes a child's defaults, reporting whether they hold a `null` fill
   const foldReporting = (
@@ -1636,6 +1707,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
           uiSchema: getByPath<UiSchema<T, S, F> | undefined>(uiSchema, ADDITIONAL_PROPERTIES_KEY),
           uiSchemaDefinitions,
           nullFills,
+          ...childPathProps<T, S, F>(props, key),
         });
         if (holdsNull) {
           setOwn(computed, key, value);
@@ -1664,7 +1736,7 @@ function branchNullFills<T, S extends StrictRJSFSchema, F extends FormContextTyp
   context: SchemaContext<S, F>,
   view: DefaultsView<S>,
   schema: S,
-  { rawFormData, uiSchema, uiSchemaDefinitions, nullFills }: FoldProps<T, S, F>,
+  props: FoldProps<T, S, F>,
   foldReporting: (
     childContext: SchemaContext<S, F>,
     memoKey: string,
@@ -1672,6 +1744,7 @@ function branchNullFills<T, S extends StrictRJSFSchema, F extends FormContextTyp
     childFoldProps: FoldProps<T, S, F>,
   ) => { value: unknown; holdsNull: boolean },
 ): { key: string; value: unknown }[] {
+  const { rawFormData, uiSchema, uiSchemaDefinitions, nullFills } = props;
   const formData = isObject(rawFormData) ? rawFormData : {};
   const retrieved = settle(context, { ...view.field, retrieves: true }, view.data, view.depData, view.options);
   const rendered = allowsAdditionalProperties<S>(retrieved.schema)
@@ -1711,6 +1784,7 @@ function branchNullFills<T, S extends StrictRJSFSchema, F extends FormContextTyp
           isRequired: rendered.required?.includes(key),
           formData: propertyFormData,
         }),
+        ...childPathProps<T, S, F>(props, key),
       });
       return holdsNull ? [{ key, value }] : [];
     });
@@ -1800,6 +1874,7 @@ function arrayDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>
     uiSchema: getItemUiSchemaForIndex<T, S, F>(schema, uiSchema, idx),
     uiSchemaDefinitions,
     nullFills,
+    ...childPathProps<T, S, F>(props, idx),
   });
 
   // Inject defaults into existing array defaults
@@ -2258,6 +2333,7 @@ export default function getDefaultFormState<
     // (an array's `uiSchema.items`, a `oneOf`/`anyOf` option's own uiSchema, `uiSchema.additionalProperties`, ...)
     // need to pass the root uiSchema's `ui:definitions` explicitly, since `ui:definitions` only ever lives at the root.
     uiSchemaDefinitions = uiSchema?.[UI_DEFINITIONS_KEY],
+    fieldState,
   }: GetDefaultFormStateProps<T, S, F>,
 ): T | T[] | null | undefined {
   if (!isObject(theSchema)) {
@@ -2282,6 +2358,7 @@ export default function getDefaultFormState<
     requiredAsRoot: true,
     uiSchema,
     uiSchemaDefinitions,
+    fieldState,
   });
   const { schema } = view;
 

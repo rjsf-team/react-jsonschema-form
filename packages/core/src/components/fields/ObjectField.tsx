@@ -53,6 +53,7 @@ import useWarnIfFormDataNotPassedThrough from '../../hooks/useWarnIfFormDataNotP
 import { additionalPropertyRemoval, EMPTY_UI_SCHEMA } from '../constants.ts';
 import RichDescription from '../RichDescription.tsx';
 import {
+  declaresProperty,
   getContainerErrorProps,
   getContainerHeading,
   isAdditionalPropertySchema,
@@ -122,23 +123,6 @@ function getSeedType<S extends StrictRJSFSchema = RJSFSchema>(subSchema: S): str
   }
   const [firstOption] = getXxxOfOptions<S>(subSchema)?.options ?? [];
   return isObject(firstOption) ? getAdditionalPropertyType<S>(firstOption) : undefined;
-}
-
-/** Returns whether the object declares `key` in its own `properties`, which is what decides whose schema and whose
- * `uiSchema` entry the property is rendered and seeded from. `retrieveSchema()` stubs every additional key the form
- * data holds in among the `properties` too, so a stub is told from a declared property by the flag it carries and left
- * to the keyword that described it. The name is read as an own property, since a key called `constructor` or
- * `toString` would otherwise be answered for by `Object.prototype`.
- *
- * @param schemaProperties - The `properties` of the resolved object schema
- * @param key - The property name to check
- * @returns - True when the object declares the name itself, rather than taking it as an additional property
- */
-function declaresProperty<S extends StrictRJSFSchema = RJSFSchema>(
-  schemaProperties: NonNullable<S['properties']>,
-  key: string,
-) {
-  return Object.hasOwn(schemaProperties, key) && !isAdditionalPropertySchema(schemaProperties[key]);
 }
 
 function getAdditionalPropertyOrder<S extends StrictRJSFSchema = RJSFSchema>(

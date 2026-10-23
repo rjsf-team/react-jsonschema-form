@@ -5,10 +5,11 @@ import {
   deepEqualsUndefinedAsMissing,
   getRenderedOptionSchema,
   getXxxOfKey,
+  isPlainObject,
   isWholeValueSelect,
 } from '@rjsf/utils';
 
-import { isAdditionalPropertySchema, storedValue } from '../components/fields/fieldWidgetUtils.ts';
+import { declaresProperty, isAdditionalPropertySchema, storedValue } from '../components/fields/fieldWidgetUtils.ts';
 import useSendMove from './useSendMove.ts';
 
 /** The options of an `anyOf`/`oneOf` field a switch leaves and selects, each with the uiSchema its field renders with */
@@ -101,10 +102,21 @@ export default function useSendOptionSwitch(fieldPath: FieldPath) {
           : undefined;
       const isKeptItem = (index: number) =>
         items !== undefined && deepEqualsUndefinedAsMissing(items.after[index], items.before[index]);
-      const isKept = (key: string) => Object.hasOwn(kept, key) || (/^\d+$/.test(key) && isKeptItem(Number(key)));
+      const declaredByOld = oldOption?.properties ?? {};
       const declaredByNew = newOption?.properties ?? {};
+      // `schema` arrives with the extra keys of its data stubbed among its `properties`, so a stub is kept only while it
+      // stays the same extra key: one an option declares renders as that option's field, and one the switch deleted
+      // renders no field to clear its errors
+      const isKeptProperty = (key: string) =>
+        declaresProperty<S>(kept, key) ||
+        (Object.hasOwn(kept, key) &&
+          !Object.hasOwn(declaredByOld, key) &&
+          !Object.hasOwn(declaredByNew, key) &&
+          isPlainObject(newFormData) &&
+          Object.hasOwn(newFormData, key));
+      const isKept = (key: string) => isKeptProperty(key) || (/^\d+$/.test(key) && isKeptItem(Number(key)));
       const held = typeof formData === 'object' && formData !== null ? Object.keys(formData) : [];
-      const gone = new Set([...Object.keys(oldOption?.properties ?? {}), ...held].filter((key) => !isKept(key)));
+      const gone = new Set([...Object.keys(declaredByOld), ...held].filter((key) => !isKept(key)));
       const value = storedValue(newFormData, fieldPath, isAdditionalPropertySchema(schema));
       return sendMove(
         {

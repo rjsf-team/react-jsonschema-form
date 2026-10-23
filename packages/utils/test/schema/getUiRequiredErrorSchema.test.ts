@@ -843,6 +843,8 @@ describe('getUiRequiredErrorSchema()', () => {
     expect(asked).toEqual([{}, {}]);
     // One empty schema on every walk, so a form state matching the options finds what it remembers for them
     expect(asked[0]).toBe(asked[1]);
+    // Nor does an index past the options, which a caller's form state can return
+    expect(errorsWhenShown(2)).toEqual([]);
   });
 
   it('does not treat a primitive value at an object-schema node as satisfying a ui:required child, matching computeDefaults isObject(rawFormData) handling', () => {

@@ -146,6 +146,11 @@ export interface FieldChange<T> {
    * at that path the user's. Any other root write, such as `setFieldValue('', data)`, is taken as written
    */
   editedPath?: FieldPathList;
+  /** Whether a field made the change, or the edit a root write such as `transformChange`'s stands for, so the fields
+   * above it, the root's included, keep the options they show for the data it leaves; data set from outside, as
+   * `setFieldValue()` sets it, is matched again
+   */
+  isFieldEdit?: boolean;
 }
 
 /** What became of a change that moved keys, see `FormDataAccess.sendMove()`: refused by `transformChange`, which leaves
@@ -326,14 +331,14 @@ function mergeErrors<T>(
  *          for the root is the caller's to decide, which is what the separate parameter below is for.
  * @param formData - The form data to validate
  * @param [retrievedSchema] - An optionally pre-resolved schema to validate against instead of the context's `schema`
- * @param [editedPath] - The path of the edit `formData` carries, if any, see `fieldStateOf()`
+ * @param [heldPath] - The path whose field and the fields above it keep the options they show, see `heldPathOf()`
  */
 export function validateFormData<T, S extends StrictRJSFSchema, F extends FormContextType>(
   props: FormProps<T, S, F>,
   context: RenderContext<T, S, F>,
   formData: T | undefined,
   retrievedSchema?: S,
-  editedPath?: FieldPathList,
+  heldPath?: FieldPathList,
 ): ValidationData<T> {
   const { schemaUtils, schema } = context;
   const { customValidate, transformErrors, uiSchema, formContext } = props;
@@ -345,15 +350,26 @@ export function validateFormData<T, S extends StrictRJSFSchema, F extends FormCo
   // Falsy root values (`false`, `0`, `''`) are valid data, so only `undefined` skips the round trip (#5404).
   const serializedFormData = JSON.stringify(formData);
   const validationFormData = serializedFormData === undefined ? undefined : JSON.parse(serializedFormData);
+  const fieldState = fieldStateOf(context.uiState, schemaUtils, heldPath);
 
   // The data handed to `customValidate` carries defaults computed here rather than inside the validator, so they honor
   // the `customMergeAllOf` and `defaultFormStateBehavior` this form was given, which a validator has no way to know.
   // They are the schema's defaults rather than this form's current ones: `initialDefaultsGenerated` is deliberately
   // left unset, as it was in v6, so `ui:initialValue` is applied again and a field the user has cleared reaches
-  // `customValidate` holding its initial value. Passed as a function so the work happens only if the validator uses
-  // it, and so defaults that come out `undefined` are still an answer rather than looking like no answer at all
+  // `customValidate` holding its initial value. A field offering options takes the defaults of the option it shows, as
+  // the form's own do. Passed as a function so the work happens only if the validator uses it, and so defaults that
+  // come out `undefined` are still an answer rather than looking like no answer at all
   const getCustomValidateFormData = customValidate
-    ? () => schemaUtils.getDefaultFormState(validationSchema, validationFormData, true, undefined, uiSchema) as T
+    ? () =>
+        schemaUtils.getDefaultFormState(
+          validationSchema,
+          validationFormData,
+          true,
+          undefined,
+          uiSchema,
+          undefined,
+          fieldState,
+        ) as T
     : undefined;
   const schemaValidation = schemaUtils
     .getValidator()
@@ -375,7 +391,7 @@ export function validateFormData<T, S extends StrictRJSFSchema, F extends FormCo
     undefined,
     pickGlobalUiOptions(uiSchema?.[UI_GLOBAL_OPTIONS_KEY], props.globalUiOptionsKeys),
     formContext ?? ({} as F),
-    fieldStateOf(context.uiState, schemaUtils, editedPath),
+    fieldState,
   );
   return validationDataMerge<T>(schemaValidation, uiRequiredErrorSchema);
 }
@@ -394,7 +410,7 @@ export function validateFormData<T, S extends StrictRJSFSchema, F extends FormCo
  *          schema`, the `oneOf` miss) and may stand in only while it describes the data. Omitting extra data keeps
  *          that true, since the fields it drops are by definition not in the schema that selects the branch; a prop
  *          change does not, which is why the derivation passes it only when nothing that resolves it changed.
- * @param [editedPath] - The path of the edit `formData` carries, if any, see `fieldStateOf()`
+ * @param [heldPath] - The path whose field and the fields above it keep the options they show, see `heldPathOf()`
  * @returns - An object containing `errorSchema`, `errors`, `schemaValidationErrors` and `schemaValidationErrorSchema`
  */
 function runLiveValidation<T, S extends StrictRJSFSchema, F extends FormContextType>(
@@ -403,9 +419,9 @@ function runLiveValidation<T, S extends StrictRJSFSchema, F extends FormContextT
   formData: T | undefined,
   customErrors?: ErrorSchema<T>,
   retrievedSchema?: S,
-  editedPath?: FieldPathList,
+  heldPath?: FieldPathList,
 ) {
-  const schemaValidation = validateFormData(props, context, formData, retrievedSchema, editedPath);
+  const schemaValidation = validateFormData(props, context, formData, retrievedSchema, heldPath);
   const { errors: schemaValidationErrors, errorSchema: schemaValidationErrorSchema } = schemaValidation;
   const mergedErrors = mergeErrors(schemaValidation, props.extraErrors, customErrors);
   return { ...mergedErrors, schemaValidationErrors, schemaValidationErrorSchema };
@@ -697,6 +713,13 @@ interface DeriveDataOptions {
   isSanitized?: boolean;
   /** The change this pass is for, if any: the value at its path is the user's */
   edit?: FieldEdit;
+  /** The path of the change this pass is for, if a field made it, whose field and the fields above it keep the options
+   * they show while the defaults are filled, see `heldPathOf()`. A root write a field makes is no `edit` but holds the
+   * root's option, and data set from outside holds none here, even where it is sanitized as an `edit`. That sanitize
+   * still holds along the `edit`'s path, but its diff shows one option on both sides, so the option it holds there
+   * judges nothing differently
+   */
+  heldPath?: FieldPathList;
   /** This pass originated from `reset()`: it computes defaults the same way an initial render does even though the
    * instance has generated defaults before
    */
@@ -721,7 +744,7 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
   options: DeriveDataOptions,
   props: FormProps<T, S, F>,
 ): DerivedData<T, S, F> {
-  const { isSanitized = false, edit, isReset = false } = options;
+  const { isSanitized = false, edit, heldPath, isReset = false } = options;
   const { uiSchema = {} } = props;
   const schemaUtils = resolveSchemaUtils(props, current);
   const areSchemaUtilsReused = schemaUtils === current?.schemaUtils;
@@ -732,10 +755,22 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
   // A reset re-runs the same "initial" defaults pass a first render does, so `ui:initialValue` applies again even
   // though this instance has generated defaults before.
   const initialDefaultsGenerated = (current?.initialDefaultsGenerated ?? false) && !isReset;
+  // The defaults of a field offering options are those of the option it shows, which is the form's to keep
+  const fieldState = current && fieldStateOf(current.uiState, schemaUtils, heldPath);
   const fill = (data: T | undefined) =>
     replaceEqualDeep(
       shareBase,
-      asFilledFormData<T>(schemaUtils.getDefaultFormState(rootSchema, data, false, initialDefaultsGenerated, uiSchema)),
+      asFilledFormData<T>(
+        schemaUtils.getDefaultFormState(
+          rootSchema,
+          data,
+          false,
+          initialDefaultsGenerated,
+          uiSchema,
+          undefined,
+          fieldState,
+        ),
+      ),
     );
   let formData = fill(inputFormData);
   const treeOf = (data: T | undefined): FieldTree<T, S, F> => ({
@@ -1057,6 +1092,14 @@ export function copyAlongPath<T>(data: T, path: FieldPathList): T {
   return root as T;
 }
 
+/** The path whose field and the fields above it keep the options they show for the data `change` leaves, see
+ * `fieldStateOf()`: the edit's, for a change a field made, the root's included. Data set from outside, as
+ * `setFieldValue()` sets it at any path, holds none, so it is matched again, as the render matches it
+ */
+function heldPathOf<T>(change: FieldChange<T>): FieldPathList | undefined {
+  return change.isFieldEdit ? (change.editedPath ?? fieldPathToList(change.fieldPath)) : undefined;
+}
+
 /** Applies the data of one `change` to `current`, returning the next state with `current`'s errors. The `newValue` is
  * set at the change's path in the data, which is then run through `deriveFormData()` for any missing defaults and,
  * when the resolved schema changed, sanitization. If `omitExtraData` and `liveOmit` are turned on, the data is filtered
@@ -1144,6 +1187,7 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
       {
         isSanitized: editedPath !== undefined && !disabled && !readonly,
         edit: editedPath && { path: editedPath, newKeyOf: change.editedPath ? undefined : change.newKeyOf },
+        heldPath: heldPathOf(change),
       },
       props,
     );
@@ -1177,7 +1221,7 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
     newFormData = context.schemaUtils.omitExtraData(
       context.schema,
       formData,
-      fieldStateOf(context.uiState, context.schemaUtils, change.editedPath ?? path),
+      fieldStateOf(context.uiState, context.schemaUtils, heldPathOf(change)),
     );
   }
 
@@ -1214,14 +1258,7 @@ export function applyChangeToErrorsOf<T, S extends StrictRJSFSchema, F extends F
     const customErrors = ownErrorsAfterChange(changed, change);
     return {
       ...changed,
-      ...runLiveValidation(
-        props,
-        changed,
-        formData,
-        customErrors,
-        changed.retrievedSchema,
-        change.editedPath ?? fieldPathToList(change.fieldPath),
-      ),
+      ...runLiveValidation(props, changed, formData, customErrors, changed.retrievedSchema, heldPathOf(change)),
       customErrors,
     };
   }

@@ -5,11 +5,9 @@ import {
   getAdditionalPropertySchema,
   getMatchingPatternProperties,
 } from '../additionalPropertiesUtils.ts';
-import { fieldPathFromList } from '../fieldPath.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
 import getSchemaTypeForValue from '../getSchemaTypeForValue.ts';
-import isConstantOptionList from '../isConstantOptionList.ts';
 import isObject, { isSchemaObject } from '../isObject.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
 import setOwn from '../setOwn.ts';
@@ -22,10 +20,11 @@ import type {
   SchemaContext,
   StrictRJSFSchema,
 } from '../types.ts';
+import fieldShownOption, { rendersOptionsAsSelect } from './fieldShownOption.ts';
 import { closestOption } from './getClosestMatchingOption.ts';
-import { emptySchema, mergeAllOf, schemaFrom, schemaOfBoolean } from './graph/mergePlan.ts';
+import { mergeAllOf, schemaFrom, schemaOfBoolean } from './graph/mergePlan.ts';
 import resolveConstantOptions from './resolveConstantOptions.ts';
-import retrieveSchema, { conditionHolds, resolveOwnRef } from './retrieveSchema.ts';
+import { conditionHolds, resolveOwnRef } from './retrieveSchema.ts';
 
 /** Returns true when a form value is considered empty: null/undefined/'', an empty array, or a plain
  * object whose every own value is itself empty (recursive). Scalars like `0` and `false` are not empty.
@@ -311,29 +310,19 @@ export default function omitExtraData<
     target: unknown,
     path: FieldPathList,
   ): unknown {
-    // An `enum` or a list of constants is a select, whose value has no branch to omit extra data by
-    if (!Array.isArray(oneOf) || Array.isArray(childSchema.enum) || isConstantOptionList<S>(oneOf)) {
+    // A select's value has no branch to omit extra data by
+    if (!Array.isArray(oneOf) || rendersOptionsAsSelect<S>(childSchema, oneOf)) {
       return target;
     }
-    const discriminator = getDiscriminatorFieldFromSchema<S>(childSchema);
     const asOption = (option: unknown): S =>
       isSchemaObject<S>(option) ? option : schemaOfBoolean(Boolean(option), rootSchema);
     let winning: unknown;
     if (fieldState) {
-      // The field picks among its options as it renders them, each retrieved for its data, which can match the data
-      // where the option as written does not, as an `if`/`then` that declares a key does
-      const views = oneOf.map((option) =>
-        retrieveSchema<unknown, S, F>(
-          context,
-          isSchemaObject<S>(option) ? option : emptySchema<S>(),
-          rootSchema,
-          source,
-        ),
-      );
-      winning = oneOf[fieldState.selectedOption(fieldPathFromList(path), views, source, discriminator)];
+      winning = oneOf[fieldShownOption<S, F>(context, fieldState, path, childSchema, oneOf, rootSchema, source)];
     } else {
       // `additionalProperties: false` is relaxed for matching only, so the data's extra keys don't rule out the option
       // that is then applied with it, to omit them
+      const discriminator = getDiscriminatorFieldFromSchema<S>(childSchema);
       winning = oneOf[closestOption<S, F>(context, rootSchema, source, oneOf, 0, true, discriminator)];
     }
     // An index naming no option, as -1 does for none shown, keeps nothing the options describe, as a `false` option does

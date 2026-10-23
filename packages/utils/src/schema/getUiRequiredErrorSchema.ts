@@ -82,9 +82,11 @@ function resolveSelectedBranch<T, S extends StrictRJSFSchema, F extends FormCont
   // the options it shows
   const empty = emptySchema<S>();
   const shownOptions = options.map((option) => (isObject(option) ? option : empty));
-  const index = fieldState
+  const shownIndex = fieldState
     ? fieldState.selectedOption(fieldPathFromList(path), shownOptions, formData, discriminator)
     : getClosestMatchingOption<unknown, S, F>(schemaContext, rootSchema, formData, options, 0, discriminator);
+  // A `fieldState` is a caller's to implement, so an index naming none of the options is none shown
+  const index = shownIndex < shownOptions.length ? shownIndex : -1;
   const option = index >= 0 ? shownOptions[index] : empty;
   const optionUiSchema = getOptionUiSchema<T, S, F>(uiSchema, key, index) ?? {};
   if (!rendersOwnFieldBesideOption<S>(schema)) {
