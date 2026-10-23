@@ -9964,6 +9964,20 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
       });
     });
 
+    it("seeds the extra keys of an option taking an object's in its place with the object's uiSchema entry for them", () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        additionalProperties: { type: 'string' },
+        default: { p: 'd' },
+        oneOf: [{ title: 'A', oneOf: [{ properties: { x: { type: 'string' } } }] }],
+      };
+      // The option's own uiSchema entry says nothing of the extra keys, which its field renders with the object's
+      const uiSchema = { additionalProperties: { 'ui:initialValue': 'I' }, oneOf: [{}] };
+      expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema, uiSchema })).toEqual({
+        p: 'I',
+      });
+    });
+
     describe('the option a field shows, from a fieldState', () => {
       const a: RJSFSchema = { title: 'A', properties: { a: { type: 'string', default: 'x' } } };
       const b: RJSFSchema = { title: 'B', properties: { b: { type: 'string', default: 'y' } } };

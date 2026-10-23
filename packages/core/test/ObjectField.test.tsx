@@ -3670,6 +3670,21 @@ describe('ObjectField', () => {
         });
         expect(elementOf(node, '#root_p').tagName).toBe('TEXTAREA');
       });
+
+      it("requires an extra key the object's additionalProperties entry requires where the option has a uiSchema of its own", async () => {
+        const { node, onSubmit, onError } = createFormComponent({
+          // A key holding nothing renders a field only where the keyword describes it
+          schema: nested({ additionalProperties: { type: 'string' } }),
+          initialFormData: { x: 'a', p: undefined },
+          uiSchema: { additionalProperties: { 'ui:required': true }, oneOf: [{}] },
+          noHtml5Validate: true,
+        });
+
+        await submitForm(node, user);
+
+        expect(onSubmit).not.toHaveBeenCalled();
+        expect(onError.mock.lastCall?.[0]).toEqual([expect.objectContaining({ property: '.p' })]);
+      });
     });
 
     it("offers no add button for an object whose unevaluatedProperties forbids extra keys, even under 'allow'", () => {

@@ -19,6 +19,7 @@ import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.
 import getOptionUiSchema from '../getOptionUiSchema.ts';
 import getPropertySchema from '../getPropertySchema.ts';
 import { renderOption } from '../getRenderedOptionSchema.ts';
+import getRenderedOptionUiSchema from '../getRenderedOptionUiSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
 import getSchemaTypeForValue from '../getSchemaTypeForValue.ts';
 import getStaticItemsUiSchema from '../getStaticItemsUiSchema.ts';
@@ -1288,11 +1289,6 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const { graph } = field;
   const rootSchema = graph.rawRoot;
   const remaining = withoutKeys(schema, key);
-  const branchProps = {
-    ...props,
-    uiSchema: getOptionUiSchema<T, S, F>(props.uiSchema, key, index),
-    isRenderedOption: true,
-  };
   const chosen = new Set(view.options.chosen).add(options);
   // Which of the two the field is gets asked of it with its `allOf` merged, as the fields ask it, since its `type` can
   // come through one. A field naming one type already has it, which an `allOf` can't change, so it is spared the merge
@@ -1301,6 +1297,23 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
       ? retrieveSchema<unknown, S, F>(context, remaining, rootSchema, props.rawFormData)
       : remaining;
   const rendersOwnField = rendersOwnFieldBesideOption<S>(fieldSchema);
+  const optionUiSchema = getOptionUiSchema<T, S, F>(props.uiSchema, key, index);
+  const listedOption: unknown = options[index];
+  const branchProps = {
+    ...props,
+    // An option whose field takes the object's extra keys is asked as the field renders it, retrieved for the data, and
+    // only where it has a uiSchema of its own for the object's to lie beneath
+    uiSchema:
+      rendersOwnField && optionUiSchema !== props.uiSchema && isSchemaObject<S>(listedOption)
+        ? getRenderedOptionUiSchema<T, S, F>(
+            fieldSchema,
+            retrieveSchema<unknown, S, F>(context, listedOption, rootSchema, props.rawFormData),
+            props.uiSchema,
+            optionUiSchema,
+          )
+        : optionUiSchema,
+    isRenderedOption: true,
+  };
   const choice = view.choices.find(
     (offered) => offered.keyword === key && offered.options.length === options.length && offered.list === options,
   );

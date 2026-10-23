@@ -90,6 +90,63 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         expect(utils.omitExtraData(offering, { b: 'x', e: 'y' })).toEqual({ b: 'x' });
       });
     });
+    describe('the extra keys of an object showing an option, judged once as its field renders them', () => {
+      const showingFirst: FormFieldState = { selectedOption: () => 0, isExpanded: () => false };
+      const omitted = (schema: RJSFSchema, formData: object, allows = false) =>
+        createSchemaUtils(
+          { validator: testValidator, additionalPropertiesWhenAbsent: allows ? 'allow' : 'forbid' },
+          schema,
+        ).omitExtraData(schema, formData, showingFirst);
+
+      it("omits a key the object's keyword allows and the closed option it shows does not", () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          additionalProperties: true,
+          oneOf: [{ properties: { b: { type: 'string' } }, additionalProperties: false }],
+        };
+        expect(omitted(schema, { b: 'x', e: 'y' })).toEqual({ b: 'x' });
+      });
+      it("keeps a property the option declares beside an object's additionalProperties: false", () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          additionalProperties: false,
+          oneOf: [{ properties: { b: { type: 'string' } } }],
+        };
+        expect(omitted(schema, { b: 'x', e: 'y' }, true)).toEqual({ b: 'x' });
+      });
+      it('reads an option closed through its allOf, as the field retrieves it', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          oneOf: [{ properties: { b: { type: 'string' } }, allOf: [{ additionalProperties: false }] }],
+        };
+        // The merged option rejects `b` as well, so its field renders neither
+        expect(omitted(schema, { b: 'x', e: 'y' }, true)).toEqual({});
+      });
+      it('keeps no extra key the retrieved option stubs, which declares none', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          additionalProperties: false,
+          oneOf: [{ type: 'object', properties: { b: { type: 'string' } } }],
+        };
+        expect(omitted(schema, { b: 'x', e: 'y' }, true)).toEqual({ b: 'x' });
+      });
+      it("leaves the extra keys to an option offering options of its own, which judges them with the object's", () => {
+        const nested = (outer: RJSFSchema, inner: RJSFSchema): RJSFSchema => ({
+          type: 'object',
+          properties: { p: { type: 'string' } },
+          ...outer,
+          oneOf: [{ title: 'A', oneOf: [{ properties: { b: { type: 'string' } }, ...inner }] }],
+        });
+        const formData = { p: 'o', b: 'x', e: 'y' };
+        expect(omitted(nested({}, { additionalProperties: false }), formData, true)).toEqual({ p: 'o', b: 'x' });
+        expect(omitted(nested({}, {}), formData, true)).toEqual(formData);
+        expect(omitted(nested({ additionalProperties: true }, { additionalProperties: false }), formData)).toEqual({
+          p: 'o',
+          b: 'x',
+        });
+        expect(omitted(nested({ additionalProperties: true }, {}), formData)).toEqual(formData);
+      });
+    });
     it('drops a property whose $ref names a false definition', () => {
       const schema: RJSFSchema = {
         type: 'object',

@@ -370,6 +370,38 @@ describe('option selection as form state', () => {
     expect(onSubmit).toHaveBeenCalledTimes(1);
   });
 
+  it.each<[string, RJSFSchema]>([
+    [
+      'an option closing through its if/then, as the field merges it in',
+      {
+        type: 'object',
+        oneOf: [
+          {
+            properties: { b: { type: 'string' } },
+            if: { required: ['b'] },
+            then: { additionalProperties: false },
+          },
+        ],
+      },
+    ],
+    [
+      "an option declaring a property beside the object's additionalProperties: false",
+      { type: 'object', additionalProperties: false, oneOf: [{ properties: { b: { type: 'string' } } }] },
+    ],
+  ])('keeps the property the field renders and omits the extra key it renders none for, for %s', async (_, schema) => {
+    const { node, onChange } = createFormComponent({
+      schema,
+      initialFormData: { b: 'x', e: 'y' },
+      omitExtraData: true,
+      liveOmit: 'onChange',
+    });
+    expect(node.querySelector('#root_e')).toBeNull();
+
+    await user.type(elementOf(node, '#root_b'), 'z');
+
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ b: 'xz' });
+  });
+
   it('renders a key the selected option declares once outside a Form, where the outermost field keeps the selection (#5461)', async () => {
     const schema: RJSFSchema = {
       type: 'object',

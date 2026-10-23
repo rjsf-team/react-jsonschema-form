@@ -32,3 +32,15 @@ export function rendersOwnFieldBesideOwnOptions<S extends StrictRJSFSchema = RJS
     (option.type === undefined || rendersOwnFieldBesideOption<S>(option))
   );
 }
+
+/** Whether `option` takes the extra keys of `parent` in the place of the parent's own field: an object parent renders
+ * a field beside the option, which leaves the extra keys to an option rendering a field of its own beside options of
+ * its own (see `getRenderedOptionSchema()`)
+ *
+ * @param parent - The schema holding the options
+ * @param option - One of its options
+ * @returns - True when the option's field takes the parent's extra keys
+ */
+export function takesParentExtraKeys<S extends StrictRJSFSchema = RJSFSchema>(parent: S, option: S): boolean {
+  return rendersOwnFieldBesideOption<S>(parent) && rendersOwnFieldBesideOwnOptions<S>(option);
+}

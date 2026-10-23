@@ -76,6 +76,7 @@ import type { PresentationSource, PresentationSubject } from './getPresentationD
 import getPresentationDeclaration, { WIDGET_FIELD_PRESENTATION } from './getPresentationDeclaration.ts';
 import getPropertySchema from './getPropertySchema.ts';
 import getRenderedOptionSchema from './getRenderedOptionSchema.ts';
+import getRenderedOptionUiSchema from './getRenderedOptionUiSchema.ts';
 import getSchemaOwnTypes from './getSchemaOwnTypes.ts';
 import getSchemaType from './getSchemaType.ts';
 import getSchemaTypeForValue from './getSchemaTypeForValue.ts';
@@ -319,6 +320,7 @@ export {
   getPropertySchema,
   getOptionValueFormat,
   getRenderedOptionSchema,
+  getRenderedOptionUiSchema,
   getSchemaOwnTypes,
   getSchemaType,
   getSchemaTypeForValue,

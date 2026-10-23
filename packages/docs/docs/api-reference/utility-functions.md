@@ -1491,7 +1491,7 @@ Callers treat the properties of a schema as schemas of the same type `S`, which 
 Returns the schema an `anyOf`/`oneOf` option of `parent` is rendered with. It is the one place that decides what an option inherits from the schema holding it, so `MultiSchemaField`, `getUiRequiredErrorSchema()` and the defaults `getDefaultFormState()` computes for a field that is not an object read the same option ([#5359](https://github.com/rjsf-team/react-jsonschema-form/issues/5359)).
 An object parent renders its own `ObjectField` beside the option, which shows the parent's properties and other keywords, so the option takes only the parent's `required` list and its type.
 That field also stubs the extra keys of the data, for the parent and the selected option together (see [`retrieveSchema()`](#retrieveschema)), so the option is rendered without its own `additionalProperties`, `patternProperties` and `unevaluatedProperties`, and marked with `EXTRA_KEYS_ELSEWHERE_FLAG`, so its own field offers no extra key beside the parent's, even in a form that reads an absent `additionalProperties` as taking any key. The marker says nothing to a validator, and an option offering options of its own still takes the extra keys one of them names.
-An option that offers options of its own renders a field of its own beside them, which takes the extra keys in the parent's field's place, so that they render once: it keeps its own extra-key keywords, joined with the parent's as the parent's field would join them, so that a key is still judged by each of them apart, and is not marked. It also carries the names of the properties the parent and the fields above it declare, which its field leaves to them rather than rendering them as extra keys.
+An option that offers options of its own renders a field of its own beside them, which takes the extra keys in the parent's field's place, so that they render once: it keeps its own extra-key keywords, joined with the parent's as the parent's field would join them, so that a key is still judged by each of them apart, and is not marked. It also carries the names of the properties the parent and the fields above it declare, which its field leaves to them rather than rendering them as extra keys, and the parent's bounds on the object's keys, which its add button now answers to: the stricter `maxProperties` of the two, and both `propertyNames`. Its uiSchema takes the parent's say over the extra keys likewise, see [`getRenderedOptionUiSchema()`](#getrenderedoptionuischema).
 Every other parent renders nothing of its own and leaves the whole field to the option, so the option takes each of the parent's keywords that describes the value, such as an array's `items` and `uniqueItems` or a string's `format`.
 It leaves the parent's `anyOf`, `oneOf`, `discriminator`, `title`, `description`, `deprecated`, `default`, the identifiers `$id`, `$anchor`, `$dynamicAnchor`, `$schema` and `$vocabulary`, `$comment`, `$defs` and `definitions` on the parent, along with any Symbol-keyed marker.
 The two are met keyword by keyword, so an option's `items` adds to the parent's rather than replacing them.
@@ -1514,6 +1514,24 @@ An option naming no `type` takes the parent's, every type of a type list include
 #### Returns
 
 - S: The option as it is rendered, or `option` itself when the parent has nothing to pass on
+
+### getRenderedOptionUiSchema&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getrenderedoptionuischema}
+
+Returns the uiSchema an `anyOf`/`oneOf` option of `parent` is rendered with, given the one [`getOptionUiSchema()`](#getoptionuischemat--unknown-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--formcontexttype) picked for it.
+An option that offers options of its own takes the extra keys of an object parent's field in that field's place (see [`getRenderedOptionSchema()`](#getrenderedoptionschemas-extends-strictrjsfschema--rjsfschema)), so where it has a uiSchema of its own, under `uiSchema.anyOf`/`uiSchema.oneOf`, it takes the parent's say over those keys too: the parent's `expandable` option and its `additionalProperties` entry, beneath the option's own.
+`MultiSchemaField`, the defaults `getDefaultFormState()` computes and `getUiRequiredErrorSchema()` all read the option's uiSchema through it, so a key rendered with the parent's `additionalProperties` entry is seeded and required by that entry as well.
+Any other option's uiSchema is returned as it is.
+
+#### Parameters
+
+- parent: S - The schema holding the `anyOf`/`oneOf`
+- option: S - The option, with its own `$ref` resolved
+- uiSchema: UiSchema&lt;T, S, F> | undefined - The parent's uiSchema
+- optionUiSchema: UiSchema&lt;T, S, F> | undefined - The uiSchema `getOptionUiSchema()` picked for the option
+
+#### Returns
+
+- UiSchema&lt;T, S, F> | undefined: `optionUiSchema`, with the parent's say over the extra keys beneath it where the option takes them
 
 ### getSchemaOwnTypes()
 
@@ -3676,6 +3694,8 @@ Any keyword that asserts nothing, such as an annotation, an identifier, `$defs`,
 Takes a schema and formData and returns a copy of the formData with any fields not defined in the schema removed.
 This is useful for ensuring that only data that is relevant to the schema is preserved.
 Objects with `additionalProperties` keyword set to `true` will not have their extra fields removed.
+An object's shown `anyOf`/`oneOf` option is read as its field renders it, retrieved for the data with its `allOf`, `if`/`then` and `dependencies` merged in, and the object's extra keys are judged once, as the one field taking them renders them: by the object's and the option's extra-key keywords joined, or, where the option offers options of its own, by that option's field, which takes them in the object's place.
+So a key the shown option forbids is removed whatever the object's own keyword allows, and a property the option declares is kept beside an object's `additionalProperties: false`.
 
 Known limitation: a property declared both beside a `$ref` and in the definition it names, or an option an `allOf` merge rebuilds, is a schema no `$id` resource holds, so a `$ref` inside it that a resource of its own wrote is resolved against the root.
 Filtering through it throws `Could not find a definition for …`, or reads the root's definition of the same name.

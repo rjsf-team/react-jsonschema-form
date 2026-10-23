@@ -17,7 +17,7 @@ import {
 } from './constants.ts';
 import isObject from './isObject.ts';
 import mergeSchemas from './mergeSchemas.ts';
-import rendersOwnFieldBesideOption, { rendersOwnFieldBesideOwnOptions } from './rendersOwnFieldBesideOption.ts';
+import rendersOwnFieldBesideOption, { takesParentExtraKeys } from './rendersOwnFieldBesideOption.ts';
 import KeyedMemo from './schema/graph/keyedMemo.ts';
 import { withoutKeys } from './schema/graph/mergePlan.ts';
 import {
@@ -282,17 +282,13 @@ export function renderOption<S extends StrictRJSFSchema>(parent: S, option: S): 
   const rendersOwnField = rendersOwnFieldBesideOption<S>(parent);
   // Such an option's own field takes the extra keys the parent's field leaves to it (see `withOptionExtraKeys()` in
   // `retrieveSchema()`), described by the parent's extra-key keywords and the option's together
-  const takesParentExtraKeys = rendersOwnField && rendersOwnFieldBesideOwnOptions<S>(option);
-  if (
-    rendersOwnField &&
-    !takesParentExtraKeys &&
-    EXTRA_KEY_KEYWORDS.some((keyword) => Object.hasOwn(option, keyword))
-  ) {
+  const takesExtraKeys = takesParentExtraKeys<S>(parent, option);
+  if (rendersOwnField && !takesExtraKeys && EXTRA_KEY_KEYWORDS.some((keyword) => Object.hasOwn(option, keyword))) {
     return renderOption<S>(parent, withoutKeys<S>(option, ...EXTRA_KEY_KEYWORDS));
   }
   const inherited: GenericObjectType = {};
   if (rendersOwnField) {
-    if (!takesParentExtraKeys) {
+    if (!takesExtraKeys) {
       // Marked, since a form whose `additionalPropertiesWhenAbsent` is `'allow'` reads an object naming no
       // `additionalProperties` as taking any key, which would give the option an add button of its own. An
       // `additionalProperties: false` in its place would be read as the option's own by a field joining it with an
@@ -318,7 +314,7 @@ export function renderOption<S extends StrictRJSFSchema>(parent: S, option: S): 
   // field stubs the extra keys in the parent's field's place, which `retrieveSchema()` reads the option itself as
   // leaving to the parent's, and it carries the names the fields above declare, which it would otherwise stub as extra
   // keys of its own
-  if (Reflect.ownKeys(inherited).length === 0 && !takesParentExtraKeys) {
+  if (Reflect.ownKeys(inherited).length === 0 && !takesExtraKeys) {
     return option;
   }
   if (!rendersOwnField) {
@@ -332,7 +328,7 @@ export function renderOption<S extends StrictRJSFSchema>(parent: S, option: S): 
       merged[key] = inherited[key];
     }
   }
-  if (!takesParentExtraKeys) {
+  if (!takesExtraKeys) {
     return merged as S;
   }
   const withParentExtraKeys: GenericObjectType = withoutKeys<S>(merged as S, ...EXTRA_KEY_KEYWORDS);
