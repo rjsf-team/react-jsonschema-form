@@ -2818,6 +2818,20 @@ describe('oneOf', () => {
       const selects = node.querySelectorAll('select');
       expect(selects).toHaveLength(0);
     });
+    // It renders the choice between the options, which with none has nothing to choose
+    it('should be disabled, whatever ui:disabled says, when there are no options', () => {
+      const recordDisabled = vi.fn<(disabled: boolean | undefined) => void>();
+      function CustomField({ disabled }: FieldProps) {
+        recordDisabled(disabled);
+        return <div className='custom-field'>Custom field</div>;
+      }
+      createFormComponent({
+        schema: { oneOf: [] },
+        uiSchema: { 'ui:field': CustomField, 'ui:fieldReplacesAnyOrOneOf': true, 'ui:disabled': false },
+      });
+
+      expect(recordDisabled).toHaveBeenLastCalledWith(true);
+    });
   });
 
   describe('Boolean field value preservation', () => {

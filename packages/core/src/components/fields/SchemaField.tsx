@@ -18,7 +18,6 @@ import type {
   UiSchema,
 } from '@rjsf/utils';
 import {
-  ADDITIONAL_PROPERTY_FLAG,
   ANY_OF_KEY,
   fieldPathToId,
   fieldPathToList,
@@ -67,6 +66,7 @@ import {
   getDeprecatedTemplateProps,
   getFieldErrorProps,
   getTemplateParts,
+  withoutAdditionalFlag,
   withoutDescribers,
 } from './fieldWidgetUtils.ts';
 import { lookUpUiField, resolveNamedField, withoutNamedField } from './namedField.ts';
@@ -169,23 +169,6 @@ function inferSelectWidget<
   return needsSelect ? 'select' : undefined;
 }
 
-/** Gets the schema the template of a field rendered by the named field above is handed, as a wrapper renders
- * `SchemaField` for its own data: that field's template frames it, and has drawn the input and remove button of an
- * extra key, so the flag asking for them is left off. The field's label and other parts are drawn as the plan handed
- * down from above says
- *
- * @param schema - The field's schema
- * @returns - The schema without `ADDITIONAL_PROPERTY_FLAG`, or `schema` itself where it has none
- */
-function withoutAdditionalFlag<S extends StrictRJSFSchema = RJSFSchema>(schema: S): S {
-  if (!(ADDITIONAL_PROPERTY_FLAG in schema)) {
-    return schema;
-  }
-  const framed = { ...schema };
-  Reflect.deleteProperty(framed, ADDITIONAL_PROPERTY_FLAG);
-  return framed;
-}
-
 const RenderNothing = () => null;
 
 /** Computes and returns which `Field` implementation to return in order to render the field represented by the
@@ -227,6 +210,7 @@ function getFieldComponent<
   rendersNamedField: boolean;
   rendersOptionsItself: boolean;
   rendersOptionSelector: boolean;
+  optionsGiveWayToField: boolean;
   plannedAsOptions: boolean;
   fieldKey: string | undefined;
   handsDownOwnParts: boolean;
@@ -377,6 +361,7 @@ function getFieldComponent<
     // `yieldsToOptions` requires `!rendersOptionsItself`, so the flags read the same whether or not the field is withheld
     rendersOptionsItself,
     rendersOptionSelector,
+    optionsGiveWayToField,
     plannedAsOptions,
     fieldKey,
     handsDownOwnParts,
@@ -923,14 +908,18 @@ function SchemaFieldRender<
   if (!uiField || !fieldToRender) {
     return withUiState(<CyclicSchemaField {...props} />);
   }
-  const { FieldComponent } = fieldToRender;
+  const { FieldComponent, optionsGiveWayToField } = fieldToRender;
 
   const { FieldTemplate, DescriptionFieldTemplate, FieldHelpTemplate, FieldErrorTemplate } = getTemplates<T, S, F>(
     registry,
     uiOptions,
   );
 
-  const disabled = Boolean(ownUiOptions.disabled ?? props.disabled) || deprecatedHandling === 'disable';
+  // A field the options give way to renders the choice between them, so with no options it has nothing to choose, which
+  // no `ui:disabled` can change
+  const hasNoOptionToChoose = optionsGiveWayToField && xxxOfKey !== undefined && (schema[xxxOfKey]?.length ?? 0) === 0;
+  const disabled =
+    Boolean(ownUiOptions.disabled ?? props.disabled) || deprecatedHandling === 'disable' || hasNoOptionToChoose;
   const readonly = Boolean(ownUiOptions.readonly ?? (props.readonly || props.schema.readOnly || schema.readOnly));
   if (
     uiRequired === false &&
@@ -1068,6 +1057,8 @@ function SchemaFieldRender<
     classNames: getFieldClassNames<S>(schema, hasErrors, uiOptions.classNames),
     style: uiOptions.style,
     formData,
+    // The named field above frames this one as a wrapper renders `SchemaField` for its own data, and its template has
+    // drawn the input and remove button of an extra key already. The label and other parts are drawn as its plan says
     schema: framedAbove ? withoutAdditionalFlag<S>(schema) : schema,
     uiSchema,
     registry,

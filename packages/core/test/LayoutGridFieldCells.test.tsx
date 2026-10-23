@@ -1,0 +1,571 @@
+import type { FieldProps, FieldTemplateProps, GenericObjectType, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import { ADDITIONAL_PROPERTY_FLAG } from '@rjsf/utils';
+import { cleanup, screen, within } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
+
+import FieldTemplate from '../src/components/templates/FieldTemplate/index.ts';
+import RadioWidget from '../src/components/widgets/RadioWidget.tsx';
+import { SIMPLE_ONEOF, SIMPLE_ONEOF_SCHEMAS, withTypelessSelector } from './testData/layoutData.ts';
+import { createFormComponent, setupConsoleWarnSuppression } from './testUtils.tsx';
+
+const user = userEvent.setup();
+
+const schema: RJSFSchema = {
+  type: 'object',
+  properties: {
+    note: { type: 'string', title: 'Note' },
+    pick: SIMPLE_ONEOF,
+  },
+};
+
+function schemaWithPick(pick: RJSFSchema): RJSFSchema {
+  return { ...schema, properties: { ...schema.properties, pick } };
+}
+
+const refSchema: RJSFSchema = {
+  ...schema,
+  definitions: { Pick: SIMPLE_ONEOF },
+  properties: { pick: { $ref: '#/definitions/Pick' } },
+};
+
+function refGridUiSchema(definition: UiSchema): UiSchema {
+  return {
+    'ui:definitions': { '#/definitions/Pick': definition },
+    'ui:field': 'LayoutGridField',
+    'ui:layoutGrid': { 'ui:row': [{ 'ui:col': ['pick'] }] },
+  };
+}
+
+function CustomField(_props: FieldProps) {
+  return <div data-testid='custom-field' />;
+}
+
+function gridUiSchema(cellUiSchemas: UiSchema = {}): UiSchema {
+  return {
+    'ui:field': 'LayoutGridField',
+    'ui:layoutGrid': { 'ui:row': [{ 'ui:col': ['note', 'pick'] }] },
+    ...cellUiSchemas,
+  };
+}
+
+/** Renders the grid with a `FieldTemplate` that records the props each field's template is handed, by the field's id */
+function renderGrid(uiSchema: UiSchema, formSchema: RJSFSchema = schema) {
+  const templateProps = new Map<string, FieldTemplateProps>();
+  function RecordingFieldTemplate(props: FieldTemplateProps) {
+    templateProps.set(props.id, props);
+    return <FieldTemplate {...props} />;
+  }
+  const result = createFormComponent({
+    schema: formSchema,
+    uiSchema,
+    templates: { FieldTemplate: RecordingFieldTemplate },
+  });
+  return { ...result, templateProps };
+}
+
+/** A `RadioWidget` that records the props it is handed, with the props of its last render */
+function recordRadioWidget() {
+  const recordWidgetProps = vi.fn<(props: WidgetProps) => void>();
+  function RecordingRadioWidget(props: WidgetProps) {
+    recordWidgetProps(props);
+    return <RadioWidget {...props} />;
+  }
+  return { widgets: { RadioWidget: RecordingRadioWidget }, lastWidgetProps: () => recordWidgetProps.mock.lastCall![0] };
+}
+
+// A discriminated cell renders the selector alone, through `SchemaField` like every other cell, so its template is
+// handed whatever `SchemaField` hands any field (#5419)
+describe('a discriminated cell of a layout grid', () => {
+  it('hands its FieldTemplate every prop a plain cell is handed', () => {
+    const { templateProps } = renderGrid(gridUiSchema());
+
+    const plainCell = templateProps.get('root_note');
+    const discriminatedCell = templateProps.get('root_pick');
+    expect(plainCell).toBeDefined();
+    expect(discriminatedCell).toBeDefined();
+    expect(Object.keys(discriminatedCell!).sort()).toEqual(Object.keys(plainCell!).sort());
+  });
+
+  // A `for` can't name a radio group's wrapper, so the theme's `RadioWidget` declaration has the label name it through
+  // `aria-labelledby`, which the plan only knows to do from the widget the selector renders
+  it.each([
+    ['an object', SIMPLE_ONEOF],
+    ['a schema with no type', { ...SIMPLE_ONEOF, type: undefined }],
+  ])("names its radio group by the template's label, for %s", (_, pick) => {
+    const { node } = renderGrid(gridUiSchema(), schemaWithPick(pick));
+
+    expect(screen.getByRole('radiogroup')).toHaveAttribute('aria-labelledby', 'root_pick__label');
+    expect(node.querySelector('label[for="root_pick"]')).toBeNull();
+  });
+
+  // With no option to type the selector by, it is typed as an object, which maps the radio alias, so a union with no
+  // options still renders one, with nothing to select
+  it('renders a radio group with nothing to select for a union with no options', () => {
+    renderGrid(gridUiSchema(), schemaWithPick({ ...SIMPLE_ONEOF, oneOf: [] }));
+
+    expect(screen.getByRole('radiogroup')).toHaveAttribute('aria-labelledby', 'root_pick__label');
+    expect(screen.queryAllByRole('radio')).toHaveLength(0);
+  });
+
+  // Its FieldTemplate draws the label and wrapper of a disabled field, as its selector is
+  it.each([
+    ['no ui:disabled', {}],
+    ['a ui:disabled of false', { 'ui:disabled': false }],
+  ])('is disabled, template and all, for a union with no options, with %s', (_, pickUiSchema) => {
+    const { templateProps } = renderGrid(
+      gridUiSchema({ pick: pickUiSchema }),
+      schemaWithPick({ ...SIMPLE_ONEOF, oneOf: [] }),
+    );
+
+    expect(templateProps.get('root_pick')?.disabled).toBe(true);
+    expect(templateProps.get('root_note')?.disabled).toBe(false);
+  });
+
+  // The selector takes its options' type, which needs no option selected, so the widget never depends on the data
+  it.each([
+    ['options that declare theirs', SIMPLE_ONEOF_SCHEMAS],
+    ['options that only imply theirs', SIMPLE_ONEOF_SCHEMAS.map(({ type: _type, ...option }) => option)],
+  ])('renders a radio group for a selector property with no type, when no option is selected, in %s', (_, oneOf) => {
+    createFormComponent({
+      schema: schemaWithPick({ ...SIMPLE_ONEOF, oneOf: withTypelessSelector(oneOf) }),
+      uiSchema: gridUiSchema(),
+      initialFormData: { pick: { answer: 'matches no option' } },
+    });
+
+    expect(screen.getByRole('radiogroup')).toHaveAttribute('aria-labelledby', 'root_pick__label');
+    screen.getAllByRole('radio').forEach((radio) => expect(radio).not.toBeChecked());
+  });
+
+  // `getWidget()` maps an alias only through a type, which a selector property with none takes from the first option,
+  // or else from the object every discriminated option is
+  it.each([
+    ['options that declare theirs', SIMPLE_ONEOF_SCHEMAS],
+    ['options that only imply theirs', SIMPLE_ONEOF_SCHEMAS.map(({ type: _type, ...option }) => option)],
+    ['no options', []],
+  ])('renders the select it names by alias, for a selector property with no type, in %s', (_, oneOf) => {
+    createFormComponent({
+      schema: schemaWithPick({ ...SIMPLE_ONEOF, oneOf: withTypelessSelector(oneOf) }),
+      uiSchema: gridUiSchema({ pick: { 'ui:widget': 'select' } }),
+      initialFormData: { pick: { answer: 'matches no option' } },
+    });
+
+    expect(screen.getByRole('combobox')).toBeInTheDocument();
+  });
+
+  // An option hands its properties out as written, so the selector is typed by the schema its `$ref` names, which
+  // `getWidget()` maps the alias through
+  it.each<[string, string, RJSFSchema, string]>([
+    ['text', 'a string', { type: 'string', const: '1' }, 'textbox'],
+    ['updown', 'an integer', { type: 'integer', const: 1 }, 'spinbutton'],
+  ])('renders the %s widget it names for a selector property written as a $ref to %s', (widget, _, answer, role) => {
+    createFormComponent({
+      schema: {
+        ...schemaWithPick({
+          ...SIMPLE_ONEOF,
+          oneOf: [{ type: 'object', properties: { answer: { $ref: '#/definitions/Answer' } } }],
+        }),
+        definitions: { Answer: answer },
+      },
+      uiSchema: gridUiSchema({ pick: { 'ui:widget': widget } }),
+    });
+
+    expect(screen.getByRole(role, { name: 'Simple' })).toBeInTheDocument();
+  });
+
+  // A boolean option holds no selector property to type the selector by, so the selector is typed by the first option
+  // that isn't one
+  it('renders a radio group for a union whose first option is a boolean schema', () => {
+    renderGrid(gridUiSchema(), schemaWithPick({ ...SIMPLE_ONEOF, oneOf: [false, ...SIMPLE_ONEOF_SCHEMAS] }));
+
+    expect(screen.getByRole('radiogroup')).toHaveAttribute('aria-labelledby', 'root_pick__label');
+  });
+
+  it('renders the text widget it names for a union whose first option is a boolean schema', () => {
+    renderGrid(
+      gridUiSchema({ pick: { 'ui:widget': 'text' } }),
+      schemaWithPick({ ...SIMPLE_ONEOF, oneOf: [false, ...SIMPLE_ONEOF_SCHEMAS] }),
+    );
+
+    expect(screen.getByRole('textbox', { name: 'Simple' })).toBeInTheDocument();
+  });
+
+  it('renders a widget registered under the radio alias as its default selector', () => {
+    function AliasRadio(_props: WidgetProps) {
+      return <div data-testid='alias-radio' />;
+    }
+    createFormComponent({ schema, uiSchema: gridUiSchema(), widgets: { radio: AliasRadio } });
+
+    expect(screen.getByTestId('alias-radio')).toBeInTheDocument();
+  });
+
+  it.each([
+    [
+      'the options, over a ui:fieldReplacesAnyOrOneOf of false',
+      { 'ui:options': {}, 'ui:fieldReplacesAnyOrOneOf': false },
+    ],
+    ['a ui:field', { 'ui:field': CustomField }],
+  ])('renders its selector in place of %s of its own', (_, pickUiSchema) => {
+    renderGrid(gridUiSchema({ pick: pickUiSchema }));
+
+    expect(screen.queryByTestId('custom-field')).not.toBeInTheDocument();
+    expect(screen.getByRole('radiogroup')).toBeInTheDocument();
+    expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
+  });
+
+  it('is labelled by its property name when it has no title, as a plain cell is', () => {
+    const { templateProps } = renderGrid(gridUiSchema(), {
+      ...schema,
+      properties: { note: { type: 'string' }, pick: { ...SIMPLE_ONEOF, title: undefined } },
+    });
+
+    expect(templateProps.get('root_note')?.label).toBe('note');
+    expect(templateProps.get('root_pick')?.label).toBe('pick');
+    expect(screen.getByRole('radiogroup')).toHaveAccessibleName('pick');
+  });
+
+  it("is labelled by its property name in an array item when it has no title, as a plain cell is, not by the item's", () => {
+    const { templateProps } = renderGrid(
+      { things: { items: gridUiSchema() } },
+      {
+        type: 'object',
+        properties: {
+          things: {
+            type: 'array',
+            title: 'Things',
+            minItems: 1,
+            items: { ...schema, properties: { note: { type: 'string' }, pick: { ...SIMPLE_ONEOF, title: undefined } } },
+          },
+        },
+      },
+    );
+
+    expect(templateProps.get('root_things_0_note')?.label).toBe('note');
+    expect(templateProps.get('root_things_0_pick')?.label).toBe('pick');
+    expect(screen.getByRole('radiogroup')).toHaveAccessibleName('pick');
+  });
+
+  it("keeps its title, as a plain cell does, once the key of the additionalProperties entry it's in is renamed", async () => {
+    const { templateProps } = renderGrid(
+      { additionalProperties: gridUiSchema() },
+      { type: 'object', additionalProperties: schema },
+    );
+    await user.click(screen.getByRole('button', { name: 'Add' }));
+
+    const keyInput = screen.getByDisplayValue('newKey');
+    await user.clear(keyInput);
+    await user.type(keyInput, 'renamed');
+    await user.tab();
+
+    expect(templateProps.get('root_renamed_note')?.label).toBe('Note');
+    expect(templateProps.get('root_renamed_pick')?.label).toBe('Simple');
+  });
+
+  it("hands neither its template nor a plain cell's the key editing of the additionalProperties entry they're in", () => {
+    const { templateProps } = renderGrid(
+      { additionalProperties: gridUiSchema() },
+      {
+        type: 'object',
+        propertyNames: { enum: ['first', 'second'] },
+        additionalProperties: schema,
+        default: { first: {} },
+      },
+    );
+
+    const entry = templateProps.get('root_first');
+    expect(entry?.onKeyRename).toBeDefined();
+    expect(entry?.propertyNamesEnum).toBeDefined();
+    ['root_first_note', 'root_first_pick'].forEach((id) => {
+      const cell = templateProps.get(id);
+      expect(cell).toBeDefined();
+      expect(cell?.onKeyRename).toBeUndefined();
+      expect(cell?.onKeyRenameBlur).toBeUndefined();
+      expect(cell?.onRemoveProperty).toBeUndefined();
+      expect(cell?.propertyNamesEnum).toBeUndefined();
+    });
+  });
+
+  it('draws no key input or remove button for a cell the layout names by an additionalProperties key', () => {
+    const { templateProps } = renderGrid(
+      { 'ui:field': 'LayoutGridField', 'ui:layoutGrid': { 'ui:row': [{ 'ui:col': ['extra'] }] } },
+      { type: 'object', additionalProperties: { type: 'string', title: 'Extra' }, default: { extra: 'x' } },
+    );
+
+    expect(ADDITIONAL_PROPERTY_FLAG in templateProps.get('root_extra')!.schema).toBe(false);
+    expect(screen.getByRole('textbox', { name: 'Extra' })).toHaveValue('x');
+    expect(screen.queryByRole('textbox', { name: /Key/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Remove' })).not.toBeInTheDocument();
+  });
+
+  describe('a cleared cell the layout names by an additionalProperties key', () => {
+    const extraUiSchema = (cell: UiSchema = {}): UiSchema => ({
+      'ui:field': 'LayoutGridField',
+      'ui:layoutGrid': { 'ui:row': [{ 'ui:col': ['extra'] }] },
+      extra: cell,
+    });
+    const stringEntries: RJSFSchema = { type: 'object', additionalProperties: { type: 'string', title: 'Extra' } };
+
+    it('is stored as an object stores it, so its key and the cell outlive a round trip through JSON', async () => {
+      const { onChange } = createFormComponent({
+        schema: stringEntries,
+        initialFormData: { extra: 'x' },
+        uiSchema: extraUiSchema(),
+      });
+
+      await user.clear(screen.getByRole('textbox', { name: 'Extra' }));
+
+      const { formData } = onChange.mock.lastCall![0];
+      expect(formData).toStrictEqual({ extra: '' });
+      cleanup();
+      createFormComponent({
+        schema: stringEntries,
+        initialFormData: JSON.parse(JSON.stringify(formData)),
+        uiSchema: extraUiSchema(),
+      });
+      expect(screen.getByRole('textbox', { name: 'Extra' })).toHaveValue('');
+    });
+
+    it('is stored as its ui:emptyValue', async () => {
+      const { onChange } = createFormComponent({
+        schema: stringEntries,
+        initialFormData: { extra: 'x' },
+        uiSchema: extraUiSchema({ 'ui:emptyValue': 'none' }),
+      });
+
+      await user.clear(screen.getByRole('textbox', { name: 'Extra' }));
+
+      expect(onChange.mock.lastCall![0].formData).toStrictEqual({ extra: 'none' });
+    });
+
+    it('is stored as its option switch sends it when discriminated, without the empty string no option takes', async () => {
+      const { onChange } = createFormComponent({
+        schema: { type: 'object', additionalProperties: SIMPLE_ONEOF },
+        initialFormData: { extra: { answer: '2' } },
+        uiSchema: extraUiSchema({ 'ui:widget': 'select' }),
+      });
+      const select = screen.getByRole('combobox');
+
+      await user.selectOptions(select, within(select).getByRole('option', { name: '' }));
+
+      expect(onChange.mock.lastCall![0].formData).toStrictEqual({ extra: undefined });
+    });
+
+    it('keeps the option an anyOf cell switches to, as its option switch sends it', async () => {
+      createFormComponent({
+        schema: {
+          type: 'object',
+          additionalProperties: {
+            title: 'Extra',
+            anyOf: [
+              { type: 'string', title: 'Text' },
+              { type: 'number', title: 'Num' },
+            ],
+          },
+        },
+        initialFormData: { extra: 'abc' },
+        uiSchema: extraUiSchema(),
+      });
+      const select = screen.getByRole('combobox');
+
+      await user.selectOptions(select, 'Num');
+
+      expect(screen.getByRole('combobox')).toHaveDisplayValue('Num');
+    });
+
+    it('is stored as an object stores it when its oneOf of constants renders as a select', async () => {
+      const { onChange } = createFormComponent({
+        schema: { type: 'object', additionalProperties: { title: 'Extra', oneOf: [{ const: 'a' }, { const: 'b' }] } },
+        initialFormData: { extra: 'a' },
+        uiSchema: extraUiSchema(),
+      });
+      const select = screen.getByRole('combobox', { name: 'Extra' });
+
+      await user.selectOptions(select, within(select).getByRole('option', { name: '' }));
+
+      expect(onChange.mock.lastCall![0].formData).toStrictEqual({ extra: '' });
+    });
+
+    it('is stored as its option switch sends it when discriminated, though its options are constants', async () => {
+      const constantOptions = SIMPLE_ONEOF_SCHEMAS.map((option, index) => ({
+        ...option,
+        const: { answer: String(index + 1) },
+      }));
+      const { onChange } = createFormComponent({
+        schema: { type: 'object', additionalProperties: { ...SIMPLE_ONEOF, oneOf: constantOptions } },
+        initialFormData: { extra: { answer: '2' } },
+        uiSchema: extraUiSchema({ 'ui:widget': 'select' }),
+      });
+      const select = screen.getByRole('combobox');
+
+      await user.selectOptions(select, within(select).getByRole('option', { name: '' }));
+
+      expect(onChange.mock.lastCall![0].formData).toStrictEqual({ extra: undefined });
+    });
+  });
+
+  it('resolves its own ui:required, ui:readonly and ui:disabled', () => {
+    const { templateProps } = renderGrid(
+      gridUiSchema({ pick: { 'ui:required': true, 'ui:readonly': true, 'ui:disabled': true } }),
+    );
+
+    const cell = templateProps.get('root_pick');
+    expect(cell?.required).toBe(true);
+    expect(cell?.readonly).toBe(true);
+    expect(cell?.disabled).toBe(true);
+    screen.getAllByRole('radio').forEach((radio) => expect(radio).toBeDisabled());
+  });
+
+  describe('a ui:required read from JSON', () => {
+    // `SchemaField` warns about a `ui:required` that turns a schema-required field optional with nothing to fill it
+    setupConsoleWarnSuppression();
+
+    it.each([0, null])('reads a ui:required of %s on a required cell as false', (uiRequired) => {
+      const uiRequiredFromJson: GenericObjectType = { 'ui:required': uiRequired };
+      const { templateProps } = renderGrid(gridUiSchema({ pick: uiRequiredFromJson }), {
+        ...schema,
+        required: ['pick'],
+      });
+
+      expect(templateProps.get('root_pick')?.required).toBe(false);
+    });
+  });
+
+  it("keeps the cell's class names and style, which its FieldTemplate applies, out of its selector's options", () => {
+    const { widgets, lastWidgetProps } = recordRadioWidget();
+    createFormComponent({
+      schema,
+      uiSchema: gridUiSchema({ pick: { 'ui:classNames': 'own-class', 'ui:style': { color: 'red' } } }),
+      widgets,
+    });
+
+    const { options } = lastWidgetProps();
+    expect(options.classNames).toBeUndefined();
+    expect(options.style).toBeUndefined();
+  });
+
+  it("doesn't scatter a ui:options read from JSON that isn't an object into its selector's options", () => {
+    const { widgets, lastWidgetProps } = recordRadioWidget();
+    const uiOptionsFromJson: GenericObjectType = { 'ui:options': 'ab' };
+    createFormComponent({
+      schema,
+      uiSchema: gridUiSchema({ pick: uiOptionsFromJson }),
+      widgets,
+    });
+
+    const { options } = lastWidgetProps();
+    expect(options).not.toHaveProperty('0');
+    expect(options).not.toHaveProperty('1');
+  });
+
+  it("keeps the field and fieldReplacesAnyOrOneOf the grid names it with out of its selector's uiSchema", () => {
+    const { widgets, lastWidgetProps } = recordRadioWidget();
+    createFormComponent({
+      schema,
+      uiSchema: gridUiSchema({ pick: { 'ui:options': { inline: true } } }),
+      widgets,
+    });
+
+    const { uiSchema } = lastWidgetProps();
+    expect(uiSchema?.['ui:options']).toEqual({ inline: true });
+    expect(uiSchema).not.toHaveProperty('ui:field');
+    expect(uiSchema).not.toHaveProperty('ui:fieldReplacesAnyOrOneOf');
+  });
+
+  describe('over a field or directive the author names for it', () => {
+    // The grid warns about each `ui:field` it overrides, which would otherwise never render without a sign why
+    const warnings = setupConsoleWarnSuppression();
+    const ignoredFieldWarning =
+      'ui:field for cell \'pick\' in "root" is ignored, since a cell with discriminated oneOf/anyOf options renders ' +
+      'only its option selector.';
+
+    // `SchemaField` merges the `ui:definitions` entry for the cell's `$ref` beneath the cell's `uiSchema`, so the
+    // entry's own spelling of either directive comes wherever the entry orders it
+    it.each([
+      ['a ui:field', { 'ui:options': { inline: true }, 'ui:field': 'CustomField' }, [[ignoredFieldWarning]]],
+      [
+        'a ui:fieldReplacesAnyOrOneOf of false',
+        { 'ui:options': { inline: true }, 'ui:fieldReplacesAnyOrOneOf': false },
+        [],
+      ],
+    ])(
+      'renders its selector in place of the options, over %s its ui:definitions entry names',
+      (_, definition, expectedWarnings) => {
+        createFormComponent({ schema: refSchema, uiSchema: refGridUiSchema(definition), fields: { CustomField } });
+
+        expect(screen.queryByTestId('custom-field')).not.toBeInTheDocument();
+        expect(screen.getAllByRole('radiogroup')).toHaveLength(1);
+        expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
+        expect(warnings.consoleSpy.mock.calls).toEqual(expectedWarnings);
+      },
+    );
+
+    // `getUiOptions()` reads both spellings in key order, so its own `ui:options` coming after its top-level spelling
+    // would win were the grid's directive not in both
+    it.each([
+      ['a ui:field', { 'ui:field': 'CustomField', 'ui:options': { field: 'CustomField' } }, [[ignoredFieldWarning]]],
+      [
+        'a ui:fieldReplacesAnyOrOneOf of false',
+        { 'ui:fieldReplacesAnyOrOneOf': false, 'ui:options': { fieldReplacesAnyOrOneOf: false } },
+        [],
+      ],
+    ])(
+      'renders its selector in place of the options, over %s of its own in both spellings',
+      (_, pickUiSchema, expectedWarnings) => {
+        createFormComponent({ schema, uiSchema: gridUiSchema({ pick: pickUiSchema }), fields: { CustomField } });
+
+        expect(screen.queryByTestId('custom-field')).not.toBeInTheDocument();
+        expect(screen.getAllByRole('radiogroup')).toHaveLength(1);
+        expect(warnings.consoleSpy.mock.calls).toEqual(expectedWarnings);
+      },
+    );
+
+    it.each([
+      ['in ui:options', { 'ui:options': { field: 'CustomField' } }],
+      ['as a component', { 'ui:field': CustomField }],
+    ])('warns about a ui:field %s that it ignores', (_, pickUiSchema) => {
+      createFormComponent({ schema, uiSchema: gridUiSchema({ pick: pickUiSchema }), fields: { CustomField } });
+
+      expect(warnings.consoleSpy).toHaveBeenCalledExactlyOnceWith(ignoredFieldWarning);
+    });
+
+    // `SchemaField` reads a `ui:field` naming itself as naming none, so a cell naming it, like one naming none, asks for
+    // the default rendering, which for a discriminated cell is the selector the grid renders
+    it.each([
+      ['LayoutMultiSchemaField', { 'ui:field': 'LayoutMultiSchemaField' }],
+      ['SchemaField', { 'ui:field': 'SchemaField' }],
+      ['no field', { 'ui:field': false, 'ui:options': { field: '' } }],
+    ])('warns about neither a ui:field naming %s nor a plain cell rendering its own', (_, pickUiSchema) => {
+      createFormComponent({
+        schema,
+        uiSchema: gridUiSchema({ note: { 'ui:field': 'CustomField' }, pick: pickUiSchema }),
+        fields: { CustomField },
+      });
+
+      expect(screen.getByTestId('custom-field')).toBeInTheDocument();
+      expect(screen.getAllByRole('radiogroup')).toHaveLength(1);
+      expect(warnings.consoleSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  it('takes the ui:definitions entry for its $ref', () => {
+    createFormComponent({
+      schema: refSchema,
+      uiSchema: refGridUiSchema({ 'ui:widget': 'select', 'ui:title': 'From definitions' }),
+    });
+
+    expect(screen.getByRole('combobox', { name: 'From definitions' })).toBeInTheDocument();
+    expect(screen.queryByRole('radiogroup')).not.toBeInTheDocument();
+  });
+
+  it('focuses its selector for its own ui:autofocus', () => {
+    renderGrid(gridUiSchema({ pick: { 'ui:autofocus': true } }));
+
+    expect(screen.getAllByRole('radio')[0]).toHaveFocus();
+  });
+
+  it("autofocuses no cell for the grid's own ui:autofocus", () => {
+    renderGrid({ ...gridUiSchema(), 'ui:autofocus': true });
+
+    expect(screen.getByRole('textbox')).not.toHaveFocus();
+    screen.getAllByRole('radio').forEach((radio) => expect(radio).not.toHaveFocus());
+  });
+});
