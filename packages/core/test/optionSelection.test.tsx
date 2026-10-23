@@ -278,6 +278,130 @@ describe('option selection as form state', () => {
     expect(onChange.mock.lastCall?.[0].formData).toEqual({ b: undefined });
   });
 
+  it("gives an object union one heading and one add button of its own under additionalPropertiesWhenAbsent 'allow'", async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      title: 'Outer',
+      oneOf: [
+        { title: 'A', type: 'object', properties: { a: { type: 'string' } } },
+        { title: 'B', type: 'object', properties: { b: { type: 'string' } } },
+      ],
+    };
+    const forbidding = createFormComponent({ schema });
+    expect(forbidding.node.querySelectorAll('.rjsf-object-property-expand')).toHaveLength(0);
+    forbidding.unmount();
+
+    const { node, onChange } = createFormComponent({ schema, additionalPropertiesWhenAbsent: 'allow' });
+    // The union's own `ObjectField` takes the extra keys, so the option it shows, an object naming no
+    // `additionalProperties` either, offers none of its own
+    expect(node.querySelectorAll('.rjsf-object-property-expand')).toHaveLength(1);
+    expect(elementOf(node, '#root_XxxOf__title')).toHaveTextContent('Outer');
+
+    await user.type(node.querySelector('#root_a')!, 'x');
+    await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
+
+    expect(node.querySelector('#root_a-key')).toBeNull();
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ b: undefined });
+  });
+
+  it.each([
+    ['allow', { type: 'string' }],
+    ['forbid', { type: 'string' }],
+    ['allow', undefined],
+  ] as const)(
+    "keeps the old option's value as an extra key of a new option that takes extra keys (%s, additionalProperties %o)",
+    async (additionalPropertiesWhenAbsent, additionalProperties) => {
+      const schema: RJSFSchema = {
+        oneOf: [
+          { title: 'A', type: 'object', properties: { a: { type: 'string' } } },
+          { title: 'B', type: 'object', properties: { b: { type: 'string' } }, additionalProperties },
+        ],
+      };
+      const { node, onChange } = createFormComponent({ schema, additionalPropertiesWhenAbsent });
+
+      await user.type(elementOf(node, '#root_a'), 'x');
+      await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
+
+      // An untyped union renders no field of its own beside the option, so B itself takes the extra keys
+      expect(onChange.mock.lastCall?.[0].formData).toEqual({ a: 'x' });
+      expect(node.querySelector('#root_a-key')).toHaveValue('a');
+    },
+  );
+
+  it("lays out an object union whose shown option is closed as it does under 'forbid', under additionalPropertiesWhenAbsent 'allow'", () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      title: 'Outer',
+      oneOf: [
+        { title: 'A', type: 'object', properties: { a: { type: 'string' } }, additionalProperties: false },
+        { title: 'B', type: 'object', properties: { b: { type: 'string' } }, additionalProperties: false },
+      ],
+    };
+    const forbidding = createFormComponent({ schema });
+    const forbiddingMarkup = forbidding.node.innerHTML;
+    forbidding.unmount();
+
+    // The object itself names no `additionalProperties`, but joined with the option it shows it takes no extra key, as
+    // its add button reads it, so it renders no heading of its own beside the option
+    const { node } = createFormComponent({ schema, additionalPropertiesWhenAbsent: 'allow' });
+
+    expect(node.querySelector('#root_XxxOf__title')).toBeNull();
+    expect(node.innerHTML).toBe(forbiddingMarkup);
+  });
+
+  it("omits the extra keys an object union's closed shown option renders no field for, under additionalPropertiesWhenAbsent 'allow'", async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      oneOf: [{ properties: { b: { type: 'string' } }, additionalProperties: false }],
+    };
+    const { node, onChange, onSubmit } = createFormComponent({
+      schema,
+      additionalPropertiesWhenAbsent: 'allow',
+      initialFormData: { b: 'x', e: 'y' },
+      omitExtraData: true,
+      liveOmit: 'onChange',
+    });
+    expect(node.querySelector('#root_e')).toBeNull();
+
+    await user.type(elementOf(node, '#root_b'), 'z');
+
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ b: 'xz' });
+    await submitForm(node, user);
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+  });
+
+  it.each<[string, RJSFSchema]>([
+    [
+      'an option closing through its if/then, as the field merges it in',
+      {
+        type: 'object',
+        oneOf: [
+          {
+            properties: { b: { type: 'string' } },
+            if: { required: ['b'] },
+            then: { additionalProperties: false },
+          },
+        ],
+      },
+    ],
+    [
+      "an option declaring a property beside the object's additionalProperties: false",
+      { type: 'object', additionalProperties: false, oneOf: [{ properties: { b: { type: 'string' } } }] },
+    ],
+  ])('keeps the property the field renders and omits the extra key it renders none for, for %s', async (_, schema) => {
+    const { node, onChange } = createFormComponent({
+      schema,
+      initialFormData: { b: 'x', e: 'y' },
+      omitExtraData: true,
+      liveOmit: 'onChange',
+    });
+    expect(node.querySelector('#root_e')).toBeNull();
+
+    await user.type(elementOf(node, '#root_b'), 'z');
+
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ b: 'xz' });
+  });
+
   it('renders a key the selected option declares once outside a Form, where the outermost field keeps the selection (#5461)', async () => {
     const schema: RJSFSchema = {
       type: 'object',

@@ -217,6 +217,7 @@ type RenderContext<T, S extends StrictRJSFSchema, F extends FormContextType> = P
   | 'registry'
   | 'validationProps'
   | 'defaultsBehavior'
+  | 'allowsAbsentAdditionalProperties'
 >;
 
 /** Keeps the previous `schemaUtils` unless the props it was built from changed */
@@ -224,8 +225,13 @@ function resolveSchemaUtils<T, S extends StrictRJSFSchema, F extends FormContext
   props: FormProps<T, S, F>,
   prev: Pick<RenderContext<T, S, F>, 'schemaUtils'> | undefined,
 ): SchemaUtilsType<T, S, F> {
-  const { schema, validator, defaultFormStateBehavior, customMergeAllOf } = props;
-  const schemaContext: SchemaContext<S, F> = { validator, defaultFormStateBehavior, customMergeAllOf };
+  const { schema, validator, defaultFormStateBehavior, customMergeAllOf, additionalPropertiesWhenAbsent } = props;
+  const schemaContext: SchemaContext<S, F> = {
+    validator,
+    defaultFormStateBehavior,
+    customMergeAllOf,
+    additionalPropertiesWhenAbsent,
+  };
   if (prev && !prev.schemaUtils.doesSchemaUtilsDiffer(schemaContext, schema)) {
     return prev.schemaUtils;
   }
@@ -300,6 +306,7 @@ function deriveRenderContext<T, S extends StrictRJSFSchema, F extends FormContex
     registry: buildRegistry(props, rootSchema, schemaUtils),
     validationProps: { customValidate, transformErrors },
     defaultsBehavior,
+    allowsAbsentAdditionalProperties: props.additionalPropertiesWhenAbsent === 'allow',
   });
 }
 
@@ -999,10 +1006,10 @@ function detectContextChanges<T, S extends StrictRJSFSchema, F extends FormConte
 }
 
 /** The state derived from data: on construction from the seed the props hand the form, and from the data the form
- * holds whenever the schema, a `ui:emptyValue` or `defaultFormStateBehavior` changed, since those are the props whose
- * change transforms the data (a default it did not have before, a branch that no longer applies). No other prop change
- * runs this: an unrelated re-render must not rerun value initialization, so `deriveState()` re-derives the render
- * context alone for those.
+ * holds whenever the schema, a `ui:emptyValue`, `defaultFormStateBehavior` or `additionalPropertiesWhenAbsent`
+ * changed, since those are the props whose change transforms the data (a default it did not have before, a branch that
+ * no longer applies). No other prop change runs this: an unrelated re-render must not rerun value initialization, so
+ * `deriveState()` re-derives the render context alone for those.
  *
  * @param current - The state the pass starts from; `undefined` on construction
  * @param inputFormData - The data to derive from
@@ -1424,7 +1431,8 @@ export function initialState<T, S extends StrictRJSFSchema, F extends FormContex
  * props: every derived member is shared against the committed state, so an unchanged input hands back the reference
  * the fields already hold and a changed one is recognized by the new reference; when nothing changed, `state` itself
  * is handed back. The data is the form's own after mount, so a `formData` or `initialFormData` passed later changes
- * nothing; it is re-derived only for a schema, `ui:emptyValue` or `defaultFormStateBehavior` change, and any other
+ * nothing; it is re-derived only for a schema, `ui:emptyValue`, `defaultFormStateBehavior` or
+ * `additionalPropertiesWhenAbsent` change, and any other
  * prop change re-derives the render context alone, since an unrelated re-render must not rerun value initialization.
  *
  * @param props - The current props
@@ -1441,10 +1449,15 @@ export function deriveState<T, S extends StrictRJSFSchema, F extends FormContext
   // recreated `validator` or `customMergeAllOf` as well, which parents commonly write inline, and re-deriving there
   // replaces data the user cleared or switched away from with the very default it came from (#5294). Only the props
   // that decide what the data should be do: the schema, the uiSchema's `ui:emptyValue`s, and the settings that decide
-  // how the defaults are computed
+  // how the defaults are computed, an absent `additionalProperties` among them
   const isEmptyValueChanged =
     context.uiSchema !== state.uiSchema && !deepEquals(emptyValuesOf(context.uiSchema), emptyValuesOf(state.uiSchema));
-  if (isSchemaChanged || isEmptyValueChanged || context.defaultsBehavior !== state.defaultsBehavior) {
+  if (
+    isSchemaChanged ||
+    isEmptyValueChanged ||
+    context.defaultsBehavior !== state.defaultsBehavior ||
+    context.allowsAbsentAdditionalProperties !== state.allowsAbsentAdditionalProperties
+  ) {
     return replaceEqualDeep(state, deriveDataState(state, state.formData, props));
   }
   // Resolved only once it is known the data is not re-derived, which resolves it itself

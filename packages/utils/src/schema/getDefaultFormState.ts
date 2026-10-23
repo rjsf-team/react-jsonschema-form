@@ -1,4 +1,4 @@
-import { allowsAdditionalProperties } from '../additionalPropertiesUtils.ts';
+import { absentKeywordAllows, allowsAdditionalProperties } from '../additionalPropertiesUtils.ts';
 import {
   ADDITIONAL_PROPERTIES_KEY,
   ADDITIONAL_PROPERTY_FLAG,
@@ -18,7 +18,8 @@ import deepEquals from '../deepEquals.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getOptionUiSchema from '../getOptionUiSchema.ts';
 import getPropertySchema from '../getPropertySchema.ts';
-import getRenderedOptionSchema from '../getRenderedOptionSchema.ts';
+import { renderOption } from '../getRenderedOptionSchema.ts';
+import getRenderedOptionUiSchema from '../getRenderedOptionUiSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
 import getSchemaTypeForValue from '../getSchemaTypeForValue.ts';
 import getStaticItemsUiSchema from '../getStaticItemsUiSchema.ts';
@@ -57,7 +58,6 @@ import type {
   SchemaContext,
   StrictRJSFSchema,
   UiSchema,
-  ValidatorType,
 } from '../types.ts';
 import fieldShownOption, { rendersOptionsAsSelect } from './fieldShownOption.ts';
 import { closestOption } from './getClosestMatchingOption.ts';
@@ -96,6 +96,8 @@ import retrieveSchema, {
   dependencyOption,
   fieldOf,
   isLeafSchema,
+  optionMatchContext,
+  optionMatchKey,
   optionNode as offeredOption,
   resolveMergedOwnRef,
   retrieveField,
@@ -607,7 +609,7 @@ interface ViewProps<T, S extends StrictRJSFSchema, F extends FormContextType> ex
  * merged as selected. Every other option list is left on the schema for the fold to select from.
  */
 function policyFor<S extends StrictRJSFSchema, F extends FormContextType>(
-  validator: ValidatorType<S, F>,
+  context: SchemaContext<S, F>,
   graph: SchemaGraph<S>,
   allOf: boolean | 'if',
   conditions: boolean,
@@ -615,21 +617,24 @@ function policyFor<S extends StrictRJSFSchema, F extends FormContextType>(
   cutRecursion = false,
   optionPolicy?: OptionPolicy,
 ): PlanPolicy<S> {
-  let key = `defaults|${allOf}|${conditions}|${cutRecursion}|${optionPolicy?.allOf}|${optionPolicy?.conditions}`;
+  let key = `defaults|${optionMatchKey(context)}|${allOf}|${conditions}|${cutRecursion}|${optionPolicy?.allOf}|${optionPolicy?.conditions}`;
   for (const [provider, index] of selections) {
     key += `|${provider}:${index}`;
   }
-  return cachedPolicy<S>(validator, graph, key, () => ({
-    allOf,
-    conditions,
-    cutRecursion,
-    selectOption: (request) =>
-      selections.get(request.provider) ?? dependencyOption(validator, request, request.depData),
-    // An option the fold selects keeps the ref path of the node offering it: restarting it, as render does, would
-    // restart it at every level of a recursion through an option chosen without data, which nothing then bounds
-    optionsInheritRefPath: true,
-    optionPolicy,
-  }));
+  return cachedPolicy<S>(context.validator, graph, key, () => {
+    const matchContext = optionMatchContext(context);
+    return {
+      allOf,
+      conditions,
+      cutRecursion,
+      selectOption: (request) =>
+        selections.get(request.provider) ?? dependencyOption(matchContext, request, request.depData),
+      // An option the fold selects keeps the ref path of the node offering it: restarting it, as render does, would
+      // restart it at every level of a recursion through an option chosen without data, which nothing then bounds
+      optionsInheritRefPath: true,
+      optionPolicy,
+    };
+  });
 }
 
 /** The keywords `ownKeywords()` read, by plan, which a plan never changes once made */
@@ -748,7 +753,7 @@ function planWith<S extends StrictRJSFSchema, F extends FormContextType>(
   { allOf, conditions }: OptionPolicy,
   optionPolicy?: OptionPolicy,
 ): PlannedField<S> {
-  const policy = policyFor(context.validator, graph, allOf, conditions, selections, cutRecursion, optionPolicy);
+  const policy = policyFor(context, graph, allOf, conditions, selections, cutRecursion, optionPolicy);
   return { plan: buildPlan<S, F>({ context, graph, seeds, data, depData, policy }), allOf, conditions, optionPolicy };
 }
 
@@ -1284,11 +1289,6 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const { graph } = field;
   const rootSchema = graph.rawRoot;
   const remaining = withoutKeys(schema, key);
-  const branchProps = {
-    ...props,
-    uiSchema: getOptionUiSchema<T, S, F>(props.uiSchema, key, index),
-    isRenderedOption: true,
-  };
   const chosen = new Set(view.options.chosen).add(options);
   // Which of the two the field is gets asked of it with its `allOf` merged, as the fields ask it, since its `type` can
   // come through one. A field naming one type already has it, which an `allOf` can't change, so it is spared the merge
@@ -1297,6 +1297,23 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
       ? retrieveSchema<unknown, S, F>(context, remaining, rootSchema, props.rawFormData)
       : remaining;
   const rendersOwnField = rendersOwnFieldBesideOption<S>(fieldSchema);
+  const optionUiSchema = getOptionUiSchema<T, S, F>(props.uiSchema, key, index);
+  const listedOption: unknown = options[index];
+  const branchProps = {
+    ...props,
+    // An option whose field takes the object's extra keys is asked as the field renders it, retrieved for the data, and
+    // only where it has a uiSchema of its own for the object's to lie beneath
+    uiSchema:
+      rendersOwnField && optionUiSchema !== props.uiSchema && isSchemaObject<S>(listedOption)
+        ? getRenderedOptionUiSchema<T, S, F>(
+            fieldSchema,
+            retrieveSchema<unknown, S, F>(context, listedOption, rootSchema, props.rawFormData),
+            props.uiSchema,
+            optionUiSchema,
+          )
+        : optionUiSchema,
+    isRenderedOption: true,
+  };
   const choice = view.choices.find(
     (offered) => offered.keyword === key && offered.options.length === options.length && offered.list === options,
   );
@@ -1316,7 +1333,7 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
       ? mergeSchemas(remaining, option)
       : withDefaultOf(
           remaining,
-          getRenderedOptionSchema<S>(
+          renderOption<S>(
             remaining,
             offered === undefined
               ? option
@@ -1386,7 +1403,7 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
     data: view.data,
     depData: view.depData,
     policy: policyFor(
-      context.validator,
+      context,
       graph,
       inherited.optionPolicy?.allOf ?? view.allOf,
       inherited.optionPolicy?.conditions ?? view.conditions,
@@ -1394,7 +1411,7 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
       merged.collapsed,
     ),
   });
-  const rendered = getRenderedOptionSchema<S>(remaining, optionAlone.schema);
+  const rendered = renderOption<S>(remaining, optionAlone.schema);
   return foldView<T, S, F>(
     context,
     { ...merged, schema: schemaFrom(rootSchema, withDefaultOf(remaining, rendered)) },
@@ -1512,7 +1529,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   // A field resolved the way `retrieveSchema()` resolves a schema has the extra keys of its data stubbed among its
   // `properties`
   const schema =
-    view.stubs && allowsAdditionalProperties<S>(view.schema)
+    view.stubs && allowsAdditionalProperties<S, F>(context, view.schema)
       ? stubExistingAdditionalProperties<unknown, S, F>(context, view.schema, rootSchema, formData)
       : view.schema;
   const parentConst = schema[CONST_KEY];
@@ -1638,7 +1655,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
       onNullFill?.();
     });
   }
-  const { additionalProperties } = schema;
+  const additionalProperties = absentKeywordAllows<S, F>(context, schema) || schema.additionalProperties;
   if (additionalProperties && !initialDefaultsGenerated) {
     // as per spec additionalProperties may be either schema or boolean
     const additionalPropertiesSchema = schemaFrom(
@@ -1747,7 +1764,7 @@ function branchNullFills<T, S extends StrictRJSFSchema, F extends FormContextTyp
   const { rawFormData, uiSchema, uiSchemaDefinitions, nullFills } = props;
   const formData = isObject(rawFormData) ? rawFormData : {};
   const retrieved = settle(context, { ...view.field, retrieves: true }, view.data, view.depData, view.options);
-  const rendered = allowsAdditionalProperties<S>(retrieved.schema)
+  const rendered = allowsAdditionalProperties<S, F>(context, retrieved.schema)
     ? stubExistingAdditionalProperties<unknown, S, F>(context, retrieved.schema, view.graph.rawRoot, formData)
     : retrieved.schema;
   const nullsOnly = nullsOnlyContext(context);

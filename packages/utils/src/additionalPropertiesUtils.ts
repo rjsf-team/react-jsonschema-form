@@ -1,8 +1,10 @@
-import { ALL_OF_KEY, UNEVALUATED_PROPERTIES_KEY } from './constants.ts';
+import { ALL_OF_KEY, EXTRA_KEYS_ELSEWHERE_FLAG, UNEVALUATED_PROPERTIES_KEY } from './constants.ts';
+import getSchemaType from './getSchemaType.ts';
 import isObject, { isSchemaObject } from './isObject.ts';
 import KeyedMemo from './schema/graph/keyedMemo.ts';
 import { schemaFrom } from './schema/graph/mergePlan.ts';
-import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
+import { JOINED_SCHEMAS_KEY } from './schemaMarkers.ts';
+import type { FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from './types.ts';
 
 /** The compiled form of every `patternProperties` pattern seen so far, so that testing a key against one costs no
  * compile of its own. A schema names a small, fixed set of patterns, where the keys they are tested against are the
@@ -82,6 +84,44 @@ export function additionalPropertiesKeyword<S extends StrictRJSFSchema = RJSFSch
   return typedSchema.additionalProperties ?? typedSchema[UNEVALUATED_PROPERTIES_KEY];
 }
 
+/** Returns whether the context's `additionalPropertiesWhenAbsent` reads an absent extra-key keyword as taking any key,
+ * the one reading of the setting that the rule below and every memo keyed on the setting share
+ *
+ * @param context - The `SchemaContext` whose `additionalPropertiesWhenAbsent` is read
+ * @returns - True where the setting is `'allow'`
+ */
+export function readsAbsentAsAllowed<
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({ additionalPropertiesWhenAbsent }: Pick<SchemaContext<S, F>, 'additionalPropertiesWhenAbsent'>): boolean {
+  return additionalPropertiesWhenAbsent === 'allow';
+}
+
+/** Returns whether the form reads an object naming neither `additionalProperties` nor `unevaluatedProperties` as
+ * taking any key its other keywords leave over, as `additionalProperties: true` does: the JSON Schema spec reads it that
+ * way, and the context's `additionalPropertiesWhenAbsent: 'allow'` has the form follow it. A schema that is no object,
+ * an untyped `{}` included, has no keys for the form to offer or keep, nor has one whose `const` or `enum` pins the
+ * whole value, and an option `getRenderedOptionSchema()` marked `EXTRA_KEYS_ELSEWHERE_FLAG` leaves them to its parent's
+ * own field.
+ *
+ * @param context - The `SchemaContext` whose `additionalPropertiesWhenAbsent` decides
+ * @param schema - The schema to check
+ * @returns - True when the object's absent keyword takes any extra key
+ */
+export function absentKeywordAllows<
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(context: SchemaContext<S, F>, schema: S): boolean {
+  return (
+    readsAbsentAsAllowed<S, F>(context) &&
+    !Reflect.get(schema, EXTRA_KEYS_ELSEWHERE_FLAG) &&
+    additionalPropertiesKeyword<S>(schema) === undefined &&
+    schema.const === undefined &&
+    schema.enum === undefined &&
+    getSchemaType<S>(schema) === 'object'
+  );
+}
+
 /** Returns whether an object takes keys its own `properties` don't name, which is what makes asking
  * `getAdditionalPropertySchema()` about such a key worth it at all: `retrieveSchema()` stubs the extra keys the form
  * data holds only for an object that takes them, `canExpand()` offers the add button only for one, and `ObjectField`
@@ -89,20 +129,25 @@ export function additionalPropertiesKeyword<S extends StrictRJSFSchema = RJSFSch
  *
  * A `patternProperties` naming a pattern says the object takes them, whatever an `additionalProperties: false` beside
  * it says about the names no pattern matches, since the names a pattern matches are the object's to take all the same.
- * Otherwise the keyword that describes those names answers, as long as it neither rejects them nor is missing: an
- * object naming none of the three keywords takes any key as far as a validator is concerned, but the form has no schema
- * to render one with and no name to add one under, so it offers none. An empty `patternProperties` names no pattern, so
- * it matches no name and describes no key the object could take, the way an empty `properties` declares none.
+ * Otherwise the keyword that describes those names answers, as long as it does not reject them. An object naming none
+ * of the three keywords takes any key as far as a validator is concerned, which the form follows only where the
+ * context's `additionalPropertiesWhenAbsent` is `'allow'`, see `absentKeywordAllows()`. An empty `patternProperties`
+ * names no pattern, so it matches no name and describes no key the object could take, the way an empty `properties`
+ * declares none.
  *
+ * @param context - The `SchemaContext` whose `additionalPropertiesWhenAbsent` says what an absent keyword means
  * @param schema - The object schema to check
  * @returns - True when the object takes keys beyond the ones its `properties` name
  */
-export function allowsAdditionalProperties<S extends StrictRJSFSchema = RJSFSchema>(schema: S): boolean {
+export function allowsAdditionalProperties<
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(context: SchemaContext<S, F>, schema: S): boolean {
   if (Object.keys(schema.patternProperties ?? {}).length > 0) {
     return true;
   }
   const keyword = additionalPropertiesKeyword<S>(schema);
-  return keyword !== undefined && keyword !== false;
+  return keyword === undefined ? absentKeywordAllows<S, F>(context, schema) : keyword !== false;
 }
 
 /** The `allOf` of the patterns a key matches, by those patterns */
@@ -143,13 +188,10 @@ export function conjoin(own: unknown, other: unknown): unknown {
   return own === false || other === false ? false : { [ALL_OF_KEY]: [own, other] };
 }
 
-/** The object schema and the option selected beside it that a schema joins the extra-key keywords of */
-const JOINED_SCHEMAS_KEY = Symbol('__rjsf_joined_schemas');
-
 /** Returns `joined`, which joins the extra-key keywords of an object schema, `own`, and of the option selected beside
  * it, `option`, carrying the two so that `getAdditionalPropertySchema()` asks each of them about a key on its own: the
  * keywords of one say nothing about a key the other's patterns or extra-key keywords evaluate, which no one set of
- * keywords can say.
+ * keywords can say. Either may carry a join of its own, which is asked apart in turn.
  *
  * @param joined - The schema with the two schemas' extra-key keywords joined
  * @param own - The object schema's extra-key keywords
@@ -158,6 +200,18 @@ const JOINED_SCHEMAS_KEY = Symbol('__rjsf_joined_schemas');
  */
 export function withJoinedSchemas<S extends StrictRJSFSchema = RJSFSchema>(joined: S, own: S, option: S): S {
   return { ...joined, [JOINED_SCHEMAS_KEY]: { own, option } };
+}
+
+/** Carries the schemas `from` joins, if it is a join, onto `to`, which takes `from`'s extra-key keywords as they stand
+ *
+ * @param from - The schema whose extra-key keywords `to` takes
+ * @param to - The schema to carry them on, which is changed in place
+ */
+export function copyJoinedSchemas(from: object, to: object) {
+  const joined: unknown = Reflect.get(from, JOINED_SCHEMAS_KEY);
+  if (joined !== undefined) {
+    Reflect.set(to, JOINED_SCHEMAS_KEY, joined);
+  }
 }
 
 /** Returns what `schema` says of a `key` its own `properties` don't name, or undefined where it names nothing that
@@ -186,6 +240,7 @@ function describesKey<S extends StrictRJSFSchema>(schema: S, key: string, readsU
  *
  * A schema `retrieveSchema()` joined with the option selected beside it answers for the object and for the option
  * apart, and conjoins the two: the object's `unevaluatedProperties` says nothing about a key the option evaluates.
+ * Either of the two may be a join itself, as an option offering options of its own is, and is asked apart in turn.
  *
  * @param schema - The object schema the `key` is a property of
  * @param key - The property name whose schema is desired
@@ -196,13 +251,18 @@ export function getAdditionalPropertySchema<S extends StrictRJSFSchema = RJSFSch
   schema: S,
   key: string,
 ): S | boolean {
-  const joined: unknown = Reflect.get(schema, JOINED_SCHEMAS_KEY);
-  let answer: unknown;
-  if (isObject(joined) && isSchemaObject<S>(joined.own) && isSchemaObject<S>(joined.option)) {
-    const optionSays = describesKey<S>(joined.option, key, true);
-    answer = conjoin(describesKey<S>(joined.own, key, optionSays === undefined), optionSays);
-  } else {
-    answer = describesKey<S>(schema, key, true);
-  }
+  const answer = joinedDescribesKey<S>(schema, key, true);
   return typeof answer === 'boolean' || isSchemaObject<S>(answer) ? answer : true;
+}
+
+/** Returns what `schema` says of `key` as `describesKey()` does, asking each of the schemas a joined one joins apart,
+ * and each of theirs where one of them was joined in turn, as an option offering options of its own is
+ */
+function joinedDescribesKey<S extends StrictRJSFSchema>(schema: S, key: string, readsUnevaluated: boolean): unknown {
+  const joined: unknown = Reflect.get(schema, JOINED_SCHEMAS_KEY);
+  if (!isObject(joined) || !isSchemaObject<S>(joined.own) || !isSchemaObject<S>(joined.option)) {
+    return describesKey<S>(schema, key, readsUnevaluated);
+  }
+  const optionSays = joinedDescribesKey<S>(joined.option, key, readsUnevaluated);
+  return conjoin(joinedDescribesKey<S>(joined.own, key, readsUnevaluated && optionSays === undefined), optionSays);
 }

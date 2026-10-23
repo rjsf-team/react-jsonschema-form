@@ -1,7 +1,6 @@
 import { Flex } from '@fluentui/react-migration-v0-v9';
 import type { FormContextType, ObjectFieldTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
-  canExpand,
   descriptionId,
   getTemplates,
   getUiOptions,
@@ -44,6 +43,7 @@ export default function ObjectFieldTemplate<
   const {
     ButtonTemplates: { AddButton },
   } = registry.templates;
+  const { schemaUtils } = registry;
   return (
     <>
       {title && (
@@ -79,7 +79,7 @@ export default function ObjectFieldTemplate<
             </Flex>
           ),
         )}
-        {canExpand<T, S, F>(schema, uiSchema, formData) && (
+        {schemaUtils.canExpand(schema, uiSchema, formData) && (
           <Flex hAlign='end'>
             <AddButton
               id={buttonId(id, 'add')}

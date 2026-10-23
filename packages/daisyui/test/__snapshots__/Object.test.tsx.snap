@@ -3603,6 +3603,193 @@ exports[`object fields > object 1`] = `
 </DocumentFragment>
 `;
 
+exports[`object fields > pure anyOf union, with no frame of its own beside the option 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="flex-grow rjsf-field rjsf-field-object"
+    >
+      <div
+        class="field-template mb-3"
+      >
+        <label
+          class="label"
+        >
+          <span
+            class="label-text font-medium"
+          >
+            <span
+              id="root__label"
+            >
+              Pet
+            </span>
+          </span>
+        </label>
+        <div
+          class="p-4 border rounded-sm shadow-sm"
+        >
+          <div
+            class="mb-4"
+          >
+            <div
+              class="form-control w-full"
+            >
+              <div
+                class="dropdown w-full"
+              >
+                <button
+                  aria-controls="_r_1a_"
+                  aria-expanded="false"
+                  aria-haspopup="listbox"
+                  aria-labelledby="root__label"
+                  class="btn btn-outline w-full text-left flex justify-between items-center "
+                  id="root__anyof_select"
+                  role="combobox"
+                  tabindex="0"
+                  type="button"
+                >
+                  <span
+                    class="truncate"
+                  >
+                    Dog
+                  </span>
+                  <span
+                    aria-hidden="true"
+                    class="ml-2"
+                  >
+                    ▼
+                  </span>
+                </button>
+                <ul
+                  class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+                  id="_r_1a_"
+                  role="listbox"
+                >
+                  <li
+                    aria-selected="true"
+                    class="px-4 py-2 hover:bg-base-200 cursor-pointer bg-primary/10"
+                    data-value="0"
+                    role="option"
+                    tabindex="-1"
+                  >
+                    <div
+                      class="flex items-center gap-2"
+                    >
+                      <span>
+                        Dog
+                      </span>
+                    </div>
+                  </li>
+                  <li
+                    aria-selected="false"
+                    class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                    data-value="1"
+                    role="option"
+                    tabindex="-1"
+                  >
+                    <div
+                      class="flex items-center gap-2"
+                    >
+                      <span>
+                        Cat
+                      </span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div
+            class="flex-grow rjsf-field rjsf-field-object"
+          >
+            <div
+              class="field-template mb-3"
+            >
+              <div
+                class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+              >
+                <div
+                  class="title-field mb-6"
+                >
+                  <h2
+                    class="text-3xl font-bold text-primary mb-2"
+                  >
+                    <span
+                      id="root__title"
+                    >
+                      Dog
+                    </span>
+                  </h2>
+                  <div
+                    class="divider divider-primary my-0"
+                  />
+                </div>
+                <div
+                  class="grid grid-cols-1 gap-4 "
+                >
+                  <div
+                    class=""
+                  >
+                    <div
+                      class="flex-grow rjsf-field rjsf-field-string"
+                    >
+                      <div
+                        class="field-template mb-3"
+                      >
+                        <label
+                          class="label"
+                          for="root_bark"
+                        >
+                          <span
+                            class="label-text font-medium"
+                          >
+                            <span
+                              id="root_bark__label"
+                            >
+                              bark
+                            </span>
+                          </span>
+                        </label>
+                        <div
+                          class="form-control"
+                        >
+                          <div
+                            style="position: relative;"
+                          >
+                            <input
+                              class="input input-bordered w-full"
+                              id="root_bark"
+                              name="root_bark"
+                              placeholder=""
+                              type="text"
+                              value=""
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary btn-primary-content "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`object fields > show add button and fields if additionalProperties is true and not an object 1`] = `
 <DocumentFragment>
   <form

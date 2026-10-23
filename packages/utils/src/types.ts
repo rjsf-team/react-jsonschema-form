@@ -205,6 +205,12 @@ export interface SchemaContext<S extends StrictRJSFSchema = RJSFSchema, F extend
   readonly customMergeAllOf?: CustomMergeAllOf<S>;
   /** Optional configuration object, if provided, allows users to override default form state behavior */
   readonly defaultFormStateBehavior?: DefaultFormStateBehavior;
+  /** What an object naming neither `additionalProperties` nor `unevaluatedProperties` says about the keys its
+   * `properties` and `patternProperties` leave over. `'allow'` reads it as the JSON Schema spec does, taking any such
+   * key, so the form renders, adds and keeps them as it does for `additionalProperties: true`; `'forbid'`, the
+   * default, offers none and prunes them.
+   */
+  readonly additionalPropertiesWhenAbsent?: 'forbid' | 'allow';
 }
 
 /** The props for the `getDefaultFormState()` schema function */
@@ -2218,6 +2224,26 @@ export interface SchemaUtilsType<
    * @returns - True if the `SchemaUtilsType` differs from the given `context` or `rootSchema`
    */
   doesSchemaUtilsDiffer(context: SchemaContext<S, F>, rootSchema: S): boolean;
+  /** Returns whether the object `schema` takes keys its own `properties` don't name, an absent `additionalProperties`
+   * read as the `SchemaContext`'s `additionalPropertiesWhenAbsent` says
+   *
+   * @param schema - The object schema to check
+   * @returns - True when the object takes keys beyond the ones its `properties` name
+   */
+  allowsAdditionalProperties(schema: S): boolean;
+  /** Checks whether the field described by `schema`, having the `uiSchema` and `formData`, supports expanding: it takes
+   * additional properties, an absent `additionalProperties` read as the `SchemaContext`'s
+   * `additionalPropertiesWhenAbsent` says, is not forced as non-expandable by the `uiSchema`, the `formData` object
+   * doesn't already have `schema.maxProperties` elements and the names `schema.propertyNames` enumerates are not all
+   * taken
+   *
+   * @param schema - The schema for the field that is being checked
+   * @param [uiSchema] - The uiSchema for the field
+   * @param [formData] - The formData for the field
+   * @returns - True if the schema element has additionalProperties, is expandable, is not at the maxProperties limit
+   *          and has an allowed property name left to take
+   */
+  canExpand(schema: S, uiSchema?: UiSchema<T, S, F>, formData?: T): boolean;
   /** Finds the field specified by the `path` within the root or recursed `schema`. If there is no field for the specified
    * `path`, then the default `{ field: undefined, isRequired: undefined }` is returned. It determines whether a leaf
    * field is in the `required` list for its parent and if so, it is marked as required on return.

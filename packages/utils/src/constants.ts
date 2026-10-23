@@ -3,7 +3,8 @@ import type { JSONSchema7TypeName } from 'json-schema';
 /** Below are the list of all the keys into various elements of a RJSFSchema or UiSchema that are used by the various
  * utility functions. In addition to those keys, there are the special `ADDITIONAL_PROPERTY_FLAG`,
  * `GUESSED_TYPE_FLAG`, `RJSF_REF_KEY`, `RJSF_REF_CYCLE_KEY` and `RJSF_PROVENANCE_KEY` Symbols that are added to a
- * schema under certain conditions by the `retrieveSchema()` utility. Using Symbols keeps these internal
+ * schema under certain conditions by the `retrieveSchema()` utility, and the `EXTRA_KEYS_ELSEWHERE_FLAG` Symbol that
+ * `getRenderedOptionSchema()` adds. Using Symbols keeps these internal
  * markers invisible to JSON serialisation and JSON Schema validators (AJV, ATA, etc.), which only enumerate
  * string-keyed properties.
  */
@@ -18,6 +19,12 @@ export const DEPENDENCIES_KEY = 'dependencies';
 export const ELSE_KEY = 'else';
 export const ENUM_KEY = 'enum';
 export const ERRORS_KEY = '__errors';
+/** Marks a schema whose field takes no extra key for an `additionalProperties` it leaves out, whatever
+ * `additionalPropertiesWhenAbsent` says, since another field at its data path takes them: an option rendered beside its
+ * object parent's own field, or an object whose selected option renders a field of its own beside the options it offers
+ * in turn
+ */
+export const EXTRA_KEYS_ELSEWHERE_FLAG = Symbol('__extra_keys_elsewhere');
 export const GUESSED_TYPE_FLAG = Symbol('__guessed_type');
 export const ID_KEY = '$id';
 export const IF_KEY = 'if';

@@ -1,7 +1,6 @@
 import type { FormContextType, ObjectFieldTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
   buttonId,
-  canExpand,
   descriptionId,
   getTemplates,
   getUiOptions,
@@ -43,6 +42,7 @@ export default function ObjectFieldTemplate<
   const {
     ButtonTemplates: { AddButton },
   } = registry.templates;
+  const { schemaUtils } = registry;
   return (
     <>
       {title && (
@@ -72,7 +72,7 @@ export default function ObjectFieldTemplate<
             <div className='w-full'>{element.content}</div>
           </div>
         ))}
-        {canExpand(schema, uiSchema, formData) ? (
+        {schemaUtils.canExpand(schema, uiSchema, formData) ? (
           <div className='mt-2 flex justify-end'>
             <AddButton
               id={buttonId(id, 'add')}

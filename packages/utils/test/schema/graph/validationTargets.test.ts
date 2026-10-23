@@ -1,4 +1,4 @@
-import type { RJSFSchema } from '../../../src/index.ts';
+import type { RJSFSchema, SchemaContext } from '../../../src/index.ts';
 import parseSchemaGraph from '../../../src/schema/graph/parseSchemaGraph.ts';
 import type { SchemaGraph } from '../../../src/schema/graph/parseSchemaGraph.ts';
 import {
@@ -11,6 +11,7 @@ import {
   validationTargets,
   withVariantId,
 } from '../../../src/schema/graph/validationTargets.ts';
+import getTestValidator from '../../testUtils/getTestValidator.ts';
 
 function nodeAt(graph: SchemaGraph, pointer: string): number {
   const id = graph.byPointer(pointer);
@@ -260,23 +261,33 @@ describe('dependencyCondition()', () => {
 });
 
 describe('holdsDeclaredKey()', () => {
+  const context: SchemaContext = { validator: getTestValidator({}) };
   const schema: RJSFSchema = {
     oneOf: [{ properties: { id: {} }, patternProperties: { '^s_': {} } }, { properties: { id: {} } }],
   };
   const graph = parseSchemaGraph(schema);
   it('counts a key one of the option patterns matches', () => {
-    expect(holdsDeclaredKey(graph, nodeAt(graph, '/oneOf/0'), { s_x: 1 })).toBe(true);
-    expect(holdsDeclaredKey(graph, nodeAt(graph, '/oneOf/1'), { s_x: 1 })).toBe(false);
+    expect(holdsDeclaredKey(context, graph, nodeAt(graph, '/oneOf/0'), { s_x: 1 })).toBe(true);
+    expect(holdsDeclaredKey(context, graph, nodeAt(graph, '/oneOf/1'), { s_x: 1 })).toBe(false);
   });
   it('does not ask a value that is not an object', () => {
-    expect(holdsDeclaredKey(graph, nodeAt(graph, '/oneOf/1'), 'text')).toBe(true);
+    expect(holdsDeclaredKey(context, graph, nodeAt(graph, '/oneOf/1'), 'text')).toBe(true);
   });
   it('counts no key by a pattern no flag compiles, beside the keys the option names and patterns that compile', () => {
     const invalid: RJSFSchema = { oneOf: [{ properties: { a: {} }, patternProperties: { '(?<x': {}, '^s_': {} } }] };
     const invalidGraph = parseSchemaGraph(invalid);
-    expect(holdsDeclaredKey(invalidGraph, nodeAt(invalidGraph, '/oneOf/0'), { a: 1 })).toBe(true);
-    expect(holdsDeclaredKey(invalidGraph, nodeAt(invalidGraph, '/oneOf/0'), { s_x: 1 })).toBe(true);
-    expect(holdsDeclaredKey(invalidGraph, nodeAt(invalidGraph, '/oneOf/0'), { b: 1 })).toBe(false);
+    expect(holdsDeclaredKey(context, invalidGraph, nodeAt(invalidGraph, '/oneOf/0'), { a: 1 })).toBe(true);
+    expect(holdsDeclaredKey(context, invalidGraph, nodeAt(invalidGraph, '/oneOf/0'), { s_x: 1 })).toBe(true);
+    expect(holdsDeclaredKey(context, invalidGraph, nodeAt(invalidGraph, '/oneOf/0'), { b: 1 })).toBe(false);
+  });
+  it('matches an option whose properties name nothing only where it takes extra keys, as the context reads it', () => {
+    const empty: RJSFSchema = { oneOf: [{ type: 'object', properties: {} }] };
+    const emptyGraph = parseSchemaGraph(empty);
+    const id = nodeAt(emptyGraph, '/oneOf/0');
+    expect(holdsDeclaredKey(context, emptyGraph, id, { a: 1 })).toBe(false);
+    expect(holdsDeclaredKey({ ...context, additionalPropertiesWhenAbsent: 'allow' }, emptyGraph, id, { a: 1 })).toBe(
+      true,
+    );
   });
 });
 

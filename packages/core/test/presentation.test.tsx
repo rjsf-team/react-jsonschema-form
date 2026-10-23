@@ -653,19 +653,21 @@ describe('the plan SchemaField builds', () => {
       ],
     };
 
-    it('draws no heading beside its options where the field draws its own label', () => {
+    it('renders no object template beside its options, only the option, where the field draws its own label', () => {
       const titles = new Map<string, string>();
+      // Draws its frame whatever it is handed, as every theme's template does
       function ObjectFieldTemplate(props: ObjectFieldTemplateProps) {
         titles.set(props.id, props.title);
         return <CoreObjectFieldTemplate {...props} />;
       }
-      createFormComponent({
+      const { node } = createFormComponent({
         schema,
         templates: { ObjectFieldTemplate },
         presentation: { fields: { AnyOfField: { label: 'self' } } },
       });
-      expect(titles.get('root_XxxOf')).toBe('');
+      expect([...titles.keys()]).toEqual(['root']);
       expect(titles.get('root')).toBe('Dog');
+      expect(node.querySelectorAll('fieldset')).toHaveLength(1);
     });
 
     it('keeps the heading of a custom field wrapping ObjectField', () => {

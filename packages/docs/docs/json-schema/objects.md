@@ -155,14 +155,47 @@ Such a key renders as a field for whatever value it holds, the way a key does un
 A key the selected `anyOf`/`oneOf` option declares as a property of its own is that option's to render rather than an additional property, so it takes no second field beside the one the option renders for it.
 An option declares a key through its own `properties`, through a `$ref` or an `allOf` it is composed of, or through the `then`/`else` branch its condition takes for the data in hand.
 Every other key is an additional property of the object and the selected option together: the option's `additionalProperties`, `unevaluatedProperties` and `patternProperties` describe it beside the object's own, a key either forbids is forbidden, and a key the option allows without describing it renders as the object's keyword describes it.
+Where the selected option offers options of its own, it renders a field of its own beside them, and that field renders the additional properties of the object, the option and the option it selects together, with the add button.
 Where the object or the option takes extra keys, switching to an option that does not declare a key the data holds therefore turns it into an additional property, with its key input and remove button.
 Where `additionalProperties: false` does forbid it, the key has no subschema to render with and the property renders as the empty field a validation error accompanies.
 An `unevaluatedProperties` answers for the same keys where the object names no `additionalProperties` to evaluate them: a `false` forbids them, so it renders them the same way, and a schema describes what they may hold, so they render as the field it calls for, exactly as an `additionalProperties` schema's keys do.
 Beside any `additionalProperties`, `true` and a schema alike, it has nothing left to say and no say in how the key renders.
 An object whose only such keyword is an `unevaluatedProperties` takes extra keys as much as one naming `additionalProperties` or `patternProperties` does, so the keys its form data holds render and its add button is shown.
 The form reads the keyword whatever JSON Schema draft the validator is configured for, while the default `@rjsf/validator-ajv8` instance is a draft-07 AJV, which ignores it: a schema that relies on it should be validated by an AJV that reads it too, through the [`AjvClass`](../usage/validation.md#ajvclass) option, so that the names the form forbids are the ones validation rejects.
-Where the object names neither `additionalProperties` nor `unevaluatedProperties`, a form that sets `omitExtraData` drops a pattern-unmatched key all the same: that option keeps only the data a schema describes, and patterns describe no key they don't match, so the property is pruned on submit — or on the next change with `liveOmit` — however editable its field was.
+Where the object names neither `additionalProperties` nor `unevaluatedProperties`, a form that sets `omitExtraData` drops a pattern-unmatched key all the same, unless its [`additionalPropertiesWhenAbsent`](#objects-naming-no-additionalproperties) is `'allow'`: that option keeps only the data a schema describes, and patterns describe no key they don't match, so the property is pruned on submit — or on the next change with `liveOmit` — however editable its field was.
 Either keyword spelled out, `true` included, describes those keys, so `omitExtraData` keeps them; it reads the two with the same precedence the rest of the form does, so a key an `unevaluatedProperties` describes is kept only where no `additionalProperties` evaluates it.
+
+### Objects naming no `additionalProperties`
+
+JSON Schema reads an object that names neither `additionalProperties` nor `unevaluatedProperties` as taking any key its `properties` and `patternProperties` leave over, as `additionalProperties: true` does.
+By default the form does not follow it: an object naming none of `additionalProperties`, `unevaluatedProperties` and `patternProperties` gets no add button and renders none of the extra keys of its data, and `omitExtraData` drops every key no property or pattern names.
+Set the `Form`'s [`additionalPropertiesWhenAbsent`](../api-reference/form-props.md#additionalpropertieswhenabsent) prop to `'allow'` to have the form read the schema as the spec does:
+
+```tsx
+import Form from '@rjsf/core';
+import { RJSFSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = {
+  type: 'object',
+  properties: {
+    name: { type: 'string' },
+  },
+};
+
+render(
+  <Form schema={schema} validator={validator} additionalPropertiesWhenAbsent='allow' />,
+  document.getElementById('app'),
+);
+```
+
+The object then gets an add button, the extra keys of its data render with their key input and remove button, each as a field for the value it holds, and `omitExtraData` keeps them, exactly as under `additionalProperties: true`.
+A schema that names a keyword is read as it stands either way, so an `additionalProperties: false` or an `unevaluatedProperties: false` still closes the object.
+A schema that is no object, an untyped `{}` included, gets no add button, nor does one whose `const` or `enum` pins the whole value.
+
+An object `anyOf`/`oneOf` union, such as `{ type: 'object', oneOf: [...] }`, takes extra keys too, so under `'allow'` it renders its own field beside the option it shows, with its title and add button; the option shows only its own properties.
+The union is read joined with the option it shows, so where that option names `additionalProperties: false` it takes no extra key and renders as it does under `'forbid'`.
+To keep such a union closed, give it `additionalProperties: false`, or hide its add button with the [`expandable` option](#expandable-option).
 
 ### Constraining key names with `propertyNames`
 

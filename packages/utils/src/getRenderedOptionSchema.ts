@@ -1,27 +1,34 @@
+import { conjoin, copyJoinedSchemas } from './additionalPropertiesUtils.ts';
 import {
-  ADDITIONAL_PROPERTIES_KEY,
+  ADDITIONAL_PROPERTY_FLAG,
   ALL_OF_KEY,
   ANY_OF_KEY,
   CONST_KEY,
   DEFAULT_KEY,
   ELSE_KEY,
   ENUM_KEY,
+  EXTRA_KEYS_ELSEWHERE_FLAG,
   IF_KEY,
   ITEMS_KEY,
   ONE_OF_KEY,
-  PATTERN_PROPERTIES_KEY,
   REF_KEY,
   REQUIRED_KEY,
   THEN_KEY,
-  UNEVALUATED_PROPERTIES_KEY,
 } from './constants.ts';
 import isObject from './isObject.ts';
 import mergeSchemas from './mergeSchemas.ts';
-import rendersOwnFieldBesideOption from './rendersOwnFieldBesideOption.ts';
+import rendersOwnFieldBesideOption, { takesParentExtraKeys } from './rendersOwnFieldBesideOption.ts';
+import KeyedMemo from './schema/graph/keyedMemo.ts';
 import { withoutKeys } from './schema/graph/mergePlan.ts';
-import { CONTAINER_KEYWORDS, IDENTIFIER_KEYWORDS } from './schema/retrieveSchema.ts';
+import {
+  CONTAINER_KEYWORDS,
+  EXTRA_KEY_KEYWORDS,
+  IDENTIFIER_KEYWORDS,
+  joinOptionExtraKeys,
+} from './schema/retrieveSchema.ts';
+import { DECLARED_ABOVE_KEY } from './schemaMarkers.ts';
 import { isSubschemaKeyword, keywordShape } from './schemaUri.ts';
-import type { GenericObjectType, RJSFSchema, StrictRJSFSchema } from './types.ts';
+import type { GenericObjectType, RJSFMarkedSchema, RJSFSchema, StrictRJSFSchema } from './types.ts';
 
 /** The keywords of a non-object parent that its option is rendered without. The options themselves and the
  * `discriminator` that picks between them describe the choice rather than the value. The annotations describe the
@@ -43,9 +50,6 @@ const KEYWORDS_LEFT_ON_PARENT = new Set<string>([
   '$comment',
   ...CONTAINER_KEYWORDS,
 ]);
-
-/** The keywords describing an object's extra keys */
-const EXTRA_KEY_KEYWORDS = [ADDITIONAL_PROPERTIES_KEY, PATTERN_PROPERTIES_KEY, UNEVALUATED_PROPERTIES_KEY];
 
 /** The bounds a value has to meet under the parent and the option alike, so the stricter of the two is what applies */
 const LOWER_BOUNDS = new Set<string>(['minItems', 'minLength', 'minProperties', 'minimum', 'exclusiveMinimum']);
@@ -233,7 +237,12 @@ function meetSubschema(parent: unknown, option: unknown): unknown {
  * shows the parent's properties and other keywords, so the option takes only its `required` list and its type. That
  * field also stubs the extra keys of the data, for the parent and the selected option together (see
  * `retrieveSchema()`'s `selectedOption`), so the option is rendered without its own `additionalProperties`,
- * `patternProperties` and `unevaluatedProperties`, which would stub the same keys a second time. Every
+ * `patternProperties` and `unevaluatedProperties`, which would stub the same keys a second time, and marked with
+ * `EXTRA_KEYS_ELSEWHERE_FLAG`, so its field offers no extra key of its own beside the parent's. An option offering
+ * options of its own is the exception: the field it renders beside them takes the extra keys in the parent's field's
+ * place, so it keeps its own extra-key keywords, joined with the parent's, each still judging a key apart, carries
+ * the names of the properties the fields above declare, which its field leaves to them, and is not marked. A
+ * `ui:field` the option's uiSchema names is that field all the same, handed the extra keys to render. Every
  * other parent renders nothing of its own and leaves the whole field to the option, so the option takes each of the
  * parent's keywords that describes the value, such as an array's `items` and `uniqueItems` or a string's `format`.
  * The two are met with `meetSchemas()`, so an option's `items` adds to the parent's rather than replacing them. A
@@ -247,17 +256,46 @@ function meetSubschema(parent: unknown, option: unknown): unknown {
  * such as `getInputProps()`, which withholds the numeric `pattern` from a union precisely because the other types do
  * not have to match it, would otherwise be told the value is of a type the parent never pinned it to.
  *
+ * The result is the same object for the same `parent` and `option`, so a reader keying its work on the schema it is
+ * handed, as `retrieveSchema()` does, finds it again rather than taking a new copy for content to compare.
+ *
  * @param parent - The schema holding the `anyOf`/`oneOf`, with its `$ref`s and `allOf` resolved
  * @param option - The option, with its own `$ref` resolved
  * @returns - The option as it is rendered, or `option` itself when the parent has nothing to pass on
  */
 export default function getRenderedOptionSchema<S extends StrictRJSFSchema = RJSFSchema>(parent: S, option: S): S {
+  return renderedOptions.get([parent, option], () => renderOption<S>(parent, option)) as S;
+}
+
+/** The options `getRenderedOptionSchema()` rendered, by parent and option: the option of an object parent is a copy
+ * on every call, and the sanitize walk and `MultiSchemaField` render each option again on every edit
+ */
+const renderedOptions = new KeyedMemo<object>();
+
+/** Renders `option` as `getRenderedOptionSchema()` describes, without keeping it: for a caller whose `parent` is a
+ * copy it made for the call, which no later call would find again
+ *
+ * @param parent - The schema holding the `anyOf`/`oneOf`, with its `$ref`s and `allOf` resolved
+ * @param option - The option, with its own `$ref` resolved
+ * @returns - The option as it is rendered, or `option` itself when the parent has nothing to pass on
+ */
+export function renderOption<S extends StrictRJSFSchema>(parent: S, option: S): S {
   const rendersOwnField = rendersOwnFieldBesideOption<S>(parent);
-  if (rendersOwnField && EXTRA_KEY_KEYWORDS.some((keyword) => Object.hasOwn(option, keyword))) {
-    return getRenderedOptionSchema<S>(parent, withoutKeys<S>(option, ...EXTRA_KEY_KEYWORDS));
+  // Such an option's own field takes the extra keys the parent's field leaves to it (see `withOptionExtraKeys()` in
+  // `retrieveSchema()`), described by the parent's extra-key keywords and the option's together
+  const takesExtraKeys = takesParentExtraKeys<S>(parent, option);
+  if (rendersOwnField && !takesExtraKeys && EXTRA_KEY_KEYWORDS.some((keyword) => Object.hasOwn(option, keyword))) {
+    return renderOption<S>(parent, withoutKeys<S>(option, ...EXTRA_KEY_KEYWORDS));
   }
   const inherited: GenericObjectType = {};
   if (rendersOwnField) {
+    if (!takesExtraKeys) {
+      // Marked, since a form whose `additionalPropertiesWhenAbsent` is `'allow'` reads an object naming no
+      // `additionalProperties` as taking any key, which would give the option an add button of its own. An
+      // `additionalProperties: false` in its place would be read as the option's own by a field joining it with an
+      // option of its own, and so shut out that option's
+      (inherited as RJSFMarkedSchema)[EXTRA_KEYS_ELSEWHERE_FLAG] = true;
+    }
     if (parent.required) {
       inherited[REQUIRED_KEY] = parent.required;
     }
@@ -273,7 +311,11 @@ export default function getRenderedOptionSchema<S extends StrictRJSFSchema = RJS
       }
     }
   }
-  if (Object.keys(inherited).length === 0) {
+  // An option taking the parent's extra keys is a new schema even where the parent names no extra-key keyword: its
+  // field stubs the extra keys in the parent's field's place, which `retrieveSchema()` reads the option itself as
+  // leaving to the parent's, and it carries the names the fields above declare, which it would otherwise stub as extra
+  // keys of its own
+  if (Reflect.ownKeys(inherited).length === 0 && !takesExtraKeys) {
     return option;
   }
   if (!rendersOwnField) {
@@ -287,5 +329,44 @@ export default function getRenderedOptionSchema<S extends StrictRJSFSchema = RJS
       merged[key] = inherited[key];
     }
   }
-  return merged as S;
+  if (!takesExtraKeys) {
+    return merged as S;
+  }
+  const withParentExtraKeys: GenericObjectType = withoutKeys<S>(merged as S, ...EXTRA_KEY_KEYWORDS);
+  for (const keyword of EXTRA_KEY_KEYWORDS) {
+    if (Object.hasOwn(parent, keyword)) {
+      withParentExtraKeys[keyword] = Reflect.get(parent, keyword);
+    }
+  }
+  // The option's field offers the add button in the parent's field's place, so it takes the parent's bounds on the
+  // object's keys too, which a value has to meet beside the option's own: the stricter `maxProperties`, and both
+  // `propertyNames`
+  if (typeof parent.maxProperties === 'number') {
+    withParentExtraKeys.maxProperties =
+      typeof option.maxProperties === 'number'
+        ? Math.min(parent.maxProperties, option.maxProperties)
+        : parent.maxProperties;
+  }
+  const propertyNames = conjoin(parent.propertyNames, option.propertyNames);
+  if (propertyNames !== undefined) {
+    withParentExtraKeys.propertyNames = propertyNames;
+  }
+  // A parent taking the extra keys of a field above it in turn describes a key by each of the schemas it joins apart
+  copyJoinedSchemas(parent, withParentExtraKeys);
+  Reflect.set(withParentExtraKeys, DECLARED_ABOVE_KEY, declaredAbove<S>(parent));
+  return joinOptionExtraKeys<S>(withParentExtraKeys as S, option);
+}
+
+/** Returns the names of the properties `parent` declares, a stub of an extra key aside, and those the fields above it
+ * declare, which an option taking the extra keys of its field leaves to them
+ */
+function declaredAbove<S extends StrictRJSFSchema>(parent: S): string[] {
+  const above: unknown = Reflect.get(parent, DECLARED_ABOVE_KEY);
+  const names = new Set<string>(Array.isArray(above) ? above : []);
+  for (const [name, property] of Object.entries(parent.properties ?? {})) {
+    if (!(isObject(property) && Reflect.get(property, ADDITIONAL_PROPERTY_FLAG))) {
+      names.add(name);
+    }
+  }
+  return [...names];
 }

@@ -1,8 +1,11 @@
 import {
+  absentKeywordAllows,
   additionalPropertiesKeyword,
   allowsAdditionalProperties,
   conjoin,
+  copyJoinedSchemas,
   getAdditionalPropertySchema,
+  readsAbsentAsAllowed,
   withJoinedSchemas,
 } from '../additionalPropertiesUtils.ts';
 import {
@@ -11,6 +14,7 @@ import {
   ALL_OF_KEY,
   ANY_OF_KEY,
   DEPENDENCIES_KEY,
+  EXTRA_KEYS_ELSEWHERE_FLAG,
   GUESSED_TYPE_FLAG,
   IF_KEY,
   ITEMS_KEY,
@@ -27,7 +31,8 @@ import getXxxOfOptions from '../getXxxOfOptions.ts';
 import guessType from '../guessType.ts';
 import isConstantOptionList from '../isConstantOptionList.ts';
 import isObject, { isSchemaObject } from '../isObject.ts';
-import rendersOwnFieldBesideOption from '../rendersOwnFieldBesideOption.ts';
+import rendersOwnFieldBesideOption, { rendersOwnFieldBesideOwnOptions } from '../rendersOwnFieldBesideOption.ts';
+import { DECLARED_ABOVE_KEY } from '../schemaMarkers.ts';
 import setOwn from '../setOwn.ts';
 import type {
   CustomMergeAllOf,
@@ -37,7 +42,6 @@ import type {
   RJSFSchema,
   SchemaContext,
   StrictRJSFSchema,
-  ValidatorType,
 } from '../types.ts';
 import { firstMatchingOption } from './getFirstMatchingOption.ts';
 import { markHandedOut, isHandedOut } from './graph/handedOut.ts';
@@ -105,7 +109,9 @@ export default function retrieveSchema<
     return schemaFrom(schema, {});
   }
   const graph = parseSchemaGraph<S>(rootSchema ?? schemaFrom(schema, {}));
-  const leaf = leafViews.get(schema);
+  // An object the context opens to any extra key stubs those of the data, keywords or not, so its view reads the data
+  const isMemoized = !absentKeywordAllows<S, F>(context, schema);
+  const leaf = isMemoized ? leafViews.get(schema) : undefined;
   if (leaf?.graph === graph && isSchemaObject<S>(leaf.view)) {
     return leaf.view;
   }
@@ -118,14 +124,15 @@ export default function retrieveSchema<
     undefined,
     selectedOption,
   );
-  if (isLeaf(graph, schema)) {
+  if (isMemoized && isLeaf(graph, schema)) {
     leafViews.set(schema, { graph, view });
   }
   return view;
 }
 
 /** The views of the schemas that merge nothing and hold no subschemas, by schema: a call root, or a subschema
- * `retrieveSchema()` handed out for a field that merges nothing. Such a view reads neither the data nor the context, and
+ * `retrieveSchema()` handed out for a field that merges nothing. Such a view reads neither the data nor the context,
+ * except for an object the context opens to extra keys, which stubs those of the data and is never kept here, and
  * `isSelect()` and `sanitizeDataForNewSchema()` retrieve every property of a form on every edit, so it is retrieved
  * once per root rather than planned again on each call.
  */
@@ -332,25 +339,59 @@ export function expandRefCycle<S extends StrictRJSFSchema = RJSFSchema>(schema: 
  * `MultiSchemaField`
  */
 function renderPolicy<S extends StrictRJSFSchema, F extends FormContextType>(
-  validator: ValidatorType<S, F>,
+  context: SchemaContext<S, F>,
   graph: SchemaGraph<S>,
 ): PlanPolicy<S> {
-  return cachedPolicy<S>(validator, graph, 'render', () => ({
-    allOf: true,
-    selectOption: (request) => dependencyOption(validator, request, request.data),
-  }));
+  // A constant per setting, since this runs on every view the leaf memo misses
+  return cachedPolicy<S>(context.validator, graph, RENDER_POLICY_KEYS[optionMatchKey(context)], () => {
+    const matchContext = optionMatchContext(context);
+    return {
+      allOf: true,
+      selectOption: (request) => dependencyOption(matchContext, request, request.data),
+    };
+  });
+}
+
+/** The keys `renderPolicy()` caches its policy under, by `optionMatchKey()` */
+const RENDER_POLICY_KEYS = { 'absent:true': 'render|absent:true', 'absent:false': 'render|absent:false' } as const;
+
+/** The key naming, beside the validator, what `optionMatchContext()` keeps of a context, which a policy matching
+ * `dependencies` options and `getClosestMatchingOption()`'s scores are cached under. A constant per setting, so asking
+ * for it allocates nothing.
+ *
+ * @param context - The `SchemaContext` the policy is asked for in
+ * @returns - The key of the context's `additionalPropertiesWhenAbsent`
+ */
+export function optionMatchKey<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+): keyof typeof RENDER_POLICY_KEYS {
+  return readsAbsentAsAllowed<S, F>(context) ? 'absent:true' : 'absent:false';
+}
+
+/** The part of a context a policy matches `dependencies` options with. A policy is cached across contexts, so it must
+ * keep no more of the one it was made in than `optionMatchKey()` names beside the validator; a field kept here is named
+ * there too.
+ *
+ * @param context - The `SchemaContext` the policy is asked for in
+ * @returns - The context options are matched in
+ */
+export function optionMatchContext<S extends StrictRJSFSchema, F extends FormContextType>({
+  validator,
+  additionalPropertiesWhenAbsent,
+}: SchemaContext<S, F>): SchemaContext<S, F> {
+  return { validator, additionalPropertiesWhenAbsent };
 }
 
 /** Returns the option of a list beside `dependencies` that `data` matches first, which is merged into the schema
  * rather than left to `MultiSchemaField` to choose; none for any other list
  *
- * @param validator - The validator the options are matched with
+ * @param context - The `SchemaContext` the options are matched in
  * @param request - The option list the plan met
  * @param data - The data the option is matched against
  * @returns - The index of the matching option, or undefined
  */
 export function dependencyOption<S extends StrictRJSFSchema, F extends FormContextType>(
-  validator: ValidatorType<S, F>,
+  context: SchemaContext<S, F>,
   { graph, options, dependencies, discriminator }: OptionRequest<S>,
   data: unknown,
 ): number | undefined {
@@ -358,7 +399,7 @@ export function dependencyOption<S extends StrictRJSFSchema, F extends FormConte
     return undefined;
   }
   return firstMatchingOption<S, F>(
-    { validator },
+    context,
     data,
     options.map((node) => ({ graph, node })),
     discriminator,
@@ -694,11 +735,19 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
   selectedOption?: number,
 ): S {
   const { graph, seeds } = field;
-  const policy = renderPolicy(context.validator, root);
+  const policy = renderPolicy(context, root);
   const planOf = (seedsToPlan: readonly Seed[], dataToPlan: unknown) =>
     buildPlan({ context, graph, seeds: seedsToPlan, data: dataToPlan, policy });
   const plan = planned ?? planOf(seeds, data);
-  const viewKey = [field, plan, resolveOptions, data === undefined, selectedOption];
+  // Keyed on what an absent `additionalProperties` means too, which decides whether the view stubs its extra keys
+  const viewKey = [
+    field,
+    plan,
+    resolveOptions,
+    data === undefined,
+    selectedOption,
+    readsAbsentAsAllowed<S, F>(context),
+  ];
   const memoized = views.peek(viewKey);
   if (memoized?.holds.every((holds) => holds(data)) && isSchemaObject<S>(memoized.view)) {
     return memoized.view;
@@ -808,8 +857,13 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
       // that happens, and an option the user picks for a recursive field renders its own options rather than collapsing
       const optionChain = data === undefined ? extendedChain() : undefined;
       // Only an object renders a field of its own beside the option (see `rendersOwnFieldBesideOption()`), which stubs
-      // the option's extra keys with its own; any other field leaves the option to stub them
-      const stubsOwnExtraKeys = !rendersOwnFieldBesideOption<S>(merged);
+      // the option's extra keys with its own; any other field leaves the option to stub them. An option naming no type
+      // is rendered with the type of an object offering it (see `getRenderedOptionSchema()`), so it renders such a field
+      // too, though its own schema names no object
+      const stubsOwnExtraKeys = !(
+        rendersOwnFieldBesideOption<S>(merged) ||
+        (merged.type === undefined && field.stubsOwnExtraKeys === false)
+      );
       Reflect.set(
         merged,
         keyword,
@@ -847,10 +901,18 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
   }
   // An option's own extra keys are stubbed with the field offering it, which knows which option is selected
   const fieldSchema = option === undefined ? merged : withOptionExtraKeys<S>(merged, option);
-  const stubsExtraKeys =
-    (field.optionOf === undefined || field.stubsOwnExtraKeys === true) && allowsAdditionalProperties<S>(fieldSchema);
+  const takesExtraKeys =
+    (field.optionOf === undefined || field.stubsOwnExtraKeys === true) &&
+    allowsAdditionalProperties<S, F>(context, fieldSchema);
+  // An object taking extra keys whose data holds none stubs nothing, so its view holds for any data holding none:
+  // under `additionalPropertiesWhenAbsent: 'allow'` that is most objects on most edits
+  const holdsNoExtraKey = holdsNoExtraKeyOf<S>(merged, fieldSchema, option);
+  const stubsExtraKeys = takesExtraKeys && !holdsNoExtraKey(data);
+  if (takesExtraKeys && !stubsExtraKeys) {
+    holds.push(holdsNoExtraKey);
+  }
   const view = handOut(
-    stubsExtraKeys
+    takesExtraKeys
       ? stubExistingAdditionalProperties<unknown, S, F>(context, merged, graph.rawRoot, data, option)
       : fieldSchema,
     field,
@@ -977,6 +1039,9 @@ export const IDENTIFIER_KEYWORDS: string[] = ['$id', '$anchor', '$dynamicAnchor'
  * `hashForSchema()` and `deepEquals()` then walk on every render.
  */
 export const CONTAINER_KEYWORDS: string[] = ['$defs', 'definitions'];
+
+/** The keywords describing an object's extra keys */
+export const EXTRA_KEY_KEYWORDS = [ADDITIONAL_PROPERTIES_KEY, PATTERN_PROPERTIES_KEY, UNEVALUATED_PROPERTIES_KEY];
 
 /** Every keyword that constrains the value, for the reasons the first two lists above give. They are only ever
  * consulted together, once per key a schema holds, so they are consulted as one.
@@ -1107,11 +1172,33 @@ function stubSchemaForSubSchema<S extends StrictRJSFSchema = RJSFSchema>(
  * naming either keyword evaluates, so it is left out of the join beside one. The joined schema carries the two, so
  * `getAdditionalPropertySchema()` describes a key by each of them apart, as the stubs are described.
  *
+ * An option that renders a field of its own beside options it offers in turn takes the extra keys of the two in that
+ * field, so the schema is returned without its extra-key keywords, marked `EXTRA_KEYS_ELSEWHERE_FLAG`, and its field
+ * takes none.
+ *
  * @param schema - The object schema
  * @param option - The option selected beside it
  * @returns - The schema with the option's extra-key keywords joined to its own
  */
 function withOptionExtraKeys<S extends StrictRJSFSchema = RJSFSchema>(schema: S, option: S): S {
+  if (rendersOwnFieldBesideOwnOptions<S>(option)) {
+    // The option's own field takes the extra keys of the two, joined as `getRenderedOptionSchema()` renders it, so they
+    // render once, in the field that knows which of its own options is selected
+    const left = withoutKeys<S>(schema, ...EXTRA_KEY_KEYWORDS);
+    (left as RJSFMarkedSchema)[EXTRA_KEYS_ELSEWHERE_FLAG] = true;
+    return left;
+  }
+  return joinOptionExtraKeys<S>(schema, option);
+}
+
+/** Returns `schema` with the extra-key keywords of the `option` selected beside it joined to its own, as
+ * `withOptionExtraKeys()` describes, whatever the option offers
+ *
+ * @param schema - The object schema
+ * @param option - The option selected beside it
+ * @returns - The schema with the option's extra-key keywords joined to its own
+ */
+export function joinOptionExtraKeys<S extends StrictRJSFSchema = RJSFSchema>(schema: S, option: S): S {
   const joined: GenericObjectType = { ...schema };
   const optionEvaluatesRest = additionalPropertiesKeyword<S>(option) !== undefined;
   for (const keyword of [ADDITIONAL_PROPERTIES_KEY, UNEVALUATED_PROPERTIES_KEY]) {
@@ -1133,13 +1220,60 @@ function withOptionExtraKeys<S extends StrictRJSFSchema = RJSFSchema>(schema: S,
   return withJoinedSchemas<S>(schemaFrom(schema, joined), extraKeyKeywords<S>(schema), extraKeyKeywords<S>(option));
 }
 
-/** Returns the keywords of `schema` that describe the keys its `properties` don't name */
+/** Returns the keywords of `schema` that describe the keys its `properties` don't name, with the schemas it joins
+ * where it is a join itself, which describe a key apart
+ */
 function extraKeyKeywords<S extends StrictRJSFSchema>(schema: S): S {
   const keywords: GenericObjectType = {};
-  for (const keyword of [ADDITIONAL_PROPERTIES_KEY, UNEVALUATED_PROPERTIES_KEY, PATTERN_PROPERTIES_KEY]) {
+  for (const keyword of EXTRA_KEY_KEYWORDS) {
     keywords[keyword] = Reflect.get(schema, keyword);
   }
+  copyJoinedSchemas(schema, keywords);
   return schemaFrom(schema, keywords);
+}
+
+/** Returns the keys of `data` that neither `joined`, the schema with the option's extra-key keywords joined to its
+ * own, nor the `option` selected beside it declares, nor a field above `schema` declares: the extra keys
+ * `stubExistingAdditionalProperties()` stubs
+ *
+ * @param schema - The schema the extra keys are stubbed for
+ * @param joined - `schema` with the option's extra-key keywords joined to its own
+ * @param option - The option selected beside the schema, if any
+ * @param data - The data the keys are read from
+ * @returns - The extra keys of the data
+ */
+function extraKeysOf<S extends StrictRJSFSchema>(schema: S, joined: S, option: S | undefined, data: unknown): string[] {
+  if (!isObject(data)) {
+    return [];
+  }
+  const properties: object = joined.properties ?? {};
+  const optionProperties: object = option?.properties ?? {};
+  // A key a field above declares is that field's, though this one takes the extra keys in its place
+  const declaredAbove: unknown = Reflect.get(schema, DECLARED_ABOVE_KEY);
+  // `Object.hasOwn`, since `in` answers for the names on `Object.prototype` too, and a property called `constructor`
+  // or `toString` left unstubbed is a value with no field to edit or remove it with
+  return Object.keys(data).filter(
+    (key) =>
+      !Object.hasOwn(properties, key) &&
+      !Object.hasOwn(optionProperties, key) &&
+      !(Array.isArray(declaredAbove) && declaredAbove.includes(key)),
+  );
+}
+
+/** Returns whether data holds none of the extra keys `extraKeysOf()` reads, built outside `buildView()` so that the
+ * memoized view keeping it doesn't keep that call's whole scope, the data it was built for included
+ *
+ * @param schema - The schema the extra keys are stubbed for
+ * @param joined - `schema` with the option's extra-key keywords joined to its own
+ * @param option - The option selected beside the schema, if any
+ * @returns - A check of whether the data it is handed holds no extra key
+ */
+function holdsNoExtraKeyOf<S extends StrictRJSFSchema>(
+  schema: S,
+  joined: S,
+  option: S | undefined,
+): (data: unknown) => boolean {
+  return (data) => extraKeysOf<S>(schema, joined, option, data).length === 0;
 }
 
 /** Stubs each key of `aFormData` that neither the schema's `properties` nor those of the `option` selected beside it
@@ -1169,13 +1303,8 @@ export function stubExistingAdditionalProperties<
     ...joined,
     properties: { ...joined.properties },
   };
-  const optionProperties: object = option?.properties ?? {};
   const formData: GenericObjectType = aFormData && isObject(aFormData) ? aFormData : {};
-  // `Object.hasOwn`, since `in` answers for the names on `Object.prototype` too, and a property called `constructor`
-  // or `toString` left unstubbed is a value with no field to edit or remove it with
-  const extraKeys = Object.keys(formData).filter(
-    (key) => !Object.hasOwn(schema.properties, key) && !Object.hasOwn(optionProperties, key),
-  );
+  const extraKeys = extraKeysOf<S>(theSchema, joined, option, formData);
   const typeOf = (subSchema: S) =>
     namedTypes.get([context.validator, context.customMergeAllOf, rootSchema, subSchema], () =>
       getAdditionalPropertyType<S>(retrieveSchema<T, S, F>(context, subSchema, rootSchema, undefined, true)),

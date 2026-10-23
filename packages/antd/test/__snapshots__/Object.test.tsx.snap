@@ -5601,6 +5601,225 @@ exports[`object fields > object 1`] = `
 </DocumentFragment>
 `;
 
+exports[`object fields > pure anyOf union, with no frame of its own beside the option 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="ant-form-item css-var-root ant-form-css-var css-dev-only-do-not-override-oc1rc0 ant-form-item-horizontal"
+      >
+        <div
+          class="ant-row ant-form-item-row css-dev-only-do-not-override-oc1rc0 css-var-root"
+        >
+          <div
+            class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+          >
+            <label
+              class=""
+            >
+              <span
+                id="root__label"
+                title="Pet"
+              >
+                Pet
+              </span>
+            </label>
+          </div>
+          <div
+            class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-oc1rc0 css-var-root"
+          >
+            <div
+              class="ant-form-item-control-input"
+            >
+              <div
+                class="ant-form-item-control-input-content"
+              >
+                <div>
+                  <div>
+                    <div
+                      class="ant-select ant-select-outlined ant-select-in-form-item css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-single ant-select-show-arrow ant-select-show-search"
+                      name="root__anyof_select"
+                      style="width: 100%;"
+                    >
+                      <div
+                        class="ant-select-content ant-select-content-has-value"
+                        title="Dog"
+                      >
+                        Dog
+                        <input
+                          aria-autocomplete="list"
+                          aria-expanded="false"
+                          aria-haspopup="listbox"
+                          aria-labelledby="root__label"
+                          autocomplete="new-password"
+                          class="ant-select-input"
+                          id="root__anyof_select"
+                          role="combobox"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                      <div
+                        class="ant-select-suffix"
+                      >
+                        <span
+                          aria-label="down"
+                          class="anticon anticon-down"
+                          role="img"
+                        >
+                          <svg
+                            aria-hidden="true"
+                            data-icon="down"
+                            fill="currentColor"
+                            focusable="false"
+                            height="1em"
+                            viewBox="64 64 896 896"
+                            width="1em"
+                          >
+                            <path
+                              d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                            />
+                          </svg>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="rjsf-field rjsf-field-object"
+                  >
+                    <div
+                      class="ant-form-item css-var-root ant-form-css-var css-dev-only-do-not-override-oc1rc0 ant-form-item-horizontal"
+                    >
+                      <div
+                        class="ant-row ant-form-item-row css-dev-only-do-not-override-oc1rc0 css-var-root"
+                      >
+                        <div
+                          class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-oc1rc0 css-var-root"
+                        >
+                          <div
+                            class="ant-form-item-control-input"
+                          >
+                            <div
+                              class="ant-form-item-control-input-content"
+                            >
+                              <fieldset
+                                id="root"
+                              >
+                                <div
+                                  class="ant-row css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                  style="margin-inline: -12px;"
+                                >
+                                  <div
+                                    class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                    style="padding-inline: 12px;"
+                                  >
+                                    <label
+                                      class=""
+                                      title="Dog"
+                                    >
+                                      <span
+                                        id="root__title"
+                                      >
+                                        Dog
+                                      </span>
+                                    </label>
+                                    <div
+                                      class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
+                                      role="separator"
+                                      style="margin-block: 1px;"
+                                    />
+                                  </div>
+                                  <div
+                                    class="ant-col ant-col-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                    style="padding-inline: 12px;"
+                                  >
+                                    <div
+                                      class="rjsf-field rjsf-field-string"
+                                    >
+                                      <div
+                                        class="ant-form-item css-var-root ant-form-css-var css-dev-only-do-not-override-oc1rc0 ant-form-item-horizontal"
+                                      >
+                                        <div
+                                          class="ant-row ant-form-item-row css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                        >
+                                          <div
+                                            class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                          >
+                                            <label
+                                              class=""
+                                              for="root_bark"
+                                            >
+                                              <span
+                                                id="root_bark__label"
+                                                title="bark"
+                                              >
+                                                bark
+                                              </span>
+                                            </label>
+                                          </div>
+                                          <div
+                                            class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                          >
+                                            <div
+                                              class="ant-form-item-control-input"
+                                            >
+                                              <div
+                                                class="ant-form-item-control-input-content"
+                                              >
+                                                <span
+                                                  class="ant-input-affix-wrapper css-dev-only-do-not-override-oc1rc0 ant-input-outlined css-var-root ant-input-css-var"
+                                                  style="width: 100%;"
+                                                >
+                                                  <input
+                                                    class="ant-input css-dev-only-do-not-override-oc1rc0"
+                                                    id="root_bark"
+                                                    name="root_bark"
+                                                    placeholder=""
+                                                    type="text"
+                                                    value=""
+                                                  />
+                                                  <span
+                                                    class="ant-input-suffix"
+                                                  />
+                                                </span>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </fieldset>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ant-btn css-dev-only-do-not-override-oc1rc0 css-var-root ant-btn-submit"
+      type="submit"
+    >
+      <span>
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`object fields > show add button and fields if additionalProperties is true and not an object 1`] = `
 <DocumentFragment>
   <form

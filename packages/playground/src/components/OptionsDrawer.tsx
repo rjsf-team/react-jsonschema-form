@@ -75,6 +75,12 @@ const liveSettingsBooleanSchema: RJSFSchema = {
     omitExtraData: { type: 'boolean', title: 'Omit extra data' },
     liveOmit: { type: 'string', title: 'Live omit', default: 'off', enum: ['off', 'onChange', 'onBlur'] },
     liveValidate: { type: 'string', title: 'Live validation', default: 'off', enum: ['off', 'onChange', 'onBlur'] },
+    additionalPropertiesWhenAbsent: {
+      type: 'string',
+      title: 'Absent additionalProperties',
+      default: 'forbid',
+      enum: ['forbid', 'allow'],
+    },
     showErrorList: {
       type: 'string',
       default: 'top',
@@ -262,6 +268,12 @@ const liveSettingsBooleanUiSchema: UiSchema = {
       inline: true,
     },
   },
+  additionalPropertiesWhenAbsent: {
+    'ui:widget': 'radio',
+    'ui:options': {
+      inline: true,
+    },
+  },
   defaultFormStateBehavior: {
     'ui:options': {
       label: false,
@@ -301,6 +313,7 @@ export type LiveSettings = Pick<
   | 'omitExtraData'
   | 'showErrorList'
   | 'useFallbackUiForUnsupportedType'
+  | 'additionalPropertiesWhenAbsent'
 > & {
   focusOnFirstError?: boolean;
   liveValidate?: LiveFlag;

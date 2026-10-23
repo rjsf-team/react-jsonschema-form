@@ -2,7 +2,6 @@ import { Grid, GridItem } from '@chakra-ui/react';
 import type { FormContextType, ObjectFieldTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
   buttonId,
-  canExpand,
   descriptionId,
   getTemplates,
   getUiOptions,
@@ -38,6 +37,7 @@ export default function ObjectFieldTemplate<
   const {
     ButtonTemplates: { AddButton },
   } = registry.templates;
+  const { schemaUtils } = registry;
 
   return (
     <>
@@ -68,7 +68,7 @@ export default function ObjectFieldTemplate<
         {properties.map((element) =>
           element.hidden ? element.content : <GridItem key={element.name}>{element.content}</GridItem>,
         )}
-        {canExpand<T, S, F>(schema, uiSchema, formData) && (
+        {schemaUtils.canExpand(schema, uiSchema, formData) && (
           <GridItem justifySelf='flex-end'>
             <AddButton
               id={buttonId(id, 'add')}

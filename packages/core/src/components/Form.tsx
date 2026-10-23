@@ -256,6 +256,13 @@ export interface FormProps<
   /** Optional function that allows for custom merging of `allOf` schemas
    */
   customMergeAllOf?: CustomMergeAllOf<S>;
+  /** What an object schema naming neither `additionalProperties` nor `unevaluatedProperties` says about the keys its
+   * `properties` and `patternProperties` leave over. `'allow'` follows the JSON Schema spec, which takes any such key:
+   * the form renders, adds and keeps them as it does for `additionalProperties: true`, and an object `anyOf`/`oneOf`
+   * union gets its own heading and add button. `'forbid'`, the default, offers no add button for such an object and
+   * prunes those keys when omitting extra data.
+   */
+  additionalPropertiesWhenAbsent?: 'forbid' | 'allow';
   /** Receives the supported imperative FormRef. */
   ref?: Ref<FormRef<T>>;
 }
@@ -314,6 +321,10 @@ export interface FormState<
    * counting as unset, so a rebuilt object holding the same settings is not read as a change
    */
   defaultsBehavior?: DefaultFormStateBehavior;
+  /** Whether `additionalPropertiesWhenAbsent` was `'allow'` when the derivation ran, so a later one can tell the
+   * defaults it decides changed
+   */
+  allowsAbsentAdditionalProperties: boolean;
 }
 
 /** The validation callbacks, the only validation inputs the schema utilities are not built from */

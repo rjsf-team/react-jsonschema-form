@@ -8,7 +8,6 @@ import type {
   StrictRJSFSchema,
 } from '@rjsf/utils';
 import {
-  canExpand,
   descriptionId,
   getTemplates,
   getUiOptions,
@@ -68,6 +67,7 @@ export default function ObjectFieldTemplate<
   const {
     ButtonTemplates: { AddButton },
   } = registry.templates;
+  const { schemaUtils } = registry;
 
   const {
     rjsfSlotProps: { objectGridContainer, objectGridItem, objectAddButtonGridContainer, objectAddButtonGridItem } = {},
@@ -119,7 +119,7 @@ export default function ObjectFieldTemplate<
           ),
         )}
       </Grid>
-      {canExpand<T, S, F>(schema, uiSchema, formData) && (
+      {schemaUtils.canExpand(schema, uiSchema, formData) && (
         <Grid
           container
           {...objectAddButtonGridContainer}
