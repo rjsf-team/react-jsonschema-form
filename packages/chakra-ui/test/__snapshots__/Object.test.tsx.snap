@@ -1015,15 +1015,15 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                     class="chakra-field__root emotion-10"
                     data-part="root"
                     data-scope="field"
-                    id="field::root_customField-key"
+                    id="field::root_customField__key"
                     role="group"
                   >
                     <label
                       class="chakra-field__label emotion-6"
                       data-part="label"
                       data-scope="field"
-                      for="root_customField-key"
-                      id="field::root_customField-key::label"
+                      for="root_customField__key"
+                      id="field::root_customField__key::label"
                     >
                       customField Key
                     </label>
@@ -1031,8 +1031,8 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                       class="chakra-input emotion-12"
                       data-part="input"
                       data-scope="field"
-                      id="root_customField-key"
-                      name="root_customField-key"
+                      id="root_customField__key"
+                      name="root_customField__key"
                       type="text"
                       value="customField"
                     />
@@ -4967,15 +4967,15 @@ exports[`object fields > additionalProperties 1`] = `
                     class="chakra-field__root emotion-5"
                     data-part="root"
                     data-scope="field"
-                    id="field::root_foo-key"
+                    id="field::root_foo__key"
                     role="group"
                   >
                     <label
                       class="chakra-field__label emotion-6"
                       data-part="label"
                       data-scope="field"
-                      for="root_foo-key"
-                      id="field::root_foo-key::label"
+                      for="root_foo__key"
+                      id="field::root_foo__key::label"
                     >
                       foo Key
                     </label>
@@ -4983,8 +4983,8 @@ exports[`object fields > additionalProperties 1`] = `
                       class="chakra-input emotion-7"
                       data-part="input"
                       data-scope="field"
-                      id="root_foo-key"
-                      name="root_foo-key"
+                      id="root_foo__key"
+                      name="root_foo__key"
                       type="text"
                       value="foo"
                     />
@@ -5828,14 +5828,14 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                     class="chakra-field__root emotion-5"
                     data-part="root"
                     data-scope="field"
-                    id="field::root_foo-key"
+                    id="field::root_foo__key"
                     role="group"
                   >
                     <label
                       class="chakra-field__label emotion-6"
                       data-part="label"
                       data-scope="field"
-                      id="root_foo-key__label"
+                      id="root_foo__key__label"
                     >
                       foo Key
                     </label>
@@ -5844,13 +5844,13 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                       data-part="root"
                       data-scope="select"
                       dir="ltr"
-                      id="select:root_foo-key"
+                      id="select:root_foo__key"
                     >
                       <select
                         aria-hidden="true"
-                        aria-labelledby="root_foo-key__label"
-                        id="select:root_foo-key:select"
-                        name="root_foo-key"
+                        aria-labelledby="root_foo__key__label"
+                        id="select:root_foo__key:select"
+                        name="root_foo__key"
                         style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                         tabindex="-1"
                       >
@@ -5877,21 +5877,21 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                         data-scope="select"
                         data-state="closed"
                         dir="ltr"
-                        id="select:root_foo-key:control"
+                        id="select:root_foo__key:control"
                       >
                         <button
-                          aria-controls="select:root_foo-key:content"
+                          aria-controls="select:root_foo__key:content"
                           aria-expanded="false"
                           aria-haspopup="listbox"
                           aria-invalid="false"
-                          aria-labelledby="root_foo-key__label"
+                          aria-labelledby="root_foo__key__label"
                           aria-required="false"
                           class="chakra-select__trigger emotion-9"
                           data-part="trigger"
                           data-scope="select"
                           data-state="closed"
                           dir="ltr"
-                          id="root_foo-key"
+                          id="root_foo__key"
                           role="combobox"
                           type="button"
                         >
@@ -5931,18 +5931,18 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                         data-part="positioner"
                         data-scope="select"
                         dir="ltr"
-                        id="select:root_foo-key:positioner"
+                        id="select:root_foo__key:positioner"
                         style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
                       >
                         <div
-                          aria-labelledby="root_foo-key__label"
+                          aria-labelledby="root_foo__key__label"
                           class="chakra-select__content emotion-15"
                           data-part="content"
                           data-scope="select"
                           data-state="closed"
                           dir="ltr"
                           hidden=""
-                          id="select:root_foo-key:content"
+                          id="select:root_foo__key:content"
                           role="listbox"
                           tabindex="0"
                         >
@@ -5954,7 +5954,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                             data-state="checked"
                             data-value="0"
                             dir="ltr"
-                            id="select:root_foo-key:option:0"
+                            id="select:root_foo__key:option:0"
                             role="option"
                           >
                             foo
@@ -5983,7 +5983,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                             data-state="unchecked"
                             data-value="1"
                             dir="ltr"
-                            id="select:root_foo-key:option:1"
+                            id="select:root_foo__key:option:1"
                             role="option"
                           >
                             bar
@@ -6013,7 +6013,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                             data-state="unchecked"
                             data-value="2"
                             dir="ltr"
-                            id="select:root_foo-key:option:2"
+                            id="select:root_foo__key:option:2"
                             role="option"
                           >
                             baz
@@ -6581,15 +6581,15 @@ exports[`object fields > additionalProperties, array type 1`] = `
                     class="chakra-field__root emotion-5"
                     data-part="root"
                     data-scope="field"
-                    id="field::root_foo-key"
+                    id="field::root_foo__key"
                     role="group"
                   >
                     <label
                       class="chakra-field__label emotion-6"
                       data-part="label"
                       data-scope="field"
-                      for="root_foo-key"
-                      id="field::root_foo-key::label"
+                      for="root_foo__key"
+                      id="field::root_foo__key::label"
                     >
                       foo Key
                     </label>
@@ -6597,8 +6597,8 @@ exports[`object fields > additionalProperties, array type 1`] = `
                       class="chakra-input emotion-7"
                       data-part="input"
                       data-scope="field"
-                      id="root_foo-key"
-                      name="root_foo-key"
+                      id="root_foo__key"
+                      name="root_foo__key"
                       type="text"
                       value="foo"
                     />
@@ -7222,15 +7222,15 @@ exports[`object fields > additionalProperties, description 1`] = `
                     class="chakra-field__root emotion-5"
                     data-part="root"
                     data-scope="field"
-                    id="field::root_foo-key"
+                    id="field::root_foo__key"
                     role="group"
                   >
                     <label
                       class="chakra-field__label emotion-6"
                       data-part="label"
                       data-scope="field"
-                      for="root_foo-key"
-                      id="field::root_foo-key::label"
+                      for="root_foo__key"
+                      id="field::root_foo__key::label"
                     >
                       foo Key
                     </label>
@@ -7238,8 +7238,8 @@ exports[`object fields > additionalProperties, description 1`] = `
                       class="chakra-input emotion-7"
                       data-part="input"
                       data-scope="field"
-                      id="root_foo-key"
-                      name="root_foo-key"
+                      id="root_foo__key"
+                      name="root_foo__key"
                       type="text"
                       value="foo"
                     />
@@ -7822,15 +7822,15 @@ exports[`object fields > additionalProperties, label off 1`] = `
                     class="chakra-field__root emotion-5"
                     data-part="root"
                     data-scope="field"
-                    id="field::root_foo-key"
+                    id="field::root_foo__key"
                     role="group"
                   >
                     <label
                       class="chakra-field__label emotion-6"
                       data-part="label"
                       data-scope="field"
-                      for="root_foo-key"
-                      id="field::root_foo-key::label"
+                      for="root_foo__key"
+                      id="field::root_foo__key::label"
                     >
                       foo Key
                     </label>
@@ -7838,8 +7838,8 @@ exports[`object fields > additionalProperties, label off 1`] = `
                       class="chakra-input emotion-7"
                       data-part="input"
                       data-scope="field"
-                      id="root_foo-key"
-                      name="root_foo-key"
+                      id="root_foo__key"
+                      name="root_foo__key"
                       type="text"
                       value="foo"
                     />
@@ -8432,15 +8432,15 @@ exports[`object fields > additionalProperties, object type 1`] = `
                     class="chakra-field__root emotion-5"
                     data-part="root"
                     data-scope="field"
-                    id="field::root_foo-key"
+                    id="field::root_foo__key"
                     role="group"
                   >
                     <label
                       class="chakra-field__label emotion-6"
                       data-part="label"
                       data-scope="field"
-                      for="root_foo-key"
-                      id="field::root_foo-key::label"
+                      for="root_foo__key"
+                      id="field::root_foo__key::label"
                     >
                       foo Key
                     </label>
@@ -8448,8 +8448,8 @@ exports[`object fields > additionalProperties, object type 1`] = `
                       class="chakra-input emotion-7"
                       data-part="input"
                       data-scope="field"
-                      id="root_foo-key"
-                      name="root_foo-key"
+                      id="root_foo__key"
+                      name="root_foo__key"
                       type="text"
                       value="foo"
                     />
@@ -9310,14 +9310,14 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                     class="chakra-field__root emotion-5"
                     data-part="root"
                     data-scope="field"
-                    id="field::root_foo-key"
+                    id="field::root_foo__key"
                     role="group"
                   >
                     <label
                       class="chakra-field__label emotion-6"
                       data-part="label"
                       data-scope="field"
-                      id="root_foo-key__label"
+                      id="root_foo__key__label"
                     >
                       foo Key
                     </label>
@@ -9326,13 +9326,13 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                       data-part="root"
                       data-scope="select"
                       dir="ltr"
-                      id="select:root_foo-key"
+                      id="select:root_foo__key"
                     >
                       <select
                         aria-hidden="true"
-                        aria-labelledby="root_foo-key__label"
-                        id="select:root_foo-key:select"
-                        name="root_foo-key"
+                        aria-labelledby="root_foo__key__label"
+                        id="select:root_foo__key:select"
+                        name="root_foo__key"
                         style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                         tabindex="-1"
                       >
@@ -9359,21 +9359,21 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                         data-scope="select"
                         data-state="closed"
                         dir="ltr"
-                        id="select:root_foo-key:control"
+                        id="select:root_foo__key:control"
                       >
                         <button
-                          aria-controls="select:root_foo-key:content"
+                          aria-controls="select:root_foo__key:content"
                           aria-expanded="false"
                           aria-haspopup="listbox"
                           aria-invalid="false"
-                          aria-labelledby="root_foo-key__label"
+                          aria-labelledby="root_foo__key__label"
                           aria-required="false"
                           class="chakra-select__trigger emotion-9"
                           data-part="trigger"
                           data-scope="select"
                           data-state="closed"
                           dir="ltr"
-                          id="root_foo-key"
+                          id="root_foo__key"
                           role="combobox"
                           type="button"
                         >
@@ -9413,18 +9413,18 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                         data-part="positioner"
                         data-scope="select"
                         dir="ltr"
-                        id="select:root_foo-key:positioner"
+                        id="select:root_foo__key:positioner"
                         style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
                       >
                         <div
-                          aria-labelledby="root_foo-key__label"
+                          aria-labelledby="root_foo__key__label"
                           class="chakra-select__content emotion-15"
                           data-part="content"
                           data-scope="select"
                           data-state="closed"
                           dir="ltr"
                           hidden=""
-                          id="select:root_foo-key:content"
+                          id="select:root_foo__key:content"
                           role="listbox"
                           tabindex="0"
                         >
@@ -9436,7 +9436,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                             data-state="checked"
                             data-value="0"
                             dir="ltr"
-                            id="select:root_foo-key:option:0"
+                            id="select:root_foo__key:option:0"
                             role="option"
                           >
                             foo
@@ -9465,7 +9465,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                             data-state="unchecked"
                             data-value="1"
                             dir="ltr"
-                            id="select:root_foo-key:option:1"
+                            id="select:root_foo__key:option:1"
                             role="option"
                           >
                             bar
@@ -9495,7 +9495,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                             data-state="unchecked"
                             data-value="2"
                             dir="ltr"
-                            id="select:root_foo-key:option:2"
+                            id="select:root_foo__key:option:2"
                             role="option"
                           >
                             baz
@@ -10338,14 +10338,14 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                     class="chakra-field__root emotion-5"
                     data-part="root"
                     data-scope="field"
-                    id="field::root_foo-key"
+                    id="field::root_foo__key"
                     role="group"
                   >
                     <label
                       class="chakra-field__label emotion-6"
                       data-part="label"
                       data-scope="field"
-                      id="root_foo-key__label"
+                      id="root_foo__key__label"
                     >
                       foo (deprecated) Key
                     </label>
@@ -10354,13 +10354,13 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                       data-part="root"
                       data-scope="select"
                       dir="ltr"
-                      id="select:root_foo-key"
+                      id="select:root_foo__key"
                     >
                       <select
                         aria-hidden="true"
-                        aria-labelledby="root_foo-key__label"
-                        id="select:root_foo-key:select"
-                        name="root_foo-key"
+                        aria-labelledby="root_foo__key__label"
+                        id="select:root_foo__key:select"
+                        name="root_foo__key"
                         style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                         tabindex="-1"
                       >
@@ -10387,21 +10387,21 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                         data-scope="select"
                         data-state="closed"
                         dir="ltr"
-                        id="select:root_foo-key:control"
+                        id="select:root_foo__key:control"
                       >
                         <button
-                          aria-controls="select:root_foo-key:content"
+                          aria-controls="select:root_foo__key:content"
                           aria-expanded="false"
                           aria-haspopup="listbox"
                           aria-invalid="false"
-                          aria-labelledby="root_foo-key__label"
+                          aria-labelledby="root_foo__key__label"
                           aria-required="false"
                           class="chakra-select__trigger emotion-9"
                           data-part="trigger"
                           data-scope="select"
                           data-state="closed"
                           dir="ltr"
-                          id="root_foo-key"
+                          id="root_foo__key"
                           role="combobox"
                           type="button"
                         >
@@ -10441,18 +10441,18 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                         data-part="positioner"
                         data-scope="select"
                         dir="ltr"
-                        id="select:root_foo-key:positioner"
+                        id="select:root_foo__key:positioner"
                         style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
                       >
                         <div
-                          aria-labelledby="root_foo-key__label"
+                          aria-labelledby="root_foo__key__label"
                           class="chakra-select__content emotion-15"
                           data-part="content"
                           data-scope="select"
                           data-state="closed"
                           dir="ltr"
                           hidden=""
-                          id="select:root_foo-key:content"
+                          id="select:root_foo__key:content"
                           role="listbox"
                           tabindex="0"
                         >
@@ -10464,7 +10464,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                             data-state="checked"
                             data-value="0"
                             dir="ltr"
-                            id="select:root_foo-key:option:0"
+                            id="select:root_foo__key:option:0"
                             role="option"
                           >
                             foo
@@ -10493,7 +10493,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                             data-state="unchecked"
                             data-value="1"
                             dir="ltr"
-                            id="select:root_foo-key:option:1"
+                            id="select:root_foo__key:option:1"
                             role="option"
                           >
                             bar
@@ -10523,7 +10523,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                             data-state="unchecked"
                             data-value="2"
                             dir="ltr"
-                            id="select:root_foo-key:option:2"
+                            id="select:root_foo__key:option:2"
                             role="option"
                           >
                             baz
@@ -12393,15 +12393,15 @@ exports[`object fields > show add button and fields if additionalProperties is t
                     class="chakra-field__root emotion-5"
                     data-part="root"
                     data-scope="field"
-                    id="field::root_additionalProperty-key"
+                    id="field::root_additionalProperty__key"
                     role="group"
                   >
                     <label
                       class="chakra-field__label emotion-6"
                       data-part="label"
                       data-scope="field"
-                      for="root_additionalProperty-key"
-                      id="field::root_additionalProperty-key::label"
+                      for="root_additionalProperty__key"
+                      id="field::root_additionalProperty__key::label"
                     >
                       additionalProperty Key
                     </label>
@@ -12409,8 +12409,8 @@ exports[`object fields > show add button and fields if additionalProperties is t
                       class="chakra-input emotion-7"
                       data-part="input"
                       data-scope="field"
-                      id="root_additionalProperty-key"
-                      name="root_additionalProperty-key"
+                      id="root_additionalProperty__key"
+                      name="root_additionalProperty__key"
                       type="text"
                       value="additionalProperty"
                     />
@@ -13031,15 +13031,15 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                     class="chakra-field__root emotion-9"
                     data-part="root"
                     data-scope="field"
-                    id="field::root_foo-key"
+                    id="field::root_foo__key"
                     role="group"
                   >
                     <label
                       class="chakra-field__label emotion-10"
                       data-part="label"
                       data-scope="field"
-                      for="root_foo-key"
-                      id="field::root_foo-key::label"
+                      for="root_foo__key"
+                      id="field::root_foo__key::label"
                     >
                       foo Key
                     </label>
@@ -13047,8 +13047,8 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                       class="chakra-input emotion-11"
                       data-part="input"
                       data-scope="field"
-                      id="root_foo-key"
-                      name="root_foo-key"
+                      id="root_foo__key"
+                      name="root_foo__key"
                       type="text"
                       value="foo"
                     />
@@ -14119,15 +14119,15 @@ exports[`object fields > with title and description > show add button and fields
                     class="chakra-field__root emotion-9"
                     data-part="root"
                     data-scope="field"
-                    id="field::root_additionalProperty-key"
+                    id="field::root_additionalProperty__key"
                     role="group"
                   >
                     <label
                       class="chakra-field__label emotion-10"
                       data-part="label"
                       data-scope="field"
-                      for="root_additionalProperty-key"
-                      id="field::root_additionalProperty-key::label"
+                      for="root_additionalProperty__key"
+                      id="field::root_additionalProperty__key::label"
                     >
                       additionalProperty Key
                     </label>
@@ -14135,8 +14135,8 @@ exports[`object fields > with title and description > show add button and fields
                       class="chakra-input emotion-11"
                       data-part="input"
                       data-scope="field"
-                      id="root_additionalProperty-key"
-                      name="root_additionalProperty-key"
+                      id="root_additionalProperty__key"
+                      name="root_additionalProperty__key"
                       type="text"
                       value="additionalProperty"
                     />
@@ -14757,15 +14757,15 @@ exports[`object fields > with title and description from both > additionalProper
                     class="chakra-field__root emotion-9"
                     data-part="root"
                     data-scope="field"
-                    id="field::root_foo-key"
+                    id="field::root_foo__key"
                     role="group"
                   >
                     <label
                       class="chakra-field__label emotion-10"
                       data-part="label"
                       data-scope="field"
-                      for="root_foo-key"
-                      id="field::root_foo-key::label"
+                      for="root_foo__key"
+                      id="field::root_foo__key::label"
                     >
                       foo Key
                     </label>
@@ -14773,8 +14773,8 @@ exports[`object fields > with title and description from both > additionalProper
                       class="chakra-input emotion-11"
                       data-part="input"
                       data-scope="field"
-                      id="root_foo-key"
-                      name="root_foo-key"
+                      id="root_foo__key"
+                      name="root_foo__key"
                       type="text"
                       value="foo"
                     />
@@ -15845,15 +15845,15 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                     class="chakra-field__root emotion-9"
                     data-part="root"
                     data-scope="field"
-                    id="field::root_foo-key"
+                    id="field::root_foo__key"
                     role="group"
                   >
                     <label
                       class="chakra-field__label emotion-10"
                       data-part="label"
                       data-scope="field"
-                      for="root_foo-key"
-                      id="field::root_foo-key::label"
+                      for="root_foo__key"
+                      id="field::root_foo__key::label"
                     >
                       foo Key
                     </label>
@@ -15861,8 +15861,8 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                       class="chakra-input emotion-11"
                       data-part="input"
                       data-scope="field"
-                      id="root_foo-key"
-                      name="root_foo-key"
+                      id="root_foo__key"
+                      name="root_foo__key"
                       type="text"
                       value="foo"
                     />
@@ -16933,15 +16933,15 @@ exports[`object fields > with title and description from uiSchema > show add but
                     class="chakra-field__root emotion-9"
                     data-part="root"
                     data-scope="field"
-                    id="field::root_additionalProperty-key"
+                    id="field::root_additionalProperty__key"
                     role="group"
                   >
                     <label
                       class="chakra-field__label emotion-10"
                       data-part="label"
                       data-scope="field"
-                      for="root_additionalProperty-key"
-                      id="field::root_additionalProperty-key::label"
+                      for="root_additionalProperty__key"
+                      id="field::root_additionalProperty__key::label"
                     >
                       additionalProperty Key
                     </label>
@@ -16949,8 +16949,8 @@ exports[`object fields > with title and description from uiSchema > show add but
                       class="chakra-input emotion-11"
                       data-part="input"
                       data-scope="field"
-                      id="root_additionalProperty-key"
-                      name="root_additionalProperty-key"
+                      id="root_additionalProperty__key"
+                      name="root_additionalProperty__key"
                       type="text"
                       value="additionalProperty"
                     />
@@ -17493,7 +17493,7 @@ exports[`object fields > with title and description with global label off > addi
                     class="chakra-field__root emotion-5"
                     data-part="root"
                     data-scope="field"
-                    id="field::root_foo-key"
+                    id="field::root_foo__key"
                     role="group"
                   >
                     <input
@@ -17501,8 +17501,8 @@ exports[`object fields > with title and description with global label off > addi
                       class="chakra-input emotion-6"
                       data-part="input"
                       data-scope="field"
-                      id="root_foo-key"
-                      name="root_foo-key"
+                      id="root_foo__key"
+                      name="root_foo__key"
                       type="text"
                       value="foo"
                     />
@@ -18347,7 +18347,7 @@ exports[`object fields > with title and description with global label off > show
                     class="chakra-field__root emotion-5"
                     data-part="root"
                     data-scope="field"
-                    id="field::root_additionalProperty-key"
+                    id="field::root_additionalProperty__key"
                     role="group"
                   >
                     <input
@@ -18355,8 +18355,8 @@ exports[`object fields > with title and description with global label off > show
                       class="chakra-input emotion-6"
                       data-part="input"
                       data-scope="field"
-                      id="root_additionalProperty-key"
-                      name="root_additionalProperty-key"
+                      id="root_additionalProperty__key"
+                      name="root_additionalProperty__key"
                       type="text"
                       value="additionalProperty"
                     />

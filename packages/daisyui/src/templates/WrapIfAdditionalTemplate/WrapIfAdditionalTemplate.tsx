@@ -1,6 +1,7 @@
 import type { WrapIfAdditionalTemplateProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
 import {
   ADDITIONAL_PROPERTY_FLAG,
+  additionalKeyId,
   AdditionalPropertyKeySelect,
   buttonId,
   hasAdditionalKeyLabel,
@@ -64,13 +65,13 @@ export default function WrapIfAdditionalTemplate<
       <div className='flex items-baseline' style={{ justifyContent: 'space-between' }}>
         <div>
           {hasKeyLabel && (
-            <label htmlFor={`${id}-key`} className='label'>
+            <label htmlFor={additionalKeyId(id)} className='label'>
               <span className='label-text'>{keyLabel}</span>
             </label>
           )}
           {propertyNamesEnum ? (
             <AdditionalPropertyKeySelect<T, S, F>
-              id={`${id}-key`}
+              id={additionalKeyId(id)}
               label={keyLabel}
               hideLabel
               labelledByTemplate={hasKeyLabel}
@@ -87,7 +88,7 @@ export default function WrapIfAdditionalTemplate<
               key={keyName}
               type='text'
               className='input input-bordered'
-              id={`${id}-key`}
+              id={additionalKeyId(id)}
               aria-label={hasKeyLabel ? undefined : keyLabel}
               onBlur={onKeyRenameBlur}
               defaultValue={keyName}

@@ -1356,7 +1356,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                           <input
                             class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                             data-with-error-styles="true"
-                            id="root_choices-0"
+                            id="root_choices__0"
                             name="root[choices][]"
                             type="checkbox"
                             value="0"
@@ -1381,7 +1381,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                         >
                           <label
                             class="m_8ee546b8 mantine-Checkbox-label"
-                            for="root_choices-0"
+                            for="root_choices__0"
                           >
                             foo
                           </label>
@@ -1404,7 +1404,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                           <input
                             class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                             data-with-error-styles="true"
-                            id="root_choices-1"
+                            id="root_choices__1"
                             name="root[choices][]"
                             type="checkbox"
                             value="1"
@@ -1429,7 +1429,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                         >
                           <label
                             class="m_8ee546b8 mantine-Checkbox-label"
-                            for="root_choices-1"
+                            for="root_choices__1"
                           >
                             bar
                           </label>
@@ -1452,7 +1452,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                           <input
                             class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                             data-with-error-styles="true"
-                            id="root_choices-2"
+                            id="root_choices__2"
                             name="root[choices][]"
                             type="checkbox"
                             value="2"
@@ -1477,7 +1477,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                         >
                           <label
                             class="m_8ee546b8 mantine-Checkbox-label"
-                            for="root_choices-2"
+                            for="root_choices__2"
                           >
                             baz
                           </label>
@@ -1880,7 +1880,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                           <input
                             class="mantine-focus-auto m_8a3dbb89 mantine-Radio-radio"
                             data-with-error-styles="true"
-                            id="root_option-0"
+                            id="root_option__0"
                             name="root[option]"
                             type="radio"
                             value="0"
@@ -1905,7 +1905,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                         >
                           <label
                             class="m_8ee546b8 mantine-Radio-label"
-                            for="root_option-0"
+                            for="root_option__0"
                           >
                             foo
                           </label>
@@ -1927,7 +1927,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                           <input
                             class="mantine-focus-auto m_8a3dbb89 mantine-Radio-radio"
                             data-with-error-styles="true"
-                            id="root_option-1"
+                            id="root_option__1"
                             name="root[option]"
                             type="radio"
                             value="1"
@@ -1952,7 +1952,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                         >
                           <label
                             class="m_8ee546b8 mantine-Radio-label"
-                            for="root_option-1"
+                            for="root_option__1"
                           >
                             bar
                           </label>
@@ -4501,7 +4501,7 @@ exports[`radio widget with options sharing a String() in the realValue format (#
                   <input
                     class="mantine-focus-auto m_8a3dbb89 mantine-Radio-radio"
                     data-with-error-styles="true"
-                    id="root-0"
+                    id="root__0"
                     name="root"
                     type="radio"
                     value="__rjsf_index:0"
@@ -4526,7 +4526,7 @@ exports[`radio widget with options sharing a String() in the realValue format (#
                 >
                   <label
                     class="m_8ee546b8 mantine-Radio-label"
-                    for="root-0"
+                    for="root__0"
                   >
                     Number
                   </label>
@@ -4550,7 +4550,7 @@ exports[`radio widget with options sharing a String() in the realValue format (#
                     checked=""
                     class="mantine-focus-auto m_8a3dbb89 mantine-Radio-radio"
                     data-with-error-styles="true"
-                    id="root-1"
+                    id="root__1"
                     name="root"
                     type="radio"
                     value="__rjsf_index:1"
@@ -4575,7 +4575,7 @@ exports[`radio widget with options sharing a String() in the realValue format (#
                 >
                   <label
                     class="m_8ee546b8 mantine-Radio-label"
-                    for="root-1"
+                    for="root__1"
                   >
                     String
                   </label>
@@ -6311,7 +6311,7 @@ exports[`single fields > Cyclic schema 1`] = `
                                 class="mantine-focus-auto mantine-active m_77c9d27d mantine-Button-root m_87cf2631 mantine-UnstyledButton-root"
                                 data-size="xs"
                                 data-variant="outline"
-                                id="root_child_child-button"
+                                id="root_child_child__expand"
                                 style="--button-height: var(--button-height-xs); --button-padding-x: var(--button-padding-x-xs); --button-fz: var(--mantine-font-size-xs); --button-bg: transparent; --button-hover: var(--mantine-color-yellow-outline-hover); --button-color: var(--mantine-color-yellow-outline); --button-bd: calc(0.0625rem * var(--mantine-scale)) solid var(--mantine-color-yellow-outline);"
                                 type="button"
                               >
@@ -6892,7 +6892,7 @@ exports[`single fields > checkboxes field 1`] = `
                   <input
                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                     data-with-error-styles="true"
-                    id="root-0"
+                    id="root__0"
                     name="root"
                     type="checkbox"
                     value="0"
@@ -6917,7 +6917,7 @@ exports[`single fields > checkboxes field 1`] = `
                 >
                   <label
                     class="m_8ee546b8 mantine-Checkbox-label"
-                    for="root-0"
+                    for="root__0"
                   >
                     foo
                   </label>
@@ -6940,7 +6940,7 @@ exports[`single fields > checkboxes field 1`] = `
                   <input
                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                     data-with-error-styles="true"
-                    id="root-1"
+                    id="root__1"
                     name="root"
                     type="checkbox"
                     value="1"
@@ -6965,7 +6965,7 @@ exports[`single fields > checkboxes field 1`] = `
                 >
                   <label
                     class="m_8ee546b8 mantine-Checkbox-label"
-                    for="root-1"
+                    for="root__1"
                   >
                     bar
                   </label>
@@ -6988,7 +6988,7 @@ exports[`single fields > checkboxes field 1`] = `
                   <input
                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                     data-with-error-styles="true"
-                    id="root-2"
+                    id="root__2"
                     name="root"
                     type="checkbox"
                     value="2"
@@ -7013,7 +7013,7 @@ exports[`single fields > checkboxes field 1`] = `
                 >
                   <label
                     class="m_8ee546b8 mantine-Checkbox-label"
-                    for="root-2"
+                    for="root__2"
                   >
                     fuzz
                   </label>
@@ -7036,7 +7036,7 @@ exports[`single fields > checkboxes field 1`] = `
                   <input
                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                     data-with-error-styles="true"
-                    id="root-3"
+                    id="root__3"
                     name="root"
                     type="checkbox"
                     value="3"
@@ -7061,7 +7061,7 @@ exports[`single fields > checkboxes field 1`] = `
                 >
                   <label
                     class="m_8ee546b8 mantine-Checkbox-label"
-                    for="root-3"
+                    for="root__3"
                   >
                     qux
                   </label>
@@ -7168,7 +7168,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                     checked=""
                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                     data-with-error-styles="true"
-                    id="root-0"
+                    id="root__0"
                     name="root"
                     type="checkbox"
                     value="0"
@@ -7193,7 +7193,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                 >
                   <label
                     class="m_8ee546b8 mantine-Checkbox-label"
-                    for="root-0"
+                    for="root__0"
                   >
                     option1
                   </label>
@@ -7217,7 +7217,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                     aria-describedby="root__description root__help"
                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                     data-with-error-styles="true"
-                    id="root-1"
+                    id="root__1"
                     name="root"
                     type="checkbox"
                     value="1"
@@ -7242,7 +7242,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                 >
                   <label
                     class="m_8ee546b8 mantine-Checkbox-label"
-                    for="root-1"
+                    for="root__1"
                   >
                     option2
                   </label>
@@ -7266,7 +7266,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                     aria-describedby="root__description root__help"
                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                     data-with-error-styles="true"
-                    id="root-2"
+                    id="root__2"
                     name="root"
                     type="checkbox"
                     value="2"
@@ -7291,7 +7291,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                 >
                   <label
                     class="m_8ee546b8 mantine-Checkbox-label"
-                    for="root-2"
+                    for="root__2"
                   >
                     option3
                   </label>
@@ -7404,7 +7404,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
                     aria-describedby="root__description"
                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                     data-with-error-styles="true"
-                    id="root-0"
+                    id="root__0"
                     name="root"
                     type="checkbox"
                     value="0"
@@ -7429,7 +7429,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
                 >
                   <label
                     class="m_8ee546b8 mantine-Checkbox-label"
-                    for="root-0"
+                    for="root__0"
                   >
                     red
                   </label>
@@ -7453,7 +7453,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
                     aria-describedby="root__description"
                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                     data-with-error-styles="true"
-                    id="root-1"
+                    id="root__1"
                     name="root"
                     type="checkbox"
                     value="1"
@@ -7478,7 +7478,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
                 >
                   <label
                     class="m_8ee546b8 mantine-Checkbox-label"
-                    for="root-1"
+                    for="root__1"
                   >
                     green
                   </label>
@@ -7502,7 +7502,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
                     aria-describedby="root__description"
                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                     data-with-error-styles="true"
-                    id="root-2"
+                    id="root__2"
                     name="root"
                     type="checkbox"
                     value="2"
@@ -7527,7 +7527,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
                 >
                   <label
                     class="m_8ee546b8 mantine-Checkbox-label"
-                    for="root-2"
+                    for="root__2"
                   >
                     blue
                   </label>
@@ -14905,7 +14905,7 @@ exports[`single fields > radio field 1`] = `
                   <input
                     class="mantine-focus-auto m_8a3dbb89 mantine-Radio-radio"
                     data-with-error-styles="true"
-                    id="root-0"
+                    id="root__0"
                     name="root"
                     type="radio"
                     value="0"
@@ -14930,7 +14930,7 @@ exports[`single fields > radio field 1`] = `
                 >
                   <label
                     class="m_8ee546b8 mantine-Radio-label"
-                    for="root-0"
+                    for="root__0"
                   >
                     Yes
                   </label>
@@ -14952,7 +14952,7 @@ exports[`single fields > radio field 1`] = `
                   <input
                     class="mantine-focus-auto m_8a3dbb89 mantine-Radio-radio"
                     data-with-error-styles="true"
-                    id="root-1"
+                    id="root__1"
                     name="root"
                     type="radio"
                     value="1"
@@ -14977,7 +14977,7 @@ exports[`single fields > radio field 1`] = `
                 >
                   <label
                     class="m_8ee546b8 mantine-Radio-label"
-                    for="root-1"
+                    for="root__1"
                   >
                     No
                   </label>
@@ -15077,7 +15077,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
                     aria-describedby="root__description"
                     class="mantine-focus-auto m_8a3dbb89 mantine-Radio-radio"
                     data-with-error-styles="true"
-                    id="root-0"
+                    id="root__0"
                     name="root"
                     type="radio"
                     value="0"
@@ -15102,7 +15102,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
                 >
                   <label
                     class="m_8ee546b8 mantine-Radio-label"
-                    for="root-0"
+                    for="root__0"
                   >
                     Yes
                   </label>
@@ -15125,7 +15125,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
                     aria-describedby="root__description"
                     class="mantine-focus-auto m_8a3dbb89 mantine-Radio-radio"
                     data-with-error-styles="true"
-                    id="root-1"
+                    id="root__1"
                     name="root"
                     type="radio"
                     value="1"
@@ -15150,7 +15150,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
                 >
                   <label
                     class="m_8ee546b8 mantine-Radio-label"
-                    for="root-1"
+                    for="root__1"
                   >
                     No
                   </label>
@@ -16281,7 +16281,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
                   <input
                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                     data-with-error-styles="true"
-                    id="root-0"
+                    id="root__0"
                     name="root"
                     type="checkbox"
                     value="0"
@@ -16306,7 +16306,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
                 >
                   <label
                     class="m_8ee546b8 mantine-Checkbox-label"
-                    for="root-0"
+                    for="root__0"
                   >
                     foo
                   </label>
@@ -16330,7 +16330,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                     data-with-error-styles="true"
                     disabled=""
-                    id="root-1"
+                    id="root__1"
                     name="root"
                     type="checkbox"
                     value="1"
@@ -16357,7 +16357,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
                   <label
                     class="m_8ee546b8 mantine-Checkbox-label"
                     data-disabled="true"
-                    for="root-1"
+                    for="root__1"
                   >
                     bar
                   </label>
@@ -16380,7 +16380,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
                   <input
                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                     data-with-error-styles="true"
-                    id="root-2"
+                    id="root__2"
                     name="root"
                     type="checkbox"
                     value="2"
@@ -16405,7 +16405,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
                 >
                   <label
                     class="m_8ee546b8 mantine-Checkbox-label"
-                    for="root-2"
+                    for="root__2"
                   >
                     fuzz
                   </label>
@@ -16428,7 +16428,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
                   <input
                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                     data-with-error-styles="true"
-                    id="root-3"
+                    id="root__3"
                     name="root"
                     type="checkbox"
                     value="3"
@@ -16453,7 +16453,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
                 >
                   <label
                     class="m_8ee546b8 mantine-Checkbox-label"
-                    for="root-3"
+                    for="root__3"
                   >
                     qux
                   </label>
@@ -17223,7 +17223,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
                   <input
                     class="mantine-focus-auto m_8a3dbb89 mantine-Radio-radio"
                     data-with-error-styles="true"
-                    id="root-0"
+                    id="root__0"
                     name="root"
                     type="radio"
                     value="0"
@@ -17248,7 +17248,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
                 >
                   <label
                     class="m_8ee546b8 mantine-Radio-label"
-                    for="root-0"
+                    for="root__0"
                   >
                     foo
                   </label>
@@ -17271,7 +17271,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
                     class="mantine-focus-auto m_8a3dbb89 mantine-Radio-radio"
                     data-with-error-styles="true"
                     disabled=""
-                    id="root-1"
+                    id="root__1"
                     name="root"
                     type="radio"
                     value="1"
@@ -17298,7 +17298,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
                   <label
                     class="m_8ee546b8 mantine-Radio-label"
                     data-disabled="true"
-                    for="root-1"
+                    for="root__1"
                   >
                     bar
                   </label>
@@ -17378,7 +17378,7 @@ exports[`single fields > select field single choice form disabled using radio wi
                     class="mantine-focus-auto m_8a3dbb89 mantine-Radio-radio"
                     data-with-error-styles="true"
                     disabled=""
-                    id="root-0"
+                    id="root__0"
                     name="root"
                     type="radio"
                     value="0"
@@ -17405,7 +17405,7 @@ exports[`single fields > select field single choice form disabled using radio wi
                   <label
                     class="m_8ee546b8 mantine-Radio-label"
                     data-disabled="true"
-                    for="root-0"
+                    for="root__0"
                   >
                     foo
                   </label>
@@ -17428,7 +17428,7 @@ exports[`single fields > select field single choice form disabled using radio wi
                     class="mantine-focus-auto m_8a3dbb89 mantine-Radio-radio"
                     data-with-error-styles="true"
                     disabled=""
-                    id="root-1"
+                    id="root__1"
                     name="root"
                     type="radio"
                     value="1"
@@ -17455,7 +17455,7 @@ exports[`single fields > select field single choice form disabled using radio wi
                   <label
                     class="m_8ee546b8 mantine-Radio-label"
                     data-disabled="true"
-                    for="root-1"
+                    for="root__1"
                   >
                     bar
                   </label>
@@ -18172,7 +18172,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
                     class="mantine-focus-auto m_8a3dbb89 mantine-Radio-radio"
                     data-with-error-styles="true"
                     disabled=""
-                    id="root-0"
+                    id="root__0"
                     name="root"
                     type="radio"
                     value="0"
@@ -18199,7 +18199,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
                   <label
                     class="m_8ee546b8 mantine-Radio-label"
                     data-disabled="true"
-                    for="root-0"
+                    for="root__0"
                   >
                     foo
                   </label>
@@ -18222,7 +18222,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
                     class="mantine-focus-auto m_8a3dbb89 mantine-Radio-radio"
                     data-with-error-styles="true"
                     disabled=""
-                    id="root-1"
+                    id="root__1"
                     name="root"
                     type="radio"
                     value="1"
@@ -18249,7 +18249,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
                   <label
                     class="m_8ee546b8 mantine-Radio-label"
                     data-disabled="true"
-                    for="root-1"
+                    for="root__1"
                   >
                     bar
                   </label>

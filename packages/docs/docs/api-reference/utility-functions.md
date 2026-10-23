@@ -120,6 +120,18 @@ Without its field's plan, `hideLabel` turns it off as well, and it renders under
 
 ## Non-Validator utility functions
 
+### additionalKeyId()
+
+Return a consistent `id` for the input a `WrapIfAdditionalTemplate` renders to edit an additional property's key
+
+#### Parameters
+
+- id: string - The id of the additional property's field
+
+#### Returns
+
+- string: The consistent id for the key input from the given `id`
+
 ### allowAdditionalItems()
 
 Checks the schema to see if it is allowing additional items, by verifying that `schema.additionalItems` is an object.
@@ -180,6 +192,18 @@ Otherwise, the string is wrapped by `Number()` and if that result is not `NaN`, 
 #### Returns
 
 - undefined | null | string | number: The `value` converted to a number when appropriate, otherwise the `value`
+
+### besideOptionsId()
+
+Return a consistent `id` for the component a field renders beside its `anyOf`/`oneOf` options, such as an object's own properties, whose selected option renders the field's own `id`
+
+#### Parameters
+
+- id: string - The id of the field
+
+#### Returns
+
+- string: The consistent id for the component rendered beside the options from the given `id`
 
 ### bracketNameGenerator()
 
@@ -319,7 +343,7 @@ dateElementAriaLabel('year', englishStringTranslator, ''); // 'year'
 
 Return a consistent `id` for one of the date element selectors an `AltDateWidget` renders.
 `DateElement` gives its `SelectWidget` this id, so a theme can point a label at the year, month or day control rather than rebuilding the id itself.
-Note that the separator here is always `_`, independent of the form's `idSeparator`.
+It is a [partId()](#partid), so no sibling property's id can take it.
 
 #### Parameters
 
@@ -333,7 +357,7 @@ Note that the separator here is always `_`, independent of the form's `idSeparat
 #### Example
 
 ```typescript
-dateElementId('root_birthday', 'year'); // 'root_birthday_year'
+dateElementId('root_birthday', 'year'); // 'root_birthday__year'
 ```
 
 ### dateElementLabel()
@@ -698,6 +722,18 @@ A schema `retrieveSchema()` did not hand out is returned without the flag.
 
 - S: The schema to retrieve the expanded field from
 
+### fallbackTypeSelectorId()
+
+Return a consistent `id` for the type selector the fallback UI renders for a field of an unsupported type
+
+#### Parameters
+
+- id: string - The id of the field
+
+#### Returns
+
+- string: The consistent id for the type selector from the given `id`
+
 ### fieldLabelId()
 
 Return a consistent `id` for the label a theme's `FieldTemplate` renders above a field's control.
@@ -747,6 +783,10 @@ Folds a `FieldPathList` into the `FieldPath` addressing the same field, the inve
 
 Derives the HTML `id` for `fieldPath` from the `idPrefix` and `idSeparator` in `globalFormOptions`, joining the prefix and every segment of the path with the separator.
 
+Each property name is written so that the id holds no whitespace, two different names never write the same id, and no name writes the `__` that [partId()](#partid) joins a field's id and the name of one of its parts with. A character is written as `%` followed by its two-digit hex code when it is ASCII whitespace or `%`, or when it is an `_` that begins or ends the name or stands next to another `_`. An empty name is written `%00`. Every other character, an `_` inside a name such as `snake_case` included, is written as it is. The `idPrefix` and `idSeparator` are written as given, so neither should hold whitespace or `__`.
+
+A property name holding the `idSeparator` still writes the id a path of several names would, as `a_b` and `a.b` both write `root_a_b`; choose an `idSeparator` no property name holds to tell those apart.
+
 #### Parameters
 
 - fieldPath: FieldPath - The `FieldPath` of the field
@@ -755,6 +795,13 @@ Derives the HTML `id` for `fieldPath` from the `idPrefix` and `idSeparator` in `
 #### Returns
 
 - string: The id for the field
+
+#### Example
+
+```typescript
+fieldPathToId(toFieldPath('Do you have any pets?'), { idPrefix: 'root', idSeparator: '_' }); // 'root_Do%20you%20have%20any%20pets?'
+fieldPathToId(toFieldPath('_id'), { idPrefix: 'root', idSeparator: '_' }); // 'root_%5Fid'
+```
 
 ### fieldPathToList()
 
@@ -2526,6 +2573,27 @@ The original object is returned whenever there is nothing to strip, so a field m
 
 - UiSchema&lt;T, S, F> | undefined: The uiSchema for the field's children, stripped of the consumed styling
 
+### optionSelectorId()
+
+Return a consistent `id` for the selector a field renders to pick its `anyOf`/`oneOf` option, numbered from the second on, so a selector rendered for an option that is itself an `anyOf`/`oneOf` has an id of its own
+
+#### Parameters
+
+- id: string - The id of the field
+- xxxOfKey: 'anyOf' | 'oneOf' - The keyword holding the options
+- [depth=1]: number - How many selectors for the same keyword render `id`, this one included
+
+#### Returns
+
+- string: The consistent id for the option selector from the given `id`, keyword and `depth`
+
+#### Example
+
+```typescript
+optionSelectorId('root_pet', 'anyOf'); // 'root_pet__anyof_select'
+optionSelectorId('root_pet', 'anyOf', 2); // 'root_pet__anyof_select2'
+```
+
 ### optionsList&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Gets the list of options from the `schema`. If the schema has an enum list, then those enum values are returned.
@@ -2612,6 +2680,25 @@ Parses the `dateString` into a `DateObject`, including the time information when
 #### Throws
 
 - Error when the date cannot be parsed from the string
+
+### partId()
+
+Generates the `id` of an element that is part of a field, such as its description or one of its controls, from the field's `id` and the name of the part. Every id `@rjsf/utils` derives from a field's id is built here, joined by `__`, which [fieldPathToId()](#fieldpathtoid) never writes into a field's own id, so a part's id can't be the id of another field. A theme or custom widget rendering an element of its own, such as a popup, takes its id from here. The part's name should hold no whitespace and no `__`.
+
+#### Parameters
+
+- id: string - The id of the field
+- part: string - The name of the part
+
+#### Returns
+
+- string: The id of that part of the field
+
+#### Example
+
+```typescript
+partId('root_when', 'picker'); // 'root_when__picker'
+```
 
 ### pickGlobalUiOptions() {#pickglobaluioptions}
 

@@ -404,7 +404,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                           <input
                                             aria-describedby="root_person_race__description"
                                             class="ant-checkbox-input"
-                                            id="root_person_race-0"
+                                            id="root_person_race__0"
                                             name="root_person_race"
                                             type="checkbox"
                                             value="0"
@@ -428,7 +428,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                           <input
                                             aria-describedby="root_person_race__description"
                                             class="ant-checkbox-input"
-                                            id="root_person_race-1"
+                                            id="root_person_race__1"
                                             name="root_person_race"
                                             type="checkbox"
                                             value="1"
@@ -452,7 +452,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                           <input
                                             aria-describedby="root_person_race__description"
                                             class="ant-checkbox-input"
-                                            id="root_person_race-2"
+                                            id="root_person_race__2"
                                             name="root_person_race"
                                             type="checkbox"
                                             value="2"
@@ -476,7 +476,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                           <input
                                             aria-describedby="root_person_race__description"
                                             class="ant-checkbox-input"
-                                            id="root_person_race-3"
+                                            id="root_person_race__3"
                                             name="root_person_race"
                                             type="checkbox"
                                             value="3"
@@ -500,7 +500,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                           <input
                                             aria-describedby="root_person_race__description"
                                             class="ant-checkbox-input"
-                                            id="root_person_race-4"
+                                            id="root_person_race__4"
                                             name="root_person_race"
                                             type="checkbox"
                                             value="4"
@@ -968,7 +968,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                             <input
                                               checked=""
                                               class="ant-radio-input"
-                                              id="root_employment-0"
+                                              id="root_employment__0"
                                               name="root_employment"
                                               type="radio"
                                               value="0"
@@ -988,7 +988,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                           >
                                             <input
                                               class="ant-radio-input"
-                                              id="root_employment-1"
+                                              id="root_employment__1"
                                               name="root_employment"
                                               type="radio"
                                               value="1"
@@ -1008,7 +1008,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                           >
                                             <input
                                               class="ant-radio-input"
-                                              id="root_employment-2"
+                                              id="root_employment__2"
                                               name="root_employment"
                                               type="radio"
                                               value="2"
@@ -1731,7 +1731,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                           <input
                                             aria-describedby="root_person_race__description"
                                             class="ant-checkbox-input"
-                                            id="root_person_race-0"
+                                            id="root_person_race__0"
                                             name="root_person_race"
                                             type="checkbox"
                                             value="0"
@@ -1755,7 +1755,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                           <input
                                             aria-describedby="root_person_race__description"
                                             class="ant-checkbox-input"
-                                            id="root_person_race-1"
+                                            id="root_person_race__1"
                                             name="root_person_race"
                                             type="checkbox"
                                             value="1"
@@ -1779,7 +1779,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                           <input
                                             aria-describedby="root_person_race__description"
                                             class="ant-checkbox-input"
-                                            id="root_person_race-2"
+                                            id="root_person_race__2"
                                             name="root_person_race"
                                             type="checkbox"
                                             value="2"
@@ -1803,7 +1803,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                           <input
                                             aria-describedby="root_person_race__description"
                                             class="ant-checkbox-input"
-                                            id="root_person_race-3"
+                                            id="root_person_race__3"
                                             name="root_person_race"
                                             type="checkbox"
                                             value="3"
@@ -1827,7 +1827,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                           <input
                                             aria-describedby="root_person_race__description"
                                             class="ant-checkbox-input"
-                                            id="root_person_race-4"
+                                            id="root_person_race__4"
                                             name="root_person_race"
                                             type="checkbox"
                                             value="4"
@@ -2294,7 +2294,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                           >
                                             <input
                                               class="ant-radio-input"
-                                              id="root_employment-0"
+                                              id="root_employment__0"
                                               name="root_employment"
                                               type="radio"
                                               value="0"
@@ -2315,7 +2315,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                             <input
                                               checked=""
                                               class="ant-radio-input"
-                                              id="root_employment-1"
+                                              id="root_employment__1"
                                               name="root_employment"
                                               type="radio"
                                               value="1"
@@ -2335,7 +2335,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                           >
                                             <input
                                               class="ant-radio-input"
-                                              id="root_employment-2"
+                                              id="root_employment__2"
                                               name="root_employment"
                                               type="radio"
                                               value="2"
@@ -3117,7 +3117,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                           <input
                                             aria-describedby="root_person_race__description"
                                             class="ant-checkbox-input"
-                                            id="root_person_race-0"
+                                            id="root_person_race__0"
                                             name="root_person_race"
                                             type="checkbox"
                                             value="0"
@@ -3141,7 +3141,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                           <input
                                             aria-describedby="root_person_race__description"
                                             class="ant-checkbox-input"
-                                            id="root_person_race-1"
+                                            id="root_person_race__1"
                                             name="root_person_race"
                                             type="checkbox"
                                             value="1"
@@ -3165,7 +3165,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                           <input
                                             aria-describedby="root_person_race__description"
                                             class="ant-checkbox-input"
-                                            id="root_person_race-2"
+                                            id="root_person_race__2"
                                             name="root_person_race"
                                             type="checkbox"
                                             value="2"
@@ -3189,7 +3189,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                           <input
                                             aria-describedby="root_person_race__description"
                                             class="ant-checkbox-input"
-                                            id="root_person_race-3"
+                                            id="root_person_race__3"
                                             name="root_person_race"
                                             type="checkbox"
                                             value="3"
@@ -3213,7 +3213,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                           <input
                                             aria-describedby="root_person_race__description"
                                             class="ant-checkbox-input"
-                                            id="root_person_race-4"
+                                            id="root_person_race__4"
                                             name="root_person_race"
                                             type="checkbox"
                                             value="4"
@@ -3680,7 +3680,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                           >
                                             <input
                                               class="ant-radio-input"
-                                              id="root_employment-0"
+                                              id="root_employment__0"
                                               name="root_employment"
                                               type="radio"
                                               value="0"
@@ -3700,7 +3700,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                           >
                                             <input
                                               class="ant-radio-input"
-                                              id="root_employment-1"
+                                              id="root_employment__1"
                                               name="root_employment"
                                               type="radio"
                                               value="1"
@@ -3721,7 +3721,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                             <input
                                               checked=""
                                               class="ant-radio-input"
-                                              id="root_employment-2"
+                                              id="root_employment__2"
                                               name="root_employment"
                                               type="radio"
                                               value="2"
@@ -4231,7 +4231,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                           <input
                                             aria-describedby="root_person_race__description"
                                             class="ant-checkbox-input"
-                                            id="root_person_race-0"
+                                            id="root_person_race__0"
                                             name="root_person_race"
                                             type="checkbox"
                                             value="0"
@@ -4255,7 +4255,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                           <input
                                             aria-describedby="root_person_race__description"
                                             class="ant-checkbox-input"
-                                            id="root_person_race-1"
+                                            id="root_person_race__1"
                                             name="root_person_race"
                                             type="checkbox"
                                             value="1"
@@ -4279,7 +4279,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                           <input
                                             aria-describedby="root_person_race__description"
                                             class="ant-checkbox-input"
-                                            id="root_person_race-2"
+                                            id="root_person_race__2"
                                             name="root_person_race"
                                             type="checkbox"
                                             value="2"
@@ -4303,7 +4303,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                           <input
                                             aria-describedby="root_person_race__description"
                                             class="ant-checkbox-input"
-                                            id="root_person_race-3"
+                                            id="root_person_race__3"
                                             name="root_person_race"
                                             type="checkbox"
                                             value="3"
@@ -4327,7 +4327,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                           <input
                                             aria-describedby="root_person_race__description"
                                             class="ant-checkbox-input"
-                                            id="root_person_race-4"
+                                            id="root_person_race__4"
                                             name="root_person_race"
                                             type="checkbox"
                                             value="4"
@@ -4795,7 +4795,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                             <input
                                               checked=""
                                               class="ant-radio-input"
-                                              id="root_employment-0"
+                                              id="root_employment__0"
                                               name="root_employment"
                                               type="radio"
                                               value="0"
@@ -4815,7 +4815,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                           >
                                             <input
                                               class="ant-radio-input"
-                                              id="root_employment-1"
+                                              id="root_employment__1"
                                               name="root_employment"
                                               type="radio"
                                               value="1"
@@ -4835,7 +4835,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                           >
                                             <input
                                               class="ant-radio-input"
-                                              id="root_employment-2"
+                                              id="root_employment__2"
                                               name="root_employment"
                                               type="radio"
                                               value="2"
@@ -5540,7 +5540,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                                         <input
                                           aria-describedby="root_person_race__description"
                                           class="ant-checkbox-input"
-                                          id="root_person_race-0"
+                                          id="root_person_race__0"
                                           name="root_person_race"
                                           type="checkbox"
                                           value="0"
@@ -5564,7 +5564,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                                         <input
                                           aria-describedby="root_person_race__description"
                                           class="ant-checkbox-input"
-                                          id="root_person_race-1"
+                                          id="root_person_race__1"
                                           name="root_person_race"
                                           type="checkbox"
                                           value="1"
@@ -5588,7 +5588,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                                         <input
                                           aria-describedby="root_person_race__description"
                                           class="ant-checkbox-input"
-                                          id="root_person_race-2"
+                                          id="root_person_race__2"
                                           name="root_person_race"
                                           type="checkbox"
                                           value="2"
@@ -5612,7 +5612,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                                         <input
                                           aria-describedby="root_person_race__description"
                                           class="ant-checkbox-input"
-                                          id="root_person_race-3"
+                                          id="root_person_race__3"
                                           name="root_person_race"
                                           type="checkbox"
                                           value="3"
@@ -5636,7 +5636,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                                         <input
                                           aria-describedby="root_person_race__description"
                                           class="ant-checkbox-input"
-                                          id="root_person_race-4"
+                                          id="root_person_race__4"
                                           name="root_person_race"
                                           type="checkbox"
                                           value="4"
@@ -6349,7 +6349,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                                         <input
                                           aria-describedby="root_person_race__description"
                                           class="ant-checkbox-input"
-                                          id="root_person_race-0"
+                                          id="root_person_race__0"
                                           name="root_person_race"
                                           type="checkbox"
                                           value="0"
@@ -6373,7 +6373,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                                         <input
                                           aria-describedby="root_person_race__description"
                                           class="ant-checkbox-input"
-                                          id="root_person_race-1"
+                                          id="root_person_race__1"
                                           name="root_person_race"
                                           type="checkbox"
                                           value="1"
@@ -6397,7 +6397,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                                         <input
                                           aria-describedby="root_person_race__description"
                                           class="ant-checkbox-input"
-                                          id="root_person_race-2"
+                                          id="root_person_race__2"
                                           name="root_person_race"
                                           type="checkbox"
                                           value="2"
@@ -6421,7 +6421,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                                         <input
                                           aria-describedby="root_person_race__description"
                                           class="ant-checkbox-input"
-                                          id="root_person_race-3"
+                                          id="root_person_race__3"
                                           name="root_person_race"
                                           type="checkbox"
                                           value="3"
@@ -6445,7 +6445,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                                         <input
                                           aria-describedby="root_person_race__description"
                                           class="ant-checkbox-input"
-                                          id="root_person_race-4"
+                                          id="root_person_race__4"
                                           name="root_person_race"
                                           type="checkbox"
                                           value="4"

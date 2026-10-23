@@ -510,7 +510,7 @@ Each theme provides its own implementation.
 You can replace the template globally via the `templates` prop on `Form`, or per-field via `ui:CyclicSchemaExpandTemplate` in the `uiSchema`.
 
 ```tsx
-import { CyclicSchemaExpandProps, RJSFSchema } from '@rjsf/utils';
+import { CyclicSchemaExpandProps, expandButtonId, RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 // A schema that is self-referencing
@@ -526,7 +526,7 @@ const schema: RJSFSchema = {
 
 function CyclicSchemaExpandTemplate<T = unknown>(props: CyclicSchemaExpandProps<T>) {
   const { name, id, onExpand } = props;
-  const buttonId = `${id}-button`;
+  const buttonId = expandButtonId(id);
   return (
     <div className='cyclic-expand'>
       <span className='warning'>Circular reference detected for field &quot;{name}&quot;</span>
@@ -1260,7 +1260,7 @@ The `WrapIfAdditionalTemplate` is used by the `FieldTemplate` to conditionally r
 You may customize `WrapIfAdditionalTemplate` if you wish to change the layout or behavior of user-controlled `additionalProperties` and `patternProperties`.
 
 ```tsx
-import { RJSFSchema, WrapIfAdditionalTemplateProps } from '@rjsf/utils';
+import { ADDITIONAL_PROPERTY_FLAG, additionalKeyId, RJSFSchema, WrapIfAdditionalTemplateProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 const schema: RJSFSchema = {
@@ -1291,8 +1291,8 @@ function WrapIfAdditionalTemplate(props: WrapIfAdditionalTemplateProps) {
 
   return (
     <div className={classNames} style={style}>
-      <label htmlFor={`${id}-key`}>Custom Field Key</label>
-      <input className='form-control' type='text' id={`${id}-key`} onBlur={onKeyRenameBlur} defaultValue={keyName} />
+      <label htmlFor={additionalKeyId(id)}>Custom Field Key</label>
+      <input className='form-control' type='text' id={additionalKeyId(id)} onBlur={onKeyRenameBlur} defaultValue={keyName} />
       <div>{children}</div>
       <RemoveButton onClick={onRemoveProperty} uiSchema={uiSchema} />
     </div>

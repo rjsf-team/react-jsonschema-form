@@ -5,6 +5,7 @@ import { act, render, renderHook, screen } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 import { userEvent } from '@testing-library/user-event';
 
+import { elementOf } from '../../../testing/elementOf.ts';
 import type { DateElementProp, Registry, UseAltDateWidgetResult, WidgetProps } from '../src/index.ts';
 import {
   ariaDescribedByIds,
@@ -235,7 +236,7 @@ describe('useAltDateWidgetProps()', () => {
     const { container, rerender } = render(
       <DateElementsTester elements={elements} handleChange={handleChange} {...PROPS} />,
     );
-    await user.selectOptions(container.querySelector('#root_year')!, String(2023 - 2000)); // convert year to index
+    await user.selectOptions(elementOf(container, '#root__year'), String(2023 - 2000)); // convert year to index
     expect(PROPS.onChange).not.toHaveBeenCalled();
     rerenderHook(() => useAltDateWidgetProps(PROPS));
     dateObj.year = 2023;
@@ -244,7 +245,7 @@ describe('useAltDateWidgetProps()', () => {
     rerender(
       <DateElementsTester elements={result.current.elements} handleChange={result.current.handleChange} {...PROPS} />,
     );
-    await user.selectOptions(container.querySelector('#root_month')!, '9'); // Month index
+    await user.selectOptions(elementOf(container, '#root__month'), '9'); // Month index
     expect(PROPS.onChange).not.toHaveBeenCalled();
     rerenderHook(() => useAltDateWidgetProps(PROPS));
     dateObj.month = 10;
@@ -253,7 +254,7 @@ describe('useAltDateWidgetProps()', () => {
     rerender(
       <DateElementsTester elements={result.current.elements} handleChange={result.current.handleChange} {...PROPS} />,
     );
-    await user.selectOptions(container.querySelector('#root_day')!, '1'); // Day index
+    await user.selectOptions(elementOf(container, '#root__day'), '1'); // Day index
     expect(PROPS.onChange).toHaveBeenCalledWith('2023-10-02');
   });
   test('time is true, value undefined', () => {
@@ -306,7 +307,7 @@ describe('useAltDateWidgetProps()', () => {
     const { container, rerender } = render(
       <DateElementsTester elements={elements} handleChange={handleChange} {...TIME_PROPS} />,
     );
-    await user.selectOptions(container.querySelector('#root_year')!, String(2023 - 2000)); // convert year to index
+    await user.selectOptions(elementOf(container, '#root__year'), String(2023 - 2000)); // convert year to index
     expect(TIME_PROPS.onChange).not.toHaveBeenCalled();
     rerenderHook(() => useAltDateWidgetProps(TIME_PROPS));
     dateObj.year = 2023;
@@ -319,7 +320,7 @@ describe('useAltDateWidgetProps()', () => {
         {...TIME_PROPS}
       />,
     );
-    await user.selectOptions(container.querySelector('#root_month')!, '9'); // Month index
+    await user.selectOptions(elementOf(container, '#root__month'), '9'); // Month index
     expect(TIME_PROPS.onChange).not.toHaveBeenCalled();
     rerenderHook(() => useAltDateWidgetProps(TIME_PROPS));
     dateObj.month = 10;
@@ -332,7 +333,7 @@ describe('useAltDateWidgetProps()', () => {
         {...TIME_PROPS}
       />,
     );
-    await user.selectOptions(container.querySelector('#root_day')!, '1'); // Day index
+    await user.selectOptions(elementOf(container, '#root__day'), '1'); // Day index
     expect(TIME_PROPS.onChange).not.toHaveBeenCalled();
     rerenderHook(() => useAltDateWidgetProps(TIME_PROPS));
     dateObj.day = 2;
@@ -345,7 +346,7 @@ describe('useAltDateWidgetProps()', () => {
         {...TIME_PROPS}
       />,
     );
-    await user.selectOptions(container.querySelector('#root_hour')!, '1');
+    await user.selectOptions(elementOf(container, '#root__hour'), '1');
     expect(TIME_PROPS.onChange).not.toHaveBeenCalled();
     rerenderHook(() => useAltDateWidgetProps(TIME_PROPS));
     dateObj.hour = 1;
@@ -358,7 +359,7 @@ describe('useAltDateWidgetProps()', () => {
         {...TIME_PROPS}
       />,
     );
-    await user.selectOptions(container.querySelector('#root_minute')!, '2');
+    await user.selectOptions(elementOf(container, '#root__minute'), '2');
     rerenderHook(() => useAltDateWidgetProps(TIME_PROPS));
     dateObj.minute = 2;
     expectedElements = getDateElementProps(dateObj, true, TIME_PROPS.options.yearsRange);
@@ -370,7 +371,7 @@ describe('useAltDateWidgetProps()', () => {
         {...TIME_PROPS}
       />,
     );
-    await user.selectOptions(container.querySelector('#root_second')!, '3');
+    await user.selectOptions(elementOf(container, '#root__second'), '3');
     expect(TIME_PROPS.onChange).toHaveBeenCalledWith('2023-10-02T01:02:03.000Z');
   });
   test('time is false, value DATE_STR, disabled', () => {
@@ -450,8 +451,8 @@ describe('useAltDateWidgetProps()', () => {
     test('gives each element its own id as its name, and describes it by the field', () => {
       renderElements({ label: 'When' });
       const select = screen.getByRole('combobox', { name: 'When, year' });
-      expect(select).toHaveAttribute('id', `${TIME_PROPS.id}_year`);
-      expect(select).toHaveAttribute('name', `${TIME_PROPS.id}_year`);
+      expect(select).toHaveAttribute('id', `${TIME_PROPS.id}__year`);
+      expect(select).toHaveAttribute('name', `${TIME_PROPS.id}__year`);
       expect(select).toHaveAttribute('aria-describedby', ariaDescribedByIds(TIME_PROPS.id));
     });
 
@@ -517,8 +518,8 @@ describe('useAltDateWidgetProps()', () => {
       </>,
     );
     const valueOf = (id: string): unknown => SpySelectWidget.mock.calls.find(([props]) => props.id === id)?.[0].value;
-    expect(valueOf('root_year')).toBeUndefined();
-    expect(valueOf('root_month')).toBe(10);
-    expect(valueOf('root_hour')).toBe(0);
+    expect(valueOf('root__year')).toBeUndefined();
+    expect(valueOf('root__month')).toBe(10);
+    expect(valueOf('root__hour')).toBe(0);
   });
 });

@@ -1,7 +1,6 @@
 import { use, useCallback, useMemo } from 'react';
 import type { ErrorSchema, FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
 import {
-  ANY_OF_KEY,
   deepEquals,
   ERRORS_KEY,
   getDiscriminatorFieldFromSchema,
@@ -15,6 +14,7 @@ import {
   isFormDataAvailable,
   logOnce,
   ONE_OF_KEY,
+  optionSelectorId,
   resolveWidget,
   selectOptionUiSchema,
   shouldRenderOptionalField,
@@ -29,6 +29,7 @@ import { displaysLabel, getWidgetErrorProps, getWidgetLabelProps } from './field
 import formDataForNewOption from './formDataForNewOption.ts';
 import { lookUpUiField } from './namedField.ts';
 import NamedFieldContext from './NamedFieldContext.ts';
+import OptionSelectorContext, { useOptionSelectorsAbove } from './OptionSelectorContext.ts';
 
 /** Returns the field's `uiSchema` for an option that declares none of its own, without the field's title and
  * description, which the field's plan already carries to the option's, so the option keeps the title and description
@@ -98,8 +99,13 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   );
 
   const xxxOfKey = getXxxOfKey<S>(schema) ?? ONE_OF_KEY;
-  const selectSuffix = xxxOfKey === ANY_OF_KEY ? '__anyof_select' : '__oneof_select';
-  const fieldId = `${id}${selectSuffix}`;
+  const selectorsAbove = useOptionSelectorsAbove(fieldPath);
+  const selectorDepth = selectorsAbove[xxxOfKey] + 1;
+  const fieldId = optionSelectorId(id, xxxOfKey, selectorDepth);
+  const selectorsBelow = useMemo(
+    () => ({ ...selectorsAbove, [xxxOfKey]: selectorDepth }),
+    [selectorsAbove, xxxOfKey, selectorDepth],
+  );
 
   const { widgets, fields, translateString, globalFormOptions, globalUiOptions, uiSchemaDefinitions, rootSchema } =
     registry;
@@ -283,7 +289,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     !isOptionalRender || hasFormData ? (
       <Widget
         id={fieldId}
-        name={`${name}${selectSuffix}`}
+        name={optionSelectorId(name, xxxOfKey, selectorDepth)}
         schema={{ type: 'number', default: 0 } as S}
         onChange={onOptionChange}
         onBlur={onBlur}
@@ -307,7 +313,9 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     ) : undefined;
 
   const optionsSchemaField = rendersOption ? (
-    <SchemaFieldComponent {...props} schema={renderedOption} uiSchema={optionFieldUiSchema} />
+    <OptionSelectorContext value={selectorsBelow}>
+      <SchemaFieldComponent {...props} schema={renderedOption} uiSchema={optionFieldUiSchema} />
+    </OptionSelectorContext>
   ) : null;
 
   return (

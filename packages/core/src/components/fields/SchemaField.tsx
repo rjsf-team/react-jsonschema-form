@@ -19,7 +19,7 @@ import type {
 } from '@rjsf/utils';
 import {
   ANY_OF_KEY,
-  fieldPathToId,
+  besideOptionsId,
   fieldPathToList,
   getDeprecatedHandling,
   getDescribedControlAttributes,
@@ -49,7 +49,6 @@ import {
   RJSF_REF_CYCLE_KEY,
   shouldRenderOptionalField,
   toConstant,
-  toFieldPath,
   UI_FIELD_KEY,
   UI_OPTIONS_KEY,
   UI_WIDGET_KEY,
@@ -645,12 +644,10 @@ export function useSchemaFieldPlan<
     inheritedPresentation?.plan.showLabel ??
     uiBooleanOption(globalUiOptions?.label) ??
     true;
-  // When the options render, the field component renders beside them under the id a child named `XxxOf` would have,
-  // to avoid DOM id duplication with the rendering of the same data address by the `XxxOfField`. The `fieldPath`
-  // stays the truthful data address either way
-  const fieldComponentId = retrievesOptions
-    ? fieldPathToId(toFieldPath('XxxOf', fieldPath), globalFormOptions)
-    : fieldId;
+  // When the options render, the field component renders beside them under an id of its own, to avoid DOM id
+  // duplication with the rendering of the same data address by the `XxxOfField`. The `fieldPath` stays the truthful
+  // data address either way
+  const fieldComponentId = retrievesOptions ? besideOptionsId(fieldId) : fieldId;
   // `MultiSchemaField` renders the options it is handed. Memoized so a re-render that changed neither the schema nor
   // the data hands it the same array, which its callbacks key on
   const xxxOfOptions = useMemo(

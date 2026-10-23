@@ -76,7 +76,7 @@ describe('oneOf', () => {
     expect(node.querySelectorAll('select')).toHaveLength(1);
     expect(node.querySelector('select')).toHaveAttribute('id', 'root__oneof_select');
     expect(node.querySelectorAll('span.required')).toHaveLength(1);
-    expect(node.querySelectorAll('#root_XxxOf__description')).toHaveLength(1);
+    expect(node.querySelectorAll('#root__XxxOf__description')).toHaveLength(1);
     // The object renders beside the selected option under an id of its own, so nothing else claims the field's
     expect(node.querySelectorAll('#root__description')).toHaveLength(0);
     expect(node.querySelectorAll('#root_baz')).toHaveLength(1);
@@ -3209,8 +3209,8 @@ describe('oneOf', () => {
       const inferred = createFormComponent({ schema: typeless, uiSchema });
       const explicit = createFormComponent({ schema: typed, uiSchema });
 
-      expect(inferred.node.querySelectorAll('input#root-0[type=radio]')).toHaveLength(1);
-      expect(explicit.node.querySelectorAll('input#root-0[type=radio]')).toHaveLength(1);
+      expect(inferred.node.querySelectorAll('input#root__0[type=radio]')).toHaveLength(1);
+      expect(explicit.node.querySelectorAll('input#root__0[type=radio]')).toHaveLength(1);
     });
 
     it('should keep the label when the caller spells the widget as a ui:option', () => {
@@ -4102,11 +4102,11 @@ describe('oneOf', () => {
 
     it('should not render a spurious XxxOf-prefixed input alongside the oneOf selector', () => {
       // Regression: { type: 'string', oneOf: [...] } was rendering an outer StringField
-      // with id="root_XxxOf" in addition to the OneOfField selector. Typing into that
+      // with id="root__XxxOf" in addition to the OneOfField selector. Typing into that
       // input corrupted formData (e.g. set { XxxOf: value } instead of a plain string).
       const { node } = createFormComponent({ schema: ipSchema });
 
-      expect(node.querySelector('input#root_XxxOf')).not.toBeInTheDocument();
+      expect(node.querySelector('input#root__XxxOf')).not.toBeInTheDocument();
     });
 
     it('should render the option text input with the correct root id after selecting an option', () => {
@@ -4143,7 +4143,7 @@ describe('oneOf', () => {
       };
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelector('input#root_XxxOf')).not.toBeInTheDocument();
+      expect(node.querySelector('input#root__XxxOf')).not.toBeInTheDocument();
       expect(node.querySelector('input#root')).toBeInTheDocument();
     });
 
@@ -4176,7 +4176,7 @@ describe('oneOf', () => {
       };
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelector('[id="root_XxxOf"]')).not.toBeInTheDocument();
+      expect(node.querySelector('[id="root__XxxOf"]')).not.toBeInTheDocument();
     });
 
     it('should still render common object properties alongside the oneOf selector', () => {
@@ -4797,7 +4797,7 @@ describe('oneOf', () => {
   });
 
   it.each([
-    ['rendered beside its selector', 'root_XxxOf__add'],
+    ['rendered beside its selector', 'root__XxxOf__add'],
     ['rendered as the selected option', 'root__add'],
   ])('keeps the own errors of an array %s when it adds an item', async (_, addButtonId) => {
     const { node, onChange } = createFormComponent({

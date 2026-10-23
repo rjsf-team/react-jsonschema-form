@@ -31,7 +31,7 @@ import { userEvent } from '@testing-library/user-event';
 import SchemaField from '../src/components/fields/SchemaField.tsx';
 import Form, { generateTheme, generateWidgets } from '../src/index.ts';
 import MarkdownTemplate from '../src/markdown.tsx';
-import { createFormComponent, setupConsoleWarnSuppression, submitForm } from './testUtils.tsx';
+import { createFormComponent, elementOf, setupConsoleWarnSuppression, submitForm } from './testUtils.tsx';
 import type { NoValFormProps } from './testUtils.tsx';
 
 const user = userEvent.setup();
@@ -2237,8 +2237,8 @@ describe('SchemaField', () => {
       };
       const { node: form } = createFormComponent({ schema: { definitions: { node }, $ref: '#/definitions/node' } });
 
-      expect(form.querySelectorAll('button[id$="-button"]')).toHaveLength(1);
-      expect(form.querySelector('#root_wrap_child-button')).toHaveTextContent('Expand Cycle');
+      expect(form.querySelectorAll('button[id$="__expand"]')).toHaveLength(1);
+      expect(form.querySelector('#root_wrap_child__expand')).toHaveTextContent('Expand Cycle');
     });
 
     it('renders a cycle indicator for a recursion reached through a then branch', async () => {
@@ -2251,14 +2251,14 @@ describe('SchemaField', () => {
       };
       const { node: form } = createFormComponent({ schema: { definitions: { node }, $ref: '#/definitions/node' } });
 
-      expect(form.querySelectorAll('button[id$="-button"]')).toHaveLength(1);
-      expect(form.querySelector('#root_child-button')).toHaveTextContent('Expand Cycle');
+      expect(form.querySelectorAll('button[id$="__expand"]')).toHaveLength(1);
+      expect(form.querySelector('#root_child__expand')).toHaveTextContent('Expand Cycle');
 
       // The expanded field is handed the definition resolved in place, with the branch still to resolve
       await user.click(screen.getByRole('button', { name: 'Expand Cycle' }));
 
-      expect(form.querySelectorAll('button[id$="-button"]')).toHaveLength(1);
-      expect(form.querySelector('#root_child_child-button')).toHaveTextContent('Expand Cycle');
+      expect(form.querySelectorAll('button[id$="__expand"]')).toHaveLength(1);
+      expect(form.querySelector('#root_child_child__expand')).toHaveTextContent('Expand Cycle');
     });
 
     it.each<[string, (b: RJSFSchema) => RJSFSchema, string]>([
@@ -2275,7 +2275,7 @@ describe('SchemaField', () => {
       const { node: form } = createFormComponent({ schema: { definitions: { Q }, ...withB(b) } });
 
       expect(form.querySelector(nameId)).toBeInTheDocument();
-      expect(form.querySelectorAll('button[id$="-button"]')).toHaveLength(0);
+      expect(form.querySelectorAll('button[id$="__expand"]')).toHaveLength(0);
     });
 
     it.each<[string, Record<string, Field> | undefined]>([
@@ -2300,28 +2300,28 @@ describe('SchemaField', () => {
         properties: { b: { type: 'string' }, a: { $ref: '#/definitions/A' } },
       };
       const { node } = createFormComponent({ schema: { definitions: { A, B }, $ref: '#/definitions/A' }, fields });
-      const ids = () => [...node.querySelectorAll('input[id], button[id$="-button"]')].map(({ id }) => id);
+      const ids = () => [...node.querySelectorAll('input[id], button[id$="__expand"]')].map(({ id }) => id);
 
-      expect(ids()).toEqual(['root_a', 'root_b_b', 'root_b_a-button']);
+      expect(ids()).toEqual(['root_a', 'root_b_b', 'root_b_a__expand']);
 
       await user.click(screen.getByRole('button', { name: 'Expand Cycle' }));
 
-      expect(ids()).toEqual(['root_a', 'root_b_b', 'root_b_a_a', 'root_b_a_b_b', 'root_b_a_b_a-button']);
+      expect(ids()).toEqual(['root_a', 'root_b_b', 'root_b_a_a', 'root_b_a_b_b', 'root_b_a_b_a__expand']);
     });
 
     it('clicking the expand button shows the next level of the cycle', async () => {
       const { node } = createFormComponent({ schema });
 
       // child is fully rendered (first $ref occurrence), but child.child hits the cycle
-      const expandButton = node.querySelector<HTMLButtonElement>('#root_child_child-button')!;
+      const expandButton = elementOf(node, '#root_child_child__expand', HTMLButtonElement);
       expect(expandButton).not.toBeNull();
       expect(expandButton).toHaveTextContent('Expand Cycle');
 
       await user.click(expandButton);
 
       // One level per click, as for a recursion through a `then` or an `allOf`
-      expect(node.querySelector('#root_child_child-button')).toBeNull();
-      expect(node.querySelector('#root_child_child_child-button')).toHaveTextContent('Expand Cycle');
+      expect(node.querySelector('#root_child_child__expand')).toBeNull();
+      expect(node.querySelector('#root_child_child_child__expand')).toHaveTextContent('Expand Cycle');
     });
 
     describe('recursive definitions', () => {
@@ -2337,15 +2337,15 @@ describe('SchemaField', () => {
       ])('expands a recursion through %s by one level per click', async (_, child) => {
         const { node } = createFormComponent({ schema: nodeWith(child) });
 
-        expect(node.querySelectorAll('button[id$="-button"]')).toHaveLength(1);
-        expect(node.querySelector('#root_child-button')).toHaveTextContent('Expand Cycle');
+        expect(node.querySelectorAll('button[id$="__expand"]')).toHaveLength(1);
+        expect(node.querySelector('#root_child__expand')).toHaveTextContent('Expand Cycle');
 
         await user.click(screen.getByRole('button', { name: 'Expand Cycle' }));
 
         expect(node.querySelector('#root_child_name')).toBeInTheDocument();
         expect(node.querySelector('#root_child_child_name')).not.toBeInTheDocument();
-        expect(node.querySelectorAll('button[id$="-button"]')).toHaveLength(1);
-        expect(node.querySelector('#root_child_child-button')).toHaveTextContent('Expand Cycle');
+        expect(node.querySelectorAll('button[id$="__expand"]')).toHaveLength(1);
+        expect(node.querySelector('#root_child_child__expand')).toHaveTextContent('Expand Cycle');
       });
 
       it('renders an anyOf option that refers back to the schema offering it as the selector alone', async () => {
@@ -2361,7 +2361,7 @@ describe('SchemaField', () => {
         await user.selectOptions(select, 'Option 2');
 
         expect(node.querySelector('#root_x')).toBeInTheDocument();
-        expect(node.querySelectorAll('button[id$="-button"]')).toHaveLength(0);
+        expect(node.querySelectorAll('button[id$="__expand"]')).toHaveLength(0);
       });
 
       it('renders definitions that all refer to one another, collapsing each path where it comes back round', () => {
@@ -2383,13 +2383,13 @@ describe('SchemaField', () => {
         const { node } = createFormComponent({ schema: { definitions, $ref: '#/definitions/d0' } });
 
         expect(node.querySelectorAll('input')).toHaveLength(16);
-        expect(node.querySelectorAll('button[id$="-button"]')).toHaveLength(33);
+        expect(node.querySelectorAll('button[id$="__expand"]')).toHaveLength(33);
       });
 
       describe('the fields and Expand Cycle buttons a recursion renders', () => {
         const controls = (node: Element) =>
           [...node.querySelectorAll('input[id], select[id], textarea[id]')].map(({ id }) => id);
-        const buttons = (node: Element) => [...node.querySelectorAll('button[id$="-button"]')].map(({ id }) => id);
+        const buttons = (node: Element) => [...node.querySelectorAll('button[id$="__expand"]')].map(({ id }) => id);
         const named: RJSFSchema = { type: 'string' };
         const withName = (child: RJSFSchema): RJSFSchema =>
           rootOf({ type: 'object', properties: { name: named, child } });
@@ -2421,26 +2421,26 @@ describe('SchemaField', () => {
             'an allOf declaring the recursive property (#5500)',
             withName({ type: 'object', allOf: [{ properties: { x: ref } }] }),
             ['root_name'],
-            'root_child_x-button',
+            'root_child_x__expand',
             ['root_name', 'root_child_x_name'],
-            'root_child_x_child_x-button',
+            'root_child_x_child_x__expand',
             true,
           ],
           [
             'a then declaring the recursive property (#5500)',
             withName({ type: 'object', if: {}, then: { properties: { x: ref } } }),
             ['root_name'],
-            'root_child_x-button',
+            'root_child_x__expand',
             ['root_name', 'root_child_x_name'],
-            'root_child_x_child_x-button',
+            'root_child_x_child_x__expand',
           ],
           [
             'a dependencies entry that is the recursive $ref (#5500)',
             withName({ type: 'object', properties: { x: { type: 'string', default: 'x' } }, dependencies: { x: ref } }),
             ['root_name'],
-            'root_child-button',
+            'root_child__expand',
             ['root_name', 'root_child_x', 'root_child_name'],
-            'root_child_child-button',
+            'root_child_child__expand',
           ],
           [
             'a dependencies entry declaring the recursive property (#5500)',
@@ -2450,25 +2450,25 @@ describe('SchemaField', () => {
               dependencies: { x: { properties: { y: ref } } },
             }),
             ['root_name', 'root_child_x'],
-            'root_child_y-button',
+            'root_child_y__expand',
             ['root_name', 'root_child_x', 'root_child_y_name', 'root_child_y_child_x'],
-            'root_child_y_child_y-button',
+            'root_child_y_child_y__expand',
           ],
           [
             'two definitions whose dependencies refer to each other',
             { definitions: { A, B }, $ref: '#/definitions/A' },
             ['root_a', 'root_b_c'],
-            'root_b_a2-button',
+            'root_b_a2__expand',
             ['root_a', 'root_b_c', 'root_b_a2_a', 'root_b_a2_b_c'],
-            'root_b_a2_b_a2-button',
+            'root_b_a2_b_a2__expand',
           ],
           [
             'a then merging a definition that merges the recursive one back in',
             { definitions: { Pet, Cat }, $ref: '#/definitions/Pet' },
             ['root_petType', 'root_hunts'],
-            'root_friend-button',
+            'root_friend__expand',
             ['root_petType', 'root_friend_petType', 'root_friend_hunts', 'root_hunts'],
-            'root_friend_friend-button',
+            'root_friend_friend__expand',
           ],
           [
             'a percent-encoded $ref, stopping where the same $ref written plainly does',
@@ -2479,9 +2479,9 @@ describe('SchemaField', () => {
               $ref: '#/definitions/A',
             },
             ['root_name'],
-            'root_child-button',
+            'root_child__expand',
             ['root_name', 'root_child_name'],
-            'root_child_child-button',
+            'root_child_child__expand',
           ],
           [
             'a chain of aliases, stopping where its first alias enters the definition again',
@@ -2494,9 +2494,9 @@ describe('SchemaField', () => {
               $ref: '#/definitions/node',
             },
             ['root_n'],
-            'root_c-button',
+            'root_c__expand',
             ['root_n', 'root_c_n'],
-            'root_c_c-button',
+            'root_c_c__expand',
           ],
           [
             'two definitions whose patterns match the keys referring to each other (#5452 a)',
@@ -2516,9 +2516,9 @@ describe('SchemaField', () => {
               $ref: '#/definitions/x',
             },
             [],
-            'root_y_x-button',
+            'root_y_x__expand',
             [],
-            'root_y_x_y_x-button',
+            'root_y_x_y_x__expand',
           ],
           [
             'an allOf entry declaring a recursive property its own pattern matches (#5452 b)',
@@ -2527,9 +2527,9 @@ describe('SchemaField', () => {
               allOf: [{ properties: { child: ref, name: named }, patternProperties: { '^child': { title: 'Child' } } }],
             }),
             ['root_name'],
-            'root_child-button',
+            'root_child__expand',
             ['root_child_name', 'root_name'],
-            'root_child_child-button',
+            'root_child_child__expand',
           ],
         ])(
           'renders a recursion through %s, one level per click',
@@ -2575,7 +2575,7 @@ describe('SchemaField', () => {
             properties: { name: named, kids: { type: 'array', items: ref }, best: ref },
           });
           const { node } = createFormComponent({ schema, initialFormData: { kids: [{}] } });
-          expect(buttons(node)).toEqual(['root_kids_0_best-button', 'root_best-button']);
+          expect(buttons(node)).toEqual(['root_kids_0_best__expand', 'root_best__expand']);
         });
 
         it("fills an added row of a recursive definition with its item's defaults, where the recursion restarts once", async () => {
@@ -2791,7 +2791,7 @@ describe('SchemaField', () => {
           };
           const { node } = createFormComponent({ schema });
           expect(controls(node)).toEqual(['root_x_a', 'root_x_b_c', 'root_y_c', 'root_y_a2_a']);
-          expect(buttons(node)).toEqual(['root_x_b_a2-button', 'root_y_a2_b-button']);
+          expect(buttons(node)).toEqual(['root_x_b_a2__expand', 'root_y_a2_b__expand']);
         });
       });
 
@@ -2810,7 +2810,7 @@ describe('SchemaField', () => {
           const { node } = createFormComponent({ schema, initialFormData: data });
 
           expect(node.querySelector('#root_kids_0_kids_0_kids_0_v')).toHaveValue('d');
-          expect(node.querySelectorAll('button[id$="-button"]')).toHaveLength(0);
+          expect(node.querySelectorAll('button[id$="__expand"]')).toHaveLength(0);
         });
 
         it('offers an added row its own Add button rather than an Expand Cycle button', async () => {
@@ -2828,7 +2828,7 @@ describe('SchemaField', () => {
 
           expect(node.querySelector('#root_kids_0_kids_0_v')).toBeInTheDocument();
           expect(node.querySelector('#root_kids_0_kids_0_kids__add')).toBeInTheDocument();
-          expect(node.querySelectorAll('button[id$="-button"]')).toHaveLength(0);
+          expect(node.querySelectorAll('button[id$="__expand"]')).toHaveLength(0);
         });
       });
     });

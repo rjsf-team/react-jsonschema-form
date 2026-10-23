@@ -287,8 +287,8 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="root_customField-key"
-                    id="root_customField-key__label"
+                    for="root_customField__key"
+                    id="root_customField__key__label"
                   >
                     customField Key
                   </label>
@@ -297,8 +297,8 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                   >
                     <input
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
-                      id="root_customField-key"
-                      name="root_customField-key"
+                      id="root_customField__key"
+                      name="root_customField__key"
                       type="text"
                       value="customField"
                     />
@@ -1777,8 +1777,8 @@ exports[`object fields > additionalProperties 1`] = `
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="root_foo-key"
-                    id="root_foo-key__label"
+                    for="root_foo__key"
+                    id="root_foo__key__label"
                   >
                     foo Key
                   </label>
@@ -1787,8 +1787,8 @@ exports[`object fields > additionalProperties 1`] = `
                   >
                     <input
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
-                      id="root_foo-key"
-                      name="root_foo-key"
+                      id="root_foo__key"
+                      name="root_foo__key"
                       type="text"
                       value="foo"
                     />
@@ -1931,8 +1931,8 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="root_foo-key"
-                    id="root_foo-key__label"
+                    for="root_foo__key"
+                    id="root_foo__key__label"
                   >
                     foo Key
                   </label>
@@ -1941,11 +1941,11 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                   >
                     <button
                       aria-expanded="false"
-                      aria-labelledby="root_foo-key__label"
+                      aria-labelledby="root_foo__key__label"
                       class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
                       data-tabster="{"focusable":{"ignoreKeydown":{"Escape":false}}}"
-                      id="root_foo-key"
-                      name="root_foo-key"
+                      id="root_foo__key"
+                      name="root_foo__key"
                       role="combobox"
                       tabindex="0"
                       type="button"
@@ -2144,8 +2144,8 @@ exports[`object fields > additionalProperties, array type 1`] = `
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="root_foo-key"
-                    id="root_foo-key__label"
+                    for="root_foo__key"
+                    id="root_foo__key__label"
                   >
                     foo Key
                   </label>
@@ -2154,8 +2154,8 @@ exports[`object fields > additionalProperties, array type 1`] = `
                   >
                     <input
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
-                      id="root_foo-key"
-                      name="root_foo-key"
+                      id="root_foo__key"
+                      name="root_foo__key"
                       type="text"
                       value="foo"
                     />
@@ -2333,8 +2333,8 @@ exports[`object fields > additionalProperties, description 1`] = `
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="root_foo-key"
-                    id="root_foo-key__label"
+                    for="root_foo__key"
+                    id="root_foo__key__label"
                   >
                     foo Key
                   </label>
@@ -2343,8 +2343,8 @@ exports[`object fields > additionalProperties, description 1`] = `
                   >
                     <input
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
-                      id="root_foo-key"
-                      name="root_foo-key"
+                      id="root_foo__key"
+                      name="root_foo__key"
                       type="text"
                       value="foo"
                     />
@@ -2499,8 +2499,8 @@ exports[`object fields > additionalProperties, label off 1`] = `
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="root_foo-key"
-                    id="root_foo-key__label"
+                    for="root_foo__key"
+                    id="root_foo__key__label"
                   >
                     foo Key
                   </label>
@@ -2509,8 +2509,8 @@ exports[`object fields > additionalProperties, label off 1`] = `
                   >
                     <input
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
-                      id="root_foo-key"
-                      name="root_foo-key"
+                      id="root_foo__key"
+                      name="root_foo__key"
                       type="text"
                       value="foo"
                     />
@@ -2653,8 +2653,8 @@ exports[`object fields > additionalProperties, object type 1`] = `
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="root_foo-key"
-                    id="root_foo-key__label"
+                    for="root_foo__key"
+                    id="root_foo__key__label"
                   >
                     foo Key
                   </label>
@@ -2663,8 +2663,8 @@ exports[`object fields > additionalProperties, object type 1`] = `
                   >
                     <input
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
-                      id="root_foo-key"
-                      name="root_foo-key"
+                      id="root_foo__key"
+                      name="root_foo__key"
                       type="text"
                       value="foo"
                     />
@@ -2843,8 +2843,8 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="root_foo-key"
-                    id="root_foo-key__label"
+                    for="root_foo__key"
+                    id="root_foo__key__label"
                   >
                     foo Key
                   </label>
@@ -2853,11 +2853,11 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                   >
                     <button
                       aria-expanded="false"
-                      aria-labelledby="root_foo-key__label"
+                      aria-labelledby="root_foo__key__label"
                       class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
                       data-tabster="{"focusable":{"ignoreKeydown":{"Escape":false}}}"
-                      id="root_foo-key"
-                      name="root_foo-key"
+                      id="root_foo__key"
+                      name="root_foo__key"
                       role="combobox"
                       tabindex="0"
                       type="button"
@@ -3044,8 +3044,8 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="root_foo-key"
-                    id="root_foo-key__label"
+                    for="root_foo__key"
+                    id="root_foo__key__label"
                   >
                     foo (deprecated) Key
                   </label>
@@ -3054,11 +3054,11 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                   >
                     <button
                       aria-expanded="false"
-                      aria-labelledby="root_foo-key__label"
+                      aria-labelledby="root_foo__key__label"
                       class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
                       data-tabster="{"focusable":{"ignoreKeydown":{"Escape":false}}}"
-                      id="root_foo-key"
-                      name="root_foo-key"
+                      id="root_foo__key"
+                      name="root_foo__key"
                       role="combobox"
                       tabindex="0"
                       type="button"
@@ -3505,8 +3505,8 @@ exports[`object fields > show add button and fields if additionalProperties is t
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="root_additionalProperty-key"
-                    id="root_additionalProperty-key__label"
+                    for="root_additionalProperty__key"
+                    id="root_additionalProperty__key__label"
                   >
                     additionalProperty Key
                   </label>
@@ -3515,8 +3515,8 @@ exports[`object fields > show add button and fields if additionalProperties is t
                   >
                     <input
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
-                      id="root_additionalProperty-key"
-                      name="root_additionalProperty-key"
+                      id="root_additionalProperty__key"
+                      name="root_additionalProperty__key"
                       type="text"
                       value="additionalProperty"
                     />
@@ -3684,8 +3684,8 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="root_foo-key"
-                    id="root_foo-key__label"
+                    for="root_foo__key"
+                    id="root_foo__key__label"
                   >
                     foo Key
                   </label>
@@ -3694,8 +3694,8 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                   >
                     <input
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
-                      id="root_foo-key"
-                      name="root_foo-key"
+                      id="root_foo__key"
+                      name="root_foo__key"
                       type="text"
                       value="foo"
                     />
@@ -4008,8 +4008,8 @@ exports[`object fields > with title and description > show add button and fields
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="root_additionalProperty-key"
-                    id="root_additionalProperty-key__label"
+                    for="root_additionalProperty__key"
+                    id="root_additionalProperty__key__label"
                   >
                     additionalProperty Key
                   </label>
@@ -4018,8 +4018,8 @@ exports[`object fields > with title and description > show add button and fields
                   >
                     <input
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
-                      id="root_additionalProperty-key"
-                      name="root_additionalProperty-key"
+                      id="root_additionalProperty__key"
+                      name="root_additionalProperty__key"
                       type="text"
                       value="additionalProperty"
                     />
@@ -4187,8 +4187,8 @@ exports[`object fields > with title and description from both > additionalProper
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="root_foo-key"
-                    id="root_foo-key__label"
+                    for="root_foo__key"
+                    id="root_foo__key__label"
                   >
                     foo Key
                   </label>
@@ -4197,8 +4197,8 @@ exports[`object fields > with title and description from both > additionalProper
                   >
                     <input
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
-                      id="root_foo-key"
-                      name="root_foo-key"
+                      id="root_foo__key"
+                      name="root_foo__key"
                       type="text"
                       value="foo"
                     />
@@ -4511,8 +4511,8 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="root_foo-key"
-                    id="root_foo-key__label"
+                    for="root_foo__key"
+                    id="root_foo__key__label"
                   >
                     foo Key
                   </label>
@@ -4521,8 +4521,8 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                   >
                     <input
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
-                      id="root_foo-key"
-                      name="root_foo-key"
+                      id="root_foo__key"
+                      name="root_foo__key"
                       type="text"
                       value="foo"
                     />
@@ -4835,8 +4835,8 @@ exports[`object fields > with title and description from uiSchema > show add but
                 >
                   <label
                     class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-                    for="root_additionalProperty-key"
-                    id="root_additionalProperty-key__label"
+                    for="root_additionalProperty__key"
+                    id="root_additionalProperty__key__label"
                   >
                     additionalProperty Key
                   </label>
@@ -4845,8 +4845,8 @@ exports[`object fields > with title and description from uiSchema > show add but
                   >
                     <input
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
-                      id="root_additionalProperty-key"
-                      name="root_additionalProperty-key"
+                      id="root_additionalProperty__key"
+                      name="root_additionalProperty__key"
                       type="text"
                       value="additionalProperty"
                     />
@@ -4993,8 +4993,8 @@ exports[`object fields > with title and description with global label off > addi
                     <input
                       aria-label="foo Key"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
-                      id="root_foo-key"
-                      name="root_foo-key"
+                      id="root_foo__key"
+                      name="root_foo__key"
                       type="text"
                       value="foo"
                     />
@@ -5222,8 +5222,8 @@ exports[`object fields > with title and description with global label off > show
                     <input
                       aria-label="additionalProperty Key"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
-                      id="root_additionalProperty-key"
-                      name="root_additionalProperty-key"
+                      id="root_additionalProperty__key"
+                      name="root_additionalProperty__key"
                       type="text"
                       value="additionalProperty"
                     />

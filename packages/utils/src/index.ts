@@ -111,13 +111,16 @@ import hasVisibleErrors from './hasVisibleErrors.ts';
 import hasWidget from './hasWidget.ts';
 import hasWidgetErrors from './hasWidgetErrors.ts';
 import {
+  additionalKeyId,
   ariaDescribedByIds,
+  besideOptionsId,
   buttonId,
   dateElementId,
   descriptionId,
   errorId,
   examplesId,
   expandButtonId,
+  fallbackTypeSelectorId,
   fieldLabelId,
   helpId,
   optionalControlsId,
@@ -125,6 +128,8 @@ import {
   optionHelpId,
   optionId,
   optionLabelId,
+  optionSelectorId,
+  partId,
   selectedOptionDescriptionId,
   titleId,
 } from './idGenerators.ts';
@@ -243,11 +248,13 @@ export type {
 };
 
 export {
+  additionalKeyId,
   AdditionalPropertyKeySelect,
   allowAdditionalItems,
   allowsAdditionalProperties,
   ariaDescribedByIds,
   asNumber,
+  besideOptionsId,
   buttonId,
   callWithDeferredThrow,
   canExpand,
@@ -281,6 +288,7 @@ export {
   examplesId,
   expandButtonId,
   ErrorSchemaBuilder,
+  fallbackTypeSelectorId,
   fieldLabelId,
   // oxlint-disable-next-line typescript/no-deprecated -- re-exported for callers written against 6.x
   findSchemaDefinition,
@@ -387,11 +395,13 @@ export {
   optionHelpId,
   optionId,
   optionLabelId,
+  optionSelectorId,
   optionsList,
   orderProperties,
   pad,
   padTimeSeconds,
   parseDateString,
+  partId,
   pickGlobalUiOptions,
   rangeSpec,
   rendersOwnFieldBesideOption,

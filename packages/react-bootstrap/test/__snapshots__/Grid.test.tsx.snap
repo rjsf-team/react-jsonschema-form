@@ -194,14 +194,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         aria-describedby="root_person_race__description"
                         class="form-check-input"
-                        id="root_person_race-0"
+                        id="root_person_race__0"
                         name="root_person_race"
                         type="checkbox"
                         value="0"
                       />
                       <label
                         class="form-check-label"
-                        for="root_person_race-0"
+                        for="root_person_race__0"
                         title=""
                       >
                         American Indian / Alaska Native
@@ -213,14 +213,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         aria-describedby="root_person_race__description"
                         class="form-check-input"
-                        id="root_person_race-1"
+                        id="root_person_race__1"
                         name="root_person_race"
                         type="checkbox"
                         value="1"
                       />
                       <label
                         class="form-check-label"
-                        for="root_person_race-1"
+                        for="root_person_race__1"
                         title=""
                       >
                         Asian
@@ -232,14 +232,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         aria-describedby="root_person_race__description"
                         class="form-check-input"
-                        id="root_person_race-2"
+                        id="root_person_race__2"
                         name="root_person_race"
                         type="checkbox"
                         value="2"
                       />
                       <label
                         class="form-check-label"
-                        for="root_person_race-2"
+                        for="root_person_race__2"
                         title=""
                       >
                         Black / African American
@@ -251,14 +251,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         aria-describedby="root_person_race__description"
                         class="form-check-input"
-                        id="root_person_race-3"
+                        id="root_person_race__3"
                         name="root_person_race"
                         type="checkbox"
                         value="3"
                       />
                       <label
                         class="form-check-label"
-                        for="root_person_race-3"
+                        for="root_person_race__3"
                         title=""
                       >
                         Native Hawaiian / Other Pacific Islander
@@ -270,14 +270,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         aria-describedby="root_person_race__description"
                         class="form-check-input"
-                        id="root_person_race-4"
+                        id="root_person_race__4"
                         name="root_person_race"
                         type="checkbox"
                         value="4"
                       />
                       <label
                         class="form-check-label"
-                        for="root_person_race-4"
+                        for="root_person_race__4"
                         title=""
                       >
                         White
@@ -786,14 +786,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           <input
                             checked=""
                             class="form-check-input"
-                            id="root_employment-0"
+                            id="root_employment__0"
                             name="root_employment"
                             type="radio"
                             value="0"
                           />
                           <label
                             class="form-check-label"
-                            for="root_employment-0"
+                            for="root_employment__0"
                             title=""
                           >
                             Company
@@ -804,14 +804,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         >
                           <input
                             class="form-check-input"
-                            id="root_employment-1"
+                            id="root_employment__1"
                             name="root_employment"
                             type="radio"
                             value="1"
                           />
                           <label
                             class="form-check-label"
-                            for="root_employment-1"
+                            for="root_employment__1"
                             title=""
                           >
                             Education
@@ -822,14 +822,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         >
                           <input
                             class="form-check-input"
-                            id="root_employment-2"
+                            id="root_employment__2"
                             name="root_employment"
                             type="radio"
                             value="2"
                           />
                           <label
                             class="form-check-label"
-                            for="root_employment-2"
+                            for="root_employment__2"
                             title=""
                           >
                             Other
@@ -1450,14 +1450,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         aria-describedby="root_person_race__description"
                         class="form-check-input"
-                        id="root_person_race-0"
+                        id="root_person_race__0"
                         name="root_person_race"
                         type="checkbox"
                         value="0"
                       />
                       <label
                         class="form-check-label"
-                        for="root_person_race-0"
+                        for="root_person_race__0"
                         title=""
                       >
                         American Indian / Alaska Native
@@ -1469,14 +1469,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         aria-describedby="root_person_race__description"
                         class="form-check-input"
-                        id="root_person_race-1"
+                        id="root_person_race__1"
                         name="root_person_race"
                         type="checkbox"
                         value="1"
                       />
                       <label
                         class="form-check-label"
-                        for="root_person_race-1"
+                        for="root_person_race__1"
                         title=""
                       >
                         Asian
@@ -1488,14 +1488,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         aria-describedby="root_person_race__description"
                         class="form-check-input"
-                        id="root_person_race-2"
+                        id="root_person_race__2"
                         name="root_person_race"
                         type="checkbox"
                         value="2"
                       />
                       <label
                         class="form-check-label"
-                        for="root_person_race-2"
+                        for="root_person_race__2"
                         title=""
                       >
                         Black / African American
@@ -1507,14 +1507,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         aria-describedby="root_person_race__description"
                         class="form-check-input"
-                        id="root_person_race-3"
+                        id="root_person_race__3"
                         name="root_person_race"
                         type="checkbox"
                         value="3"
                       />
                       <label
                         class="form-check-label"
-                        for="root_person_race-3"
+                        for="root_person_race__3"
                         title=""
                       >
                         Native Hawaiian / Other Pacific Islander
@@ -1526,14 +1526,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         aria-describedby="root_person_race__description"
                         class="form-check-input"
-                        id="root_person_race-4"
+                        id="root_person_race__4"
                         name="root_person_race"
                         type="checkbox"
                         value="4"
                       />
                       <label
                         class="form-check-label"
-                        for="root_person_race-4"
+                        for="root_person_race__4"
                         title=""
                       >
                         White
@@ -2041,14 +2041,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         >
                           <input
                             class="form-check-input"
-                            id="root_employment-0"
+                            id="root_employment__0"
                             name="root_employment"
                             type="radio"
                             value="0"
                           />
                           <label
                             class="form-check-label"
-                            for="root_employment-0"
+                            for="root_employment__0"
                             title=""
                           >
                             Company
@@ -2060,14 +2060,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           <input
                             checked=""
                             class="form-check-input"
-                            id="root_employment-1"
+                            id="root_employment__1"
                             name="root_employment"
                             type="radio"
                             value="1"
                           />
                           <label
                             class="form-check-label"
-                            for="root_employment-1"
+                            for="root_employment__1"
                             title=""
                           >
                             Education
@@ -2078,14 +2078,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         >
                           <input
                             class="form-check-input"
-                            id="root_employment-2"
+                            id="root_employment__2"
                             name="root_employment"
                             type="radio"
                             value="2"
                           />
                           <label
                             class="form-check-label"
-                            for="root_employment-2"
+                            for="root_employment__2"
                             title=""
                           >
                             Other
@@ -2734,14 +2734,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         aria-describedby="root_person_race__description"
                         class="form-check-input"
-                        id="root_person_race-0"
+                        id="root_person_race__0"
                         name="root_person_race"
                         type="checkbox"
                         value="0"
                       />
                       <label
                         class="form-check-label"
-                        for="root_person_race-0"
+                        for="root_person_race__0"
                         title=""
                       >
                         American Indian / Alaska Native
@@ -2753,14 +2753,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         aria-describedby="root_person_race__description"
                         class="form-check-input"
-                        id="root_person_race-1"
+                        id="root_person_race__1"
                         name="root_person_race"
                         type="checkbox"
                         value="1"
                       />
                       <label
                         class="form-check-label"
-                        for="root_person_race-1"
+                        for="root_person_race__1"
                         title=""
                       >
                         Asian
@@ -2772,14 +2772,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         aria-describedby="root_person_race__description"
                         class="form-check-input"
-                        id="root_person_race-2"
+                        id="root_person_race__2"
                         name="root_person_race"
                         type="checkbox"
                         value="2"
                       />
                       <label
                         class="form-check-label"
-                        for="root_person_race-2"
+                        for="root_person_race__2"
                         title=""
                       >
                         Black / African American
@@ -2791,14 +2791,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         aria-describedby="root_person_race__description"
                         class="form-check-input"
-                        id="root_person_race-3"
+                        id="root_person_race__3"
                         name="root_person_race"
                         type="checkbox"
                         value="3"
                       />
                       <label
                         class="form-check-label"
-                        for="root_person_race-3"
+                        for="root_person_race__3"
                         title=""
                       >
                         Native Hawaiian / Other Pacific Islander
@@ -2810,14 +2810,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         aria-describedby="root_person_race__description"
                         class="form-check-input"
-                        id="root_person_race-4"
+                        id="root_person_race__4"
                         name="root_person_race"
                         type="checkbox"
                         value="4"
                       />
                       <label
                         class="form-check-label"
-                        for="root_person_race-4"
+                        for="root_person_race__4"
                         title=""
                       >
                         White
@@ -3325,14 +3325,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         >
                           <input
                             class="form-check-input"
-                            id="root_employment-0"
+                            id="root_employment__0"
                             name="root_employment"
                             type="radio"
                             value="0"
                           />
                           <label
                             class="form-check-label"
-                            for="root_employment-0"
+                            for="root_employment__0"
                             title=""
                           >
                             Company
@@ -3343,14 +3343,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         >
                           <input
                             class="form-check-input"
-                            id="root_employment-1"
+                            id="root_employment__1"
                             name="root_employment"
                             type="radio"
                             value="1"
                           />
                           <label
                             class="form-check-label"
-                            for="root_employment-1"
+                            for="root_employment__1"
                             title=""
                           >
                             Education
@@ -3362,14 +3362,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           <input
                             checked=""
                             class="form-check-input"
-                            id="root_employment-2"
+                            id="root_employment__2"
                             name="root_employment"
                             type="radio"
                             value="2"
                           />
                           <label
                             class="form-check-label"
-                            for="root_employment-2"
+                            for="root_employment__2"
                             title=""
                           >
                             Other
@@ -3624,14 +3624,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         aria-describedby="root_person_race__description"
                         class="form-check-input"
-                        id="root_person_race-0"
+                        id="root_person_race__0"
                         name="root_person_race"
                         type="checkbox"
                         value="0"
                       />
                       <label
                         class="form-check-label"
-                        for="root_person_race-0"
+                        for="root_person_race__0"
                         title=""
                       >
                         American Indian / Alaska Native
@@ -3643,14 +3643,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         aria-describedby="root_person_race__description"
                         class="form-check-input"
-                        id="root_person_race-1"
+                        id="root_person_race__1"
                         name="root_person_race"
                         type="checkbox"
                         value="1"
                       />
                       <label
                         class="form-check-label"
-                        for="root_person_race-1"
+                        for="root_person_race__1"
                         title=""
                       >
                         Asian
@@ -3662,14 +3662,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         aria-describedby="root_person_race__description"
                         class="form-check-input"
-                        id="root_person_race-2"
+                        id="root_person_race__2"
                         name="root_person_race"
                         type="checkbox"
                         value="2"
                       />
                       <label
                         class="form-check-label"
-                        for="root_person_race-2"
+                        for="root_person_race__2"
                         title=""
                       >
                         Black / African American
@@ -3681,14 +3681,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         aria-describedby="root_person_race__description"
                         class="form-check-input"
-                        id="root_person_race-3"
+                        id="root_person_race__3"
                         name="root_person_race"
                         type="checkbox"
                         value="3"
                       />
                       <label
                         class="form-check-label"
-                        for="root_person_race-3"
+                        for="root_person_race__3"
                         title=""
                       >
                         Native Hawaiian / Other Pacific Islander
@@ -3700,14 +3700,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         aria-describedby="root_person_race__description"
                         class="form-check-input"
-                        id="root_person_race-4"
+                        id="root_person_race__4"
                         name="root_person_race"
                         type="checkbox"
                         value="4"
                       />
                       <label
                         class="form-check-label"
-                        for="root_person_race-4"
+                        for="root_person_race__4"
                         title=""
                       >
                         White
@@ -4216,14 +4216,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           <input
                             checked=""
                             class="form-check-input"
-                            id="root_employment-0"
+                            id="root_employment__0"
                             name="root_employment"
                             type="radio"
                             value="0"
                           />
                           <label
                             class="form-check-label"
-                            for="root_employment-0"
+                            for="root_employment__0"
                             title=""
                           >
                             Company
@@ -4234,14 +4234,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         >
                           <input
                             class="form-check-input"
-                            id="root_employment-1"
+                            id="root_employment__1"
                             name="root_employment"
                             type="radio"
                             value="1"
                           />
                           <label
                             class="form-check-label"
-                            for="root_employment-1"
+                            for="root_employment__1"
                             title=""
                           >
                             Education
@@ -4252,14 +4252,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         >
                           <input
                             class="form-check-input"
-                            id="root_employment-2"
+                            id="root_employment__2"
                             name="root_employment"
                             type="radio"
                             value="2"
                           />
                           <label
                             class="form-check-label"
-                            for="root_employment-2"
+                            for="root_employment__2"
                             title=""
                           >
                             Other
@@ -4869,14 +4869,14 @@ exports[`Three even column grid > renders person and address in three columns, n
                     <input
                       aria-describedby="root_person_race__description"
                       class="form-check-input"
-                      id="root_person_race-0"
+                      id="root_person_race__0"
                       name="root_person_race"
                       type="checkbox"
                       value="0"
                     />
                     <label
                       class="form-check-label"
-                      for="root_person_race-0"
+                      for="root_person_race__0"
                       title=""
                     >
                       American Indian / Alaska Native
@@ -4888,14 +4888,14 @@ exports[`Three even column grid > renders person and address in three columns, n
                     <input
                       aria-describedby="root_person_race__description"
                       class="form-check-input"
-                      id="root_person_race-1"
+                      id="root_person_race__1"
                       name="root_person_race"
                       type="checkbox"
                       value="1"
                     />
                     <label
                       class="form-check-label"
-                      for="root_person_race-1"
+                      for="root_person_race__1"
                       title=""
                     >
                       Asian
@@ -4907,14 +4907,14 @@ exports[`Three even column grid > renders person and address in three columns, n
                     <input
                       aria-describedby="root_person_race__description"
                       class="form-check-input"
-                      id="root_person_race-2"
+                      id="root_person_race__2"
                       name="root_person_race"
                       type="checkbox"
                       value="2"
                     />
                     <label
                       class="form-check-label"
-                      for="root_person_race-2"
+                      for="root_person_race__2"
                       title=""
                     >
                       Black / African American
@@ -4926,14 +4926,14 @@ exports[`Three even column grid > renders person and address in three columns, n
                     <input
                       aria-describedby="root_person_race__description"
                       class="form-check-input"
-                      id="root_person_race-3"
+                      id="root_person_race__3"
                       name="root_person_race"
                       type="checkbox"
                       value="3"
                     />
                     <label
                       class="form-check-label"
-                      for="root_person_race-3"
+                      for="root_person_race__3"
                       title=""
                     >
                       Native Hawaiian / Other Pacific Islander
@@ -4945,14 +4945,14 @@ exports[`Three even column grid > renders person and address in three columns, n
                     <input
                       aria-describedby="root_person_race__description"
                       class="form-check-input"
-                      id="root_person_race-4"
+                      id="root_person_race__4"
                       name="root_person_race"
                       type="checkbox"
                       value="4"
                     />
                     <label
                       class="form-check-label"
-                      for="root_person_race-4"
+                      for="root_person_race__4"
                       title=""
                     >
                       White
@@ -5574,14 +5574,14 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     <input
                       aria-describedby="root_person_race__description"
                       class="form-check-input"
-                      id="root_person_race-0"
+                      id="root_person_race__0"
                       name="root_person_race"
                       type="checkbox"
                       value="0"
                     />
                     <label
                       class="form-check-label"
-                      for="root_person_race-0"
+                      for="root_person_race__0"
                       title=""
                     >
                       American Indian / Alaska Native
@@ -5593,14 +5593,14 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     <input
                       aria-describedby="root_person_race__description"
                       class="form-check-input"
-                      id="root_person_race-1"
+                      id="root_person_race__1"
                       name="root_person_race"
                       type="checkbox"
                       value="1"
                     />
                     <label
                       class="form-check-label"
-                      for="root_person_race-1"
+                      for="root_person_race__1"
                       title=""
                     >
                       Asian
@@ -5612,14 +5612,14 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     <input
                       aria-describedby="root_person_race__description"
                       class="form-check-input"
-                      id="root_person_race-2"
+                      id="root_person_race__2"
                       name="root_person_race"
                       type="checkbox"
                       value="2"
                     />
                     <label
                       class="form-check-label"
-                      for="root_person_race-2"
+                      for="root_person_race__2"
                       title=""
                     >
                       Black / African American
@@ -5631,14 +5631,14 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     <input
                       aria-describedby="root_person_race__description"
                       class="form-check-input"
-                      id="root_person_race-3"
+                      id="root_person_race__3"
                       name="root_person_race"
                       type="checkbox"
                       value="3"
                     />
                     <label
                       class="form-check-label"
-                      for="root_person_race-3"
+                      for="root_person_race__3"
                       title=""
                     >
                       Native Hawaiian / Other Pacific Islander
@@ -5650,14 +5650,14 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     <input
                       aria-describedby="root_person_race__description"
                       class="form-check-input"
-                      id="root_person_race-4"
+                      id="root_person_race__4"
                       name="root_person_race"
                       type="checkbox"
                       value="4"
                     />
                     <label
                       class="form-check-label"
-                      for="root_person_race-4"
+                      for="root_person_race__4"
                       title=""
                     >
                       White

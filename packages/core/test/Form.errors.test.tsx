@@ -2079,7 +2079,7 @@ describe('the errors a field raises for the items of an array', () => {
     });
 
     await user.click(screen.getByRole('button', { name: 'Raise' }));
-    const keyInput = elementOf(node, '#root_obj_a-key');
+    const keyInput = elementOf(node, '#root_obj_a__key');
     await user.clear(keyInput);
     await user.type(keyInput, 'c');
     await user.tab();
@@ -2102,7 +2102,7 @@ describe('the errors a field raises for the items of an array', () => {
     });
 
     await submitForm(node, user);
-    const keyInput = elementOf(node, '#root_obj_a-key');
+    const keyInput = elementOf(node, '#root_obj_a__key');
     await user.clear(keyInput);
     await user.type(keyInput, 'c');
     await user.tab();
