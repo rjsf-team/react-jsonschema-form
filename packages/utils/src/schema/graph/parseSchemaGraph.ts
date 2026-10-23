@@ -7,6 +7,7 @@ import {
   ID_KEY,
   JSON_SCHEMA_DRAFT_2019_09,
   JSON_SCHEMA_DRAFT_2020_12,
+  EXTRA_KEYS_ELSEWHERE_FLAG,
   REF_KEY,
   RJSF_REF_KEY,
   SCHEMA_KEY,
@@ -787,10 +788,15 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
   }
 }
 
-/** The symbols a schema `retrieveSchema()` builds can carry, such as the stub of an extra key, which say what the schema
- * is to the fields that render it
+/** The symbols a schema `retrieveSchema()` or `getRenderedOptionSchema()` builds can carry, such as the stub of an extra
+ * key, which say what the schema is to the fields that render it
  */
-const MARKERS: readonly symbol[] = [ADDITIONAL_PROPERTY_FLAG, GUESSED_TYPE_FLAG, RJSF_REF_KEY];
+const MARKERS: readonly symbol[] = [
+  ADDITIONAL_PROPERTY_FLAG,
+  GUESSED_TYPE_FLAG,
+  RJSF_REF_KEY,
+  EXTRA_KEYS_ELSEWHERE_FLAG,
+];
 
 /** The key of a primitive in a `contentKey()`, apart from a string, which is quoted there to set it apart from these;
  * undefined for one no schema holds, such as a function

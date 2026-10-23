@@ -1,4 +1,4 @@
-import { ALL_OF_KEY, UNEVALUATED_PROPERTIES_KEY } from './constants.ts';
+import { ALL_OF_KEY, EXTRA_KEYS_ELSEWHERE_FLAG, UNEVALUATED_PROPERTIES_KEY } from './constants.ts';
 import getSchemaType from './getSchemaType.ts';
 import isObject, { isSchemaObject } from './isObject.ts';
 import KeyedMemo from './schema/graph/keyedMemo.ts';
@@ -86,7 +86,8 @@ export function additionalPropertiesKeyword<S extends StrictRJSFSchema = RJSFSch
 /** Returns whether the form reads an object naming neither `additionalProperties` nor `unevaluatedProperties` as
  * taking any key its other keywords leave over, as `additionalProperties: true` does: the JSON Schema spec reads it that
  * way, and the context's `additionalPropertiesWhenAbsent: 'allow'` has the form follow it. A schema that is no object,
- * an untyped `{}` included, has no keys for the form to offer or keep.
+ * an untyped `{}` included, has no keys for the form to offer or keep, and an option `getRenderedOptionSchema()` marked
+ * `EXTRA_KEYS_ELSEWHERE_FLAG` leaves them to its parent's own field.
  *
  * @param schema - The schema to check
  * @param context - The `SchemaContext` whose `additionalPropertiesWhenAbsent` decides
@@ -98,6 +99,7 @@ export function absentKeywordAllows<
 >(schema: S, context: SchemaContext<S, F>): boolean {
   return (
     context.additionalPropertiesWhenAbsent === 'allow' &&
+    !Reflect.get(schema, EXTRA_KEYS_ELSEWHERE_FLAG) &&
     additionalPropertiesKeyword<S>(schema) === undefined &&
     getSchemaType<S>(schema) === 'object'
   );
@@ -170,12 +172,12 @@ export function conjoin(own: unknown, other: unknown): unknown {
 }
 
 /** The object schema and the option selected beside it that a schema joins the extra-key keywords of */
-const JOINED_SCHEMAS_KEY = Symbol('__rjsf_joined_schemas');
+export const JOINED_SCHEMAS_KEY = Symbol('__rjsf_joined_schemas');
 
 /** Returns `joined`, which joins the extra-key keywords of an object schema, `own`, and of the option selected beside
  * it, `option`, carrying the two so that `getAdditionalPropertySchema()` asks each of them about a key on its own: the
  * keywords of one say nothing about a key the other's patterns or extra-key keywords evaluate, which no one set of
- * keywords can say.
+ * keywords can say. Either may carry a join of its own, which is asked apart in turn.
  *
  * @param joined - The schema with the two schemas' extra-key keywords joined
  * @param own - The object schema's extra-key keywords
@@ -212,6 +214,7 @@ function describesKey<S extends StrictRJSFSchema>(schema: S, key: string, readsU
  *
  * A schema `retrieveSchema()` joined with the option selected beside it answers for the object and for the option
  * apart, and conjoins the two: the object's `unevaluatedProperties` says nothing about a key the option evaluates.
+ * Either of the two may be a join itself, as an option offering options of its own is, and is asked apart in turn.
  *
  * @param schema - The object schema the `key` is a property of
  * @param key - The property name whose schema is desired
@@ -222,13 +225,18 @@ export function getAdditionalPropertySchema<S extends StrictRJSFSchema = RJSFSch
   schema: S,
   key: string,
 ): S | boolean {
-  const joined: unknown = Reflect.get(schema, JOINED_SCHEMAS_KEY);
-  let answer: unknown;
-  if (isObject(joined) && isSchemaObject<S>(joined.own) && isSchemaObject<S>(joined.option)) {
-    const optionSays = describesKey<S>(joined.option, key, true);
-    answer = conjoin(describesKey<S>(joined.own, key, optionSays === undefined), optionSays);
-  } else {
-    answer = describesKey<S>(schema, key, true);
-  }
+  const answer = joinedDescribesKey<S>(schema, key, true);
   return typeof answer === 'boolean' || isSchemaObject<S>(answer) ? answer : true;
+}
+
+/** Returns what `schema` says of `key` as `describesKey()` does, asking each of the schemas a joined one joins apart,
+ * and each of theirs where one of them was joined in turn, as an option offering options of its own is
+ */
+function joinedDescribesKey<S extends StrictRJSFSchema>(schema: S, key: string, readsUnevaluated: boolean): unknown {
+  const joined: unknown = Reflect.get(schema, JOINED_SCHEMAS_KEY);
+  if (!isObject(joined) || !isSchemaObject<S>(joined.own) || !isSchemaObject<S>(joined.option)) {
+    return describesKey<S>(schema, key, readsUnevaluated);
+  }
+  const optionSays = joinedDescribesKey<S>(joined.option, key, readsUnevaluated);
+  return conjoin(joinedDescribesKey<S>(joined.own, key, readsUnevaluated && optionSays === undefined), optionSays);
 }

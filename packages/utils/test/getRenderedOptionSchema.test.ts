@@ -1,10 +1,13 @@
 import type { RJSFSchema } from '../src/index.ts';
 import {
   ADDITIONAL_PROPERTY_FLAG,
+  EXTRA_KEYS_ELSEWHERE_FLAG,
   getRenderedOptionSchema,
   rendersOwnFieldBesideOption,
   RJSF_REF_KEY,
 } from '../src/index.ts';
+import { rendersOwnFieldBesideOwnOptions } from '../src/rendersOwnFieldBesideOption.ts';
+import { DECLARED_ABOVE_KEY } from '../src/schema/retrieveSchema.ts';
 
 describe('getRenderedOptionSchema()', () => {
   describe('a non-object parent', () => {
@@ -369,26 +372,26 @@ describe('getRenderedOptionSchema()', () => {
 
   describe('an object parent', () => {
     const properties: RJSFSchema['properties'] = { a: { type: 'string' }, b: { type: 'string' } };
-    test('passes on only its required list and its type, closing the option to extra keys, since its own ObjectField renders the rest', () => {
+    test('passes on only its required list and its type, marking the option to take no extra keys of its own, since its own ObjectField renders the rest', () => {
       const parent: RJSFSchema = { type: 'object', properties, required: ['a'], minProperties: 1 };
       expect(getRenderedOptionSchema(parent, { required: ['b'] })).toEqual({
         type: 'object',
         required: ['a', 'b'],
-        additionalProperties: false,
+        [EXTRA_KEYS_ELSEWHERE_FLAG]: true,
       });
     });
     test('passes on the object type it was read as when it names no type of its own', () => {
       expect(getRenderedOptionSchema({ properties }, { required: ['a'] })).toEqual({
         type: 'object',
         required: ['a'],
-        additionalProperties: false,
+        [EXTRA_KEYS_ELSEWHERE_FLAG]: true,
       });
     });
     test("leaves an option naming its own type with that type, over the parent's", () => {
       expect(getRenderedOptionSchema({ properties }, { type: 'object', required: ['a'] })).toEqual({
         type: 'object',
         required: ['a'],
-        additionalProperties: false,
+        [EXTRA_KEYS_ELSEWHERE_FLAG]: true,
       });
     });
     test("reads an option's type or required list holding undefined as declaring nothing, passing on the parent's", () => {
@@ -397,7 +400,7 @@ describe('getRenderedOptionSchema()', () => {
       expect(getRenderedOptionSchema(parent, option)).toStrictEqual({
         type: 'object',
         required: ['a'],
-        additionalProperties: false,
+        [EXTRA_KEYS_ELSEWHERE_FLAG]: true,
         properties: { b: { minLength: 1 } },
       });
     });
@@ -408,13 +411,41 @@ describe('getRenderedOptionSchema()', () => {
         patternProperties: { '^x': { type: 'string' } },
         unevaluatedProperties: false,
       };
-      // Stated as `false` rather than left out: a form reading an absent keyword as taking any key would otherwise give
-      // the option's field an add button beside the parent's
+      // Marked rather than left as it is: a form reading an absent keyword as taking any key would otherwise give the
+      // option's field an add button beside the parent's
       expect(getRenderedOptionSchema({ type: 'object', properties }, option)).toEqual({
         type: 'object',
         properties: { b: { type: 'string' } },
-        additionalProperties: false,
+        [EXTRA_KEYS_ELSEWHERE_FLAG]: true,
       });
+    });
+    test("leaves an option offering options of its own its extra-key keywords, joined with the parent's, for its own field to take", () => {
+      const parent: RJSFSchema = {
+        type: 'object',
+        properties,
+        additionalProperties: { type: 'string' },
+        patternProperties: { '^p': { type: 'number' } },
+      };
+      const oneOf: RJSFSchema[] = [{ properties: { x: { type: 'string' } } }];
+      const rendered = getRenderedOptionSchema(parent, { oneOf, patternProperties: { '^q': { type: 'boolean' } } });
+      expect(rendered).toMatchObject({
+        type: 'object',
+        oneOf,
+        additionalProperties: { type: 'string' },
+        patternProperties: { '^p': { type: 'number' }, '^q': { type: 'boolean' } },
+      });
+      expect(Reflect.get(rendered, EXTRA_KEYS_ELSEWHERE_FLAG)).toBeUndefined();
+    });
+    test('hands an option offering options of its own the properties its parent declares, a boolean one included', () => {
+      const oneOf: RJSFSchema[] = [{ properties: { x: { type: 'string' } } }];
+      const declared = (parent: RJSFSchema) =>
+        Reflect.get(getRenderedOptionSchema(parent, { oneOf }), DECLARED_ABOVE_KEY) as string[];
+      expect(declared({ type: 'object', additionalProperties: true })).toEqual([]);
+      expect(declared({ type: 'object', properties: { b: true }, additionalProperties: true })).toEqual(['b']);
+    });
+    test('returns an option offering options of its own as it is, where the parent has nothing to pass on', () => {
+      const option: RJSFSchema = { type: 'object', oneOf: [{ properties: { x: { type: 'string' } } }] };
+      expect(getRenderedOptionSchema({ type: 'object', properties }, option)).toBe(option);
     });
     test('returns the same object for the same parent and option, rather than a copy on every call', () => {
       const parent: RJSFSchema = { type: 'object', properties };
@@ -427,7 +458,7 @@ describe('getRenderedOptionSchema()', () => {
       expect(getRenderedOptionSchema({ type: ['object', 'null'], properties }, { required: ['a'] })).toEqual({
         type: ['object', 'null'],
         required: ['a'],
-        additionalProperties: false,
+        [EXTRA_KEYS_ELSEWHERE_FLAG]: true,
       });
     });
   });
@@ -441,5 +472,19 @@ describe('rendersOwnFieldBesideOption()', () => {
     ['a typeless schema', {}, false],
   ])('reads %s as rendering its own field: %s', (_, schema, expected) => {
     expect(rendersOwnFieldBesideOption(schema)).toBe(expected);
+  });
+});
+
+describe('rendersOwnFieldBesideOwnOptions()', () => {
+  const offered: RJSFSchema[] = [{ properties: { x: { type: 'string' } } }];
+  test.each<[string, RJSFSchema, boolean]>([
+    ['an option naming no type', { oneOf: offered }, true],
+    ['an object option', { type: 'object', anyOf: offered }, true],
+    ['an option offering nothing', { properties: { x: { type: 'string' } } }, false],
+    ['an option of constants, a select', { oneOf: [{ const: 'a' }, { const: 'b' }] }, false],
+    ['an option with an enum beside its options, a select', { enum: ['a'], oneOf: offered }, false],
+    ['an option of another type', { type: 'string', oneOf: [{ minLength: 1 }] }, false],
+  ])('reads %s as rendering its own field beside its options: %s', (_, option, expected) => {
+    expect(rendersOwnFieldBesideOwnOptions(option)).toBe(expected);
   });
 });

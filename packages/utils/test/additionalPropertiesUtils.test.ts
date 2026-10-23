@@ -4,6 +4,7 @@ import {
   getAdditionalPropertySchema,
   getMatchingPatternProperties,
 } from '../src/additionalPropertiesUtils.ts';
+import { getRenderedOptionSchema } from '../src/index.ts';
 import type { RJSFSchema, SchemaContext } from '../src/index.ts';
 import getTestValidator from './testUtils/getTestValidator.ts';
 
@@ -92,6 +93,17 @@ describe('allowsAdditionalProperties()', () => {
   it('returns false for a schema that is no object, even where the context allows an absent keyword', () => {
     expect(allowsAdditionalProperties({}, allowing)).toBe(false);
     expect(allowsAdditionalProperties({ type: 'string' }, allowing)).toBe(false);
+  });
+  it("leaves the extra keys of an option rendered beside its parent's field to that field, even where the context allows an absent keyword", () => {
+    const rendered = getRenderedOptionSchema(
+      { type: 'object', properties: { a: { type: 'string' } } },
+      { properties: { b: { type: 'string' } } },
+    );
+    expect(allowsAdditionalProperties(rendered, allowing)).toBe(false);
+    // A keyword joined in from an option it offers in turn is read as it stands
+    expect(allowsAdditionalProperties({ ...rendered, additionalProperties: { type: 'string' } }, forbidding)).toBe(
+      true,
+    );
   });
 });
 describe('getAdditionalPropertySchema()', () => {

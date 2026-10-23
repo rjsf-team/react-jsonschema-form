@@ -3,6 +3,7 @@ import type { MockInstance } from 'vitest';
 import type { RJSFSchema } from '../../src/index.ts';
 import {
   ADDITIONAL_PROPERTY_FLAG,
+  EXTRA_KEYS_ELSEWHERE_FLAG,
   GUESSED_TYPE_FLAG,
   getAdditionalPropertySchema,
   createSchemaUtils,
@@ -2878,6 +2879,61 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         expect(retrieveSchema({ validator: testValidator }, schema, schema, formData, false, 0).properties).toEqual({
           b: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true },
         });
+      });
+      it('leaves the extra keys to a selected option offering options of its own, whose own field takes them', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          additionalProperties: true,
+          patternProperties: { '^p': { type: 'number' } },
+          oneOf: [{ title: 'A', oneOf: [{ title: 'A1', properties: { x: { type: 'string' } } }] }],
+        };
+        const view = retrieveSchema({ validator: testValidator }, schema, schema, { x: 'a', p1: 1 }, false, 0);
+        // A's field renders beside A1, and does not know `x` from an extra key until A1 is selected there
+        expect(view.properties).toBeUndefined();
+        expect(view.additionalProperties).toBeUndefined();
+        expect(view.patternProperties).toBeUndefined();
+        expect(Reflect.get(view, EXTRA_KEYS_ELSEWHERE_FLAG)).toBe(true);
+      });
+      it('leaves the properties the fields above declare to them, in the field of an option taking their extra keys', () => {
+        const nested: RJSFSchema = {
+          title: 'A',
+          properties: { q: { type: 'string' } },
+          oneOf: [{ title: 'A1', oneOf: [{ title: 'A2', properties: { x: { type: 'string' } } }] }],
+        };
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { p: { type: 'string' } },
+          additionalProperties: true,
+          oneOf: [nested],
+        };
+        const formData = { p: '1', q: '2', x: 'a', extra: 'e' };
+        const context = { validator: testValidator };
+        // Retrieved without an option, as the field holding the options is, so its own view stubs every extra key
+        const parent = retrieveSchema(context, schema, schema, formData);
+        const a = retrieveSchema(context, getRenderedOptionSchema(parent, nested), schema, formData);
+        const a1 = retrieveSchema(
+          context,
+          getRenderedOptionSchema(a, a.oneOf![0] as RJSFSchema),
+          schema,
+          formData,
+          false,
+          0,
+        );
+        expect(Object.keys(a1.properties!)).toEqual(['extra']);
+      });
+      it('describes an extra key by each level apart, in the field of an option taking the extra keys of the object', () => {
+        const nested: RJSFSchema = {
+          title: 'A',
+          additionalProperties: false,
+          oneOf: [{ title: 'A1', properties: { x: { type: 'string' } } }],
+        };
+        const schema: RJSFSchema = { type: 'object', patternProperties: { '^p': { type: 'number' } }, oneOf: [nested] };
+        const formData = { x: 'a', p1: 1 };
+        const context = { validator: testValidator };
+        const parent = retrieveSchema(context, schema, schema, formData);
+        const a = retrieveSchema(context, getRenderedOptionSchema(parent, nested), schema, formData, false, 0);
+        // The object's pattern describes `p1`, but A forbids it, as validation does
+        expect(a.properties!.p1).toEqual({ type: 'null', [ADDITIONAL_PROPERTY_FLAG]: true });
       });
       it("describes a key the option allows without describing it by the object's own keyword (#5462)", () => {
         const db: RJSFSchema = {

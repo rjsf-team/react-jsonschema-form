@@ -304,6 +304,47 @@ describe('option selection as form state', () => {
     expect(onChange.mock.lastCall?.[0].formData).toEqual({ b: undefined });
   });
 
+  it.each(['allow', 'forbid'] as const)(
+    "keeps the old option's value as an extra key of a new option that takes extra keys of its own (%s)",
+    async (additionalPropertiesWhenAbsent) => {
+      const schema: RJSFSchema = {
+        oneOf: [
+          { title: 'A', type: 'object', properties: { a: { type: 'string' } } },
+          {
+            title: 'B',
+            type: 'object',
+            properties: { b: { type: 'string' } },
+            additionalProperties: { type: 'string' },
+          },
+        ],
+      };
+      const { node, onChange } = createFormComponent({ schema, additionalPropertiesWhenAbsent });
+
+      await user.type(elementOf(node, '#root_a'), 'x');
+      await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
+
+      expect(onChange.mock.lastCall?.[0].formData).toEqual({ a: 'x' });
+      expect(node.querySelector('#root_a-key')).toHaveValue('a');
+    },
+  );
+
+  it("keeps the old option's value as an extra key of a new option naming no additionalProperties under 'allow', as one naming it does", async () => {
+    const schema: RJSFSchema = {
+      oneOf: [
+        { title: 'A', type: 'object', properties: { a: { type: 'string' } } },
+        { title: 'B', type: 'object', properties: { b: { type: 'string' } } },
+      ],
+    };
+    const { node, onChange } = createFormComponent({ schema, additionalPropertiesWhenAbsent: 'allow' });
+
+    await user.type(elementOf(node, '#root_a'), 'x');
+    await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
+
+    // An untyped union renders no field of its own beside the option, so B itself takes the extra keys
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ a: 'x' });
+    expect(node.querySelector('#root_a-key')).toHaveValue('a');
+  });
+
   it("lays out an object union whose shown option is closed as it does under 'forbid', under additionalPropertiesWhenAbsent 'allow'", () => {
     const schema: RJSFSchema = {
       type: 'object',

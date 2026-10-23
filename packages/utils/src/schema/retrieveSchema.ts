@@ -4,6 +4,7 @@ import {
   allowsAdditionalProperties,
   conjoin,
   getAdditionalPropertySchema,
+  JOINED_SCHEMAS_KEY,
   withJoinedSchemas,
 } from '../additionalPropertiesUtils.ts';
 import {
@@ -12,6 +13,7 @@ import {
   ALL_OF_KEY,
   ANY_OF_KEY,
   DEPENDENCIES_KEY,
+  EXTRA_KEYS_ELSEWHERE_FLAG,
   GUESSED_TYPE_FLAG,
   IF_KEY,
   ITEMS_KEY,
@@ -28,7 +30,7 @@ import getXxxOfOptions from '../getXxxOfOptions.ts';
 import guessType from '../guessType.ts';
 import isConstantOptionList from '../isConstantOptionList.ts';
 import isObject, { isSchemaObject } from '../isObject.ts';
-import rendersOwnFieldBesideOption from '../rendersOwnFieldBesideOption.ts';
+import rendersOwnFieldBesideOption, { rendersOwnFieldBesideOwnOptions } from '../rendersOwnFieldBesideOption.ts';
 import setOwn from '../setOwn.ts';
 import type {
   CustomMergeAllOf,
@@ -1004,6 +1006,14 @@ export const IDENTIFIER_KEYWORDS: string[] = ['$id', '$anchor', '$dynamicAnchor'
  */
 export const CONTAINER_KEYWORDS: string[] = ['$defs', 'definitions'];
 
+/** The names of the properties the fields above declare, which `getRenderedOptionSchema()` hands an option taking the
+ * extra keys of the field above in its place, so that it renders none of them a second time
+ */
+export const DECLARED_ABOVE_KEY = Symbol('__rjsf_declared_above');
+
+/** The keywords describing an object's extra keys */
+export const EXTRA_KEY_KEYWORDS = [ADDITIONAL_PROPERTIES_KEY, PATTERN_PROPERTIES_KEY, UNEVALUATED_PROPERTIES_KEY];
+
 /** Every keyword that constrains the value, for the reasons the first two lists above give. They are only ever
  * consulted together, once per key a schema holds, so they are consulted as one.
  */
@@ -1133,11 +1143,33 @@ function stubSchemaForSubSchema<S extends StrictRJSFSchema = RJSFSchema>(
  * naming either keyword evaluates, so it is left out of the join beside one. The joined schema carries the two, so
  * `getAdditionalPropertySchema()` describes a key by each of them apart, as the stubs are described.
  *
+ * An option that renders a field of its own beside options it offers in turn takes the extra keys of the two in that
+ * field, so the schema is returned without its extra-key keywords, marked `EXTRA_KEYS_ELSEWHERE_FLAG`, and its field
+ * takes none.
+ *
  * @param schema - The object schema
  * @param option - The option selected beside it
  * @returns - The schema with the option's extra-key keywords joined to its own
  */
 function withOptionExtraKeys<S extends StrictRJSFSchema = RJSFSchema>(schema: S, option: S): S {
+  if (rendersOwnFieldBesideOwnOptions<S>(option)) {
+    // The option's own field takes the extra keys of the two, joined as `getRenderedOptionSchema()` renders it, so they
+    // render once, in the field that knows which of its own options is selected
+    const left = withoutKeys<S>(schema, ...EXTRA_KEY_KEYWORDS);
+    (left as RJSFMarkedSchema)[EXTRA_KEYS_ELSEWHERE_FLAG] = true;
+    return left;
+  }
+  return joinOptionExtraKeys<S>(schema, option);
+}
+
+/** Returns `schema` with the extra-key keywords of the `option` selected beside it joined to its own, as
+ * `withOptionExtraKeys()` describes, whatever the option offers
+ *
+ * @param schema - The object schema
+ * @param option - The option selected beside it
+ * @returns - The schema with the option's extra-key keywords joined to its own
+ */
+export function joinOptionExtraKeys<S extends StrictRJSFSchema = RJSFSchema>(schema: S, option: S): S {
   const joined: GenericObjectType = { ...schema };
   const optionEvaluatesRest = additionalPropertiesKeyword<S>(option) !== undefined;
   for (const keyword of [ADDITIONAL_PROPERTIES_KEY, UNEVALUATED_PROPERTIES_KEY]) {
@@ -1159,11 +1191,17 @@ function withOptionExtraKeys<S extends StrictRJSFSchema = RJSFSchema>(schema: S,
   return withJoinedSchemas<S>(schemaFrom(schema, joined), extraKeyKeywords<S>(schema), extraKeyKeywords<S>(option));
 }
 
-/** Returns the keywords of `schema` that describe the keys its `properties` don't name */
+/** Returns the keywords of `schema` that describe the keys its `properties` don't name, with the schemas it joins
+ * where it is a join itself, which describe a key apart
+ */
 function extraKeyKeywords<S extends StrictRJSFSchema>(schema: S): S {
   const keywords: GenericObjectType = {};
   for (const keyword of [ADDITIONAL_PROPERTIES_KEY, UNEVALUATED_PROPERTIES_KEY, PATTERN_PROPERTIES_KEY]) {
     keywords[keyword] = Reflect.get(schema, keyword);
+  }
+  const joined: unknown = Reflect.get(schema, JOINED_SCHEMAS_KEY);
+  if (joined !== undefined) {
+    Reflect.set(keywords, JOINED_SCHEMAS_KEY, joined);
   }
   return schemaFrom(schema, keywords);
 }
@@ -1199,8 +1237,13 @@ export function stubExistingAdditionalProperties<
   const formData: GenericObjectType = aFormData && isObject(aFormData) ? aFormData : {};
   // `Object.hasOwn`, since `in` answers for the names on `Object.prototype` too, and a property called `constructor`
   // or `toString` left unstubbed is a value with no field to edit or remove it with
+  // A key a field above declares is that field's, though this one takes the extra keys in its place
+  const declaredAbove: unknown = Reflect.get(theSchema, DECLARED_ABOVE_KEY);
   const extraKeys = Object.keys(formData).filter(
-    (key) => !Object.hasOwn(schema.properties, key) && !Object.hasOwn(optionProperties, key),
+    (key) =>
+      !Object.hasOwn(schema.properties, key) &&
+      !Object.hasOwn(optionProperties, key) &&
+      !(Array.isArray(declaredAbove) && declaredAbove.includes(key)),
   );
   const typeOf = (subSchema: S) =>
     namedTypes.get([context.validator, context.customMergeAllOf, rootSchema, subSchema], () =>
