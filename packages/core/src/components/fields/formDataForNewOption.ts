@@ -9,20 +9,18 @@ import type {
   UiSchemaDefinitions,
 } from '@rjsf/utils';
 import {
-  ADDITIONAL_PROPERTY_FLAG,
   CONST_KEY,
   DEFAULT_KEY,
   deepEquals,
   getPropertySchema,
   getRenderedOptionSchema,
   getXxxOfKey,
-  isObject,
   isPlainObject,
   mergeSchemas,
 } from '@rjsf/utils';
 
 import { asFieldValue } from '../uiState.ts';
-import { withGlobalUiOptions } from './fieldWidgetUtils.ts';
+import { declaresProperty, withGlobalUiOptions } from './fieldWidgetUtils.ts';
 
 /** Returns `option` carrying the `required` that `parentSchema` declares, which is what decides whether the form
  * populates a key at all under a `defaultFormStateBehavior` keyed off `required`. A schema's defaults
@@ -117,18 +115,15 @@ function withoutDiscardedKeys<S extends StrictRJSFSchema = RJSFSchema>(
 ): GenericObjectType {
   const oldProperties: object = oldOption?.properties ?? {};
   const newProperties: object = newOption?.properties ?? {};
-  const parentProperties: GenericObjectType = parentSchema?.properties ?? {};
   // The schema holding the options arrives with the extra keys of its data stubbed among its `properties`, a key the
   // old option declares among them, and a stub declares nothing
-  const parentDeclares = (key: string) =>
-    Object.hasOwn(parentProperties, key) &&
-    !(isObject(parentProperties[key]) && ADDITIONAL_PROPERTY_FLAG in parentProperties[key]);
+  const parentProperties = parentSchema?.properties ?? {};
   const discardedKeys = Object.keys(data).filter(
     (key) =>
       data[key] === undefined &&
       Object.hasOwn(oldProperties, key) &&
       !Object.hasOwn(newProperties, key) &&
-      !parentDeclares(key),
+      !declaresProperty<S>(parentProperties, key),
   );
   if (discardedKeys.length === 0) {
     return data;

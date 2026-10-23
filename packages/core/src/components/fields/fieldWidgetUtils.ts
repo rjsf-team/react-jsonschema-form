@@ -311,6 +311,22 @@ export function isAdditionalPropertySchema(schema: unknown) {
   return Boolean((schema as RJSFMarkedSchema)?.[ADDITIONAL_PROPERTY_FLAG]);
 }
 
+/** Returns whether the object declares `key` in its own `properties`, rather than holding it as an extra key
+ * `retrieveSchema()` stubbed in among them for the form data. A stub is told from a declared property by the flag it
+ * carries. The name is read as an own property, since a key called `constructor` or `toString` would otherwise be
+ * answered for by `Object.prototype`.
+ *
+ * @param schemaProperties - The `properties` of the resolved object schema
+ * @param key - The property name to check
+ * @returns - True when the object declares the name itself, rather than taking it as an additional property
+ */
+export function declaresProperty<S extends StrictRJSFSchema = RJSFSchema>(
+  schemaProperties: NonNullable<S['properties']>,
+  key: string,
+) {
+  return Object.hasOwn(schemaProperties, key) && !isAdditionalPropertySchema(schemaProperties[key]);
+}
+
 /** Returns `schema` without the `ADDITIONAL_PROPERTY_FLAG` that has its template draw the input and remove button of
  * an extra key, for a field whose key is edited elsewhere or not at all
  *

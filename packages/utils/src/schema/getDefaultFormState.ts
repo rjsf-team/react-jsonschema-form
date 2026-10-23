@@ -563,7 +563,24 @@ interface FoldProps<T, S extends StrictRJSFSchema, F extends FormContextType> ex
   /** The option each field shows, which a field offering `anyOf`/`oneOf` options computes its defaults from */
   fieldState?: FormFieldState<S>;
   /** The path of the field, which only `fieldState` is asked about, so without one none is built */
-  fieldPath?: FieldPathList;
+  fieldPath?: FoldPath;
+}
+
+/** A field's path as its parent's and its own key, so a child's is made without copying its parent's, and is spelled
+ * out only for a field `fieldState` is asked about, see `pathListOf()`
+ */
+interface FoldPath {
+  parent?: FoldPath;
+  key: string | number;
+}
+
+/** Returns the segments of `path`, none for the root */
+function pathListOf(path?: FoldPath): FieldPathList {
+  const list: FieldPathList = [];
+  for (let at = path; at; at = at.parent) {
+    list.push(at.key);
+  }
+  return list.reverse();
 }
 
 /** The `fieldState` and path the child at `key` of a field is folded with, none without a `fieldState`. The memos key
@@ -572,10 +589,10 @@ interface FoldProps<T, S extends StrictRJSFSchema, F extends FormContextType> ex
  * which option it shows, and a leaf memoized across calls offers no options to ask about
  */
 function childPathProps<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  { fieldState, fieldPath = [] }: FoldProps<T, S, F>,
+  { fieldState, fieldPath }: FoldProps<T, S, F>,
   key: string | number,
 ): Pick<FoldProps<T, S, F>, 'fieldState' | 'fieldPath'> {
-  return fieldState ? { fieldState, fieldPath: [...fieldPath, key] } : {};
+  return fieldState ? { fieldState, fieldPath: { parent: fieldPath, key } } : {};
 }
 
 /** The props `foldView()` computes a field with: the field's own, with what it reports the last view it computed the
@@ -1168,7 +1185,7 @@ function shownOptionIndex<T, S extends StrictRJSFSchema, F extends FormContextTy
   view: DefaultsView<S>,
   options: readonly S[],
   rawFormData: unknown,
-  { fieldState, fieldPath = [] }: FoldProps<T, S, F>,
+  { fieldState, fieldPath }: FoldProps<T, S, F>,
 ): number {
   if (!fieldState || Array.isArray(view.schema.enum) || isConstantOptionList<S>(options)) {
     return -1;
@@ -1183,7 +1200,7 @@ function shownOptionIndex<T, S extends StrictRJSFSchema, F extends FormContextTy
     ),
   );
   const discriminator = getDiscriminatorFieldFromSchema<S>(view.schema);
-  return fieldState.selectedOption(fieldPathFromList(fieldPath), views, rawFormData, discriminator);
+  return fieldState.selectedOption(fieldPathFromList(pathListOf(fieldPath)), views, rawFormData, discriminator);
 }
 
 /** Picks the option of a field offering `anyOf`/`oneOf` options that it shows, or else the one its data, or its
