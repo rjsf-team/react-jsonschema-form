@@ -1056,8 +1056,9 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
 
     // An `allOf` merged for the defaults of a field that is not an object is gone from its schema, as it was from the
     // schema `computeDefaults()` recursed into
+    const unmergedAllOf = ALL_OF_KEY in schema;
     const mergedAllOf =
-      ALL_OF_KEY in schema ||
+      unmergedAllOf ||
       (!view.field.retrieves &&
         view.keywords.has(ALL_OF_KEY) &&
         !(defaultFormStateBehavior?.allOf === 'populateDefaults' && getSchemaType<S>(schema) !== 'object'));
@@ -1075,13 +1076,15 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
     } else if (!isObject(rawFormData) || mergedAllOf) {
       // If the formData is not an object which means it's a primitive field, then we need to merge the defaults into the formData.
       // Or if the schema has allOf, we need to merge the defaults into the formData because we don't compute the defaults for allOf.
-      // The properties of object data were merged with their own defaults already, so those win over the data here
+      // Where the `allOf` was merged, the properties of object data were computed from it with their data already, so
+      // what they were computed as wins over the data here, as an `if`/`then` `const` does. An `allOf` left unmerged
+      // computed none of the properties it declares, so the data wins over its defaults
       defaultsWithFormData = mergeDefaultsWithFormData(
         defaultsWithFormData,
         viewFormDataMatching<unknown, S, F>(context, view, rawFormData),
         mergeExtraDefaults,
         true,
-        isObject(rawFormData),
+        isObject(rawFormData) && !unmergedAllOf,
       );
     }
   }

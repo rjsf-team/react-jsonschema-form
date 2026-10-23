@@ -6544,6 +6544,24 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           });
         });
 
+        it('keeps the data of a nested object over its own default where its allOf is left unmerged', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              field: {
+                allOf: [{ properties: { first: { type: 'string' } } }, { properties: { second: { type: 'string' } } }],
+                default: { second: 'second!' },
+              },
+            },
+          };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator },
+              { schema, formData: { field: { second: 'changed!' } }, rootSchema: schema },
+            ),
+          ).toEqual({ field: { second: 'changed!' } });
+        });
+
         it('should populate the conditional defaults of an allOf in array items', () => {
           expect(
             getDefaultFormState(
