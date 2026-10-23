@@ -404,9 +404,9 @@ function withoutAbsentValues(data: unknown): unknown {
   return normalize(data, true);
 }
 
-/** The definition of a pending change that will be processed in the `onChange` handler
+/** A change made to a field, which an updater queued by the `onChange` handler applies
  */
-interface PendingChange<T> {
+interface FieldChange<T> {
   /** The path into the formData/errorSchema at which the `newValue`/`newErrorSchema` will be set */
   path: FieldPathList;
   /** The new value to set into the formData */
@@ -428,9 +428,16 @@ export default class Form<
    */
   formElement: RefObject<any>;
 
-  /** The list of pending changes
+  /** Counts the changes `onChange` has queued, so the updater of the latest one knows it is the last of its batch and
+   * runs the live validation the earlier ones skip
    */
-  pendingChanges: PendingChange<T>[] = [];
+  private changeCount = 0;
+
+  /** The state an updater queued by `onChange` is applying its change to. React hands each updater the result of the
+   * one before it, which `this.state` does not hold until the batch commits, so the helpers the change runs through
+   * read this instead while it is set
+   */
+  private updaterBaseState?: FormState<T, S, F>;
 
   /** The `formData` last handed to `onChange`, wrapped so that never having reported a change is distinguishable from
    * having reported `undefined`. A parent that stores what it receives is holding the form's own data even when it
@@ -630,7 +637,7 @@ export default class Form<
         this.lastReportedFormData = isEchoOfState ? { formData: this.props.formData, awaitingReply: false } : undefined;
       }
       if (isEchoOfState && nextStateDiffersFromProps) {
-        // Re-deriving defaults from echoed data can undo what `processPendingChange` resolved, such as a switch to a
+        // Re-deriving defaults from echoed data can undo what `processChange` resolved, such as a switch to a
         // oneOf/anyOf option whose data the root `default` would otherwise replace, so that data is kept while the
         // rest of the recomputed state (`uiSchema`, `registry`, `schemaUtils`) is still applied. It comes from
         // `this.state` rather than `prevState` so a state update batched into this render, like `setFieldValue()`, is
@@ -681,7 +688,7 @@ export default class Form<
     skipLiveValidate = false,
     shouldSanitize = false,
   ): FormState<T, S, F> {
-    const state: FormState<T, S, F> = this.state || {};
+    const state: FormState<T, S, F> = this.baseState() || {};
     const schema = 'schema' in props ? props.schema : this.props.schema;
     const validator = 'validator' in props ? props.validator : this.props.validator;
     const uiSchema: UiSchema<T, S, F> = ('uiSchema' in props ? props.uiSchema! : this.props.uiSchema!) || {};
@@ -1034,7 +1041,7 @@ export default class Form<
    *               instead.
    */
   omitExtraData = (formData?: T): T | undefined => {
-    const { schema, schemaUtils } = this.state;
+    const { schema, schemaUtils } = this.baseState();
     return schemaUtils.omitExtraData(schema, formData);
   };
 
@@ -1052,8 +1059,11 @@ export default class Form<
     this.onChange(newValue, path, undefined, fieldPathId[ID_KEY]);
   };
 
-  /** Pushes the given change information into the `pendingChanges` array and then calls `processPendingChanges()` if
-   * the array only contains a single pending change.
+  /** Queues the change as a `setState` updater, then reports it through `onChange` once committed. React applies a
+   * batch's updaters in order, each to the result of the one before, so changes made close together do not overwrite
+   * one another, and they commit together, so any number of them is one update rather than one nested in the commit of
+   * the last. A change that throws, from `customValidate` or `transformErrors` say, leaves the state as it was and is
+   * rethrown from a timeout, since the updater runs while React renders, where a throw would unmount the form.
    *
    * @param newValue - The new form data from a change to a field
    * @param path - The path to the change into which to set the formData
@@ -1061,31 +1071,57 @@ export default class Form<
    * @param [id] - The id of the field that caused the change
    */
   onChange = (newValue: T | undefined, path: FieldPathList, newErrorSchema?: ErrorSchema<T>, id?: string) => {
-    this.pendingChanges.push({ newValue, path, newErrorSchema, id });
-    if (this.pendingChanges.length === 1) {
-      this.processPendingChange();
-    }
+    this.changeCount += 1;
+    const changeNumber = this.changeCount;
+    let outcome: { changed: FormState<T, S, F> } | { error: unknown } | undefined;
+    this.setState(
+      (prevState) => {
+        this.updaterBaseState = prevState;
+        try {
+          const isLast = changeNumber === this.changeCount;
+          const state = this.processChange({ newValue, path, newErrorSchema, id }, isLast);
+          outcome = { changed: { ...prevState, ...state } };
+          return state as FormState<T, S, F>;
+        } catch (error) {
+          outcome = { error };
+          return null;
+        } finally {
+          this.updaterBaseState = undefined;
+        }
+      },
+      () => {
+        if (!outcome) {
+          return;
+        }
+        if ('error' in outcome) {
+          const { error } = outcome;
+          setTimeout(() => {
+            throw error;
+          });
+          return;
+        }
+        this.reportChange(toIChangeEvent(outcome.changed), id);
+      },
+    );
   };
 
-  /** Function to handle changes made to a field in the `Form`. This handler gets the first change from the
-   * `pendingChanges` list, containing the `newValue` for the `formData` and the `path` at which the `newValue` is to be
-   * updated, along with a new, optional `ErrorSchema` for that same `path` and potentially the `id` of the field being
-   * changed. It will first update the `formData` with any missing default fields and then, if `omitExtraData` and
-   * `liveOmit` are turned on, the `formData` will be filtered to remove any extra data not in a form field. Then, the
-   * resulting `formData` will be validated if required. The state will be updated with the new updated (potentially
-   * filtered) `formData`, any errors that resulted from validation. Finally the `onChange` callback will be called, if
-   * specified, with the updated state and the `processPendingChange()` function is called again.
+  /** Applies a change made to a field to the state an updater queued by `onChange` was handed, returning the partial
+   * state the change makes. The `newValue` is set into the `formData` at `path`, along with a new, optional
+   * `ErrorSchema` for that same `path`. It will first update the `formData` with any missing default fields and then,
+   * if `omitExtraData` and `liveOmit` are turned on, the `formData` will be filtered to remove any extra data not in a
+   * form field. Then, the resulting `formData` will be validated if required, which only the last change of a batch
+   * does.
+   *
+   * @param change - The change to apply
+   * @param isLast - Whether no later change has been queued, so live validation runs
    */
-  processPendingChange() {
-    if (this.pendingChanges.length === 0) {
-      return;
-    }
-    const { newValue, path, id } = this.pendingChanges[0];
-    const { newErrorSchema } = this.pendingChanges[0];
+  private processChange(change: FieldChange<T>, isLast: boolean): Partial<FormState<T, S, F>> {
+    const { newValue, path, newErrorSchema } = change;
+    const base = this.baseState();
     // oxlint-disable-next-line typescript/no-deprecated
     const { extraErrors, omitExtraData, liveOmit, noValidate, liveValidate, disabled, readonly } = this.props;
-    const { formData: oldFormData, schemaUtils, schema, fieldPathId, schemaValidationErrorSchema, errors } = this.state;
-    let { customErrors, retrievedSchema } = this.state;
+    const { formData: oldFormData, schemaUtils, schema, fieldPathId, schemaValidationErrorSchema, errors } = base;
+    let { customErrors, retrievedSchema } = base;
     // Use the un-merged AJV-only schema as the base for re-merging extraErrors. Mirrors the
     // pattern in getStateFromProps/getDerivedStateFromProps and avoids the duplication that
     // happened when state.errorSchema (already containing merged extraErrors) was passed in.
@@ -1197,9 +1233,8 @@ export default class Form<
           mergeBaseErrorSchema = newErrorSchema;
         }
       } else {
-        if (!customErrors) {
-          customErrors = new ErrorSchemaBuilder<T>();
-        }
+        // A copy, since the builder in `base` is the state's own, which a change that throws must leave as it was
+        customErrors = new ErrorSchemaBuilder<T>(customErrors?.ErrorSchema);
         if (isRootPath) {
           const pathErrors = newErrorSchema[ERRORS_KEY];
           if (pathErrors) {
@@ -1215,8 +1250,7 @@ export default class Form<
       // If we have custom errors and the path has an error, then we need to clear it
       customErrors.clearErrors(path);
     }
-    // If there are pending changes in the queue, skip live validation since it will happen with the last change
-    if (mustValidate && this.pendingChanges.length === 1) {
+    if (mustValidate && isLast) {
       const liveValidation = this.liveValidate(
         schema,
         schemaUtils,
@@ -1237,12 +1271,7 @@ export default class Form<
       state = { ...state, formData: newFormData, ...mergedErrors, customErrors };
     }
 
-    this.setState(state as FormState<T, S, F>, () => {
-      this.reportChange(toIChangeEvent({ ...this.state, ...state }), id);
-      // Now remove the change we just completed and call this again
-      this.pendingChanges.shift();
-      this.processPendingChange();
-    });
+    return state;
   }
 
   /**
@@ -1255,8 +1284,16 @@ export default class Form<
    * @returns The new retrieved schema if it has changed, else the old retrieved schema.
    */
   private updateRetrievedSchema(retrievedSchema: S) {
-    const isTheSame = deepEquals(retrievedSchema, this.state?.retrievedSchema);
-    return isTheSame ? this.state.retrievedSchema : retrievedSchema;
+    const base = this.baseState();
+    const isTheSame = deepEquals(retrievedSchema, base?.retrievedSchema);
+    return isTheSame ? base.retrievedSchema : retrievedSchema;
+  }
+
+  /** The state a change is applied to: the one an updater queued by `onChange` was handed while it runs, otherwise the
+   * committed state
+   */
+  private baseState(): FormState<T, S, F> {
+    return this.updaterBaseState || this.state;
   }
 
   /**

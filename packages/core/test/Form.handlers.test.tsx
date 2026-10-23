@@ -1,12 +1,12 @@
-import { createRef, useEffect } from 'react';
-import type { RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import { createRef, useEffect, useLayoutEffect, useState } from 'react';
+import type { ErrorSchema, GenericObjectType, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { getTemplate, getUiOptions } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
-import { act, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import type Form from '../src/index.ts';
 import type { FormProps, IChangeEvent } from '../src/index.ts';
+import Form from '../src/index.ts';
 import { expectToHaveBeenCalledWithFormData, submitForm, describeRepeated } from './testUtils.tsx';
 
 const user = userEvent.setup();
@@ -212,6 +212,268 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
       expect(formData).toEqual({ foo: 'bar2', baz: 'blah2' });
       // There will be 3 ids, undefined for the setting of the defaults and then the two updated components
       expect(ids).toEqual([undefined, 'root_foo', 'root_baz']);
+    });
+    describe('many changes in one event', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          foo: { type: 'string' },
+          baz: { type: 'string' },
+        },
+      };
+      const burstWidget = (count: number) =>
+        function BurstWidget({ onChange }: WidgetProps) {
+          return (
+            <button
+              type='button'
+              onClick={() => {
+                for (let i = 1; i <= count; i++) {
+                  onChange(`value ${i}`);
+                }
+              }}
+            >
+              burst
+            </button>
+          );
+        };
+
+      it('should not throw and should keep the last value after many changes to one field', async () => {
+        const { node, onChange } = createFormComponent({
+          schema,
+          uiSchema: { foo: { 'ui:widget': burstWidget(200) } },
+        });
+
+        onChange.mockClear();
+
+        await user.click(node.querySelector('button')!);
+
+        await waitFor(() => expect(onChange).toHaveBeenCalledTimes(200));
+        expectToHaveBeenCalledWithFormData(onChange, { foo: 'value 200' }, 'root_foo');
+      });
+      it('should still report a burst of 40 changes before the event returns', () => {
+        const { node, onChange } = createFormComponent({
+          schema,
+          uiSchema: { foo: { 'ui:widget': burstWidget(40) } },
+        });
+
+        onChange.mockClear();
+
+        fireEvent.click(node.querySelector('button')!);
+
+        expect(onChange).toHaveBeenCalledTimes(40);
+        expectToHaveBeenCalledWithFormData(onChange, { foo: 'value 40' }, 'root_foo');
+      });
+      it('should not throw and should report every change after many changes to different fields', async () => {
+        const ref = createRef<Form>();
+        const { onChange } = createFormComponent({ ref, schema });
+        onChange.mockClear();
+
+        await act(async () => {
+          for (let i = 1; i <= 60; i++) {
+            ref.current!.setFieldValue(i % 2 ? 'foo' : 'baz', `value ${i}`);
+          }
+        });
+
+        await waitFor(() => expect(onChange).toHaveBeenCalledTimes(60));
+        expect(onChange.mock.calls.map(([, id]) => id)).toEqual(
+          Array.from({ length: 60 }, (_, i) => (i % 2 ? 'root_baz' : 'root_foo')),
+        );
+        expectToHaveBeenCalledWithFormData(onChange, { foo: 'value 59', baz: 'value 60' }, 'root_baz');
+      });
+      it('should live validate the last value of a burst', () => {
+        const shortLast = Array.from({ length: 60 }, (_, i) => (i === 59 ? 'a' : 'abc'));
+        const longLast = Array.from({ length: 60 }, (_, i) => (i === 59 ? 'abc' : 'a'));
+        const sendWidget = (values: string[]) =>
+          function SendWidget({ onChange }: WidgetProps) {
+            return (
+              <button type='button' onClick={() => values.forEach((value) => onChange(value))}>
+                send
+              </button>
+            );
+          };
+        const minLengthSchema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string', minLength: 3 } } };
+        const errorsAfter = (values: string[]) => {
+          const { node, onChange } = createFormComponent({
+            schema: minLengthSchema,
+            liveValidate: true,
+            uiSchema: { foo: { 'ui:widget': sendWidget(values) } },
+          });
+          onChange.mockClear();
+          fireEvent.click(node.querySelector('button')!);
+          expect(onChange).toHaveBeenCalledTimes(values.length);
+          return onChange.mock.lastCall![0].errors.map(({ property }: { property: string }) => property);
+        };
+
+        expect(errorsAfter(shortLast)).toEqual(['.foo']);
+        expect(errorsAfter(longLast)).toEqual([]);
+      });
+    });
+    it('should report every change of a burst to a form controlled by its parent and a widget that copies its value', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          foo: { type: 'string', default: 'foo' },
+          baz: { type: 'string', default: 'baz' },
+        },
+      };
+      const reported: string[] = [];
+      function BurstWidget({ onChange, value }: WidgetProps) {
+        const [, setCopy] = useState(value);
+        useLayoutEffect(() => {
+          setCopy(value);
+        }, [value]);
+        return (
+          <button
+            type='button'
+            onClick={() => {
+              for (let i = 1; i <= 300; i++) {
+                onChange(`value ${i}`);
+              }
+            }}
+          >
+            burst
+          </button>
+        );
+      }
+      function Parent() {
+        const [formData, setFormData] = useState<GenericObjectType | undefined>({});
+        return (
+          <Form
+            schema={schema}
+            uiSchema={{ foo: { 'ui:widget': BurstWidget } }}
+            validator={customizeValidator<GenericObjectType>()}
+            liveValidate
+            formData={formData}
+            onChange={(e) => {
+              reported.push(e.formData!.foo);
+              setFormData(e.formData);
+            }}
+          />
+        );
+      }
+      const { container } = render(<Parent />);
+      reported.length = 0;
+
+      await user.click(container.querySelector('button')!);
+
+      await waitFor(() => {
+        expect(reported).toHaveLength(300);
+      });
+      expect(reported[299]).toBe('value 300');
+    });
+    it('should keep the form mounted and taking changes when a change throws', () => {
+      vi.useFakeTimers();
+      try {
+        const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' } } };
+        const { node, onChange } = createFormComponent({
+          schema,
+          liveValidate: true,
+          customValidate: (formData, errors) => {
+            if (formData?.foo === 'boom') {
+              throw new Error('customValidate failed');
+            }
+            return errors;
+          },
+        });
+        onChange.mockClear();
+
+        fireEvent.change(node.querySelector('#root_foo')!, { target: { value: 'boom' } });
+
+        expect(() => vi.runOnlyPendingTimers()).toThrow('customValidate failed');
+        expect(onChange).not.toHaveBeenCalled();
+
+        fireEvent.change(node.querySelector('#root_foo')!, { target: { value: 'fine' } });
+
+        expect(node.isConnected).toBe(true);
+        expectToHaveBeenCalledWithFormData(onChange, { foo: 'fine' }, 'root_foo');
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+    it('should keep the changes before the last change of a burst when that change throws', () => {
+      vi.useFakeTimers();
+      try {
+        const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' } } };
+        const SendWidget = ({ onChange, value }: WidgetProps) => (
+          <>
+            <output>{value}</output>
+            <button type='button' onClick={() => ['value 1', 'value 2', 'boom'].forEach((v) => onChange(v))}>
+              send
+            </button>
+          </>
+        );
+        const { node, onChange } = createFormComponent({
+          schema,
+          liveValidate: true,
+          uiSchema: { foo: { 'ui:widget': SendWidget } },
+          customValidate: (formData, errors) => {
+            if (formData?.foo === 'boom') {
+              throw new Error('customValidate failed');
+            }
+            return errors;
+          },
+        });
+        onChange.mockClear();
+
+        fireEvent.click(node.querySelector('button')!);
+
+        expect(() => vi.runOnlyPendingTimers()).toThrow('customValidate failed');
+        expect(onChange.mock.calls.map(([event]) => event.formData.foo)).toEqual(['value 1', 'value 2']);
+        expect(node.querySelector('output')!.textContent).toBe('value 2');
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+    it('should not keep the custom errors of a change that throws', () => {
+      vi.useFakeTimers();
+      try {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { foo: { type: 'string' }, baz: { type: 'string' }, qux: { type: 'string' } },
+        };
+        const raisingWidget = (value: string, error: string) =>
+          function RaisingWidget({ onChange, id }: WidgetProps) {
+            return (
+              <button
+                type='button'
+                id={`${id}_raise`}
+                onClick={() => onChange(value, { __errors: [error] } as ErrorSchema)}
+              >
+                raise
+              </button>
+            );
+          };
+        let isTransformFailing = false;
+        const { node, onChange } = createFormComponent({
+          schema,
+          liveValidate: true,
+          uiSchema: {
+            foo: { 'ui:widget': raisingWidget('boom', 'raised on foo') },
+            baz: { 'ui:widget': raisingWidget('kept', 'raised on baz') },
+          },
+          transformErrors: (errors) => {
+            if (isTransformFailing) {
+              throw new Error('transformErrors failed');
+            }
+            return errors;
+          },
+        });
+
+        fireEvent.click(node.querySelector('#root_baz_raise')!);
+        isTransformFailing = true;
+        fireEvent.click(node.querySelector('#root_foo_raise')!);
+        expect(() => vi.runOnlyPendingTimers()).toThrow('transformErrors failed');
+        isTransformFailing = false;
+        onChange.mockClear();
+        fireEvent.change(node.querySelector('#root_qux')!, { target: { value: 'fine' } });
+
+        expectToHaveBeenCalledWithFormData(onChange, { baz: 'kept', qux: 'fine' }, 'root_qux');
+        expect(onChange.mock.lastCall![0].errors.map(({ message }: { message: string }) => message)).toEqual([
+          'raised on baz',
+        ]);
+      } finally {
+        vi.useRealTimers();
+      }
     });
     it('should modify an allOf field when the defaults are set', async () => {
       const schema: RJSFSchema = {
