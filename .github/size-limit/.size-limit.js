@@ -21,7 +21,7 @@ const PACKAGES = {
   },
   '@rjsf/utils': {
     installed: '47 kB',
-    own: '41 kB',
+    own: '42 kB',
     canaries: [{ label: 'getUiOptions', import: '{ getUiOptions }', limit: '1 kB' }],
   },
   '@rjsf/validator-ajv8': {
