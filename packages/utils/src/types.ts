@@ -1529,7 +1529,7 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
    *
    * @param [newSchema] - The new schema for which the data is being sanitized
    * @param [oldSchema] - The old schema from which the data originated
-   * @param [data={}] - The form data associated with the schema, defaulting to an empty object when undefined
+   * @param [data] - The form data associated with the schema; undefined data stays undefined
    * @param [oldData] - The form data the `oldSchema` was resolved against. Only used to resolve a `oneOf`/`anyOf`
    *      option as it was for that data, and without it the data of such an option is returned as is
    * @returns - The new form data, with all of the fields uniquely associated with the old schema set to `undefined`.

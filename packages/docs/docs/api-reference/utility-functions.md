@@ -1813,7 +1813,7 @@ Also, any properties in the old schema that are non-existent in the new schema a
 - rootSchema: S - The root JSON schema of the entire form
 - [newSchema]: S | undefined - The new schema for which the data is being sanitized
 - [oldSchema]: S | undefined - The old schema from which the data originated
-- [data={}]: any - The form data associated with the schema, defaulting to an empty object when undefined
+- [data]: any - The form data associated with the schema; undefined data stays undefined
 - [experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [experimental_customMergeAllOf](./form-props.md#experimental_custommergeallof) prop
 - [oldData]: any - The form data the `oldSchema` was resolved against. Only used to resolve a `oneOf`/`anyOf` option as it was for that data, and without it the data of such an option is returned as is
 
