@@ -14183,7 +14183,7 @@ exports[`single fields > string field > required field with markdown help 1`] = 
             name="root"
             placeholder=""
             type="text"
-            value="[object Object]"
+            value=""
           />
         </div>
         <div
