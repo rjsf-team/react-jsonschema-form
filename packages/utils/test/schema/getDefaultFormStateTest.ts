@@ -6446,7 +6446,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             turtles: ['Raphael', 'Michaelangelo', 'Unknown', 'Unknown'],
           });
         });
-        it.each<[string, RJSFSchema, unknown]>([
+        it.each<[string, RJSFSchema, Exclude<RJSFSchema['default'], undefined>]>([
           ['0', { type: 'integer', default: 1 }, 0],
           ['false', { type: 'boolean', default: true }, false],
           ["''", { type: 'string', default: 'deeper' }, ''],
