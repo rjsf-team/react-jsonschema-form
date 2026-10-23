@@ -1006,10 +1006,10 @@ function detectContextChanges<T, S extends StrictRJSFSchema, F extends FormConte
 }
 
 /** The state derived from data: on construction from the seed the props hand the form, and from the data the form
- * holds whenever the schema, a `ui:emptyValue` or `defaultFormStateBehavior` changed, since those are the props whose
- * change transforms the data (a default it did not have before, a branch that no longer applies). No other prop change
- * runs this: an unrelated re-render must not rerun value initialization, so `deriveState()` re-derives the render
- * context alone for those.
+ * holds whenever the schema, a `ui:emptyValue`, `defaultFormStateBehavior` or `additionalPropertiesWhenAbsent`
+ * changed, since those are the props whose change transforms the data (a default it did not have before, a branch that
+ * no longer applies). No other prop change runs this: an unrelated re-render must not rerun value initialization, so
+ * `deriveState()` re-derives the render context alone for those.
  *
  * @param current - The state the pass starts from; `undefined` on construction
  * @param inputFormData - The data to derive from

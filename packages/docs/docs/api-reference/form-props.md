@@ -29,7 +29,7 @@ To keep a union closed under `'allow'`, give it `additionalProperties: false`, o
 A schema that is no object, an untyped `{}` included, gets no add button.
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import validator from '@rjsf/validator-ajv8';
 
 render(

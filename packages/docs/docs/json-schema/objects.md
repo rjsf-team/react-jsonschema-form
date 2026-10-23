@@ -172,7 +172,7 @@ By default the form does not follow it: an object naming none of `additionalProp
 Set the `Form`'s [`additionalPropertiesWhenAbsent`](../api-reference/form-props.md#additionalpropertieswhenabsent) prop to `'allow'` to have the form read the schema as the spec does:
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
