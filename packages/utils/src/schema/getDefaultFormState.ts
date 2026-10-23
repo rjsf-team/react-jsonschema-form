@@ -959,7 +959,7 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // Compute the defaults recursively: give highest priority to deepest nodes unless nestedDefaultsPrecedence is ancestorWins.
   let defaults: unknown = parentDefaults;
   const preferParentDefaults =
-    Boolean(defaults) && defaultFormStateBehavior?.nestedDefaultsPrecedence === 'ancestorWins';
+    defaults !== undefined && defaultFormStateBehavior?.nestedDefaultsPrecedence === 'ancestorWins';
   // Worked out by the `oneOf`/`anyOf` branch, so it isn't worked out again for this node's type-based default
   let isWholeValue: boolean | undefined;
   // A collapsed field keeps its own keywords, but selecting an option would plan it again past the collapse. A list the

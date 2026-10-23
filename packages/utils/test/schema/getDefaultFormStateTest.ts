@@ -6294,6 +6294,37 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             turtles: ['Raphael', 'Michaelangelo', 'Unknown', 'Unknown'],
           });
         });
+        it.each<[string, RJSFSchema, unknown]>([
+          ['0', { type: 'integer', default: 1 }, 0],
+          ['false', { type: 'boolean', default: true }, false],
+          ["''", { type: 'string', default: 'deeper' }, ''],
+          ['null', { type: ['integer', 'null'], default: 1 }, null],
+        ])('keeps an ancestor default of %s over the property default (#5624)', (_name, property, ancestorDefault) => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            default: { value: ancestorDefault },
+            properties: { value: property },
+          };
+          expect(getDefaultFormState({ validator: testValidator, defaultFormStateBehavior }, { schema })).toEqual({
+            value: ancestorDefault,
+          });
+        });
+        it('keeps a falsy default two levels up over the property default (#5624)', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            default: { inner: { value: 0 } },
+            properties: {
+              inner: {
+                type: 'object',
+                default: { value: 2 },
+                properties: { value: { type: 'integer', default: 1 } },
+              },
+            },
+          };
+          expect(getDefaultFormState({ validator: testValidator, defaultFormStateBehavior }, { schema })).toEqual({
+            inner: { value: 0 },
+          });
+        });
       });
     });
     describe('defaults with allOf', () => {
