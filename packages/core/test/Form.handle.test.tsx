@@ -236,11 +236,11 @@ describe('FormRef', () => {
     });
 
     it.each([
-      ['say "hi"', 'root_say%20"hi"'],
-      ['back\\slash', 'root_back\\slash'],
-      ['line\nbreak', 'root_line%0Abreak'],
+      ['say "hi"', 'root_say-_20-_22hi-_22'],
+      ['back\\slash', 'root_back-_5Cslash'],
+      ['line\nbreak', 'root_line-_0Abreak'],
     ])(
-      'falls back to the first control whose id starts with a field id holding a character a selector quotes: %j',
+      'falls back to the first control whose id starts with the id of a field named with a character a selector quotes: %j',
       (name, fieldId) => {
         function ButtonGroup({ id }: WidgetProps) {
           return (

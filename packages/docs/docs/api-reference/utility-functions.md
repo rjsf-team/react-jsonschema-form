@@ -783,7 +783,7 @@ Folds a `FieldPathList` into the `FieldPath` addressing the same field, the inve
 
 Derives the HTML `id` for `fieldPath` from the `idPrefix` and `idSeparator` in `globalFormOptions`, joining the prefix and every segment of the path with the separator.
 
-Each property name is written so that the id holds no whitespace, two different names never write the same id, and no name writes the `__` that [partId()](#partid) joins a field's id and the name of one of its parts with. A character is written as `%` followed by its two-digit hex code when it is ASCII whitespace or `%`, or when it is an `_` that begins or ends the name or stands next to another `_`. An empty name is written `%00`. Every other character, an `_` inside a name such as `snake_case` included, is written as it is. The `idPrefix` and `idSeparator` are written as given, so neither should hold whitespace or `__`.
+Each property name is written so that the id is a CSS identifier as it stands, so `#${id}` selects the element with no escaping, holds no whitespace, holds no `__`, which [partId()](#partid) joins a field's id and the name of one of its parts with, and is no other name's id. A character is written as an escape, `-_` followed by the two uppercase hex digits of its code, when it is an ASCII character other than a letter, a digit, `-` or `_`, such as a space, `.`, `:`, `/`, `#`, `[` or `%`; when it is an `_` that begins or ends the name, stands next to another `_` or follows a `-`; or when it is a `-` that ends the name. Whitespace past ASCII, such as a no-break space, is written `-_U` and four hex digits, and an empty name `-_FF`. Every other character, an `_` or `-` inside a name such as `snake_case` or `kebab-case` and any non-ASCII letter included, is written as it is. The encoder writes `-_` nowhere else, so every `-_` starts an escape and two names never write the same id. The `idPrefix` and `idSeparator` are written as given, so each should hold only letters, digits, `-` and `_`, with no `__` in either or where they meet.
 
 A property name holding the `idSeparator` still writes the id a path of several names would, as `a_b` and `a.b` both write `root_a_b`; choose an `idSeparator` no property name holds to tell those apart.
 
@@ -799,8 +799,9 @@ A property name holding the `idSeparator` still writes the id a path of several 
 #### Example
 
 ```typescript
-fieldPathToId(toFieldPath('Do you have any pets?'), { idPrefix: 'root', idSeparator: '_' }); // 'root_Do%20you%20have%20any%20pets?'
-fieldPathToId(toFieldPath('_id'), { idPrefix: 'root', idSeparator: '_' }); // 'root_%5Fid'
+fieldPathToId(toFieldPath('Do you have any pets?'), { idPrefix: 'root', idSeparator: '_' }); // 'root_Do-_20you-_20have-_20any-_20pets-_3F'
+fieldPathToId(toFieldPath('_id'), { idPrefix: 'root', idSeparator: '_' }); // 'root_-_5Fid'
+fieldPathToId(toFieldPath('snake_case-name'), { idPrefix: 'root', idSeparator: '_' }); // 'root_snake_case-name'
 ```
 
 ### fieldPathToList()
