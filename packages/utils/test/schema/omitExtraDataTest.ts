@@ -146,6 +146,22 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         });
         expect(omitted(nested({ additionalProperties: true }, {}), formData)).toEqual(formData);
       });
+      it("omits a key the object's own if/then adds past its additionalProperties: false, whichever field judges", () => {
+        const base: RJSFSchema = {
+          type: 'object',
+          additionalProperties: false,
+          properties: { kind: { type: 'string' } },
+          if: { properties: { kind: { const: 'x' } }, required: ['kind'] },
+          then: { properties: { extra: { type: 'string' } } },
+        };
+        const a: RJSFSchema = { properties: { a: { type: 'string' } } };
+        const formData = { kind: 'x', extra: 'e', a: 'q' };
+        expect(omitted(base, formData)).toEqual({ kind: 'x' });
+        expect(omitted({ ...base, oneOf: [a] }, formData)).toEqual({ kind: 'x', a: 'q' });
+        // The option offering options of its own judges the keys it renders, `a` among them, and the object's `then`
+        // key is still pruned by the object's own keywords
+        expect(omitted({ ...base, oneOf: [{ oneOf: [a] }] }, formData)).toEqual({ kind: 'x', a: 'q' });
+      });
     });
     it('drops a property whose $ref names a false definition', () => {
       const schema: RJSFSchema = {
@@ -392,6 +408,15 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
 
       expect(schemaUtils.omitExtraData(schema, { choice: value })).toEqual({ choice: value });
     });
+    it.each(['allow', 'forbid'] as const)(
+      "should keep the whole value an object's const pins, under additionalPropertiesWhenAbsent: '%s'",
+      (additionalPropertiesWhenAbsent) => {
+        const schema: RJSFSchema = { type: 'object', properties: { pinned: { type: 'object', const: { a: 1 } } } };
+        const schemaUtils = createSchemaUtils({ validator: testValidator, additionalPropertiesWhenAbsent }, schema);
+
+        expect(schemaUtils.omitExtraData(schema, { pinned: { a: 1 } })).toEqual({ pinned: { a: 1 } });
+      },
+    );
     it('should still prune a typed object whose oneOf is empty', () => {
       const schema: RJSFSchema = {
         type: 'object',

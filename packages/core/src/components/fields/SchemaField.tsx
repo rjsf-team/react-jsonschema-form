@@ -689,13 +689,15 @@ export function useSchemaFieldPlan<
     [optionBeside, schema, schemaUtils, _schema, formData],
   );
   // An object with no properties of its own besides its options, a pure union, has nothing to render beside them, so
-  // like a withheld field it is planned as the field that renders its options, whose template labels it. One taking
-  // extra keys renders its own heading and add button beside them: read joined with the option shown, as its add button
-  // reads them, so an object whose every option is closed stays a pure union however its own keywords read
+  // like a withheld field it is planned as the field that renders its options, whose template labels it. One holding
+  // extra keys or showing its add button renders its own heading beside them. The `properties` are counted, since a
+  // view taking extra keys stubs each one the data holds among them, and the add button is read joined with the option
+  // shown, so an object whose every option is closed, or whose `expandable` is off, stays a pure union however its
+  // keywords read
   const isPureUnion =
     fieldToRender?.yieldsToOptions === true &&
-    !fieldSchema.properties &&
-    !schemaUtils.allowsAdditionalProperties(fieldSchema);
+    Object.keys(fieldSchema.properties ?? {}).length === 0 &&
+    !schemaUtils.canExpand(fieldSchema, fieldUiSchema, formData);
   const plannedAsOptions = fieldToRender?.isWithheld === true || isPureUnion;
   const renderedComponent = fieldToRender?.FieldComponent;
   const { presentation, labelPlacement } = useSchemaFieldPresentation<T, S, F>({

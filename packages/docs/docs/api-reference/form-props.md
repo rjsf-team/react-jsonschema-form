@@ -26,7 +26,7 @@ JSON Schema reads such an object as taking any extra key, as `additionalProperti
 
 A keyword the schema names is read as it stands either way, so an `additionalProperties: false` or an `unevaluatedProperties: false` still closes the object.
 To keep a union closed under `'allow'`, give it `additionalProperties: false`, or hide its add button with the [`expandable` option](../json-schema/objects.md#expandable-option).
-A schema that is no object, an untyped `{}` included, gets no add button.
+A schema that is no object, an untyped `{}` included, gets no add button, nor does one whose `const` or `enum` pins the whole value.
 
 ```tsx
 import Form from '@rjsf/core';

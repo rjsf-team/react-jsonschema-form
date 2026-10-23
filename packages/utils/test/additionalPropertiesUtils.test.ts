@@ -94,6 +94,10 @@ describe('allowsAdditionalProperties()', () => {
     expect(allowsAdditionalProperties(allowing, {})).toBe(false);
     expect(allowsAdditionalProperties(allowing, { type: 'string' })).toBe(false);
   });
+  it('returns false for an object whose const or enum pins the whole value, even where the context allows an absent keyword', () => {
+    expect(allowsAdditionalProperties(allowing, { const: { a: 1 } })).toBe(false);
+    expect(allowsAdditionalProperties(allowing, { type: 'object', enum: [{ a: 1 }, { b: 2 }] })).toBe(false);
+  });
   it("leaves the extra keys of an option rendered beside its parent's field to that field, even where the context allows an absent keyword", () => {
     const rendered = getRenderedOptionSchema(
       { type: 'object', properties: { a: { type: 'string' } } },

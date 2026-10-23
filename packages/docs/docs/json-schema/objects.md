@@ -191,7 +191,7 @@ render(
 
 The object then gets an add button, the extra keys of its data render with their key input and remove button, each as a field for the value it holds, and `omitExtraData` keeps them, exactly as under `additionalProperties: true`.
 A schema that names a keyword is read as it stands either way, so an `additionalProperties: false` or an `unevaluatedProperties: false` still closes the object.
-A schema that is no object, an untyped `{}` included, gets no add button.
+A schema that is no object, an untyped `{}` included, gets no add button, nor does one whose `const` or `enum` pins the whole value.
 
 An object `anyOf`/`oneOf` union, such as `{ type: 'object', oneOf: [...] }`, takes extra keys too, so under `'allow'` it renders its own field beside the option it shows, with its title and add button; the option shows only its own properties.
 The union is read joined with the option it shows, so where that option names `additionalProperties: false` it takes no extra key and renders as it does under `'forbid'`.

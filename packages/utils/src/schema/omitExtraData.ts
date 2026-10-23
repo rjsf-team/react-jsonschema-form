@@ -11,6 +11,7 @@ import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.
 import getRenderedOptionSchema from '../getRenderedOptionSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
 import getSchemaTypeForValue from '../getSchemaTypeForValue.ts';
+import isContainerValue from '../isContainerValue.ts';
 import isObject, { isSchemaObject } from '../isObject.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
 import rendersOwnFieldBesideOption, { takesParentExtraKeys } from '../rendersOwnFieldBesideOption.ts';
@@ -606,9 +607,14 @@ export default function omitExtraData<
     // shows joined, as `retrieveSchema()` stubs them, rather than each keeping the keys its own keywords allow
     const judge = judgesExtraKeys && !shown.takesExtraKeys ? extraKeyJudgeOf<S>(localSchema, shown.option) : undefined;
 
-    // A select holds one of its constants as a whole, so an `object` or `array` one has no contents to prune. A value of
-    // another type a `type` list allows is kept as it is, rather than pruned or dropped as the type the list resolves to
-    const schemaType = isWholeValueSelect<S>(localSchema) ? undefined : getSchemaType<S>(localSchema);
+    // A select holds one of its constants as a whole, so an `object` or `array` one has no contents to prune, nor has a
+    // container `const`, which takes no extra key (see `absentKeywordAllows()`) yet needs every key it names to hold. A
+    // value of another type a `type` list allows is kept as it is, rather than pruned or dropped as the type the list
+    // resolves to
+    const schemaType =
+      isWholeValueSelect<S>(localSchema) || isContainerValue(localSchema.const)
+        ? undefined
+        : getSchemaType<S>(localSchema);
     const type =
       Array.isArray(localSchema.type) && getSchemaTypeForValue<S>(localSchema, source) !== schemaType
         ? undefined
@@ -631,10 +637,21 @@ export default function omitExtraData<
     // dependency sub-schemas are legitimate extensions of the allowed property set and must not be
     // pruned. Keys added only by winning conditional branches are still removed here so the result
     // honours additionalProperties:false.
+    // Where the shown option's field took the object's extra keys, the keys it kept stand, and only those the object's
+    // own conditions add are pruned, by the object's keywords
+    const judgedByOption =
+      judgesExtraKeys && shown.takesExtraKeys && localSchema.additionalProperties === false && isObjectValue(filtered)
+        ? new Set(Object.keys(filtered))
+        : undefined;
     const afterConditions = handleConditions(localSchema, source, filtered, path);
-    if (judge?.schema.additionalProperties === false && isObjectValue(afterConditions)) {
+    const pruning = judge ?? (judgedByOption ? extraKeyJudgeOf<S>(localSchema) : undefined);
+    if (pruning?.schema.additionalProperties === false && isObjectValue(afterConditions)) {
       for (const key of Object.keys(afterConditions)) {
-        if (!judge.declared.has(key) && Object.keys(getMatchingPatternProperties<S>(judge.schema, key)).length === 0) {
+        if (
+          !judgedByOption?.has(key) &&
+          !pruning.declared.has(key) &&
+          Object.keys(getMatchingPatternProperties<S>(pruning.schema, key)).length === 0
+        ) {
           delete afterConditions[key];
         }
       }

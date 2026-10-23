@@ -241,7 +241,8 @@ function meetSubschema(parent: unknown, option: unknown): unknown {
  * `EXTRA_KEYS_ELSEWHERE_FLAG`, so its field offers no extra key of its own beside the parent's. An option offering
  * options of its own is the exception: the field it renders beside them takes the extra keys in the parent's field's
  * place, so it keeps its own extra-key keywords, joined with the parent's, each still judging a key apart, carries
- * the names of the properties the fields above declare, which its field leaves to them, and is not marked. Every
+ * the names of the properties the fields above declare, which its field leaves to them, and is not marked. A
+ * `ui:field` the option's uiSchema names is that field all the same, handed the extra keys to render. Every
  * other parent renders nothing of its own and leaves the whole field to the option, so the option takes each of the
  * parent's keywords that describes the value, such as an array's `items` and `uniqueItems` or a string's `format`.
  * The two are met with `meetSchemas()`, so an option's `items` adds to the parent's rather than replacing them. A

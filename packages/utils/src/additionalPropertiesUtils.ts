@@ -100,8 +100,9 @@ export function readsAbsentAsAllowed<
 /** Returns whether the form reads an object naming neither `additionalProperties` nor `unevaluatedProperties` as
  * taking any key its other keywords leave over, as `additionalProperties: true` does: the JSON Schema spec reads it that
  * way, and the context's `additionalPropertiesWhenAbsent: 'allow'` has the form follow it. A schema that is no object,
- * an untyped `{}` included, has no keys for the form to offer or keep, and an option `getRenderedOptionSchema()` marked
- * `EXTRA_KEYS_ELSEWHERE_FLAG` leaves them to its parent's own field.
+ * an untyped `{}` included, has no keys for the form to offer or keep, nor has one whose `const` or `enum` pins the
+ * whole value, and an option `getRenderedOptionSchema()` marked `EXTRA_KEYS_ELSEWHERE_FLAG` leaves them to its parent's
+ * own field.
  *
  * @param context - The `SchemaContext` whose `additionalPropertiesWhenAbsent` decides
  * @param schema - The schema to check
@@ -115,6 +116,8 @@ export function absentKeywordAllows<
     readsAbsentAsAllowed<S, F>(context) &&
     !Reflect.get(schema, EXTRA_KEYS_ELSEWHERE_FLAG) &&
     additionalPropertiesKeyword<S>(schema) === undefined &&
+    schema.const === undefined &&
+    schema.enum === undefined &&
     getSchemaType<S>(schema) === 'object'
   );
 }

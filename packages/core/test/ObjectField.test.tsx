@@ -3629,6 +3629,81 @@ describe('ObjectField', () => {
       expect(node.querySelectorAll('.rjsf-object-property-expand button')).toHaveLength(1);
     });
 
+    describe('lays out an object union that can neither add an extra key nor holds one as a pure union', () => {
+      const union = (keyword: RJSFSchema): RJSFSchema => ({
+        type: 'object',
+        title: 'Thing',
+        ...keyword,
+        oneOf: [
+          { title: 'A', properties: { a: { type: 'string' } } },
+          { title: 'B', properties: { b: { type: 'string' } } },
+        ],
+      });
+      const expandableOff = { 'ui:options': { expandable: false } };
+
+      it.each([
+        ["under 'allow', naming no keyword", union({}), 'allow'],
+        ["under 'forbid', beside an additionalProperties: true", union({ additionalProperties: true }), 'forbid'],
+      ] as const)('with its expandable off, %s', (_, schema, additionalPropertiesWhenAbsent) => {
+        const { node } = createFormComponent({
+          schema,
+          uiSchema: expandableOff,
+          additionalPropertiesWhenAbsent,
+          initialFormData: { a: 'x' },
+        });
+
+        expect(node.querySelector('#root_XxxOf')).not.toBeInTheDocument();
+        expect(screen.getAllByText('Thing')).toHaveLength(1);
+      });
+      it('renders its own field beside the option while the data holds an extra key', () => {
+        const { node } = createFormComponent({
+          schema: union({}),
+          uiSchema: expandableOff,
+          additionalPropertiesWhenAbsent: 'allow',
+          initialFormData: { a: 'x', extra: 'e' },
+        });
+
+        expect(node.querySelector('#root_XxxOf')).toBeInTheDocument();
+        expect(node.querySelector('#root_extra-key')).toBeInTheDocument();
+      });
+      it("drops its own field once the data reaches the object's maxProperties", async () => {
+        const { node } = createFormComponent({
+          schema: union({ maxProperties: 1 }),
+          additionalPropertiesWhenAbsent: 'allow',
+        });
+        expect(node.querySelector('#root_XxxOf')).toBeInTheDocument();
+
+        await user.type(node.querySelector('#root_a')!, 'x');
+
+        expect(node.querySelector('#root_XxxOf')).not.toBeInTheDocument();
+        expect(node.querySelector('#root_a')).toHaveFocus();
+      });
+    });
+
+    it("hands a named field given to an option offering options of its own the object's extra keys", () => {
+      const Named = vi.fn((_props: FieldProps) => null);
+      createFormComponent({
+        schema: {
+          type: 'object',
+          additionalProperties: { type: 'string' },
+          oneOf: [{ title: 'A', oneOf: [{ title: 'A1', properties: { x: { type: 'string' } } }] }],
+        },
+        uiSchema: { oneOf: [{ 'ui:field': Named }] },
+        initialFormData: { extra: 'e' },
+      });
+
+      expect(Named).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          schema: expect.objectContaining({
+            additionalProperties: { type: 'string' },
+            properties: { extra: expect.objectContaining({ type: 'string' }) },
+          }),
+          formData: { extra: 'e' },
+        }),
+        undefined,
+      );
+    });
+
     describe("an option taking the extra keys in its object's place keeps the object's bounds on them", () => {
       const nested = (bounds: RJSFSchema): RJSFSchema => ({
         type: 'object',
