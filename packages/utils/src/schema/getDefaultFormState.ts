@@ -19,6 +19,7 @@ import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.
 import getOptionUiSchema from '../getOptionUiSchema.ts';
 import getPropertySchema from '../getPropertySchema.ts';
 import getRenderedOptionSchema from '../getRenderedOptionSchema.ts';
+import getSchemaOwnTypes from '../getSchemaOwnTypes.ts';
 import getSchemaType from '../getSchemaType.ts';
 import getSchemaTypeForValue from '../getSchemaTypeForValue.ts';
 import getStaticItemsUiSchema from '../getStaticItemsUiSchema.ts';
@@ -1957,7 +1958,7 @@ function foldedTypeOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
  * @param view - The field's view
  * @param props - The props of the field
  * @param defaults - The defaults computed for the field so far
- * @param [isWholeValue] - Whether the field is a select over whole object or array values, when already known
+ * @param isWholeValue - Whether the field is a select over whole object or array values
  * @returns - The default value based on the schema type if they are defined for object or array schemas.
  */
 function typeDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>(
@@ -1965,7 +1966,7 @@ function typeDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>(
   view: DefaultsView<S>,
   props: FoldProps<T, S, F>,
   defaults: unknown,
-  isWholeValue = isWholeValueSelect<S>(resolveDeclaredConstantOptions<S>(view.schema, () => view)),
+  isWholeValue: boolean,
 ): unknown {
   const type = foldedTypeOf<T, S, F>(view, props, defaults, isWholeValue);
   // A value already picked is kept as it is, since the form data is merged over the defaults key by key, which would
@@ -2118,7 +2119,13 @@ export function getDefaultBasedOnSchemaType<
   const { rootSchema, rawFormData } = computeDefaultsProps;
   const view = helperView<S, F>(context, rawSchema, rootSchema, rawFormData);
   return asDeclared<T | T[] | undefined>(
-    typeDefaults<T, S, F>(context, view, computeDefaultsProps, defaults, isWholeValue),
+    typeDefaults<T, S, F>(
+      context,
+      view,
+      computeDefaultsProps,
+      defaults,
+      isWholeValue ?? isWholeValueSelect<S>(resolveDeclaredConstantOptions<S>(view.schema, () => view)),
+    ),
   );
 }
 
@@ -2183,6 +2190,22 @@ interface MatchedSchema<S extends StrictRJSFSchema> {
   readonly chains: () => readonly Keywords<S>[];
 }
 
+/** Whether `value` is an object as JSON Schema reads data: a plain object with no primitive value of its own. One whose
+ * `valueOf()` gives a primitive, as a moment, dayjs or Luxon object's gives an epoch, is that value to the date widgets
+ * `utcToLocal()` converts it for
+ */
+function isObjectData(value: unknown): value is Record<string, unknown> {
+  return isPlainObject(value) && Reflect.get(value, 'valueOf') === Object.prototype.valueOf;
+}
+
+/** Whether `schema` takes an object as its value: it names `object` among the types it says its value has, or says
+ * nothing about them, as a schema with no `type` of its own whose `anyOf` options or `default` would say
+ */
+function takesObject<S extends StrictRJSFSchema>(schema: S): boolean {
+  const types = getSchemaOwnTypes<S>(schema);
+  return types === undefined || types.includes('object');
+}
+
 /** Returns `formData` matched to `matched.schema` as `ensureFormDataMatchingSchema()` matches it */
 function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
@@ -2219,6 +2242,9 @@ function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextTy
     if (getOptionsList?.length !== 0) {
       validFormData = getOptionsList?.some((option) => deepEquals(option.value, formData)) ? formData : undefined;
     }
+  } else if (isObjectData(formData) && !takesObject<S>(schemaToMatch)) {
+    // Object data can never validate against a schema whose types leave out `object`, so it is no value of the field
+    validFormData = undefined;
   }
 
   // Override the formData with the const if the constAsDefaults is set to always
@@ -2246,24 +2272,25 @@ function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextTy
         const { graph, seeds } = propertyField();
         readProperty = resolveMergedOwnRef<S>(graph, seeds, propertySchema, context.customMergeAllOf);
       }
-      if (
-        Object.hasOwn(matched, key) &&
-        (shouldRetrieveAllOf || (isObject(readProperty) && ALL_OF_KEY in readProperty))
-      ) {
+      const retrievesProperty = shouldRetrieveAllOf || (isObject(readProperty) && ALL_OF_KEY in readProperty);
+      // Object data is matched at every depth, so a value nested in it that its schema can't take is found too
+      if (Object.hasOwn(matched, key) && (retrievesProperty || isObjectData(matched[key]))) {
         const chainsOfProperty = () => {
           const { graph, seeds } = propertyField();
           return buildPlan<S, F>({ context, graph, seeds, policy: { allOf: false, conditions: false } }).chains;
         };
-        setOwn(
-          matched,
-          key,
-          formDataMatching<unknown, S, F>(
-            context,
-            { schema: readProperty, field: propertyField, chains: chainsOfProperty },
-            rootSchema,
-            matched[key],
-          ),
+        const matchedProperty = formDataMatching<unknown, S, F>(
+          context,
+          { schema: readProperty, field: propertyField, chains: chainsOfProperty },
+          rootSchema,
+          matched[key],
         );
+        // Object data that doesn't match is left out, so the property takes its defaults as one the data lacks does
+        if (matchedProperty === undefined && !retrievesProperty) {
+          Reflect.deleteProperty(matched, key);
+        } else {
+          setOwn(matched, key, matchedProperty);
+        }
       }
     }
     validFormData = matched;
@@ -2326,6 +2353,8 @@ export default function getDefaultFormState<
     uiSchemaDefinitions,
   });
   const { schema } = view;
+  const matchingFormData: unknown =
+    isObject(formData) || Array.isArray(formData) ? viewFormDataMatching<T, S, F>(context, view, formData) : undefined;
 
   // Array form data takes the merge path below, which knows how to combine it with the defaults
   if (schema.type !== 'object' && isObject(schema.default) && isObject(defaults) && !Array.isArray(formData)) {
@@ -2333,7 +2362,7 @@ export default function getDefaultFormState<
       withNullFills(
         {
           ...defaults,
-          ...(isObject(formData) ? formData : undefined),
+          ...(isObject(matchingFormData) ? matchingFormData : undefined),
         },
         formData,
         nullFills,
@@ -2346,7 +2375,10 @@ export default function getDefaultFormState<
   if (isObject(formData) || Array.isArray(formData)) {
     const { mergeDefaultsIntoFormData } = context.defaultFormStateBehavior ?? {};
     const defaultSupercedesUndefined = mergeDefaultsIntoFormData === 'useDefaultIfFormDataUndefined';
-    const matchingFormData = viewFormDataMatching<T, S, F>(context, view, formData);
+    // Data the schema can't take is no value at all, so the defaults stand alone
+    if (matchingFormData === undefined) {
+      return asDeclared<T | T[] | null | undefined>(defaults);
+    }
     return asDeclared<T | T[] | null | undefined>(
       withNullFills(
         mergeDefaultsWithFormData(

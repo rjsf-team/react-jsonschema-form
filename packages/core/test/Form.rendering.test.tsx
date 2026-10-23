@@ -939,12 +939,13 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('string');
     });
 
-    // The `range` would render the object as its value, which React throws for, wherever its type is in the list
+    // The `range` would render the object as its value, which React throws for, wherever its type is in the list. The
+    // object can't validate against a union naming no `object`, so the defaults drop it and the range shows no value
     it.each<[string, RJSFSchema['type']]>([
       ['after', ['string', 'number']],
       ['before', ['number', 'string']],
     ])(
-      "starts a union holding data its ui:widget's type can't show on a type without the widget, listed %s it",
+      "drops object data a union of no object type holds and starts it on its ui:widget's type, listed %s it (#5522)",
       (_, type) => {
         const { node } = createFormComponent({
           schema: { type: 'object', properties: { val: { type } } },
@@ -954,8 +955,8 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         });
 
         const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
-        expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('string');
-        expect(node.querySelector('#root_val')).toHaveAttribute('type', 'text');
+        expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('number');
+        expect(node.querySelector('#root_val')).toHaveAttribute('type', 'range');
       },
     );
 
