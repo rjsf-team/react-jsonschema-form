@@ -1583,7 +1583,7 @@ Mixed types can't share a typed field (`NumberField` would cast a string option 
 
 Derives the plan of the selector an `anyOf`/`oneOf` field renders to pick its option from the field's own plan.
 The selector draws the parts the field's plan has the field draw itself, as a theme whose template draws no label declares, and the parts drawn elsewhere are `'above'` it. It is derived from the plan of the field rendering the options, which `SchemaField` hands none of the parts a component rendered beside the options draws itself, such as a custom field's label or an object's heading.
-It is named through `aria-labelledby` by a label a `FieldTemplate` draws, since that label's `for` names the field's own control rather than the selector, or by the `aria-label` the field's control takes where `ui:label: false` hides its label, described by the field's parts that render, marked `aria-invalid` while the field shows errors, and never `required`, since it always holds an option.
+It is named through `aria-labelledby` by a label a `FieldTemplate` draws, since that label's `for` names the field's own control rather than the selector, or by the `aria-label` the field's control takes where `ui:label: false` hides its label, described by the field's parts that render, marked `aria-invalid` while the field shows errors, and never `required`, since it picks an option index rather than form data and holds one unless its widget offers an empty choice, which clears the field's data with it.
 `MultiSchemaField` passes it to the selector as `presentation`.
 
 #### Parameters

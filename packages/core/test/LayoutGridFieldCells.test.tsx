@@ -414,6 +414,24 @@ describe('a discriminated cell of a layout grid', () => {
     screen.getAllByRole('radio').forEach((radio) => expect(radio).toBeDisabled());
   });
 
+  // `LayoutMultiSchemaField`'s selector is the only control for the discriminator it writes into the form data, so it's
+  // the cell's required control, where `MultiSchemaField`'s picks an option index and the option renders the
+  // discriminator as a control of its own (#5527)
+  it("requires its selector when the cell is required, marking only the cell's label", () => {
+    const { node } = renderGrid(gridUiSchema(), { ...schema, required: ['pick'] });
+
+    screen.getAllByRole('radio').forEach((radio) => expect(radio).toBeRequired());
+    expect(node.querySelectorAll('span.required')).toHaveLength(1);
+    expect(node.querySelector('#root_pick__label + span.required')).toBeInTheDocument();
+  });
+
+  it('leaves its selector unrequired when the cell is optional', () => {
+    const { node } = renderGrid(gridUiSchema());
+
+    screen.getAllByRole('radio').forEach((radio) => expect(radio).not.toBeRequired());
+    expect(node.querySelector('span.required')).not.toBeInTheDocument();
+  });
+
   describe('a ui:required read from JSON', () => {
     // `SchemaField` warns about a `ui:required` that turns a schema-required field optional with nothing to fill it
     setupConsoleWarnSuppression();

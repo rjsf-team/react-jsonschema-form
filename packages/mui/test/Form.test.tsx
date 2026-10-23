@@ -140,6 +140,35 @@ describe("a titled anyOf field's option selector", () => {
   });
 });
 
+describe('an anyOf/oneOf field', () => {
+  // The selector draws the field's label but, picking an option index, which isn't form data, is neither required nor
+  // marked so; the selected option's control is required and its own label carries the field's only marker (#5527)
+  test("marks a required field on its selected option's label rather than its selector's", () => {
+    const { container } = render(
+      <Form
+        validator={validator}
+        schema={{
+          type: 'object',
+          required: ['pet'],
+          properties: {
+            pet: {
+              oneOf: [
+                { title: 'Cat', type: 'string' },
+                { title: 'Dog', type: 'number' },
+              ],
+            },
+          },
+        }}
+      />,
+    );
+
+    expect(screen.getByRole('combobox', { name: 'pet' })).not.toBeRequired();
+    expect(screen.getByRole('textbox', { name: 'Cat' })).toBeRequired();
+    expect(container.querySelectorAll('.MuiFormLabel-asterisk')).toHaveLength(1);
+    expect(container.querySelector('label[for="root_pet"] .MuiFormLabel-asterisk')).toBeInTheDocument();
+  });
+});
+
 describe('the fallback UI', () => {
   it('names the value control with the field title, and describes it once', () => {
     const { container } = render(
