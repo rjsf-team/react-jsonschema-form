@@ -74,26 +74,15 @@ export default function mergeDefaultsWithFormData<T = unknown>(
       const keyValue = formDataObj[key];
       const keyExistsInDefaults = defaultsObj !== undefined && Object.hasOwn(defaultsObj, key);
       const ownDefault = keyExistsInDefaults ? defaultsObj[key] : undefined;
-      const keyDefaultIsObject = isObject(ownDefault);
-      // If any direct child of this key's default is itself an object or array,
-      // the shallow spread below would bypass its merge rules. Route those cases
-      // to the recursive path; the recursive call repeats this check one level deeper.
-      const defaultValueNeedsDeepMerge =
-        keyDefaultIsObject && Object.values(ownDefault).some((v) => isObject(v) || Array.isArray(v));
-
-      const keyHasFormDataObject = isObject(keyValue);
-
-      const merged =
-        keyDefaultIsObject && keyHasFormDataObject && !defaultValueNeedsDeepMerge
-          ? { ...ownDefault, ...keyValue }
-          : mergeDefaultsWithFormData<T>(
-              ownDefault,
-              keyValue,
-              mergeExtraArrayDefaults,
-              defaultSupercedesUndefined,
-              // overrideFormDataWithDefaults can be true only when the key value exists in defaults
-              overrideFormDataWithDefaults && keyExistsInDefaults,
-            );
+      // Every key is merged by these same rules, at any depth
+      const merged = mergeDefaultsWithFormData<T>(
+        ownDefault,
+        keyValue,
+        mergeExtraArrayDefaults,
+        defaultSupercedesUndefined,
+        // overrideFormDataWithDefaults can be true only when the key value exists in defaults
+        overrideFormDataWithDefaults && keyExistsInDefaults,
+      );
       setOwn(accumulator, key, merged);
       return accumulator;
     }, acc) as T;
