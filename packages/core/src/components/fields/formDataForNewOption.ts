@@ -107,12 +107,12 @@ function optionDeclaresValueFor<
  * @param [parentSchema] - The schema holding the `oneOf`/`anyOf`
  * @returns - `data`, or a copy of it without the discarded keys
  */
-function withoutDiscardedKeys<S extends StrictRJSFSchema = RJSFSchema>(
-  data: GenericObjectType,
+function withoutDiscardedKeys<D extends GenericObjectType, S extends StrictRJSFSchema = RJSFSchema>(
+  data: D,
   oldOption?: S,
   newOption?: S,
   parentSchema?: S,
-): GenericObjectType {
+): D {
   const oldProperties: object = oldOption?.properties ?? {};
   const newProperties: object = newOption?.properties ?? {};
   // The schema holding the options arrives with the extra keys of its data stubbed among its `properties`, a key the
@@ -243,7 +243,7 @@ export default function formDataForNewOption<
   const renderedOldOption = renderedOption<S>(parentSchema, oldOption);
   let newFormData: T | undefined = schemaUtils.sanitizeDataForNewSchema(renderedNewOption, renderedOldOption, formData);
   if (isPlainObject(newFormData)) {
-    newFormData = withoutDiscardedKeys<S>(newFormData, renderedOldOption, renderedNewOption, parentSchema) as T;
+    newFormData = withoutDiscardedKeys(newFormData, renderedOldOption, renderedNewOption, parentSchema);
   }
   // A `null` option renders no field, so the switch leaves the data as the sanitize did, rather than the `null` the
   // option's defaults fill in for a field that renders one

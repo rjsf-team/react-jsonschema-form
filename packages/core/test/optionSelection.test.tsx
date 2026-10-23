@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { CustomValidator, FieldProps, RJSFSchema, UiSchema } from '@rjsf/utils';
-import { ROOT_FIELD_PATH } from '@rjsf/utils';
+import { isPlainObject, ROOT_FIELD_PATH } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import { act, render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -56,7 +56,7 @@ describe('option selection as form state', () => {
         { title: 'B', properties: { a: { type: 'string' }, b: { type: 'number' } } },
       ],
     };
-    const { node } = createFormComponent({ schema, initialFormData: { a: 'x', b: 2 } });
+    const { node, onChange } = createFormComponent({ schema, initialFormData: { a: 'x', b: 2 } });
 
     expect(selectOf(node, 'root__anyof_select')).toHaveValue('1');
     expect(ids(node, '#root_b')).toHaveLength(1);
@@ -64,7 +64,8 @@ describe('option selection as form state', () => {
 
     await user.selectOptions(selectOf(node, 'root__anyof_select'), 'A');
 
-    // The switch leaves `b` holding `undefined`, which is no entry for the extra-key keyword to render a row for
+    // The switch deletes `b`, which only B declares, so the extra-key keyword has no entry to render a row for
+    expect(onChange.mock.lastCall?.[0].formData).not.toHaveProperty('b');
     expect(node.querySelector('#root_b-key')).toBeNull();
     expect(ids(node, '#root_b')).toHaveLength(0);
   });
@@ -99,10 +100,32 @@ describe('option selection as form state', () => {
     const { node } = createFormComponent({ schema, liveValidate: 'onChange', customValidate });
 
     await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
-    await user.clear(node.querySelector('#root_b')!);
+    await user.clear(elementOf(node, '#root_b'));
 
     // The cleared field reaches customValidate holding its default, as it does outside options, and that default is
     // B's: `{}` fits A as well, whose `a` would come back with A's
+    expect(customValidate.mock.lastCall?.[0]).toEqual({ b: 'y' });
+  });
+
+  it('hands customValidate the defaults of the option on screen on submit', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      oneOf: [
+        { title: 'A', properties: { a: { type: 'string', default: 'x' } } },
+        { title: 'B', properties: { b: { type: 'string', default: 'y' } }, required: ['b'] },
+      ],
+    };
+    const customValidate = vi.fn<CustomValidator>((_formData, errors) => errors);
+    // The browser's own check of the required `b` would block the submit
+    const { node } = createFormComponent({ schema, customValidate, noHtml5Validate: true });
+
+    await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
+    await user.clear(elementOf(node, '#root_b'));
+    await submitForm(node, user);
+
+    // The validator is handed `{}`, which only A validates, yet B, which the form shows for `{ b: undefined }`, is the
+    // option the defaults come from
+    expect(getSelectedOptionValue(selectOf(node, 'root__oneof_select'))).toBe('B');
     expect(customValidate.mock.lastCall?.[0]).toEqual({ b: 'y' });
   });
 
@@ -151,10 +174,8 @@ describe('option selection as form state', () => {
       customValidate,
       omitExtraData: true,
       liveOmit: 'onChange',
-      transformChange: (next) => {
-        const data = next as { a?: unknown } | undefined;
-        return typeof data?.a === 'string' ? { ...data, a: data.a.toUpperCase() } : next;
-      },
+      transformChange: (next) =>
+        isPlainObject(next) && typeof next.a === 'string' ? { ...next, a: next.a.toUpperCase() } : next,
     });
 
     await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
@@ -208,7 +229,7 @@ describe('option selection as form state', () => {
     };
     const { node } = createFormComponent({ schema });
 
-    await user.type(node.querySelector('#root_a')!, 'x');
+    await user.type(elementOf(node, '#root_a'), 'x');
     await user.selectOptions(selectOf(node, 'root__anyof_select'), 'B');
 
     expect(node.querySelector('#root_a-key')).toBeNull();
@@ -226,7 +247,7 @@ describe('option selection as form state', () => {
     };
     const { node, onChange } = createFormComponent({ schema });
 
-    await user.type(node.querySelector('#root_a')!, 'x');
+    await user.type(elementOf(node, '#root_a'), 'x');
     await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
 
     expect(node.querySelector('#root_a-key')).toBeNull();
@@ -249,7 +270,7 @@ describe('option selection as form state', () => {
     };
     const { node, onChange } = createFormComponent({ schema });
 
-    await user.type(node.querySelector('#root_a')!, 'x');
+    await user.type(elementOf(node, '#root_a'), 'x');
     await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
 
     // `{ b: undefined }` fits A too, as an extra key of A whose `null` fills it, so matching the data again would pick

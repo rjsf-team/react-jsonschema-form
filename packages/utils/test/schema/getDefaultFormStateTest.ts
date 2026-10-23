@@ -10004,6 +10004,14 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         ).toEqual({ a: 'x' });
       });
 
+      it('falls back to the option the data matches where the fieldState names an index past the options', () => {
+        const schema: RJSFSchema = { type: 'object', oneOf: [a, b] };
+        const { fieldState } = showing(2);
+        expect(
+          getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema, formData: {}, fieldState }),
+        ).toEqual({ a: 'x' });
+      });
+
       it('asks nothing of a select, over constants or an enum, nor of a field holding no data, which its default matches', () => {
         const schema: RJSFSchema = {
           type: 'object',

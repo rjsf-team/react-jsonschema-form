@@ -15,7 +15,6 @@ import {
 } from '../constants.ts';
 import constIsAjvDataReference from '../constIsAjvDataReference.ts';
 import deepEquals from '../deepEquals.ts';
-import { fieldPathFromList } from '../fieldPath.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getOptionUiSchema from '../getOptionUiSchema.ts';
 import getPropertySchema from '../getPropertySchema.ts';
@@ -60,13 +59,13 @@ import type {
   UiSchema,
   ValidatorType,
 } from '../types.ts';
+import fieldShownOption, { rendersOptionsAsSelect } from './fieldShownOption.ts';
 import { closestOption } from './getClosestMatchingOption.ts';
 import buildPlan, {
   asTarget,
   cachedPolicy,
   childSeeds,
   declaresKeyword,
-  emptySchema,
   ownChains,
   schemaFrom,
   seedsAt,
@@ -1176,9 +1175,7 @@ function ownValue<V>(value: V): V {
 }
 
 /** Returns the index of the option a field offering `options` shows, as `fieldState` says, or -1 without a
- * `fieldState` or for a select, an `enum` beside the options or a list of constants, which renders as one select
- * rather than as an option field. The field picks among its options as it renders them, each retrieved for its data,
- * as `omitExtraData()` asks it.
+ * `fieldState`, for a select, or for an index naming none of the options, see `fieldShownOption()`
  */
 function shownOptionIndex<T, S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
@@ -1187,20 +1184,18 @@ function shownOptionIndex<T, S extends StrictRJSFSchema, F extends FormContextTy
   rawFormData: unknown,
   { fieldState, fieldPath }: FoldProps<T, S, F>,
 ): number {
-  if (!fieldState || Array.isArray(view.schema.enum) || isConstantOptionList<S>(options)) {
+  if (!fieldState || rendersOptionsAsSelect<S>(view.schema, options)) {
     return -1;
   }
-  const rootSchema = view.graph.rawRoot;
-  const views = options.map((option) =>
-    retrieveSchema<unknown, S, F>(
-      context,
-      isSchemaObject<S>(option) ? option : emptySchema<S>(),
-      rootSchema,
-      rawFormData,
-    ),
+  return fieldShownOption<S, F>(
+    context,
+    fieldState,
+    pathListOf(fieldPath),
+    view.schema,
+    options,
+    view.graph.rawRoot,
+    rawFormData,
   );
-  const discriminator = getDiscriminatorFieldFromSchema<S>(view.schema);
-  return fieldState.selectedOption(fieldPathFromList(pathListOf(fieldPath)), views, rawFormData, discriminator);
 }
 
 /** Picks the option of a field offering `anyOf`/`oneOf` options that it shows, or else the one its data, or its
