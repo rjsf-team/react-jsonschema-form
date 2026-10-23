@@ -7577,6 +7577,22 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
       });
     });
     describe('with dependencies', () => {
+      it.each<[string, NonNullable<RJSFSchema['dependencies']>, GenericObjectType]>([
+        ['a property list', { a: ['b'] }, { a: 1 }],
+        ['a schema it satisfies', { a: { properties: { c: { type: 'number' } } } }, { a: 1 }],
+        ['a schema keyed by a property it lacks', { b: { const: { a: 2 } } }, { a: 1 }],
+        ['a schema pinning another constant', { a: { const: { a: 2 } } }, { a: 2 }],
+      ])(
+        'keeps the default a select over object constants inherits, under dependencies naming %s (#5407)',
+        (_, dependencies, expected) => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            default: { x: { a: 1 } },
+            properties: { x: { type: 'object', enum: [{ a: 1 }, { a: 2 }], dependencies } },
+          };
+          expect(getDefaultFormState({ validator: testValidator }, { schema })).toEqual({ x: expected });
+        },
+      );
       it.each([
         'inline',
         'allOf',
