@@ -1,10 +1,13 @@
-/** Generates a consistent `id` pattern for a given `id` and a `suffix`
+/** Generates the `id` of an element that is part of a field, such as its description or one of its controls, from the
+ * field's `id` and the name of the part. Every id derived from a field's id is built here, joined by `__`, which
+ * `fieldPathToId()` never writes into a field's own id, so a part's id can't be the id of another field
  *
  * @param id - The id of the field
- * @param suffix - The suffix to append to the id
+ * @param part - The name of the part
+ * @returns - The id of that part of the field
  */
-function idGenerator(id: string, suffix: string) {
-  return `${id}__${suffix}`;
+export function partId(id: string, part: string) {
+  return `${id}__${part}`;
 }
 /** Return a consistent `id` for the field description element
  *
@@ -12,7 +15,7 @@ function idGenerator(id: string, suffix: string) {
  * @returns - The consistent id for the field description element from the given `id`
  */
 export function descriptionId(id: string) {
-  return idGenerator(id, 'description');
+  return partId(id, 'description');
 }
 
 /** Return a consistent `id` for the field error element
@@ -21,7 +24,7 @@ export function descriptionId(id: string) {
  * @returns - The consistent id for the field error element from the given `id`
  */
 export function errorId(id: string) {
-  return idGenerator(id, 'error');
+  return partId(id, 'error');
 }
 
 /** Return a consistent `id` for the field examples element
@@ -30,7 +33,7 @@ export function errorId(id: string) {
  * @returns - The consistent id for the field examples element from the given `id`
  */
 export function examplesId(id: string) {
-  return idGenerator(id, 'examples');
+  return partId(id, 'examples');
 }
 
 /** Return a consistent `id` for the field help element
@@ -39,7 +42,7 @@ export function examplesId(id: string) {
  * @returns - The consistent id for the field help element from the given `id`
  */
 export function helpId(id: string) {
-  return idGenerator(id, 'help');
+  return partId(id, 'help');
 }
 
 /** Generates the `id` of an option's own description, help or label, numbered from the second on, so an option showing
@@ -50,7 +53,7 @@ export function helpId(id: string) {
  * @param depth - How many fields above rendering the same `id` show text, or draw a label, of their own
  */
 function optionIdGenerator(id: string, suffix: string, depth: number) {
-  return idGenerator(id, depth > 1 ? `${suffix}${depth}` : suffix);
+  return partId(id, depth > 1 ? `${suffix}${depth}` : suffix);
 }
 
 /** Return a consistent `id` for the description a selected `anyOf`/`oneOf` option or the fallback UI's value field
@@ -97,7 +100,7 @@ export function optionHelpId(id: string, depth = 1) {
  * @returns - The consistent id for the selected option's description element from the given `id`
  */
 export function selectedOptionDescriptionId(id: string) {
-  return idGenerator(id, 'selectedOptionDescription');
+  return partId(id, 'selectedOptionDescription');
 }
 
 /** Return a consistent `id` for the field title element
@@ -106,7 +109,7 @@ export function selectedOptionDescriptionId(id: string) {
  * @returns - The consistent id for the field title element from the given `id`
  */
 export function titleId(id: string) {
-  return idGenerator(id, 'title');
+  return partId(id, 'title');
 }
 
 /** Return a list of element ids that contain additional information about the field that can be used to as the aria
@@ -141,19 +144,18 @@ export function ariaDescribedByIds(id: string, includeExamples = false) {
  * @returns - The consistent id for that field's label element
  */
 export function fieldLabelId(id: string) {
-  return `${id}__label`;
+  return partId(id, 'label');
 }
 
 /** Return a consistent `id` for one of the date element selectors an `AltDateWidget` renders, so a theme can point a
- * label at the year, month or day control rather than rebuilding this shape itself. Note that the separator here is
- * always `_`, independent of the form's `idSeparator`
+ * label at the year, month or day control rather than rebuilding this shape itself
  *
  * @param rootId - The id of the `AltDateWidget` field the date element belongs to
  * @param type - The type of the date element, as given by its `DateElementProp`
  * @returns - The consistent id for that date element's control
  */
 export function dateElementId(rootId: string, type: string) {
-  return `${rootId}_${type}`;
+  return partId(rootId, type);
 }
 
 /** Return a consistent `id` for the `optionIndex`s of a `Radio` or `Checkboxes` widget
@@ -163,7 +165,7 @@ export function dateElementId(rootId: string, type: string) {
  * @returns - An id for the option index based on the parent `id`
  */
 export function optionId(id: string, optionIndex: number) {
-  return `${id}-${optionIndex}`;
+  return partId(id, String(optionIndex));
 }
 
 /** Return a consistent `id` for the `btn` button element
@@ -173,7 +175,7 @@ export function optionId(id: string, optionIndex: number) {
  * @returns - The consistent id for the button from the given `id` and `btn` type
  */
 export function buttonId(id: string, btn: 'add' | 'copy' | 'moveDown' | 'moveUp' | 'remove') {
-  return idGenerator(id, btn);
+  return partId(id, btn);
 }
 
 /** Return a consistent `id` for the expand button of a cyclic schema's expand controls
@@ -182,7 +184,7 @@ export function buttonId(id: string, btn: 'add' | 'copy' | 'moveDown' | 'moveUp'
  * @returns - The consistent id for the expand button from the given `id`
  */
 export function expandButtonId(id: string) {
-  return `${id}-button`;
+  return partId(id, 'expand');
 }
 
 /** Return a consistent `id` for the optional data controls `element`
@@ -192,5 +194,47 @@ export function expandButtonId(id: string) {
  * @returns - The consistent id for the optional data controls element from the given `id` and `element` type
  */
 export function optionalControlsId(id: string, element: 'Add' | 'Msg' | 'Remove') {
-  return idGenerator(id, `optional${element}`);
+  return partId(id, `optional${element}`);
+}
+
+/** Return a consistent `id` for the input a `WrapIfAdditionalTemplate` renders to edit an additional property's key
+ *
+ * @param id - The id of the additional property's field
+ * @returns - The consistent id for the key input from the given `id`
+ */
+export function additionalKeyId(id: string) {
+  return partId(id, 'key');
+}
+
+/** Return a consistent `id` for the selector a field renders to pick its `anyOf`/`oneOf` option, numbered from the
+ * second on, so a selector rendered for an option that is itself an `anyOf`/`oneOf` has an id of its own
+ *
+ * @param id - The id of the field
+ * @param xxxOfKey - The keyword holding the options, `anyOf` or `oneOf`
+ * @param [depth=1] - How many selectors for the same keyword render `id`, this one included: 2 for the selector of an
+ *        `anyOf` option beneath its field's own `anyOf` selector, which takes `anyof_select2`
+ * @returns - The consistent id for the option selector from the given `id`, keyword and `depth`
+ */
+export function optionSelectorId(id: string, xxxOfKey: 'anyOf' | 'oneOf', depth = 1) {
+  return optionIdGenerator(id, `${xxxOfKey.toLowerCase()}_select`, depth);
+}
+
+/** Return a consistent `id` for the component a field renders beside its `anyOf`/`oneOf` options, such as an object's
+ * own properties, whose selected option renders the field's own `id`
+ *
+ * @param id - The id of the field
+ * @returns - The consistent id for the component rendered beside the options from the given `id`
+ */
+export function besideOptionsId(id: string) {
+  return partId(id, 'XxxOf');
+}
+
+/** Return a consistent `id` for the type selector the fallback UI renders for a field of an unsupported type, which
+ * is the id it rendered under as the child `__internal_type_selector` of the field with the default `idSeparator`
+ *
+ * @param id - The id of the field
+ * @returns - The consistent id for the type selector from the given `id`
+ */
+export function fallbackTypeSelectorId(id: string) {
+  return partId(id, '_internal_type_selector');
 }

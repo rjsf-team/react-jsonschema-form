@@ -41,6 +41,7 @@ import {
   isLabelledByTemplate,
   isObject,
   labelValue,
+  partId,
   RESERVED_UI_OPTION_NAMES,
   titleId,
   widgetDrawsLabel,
@@ -291,7 +292,7 @@ function asObject(value: unknown): GenericObjectType | undefined {
 
 function successIdOf(id: string, ownSuccessProps: GenericObjectType | undefined): string {
   const ownId: unknown = ownSuccessProps?.id;
-  return typeof ownId === 'string' && ownId ? ownId : `${id}-success`;
+  return typeof ownId === 'string' && ownId ? ownId : partId(id, 'success');
 }
 
 /** Whether `Input.Wrapper` renders the element with `id`, which it lists in its context's `describedBy` when it does */

@@ -362,7 +362,7 @@ describe('the plan SchemaField builds', () => {
 
       for (const control of [node.querySelector('#root_foo__anyof_select')!, node.querySelector('input#root_foo')!]) {
         const describers = control.getAttribute('aria-describedby')?.split(' ') ?? [];
-        expect(describers).not.toContain('root_foo_XxxOf__description');
+        expect(describers).not.toContain('root_foo__XxxOf__description');
         describers.forEach((describer) => expect(node.querySelector(`#${describer}`)).toBeInTheDocument());
       }
     });
@@ -541,7 +541,7 @@ describe('the plan SchemaField builds', () => {
         schema,
       });
 
-      expect(node.querySelector('#root__anyof_select')).toHaveAttribute('aria-labelledby', titleId('root_XxxOf'));
+      expect(node.querySelector('#root__anyof_select')).toHaveAttribute('aria-labelledby', titleId('root__XxxOf'));
       expect(node.querySelector('#root__anyof_select')).toHaveAccessibleName('Pet');
     });
 
@@ -555,7 +555,7 @@ describe('the plan SchemaField builds', () => {
         initialFormData: { pet: { name: 'Rex' } },
       });
 
-      const title = node.querySelector('#root_pet_XxxOf__title');
+      const title = node.querySelector('#root_pet__XxxOf__title');
       expect(title?.closest('legend')?.querySelector(extra)).toBeInTheDocument();
       expect(title?.querySelector(extra)).toBeNull();
       expect(node.querySelector('#root_pet__anyof_select')).toHaveAccessibleName('Pet');

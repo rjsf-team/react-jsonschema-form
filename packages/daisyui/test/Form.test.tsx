@@ -187,9 +187,9 @@ describe("daisyui widgets carry their field's plan on the element a user focuses
       "checkboxes group's first checkbox",
       { type: 'array', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true },
       { 'ui:widget': 'checkboxes' },
-      '#root_x-0',
+      '#root_x__0',
     ],
-    ["alt-date's first part", { type: 'string', format: 'date' }, { 'ui:widget': 'alt-date' }, '#root_x_year'],
+    ["alt-date's first part", { type: 'string', format: 'date' }, { 'ui:widget': 'alt-date' }, '#root_x__year'],
   ])('focuses a %s under ui:autofocus, as core does', (_, x, ui, focused) => {
     const { container } = render(
       <Form
@@ -262,7 +262,7 @@ describe('daisyui FieldTemplate', () => {
       />,
     );
 
-    expect(screen.getByRole('textbox', { name: 'first Key' })).toHaveAttribute('id', 'root_first-key');
+    expect(screen.getByRole('textbox', { name: 'first Key' })).toHaveAttribute('id', 'root_first__key');
   });
 
   test.each([
@@ -507,15 +507,15 @@ describe('daisyui focusOnFirstError', () => {
     ['select', { type: 'string', enum: ['a', 'b'] }, {}, '#root_x'],
     ['date picker', { type: 'string', format: 'date' }, {}, '#root_x'],
     // A group's wrapper carries the field's id but isn't focusable, so its first control is focused
-    ['radio group', { type: 'string', enum: ['a', 'b'] }, { 'ui:widget': 'radio' }, '#root_x-0'],
+    ['radio group', { type: 'string', enum: ['a', 'b'] }, { 'ui:widget': 'radio' }, '#root_x__0'],
     [
       'checkboxes group',
       { type: 'array', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true },
       { 'ui:widget': 'checkboxes' },
-      '#root_x-0',
+      '#root_x__0',
     ],
     ['rating', { type: 'number', maximum: 3 }, { 'ui:widget': 'RatingWidget' }, '#root_x input'],
-    ['alt-date', { type: 'string', format: 'date' }, { 'ui:widget': 'alt-date' }, '#root_x_year'],
+    ['alt-date', { type: 'string', format: 'date' }, { 'ui:widget': 'alt-date' }, '#root_x__year'],
   ])('moves focus to a %s with errors', async (_, x, ui, focused) => {
     const { container } = render(
       <Form

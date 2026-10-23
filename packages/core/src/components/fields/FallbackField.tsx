@@ -12,6 +12,7 @@ import {
   ADDITIONAL_PROPERTIES_KEY,
   ADDITIONAL_PROPERTY_FLAG,
   ANY_OF_KEY,
+  fallbackTypeSelectorId,
   getSchemaOwnTypes,
   getFieldTypeForWidget,
   getTemplates,
@@ -26,7 +27,6 @@ import {
   PROPERTIES_KEY,
   RJSF_REF_KEY,
   toFieldPath,
-  fieldPathToId,
   TranslatableString,
   UI_OPTIONS_KEY,
   UI_WIDGET_KEY,
@@ -345,7 +345,7 @@ function FallbackUiField<
     onChange,
     presentation,
   } = props;
-  const { translateString, fields, widgets, globalFormOptions, globalUiOptions } = registry;
+  const { translateString, fields, widgets, globalUiOptions } = registry;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const types = useMemo(() => getFallbackTypes<S>(schema), [schema]);
   const defaultType = useMemo(
@@ -457,7 +457,7 @@ function FallbackUiField<
       typeSelector={
         <SchemaField
           fieldPath={typeSelectorFieldPath}
-          id={fieldPathToId(typeSelectorFieldPath, globalFormOptions)}
+          id={fallbackTypeSelectorId(id)}
           name={`${name}__fallback_type`}
           schema={typesOptionSchema as S}
           uiSchema={typeSelectorUiSchema}

@@ -1655,8 +1655,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                   <label
                     class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-5"
                     data-shrink="true"
-                    for="root_customField-key"
-                    id="root_customField-key-label"
+                    for="root_customField__key"
+                    id="root_customField__key-label"
                   >
                     customField Key
                   </label>
@@ -1666,8 +1666,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                     <input
                       aria-invalid="false"
                       class="MuiInputBase-input MuiOutlinedInput-input emotion-7"
-                      id="root_customField-key"
-                      name="root_customField-key"
+                      id="root_customField__key"
+                      name="root_customField__key"
                       type="text"
                       value="customField"
                     />
@@ -7580,8 +7580,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
                   <label
                     class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-6"
                     data-shrink="true"
-                    for="root_foo-key"
-                    id="root_foo-key-label"
+                    for="root_foo__key"
+                    id="root_foo__key-label"
                   >
                     foo Key
                   </label>
@@ -7591,8 +7591,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
                     <input
                       aria-invalid="false"
                       class="MuiInputBase-input MuiOutlinedInput-input emotion-8"
-                      id="root_foo-key"
-                      name="root_foo-key"
+                      id="root_foo__key"
+                      name="root_foo__key"
                       type="text"
                       value="foo"
                     />
@@ -8724,7 +8724,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                   <div
                     class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-6"
                     data-shrink="true"
-                    id="root_foo-key-label"
+                    id="root_foo__key-label"
                   >
                     foo Key
                   </div>
@@ -8734,9 +8734,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                     <div
                       aria-expanded="false"
                       aria-haspopup="listbox"
-                      aria-labelledby="root_foo-key-label"
+                      aria-labelledby="root_foo__key-label"
                       class="MuiSelect-select MuiSelect-outlined MuiInputBase-input MuiOutlinedInput-input emotion-8"
-                      id="root_foo-key"
+                      id="root_foo__key"
                       role="combobox"
                       tabindex="0"
                     >
@@ -8747,7 +8747,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                       aria-invalid="false"
                       class="MuiSelect-nativeInput emotion-9"
                       id="_r_16_"
-                      name="root_foo-key"
+                      name="root_foo__key"
                       tabindex="-1"
                       value="0"
                     />
@@ -9731,8 +9731,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
                   <label
                     class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-6"
                     data-shrink="true"
-                    for="root_foo-key"
-                    id="root_foo-key-label"
+                    for="root_foo__key"
+                    id="root_foo__key-label"
                   >
                     foo Key
                   </label>
@@ -9742,8 +9742,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
                     <input
                       aria-invalid="false"
                       class="MuiInputBase-input MuiOutlinedInput-input emotion-8"
-                      id="root_foo-key"
-                      name="root_foo-key"
+                      id="root_foo__key"
+                      name="root_foo__key"
                       type="text"
                       value="foo"
                     />
@@ -10770,8 +10770,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
                   <label
                     class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-6"
                     data-shrink="true"
-                    for="root_foo-key"
-                    id="root_foo-key-label"
+                    for="root_foo__key"
+                    id="root_foo__key-label"
                   >
                     foo Key
                   </label>
@@ -10781,8 +10781,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
                     <input
                       aria-invalid="false"
                       class="MuiInputBase-input MuiOutlinedInput-input emotion-8"
-                      id="root_foo-key"
-                      name="root_foo-key"
+                      id="root_foo__key"
+                      name="root_foo__key"
                       type="text"
                       value="foo"
                     />
@@ -11781,8 +11781,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
                   <label
                     class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-6"
                     data-shrink="true"
-                    for="root_foo-key"
-                    id="root_foo-key-label"
+                    for="root_foo__key"
+                    id="root_foo__key-label"
                   >
                     foo Key
                   </label>
@@ -11792,8 +11792,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
                     <input
                       aria-invalid="false"
                       class="MuiInputBase-input MuiOutlinedInput-input emotion-8"
-                      id="root_foo-key"
-                      name="root_foo-key"
+                      id="root_foo__key"
+                      name="root_foo__key"
                       type="text"
                       value="foo"
                     />
@@ -12874,8 +12874,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
                   <label
                     class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-6"
                     data-shrink="true"
-                    for="root_foo-key"
-                    id="root_foo-key-label"
+                    for="root_foo__key"
+                    id="root_foo__key-label"
                   >
                     foo Key
                   </label>
@@ -12885,8 +12885,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
                     <input
                       aria-invalid="false"
                       class="MuiInputBase-input MuiOutlinedInput-input emotion-8"
-                      id="root_foo-key"
-                      name="root_foo-key"
+                      id="root_foo__key"
+                      name="root_foo__key"
                       type="text"
                       value="foo"
                     />
@@ -14030,7 +14030,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                   <div
                     class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-6"
                     data-shrink="true"
-                    id="root_foo-key-label"
+                    id="root_foo__key-label"
                   >
                     foo Key
                   </div>
@@ -14040,9 +14040,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                     <div
                       aria-expanded="false"
                       aria-haspopup="listbox"
-                      aria-labelledby="root_foo-key-label"
+                      aria-labelledby="root_foo__key-label"
                       class="MuiSelect-select MuiSelect-outlined MuiInputBase-input MuiOutlinedInput-input emotion-8"
-                      id="root_foo-key"
+                      id="root_foo__key"
                       role="combobox"
                       tabindex="0"
                     >
@@ -14053,7 +14053,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                       aria-invalid="false"
                       class="MuiSelect-nativeInput emotion-9"
                       id="_r_v_"
-                      name="root_foo-key"
+                      name="root_foo__key"
                       tabindex="-1"
                       value="0"
                     />
@@ -15176,7 +15176,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                   <div
                     class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-6"
                     data-shrink="true"
-                    id="root_foo-key-label"
+                    id="root_foo__key-label"
                   >
                     foo (deprecated) Key
                   </div>
@@ -15186,9 +15186,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                     <div
                       aria-expanded="false"
                       aria-haspopup="listbox"
-                      aria-labelledby="root_foo-key-label"
+                      aria-labelledby="root_foo__key-label"
                       class="MuiSelect-select MuiSelect-outlined MuiInputBase-input MuiOutlinedInput-input emotion-8"
-                      id="root_foo-key"
+                      id="root_foo__key"
                       role="combobox"
                       tabindex="0"
                     >
@@ -15199,7 +15199,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                       aria-invalid="false"
                       class="MuiSelect-nativeInput emotion-9"
                       id="_r_1d_"
-                      name="root_foo-key"
+                      name="root_foo__key"
                       tabindex="-1"
                       value="0"
                     />
@@ -17703,8 +17703,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
                   <label
                     class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-6"
                     data-shrink="true"
-                    for="root_additionalProperty-key"
-                    id="root_additionalProperty-key-label"
+                    for="root_additionalProperty__key"
+                    id="root_additionalProperty__key-label"
                   >
                     additionalProperty Key
                   </label>
@@ -17714,8 +17714,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
                     <input
                       aria-invalid="false"
                       class="MuiInputBase-input MuiOutlinedInput-input emotion-8"
-                      id="root_additionalProperty-key"
-                      name="root_additionalProperty-key"
+                      id="root_additionalProperty__key"
+                      name="root_additionalProperty__key"
                       type="text"
                       value="additionalProperty"
                     />
@@ -18760,8 +18760,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                   <label
                     class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-10"
                     data-shrink="true"
-                    for="root_foo-key"
-                    id="root_foo-key-label"
+                    for="root_foo__key"
+                    id="root_foo__key-label"
                   >
                     foo Key
                   </label>
@@ -18771,8 +18771,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                     <input
                       aria-invalid="false"
                       class="MuiInputBase-input MuiOutlinedInput-input emotion-12"
-                      id="root_foo-key"
-                      name="root_foo-key"
+                      id="root_foo__key"
+                      name="root_foo__key"
                       type="text"
                       value="foo"
                     />
@@ -20475,8 +20475,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                   <label
                     class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-10"
                     data-shrink="true"
-                    for="root_additionalProperty-key"
-                    id="root_additionalProperty-key-label"
+                    for="root_additionalProperty__key"
+                    id="root_additionalProperty__key-label"
                   >
                     additionalProperty Key
                   </label>
@@ -20486,8 +20486,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                     <input
                       aria-invalid="false"
                       class="MuiInputBase-input MuiOutlinedInput-input emotion-12"
-                      id="root_additionalProperty-key"
-                      name="root_additionalProperty-key"
+                      id="root_additionalProperty__key"
+                      name="root_additionalProperty__key"
                       type="text"
                       value="additionalProperty"
                     />
@@ -21532,8 +21532,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                   <label
                     class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-10"
                     data-shrink="true"
-                    for="root_foo-key"
-                    id="root_foo-key-label"
+                    for="root_foo__key"
+                    id="root_foo__key-label"
                   >
                     foo Key
                   </label>
@@ -21543,8 +21543,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                     <input
                       aria-invalid="false"
                       class="MuiInputBase-input MuiOutlinedInput-input emotion-12"
-                      id="root_foo-key"
-                      name="root_foo-key"
+                      id="root_foo__key"
+                      name="root_foo__key"
                       type="text"
                       value="foo"
                     />
@@ -23247,8 +23247,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                   <label
                     class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-10"
                     data-shrink="true"
-                    for="root_foo-key"
-                    id="root_foo-key-label"
+                    for="root_foo__key"
+                    id="root_foo__key-label"
                   >
                     foo Key
                   </label>
@@ -23258,8 +23258,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                     <input
                       aria-invalid="false"
                       class="MuiInputBase-input MuiOutlinedInput-input emotion-12"
-                      id="root_foo-key"
-                      name="root_foo-key"
+                      id="root_foo__key"
+                      name="root_foo__key"
                       type="text"
                       value="foo"
                     />
@@ -24962,8 +24962,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                   <label
                     class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-10"
                     data-shrink="true"
-                    for="root_additionalProperty-key"
-                    id="root_additionalProperty-key-label"
+                    for="root_additionalProperty__key"
+                    id="root_additionalProperty__key-label"
                   >
                     additionalProperty Key
                   </label>
@@ -24973,8 +24973,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                     <input
                       aria-invalid="false"
                       class="MuiInputBase-input MuiOutlinedInput-input emotion-12"
-                      id="root_additionalProperty-key"
-                      name="root_additionalProperty-key"
+                      id="root_additionalProperty__key"
+                      name="root_additionalProperty__key"
                       type="text"
                       value="additionalProperty"
                     />
@@ -25889,8 +25889,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                       aria-invalid="false"
                       aria-label="foo Key"
                       class="MuiInputBase-input MuiOutlinedInput-input emotion-7"
-                      id="root_foo-key"
-                      name="root_foo-key"
+                      id="root_foo__key"
+                      name="root_foo__key"
                       type="text"
                       value="foo"
                     />
@@ -27307,8 +27307,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                       aria-invalid="false"
                       aria-label="additionalProperty Key"
                       class="MuiInputBase-input MuiOutlinedInput-input emotion-7"
-                      id="root_additionalProperty-key"
-                      name="root_additionalProperty-key"
+                      id="root_additionalProperty__key"
+                      name="root_additionalProperty__key"
                       type="text"
                       value="additionalProperty"
                     />

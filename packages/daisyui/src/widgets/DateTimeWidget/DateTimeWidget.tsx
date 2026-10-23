@@ -1,7 +1,7 @@
 import type { ChangeEvent } from 'react';
 import { memo, useCallback, useMemo } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { getDateTimeLocalValue, isNamedByTemplateLabel, TranslatableString } from '@rjsf/utils';
+import { getDateTimeLocalValue, isNamedByTemplateLabel, partId, TranslatableString } from '@rjsf/utils';
 import { format, isValid } from 'date-fns';
 
 import DatePickerCalendar from '../DatePickerCalendar.tsx';
@@ -186,7 +186,7 @@ export default function DateTimeWidget<
           >
             <DatePickerDialog id={popupId} name={pickerName}>
               <MemoizedDateTimePickerPopup
-                id={`${id}-picker`}
+                id={partId(id, 'picker')}
                 selectedDate={displayedDate}
                 month={month}
                 timeLabel={registry.translateString(TranslatableString.TimeLabel)}

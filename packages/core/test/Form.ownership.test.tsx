@@ -1736,7 +1736,7 @@ describe('form data ownership', () => {
       const { container } = render(
         <ListeningParent schema={objectSchema} initialValue={{ first: 'one', second: 'two' }} log={log} />,
       );
-      const keyInput = input(container, 'root_first-key');
+      const keyInput = input(container, 'root_first__key');
 
       await user.clear(keyInput);
       await user.type(keyInput, 'renamed');

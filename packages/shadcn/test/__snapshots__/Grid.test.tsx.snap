@@ -236,7 +236,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
-                        id="root_person_race-0"
+                        id="root_person_race__0"
                         role="checkbox"
                         type="button"
                         value="0"
@@ -252,7 +252,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                         data-slot="label"
-                        for="root_person_race-0"
+                        for="root_person_race__0"
                       >
                         American Indian / Alaska Native
                       </label>
@@ -266,7 +266,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
-                        id="root_person_race-1"
+                        id="root_person_race__1"
                         role="checkbox"
                         type="button"
                         value="1"
@@ -282,7 +282,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                         data-slot="label"
-                        for="root_person_race-1"
+                        for="root_person_race__1"
                       >
                         Asian
                       </label>
@@ -296,7 +296,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
-                        id="root_person_race-2"
+                        id="root_person_race__2"
                         role="checkbox"
                         type="button"
                         value="2"
@@ -312,7 +312,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                         data-slot="label"
-                        for="root_person_race-2"
+                        for="root_person_race__2"
                       >
                         Black / African American
                       </label>
@@ -326,7 +326,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
-                        id="root_person_race-3"
+                        id="root_person_race__3"
                         role="checkbox"
                         type="button"
                         value="3"
@@ -342,7 +342,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                         data-slot="label"
-                        for="root_person_race-3"
+                        for="root_person_race__3"
                       >
                         Native Hawaiian / Other Pacific Islander
                       </label>
@@ -356,7 +356,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
-                        id="root_person_race-4"
+                        id="root_person_race__4"
                         role="checkbox"
                         type="button"
                         value="4"
@@ -372,7 +372,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                         data-slot="label"
-                        for="root_person_race-4"
+                        for="root_person_race__4"
                       >
                         White
                       </label>
@@ -685,7 +685,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           data-radix-collection-item=""
                           data-slot="radio-group-item"
                           data-state="checked"
-                          id="root_employment-0"
+                          id="root_employment__0"
                           role="radio"
                           tabindex="-1"
                           type="button"
@@ -729,7 +729,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <label
                           class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                           data-slot="label"
-                          for="root_employment-0"
+                          for="root_employment__0"
                         >
                           Company
                         </label>
@@ -744,7 +744,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           data-radix-collection-item=""
                           data-slot="radio-group-item"
                           data-state="unchecked"
-                          id="root_employment-1"
+                          id="root_employment__1"
                           role="radio"
                           tabindex="-1"
                           type="button"
@@ -761,7 +761,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <label
                           class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                           data-slot="label"
-                          for="root_employment-1"
+                          for="root_employment__1"
                         >
                           Education
                         </label>
@@ -776,7 +776,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           data-radix-collection-item=""
                           data-slot="radio-group-item"
                           data-state="unchecked"
-                          id="root_employment-2"
+                          id="root_employment__2"
                           role="radio"
                           tabindex="-1"
                           type="button"
@@ -793,7 +793,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <label
                           class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                           data-slot="label"
-                          for="root_employment-2"
+                          for="root_employment__2"
                         >
                           Other
                         </label>
@@ -1243,7 +1243,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
-                        id="root_person_race-0"
+                        id="root_person_race__0"
                         role="checkbox"
                         type="button"
                         value="0"
@@ -1259,7 +1259,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                         data-slot="label"
-                        for="root_person_race-0"
+                        for="root_person_race__0"
                       >
                         American Indian / Alaska Native
                       </label>
@@ -1273,7 +1273,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
-                        id="root_person_race-1"
+                        id="root_person_race__1"
                         role="checkbox"
                         type="button"
                         value="1"
@@ -1289,7 +1289,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                         data-slot="label"
-                        for="root_person_race-1"
+                        for="root_person_race__1"
                       >
                         Asian
                       </label>
@@ -1303,7 +1303,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
-                        id="root_person_race-2"
+                        id="root_person_race__2"
                         role="checkbox"
                         type="button"
                         value="2"
@@ -1319,7 +1319,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                         data-slot="label"
-                        for="root_person_race-2"
+                        for="root_person_race__2"
                       >
                         Black / African American
                       </label>
@@ -1333,7 +1333,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
-                        id="root_person_race-3"
+                        id="root_person_race__3"
                         role="checkbox"
                         type="button"
                         value="3"
@@ -1349,7 +1349,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                         data-slot="label"
-                        for="root_person_race-3"
+                        for="root_person_race__3"
                       >
                         Native Hawaiian / Other Pacific Islander
                       </label>
@@ -1363,7 +1363,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
-                        id="root_person_race-4"
+                        id="root_person_race__4"
                         role="checkbox"
                         type="button"
                         value="4"
@@ -1379,7 +1379,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                         data-slot="label"
-                        for="root_person_race-4"
+                        for="root_person_race__4"
                       >
                         White
                       </label>
@@ -1692,7 +1692,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           data-radix-collection-item=""
                           data-slot="radio-group-item"
                           data-state="unchecked"
-                          id="root_employment-0"
+                          id="root_employment__0"
                           role="radio"
                           tabindex="-1"
                           type="button"
@@ -1709,7 +1709,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <label
                           class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                           data-slot="label"
-                          for="root_employment-0"
+                          for="root_employment__0"
                         >
                           Company
                         </label>
@@ -1724,7 +1724,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           data-radix-collection-item=""
                           data-slot="radio-group-item"
                           data-state="checked"
-                          id="root_employment-1"
+                          id="root_employment__1"
                           role="radio"
                           tabindex="-1"
                           type="button"
@@ -1768,7 +1768,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <label
                           class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                           data-slot="label"
-                          for="root_employment-1"
+                          for="root_employment__1"
                         >
                           Education
                         </label>
@@ -1783,7 +1783,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           data-radix-collection-item=""
                           data-slot="radio-group-item"
                           data-state="unchecked"
-                          id="root_employment-2"
+                          id="root_employment__2"
                           role="radio"
                           tabindex="-1"
                           type="button"
@@ -1800,7 +1800,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <label
                           class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                           data-slot="label"
-                          for="root_employment-2"
+                          for="root_employment__2"
                         >
                           Other
                         </label>
@@ -2285,7 +2285,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
-                        id="root_person_race-0"
+                        id="root_person_race__0"
                         role="checkbox"
                         type="button"
                         value="0"
@@ -2301,7 +2301,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                         data-slot="label"
-                        for="root_person_race-0"
+                        for="root_person_race__0"
                       >
                         American Indian / Alaska Native
                       </label>
@@ -2315,7 +2315,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
-                        id="root_person_race-1"
+                        id="root_person_race__1"
                         role="checkbox"
                         type="button"
                         value="1"
@@ -2331,7 +2331,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                         data-slot="label"
-                        for="root_person_race-1"
+                        for="root_person_race__1"
                       >
                         Asian
                       </label>
@@ -2345,7 +2345,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
-                        id="root_person_race-2"
+                        id="root_person_race__2"
                         role="checkbox"
                         type="button"
                         value="2"
@@ -2361,7 +2361,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                         data-slot="label"
-                        for="root_person_race-2"
+                        for="root_person_race__2"
                       >
                         Black / African American
                       </label>
@@ -2375,7 +2375,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
-                        id="root_person_race-3"
+                        id="root_person_race__3"
                         role="checkbox"
                         type="button"
                         value="3"
@@ -2391,7 +2391,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                         data-slot="label"
-                        for="root_person_race-3"
+                        for="root_person_race__3"
                       >
                         Native Hawaiian / Other Pacific Islander
                       </label>
@@ -2405,7 +2405,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
-                        id="root_person_race-4"
+                        id="root_person_race__4"
                         role="checkbox"
                         type="button"
                         value="4"
@@ -2421,7 +2421,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                         data-slot="label"
-                        for="root_person_race-4"
+                        for="root_person_race__4"
                       >
                         White
                       </label>
@@ -2734,7 +2734,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           data-radix-collection-item=""
                           data-slot="radio-group-item"
                           data-state="unchecked"
-                          id="root_employment-0"
+                          id="root_employment__0"
                           role="radio"
                           tabindex="-1"
                           type="button"
@@ -2751,7 +2751,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <label
                           class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                           data-slot="label"
-                          for="root_employment-0"
+                          for="root_employment__0"
                         >
                           Company
                         </label>
@@ -2766,7 +2766,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           data-radix-collection-item=""
                           data-slot="radio-group-item"
                           data-state="unchecked"
-                          id="root_employment-1"
+                          id="root_employment__1"
                           role="radio"
                           tabindex="-1"
                           type="button"
@@ -2783,7 +2783,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <label
                           class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                           data-slot="label"
-                          for="root_employment-1"
+                          for="root_employment__1"
                         >
                           Education
                         </label>
@@ -2798,7 +2798,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           data-radix-collection-item=""
                           data-slot="radio-group-item"
                           data-state="checked"
-                          id="root_employment-2"
+                          id="root_employment__2"
                           role="radio"
                           tabindex="-1"
                           type="button"
@@ -2842,7 +2842,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <label
                           class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                           data-slot="label"
-                          for="root_employment-2"
+                          for="root_employment__2"
                         >
                           Other
                         </label>
@@ -3141,7 +3141,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
-                        id="root_person_race-0"
+                        id="root_person_race__0"
                         role="checkbox"
                         type="button"
                         value="0"
@@ -3157,7 +3157,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                         data-slot="label"
-                        for="root_person_race-0"
+                        for="root_person_race__0"
                       >
                         American Indian / Alaska Native
                       </label>
@@ -3171,7 +3171,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
-                        id="root_person_race-1"
+                        id="root_person_race__1"
                         role="checkbox"
                         type="button"
                         value="1"
@@ -3187,7 +3187,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                         data-slot="label"
-                        for="root_person_race-1"
+                        for="root_person_race__1"
                       >
                         Asian
                       </label>
@@ -3201,7 +3201,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
-                        id="root_person_race-2"
+                        id="root_person_race__2"
                         role="checkbox"
                         type="button"
                         value="2"
@@ -3217,7 +3217,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                         data-slot="label"
-                        for="root_person_race-2"
+                        for="root_person_race__2"
                       >
                         Black / African American
                       </label>
@@ -3231,7 +3231,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
-                        id="root_person_race-3"
+                        id="root_person_race__3"
                         role="checkbox"
                         type="button"
                         value="3"
@@ -3247,7 +3247,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                         data-slot="label"
-                        for="root_person_race-3"
+                        for="root_person_race__3"
                       >
                         Native Hawaiian / Other Pacific Islander
                       </label>
@@ -3261,7 +3261,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
-                        id="root_person_race-4"
+                        id="root_person_race__4"
                         role="checkbox"
                         type="button"
                         value="4"
@@ -3277,7 +3277,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                         data-slot="label"
-                        for="root_person_race-4"
+                        for="root_person_race__4"
                       >
                         White
                       </label>
@@ -3590,7 +3590,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           data-radix-collection-item=""
                           data-slot="radio-group-item"
                           data-state="checked"
-                          id="root_employment-0"
+                          id="root_employment__0"
                           role="radio"
                           tabindex="-1"
                           type="button"
@@ -3634,7 +3634,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <label
                           class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                           data-slot="label"
-                          for="root_employment-0"
+                          for="root_employment__0"
                         >
                           Company
                         </label>
@@ -3649,7 +3649,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           data-radix-collection-item=""
                           data-slot="radio-group-item"
                           data-state="unchecked"
-                          id="root_employment-1"
+                          id="root_employment__1"
                           role="radio"
                           tabindex="-1"
                           type="button"
@@ -3666,7 +3666,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <label
                           class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                           data-slot="label"
-                          for="root_employment-1"
+                          for="root_employment__1"
                         >
                           Education
                         </label>
@@ -3681,7 +3681,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           data-radix-collection-item=""
                           data-slot="radio-group-item"
                           data-state="unchecked"
-                          id="root_employment-2"
+                          id="root_employment__2"
                           role="radio"
                           tabindex="-1"
                           type="button"
@@ -3698,7 +3698,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         <label
                           class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                           data-slot="label"
-                          for="root_employment-2"
+                          for="root_employment__2"
                         >
                           Other
                         </label>
@@ -4137,7 +4137,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                       data-slot="checkbox"
                       data-state="unchecked"
-                      id="root_person_race-0"
+                      id="root_person_race__0"
                       role="checkbox"
                       type="button"
                       value="0"
@@ -4153,7 +4153,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                     <label
                       class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                       data-slot="label"
-                      for="root_person_race-0"
+                      for="root_person_race__0"
                     >
                       American Indian / Alaska Native
                     </label>
@@ -4167,7 +4167,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                       data-slot="checkbox"
                       data-state="unchecked"
-                      id="root_person_race-1"
+                      id="root_person_race__1"
                       role="checkbox"
                       type="button"
                       value="1"
@@ -4183,7 +4183,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                     <label
                       class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                       data-slot="label"
-                      for="root_person_race-1"
+                      for="root_person_race__1"
                     >
                       Asian
                     </label>
@@ -4197,7 +4197,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                       data-slot="checkbox"
                       data-state="unchecked"
-                      id="root_person_race-2"
+                      id="root_person_race__2"
                       role="checkbox"
                       type="button"
                       value="2"
@@ -4213,7 +4213,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                     <label
                       class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                       data-slot="label"
-                      for="root_person_race-2"
+                      for="root_person_race__2"
                     >
                       Black / African American
                     </label>
@@ -4227,7 +4227,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                       data-slot="checkbox"
                       data-state="unchecked"
-                      id="root_person_race-3"
+                      id="root_person_race__3"
                       role="checkbox"
                       type="button"
                       value="3"
@@ -4243,7 +4243,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                     <label
                       class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                       data-slot="label"
-                      for="root_person_race-3"
+                      for="root_person_race__3"
                     >
                       Native Hawaiian / Other Pacific Islander
                     </label>
@@ -4257,7 +4257,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                       data-slot="checkbox"
                       data-state="unchecked"
-                      id="root_person_race-4"
+                      id="root_person_race__4"
                       role="checkbox"
                       type="button"
                       value="4"
@@ -4273,7 +4273,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                     <label
                       class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                       data-slot="label"
-                      for="root_person_race-4"
+                      for="root_person_race__4"
                     >
                       White
                     </label>
@@ -4725,7 +4725,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                       data-slot="checkbox"
                       data-state="unchecked"
-                      id="root_person_race-0"
+                      id="root_person_race__0"
                       role="checkbox"
                       type="button"
                       value="0"
@@ -4741,7 +4741,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     <label
                       class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                       data-slot="label"
-                      for="root_person_race-0"
+                      for="root_person_race__0"
                     >
                       American Indian / Alaska Native
                     </label>
@@ -4755,7 +4755,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                       data-slot="checkbox"
                       data-state="unchecked"
-                      id="root_person_race-1"
+                      id="root_person_race__1"
                       role="checkbox"
                       type="button"
                       value="1"
@@ -4771,7 +4771,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     <label
                       class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                       data-slot="label"
-                      for="root_person_race-1"
+                      for="root_person_race__1"
                     >
                       Asian
                     </label>
@@ -4785,7 +4785,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                       data-slot="checkbox"
                       data-state="unchecked"
-                      id="root_person_race-2"
+                      id="root_person_race__2"
                       role="checkbox"
                       type="button"
                       value="2"
@@ -4801,7 +4801,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     <label
                       class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                       data-slot="label"
-                      for="root_person_race-2"
+                      for="root_person_race__2"
                     >
                       Black / African American
                     </label>
@@ -4815,7 +4815,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                       data-slot="checkbox"
                       data-state="unchecked"
-                      id="root_person_race-3"
+                      id="root_person_race__3"
                       role="checkbox"
                       type="button"
                       value="3"
@@ -4831,7 +4831,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     <label
                       class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                       data-slot="label"
-                      for="root_person_race-3"
+                      for="root_person_race__3"
                     >
                       Native Hawaiian / Other Pacific Islander
                     </label>
@@ -4845,7 +4845,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                       data-slot="checkbox"
                       data-state="unchecked"
-                      id="root_person_race-4"
+                      id="root_person_race__4"
                       role="checkbox"
                       type="button"
                       value="4"
@@ -4861,7 +4861,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     <label
                       class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                       data-slot="label"
-                      for="root_person_race-4"
+                      for="root_person_race__4"
                     >
                       White
                     </label>

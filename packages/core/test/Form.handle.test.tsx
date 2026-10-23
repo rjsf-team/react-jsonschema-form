@@ -1,4 +1,5 @@
 import type { RJSFSchema, RJSFValidationError, WidgetProps } from '@rjsf/utils';
+import { optionId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -219,8 +220,8 @@ describe('FormRef', () => {
       function ButtonGroup({ id }: WidgetProps) {
         return (
           <>
-            <button type='button' id={`${id}-0`} aria-label='a' />
-            <button type='button' id={`${id}-1`} aria-label='b' />
+            <button type='button' id={optionId(id, 0)} aria-label='a' />
+            <button type='button' id={optionId(id, 1)} aria-label='b' />
           </>
         );
       }
@@ -231,17 +232,21 @@ describe('FormRef', () => {
 
       act(() => handle.focusOnError(error('.choice')));
 
-      expect(node.querySelector('#root_choice-0')).toHaveFocus();
+      expect(node.querySelector('#root_choice__0')).toHaveFocus();
     });
 
-    it.each(['say "hi"', 'back\\slash', 'line\nbreak'])(
-      'falls back to the first control whose id starts with a field id holding a character a selector quotes: %j',
-      (name) => {
+    it.each([
+      ['say "hi"', 'root_say-_20-_22hi-_22'],
+      ['back\\slash', 'root_back-_5Cslash'],
+      ['line\nbreak', 'root_line-_0Abreak'],
+    ])(
+      'falls back to the first control whose id starts with the id of a field named with a character a selector quotes: %j',
+      (name, fieldId) => {
         function ButtonGroup({ id }: WidgetProps) {
           return (
             <>
-              <button type='button' id={`${id}-0`} aria-label='a' />
-              <button type='button' id={`${id}-1`} aria-label='b' />
+              <button type='button' id={optionId(id, 0)} aria-label='a' />
+              <button type='button' id={optionId(id, 1)} aria-label='b' />
             </>
           );
         }
@@ -252,7 +257,7 @@ describe('FormRef', () => {
 
         act(() => handle.focusOnError(error(`.${name}`)));
 
-        expect(node.ownerDocument.activeElement).toBe(node.ownerDocument.getElementById(`root_${name}-0`));
+        expect(node.ownerDocument.activeElement).toBe(node.ownerDocument.getElementById(optionId(fieldId, 0)));
       },
     );
 

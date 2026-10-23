@@ -1,6 +1,7 @@
 import type { ChangeEvent, PropsWithChildren } from 'react';
 import { useCallback, useState } from 'react';
 import type { FieldProps } from '@rjsf/utils';
+import { partId } from '@rjsf/utils';
 
 const COLORS = ['red', 'green', 'blue'];
 
@@ -27,9 +28,9 @@ export default function SpecialInput({ id, fieldPath, onChange, formData }: Prop
       </p>
       <div className='row'>
         <div className='col-sm-6'>
-          <label htmlFor={`${id}-special-input`}>SpecialInput</label>
+          <label htmlFor={partId(id, 'specialInput')}>SpecialInput</label>
           <input
-            id={`${id}-special-input`}
+            id={partId(id, 'specialInput')}
             className='form-control'
             style={{ background: inputBgColor, color: 'white', fontSize: 14 }}
             value={text}

@@ -204,7 +204,7 @@ describe('mantine FieldTemplate', () => {
 
     expect(document.getElementById('root_x__label')).toHaveTextContent(/^X$/);
     expect(document.getElementById('root_x__label')).not.toHaveAttribute('for');
-    expect(document.getElementById('root_x_year')).toHaveAccessibleName('X, year');
+    expect(document.getElementById('root_x__year')).toHaveAccessibleName('X, year');
   });
 
   test("draws the label and description of @rjsf/core's RatingWidget, which draws neither itself", () => {
@@ -275,7 +275,7 @@ describe('mantine WrapIfAdditionalTemplate and SelectWidget', () => {
       />,
     );
 
-    expect(screen.getByRole('textbox', { name: 'first Key' })).toHaveAttribute('id', 'root_first-key');
+    expect(screen.getByRole('textbox', { name: 'first Key' })).toHaveAttribute('id', 'root_first__key');
   });
 
   test('marks a required multiple select aria-required on the input a user focuses', () => {
@@ -316,7 +316,7 @@ describe('mantine title templates', () => {
 
     // The heading of an object rendered beside its options takes the `XxxOf` ids, as its selector's name does
     expect(container.querySelector('h3')).toHaveTextContent(/^Pet \*$/);
-    expect(screen.getByRole('combobox')).toHaveAttribute('aria-labelledby', 'root_pet_XxxOf__title');
+    expect(screen.getByRole('combobox')).toHaveAttribute('aria-labelledby', 'root_pet__XxxOf__title');
     expect(screen.getByRole('combobox')).toHaveAccessibleName('Pet');
   });
 

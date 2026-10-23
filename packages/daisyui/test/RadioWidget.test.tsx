@@ -34,8 +34,8 @@ describe('RadioWidget', () => {
   test('gives each object option its own id', () => {
     render(<RadioWidget {...makeWidgetMockProps({ value: undefined, options: { enumOptions: objectOptions } })} />);
 
-    expect(screen.getByRole('radio', { name: 'One' })).toHaveAttribute('id', 'test-id-0');
-    expect(screen.getByRole('radio', { name: 'Two' })).toHaveAttribute('id', 'test-id-1');
+    expect(screen.getByRole('radio', { name: 'One' })).toHaveAttribute('id', 'test-id__0');
+    expect(screen.getByRole('radio', { name: 'Two' })).toHaveAttribute('id', 'test-id__1');
   });
 
   test('selecting an object option fires onChange with its value', async () => {

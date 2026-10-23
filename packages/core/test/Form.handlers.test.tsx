@@ -838,8 +838,8 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
           'ui:label': false,
         },
       };
-      const notApplicableInputID = '#root_a-1';
-      const NoInputID = '#root_a-0';
+      const notApplicableInputID = '#root_a__1';
+      const NoInputID = '#root_a__0';
 
       it('Test with default constAsDefaults', async () => {
         const { node, onChange } = createFormComponent({
@@ -1008,7 +1008,7 @@ describe('Form: the prop changes the form re-derives its data for', () => {
 
     rerender({ schema, uiSchema: JSON.parse('{"__proto__": {"ui:emptyValue": "empty"}}') });
 
-    expect(node.querySelector<HTMLInputElement>('#root___proto__')).toHaveValue('empty');
+    expect(node.querySelector<HTMLInputElement>('#root_-_5F-_5Fproto-_5F-_5F')).toHaveValue('empty');
   });
   it('should not re-derive it for a uiSchema holding a function written inline', async () => {
     const uiSchema = (): UiSchema => ({ 'ui:options': { onSomething: () => undefined } });

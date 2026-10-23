@@ -525,7 +525,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                                   >
                                     <label
                                       class=""
-                                      for="root_customField-key"
+                                      for="root_customField__key"
                                       title="customField Key"
                                     >
                                       customField Key
@@ -546,8 +546,8 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                                         >
                                           <input
                                             class="ant-input css-dev-only-do-not-override-oc1rc0"
-                                            id="root_customField-key"
-                                            name="root_customField-key"
+                                            id="root_customField__key"
+                                            name="root_customField__key"
                                             type="text"
                                             value="customField"
                                           />
@@ -3127,7 +3127,7 @@ exports[`object fields > additionalProperties 1`] = `
                                   >
                                     <label
                                       class=""
-                                      for="root_foo-key"
+                                      for="root_foo__key"
                                       title="foo Key"
                                     >
                                       foo Key
@@ -3148,8 +3148,8 @@ exports[`object fields > additionalProperties 1`] = `
                                         >
                                           <input
                                             class="ant-input css-dev-only-do-not-override-oc1rc0"
-                                            id="root_foo-key"
-                                            name="root_foo-key"
+                                            id="root_foo__key"
+                                            name="root_foo__key"
                                             type="text"
                                             value="foo"
                                           />
@@ -3386,7 +3386,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                                   >
                                     <label
                                       class=""
-                                      for="root_foo-key"
+                                      for="root_foo__key"
                                       title="foo Key"
                                     >
                                       foo Key
@@ -3403,7 +3403,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                                       >
                                         <div
                                           class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-single ant-select-show-arrow ant-select-show-search"
-                                          name="root_foo-key"
+                                          name="root_foo__key"
                                           style="width: 100%;"
                                         >
                                           <div
@@ -3417,7 +3417,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                                               aria-haspopup="listbox"
                                               autocomplete="new-password"
                                               class="ant-select-input"
-                                              id="root_foo-key"
+                                              id="root_foo__key"
                                               role="combobox"
                                               type="text"
                                               value=""
@@ -3690,7 +3690,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
                                   >
                                     <label
                                       class=""
-                                      for="root_foo-key"
+                                      for="root_foo__key"
                                       title="foo Key"
                                     >
                                       foo Key
@@ -3711,8 +3711,8 @@ exports[`object fields > additionalProperties, array type 1`] = `
                                         >
                                           <input
                                             class="ant-input css-dev-only-do-not-override-oc1rc0"
-                                            id="root_foo-key"
-                                            name="root_foo-key"
+                                            id="root_foo__key"
+                                            name="root_foo__key"
                                             type="text"
                                             value="foo"
                                           />
@@ -4001,7 +4001,7 @@ exports[`object fields > additionalProperties, description 1`] = `
                                   >
                                     <label
                                       class=""
-                                      for="root_foo-key"
+                                      for="root_foo__key"
                                       title="foo Key"
                                     >
                                       foo Key
@@ -4022,8 +4022,8 @@ exports[`object fields > additionalProperties, description 1`] = `
                                         >
                                           <input
                                             class="ant-input css-dev-only-do-not-override-oc1rc0"
-                                            id="root_foo-key"
-                                            name="root_foo-key"
+                                            id="root_foo__key"
+                                            name="root_foo__key"
                                             type="text"
                                             value="foo"
                                           />
@@ -4274,7 +4274,7 @@ exports[`object fields > additionalProperties, label off 1`] = `
                                   >
                                     <label
                                       class=""
-                                      for="root_foo-key"
+                                      for="root_foo__key"
                                       title="foo Key"
                                     >
                                       foo Key
@@ -4295,8 +4295,8 @@ exports[`object fields > additionalProperties, label off 1`] = `
                                         >
                                           <input
                                             class="ant-input css-dev-only-do-not-override-oc1rc0"
-                                            id="root_foo-key"
-                                            name="root_foo-key"
+                                            id="root_foo__key"
+                                            name="root_foo__key"
                                             type="text"
                                             value="foo"
                                           />
@@ -4533,7 +4533,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
                                   >
                                     <label
                                       class=""
-                                      for="root_foo-key"
+                                      for="root_foo__key"
                                       title="foo Key"
                                     >
                                       foo Key
@@ -4554,8 +4554,8 @@ exports[`object fields > additionalProperties, object type 1`] = `
                                         >
                                           <input
                                             class="ant-input css-dev-only-do-not-override-oc1rc0"
-                                            id="root_foo-key"
-                                            name="root_foo-key"
+                                            id="root_foo__key"
+                                            name="root_foo__key"
                                             type="text"
                                             value="foo"
                                           />
@@ -4850,7 +4850,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                                   >
                                     <label
                                       class=""
-                                      for="root_foo-key"
+                                      for="root_foo__key"
                                       title="foo Key"
                                     >
                                       foo Key
@@ -4867,7 +4867,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                                       >
                                         <div
                                           class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-single ant-select-show-arrow ant-select-show-search"
-                                          name="root_foo-key"
+                                          name="root_foo__key"
                                           style="width: 100%;"
                                         >
                                           <div
@@ -4881,7 +4881,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                                               aria-haspopup="listbox"
                                               autocomplete="new-password"
                                               class="ant-select-input"
-                                              id="root_foo-key"
+                                              id="root_foo__key"
                                               role="combobox"
                                               type="text"
                                               value=""
@@ -5140,7 +5140,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                                   >
                                     <label
                                       class=""
-                                      for="root_foo-key"
+                                      for="root_foo__key"
                                       title="foo (deprecated) Key"
                                     >
                                       foo (deprecated) Key
@@ -5157,7 +5157,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                                       >
                                         <div
                                           class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-single ant-select-show-arrow ant-select-show-search"
-                                          name="root_foo-key"
+                                          name="root_foo__key"
                                           style="width: 100%;"
                                         >
                                           <div
@@ -5171,7 +5171,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                                               aria-haspopup="listbox"
                                               autocomplete="new-password"
                                               class="ant-select-input"
-                                              id="root_foo-key"
+                                              id="root_foo__key"
                                               role="combobox"
                                               type="text"
                                               value=""
@@ -5879,7 +5879,7 @@ exports[`object fields > show add button and fields if additionalProperties is t
                                   >
                                     <label
                                       class=""
-                                      for="root_additionalProperty-key"
+                                      for="root_additionalProperty__key"
                                       title="additionalProperty Key"
                                     >
                                       additionalProperty Key
@@ -5900,8 +5900,8 @@ exports[`object fields > show add button and fields if additionalProperties is t
                                         >
                                           <input
                                             class="ant-input css-dev-only-do-not-override-oc1rc0"
-                                            id="root_additionalProperty-key"
-                                            name="root_additionalProperty-key"
+                                            id="root_additionalProperty__key"
+                                            name="root_additionalProperty__key"
                                             type="text"
                                             value="additionalProperty"
                                           />
@@ -6158,7 +6158,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                                   >
                                     <label
                                       class=""
-                                      for="root_foo-key"
+                                      for="root_foo__key"
                                       title="foo Key"
                                     >
                                       foo Key
@@ -6179,8 +6179,8 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                                         >
                                           <input
                                             class="ant-input css-dev-only-do-not-override-oc1rc0"
-                                            id="root_foo-key"
-                                            name="root_foo-key"
+                                            id="root_foo__key"
+                                            name="root_foo__key"
                                             type="text"
                                             value="foo"
                                           />
@@ -6741,7 +6741,7 @@ exports[`object fields > with title and description > show add button and fields
                                   >
                                     <label
                                       class=""
-                                      for="root_additionalProperty-key"
+                                      for="root_additionalProperty__key"
                                       title="additionalProperty Key"
                                     >
                                       additionalProperty Key
@@ -6762,8 +6762,8 @@ exports[`object fields > with title and description > show add button and fields
                                         >
                                           <input
                                             class="ant-input css-dev-only-do-not-override-oc1rc0"
-                                            id="root_additionalProperty-key"
-                                            name="root_additionalProperty-key"
+                                            id="root_additionalProperty__key"
+                                            name="root_additionalProperty__key"
                                             type="text"
                                             value="additionalProperty"
                                           />
@@ -7033,7 +7033,7 @@ exports[`object fields > with title and description from both > additionalProper
                                   >
                                     <label
                                       class=""
-                                      for="root_foo-key"
+                                      for="root_foo__key"
                                       title="foo Key"
                                     >
                                       foo Key
@@ -7054,8 +7054,8 @@ exports[`object fields > with title and description from both > additionalProper
                                         >
                                           <input
                                             class="ant-input css-dev-only-do-not-override-oc1rc0"
-                                            id="root_foo-key"
-                                            name="root_foo-key"
+                                            id="root_foo__key"
+                                            name="root_foo__key"
                                             type="text"
                                             value="foo"
                                           />
@@ -7616,7 +7616,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                                   >
                                     <label
                                       class=""
-                                      for="root_foo-key"
+                                      for="root_foo__key"
                                       title="foo Key"
                                     >
                                       foo Key
@@ -7637,8 +7637,8 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                                         >
                                           <input
                                             class="ant-input css-dev-only-do-not-override-oc1rc0"
-                                            id="root_foo-key"
-                                            name="root_foo-key"
+                                            id="root_foo__key"
+                                            name="root_foo__key"
                                             type="text"
                                             value="foo"
                                           />
@@ -8199,7 +8199,7 @@ exports[`object fields > with title and description from uiSchema > show add but
                                   >
                                     <label
                                       class=""
-                                      for="root_additionalProperty-key"
+                                      for="root_additionalProperty__key"
                                       title="additionalProperty Key"
                                     >
                                       additionalProperty Key
@@ -8220,8 +8220,8 @@ exports[`object fields > with title and description from uiSchema > show add but
                                         >
                                           <input
                                             class="ant-input css-dev-only-do-not-override-oc1rc0"
-                                            id="root_additionalProperty-key"
-                                            name="root_additionalProperty-key"
+                                            id="root_additionalProperty__key"
+                                            name="root_additionalProperty__key"
                                             type="text"
                                             value="additionalProperty"
                                           />
@@ -8482,8 +8482,8 @@ exports[`object fields > with title and description with global label off > addi
                                           <input
                                             aria-label="foo Key"
                                             class="ant-input css-dev-only-do-not-override-oc1rc0"
-                                            id="root_foo-key"
-                                            name="root_foo-key"
+                                            id="root_foo__key"
+                                            name="root_foo__key"
                                             type="text"
                                             value="foo"
                                           />
@@ -8919,8 +8919,8 @@ exports[`object fields > with title and description with global label off > show
                                           <input
                                             aria-label="additionalProperty Key"
                                             class="ant-input css-dev-only-do-not-override-oc1rc0"
-                                            id="root_additionalProperty-key"
-                                            name="root_additionalProperty-key"
+                                            id="root_additionalProperty__key"
+                                            name="root_additionalProperty__key"
                                             type="text"
                                             value="additionalProperty"
                                           />
