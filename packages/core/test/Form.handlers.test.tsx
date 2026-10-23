@@ -1002,6 +1002,14 @@ describe('Form: the prop changes the form re-derives its data for', () => {
 
     expect(node.querySelector<HTMLInputElement>('#root_name')).toHaveValue('empty');
   });
+  it('should apply a changed ui:emptyValue under a property named __proto__', () => {
+    const schema = JSON.parse('{"type": "object", "properties": {"__proto__": {"type": "string"}}}') as RJSFSchema;
+    const { node, rerender } = createFormComponent({ schema });
+
+    rerender({ schema, uiSchema: JSON.parse('{"__proto__": {"ui:emptyValue": "empty"}}') });
+
+    expect(node.querySelector<HTMLInputElement>('#root___proto__')).toHaveValue('empty');
+  });
   it('should not re-derive it for a uiSchema holding a function written inline', async () => {
     const uiSchema = (): UiSchema => ({ 'ui:options': { onSomething: () => undefined } });
     const { node, rerender } = createFormComponent({ schema: nullOptionSchema, uiSchema: uiSchema() });

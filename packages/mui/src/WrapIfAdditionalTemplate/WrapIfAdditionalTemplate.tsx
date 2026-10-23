@@ -76,7 +76,7 @@ export default function WrapIfAdditionalTemplate<
     fontWeight: 'bold',
   };
 
-  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const uiOptions = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);
   const { rjsfSlotProps: { wrapGridContainer, wrapKeyGridItem, wrapChildrenGridItem, wrapRemoveButtonGridItem } = {} } =
     getMuiProps<T, S, F, WrapIfAdditionalTemplateMuiProps>(uiOptions);
 

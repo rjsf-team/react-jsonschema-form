@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { Activity, useState } from 'react';
 import { ChakraProvider, defaultSystem } from '@chakra-ui/react';
 import { getTestRegistry } from '@rjsf/core/testing';
-import { formTests, themeTests } from '@rjsf/snapshot-tests';
+import { checkboxLabelTests, fallbackDescriptionTests, formTests, themeTests } from '@rjsf/snapshot-tests';
 import type { ArrayFieldItemTemplateProps, FormValidation, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { bracketNameGenerator, errorId, fieldLabelId, helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
@@ -1011,13 +1011,6 @@ describe('chakra-ui ArrayFieldItemTemplate', () => {
       displayLabel: false,
     },
     {
-      named: 'a type list hidden by a global widget under the fallback UI, whose type selector is hidden with it',
-      items: { type: ['string', 'number'], title: 'Value' },
-      uiSchema: { 'ui:globalOptions': { widget: 'hidden' } },
-      value: 'a',
-      displayLabel: false,
-    },
-    {
       named: 'a hidden text input, with no control on screen to draw a label above',
       items: { type: 'string', title: 'Tag' },
       uiSchema: { items: { 'ui:widget': 'hidden' } },
@@ -1316,3 +1309,6 @@ describe('chakra-ui CheckboxWidget required attribute', () => {
     expect(container.querySelector('input[type=checkbox]')).not.toHaveAttribute('required');
   });
 });
+
+checkboxLabelTests(WrappedForm, { generateTemplates, generateWidgets, descriptionBy: 'self' });
+fallbackDescriptionTests(WrappedForm, true);

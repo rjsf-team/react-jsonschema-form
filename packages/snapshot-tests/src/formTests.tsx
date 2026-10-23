@@ -1,7 +1,7 @@
 import type { ComponentType } from 'react';
 import type { FormProps } from '@rjsf/core';
 import MarkdownTemplate from '@rjsf/core/markdown';
-import type { RJSFSchema, ErrorSchema, UiSchema, DefaultFormStateBehavior } from '@rjsf/utils';
+import type { RJSFSchema, ErrorSchema, GenericObjectType, UiSchema, DefaultFormStateBehavior } from '@rjsf/utils';
 import { bracketNameGenerator, dotNotationNameGenerator } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
@@ -1533,8 +1533,10 @@ export function formTests(Form: ComponentType<FormProps>) {
     });
     test('a global required option does not mark a checkbox required', () => {
       const schema: RJSFSchema = { type: 'object', properties: { flag: { type: 'boolean', title: 'Flag' } } };
+      // Untyped, as a JSON uiSchema is, since `required` is an option RJSF reads only per field
+      const globalOptions: GenericObjectType = { required: true };
       const { container } = render(
-        <Form schema={schema} uiSchema={{ 'ui:globalOptions': { required: true } }} validator={validator} />,
+        <Form schema={schema} uiSchema={{ 'ui:globalOptions': globalOptions }} validator={validator} />,
       );
       expect(container.querySelector('[required], [aria-required="true"]')).toBeNull();
     });

@@ -12,6 +12,7 @@ import {
   DEFAULT_ID_SEPARATOR,
   englishStringTranslator,
   mergeThemePresentation,
+  pickGlobalUiOptions,
   UI_DEFINITIONS_KEY,
   UI_GLOBAL_OPTIONS_KEY,
   WIDGET_FIELD_PRESENTATION,
@@ -124,7 +125,7 @@ export function buildRegistry<
     formContext: props.formContext ?? ({} as F),
     schemaUtils,
     translateString,
-    globalUiOptions: uiSchema?.[UI_GLOBAL_OPTIONS_KEY],
+    globalUiOptions: pickGlobalUiOptions(uiSchema?.[UI_GLOBAL_OPTIONS_KEY], props.globalUiOptionsKeys),
     globalFormOptions: getGlobalFormOptions(props),
     uiSchemaDefinitions: uiSchema?.[UI_DEFINITIONS_KEY] ?? {},
   };

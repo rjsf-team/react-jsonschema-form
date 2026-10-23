@@ -31,7 +31,7 @@ export default function FileWidget<
   } = props;
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const { filesInfo, handleChange, handleRemove } = useFileWidgetProps(value, onChange, multiple);
-  const themeProps = cleanupOptions(options);
+  const themeProps = cleanupOptions(options, props);
 
   const handleOnChange = useCallback(
     (files: File[] | File | null) => {

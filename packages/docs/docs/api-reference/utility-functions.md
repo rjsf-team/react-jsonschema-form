@@ -958,7 +958,7 @@ console.log(separator); // Output: ','
 Resolves how a field has to render a schema marked `deprecated`: `label` appends a deprecation marker to the label it hands its `FieldTemplate`, `disable` disables the field, and `hide` tells the `FieldTemplate` the field is hidden.
 Returns `undefined` for a schema that is not deprecated, so a `ui:deprecatedHandling` on an undeprecated schema cannot hide or disable a field on its own, and a caller can treat the three modes as the only cases.
 Under `label`, the decorated label is the field's own: under a plan, which a `Form` always builds, the `FieldTemplate` and the widget below it are both handed it. A field rendered without a plan, as by a custom field, hands its widget the undecorated label.
-`SchemaField` and `LayoutMultiSchemaField` both call this, and a custom field rendering its own `FieldTemplate` should too, rather than read `uiOptions.deprecatedHandling` directly — which is how the `label` default gets missed, leaving a deprecated field undecorated.
+`SchemaField` calls this for every field, and a custom field rendering its own `FieldTemplate` should too, rather than read `uiOptions.deprecatedHandling` directly — which is how the `label` default gets missed, leaving a deprecated field undecorated.
 
 #### Parameters
 
@@ -1137,7 +1137,7 @@ The suggestions are read once per schema object, so `examples` or a `default` ed
 Builds the `classNames` string a `FieldTemplate` receives for a field: the `rjsf-field` marker every field carries, the `rjsf-field-<type>` class naming what the schema holds, `rjsf-field-error` while the field has errors to show, and finally whatever `ui:classNames` the field declares, appended last so it can override the rest.
 The type class comes from [`getSchemaType()`](#getschematype), so a schema with no derivable type — a discriminated `oneOf`/`anyOf` of `$ref`s, say — is spelled `rjsf-field-undefined` rather than left without a type class, as it has been since 6.x.
 That spelling is this function's to change, in one place for every field that calls it, so it is not one to key a CSS rule off; key off `rjsf-field`, which every field carries whatever its schema says.
-`SchemaField` and `LayoutMultiSchemaField` both call this, and a custom field rendering its own `FieldTemplate` should too: a field that spells the list itself is the one field a `rjsf-field*` CSS rule stops reaching the next time the contract gains a class.
+`SchemaField` calls this for every field, and a custom field rendering its own `FieldTemplate` should too: a field that spells the list itself is the one field a `rjsf-field*` CSS rule stops reaching the next time the contract gains a class.
 
 #### Parameters
 
@@ -1171,7 +1171,6 @@ A deprecated field's label is decorated with the `DeprecatedLabel` marker under 
 ### getFieldTypeForUiSchema&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getfieldtypeforuischema}
 
 Gets the type of the field `SchemaField` renders a schema by, as [getFieldTypeForWidget()](#getfieldtypeforwidget) does for the field's own `ui:widget` in its `uiSchema`.
-Only that one picks the field, so `ui:globalOptions` is not read.
 
 #### Parameters
 
@@ -1214,6 +1213,19 @@ A `propertyNames` written as a `$ref` reads as the former, since resolving one n
 #### Returns
 
 - string[] | undefined: The allowed names nothing has taken, or undefined when the schema enumerates none
+
+### getGlobalUiOptions&lt;UserExtensions extends GlobalUISchemaOptionsExtensions&lt;UserExtensions> = Record&lt;never, never>>() {#getglobaluioptions}
+
+Returns the registry's `globalUiOptions` typed with the `UserExtensions` a theme or custom component reads from them.
+The `Registry` only knows the options RJSF reads, so this is an unchecked cast: it is the caller's word that the root uiSchema's `ui:globalOptions` was written against the same extensions.
+
+#### Parameters
+
+- registry: Pick&lt;Registry, 'globalUiOptions'> - The `Registry` holding the `globalUiOptions`
+
+#### Returns
+
+- GlobalUISchemaOptions&lt;UserExtensions> | undefined: The registry's `globalUiOptions`, typed with `UserExtensions`, if the root uiSchema has any
 
 ### getGroupAttributes&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getgroupattributes}
 
@@ -1387,6 +1399,7 @@ The type of an `anyOf`/`oneOf` schema whose options name no type of their own is
 
 Returns the schema of the selector property of an `anyOf`/`oneOf` option, the one the options are told apart by, as it is read for the value, title and type that tell them apart.
 An option hands its properties out as written, so a selector written as a `$ref` is retrieved by `retrieve`; one written in place is read as it stands.
+Only an own property counts, so a selector named `__proto__` that the option doesn't declare gives `undefined` rather than `Object.prototype`.
 `findSelectedOptionInXxxOf()` and `LayoutMultiSchemaField` both read a selector this way, so the option one selects is the one the other lists.
 
 #### Parameters
@@ -1455,7 +1468,8 @@ A part nothing declares is drawn by the template. A widget `getWidget()` rejects
 
 ### getPropertySchema&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
-Returns the sub-schema declared for `property` in the `properties` of `schema`, falling back to an empty schema when the schema has no such property.
+Returns the sub-schema declared for `property` in the `properties` of `schema`, falling back to an empty schema when the schema has no such property, or declares it as `null`.
+Only an own property counts, so a property named like an `Object.prototype` member, such as `toString`, that the schema doesn't declare isn't read as the inherited function.
 Callers treat the properties of a schema as schemas of the same type `S`, which the `JSONSchema7` typing of `properties` cannot express, so this function owns that single assertion rather than repeating it at every lookup.
 
 #### Parameters
@@ -1569,7 +1583,7 @@ Mixed types can't share a typed field (`NumberField` would cast a string option 
 
 Derives the plan of the selector an `anyOf`/`oneOf` field renders to pick its option from the field's own plan.
 The selector draws the parts the field's plan has the field draw itself, as a theme whose template draws no label declares, and the parts drawn elsewhere are `'above'` it. It is derived from the plan of the field rendering the options, which `SchemaField` hands none of the parts a component rendered beside the options draws itself, such as a custom field's label or an object's heading.
-It is named through `aria-labelledby` by a label a `FieldTemplate` draws, since that label's `for` names the field's own control rather than the selector, or by the `aria-label` the field's control takes where `ui:label: false` hides its label, described by the field's parts that render, marked `aria-invalid` while the field shows errors, and never `required`, since it always holds an option.
+It is named through `aria-labelledby` by a label a `FieldTemplate` draws, since that label's `for` names the field's own control rather than the selector, or by the `aria-label` the field's control takes where `ui:label: false` hides its label, described by the field's parts that render, marked `aria-invalid` while the field shows errors, and never `required`, since it picks an option index rather than form data and holds one unless its widget offers an empty choice, which clears the field's data with it.
 `MultiSchemaField` passes it to the selector as `presentation`.
 
 #### Parameters
@@ -1657,12 +1671,13 @@ This will allow you to use `TEST_IDS.examplePropertyName` within your tests, whi
 
 - TestIdShape: An object that auto-generates test ids upon request the first time and then returns the same value on subsequent calls
 
-### getUiOptions&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+### getUiOptions&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getuioptions}
 
 Get all passed options from ui:options, and ui:&lt;optionName>, returning them in an object with the `ui:` stripped off.
 Any `globalOptions` will always be returned, unless they are overridden by options in the `uiSchema`.
 A global `required` is left out: `ui:required` is a field's own, since validation reads it from the field's own uiSchema alone, so a form-wide one would mark fields required that validation doesn't require.
 `ui:definitions` and `ui:globalOptions` aren't options either.
+Pass the registry's `globalUiOptions`, which hold only the options RJSF reads there and the extension keys the theme and the `Form` declare, as [`pickGlobalUiOptions()`](#pickglobaluioptions) leaves them. A root uiSchema's `ui:globalOptions` read some other way goes through `pickGlobalUiOptions()` with those keys first, or it keeps only RJSF's own.
 
 #### Parameters
 
@@ -2063,7 +2078,6 @@ otherwise leaves the `anyOf`/`oneOf` to decide. Unlike `isSelect()`, `schema` is
 ### isCustomWidget&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Checks to see if the `uiSchema` names a `widget` and that the widget is not `hidden`.
-A `widget` set to `undefined` names none: it is how a `uiSchema` shadows a `widget` in `ui:globalOptions`
 
 #### Parameters
 
@@ -2478,7 +2492,7 @@ Strips a trailing timezone offset (`Z` or `+HH:MM`/`-HH:MM`) from a `time` strin
 Returns the `uiSchema` to hand a field's children with the class names and style the field's own `FieldTemplate` has already consumed removed from it, in all four spellings: `ui:classNames`, a bare `classNames`, `ui:style` and the `ui:options.classNames`/`ui:options.style` equivalents.
 A child reading these off the `uiSchema` it receives would apply the same classes and style a second time, inside the wrapper already carrying them ([#439](https://github.com/rjsf-team/react-jsonschema-form/issues/439)).
 The original object is returned whenever there is nothing to strip, so a field memoizing the result keeps the identity it had for the forms — the overwhelming majority — that declare no styling on the field at all.
-`SchemaField` and `LayoutMultiSchemaField` both call this for the `uiSchema` they pass down; a custom field that renders its own `FieldTemplate` and reads `ui:classNames`/`ui:style` off its `uiSchema` should do the same.
+`SchemaField` calls this for the `uiSchema` it passes down; a custom field that renders its own `FieldTemplate` and reads `ui:classNames`/`ui:style` off its `uiSchema` should do the same.
 
 #### Parameters
 
@@ -2574,6 +2588,23 @@ Parses the `dateString` into a `DateObject`, including the time information when
 #### Throws
 
 - Error when the date cannot be parsed from the string
+
+### pickGlobalUiOptions() {#pickglobaluioptions}
+
+Picks the options a form reads from its root uiSchema's `ui:globalOptions`: the ones RJSF reads, which `GLOBAL_UI_OPTIONS_KEYS` lists, and the extension keys the form's theme and the `Form` itself declare.
+Every other key is left out, so a global option RJSF reads only per field, such as `widget` or `placeholder`, reaches no field.
+Such an option is warned about once, since a form that set one, such as a global `readonly`, would otherwise change with no sign of why.
+An extension key that is one of those per-field names, which `RESERVED_UI_OPTION_NAMES` lists, is left out too, with a warning: every field would otherwise read it as its own option.
+`Form` builds its registry's `globalUiOptions` with it.
+
+#### Parameters
+
+- [globalOptions]: GlobalUISchemaOptions | undefined - The root uiSchema's `ui:globalOptions`
+- [extensionKeys=[]]: readonly string[] - The extension keys the form's theme and the `Form` declare
+
+#### Returns
+
+- GlobalUISchemaOptions | undefined: The options picked, or undefined when `globalOptions` is not an object
 
 ### propertyToPath()
 
@@ -2859,7 +2890,7 @@ This is the lookup half of `getOptionUiSchema()`, split out for a caller that ha
 Sets `value` at `path` of `obj`, mutating and returning `obj`.
 A bare string `path` is a single literal key, not a dotted path; use [toPath()](#topath) to split a dotted path string into segments first.
 Missing intermediate containers are created: arrays when the next segment is a valid array index, plain objects otherwise, or always plain objects when `createIntermediateObjects` is true.
-A path containing a `__proto__` segment is refused and `obj` is returned unmodified, preventing prototype pollution. `constructor` and `prototype` are legal JSON Schema property names and are written normally: intermediate containers are read as own properties only, so `['constructor', 'prototype', 'x']` shadows `constructor` with a fresh object instead of reaching `Object.prototype`.
+Every key of a plain object is written as an own property, a `__proto__` segment in any position included, which is defined through [setOwn()](#setown) rather than assigned, so no write reaches the prototype setter. `constructor` and `prototype` are legal JSON Schema property names and are written normally: intermediate containers are read as own properties only, so `['constructor', 'prototype', 'x']` shadows `constructor` with a fresh object instead of reaching `Object.prototype`.
 
 #### Parameters
 
@@ -2879,6 +2910,24 @@ setByPath({}, ['a', 'b'], 1); // { a: { b: 1 } }
 setByPath({}, ['a', 0], 1); // { a: [1] }, a numeric next segment creates an array
 setByPath({}, ['a', 0], 1, true); // { a: { 0: 1 } }, createIntermediateObjects forces an object
 setByPath({}, 'a.b', 1); // { 'a.b': 1 }, a bare string is one literal key
+```
+
+### setOwn()
+
+Writes `value` at `key` of a plain object `obj` as an own, enumerable data property, mutating `obj`.
+A plain assignment to a `__proto__` key, which JSON-sourced data can hold, would reach the prototype setter and re-point `obj`'s prototype instead of adding the key, so that key is written through `Object.defineProperty`; every other key is assigned, so on an object whose prototype has a setter for the key, or that already holds the key as a non-enumerable property, it runs that setter or keeps those attributes.
+
+#### Parameters
+
+- obj: GenericObjectType - The object to write to
+- key: string | number - The key to write, a path segment's array index included
+- value: unknown - The value to store at `key`
+
+#### Example
+
+```typescript
+const data = {};
+setOwn(data, '__proto__', { x: 1 }); // data has an own __proto__ key, and its prototype is still Object.prototype
 ```
 
 ### shouldRenderOptionalField&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
@@ -3469,7 +3518,7 @@ An `object` or `array` schema whose `anyOf`/`oneOf` is a list of constants rende
 - schema: S - The schema for which the display label flag is desired
 - [uiSchema={}]: UiSchema&lt;T, S, F> - The UI schema from which to derive potentially displayable information
 - [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
-- [globalOptions]: GlobalUISchemaOptions | undefined - The optional Global UI Schema from which to get any fallback `xxx` options
+- [globalOptions]: GlobalUISchemaOptions | undefined - The optional Global UI Schema from which to get any fallback `xxx` options, as `pickGlobalUiOptions()` leaves them
 
 #### Returns
 

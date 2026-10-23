@@ -17,6 +17,7 @@ import {
   getByPath,
   hasByPath,
   setByPath,
+  setOwn,
   ADDITIONAL_PROPERTIES_KEY,
   allowsAdditionalProperties,
   deepEquals,
@@ -633,10 +634,10 @@ export default function ObjectField<
           ? describedKeySchema
           : schemaUtils.retrieveSchema(keySchema, describedKeySchema.default as T);
       const keyUiSchema = uiSchemaForKey(key);
-      // The widget is read as `SchemaField` reads it, with the `ui:definitions` entry the `$ref` names merged in and
-      // without `ui:globalOptions`. Read off the resolved schema, which is the one `SchemaField` is handed: that
-      // carries the name of the definition it came from, where an unresolved `$ref` only names one while it sits at
-      // the top of the schema, which it does not for a key described by an `allOf` of matching patterns
+      // The widget is read as `SchemaField` reads it, with the `ui:definitions` entry the `$ref` names merged in. Read
+      // off the resolved schema, which is the one `SchemaField` is handed: that carries the name of the definition it
+      // came from, where an unresolved `$ref` only names one while it sits at the top of the schema, which it does not
+      // for a key described by an `allOf` of matching patterns
       const resolvedKeyUiSchema = resolveUiSchema<T, S, F>(resolvedKeySchema, keyUiSchema, {
         rootSchema,
         uiSchemaDefinitions,
@@ -747,7 +748,6 @@ export default function ObjectField<
         const newFormData: GenericObjectType = {
           ...(currentFormData as GenericObjectType),
         };
-        const newKeys: GenericObjectType = { [oldKey]: actualNewKey };
         // The seed the add button wrote was picked for a name the user had not picked yet, so a property still holding
         // it takes the one the schema describing its new name seeds instead: a `New Value` string left under a name a
         // numeric pattern describes is a value that pattern's field cannot show. Which properties those are is what
@@ -761,21 +761,17 @@ export default function ObjectField<
         const wasSeeded = seededProperties.current.has(oldKey) && deepEquals(newFormData[oldKey], seed);
         if (wasSeeded) {
           const newSeed = seedForKey(actualNewKey);
-          newFormData[oldKey] = newSeed;
+          setOwn(newFormData, oldKey, newSeed);
           seededProperties.current.set(actualNewKey, newSeed);
         }
-        const keyValues = Object.keys(newFormData).map((key) => {
-          // `Object.hasOwn` so a falsy rename target (e.g. `""`) isn't dropped.
-          const mappedKey = Object.hasOwn(newKeys, key) ? newKeys[key] : key;
-          return { [mappedKey]: newFormData[key] };
-        });
-        const renamedObj = Object.assign({}, ...keyValues);
+        const newKeyOf = (key: string) => (key === oldKey ? actualNewKey : key);
+        const renamedObj = Object.fromEntries(
+          Object.entries(newFormData).map(([key, value]) => [newKeyOf(key), value]),
+        ) as GenericObjectType & T;
 
         // The errors the form holds under the old name describe the property, so they go to its new name with it
         sentFormData.current = renamedObj;
-        const outcome = sendMove({ value: renamedObj, newKeyOf: (key) => (key === oldKey ? actualNewKey : key) }, () =>
-          onChange(renamedObj, fieldPath),
-        );
+        const outcome = sendMove({ value: renamedObj, newKeyOf }, () => onChange(renamedObj, fieldPath));
         // A rewrite decided the object's keys itself, so the properties take the order of the data it kept, and the
         // renamed one keeps its instance only where the kept data holds it under the new name and not the old one
         const rewrittenKeys =

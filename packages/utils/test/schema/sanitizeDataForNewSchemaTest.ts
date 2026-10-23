@@ -1468,5 +1468,92 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         expect(sanitize(select, oldSelect, [3])).toEqual([3]);
       });
     });
+    describe('with keys named like Object.prototype members', () => {
+      it('seeds the default of a new property named toString, which the data does not hold', () => {
+        const oldSchema: RJSFSchema = { type: 'object', properties: { a: { type: 'string' } } };
+        // `as const` keeps the type name a literal, which the value of a `toString` key loses otherwise
+        const newSchema: RJSFSchema = {
+          type: 'object',
+          properties: { toString: { type: 'string' as const, default: 'x' } },
+        };
+        const result = schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, {}) as Record<string, unknown>;
+        expect(Object.hasOwn(result, 'toString')).toBe(true);
+        expect(result.toString).toBe('x');
+      });
+      it('writes a __proto__ property as an own key without changing the prototype', () => {
+        const oldSchema = JSON.parse(
+          '{"type": "object", "properties": {"__proto__": {"type": "string", "default": "old"}}}',
+        ) as RJSFSchema;
+        const newSchema = JSON.parse(
+          '{"type": "object", "properties": {"__proto__": {"type": "string", "default": "new"}, "nested": {"type": "object", "properties": {"__proto__": {"type": "string", "default": "inner"}}}}}',
+        ) as RJSFSchema;
+        const data = JSON.parse('{"__proto__": "old", "nested": {}}');
+        const result = schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, data) as { nested: object };
+        expect(Object.getPrototypeOf(result)).toBe(Object.prototype);
+        expect(Object.getOwnPropertyDescriptor(result, '__proto__')?.value).toBe('new');
+        expect(Object.getOwnPropertyDescriptor(result.nested, '__proto__')?.value).toBe('inner');
+        expect(Object.getPrototypeOf(result.nested)).toBe(Object.prototype);
+      });
+      // The prototype setter ignores a string or `undefined`, so each write below is only seen as an own key
+      it('clears a __proto__ property that only the old schema declares', () => {
+        const oldSchema = JSON.parse(
+          '{"type": "object", "properties": {"__proto__": {"type": "string"}}}',
+        ) as RJSFSchema;
+        const newSchema: RJSFSchema = { type: 'object', properties: { other: { type: 'string' } } };
+        const data = JSON.parse('{"__proto__": "stale"}');
+        const result = schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, data);
+        expect(Object.getPrototypeOf(result)).toBe(Object.prototype);
+        expect(Object.getOwnPropertyDescriptor(result, '__proto__')).toEqual(
+          expect.objectContaining({ value: undefined }),
+        );
+      });
+      it('clears a __proto__ property whose new default is readOnly', () => {
+        const oldSchema = JSON.parse(
+          '{"type": "object", "properties": {"__proto__": {"type": "string", "default": "o"}}}',
+        ) as RJSFSchema;
+        const newSchema = JSON.parse(
+          '{"type": "object", "properties": {"__proto__": {"type": "string", "default": "n", "readOnly": true}}}',
+        ) as RJSFSchema;
+        const data = JSON.parse('{"__proto__": "user"}');
+        const result = schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, data);
+        expect(Object.getOwnPropertyDescriptor(result, '__proto__')).toEqual(
+          expect.objectContaining({ value: undefined }),
+        );
+      });
+      it('replaces the old const of a __proto__ property with the new one', () => {
+        const oldSchema = JSON.parse(
+          '{"type": "object", "properties": {"__proto__": {"type": "string", "const": "a"}}}',
+        ) as RJSFSchema;
+        const newSchema = JSON.parse(
+          '{"type": "object", "properties": {"__proto__": {"type": "string", "const": "b"}}}',
+        ) as RJSFSchema;
+        const data = JSON.parse('{"__proto__": "a"}');
+        const result = schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, data);
+        expect(Object.getOwnPropertyDescriptor(result, '__proto__')?.value).toBe('b');
+      });
+      it('replaces a __proto__ property value the new enum no longer offers', () => {
+        const oldSchema = JSON.parse(
+          '{"type": "object", "properties": {"__proto__": {"type": "string", "enum": ["a"]}}}',
+        ) as RJSFSchema;
+        const newSchema = JSON.parse(
+          '{"type": "object", "properties": {"__proto__": {"type": "string", "enum": ["b"]}}}',
+        ) as RJSFSchema;
+        const data = JSON.parse('{"__proto__": "a"}');
+        const result = schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, data);
+        expect(Object.getOwnPropertyDescriptor(result, '__proto__')?.value).toBe('b');
+      });
+      it('sanitizes the object held under a __proto__ property and keeps it an own key', () => {
+        const oldSchema = JSON.parse(
+          '{"type": "object", "properties": {"__proto__": {"type": "object", "properties": {"a": {"type": "string"}, "b": {"type": "string"}}}}}',
+        ) as RJSFSchema;
+        const newSchema = JSON.parse(
+          '{"type": "object", "properties": {"__proto__": {"type": "object", "properties": {"a": {"type": "string"}}}}}',
+        ) as RJSFSchema;
+        const data = JSON.parse('{"__proto__": {"a": "kept", "b": "dropped"}}');
+        const result = schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, data);
+        expect(Object.getPrototypeOf(result)).toBe(Object.prototype);
+        expect(Object.getOwnPropertyDescriptor(result, '__proto__')?.value).toEqual({ a: 'kept', b: undefined });
+      });
+    });
   });
 }

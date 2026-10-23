@@ -22,9 +22,11 @@ import type {
   ControlAttributes,
   FormContextType,
   GenericObjectType,
+  Registry,
+  ReservedUiOptionName,
   RJSFSchema,
   StrictRJSFSchema,
-  TemplatesType,
+  UiSchema,
   WidgetProps,
 } from '@rjsf/utils';
 import {
@@ -33,122 +35,37 @@ import {
   getErrorsToDraw,
   getGroupAttributes,
   getTemplates,
+  getUiOptions,
   getWidgetDescription,
   hasWidgetErrors,
   isLabelledByTemplate,
   isObject,
   labelValue,
+  RESERVED_UI_OPTION_NAMES,
   titleId,
   widgetDrawsLabel,
 } from '@rjsf/utils';
+
+import type { MantineGlobalUiOptionsKeys } from './globalUiOptions.ts';
+import { MANTINE_GLOBAL_UI_OPTIONS_KEYS } from './globalUiOptions.ts';
 
 /** The keys `T` declares. `keyof T` is `string` for a type with an index signature, as `UIOptionsType` and
  * `TemplatesType` have, so it would accept any name and require none.
  */
 type DeclaredKeys<T> = keyof { [K in keyof T as string extends K ? never : K]: T[K] };
 
-/** The options rjsf reads from a widget's `options`: those `WidgetProps` declares, and a per-field override of any
- * template, which `getTemplates()` matches in `ui:options` by name. That includes `ButtonTemplates`, though
- * `getTemplate()` ignores an override of it.
+/** The options rjsf reads from a widget's `options`, which `ReservedUiOptionName` lists: those `ui:options` declares,
+ * `enumOptions`, every template `getTemplates()` matches in `ui:options` by name, `ui:fieldReplacesAnyOrOneOf` and the
+ * options rjsf's widgets read that no type declares. `ButtonTemplates` is added, which `TemplatesType` declares though
+ * `getTemplate()` ignores an override of it, and so are the theme's own global options. `ColorWidget` and `FileWidget`
+ * pass `format` and `accept` on themselves, since their Mantine components take options of those names.
  */
-type RjsfOptionName = DeclaredKeys<WidgetProps['options']> | DeclaredKeys<TemplatesType>;
-
-// A record, not a list, so that an option or template a later release declares fails typecheck until it is listed here
-const rjsfOptionNameRecord: Record<RjsfOptionName, true> = {
-  emptyValue: true,
-  initialValue: true,
-  classNames: true,
-  style: true,
-  title: true,
-  description: true,
-  placeholder: true,
-  label: true,
-  help: true,
-  autofocus: true,
-  autocomplete: true,
-  autocapitalize: true,
-  disabled: true,
-  readonly: true,
-  required: true,
-  enumDisabled: true,
-  enumNames: true,
-  enumOrder: true,
-  optgroups: true,
-  hideError: true,
-  order: true,
-  filePreview: true,
-  inline: true,
-  inputType: true,
-  rows: true,
-  submitButtonOptions: true,
-  widget: true,
-  field: true,
-  addable: true,
-  copyable: true,
-  itemLabel: true,
-  orderable: true,
-  removable: true,
-  duplicateKeySuffixSeparator: true,
-  enumOptions: true,
-  enableMarkdownInDescription: true,
-  enableMarkdownInHelp: true,
-  enableOptionalDataFieldForType: true,
-  allowClearTextInputs: true,
-  optionValueFormat: true,
-  optionsSchemaSelector: true,
-  deprecatedHandling: true,
-  ArrayFieldDescriptionTemplate: true,
-  ArrayFieldItemButtonsTemplate: true,
-  ArrayFieldItemTemplate: true,
-  ArrayFieldTemplate: true,
-  ArrayFieldTitleTemplate: true,
-  BaseInputTemplate: true,
-  ButtonTemplates: true,
-  CyclicSchemaExpandTemplate: true,
-  DescriptionFieldTemplate: true,
-  ErrorListTemplate: true,
-  FallbackFieldTemplate: true,
-  FieldErrorTemplate: true,
-  FieldHelpTemplate: true,
-  FieldTemplate: true,
-  GridTemplate: true,
-  MarkdownTemplate: true,
-  MultiSchemaFieldTemplate: true,
-  ObjectFieldTemplate: true,
-  OptionalDataControlsTemplate: true,
-  TitleFieldTemplate: true,
-  UnsupportedFieldTemplate: true,
-  WrapIfAdditionalTemplate: true,
-};
-
-// The options rjsf's widgets, fields and templates read that no type declares, so they can't be derived either: the
-// alt-date widgets' `yearsRange`, `format`, `hideNowButton` and `hideClearButton`, the file widget's `accept`, the
-// rating widget's `stars` and `shape`, an object's `expandable`, and the `gridCols`, `gridSpacing` and
-// `gridVerticalSpacing` of this theme's `ObjectFieldTemplate`. `ColorWidget` and `FileWidget` pass `format` and `accept`
-// on themselves, since their Mantine components take options of those names.
-const undeclaredOptionNames = [
-  'accept',
-  'expandable',
-  'format',
-  'gridCols',
-  'gridSpacing',
-  'gridVerticalSpacing',
-  'hideClearButton',
-  'hideNowButton',
-  'shape',
-  'stars',
-  'yearsRange',
-] as const;
-
-// `fieldReplacesAnyOrOneOf` is the uiSchema's own `ui:fieldReplacesAnyOrOneOf`, which `getUiOptions()` also gives a
-// field as an option. It can't be derived like the rest, since `UiSchema`'s `ui:${string}` key, which every option
-// takes, absorbs it.
-type StrippedOptionName = RjsfOptionName | 'fieldReplacesAnyOrOneOf' | (typeof undeclaredOptionNames)[number];
+type StrippedOptionName = ReservedUiOptionName | 'ButtonTemplates' | keyof MantineGlobalUiOptionsKeys;
 
 const strippedOptionNames = new Set<string>([
-  ...Object.keys(rjsfOptionNameRecord),
-  'fieldReplacesAnyOrOneOf',
-  ...undeclaredOptionNames,
+  ...RESERVED_UI_OPTION_NAMES,
+  'ButtonTemplates',
+  ...MANTINE_GLOBAL_UI_OPTIONS_KEYS,
 ]);
 
 /** Builds the `error` prop Mantine's inputs render from a list of errors. Mantine's error element doesn't keep line
@@ -265,20 +182,41 @@ type CleanedOptions<T> = {
 const noExtraKeys: ReadonlySet<string> = new Set();
 
 /** Leaves out of a widget's `options` the ones rjsf reads, so that the rest, Mantine's own props, can be spread onto
- * its Mantine component
+ * its Mantine component. A key of the registry's `globalUiOptions` is left out too unless the field sets it itself:
+ * every field hands its widget the extension keys a form declares, which are meant for the user's own components
+ * rather than Mantine's, while a field's own option of the same name is a Mantine prop like any other
  *
  * @param options - The widget's options
+ * @param source - The widget's `registry`, whose `globalUiOptions` are left out, and its `uiSchema`, whose own options
+ *   are kept
  * @param [extraKeys] - Further keys to leave out, as a `Set` or an array
- * @returns - The options that aren't rjsf's or in `extraKeys`
+ * @returns - The options that aren't rjsf's, a global one the field doesn't set or in `extraKeys`
  */
-export function cleanupOptions<T extends object>(
-  options: T,
+export function cleanupOptions<
+  O extends object,
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
+  options: O,
+  { registry, uiSchema }: { registry: Pick<Registry<T, S, F>, 'globalUiOptions'>; uiSchema?: UiSchema<T, S, F> },
   extraKeys: ReadonlySet<string> | readonly string[] = noExtraKeys,
-): CleanedOptions<T> {
+): CleanedOptions<O> {
   const extraKeySet = 'has' in extraKeys ? extraKeys : new Set(extraKeys);
+  const { globalUiOptions } = registry;
+  // Read only once a key the globals hold reaches the check, since a form's globals rarely hold one
+  let ownOptions: GenericObjectType | undefined;
   const result: GenericObjectType = {};
   for (const key in options) {
-    if (!strippedOptionNames.has(key) && !extraKeySet.has(key)) {
+    if (
+      !strippedOptionNames.has(key) &&
+      !extraKeySet.has(key) &&
+      !(
+        globalUiOptions &&
+        Object.hasOwn(globalUiOptions, key) &&
+        !Object.hasOwn((ownOptions ??= getUiOptions<T, S, F>(uiSchema)), key)
+      )
+    ) {
       result[key] = options[key];
     }
   }
@@ -589,7 +527,7 @@ export function useHiddenTitle(
 export type OwnKeys<P, Base> = Exclude<keyof P, keyof Base>;
 
 /** The `InputWrapper` options a widget's options can set; rjsf renders the title, description and errors itself */
-type FieldWrapperOptionKey = Exclude<
+export type FieldWrapperOptionKey = Exclude<
   OwnKeys<InputWrapperProps, BoxProps & StylesApiProps<InputWrapperFactory> & ElementProps<'div'>>,
   `__${string}` | 'label' | 'description' | 'error' | 'required'
 >;

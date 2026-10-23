@@ -34,7 +34,7 @@ export default function PasswordWidget<
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
 
   const { emptyValue } = options;
-  const themeProps = cleanupOptions(options);
+  const themeProps = cleanupOptions(options, props);
 
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {

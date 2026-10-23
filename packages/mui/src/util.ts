@@ -8,9 +8,55 @@ import type {
   Theme,
   TypographyProps,
 } from '@mui/material';
-import type { FormContextType, RJSFSchema, StrictRJSFSchema, UIOptionsType, GenericObjectType } from '@rjsf/utils';
+import type {
+  FormContextType,
+  GlobalUISchemaOptionsExtensions,
+  ReservedUiOptionName,
+  RJSFSchema,
+  StrictRJSFSchema,
+  ThemeGlobalUISchemaOptions,
+  UIOptionsType,
+  UiSchema,
+  GenericObjectType,
+} from '@rjsf/utils';
 
 type SxArray = Extract<SxProps<Theme>, readonly unknown[]>;
+
+/** The options this theme reads from `ui:globalOptions`, beyond the ones RJSF reads */
+export interface MuiGlobalUiOptionsKeys {
+  /** The props for the MUI components every field renders, as in a field's `ui:options` */
+  mui?: GenericObjectType;
+}
+
+/** The `ui:globalOptions` this theme reads, plus a user's own `UserExtensions` */
+export type MuiGlobalUISchemaOptions<
+  UserExtensions extends GlobalUISchemaOptionsExtensions<
+    UserExtensions,
+    ReservedUiOptionName | keyof MuiGlobalUiOptionsKeys
+  > = Record<never, never>,
+> = ThemeGlobalUISchemaOptions<MuiGlobalUiOptionsKeys, UserExtensions>;
+
+/** A `UiSchema` whose `ui:options` and `ui:globalOptions` are known to carry the theme's `mui` props, and whose
+ * `ui:globalOptions` carry a user's own `UserExtensions` too.
+ *
+ * NOTE: intersects rather than using `Omit`, whose `keyof UiSchema` includes `UiSchema`'s string index signature and so
+ * erases every named member.
+ */
+export type MuiUiSchema<
+  UserExtensions extends GlobalUISchemaOptionsExtensions<
+    UserExtensions,
+    ReservedUiOptionName | keyof MuiGlobalUiOptionsKeys
+  > = Record<never, never>,
+> = UiSchema & {
+  'ui:options'?: UiSchema['ui:options'] & MuiGlobalUiOptionsKeys;
+  'ui:globalOptions'?: MuiGlobalUISchemaOptions<UserExtensions>;
+};
+
+/** The keys of `MuiGlobalUiOptionsKeys`, which the theme declares as its `globalUiOptionsKeys` */
+export const MUI_GLOBAL_UI_OPTIONS_KEYS = Object.keys({ mui: true } satisfies Record<
+  keyof MuiGlobalUiOptionsKeys,
+  true
+>);
 
 function isSxArray(sx: SxProps<Theme>): sx is SxArray {
   return Array.isArray(sx);

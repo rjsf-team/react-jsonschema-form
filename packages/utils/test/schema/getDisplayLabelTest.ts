@@ -95,6 +95,19 @@ export default function getDisplayLabelTest(testValidator: TestValidatorType) {
     ])('a %s on a %j follows the field of the type that renders it', (widget, type, expected) => {
       expect(getDisplayLabel({ validator: testValidator }, { type }, { 'ui:widget': widget })).toEqual(expected);
     });
+    it('a type list ignores a widget in globalOptions, which picks no field', () => {
+      // As a caller could pass a root uiSchema's `ui:globalOptions` that `pickGlobalUiOptions()` never saw
+      const unpickedGlobals: GenericObjectType = { widget: 'CheckboxWidget' };
+      expect(
+        getDisplayLabel({ validator: testValidator }, { type: ['number', 'boolean'] }, {}, undefined, unpickedGlobals),
+      ).toEqual(true);
+    });
+    it('a boolean ignores a widget in globalOptions, which picks no widget for its checkbox', () => {
+      const unpickedGlobals: GenericObjectType = { widget: 'select' };
+      expect(
+        getDisplayLabel({ validator: testValidator }, { type: 'boolean' }, {}, undefined, unpickedGlobals),
+      ).toEqual(false);
+    });
     it('a select over a type list naming boolean first displays its label, since StringField renders it', () => {
       expect(
         getDisplayLabel({ validator: testValidator }, { type: ['null', 'boolean', 'string'], enum: [null, true, 'a'] }),

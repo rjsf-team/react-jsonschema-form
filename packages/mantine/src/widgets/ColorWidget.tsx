@@ -46,7 +46,7 @@ export default function ColorWidget<
   } = props;
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
 
-  const themeProps = cleanupOptions(options);
+  const themeProps = cleanupOptions(options, props);
 
   const handleChange = useCallback(
     (nextValue: string) => {

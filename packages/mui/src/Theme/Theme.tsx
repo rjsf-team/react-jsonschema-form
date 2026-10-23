@@ -2,6 +2,7 @@ import type { ThemeProps } from '@rjsf/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, ThemePresentation } from '@rjsf/utils';
 
 import { createTemplates } from '../Templates/index.ts';
+import { MUI_GLOBAL_UI_OPTIONS_KEYS } from '../util.ts';
 import { createWidgets } from '../Widgets/index.ts';
 
 /** Which parts of a field this theme's fields and widgets draw themselves, over `@rjsf/core`'s: every widget built on
@@ -31,7 +32,12 @@ function createPresentation(): ThemePresentation {
 }
 
 function createTheme() {
-  return { templates: createTemplates(), widgets: createWidgets(), presentation: createPresentation() };
+  return {
+    templates: createTemplates(),
+    widgets: createWidgets(),
+    presentation: createPresentation(),
+    globalUiOptionsKeys: [...MUI_GLOBAL_UI_OPTIONS_KEYS],
+  };
 }
 
 export function generateTheme<

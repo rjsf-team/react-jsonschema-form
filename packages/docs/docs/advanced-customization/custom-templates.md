@@ -11,7 +11,7 @@ This is an advanced feature that lets you customize even more aspects of the for
 | **Documentation**     | [Custom Fields](custom-widgets-fields.md) | See documentation below                                        | [Custom Widgets](custom-widgets-fields.md)                                |
 
 In version 5, all existing `templates` were consolidated into a new `TemplatesType` interface that is provided as part of the `Registry`.
-They can also be overloaded globally on the `Form` via the `templates` prop as well as globally or per-field through the `uiSchema`.
+They can also be overloaded globally on the `Form` via the `templates` prop as well as per-field through the `uiSchema`.
 Further, many new templates were added or repurposed from existing `widgets` and `fields` in an effort to simplify the effort needed by theme authors to build new and/or maintain current themes.
 These new templates can also be overridden by individual users to customize the specific needs of their application.
 A special category of templates, `ButtonTemplates`, were also added to support the easy replacement of the `Submit` button on the form, the `Add` and `Remove` buttons associated with `additionalProperties` and `patternProperties` on objects and elements of arrays, as well as the `Move up` and `Move down` buttons used for reordering arrays.

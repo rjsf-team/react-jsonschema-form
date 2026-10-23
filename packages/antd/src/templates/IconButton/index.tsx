@@ -95,11 +95,10 @@ export function RemoveButton<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: AntdIconButtonProps<T, S, F>) {
+  const { uiSchema, registry } = props;
+  const { translateString, globalUiOptions } = registry;
   // The `block` prop is not part of the `IconButtonProps` defined in the template, so get it from the uiSchema instead
-  const options = getUiOptions<T, S, F>(props.uiSchema);
-  const {
-    registry: { translateString },
-  } = props;
+  const options = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
   return (
     <IconButton
       title={translateString(TranslatableString.RemoveButton)}

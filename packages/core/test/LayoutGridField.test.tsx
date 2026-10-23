@@ -25,6 +25,7 @@ import {
   fieldPathToId,
   fieldPathToList,
   ROOT_FIELD_PATH,
+  UI_FIELD_KEY,
   UI_GLOBAL_OPTIONS_KEY,
   getByPath,
   hasByPath,
@@ -652,6 +653,7 @@ const nestedUiSchema: UiSchema = {
 
 const ERRORS = ['error'];
 const EXTRA_ERROR = new ErrorSchemaBuilder().addErrors(ERRORS).ErrorSchema;
+const PASSES_EXTRA_ERROR_KEY = 'ui:passesExtraError';
 const DEFAULT_ID = 'test-id';
 
 // Stringify the FieldProps, minus the registry, hasFormData and optionalObjectNode in the uiSchema
@@ -675,7 +677,7 @@ const testRendererElement = <TestRenderer />;
 function FakeSchemaField({ 'data-testid': testId, ...props }: Readonly<FieldProps>) {
   const { fieldPath, id, formData, onChange, onBlur, onFocus, uiSchema } = props;
   // Special test case that will pass an error schema into on change to allow coverage
-  const error = hasByPath(uiSchema, UI_GLOBAL_OPTIONS_KEY) ? EXTRA_ERROR : undefined;
+  const error = hasByPath(uiSchema, PASSES_EXTRA_ERROR_KEY) ? EXTRA_ERROR : undefined;
   const onTextChange = ({ target: { value: val } }: ChangeEvent<HTMLInputElement>) => {
     onChange(val, fieldPath, error, id);
   };
@@ -749,7 +751,7 @@ const nestedSchemaRegistry = getTestRegistry(nestedSchema, REGISTRY_FIELDS, {}, 
 
 /** The list of props that will always be forwarded to fields
  */
-const FORWARDED_PROPS = ['disabled', 'autofocus', 'readonly', 'formContext'];
+const FORWARDED_PROPS = ['disabled', 'readonly', 'formContext'];
 
 /** Children for rows and columns
  */
@@ -796,15 +798,11 @@ function getExpectedPropsForField(
   }
   // Get the readonly options from the schema, if any
   const readonly = getByPath<boolean>(schema, 'readOnly');
-  // Get the options from the schema's oneOf, if any
-  const options = getByPath<RJSFSchema[]>(schema, ONE_OF_KEY);
   // Drill down in the uiSchema, errorSchema, fieldPath and formData to the field
   const uiSchema = getByPath<UiSchema>(props.uiSchema, toPath(field));
   const errorSchema = getByPath<ErrorSchema>(props.errorSchema, toPath(field));
   const fieldPath = fieldPathFromPaths(paths, props.fieldPath!);
   const formData = getByPath<GenericObjectType>(props.formData, toPath(field));
-  // Also extract any global props
-  const global = getByPath<GenericObjectType>(props.uiSchema, [UI_GLOBAL_OPTIONS_KEY]);
   const fieldUISchema = getByPath<UiSchema>(props.uiSchema, toPath(field));
   const { readonly: uiReadonly } = getUiOptions(fieldUISchema);
   // The expected props are the FORWARDED_PROPS, the field name, sub-schema, sub-uiSchema and sub-fieldPath
@@ -815,14 +813,12 @@ function getExpectedPropsForField(
     ...otherProps,
     required,
     readonly: uiReadonly ?? readonly,
-    options,
     formData,
     name: field,
     schema,
     uiSchema: {
       ...uiSchema,
-      [UI_OPTIONS_KEY]: { ...global, ...otherUiProps }, // spread the global and other ui keys into the ui:options
-      ...(global ? { [UI_GLOBAL_OPTIONS_KEY]: global } : {}), // ensure the globals are maintained
+      [UI_OPTIONS_KEY]: otherUiProps, // spread the other ui keys into the ui:options, which never take the globals
     },
     fieldPath,
     id: fieldPathToId(fieldPath, globalFormOptions),
@@ -981,6 +977,34 @@ describe('LayoutGridField', () => {
         fieldPathToId(toFieldPath('0', FIELD_PATH), arraySchemaRegistry.globalFormOptions),
       );
     });
+    describe('a tuple', () => {
+      const first: RJSFSchema = { type: 'string' };
+      const second: RJSFSchema = { type: 'number' };
+      const additional: RJSFSchema = { type: 'boolean' };
+      const tuple: RJSFSchema = { type: 'array', items: [first, second], additionalItems: additional };
+
+      test('returns the item schema at an index the tuple covers', () => {
+        expect(computeArraySchemasIfPresent(tuple, '1')).toEqual({ rawSchema: second, index: 1 });
+      });
+      test.each(['2', '3'])('returns the additionalItems schema at index %s, past the tuple', (index) => {
+        expect(computeArraySchemasIfPresent(tuple, index)).toEqual({
+          rawSchema: additional,
+          index: Number(index),
+          isAdditionalItem: true,
+        });
+      });
+      test('returns an empty additionalItems schema past the tuple, for the caller to treat as no schema', () => {
+        const open: RJSFSchema = { type: 'array', items: [first, second], additionalItems: {} };
+        expect(computeArraySchemasIfPresent(open, '3')).toEqual({ rawSchema: {}, index: 3, isAdditionalItem: true });
+      });
+      test.each<[string, RJSFSchema]>([
+        ['has no additionalItems', { type: 'array', items: [first, second] }],
+        ['allows any additional item', { type: 'array', items: [first, second], additionalItems: true }],
+        ['allows no additional item', { type: 'array', items: [first, second], additionalItems: false }],
+      ])('returns no schema past a tuple that %s', (_, open) => {
+        expect(computeArraySchemasIfPresent(open, '3')).toEqual({ rawSchema: undefined, index: 3 });
+      });
+    });
   });
   describe('getSchemaDetailsForField(), array items written as a $ref', () => {
     test('reads the options of an array item through the $ref of its items', () => {
@@ -1004,9 +1028,44 @@ describe('LayoutGridField', () => {
         { pets: [{ kind: 'dog' }] },
         FIELD_PATH,
       );
-      expect(details.optionsInfo).toEqual({ options: expect.any(Array), hasDiscriminator: true });
-      expect(details.optionsInfo?.options).toHaveLength(2);
+      expect(details.optionsInfo).toEqual({ hasDiscriminator: true });
       expect(details.isReadonly).toBe(true);
+    });
+  });
+  describe('getSchemaDetailsForField(), a tuple', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      definitions: { Flag: { type: 'boolean', readOnly: true } },
+      properties: {
+        tuple: { type: 'array', items: [{ type: 'string' }], additionalItems: { $ref: '#/definitions/Flag' } },
+      },
+    };
+    test('reads the additionalItems schema, through its $ref, at an index past the tuple', () => {
+      const details = getSchemaDetailsForField(
+        getTestRegistry(schema),
+        'tuple.2',
+        schema,
+        { tuple: ['a', true, false] },
+        FIELD_PATH,
+      );
+      expect(details.schema).toMatchObject({ type: 'boolean', readOnly: true });
+      expect(details.isReadonly).toBe(true);
+      expect(fieldPathToList(details.fieldPath)).toEqual([DEFAULT_ID, 'tuple', 2]);
+    });
+    test('reads no schema at an index past a tuple without additionalItems', () => {
+      const closed: RJSFSchema = {
+        type: 'object',
+        properties: { tuple: { type: 'array', items: [{ type: 'string' }] } },
+      };
+      const details = getSchemaDetailsForField(
+        getTestRegistry(closed),
+        'tuple.1',
+        closed,
+        { tuple: ['a', 1] },
+        FIELD_PATH,
+      );
+      expect(details.schema).toBeUndefined();
+      expect(fieldPathToList(details.fieldPath)).toEqual([DEFAULT_ID, 'tuple', 1]);
     });
   });
   describe('getSchemaDetailsForField(), blank schema', () => {
@@ -1061,6 +1120,13 @@ describe('LayoutGridField', () => {
         fieldPath,
       }); // `path` digs into `fieldPath`
       expect(retrieveSchemaSpy).toHaveBeenCalledTimes(1);
+    });
+    test('returns no schema or options when the leaf field is named like an Object.prototype member the schema lacks', () => {
+      const fieldPath = toFieldPath('toString', FIELD_PATH);
+      expect(getSchemaDetailsForField(sampleSchemaRegistry, 'toString', SAMPLE_SCHEMA, {}, FIELD_PATH)).toEqual({
+        ...NO_SCHEMA_OR_OPTIONS,
+        fieldPath,
+      });
     });
     test('returns schema, isRequired: true, isReadonly: undefined, options: undefined, and fieldPath when simple schema is used', () => {
       const path = 'ranges';
@@ -1129,7 +1195,6 @@ describe('LayoutGridField', () => {
         isReadonly: undefined,
         fieldPath: toFieldPath(path, FIELD_PATH),
         optionsInfo: {
-          options: getByPath(schema, [ONE_OF_KEY]),
           hasDiscriminator: true,
         },
       });
@@ -1186,7 +1251,6 @@ describe('LayoutGridField', () => {
         isReadonly: undefined,
         fieldPath: toFieldPath(path, FIELD_PATH),
         optionsInfo: {
-          options: getByPath(schema, [ONE_OF_KEY]),
           hasDiscriminator: false,
         },
       });
@@ -1348,19 +1412,14 @@ describe('LayoutGridField', () => {
         uiReadonly: undefined,
       });
     });
-    test('field with uiProps and uiSchema with global options for the field', () => {
+    test('field with uiProps and uiSchema with global options, which the field reads from the registry instead', () => {
       const uiProps = { fullWidth: true };
-      const globalOptions = { label: false };
       const uiSchema = {
         foo: { 'ui:widget': 'bar' },
-        [UI_GLOBAL_OPTIONS_KEY]: globalOptions,
+        [UI_GLOBAL_OPTIONS_KEY]: { label: false, readonly: true },
       };
       expect(computeFieldUiSchema('foo', uiProps, uiSchema)).toEqual({
-        fieldUiSchema: {
-          ...uiSchema.foo,
-          [UI_OPTIONS_KEY]: { ...uiProps, ...globalOptions },
-          [UI_GLOBAL_OPTIONS_KEY]: globalOptions,
-        },
+        fieldUiSchema: { ...uiSchema.foo, [UI_OPTIONS_KEY]: uiProps },
         uiReadonly: undefined,
       });
     });
@@ -1498,6 +1557,35 @@ describe('LayoutGridField', () => {
     // Renders the uiComponent with the props and options forwarded
     const uiComponent = screen.getByTestId(LayoutGridField.TEST_IDS.uiComponent);
     expect(uiComponent).toHaveTextContent(stringifyProps(expectedProps));
+  });
+  test('renderField with render=TestRenderer for an index past a tuple without additionalItems', () => {
+    const options = { name: 'tuple.1' };
+    const props = getProps({
+      schema: { type: 'object', properties: { tuple: { type: 'array', items: [{ type: 'string' }] } } },
+      formData: { tuple: ['a'] },
+      uiSchema: { [LAYOUT_GRID_OPTION]: { ...options, render: TestRenderer } },
+    });
+    render(<LayoutGridField {...props} />);
+    expect(screen.getByTestId(LayoutGridField.TEST_IDS.uiComponent)).toBeInTheDocument();
+    expect(screen.queryByTestId(LayoutGridField.TEST_IDS.field)).not.toBeInTheDocument();
+  });
+  test.each<[string, RJSFSchema]>([
+    ['a $ref to {}', { $ref: '#/definitions/Any' }],
+    ['{}', {}],
+  ])('renderField with render=TestRenderer past a tuple whose additionalItems is %s', (_, additionalItems) => {
+    const options = { name: 'tuple.1' };
+    const props = getProps({
+      schema: {
+        type: 'object',
+        definitions: { Any: {} },
+        properties: { tuple: { type: 'array', items: [{ type: 'string' }], additionalItems } },
+      },
+      formData: { tuple: ['a', 'b'] },
+      uiSchema: { [LAYOUT_GRID_OPTION]: { ...options, render: TestRenderer } },
+    });
+    render(<LayoutGridField {...props} />);
+    expect(screen.getByTestId(LayoutGridField.TEST_IDS.uiComponent)).toBeInTheDocument();
+    expect(screen.queryByTestId(LayoutGridField.TEST_IDS.field)).not.toBeInTheDocument();
   });
   test('renderField with a memo() render via LAYOUT_GRID_OPTION and name is not provided', () => {
     const options = { myProp: true };
@@ -1691,29 +1779,25 @@ describe('LayoutGridField', () => {
     });
     render(<LayoutGridField {...props} {...otherProps} />);
     const field = screen.getByTestId(LayoutGridField.TEST_IDS.layoutMultiSchemaField);
+    const expected = getExpectedPropsForField(props, fieldName, otherProps, otherUIProps);
+    // A discriminated cell names the field rendering its selector in place of the options, over the `ui:field` its own
+    // uiSchema names, in both spellings
     expect(field).toHaveTextContent(
-      stringifyProps(getExpectedPropsForField(props, fieldName, otherProps, otherUIProps)),
+      stringifyProps({
+        ...expected,
+        uiSchema: {
+          ...expected.uiSchema,
+          [UI_FIELD_KEY]: 'LayoutMultiSchemaField',
+          'ui:fieldReplacesAnyOrOneOf': true,
+          [UI_OPTIONS_KEY]: {
+            ...expected.uiSchema[UI_OPTIONS_KEY],
+            field: 'LayoutMultiSchemaField',
+            fieldReplacesAnyOrOneOf: true,
+          },
+        },
+      }),
     );
   });
-  test.each([0, null])(
-    'renderField passes a ui:required of %s to a required discriminated field as required: false',
-    (uiRequired) => {
-      const fieldName = 'employment';
-      const uiRequiredFromJson: GenericObjectType = { 'ui:required': uiRequired };
-      const props = getProps({
-        schema: { ...GRID_FORM_SCHEMA, required: [fieldName] },
-        uiSchema: { ...gridFormUISchema, [fieldName]: uiRequiredFromJson },
-        formData: {},
-        fieldPath: ROOT_FIELD_PATH,
-        id: gridFormSchemaRegistry.globalFormOptions.idPrefix,
-        layoutGridSchema: { name: fieldName },
-        registry: gridFormSchemaRegistry,
-      });
-      render(<LayoutGridField {...props} />);
-      const field = screen.getByTestId(LayoutGridField.TEST_IDS.layoutMultiSchemaField);
-      expect(field).toHaveTextContent('"required":false');
-    },
-  );
   test('renderField via object explicit readonlySchema, and uiSchema readonly override', () => {
     const fieldName = 'string';
     const props = getProps({
@@ -1839,7 +1923,7 @@ describe('LayoutGridField', () => {
       schema: SAMPLE_SCHEMA,
       uiSchema: {
         ...sampleUISchema,
-        [UI_GLOBAL_OPTIONS_KEY]: { always: 'there' },
+        [fieldName]: { ...sampleUISchema[fieldName], [PASSES_EXTRA_ERROR_KEY]: true },
       },
       formData: { [fieldName]: 'foo' },
       layoutGridSchema: {

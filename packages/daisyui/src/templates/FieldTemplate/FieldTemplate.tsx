@@ -74,7 +74,8 @@ function widgetRendersOwnLabel<T, S extends StrictRJSFSchema, F extends FormCont
  * - Proper spacing between form fields
  * - Rendering error messages and help text
  * - Maintaining accessibility with proper label associations
- * - Applying a per-field DaisyUI theme, class name and/or style passed via `ui:options.daisy`
+ * - Applying a per-field DaisyUI theme, class name and/or style passed via `ui:daisy` or `ui:options.daisy`, or to
+ *   every field via `ui:globalOptions`
  *
  * This template uses DaisyUI's label and form-control components for consistent styling.
  *
@@ -125,14 +126,14 @@ export default function FieldTemplate<
     return <div className='hidden'>{children}</div>;
   }
 
-  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const uiOptions = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);
   // The checkbox and the toggle render their own label after the input, and their own description, so this template
   // renders neither for them
   // The plan already says whether the widget draws the label; the guess is left for a template rendered
   // without one
   const widgetRendersLabel =
     !presentation && widgetRendersOwnLabel<T, S, F>(schema, uiOptions.widget, registry.widgets);
-  const daisy = getDaisy<T, S, F>({ uiSchema });
+  const daisy = getDaisy<T, S, F>(uiOptions);
   const { WrapIfAdditionalTemplate } = getTemplates<T, S, F>(registry, uiOptions);
 
   return (
@@ -158,8 +159,8 @@ export default function FieldTemplate<
     >
       <div
         // `ui:classNames` and `ui:style` are the wrapper's to apply, as they are in `@rjsf/core`, so that a border
-        // or padding is drawn once and both land on the same element. Only `ui:options.daisy`, this theme's own
-        // per-field theming of this div, belongs here
+        // or padding is drawn once and both land on the same element. Only the field's `daisy` option, this theme's
+        // own theming of this div, belongs here
         className={`field-template mb-3 ${daisy.className || ''}`.trim()}
         data-theme={daisy.theme}
         {...divProps}

@@ -4,7 +4,7 @@ import { createContext, forwardRef, memo } from 'react';
 import { render } from '@testing-library/react';
 
 import { getWidgetKey } from '../src/getWidget.tsx';
-import type { Registry, RJSFSchema, WidgetProps, Widget } from '../src/index.ts';
+import type { GenericObjectType, Registry, RJSFSchema, WidgetProps, Widget } from '../src/index.ts';
 import {
   getFieldTypeForUiSchema,
   getFieldTypeForWidget,
@@ -409,8 +409,10 @@ describe('getFieldTypeForUiSchema()', () => {
     expect(getFieldTypeForUiSchema(schema, { 'ui:options': { widget: 'textarea' } })).toBe('string');
   });
   it('should resolve the schema type without a uiSchema, or ignoring ui:globalOptions', () => {
+    // Untyped, as a JSON uiSchema is, since `widget` is an option RJSF reads only per field
+    const globalOptions: GenericObjectType = { widget: 'textarea' };
     expect(getFieldTypeForUiSchema(schema)).toBe('number');
-    expect(getFieldTypeForUiSchema(schema, { 'ui:globalOptions': { widget: 'textarea' } })).toBe('number');
+    expect(getFieldTypeForUiSchema(schema, { 'ui:globalOptions': globalOptions })).toBe('number');
   });
 });
 

@@ -92,7 +92,7 @@ render(<Form schema={schema} validator={validator} />, document.getElementById('
 
 ## Array item uiSchema options
 
-Any of these options can be set globally if they are contained within the `ui:globalOptions` block.
+The `orderable`, `addable`, `copyable` and `removable` options can be set globally if they are contained within the `ui:globalOptions` block, and `itemLabel` is set per array only.
 They can also be overridden on a per-field basis inside a `ui:options` block as shown below.
 
 ### `orderable` option

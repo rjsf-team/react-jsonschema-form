@@ -113,4 +113,55 @@ describe('the options rjsf reads are not passed on to Mantine components', () =>
       expect(unrecognizedProps()).not.toContain(prop);
     }
   });
+
+  it('does not pass on an extension key the form declares, which is meant for its own components', () => {
+    const { container } = render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: { name: { type: 'string' }, agree: { type: 'boolean', title: 'Agree' } },
+        }}
+        uiSchema={{ 'ui:globalOptions': { rowDensity: 2 }, agree: { 'ui:widget': 'select' } }}
+        globalUiOptionsKeys={['rowDensity']}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('textbox')).toBeInTheDocument();
+    expect(container.querySelector('[rowdensity]')).toBeNull();
+    expect(unrecognizedProps()).not.toContain('rowDensity');
+  });
+
+  it("passes on a field's own Mantine prop that a declared extension key shares its name with", () => {
+    render(
+      <Form
+        schema={{ type: 'object', properties: { name: { type: 'string' }, other: { type: 'string' } } }}
+        uiSchema={{ 'ui:globalOptions': { variant: 'compact' }, name: { 'ui:options': { variant: 'filled' } } }}
+        globalUiOptionsKeys={['variant']}
+        validator={validator}
+      />,
+    );
+
+    const [name, other] = screen.getAllByRole('textbox');
+    expect(name).toHaveAttribute('data-variant', 'filled');
+    expect(other).not.toHaveAttribute('data-variant', 'compact');
+  });
+
+  it("passes an anyOf field's own Mantine prop on to its option selector beside a declared global of the same name", () => {
+    const { container } = render(
+      <Form
+        schema={{
+          anyOf: [
+            { title: 'First', type: 'string' },
+            { title: 'Second', type: 'number' },
+          ],
+        }}
+        uiSchema={{ 'ui:globalOptions': { variant: 'compact' }, 'ui:options': { variant: 'filled' } }}
+        globalUiOptionsKeys={['variant']}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('#root__anyof_select')).toHaveAttribute('data-variant', 'filled');
+  });
 });

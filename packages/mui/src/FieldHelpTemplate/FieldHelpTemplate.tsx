@@ -29,7 +29,7 @@ export default function FieldHelpTemplate<
     return null;
   }
 
-  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const uiOptions = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);
   const { rjsfSlotProps: { helpFormHelperText } = {} } = getMuiProps<T, S, F, FieldHelpTemplateMuiProps>(uiOptions);
 
   return (

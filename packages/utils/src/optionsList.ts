@@ -130,7 +130,7 @@ export default function optionsList<
     // A selector names a property of object options, so a constant that doesn't declare it is read by its constant. An
     // object constant that does keeps its property's value, which is what `LayoutMultiSchemaField` matches a pick by
     const field =
-      selectorField && (!isConstantList || aSchema[PROPERTIES_KEY]?.[selectorField] !== undefined)
+      selectorField && (!isConstantList || getByPath(aSchema[PROPERTIES_KEY], selectorField) !== undefined)
         ? selectorField
         : undefined;
     if (field) {

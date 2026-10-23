@@ -61,6 +61,7 @@ import getFieldClassNames from './getFieldClassNames.ts';
 import type { FieldLabelSources } from './getFieldLabel.ts';
 import getFieldLabel from './getFieldLabel.ts';
 import getFreePropertyNames from './getFreePropertyNames.ts';
+import getGlobalUiOptions from './getGlobalUiOptions.ts';
 import getGroupAttributes from './getGroupAttributes.ts';
 import type { GroupRole } from './getGroupAttributes.ts';
 import getGroupLabelling from './getGroupLabelling.ts';
@@ -161,6 +162,7 @@ import padTimeSeconds from './padTimeSeconds.ts';
 import parseDateString from './parseDateString.ts';
 import { getByPath, hasByPath, propertyToPath, setByPath, toPath, unsetByPath } from './pathUtils.ts';
 import type { ObjectPath } from './pathUtils.ts';
+import pickGlobalUiOptions from './pickGlobalUiOptions.ts';
 import rangeSpec from './rangeSpec.ts';
 import rendersOwnFieldBesideOption from './rendersOwnFieldBesideOption.ts';
 import replaceEqualDeep from './replaceEqualDeep.ts';
@@ -173,6 +175,7 @@ import schemaRequiresTrueValue from './schemaRequiresTrueValue.ts';
 import { keywordShape, normalizeUri, resolveUri } from './schemaUri.ts';
 import SelectedOptionDescription from './SelectedOptionDescription.tsx';
 import type { SelectedOptionDescriptionProps } from './SelectedOptionDescription.tsx';
+import setOwn from './setOwn.ts';
 import shouldRenderOptionalField, { getOptionalDataControlsType } from './shouldRenderOptionalField.ts';
 import templateDrawsDescription from './templateDrawsDescription.ts';
 import templateDrawsLabel from './templateDrawsLabel.ts';
@@ -208,6 +211,7 @@ export type * from './types.ts';
 export * from './enums.ts';
 
 export * from './constants.ts';
+export * from './globalUiOptionsKeys.ts';
 export * from './parser/index.ts';
 export * from './schema/index.ts';
 
@@ -300,6 +304,7 @@ export {
   getFieldTypeForUiSchema,
   getFieldTypeForWidget,
   getFreePropertyNames,
+  getGlobalUiOptions,
   getGroupAttributes,
   getGroupLabelling,
   getInputProps,
@@ -385,6 +390,7 @@ export {
   pad,
   padTimeSeconds,
   parseDateString,
+  pickGlobalUiOptions,
   rangeSpec,
   rendersOwnFieldBesideOption,
   replaceEqualDeep,
@@ -397,6 +403,7 @@ export {
   schemaKey,
   schemaRequiresTrueValue,
   setByPath,
+  setOwn,
   SelectedOptionDescription,
   selectedOptionDescriptionId,
   selectOptionUiSchema,

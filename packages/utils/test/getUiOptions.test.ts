@@ -1,7 +1,14 @@
 import { createElement, forwardRef, lazy, memo } from 'react';
 import type { MockInstance } from 'vitest';
 
-import type { GlobalUISchemaOptions, UIOptionsType, UiSchema, Widget, WidgetProps } from '../src/index.ts';
+import type {
+  GenericObjectType,
+  GlobalUISchemaOptions,
+  UIOptionsType,
+  UiSchema,
+  Widget,
+  WidgetProps,
+} from '../src/index.ts';
 import { getUiOptions, noop } from '../src/index.ts';
 
 const uiSchema: UiSchema = {
@@ -93,9 +100,11 @@ describe('getUiOptions()', () => {
     expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
   });
   it('leaves a global required out, since ui:required is a field option alone (#5527)', () => {
-    expect(getUiOptions({}, { required: true, label: false })).toEqual({ label: false });
-    expect(getUiOptions(undefined, { required: true })).toEqual({});
-    expect(getUiOptions({ 'ui:required': false }, { required: true })).toEqual({ required: false });
+    // Untyped, as a JSON uiSchema is, since `required` is an option RJSF reads only per field
+    const requiredGlobally: GenericObjectType = { required: true };
+    expect(getUiOptions({}, { ...requiredGlobally, label: false })).toEqual({ label: false });
+    expect(getUiOptions(undefined, requiredGlobally)).toEqual({});
+    expect(getUiOptions({ 'ui:required': false }, requiredGlobally)).toEqual({ required: false });
   });
   it('does not return the root keys ui:definitions and ui:globalOptions as options (#5527)', () => {
     const rootUiSchema: UiSchema = {
@@ -121,5 +130,8 @@ describe('getUiOptions()', () => {
     expect(consoleErrorSpy).toHaveBeenLastCalledWith(
       'ui:widget is a React element rather than a component (pass MyWidget, not <MyWidget />), so it is ignored.',
     );
+  });
+  it('reads no global options from a null one, as a JSON uiSchema can give', () => {
+    expect(getUiOptions({ 'ui:label': true }, null as unknown as GlobalUISchemaOptions)).toEqual({ label: true });
   });
 });

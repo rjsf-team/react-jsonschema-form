@@ -1,5 +1,5 @@
 import { getTestRegistry } from '@rjsf/core/testing';
-import { formTests, themeTests } from '@rjsf/snapshot-tests';
+import { checkboxLabelTests, fallbackDescriptionTests, formTests, themeTests } from '@rjsf/snapshot-tests';
 import type { ErrorSchema, FieldProps, FormValidation, RJSFSchema, UiSchema } from '@rjsf/utils';
 import { errorId, fieldLabelId, helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
@@ -133,46 +133,6 @@ describe('antd specific tests', () => {
     );
 
     expect(container.querySelector('#root_name__help')).toHaveTextContent('element help');
-  });
-
-  test('renders a ui:help inherited from ui:globalOptions', () => {
-    const schema: RJSFSchema = {
-      type: 'object',
-      properties: {
-        name: {
-          type: 'string',
-          title: 'Name',
-        },
-      },
-    };
-
-    const { container } = render(
-      <Form schema={schema} uiSchema={{ 'ui:globalOptions': { help: 'global help' } }} validator={validator} />,
-    );
-
-    expect(container.querySelector('#root_name__help')).toHaveTextContent('global help');
-  });
-
-  test('does not render an explain block when an explicit ui:help overrides a global one away', () => {
-    const schema: RJSFSchema = {
-      type: 'object',
-      properties: {
-        name: {
-          type: 'string',
-        },
-      },
-    };
-
-    const { container } = render(
-      <Form
-        schema={schema}
-        uiSchema={{ 'ui:globalOptions': { help: 'global help' }, name: { 'ui:help': undefined } }}
-        validator={validator}
-      />,
-    );
-
-    const nameItem = container.querySelector('#root_name')!.closest('.ant-form-item')!;
-    expect(nameItem.querySelector('.ant-form-item-explain')).toBeNull();
   });
 
   test('renders the help text with no error styling when ui:hideError suppresses the errors', () => {
@@ -1007,19 +967,9 @@ describe('antd renders a field a named field wraps once', () => {
       { val: { 'ui:options': { field: 'SchemaField' }, 'ui:help': 'Help' } },
     ],
     [
-      "ui:globalOptions.field: 'SchemaField'",
-      describedSchema,
-      { 'ui:globalOptions': { field: 'SchemaField' }, val: { 'ui:help': 'Help' } },
-    ],
-    [
       'a ui:options.field wrapping SchemaField',
       describedSchema,
       { val: { 'ui:options': { field: 'wrapping' }, 'ui:help': 'Help' } },
-    ],
-    [
-      'a ui:globalOptions.field wrapping SchemaField',
-      describedSchema,
-      { 'ui:globalOptions': { field: 'wrapping' }, val: { 'ui:help': 'Help' } },
     ],
     [
       'a $id wrapping SchemaField',
@@ -1064,7 +1014,6 @@ describe('antd renders a field a named field wraps once', () => {
   test.each<[string, RJSFSchema, UiSchema]>([
     ["ui:field: 'SchemaField'", anyOfSchema, { val: { 'ui:field': 'SchemaField' } }],
     ["ui:options.field: 'SchemaField'", anyOfSchema, { val: { 'ui:options': { field: 'SchemaField' } } }],
-    ["ui:globalOptions.field: 'SchemaField'", anyOfSchema, { 'ui:globalOptions': { field: 'SchemaField' } }],
     ['a ui:field wrapping SchemaField', anyOfSchema, { val: { 'ui:field': 'wrapping' } }],
     ['a ui:options.field wrapping SchemaField', anyOfSchema, { val: { 'ui:options': { field: 'wrapping' } } }],
     [
@@ -1225,3 +1174,6 @@ describe("antd marks a deprecated field's label, as core does", () => {
     expect(container.innerHTML).not.toContain('(deprecated) (deprecated)');
   });
 });
+
+checkboxLabelTests(Form, { generateTemplates, generateWidgets, descriptionBy: 'template' });
+fallbackDescriptionTests(Form, false);

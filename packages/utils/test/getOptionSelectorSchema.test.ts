@@ -24,4 +24,8 @@ describe('getOptionSelectorSchema()', () => {
   ])('gives undefined for an option that %s', (_, option) => {
     expect(getOptionSelectorSchema(option, 'kind', retrieve)).toBeUndefined();
   });
+
+  it('gives undefined for an option that does not declare a selector named __proto__', () => {
+    expect(getOptionSelectorSchema({ properties: { kind: { const: 'a' } } }, '__proto__', retrieve)).toBeUndefined();
+  });
 });

@@ -1,6 +1,7 @@
 import type { ThemeProps } from '@rjsf/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, ThemePresentation } from '@rjsf/utils';
 
+import { MANTINE_GLOBAL_UI_OPTIONS_KEYS } from '../globalUiOptions.ts';
 import { createTemplates } from '../templates/index.ts';
 import { createWidgets } from '../widgets/index.ts';
 
@@ -41,7 +42,12 @@ function createPresentation(widgetKeys: readonly string[]): ThemePresentation {
 
 function createTheme() {
   const widgets = createWidgets();
-  return { templates: createTemplates(), widgets, presentation: createPresentation(Object.keys(widgets)) };
+  return {
+    templates: createTemplates(),
+    widgets,
+    presentation: createPresentation(Object.keys(widgets)),
+    globalUiOptionsKeys: [...MANTINE_GLOBAL_UI_OPTIONS_KEYS],
+  };
 }
 
 export function generateTheme<

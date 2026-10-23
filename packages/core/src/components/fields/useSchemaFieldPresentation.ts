@@ -132,8 +132,8 @@ function rendersControl<
     return widget !== undefined;
   }
   if (field === fields.FallbackField) {
-    // The fallback UI labels its value from outside by the same call it makes to decide that, and otherwise leaves the
-    // value field to draw its own heading or label
+    // The fallback UI labels its value from outside where this call says the value is a control, and otherwise leaves
+    // the value field to draw its own heading or label. The call matches `ui:widget` by name (#5581)
     return (
       Boolean(globalFormOptions.useFallbackUiForUnsupportedType) && displaysLabel<T, S, F>(registry, schema, uiSchema)
     );
