@@ -8,11 +8,12 @@ import MarkdownTemplate from '../src/markdown.tsx';
 import {
   createFormComponent,
   createFormRef,
+  elementOf,
+  expectToHaveBeenCalledWithFormData,
   getSelectedOptionValue,
   handleOf,
   setupConsoleErrorSuppression,
   submitForm,
-  expectToHaveBeenCalledWithFormData,
 } from './testUtils.tsx';
 import { TextWidgetTest } from './TextWidgetTest.tsx';
 
@@ -1699,12 +1700,12 @@ describe('StringField', () => {
         uiSchema,
       });
 
-      const yearSelect = node.querySelector<HTMLSelectElement>('#root_year')!;
-      const monthSelect = node.querySelector<HTMLSelectElement>('#root_month')!;
-      const daySelect = node.querySelector<HTMLSelectElement>('#root_day')!;
-      const hourSelect = node.querySelector<HTMLSelectElement>('#root_hour')!;
-      const minuteSelect = node.querySelector<HTMLSelectElement>('#root_minute')!;
-      const secondSelect = node.querySelector<HTMLSelectElement>('#root_second')!;
+      const yearSelect = elementOf(node, '#root__year', HTMLSelectElement);
+      const monthSelect = elementOf(node, '#root__month', HTMLSelectElement);
+      const daySelect = elementOf(node, '#root__day', HTMLSelectElement);
+      const hourSelect = elementOf(node, '#root__hour', HTMLSelectElement);
+      const minuteSelect = elementOf(node, '#root__minute', HTMLSelectElement);
+      const secondSelect = elementOf(node, '#root__second', HTMLSelectElement);
 
       await user.selectOptions(
         yearSelect,
@@ -1743,7 +1744,7 @@ describe('StringField', () => {
 
       const ids = [].map.call(node.querySelectorAll('select'), (node: HTMLSelectElement) => node.id);
 
-      expect(ids).toEqual(['root_year', 'root_month', 'root_day', 'root_hour', 'root_minute', 'root_second']);
+      expect(ids).toEqual(['root__year', 'root__month', 'root__day', 'root__hour', 'root__minute', 'root__second']);
     });
 
     it("should render the widgets with the expected options' values", () => {
@@ -1766,7 +1767,7 @@ describe('StringField', () => {
         60 + 1,
         60 + 1,
       ]);
-      const monthOptions = node.querySelectorAll('select#root_month option');
+      const monthOptions = node.querySelectorAll('select#root__month option');
       const monthOptionsValues = [].map.call(monthOptions, (o: HTMLOptionElement) => o.value);
       expect(monthOptionsValues).toEqual(['', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11']);
     });
@@ -1780,7 +1781,7 @@ describe('StringField', () => {
         uiSchema,
       });
 
-      const monthOptions = node.querySelectorAll('select#root_month option');
+      const monthOptions = node.querySelectorAll('select#root__month option');
       const monthOptionsLabels = [].map.call(monthOptions, (o: HTMLOptionElement) => o.text);
       expect(monthOptionsLabels).toEqual([
         'month',
@@ -1898,7 +1899,7 @@ describe('StringField', () => {
 
         const ids = [].map.call(node.querySelectorAll('select'), (node: HTMLSelectElement) => node.id);
 
-        expect(ids).toEqual(['root_year', 'root_month', 'root_day', 'root_hour', 'root_minute', 'root_second']);
+        expect(ids).toEqual(['root__year', 'root__month', 'root__day', 'root__hour', 'root__minute', 'root__second']);
       });
 
       it('should render a date field with DMY format', () => {
@@ -1913,7 +1914,7 @@ describe('StringField', () => {
 
         const ids = [].map.call(node.querySelectorAll('select'), (node: HTMLSelectElement) => node.id);
 
-        expect(ids).toEqual(['root_day', 'root_month', 'root_year', 'root_hour', 'root_minute', 'root_second']);
+        expect(ids).toEqual(['root__day', 'root__month', 'root__year', 'root__hour', 'root__minute', 'root__second']);
       });
 
       it('should render a date field with MDY format', () => {
@@ -1928,7 +1929,7 @@ describe('StringField', () => {
 
         const ids = [].map.call(node.querySelectorAll('select'), (node: HTMLSelectElement) => node.id);
 
-        expect(ids).toEqual(['root_month', 'root_day', 'root_year', 'root_hour', 'root_minute', 'root_second']);
+        expect(ids).toEqual(['root__month', 'root__day', 'root__year', 'root__hour', 'root__minute', 'root__second']);
       });
     });
 
@@ -1943,7 +1944,7 @@ describe('StringField', () => {
           uiSchema,
         });
 
-        const yearOptions = node.querySelectorAll('select#root_year option');
+        const yearOptions = node.querySelectorAll('select#root__year option');
         const yearOptionsLabels = [].map.call(yearOptions, (o: HTMLOptionElement) => o.text);
         expect(yearOptionsLabels).toEqual(['year', '1980', '1981', '1982', '1983', '1984', '1985']);
       });
@@ -1957,7 +1958,7 @@ describe('StringField', () => {
           uiSchema,
         });
 
-        const yearOptions = node.querySelectorAll('select#root_year option');
+        const yearOptions = node.querySelectorAll('select#root__year option');
         const yearOptionsLabels = [].map.call(yearOptions, (o: HTMLOptionElement) => o.text);
         expect(yearOptionsLabels).toEqual(['year', '1985', '1984', '1983', '1982', '1981', '1980']);
       });
@@ -1972,7 +1973,7 @@ describe('StringField', () => {
         });
 
         const thisYear = new Date().getFullYear();
-        const yearOptions = node.querySelectorAll('select#root_year option');
+        const yearOptions = node.querySelectorAll('select#root__year option');
         const yearOptionsLabels = [].map.call(yearOptions, (o: HTMLOptionElement) => o.text);
         expect(yearOptionsLabels).toEqual([
           'year',
@@ -1993,7 +1994,7 @@ describe('StringField', () => {
         });
 
         const thisYear = new Date().getFullYear();
-        const yearOptions = node.querySelectorAll('select#root_year option');
+        const yearOptions = node.querySelectorAll('select#root__year option');
         const yearOptionsLabels = [].map.call(yearOptions, (o: HTMLOptionElement) => o.text);
         expect(yearOptionsLabels).toEqual([
           'year',
@@ -2057,9 +2058,9 @@ describe('StringField', () => {
         uiSchema,
       });
 
-      const yearSelect = node.querySelector<HTMLSelectElement>('#root_year')!;
-      const monthSelect = node.querySelector<HTMLSelectElement>('#root_month')!;
-      const daySelect = node.querySelector<HTMLSelectElement>('#root_day')!;
+      const yearSelect = elementOf(node, '#root__year', HTMLSelectElement);
+      const monthSelect = elementOf(node, '#root__month', HTMLSelectElement);
+      const daySelect = elementOf(node, '#root__day', HTMLSelectElement);
 
       await user.selectOptions(
         yearSelect,
@@ -2080,8 +2081,8 @@ describe('StringField', () => {
         uiSchema,
       });
 
-      const yearSelect = node.querySelector<HTMLSelectElement>('#root_year')!;
-      const monthSelect = node.querySelector<HTMLSelectElement>('#root_month')!;
+      const yearSelect = elementOf(node, '#root__year', HTMLSelectElement);
+      const monthSelect = elementOf(node, '#root__month', HTMLSelectElement);
 
       await user.selectOptions(
         yearSelect,
@@ -2089,9 +2090,9 @@ describe('StringField', () => {
       );
       await user.selectOptions(monthSelect, monthSelect.querySelector<HTMLOptionElement>('option[value="9"]')!);
 
-      expect(getSelectedOptionValue(node.querySelector<HTMLSelectElement>('#root_year')!)).toEqual('2012');
-      expect(getSelectedOptionValue(node.querySelector<HTMLSelectElement>('#root_month')!)).toEqual('10');
-      expect(getSelectedOptionValue(node.querySelector<HTMLSelectElement>('#root_day')!)).toEqual('day');
+      expect(getSelectedOptionValue(elementOf(node, '#root__year', HTMLSelectElement))).toEqual('2012');
+      expect(getSelectedOptionValue(elementOf(node, '#root__month', HTMLSelectElement))).toEqual('10');
+      expect(getSelectedOptionValue(elementOf(node, '#root__day', HTMLSelectElement))).toEqual('day');
       expect(onChange).not.toHaveBeenCalled();
     });
 
@@ -2120,7 +2121,7 @@ describe('StringField', () => {
 
       const ids = [].map.call(node.querySelectorAll('select'), (node: HTMLSelectElement) => node.id);
 
-      expect(ids).toEqual(['root_year', 'root_month', 'root_day']);
+      expect(ids).toEqual(['root__year', 'root__month', 'root__day']);
     });
 
     it("should render the widgets with the expected options' values", () => {
@@ -2140,7 +2141,7 @@ describe('StringField', () => {
         12 + 1,
         31 + 1,
       ]);
-      const monthOptions = node.querySelectorAll('select#root_month option');
+      const monthOptions = node.querySelectorAll('select#root__month option');
       const monthOptionsValues = [].map.call(monthOptions, (o: HTMLOptionElement) => o.value);
       expect(monthOptionsValues).toEqual(['', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11']);
     });
@@ -2154,7 +2155,7 @@ describe('StringField', () => {
         uiSchema,
       });
 
-      const monthOptions = node.querySelectorAll('select#root_month option');
+      const monthOptions = node.querySelectorAll('select#root__month option');
       const monthOptionsLabels = [].map.call(monthOptions, (o: HTMLOptionElement) => o.text);
       expect(monthOptionsLabels).toEqual([
         'month',
@@ -2215,7 +2216,7 @@ describe('StringField', () => {
 
         const ids = [].map.call(node.querySelectorAll('select'), (node: HTMLSelectElement) => node.id);
 
-        expect(ids).toEqual(['root_year', 'root_month', 'root_day']);
+        expect(ids).toEqual(['root__year', 'root__month', 'root__day']);
       });
 
       it('should render a date field with MDY format', () => {
@@ -2230,7 +2231,7 @@ describe('StringField', () => {
 
         const ids = [].map.call(node.querySelectorAll('select'), (node: HTMLSelectElement) => node.id);
 
-        expect(ids).toEqual(['root_month', 'root_day', 'root_year']);
+        expect(ids).toEqual(['root__month', 'root__day', 'root__year']);
       });
 
       it('should render a date field with DMY format', () => {
@@ -2245,7 +2246,7 @@ describe('StringField', () => {
 
         const ids = [].map.call(node.querySelectorAll('select'), (node: HTMLSelectElement) => node.id);
 
-        expect(ids).toEqual(['root_day', 'root_month', 'root_year']);
+        expect(ids).toEqual(['root__day', 'root__month', 'root__year']);
       });
     });
 

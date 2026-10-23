@@ -221,9 +221,9 @@ export function altDateTests(Form: ComponentType<FormProps>) {
       />,
     );
     const cases: [string, string, number | undefined][] = [
-      ['When, year', 'root_when_year', undefined],
-      ['At, year', 'root_at_year', 2021],
-      ['At, minute', 'root_at_minute', 0],
+      ['When, year', 'root_when__year', undefined],
+      ['At, year', 'root_at__year', 2021],
+      ['At, minute', 'root_at__minute', 0],
     ];
     cases.forEach(([name, partId, reported]) => {
       const part = getPart(name);

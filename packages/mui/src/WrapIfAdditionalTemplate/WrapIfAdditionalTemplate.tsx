@@ -11,6 +11,7 @@ import type {
 } from '@rjsf/utils';
 import {
   ADDITIONAL_PROPERTY_FLAG,
+  additionalKeyId,
   AdditionalPropertyKeySelect,
   buttonId,
   getUiOptions,
@@ -91,7 +92,7 @@ export default function WrapIfAdditionalTemplate<
   return (
     <Grid
       container
-      key={`${id}-key`}
+      key={additionalKeyId(id)}
       spacing={2}
       className={classNames}
       style={style}
@@ -108,7 +109,7 @@ export default function WrapIfAdditionalTemplate<
       >
         {propertyNamesEnum ? (
           <AdditionalPropertyKeySelect<T, S, F>
-            id={`${id}-key`}
+            id={additionalKeyId(id)}
             label={keyLabel}
             hideLabel={!hasKeyLabel}
             value={keyName}
@@ -129,8 +130,8 @@ export default function WrapIfAdditionalTemplate<
             slotProps={{ htmlInput: { 'aria-label': hasKeyLabel ? undefined : keyLabel } }}
             defaultValue={keyName}
             disabled={disabled || readonly}
-            id={`${id}-key`}
-            name={`${id}-key`}
+            id={additionalKeyId(id)}
+            name={additionalKeyId(id)}
             onBlur={!readonly ? onKeyRenameBlur : undefined}
             type='text'
           />

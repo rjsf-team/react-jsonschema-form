@@ -4068,7 +4068,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                       <input
                         class="PrivateSwitchBase-input emotion-8"
                         data-indeterminate="false"
-                        id="root_choices-0"
+                        id="root_choices__0"
                         name="root[choices][]"
                         type="checkbox"
                         value="0"
@@ -4100,7 +4100,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                       <input
                         class="PrivateSwitchBase-input emotion-8"
                         data-indeterminate="false"
-                        id="root_choices-1"
+                        id="root_choices__1"
                         name="root[choices][]"
                         type="checkbox"
                         value="1"
@@ -4132,7 +4132,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                       <input
                         class="PrivateSwitchBase-input emotion-8"
                         data-indeterminate="false"
-                        id="root_choices-2"
+                        id="root_choices__2"
                         name="root[choices][]"
                         type="checkbox"
                         value="2"
@@ -5369,7 +5369,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                     >
                       <input
                         class="PrivateSwitchBase-input emotion-8"
-                        id="root_option-0"
+                        id="root_option__0"
                         name="root[option]"
                         type="radio"
                         value="0"
@@ -5415,7 +5415,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                     >
                       <input
                         class="PrivateSwitchBase-input emotion-8"
-                        id="root_option-1"
+                        id="root_option__1"
                         name="root[option]"
                         type="radio"
                         value="1"
@@ -12808,7 +12808,7 @@ exports[`radio widget with options sharing a String() in the realValue format (#
             >
               <input
                 class="PrivateSwitchBase-input emotion-4"
-                id="root-0"
+                id="root__0"
                 name="root"
                 type="radio"
                 value="__rjsf_index:0"
@@ -12855,7 +12855,7 @@ exports[`radio widget with options sharing a String() in the realValue format (#
               <input
                 checked=""
                 class="PrivateSwitchBase-input emotion-4"
-                id="root-1"
+                id="root__1"
                 name="root"
                 type="radio"
                 value="__rjsf_index:1"
@@ -17176,7 +17176,7 @@ exports[`single fields > Cyclic schema 1`] = `
                       </p>
                       <button
                         class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-sizeSmall MuiButton-colorWarning emotion-16"
-                        id="root_child_child-button"
+                        id="root_child_child__expand"
                         tabindex="0"
                         type="button"
                       >
@@ -19283,7 +19283,7 @@ exports[`single fields > checkboxes field 1`] = `
               <input
                 class="PrivateSwitchBase-input emotion-5"
                 data-indeterminate="false"
-                id="root-0"
+                id="root__0"
                 name="root"
                 type="checkbox"
                 value="0"
@@ -19315,7 +19315,7 @@ exports[`single fields > checkboxes field 1`] = `
               <input
                 class="PrivateSwitchBase-input emotion-5"
                 data-indeterminate="false"
-                id="root-1"
+                id="root__1"
                 name="root"
                 type="checkbox"
                 value="1"
@@ -19347,7 +19347,7 @@ exports[`single fields > checkboxes field 1`] = `
               <input
                 class="PrivateSwitchBase-input emotion-5"
                 data-indeterminate="false"
-                id="root-2"
+                id="root__2"
                 name="root"
                 type="checkbox"
                 value="2"
@@ -19379,7 +19379,7 @@ exports[`single fields > checkboxes field 1`] = `
               <input
                 class="PrivateSwitchBase-input emotion-5"
                 data-indeterminate="false"
-                id="root-3"
+                id="root__3"
                 name="root"
                 type="checkbox"
                 value="3"
@@ -19815,7 +19815,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                 checked=""
                 class="PrivateSwitchBase-input emotion-5"
                 data-indeterminate="false"
-                id="root-0"
+                id="root__0"
                 name="root"
                 type="checkbox"
                 value="0"
@@ -19848,7 +19848,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                 aria-describedby="root__description root__help"
                 class="PrivateSwitchBase-input emotion-5"
                 data-indeterminate="false"
-                id="root-1"
+                id="root__1"
                 name="root"
                 type="checkbox"
                 value="1"
@@ -19881,7 +19881,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                 aria-describedby="root__description root__help"
                 class="PrivateSwitchBase-input emotion-5"
                 data-indeterminate="false"
-                id="root-2"
+                id="root__2"
                 name="root"
                 type="checkbox"
                 value="2"
@@ -20304,7 +20304,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
                 aria-describedby="root__description"
                 class="PrivateSwitchBase-input emotion-5"
                 data-indeterminate="false"
-                id="root-0"
+                id="root__0"
                 name="root"
                 type="checkbox"
                 value="0"
@@ -20337,7 +20337,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
                 aria-describedby="root__description"
                 class="PrivateSwitchBase-input emotion-5"
                 data-indeterminate="false"
-                id="root-1"
+                id="root__1"
                 name="root"
                 type="checkbox"
                 value="1"
@@ -20370,7 +20370,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
                 aria-describedby="root__description"
                 class="PrivateSwitchBase-input emotion-5"
                 data-indeterminate="false"
-                id="root-2"
+                id="root__2"
                 name="root"
                 type="checkbox"
                 value="2"
@@ -37163,7 +37163,7 @@ exports[`single fields > radio field 1`] = `
             >
               <input
                 class="PrivateSwitchBase-input emotion-4"
-                id="root-0"
+                id="root__0"
                 name="root"
                 type="radio"
                 value="0"
@@ -37209,7 +37209,7 @@ exports[`single fields > radio field 1`] = `
             >
               <input
                 class="PrivateSwitchBase-input emotion-4"
-                id="root-1"
+                id="root__1"
                 name="root"
                 type="radio"
                 value="1"
@@ -37666,7 +37666,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
               <input
                 aria-describedby="root__description"
                 class="PrivateSwitchBase-input emotion-5"
-                id="root-0"
+                id="root__0"
                 name="root"
                 type="radio"
                 value="0"
@@ -37713,7 +37713,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
               <input
                 aria-describedby="root__description"
                 class="PrivateSwitchBase-input emotion-5"
-                id="root-1"
+                id="root__1"
                 name="root"
                 type="radio"
                 value="1"
@@ -41270,7 +41270,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
               <input
                 class="PrivateSwitchBase-input emotion-4"
                 data-indeterminate="false"
-                id="root-0"
+                id="root__0"
                 name="root"
                 type="checkbox"
                 value="0"
@@ -41303,7 +41303,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
                 class="PrivateSwitchBase-input emotion-4"
                 data-indeterminate="false"
                 disabled=""
-                id="root-1"
+                id="root__1"
                 name="root"
                 type="checkbox"
                 value="1"
@@ -41335,7 +41335,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
               <input
                 class="PrivateSwitchBase-input emotion-4"
                 data-indeterminate="false"
-                id="root-2"
+                id="root__2"
                 name="root"
                 type="checkbox"
                 value="2"
@@ -41367,7 +41367,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
               <input
                 class="PrivateSwitchBase-input emotion-4"
                 data-indeterminate="false"
-                id="root-3"
+                id="root__3"
                 name="root"
                 type="checkbox"
                 value="3"
@@ -43375,7 +43375,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
             >
               <input
                 class="PrivateSwitchBase-input emotion-4"
-                id="root-0"
+                id="root__0"
                 name="root"
                 type="radio"
                 value="0"
@@ -43422,7 +43422,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
               <input
                 class="PrivateSwitchBase-input emotion-4"
                 disabled=""
-                id="root-1"
+                id="root__1"
                 name="root"
                 type="radio"
                 value="1"
@@ -43821,7 +43821,7 @@ exports[`single fields > select field single choice form disabled using radio wi
               <input
                 class="PrivateSwitchBase-input emotion-4"
                 disabled=""
-                id="root-0"
+                id="root__0"
                 name="root"
                 type="radio"
                 value="0"
@@ -43868,7 +43868,7 @@ exports[`single fields > select field single choice form disabled using radio wi
               <input
                 class="PrivateSwitchBase-input emotion-4"
                 disabled=""
-                id="root-1"
+                id="root__1"
                 name="root"
                 type="radio"
                 value="1"
@@ -45823,7 +45823,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
               <input
                 class="PrivateSwitchBase-input emotion-4"
                 disabled=""
-                id="root-0"
+                id="root__0"
                 name="root"
                 type="radio"
                 value="0"
@@ -45870,7 +45870,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
               <input
                 class="PrivateSwitchBase-input emotion-4"
                 disabled=""
-                id="root-1"
+                id="root__1"
                 name="root"
                 type="radio"
                 value="1"

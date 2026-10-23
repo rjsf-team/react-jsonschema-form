@@ -8,7 +8,14 @@ import type {
   UiSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { bracketNameGenerator, buttonId, dotNotationNameGenerator, optionalControlsId, toFieldPath } from '@rjsf/utils';
+import {
+  besideOptionsId,
+  bracketNameGenerator,
+  buttonId,
+  dotNotationNameGenerator,
+  optionalControlsId,
+  toFieldPath,
+} from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -516,7 +523,7 @@ describe('Form omitExtraData and liveOmit', () => {
       liveOmit: 'onChange',
     });
 
-    const textNode = node.querySelector<HTMLInputElement>('#root_nested_key1-key')!;
+    const textNode = elementOf(node, '#root_nested_key1__key', HTMLInputElement);
     await user.clear(textNode);
     await user.type(textNode, 'key1new');
     await user.tab();
@@ -2014,7 +2021,7 @@ describe('setFieldValue()', () => {
     const { node } = createFormComponent({ schema });
     const ids = Array.from(node.querySelectorAll('[id]')).map((element) => element.id);
 
-    expect(node.querySelector('input#root_obj_')).toBeInTheDocument();
+    expect(node.querySelector('input[id="root_obj_%00"]')).toBeInTheDocument();
     expect(new Set(ids).size).toBe(ids.length);
   });
   it('keeps a root-level property named the empty string apart from the form itself', async () => {
@@ -2024,13 +2031,13 @@ describe('setFieldValue()', () => {
     };
     const { node, onChange } = createFormComponent({ schema, initialFormData: { other: 'kept' } });
 
-    const input = node.querySelector('input#root_');
+    const input = node.querySelector('input[id="root_%00"]');
     expect(input).toBeInTheDocument();
     await user.type(input!, 'x');
 
     expect(onChange).toHaveBeenLastCalledWith(
       expect.objectContaining({ formData: { '': 'x', other: 'kept' } }),
-      'root_',
+      'root_%00',
     );
   });
   it('Sets a field whose property name is the empty string', () => {
@@ -2056,7 +2063,7 @@ describe('setFieldValue()', () => {
 
     expect(onChange).toHaveBeenLastCalledWith(
       expect.objectContaining({ formData: { foo: { '': { bar: 'populated value' } } } }),
-      'root_foo__bar',
+      'root_foo_%00_bar',
     );
   });
 });
@@ -2381,7 +2388,7 @@ describe('optionalDataControls', () => {
 
     expect(new Set(ids).size).toEqual(ids.length);
     expect(ids).toContain(objectControlAddId);
-    expect(ids).toContain(optionalControlsId(`${objectId}_XxxOf`, 'Add'));
+    expect(ids).toContain(optionalControlsId(besideOptionsId(objectId), 'Add'));
   });
   it('renders the controls for an object and an array with an empty option list, and adds and removes the value', async () => {
     const emptyOptionsSchema: RJSFSchema = {
@@ -3233,7 +3240,7 @@ describe('enum-based array values do not update when dependencies change (#1357 
       initialFormData: { opt: false },
     });
 
-    const checkboxC = node.querySelector('#root_arr-0');
+    const checkboxC = node.querySelector('#root_arr__0');
     expect(checkboxC).not.toBeChecked();
     await user.click(checkboxC!);
     expect(checkboxC).toBeChecked();

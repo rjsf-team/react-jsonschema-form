@@ -7,6 +7,7 @@ import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
+import { elementOf } from '../../../testing/elementOf.ts';
 import Form from '../src/index.ts';
 import { errorLines, renderErrors } from '../src/utils.tsx';
 import WrappedForm from './WrappedForm.tsx';
@@ -369,15 +370,15 @@ describe('aria-describedby', () => {
 
   describe('a success message Mantine renders', () => {
     test.each([
-      ['its default id', {}, 'root-success'],
+      ['its default id', {}, 'root__success'],
       ['a successProps id', { successProps: { id: 'custom-success' } }, 'custom-success'],
       [
         'a wrapperProps.successProps id',
         { wrapperProps: { successProps: { id: 'wrapped-success' } } },
         'wrapped-success',
       ],
-      ['the default id for an empty successProps id', { successProps: { id: '' } }, 'root-success'],
-      ['the default id despite a wrapperProps id', { wrapperProps: { id: 'wrapped' } }, 'root-success'],
+      ['the default id for an empty successProps id', { successProps: { id: '' } }, 'root__success'],
+      ['the default id despite a wrapperProps id', { wrapperProps: { id: 'wrapped' } }, 'root__success'],
     ])('still describes the input, by %s', (_, uiOptions, successId) => {
       const { container } = renderThemed(
         {},
@@ -406,13 +407,13 @@ describe('aria-describedby', () => {
         'ui:options': { success: 'Looks good', wrapperProps: { id: 'wrapped' } },
       });
 
-      expect(container.querySelector('[id="root-success"]')).toHaveTextContent('Looks good');
-      expect(describedByValues(container)).toEqual([`${descriptionId('root')} root-success`]);
+      expect(container.querySelector('[id="root__success"]')).toHaveTextContent('Looks good');
+      expect(describedByValues(container)).toEqual([`${descriptionId('root')} root__success`]);
     });
 
     test.each([
-      ['the theme InputWrapper', { InputWrapper: { defaultProps: { success: 'Looks good' } } }, 'root-success'],
-      ['the theme Input', { Input: { defaultProps: { success: 'Looks good' } } }, 'root-success'],
+      ['the theme InputWrapper', { InputWrapper: { defaultProps: { success: 'Looks good' } } }, 'root__success'],
+      ['the theme Input', { Input: { defaultProps: { success: 'Looks good' } } }, 'root__success'],
       [
         'a theme successProps id',
         { InputWrapper: { defaultProps: { success: 'Looks good', successProps: { id: 'shared' } } } },
@@ -444,7 +445,7 @@ describe('aria-describedby', () => {
 
       expect(screen.getByRole(groupRole)).not.toHaveAttribute('aria-describedby');
       for (const option of screen.getAllByRole(optionRole)) {
-        expect(option).toHaveAttribute('aria-describedby', `${descriptionId('root')} root-success`);
+        expect(option).toHaveAttribute('aria-describedby', `${descriptionId('root')} root__success`);
       }
     });
 
@@ -1053,7 +1054,7 @@ describe('aria-describedby', () => {
       <WrappedForm schema={pick} uiSchema={{ pick: { 'ui:widget': 'radio' } }} validator={validator} />,
     );
 
-    const firstOption = container.querySelector('#root_pick__anyof_select-0')!;
+    const firstOption = elementOf(container, '#root_pick__anyof_select__0');
     expect(firstOption.closest('[role="radiogroup"]')).toHaveAccessibleName('Pick');
     expectReferencesResolve(container);
   });

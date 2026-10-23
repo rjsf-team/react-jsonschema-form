@@ -295,19 +295,16 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   const formWindow = () => formElement?.ownerDocument.defaultView;
 
   /** Attempts to focus on the field associated with the `error`. Uses the `property` field to compute path of the error
-   * field, then, using the `idPrefix` and `idSeparator` converts that path into an id. Then the input element with that
-   * id is attempted to be found in the form element. If it is located, then it is focused.
+   * field, then converts that path into the id the field renders under, as `fieldPathToId()` does for every field. Then
+   * the input element with that id is attempted to be found in the form element. If it is located, then it is focused.
    *
    * @param error - The error on which to focus
    */
   const focusOnError = (error: RJSFValidationError) => {
-    const { idPrefix = 'root', idSeparator = '_' } = committedProps;
-    const { property } = error;
-    const path = propertyToPath(property);
-    // The id of the root element is the idPrefix, so prepend it to the path
-    path.unshift(idPrefix);
-
-    const elementId = path.join(idSeparator);
+    const elementId = fieldPathToId(
+      fieldPathFromList(propertyToPath(error.property)),
+      current().registry.globalFormOptions,
+    );
     const view = formWindow();
     if (!formElement || !view) {
       return;

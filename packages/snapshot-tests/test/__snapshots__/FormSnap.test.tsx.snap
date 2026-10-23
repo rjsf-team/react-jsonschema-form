@@ -598,7 +598,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
               <label>
                 <span>
                   <input
-                    id="root_choices-0"
+                    id="root_choices__0"
                     name="root[choices][]"
                     type="checkbox"
                     value="0"
@@ -615,7 +615,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
               <label>
                 <span>
                   <input
-                    id="root_choices-1"
+                    id="root_choices__1"
                     name="root[choices][]"
                     type="checkbox"
                     value="1"
@@ -632,7 +632,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
               <label>
                 <span>
                   <input
-                    id="root_choices-2"
+                    id="root_choices__2"
                     name="root[choices][]"
                     type="checkbox"
                     value="2"
@@ -841,7 +841,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
               <label>
                 <span>
                   <input
-                    id="root_option-0"
+                    id="root_option__0"
                     name="root[option]"
                     type="radio"
                     value="0"
@@ -858,7 +858,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
               <label>
                 <span>
                   <input
-                    id="root_option-1"
+                    id="root_option__1"
                     name="root[option]"
                     type="radio"
                     value="1"
@@ -1909,7 +1909,7 @@ exports[`radio widget with options sharing a String() in the realValue format (#
           <label>
             <span>
               <input
-                id="root-0"
+                id="root__0"
                 name="root"
                 type="radio"
                 value="__rjsf_index:0"
@@ -1927,7 +1927,7 @@ exports[`radio widget with options sharing a String() in the realValue format (#
             <span>
               <input
                 checked=""
-                id="root-1"
+                id="root__1"
                 name="root"
                 type="radio"
                 value="__rjsf_index:1"
@@ -2338,7 +2338,7 @@ exports[`single fields > Cyclic schema 1`] = `
               <div>
                 <button
                   class="btn btn-sm btn-warning"
-                  id="root_child_child-button"
+                  id="root_child_child__expand"
                   type="button"
                 >
                   Expand Cycle
@@ -2592,7 +2592,7 @@ exports[`single fields > checkboxes field 1`] = `
           <label>
             <span>
               <input
-                id="root-0"
+                id="root__0"
                 name="root"
                 type="checkbox"
                 value="0"
@@ -2609,7 +2609,7 @@ exports[`single fields > checkboxes field 1`] = `
           <label>
             <span>
               <input
-                id="root-1"
+                id="root__1"
                 name="root"
                 type="checkbox"
                 value="1"
@@ -2626,7 +2626,7 @@ exports[`single fields > checkboxes field 1`] = `
           <label>
             <span>
               <input
-                id="root-2"
+                id="root__2"
                 name="root"
                 type="checkbox"
                 value="2"
@@ -2643,7 +2643,7 @@ exports[`single fields > checkboxes field 1`] = `
           <label>
             <span>
               <input
-                id="root-3"
+                id="root__3"
                 name="root"
                 type="checkbox"
                 value="3"
@@ -2704,7 +2704,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
             <input
               aria-describedby="root__description root__help"
               checked=""
-              id="root-0"
+              id="root__0"
               name="root"
               type="checkbox"
               value="0"
@@ -2720,7 +2720,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
           <span>
             <input
               aria-describedby="root__description root__help"
-              id="root-1"
+              id="root__1"
               name="root"
               type="checkbox"
               value="1"
@@ -2736,7 +2736,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
           <span>
             <input
               aria-describedby="root__description root__help"
-              id="root-2"
+              id="root__2"
               name="root"
               type="checkbox"
               value="2"
@@ -2802,7 +2802,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
             <span>
               <input
                 aria-describedby="root__description"
-                id="root-0"
+                id="root__0"
                 name="root"
                 type="checkbox"
                 value="0"
@@ -2820,7 +2820,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
             <span>
               <input
                 aria-describedby="root__description"
-                id="root-1"
+                id="root__1"
                 name="root"
                 type="checkbox"
                 value="1"
@@ -2838,7 +2838,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
             <span>
               <input
                 aria-describedby="root__description"
-                id="root-2"
+                id="root__2"
                 name="root"
                 type="checkbox"
                 value="2"
@@ -6093,7 +6093,7 @@ exports[`single fields > radio field 1`] = `
           <label>
             <span>
               <input
-                id="root-0"
+                id="root__0"
                 name="root"
                 type="radio"
                 value="0"
@@ -6110,7 +6110,7 @@ exports[`single fields > radio field 1`] = `
           <label>
             <span>
               <input
-                id="root-1"
+                id="root__1"
                 name="root"
                 type="radio"
                 value="1"
@@ -6171,7 +6171,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
             <span>
               <input
                 aria-describedby="root__description"
-                id="root-0"
+                id="root__0"
                 name="root"
                 type="radio"
                 value="0"
@@ -6189,7 +6189,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
             <span>
               <input
                 aria-describedby="root__description"
-                id="root-1"
+                id="root__1"
                 name="root"
                 type="radio"
                 value="1"
@@ -6556,7 +6556,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
           <label>
             <span>
               <input
-                id="root-0"
+                id="root__0"
                 name="root"
                 type="checkbox"
                 value="0"
@@ -6574,7 +6574,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
             <span>
               <input
                 disabled=""
-                id="root-1"
+                id="root__1"
                 name="root"
                 type="checkbox"
                 value="1"
@@ -6591,7 +6591,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
           <label>
             <span>
               <input
-                id="root-2"
+                id="root__2"
                 name="root"
                 type="checkbox"
                 value="2"
@@ -6608,7 +6608,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
           <label>
             <span>
               <input
-                id="root-3"
+                id="root__3"
                 name="root"
                 type="checkbox"
                 value="3"
@@ -6784,7 +6784,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
           <label>
             <span>
               <input
-                id="root-0"
+                id="root__0"
                 name="root"
                 type="radio"
                 value="0"
@@ -6802,7 +6802,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
             <span>
               <input
                 disabled=""
-                id="root-1"
+                id="root__1"
                 name="root"
                 type="radio"
                 value="1"
@@ -6847,7 +6847,7 @@ exports[`single fields > select field single choice form disabled using radio wi
             <span>
               <input
                 disabled=""
-                id="root-0"
+                id="root__0"
                 name="root"
                 type="radio"
                 value="0"
@@ -6865,7 +6865,7 @@ exports[`single fields > select field single choice form disabled using radio wi
             <span>
               <input
                 disabled=""
-                id="root-1"
+                id="root__1"
                 name="root"
                 type="radio"
                 value="1"
@@ -7068,7 +7068,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
             <span>
               <input
                 disabled=""
-                id="root-0"
+                id="root__0"
                 name="root"
                 type="radio"
                 value="0"
@@ -7086,7 +7086,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
             <span>
               <input
                 disabled=""
-                id="root-1"
+                id="root__1"
                 name="root"
                 type="radio"
                 value="1"

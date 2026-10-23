@@ -387,7 +387,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     aria-describedby="root_person_race__description"
                                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                                     data-with-error-styles="true"
-                                    id="root_person_race-0"
+                                    id="root_person_race__0"
                                     name="root_person_race"
                                     type="checkbox"
                                     value="0"
@@ -412,7 +412,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 >
                                   <label
                                     class="m_8ee546b8 mantine-Checkbox-label"
-                                    for="root_person_race-0"
+                                    for="root_person_race__0"
                                   >
                                     American Indian / Alaska Native
                                   </label>
@@ -436,7 +436,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     aria-describedby="root_person_race__description"
                                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                                     data-with-error-styles="true"
-                                    id="root_person_race-1"
+                                    id="root_person_race__1"
                                     name="root_person_race"
                                     type="checkbox"
                                     value="1"
@@ -461,7 +461,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 >
                                   <label
                                     class="m_8ee546b8 mantine-Checkbox-label"
-                                    for="root_person_race-1"
+                                    for="root_person_race__1"
                                   >
                                     Asian
                                   </label>
@@ -485,7 +485,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     aria-describedby="root_person_race__description"
                                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                                     data-with-error-styles="true"
-                                    id="root_person_race-2"
+                                    id="root_person_race__2"
                                     name="root_person_race"
                                     type="checkbox"
                                     value="2"
@@ -510,7 +510,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 >
                                   <label
                                     class="m_8ee546b8 mantine-Checkbox-label"
-                                    for="root_person_race-2"
+                                    for="root_person_race__2"
                                   >
                                     Black / African American
                                   </label>
@@ -534,7 +534,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     aria-describedby="root_person_race__description"
                                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                                     data-with-error-styles="true"
-                                    id="root_person_race-3"
+                                    id="root_person_race__3"
                                     name="root_person_race"
                                     type="checkbox"
                                     value="3"
@@ -559,7 +559,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 >
                                   <label
                                     class="m_8ee546b8 mantine-Checkbox-label"
-                                    for="root_person_race-3"
+                                    for="root_person_race__3"
                                   >
                                     Native Hawaiian / Other Pacific Islander
                                   </label>
@@ -583,7 +583,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     aria-describedby="root_person_race__description"
                                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                                     data-with-error-styles="true"
-                                    id="root_person_race-4"
+                                    id="root_person_race__4"
                                     name="root_person_race"
                                     type="checkbox"
                                     value="4"
@@ -608,7 +608,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 >
                                   <label
                                     class="m_8ee546b8 mantine-Checkbox-label"
-                                    for="root_person_race-4"
+                                    for="root_person_race__4"
                                   >
                                     White
                                   </label>
@@ -1774,7 +1774,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                             checked=""
                                             class="mantine-focus-auto m_8a3dbb89 mantine-Radio-radio"
                                             data-with-error-styles="true"
-                                            id="root_employment-0"
+                                            id="root_employment__0"
                                             name="root_employment"
                                             type="radio"
                                             value="0"
@@ -1799,7 +1799,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                         >
                                           <label
                                             class="m_8ee546b8 mantine-Radio-label"
-                                            for="root_employment-0"
+                                            for="root_employment__0"
                                           >
                                             Company
                                           </label>
@@ -1821,7 +1821,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                           <input
                                             class="mantine-focus-auto m_8a3dbb89 mantine-Radio-radio"
                                             data-with-error-styles="true"
-                                            id="root_employment-1"
+                                            id="root_employment__1"
                                             name="root_employment"
                                             type="radio"
                                             value="1"
@@ -1846,7 +1846,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                         >
                                           <label
                                             class="m_8ee546b8 mantine-Radio-label"
-                                            for="root_employment-1"
+                                            for="root_employment__1"
                                           >
                                             Education
                                           </label>
@@ -1868,7 +1868,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                           <input
                                             class="mantine-focus-auto m_8a3dbb89 mantine-Radio-radio"
                                             data-with-error-styles="true"
-                                            id="root_employment-2"
+                                            id="root_employment__2"
                                             name="root_employment"
                                             type="radio"
                                             value="2"
@@ -1893,7 +1893,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                         >
                                           <label
                                             class="m_8ee546b8 mantine-Radio-label"
-                                            for="root_employment-2"
+                                            for="root_employment__2"
                                           >
                                             Other
                                           </label>
@@ -3278,7 +3278,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     aria-describedby="root_person_race__description"
                                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                                     data-with-error-styles="true"
-                                    id="root_person_race-0"
+                                    id="root_person_race__0"
                                     name="root_person_race"
                                     type="checkbox"
                                     value="0"
@@ -3303,7 +3303,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 >
                                   <label
                                     class="m_8ee546b8 mantine-Checkbox-label"
-                                    for="root_person_race-0"
+                                    for="root_person_race__0"
                                   >
                                     American Indian / Alaska Native
                                   </label>
@@ -3327,7 +3327,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     aria-describedby="root_person_race__description"
                                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                                     data-with-error-styles="true"
-                                    id="root_person_race-1"
+                                    id="root_person_race__1"
                                     name="root_person_race"
                                     type="checkbox"
                                     value="1"
@@ -3352,7 +3352,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 >
                                   <label
                                     class="m_8ee546b8 mantine-Checkbox-label"
-                                    for="root_person_race-1"
+                                    for="root_person_race__1"
                                   >
                                     Asian
                                   </label>
@@ -3376,7 +3376,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     aria-describedby="root_person_race__description"
                                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                                     data-with-error-styles="true"
-                                    id="root_person_race-2"
+                                    id="root_person_race__2"
                                     name="root_person_race"
                                     type="checkbox"
                                     value="2"
@@ -3401,7 +3401,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 >
                                   <label
                                     class="m_8ee546b8 mantine-Checkbox-label"
-                                    for="root_person_race-2"
+                                    for="root_person_race__2"
                                   >
                                     Black / African American
                                   </label>
@@ -3425,7 +3425,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     aria-describedby="root_person_race__description"
                                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                                     data-with-error-styles="true"
-                                    id="root_person_race-3"
+                                    id="root_person_race__3"
                                     name="root_person_race"
                                     type="checkbox"
                                     value="3"
@@ -3450,7 +3450,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 >
                                   <label
                                     class="m_8ee546b8 mantine-Checkbox-label"
-                                    for="root_person_race-3"
+                                    for="root_person_race__3"
                                   >
                                     Native Hawaiian / Other Pacific Islander
                                   </label>
@@ -3474,7 +3474,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     aria-describedby="root_person_race__description"
                                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                                     data-with-error-styles="true"
-                                    id="root_person_race-4"
+                                    id="root_person_race__4"
                                     name="root_person_race"
                                     type="checkbox"
                                     value="4"
@@ -3499,7 +3499,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 >
                                   <label
                                     class="m_8ee546b8 mantine-Checkbox-label"
-                                    for="root_person_race-4"
+                                    for="root_person_race__4"
                                   >
                                     White
                                   </label>
@@ -4663,7 +4663,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                           <input
                                             class="mantine-focus-auto m_8a3dbb89 mantine-Radio-radio"
                                             data-with-error-styles="true"
-                                            id="root_employment-0"
+                                            id="root_employment__0"
                                             name="root_employment"
                                             type="radio"
                                             value="0"
@@ -4688,7 +4688,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                         >
                                           <label
                                             class="m_8ee546b8 mantine-Radio-label"
-                                            for="root_employment-0"
+                                            for="root_employment__0"
                                           >
                                             Company
                                           </label>
@@ -4712,7 +4712,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                             checked=""
                                             class="mantine-focus-auto m_8a3dbb89 mantine-Radio-radio"
                                             data-with-error-styles="true"
-                                            id="root_employment-1"
+                                            id="root_employment__1"
                                             name="root_employment"
                                             type="radio"
                                             value="1"
@@ -4737,7 +4737,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                         >
                                           <label
                                             class="m_8ee546b8 mantine-Radio-label"
-                                            for="root_employment-1"
+                                            for="root_employment__1"
                                           >
                                             Education
                                           </label>
@@ -4759,7 +4759,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                           <input
                                             class="mantine-focus-auto m_8a3dbb89 mantine-Radio-radio"
                                             data-with-error-styles="true"
-                                            id="root_employment-2"
+                                            id="root_employment__2"
                                             name="root_employment"
                                             type="radio"
                                             value="2"
@@ -4784,7 +4784,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                         >
                                           <label
                                             class="m_8ee546b8 mantine-Radio-label"
-                                            for="root_employment-2"
+                                            for="root_employment__2"
                                           >
                                             Other
                                           </label>
@@ -6212,7 +6212,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     aria-describedby="root_person_race__description"
                                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                                     data-with-error-styles="true"
-                                    id="root_person_race-0"
+                                    id="root_person_race__0"
                                     name="root_person_race"
                                     type="checkbox"
                                     value="0"
@@ -6237,7 +6237,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 >
                                   <label
                                     class="m_8ee546b8 mantine-Checkbox-label"
-                                    for="root_person_race-0"
+                                    for="root_person_race__0"
                                   >
                                     American Indian / Alaska Native
                                   </label>
@@ -6261,7 +6261,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     aria-describedby="root_person_race__description"
                                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                                     data-with-error-styles="true"
-                                    id="root_person_race-1"
+                                    id="root_person_race__1"
                                     name="root_person_race"
                                     type="checkbox"
                                     value="1"
@@ -6286,7 +6286,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 >
                                   <label
                                     class="m_8ee546b8 mantine-Checkbox-label"
-                                    for="root_person_race-1"
+                                    for="root_person_race__1"
                                   >
                                     Asian
                                   </label>
@@ -6310,7 +6310,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     aria-describedby="root_person_race__description"
                                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                                     data-with-error-styles="true"
-                                    id="root_person_race-2"
+                                    id="root_person_race__2"
                                     name="root_person_race"
                                     type="checkbox"
                                     value="2"
@@ -6335,7 +6335,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 >
                                   <label
                                     class="m_8ee546b8 mantine-Checkbox-label"
-                                    for="root_person_race-2"
+                                    for="root_person_race__2"
                                   >
                                     Black / African American
                                   </label>
@@ -6359,7 +6359,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     aria-describedby="root_person_race__description"
                                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                                     data-with-error-styles="true"
-                                    id="root_person_race-3"
+                                    id="root_person_race__3"
                                     name="root_person_race"
                                     type="checkbox"
                                     value="3"
@@ -6384,7 +6384,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 >
                                   <label
                                     class="m_8ee546b8 mantine-Checkbox-label"
-                                    for="root_person_race-3"
+                                    for="root_person_race__3"
                                   >
                                     Native Hawaiian / Other Pacific Islander
                                   </label>
@@ -6408,7 +6408,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     aria-describedby="root_person_race__description"
                                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                                     data-with-error-styles="true"
-                                    id="root_person_race-4"
+                                    id="root_person_race__4"
                                     name="root_person_race"
                                     type="checkbox"
                                     value="4"
@@ -6433,7 +6433,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 >
                                   <label
                                     class="m_8ee546b8 mantine-Checkbox-label"
-                                    for="root_person_race-4"
+                                    for="root_person_race__4"
                                   >
                                     White
                                   </label>
@@ -7597,7 +7597,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                           <input
                                             class="mantine-focus-auto m_8a3dbb89 mantine-Radio-radio"
                                             data-with-error-styles="true"
-                                            id="root_employment-0"
+                                            id="root_employment__0"
                                             name="root_employment"
                                             type="radio"
                                             value="0"
@@ -7622,7 +7622,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                         >
                                           <label
                                             class="m_8ee546b8 mantine-Radio-label"
-                                            for="root_employment-0"
+                                            for="root_employment__0"
                                           >
                                             Company
                                           </label>
@@ -7644,7 +7644,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                           <input
                                             class="mantine-focus-auto m_8a3dbb89 mantine-Radio-radio"
                                             data-with-error-styles="true"
-                                            id="root_employment-1"
+                                            id="root_employment__1"
                                             name="root_employment"
                                             type="radio"
                                             value="1"
@@ -7669,7 +7669,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                         >
                                           <label
                                             class="m_8ee546b8 mantine-Radio-label"
-                                            for="root_employment-1"
+                                            for="root_employment__1"
                                           >
                                             Education
                                           </label>
@@ -7693,7 +7693,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                             checked=""
                                             class="mantine-focus-auto m_8a3dbb89 mantine-Radio-radio"
                                             data-with-error-styles="true"
-                                            id="root_employment-2"
+                                            id="root_employment__2"
                                             name="root_employment"
                                             type="radio"
                                             value="2"
@@ -7718,7 +7718,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                         >
                                           <label
                                             class="m_8ee546b8 mantine-Radio-label"
-                                            for="root_employment-2"
+                                            for="root_employment__2"
                                           >
                                             Other
                                           </label>
@@ -8198,7 +8198,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     aria-describedby="root_person_race__description"
                                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                                     data-with-error-styles="true"
-                                    id="root_person_race-0"
+                                    id="root_person_race__0"
                                     name="root_person_race"
                                     type="checkbox"
                                     value="0"
@@ -8223,7 +8223,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 >
                                   <label
                                     class="m_8ee546b8 mantine-Checkbox-label"
-                                    for="root_person_race-0"
+                                    for="root_person_race__0"
                                   >
                                     American Indian / Alaska Native
                                   </label>
@@ -8247,7 +8247,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     aria-describedby="root_person_race__description"
                                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                                     data-with-error-styles="true"
-                                    id="root_person_race-1"
+                                    id="root_person_race__1"
                                     name="root_person_race"
                                     type="checkbox"
                                     value="1"
@@ -8272,7 +8272,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 >
                                   <label
                                     class="m_8ee546b8 mantine-Checkbox-label"
-                                    for="root_person_race-1"
+                                    for="root_person_race__1"
                                   >
                                     Asian
                                   </label>
@@ -8296,7 +8296,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     aria-describedby="root_person_race__description"
                                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                                     data-with-error-styles="true"
-                                    id="root_person_race-2"
+                                    id="root_person_race__2"
                                     name="root_person_race"
                                     type="checkbox"
                                     value="2"
@@ -8321,7 +8321,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 >
                                   <label
                                     class="m_8ee546b8 mantine-Checkbox-label"
-                                    for="root_person_race-2"
+                                    for="root_person_race__2"
                                   >
                                     Black / African American
                                   </label>
@@ -8345,7 +8345,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     aria-describedby="root_person_race__description"
                                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                                     data-with-error-styles="true"
-                                    id="root_person_race-3"
+                                    id="root_person_race__3"
                                     name="root_person_race"
                                     type="checkbox"
                                     value="3"
@@ -8370,7 +8370,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 >
                                   <label
                                     class="m_8ee546b8 mantine-Checkbox-label"
-                                    for="root_person_race-3"
+                                    for="root_person_race__3"
                                   >
                                     Native Hawaiian / Other Pacific Islander
                                   </label>
@@ -8394,7 +8394,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     aria-describedby="root_person_race__description"
                                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                                     data-with-error-styles="true"
-                                    id="root_person_race-4"
+                                    id="root_person_race__4"
                                     name="root_person_race"
                                     type="checkbox"
                                     value="4"
@@ -8419,7 +8419,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 >
                                   <label
                                     class="m_8ee546b8 mantine-Checkbox-label"
-                                    for="root_person_race-4"
+                                    for="root_person_race__4"
                                   >
                                     White
                                   </label>
@@ -9585,7 +9585,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                             checked=""
                                             class="mantine-focus-auto m_8a3dbb89 mantine-Radio-radio"
                                             data-with-error-styles="true"
-                                            id="root_employment-0"
+                                            id="root_employment__0"
                                             name="root_employment"
                                             type="radio"
                                             value="0"
@@ -9610,7 +9610,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                         >
                                           <label
                                             class="m_8ee546b8 mantine-Radio-label"
-                                            for="root_employment-0"
+                                            for="root_employment__0"
                                           >
                                             Company
                                           </label>
@@ -9632,7 +9632,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                           <input
                                             class="mantine-focus-auto m_8a3dbb89 mantine-Radio-radio"
                                             data-with-error-styles="true"
-                                            id="root_employment-1"
+                                            id="root_employment__1"
                                             name="root_employment"
                                             type="radio"
                                             value="1"
@@ -9657,7 +9657,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                         >
                                           <label
                                             class="m_8ee546b8 mantine-Radio-label"
-                                            for="root_employment-1"
+                                            for="root_employment__1"
                                           >
                                             Education
                                           </label>
@@ -9679,7 +9679,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                           <input
                                             class="mantine-focus-auto m_8a3dbb89 mantine-Radio-radio"
                                             data-with-error-styles="true"
-                                            id="root_employment-2"
+                                            id="root_employment__2"
                                             name="root_employment"
                                             type="radio"
                                             value="2"
@@ -9704,7 +9704,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                         >
                                           <label
                                             class="m_8ee546b8 mantine-Radio-label"
-                                            for="root_employment-2"
+                                            for="root_employment__2"
                                           >
                                             Other
                                           </label>
@@ -11032,7 +11032,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                               aria-describedby="root_person_race__description"
                               class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                               data-with-error-styles="true"
-                              id="root_person_race-0"
+                              id="root_person_race__0"
                               name="root_person_race"
                               type="checkbox"
                               value="0"
@@ -11057,7 +11057,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                           >
                             <label
                               class="m_8ee546b8 mantine-Checkbox-label"
-                              for="root_person_race-0"
+                              for="root_person_race__0"
                             >
                               American Indian / Alaska Native
                             </label>
@@ -11081,7 +11081,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                               aria-describedby="root_person_race__description"
                               class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                               data-with-error-styles="true"
-                              id="root_person_race-1"
+                              id="root_person_race__1"
                               name="root_person_race"
                               type="checkbox"
                               value="1"
@@ -11106,7 +11106,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                           >
                             <label
                               class="m_8ee546b8 mantine-Checkbox-label"
-                              for="root_person_race-1"
+                              for="root_person_race__1"
                             >
                               Asian
                             </label>
@@ -11130,7 +11130,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                               aria-describedby="root_person_race__description"
                               class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                               data-with-error-styles="true"
-                              id="root_person_race-2"
+                              id="root_person_race__2"
                               name="root_person_race"
                               type="checkbox"
                               value="2"
@@ -11155,7 +11155,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                           >
                             <label
                               class="m_8ee546b8 mantine-Checkbox-label"
-                              for="root_person_race-2"
+                              for="root_person_race__2"
                             >
                               Black / African American
                             </label>
@@ -11179,7 +11179,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                               aria-describedby="root_person_race__description"
                               class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                               data-with-error-styles="true"
-                              id="root_person_race-3"
+                              id="root_person_race__3"
                               name="root_person_race"
                               type="checkbox"
                               value="3"
@@ -11204,7 +11204,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                           >
                             <label
                               class="m_8ee546b8 mantine-Checkbox-label"
-                              for="root_person_race-3"
+                              for="root_person_race__3"
                             >
                               Native Hawaiian / Other Pacific Islander
                             </label>
@@ -11228,7 +11228,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                               aria-describedby="root_person_race__description"
                               class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                               data-with-error-styles="true"
-                              id="root_person_race-4"
+                              id="root_person_race__4"
                               name="root_person_race"
                               type="checkbox"
                               value="4"
@@ -11253,7 +11253,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                           >
                             <label
                               class="m_8ee546b8 mantine-Checkbox-label"
-                              for="root_person_race-4"
+                              for="root_person_race__4"
                             >
                               White
                             </label>
@@ -12586,7 +12586,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                               aria-describedby="root_person_race__description"
                               class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                               data-with-error-styles="true"
-                              id="root_person_race-0"
+                              id="root_person_race__0"
                               name="root_person_race"
                               type="checkbox"
                               value="0"
@@ -12611,7 +12611,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                           >
                             <label
                               class="m_8ee546b8 mantine-Checkbox-label"
-                              for="root_person_race-0"
+                              for="root_person_race__0"
                             >
                               American Indian / Alaska Native
                             </label>
@@ -12635,7 +12635,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                               aria-describedby="root_person_race__description"
                               class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                               data-with-error-styles="true"
-                              id="root_person_race-1"
+                              id="root_person_race__1"
                               name="root_person_race"
                               type="checkbox"
                               value="1"
@@ -12660,7 +12660,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                           >
                             <label
                               class="m_8ee546b8 mantine-Checkbox-label"
-                              for="root_person_race-1"
+                              for="root_person_race__1"
                             >
                               Asian
                             </label>
@@ -12684,7 +12684,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                               aria-describedby="root_person_race__description"
                               class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                               data-with-error-styles="true"
-                              id="root_person_race-2"
+                              id="root_person_race__2"
                               name="root_person_race"
                               type="checkbox"
                               value="2"
@@ -12709,7 +12709,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                           >
                             <label
                               class="m_8ee546b8 mantine-Checkbox-label"
-                              for="root_person_race-2"
+                              for="root_person_race__2"
                             >
                               Black / African American
                             </label>
@@ -12733,7 +12733,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                               aria-describedby="root_person_race__description"
                               class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                               data-with-error-styles="true"
-                              id="root_person_race-3"
+                              id="root_person_race__3"
                               name="root_person_race"
                               type="checkbox"
                               value="3"
@@ -12758,7 +12758,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                           >
                             <label
                               class="m_8ee546b8 mantine-Checkbox-label"
-                              for="root_person_race-3"
+                              for="root_person_race__3"
                             >
                               Native Hawaiian / Other Pacific Islander
                             </label>
@@ -12782,7 +12782,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                               aria-describedby="root_person_race__description"
                               class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                               data-with-error-styles="true"
-                              id="root_person_race-4"
+                              id="root_person_race__4"
                               name="root_person_race"
                               type="checkbox"
                               value="4"
@@ -12807,7 +12807,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                           >
                             <label
                               class="m_8ee546b8 mantine-Checkbox-label"
-                              for="root_person_race-4"
+                              for="root_person_race__4"
                             >
                               White
                             </label>

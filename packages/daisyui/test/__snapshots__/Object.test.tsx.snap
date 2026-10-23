@@ -345,7 +345,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                   <div>
                     <label
                       class="label"
-                      for="root_customField-key"
+                      for="root_customField__key"
                     >
                       <span
                         class="label-text"
@@ -355,7 +355,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                     </label>
                     <input
                       class="input input-bordered"
-                      id="root_customField-key"
+                      id="root_customField__key"
                       type="text"
                       value="customField"
                     />
@@ -1945,7 +1945,7 @@ exports[`object fields > additionalProperties 1`] = `
                   <div>
                     <label
                       class="label"
-                      for="root_foo-key"
+                      for="root_foo__key"
                     >
                       <span
                         class="label-text"
@@ -1955,7 +1955,7 @@ exports[`object fields > additionalProperties 1`] = `
                     </label>
                     <input
                       class="input input-bordered"
-                      id="root_foo-key"
+                      id="root_foo__key"
                       type="text"
                       value="foo"
                     />
@@ -2102,7 +2102,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                   <div>
                     <label
                       class="label"
-                      for="root_foo-key"
+                      for="root_foo__key"
                     >
                       <span
                         class="label-text"
@@ -2121,7 +2121,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                           aria-expanded="false"
                           aria-haspopup="listbox"
                           class="btn btn-outline w-full text-left flex justify-between items-center "
-                          id="root_foo-key"
+                          id="root_foo__key"
                           role="combobox"
                           tabindex="0"
                           type="button"
@@ -2345,7 +2345,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
                   <div>
                     <label
                       class="label"
-                      for="root_foo-key"
+                      for="root_foo__key"
                     >
                       <span
                         class="label-text"
@@ -2355,7 +2355,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
                     </label>
                     <input
                       class="input input-bordered"
-                      id="root_foo-key"
+                      id="root_foo__key"
                       type="text"
                       value="foo"
                     />
@@ -2531,7 +2531,7 @@ exports[`object fields > additionalProperties, description 1`] = `
                   <div>
                     <label
                       class="label"
-                      for="root_foo-key"
+                      for="root_foo__key"
                     >
                       <span
                         class="label-text"
@@ -2541,7 +2541,7 @@ exports[`object fields > additionalProperties, description 1`] = `
                     </label>
                     <input
                       class="input input-bordered"
-                      id="root_foo-key"
+                      id="root_foo__key"
                       type="text"
                       value="foo"
                     />
@@ -2699,7 +2699,7 @@ exports[`object fields > additionalProperties, label off 1`] = `
                   <div>
                     <label
                       class="label"
-                      for="root_foo-key"
+                      for="root_foo__key"
                     >
                       <span
                         class="label-text"
@@ -2709,7 +2709,7 @@ exports[`object fields > additionalProperties, label off 1`] = `
                     </label>
                     <input
                       class="input input-bordered"
-                      id="root_foo-key"
+                      id="root_foo__key"
                       type="text"
                       value="foo"
                     />
@@ -2856,7 +2856,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
                   <div>
                     <label
                       class="label"
-                      for="root_foo-key"
+                      for="root_foo__key"
                     >
                       <span
                         class="label-text"
@@ -2866,7 +2866,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
                     </label>
                     <input
                       class="input input-bordered"
-                      id="root_foo-key"
+                      id="root_foo__key"
                       type="text"
                       value="foo"
                     />
@@ -3049,7 +3049,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                   <div>
                     <label
                       class="label"
-                      for="root_foo-key"
+                      for="root_foo__key"
                     >
                       <span
                         class="label-text"
@@ -3068,7 +3068,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                           aria-expanded="false"
                           aria-haspopup="listbox"
                           class="btn btn-outline w-full text-left flex justify-between items-center "
-                          id="root_foo-key"
+                          id="root_foo__key"
                           role="combobox"
                           tabindex="0"
                           type="button"
@@ -3281,7 +3281,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                   <div>
                     <label
                       class="label"
-                      for="root_foo-key"
+                      for="root_foo__key"
                     >
                       <span
                         class="label-text"
@@ -3300,7 +3300,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                           aria-expanded="false"
                           aria-haspopup="listbox"
                           class="btn btn-outline w-full text-left flex justify-between items-center "
-                          id="root_foo-key"
+                          id="root_foo__key"
                           role="combobox"
                           tabindex="0"
                           type="button"
@@ -3820,7 +3820,7 @@ exports[`object fields > show add button and fields if additionalProperties is t
                   <div>
                     <label
                       class="label"
-                      for="root_additionalProperty-key"
+                      for="root_additionalProperty__key"
                     >
                       <span
                         class="label-text"
@@ -3830,7 +3830,7 @@ exports[`object fields > show add button and fields if additionalProperties is t
                     </label>
                     <input
                       class="input input-bordered"
-                      id="root_additionalProperty-key"
+                      id="root_additionalProperty__key"
                       type="text"
                       value="additionalProperty"
                     />
@@ -4003,7 +4003,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                   <div>
                     <label
                       class="label"
-                      for="root_foo-key"
+                      for="root_foo__key"
                     >
                       <span
                         class="label-text"
@@ -4013,7 +4013,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                     </label>
                     <input
                       class="input input-bordered"
-                      id="root_foo-key"
+                      id="root_foo__key"
                       type="text"
                       value="foo"
                     />
@@ -4354,7 +4354,7 @@ exports[`object fields > with title and description > show add button and fields
                   <div>
                     <label
                       class="label"
-                      for="root_additionalProperty-key"
+                      for="root_additionalProperty__key"
                     >
                       <span
                         class="label-text"
@@ -4364,7 +4364,7 @@ exports[`object fields > with title and description > show add button and fields
                     </label>
                     <input
                       class="input input-bordered"
-                      id="root_additionalProperty-key"
+                      id="root_additionalProperty__key"
                       type="text"
                       value="additionalProperty"
                     />
@@ -4537,7 +4537,7 @@ exports[`object fields > with title and description from both > additionalProper
                   <div>
                     <label
                       class="label"
-                      for="root_foo-key"
+                      for="root_foo__key"
                     >
                       <span
                         class="label-text"
@@ -4547,7 +4547,7 @@ exports[`object fields > with title and description from both > additionalProper
                     </label>
                     <input
                       class="input input-bordered"
-                      id="root_foo-key"
+                      id="root_foo__key"
                       type="text"
                       value="foo"
                     />
@@ -4888,7 +4888,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                   <div>
                     <label
                       class="label"
-                      for="root_foo-key"
+                      for="root_foo__key"
                     >
                       <span
                         class="label-text"
@@ -4898,7 +4898,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                     </label>
                     <input
                       class="input input-bordered"
-                      id="root_foo-key"
+                      id="root_foo__key"
                       type="text"
                       value="foo"
                     />
@@ -5239,7 +5239,7 @@ exports[`object fields > with title and description from uiSchema > show add but
                   <div>
                     <label
                       class="label"
-                      for="root_additionalProperty-key"
+                      for="root_additionalProperty__key"
                     >
                       <span
                         class="label-text"
@@ -5249,7 +5249,7 @@ exports[`object fields > with title and description from uiSchema > show add but
                     </label>
                     <input
                       class="input input-bordered"
-                      id="root_additionalProperty-key"
+                      id="root_additionalProperty__key"
                       type="text"
                       value="additionalProperty"
                     />
@@ -5397,7 +5397,7 @@ exports[`object fields > with title and description with global label off > addi
                     <input
                       aria-label="foo Key"
                       class="input input-bordered"
-                      id="root_foo-key"
+                      id="root_foo__key"
                       type="text"
                       value="foo"
                     />
@@ -5626,7 +5626,7 @@ exports[`object fields > with title and description with global label off > show
                     <input
                       aria-label="additionalProperty Key"
                       class="input input-bordered"
-                      id="root_additionalProperty-key"
+                      id="root_additionalProperty__key"
                       type="text"
                       value="additionalProperty"
                     />

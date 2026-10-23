@@ -20,28 +20,28 @@ const field: FieldPresentation = {
 
 describe('getNestedControlPresentation()', () => {
   it('names a control that draws no label by its text, with no parts of its own', () => {
-    const plan = getNestedControlPresentation({ id: 'root_a-key', label: 'a Key' });
+    const plan = getNestedControlPresentation({ id: 'root_a__key', label: 'a Key' });
 
     expect(plan.label).toMatchObject({ by: 'none', text: 'a Key' });
     expect([plan.description.by, plan.help.by, plan.errors.by]).toEqual(['none', 'none', 'none']);
     expect(plan.describedBy).toEqual([]);
-    expect(plan.control).toEqual({ id: 'root_a-key', attributes: { 'aria-label': 'a Key' } });
+    expect(plan.control).toEqual({ id: 'root_a__key', attributes: { 'aria-label': 'a Key' } });
   });
 
   it('has a control that draws its label name itself by it, required where it is', () => {
-    const plan = getNestedControlPresentation({ id: 'root_a-key', label: 'a Key', showLabel: true, required: true });
+    const plan = getNestedControlPresentation({ id: 'root_a__key', label: 'a Key', showLabel: true, required: true });
 
     expect(plan.label).toMatchObject({ by: 'self', text: 'a Key', requiredMarker: true });
-    expect(plan.control).toEqual({ id: 'root_a-key', attributes: { required: true } });
+    expect(plan.control).toEqual({ id: 'root_a__key', attributes: { required: true } });
   });
 
   it('leaves a control its template labels beside it named by that label alone, over showLabel', () => {
-    const plan = getNestedControlPresentation({ id: 'root_a-key', label: 'a Key', labelledByTemplate: true });
+    const plan = getNestedControlPresentation({ id: 'root_a__key', label: 'a Key', labelledByTemplate: true });
 
     expect(plan.label).toMatchObject({ by: 'template', text: 'a Key' });
-    expect(plan.control).toEqual({ id: 'root_a-key', attributes: {} });
+    expect(plan.control).toEqual({ id: 'root_a__key', attributes: {} });
     expect(
-      getNestedControlPresentation({ id: 'root_a-key', label: 'a Key', showLabel: true, labelledByTemplate: true })
+      getNestedControlPresentation({ id: 'root_a__key', label: 'a Key', showLabel: true, labelledByTemplate: true })
         .label.by,
     ).toBe('template');
   });

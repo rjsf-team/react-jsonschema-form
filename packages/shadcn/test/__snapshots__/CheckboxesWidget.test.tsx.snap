@@ -18,7 +18,7 @@ exports[`CheckboxesWidget > inline 1`] = `
         data-slot="checkbox"
         data-state="unchecked"
         disabled=""
-        id="_id-0"
+        id="_id__0"
         role="checkbox"
         type="button"
         value="0"
@@ -26,7 +26,7 @@ exports[`CheckboxesWidget > inline 1`] = `
       <label
         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
         data-slot="label"
-        for="_id-0"
+        for="_id__0"
       >
         A
       </label>
@@ -53,7 +53,7 @@ exports[`CheckboxesWidget > simple 1`] = `
         data-slot="checkbox"
         data-state="unchecked"
         disabled=""
-        id="_id-0"
+        id="_id__0"
         role="checkbox"
         type="button"
         value="0"
@@ -61,7 +61,7 @@ exports[`CheckboxesWidget > simple 1`] = `
       <label
         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
         data-slot="label"
-        for="_id-0"
+        for="_id__0"
       >
         A
       </label>

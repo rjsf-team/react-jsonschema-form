@@ -283,7 +283,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       expect(node.querySelector<HTMLInputElement>('input[inputmode=numeric]')).toBeInTheDocument();
       expectToHaveBeenCalledWithFormData(onChange, { aKey: 42 }, 'root_aKey');
       // The key of the additional property is still editable alongside the type selector
-      expect(node.querySelector<HTMLInputElement>('#root_aKey-key')).toHaveAttribute('value', 'aKey');
+      expect(node.querySelector<HTMLInputElement>('#root_aKey__key')).toHaveAttribute('value', 'aKey');
     });
 
     it('keeps the rest of the schema when rendering the chosen type', async () => {
@@ -532,7 +532,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       // value field and render it a second time alongside the option's own
       expect(node.querySelectorAll('#root_multi_a')).toHaveLength(1);
       // ...under a key input and a remove button that would rename or delete a property the schema describes
-      expect(node.querySelector('#root_multi_a-key')).not.toBeInTheDocument();
+      expect(node.querySelector('#root_multi_a__key')).not.toBeInTheDocument();
       expect(node.querySelector('#root_multi_a__remove')).not.toBeInTheDocument();
       expect(node.querySelector('.rjsf-object-property-expand button')).not.toBeInTheDocument();
     });
@@ -547,7 +547,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       // The keyword says what the object takes as much as `additionalProperties` would, and the `true` written in for
       // a schema that says nothing would take precedence over it, offering an add button for keys it forbids
       expect(node.querySelector('.rjsf-object-property-expand button')).not.toBeInTheDocument();
-      expect(node.querySelector('#root_a-key')).not.toBeInTheDocument();
+      expect(node.querySelector('#root_a__key')).not.toBeInTheDocument();
     });
 
     it('drops the option selector when a composed union is pinned to null', async () => {
@@ -643,7 +643,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       // `string` the selector has to go back to and so put every other type out of reach of a cleared value
       expect(Array.from(select.options).find((o) => o.selected)?.textContent).toBe('boolean');
       expect(node.querySelector<HTMLInputElement>('input[type=checkbox]')).toBeInTheDocument();
-      expect(node.querySelector<HTMLInputElement>('#root_aKey-key')).toHaveAttribute('value', 'aKey');
+      expect(node.querySelector<HTMLInputElement>('#root_aKey__key')).toHaveAttribute('value', 'aKey');
     });
 
     it('renders the title and description of a union whose field renders no label of its own', () => {
@@ -1232,7 +1232,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
 
       // `null` is a value the property is allowed to hold, so it survives `omitExtraData` and the key stays editable
       expectToHaveBeenCalledWithFormData(onChange, { aKey: null }, 'root_aKey');
-      expect(node.querySelector<HTMLInputElement>('#root_aKey-key')).toHaveAttribute('value', 'aKey');
+      expect(node.querySelector<HTMLInputElement>('#root_aKey__key')).toHaveAttribute('value', 'aKey');
       expect(
         Array.from(node.querySelectorAll<HTMLOptionElement>('select option')).find((o) => o.selected),
       ).toHaveTextContent('null');

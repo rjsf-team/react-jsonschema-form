@@ -2,6 +2,7 @@ import { Grid, GridItem, Input } from '@chakra-ui/react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WrapIfAdditionalTemplateProps } from '@rjsf/utils';
 import {
   ADDITIONAL_PROPERTY_FLAG,
+  additionalKeyId,
   AdditionalPropertyKeySelect,
   buttonId,
   hasAdditionalKeyLabel,
@@ -53,7 +54,7 @@ export default function WrapIfAdditionalTemplate<
 
   return (
     <Grid
-      key={`${id}-key`}
+      key={additionalKeyId(id)}
       templateColumns='repeat(11, 1fr)'
       className={classNames}
       style={style}
@@ -63,7 +64,7 @@ export default function WrapIfAdditionalTemplate<
       <GridItem colSpan={5} style={{ marginTop: hasDescription ? '36px' : undefined }}>
         {propertyNamesEnum ? (
           <AdditionalPropertyKeySelect<T, S, F>
-            id={`${id}-key`}
+            id={additionalKeyId(id)}
             label={keyLabel}
             hideLabel={!hasKeyLabel}
             value={keyName}
@@ -75,13 +76,13 @@ export default function WrapIfAdditionalTemplate<
             registry={registry}
           />
         ) : (
-          <Field required={required} label={hasKeyLabel ? keyLabel : undefined} id={`${id}-key`}>
+          <Field required={required} label={hasKeyLabel ? keyLabel : undefined} id={additionalKeyId(id)}>
             <Input
               key={keyName}
               defaultValue={keyName}
               disabled={disabled || readonly}
-              id={`${id}-key`}
-              name={`${id}-key`}
+              id={additionalKeyId(id)}
+              name={additionalKeyId(id)}
               onBlur={!readonly ? onKeyRenameBlur : undefined}
               type='text'
               mb={1}

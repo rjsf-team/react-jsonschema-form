@@ -247,9 +247,9 @@ describe('aria-labelledby', () => {
     const partNames = () => screen.getAllByRole('combobox').map((part) => part.getAttribute('aria-label'));
     const { rerender } = renderField({ type: 'string', title: 'Birthday' }, { 'ui:widget': 'alt-date' });
 
-    expect(screen.getAllByRole('combobox').map((part) => part.id)).toEqual(['root_year', 'root_month', 'root_day']);
+    expect(screen.getAllByRole('combobox').map((part) => part.id)).toEqual(['root__year', 'root__month', 'root__day']);
     for (const part of screen.getAllByRole('combobox')) {
-      expect(part).toHaveAccessibleName(`Birthday, ${part.id.replace('root_', '')}`);
+      expect(part).toHaveAccessibleName(`Birthday, ${part.id.replace('root__', '')}`);
       expect(part).not.toHaveAttribute('aria-labelledby');
     }
     expect(screen.getByText('Birthday')).toBeVisible();
@@ -928,9 +928,9 @@ describe("the field's id is on the element a user focuses", () => {
   test.each<[string, RJSFSchema, UiSchema, string]>([
     ...controls.map(([name, x, ui]): [string, RJSFSchema, UiSchema, string] => [name, x, ui, 'root_x']),
     ['password input', { type: 'string' }, { 'ui:widget': 'password' }, 'root_x'],
-    ['radio group', enumSchema, { 'ui:widget': 'radio' }, 'root_x-0'],
-    ['checkboxes group', checkboxesSchema, { 'ui:widget': 'checkboxes' }, 'root_x-0'],
-    ['alt-date', { type: 'string' }, { 'ui:widget': 'alt-date' }, 'root_x_year'],
+    ['radio group', enumSchema, { 'ui:widget': 'radio' }, 'root_x__0'],
+    ['checkboxes group', checkboxesSchema, { 'ui:widget': 'checkboxes' }, 'root_x__0'],
+    ['alt-date', { type: 'string' }, { 'ui:widget': 'alt-date' }, 'root_x__year'],
   ])('moves focus to a %s with errors when focusOnFirstError is set', async (_, x, ui, focusedId) => {
     render(
       <WrappedForm

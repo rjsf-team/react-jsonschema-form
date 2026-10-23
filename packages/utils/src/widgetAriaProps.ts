@@ -25,9 +25,8 @@ export type WidgetAriaPropsInput<
  * element may have.
  *
  * The selected option's description id is added only while `SelectedOptionDescription` renders it, the one element the
- * widget renders itself, so the description of the selected option is still announced. Otherwise the id is left out:
- * no element has it, and it may be another field's description id, as `root_when_year__description` is for both the
- * year select of `when` and a `when_year` property.
+ * widget renders itself, so the description of the selected option is still announced. Otherwise the id is left out,
+ * since no element has it.
  *
  * @param props - The widget's props, of which `id`, `presentation`, `aria-label`, `aria-describedby` and those
  *   `SelectedOptionDescription` reads are used

@@ -145,6 +145,37 @@ describe('fieldPathToId()', () => {
       fieldPathToId(toFieldPath('b', fp('a')), GLOBAL_FORM_OPTIONS),
     );
   });
+  test('writes no whitespace into the id, so it stays one id in a space-separated id list (#5558)', () => {
+    const id = fieldPathToId(toFieldPath('Do you have any pets?', toFieldPath('petOwner')), GLOBAL_FORM_OPTIONS);
+    expect(id).toBe('root_petOwner_Do%20you%20have%20any%20pets?');
+    expect(fieldPathToId(toFieldPath('a\tb\nc\fd\re'), GLOBAL_FORM_OPTIONS)).toBe('root_a%09b%0Ac%0Cd%0De');
+  });
+  test('writes different property names as different ids, the escape character included', () => {
+    const ids = ['a b', 'a%20b', 'a_b', 'a%5Fb', '', '%00', '_', '%'].map((name) =>
+      fieldPathToId(toFieldPath(name), GLOBAL_FORM_OPTIONS),
+    );
+    expect(ids).toEqual([
+      'root_a%20b',
+      'root_a%2520b',
+      'root_a_b',
+      'root_a%255Fb',
+      'root_%00',
+      'root_%2500',
+      'root_%5F',
+      'root_%25',
+    ]);
+  });
+  test('writes no `__`, which joins a field id to the name of one of its parts', () => {
+    expect(fieldPathToId(toFieldPath('_description', toFieldPath('a')), GLOBAL_FORM_OPTIONS)).toBe(
+      'root_a_%5Fdescription',
+    );
+    expect(fieldPathToId(toFieldPath('b', toFieldPath('a_')), GLOBAL_FORM_OPTIONS)).toBe('root_a%5F_b');
+    expect(fieldPathToId(toFieldPath('a__b'), GLOBAL_FORM_OPTIONS)).toBe('root_a%5F%5Fb');
+    expect(fieldPathToId(toFieldPath('description', toFieldPath('')), GLOBAL_FORM_OPTIONS)).toBe(
+      'root_%00_description',
+    );
+    expect(fieldPathToId(toFieldPath('snake_case_name'), GLOBAL_FORM_OPTIONS)).toBe('root_snake_case_name');
+  });
 });
 
 describe('fieldPathToName()', () => {

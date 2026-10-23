@@ -118,13 +118,13 @@ describe("fluentui-rc widgets are named by their label and carry the field's id 
     ['number input', { type: 'number' }, { 'ui:widget': 'updown' }, 'spinbutton', 'root_x'],
     ['slider', { type: 'number' }, { 'ui:widget': 'range' }, 'slider', 'root_x'],
     // The group's wrapper carries the field's id but isn't focusable, so focus goes to its first radio, as core's does
-    ['radio group', { type: 'string', enum: ['a', 'b'] }, { 'ui:widget': 'radio' }, 'radiogroup', 'root_x-0'],
+    ['radio group', { type: 'string', enum: ['a', 'b'] }, { 'ui:widget': 'radio' }, 'radiogroup', 'root_x__0'],
     [
       'checkboxes group',
       { type: 'array', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true },
       { 'ui:widget': 'checkboxes' },
       'group',
-      'root_x-0',
+      'root_x__0',
     ],
     ['select', { type: 'string', enum: ['a', 'b'] }, {}, 'combobox', 'root_x'],
   ];
@@ -307,7 +307,7 @@ describe("fluentui-rc widgets are named by their label and carry the field's id 
       />,
     );
 
-    expect(screen.getByRole('textbox', { name: 'foo Key' })).toHaveAttribute('id', 'root_foo-key');
+    expect(screen.getByRole('textbox', { name: 'foo Key' })).toHaveAttribute('id', 'root_foo__key');
     expectReferencesResolve(container);
   });
 });
@@ -323,7 +323,7 @@ describe('fluentui-rc WrapIfAdditionalTemplate', () => {
       />,
     );
 
-    expect(screen.getByRole('textbox', { name: 'first Key' })).toHaveAttribute('id', 'root_first-key');
+    expect(screen.getByRole('textbox', { name: 'first Key' })).toHaveAttribute('id', 'root_first__key');
   });
 });
 

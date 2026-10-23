@@ -6,6 +6,7 @@ import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { ThemeProvider } from 'react-bootstrap';
 
+import { elementOf } from '../../../testing/elementOf.ts';
 import CheckboxWidget from '../src/CheckboxWidget/index.ts';
 import Form, { generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
 import { makeWidgetMockProps } from './helpers/createMocks.ts';
@@ -232,12 +233,12 @@ describe('react-bootstrap focusOnFirstError', () => {
     ['select', { type: 'string', enum: ['a', 'b'] }, {}, '#root_x'],
     ['range', { type: 'number' }, { 'ui:widget': 'range' }, '#root_x'],
     // A group's wrapper carries the field's id but isn't focusable, so its first control is focused
-    ['radio group', { type: 'string', enum: ['a', 'b'] }, { 'ui:widget': 'radio' }, '#root_x-0'],
+    ['radio group', { type: 'string', enum: ['a', 'b'] }, { 'ui:widget': 'radio' }, '#root_x__0'],
     [
       'checkboxes group',
       { type: 'array', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true },
       { 'ui:widget': 'checkboxes' },
-      '#root_x-0',
+      '#root_x__0',
     ],
   ])('moves focus to a %s with errors', async (_, x, ui, focused) => {
     const { container } = render(
@@ -292,8 +293,8 @@ describe('react-bootstrap templates', () => {
       <Form schema={{ type: 'object', properties: { pet }, required: ['pet'] }} validator={validator} />,
     );
 
-    expect(container.querySelector('#root_pet_XxxOf__title')).toHaveTextContent(/^Pet$/);
-    expect(container.querySelector('#root_pet_XxxOf__title')?.parentElement).toHaveTextContent(/^Pet\*$/);
+    expect(container.querySelector('#root_pet__XxxOf__title')).toHaveTextContent(/^Pet$/);
+    expect(container.querySelector('#root_pet__XxxOf__title')?.parentElement).toHaveTextContent(/^Pet\*$/);
     expect(container.querySelector('select#root_pet__anyof_select')).toHaveAccessibleName('Pet');
   });
 
@@ -314,7 +315,7 @@ describe('react-bootstrap templates', () => {
       <Form schema={pick} uiSchema={{ pick: { 'ui:widget': 'radio' } }} validator={validator} />,
     );
 
-    const firstOption = container.querySelector('#root_pick__anyof_select-0')!;
+    const firstOption = elementOf(container, '#root_pick__anyof_select__0');
     expect(firstOption.closest('[role="radiogroup"]')).toHaveAccessibleName('Pick');
     expectReferencesResolve(container);
   });
@@ -488,7 +489,7 @@ describe('react-bootstrap labels and key inputs', () => {
       />,
     );
 
-    expect(screen.getByRole('textbox', { name: 'first Key' })).toHaveAttribute('id', 'root_first-key');
+    expect(screen.getByRole('textbox', { name: 'first Key' })).toHaveAttribute('id', 'root_first__key');
   });
 });
 

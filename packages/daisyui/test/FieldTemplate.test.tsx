@@ -4,6 +4,7 @@ import { fieldLabelId, toFieldPath } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 
+import { elementOf } from '../../../testing/elementOf.ts';
 import type { DaisyGlobalUISchemaOptions, UiSchema as DaisyUiSchema } from '../src/index.ts';
 import Form, { generateTemplates } from '../src/index.ts';
 import DaisyFieldTemplate from '../src/templates/FieldTemplate/FieldTemplate.tsx';
@@ -537,7 +538,7 @@ describe('FieldTemplate', () => {
         />,
       );
 
-      const keySelect = document.getElementById('root_alpha-key')!;
+      const keySelect = elementOf(document, '#root_alpha__key');
       expect(keySelect).toHaveAccessibleName('alpha Key');
       expect(keySelect).toHaveAccessibleDescription('');
     });

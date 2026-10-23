@@ -1,6 +1,7 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WrapIfAdditionalTemplateProps } from '@rjsf/utils';
 import {
   ADDITIONAL_PROPERTY_FLAG,
+  additionalKeyId,
   AdditionalPropertyKeySelect,
   buttonId,
   hasAdditionalKeyLabel,
@@ -67,11 +68,11 @@ export default function WrapIfAdditionalTemplate<
       <div className='row'>
         <div className='col-xs-5 form-additional'>
           <div className='form-group'>
-            {hasKeyLabel && <Label label={keyLabel} required={required} id={`${id}-key`} />}
+            {hasKeyLabel && <Label label={keyLabel} required={required} id={additionalKeyId(id)} />}
             {hasKeyLabel && rawDescription && <div>&nbsp;</div>}
             {propertyNamesEnum ? (
               <AdditionalPropertyKeySelect<T, S, F>
-                id={`${id}-key`}
+                id={additionalKeyId(id)}
                 label={keyLabel}
                 hideLabel
                 labelledByTemplate={hasKeyLabel}
@@ -88,7 +89,7 @@ export default function WrapIfAdditionalTemplate<
                 key={keyName}
                 className='form-control'
                 type='text'
-                id={`${id}-key`}
+                id={additionalKeyId(id)}
                 aria-label={hasKeyLabel ? undefined : keyLabel}
                 onBlur={onKeyRenameBlur}
                 defaultValue={keyName}

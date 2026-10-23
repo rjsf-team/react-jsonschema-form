@@ -8,6 +8,7 @@ import type {
 } from '@rjsf/utils';
 import {
   ADDITIONAL_PROPERTY_FLAG,
+  additionalKeyId,
   AdditionalPropertyKeySelect,
   buttonId,
   hasAdditionalKeyLabel,
@@ -77,7 +78,7 @@ export default function WrapIfAdditionalTemplate<
             {propertyNamesEnum ? (
               <>
                 <AdditionalPropertyKeySelect<T, S, F>
-                  id={`${id}-key`}
+                  id={additionalKeyId(id)}
                   label={keyLabel}
                   hideLabel={!hasKeyLabel}
                   value={keyName}
@@ -102,8 +103,8 @@ export default function WrapIfAdditionalTemplate<
                 required={required}
                 description={hasDescription ? '\u00A0' : undefined}
                 disabled={disabled || readonly}
-                id={`${id}-key`}
-                name={`${id}-key`}
+                id={additionalKeyId(id)}
+                name={additionalKeyId(id)}
                 onBlur={!readonly ? onKeyRenameBlur : undefined}
               />
             )}

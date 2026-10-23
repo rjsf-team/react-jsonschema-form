@@ -7,6 +7,7 @@ import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { ConfigProvider, theme } from 'antd';
 
+import { elementOf } from '../../../testing/elementOf.ts';
 import Form, { generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
 import CheckboxWidget from '../src/widgets/CheckboxWidget/index.tsx';
 
@@ -286,7 +287,7 @@ describe('antd specific tests', () => {
       />,
     );
 
-    expect(container.querySelector('#root_hour')).toBeInTheDocument();
+    expect(container.querySelector('#root__hour')).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'Now' }));
     expect(onChange.mock.lastCall?.[0].formData).toMatch(/T\d{2}:\d{2}:\d{2}/);
   });
@@ -539,7 +540,7 @@ describe('antd specific tests', () => {
       <Form schema={{ type: 'object', properties: { pet }, required: ['pet'] }} validator={validator} />,
     );
 
-    const heading = container.querySelector('#root_pet_XxxOf__title');
+    const heading = container.querySelector('#root_pet__XxxOf__title');
     expect(heading).toHaveTextContent(/^Pet$/);
     expect(heading).not.toHaveClass('ant-form-item-required');
     expect(heading?.closest('label')).toHaveClass('ant-form-item-required');
@@ -557,7 +558,7 @@ describe('antd specific tests', () => {
       />,
     );
 
-    const firstOption = container.querySelector('#root_pick__anyof_select-0')!;
+    const firstOption = elementOf(container, '#root_pick__anyof_select__0');
     expect(firstOption.closest('[role="radiogroup"]')).toHaveAccessibleName('Pick');
     expectReferencesResolve(container);
   });
@@ -644,16 +645,16 @@ describe('antd focusOnFirstError', () => {
     ['select', { type: 'string', enum: ['a', 'b'] }, {}, '#root_x'],
     ['date picker', { type: 'string', format: 'date' }, {}, '#root_x'],
     // A group's wrapper carries the field's id but isn't focusable, so its first control is focused
-    ['radio group', { type: 'string', enum: ['a', 'b'] }, { 'ui:widget': 'radio' }, '#root_x-0'],
+    ['radio group', { type: 'string', enum: ['a', 'b'] }, { 'ui:widget': 'radio' }, '#root_x__0'],
     [
       'checkboxes group',
       { type: 'array', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true },
       { 'ui:widget': 'checkboxes' },
-      '#root_x-0',
+      '#root_x__0',
     ],
     // The date parts' group carries the field's id but isn't focusable, so its first part is focused
-    ['alt-date group', { type: 'string' }, { 'ui:widget': 'alt-date' }, '#root_x_year'],
-    ['alt-datetime group', { type: 'string' }, { 'ui:widget': 'alt-datetime' }, '#root_x_year'],
+    ['alt-date group', { type: 'string' }, { 'ui:widget': 'alt-date' }, '#root_x__year'],
+    ['alt-datetime group', { type: 'string' }, { 'ui:widget': 'alt-datetime' }, '#root_x__year'],
     // The slider's root carries the field's id but isn't focusable, so the handle inside it is focused
     ['slider', { type: 'number' }, { 'ui:widget': 'range' }, '#root_x [role="slider"]'],
   ])('moves focus to a %s with errors', async (_, x, ui, focused) => {
@@ -717,7 +718,7 @@ describe("antd widgets carry their field's plan on the element a user focuses", 
       />,
     );
 
-    expect(screen.getByRole('textbox', { name: 'first Key' })).toHaveAttribute('id', 'root_first-key');
+    expect(screen.getByRole('textbox', { name: 'first Key' })).toHaveAttribute('id', 'root_first__key');
   });
 
   test.each([
@@ -1057,7 +1058,7 @@ describe('antd renders a field a named field wraps once', () => {
       />,
     );
 
-    expect(container.querySelectorAll('input#root_foo-key')).toHaveLength(1);
+    expect(container.querySelectorAll('input#root_foo__key')).toHaveLength(1);
     expect(container.querySelectorAll('input#root_foo')).toHaveLength(1);
     expect(container.querySelectorAll('button#root_foo__remove')).toHaveLength(1);
   });

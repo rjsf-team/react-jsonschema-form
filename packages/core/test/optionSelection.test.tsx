@@ -60,7 +60,7 @@ describe('option selection as form state', () => {
 
     expect(selectOf(node, 'root__anyof_select')).toHaveValue('1');
     expect(ids(node, '#root_b')).toHaveLength(1);
-    expect(node.querySelector('#root_b-key')).toBeNull();
+    expect(node.querySelector('#root_b__key')).toBeNull();
 
     await user.selectOptions(selectOf(node, 'root__anyof_select'), 'A');
 
@@ -84,7 +84,7 @@ describe('option selection as form state', () => {
 
     expect(selectOf(node, 'root__anyof_select')).toHaveValue('0');
     // Under A nothing evaluates `b`, so the keyword describing the extra keys renders it, with its key and remove button
-    expect(node.querySelector('#root_b-key')).toHaveValue('b');
+    expect(node.querySelector('#root_b__key')).toHaveValue('b');
     expect(ids(node, '#root_b')).toHaveLength(1);
   });
 
@@ -436,7 +436,7 @@ describe('option selection as form state', () => {
 
     expect(selectOf(container, 'root__oneof_select')).toHaveValue('1');
     expect(ids(container, '#root_z')).toHaveLength(1);
-    expect(container.querySelector('#root_z-key')).toBeNull();
+    expect(container.querySelector('#root_z__key')).toBeNull();
   });
 
   it('seeds a new key renamed onto a name the selected option declares from that option (#5461)', async () => {
@@ -450,7 +450,7 @@ describe('option selection as form state', () => {
     };
     const { node, onChange } = createFormComponent({ schema, initialFormData: {} });
     await user.click(elementOf(node, '.rjsf-object-property-expand button'));
-    const keyInput = elementOf(node, '#root_newKey-key');
+    const keyInput = elementOf(node, '#root_newKey__key');
 
     await user.clear(keyInput);
     await user.type(keyInput, 'count');
@@ -459,7 +459,7 @@ describe('option selection as form state', () => {
     expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { count: 0 } }), 'root');
     expect(ids(node, '#root_count')).toHaveLength(1);
     expect(elementOf(node, '#root_count')).toHaveValue('0');
-    expect(node.querySelector('#root_count-key')).toBeNull();
+    expect(node.querySelector('#root_count__key')).toBeNull();
   });
 
   it("seeds a key renamed onto a name the selected option declares from that option's entry of the uiSchema's option list", async () => {
@@ -476,7 +476,7 @@ describe('option selection as form state', () => {
     const uiSchema: UiSchema = { anyOf: [optionUiSchema, optionUiSchema] };
     const { node, onChange } = createFormComponent({ schema, uiSchema, initialFormData: {} });
     await user.click(elementOf(node, '.rjsf-object-property-expand button'));
-    const keyInput = elementOf(node, '#root_newKey-key');
+    const keyInput = elementOf(node, '#root_newKey__key');
 
     await user.clear(keyInput);
     await user.type(keyInput, 'count');
@@ -499,7 +499,7 @@ describe('option selection as form state', () => {
     const uiSchema: UiSchema = { 'ui:field': 'ObjectField', 'ui:fieldReplacesAnyOrOneOf': true };
     const { node, onChange } = createFormComponent({ schema, uiSchema, initialFormData: {} });
     await user.click(elementOf(node, '.rjsf-object-property-expand button'));
-    const keyInput = elementOf(node, '#root_newKey-key');
+    const keyInput = elementOf(node, '#root_newKey__key');
 
     await user.clear(keyInput);
     await user.type(keyInput, 'count');
@@ -507,7 +507,7 @@ describe('option selection as form state', () => {
 
     expect(node.querySelector('#root__anyof_select')).toBeNull();
     expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { count: 'New Value' } }), 'root');
-    expect(elementOf(node, '#root_count-key')).toHaveValue('count');
+    expect(elementOf(node, '#root_count__key')).toHaveValue('count');
     expect(elementOf(node, '#root_count')).toHaveValue('New Value');
   });
 
@@ -524,7 +524,7 @@ describe('option selection as form state', () => {
       },
     };
     const { node, onChange } = createFormComponent({ schema, initialFormData: { v: { id: 'a', extra: 'x' } } });
-    expect(elementOf(node, '#root_v_extra-key')).toHaveValue('extra');
+    expect(elementOf(node, '#root_v_extra__key')).toHaveValue('extra');
     expect(ids(node, '#root_v_extra')).toHaveLength(1);
 
     await user.type(elementOf(node, '#root_v_extra'), 'y');
@@ -545,7 +545,7 @@ describe('option selection as form state', () => {
 
     expect(node.querySelector('#root_db_host')).toHaveValue('h');
     expect(node.querySelector('#root_db_port')).toHaveValue('1');
-    expect(ids(node, '#root_db-key')).toHaveLength(1);
+    expect(ids(node, '#root_db__key')).toHaveLength(1);
   });
 
   it("renders an enum the object's extra-key keyword declares as a select beside such an option (#5462)", () => {
@@ -1371,12 +1371,12 @@ describe('option selection as form state', () => {
       initialFormData: { b: 'v' },
     });
     expect(node.querySelector('#switch')).toHaveTextContent('1');
-    expect(node.querySelector('#root_b-key')).toBeNull();
+    expect(node.querySelector('#root_b__key')).toBeNull();
 
     await user.click(elementOf(node, '#switch'));
 
     expect(node.querySelector('#switch')).toHaveTextContent('0');
-    expect(node.querySelector('#root_b-key')).toHaveValue('b');
+    expect(node.querySelector('#root_b__key')).toHaveValue('b');
   });
 
   it('shares the selection with a custom AnyOfField that passes copies of the options', async () => {
@@ -1400,7 +1400,7 @@ describe('option selection as form state', () => {
     await user.click(elementOf(node, '#switch'));
 
     expect(node.querySelector('#switch')).toHaveTextContent('0');
-    expect(node.querySelector('#root_b-key')).toHaveValue('b');
+    expect(node.querySelector('#root_b__key')).toHaveValue('b');
   });
 });
 
@@ -1568,7 +1568,7 @@ describe('cycle expansion as form state', () => {
 
   it('keeps an expansion when the field mounts again, and moves it with the array item', async () => {
     const { node, rerender } = createFormComponent({ schema, initialFormData: [{ name: 'a' }, { name: 'b' }] });
-    await user.click(elementOf(node, '#root_0_child-button'));
+    await user.click(elementOf(node, '#root_0_child__expand'));
     expect(node.querySelector('#root_0_child_name')).toBeInTheDocument();
 
     rerender({ schema, uiSchema: { items: { 'ui:field': () => null } } });
@@ -1577,7 +1577,7 @@ describe('cycle expansion as form state', () => {
 
     await user.click(node.querySelectorAll('.rjsf-array-item-move-down')[0]);
 
-    expect(node.querySelector('#root_0_child-button')).toBeInTheDocument();
+    expect(node.querySelector('#root_0_child__expand')).toBeInTheDocument();
     expect(node.querySelector('#root_1_child_name')).toBeInTheDocument();
   });
 
@@ -1587,13 +1587,13 @@ describe('cycle expansion as form state', () => {
       initialFormData: [{ name: 'a' }, { name: 'b' }],
       transformChange: (_next, previous) => previous,
     });
-    await user.click(elementOf(node, '#root_0_child-button'));
+    await user.click(elementOf(node, '#root_0_child__expand'));
 
     await user.click(node.querySelectorAll('.rjsf-array-item-move-down')[0]);
 
     expect(node.querySelector('#root_0_name')).toHaveValue('a');
     expect(node.querySelector('#root_0_child_name')).toBeInTheDocument();
-    expect(node.querySelector('#root_1_child-button')).toBeInTheDocument();
+    expect(node.querySelector('#root_1_child__expand')).toBeInTheDocument();
   });
 
   it('keeps an expansion on the item transformChange leaves where it was when it rewrites a reorder', async () => {
@@ -1604,30 +1604,30 @@ describe('cycle expansion as form state', () => {
       transformChange: (next, previous) =>
         rewrites && Array.isArray(previous) ? [previous[0], { ...previous[1], name: 'b!' }] : next,
     });
-    await user.click(elementOf(node, '#root_0_child-button'));
+    await user.click(elementOf(node, '#root_0_child__expand'));
     rewrites = true;
 
     await user.click(node.querySelectorAll('.rjsf-array-item-move-down')[0]);
 
     expect(node.querySelector('#root_0_name')).toHaveValue('a');
     expect(node.querySelector('#root_0_child_name')).toBeInTheDocument();
-    expect(node.querySelector('#root_1_child-button')).toBeInTheDocument();
+    expect(node.querySelector('#root_1_child__expand')).toBeInTheDocument();
   });
 
   it('moves an expansion with its array item on a reorder of items holding equal data', async () => {
     const { node } = createFormComponent({ schema, initialFormData: [{ name: 'a' }, { name: 'a' }] });
-    await user.click(elementOf(node, '#root_0_child-button'));
+    await user.click(elementOf(node, '#root_0_child__expand'));
 
     await user.click(node.querySelectorAll('.rjsf-array-item-move-down')[0]);
 
-    expect(node.querySelector('#root_0_child-button')).toBeInTheDocument();
+    expect(node.querySelector('#root_0_child__expand')).toBeInTheDocument();
     expect(node.querySelector('#root_1_child_name')).toBeInTheDocument();
   });
 
   it('keeps an expansion through a reset', async () => {
     const ref = createFormRef();
     const { node } = createFormComponent({ ref, schema, initialFormData: [{ name: 'a' }] });
-    await user.click(elementOf(node, '#root_0_child-button'));
+    await user.click(elementOf(node, '#root_0_child__expand'));
 
     act(() => handleOf(ref).reset());
 

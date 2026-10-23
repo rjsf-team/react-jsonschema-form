@@ -195,13 +195,13 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
               >
                 <label
                   class="control-label"
-                  for="root_customField-key"
+                  for="root_customField__key"
                 >
                   customField Key
                 </label>
                 <input
                   class="form-control"
-                  id="root_customField-key"
+                  id="root_customField__key"
                   type="text"
                   value="customField"
                 />
@@ -1178,13 +1178,13 @@ exports[`object fields > additionalProperties 1`] = `
               >
                 <label
                   class="control-label"
-                  for="root_foo-key"
+                  for="root_foo__key"
                 >
                   foo Key
                 </label>
                 <input
                   class="form-control"
-                  id="root_foo-key"
+                  id="root_foo__key"
                   type="text"
                   value="foo"
                 />
@@ -1288,7 +1288,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
               >
                 <label
                   class="control-label"
-                  for="root_foo-key"
+                  for="root_foo__key"
                 >
                   foo Key
                 </label>
@@ -1297,8 +1297,8 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                 </div>
                 <select
                   class="form-control"
-                  id="root_foo-key"
-                  name="root_foo-key"
+                  id="root_foo__key"
+                  name="root_foo__key"
                 >
                   <option
                     value="0"
@@ -1423,13 +1423,13 @@ exports[`object fields > additionalProperties, array type 1`] = `
               >
                 <label
                   class="control-label"
-                  for="root_foo-key"
+                  for="root_foo__key"
                 >
                   foo Key
                 </label>
                 <input
                   class="form-control"
-                  id="root_foo-key"
+                  id="root_foo__key"
                   type="text"
                   value="foo"
                 />
@@ -1547,7 +1547,7 @@ exports[`object fields > additionalProperties, description 1`] = `
               >
                 <label
                   class="control-label"
-                  for="root_foo-key"
+                  for="root_foo__key"
                 >
                   foo Key
                 </label>
@@ -1556,7 +1556,7 @@ exports[`object fields > additionalProperties, description 1`] = `
                 </div>
                 <input
                   class="form-control"
-                  id="root_foo-key"
+                  id="root_foo__key"
                   type="text"
                   value="foo"
                 />
@@ -1667,13 +1667,13 @@ exports[`object fields > additionalProperties, label off 1`] = `
               >
                 <label
                   class="control-label"
-                  for="root_foo-key"
+                  for="root_foo__key"
                 >
                   foo Key
                 </label>
                 <input
                   class="form-control"
-                  id="root_foo-key"
+                  id="root_foo__key"
                   type="text"
                   value="foo"
                 />
@@ -1777,13 +1777,13 @@ exports[`object fields > additionalProperties, object type 1`] = `
               >
                 <label
                   class="control-label"
-                  for="root_foo-key"
+                  for="root_foo__key"
                 >
                   foo Key
                 </label>
                 <input
                   class="form-control"
-                  id="root_foo-key"
+                  id="root_foo__key"
                   type="text"
                   value="foo"
                 />
@@ -1902,14 +1902,14 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
               >
                 <label
                   class="control-label"
-                  for="root_foo-key"
+                  for="root_foo__key"
                 >
                   foo Key
                 </label>
                 <select
                   class="form-control"
-                  id="root_foo-key"
-                  name="root_foo-key"
+                  id="root_foo__key"
+                  name="root_foo__key"
                 >
                   <option
                     value="0"
@@ -2027,14 +2027,14 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
               >
                 <label
                   class="control-label"
-                  for="root_foo-key"
+                  for="root_foo__key"
                 >
                   foo (deprecated) Key
                 </label>
                 <select
                   class="form-control"
-                  id="root_foo-key"
-                  name="root_foo-key"
+                  id="root_foo__key"
+                  name="root_foo__key"
                 >
                   <option
                     value="0"
@@ -2319,13 +2319,13 @@ exports[`object fields > show add button and fields if additionalProperties is t
               >
                 <label
                   class="control-label"
-                  for="root_additionalProperty-key"
+                  for="root_additionalProperty__key"
                 >
                   additionalProperty Key
                 </label>
                 <input
                   class="form-control"
-                  id="root_additionalProperty-key"
+                  id="root_additionalProperty__key"
                   type="text"
                   value="additionalProperty"
                 />
@@ -2442,13 +2442,13 @@ exports[`object fields > with title and description > additionalProperties 1`] =
               >
                 <label
                   class="control-label"
-                  for="root_foo-key"
+                  for="root_foo__key"
                 >
                   foo Key
                 </label>
                 <input
                   class="form-control"
-                  id="root_foo-key"
+                  id="root_foo__key"
                   type="text"
                   value="foo"
                 />
@@ -2666,13 +2666,13 @@ exports[`object fields > with title and description > show add button and fields
               >
                 <label
                   class="control-label"
-                  for="root_additionalProperty-key"
+                  for="root_additionalProperty__key"
                 >
                   additionalProperty Key
                 </label>
                 <input
                   class="form-control"
-                  id="root_additionalProperty-key"
+                  id="root_additionalProperty__key"
                   type="text"
                   value="additionalProperty"
                 />
@@ -2789,13 +2789,13 @@ exports[`object fields > with title and description from both > additionalProper
               >
                 <label
                   class="control-label"
-                  for="root_foo-key"
+                  for="root_foo__key"
                 >
                   foo Key
                 </label>
                 <input
                   class="form-control"
-                  id="root_foo-key"
+                  id="root_foo__key"
                   type="text"
                   value="foo"
                 />
@@ -3013,13 +3013,13 @@ exports[`object fields > with title and description from uiSchema > additionalPr
               >
                 <label
                   class="control-label"
-                  for="root_foo-key"
+                  for="root_foo__key"
                 >
                   foo Key
                 </label>
                 <input
                   class="form-control"
-                  id="root_foo-key"
+                  id="root_foo__key"
                   type="text"
                   value="foo"
                 />
@@ -3237,13 +3237,13 @@ exports[`object fields > with title and description from uiSchema > show add but
               >
                 <label
                   class="control-label"
-                  for="root_additionalProperty-key"
+                  for="root_additionalProperty__key"
                 >
                   additionalProperty Key
                 </label>
                 <input
                   class="form-control"
-                  id="root_additionalProperty-key"
+                  id="root_additionalProperty__key"
                   type="text"
                   value="additionalProperty"
                 />
@@ -3348,7 +3348,7 @@ exports[`object fields > with title and description with global label off > addi
                 <input
                   aria-label="foo Key"
                   class="form-control"
-                  id="root_foo-key"
+                  id="root_foo__key"
                   type="text"
                   value="foo"
                 />
@@ -3499,7 +3499,7 @@ exports[`object fields > with title and description with global label off > show
                 <input
                   aria-label="additionalProperty Key"
                   class="form-control"
-                  id="root_additionalProperty-key"
+                  id="root_additionalProperty__key"
                   type="text"
                   value="additionalProperty"
                 />
