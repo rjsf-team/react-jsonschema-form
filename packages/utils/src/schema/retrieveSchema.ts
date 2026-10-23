@@ -855,8 +855,13 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
       // that happens, and an option the user picks for a recursive field renders its own options rather than collapsing
       const optionChain = data === undefined ? extendedChain() : undefined;
       // Only an object renders a field of its own beside the option (see `rendersOwnFieldBesideOption()`), which stubs
-      // the option's extra keys with its own; any other field leaves the option to stub them
-      const stubsOwnExtraKeys = !rendersOwnFieldBesideOption<S>(merged);
+      // the option's extra keys with its own; any other field leaves the option to stub them. An option naming no type
+      // is rendered with the type of an object offering it (see `getRenderedOptionSchema()`), so it renders such a field
+      // too, though its own schema names no object
+      const stubsOwnExtraKeys = !(
+        rendersOwnFieldBesideOption<S>(merged) ||
+        (merged.type === undefined && field.stubsOwnExtraKeys === false)
+      );
       Reflect.set(
         merged,
         keyword,

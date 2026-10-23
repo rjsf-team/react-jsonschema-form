@@ -2894,6 +2894,21 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         expect(view.patternProperties).toBeUndefined();
         expect(Reflect.get(view, EXTRA_KEYS_ELSEWHERE_FLAG)).toBe(true);
       });
+      it("leaves the extra keys of an option's options to the option where it names no type, as an object's option", () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { p: { type: 'string' } },
+          oneOf: [{ title: 'A', oneOf: [{ title: 'A1', additionalProperties: { type: 'string' } }] }],
+        };
+        const formData = { p: '1', extra: 'e' };
+        const context = { validator: testValidator };
+        // As `SchemaField` reads it: each option retrieved out of the view of the field offering it
+        const view = retrieveSchema(context, schema, schema, formData);
+        const a = retrieveSchema(context, schemaOf(view.oneOf?.[0]), schema, formData);
+        const a1 = retrieveSchema(context, schemaOf(a.oneOf?.[0]), schema, formData);
+        // A is rendered with the object's type, so its field renders beside A1 and stubs the extra keys of the two
+        expect(a1.properties).toBeUndefined();
+      });
       it('leaves the properties the fields above declare to them, in the field of an option taking their extra keys', () => {
         const nested: RJSFSchema = {
           title: 'A',

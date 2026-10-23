@@ -3558,6 +3558,27 @@ describe('ObjectField', () => {
       },
     );
 
+    it('renders a property the object declares once, beside an option naming no type that offers options in turn, where the object names nothing', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { p: { type: 'string' } },
+        oneOf: [
+          {
+            title: 'A',
+            oneOf: [{ title: 'A1', properties: { x: { type: 'string' } }, additionalProperties: { type: 'string' } }],
+          },
+        ],
+      };
+      const { node } = createFormComponent({ schema, initialFormData: { p: '1', x: 'a', extra: 'e' } });
+
+      // A takes the object's type, so its field renders beside A1's and takes A1's extra keys
+      for (const id of ['root_p', 'root_x', 'root_extra-key']) {
+        expect(node.querySelectorAll(`#${id}`)).toHaveLength(1);
+      }
+      expect(node.querySelector('#root_p-key')).toBeNull();
+      expect(node.querySelectorAll('.rjsf-object-property-expand button')).toHaveLength(1);
+    });
+
     it('renders a property the object declares once, beside an option taking its extra keys in its place', () => {
       const schema: RJSFSchema = {
         type: 'object',
