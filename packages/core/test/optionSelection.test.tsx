@@ -134,6 +134,68 @@ describe('option selection as form state', () => {
     expect(customValidate.mock.lastCall?.[0]).toEqual({ a: 'q' });
   });
 
+  it('matches the root data setFieldValue sets again when transformChange rewrites it', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      oneOf: [
+        { title: 'A', properties: { a: { type: 'string', default: 'x' } } },
+        { title: 'B', properties: { b: { type: 'string', default: 'y' } } },
+      ],
+    };
+    const ref = createFormRef();
+    const customValidate = vi.fn<CustomValidator>((_formData, errors) => errors);
+    const { node, onChange } = createFormComponent({
+      ref,
+      schema,
+      liveValidate: 'onChange',
+      customValidate,
+      omitExtraData: true,
+      liveOmit: 'onChange',
+      transformChange: (next) => {
+        const data = next as { a?: unknown } | undefined;
+        return typeof data?.a === 'string' ? { ...data, a: data.a.toUpperCase() } : next;
+      },
+    });
+
+    await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
+    act(() => handleOf(ref).setFieldValue('', { a: 'q' }));
+
+    // The rewrite is still data set from outside, so it is matched again rather than holding B and pruning `a`
+    expect(getSelectedOptionValue(selectOf(node, 'root__oneof_select'))).toBe('A');
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ a: 'Q' });
+    expect(customValidate.mock.lastCall?.[0]).toEqual({ a: 'Q' });
+  });
+
+  it('matches the data setFieldValue sets below the root again for customValidate, as the render does', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      oneOf: [
+        {
+          title: 'A',
+          properties: { kind: { const: 'a' }, a: { type: 'string', default: 'x' } },
+          required: ['kind'],
+        },
+        {
+          title: 'B',
+          properties: { kind: { const: 'b' }, b: { type: 'string', default: 'y' } },
+          required: ['kind'],
+        },
+      ],
+    };
+    const ref = createFormRef();
+    const customValidate = vi.fn<CustomValidator>((_formData, errors) => errors);
+    const { node, onChange } = createFormComponent({ ref, schema, liveValidate: 'onChange', customValidate });
+
+    await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
+    act(() => handleOf(ref).setFieldValue('kind', 'a'));
+
+    // `kind: 'a'` fits only A, which the form shows, so the form and customValidate get A's `a` rather than holding B's
+    // defaults
+    expect(getSelectedOptionValue(selectOf(node, 'root__oneof_select'))).toBe('A');
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ kind: 'a', a: 'x', b: 'y' });
+    expect(customValidate.mock.lastCall?.[0]).toEqual({ kind: 'a', a: 'x', b: 'y' });
+  });
+
   it('counts no key a switch of options discards against maxProperties', async () => {
     const schema: RJSFSchema = {
       type: 'object',
