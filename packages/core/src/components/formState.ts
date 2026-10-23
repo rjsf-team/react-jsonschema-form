@@ -28,6 +28,7 @@ import {
   isObject,
   isPlainObject,
   mergeObjects,
+  pickGlobalUiOptions,
   replaceEqualDeep,
   setOwn,
   toErrorList,
@@ -372,7 +373,7 @@ export function validateFormData<T, S extends StrictRJSFSchema, F extends FormCo
     uiSchema,
     formData,
     undefined,
-    uiSchema?.[UI_GLOBAL_OPTIONS_KEY],
+    pickGlobalUiOptions(uiSchema?.[UI_GLOBAL_OPTIONS_KEY], props.globalUiOptionsKeys),
     formContext ?? ({} as F),
     fieldStateOf(context.uiState, schemaUtils, editedPath),
   );

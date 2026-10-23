@@ -31,13 +31,13 @@ export default function FieldErrorTemplate<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: FieldErrorProps<T, S, F>) {
-  const { errors = [], id: fieldId, uiSchema } = props;
+  const { errors = [], id: fieldId, uiSchema, registry } = props;
   if (errors.length === 0) {
     return null;
   }
   const id = errorId(fieldId);
 
-  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const uiOptions = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);
   const muiProps = getMuiProps<T, S, F, FieldErrorTemplateMuiProps>(uiOptions);
   const { rjsfSlotProps: muiSlotProps } = muiProps;
 

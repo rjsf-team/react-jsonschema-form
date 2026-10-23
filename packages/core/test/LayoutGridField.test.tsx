@@ -652,6 +652,7 @@ const nestedUiSchema: UiSchema = {
 
 const ERRORS = ['error'];
 const EXTRA_ERROR = new ErrorSchemaBuilder().addErrors(ERRORS).ErrorSchema;
+const PASSES_EXTRA_ERROR_KEY = 'ui:passesExtraError';
 const DEFAULT_ID = 'test-id';
 
 // Stringify the FieldProps, minus the registry, hasFormData and optionalObjectNode in the uiSchema
@@ -675,7 +676,7 @@ const testRendererElement = <TestRenderer />;
 function FakeSchemaField({ 'data-testid': testId, ...props }: Readonly<FieldProps>) {
   const { fieldPath, id, formData, onChange, onBlur, onFocus, uiSchema } = props;
   // Special test case that will pass an error schema into on change to allow coverage
-  const error = hasByPath(uiSchema, UI_GLOBAL_OPTIONS_KEY) ? EXTRA_ERROR : undefined;
+  const error = hasByPath(uiSchema, PASSES_EXTRA_ERROR_KEY) ? EXTRA_ERROR : undefined;
   const onTextChange = ({ target: { value: val } }: ChangeEvent<HTMLInputElement>) => {
     onChange(val, fieldPath, error, id);
   };
@@ -803,8 +804,6 @@ function getExpectedPropsForField(
   const errorSchema = getByPath<ErrorSchema>(props.errorSchema, toPath(field));
   const fieldPath = fieldPathFromPaths(paths, props.fieldPath!);
   const formData = getByPath<GenericObjectType>(props.formData, toPath(field));
-  // Also extract any global props
-  const global = getByPath<GenericObjectType>(props.uiSchema, [UI_GLOBAL_OPTIONS_KEY]);
   const fieldUISchema = getByPath<UiSchema>(props.uiSchema, toPath(field));
   const { readonly: uiReadonly } = getUiOptions(fieldUISchema);
   // The expected props are the FORWARDED_PROPS, the field name, sub-schema, sub-uiSchema and sub-fieldPath
@@ -821,8 +820,7 @@ function getExpectedPropsForField(
     schema,
     uiSchema: {
       ...uiSchema,
-      [UI_OPTIONS_KEY]: { ...global, ...otherUiProps }, // spread the global and other ui keys into the ui:options
-      ...(global ? { [UI_GLOBAL_OPTIONS_KEY]: global } : {}), // ensure the globals are maintained
+      [UI_OPTIONS_KEY]: otherUiProps, // spread the other ui keys into the ui:options, which never take the globals
     },
     fieldPath,
     id: fieldPathToId(fieldPath, globalFormOptions),
@@ -1419,19 +1417,14 @@ describe('LayoutGridField', () => {
         uiReadonly: undefined,
       });
     });
-    test('field with uiProps and uiSchema with global options for the field', () => {
+    test('field with uiProps and uiSchema with global options, which the field reads from the registry instead', () => {
       const uiProps = { fullWidth: true };
-      const globalOptions = { label: false };
       const uiSchema = {
         foo: { 'ui:widget': 'bar' },
-        [UI_GLOBAL_OPTIONS_KEY]: globalOptions,
+        [UI_GLOBAL_OPTIONS_KEY]: { label: false, readonly: true },
       };
       expect(computeFieldUiSchema('foo', uiProps, uiSchema)).toEqual({
-        fieldUiSchema: {
-          ...uiSchema.foo,
-          [UI_OPTIONS_KEY]: { ...uiProps, ...globalOptions },
-          [UI_GLOBAL_OPTIONS_KEY]: globalOptions,
-        },
+        fieldUiSchema: { ...uiSchema.foo, [UI_OPTIONS_KEY]: uiProps },
         uiReadonly: undefined,
       });
     });
@@ -1939,7 +1932,7 @@ describe('LayoutGridField', () => {
       schema: SAMPLE_SCHEMA,
       uiSchema: {
         ...sampleUISchema,
-        [UI_GLOBAL_OPTIONS_KEY]: { always: 'there' },
+        [fieldName]: { ...sampleUISchema[fieldName], [PASSES_EXTRA_ERROR_KEY]: true },
       },
       formData: { [fieldName]: 'foo' },
       layoutGridSchema: {

@@ -568,7 +568,7 @@ const schema: RJSFSchema = {
 render(<Form schema={schema} validator={validator} fields={fields} />, document.getElementById('app'));
 ```
 
-A `$id` names the field the way [`ui:field`](../api-reference/uiSchema.md#uifield) does, after the field's own `ui:field` and `ui:globalOptions.field`: the field renders beside an `anyOf`/`oneOf` option selector, or in place of the options with `ui:fieldReplacesAnyOrOneOf`.
+A `$id` names the field the way [`ui:field`](../api-reference/uiSchema.md#uifield) does, after the field's own `ui:field`: the field renders beside an `anyOf`/`oneOf` option selector, or in place of the options with `ui:fieldReplacesAnyOrOneOf`.
 A named field is applied once per data path, so one that renders `registry.fields.SchemaField` for its own data gets the default field for the schema there, whatever the `uiSchema` it passes names. That field draws the label, description and help the named field's [`presentation`](../api-reference/form-props.md#presentation) plan hands down to it, and the extra key's input and remove button and the option selector stay with the field's own `SchemaField`, so each renders once. Naming `SchemaField` or `FallbackField` names no custom field: `SchemaField` renders as though no field were named, and `FallbackField` as it does when the schema's type picks it.
 
 ### Wrapping an existing field to customize it

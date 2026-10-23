@@ -1,8 +1,7 @@
 import getUiOptions from './getUiOptions.ts';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from './types.ts';
 
-/** Checks to see if the `uiSchema` names a `widget` and that the widget is not `hidden`. A `widget` set to `undefined`
- * names none: it is how a `uiSchema` shadows a `widget` in `ui:globalOptions`
+/** Checks to see if the `uiSchema` names a `widget` and that the widget is not `hidden`
  *
  * @param uiSchema - The UI Schema from which to detect if it is customized
  * @returns - True if the `uiSchema` describes a custom widget, false otherwise

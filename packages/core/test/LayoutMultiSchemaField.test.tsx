@@ -1142,19 +1142,6 @@ describe('LayoutMultiSchemaField', () => {
       expect(within(fieldTemplate).getByTestId(RAW_HELP_TEST_ID)).toBeInTheDocument();
     });
 
-    test('renders the help inherited from ui:globalOptions', () => {
-      const baseProps = getProps();
-      // getTestRegistry() freezes the registry it returns, so a new object is substituted in rather than mutated.
-      const props = {
-        ...baseProps,
-        registry: { ...baseProps.registry, globalUiOptions: { help: 'global help' } },
-      };
-      render(<LayoutMultiSchemaField {...props} />);
-
-      const fieldTemplate = screen.getByTestId(FIELD_TEMPLATE_TEST_ID);
-      expect(within(fieldTemplate).getByText('global help')).toBeInTheDocument();
-    });
-
     test('renders no help when there is no ui:help', () => {
       render(<LayoutMultiSchemaField {...getProps()} />);
 

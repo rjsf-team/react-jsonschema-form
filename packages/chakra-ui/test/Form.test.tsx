@@ -1011,13 +1011,6 @@ describe('chakra-ui ArrayFieldItemTemplate', () => {
       displayLabel: false,
     },
     {
-      named: 'a type list hidden by a global widget under the fallback UI, whose type selector is hidden with it',
-      items: { type: ['string', 'number'], title: 'Value' },
-      uiSchema: { 'ui:globalOptions': { widget: 'hidden' } },
-      value: 'a',
-      displayLabel: false,
-    },
-    {
       named: 'a hidden text input, with no control on screen to draw a label above',
       items: { type: 'string', title: 'Tag' },
       uiSchema: { items: { 'ui:widget': 'hidden' } },

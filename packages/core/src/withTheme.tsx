@@ -13,7 +13,7 @@ export type ThemeProps<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
-> = Pick<FormProps<T, S, F>, 'fields' | 'templates' | 'widgets' | 'presentation'>;
+> = Pick<FormProps<T, S, F>, 'fields' | 'templates' | 'widgets' | 'presentation' | 'globalUiOptionsKeys'>;
 
 /** The `Form` returned by `withTheme()`. It stays generic over the form data like `Form` itself, so `T` is inferred
  * from `formData` or named per use (`<ThemedForm<MyData> />`) instead of being fixed when the theme is applied; a theme
@@ -42,6 +42,7 @@ export default function withTheme<
     widgets: propWidgets,
     templates: propTemplates,
     presentation: propPresentation,
+    globalUiOptionsKeys: propGlobalUiOptionsKeys,
     ref,
     ...directProps
   }: FormProps<TT, S, F>) {
@@ -63,6 +64,11 @@ export default function withTheme<
       () => mergeThemePresentation(theme?.presentation, propPresentation),
       [theme, propPresentation],
     );
+    // Memoised for the reason `presentation` is
+    const globalUiOptionsKeys = useMemo(
+      () => [...(theme?.globalUiOptionsKeys ?? []), ...(propGlobalUiOptionsKeys ?? [])],
+      [theme, propGlobalUiOptionsKeys],
+    );
 
     return (
       <Form<TT, S, F>
@@ -71,6 +77,7 @@ export default function withTheme<
         widgets={widgets}
         templates={templates}
         presentation={presentation}
+        globalUiOptionsKeys={globalUiOptionsKeys}
         ref={ref}
       />
     );

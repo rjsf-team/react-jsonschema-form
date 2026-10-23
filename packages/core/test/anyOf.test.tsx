@@ -2045,10 +2045,10 @@ describe('anyOf', () => {
       expect(screen.getAllByText('DESCRIPTION')).toHaveLength(1);
       expect(node.querySelectorAll('[id="root__description"]')).toHaveLength(1);
     });
-    it('should render a ui:globalOptions field once for a union nested in an option with its own uiSchema', () => {
+    it('should render a named field once for a union nested in an option with its own uiSchema', () => {
       const { node } = createFormComponent({
         schema: { anyOf: [{ anyOf: [{ type: 'number' }, { type: 'string' }] }, { type: 'boolean' }] },
-        uiSchema: { anyOf: [{ anyOf: [{}, {}] }, {}], 'ui:globalOptions': { field: uiSchema['ui:field'] } },
+        uiSchema: { 'ui:field': uiSchema['ui:field'], anyOf: [{ anyOf: [{}, {}] }, {}] },
       });
       expect(node.querySelectorAll('.custom-field')).toHaveLength(1);
       expect(node.querySelector('input#root')).toBeInTheDocument();

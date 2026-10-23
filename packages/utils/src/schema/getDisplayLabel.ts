@@ -1,6 +1,6 @@
 import { ADDITIONAL_PROPERTY_FLAG, UI_FIELD_KEY } from '../constants.ts';
 import getUiOptions from '../getUiOptions.ts';
-import { DEFAULT_BOOLEAN_WIDGET, getFieldTypeForUiSchema } from '../getWidget.tsx';
+import { DEFAULT_BOOLEAN_WIDGET, getFieldTypeForWidget } from '../getWidget.tsx';
 import isCustomWidget from '../isCustomWidget.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
 import type {
@@ -24,7 +24,7 @@ import resolveConstantOptions from './resolveConstantOptions.ts';
  * @param schema - The schema for which the display label flag is desired
  * @param [uiSchema={}] - The UI schema from which to derive potentially displayable information
  * @param [rootSchema] - The root schema, used to primarily to look up `$ref`s
- * @param [globalOptions={}] - The optional Global UI Schema from which to get any fallback `xxx` options
+ * @param [globalOptions={}] - The optional Global UI Schema from which to get any fallback `xxx` options, as `pickGlobalUiOptions()` leaves them
  * @returns - True if the label should be displayed or false if it should not
  * @deprecated Kept through v7 for a field rendered without a plan: a field's plan, from `resolveFieldPresentation()`,
  *   says what draws its label
@@ -44,8 +44,9 @@ export default function getDisplayLabel<
   let displayLabel = uiBooleanOption(uiOptions.label) ?? true;
   if (displayLabel) {
     // The label follows the field `SchemaField` renders: a `CheckboxWidget` on a `['number', 'boolean']` is a boolean's.
-    // Only the field's own `ui:widget` picks that field, so the `ui:globalOptions` one is left out
-    const schemaType = getFieldTypeForUiSchema<T, S, F>(schema, uiSchema);
+    // Only the field's own `ui:widget` picks that field, so a `widget` in `globalOptions` is left out
+    const { widget } = getUiOptions<T, S, F>(uiSchema);
+    const schemaType = getFieldTypeForWidget<S>(schema, widget);
     const addedByAdditionalProperty = Boolean((schema as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG]);
     // A schema handed in as written holds a select's constants as `$ref`s, so they are read resolved
     const isWholeValue = () =>
@@ -73,7 +74,7 @@ export default function getDisplayLabel<
     // Under a plan, `getPresentationDeclaration()` finds the widget by its alias, its key or the component itself, and
     // its declaration, not this name match, says who draws the field's label. One layout decision under a plan asks
     // this: whether the fallback UI's template or its value field draws the label (#5581)
-    if (schemaType === 'boolean' && (!uiOptions.widget || uiOptions.widget === DEFAULT_BOOLEAN_WIDGET)) {
+    if (schemaType === 'boolean' && (!widget || widget === DEFAULT_BOOLEAN_WIDGET)) {
       displayLabel = false;
     }
     if (uiSchema[UI_FIELD_KEY]) {

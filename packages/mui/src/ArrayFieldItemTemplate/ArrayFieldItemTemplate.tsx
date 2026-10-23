@@ -45,7 +45,7 @@ export default function ArrayFieldItemTemplate<
   F extends FormContextType = FormContextType,
 >(props: ArrayFieldItemTemplateProps<T, S, F>) {
   const { children, buttonsProps, hasDescription, hasToolbar, uiSchema, registry } = props;
-  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const uiOptions = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);
   const { ArrayFieldItemButtonsTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   const btnStyle: CSSProperties = {
     flex: 1,

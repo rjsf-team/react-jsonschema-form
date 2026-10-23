@@ -32,7 +32,7 @@ export default function TextareaWidget<
   } = props;
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
 
-  const themeProps = cleanupOptions(options);
+  const themeProps = cleanupOptions(options, props);
   const emptyValue = options?.emptyValue;
 
   const handleChange = useCallback(

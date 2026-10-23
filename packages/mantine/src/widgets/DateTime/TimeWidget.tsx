@@ -40,7 +40,7 @@ export default function TimeWidget<
 
   const { localValue: displayValue, computeTimeValue } = useTimeWidgetProps(props);
   const emptyValue = options.emptyValue || '';
-  const themeProps = cleanupOptions(options);
+  const themeProps = cleanupOptions(options, props);
 
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {

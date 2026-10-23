@@ -22,6 +22,7 @@ import {
   englishStringTranslator,
   errorId,
   mergeThemePresentation,
+  toFieldPath,
 } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen, waitFor } from '@testing-library/react';
@@ -119,6 +120,72 @@ describe('SchemaField', () => {
           useFallbackUiForUnsupportedType: false,
         },
         uiSchemaDefinitions: {},
+      });
+    });
+
+    describe('a registry whose globalUiOptions skipped pickGlobalUiOptions()', () => {
+      // A per-field name such as these can only reach the registry when it is built by hand
+      const unpickedGlobals: GenericObjectType = {
+        hideError: true,
+        description: 'Global description',
+        widget: 'textarea',
+        readonly: true,
+        help: 'Global help',
+      };
+      const NumberFieldMarker = () => <div id='number-field' />;
+
+      function renderWithUnpickedGlobals(fieldProps: Partial<FieldProps>) {
+        return createFormComponent({
+          schema: { type: 'object' },
+          uiSchema: {
+            'ui:field': (props: FieldProps) => (
+              <SchemaField
+                {...props}
+                name='child'
+                fieldPath={toFieldPath('child')}
+                id='root_child'
+                formData={undefined}
+                uiSchema={{}}
+                {...fieldProps}
+                registry={{
+                  ...props.registry,
+                  fields: { ...props.registry.fields, NumberField: NumberFieldMarker },
+                  globalUiOptions: unpickedGlobals,
+                }}
+              />
+            ),
+          },
+        });
+      }
+
+      it("keeps the parent's hideError over a global one", () => {
+        const { node } = renderWithUnpickedGlobals({
+          schema: { type: 'string' },
+          errorSchema: { __errors: ['Boom'] },
+          hideError: false,
+        });
+
+        expect(node).toHaveTextContent('Boom');
+      });
+
+      it("renders the field's own schema description over a global one", () => {
+        const { node } = renderWithUnpickedGlobals({ schema: { type: 'string', description: 'Own description' } });
+
+        expect(node).toHaveTextContent('Own description');
+        expect(node).not.toHaveTextContent('Global description');
+      });
+
+      it("keeps the parent's readonly over a global one, and renders no global help", () => {
+        const { node } = renderWithUnpickedGlobals({ schema: { type: 'string' }, readonly: false });
+
+        expect(node.querySelector('#root_child')).not.toHaveAttribute('readonly');
+        expect(node).not.toHaveTextContent('Global help');
+      });
+
+      it("picks a type list's field by the field's own widget only", () => {
+        const { node } = renderWithUnpickedGlobals({ schema: { type: ['null', 'number', 'string'] } });
+
+        expect(node.querySelector('#number-field')).toBeInTheDocument();
       });
     });
   });
@@ -526,30 +593,6 @@ describe('SchemaField', () => {
         );
       });
 
-      it('warns once for the form about an unusable ui:globalOptions.field, and per field about a local one', () => {
-        const schema: RJSFSchema = {
-          type: 'object',
-          properties: { a: { type: 'string' }, b: { type: 'string' }, c: { type: 'string' } },
-        };
-        const { node } = createFormComponent({
-          schema,
-          uiSchema: { 'ui:globalOptions': { field: 'Stringfield' }, c: { 'ui:field': 'Cfield' } },
-        });
-
-        expect(node.querySelectorAll('input')).toHaveLength(3);
-        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledTimes(2);
-        expect(consoleWarnSuppression.consoleSpy).toHaveBeenNthCalledWith(
-          1,
-          `ui:globalOptions.field names no registered field ('Stringfield'), so it is ignored and the fields it ` +
-            'applies to are rendered as though no ui:field were given.',
-        );
-        expect(consoleWarnSuppression.consoleSpy).toHaveBeenNthCalledWith(
-          2,
-          `ui:field for "root_c" (c) names no registered field ('Cfield'), so it is ignored and the field is ` +
-            'rendered as though no ui:field were given.',
-        );
-      });
-
       it.each<[string, RJSFSchema, UiSchema, unknown, string]>([
         [
           'a nested',
@@ -583,39 +626,6 @@ describe('SchemaField', () => {
         },
       );
 
-      it('renders the ui:globalOptions.field in place of a local ui:field that is ignored', () => {
-        const uiSchema: UiSchema = JSON.parse(
-          '{ "ui:globalOptions": { "field": "myobject" }, "ui:field": null, "val": { "ui:field": "Nope" } }',
-        );
-
-        const { node } = createFormComponent({ schema: stringSchema, uiSchema, fields: { myobject: MyObject } });
-
-        expect(node.querySelector('#custom')).toBeInTheDocument();
-        expect(node.querySelector('input#root_val')).not.toBeInTheDocument();
-        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
-          `ui:field for "root_val" (val) names no registered field ('Nope'), so it is ignored and the field is ` +
-            'rendered as though no ui:field were given.',
-        );
-      });
-
-      it('labels a field whose own ui:field is ignored for the ui:globalOptions.field as it labels its sibling', () => {
-        const uiSchema: UiSchema = JSON.parse(
-          '{ "ui:globalOptions": { "field": "StringField" }, "ui:field": null, "b": { "ui:field": "Nope" } }',
-        );
-
-        const { node } = createFormComponent({
-          schema: { type: 'object', properties: { a: { type: 'string' }, b: { type: 'string' } } },
-          uiSchema,
-        });
-
-        expect(node.querySelector('label[for="root_a"]')).toHaveTextContent(/^a$/);
-        expect(node.querySelector('label[for="root_b"]')).toHaveTextContent(/^b$/);
-        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
-          `ui:field for "root_b" (b) names no registered field ('Nope'), so it is ignored and the field is ` +
-            'rendered as though no ui:field were given.',
-        );
-      });
-
       it('warns that a value that is neither a name nor a component is ignored', () => {
         const { node } = createFormComponent({
           schema: stringSchema,
@@ -632,30 +642,6 @@ describe('SchemaField', () => {
       it('does not warn when a ui:field is shadowed with undefined', () => {
         createFormComponent({ schema: stringSchema, uiSchema: { val: { 'ui:field': undefined } } });
 
-        expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalled();
-      });
-
-      it.each(['null', 'false', '""', '0'])(
-        'does not warn when a JSON uiSchema clears a global ui:field with %s',
-        (empty) => {
-          const uiSchema: UiSchema = JSON.parse(
-            `{ "ui:globalOptions": { "field": "myobject" }, "ui:field": ${empty}, "val": { "ui:field": ${empty} } }`,
-          );
-
-          const { node } = createFormComponent({ schema: stringSchema, uiSchema, fields: { myobject: MyObject } });
-
-          expect(node.querySelector('#custom')).not.toBeInTheDocument();
-          expect(node.querySelector('input#root_val')).toBeInTheDocument();
-          expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalled();
-        },
-      );
-
-      it.each(['null', 'false', '""', '0'])('does not warn about a JSON ui:globalOptions.field of %s', (empty) => {
-        const uiSchema: UiSchema = JSON.parse(`{ "ui:globalOptions": { "field": ${empty} } }`);
-
-        const { node } = createFormComponent({ schema: stringSchema, uiSchema });
-
-        expect(node.querySelector('input#root_val')).toBeInTheDocument();
         expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalled();
       });
     });
@@ -676,7 +662,6 @@ describe('SchemaField', () => {
     it.each<[string, UiSchema]>([
       ["ui:field: 'SchemaField'", { val: { 'ui:field': 'SchemaField' } }],
       ["ui:options.field: 'SchemaField'", { val: { 'ui:options': { field: 'SchemaField' } } }],
-      ["ui:globalOptions.field: 'SchemaField'", { 'ui:globalOptions': { field: 'SchemaField' } }],
     ])('renders the field %s names once, rather than until the heap runs out (#5377)', (_, uiSchema) => {
       const { node } = createFormComponent({ schema, uiSchema });
 
@@ -710,7 +695,6 @@ describe('SchemaField', () => {
       ["ui:field: 'SchemaField'", schema, { val: { 'ui:field': 'SchemaField' } }],
       ['a ui:field wrapping SchemaField', schema, { val: { 'ui:field': 'wrapping' } }],
       ['a ui:options.field wrapping SchemaField', schema, { val: { 'ui:options': { field: 'wrapping' } } }],
-      ['a ui:globalOptions.field wrapping SchemaField', schema, { 'ui:globalOptions': { field: 'wrapping' } }],
       ['a $id wrapping SchemaField', { type: 'object', properties: { val: { $id: 'wrapping', type: 'string' } } }, {}],
     ])("hands the widget the field's own errors with %s named, and renders them once", (_, schema, uiSchema) => {
       const renderWidget = vi.fn<(id: string, rawErrors: WidgetProps['rawErrors']) => void>();
@@ -776,12 +760,6 @@ describe('SchemaField', () => {
         named: { type: 'object', properties: { o: { type: 'object', title: 'O', properties: { a: titled } } } },
         uiSchema: { o: { 'ui:field': 'SchemaField' } },
         props: { extraErrors: { o: { __errors: ['o bad'], a: { __errors: ['a bad'] } } } },
-      },
-      {
-        spelling: "ui:globalOptions.field: 'SchemaField' on an anyOf",
-        schema: { type: 'object', properties: { val: titledAnyOf } },
-        named: { type: 'object', properties: { val: titledAnyOf } },
-        uiSchema: { 'ui:globalOptions': { field: 'SchemaField' } },
       },
       {
         spelling: "a $id naming 'SchemaField' on an anyOf",
@@ -870,12 +848,6 @@ describe('SchemaField', () => {
           displayLabel: true,
         },
         {
-          named: "ui:field: 'Missing' and ui:globalOptions.field: 'SchemaField'",
-          items: titled,
-          uiSchema: { items: { 'ui:field': 'Missing' }, 'ui:globalOptions': { field: 'SchemaField' } },
-          displayLabel: true,
-        },
-        {
           named: "ui:field: 'Missing' and a $id naming 'SchemaField'",
           items: { ...titled, $id: 'SchemaField' },
           uiSchema: { items: { 'ui:field': 'Missing' } },
@@ -916,14 +888,6 @@ describe('SchemaField', () => {
           naming: (key) => ({
             schema: { type: 'array', items: titled },
             uiSchema: { items: { 'ui:options': { field: key } } },
-          }),
-        },
-        {
-          spelling: 'ui:globalOptions.field',
-          // The array's own empty `ui:field` keeps the global field for its item alone
-          naming: (key) => ({
-            schema: { type: 'array', items: titled },
-            uiSchema: { 'ui:field': '', 'ui:globalOptions': { field: key } },
           }),
         },
         { spelling: 'a $id', naming: (key) => ({ schema: { type: 'array', items: { ...titled, $id: key } } }) },
@@ -1090,12 +1054,6 @@ describe('SchemaField', () => {
             displayLabel: false,
           },
           {
-            named: 'a type list hidden by a global widget, whose type selector is hidden with it',
-            items: { ...typeList, title: 'Value' },
-            uiSchema: { 'ui:globalOptions': { widget: 'hidden' } },
-            displayLabel: false,
-          },
-          {
             named: "a type list with ui:label false, which turns the selector's label off too",
             items: { ...typeList, title: 'Value' },
             uiSchema: { items: { 'ui:label': false } },
@@ -1138,19 +1096,9 @@ describe('SchemaField', () => {
         { val: { 'ui:options': { field: 'SchemaField' }, 'ui:help': 'Help' } },
       ],
       [
-        "ui:globalOptions.field: 'SchemaField'",
-        describedSchema,
-        { 'ui:globalOptions': { field: 'SchemaField' }, val: { 'ui:help': 'Help' } },
-      ],
-      [
         'a ui:options.field wrapping SchemaField',
         describedSchema,
         { val: { 'ui:options': { field: 'wrapping' }, 'ui:help': 'Help' } },
-      ],
-      [
-        'a ui:globalOptions.field wrapping SchemaField',
-        describedSchema,
-        { 'ui:globalOptions': { field: 'wrapping' }, val: { 'ui:help': 'Help' } },
       ],
       ['a $id wrapping SchemaField', describedIdSchema, { val: { 'ui:help': 'Help' } }],
     ])('renders one label, description and help for the field %s names', (_, schema, uiSchema) => {
@@ -1186,11 +1134,6 @@ describe('SchemaField', () => {
         "ui:options.field: 'SchemaField'",
         { type: 'object', properties: { val: { type: 'string', anyOf: [{ minLength: 2 }, { maxLength: 5 }] } } },
         { val: { 'ui:options': { field: 'SchemaField' } } },
-      ],
-      [
-        "ui:globalOptions.field: 'SchemaField'",
-        { type: 'object', properties: { val: { type: 'string', anyOf: [{ minLength: 2 }, { maxLength: 5 }] } } },
-        { 'ui:globalOptions': { field: 'SchemaField' } },
       ],
       [
         'a ui:field wrapping SchemaField',
@@ -1302,9 +1245,9 @@ describe('SchemaField', () => {
     });
 
     it.each<[string, UiSchema]>([
-      ['without', { 'ui:globalOptions': { field: 'FallbackField' } }],
-      ['with', { 'ui:globalOptions': { field: 'FallbackField' }, val: { anyOf: [{}, {}] } }],
-    ])('renders one type selector %s a uiSchema per option under a global FallbackField', (_, uiSchema) => {
+      ['without', { val: { 'ui:field': 'FallbackField' } }],
+      ['with', { val: { 'ui:field': 'FallbackField', anyOf: [{}, {}] } }],
+    ])('renders one type selector %s a uiSchema per option under a ui:field naming FallbackField', (_, uiSchema) => {
       const { node } = createFormComponent({
         schema: {
           type: 'object',
@@ -1371,12 +1314,6 @@ describe('SchemaField', () => {
 
     it.each<{ spelling: string; schema: RJSFSchema; uiSchema: UiSchema; issue: string }>([
       { spelling: 'a ui:field', schema: anyOfSchema, uiSchema: { 'ui:field': 'MyField' }, issue: '#5358' },
-      {
-        spelling: 'a ui:globalOptions.field',
-        schema: anyOfSchema,
-        uiSchema: { 'ui:globalOptions': { field: 'MyField' } },
-        issue: '#5358',
-      },
     ])('renders the field $spelling names once, beside the option selector ($issue)', ({ schema, uiSchema }) => {
       const { node } = createFormComponent({ schema, uiSchema, fields });
 
@@ -1439,17 +1376,6 @@ describe('SchemaField', () => {
 
       expect(node.querySelector('#root__anyof_select')).toBeInTheDocument();
       expect(node.querySelectorAll('.option-field')).toHaveLength(1);
-    });
-
-    it('does not render a ui:globalOptions.field again for an option with a uiSchema of its own', () => {
-      const { node } = createFormComponent({
-        schema: anyOfSchema,
-        uiSchema: { 'ui:globalOptions': { field: 'MyField' }, anyOf: [{ 'ui:title': 'Short' }, {}] },
-        fields,
-      });
-
-      expect(node.querySelectorAll('.my-field')).toHaveLength(1);
-      expect(node.querySelectorAll('input#root')).toHaveLength(1);
     });
   });
 
@@ -1584,26 +1510,21 @@ describe('SchemaField', () => {
   describe('the uiSchema a field written for the schema reads, named past an own ui:field that names nothing', () => {
     setupConsoleWarnSuppression();
 
-    it.each<[string, RJSFSchema, UiSchema]>([
-      ['ui:globalOptions.field', { type: 'string' }, { 'ui:field': 'Missing', 'ui:globalOptions': { field: 'Own' } }],
-      [
-        'ui:globalOptions.field, past ui:options.field',
-        { type: 'string' },
-        { 'ui:options': { field: 'Missing' }, 'ui:globalOptions': { field: 'Own' } },
-      ],
-      ['a $id', { $id: 'Own', type: 'string' }, { 'ui:field': 'Missing' }],
-    ])('names no field where %s names it', (_, schema, uiSchema) => {
-      const received = vi.fn<(uiSchema: FieldProps['uiSchema']) => void>();
-      function Own(props: FieldProps) {
-        received(props.uiSchema);
-        return null;
-      }
-      createFormComponent({ schema, uiSchema, fields: { Own } });
+    it.each<[string, RJSFSchema, UiSchema]>([['a $id', { $id: 'Own', type: 'string' }, { 'ui:field': 'Missing' }]])(
+      'names no field where %s names it',
+      (_, schema, uiSchema) => {
+        const received = vi.fn<(uiSchema: FieldProps['uiSchema']) => void>();
+        function Own(props: FieldProps) {
+          received(props.uiSchema);
+          return null;
+        }
+        createFormComponent({ schema, uiSchema, fields: { Own } });
 
-      expect(received).toHaveBeenCalled();
-      expect(received.mock.lastCall?.[0]).not.toHaveProperty(['ui:field']);
-      expect(received.mock.lastCall?.[0]?.['ui:options']?.field).toBeUndefined();
-    });
+        expect(received).toHaveBeenCalled();
+        expect(received.mock.lastCall?.[0]).not.toHaveProperty(['ui:field']);
+        expect(received.mock.lastCall?.[0]?.['ui:options']?.field).toBeUndefined();
+      },
+    );
 
     it('keeps the ui:field that names it', () => {
       const received = vi.fn<(uiSchema: FieldProps['uiSchema']) => void>();
@@ -2125,17 +2046,17 @@ describe('SchemaField', () => {
       });
     });
 
-    describe("resolved as the field's own, then its parent's, then the global one", () => {
+    describe("resolved as the field's own, then its parent's", () => {
       const nestedSchema: RJSFSchema = {
         type: 'object',
         properties: { foo: { type: 'string' }, bar: { type: 'string' } },
       };
       const extraErrors = { foo: { __errors: ['foo is wrong'] }, bar: { __errors: ['bar is wrong'] } } as ErrorSchema;
 
-      it("hides a child's errors by its parent's ui:hideError over a global one", () => {
+      it("hides a child's errors by its parent's ui:hideError", () => {
         const { node } = createFormComponent({
           schema: nestedSchema,
-          uiSchema: { 'ui:globalOptions': { hideError: false }, 'ui:hideError': true },
+          uiSchema: { 'ui:hideError': true },
           extraErrors,
         });
 
@@ -2153,14 +2074,16 @@ describe('SchemaField', () => {
         expect(node.querySelector(`#${errorId('root_bar')}`)).toHaveTextContent('bar is wrong');
       });
 
-      it('falls back to the global one where no field sets its own', () => {
+      it('ignores a hideError in ui:globalOptions, which RJSF reads only per field', () => {
+        // Untyped, as a JSON uiSchema is, since `hideError` is an option RJSF reads only per field
+        const globalOptions: GenericObjectType = { hideError: true };
         const { node } = createFormComponent({
           schema: nestedSchema,
-          uiSchema: { 'ui:globalOptions': { hideError: true } },
+          uiSchema: { 'ui:globalOptions': globalOptions },
           extraErrors,
         });
 
-        expect(node.querySelector(`#${errorId('root_foo')}`)).not.toBeInTheDocument();
+        expect(node.querySelector(`#${errorId('root_foo')}`)).toHaveTextContent('foo is wrong');
       });
     });
   });

@@ -56,7 +56,7 @@ export default function ArrayFieldTemplate<
     title,
     presentation,
   } = props;
-  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const uiOptions = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);
   const { ArrayFieldDescriptionTemplate, ArrayFieldTitleTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   const shownDescription = getArrayDescription<T, S, F>(props);
   const showOptionalDataControlInTitle = titleDrawsOptionalDataControl<T, S, F>(props);

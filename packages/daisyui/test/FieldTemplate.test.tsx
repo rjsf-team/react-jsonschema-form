@@ -4,6 +4,7 @@ import { fieldLabelId, toFieldPath } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 
+import type { DaisyGlobalUISchemaOptions, UiSchema as DaisyUiSchema } from '../src/index.ts';
 import Form, { generateTemplates } from '../src/index.ts';
 import DaisyFieldTemplate from '../src/templates/FieldTemplate/FieldTemplate.tsx';
 import DaisyCheckboxWidget from '../src/widgets/CheckboxWidget/CheckboxWidget.tsx';
@@ -644,6 +645,40 @@ describe('FieldTemplate', () => {
       const { wrapper, innerDiv } = agreeElements(container);
       expect(innerDiv?.getAttribute('style')).toBe('color: blue;');
       expect(wrapper).not.toHaveAttribute('style');
+    });
+
+    test('rejects a user extension of the global options reusing an option name the widgets read', () => {
+      expectTypeOf<DaisyGlobalUISchemaOptions<{ myKey?: string }>>().not.toBeNever();
+      // @ts-expect-error `BaseInputTemplate` reads `multiple`
+      expectTypeOf<DaisyGlobalUISchemaOptions<{ multiple?: boolean }>>().not.toBeNever();
+      // @ts-expect-error `RatingWidget` reads `size`
+      expectTypeOf<DaisyGlobalUISchemaOptions<{ size?: string }>>().not.toBeNever();
+    });
+
+    test('takes a ui:globalOptions daisy where the field sets none of its own', () => {
+      const globalUiSchema: DaisyUiSchema = { 'ui:globalOptions': { daisy: { style: { color: 'green' } } } };
+      const { container: globalContainer } = renderForm({
+        ...globalUiSchema,
+        agree: { 'ui:classNames': 'custom-class' },
+      });
+      const { container: ownContainer } = renderForm({
+        ...globalUiSchema,
+        agree: { 'ui:classNames': 'custom-class', 'ui:options': { daisy: { style: { color: 'blue' } } } },
+      });
+      const { container: shorthandContainer } = renderForm({
+        ...globalUiSchema,
+        agree: { 'ui:classNames': 'custom-class', 'ui:daisy': { style: { color: 'purple' } } },
+      });
+      // As `getUiOptions()` layers them: a `daisy` key the field sets, even to `undefined`, shadows the global one
+      const { container: clearedContainer } = renderForm({
+        ...globalUiSchema,
+        agree: { 'ui:classNames': 'custom-class', 'ui:options': { daisy: undefined } },
+      });
+
+      expect(agreeElements(globalContainer).innerDiv?.getAttribute('style')).toBe('color: green;');
+      expect(agreeElements(ownContainer).innerDiv?.getAttribute('style')).toBe('color: blue;');
+      expect(agreeElements(shorthandContainer).innerDiv?.getAttribute('style')).toBe('color: purple;');
+      expect(agreeElements(clearedContainer).innerDiv).not.toHaveAttribute('style');
     });
   });
 

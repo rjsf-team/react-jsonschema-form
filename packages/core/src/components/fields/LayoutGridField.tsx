@@ -33,7 +33,6 @@ import {
   toFieldPath,
   fieldPathToId,
   UI_OPTIONS_KEY,
-  UI_GLOBAL_OPTIONS_KEY,
   ITEMS_KEY,
   uiBooleanOption,
 } from '@rjsf/utils';
@@ -143,8 +142,8 @@ function isNumericIndex(str: string) {
 const LAYOUT_GRID_FIELD_TEST_IDS = getTestIds();
 
 /** Computes the uiSchema for the field with `name` from the `uiProps` and `uiSchema` provided. The field UI Schema
- * will always contain a copy of the global options from the `uiSchema` (so they can be passed down) as well as
- * copying them into the local ui options. When the `forceReadonly` flag is true, then the field UI Schema is
+ * holds the field's own options, with the `uiProps` over them, but not the `ui:globalOptions`, which the field reads
+ * from the registry as every other field does. When the `forceReadonly` flag is true, then the field UI Schema is
  * updated to make "readonly" be true. When the `schemaReadonly` flag is true AND the field UI Schema does NOT have
  * the flag already provided, then we also make "readonly" true. We always make sure to return the final value of the
  * field UI Schema's "readonly" flag as `uiReadonly` along with the `fieldUiSchema` in the return value.
@@ -166,11 +165,9 @@ export function computeFieldUiSchema<
   schemaReadonly?: boolean,
   forceReadonly?: boolean,
 ) {
-  // `required` is deliberately excluded from both the global options and the grid config's own `uiProps` propagated
-  // here: unlike the rest of `GlobalUISchemaOptions`/`uiProps`, it also has to be seen by getUiRequiredErrorSchema()
-  // for validation, which only ever sees a field's own uiSchema, so a grid-level or form-wide default would make the
-  // required indicator and schema validation disagree
-  const { required: _globalRequired, ...globalUiOptions } = uiSchema?.[UI_GLOBAL_OPTIONS_KEY] ?? {};
+  // `required` is deliberately excluded from the grid config's own `uiProps` propagated here: unlike the rest of
+  // `uiProps`, it also has to be seen by getUiRequiredErrorSchema() for validation, which only ever sees a field's own
+  // uiSchema, so a grid-level default would make the required indicator and schema validation disagree
   const { required: _uiPropsRequired, ...restUiProps } = uiProps;
   // This reads the caller's uiSchema before `resolveUiSchema()` has normalized it, so neither value is known to be an
   // object yet; spreading a non-object would scatter its characters or digits as keys
@@ -180,15 +177,10 @@ export function computeFieldUiSchema<
   const localUiOptions = {
     ...(isObject(rawLocalUiOptions) ? rawLocalUiOptions : {}),
     ...restUiProps,
-    ...globalUiOptions,
   };
   const fieldUiSchema: UiSchema<T, S, F> = localUiSchema ? { ...localUiSchema } : {};
   if (Object.keys(localUiOptions).length > 0) {
     fieldUiSchema[UI_OPTIONS_KEY] = localUiOptions;
-  }
-  if (Object.keys(globalUiOptions).length > 0) {
-    // pass the global uiOptions down to the field uiSchema so that they can be applied to all nested fields
-    fieldUiSchema[UI_GLOBAL_OPTIONS_KEY] = globalUiOptions;
   }
   let { readonly: uiReadonly } = getUiOptions<T, S, F>(fieldUiSchema);
   if (forceReadonly === true || (uiReadonly === undefined && schemaReadonly === true)) {

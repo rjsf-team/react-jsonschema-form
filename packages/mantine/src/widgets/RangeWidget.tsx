@@ -17,8 +17,8 @@ import { getControlAttributes, rangeSpec, titleId, widgetDrawsLabel } from '@rjs
 import type { OwnKeys } from '../utils.tsx';
 import { cleanupOptions, getOwnLabel, useFieldWrapperProps, useHiddenTitle, useShownSuccessId } from '../utils.tsx';
 
-/** The Mantine input and `InputWrapper` props `Slider` doesn't take, such as a `ui:globalOptions` meant for the text
- * inputs, which it would pass on to its root element as unknown attributes
+/** The Mantine input and `InputWrapper` props `Slider` doesn't take, which it would pass on to its root element as
+ * unknown attributes
  */
 type SliderExcludedKey = Exclude<
   | keyof __BaseInputProps
@@ -125,7 +125,7 @@ export default function RangeWidget<
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const label = getOwnLabel<T, S, F>(props);
 
-  const themeProps = cleanupOptions(options, sliderExcludedKeys);
+  const themeProps = cleanupOptions(options, props, sliderExcludedKeys);
   const { min, max, step } = rangeSpec(schema);
   const { wrapperProps, inputWrapperOrder, invalid, successId, slotlessErrors } = useFieldWrapperProps(props);
   const { 'aria-labelledby': labelledBy, 'aria-describedby': describedBy } = getControlAttributes<T, S, F>(props);

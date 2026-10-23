@@ -3,6 +3,7 @@ import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 
 import type { BaseInputTemplateMuiProps } from '../src/BaseInputTemplate/BaseInputTemplate.tsx';
+import type { UiSchema as MuiUiSchema } from '../src/index.ts';
 import Form from '../src/index.ts';
 
 describe('MUI Theme-Specific Props', () => {
@@ -30,6 +31,26 @@ describe('MUI Theme-Specific Props', () => {
     expect(input).toBeInTheDocument();
     // In MUI, variant "standard" removes the notched outline classes that "outlined" (default) has.
     // Or we can check the class name if we want to be very specific, but existence of placeholder is enough to show mui props worked as placeholder is a TextField prop.
+  });
+
+  it("should apply mui props from ui:globalOptions, beneath a field's own, to its templates and its widget", () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      title: 'Profile',
+      properties: { foo: { type: 'string' }, bar: { type: 'string' } },
+    };
+    const uiSchema: MuiUiSchema = {
+      'ui:globalOptions': {
+        mui: { placeholder: 'Global', rjsfSlotProps: { titleTypography: { 'data-testid': 'global-title' } } },
+      },
+      bar: { 'ui:options': { mui: { placeholder: 'Own' } } },
+    };
+
+    const { container } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+    expect(screen.getByTestId('global-title')).toHaveTextContent('Profile');
+    expect(container.querySelector('#root_foo')).toHaveAttribute('placeholder', 'Global');
+    expect(container.querySelector('#root_bar')).toHaveAttribute('placeholder', 'Own');
   });
 
   it('should keep a pattern and inputMode a caller sets on a non-numeric field through slotProps.htmlInput', () => {
