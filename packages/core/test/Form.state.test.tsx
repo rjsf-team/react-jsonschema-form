@@ -588,5 +588,22 @@ describeRepeated('Form common: form state updates', (createFormComponent) => {
       expect(node.querySelector<HTMLInputElement>('#root_0_animal')!.value).toBe('Fi');
       expectToHaveBeenCalledWithFormData(onChange, [{ animal: 'Fi' }], 'root_0_animal');
     });
+
+    it('does not add an empty object for an absent nested oneOf', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { name: { type: 'string' }, pet: { type: 'object', oneOf: [optionA, optionB] } },
+      };
+      const { node, onChange } = createFormComponent({
+        ref: createRef(),
+        schema,
+        experimental_defaultFormStateBehavior: { emptyObjectFields: 'skipEmptyDefaults' },
+      });
+
+      await user.type(node.querySelector<HTMLInputElement>('#root_name')!, 'x');
+
+      expectToHaveBeenCalledWithFormData(onChange, { name: 'x' }, 'root_name');
+      expect(onChange.mock.lastCall![0].formData).not.toHaveProperty('pet');
+    });
   });
 });
