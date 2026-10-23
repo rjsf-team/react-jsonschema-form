@@ -1,8 +1,10 @@
 import type { FocusEvent } from 'react';
-import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps, GenericObjectType } from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { getControlAttributes, schemaRequiresTrueValue, widgetDrawsLabel } from '@rjsf/utils';
 import type { CheckboxProps } from 'antd';
 import { Checkbox, theme } from 'antd';
+
+import getControlState from '../../controlState.ts';
 
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.
  *  It is typically used to represent a boolean.
@@ -31,10 +33,9 @@ export default function CheckboxWidget<
     presentation,
   } = props;
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
-  const { formContext } = registry;
-  const { readonlyAsDisabled = true } = formContext as GenericObjectType;
   const { token } = theme.useToken();
   const trueValueRequired = schemaRequiresTrueValue(schema) && required;
+  const control = getControlState<T, S, F>({ disabled, readonly, required: trueValueRequired, registry });
 
   const handleChange: NonNullable<CheckboxProps['onChange']> = ({ target }) => onChange(target.checked);
 
@@ -52,10 +53,11 @@ export default function CheckboxWidget<
     <Checkbox
       autoFocus={autofocus}
       checked={typeof value === 'undefined' ? false : value}
-      disabled={disabled || (readonlyAsDisabled && readonly)}
+      disabled={control.disabled}
       id={id}
       name={htmlName || id}
-      required={trueValueRequired}
+      required={control.toggleRequired}
+      aria-readonly={control.ariaReadonly}
       onChange={!readonly ? handleChange : undefined}
       {...extraProps}
       {...getControlAttributes<T, S, F>({ id, presentation })}

@@ -15,6 +15,8 @@ import {
 } from '@rjsf/utils';
 import { Col, Row, Form, Input } from 'antd';
 
+import getControlState from '../../controlState.ts';
+
 const VERTICAL_LABEL_COL = { span: 24 };
 const VERTICAL_WRAPPER_COL = { span: 24 };
 
@@ -55,13 +57,13 @@ export default function WrapIfAdditionalTemplate<
   const {
     colon,
     labelCol = VERTICAL_LABEL_COL,
-    readonlyAsDisabled = true,
     rowGutter = 24,
     toolbarAlign = 'top',
     wrapperCol = VERTICAL_WRAPPER_COL,
     wrapperStyle,
   } = registry.formContext;
   const { templates, translateString } = registry;
+  const control = getControlState<T, S, F>({ disabled, readonly, registry });
   // Button templates are not overridden in the uiSchema
   const { RemoveButton } = templates.ButtonTemplates;
   const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
@@ -107,7 +109,7 @@ export default function WrapIfAdditionalTemplate<
                   value={keyName}
                   propertyNamesEnum={propertyNamesEnum}
                   onKeyRename={onKeyRename}
-                  disabled={disabled || (readonlyAsDisabled && readonly)}
+                  disabled={control.disabled}
                   readonly={readonly}
                   required={required}
                   registry={registry}
@@ -118,7 +120,7 @@ export default function WrapIfAdditionalTemplate<
                   aria-label={hasKeyLabel ? undefined : keyLabel}
                   className='form-control'
                   defaultValue={keyName}
-                  disabled={disabled || (readonlyAsDisabled && readonly)}
+                  disabled={control.disabled}
                   id={`${id}-key`}
                   name={`${id}-key`}
                   onBlur={!readonly ? onKeyRenameBlur : undefined}

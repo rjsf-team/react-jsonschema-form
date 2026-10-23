@@ -3903,6 +3903,45 @@ describe('ArrayField', () => {
     });
   });
 
+  describe('A custom ArraySchemaField', () => {
+    it("is handed each item's own errors as rawErrors, not the array's (#5594)", async () => {
+      const rawErrorsById = new Map<string, string[] | undefined>();
+      function RecordingSchemaField(props: FieldProps) {
+        // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop is what this test pins
+        rawErrorsById.set(props.id, props.rawErrors);
+        return <SchemaField {...props} />;
+      }
+      const { node } = createFormComponent({
+        schema: { type: 'array', minItems: 2, items: { type: 'string', minLength: 2 } },
+        initialFormData: ['a'],
+        fields: { ArraySchemaField: RecordingSchemaField },
+      });
+
+      await submitForm(node, user);
+
+      expect(rawErrorsById.get('root_0')).toEqual(['must NOT have fewer than 2 characters']);
+    });
+
+    it('is handed no rawErrors for an item with no errors of its own while the array has some (#5594)', async () => {
+      const rawErrorsById = new Map<string, string[] | undefined>();
+      function RecordingSchemaField(props: FieldProps) {
+        // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop is what this test pins
+        rawErrorsById.set(props.id, props.rawErrors);
+        return <SchemaField {...props} />;
+      }
+      const { node } = createFormComponent({
+        schema: { type: 'array', minItems: 2, items: { type: 'string' } },
+        initialFormData: ['a'],
+        fields: { ArraySchemaField: RecordingSchemaField },
+      });
+
+      await submitForm(node, user);
+
+      expect(node.querySelector('.rjsf-field-array')).toHaveTextContent('must NOT have fewer than 2 items');
+      expect(rawErrorsById.get('root_0')).toBeUndefined();
+    });
+  });
+
   describe('ErrorSchema gets updated', () => {
     const templates = {
       ArrayFieldItemTemplate: ArrayFieldTestItemTemplate,

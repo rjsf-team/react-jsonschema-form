@@ -1,3 +1,4 @@
+import { Fragment } from 'react';
 import type { FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { getTemplates, getUiOptions } from '@rjsf/utils';
 
@@ -22,8 +23,11 @@ export default function OwnTitleAndDescription<
     return null;
   }
   const { TitleFieldTemplate, DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, getUiOptions(uiSchema));
+  // A `TitleFieldTemplate` may draw a `<legend>`, as core's does, which is valid only as the first child of a
+  // `<fieldset>` it names, so a title is drawn inside one, as an object's heading and description are
+  const Wrapper = drawsLabel ? 'fieldset' : Fragment;
   return (
-    <>
+    <Wrapper>
       {drawsLabel && (
         <TitleFieldTemplate
           id={label.id}
@@ -43,6 +47,6 @@ export default function OwnTitleAndDescription<
           registry={registry}
         />
       )}
-    </>
+    </Wrapper>
   );
 }

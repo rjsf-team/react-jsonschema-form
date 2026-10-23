@@ -39,6 +39,24 @@ describe('NullField', () => {
       expect(node.querySelector('.rjsf-field label')).not.toBeInTheDocument();
     });
 
+    it("should draw a null field's title as the legend of a fieldset around its title and description (#5562)", () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { n: { type: 'null', title: 'Nothing', description: 'Holds nothing' } } },
+      });
+
+      const legend = node.querySelector('#root_n__title')?.closest('legend');
+      expect(legend?.parentElement?.tagName).toBe('FIELDSET');
+      expect(legend?.parentElement?.firstElementChild).toBe(legend);
+      expect(legend?.parentElement).toContainElement(node.querySelector('#root_n__description'));
+    });
+
+    it('should draw no fieldset for a null field that draws only a description', () => {
+      const { node } = createFormComponent({ schema: { type: 'null', description: 'Holds nothing' } });
+
+      expect(node.querySelector('#root__description')).toBeInTheDocument();
+      expect(node.querySelector('fieldset')).toBeNull();
+    });
+
     it('should render nothing of its own for a null field with no title or description', () => {
       const { node } = createFormComponent({ schema: { type: 'null' } });
 

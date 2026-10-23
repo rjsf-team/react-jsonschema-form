@@ -61,6 +61,16 @@ describe('StringField', () => {
       expect(node.querySelectorAll('.rjsf-field input[type=text]')).toHaveLength(1);
     });
 
+    it("should not put the widget's label on the input as an attribute (#5587)", () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { name: { type: 'string', title: 'Name' }, age: { type: 'number' } } },
+        uiSchema: { age: { 'ui:label': false } },
+      });
+
+      expect(node.querySelector('#root_name')).not.toHaveAttribute('label');
+      expect(node.querySelector('#root_age')).not.toHaveAttribute('label');
+    });
+
     it('should render a string field with a label', () => {
       const { node } = createFormComponent({
         schema: {

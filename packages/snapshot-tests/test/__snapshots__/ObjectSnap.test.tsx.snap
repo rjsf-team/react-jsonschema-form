@@ -40,7 +40,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
               <input
                 class="form-control"
                 id="root_person_name"
-                label="name"
                 name="root[person][name]"
                 placeholder=""
                 type="text"
@@ -76,7 +75,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                   <input
                     class="form-control"
                     id="root_person_address_street"
-                    label="street"
                     name="root[person][address][street]"
                     placeholder=""
                     type="text"
@@ -99,7 +97,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                   <input
                     class="form-control"
                     id="root_person_address_city"
-                    label="city"
                     name="root[person][address][city]"
                     placeholder=""
                     type="text"
@@ -122,7 +119,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                   <input
                     class="form-control"
                     id="root_person_address_country"
-                    label="country"
                     name="root[person][address][country]"
                     placeholder=""
                     type="text"
@@ -174,7 +170,6 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
           <input
             class="form-control"
             id="root_name"
-            label="name"
             name="root[name]"
             placeholder=""
             type="text"
@@ -223,7 +218,6 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
               <input
                 class="form-control"
                 id="root_customField"
-                label="customField"
                 name="root[customField]"
                 placeholder=""
                 type="text"
@@ -307,7 +301,6 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
           <input
             class="form-control"
             id="root_name"
-            label="name"
             name="root[name]"
             placeholder=""
             type="text"
@@ -331,7 +324,6 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
             class="form-control"
             id="root_age"
             inputmode="decimal"
-            label="age"
             name="root[age]"
             pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
             placeholder=""
@@ -404,7 +396,6 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                     <input
                       class="form-control"
                       id="root_tags_0"
-                      label="tags-1"
                       name="root[tags][0]"
                       placeholder=""
                       required=""
@@ -482,7 +473,6 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                     <input
                       class="form-control"
                       id="root_tags_1"
-                      label="tags-2"
                       name="root[tags][1]"
                       placeholder=""
                       required=""
@@ -594,7 +584,6 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
           <input
             class="form-control"
             id="root_firstName"
-            label="firstName"
             name="root[firstName]"
             placeholder=""
             type="text"
@@ -617,7 +606,6 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
           <input
             class="form-control"
             id="root_lastName"
-            label="lastName"
             name="root[lastName]"
             placeholder=""
             type="text"
@@ -641,7 +629,6 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
             class="form-control"
             id="root_age"
             inputmode="decimal"
-            label="age"
             name="root[age]"
             pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
             placeholder=""
@@ -704,7 +691,6 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
               <input
                 class="form-control"
                 id="root_person_name"
-                label="name"
                 name="root.person.name"
                 placeholder=""
                 type="text"
@@ -740,7 +726,6 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                   <input
                     class="form-control"
                     id="root_person_address_street"
-                    label="street"
                     name="root.person.address.street"
                     placeholder=""
                     type="text"
@@ -763,7 +748,6 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                   <input
                     class="form-control"
                     id="root_person_address_city"
-                    label="city"
                     name="root.person.address.city"
                     placeholder=""
                     type="text"
@@ -815,7 +799,6 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
           <input
             class="form-control"
             id="root_name"
-            label="name"
             name="root.name"
             placeholder=""
             type="text"
@@ -839,7 +822,6 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
             class="form-control"
             id="root_count"
             inputmode="decimal"
-            label="count"
             name="root.count"
             pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
             placeholder=""
@@ -893,7 +875,6 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                     <input
                       class="form-control"
                       id="root_items_0"
-                      label="items-1"
                       name="root.items.0"
                       placeholder=""
                       required=""
@@ -971,7 +952,6 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                     <input
                       class="form-control"
                       id="root_items_1"
-                      label="items-2"
                       name="root.items.1"
                       placeholder=""
                       required=""
@@ -1083,7 +1063,6 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
           <input
             class="form-control"
             id="root_firstName"
-            label="firstName"
             name="root.firstName"
             placeholder=""
             type="text"
@@ -1106,7 +1085,6 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
           <input
             class="form-control"
             id="root_lastName"
-            label="lastName"
             name="root.lastName"
             placeholder=""
             type="text"
@@ -1130,7 +1108,6 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
             class="form-control"
             id="root_age"
             inputmode="decimal"
-            label="age"
             name="root.age"
             pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
             placeholder=""
@@ -1206,7 +1183,6 @@ exports[`object fields > additionalProperties 1`] = `
               <input
                 class="form-control"
                 id="root_foo"
-                label="foo"
                 name="root_foo"
                 placeholder=""
                 type="text"
@@ -1341,7 +1317,6 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                 aria-describedby="root_foo__description"
                 class="form-control"
                 id="root_foo"
-                label="foo"
                 name="root_foo"
                 placeholder=""
                 type="text"
@@ -1585,7 +1560,6 @@ exports[`object fields > additionalProperties, description 1`] = `
                 aria-describedby="root_foo__description"
                 class="form-control"
                 id="root_foo"
-                label="foo"
                 name="root_foo"
                 placeholder=""
                 type="text"
@@ -1695,7 +1669,6 @@ exports[`object fields > additionalProperties, label off 1`] = `
               <input
                 class="form-control"
                 id="root_foo"
-                label="foo"
                 name="root_foo"
                 placeholder=""
                 type="text"
@@ -1818,7 +1791,6 @@ exports[`object fields > additionalProperties, object type 1`] = `
                   <input
                     class="form-control"
                     id="root_foo_foo"
-                    label="foo"
                     name="root_foo_foo"
                     placeholder=""
                     type="text"
@@ -1945,7 +1917,6 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
               <input
                 class="form-control"
                 id="root_foo"
-                label="foo"
                 name="root_foo"
                 placeholder=""
                 type="text"
@@ -2070,7 +2041,6 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
               <input
                 class="form-control"
                 id="root_foo"
-                label="foo (deprecated)"
                 name="root_foo"
                 placeholder=""
                 type="text"
@@ -2154,7 +2124,6 @@ exports[`object fields > object 1`] = `
           <input
             class="form-control"
             id="root_a"
-            label="A"
             name="root_a"
             placeholder=""
             type="text"
@@ -2178,7 +2147,6 @@ exports[`object fields > object 1`] = `
             class="form-control"
             id="root_b"
             inputmode="decimal"
-            label="B"
             name="root_b"
             pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
             placeholder=""
@@ -2271,7 +2239,6 @@ exports[`object fields > pure anyOf union, with no frame of its own beside the o
               <input
                 class="form-control"
                 id="root_bark"
-                label="bark"
                 name="root_bark"
                 placeholder=""
                 type="text"
@@ -2347,7 +2314,6 @@ exports[`object fields > show add button and fields if additionalProperties is t
               <input
                 class="form-control"
                 id="root_additionalProperty"
-                label="additionalProperty"
                 name="root_additionalProperty"
                 placeholder=""
                 type="text"
@@ -2470,7 +2436,6 @@ exports[`object fields > with title and description > additionalProperties 1`] =
               <input
                 class="form-control"
                 id="root_foo"
-                label="foo"
                 name="root_foo"
                 placeholder=""
                 type="text"
@@ -2574,7 +2539,6 @@ exports[`object fields > with title and description > object 1`] = `
             aria-describedby="root_a__description"
             class="form-control"
             id="root_a"
-            label="A"
             name="root_a"
             placeholder=""
             type="text"
@@ -2605,7 +2569,6 @@ exports[`object fields > with title and description > object 1`] = `
             class="form-control"
             id="root_b"
             inputmode="decimal"
-            label="B"
             name="root_b"
             pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
             placeholder=""
@@ -2694,7 +2657,6 @@ exports[`object fields > with title and description > show add button and fields
               <input
                 class="form-control"
                 id="root_additionalProperty"
-                label="additionalProperty"
                 name="root_additionalProperty"
                 placeholder=""
                 type="text"
@@ -2817,7 +2779,6 @@ exports[`object fields > with title and description from both > additionalProper
               <input
                 class="form-control"
                 id="root_foo"
-                label="foo"
                 name="root_foo"
                 placeholder=""
                 type="text"
@@ -2921,7 +2882,6 @@ exports[`object fields > with title and description from both > object 1`] = `
             aria-describedby="root_a__description"
             class="form-control"
             id="root_a"
-            label="My Item A"
             name="root_a"
             placeholder=""
             type="text"
@@ -2952,7 +2912,6 @@ exports[`object fields > with title and description from both > object 1`] = `
             class="form-control"
             id="root_b"
             inputmode="decimal"
-            label="My Item B"
             name="root_b"
             pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
             placeholder=""
@@ -3041,7 +3000,6 @@ exports[`object fields > with title and description from uiSchema > additionalPr
               <input
                 class="form-control"
                 id="root_foo"
-                label="foo"
                 name="root_foo"
                 placeholder=""
                 type="text"
@@ -3145,7 +3103,6 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
             aria-describedby="root_a__description"
             class="form-control"
             id="root_a"
-            label="My Item A"
             name="root_a"
             placeholder=""
             type="text"
@@ -3176,7 +3133,6 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
             class="form-control"
             id="root_b"
             inputmode="decimal"
-            label="My Item B"
             name="root_b"
             pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
             placeholder=""
@@ -3265,7 +3221,6 @@ exports[`object fields > with title and description from uiSchema > show add but
               <input
                 class="form-control"
                 id="root_additionalProperty"
-                label="additionalProperty"
                 name="root_additionalProperty"
                 placeholder=""
                 type="text"
@@ -3361,7 +3316,6 @@ exports[`object fields > with title and description with global label off > addi
                 aria-label="foo"
                 class="form-control"
                 id="root_foo"
-                label="foo"
                 name="root_foo"
                 placeholder=""
                 type="text"
@@ -3435,7 +3389,6 @@ exports[`object fields > with title and description with global label off > obje
             aria-label="A"
             class="form-control"
             id="root_a"
-            label="A"
             name="root_a"
             placeholder=""
             type="text"
@@ -3450,7 +3403,6 @@ exports[`object fields > with title and description with global label off > obje
             class="form-control"
             id="root_b"
             inputmode="decimal"
-            label="B"
             name="root_b"
             pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
             placeholder=""
@@ -3512,7 +3464,6 @@ exports[`object fields > with title and description with global label off > show
                 aria-label="additionalProperty"
                 class="form-control"
                 id="root_additionalProperty"
-                label="additionalProperty"
                 name="root_additionalProperty"
                 placeholder=""
                 type="text"
