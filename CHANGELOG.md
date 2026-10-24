@@ -22,6 +22,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated `markdown-to-jsx` from `^9.8.2` to `^9.10.3` ([#5420](https://github.com/rjsf-team/react-jsonschema-form/pull/5420))
 - Fixed `Form` failing validation with `must be boolean` (or the matching type error) when the root `formData` is a falsy value such as `false`, `0` or `''`. Only `undefined` is now treated as missing before validating, fixing [#5404](https://github.com/rjsf-team/react-jsonschema-form/issues/5404)
+- Fixed `Form` throwing `Maximum update depth exceeded` when a widget or `setFieldValue()` calls `onChange` more than about 50 times in one event. Changes are now applied as `setState` updaters that commit together, and each still reports through `onChange` in order. A change that throws from `customValidate` or `transformErrors` now leaves the form mounted and its state unchanged, and the error is rethrown from a timeout. The undocumented `Form` members `pendingChanges` and `processPendingChange()` are removed, fixing [#5532](https://github.com/rjsf-team/react-jsonschema-form/issues/5532)
 
 ## @rjsf/shadcn
 

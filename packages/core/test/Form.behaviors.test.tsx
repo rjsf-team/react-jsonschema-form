@@ -2315,9 +2315,8 @@ describe('extraErrors set after submit (#4965)', () => {
 describe('extraErrors not duplicated when sibling array field mutated (#5041)', () => {
   it('should not accumulate duplicate extraErrors after array item is added', async () => {
     // Reproduces https://github.com/rjsf-team/react-jsonschema-form/issues/5041
-    // processPendingChange() used originalErrorSchema (which already contains merged
-    // extraErrors) as the base for re-merging extraErrors, causing __errors to be
-    // appended again on every array mutation.
+    // A change must re-merge extraErrors onto the AJV-only error schema, not onto one that
+    // already contains them, or __errors are appended again on every array mutation.
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
