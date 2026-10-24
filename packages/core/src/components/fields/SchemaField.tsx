@@ -56,7 +56,7 @@ import {
   uiBooleanOption,
 } from '@rjsf/utils';
 
-import fieldLabelForLog from '../../fieldLabelForLog.ts';
+import fieldLabelForLog, { entryLabelForLog } from '../../fieldLabelForLog.ts';
 import hasOptionLabels from '../../hasOptionLabels.ts';
 import { useShownOption } from '../../hooks/useOptionSelection.ts';
 import useUiState from '../../hooks/useUiState.ts';
@@ -909,6 +909,12 @@ function SchemaFieldRender<
   const { FieldTemplate, DescriptionFieldTemplate, FieldHelpTemplate, FieldErrorTemplate } = getTemplates<T, S, F>(
     registry,
     uiOptions,
+    {
+      // The label names the uiSchema entry rather than the field, so an `items` mistake warns once, not once per row;
+      // it is built only when an override is actually invalid
+      entryLabel: () => entryLabelForLog(fieldPath, registry.globalFormOptions),
+      ownUiOptions,
+    },
   );
 
   // A field the options give way to renders the choice between them, so with no options it has nothing to choose, which

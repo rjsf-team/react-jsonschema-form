@@ -25,6 +25,7 @@ import {
   isConstantSelect,
   isObject,
   isPlainObject,
+  describeUnresolvedComponent,
   isSchemaObject,
   logOnce,
   lookupFromFormContext,
@@ -39,7 +40,6 @@ import {
   ITEMS_KEY,
 } from '@rjsf/utils';
 
-import describeUnresolvedComponent from '../../describeUnresolvedComponent.ts';
 import fieldLabelForLog from '../../fieldLabelForLog.ts';
 import { isAdditionalPropertySchema, storedValue, withoutAdditionalFlag } from './fieldWidgetUtils.ts';
 import { lookUpUiField } from './namedField.ts';

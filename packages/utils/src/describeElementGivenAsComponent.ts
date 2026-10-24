@@ -1,6 +1,7 @@
 /** Describes a React element given where a component was expected, for an error or warning that it can't be used.
  * Passing `<MyWidget />` for `MyWidget` is the likely mistake, and "got object" wouldn't say what to change.
- * `@rjsf/core`'s `describeUnresolvedComponent()` words its own element case the same way, so keep the two in step.
+ * `describeUnresolvedComponent()` (in this package) words its element case with this helper, so the warnings for
+ * every option that takes a component or a name read alike.
  *
  * Internal to `@rjsf/utils`: `package.json` excludes `./lib/describeElementGivenAsComponent.js` from the `./lib/*.js`
  * exports wildcard so it can't be deep-imported, since a reachable subpath would have to keep working until the next
