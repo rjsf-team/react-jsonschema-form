@@ -285,6 +285,28 @@ importers:
         specifier: ^1.11.23
         version: 1.11.23
 
+  packages/bootstrap3:
+    dependencies:
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
+      react:
+        specifier: '>=19'
+        version: 19.3.0
+    devDependencies:
+      '@rjsf/core':
+        specifier: workspace:^
+        version: link:../core
+      '@rjsf/snapshot-tests':
+        specifier: workspace:^
+        version: link:../snapshot-tests
+      '@rjsf/utils':
+        specifier: workspace:^
+        version: link:../utils
+      '@rjsf/validator-ajv8':
+        specifier: workspace:^
+        version: link:../validator-ajv8
+
   packages/chakra-ui:
     dependencies:
       '@emotion/cache':

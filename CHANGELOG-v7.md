@@ -60,6 +60,10 @@ should change the heading of the (upcoming) version to include a major version b
 - `ObjectFieldTemplate` keys a property's column span by the property's own `ui:widget` and `ui:field` only, since RJSF no longer reads either from `ui:globalOptions` ([#5607](https://github.com/rjsf-team/react-jsonschema-form/issues/5607))
 - `ObjectFieldTemplate` shows its add button by `registry.schemaUtils.canExpand()` rather than `canExpand()`, so an object naming no `additionalProperties` gets one in a form whose `additionalPropertiesWhenAbsent` is `'allow'` (see `@rjsf/core`), [#2137](https://github.com/rjsf-team/react-jsonschema-form/issues/2137)
 
+## @rjsf/bootstrap3
+
+- New package, deprecated from the start and removed in v8: the Bootstrap 3 theme `@rjsf/core` rendered through v6, as a class map and the four templates whose markup is Bootstrap 3's (the `IconButton` family, `ArrayFieldItemTemplate`, `WrapIfAdditionalTemplate` and `TitleField`) over core's components. Its output is core's today, byte for byte, and stays Bootstrap 3 once core renders unstyled markup ([#5616](https://github.com/rjsf-team/react-jsonschema-form/issues/5616))
+
 ## @rjsf/chakra-ui
 
 - Converted the internal `forwardRef`-wrapped UI primitives (`Field`, `Slider`, `Alert`, `NumberInputRoot`, `Checkbox`, `Radio`, `CloseButton`, and the `Select` family) to plain function components that accept `ref` as a regular prop, now that React 19 supports this natively
@@ -674,6 +678,7 @@ should change the heading of the (upcoming) version to include a major version b
 - `altDateTests()` checks that the Now and Clear buttons are enabled by default, disabled when the form is disabled or read-only, and hidden by `hideNowButton` and `hideClearButton`, and that an unset date part reaches `onFocus` and `onBlur` as `undefined` and a set one as its number ([#5378](https://github.com/rjsf-team/react-jsonschema-form/issues/5378))
 - Added `checkboxLabelTests()`, which checks that a boolean's label and description are drawn once, and its checkbox is named by its label, however `ui:widget` names it: the `checkbox` alias, the `CheckboxWidget` key, that key through `ui:options.widget`, the registered widget passed as a component, a wrapper registered under the `CheckboxWidget` key, and an unregistered wrapper passed as a component. For every spelling but the unregistered wrapper, which takes the theme's `default`, it also checks that the field's plan has the checkbox draw the label, and the description wherever the theme's `descriptionBy` argument says it goes, the checkbox itself or the field's template ([#5389](https://github.com/rjsf-team/react-jsonschema-form/issues/5389))
 - Added `fallbackDescriptionTests()`, which checks that under `useFallbackUiForUnsupportedType` a field's own `ui:field` naming `FallbackField` or nothing, through `ui:field` or `ui:options.field`, leaves the fallback UI's description drawn once, by the field rather than its value field, where the theme draws it with no `ui:field`, which the theme passes as above or below the type selector ([#5389](https://github.com/rjsf-team/react-jsonschema-form/issues/5389))
+- `themeTests()` takes a theme with no widgets of its own, as `@rjsf/bootstrap3` is: `ThemeGenerators.generateWidgets` is optional ([#5616](https://github.com/rjsf-team/react-jsonschema-form/issues/5616))
 
 ## @rjsf/utils
 

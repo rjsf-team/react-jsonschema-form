@@ -1,0 +1,67 @@
+{
+  "name": "@rjsf/bootstrap3",
+  "version": "6.11.0",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "type": "module",
+  "sideEffects": false,
+  "description": "Deprecated Bootstrap 3 theme for react-jsonschema-form, the markup @rjsf/core rendered through v6",
+  "exports": {
+    ".": {
+      "@rjsf/source": "./src/index.ts",
+      "default": "./lib/index.js"
+    },
+    "./lib": "./lib/index.js",
+    "./lib/*.js": "./lib/*.js"
+  },
+  "files": [
+    "lib",
+    "src"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rjsf-team/react-jsonschema-form.git"
+  },
+  "scripts": {
+    "build": "tsdown -c ../../tsdown.base.mts",
+    "test": "vitest run",
+    "test:update": "vitest run --update"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1"
+  },
+  "peerDependencies": {
+    "@rjsf/core": "workspace:^",
+    "@rjsf/utils": "workspace:^",
+    "react": ">=19"
+  },
+  "engineStrict": false,
+  "engines": {
+    "node": "^22.18.0 || ^24.11.0 || >=26.0.0"
+  },
+  "devDependencies": {
+    "@rjsf/core": "workspace:^",
+    "@rjsf/snapshot-tests": "workspace:^",
+    "@rjsf/utils": "workspace:^",
+    "@rjsf/validator-ajv8": "workspace:^"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "Bootstrap 3",
+    "react-jsonschema-form",
+    "jsonschema",
+    "json-schema",
+    "json",
+    "schema",
+    "form",
+    "react",
+    "bootstrap-3",
+    "rjsf-bootstrap-3"
+  ],
+  "contributors": [
+    "Heath Chiavettone <heath.chiavettone@freenome.com>"
+  ],
+  "license": "Apache-2.0"
+}

@@ -5,17 +5,18 @@ meaning that you must load the Bootstrap stylesheet on the page to view the form
 
 ## Supported themes
 
-| Theme Name            | Status    | Package Name / Link     |
-| --------------------- | --------- | ----------------------- |
-| antd                  | Published | `@rjsf/antd`            |
-| Chakra UI             | Published | `@rjsf/chakra-ui`       |
-| Bootstrap 3 (default) | Published | `@rjsf/core`            |
-| Daisy UI              | Published | `@rjsf/daisyui`         |
-| fluentui-rc           | Published | `@rjsf/fluentui-rc`     |
-| mantine               | Published | `@rjsf/mantine`         |
-| material-ui           | Published | `@rjsf/mui`             |
-| react-bootstrap       | Published | `@rjsf/react-bootstrap` |
-| shadcn                | Published | `@rjsf/shadcn`          |
+| Theme Name            | Status     | Package Name / Link     |
+| --------------------- | ---------- | ----------------------- |
+| antd                  | Published  | `@rjsf/antd`            |
+| Bootstrap 3           | Deprecated | `@rjsf/bootstrap3`      |
+| Chakra UI             | Published  | `@rjsf/chakra-ui`       |
+| Bootstrap 3 (default) | Published  | `@rjsf/core`            |
+| Daisy UI              | Published  | `@rjsf/daisyui`         |
+| fluentui-rc           | Published  | `@rjsf/fluentui-rc`     |
+| mantine               | Published  | `@rjsf/mantine`         |
+| material-ui           | Published  | `@rjsf/mui`             |
+| react-bootstrap       | Published  | `@rjsf/react-bootstrap` |
+| shadcn                | Published  | `@rjsf/shadcn`          |
 
 ## Using themes
 

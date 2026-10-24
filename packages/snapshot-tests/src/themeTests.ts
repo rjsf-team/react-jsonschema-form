@@ -3,7 +3,8 @@ import type { RegistryWidgetsType, TemplatesType } from '@rjsf/utils';
 
 export interface ThemeGenerators {
   generateTemplates: () => Partial<TemplatesType>;
-  generateWidgets: () => RegistryWidgetsType;
+  /** Left out by a theme with no widgets of its own, such as `@rjsf/bootstrap3` */
+  generateWidgets?: () => RegistryWidgetsType;
   generateTheme: () => ThemeProps;
 }
 
@@ -35,8 +36,8 @@ export function themeTests({ generateTemplates, generateWidgets, generateTheme }
     test('generateTemplates() returns fresh maps on every call', () => {
       expectFreshMaps(generateTemplates(), generateTemplates());
     });
-    test('generateWidgets() returns a fresh map on every call', () => {
-      expectFreshMaps(generateWidgets(), generateWidgets());
+    test.runIf(generateWidgets)('generateWidgets() returns a fresh map on every call', () => {
+      expectFreshMaps(generateWidgets!(), generateWidgets!());
     });
     test('generateTheme() returns fresh maps on every call', () => {
       expectFreshMaps(generateTheme(), generateTheme());
@@ -45,12 +46,14 @@ export function themeTests({ generateTemplates, generateWidgets, generateTheme }
     // maps only have to contain every generated key
     test('generateTemplates() and generateWidgets() return what generateTheme() is built from', () => {
       const templateKeys = Object.keys(generateTemplates());
-      const widgetKeys = Object.keys(generateWidgets());
       const { templates = {}, widgets = {} } = generateTheme();
       expect(templateKeys).not.toHaveLength(0);
-      expect(widgetKeys).not.toHaveLength(0);
       expect(Object.keys(templates)).toEqual(expect.arrayContaining(templateKeys));
-      expect(Object.keys(widgets)).toEqual(expect.arrayContaining(widgetKeys));
+      if (generateWidgets) {
+        const widgetKeys = Object.keys(generateWidgets());
+        expect(widgetKeys).not.toHaveLength(0);
+        expect(Object.keys(widgets)).toEqual(expect.arrayContaining(widgetKeys));
+      }
     });
   });
 }

@@ -61,6 +61,7 @@
   },
   "workspaces": [
     "packages/antd",
+    "packages/bootstrap3",
     "packages/chakra-ui",
     "packages/core",
     "packages/daisyui",
