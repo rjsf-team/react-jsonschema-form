@@ -103,7 +103,7 @@ export default function RatingWidget<
   return (
     <div
       id={id}
-      className='rating-widget'
+      className='rjsf-rating-widget'
       {...groupAttributes}
       aria-required={required || undefined}
       style={{

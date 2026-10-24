@@ -1,0 +1,213 @@
+:where(.rjsf) {
+  --rjsf-gap: 0.75rem;
+  --rjsf-radius: 0.25rem;
+  --rjsf-border: light-dark(#ccc, #555);
+  --rjsf-muted: light-dark(#666, #aaa);
+  --rjsf-danger: light-dark(#b02a37, #f1aeb5);
+  --rjsf-accent: light-dark(#0d6efd, #6ea8fe);
+  --rjsf-surface: light-dark(#fff, #1e1e1e);
+}
+
+:where(.rjsf .rjsf-field) {
+  margin-block-end: var(--rjsf-gap);
+}
+
+:where(.rjsf fieldset) {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+
+:where(.rjsf legend) {
+  display: flex;
+  align-items: center;
+  padding: 0;
+  margin-block-end: var(--rjsf-gap);
+  font-size: 1.25rem;
+}
+
+:where(.rjsf .rjsf-title-optional-data) {
+  margin-inline-start: auto;
+}
+
+:where(.rjsf .rjsf-field-label) {
+  display: block;
+  margin-block-end: 0.25rem;
+  font-weight: 600;
+}
+
+:where(.rjsf .rjsf-required) {
+  color: var(--rjsf-danger);
+  margin-inline-start: 0.125rem;
+}
+
+:where(
+  .rjsf input:not([type='checkbox'], [type='radio'], [type='range'], [type='file']),
+  .rjsf select,
+  .rjsf textarea
+) {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0.375rem 0.5rem;
+  border: 1px solid var(--rjsf-border);
+  border-radius: var(--rjsf-radius);
+  background: var(--rjsf-surface);
+  color: inherit;
+  font: inherit;
+}
+
+:where(.rjsf .rjsf-field-error) :where(input, select, textarea) {
+  border-color: var(--rjsf-danger);
+}
+
+:where(.rjsf .rjsf-field-description, .rjsf .rjsf-field-help) {
+  color: var(--rjsf-muted);
+  font-size: 0.875rem;
+  margin-block: 0.25rem;
+}
+
+:where(.rjsf .rjsf-error-detail) {
+  color: var(--rjsf-danger);
+  font-size: 0.875rem;
+  margin: 0.25rem 0 0;
+  padding-inline-start: 1.25rem;
+}
+
+:where(.rjsf .rjsf-errors) {
+  color: var(--rjsf-danger);
+  border: 1px solid var(--rjsf-danger);
+  border-radius: var(--rjsf-radius);
+  margin-block-end: var(--rjsf-gap);
+}
+
+:where(.rjsf .rjsf-errors h3) {
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  border-block-end: 1px solid var(--rjsf-danger);
+  font-size: 1rem;
+}
+
+:where(.rjsf .rjsf-errors ul) {
+  margin: 0;
+  padding: 0.5rem 0.75rem 0.5rem 2rem;
+}
+
+:where(.rjsf .rjsf-checkbox, .rjsf .rjsf-radio) {
+  margin-block: 0.25rem;
+}
+
+:where(.rjsf .rjsf-checkbox-inline, .rjsf .rjsf-radio-inline) {
+  margin-inline-end: var(--rjsf-gap);
+}
+
+:where(.rjsf .rjsf-checkbox label, .rjsf .rjsf-radio label, .rjsf .rjsf-checkbox-inline, .rjsf .rjsf-radio-inline) {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* A margin and vertical-align rather than a flex gap, so the spacing survives a host stylesheet that makes every
+   label inline-block */
+:where(.rjsf input:is([type='checkbox'], [type='radio'])) {
+  margin: 0;
+  vertical-align: middle;
+}
+
+:where(.rjsf input:is([type='checkbox'], [type='radio']) + span) {
+  margin-inline-start: 0.375rem;
+  vertical-align: middle;
+}
+
+:where(.rjsf .rjsf-alt-date-list) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--rjsf-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+:where(.rjsf .rjsf-field-range-wrapper) {
+  display: flex;
+  align-items: center;
+  gap: var(--rjsf-gap);
+}
+
+:where(
+  .rjsf .rjsf-button,
+  .rjsf .rjsf-submit-button,
+  .rjsf .rjsf-btn-now,
+  .rjsf .rjsf-btn-clear,
+  .rjsf .rjsf-cyclic-schema-expand
+) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.75rem;
+  border: 1px solid var(--rjsf-border);
+  border-radius: var(--rjsf-radius);
+  background: var(--rjsf-surface);
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+:where(.rjsf button:disabled) {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+:where(.rjsf .rjsf-button-info, .rjsf .rjsf-submit-button, .rjsf .rjsf-btn-now) {
+  border-color: var(--rjsf-accent);
+  color: var(--rjsf-accent);
+}
+
+:where(.rjsf .rjsf-button-danger) {
+  border-color: var(--rjsf-danger);
+  color: var(--rjsf-danger);
+}
+
+:where(.rjsf .rjsf-btn-add) {
+  display: flex;
+  margin-inline-start: auto;
+}
+
+:where(.rjsf .rjsf-array-item) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--rjsf-gap);
+  align-items: start;
+  margin-block-end: var(--rjsf-gap);
+}
+
+:where(.rjsf .rjsf-array-item-toolbox) {
+  display: flex;
+  gap: 0.25rem;
+}
+
+:where(.rjsf .rjsf-additional-property) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+  gap: var(--rjsf-gap);
+  align-items: end;
+}
+
+:where(.rjsf .rjsf-cyclic-schema) {
+  margin-block-start: var(--rjsf-gap);
+}
+
+:where(.rjsf .rjsf-grid-row) {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--rjsf-gap);
+}
+
+:where(.rjsf .rjsf-grid-row > .rjsf-grid-row) {
+  grid-column: 1 / -1;
+}
+
+:where(.rjsf .rjsf-grid-column) {
+  grid-column: span var(--rjsf-span, 12);
+  min-width: 0;
+}

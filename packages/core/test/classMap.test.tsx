@@ -6,17 +6,15 @@ import { buildRegistry } from '../src/index.ts';
 import { createFormComponent } from './testUtils.tsx';
 
 describe('classMap', () => {
-  it("layers the Form's classMap over core's, key by key, keeping core's under an entry left undefined and none under ''", () => {
+  it('lands a Form classMap entry in registry.classMap, an empty one as undefined', () => {
     const schema: RJSFSchema = { type: 'string' };
     const registry = buildRegistry(
-      { schema, validator, classMap: { input: 'theme-input', select: undefined, textarea: '' } },
+      { schema, validator, classMap: { input: 'theme-input', textarea: '' } },
       schema,
       createSchemaUtils({ validator }, schema),
     );
 
-    expect(registry.classMap.input).toBe('theme-input');
-    expect(registry.classMap.select).toBe('form-control');
-    expect(registry.classMap.textarea).toBe('');
+    expect(registry.classMap).toEqual(expect.objectContaining({ input: 'theme-input', textarea: undefined }));
   });
 
   it('renders a mapped class in place of the default and keeps the marker and state classes beside it', () => {
@@ -64,20 +62,20 @@ describe('classMap', () => {
     const [range, rangeByInputType] = node.querySelectorAll('input[type="range"]');
     expect(range).toHaveClass('theme-range');
     expect(rangeByInputType).toHaveClass('theme-range');
-    expect(range?.closest('.field-range-wrapper')).toHaveClass('theme-range-wrapper');
+    expect(range?.closest('.rjsf-field-range-wrapper')).toHaveClass('theme-range-wrapper');
     expect(node.querySelector('fieldset.rjsf-field-array')).toHaveClass('theme-array');
-    expect(node.querySelector('.array-item-list')).toHaveClass('theme-list');
+    expect(node.querySelector('.rjsf-array-item-list')).toHaveClass('theme-list');
     expect(node.querySelector('.rjsf-array-item')).toHaveClass('theme-item');
-    expect(node.querySelector('.array-item-toolbox')).toHaveClass('theme-toolbox');
+    expect(node.querySelector('.rjsf-array-item-toolbox')).toHaveClass('theme-toolbox');
     expect(node.querySelector('fieldset#root')).toHaveClass('theme-object');
     const checkbox = node.querySelector('input[type="checkbox"]');
     expect(checkbox).toHaveClass('theme-checkbox');
     expect(checkbox?.closest('label')).toHaveClass('theme-checkbox-label');
-    expect(checkbox?.closest('div')).toHaveClass('checkbox', 'theme-disabled');
+    expect(checkbox?.closest('div')).toHaveClass('rjsf-checkbox', 'theme-disabled');
     const radio = node.querySelector('input[type="radio"]');
     expect(radio).toHaveClass('theme-radio');
     expect(radio?.closest('label')).toHaveClass('theme-radio-label');
-    expect(node.querySelector('.field-description')).toHaveClass('theme-description');
+    expect(node.querySelector('.rjsf-field-description')).toHaveClass('theme-description');
   });
 
   it('adds the error keys to the label, description and help of a field showing errors only', () => {
@@ -106,6 +104,7 @@ describe('classMap', () => {
     expect(node.querySelector('#root_good__help')).not.toHaveClass('theme-help-error');
   });
 
+  // An option's label follows its own errors and `ui:hideError`, as its wrapper's class and its help do, whatever the
   // field above does
   it.each([
     ['shows', true, false],

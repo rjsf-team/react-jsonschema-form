@@ -29,7 +29,7 @@ function UnsupportedField<
     translateParams.push(reason);
   }
   return (
-    <div className='unsupported-field'>
+    <div className='rjsf-unsupported-field'>
       <p>
         <RichDescription
           description={translateString(translateEnum, translateParams)}

@@ -26,7 +26,7 @@ export default function FieldTemplate<
   const uiOptions = getUiOptions(uiSchema);
   const { WrapIfAdditionalTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   if (hidden) {
-    return <div className='hidden'>{children}</div>;
+    return <div hidden>{children}</div>;
   }
   // The plan's label already says whether a checkbox draws its own; the guess by the `checkbox` alias is left for a
   // template rendered without one, which `getDisplayLabel()` still tells to draw it, as the themes' templates do
@@ -39,7 +39,7 @@ export default function FieldTemplate<
           required={templateMarksRequired<T, S, F>(props)}
           id={templateLabelFor<T, S, F>(props)}
           labelId={presentation?.label.id}
-          className={clsx(classMap.fieldLabel, hasErrors && classMap.labelError)}
+          className={clsx('rjsf-field-label', classMap.fieldLabel, hasErrors && classMap.labelError)}
         />
       )}
       {templateDrawsDescription<T, S, F>(props) && description}

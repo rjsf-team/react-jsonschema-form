@@ -13,7 +13,7 @@ exports[`array fields > array 1`] = `
         id="root"
       >
         <div
-          class="row array-item-list"
+          class="rjsf-array-item-list row"
         />
         <div
           class="row"
@@ -22,7 +22,7 @@ exports[`array fields > array 1`] = `
             class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
           >
             <button
-              class="btn btn-info btn-add col-xs-12"
+              class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
               title="Add"
               type="button"
@@ -37,7 +37,7 @@ exports[`array fields > array 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -60,7 +60,7 @@ exports[`array fields > array icons 1`] = `
         id="root"
       >
         <div
-          class="row array-item-list"
+          class="rjsf-array-item-list row"
         >
           <div
             class="rjsf-array-item"
@@ -85,7 +85,7 @@ exports[`array fields > array icons 1`] = `
               </div>
             </div>
             <div
-              class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
+              class="col-xs-3 col-md-2 col-xl-1 rjsf-array-item-toolbox"
             >
               <div
                 class="btn-group"
@@ -158,7 +158,7 @@ exports[`array fields > array icons 1`] = `
               </div>
             </div>
             <div
-              class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
+              class="col-xs-3 col-md-2 col-xl-1 rjsf-array-item-toolbox"
             >
               <div
                 class="btn-group"
@@ -216,7 +216,7 @@ exports[`array fields > array icons 1`] = `
             class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
           >
             <button
-              class="btn btn-info btn-add col-xs-12"
+              class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
               title="Add"
               type="button"
@@ -231,7 +231,7 @@ exports[`array fields > array icons 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -274,7 +274,7 @@ exports[`array fields > checkboxes 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -299,7 +299,7 @@ exports[`array fields > empty errors array 1`] = `
           class="form-group rjsf-field rjsf-field-string"
         >
           <label
-            class="control-label"
+            class="rjsf-field-label control-label"
             for="root_name"
           >
             <span
@@ -322,7 +322,7 @@ exports[`array fields > empty errors array 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -345,7 +345,7 @@ exports[`array fields > fixed array 1`] = `
         id="root"
       >
         <div
-          class="row array-item-list"
+          class="rjsf-array-item-list row"
         >
           <div
             class="rjsf-array-item"
@@ -401,7 +401,7 @@ exports[`array fields > fixed array 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -417,7 +417,7 @@ exports[`array fields > has errors 1`] = `
     class="rjsf"
   >
     <div
-      class="panel panel-danger errors"
+      class="rjsf-errors panel panel-danger"
     >
       <div
         class="panel-heading"
@@ -448,7 +448,7 @@ exports[`array fields > has errors 1`] = `
           class="form-group rjsf-field rjsf-field-string rjsf-field-error has-error has-danger"
         >
           <label
-            class="control-label"
+            class="rjsf-field-label control-label"
             for="root_name"
           >
             <span
@@ -470,11 +470,11 @@ exports[`array fields > has errors 1`] = `
           />
           <div>
             <ul
-              class="error-detail bs-callout bs-callout-info"
+              class="rjsf-error-detail bs-callout bs-callout-info"
               id="root_name__error"
             >
               <li
-                class="text-danger"
+                class="rjsf-error text-danger"
               >
                 Bad input
               </li>
@@ -485,7 +485,7 @@ exports[`array fields > has errors 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -510,7 +510,7 @@ exports[`array fields > no errors 1`] = `
           class="form-group rjsf-field rjsf-field-string"
         >
           <label
-            class="control-label"
+            class="rjsf-field-label control-label"
             for="root_name"
           >
             <span
@@ -533,7 +533,7 @@ exports[`array fields > no errors 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -556,7 +556,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
         id="root"
       >
         <div
-          class="row array-item-list"
+          class="rjsf-array-item-list row"
         >
           <div
             class="rjsf-array-item"
@@ -575,7 +575,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                     class="form-group rjsf-field rjsf-field-string"
                   >
                     <label
-                      class="control-label"
+                      class="rjsf-field-label control-label"
                       for="root_0_name"
                     >
                       <span
@@ -598,7 +598,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                     class="form-group rjsf-field rjsf-field-number"
                   >
                     <label
-                      class="control-label"
+                      class="rjsf-field-label control-label"
                       for="root_0_value"
                     >
                       <span
@@ -624,7 +624,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
               </div>
             </div>
             <div
-              class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
+              class="col-xs-3 col-md-2 col-xl-1 rjsf-array-item-toolbox"
             >
               <div
                 class="btn-group"
@@ -681,7 +681,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                     class="form-group rjsf-field rjsf-field-string"
                   >
                     <label
-                      class="control-label"
+                      class="rjsf-field-label control-label"
                       for="root_1_name"
                     >
                       <span
@@ -704,7 +704,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                     class="form-group rjsf-field rjsf-field-number"
                   >
                     <label
-                      class="control-label"
+                      class="rjsf-field-label control-label"
                       for="root_1_value"
                     >
                       <span
@@ -730,7 +730,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
               </div>
             </div>
             <div
-              class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
+              class="col-xs-3 col-md-2 col-xl-1 rjsf-array-item-toolbox"
             >
               <div
                 class="btn-group"
@@ -778,7 +778,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
             class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
           >
             <button
-              class="btn btn-info btn-add col-xs-12"
+              class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
               title="Add"
               type="button"
@@ -793,7 +793,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -816,7 +816,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
         id="root"
       >
         <div
-          class="row array-item-list"
+          class="rjsf-array-item-list row"
         >
           <div
             class="rjsf-array-item"
@@ -841,7 +841,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
               </div>
             </div>
             <div
-              class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
+              class="col-xs-3 col-md-2 col-xl-1 rjsf-array-item-toolbox"
             >
               <div
                 class="btn-group"
@@ -904,7 +904,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
               </div>
             </div>
             <div
-              class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
+              class="col-xs-3 col-md-2 col-xl-1 rjsf-array-item-toolbox"
             >
               <div
                 class="btn-group"
@@ -952,7 +952,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
             class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
           >
             <button
-              class="btn btn-info btn-add col-xs-12"
+              class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
               title="Add"
               type="button"
@@ -967,7 +967,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -1010,7 +1010,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -1033,7 +1033,7 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
         id="root"
       >
         <div
-          class="row array-item-list"
+          class="rjsf-array-item-list row"
         >
           <div
             class="rjsf-array-item"
@@ -1095,7 +1095,7 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                 class="form-group rjsf-field rjsf-field-boolean"
               >
                 <div
-                  class="checkbox"
+                  class="rjsf-checkbox checkbox"
                 >
                   <label>
                     <input
@@ -1114,7 +1114,7 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -1137,7 +1137,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
         id="root"
       >
         <div
-          class="row array-item-list"
+          class="rjsf-array-item-list row"
         >
           <div
             class="rjsf-array-item"
@@ -1154,7 +1154,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                   id="root_0"
                 >
                   <div
-                    class="row array-item-list"
+                    class="rjsf-array-item-list row"
                   >
                     <div
                       class="rjsf-array-item"
@@ -1179,7 +1179,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                         </div>
                       </div>
                       <div
-                        class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
+                        class="col-xs-3 col-md-2 col-xl-1 rjsf-array-item-toolbox"
                       >
                         <div
                           class="btn-group"
@@ -1242,7 +1242,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                         </div>
                       </div>
                       <div
-                        class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
+                        class="col-xs-3 col-md-2 col-xl-1 rjsf-array-item-toolbox"
                       >
                         <div
                           class="btn-group"
@@ -1290,7 +1290,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                       class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
                     >
                       <button
-                        class="btn btn-info btn-add col-xs-12"
+                        class="btn btn-info rjsf-btn-add col-xs-12"
                         id="root_0__add"
                         title="Add"
                         type="button"
@@ -1305,7 +1305,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
               </div>
             </div>
             <div
-              class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
+              class="col-xs-3 col-md-2 col-xl-1 rjsf-array-item-toolbox"
             >
               <div
                 class="btn-group"
@@ -1360,7 +1360,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                   id="root_1"
                 >
                   <div
-                    class="row array-item-list"
+                    class="rjsf-array-item-list row"
                   >
                     <div
                       class="rjsf-array-item"
@@ -1385,7 +1385,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                         </div>
                       </div>
                       <div
-                        class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
+                        class="col-xs-3 col-md-2 col-xl-1 rjsf-array-item-toolbox"
                       >
                         <div
                           class="btn-group"
@@ -1448,7 +1448,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                         </div>
                       </div>
                       <div
-                        class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
+                        class="col-xs-3 col-md-2 col-xl-1 rjsf-array-item-toolbox"
                       >
                         <div
                           class="btn-group"
@@ -1496,7 +1496,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                       class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
                     >
                       <button
-                        class="btn btn-info btn-add col-xs-12"
+                        class="btn btn-info rjsf-btn-add col-xs-12"
                         id="root_1__add"
                         title="Add"
                         type="button"
@@ -1511,7 +1511,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
               </div>
             </div>
             <div
-              class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
+              class="col-xs-3 col-md-2 col-xl-1 rjsf-array-item-toolbox"
             >
               <div
                 class="btn-group"
@@ -1559,7 +1559,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
             class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
           >
             <button
-              class="btn btn-info btn-add col-xs-12"
+              class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
               title="Add"
               type="button"
@@ -1574,7 +1574,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -1597,7 +1597,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
         id="root"
       >
         <div
-          class="row array-item-list"
+          class="rjsf-array-item-list row"
         >
           <div
             class="rjsf-array-item"
@@ -1616,7 +1616,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                     class="form-group rjsf-field rjsf-field-string"
                   >
                     <label
-                      class="control-label"
+                      class="rjsf-field-label control-label"
                       for="root_0_name"
                     >
                       <span
@@ -1639,7 +1639,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                     class="form-group rjsf-field rjsf-field-number"
                   >
                     <label
-                      class="control-label"
+                      class="rjsf-field-label control-label"
                       for="root_0_value"
                     >
                       <span
@@ -1665,7 +1665,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
               </div>
             </div>
             <div
-              class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
+              class="col-xs-3 col-md-2 col-xl-1 rjsf-array-item-toolbox"
             >
               <div
                 class="btn-group"
@@ -1722,7 +1722,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                     class="form-group rjsf-field rjsf-field-string"
                   >
                     <label
-                      class="control-label"
+                      class="rjsf-field-label control-label"
                       for="root_1_name"
                     >
                       <span
@@ -1745,7 +1745,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                     class="form-group rjsf-field rjsf-field-number"
                   >
                     <label
-                      class="control-label"
+                      class="rjsf-field-label control-label"
                       for="root_1_value"
                     >
                       <span
@@ -1771,7 +1771,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
               </div>
             </div>
             <div
-              class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
+              class="col-xs-3 col-md-2 col-xl-1 rjsf-array-item-toolbox"
             >
               <div
                 class="btn-group"
@@ -1819,7 +1819,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
             class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
           >
             <button
-              class="btn btn-info btn-add col-xs-12"
+              class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
               title="Add"
               type="button"
@@ -1834,7 +1834,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -1857,7 +1857,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
         id="root"
       >
         <div
-          class="row array-item-list"
+          class="rjsf-array-item-list row"
         >
           <div
             class="rjsf-array-item"
@@ -1882,7 +1882,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
               </div>
             </div>
             <div
-              class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
+              class="col-xs-3 col-md-2 col-xl-1 rjsf-array-item-toolbox"
             >
               <div
                 class="btn-group"
@@ -1945,7 +1945,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
               </div>
             </div>
             <div
-              class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
+              class="col-xs-3 col-md-2 col-xl-1 rjsf-array-item-toolbox"
             >
               <div
                 class="btn-group"
@@ -1993,7 +1993,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
             class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
           >
             <button
-              class="btn btn-info btn-add col-xs-12"
+              class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
               title="Add"
               type="button"
@@ -2008,7 +2008,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -2031,7 +2031,7 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
         id="root"
       >
         <div
-          class="row array-item-list"
+          class="rjsf-array-item-list row"
         >
           <div
             class="rjsf-array-item"
@@ -2050,7 +2050,7 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                     class="form-group rjsf-field rjsf-field-string"
                   >
                     <label
-                      class="control-label"
+                      class="rjsf-field-label control-label"
                       for="root_0_name"
                     >
                       <span
@@ -2073,7 +2073,7 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
               </div>
             </div>
             <div
-              class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
+              class="col-xs-3 col-md-2 col-xl-1 rjsf-array-item-toolbox"
             >
               <div
                 class="btn-group"
@@ -2140,7 +2140,7 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                     class="form-group rjsf-field rjsf-field-string"
                   >
                     <label
-                      class="control-label"
+                      class="rjsf-field-label control-label"
                       for="root_1_name"
                     >
                       <span
@@ -2163,7 +2163,7 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
               </div>
             </div>
             <div
-              class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
+              class="col-xs-3 col-md-2 col-xl-1 rjsf-array-item-toolbox"
             >
               <div
                 class="btn-group"
@@ -2221,7 +2221,7 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
             class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
           >
             <button
-              class="btn btn-info btn-add col-xs-12"
+              class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
               title="Add"
               type="button"
@@ -2236,7 +2236,7 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -2266,13 +2266,13 @@ exports[`with title and description > array 1`] = `
           </span>
         </legend>
         <div
-          class="field-description"
+          class="rjsf-field-description"
           id="root__description"
         >
           a test description
         </div>
         <div
-          class="row array-item-list"
+          class="rjsf-array-item-list row"
         />
         <div
           class="row"
@@ -2281,7 +2281,7 @@ exports[`with title and description > array 1`] = `
             class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
           >
             <button
-              class="btn btn-info btn-add col-xs-12"
+              class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
               title="Add"
               type="button"
@@ -2296,7 +2296,7 @@ exports[`with title and description > array 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -2326,13 +2326,13 @@ exports[`with title and description > array icons 1`] = `
           </span>
         </legend>
         <div
-          class="field-description"
+          class="rjsf-field-description"
           id="root__description"
         >
           a test description
         </div>
         <div
-          class="row array-item-list"
+          class="rjsf-array-item-list row"
         >
           <div
             class="rjsf-array-item"
@@ -2345,7 +2345,7 @@ exports[`with title and description > array icons 1`] = `
                 class="form-group rjsf-field rjsf-field-string"
               >
                 <label
-                  class="control-label"
+                  class="rjsf-field-label control-label"
                   for="root_0"
                 >
                   <span
@@ -2354,13 +2354,13 @@ exports[`with title and description > array icons 1`] = `
                     Test item
                   </span>
                   <span
-                    class="required"
+                    class="rjsf-required"
                   >
                     *
                   </span>
                 </label>
                 <div
-                  class="field-description"
+                  class="rjsf-field-description"
                   id="root_0__description"
                 >
                   a test item description
@@ -2379,7 +2379,7 @@ exports[`with title and description > array icons 1`] = `
               </div>
             </div>
             <div
-              class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
+              class="col-xs-3 col-md-2 col-xl-1 rjsf-array-item-toolbox"
             >
               <div
                 class="btn-group"
@@ -2440,7 +2440,7 @@ exports[`with title and description > array icons 1`] = `
                 class="form-group rjsf-field rjsf-field-string"
               >
                 <label
-                  class="control-label"
+                  class="rjsf-field-label control-label"
                   for="root_1"
                 >
                   <span
@@ -2449,13 +2449,13 @@ exports[`with title and description > array icons 1`] = `
                     Test item
                   </span>
                   <span
-                    class="required"
+                    class="rjsf-required"
                   >
                     *
                   </span>
                 </label>
                 <div
-                  class="field-description"
+                  class="rjsf-field-description"
                   id="root_1__description"
                 >
                   a test item description
@@ -2474,7 +2474,7 @@ exports[`with title and description > array icons 1`] = `
               </div>
             </div>
             <div
-              class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
+              class="col-xs-3 col-md-2 col-xl-1 rjsf-array-item-toolbox"
             >
               <div
                 class="btn-group"
@@ -2532,7 +2532,7 @@ exports[`with title and description > array icons 1`] = `
             class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
           >
             <button
-              class="btn btn-info btn-add col-xs-12"
+              class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
               title="Add"
               type="button"
@@ -2547,7 +2547,7 @@ exports[`with title and description > array icons 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -2566,7 +2566,7 @@ exports[`with title and description > checkboxes 1`] = `
       class="form-group rjsf-field rjsf-field-array"
     >
       <label
-        class="control-label"
+        class="rjsf-field-label control-label"
         for="root"
       >
         <span
@@ -2576,7 +2576,7 @@ exports[`with title and description > checkboxes 1`] = `
         </span>
       </label>
       <div
-        class="field-description"
+        class="rjsf-field-description"
         id="root__description"
       >
         a test description
@@ -2607,7 +2607,7 @@ exports[`with title and description > checkboxes 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -2637,13 +2637,13 @@ exports[`with title and description > fixed array 1`] = `
           </span>
         </legend>
         <div
-          class="field-description"
+          class="rjsf-field-description"
           id="root__description"
         >
           a test description
         </div>
         <div
-          class="row array-item-list"
+          class="rjsf-array-item-list row"
         >
           <div
             class="rjsf-array-item"
@@ -2656,7 +2656,7 @@ exports[`with title and description > fixed array 1`] = `
                 class="form-group rjsf-field rjsf-field-string"
               >
                 <label
-                  class="control-label"
+                  class="rjsf-field-label control-label"
                   for="root_0"
                 >
                   <span
@@ -2665,13 +2665,13 @@ exports[`with title and description > fixed array 1`] = `
                     Test item
                   </span>
                   <span
-                    class="required"
+                    class="rjsf-required"
                   >
                     *
                   </span>
                 </label>
                 <div
-                  class="field-description"
+                  class="rjsf-field-description"
                   id="root_0__description"
                 >
                   a test item description
@@ -2701,7 +2701,7 @@ exports[`with title and description > fixed array 1`] = `
                 class="form-group rjsf-field rjsf-field-number"
               >
                 <label
-                  class="control-label"
+                  class="rjsf-field-label control-label"
                   for="root_1"
                 >
                   <span
@@ -2710,13 +2710,13 @@ exports[`with title and description > fixed array 1`] = `
                     Test item
                   </span>
                   <span
-                    class="required"
+                    class="rjsf-required"
                   >
                     *
                   </span>
                 </label>
                 <div
-                  class="field-description"
+                  class="rjsf-field-description"
                   id="root_1__description"
                 >
                   a test item description
@@ -2743,7 +2743,7 @@ exports[`with title and description > fixed array 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -2773,13 +2773,13 @@ exports[`with title and description from both > array 1`] = `
           </span>
         </legend>
         <div
-          class="field-description"
+          class="rjsf-field-description"
           id="root__description"
         >
           a fancier description
         </div>
         <div
-          class="row array-item-list"
+          class="rjsf-array-item-list row"
         />
         <div
           class="row"
@@ -2788,7 +2788,7 @@ exports[`with title and description from both > array 1`] = `
             class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
           >
             <button
-              class="btn btn-info btn-add col-xs-12"
+              class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
               title="Add"
               type="button"
@@ -2803,7 +2803,7 @@ exports[`with title and description from both > array 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -2833,13 +2833,13 @@ exports[`with title and description from both > array icons 1`] = `
           </span>
         </legend>
         <div
-          class="field-description"
+          class="rjsf-field-description"
           id="root__description"
         >
           a fancier description
         </div>
         <div
-          class="row array-item-list"
+          class="rjsf-array-item-list row"
         >
           <div
             class="rjsf-array-item"
@@ -2852,7 +2852,7 @@ exports[`with title and description from both > array icons 1`] = `
                 class="form-group rjsf-field rjsf-field-string"
               >
                 <label
-                  class="control-label"
+                  class="rjsf-field-label control-label"
                   for="root_0"
                 >
                   <span
@@ -2861,13 +2861,13 @@ exports[`with title and description from both > array icons 1`] = `
                     My Item
                   </span>
                   <span
-                    class="required"
+                    class="rjsf-required"
                   >
                     *
                   </span>
                 </label>
                 <div
-                  class="field-description"
+                  class="rjsf-field-description"
                   id="root_0__description"
                 >
                   a fancier item description
@@ -2886,7 +2886,7 @@ exports[`with title and description from both > array icons 1`] = `
               </div>
             </div>
             <div
-              class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
+              class="col-xs-3 col-md-2 col-xl-1 rjsf-array-item-toolbox"
             >
               <div
                 class="btn-group"
@@ -2947,7 +2947,7 @@ exports[`with title and description from both > array icons 1`] = `
                 class="form-group rjsf-field rjsf-field-string"
               >
                 <label
-                  class="control-label"
+                  class="rjsf-field-label control-label"
                   for="root_1"
                 >
                   <span
@@ -2956,13 +2956,13 @@ exports[`with title and description from both > array icons 1`] = `
                     My Item
                   </span>
                   <span
-                    class="required"
+                    class="rjsf-required"
                   >
                     *
                   </span>
                 </label>
                 <div
-                  class="field-description"
+                  class="rjsf-field-description"
                   id="root_1__description"
                 >
                   a fancier item description
@@ -2981,7 +2981,7 @@ exports[`with title and description from both > array icons 1`] = `
               </div>
             </div>
             <div
-              class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
+              class="col-xs-3 col-md-2 col-xl-1 rjsf-array-item-toolbox"
             >
               <div
                 class="btn-group"
@@ -3039,7 +3039,7 @@ exports[`with title and description from both > array icons 1`] = `
             class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
           >
             <button
-              class="btn btn-info btn-add col-xs-12"
+              class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
               title="Add"
               type="button"
@@ -3054,7 +3054,7 @@ exports[`with title and description from both > array icons 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -3073,7 +3073,7 @@ exports[`with title and description from both > checkboxes 1`] = `
       class="form-group rjsf-field rjsf-field-array"
     >
       <label
-        class="control-label"
+        class="rjsf-field-label control-label"
         for="root"
       >
         <span
@@ -3083,7 +3083,7 @@ exports[`with title and description from both > checkboxes 1`] = `
         </span>
       </label>
       <div
-        class="field-description"
+        class="rjsf-field-description"
         id="root__description"
       >
         a fancier description
@@ -3114,7 +3114,7 @@ exports[`with title and description from both > checkboxes 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -3144,13 +3144,13 @@ exports[`with title and description from both > fixed array 1`] = `
           </span>
         </legend>
         <div
-          class="field-description"
+          class="rjsf-field-description"
           id="root__description"
         >
           a fancier description
         </div>
         <div
-          class="row array-item-list"
+          class="rjsf-array-item-list row"
         >
           <div
             class="rjsf-array-item"
@@ -3163,7 +3163,7 @@ exports[`with title and description from both > fixed array 1`] = `
                 class="form-group rjsf-field rjsf-field-string"
               >
                 <label
-                  class="control-label"
+                  class="rjsf-field-label control-label"
                   for="root_0"
                 >
                   <span
@@ -3172,13 +3172,13 @@ exports[`with title and description from both > fixed array 1`] = `
                     My Item
                   </span>
                   <span
-                    class="required"
+                    class="rjsf-required"
                   >
                     *
                   </span>
                 </label>
                 <div
-                  class="field-description"
+                  class="rjsf-field-description"
                   id="root_0__description"
                 >
                   a fancier item description
@@ -3208,7 +3208,7 @@ exports[`with title and description from both > fixed array 1`] = `
                 class="form-group rjsf-field rjsf-field-number"
               >
                 <label
-                  class="control-label"
+                  class="rjsf-field-label control-label"
                   for="root_1"
                 >
                   <span
@@ -3217,13 +3217,13 @@ exports[`with title and description from both > fixed array 1`] = `
                     My Item
                   </span>
                   <span
-                    class="required"
+                    class="rjsf-required"
                   >
                     *
                   </span>
                 </label>
                 <div
-                  class="field-description"
+                  class="rjsf-field-description"
                   id="root_1__description"
                 >
                   a fancier item description
@@ -3250,7 +3250,7 @@ exports[`with title and description from both > fixed array 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -3280,13 +3280,13 @@ exports[`with title and description from uiSchema > array 1`] = `
           </span>
         </legend>
         <div
-          class="field-description"
+          class="rjsf-field-description"
           id="root__description"
         >
           a fancier description
         </div>
         <div
-          class="row array-item-list"
+          class="rjsf-array-item-list row"
         />
         <div
           class="row"
@@ -3295,7 +3295,7 @@ exports[`with title and description from uiSchema > array 1`] = `
             class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
           >
             <button
-              class="btn btn-info btn-add col-xs-12"
+              class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
               title="Add"
               type="button"
@@ -3310,7 +3310,7 @@ exports[`with title and description from uiSchema > array 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -3340,13 +3340,13 @@ exports[`with title and description from uiSchema > array icons 1`] = `
           </span>
         </legend>
         <div
-          class="field-description"
+          class="rjsf-field-description"
           id="root__description"
         >
           a fancier description
         </div>
         <div
-          class="row array-item-list"
+          class="rjsf-array-item-list row"
         >
           <div
             class="rjsf-array-item"
@@ -3359,7 +3359,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                 class="form-group rjsf-field rjsf-field-string"
               >
                 <label
-                  class="control-label"
+                  class="rjsf-field-label control-label"
                   for="root_0"
                 >
                   <span
@@ -3368,13 +3368,13 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                     My Item
                   </span>
                   <span
-                    class="required"
+                    class="rjsf-required"
                   >
                     *
                   </span>
                 </label>
                 <div
-                  class="field-description"
+                  class="rjsf-field-description"
                   id="root_0__description"
                 >
                   a fancier item description
@@ -3393,7 +3393,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
               </div>
             </div>
             <div
-              class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
+              class="col-xs-3 col-md-2 col-xl-1 rjsf-array-item-toolbox"
             >
               <div
                 class="btn-group"
@@ -3454,7 +3454,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                 class="form-group rjsf-field rjsf-field-string"
               >
                 <label
-                  class="control-label"
+                  class="rjsf-field-label control-label"
                   for="root_1"
                 >
                   <span
@@ -3463,13 +3463,13 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                     My Item
                   </span>
                   <span
-                    class="required"
+                    class="rjsf-required"
                   >
                     *
                   </span>
                 </label>
                 <div
-                  class="field-description"
+                  class="rjsf-field-description"
                   id="root_1__description"
                 >
                   a fancier item description
@@ -3488,7 +3488,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
               </div>
             </div>
             <div
-              class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
+              class="col-xs-3 col-md-2 col-xl-1 rjsf-array-item-toolbox"
             >
               <div
                 class="btn-group"
@@ -3546,7 +3546,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
             class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
           >
             <button
-              class="btn btn-info btn-add col-xs-12"
+              class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
               title="Add"
               type="button"
@@ -3561,7 +3561,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -3580,7 +3580,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
       class="form-group rjsf-field rjsf-field-array"
     >
       <label
-        class="control-label"
+        class="rjsf-field-label control-label"
         for="root"
       >
         <span
@@ -3590,7 +3590,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
         </span>
       </label>
       <div
-        class="field-description"
+        class="rjsf-field-description"
         id="root__description"
       >
         a fancier description
@@ -3621,7 +3621,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -3651,13 +3651,13 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
           </span>
         </legend>
         <div
-          class="field-description"
+          class="rjsf-field-description"
           id="root__description"
         >
           a fancier description
         </div>
         <div
-          class="row array-item-list"
+          class="rjsf-array-item-list row"
         >
           <div
             class="rjsf-array-item"
@@ -3670,7 +3670,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                 class="form-group rjsf-field rjsf-field-string"
               >
                 <label
-                  class="control-label"
+                  class="rjsf-field-label control-label"
                   for="root_0"
                 >
                   <span
@@ -3679,13 +3679,13 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                     My Item
                   </span>
                   <span
-                    class="required"
+                    class="rjsf-required"
                   >
                     *
                   </span>
                 </label>
                 <div
-                  class="field-description"
+                  class="rjsf-field-description"
                   id="root_0__description"
                 >
                   a fancier item description
@@ -3715,7 +3715,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                 class="form-group rjsf-field rjsf-field-number"
               >
                 <label
-                  class="control-label"
+                  class="rjsf-field-label control-label"
                   for="root_1"
                 >
                   <span
@@ -3724,13 +3724,13 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                     My Item
                   </span>
                   <span
-                    class="required"
+                    class="rjsf-required"
                   >
                     *
                   </span>
                 </label>
                 <div
-                  class="field-description"
+                  class="rjsf-field-description"
                   id="root_1__description"
                 >
                   a fancier item description
@@ -3757,7 +3757,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -3780,7 +3780,7 @@ exports[`with title and description with global label off > array 1`] = `
         id="root"
       >
         <div
-          class="row array-item-list"
+          class="rjsf-array-item-list row"
         />
         <div
           class="row"
@@ -3789,7 +3789,7 @@ exports[`with title and description with global label off > array 1`] = `
             class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
           >
             <button
-              class="btn btn-info btn-add col-xs-12"
+              class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
               title="Add"
               type="button"
@@ -3804,7 +3804,7 @@ exports[`with title and description with global label off > array 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -3827,7 +3827,7 @@ exports[`with title and description with global label off > array icons 1`] = `
         id="root"
       >
         <div
-          class="row array-item-list"
+          class="rjsf-array-item-list row"
         >
           <div
             class="rjsf-array-item"
@@ -3853,7 +3853,7 @@ exports[`with title and description with global label off > array icons 1`] = `
               </div>
             </div>
             <div
-              class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
+              class="col-xs-3 col-md-2 col-xl-1 rjsf-array-item-toolbox"
             >
               <div
                 class="btn-group"
@@ -3927,7 +3927,7 @@ exports[`with title and description with global label off > array icons 1`] = `
               </div>
             </div>
             <div
-              class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
+              class="col-xs-3 col-md-2 col-xl-1 rjsf-array-item-toolbox"
             >
               <div
                 class="btn-group"
@@ -3985,7 +3985,7 @@ exports[`with title and description with global label off > array icons 1`] = `
             class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
           >
             <button
-              class="btn btn-info btn-add col-xs-12"
+              class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
               title="Add"
               type="button"
@@ -4000,7 +4000,7 @@ exports[`with title and description with global label off > array icons 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -4044,7 +4044,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -4067,7 +4067,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
         id="root"
       >
         <div
-          class="row array-item-list"
+          class="rjsf-array-item-list row"
         >
           <div
             class="rjsf-array-item"
@@ -4125,7 +4125,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit

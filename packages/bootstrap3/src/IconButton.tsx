@@ -103,7 +103,7 @@ function ClearButtonFn<
       id={id}
       iconType='default'
       icon='remove'
-      className='btn-clear col-xs-12'
+      className='rjsf-btn-clear col-xs-12'
       title={translateString(TranslatableString.ClearButton)}
       onClick={onClick}
       disabled={disabled}

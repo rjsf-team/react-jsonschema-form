@@ -89,8 +89,8 @@ const ExposedArrayKeyTemplate = function ExposedArrayKeyTemplate(props: ArrayFie
     <div className='array'>
       {props.items}
       {props.canAdd && (
-        <div className='rjsf-array-item-add'>
-          <button type='button' onClick={props.onAddClick}>
+        <div>
+          <button type='button' className='rjsf-array-item-add' onClick={props.onAddClick}>
             Add New
           </button>
         </div>
@@ -112,8 +112,8 @@ const CustomOnAddClickTemplate = function CustomOnAddClickTemplate(props: ArrayF
     <div className='array'>
       {props.items}
       {props.canAdd && (
-        <div className='rjsf-array-item-add'>
-          <button type='button' onClick={() => props.onAddClick()}>
+        <div>
+          <button type='button' className='rjsf-array-item-add' onClick={() => props.onAddClick()}>
             Add New
           </button>
         </div>
@@ -242,9 +242,7 @@ describe('ArrayField', () => {
     it('should warn on missing items descriptor', () => {
       const { node } = createFormComponent({ schema: { type: 'array' } });
 
-      expect(node.querySelector('.rjsf-field-array > .unsupported-field')).toHaveTextContent(
-        'Missing items definition',
-      );
+      expect(node.querySelector('.rjsf-unsupported-field')).toHaveTextContent('Missing items definition');
     });
 
     it('should be able to be overwritten with a custom UnsupportedField component', () => {
@@ -368,7 +366,7 @@ describe('ArrayField', () => {
     it('should render a description', () => {
       const { node } = createFormComponent({ schema });
 
-      const description = node.querySelector('fieldset > .field-description');
+      const description = node.querySelector('fieldset > .rjsf-field-description');
 
       expect(description).toHaveTextContent('my description');
       expect(description).toHaveAttribute('id', 'root__description');
@@ -380,7 +378,7 @@ describe('ArrayField', () => {
         uiSchema: { 'ui:label': false },
       });
 
-      const description = node.querySelector('fieldset > .field-description');
+      const description = node.querySelector('fieldset > .rjsf-field-description');
 
       expect(description).toBeNull();
     });
@@ -392,7 +390,7 @@ describe('ArrayField', () => {
           'ui:widget': 'hidden',
         },
       });
-      expect(node.querySelector('div.hidden > fieldset')).toBeInTheDocument();
+      expect(node.querySelector('div[hidden] > fieldset')).toBeInTheDocument();
     });
 
     it('should render a customized title', () => {
@@ -499,7 +497,7 @@ describe('ArrayField', () => {
     it('should have an add button', () => {
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelector('.rjsf-array-item-add button')).not.toBeNull();
+      expect(node.querySelector('.rjsf-array-item-add')).not.toBeNull();
     });
 
     it('should not have an add button if addable is false', () => {
@@ -508,13 +506,13 @@ describe('ArrayField', () => {
         uiSchema: { 'ui:options': { addable: false } },
       });
 
-      expect(node.querySelector('.rjsf-array-item-add button')).toBeNull();
+      expect(node.querySelector('.rjsf-array-item-add')).toBeNull();
     });
 
     it('should add a new field when clicking the add button', async () => {
       const { node } = createFormComponent({ schema });
 
-      await user.click(elementOf(node, '.rjsf-array-item-add button'));
+      await user.click(elementOf(node, '.rjsf-array-item-add'));
 
       expect(node.querySelectorAll('.rjsf-field-string')).toHaveLength(1);
     });
@@ -525,7 +523,7 @@ describe('ArrayField', () => {
         templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate, ArrayFieldItemTemplate: ExposedArrayKeyItemTemplate },
       });
 
-      await user.click(elementOf(node, '.rjsf-array-item-add button'));
+      await user.click(elementOf(node, '.rjsf-array-item-add'));
 
       expect(node.querySelector('.rjsf-array-item')).toHaveAttribute(ArrayKeyDataAttr);
     });
@@ -581,7 +579,7 @@ describe('ArrayField', () => {
         </>,
       );
 
-      await user.click(elementOf(container, '.rjsf-array-item-add button'));
+      await user.click(elementOf(container, '.rjsf-array-item-add'));
 
       const keys = rowKeys(container);
       expect(keys).toHaveLength(6);
@@ -597,7 +595,7 @@ describe('ArrayField', () => {
       const keysBefore = rowKeys(node);
 
       await user.click(node.querySelectorAll('.rjsf-array-item-remove')[2]);
-      await user.click(elementOf(node, '.rjsf-array-item-add button'));
+      await user.click(elementOf(node, '.rjsf-array-item-add'));
 
       const keysAfter = rowKeys(node);
       expect(keysAfter.slice(0, 2)).toEqual(keysBefore.slice(0, 2));
@@ -613,7 +611,7 @@ describe('ArrayField', () => {
         },
       });
 
-      await user.click(elementOf(node, '.rjsf-array-item-add button'));
+      await user.click(elementOf(node, '.rjsf-array-item-add'));
 
       expect(node.querySelector('.rjsf-array-item')).not.toBeNull();
     });
@@ -624,7 +622,7 @@ describe('ArrayField', () => {
         initialFormData: ['foo', 'bar'],
       });
 
-      expect(node.querySelector('.rjsf-array-item-add button')).toBeNull();
+      expect(node.querySelector('.rjsf-array-item-add')).toBeNull();
     });
 
     it('should provide an add button if length is lesser than maxItems', () => {
@@ -633,7 +631,7 @@ describe('ArrayField', () => {
         initialFormData: ['foo'],
       });
 
-      expect(node.querySelector('.rjsf-array-item-add button')).not.toBeNull();
+      expect(node.querySelector('.rjsf-array-item-add')).not.toBeNull();
     });
 
     it('should retain existing row keys/ids when adding new row', async () => {
@@ -647,7 +645,7 @@ describe('ArrayField', () => {
       const startRow1_key = startRows[0].getAttribute(ArrayKeyDataAttr);
       const startRow2_key = startRows[1] ? startRows[1].getAttribute(ArrayKeyDataAttr) : undefined;
 
-      await user.click(elementOf(node, '.rjsf-array-item-add button'));
+      await user.click(elementOf(node, '.rjsf-array-item-add'));
 
       const endRows = node.querySelectorAll('.rjsf-array-item');
       const endRow1_key = endRows[0].getAttribute(ArrayKeyDataAttr);
@@ -672,7 +670,7 @@ describe('ArrayField', () => {
         },
       });
 
-      expect(node.querySelector('.rjsf-array-item-add button')).toBeNull();
+      expect(node.querySelector('.rjsf-array-item-add')).toBeNull();
     });
 
     it('should ignore addable value if maxItems constraint is not satisfied', () => {
@@ -686,13 +684,13 @@ describe('ArrayField', () => {
         },
       });
 
-      expect(node.querySelector('.rjsf-array-item-add button')).toBeNull();
+      expect(node.querySelector('.rjsf-array-item-add')).toBeNull();
     });
 
     it('should mark a non-null array item widget as required', async () => {
       const { node } = createFormComponent({ schema });
 
-      await user.click(elementOf(node, '.rjsf-array-item-add button'));
+      await user.click(elementOf(node, '.rjsf-array-item-add'));
 
       expect(node.querySelector('.rjsf-field-string input[type=text]')).toBeRequired();
     });
@@ -969,13 +967,13 @@ describe('ArrayField', () => {
         // Silencing error thrown as failure is expected here
       }
 
-      expect(node.querySelectorAll('.has-error .error-detail')).toHaveLength(1);
+      expect(node.querySelectorAll('.rjsf-field-error .rjsf-error-detail')).toHaveLength(1);
 
       const dropBtns = node.querySelectorAll('.rjsf-array-item-remove');
 
       await user.click(dropBtns[0]);
 
-      expect(node.querySelectorAll('.has-error .error-detail')).toHaveLength(0);
+      expect(node.querySelectorAll('.rjsf-field-error .rjsf-error-detail')).toHaveLength(0);
     });
 
     it('should not show copy button by default', () => {
@@ -1563,7 +1561,7 @@ describe('ArrayField', () => {
       it('should render the expected labels', () => {
         const { node } = createFormComponent({ schema, uiSchema });
 
-        const labels = [].map.call(node.querySelectorAll('.checkbox label'), (node: Element) => node.textContent);
+        const labels = [].map.call(node.querySelectorAll('.rjsf-checkbox label'), (node: Element) => node.textContent);
         expect(labels).toEqual(['foo', 'bar', 'fuzz']);
       });
 
@@ -1610,7 +1608,7 @@ describe('ArrayField', () => {
       it('should render the widget with the expected id', () => {
         const { node } = createFormComponent({ schema, uiSchema });
 
-        expect(node.querySelector('.checkboxes')).toHaveAttribute('id', 'root');
+        expect(node.querySelector('.rjsf-checkboxes')).toHaveAttribute('id', 'root');
       });
 
       it('should support inline checkboxes', () => {
@@ -1624,7 +1622,7 @@ describe('ArrayField', () => {
           },
         });
 
-        expect(node.querySelectorAll('.checkbox-inline')).toHaveLength(3);
+        expect(node.querySelectorAll('.rjsf-checkbox-inline')).toHaveLength(3);
       });
 
       it('should pass rawErrors down to custom widgets', async () => {
@@ -1675,7 +1673,7 @@ describe('ArrayField', () => {
           },
         });
 
-        expect(node.querySelectorAll('.checkbox-inline')).toHaveLength(3);
+        expect(node.querySelectorAll('.rjsf-checkbox-inline')).toHaveLength(3);
       });
     });
   });
@@ -1754,7 +1752,7 @@ describe('ArrayField', () => {
         ],
       });
 
-      const li = node.querySelectorAll('.file-info li');
+      const li = node.querySelectorAll('.rjsf-file-info li');
 
       expect(li).toHaveLength(2);
       expect(li[0]).toHaveTextContent('file1.txt (text/plain, 5 bytes)');
@@ -1859,7 +1857,7 @@ describe('ArrayField', () => {
       const { node } = createFormComponent({ schema });
       expect(node.querySelectorAll('fieldset fieldset')).toHaveLength(0);
 
-      await user.click(elementOf(node, '.rjsf-array-item-add button'));
+      await user.click(elementOf(node, '.rjsf-array-item-add'));
 
       expect(node.querySelectorAll('fieldset fieldset')).toHaveLength(1);
     });
@@ -2011,18 +2009,18 @@ describe('ArrayField', () => {
         },
         initialFormData: [1, 2, 'bar'],
       });
-      const label = node.querySelector('fieldset .rjsf-field-string label.control-label');
+      const label = node.querySelector('fieldset .rjsf-field-string label.rjsf-field-label');
       expect(label).toHaveTextContent('Custom title*');
     });
 
     it('should have an add button if additionalItems is an object', () => {
       const { node } = createFormComponent({ schema: schemaAdditional });
-      expect(node.querySelector('.rjsf-array-item-add button')).not.toBeNull();
+      expect(node.querySelector('.rjsf-array-item-add')).not.toBeNull();
     });
 
     it('should not have an add button if additionalItems is not set', () => {
       const { node } = createFormComponent({ schema });
-      expect(node.querySelector('.rjsf-array-item-add button')).toBeNull();
+      expect(node.querySelector('.rjsf-array-item-add')).toBeNull();
     });
 
     it('should not have an add button if global addable is false', () => {
@@ -2030,7 +2028,7 @@ describe('ArrayField', () => {
         schema,
         uiSchema: { 'ui:globalOptions': { addable: false } },
       });
-      expect(node.querySelector('.rjsf-array-item-add button')).toBeNull();
+      expect(node.querySelector('.rjsf-array-item-add')).toBeNull();
     });
 
     it('should not have an add button if addable is false', () => {
@@ -2038,7 +2036,7 @@ describe('ArrayField', () => {
         schema,
         uiSchema: { 'ui:options': { addable: false } },
       });
-      expect(node.querySelector('.rjsf-array-item-add button')).toBeNull();
+      expect(node.querySelector('.rjsf-array-item-add')).toBeNull();
     });
 
     it('[fixed-noadditional] should not provide an add button regardless maxItems', () => {
@@ -2046,7 +2044,7 @@ describe('ArrayField', () => {
         schema: { maxItems: 3, ...schema },
       });
 
-      expect(node.querySelector('.rjsf-array-item-add button')).toBeNull();
+      expect(node.querySelector('.rjsf-array-item-add')).toBeNull();
     });
 
     it('[fixed] should not provide an add button if length equals maxItems', () => {
@@ -2054,7 +2052,7 @@ describe('ArrayField', () => {
         schema: { maxItems: 2, ...schemaAdditional },
       });
 
-      expect(node.querySelector('.rjsf-array-item-add button')).toBeNull();
+      expect(node.querySelector('.rjsf-array-item-add')).toBeNull();
     });
 
     it('[fixed] should provide an add button if length is lesser than maxItems', () => {
@@ -2062,7 +2060,7 @@ describe('ArrayField', () => {
         schema: { maxItems: 3, ...schemaAdditional },
       });
 
-      expect(node.querySelector('.rjsf-array-item-add button')).not.toBeNull();
+      expect(node.querySelector('.rjsf-array-item-add')).not.toBeNull();
     });
 
     it('[fixed] should not provide an add button if addable is expliclty false regardless maxItems value', () => {
@@ -2075,7 +2073,7 @@ describe('ArrayField', () => {
         },
       });
 
-      expect(node.querySelector('.rjsf-array-item-add button')).toBeNull();
+      expect(node.querySelector('.rjsf-array-item-add')).toBeNull();
     });
 
     it('[fixed] should ignore addable value if maxItems constraint is not satisfied', () => {
@@ -2088,7 +2086,7 @@ describe('ArrayField', () => {
         },
       });
 
-      expect(node.querySelector('.rjsf-array-item-add button')).toBeNull();
+      expect(node.querySelector('.rjsf-array-item-add')).toBeNull();
     });
 
     it('[fixed] should pass uiSchema to fixed array', () => {
@@ -2156,7 +2154,7 @@ describe('ArrayField', () => {
           templates,
         });
 
-        const addBtn = node.querySelector('.rjsf-array-item-add button');
+        const addBtn = node.querySelector('.rjsf-array-item-add');
 
         expect(addBtn).not.toBeNull();
 
@@ -2179,7 +2177,7 @@ describe('ArrayField', () => {
           },
         });
 
-        const addBtn = node.querySelector('.rjsf-array-item-add button');
+        const addBtn = node.querySelector('.rjsf-array-item-add');
 
         await user.click(addBtn!);
 
@@ -2204,7 +2202,7 @@ describe('ArrayField', () => {
         const startRow3_key = startRows[2].getAttribute(ArrayKeyDataAttr);
         const startRow4_key = startRows[3] ? startRows[3].getAttribute(ArrayKeyDataAttr) : undefined;
 
-        const addBtn = node.querySelector('.rjsf-array-item-add button');
+        const addBtn = node.querySelector('.rjsf-array-item-add');
 
         await user.click(addBtn!);
 
@@ -2236,7 +2234,7 @@ describe('ArrayField', () => {
           },
         });
 
-        const addBtn = node.querySelector('.rjsf-array-item-add button');
+        const addBtn = node.querySelector('.rjsf-array-item-add');
 
         await user.click(addBtn!);
 
@@ -2259,7 +2257,7 @@ describe('ArrayField', () => {
           },
         });
 
-        const addBtn = node.querySelector('.rjsf-array-item-add button');
+        const addBtn = node.querySelector('.rjsf-array-item-add');
 
         await user.click(addBtn!);
 
@@ -3312,7 +3310,7 @@ describe('ArrayField', () => {
           widgets,
         });
 
-        await user.click(elementOf(node, '.rjsf-array-item-add button'));
+        await user.click(elementOf(node, '.rjsf-array-item-add'));
 
         expect(node.querySelector('#title-Array-1')).not.toBeNull();
       });
@@ -3336,7 +3334,7 @@ describe('ArrayField', () => {
           widgets,
         });
 
-        await user.click(elementOf(node, '.rjsf-array-item-add button'));
+        await user.click(elementOf(node, '.rjsf-array-item-add'));
 
         expect(node.querySelector('#title-Boolean')).not.toBeNull();
         expect(node.querySelector('#title-Array-1')).toBeNull();
@@ -3360,7 +3358,7 @@ describe('ArrayField', () => {
             uiSchema,
           });
 
-          await user.click(elementOf(node, '.rjsf-array-item-add button'));
+          await user.click(elementOf(node, '.rjsf-array-item-add'));
 
           // By the label's id, since a group's label has no `for`; the id is on the label's text
           const widgetLabel = node.querySelector(`#${fieldLabelId('root_0')}`)?.closest('label');
@@ -3391,7 +3389,7 @@ describe('ArrayField', () => {
             uiSchema,
           });
 
-          await user.click(elementOf(node, '.rjsf-array-item-add button'));
+          await user.click(elementOf(node, '.rjsf-array-item-add'));
 
           const widgetLabelText = node.querySelector(`#${fieldLabelId('root_0')}`)?.closest('label');
 
@@ -3492,7 +3490,7 @@ describe('ArrayField', () => {
             schema,
           });
 
-          await user.click(elementOf(node, '.rjsf-array-item-add button'));
+          await user.click(elementOf(node, '.rjsf-array-item-add'));
 
           expect(node.querySelector('legend #root_0__title')).toHaveTextContent('Array-1');
         },
@@ -3514,7 +3512,7 @@ describe('ArrayField', () => {
             schema,
           });
 
-          await user.click(elementOf(node, '.rjsf-array-item-add button'));
+          await user.click(elementOf(node, '.rjsf-array-item-add'));
 
           const legendText = node.querySelector('legend #root_0__title');
 
@@ -3536,7 +3534,7 @@ describe('ArrayField', () => {
             schema,
           });
 
-          await user.click(elementOf(node, '.rjsf-array-item-add button'));
+          await user.click(elementOf(node, '.rjsf-array-item-add'));
 
           expect(node.querySelector('label[for="root_0"]')).toHaveTextContent('Array-1');
         },
@@ -3558,7 +3556,7 @@ describe('ArrayField', () => {
             schema,
           });
 
-          await user.click(elementOf(node, '.rjsf-array-item-add button'));
+          await user.click(elementOf(node, '.rjsf-array-item-add'));
 
           const labelText = node.querySelector('label[for="root_0"]');
 
@@ -3638,7 +3636,7 @@ describe('ArrayField', () => {
 
       await submitForm(node, user);
 
-      const inputs = node.querySelectorAll('.form-group.rjsf-field-error input[type=text]');
+      const inputs = node.querySelectorAll('.rjsf-field.rjsf-field-error input[type=text]');
       expect(inputs[0]).toHaveAttribute('id', 'root_foo_0_bar');
       expect(inputs[1]).toHaveAttribute('id', 'root_foo_1_bar');
     });
@@ -3656,7 +3654,7 @@ describe('ArrayField', () => {
       });
       await submitForm(node, user);
 
-      const inputsNoError = node.querySelectorAll('.form-group.rjsf-field-error input[type=text]');
+      const inputsNoError = node.querySelectorAll('.rjsf-field.rjsf-field-error input[type=text]');
       expect(inputsNoError).toHaveLength(0);
     });
     describe('ArrayFieldTemplate', () => {
@@ -4196,7 +4194,7 @@ describe('ArrayField', () => {
 
       const errorMessages = node.querySelectorAll('#root_0_text__error');
       expect(errorMessages).toHaveLength(1);
-      const errorMessage = node.querySelector('#root_0_text__error .text-danger');
+      const errorMessage = node.querySelector('#root_0_text__error .rjsf-error');
       expect(errorMessage).toHaveTextContent("must have required property 'text'");
 
       act(() => handleOf(ref).setFieldValue('', [{ text: 'test' }]));
@@ -4224,7 +4222,7 @@ describe('ArrayField', () => {
 
       const errorMessages = node.querySelectorAll('#root_0_text__error');
       expect(errorMessages).toHaveLength(1);
-      const errorMessage = node.querySelector('#root_0_text__error .text-danger');
+      const errorMessage = node.querySelector('#root_0_text__error .rjsf-error');
       expect(errorMessage).toHaveTextContent('Value must be "Appie"');
     });
 
@@ -4270,7 +4268,7 @@ describe('ArrayField', () => {
 
       let errorMessages = node.querySelectorAll('#root_0_text__error');
       expect(errorMessages).toHaveLength(1);
-      const errorMessage = node.querySelector('#root_0_text__error .text-danger');
+      const errorMessage = node.querySelector('#root_0_text__error .rjsf-error');
       expect(errorMessage).toHaveTextContent('Value must be "Appie"');
 
       await user.clear(inputs[0]);
@@ -4300,7 +4298,7 @@ describe('ArrayField', () => {
 
       const errorMessages = node.querySelectorAll('#root_0_text__error');
       expect(errorMessages).toHaveLength(1);
-      const errorMessage = node.querySelector('#root_0_text__error .text-danger');
+      const errorMessage = node.querySelector('#root_0_text__error .rjsf-error');
       expect(errorMessage).toHaveTextContent('Value must be "test"');
     });
 
@@ -4346,7 +4344,7 @@ describe('ArrayField', () => {
 
       let errorMessages = node.querySelectorAll('#root_0_text__error');
       expect(errorMessages).toHaveLength(1);
-      const errorMessage = node.querySelector('#root_0_text__error .text-danger');
+      const errorMessage = node.querySelector('#root_0_text__error .rjsf-error');
       expect(errorMessage).toHaveTextContent('Value must be "test"');
 
       await user.clear(inputs[0]);
@@ -4414,7 +4412,7 @@ describe('ArrayField', () => {
       const schema: RJSFSchema = { type: 'array', items: { type: 'string' } };
       const uiSchema: UiSchema = { items: [{ 'ui:initialValue': 'a' }, { 'ui:initialValue': 'b' }] };
       const { node } = createFormComponent({ schema, uiSchema });
-      await user.click(elementOf(node, '.rjsf-array-item-add button'));
+      await user.click(elementOf(node, '.rjsf-array-item-add'));
       const input = node.querySelector<HTMLInputElement>('.rjsf-array-item input[type="text"]');
       expect(input).toHaveValue('a');
     });
@@ -4686,7 +4684,7 @@ describe('ArrayField', () => {
       expect(dynamicUiSchemaFunction).toHaveBeenCalledTimes(0);
 
       // Should still render the add button
-      const addButton = node.querySelector('.rjsf-array-item-add button');
+      const addButton = node.querySelector('.rjsf-array-item-add');
       expect(addButton).toBeInTheDocument();
     });
 
@@ -4722,7 +4720,7 @@ describe('ArrayField', () => {
       expect(callCount).toEqual(1);
 
       // Add a new item
-      const addButton = node.querySelector('.rjsf-array-item-add button');
+      const addButton = node.querySelector('.rjsf-array-item-add');
       await user.click(addButton!);
 
       // Should now have called function for both items (3 total: 1 initial + 2 for re-render)
@@ -4873,7 +4871,7 @@ describe('ArrayField', () => {
 
       expect(node.querySelectorAll('input[type=text]')).toHaveLength(4);
 
-      await user.click(elementOf(node, '.rjsf-array-item-add button'));
+      await user.click(elementOf(node, '.rjsf-array-item-add'));
 
       expect(handleOf(ref).getFormData()).toHaveLength(5);
       expect(node.querySelectorAll('input[type=text]')).toHaveLength(5);

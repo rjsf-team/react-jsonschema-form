@@ -56,7 +56,7 @@ export default function ArrayFieldTemplate<
         presentation={presentation}
       />
       {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
-      <div className={clsx(classMap.arrayItemList, 'array-item-list')}>{items}</div>
+      <div className={clsx('rjsf-array-item-list', classMap.arrayItemList)}>{items}</div>
       {canAdd && (
         <AddButton
           id={buttonId(id, 'add')}

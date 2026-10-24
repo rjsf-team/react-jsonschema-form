@@ -46,4 +46,6 @@ export const BOOTSTRAP3_CLASS_MAP: MergedClassMap = {
   optionalDataAddButton: 'btn-sm',
   optionalDataRemoveButton: 'btn-sm',
   submitButton: 'btn btn-info',
+  iconButton: '',
+  buttonIcon: '',
 };

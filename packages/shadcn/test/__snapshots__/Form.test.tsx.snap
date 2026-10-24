@@ -14508,7 +14508,7 @@ exports[`single fields > unsupported field 1`] = `
         class="flex flex-col gap-2"
       >
         <div
-          class="unsupported-field"
+          class="rjsf-unsupported-field"
         >
           <p>
             Unsupported field schema for field root: Unknown field type undefined.

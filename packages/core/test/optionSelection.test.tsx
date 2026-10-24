@@ -233,7 +233,7 @@ describe('option selection as form state', () => {
     await user.selectOptions(selectOf(node, 'root__anyof_select'), 'B');
 
     expect(node.querySelector('#root_a-key')).toBeNull();
-    expect(node.querySelector('.rjsf-object-property-expand button')).not.toBeNull();
+    expect(node.querySelector('.rjsf-object-property-expand')).not.toBeNull();
   });
 
   it('renders no field for a key a switch of options discards from an object allowing any extra key', async () => {
@@ -449,7 +449,7 @@ describe('option selection as form state', () => {
       ],
     };
     const { node, onChange } = createFormComponent({ schema, initialFormData: {} });
-    await user.click(elementOf(node, '.rjsf-object-property-expand button'));
+    await user.click(elementOf(node, '.rjsf-object-property-expand'));
     const keyInput = elementOf(node, '#root_newKey-key');
 
     await user.clear(keyInput);
@@ -475,7 +475,7 @@ describe('option selection as form state', () => {
     const optionUiSchema: UiSchema = { count: { 'ui:enumDisabled': [0] } };
     const uiSchema: UiSchema = { anyOf: [optionUiSchema, optionUiSchema] };
     const { node, onChange } = createFormComponent({ schema, uiSchema, initialFormData: {} });
-    await user.click(elementOf(node, '.rjsf-object-property-expand button'));
+    await user.click(elementOf(node, '.rjsf-object-property-expand'));
     const keyInput = elementOf(node, '#root_newKey-key');
 
     await user.clear(keyInput);
@@ -498,7 +498,7 @@ describe('option selection as form state', () => {
     };
     const uiSchema: UiSchema = { 'ui:field': 'ObjectField', 'ui:fieldReplacesAnyOrOneOf': true };
     const { node, onChange } = createFormComponent({ schema, uiSchema, initialFormData: {} });
-    await user.click(elementOf(node, '.rjsf-object-property-expand button'));
+    await user.click(elementOf(node, '.rjsf-object-property-expand'));
     const keyInput = elementOf(node, '#root_newKey-key');
 
     await user.clear(keyInput);
@@ -1129,11 +1129,11 @@ describe('option selection as form state', () => {
       },
     };
     const { node } = createFormComponent({ schema, initialFormData: {} });
-    await user.click(elementOf(node, '.rjsf-object-property-expand button'));
+    await user.click(elementOf(node, '.rjsf-object-property-expand'));
     await user.selectOptions(selectOf(node, 'root_newKey__anyof_select'), 'B');
 
     await user.click(elementOf(node, '.rjsf-object-property-remove'));
-    await user.click(elementOf(node, '.rjsf-object-property-expand button'));
+    await user.click(elementOf(node, '.rjsf-object-property-expand'));
 
     expect(selectOf(node, 'root_newKey__anyof_select')).toHaveValue('0');
   });

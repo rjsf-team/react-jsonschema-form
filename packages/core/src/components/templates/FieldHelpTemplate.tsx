@@ -20,7 +20,10 @@ export default function FieldHelpTemplate<
   }
 
   return (
-    <div id={presentation?.help.id ?? helpId(id)} className={clsx(classMap.fieldHelp, hasErrors && classMap.helpError)}>
+    <div
+      id={presentation?.help.id ?? helpId(id)}
+      className={clsx('rjsf-field-help', classMap.fieldHelp, hasErrors && classMap.helpError)}
+    >
       <RichHelp help={help} registry={registry} uiSchema={uiSchema} />
     </div>
   );

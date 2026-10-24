@@ -421,15 +421,15 @@ describe('a discriminated cell of a layout grid', () => {
     const { node } = renderGrid(gridUiSchema(), { ...schema, required: ['pick'] });
 
     screen.getAllByRole('radio').forEach((radio) => expect(radio).toBeRequired());
-    expect(node.querySelectorAll('span.required')).toHaveLength(1);
-    expect(node.querySelector('#root_pick__label + span.required')).toBeInTheDocument();
+    expect(node.querySelectorAll('span.rjsf-required')).toHaveLength(1);
+    expect(node.querySelector('#root_pick__label + span.rjsf-required')).toBeInTheDocument();
   });
 
   it('leaves its selector unrequired when the cell is optional', () => {
     const { node } = renderGrid(gridUiSchema());
 
     screen.getAllByRole('radio').forEach((radio) => expect(radio).not.toBeRequired());
-    expect(node.querySelector('span.required')).not.toBeInTheDocument();
+    expect(node.querySelector('span.rjsf-required')).not.toBeInTheDocument();
   });
 
   describe('a ui:required read from JSON', () => {

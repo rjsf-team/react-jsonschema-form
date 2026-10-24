@@ -26,7 +26,7 @@ describe('state derivation', () => {
     await act(async () => {
       formRef.current!.setFieldValue('b', 'z');
     });
-    expect(node.querySelectorAll('.error-detail li')).toHaveLength(0);
+    expect(node.querySelectorAll('.rjsf-error-detail li')).toHaveLength(0);
 
     rerender({
       ref: formRef,
@@ -42,7 +42,7 @@ describe('state derivation', () => {
       formRef.current!.setFieldValue('b', 'z');
     });
 
-    expect(node.querySelector('.error-detail')).toHaveTextContent('custom');
+    expect(node.querySelector('.rjsf-error-detail')).toHaveTextContent('custom');
   });
 
   it('a root replacement through setFieldValue validates with the schema resolved for the data, as typing does', () => {
@@ -65,8 +65,8 @@ describe('state derivation', () => {
     });
     act(() => handleOf(ref).setFieldValue('', { c: 'yes', d: 1 }));
 
-    expect(node.querySelector('.panel-danger.errors')).toHaveTextContent('must be >= 100');
-    expect(node.querySelector('.panel-danger.errors')).not.toHaveTextContent('must match "then" schema');
+    expect(node.querySelector('.rjsf-errors')).toHaveTextContent('must be >= 100');
+    expect(node.querySelector('.rjsf-errors')).not.toHaveTextContent('must match "then" schema');
   });
 
   it('turning noValidate on drops the validator results, so turning it back off does not bring them back', () => {

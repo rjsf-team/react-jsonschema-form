@@ -100,7 +100,7 @@ This will highlight the first elements of the new "syntax"; `ui:layoutGrid` and 
 }
 ```
 
-This results in the following UI using the `core` theme via the `Bootstrap 3` grid system:
+This results in the following UI using the `core` theme's grid:
 
 ```text
   Last Name*
@@ -208,13 +208,12 @@ it's just a matter of updating the `uiSchema` again, this time using more of the
   "ui:field": "LayoutGridField",
   "ui:layoutGrid": {
     "ui:row": {
-      "className": "row",
       "children": [
         {
           "ui:row": [
             {
               "ui:col": {
-                "className": "col-xs-12",
+                "span": 12,
                 "children": ["person"]
               }
             }
@@ -224,7 +223,7 @@ it's just a matter of updating the `uiSchema` again, this time using more of the
           "ui:row": [
             {
               "ui:col": {
-                "className": "col-xs-4",
+                "span": 4,
                 "children": [
                   {
                     "name": "person.first"
@@ -234,7 +233,7 @@ it's just a matter of updating the `uiSchema` again, this time using more of the
             },
             {
               "ui:col": {
-                "className": "col-xs-4",
+                "span": 4,
                 "children": [
                   {
                     "name": "person.middle"
@@ -244,7 +243,7 @@ it's just a matter of updating the `uiSchema` again, this time using more of the
             },
             {
               "ui:col": {
-                "className": "col-xs-4",
+                "span": 4,
                 "children": [
                   {
                     "name": "person.last"
@@ -273,9 +272,10 @@ Person Info
   +--------------------------+  +--------------------------+  +--------------------------+
 ```
 
-The above example uses the `core` UI theme's `Bootstrap 3` grid classes to make the `Person Info` span 12 columns within
-a row and each of the person name fields span 4 columns within a row. It also adds the "row" grid class to the outermost
-`ui:row` to make whole UI be part of a grid row.
+The above example uses the `core` UI theme's `span` property to make the `Person Info` span all 12 columns of a row and
+each of the person name fields span 4 columns within a row. The `core` theme's `GridTemplate` renders every `ui:row` as a
+12-column grid and every `ui:col` as a column spanning `span` of its tracks, or all of them when it has none, laid out by
+the optional `@rjsf/core/rjsf.css` stylesheet.
 
 Now sometimes, depending on the grid system, you don't need to explicitly define both second-level rows, instead
 depending on the column grid behavior. Luckily the `core` theme's grid system is one of those, so the following UI
@@ -286,17 +286,16 @@ schema will also produce the exact same result.
   "ui:field": "LayoutGridField",
   "ui:layoutGrid": {
     "ui:row": {
-      "className": "row",
       "children": [
         {
           "ui:col": {
-            "className": "col-xs-12",
+            "span": 12,
             "children": ["person"]
           }
         },
         {
           "ui:columns": {
-            "className": "col-xs-4",
+            "span": 4,
             "children": ["person.first", "person.middle", "person.last"]
           }
         }
@@ -314,16 +313,15 @@ Here is how the `LayoutGridField` "syntax" above is used.
 ### `ui:row`, part 2
 
 As the above examples show, the `ui:row` object can be nested inside of the `children` of a `ui:row`. This signifies the
-nesting of one row inside another row. It also shows that any additional properties added to the `ui:row` object, in this
-case the `"className": "row"` will be spread onto the underlying theme's grid implementation. You may also pass other
-properties, such as `style` blocks or, in the case of other themes, properties that will affect the underlying grid system
-components.
+nesting of one row inside another row. Any additional properties added to the `ui:row` object, such as a `className`, will
+be spread onto the underlying theme's grid implementation. You may also pass other properties, such as `style` blocks or,
+in the case of other themes, properties that will affect the underlying grid system components.
 
 ### `ui:col`
 
 The `ui:col` "syntax" represents a single column of data in the grid. Like `ui:row` this syntax will spread the
-`"className": "col-xs-12"` and `"className": "col-xs-4"` properties onto the underlying theme's grid implementation, as
-well as any other properties, such as `style` blocks, etc. In its most compact form, the `ui:col` can be written as
+`"span": 12` and `"span": 4` properties onto the underlying theme's grid implementation, as well as any other
+properties, such as `style` blocks, etc. In its most compact form, the `ui:col` can be written as
 `{ "ui:col": ["person"] }`, in a manner similar to `ui:row` where the array is implicitly assumed to be the `children`
 property.
 
@@ -339,13 +337,12 @@ a margin to take up the space once occupied by the label, and is reduced in size
   "ui:field": "LayoutGridField",
   "ui:layoutGrid": {
     "ui:row": {
-      "className": "row",
       "children": [
         {
           "ui:row": [
             {
               "ui:col": {
-                "className": "col-xs-12",
+                "span": 12,
                 "children": ["person"]
               }
             }
@@ -355,13 +352,13 @@ a margin to take up the space once occupied by the label, and is reduced in size
           "ui:row": [
             {
               "ui:col": {
-                "className": "col-xs-5",
+                "span": 5,
                 "children": ["person.first"]
               }
             },
             {
               "ui:col": {
-                "className": "col-xs-2",
+                "span": 2,
                 "style": {
                   "margin-top": "25px"
                 },
@@ -375,7 +372,7 @@ a margin to take up the space once occupied by the label, and is reduced in size
             },
             {
               "ui:col": {
-                "className": "col-xs-5",
+                "span": 5,
                 "children": ["person.last"]
               }
             }
@@ -403,7 +400,7 @@ Person Info
 ### `ui:columns`
 
 The `ui:columns` "syntax" represents a group of columns in the grid. Like `ui:row` and `ui:col` this syntax will spread
-the properties onto the underlying theme's grid implementation (in an earlier example `"className": "col-xs-4"` ), as
+the properties onto the underlying theme's grid implementation (in an earlier example `"span": 4` ), as
 well as any other properties, such as `style` blocks, etc. It is short-hand notation for rendering a group of columns
 all with the same grid system properties. As shown in the above examples, the set of three `ui:col` definitions for
 first, middle and last names are the same as the single `ui:columns` definition with all three listed as children.
@@ -604,17 +601,16 @@ Now let's add a `uiSchema` that will allow us to create a much more pleasing UI 
   "ui:field": "LayoutGridField",
   "ui:layoutGrid": {
     "ui:row": {
-      "className": "row",
       "children": [
         {
           "ui:col": {
-            "className": "col-xs-12",
+            "span": 12,
             "children": ["name"]
           }
         },
         {
           "ui:col": {
-            "className": "col-xs-4",
+            "span": 4,
             "children": ["favorite"]
           }
         },
@@ -626,7 +622,7 @@ Now let's add a `uiSchema` that will allow us to create a much more pleasing UI 
             "children": [
               {
                 "ui:col": {
-                  "className": "col-xs-4",
+                  "span": 4,
                   "children": ["favorite.length"]
                 }
               }
@@ -641,7 +637,7 @@ Now let's add a `uiSchema` that will allow us to create a much more pleasing UI 
             "children": [
               {
                 "ui:col": {
-                  "className": "col-xs-4",
+                  "span": 4,
                   "children": ["favorite.radius"]
                 }
               }
@@ -656,7 +652,7 @@ Now let's add a `uiSchema` that will allow us to create a much more pleasing UI 
             "children": [
               {
                 "ui:columns": {
-                  "className": "col-xs-4",
+                  "span": 4,
                   "children": ["favorite.sides", "favorite.length"]
                 }
               }
@@ -672,7 +668,7 @@ Now let's add a `uiSchema` that will allow us to create a much more pleasing UI 
 }
 ```
 
-This results in the following UI using the `core` theme via the `Bootstrap 3` grid system:
+This results in the following UI using the `core` theme's grid:
 
 ```text
   My Name*
@@ -819,17 +815,16 @@ really easy using a variant of the "syntax" for a `children` node in the `uiSche
   "ui:field": "LayoutGridField",
   "ui:layoutGrid": {
     "ui:row": {
-      "className": "row",
       "children": [
         {
           "ui:col": {
-            "className": "col-xs-12",
+            "span": 12,
             "children": ["name"]
           }
         },
         {
           "ui:col": {
-            "className": "col-xs-4",
+            "span": 4,
             "children": ["favorite"]
           }
         },
@@ -841,7 +836,7 @@ really easy using a variant of the "syntax" for a `children` node in the `uiSche
             "children": [
               {
                 "ui:col": {
-                  "className": "col-xs-2",
+                  "span": 2,
                   "children": [
                     {
                       "name": "",
@@ -853,7 +848,7 @@ really easy using a variant of the "syntax" for a `children` node in the `uiSche
               },
               {
                 "ui:col": {
-                  "className": "col-xs-4",
+                  "span": 4,
                   "children": ["favorite.length"]
                 }
               }
@@ -868,7 +863,7 @@ really easy using a variant of the "syntax" for a `children` node in the `uiSche
             "children": [
               {
                 "ui:col": {
-                  "className": "col-xs-2",
+                  "span": 2,
                   "children": [
                     {
                       "name": "",
@@ -880,7 +875,7 @@ really easy using a variant of the "syntax" for a `children` node in the `uiSche
               },
               {
                 "ui:col": {
-                  "className": "col-xs-4",
+                  "span": 4,
                   "children": ["favorite.radius"]
                 }
               }
@@ -895,7 +890,7 @@ really easy using a variant of the "syntax" for a `children` node in the `uiSche
             "children": [
               {
                 "ui:col": {
-                  "className": "col-xs-2",
+                  "span": 2,
                   "children": [
                     {
                       "name": "",
@@ -907,7 +902,7 @@ really easy using a variant of the "syntax" for a `children` node in the `uiSche
               },
               {
                 "ui:columns": {
-                  "className": "col-xs-3",
+                  "span": 3,
                   "children": ["favorite.sides", "favorite.length"]
                 }
               }
@@ -987,17 +982,16 @@ const uiSchema: UiSchema = {
   'ui:field': 'LayoutGridField',
   'ui:layoutGrid': {
     'ui:row': {
-      className: 'row',
       children: [
         {
           'ui:col': {
-            className: 'col-xs-12',
+            span: 12,
             children: ['name'],
           },
         },
         {
           'ui:col': {
-            className: 'col-xs-4',
+            span: 4,
             children: ['favorite'],
           },
         },
@@ -1009,13 +1003,13 @@ const uiSchema: UiSchema = {
             children: [
               {
                 'ui:col': {
-                  className: 'col-xs-4',
+                  span: 4,
                   children: ['favorite.length'],
                 },
               },
               {
                 'ui:col': {
-                  className: 'col-xs-12',
+                  span: 12,
                   children: [
                     {
                       name: 'lineImage',
@@ -1036,13 +1030,13 @@ const uiSchema: UiSchema = {
             children: [
               {
                 'ui:col': {
-                  className: 'col-xs-4',
+                  span: 4,
                   children: ['favorite.radius'],
                 },
               },
               {
                 'ui:col': {
-                  className: 'col-xs-12',
+                  span: 12,
                   children: [
                     {
                       name: 'circleShape',
@@ -1063,13 +1057,13 @@ const uiSchema: UiSchema = {
             children: [
               {
                 'ui:columns': {
-                  className: 'col-xs-4',
+                  span: 4,
                   children: ['favorite.sides', 'favorite.length'],
                 },
               },
               {
                 'ui:col': {
-                  className: 'col-xs-12',
+                  span: 12,
                   children: [
                     {
                       name: 'polygonShape',

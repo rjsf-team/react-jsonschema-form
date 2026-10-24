@@ -54689,7 +54689,7 @@ exports[`single fields > unsupported field 1`] = `
         class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
       >
         <div
-          class="unsupported-field"
+          class="rjsf-unsupported-field"
         >
           <p>
             Unsupported field schema for field root: Unknown field type undefined.

@@ -16,7 +16,11 @@ export default function SubmitButton<
   }
   return (
     <div>
-      <button type='submit' {...submitButtonProps} className={clsx(classMap.submitButton, submitButtonProps.className)}>
+      <button
+        type='submit'
+        {...submitButtonProps}
+        className={clsx('rjsf-submit-button', classMap.submitButton, submitButtonProps.className)}
+      >
         {submitText}
       </button>
     </div>

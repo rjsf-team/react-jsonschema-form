@@ -11628,7 +11628,7 @@ exports[`single fields > unsupported field 1`] = `
     >
       <div>
         <div
-          class="unsupported-field"
+          class="rjsf-unsupported-field"
         >
           <p>
             Unsupported field schema for field root: Unknown field type undefined.

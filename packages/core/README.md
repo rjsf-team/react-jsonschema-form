@@ -13,7 +13,7 @@
   <h3 align="center">@rjsf/core</h3>
 
   <p align="center">
-  Core logic and classic Bootstrap 3 theme for <a href="https://github.com/rjsf-team/react-jsonschema-form/"><code>react-jsonschema-form</code></a>.
+  Core logic and unstyled default theme for <a href="https://github.com/rjsf-team/react-jsonschema-form/"><code>react-jsonschema-form</code></a>.
     <br />
     <a href="https://rjsf-team.github.io/react-jsonschema-form/docs/"><strong>Explore the docs »</strong></a>
     <br />
@@ -45,14 +45,13 @@
 
 ## About The Project
 
-Core logic and classic Bootstrap 3 theme for `react-jsonschema-form`.
+Core logic and the unstyled default theme for `react-jsonschema-form`: toolkit-independent HTML5 markup carrying `rjsf-` marker classes, and an optional stylesheet, `@rjsf/core/rjsf.css`, that styles it with HTML5 and CSS3 alone.
 
 [<img src="./screenshot.png" alt="product-screenshot" width="800" />](https://rjsf-team.github.io/@rjsf/core)
 
 ### Built With
 
 - [react-jsonschema-form](https://github.com/rjsf-team/react-jsonschema-form/)
-- [Bootstrap 3](https://getbootstrap.com/docs/3.3/)
 
 <!-- GETTING STARTED -->
 
@@ -60,13 +59,13 @@ Core logic and classic Bootstrap 3 theme for `react-jsonschema-form`.
 
 ### Prerequisites
 
-- `Bootstrap 3`
+None: the form renders the browser's own controls. To style them without a CSS framework, import the optional stylesheet:
 
-To use the default Bootstrap 3 theme, add a Bootstrap 3 CSS tag to your HTML page:
-
-```html
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+```js
+import '@rjsf/core/rjsf.css';
 ```
+
+The Bootstrap 3 markup `@rjsf/core` rendered through v6 is the deprecated [`@rjsf/bootstrap3`](../bootstrap3) package.
 
 ### Installation
 

@@ -147,8 +147,8 @@ const ThemeObject: ThemeProps = {
 };
 ```
 
-A key's value replaces the class `@rjsf/core` gives that element, so a theme that wants none of core's Bootstrap 3 classes on an element maps it to `''`.
-`buildRegistry()` layers the theme's map over `@rjsf/core`'s and the `Form`'s [`classMap`](../api-reference/form-props.md#classmap) prop over the theme's, key by key, and the merged `MergedClassMap`, with every key filled in, is `registry.classMap`, which a custom component reads its classes from.
+`@rjsf/core` gives its elements no class of its own beyond their `rjsf-` markers, which always render, so a key's value is the class the element carries beside its marker, and a key the `Form`'s `classMap` gives replaces the theme's.
+`buildRegistry()` layers the theme's map over `@rjsf/core`'s empty one and the `Form`'s [`classMap`](../api-reference/form-props.md#classmap) prop over the theme's, key by key, and the merged `MergedClassMap` is `registry.classMap`, which a custom component reads its classes from: every key is present, `undefined` where no layer gives the element a class, so reading it onto a `className` renders no `class` attribute.
 
 ### Global UI options
 

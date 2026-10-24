@@ -1,22 +1,22 @@
 # Themes
 
-By default, this library renders form fields and widgets leveraging the [Bootstrap](http://getbootstrap.com/) semantics,
-meaning that you must load the Bootstrap stylesheet on the page to view the form properly. You can use another theme by importing one of the packages listed below.
+By default, this library renders form fields and widgets as plain HTML5 markup with no CSS framework's classes, marked by `rjsf-` prefixed class names, and `@rjsf/core/rjsf.css` is an optional stylesheet that styles that markup with HTML5 and CSS3 alone.
+Every rule in it is a zero-specificity `:where(.rjsf …)`, so your own CSS overrides it, and its colors and spacing are the custom properties `--rjsf-gap`, `--rjsf-radius`, `--rjsf-border`, `--rjsf-muted`, `--rjsf-danger`, `--rjsf-accent` and `--rjsf-surface`, whose `light-dark()` values follow the `color-scheme` your page declares.
+You can use a theme built on a UI framework by importing one of the packages listed below.
 
 ## Supported themes
 
-| Theme Name            | Status     | Package Name / Link     |
-| --------------------- | ---------- | ----------------------- |
-| antd                  | Published  | `@rjsf/antd`            |
-| Bootstrap 3           | Deprecated | `@rjsf/bootstrap3`      |
-| Chakra UI             | Published  | `@rjsf/chakra-ui`       |
-| Bootstrap 3 (default) | Published  | `@rjsf/core`            |
-| Daisy UI              | Published  | `@rjsf/daisyui`         |
-| fluentui-rc           | Published  | `@rjsf/fluentui-rc`     |
-| mantine               | Published  | `@rjsf/mantine`         |
-| material-ui           | Published  | `@rjsf/mui`             |
-| react-bootstrap       | Published  | `@rjsf/react-bootstrap` |
-| shadcn                | Published  | `@rjsf/shadcn`          |
+| Theme Name      | Status     | Package Name / Link     |
+| --------------- | ---------- | ----------------------- |
+| antd            | Published  | `@rjsf/antd`            |
+| Bootstrap 3     | Deprecated | `@rjsf/bootstrap3`      |
+| Chakra UI       | Published  | `@rjsf/chakra-ui`       |
+| Daisy UI        | Published  | `@rjsf/daisyui`         |
+| fluentui-rc     | Published  | `@rjsf/fluentui-rc`     |
+| mantine         | Published  | `@rjsf/mantine`         |
+| material-ui     | Published  | `@rjsf/mui`             |
+| react-bootstrap | Published  | `@rjsf/react-bootstrap` |
+| shadcn          | Published  | `@rjsf/shadcn`          |
 
 ## Using themes
 
@@ -39,13 +39,16 @@ You can also use the uiSchema to add custom CSS class names to your form.
 
 ## Customizing with other frameworks
 
-The default theme is bootstrap 3. In order to use another theme, you must first install `@rjsf/core`.
+The default theme is `@rjsf/core`'s unstyled markup. In order to use another theme, you must first install `@rjsf/core`.
 
-For example, to use the standard bootstrap 3 form, you can run:
+For example, to use the plain form with its optional stylesheet, you can run:
 
 ```ts
 import Form from '@rjsf/core';
+import '@rjsf/core/rjsf.css';
 ```
+
+The Bootstrap 3 markup `@rjsf/core` rendered through v6 is `@rjsf/bootstrap3`, deprecated and removed in v8.
 
 To use the material-ui form, you should first install both `@rjsf/core` and `@rjsf/mui`. Then, you can run:
 

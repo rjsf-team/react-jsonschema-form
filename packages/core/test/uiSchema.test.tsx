@@ -549,7 +549,7 @@ describe('uiSchema', () => {
 
       const { node } = createFormComponent({ schema, uiSchema });
 
-      expect(node.querySelector('div.help-block')).toHaveTextContent('plop');
+      expect(node.querySelector('div.rjsf-field-help')).toHaveTextContent('plop');
     });
   });
 
@@ -564,7 +564,7 @@ describe('uiSchema', () => {
 
       const { node } = createFormComponent({ schema, uiSchema });
 
-      expect(node.querySelector('label.control-label')).toHaveTextContent('plop');
+      expect(node.querySelector('label.rjsf-field-label')).toHaveTextContent('plop');
     });
   });
 
@@ -579,7 +579,7 @@ describe('uiSchema', () => {
 
       const { node } = createFormComponent({ schema, uiSchema });
 
-      expect(node.querySelector('div.field-description')).toHaveTextContent('plop');
+      expect(node.querySelector('div.rjsf-field-description')).toHaveTextContent('plop');
     });
   });
 
@@ -593,7 +593,7 @@ describe('uiSchema', () => {
 
     const { node } = createFormComponent({ schema, uiSchema });
 
-    expect(node.querySelector('div.help-block')).toHaveTextContent('plop');
+    expect(node.querySelector('div.rjsf-field-help')).toHaveTextContent('plop');
   });
 
   describe('ui:focus', () => {
@@ -1322,7 +1322,7 @@ describe('uiSchema', () => {
           initialFormData: { foo: 13.14 },
         });
 
-        expect(node.querySelector('button.btn-clear')).not.toBeInTheDocument();
+        expect(node.querySelector('button.rjsf-btn-clear')).not.toBeInTheDocument();
       });
 
       it('should call onChange handler when value is updated', () => {
@@ -1697,7 +1697,7 @@ describe('uiSchema', () => {
       it('should render boolean option labels', () => {
         const { node } = createFormComponent({ schema, uiSchema });
         const labels = [].map.call(
-          node.querySelectorAll('.field-radio-group label'),
+          node.querySelectorAll('.rjsf-field-radio-group label'),
           (node: Element) => node.textContent,
         );
 
@@ -1871,7 +1871,7 @@ describe('uiSchema', () => {
         });
 
         it('should disable the Add button', () => {
-          expect(node.querySelector('.rjsf-array-item-add button')).toBeDisabled();
+          expect(node.querySelector('.rjsf-array-item-add')).toBeDisabled();
         });
 
         it('should disable the Delete button', () => {
@@ -2148,7 +2148,7 @@ describe('uiSchema', () => {
         });
 
         it('should disable the Add button', () => {
-          expect(node.querySelector('.rjsf-array-item-add button')).toBeDisabled();
+          expect(node.querySelector('.rjsf-array-item-add')).toBeDisabled();
         });
 
         it('should disable the Delete button', () => {
@@ -2412,7 +2412,7 @@ describe('uiSchema', () => {
         });
 
         it('should disable the Add button', () => {
-          expect(node.querySelector('.rjsf-array-item-add button')).toBeDisabled();
+          expect(node.querySelector('.rjsf-array-item-add')).toBeDisabled();
         });
 
         it('should disable the Delete button', () => {
@@ -2775,7 +2775,7 @@ describe('uiSchema', () => {
           initialFormData,
         });
 
-        await user.click(node.querySelector('button.btn-clear')!);
+        await user.click(node.querySelector('button.rjsf-btn-clear')!);
 
         expectToHaveBeenCalledWithFormData(onChange, undefined, 'root');
       },
@@ -3140,7 +3140,7 @@ describe('uiSchema', () => {
         foo: { 'ui:required': true },
       };
       const { node } = createFormComponent({ schema, uiSchema });
-      expect(node.querySelector('.rjsf-field-string span.required')).not.toBeNull();
+      expect(node.querySelector('.rjsf-field-string span.rjsf-required')).not.toBeNull();
     });
 
     it('forwards the effective required state to the field/widget, not just the label', () => {
@@ -3172,7 +3172,7 @@ describe('uiSchema', () => {
         foo: { 'ui:required': false, 'ui:initialValue': 'fallback' },
       };
       const { node } = createFormComponent({ schema, uiSchema });
-      expect(node.querySelector('.rjsf-field-string span.required')).toBeNull();
+      expect(node.querySelector('.rjsf-field-string span.rjsf-required')).toBeNull();
     });
 
     it('reads a ui:required of null as false on a schema-required field, not as unset', () => {
@@ -3185,7 +3185,7 @@ describe('uiSchema', () => {
       };
       const uiSchema: GenericObjectType = { foo: { 'ui:required': null } };
       const { node } = createFormComponent({ schema, uiSchema });
-      expect(node.querySelector('.rjsf-field-string span.required')).toBeNull();
+      expect(node.querySelector('.rjsf-field-string span.rjsf-required')).toBeNull();
     });
 
     it('blocks submission when ui:required is true and the field is empty', async () => {
@@ -3436,7 +3436,7 @@ describe('uiSchema', () => {
         'ui:globalOptions': globalOptions,
       };
       const { node, onSubmit } = createFormComponent({ schema, uiSchema });
-      expect(node.querySelector('.rjsf-field-string span.required')).toBeNull();
+      expect(node.querySelector('.rjsf-field-string span.rjsf-required')).toBeNull();
       await submitForm(node, user);
       expect(onSubmit).toHaveBeenCalled();
     });
@@ -3457,7 +3457,7 @@ describe('uiSchema', () => {
         'ui:globalOptions': globalOptions,
       };
       const { node, onSubmit } = createFormComponent({ schema, uiSchema });
-      expect(node.querySelector('.rjsf-field-string span.required')).toBeNull();
+      expect(node.querySelector('.rjsf-field-string span.rjsf-required')).toBeNull();
       await submitForm(node, user);
       expect(onSubmit).toHaveBeenCalled();
     });
@@ -3545,7 +3545,7 @@ describe('uiSchema', () => {
         },
       };
       const { node, onSubmit } = createFormComponent({ schema, uiSchema });
-      expect(node.querySelector('.rjsf-field-string span.required')).toBeNull();
+      expect(node.querySelector('.rjsf-field-string span.rjsf-required')).toBeNull();
       await submitForm(node, user);
       expect(onSubmit).toHaveBeenCalled();
     });
@@ -3752,7 +3752,7 @@ describe('uiSchema', () => {
         },
       };
       const { node } = createFormComponent({ schema, uiSchema });
-      await user.click(node.querySelector('.rjsf-array-item-add button')!);
+      await user.click(node.querySelector('.rjsf-array-item-add')!);
       expect(node.querySelector<HTMLInputElement>('.rjsf-array-item input[type=text]')).toHaveValue('Anonymous');
     });
 
@@ -3772,7 +3772,7 @@ describe('uiSchema', () => {
         },
       };
       const { node } = createFormComponent({ schema, uiSchema });
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
       expect(node.querySelector<HTMLInputElement>('#root_newKey_name')).toHaveValue('Anonymous');
     });
 
@@ -3815,7 +3815,7 @@ describe('uiSchema', () => {
         },
       };
       const { node } = createFormComponent({ schema, uiSchema });
-      await user.click(node.querySelector('.rjsf-array-item-add button')!);
+      await user.click(node.querySelector('.rjsf-array-item-add')!);
       expect(node.querySelector<HTMLInputElement>('.rjsf-array-item input[type=text]')).toHaveValue('Anonymous');
     });
 
@@ -3836,7 +3836,7 @@ describe('uiSchema', () => {
         },
       };
       const { node } = createFormComponent({ schema, uiSchema });
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
       expect(node.querySelector<HTMLInputElement>('#root_newKey_name')).toHaveValue('Anonymous');
     });
 

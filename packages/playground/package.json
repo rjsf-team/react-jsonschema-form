@@ -31,6 +31,7 @@
     "@mantine/hooks": "^9.6.3",
     "@mui/material": "^9.4.0",
     "@rjsf/antd": "workspace:^",
+    "@rjsf/bootstrap3": "workspace:^",
     "@rjsf/chakra-ui": "workspace:^",
     "@rjsf/core": "workspace:^",
     "@rjsf/daisyui": "workspace:^",

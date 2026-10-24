@@ -75,7 +75,7 @@ describe('oneOf', () => {
 
     expect(node.querySelectorAll('select')).toHaveLength(1);
     expect(node.querySelector('select')).toHaveAttribute('id', 'root__oneof_select');
-    expect(node.querySelectorAll('span.required')).toHaveLength(1);
+    expect(node.querySelectorAll('span.rjsf-required')).toHaveLength(1);
     expect(node.querySelectorAll('#root_XxxOf__description')).toHaveLength(1);
     // The object renders beside the selected option under an id of its own, so nothing else claims the field's
     expect(node.querySelectorAll('#root__description')).toHaveLength(0);
@@ -110,7 +110,7 @@ describe('oneOf', () => {
 
     expect(node.querySelectorAll('select')).toHaveLength(1);
     expect(node.querySelector('select')).toHaveAttribute('id', 'root__oneof_select');
-    expect(node.querySelectorAll('span.required')).toHaveLength(2);
+    expect(node.querySelectorAll('span.rjsf-required')).toHaveLength(2);
   });
 
   // The selector picks an option index, which isn't form data, and holds one unless its widget offers an empty choice,
@@ -134,8 +134,8 @@ describe('oneOf', () => {
 
     expect(screen.getByRole('combobox', { name: 'pet' })).not.toBeRequired();
     expect(screen.getByRole('textbox')).toBeRequired();
-    expect(node.querySelectorAll('span.required')).toHaveLength(1);
-    expect(node.querySelector('label[for="root_pet"] span.required')).toBeInTheDocument();
+    expect(node.querySelectorAll('span.rjsf-required')).toHaveLength(1);
+    expect(node.querySelector('label[for="root_pet"] span.rjsf-required')).toBeInTheDocument();
   });
 
   // An option drawing a heading of its own is required with its field, so its heading is marked beside the field's label
@@ -153,9 +153,9 @@ describe('oneOf', () => {
     });
 
     expect(screen.getByRole('combobox', { name: 'pet' })).not.toBeRequired();
-    expect(node.querySelectorAll('span.required')).toHaveLength(2);
-    expect(node.querySelector('#root_pet__label + span.required')).toBeInTheDocument();
-    expect(node.querySelector('#root_pet__title + span.required')).toBeInTheDocument();
+    expect(node.querySelectorAll('span.rjsf-required')).toHaveLength(2);
+    expect(node.querySelector('#root_pet__label + span.rjsf-required')).toBeInTheDocument();
+    expect(node.querySelector('#root_pet__title + span.rjsf-required')).toBeInTheDocument();
   });
 
   it('should assign a default value and set defaults on option change', async () => {
@@ -1514,9 +1514,9 @@ describe('oneOf', () => {
         schema,
       });
 
-      expect(node.querySelector('.rjsf-array-item-add button')).not.toEqual(null);
+      expect(node.querySelector('.rjsf-array-item-add')).not.toEqual(null);
 
-      await user.click(node.querySelector('.rjsf-array-item-add button')!);
+      await user.click(node.querySelector('.rjsf-array-item-add')!);
 
       const $select = node.querySelector('select');
       expect($select).not.toEqual(null);
@@ -1721,9 +1721,9 @@ describe('oneOf', () => {
         schema,
       });
 
-      expect(node.querySelector('.rjsf-array-item-add button')).not.toEqual(null);
+      expect(node.querySelector('.rjsf-array-item-add')).not.toEqual(null);
 
-      await user.click(node.querySelector('.rjsf-array-item-add button')!);
+      await user.click(node.querySelector('.rjsf-array-item-add')!);
 
       const $select = node.querySelector('select');
       expect($select).not.toEqual(null);
@@ -1731,7 +1731,7 @@ describe('oneOf', () => {
 
       // This works because the nested "add" button will now be the first to
       // appear in the dom
-      await user.click(node.querySelector('.rjsf-array-item-add button')!);
+      await user.click(node.querySelector('.rjsf-array-item-add')!);
 
       expect($select).toHaveValue($select?.options[1].value);
     });
@@ -2052,9 +2052,9 @@ describe('oneOf', () => {
         schema,
       });
 
-      expect(node.querySelector('.rjsf-array-item-add button')).not.toEqual(null);
+      expect(node.querySelector('.rjsf-array-item-add')).not.toEqual(null);
 
-      await user.click(node.querySelector('.rjsf-array-item-add button')!);
+      await user.click(node.querySelector('.rjsf-array-item-add')!);
 
       const $select = node.querySelector('select');
       expect($select).not.toEqual(null);
@@ -2268,7 +2268,7 @@ describe('oneOf', () => {
       await user.type(userIdInput, '12345');
       await submitForm(node, user);
 
-      let inputs = node.querySelectorAll('.form-group.rjsf-field-error input[inputmode=decimal]');
+      let inputs = node.querySelectorAll('.rjsf-field.rjsf-field-error input[inputmode=decimal]');
       expect(inputs[0]).toHaveAttribute('id', 'root_userId');
 
       const $select = node.querySelector('select');
@@ -2280,7 +2280,7 @@ describe('oneOf', () => {
       await user.type(userIdInput2, 'Lorem ipsum dolor sit amet');
       await submitForm(node, user);
 
-      inputs = node.querySelectorAll('.form-group.rjsf-field-error input[type=text]');
+      inputs = node.querySelectorAll('.rjsf-field.rjsf-field-error input[type=text]');
       expect(inputs[0]).toHaveAttribute('id', 'root_userId');
     });
     it('should NOT show error on options with different types when hideError: true', async () => {
@@ -2297,7 +2297,7 @@ describe('oneOf', () => {
       await user.type(userIdInput, '12345');
       await submitForm(node, user);
 
-      let inputs = node.querySelectorAll('.form-group.rjsf-field-error input[inputmode=decimal]');
+      let inputs = node.querySelectorAll('.rjsf-field.rjsf-field-error input[inputmode=decimal]');
       expect(inputs).toHaveLength(0);
 
       const $select = node.querySelector('select');
@@ -2309,7 +2309,7 @@ describe('oneOf', () => {
       await user.type(userIdInput2, 'Lorem ipsum dolor sit amet');
       await submitForm(node, user);
 
-      inputs = node.querySelectorAll('.form-group.rjsf-field-error input[type=text]');
+      inputs = node.querySelectorAll('.rjsf-field.rjsf-field-error input[type=text]');
       expect(inputs).toHaveLength(0);
     });
 
@@ -3000,7 +3000,7 @@ describe('oneOf', () => {
       const select = node.querySelector<HTMLSelectElement>('select#root_myprop');
       expect(select).toBeInTheDocument();
       expect(getSelectedOptionValue(select!)).toEqual('none');
-      expect(node.querySelector('.unsupported-field')).not.toBeInTheDocument();
+      expect(node.querySelector('.rjsf-unsupported-field')).not.toBeInTheDocument();
     });
 
     it('should render a select for single value enum options without a type', async () => {
@@ -3272,7 +3272,7 @@ describe('oneOf', () => {
       const schema: RJSFSchema = { type: 'object', properties: { myprop: { oneOf: [] } } };
       const { node, onChange } = createFormComponent({ schema, initialFormData: {} });
 
-      expect(node.querySelector('.unsupported-field')).toBeInTheDocument();
+      expect(node.querySelector('.rjsf-unsupported-field')).toBeInTheDocument();
       expect(onChange).not.toHaveBeenCalled();
     });
 
@@ -3288,7 +3288,7 @@ describe('oneOf', () => {
       };
       const { node } = createFormComponent({ schema, initialFormData: { myprop: value } });
 
-      expect(node.querySelector('.unsupported-field')).not.toBeInTheDocument();
+      expect(node.querySelector('.rjsf-unsupported-field')).not.toBeInTheDocument();
       expect(node.querySelector(selector)).toBeInTheDocument();
     });
 
@@ -3322,7 +3322,7 @@ describe('oneOf', () => {
         };
         const { node, onChange } = createFormComponent({ schema, uiSchema, initialFormData: { v: { a: 1 } } });
 
-        expect(node.querySelector('.unsupported-field')).not.toBeInTheDocument();
+        expect(node.querySelector('.rjsf-unsupported-field')).not.toBeInTheDocument();
         const select = node.querySelector<HTMLSelectElement>('select#root_v')!;
         expect(getSelectedOptionValue(select)).toEqual('One');
         await user.selectOptions(select, 'Two');
@@ -3947,7 +3947,7 @@ describe('oneOf', () => {
       };
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelector('.unsupported-field')).not.toBeInTheDocument();
+      expect(node.querySelector('.rjsf-unsupported-field')).not.toBeInTheDocument();
       expect(node.querySelector('#root_myprop__anyof_select')).toBeInTheDocument();
       expect(node.querySelector('input#root_myprop[type=text]')).toBeInTheDocument();
     });
@@ -4205,7 +4205,7 @@ describe('oneOf', () => {
       const schema = wrap({ type: 'array', items: { type: 'string' }, anyOf: [{ minItems: 1 }, { maxItems: 3 }] });
       const { node, onChange } = createFormComponent({ schema });
 
-      expect(node.querySelector('.unsupported-field')).not.toBeInTheDocument();
+      expect(node.querySelector('.rjsf-unsupported-field')).not.toBeInTheDocument();
       await user.type(node.querySelector<HTMLInputElement>('input#root_opt_0')!, 'x');
       await user.click(node.querySelector<HTMLButtonElement>('#root_opt__add')!);
 
@@ -4460,7 +4460,7 @@ describe('oneOf', () => {
       const { node } = createFormComponent({ schema, initialFormData: { opt: ['a', 'b'] } });
 
       expect(node.querySelector('input#root_opt_1')).not.toEqual(null);
-      expect(node.querySelector('.rjsf-array-item-add button')).toEqual(null);
+      expect(node.querySelector('.rjsf-array-item-add')).toEqual(null);
     });
 
     it("should replace the items with the const of the option switched to when they don't equal it", async () => {
@@ -4486,7 +4486,7 @@ describe('oneOf', () => {
       const schema = wrap({ type: 'array', items: { type: 'string' }, anyOf: [{ items: true }, { maxItems: 3 }] });
       const { node } = createFormComponent({ schema, initialFormData: { opt: ['x'] } });
 
-      expect(node.querySelector('.unsupported-field')).not.toBeInTheDocument();
+      expect(node.querySelector('.rjsf-unsupported-field')).not.toBeInTheDocument();
       expect(node.querySelector<HTMLInputElement>('input#root_opt_0')).toHaveValue('x');
     });
 
@@ -4498,7 +4498,7 @@ describe('oneOf', () => {
       });
       const { node } = createFormComponent({ schema, initialFormData: { opt: ['x', 1] } });
 
-      expect(node.querySelector('.unsupported-field')).not.toBeInTheDocument();
+      expect(node.querySelector('.rjsf-unsupported-field')).not.toBeInTheDocument();
       expect(node.querySelector<HTMLInputElement>('input#root_opt_0')).toHaveValue('x');
       expect(node.querySelector<HTMLInputElement>('input#root_opt_1')).toHaveValue('1');
     });
@@ -4522,7 +4522,7 @@ describe('oneOf', () => {
       });
       const { node, onChange } = createFormComponent({ schema });
 
-      expect(node.querySelector('.unsupported-field')).not.toBeInTheDocument();
+      expect(node.querySelector('.rjsf-unsupported-field')).not.toBeInTheDocument();
       await user.selectOptions(node.querySelector<HTMLSelectElement>('select[multiple]#root_opt')!, 'b');
 
       expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { opt: ['b'] } }), 'root_opt');
@@ -4691,7 +4691,7 @@ describe('oneOf', () => {
       const typeless = createFormComponent({ schema: wrap({ properties, oneOf }) });
       const typed = createFormComponent({ schema: wrap({ type: 'object', properties, oneOf }) });
 
-      expect(typeless.node.querySelector('.unsupported-field')).not.toBeInTheDocument();
+      expect(typeless.node.querySelector('.rjsf-unsupported-field')).not.toBeInTheDocument();
       expect(typeless.node.innerHTML).toEqual(typed.node.innerHTML);
     });
   });

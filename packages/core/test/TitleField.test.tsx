@@ -35,6 +35,6 @@ describe('TitleField', () => {
   it('should add an asterisk to the title, when field is required', () => {
     expect(node).toHaveTextContent(`${props.title}*`);
 
-    expect(node.querySelector('span.required')).toHaveTextContent('*');
+    expect(node.querySelector('span.rjsf-required')).toHaveTextContent('*');
   });
 });

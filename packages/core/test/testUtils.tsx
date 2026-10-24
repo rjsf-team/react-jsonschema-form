@@ -281,7 +281,7 @@ export function describeRepeated(title: string, fn: (creatorFn: typeof createFor
  */
 export function fieldErrorsById(node: ParentNode): Record<string, string[]> {
   const result: Record<string, string[]> = {};
-  for (const list of node.querySelectorAll('ul.error-detail')) {
+  for (const list of node.querySelectorAll('ul.rjsf-error-detail')) {
     result[list.id.replace(/__error$/, '')] = Array.from(list.querySelectorAll('li'), (item) => item.textContent ?? '');
   }
   return result;
@@ -291,7 +291,7 @@ export function fieldErrorsById(node: ParentNode): Record<string, string[]> {
  * with a custom `ErrorListTemplate` it finds no list and returns `[]`.
  */
 export function errorListMessages(node: ParentNode): string[] {
-  return Array.from(node.querySelectorAll('.panel.errors li'), (item) => item.textContent ?? '');
+  return Array.from(node.querySelectorAll('.rjsf-errors li'), (item) => item.textContent ?? '');
 }
 
 export async function submitForm(node: Element, user: UserEvent, forceFireEvent = false) {

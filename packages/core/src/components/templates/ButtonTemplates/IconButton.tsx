@@ -3,15 +3,51 @@ import type { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema } f
 import { TranslatableString } from '@rjsf/utils';
 import { clsx } from 'clsx';
 
+/** The strokes of each named icon, in a 16 by 16 box */
+const ICON_PATHS: Record<string, string> = {
+  plus: 'M8 3v10M3 8h10',
+  copy: 'M6 6h7v7H6zM3 10V3h7',
+  'arrow-up': 'M8 13V3m-4 4 4-4 4 4',
+  'arrow-down': 'M8 3v10m-4-4 4 4 4-4',
+  remove: 'M4 4l8 8M12 4l-8 8',
+};
+
+/** A `<button>` carrying an inline SVG icon, named by `icon`, or the element `icon` is */
 function IconButtonFn<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: IconButtonProps<T, S, F>) {
   const { iconType = 'default', icon, className, uiSchema, registry, ...otherProps } = props;
+  const { classMap } = registry;
+  const path = typeof icon === 'string' ? ICON_PATHS[icon] : undefined;
   return (
-    <button type='button' className={clsx('btn', `btn-${iconType}`, className)} {...otherProps}>
-      {typeof icon === 'object' ? icon : <i className={`glyphicon glyphicon-${icon}`} />}
+    // The icon is hidden from assistive technology, so the title names the button, as a label, unless the caller
+    // names it otherwise
+    <button
+      type='button'
+      className={clsx('rjsf-button', `rjsf-button-${iconType}`, classMap.iconButton, className)}
+      aria-label={otherProps.title}
+      {...otherProps}
+    >
+      {typeof icon === 'object'
+        ? icon
+        : path && (
+            <svg
+              className={clsx('rjsf-button-icon', classMap.buttonIcon)}
+              viewBox='0 0 16 16'
+              width='1em'
+              height='1em'
+              fill='none'
+              stroke='currentColor'
+              strokeWidth='2'
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              aria-hidden='true'
+            >
+              <path d={path} />
+            </svg>
+          )}
     </button>
   );
 }
@@ -79,7 +115,7 @@ function ClearButtonFn<
       id={id}
       iconType='default'
       icon='remove'
-      className='btn-clear col-xs-12'
+      className={clsx('rjsf-btn-clear', className)}
       title={translateString(TranslatableString.ClearButton)}
       onClick={onClick}
       disabled={disabled}

@@ -25,9 +25,9 @@
 ## About The Project
 
 Exports the Bootstrap 3 theme for `react-jsonschema-form`: a [class map](https://rjsf-team.github.io/react-jsonschema-form/docs/advanced-customization/custom-themes#class-map)
-of Bootstrap 3 class names for the elements `@rjsf/core` renders, plus the four templates whose markup is Bootstrap
-3's rather than a class name: the glyphicon buttons, `ArrayFieldItemTemplate`, `WrapIfAdditionalTemplate` and
-`TitleField`. Everything else is `@rjsf/core`'s own component.
+of Bootstrap 3 class names for the elements `@rjsf/core` renders, plus the templates whose markup is Bootstrap 3's
+rather than a class name: the glyphicon buttons, `OptionalDataControlsTemplate` which renders them,
+`ArrayFieldItemTemplate`, `WrapIfAdditionalTemplate` and `TitleField`. Everything else is `@rjsf/core`'s own component.
 
 ### Built With
 

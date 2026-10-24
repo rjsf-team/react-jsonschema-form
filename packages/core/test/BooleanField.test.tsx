@@ -83,7 +83,7 @@ describe('BooleanField', () => {
       },
     });
 
-    expect(node.querySelector('.rjsf-field span.required')).toHaveTextContent('*');
+    expect(node.querySelector('.rjsf-field span.rjsf-required')).toHaveTextContent('*');
   });
 
   describe('HTML5 required attribute', () => {
@@ -125,7 +125,7 @@ describe('BooleanField', () => {
       const label = node.querySelector('label[for="root_foo"]');
       expect(requiredProps.at(-1)).toBe(expected);
       expect(label).toHaveTextContent(/^Foo/);
-      expect(Boolean(label?.querySelector('span.required'))).toBe(expected);
+      expect(Boolean(label?.querySelector('span.rjsf-required'))).toBe(expected);
     });
 
     it('neither requires nor marks a custom boolean field declared to hold false unchecked', () => {
@@ -144,7 +144,7 @@ describe('BooleanField', () => {
       const label = node.querySelector('label[for="root_foo"]');
       expect(requiredAttributes.at(-1)).not.toBe(true);
       expect(label).toHaveTextContent(/^Foo/);
-      expect(label?.querySelector('span.required')).toBeNull();
+      expect(label?.querySelector('span.rjsf-required')).toBeNull();
     });
 
     it("hands a custom checkbox widget the plan's required, which a boolean false satisfies isn't", () => {
@@ -194,7 +194,7 @@ describe('BooleanField', () => {
 
       const label = node.querySelector('label[for="root_foo"]');
       expect(label).toHaveTextContent(/^Foo/);
-      expect(Boolean(label?.querySelector('span.required'))).toBe(marked);
+      expect(Boolean(label?.querySelector('span.rjsf-required'))).toBe(marked);
     });
 
     it('should submit a required boolean left unchecked', async () => {
@@ -357,7 +357,7 @@ describe('BooleanField', () => {
       },
     });
 
-    const description = node.querySelector('.field-description');
+    const description = node.querySelector('.rjsf-field-description');
     expect(description).toHaveTextContent('my description');
   });
 
@@ -410,12 +410,12 @@ describe('BooleanField', () => {
       },
       templates: {
         DescriptionFieldTemplate: ({ description }) => (
-          <div className='field-description'>{description} overridden</div>
+          <div className='rjsf-field-description'>{description} overridden</div>
         ),
       },
     });
 
-    const description = node.querySelector('.field-description');
+    const description = node.querySelector('.rjsf-field-description');
     expect(description).toHaveTextContent('my description overridden');
   });
 
@@ -460,7 +460,7 @@ describe('BooleanField', () => {
     const focusSpys = [vi.fn(), vi.fn()];
     const inputs = node.querySelectorAll('input[id^=root_bool]');
     expect(inputs).toHaveLength(2);
-    let errorInputs = node.querySelectorAll('.form-group.rjsf-field-error input[id^=root_bool]');
+    let errorInputs = node.querySelectorAll('.rjsf-field.rjsf-field-error input[id^=root_bool]');
     expect(errorInputs).toHaveLength(0);
     // Since programmatically triggering focus does not call onFocus, change the focus method to a spy
     // Object.defineProperty is used because userEvent.setup() patches HTMLElement.prototype.focus as
@@ -474,7 +474,7 @@ describe('BooleanField', () => {
     ]);
     expect(focusSpys[0]).toHaveBeenCalled();
     expect(focusSpys[1]).not.toHaveBeenCalled();
-    errorInputs = node.querySelectorAll('.form-group.rjsf-field-error input[id^=root_bool]');
+    errorInputs = node.querySelectorAll('.rjsf-field.rjsf-field-error input[id^=root_bool]');
     expect(errorInputs).toHaveLength(2);
   });
 
@@ -498,7 +498,7 @@ describe('BooleanField', () => {
     const focusSpys = [vi.fn(), vi.fn()];
     const inputs = node.querySelectorAll('input[id^=root_bool]');
     expect(inputs).toHaveLength(2);
-    let errorInputs = node.querySelectorAll('.form-group.rjsf-field-error input[id^=root_bool]');
+    let errorInputs = node.querySelectorAll('.rjsf-field.rjsf-field-error input[id^=root_bool]');
     expect(errorInputs).toHaveLength(0);
     // Since programmatically triggering focus does not call onFocus, change the focus method to a spy
     // Object.defineProperty is used because userEvent.setup() patches HTMLElement.prototype.focus as
@@ -512,7 +512,7 @@ describe('BooleanField', () => {
     ]);
     expect(focusSpys[0]).toHaveBeenCalled();
     expect(focusSpys[1]).not.toHaveBeenCalled();
-    errorInputs = node.querySelectorAll('.form-group.rjsf-field-error input[id^=root_bool]');
+    errorInputs = node.querySelectorAll('.rjsf-field.rjsf-field-error input[id^=root_bool]');
     expect(errorInputs).toHaveLength(0);
   });
 
@@ -548,7 +548,7 @@ describe('BooleanField', () => {
       uiSchema: { 'ui:widget': 'radio' },
     });
 
-    expect(node.querySelector('.field-radio-group')).toHaveAttribute('id', 'root');
+    expect(node.querySelector('.rjsf-field-radio-group')).toHaveAttribute('id', 'root');
   });
 
   it('should have default enum option labels for radio widgets', () => {
@@ -561,7 +561,7 @@ describe('BooleanField', () => {
     });
 
     const labels = [].map.call(
-      node.querySelectorAll('.field-radio-group label'),
+      node.querySelectorAll('.rjsf-field-radio-group label'),
       (label: Element) => label.textContent,
     );
     expect(labels).toEqual(['Yes', 'No']);
@@ -578,7 +578,7 @@ describe('BooleanField', () => {
     });
 
     const labels = [].map.call(
-      node.querySelectorAll('.field-radio-group label'),
+      node.querySelectorAll('.rjsf-field-radio-group label'),
       (label: Element) => label.textContent,
     );
     expect(labels).toEqual(['No', 'Yes']);
@@ -592,7 +592,7 @@ describe('BooleanField', () => {
     });
 
     const labels = [].map.call(
-      node.querySelectorAll('.field-radio-group label'),
+      node.querySelectorAll('.rjsf-field-radio-group label'),
       (label: Element) => label.textContent,
     );
     expect(labels).toEqual(['Yes', 'No']);
@@ -618,7 +618,7 @@ describe('BooleanField', () => {
     });
 
     const labels = [].map.call(
-      node.querySelectorAll('.field-radio-group label'),
+      node.querySelectorAll('.rjsf-field-radio-group label'),
       (label: Element) => label.textContent,
     );
     expect(labels).toEqual(['Yes', 'No']);
@@ -644,7 +644,7 @@ describe('BooleanField', () => {
     });
 
     const labels = [].map.call(
-      node.querySelectorAll('.field-radio-group label'),
+      node.querySelectorAll('.rjsf-field-radio-group label'),
       (label: Element) => label.textContent,
     );
     expect(labels).toEqual(['Yes', 'No']);
@@ -945,7 +945,7 @@ describe('BooleanField', () => {
       const { node, onChange } = createFormComponent({ schema, uiSchema: { 'ui:widget': 'radio' } });
 
       expect(radioTexts(node)).toEqual(['Yes', 'No']);
-      await user.click(node.querySelectorAll<HTMLInputElement>('.field-radio-group input')[0]);
+      await user.click(node.querySelectorAll<HTMLInputElement>('.rjsf-field-radio-group input')[0]);
       expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: true }), 'root');
     });
 
@@ -1266,7 +1266,7 @@ describe('BooleanField', () => {
     });
 
     const labels = [].map.call(
-      node.querySelectorAll('.field-radio-group label'),
+      node.querySelectorAll('.rjsf-field-radio-group label'),
       (label: Element) => label.textContent,
     );
     expect(labels).toEqual(['Si!', 'No!']);
@@ -1292,7 +1292,7 @@ describe('BooleanField', () => {
     });
 
     const labels = [].map.call(
-      node.querySelectorAll('.field-radio-group label'),
+      node.querySelectorAll('.rjsf-field-radio-group label'),
       (label: Element) => label.textContent,
     );
     expect(labels).toEqual(['No', 'Yes']);
@@ -1310,7 +1310,7 @@ describe('BooleanField', () => {
       },
     });
 
-    expect(node.querySelectorAll('.radio-inline')).toHaveLength(2);
+    expect(node.querySelectorAll('.rjsf-radio-inline')).toHaveLength(2);
   });
 
   it('should handle a focus event for radio widgets', async () => {
@@ -1326,7 +1326,7 @@ describe('BooleanField', () => {
       onFocus,
     });
 
-    const element = node.querySelector('.field-radio-group');
+    const element = node.querySelector('.rjsf-field-radio-group');
     await user.click(node.querySelectorAll('input')[1]); // click "No" (false) radio at index 1
     expect(onFocus).toHaveBeenLastCalledWith(element?.id, false);
   });
@@ -1344,7 +1344,7 @@ describe('BooleanField', () => {
       onBlur,
     });
 
-    const element = node.querySelector('.field-radio-group');
+    const element = node.querySelector('.rjsf-field-radio-group');
     await user.click(node.querySelectorAll('input')[1]); // focus "No" (false) radio at index 1
     await user.tab();
     expect(onBlur).toHaveBeenLastCalledWith(element?.id, false);

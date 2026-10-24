@@ -60,7 +60,7 @@ function RadioWidget<
   );
   const autofocusIndex = enumOptionsAutofocusIndex<S>(enumOptions, enumDisabled, autofocus, value);
   return (
-    <div className='field-radio-group' id={id} {...groupAttributes}>
+    <div className='rjsf-field-radio-group' id={id} {...groupAttributes}>
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, i) => {
           const checked = enumOptionsIsSelected<S>(option.value, value, false);
@@ -73,7 +73,7 @@ function RadioWidget<
             <span>
               <input
                 type='radio'
-                className={classMap.radioInput || undefined}
+                className={classMap.radioInput}
                 id={optionId(id, i)}
                 checked={checked}
                 name={htmlName || id}
@@ -92,13 +92,13 @@ function RadioWidget<
 
           return inline ? (
             // oxlint-disable-next-line react/no-array-index-key
-            <label key={i} className={clsx(classMap.radioInlineLabel, disabledCls)}>
+            <label key={i} className={clsx('rjsf-radio-inline', classMap.radioInlineLabel, disabledCls)}>
               {radio}
             </label>
           ) : (
             // oxlint-disable-next-line react/no-array-index-key
-            <div key={i} className={clsx(classMap.radioWrapper, disabledCls)}>
-              <label className={classMap.radioLabel || undefined}>{radio}</label>
+            <div key={i} className={clsx('rjsf-radio', classMap.radioWrapper, disabledCls)}>
+              <label className={classMap.radioLabel}>{radio}</label>
             </div>
           );
         })}

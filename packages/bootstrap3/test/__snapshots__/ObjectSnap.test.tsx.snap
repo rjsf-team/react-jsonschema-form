@@ -28,7 +28,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
               class="form-group rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label control-label"
                 for="root_person_name"
               >
                 <span
@@ -64,7 +64,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                   class="form-group rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="control-label"
+                    class="rjsf-field-label control-label"
                     for="root_person_address_street"
                   >
                     <span
@@ -87,7 +87,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                   class="form-group rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="control-label"
+                    class="rjsf-field-label control-label"
                     for="root_person_address_city"
                   >
                     <span
@@ -110,7 +110,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                   class="form-group rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="control-label"
+                    class="rjsf-field-label control-label"
                     for="root_person_address_country"
                   >
                     <span
@@ -137,7 +137,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -162,7 +162,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
           class="form-group rjsf-field rjsf-field-string"
         >
           <label
-            class="control-label"
+            class="rjsf-field-label control-label"
             for="root_name"
           >
             <span
@@ -211,7 +211,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
               class="form-additional form-group col-xs-5"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label control-label"
                 for="root_customField"
               >
                 <span
@@ -255,7 +255,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
             class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-object-property-expand"
           >
             <button
-              class="btn btn-info btn-add col-xs-12"
+              class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
               title="Add"
               type="button"
@@ -270,7 +270,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -295,7 +295,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
           class="form-group rjsf-field rjsf-field-string"
         >
           <label
-            class="control-label"
+            class="rjsf-field-label control-label"
             for="root_name"
           >
             <span
@@ -318,7 +318,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
           class="form-group rjsf-field rjsf-field-number"
         >
           <label
-            class="control-label"
+            class="rjsf-field-label control-label"
             for="root_age"
           >
             <span
@@ -344,7 +344,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
           class="form-group rjsf-field rjsf-field-boolean"
         >
           <div
-            class="checkbox"
+            class="rjsf-checkbox checkbox"
           >
             <label>
               <input
@@ -374,7 +374,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
               </span>
             </legend>
             <div
-              class="row array-item-list"
+              class="rjsf-array-item-list row"
             >
               <div
                 class="rjsf-array-item"
@@ -387,7 +387,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                     class="form-group rjsf-field rjsf-field-string"
                   >
                     <label
-                      class="control-label"
+                      class="rjsf-field-label control-label"
                       for="root_tags_0"
                     >
                       <span
@@ -396,7 +396,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                         tags-1
                       </span>
                       <span
-                        class="required"
+                        class="rjsf-required"
                       >
                         *
                       </span>
@@ -414,7 +414,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                   </div>
                 </div>
                 <div
-                  class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
+                  class="col-xs-3 col-md-2 col-xl-1 rjsf-array-item-toolbox"
                 >
                   <div
                     class="btn-group"
@@ -465,7 +465,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                     class="form-group rjsf-field rjsf-field-string"
                   >
                     <label
-                      class="control-label"
+                      class="rjsf-field-label control-label"
                       for="root_tags_1"
                     >
                       <span
@@ -474,7 +474,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                         tags-2
                       </span>
                       <span
-                        class="required"
+                        class="rjsf-required"
                       >
                         *
                       </span>
@@ -492,7 +492,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                   </div>
                 </div>
                 <div
-                  class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
+                  class="col-xs-3 col-md-2 col-xl-1 rjsf-array-item-toolbox"
                 >
                   <div
                     class="btn-group"
@@ -540,7 +540,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                 class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
               >
                 <button
-                  class="btn btn-info btn-add col-xs-12"
+                  class="btn btn-info rjsf-btn-add col-xs-12"
                   id="root_tags__add"
                   title="Add"
                   type="button"
@@ -557,7 +557,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -582,7 +582,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
           class="form-group rjsf-field rjsf-field-string"
         >
           <label
-            class="control-label"
+            class="rjsf-field-label control-label"
             for="root_firstName"
           >
             <span
@@ -605,7 +605,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
           class="form-group rjsf-field rjsf-field-string"
         >
           <label
-            class="control-label"
+            class="rjsf-field-label control-label"
             for="root_lastName"
           >
             <span
@@ -628,7 +628,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
           class="form-group rjsf-field rjsf-field-number"
         >
           <label
-            class="control-label"
+            class="rjsf-field-label control-label"
             for="root_age"
           >
             <span
@@ -654,7 +654,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -692,7 +692,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
               class="form-group rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label control-label"
                 for="root_person_name"
               >
                 <span
@@ -728,7 +728,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                   class="form-group rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="control-label"
+                    class="rjsf-field-label control-label"
                     for="root_person_address_street"
                   >
                     <span
@@ -751,7 +751,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                   class="form-group rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="control-label"
+                    class="rjsf-field-label control-label"
                     for="root_person_address_city"
                   >
                     <span
@@ -778,7 +778,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -803,7 +803,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
           class="form-group rjsf-field rjsf-field-string"
         >
           <label
-            class="control-label"
+            class="rjsf-field-label control-label"
             for="root_name"
           >
             <span
@@ -826,7 +826,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
           class="form-group rjsf-field rjsf-field-number"
         >
           <label
-            class="control-label"
+            class="rjsf-field-label control-label"
             for="root_count"
           >
             <span
@@ -863,7 +863,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
               </span>
             </legend>
             <div
-              class="row array-item-list"
+              class="rjsf-array-item-list row"
             >
               <div
                 class="rjsf-array-item"
@@ -876,7 +876,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                     class="form-group rjsf-field rjsf-field-string"
                   >
                     <label
-                      class="control-label"
+                      class="rjsf-field-label control-label"
                       for="root_items_0"
                     >
                       <span
@@ -885,7 +885,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                         items-1
                       </span>
                       <span
-                        class="required"
+                        class="rjsf-required"
                       >
                         *
                       </span>
@@ -903,7 +903,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                   </div>
                 </div>
                 <div
-                  class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
+                  class="col-xs-3 col-md-2 col-xl-1 rjsf-array-item-toolbox"
                 >
                   <div
                     class="btn-group"
@@ -954,7 +954,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                     class="form-group rjsf-field rjsf-field-string"
                   >
                     <label
-                      class="control-label"
+                      class="rjsf-field-label control-label"
                       for="root_items_1"
                     >
                       <span
@@ -963,7 +963,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                         items-2
                       </span>
                       <span
-                        class="required"
+                        class="rjsf-required"
                       >
                         *
                       </span>
@@ -981,7 +981,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                   </div>
                 </div>
                 <div
-                  class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
+                  class="col-xs-3 col-md-2 col-xl-1 rjsf-array-item-toolbox"
                 >
                   <div
                     class="btn-group"
@@ -1029,7 +1029,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                 class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
               >
                 <button
-                  class="btn btn-info btn-add col-xs-12"
+                  class="btn btn-info rjsf-btn-add col-xs-12"
                   id="root_items__add"
                   title="Add"
                   type="button"
@@ -1046,7 +1046,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -1071,7 +1071,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
           class="form-group rjsf-field rjsf-field-string"
         >
           <label
-            class="control-label"
+            class="rjsf-field-label control-label"
             for="root_firstName"
           >
             <span
@@ -1094,7 +1094,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
           class="form-group rjsf-field rjsf-field-string"
         >
           <label
-            class="control-label"
+            class="rjsf-field-label control-label"
             for="root_lastName"
           >
             <span
@@ -1117,7 +1117,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
           class="form-group rjsf-field rjsf-field-number"
         >
           <label
-            class="control-label"
+            class="rjsf-field-label control-label"
             for="root_age"
           >
             <span
@@ -1143,7 +1143,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -1194,7 +1194,7 @@ exports[`object fields > additionalProperties 1`] = `
               class="form-additional form-group col-xs-5"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label control-label"
                 for="root_foo"
               >
                 <span
@@ -1238,7 +1238,7 @@ exports[`object fields > additionalProperties 1`] = `
             class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-object-property-expand"
           >
             <button
-              class="btn btn-info btn-add col-xs-12"
+              class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
               title="Add"
               type="button"
@@ -1253,7 +1253,7 @@ exports[`object fields > additionalProperties 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -1322,7 +1322,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
               class="form-additional form-group col-xs-5"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label control-label"
                 for="root_foo"
               >
                 <span
@@ -1332,7 +1332,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                 </span>
               </label>
               <div
-                class="field-description"
+                class="rjsf-field-description"
                 id="root_foo__description"
               >
                 A description
@@ -1373,7 +1373,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
             class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-object-property-expand"
           >
             <button
-              class="btn btn-info btn-add col-xs-12"
+              class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
               title="Add"
               type="button"
@@ -1388,7 +1388,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -1450,7 +1450,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
                   </span>
                 </legend>
                 <div
-                  class="row array-item-list"
+                  class="rjsf-array-item-list row"
                 />
                 <div
                   class="row"
@@ -1459,7 +1459,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
                     class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
                   >
                     <button
-                      class="btn btn-info btn-add col-xs-12"
+                      class="btn btn-info rjsf-btn-add col-xs-12"
                       id="root_foo__add"
                       title="Add"
                       type="button"
@@ -1497,7 +1497,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
             class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-object-property-expand"
           >
             <button
-              class="btn btn-info btn-add col-xs-12"
+              class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
               title="Add"
               type="button"
@@ -1512,7 +1512,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -1566,7 +1566,7 @@ exports[`object fields > additionalProperties, description 1`] = `
               class="form-additional form-group col-xs-5"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label control-label"
                 for="root_foo"
               >
                 <span
@@ -1576,7 +1576,7 @@ exports[`object fields > additionalProperties, description 1`] = `
                 </span>
               </label>
               <div
-                class="field-description"
+                class="rjsf-field-description"
                 id="root_foo__description"
               >
                 item description
@@ -1617,7 +1617,7 @@ exports[`object fields > additionalProperties, description 1`] = `
             class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-object-property-expand"
           >
             <button
-              class="btn btn-info btn-add col-xs-12"
+              class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
               title="Add"
               type="button"
@@ -1632,7 +1632,7 @@ exports[`object fields > additionalProperties, description 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -1683,7 +1683,7 @@ exports[`object fields > additionalProperties, label off 1`] = `
               class="form-additional form-group col-xs-5"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label control-label"
                 for="root_foo"
               >
                 <span
@@ -1727,7 +1727,7 @@ exports[`object fields > additionalProperties, label off 1`] = `
             class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-object-property-expand"
           >
             <button
-              class="btn btn-info btn-add col-xs-12"
+              class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
               title="Add"
               type="button"
@@ -1742,7 +1742,7 @@ exports[`object fields > additionalProperties, label off 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -1806,7 +1806,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
                   class="form-group rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="control-label"
+                    class="rjsf-field-label control-label"
                     for="root_foo_foo"
                   >
                     <span
@@ -1852,7 +1852,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
             class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-object-property-expand"
           >
             <button
-              class="btn btn-info btn-add col-xs-12"
+              class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
               title="Add"
               type="button"
@@ -1867,7 +1867,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -1933,7 +1933,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
               class="form-additional form-group col-xs-5"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label control-label"
                 for="root_foo"
               >
                 <span
@@ -1977,7 +1977,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
             class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-object-property-expand"
           >
             <button
-              class="btn btn-info btn-add col-xs-12"
+              class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
               title="Add"
               type="button"
@@ -1992,7 +1992,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -2058,7 +2058,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
               class="form-additional form-group col-xs-5"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label control-label"
                 for="root_foo"
               >
                 <span
@@ -2102,7 +2102,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
             class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-object-property-expand"
           >
             <button
-              class="btn btn-info btn-add col-xs-12"
+              class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
               title="Add"
               type="button"
@@ -2117,7 +2117,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -2142,7 +2142,7 @@ exports[`object fields > object 1`] = `
           class="form-group rjsf-field rjsf-field-string"
         >
           <label
-            class="control-label"
+            class="rjsf-field-label control-label"
             for="root_a"
           >
             <span
@@ -2165,7 +2165,7 @@ exports[`object fields > object 1`] = `
           class="form-group rjsf-field rjsf-field-number"
         >
           <label
-            class="control-label"
+            class="rjsf-field-label control-label"
             for="root_b"
           >
             <span
@@ -2191,7 +2191,7 @@ exports[`object fields > object 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -2210,7 +2210,7 @@ exports[`object fields > pure anyOf union, with no frame of its own beside the o
       class="form-group rjsf-field rjsf-field-object"
     >
       <label
-        class="control-label"
+        class="rjsf-field-label control-label"
       >
         <span
           id="root__label"
@@ -2219,10 +2219,10 @@ exports[`object fields > pure anyOf union, with no frame of its own beside the o
         </span>
       </label>
       <div
-        class="panel panel-default panel-body"
+        class="rjsf-multi-schema panel panel-default panel-body"
       >
         <div
-          class="form-group"
+          class="rjsf-multi-schema-selector form-group"
         >
           <select
             aria-labelledby="root__label"
@@ -2259,7 +2259,7 @@ exports[`object fields > pure anyOf union, with no frame of its own beside the o
               class="form-group rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label control-label"
                 for="root_bark"
               >
                 <span
@@ -2284,7 +2284,7 @@ exports[`object fields > pure anyOf union, with no frame of its own beside the o
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -2335,7 +2335,7 @@ exports[`object fields > show add button and fields if additionalProperties is t
               class="form-additional form-group col-xs-5"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label control-label"
                 for="root_additionalProperty"
               >
                 <span
@@ -2379,7 +2379,7 @@ exports[`object fields > show add button and fields if additionalProperties is t
             class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-object-property-expand"
           >
             <button
-              class="btn btn-info btn-add col-xs-12"
+              class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
               title="Add"
               type="button"
@@ -2394,7 +2394,7 @@ exports[`object fields > show add button and fields if additionalProperties is t
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -2423,7 +2423,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
           </span>
         </legend>
         <div
-          class="field-description"
+          class="rjsf-field-description"
           id="root__description"
         >
           a test description
@@ -2458,7 +2458,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
               class="form-additional form-group col-xs-5"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label control-label"
                 for="root_foo"
               >
                 <span
@@ -2502,7 +2502,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
             class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-object-property-expand"
           >
             <button
-              class="btn btn-info btn-add col-xs-12"
+              class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
               title="Add"
               type="button"
@@ -2517,7 +2517,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -2546,7 +2546,7 @@ exports[`object fields > with title and description > object 1`] = `
           </span>
         </legend>
         <div
-          class="field-description"
+          class="rjsf-field-description"
           id="root__description"
         >
           a test description
@@ -2555,7 +2555,7 @@ exports[`object fields > with title and description > object 1`] = `
           class="form-group rjsf-field rjsf-field-string"
         >
           <label
-            class="control-label"
+            class="rjsf-field-label control-label"
             for="root_a"
           >
             <span
@@ -2565,7 +2565,7 @@ exports[`object fields > with title and description > object 1`] = `
             </span>
           </label>
           <div
-            class="field-description"
+            class="rjsf-field-description"
             id="root_a__description"
           >
             A description
@@ -2585,7 +2585,7 @@ exports[`object fields > with title and description > object 1`] = `
           class="form-group rjsf-field rjsf-field-number"
         >
           <label
-            class="control-label"
+            class="rjsf-field-label control-label"
             for="root_b"
           >
             <span
@@ -2595,7 +2595,7 @@ exports[`object fields > with title and description > object 1`] = `
             </span>
           </label>
           <div
-            class="field-description"
+            class="rjsf-field-description"
             id="root_b__description"
           >
             B description
@@ -2618,7 +2618,7 @@ exports[`object fields > with title and description > object 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -2647,7 +2647,7 @@ exports[`object fields > with title and description > show add button and fields
           </span>
         </legend>
         <div
-          class="field-description"
+          class="rjsf-field-description"
           id="root__description"
         >
           a test description
@@ -2682,7 +2682,7 @@ exports[`object fields > with title and description > show add button and fields
               class="form-additional form-group col-xs-5"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label control-label"
                 for="root_additionalProperty"
               >
                 <span
@@ -2726,7 +2726,7 @@ exports[`object fields > with title and description > show add button and fields
             class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-object-property-expand"
           >
             <button
-              class="btn btn-info btn-add col-xs-12"
+              class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
               title="Add"
               type="button"
@@ -2741,7 +2741,7 @@ exports[`object fields > with title and description > show add button and fields
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -2770,7 +2770,7 @@ exports[`object fields > with title and description from both > additionalProper
           </span>
         </legend>
         <div
-          class="field-description"
+          class="rjsf-field-description"
           id="root__description"
         >
           a fancier description
@@ -2805,7 +2805,7 @@ exports[`object fields > with title and description from both > additionalProper
               class="form-additional form-group col-xs-5"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label control-label"
                 for="root_foo"
               >
                 <span
@@ -2849,7 +2849,7 @@ exports[`object fields > with title and description from both > additionalProper
             class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-object-property-expand"
           >
             <button
-              class="btn btn-info btn-add col-xs-12"
+              class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
               title="Add"
               type="button"
@@ -2864,7 +2864,7 @@ exports[`object fields > with title and description from both > additionalProper
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -2893,7 +2893,7 @@ exports[`object fields > with title and description from both > object 1`] = `
           </span>
         </legend>
         <div
-          class="field-description"
+          class="rjsf-field-description"
           id="root__description"
         >
           a fancier description
@@ -2902,7 +2902,7 @@ exports[`object fields > with title and description from both > object 1`] = `
           class="form-group rjsf-field rjsf-field-string"
         >
           <label
-            class="control-label"
+            class="rjsf-field-label control-label"
             for="root_a"
           >
             <span
@@ -2912,7 +2912,7 @@ exports[`object fields > with title and description from both > object 1`] = `
             </span>
           </label>
           <div
-            class="field-description"
+            class="rjsf-field-description"
             id="root_a__description"
           >
             a fancier item A description
@@ -2932,7 +2932,7 @@ exports[`object fields > with title and description from both > object 1`] = `
           class="form-group rjsf-field rjsf-field-number"
         >
           <label
-            class="control-label"
+            class="rjsf-field-label control-label"
             for="root_b"
           >
             <span
@@ -2942,7 +2942,7 @@ exports[`object fields > with title and description from both > object 1`] = `
             </span>
           </label>
           <div
-            class="field-description"
+            class="rjsf-field-description"
             id="root_b__description"
           >
             a fancier item B description
@@ -2965,7 +2965,7 @@ exports[`object fields > with title and description from both > object 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -2994,7 +2994,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
           </span>
         </legend>
         <div
-          class="field-description"
+          class="rjsf-field-description"
           id="root__description"
         >
           a fancier description
@@ -3029,7 +3029,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
               class="form-additional form-group col-xs-5"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label control-label"
                 for="root_foo"
               >
                 <span
@@ -3073,7 +3073,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
             class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-object-property-expand"
           >
             <button
-              class="btn btn-info btn-add col-xs-12"
+              class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
               title="Add"
               type="button"
@@ -3088,7 +3088,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -3117,7 +3117,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
           </span>
         </legend>
         <div
-          class="field-description"
+          class="rjsf-field-description"
           id="root__description"
         >
           a fancier description
@@ -3126,7 +3126,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
           class="form-group rjsf-field rjsf-field-string"
         >
           <label
-            class="control-label"
+            class="rjsf-field-label control-label"
             for="root_a"
           >
             <span
@@ -3136,7 +3136,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
             </span>
           </label>
           <div
-            class="field-description"
+            class="rjsf-field-description"
             id="root_a__description"
           >
             a fancier item A description
@@ -3156,7 +3156,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
           class="form-group rjsf-field rjsf-field-number"
         >
           <label
-            class="control-label"
+            class="rjsf-field-label control-label"
             for="root_b"
           >
             <span
@@ -3166,7 +3166,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
             </span>
           </label>
           <div
-            class="field-description"
+            class="rjsf-field-description"
             id="root_b__description"
           >
             a fancier item B description
@@ -3189,7 +3189,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -3218,7 +3218,7 @@ exports[`object fields > with title and description from uiSchema > show add but
           </span>
         </legend>
         <div
-          class="field-description"
+          class="rjsf-field-description"
           id="root__description"
         >
           a fancier description
@@ -3253,7 +3253,7 @@ exports[`object fields > with title and description from uiSchema > show add but
               class="form-additional form-group col-xs-5"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label control-label"
                 for="root_additionalProperty"
               >
                 <span
@@ -3297,7 +3297,7 @@ exports[`object fields > with title and description from uiSchema > show add but
             class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-object-property-expand"
           >
             <button
-              class="btn btn-info btn-add col-xs-12"
+              class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
               title="Add"
               type="button"
@@ -3312,7 +3312,7 @@ exports[`object fields > with title and description from uiSchema > show add but
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -3392,7 +3392,7 @@ exports[`object fields > with title and description with global label off > addi
             class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-object-property-expand"
           >
             <button
-              class="btn btn-info btn-add col-xs-12"
+              class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
               title="Add"
               type="button"
@@ -3407,7 +3407,7 @@ exports[`object fields > with title and description with global label off > addi
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -3463,7 +3463,7 @@ exports[`object fields > with title and description with global label off > obje
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -3543,7 +3543,7 @@ exports[`object fields > with title and description with global label off > show
             class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-object-property-expand"
           >
             <button
-              class="btn btn-info btn-add col-xs-12"
+              class="btn btn-info rjsf-btn-add col-xs-12"
               id="root__add"
               title="Add"
               type="button"
@@ -3558,7 +3558,7 @@ exports[`object fields > with title and description with global label off > show
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit

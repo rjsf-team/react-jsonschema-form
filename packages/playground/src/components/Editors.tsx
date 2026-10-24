@@ -1,11 +1,14 @@
 import type { Dispatch, SetStateAction } from 'react';
 import { useCallback, useState } from 'react';
 import { Editor as MonacoEditor } from '@monaco-editor/react';
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import MuiAccordionSummary from '@mui/material/AccordionSummary';
 import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import type { ErrorSchema, RJSFSchema, UiSchema } from '@rjsf/utils';
@@ -74,15 +77,12 @@ function Editor<T>({ title, code, accepts, onChange }: EditorProps<T>) {
     [setValid, accepts, onChange],
   );
 
-  const icon = valid ? 'ok' : 'remove';
-  const cls = valid ? 'valid' : 'invalid';
-
   return (
-    <div className='panel panel-default' style={{ marginBottom: 0 }}>
-      <div className='panel-heading'>
-        <span className={`${cls} glyphicon glyphicon-${icon}`} />
-        {` ${title}`}
-      </div>
+    <Paper variant='outlined'>
+      <Typography variant='subtitle2' component='div' sx={{ display: 'flex', alignItems: 'center', gap: 0.5, p: 1 }}>
+        {valid ? <CheckIcon fontSize='small' color='success' /> : <CloseIcon fontSize='small' color='error' />}
+        {title}
+      </Typography>
       <div style={{ overscrollBehavior: 'auto' }}>
         <MonacoEditor
           language='json'
@@ -93,7 +93,7 @@ function Editor<T>({ title, code, accepts, onChange }: EditorProps<T>) {
           options={monacoEditorOptions}
         />
       </div>
-    </div>
+    </Paper>
   );
 }
 
@@ -189,7 +189,7 @@ export default function Editors({
       <AccordionSummary expandIcon={<ExpandMoreIcon fontSize='large' />} title='Toggle Editors'>
         <Grid container spacing={1} sx={{ width: '100%' }}>
           <Grid size={6}>
-            <Typography component='div' variant='h2' sx={{ pr: 1 }}>
+            <Typography component='div' variant='h4' sx={{ pr: 1 }}>
               react-jsonschema-form
             </Typography>
           </Grid>

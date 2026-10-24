@@ -20,12 +20,12 @@ export default function FieldErrorTemplate<
 
   return (
     <div>
-      <ul id={id} className={clsx('error-detail', classMap.fieldErrors)}>
+      <ul id={id} className={clsx('rjsf-error-detail', classMap.fieldErrors)}>
         {errors
           .filter((elem) => !!elem)
           .map((error, index: number) => (
             // oxlint-disable-next-line react/no-array-index-key
-            <li className={classMap.fieldError} key={index}>
+            <li className={clsx('rjsf-error', classMap.fieldError)} key={index}>
               {error}
             </li>
           ))}

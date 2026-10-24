@@ -17,12 +17,8 @@ export default function TitleField<
   return (
     <legend>
       <span id={id}>{title}</span>
-      {required && <span className='required'>{REQUIRED_FIELD_SYMBOL}</span>}
-      {optionalDataControl && (
-        <span className='pull-right' style={{ marginBottom: '2px' }}>
-          {optionalDataControl}
-        </span>
-      )}
+      {required && <span className='rjsf-required'>{REQUIRED_FIELD_SYMBOL}</span>}
+      {optionalDataControl && <span className='rjsf-title-optional-data'>{optionalDataControl}</span>}
     </legend>
   );
 }

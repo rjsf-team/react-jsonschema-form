@@ -20,7 +20,7 @@ export default function DescriptionField<
   return (
     <div
       id={id}
-      className={clsx('field-description', classMap.fieldDescription, hasErrors && classMap.descriptionError)}
+      className={clsx('rjsf-field-description', classMap.fieldDescription, hasErrors && classMap.descriptionError)}
     >
       <RichDescription description={description} registry={registry} uiSchema={uiSchema} />
     </div>

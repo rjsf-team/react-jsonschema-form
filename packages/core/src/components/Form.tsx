@@ -31,6 +31,7 @@ import type {
   NameGeneratorFunction,
 } from '@rjsf/utils';
 import { getTemplates, getUiOptions, SUBMIT_BTN_OPTIONS_KEY, ROOT_FIELD_PATH, UI_OPTIONS_KEY } from '@rjsf/utils';
+import { clsx } from 'clsx';
 
 import isDevelopment from '../isDevelopment.ts';
 import NamedFieldContext from './fields/NamedFieldContext.ts';
@@ -463,7 +464,7 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   return (
     <FormDataContext value={model}>
       <FormTag
-        className={className || 'rjsf'}
+        className={clsx('rjsf', className)}
         id={id}
         name={name}
         method={method}

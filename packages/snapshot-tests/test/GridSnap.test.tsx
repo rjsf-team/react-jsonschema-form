@@ -3,23 +3,20 @@ import Form from '@rjsf/core';
 import { gridTests } from '../src/index.ts';
 
 gridTests(Form, {
-  ColumnWidthAll: { className: 'col-xs-12' },
-  ColumnWidth4: { className: 'col-xs-4' },
-  ColumnWidth6: { className: 'col-xs-6' },
-  ColumnWidth8: { className: 'col-xs-8' },
-  Row2Columns: { className: 'row' },
-  Row3Columns: { className: 'row' },
+  ColumnWidthAll: { span: 12 },
+  ColumnWidth4: { span: 4 },
+  ColumnWidth6: { span: 6 },
+  ColumnWidth8: { span: 8 },
   ComplexUiSchema: {
     'ui:field': 'LayoutGridField',
     'ui:layoutGrid': {
       'ui:row': [
         {
           'ui:row': {
-            className: 'row',
             children: [
               {
                 'ui:col': {
-                  className: 'col-xs-12',
+                  span: 12,
                   children: ['person'],
                 },
               },
@@ -28,11 +25,10 @@ gridTests(Form, {
         },
         {
           'ui:row': {
-            className: 'row',
             children: [
               {
                 'ui:columns': {
-                  className: 'col-xs-4',
+                  span: 4,
                   children: ['person.name.first', 'person.name.middle', 'person.name.last'],
                 },
               },
@@ -41,11 +37,10 @@ gridTests(Form, {
         },
         {
           'ui:row': {
-            className: 'row',
             children: [
               {
                 'ui:col': {
-                  className: 'col-xs-3',
+                  span: 3,
                   children: [
                     {
                       name: 'person.birth_date',
@@ -56,7 +51,7 @@ gridTests(Form, {
               },
               {
                 'ui:col': {
-                  className: 'col-xs-6',
+                  span: 6,
                   children: ['person.race'],
                 },
               },
@@ -65,17 +60,16 @@ gridTests(Form, {
         },
         {
           'ui:row': {
-            className: 'row',
             children: [
               {
                 'ui:col': {
-                  className: 'col-xs-6',
+                  span: 6,
                   children: ['person.address'],
                 },
               },
               {
                 'ui:col': {
-                  className: 'col-xs-6',
+                  span: 6,
                   style: { margin: '26px 0' },
                   children: ['employment'],
                 },
@@ -88,19 +82,19 @@ gridTests(Form, {
                   children: [
                     {
                       'ui:columns': {
-                        className: 'col-xs-6',
+                        span: 6,
                         children: ['employment.business', 'employment.title'],
                       },
                     },
                     {
                       'ui:col': {
-                        className: 'col-xs-4',
+                        span: 4,
                         children: ['employment.location.city'],
                       },
                     },
                     {
                       'ui:col': {
-                        className: 'col-xs-2',
+                        span: 2,
                         children: ['employment.location.state'],
                       },
                     },
@@ -115,19 +109,19 @@ gridTests(Form, {
                   children: [
                     {
                       'ui:columns': {
-                        className: 'col-xs-6',
+                        span: 6,
                         children: ['employment.district', 'employment.school', 'employment.title'],
                       },
                     },
                     {
                       'ui:col': {
-                        className: 'col-xs-4',
+                        span: 4,
                         children: ['employment.location.city'],
                       },
                     },
                     {
                       'ui:col': {
-                        className: 'col-xs-2',
+                        span: 2,
                         children: ['employment.location.state'],
                       },
                     },
@@ -142,7 +136,7 @@ gridTests(Form, {
                   children: [
                     {
                       'ui:columns': {
-                        className: 'col-xs-6',
+                        span: 6,
                         children: [
                           {
                             name: 'employment.description',
@@ -170,11 +164,10 @@ gridTests(Form, {
         'ui:field': 'LayoutGridField',
         'ui:layoutGrid': {
           'ui:row': {
-            className: 'row',
             children: [
               {
                 'ui:columns': {
-                  className: 'col-xs-12',
+                  span: 12,
                   children: ['line_1', 'line_2', 'city'],
                 },
               },
@@ -183,7 +176,7 @@ gridTests(Form, {
                   children: [
                     {
                       'ui:columns': {
-                        className: 'col-xs-6',
+                        span: 6,
                         children: ['state', 'postal_code'],
                       },
                     },

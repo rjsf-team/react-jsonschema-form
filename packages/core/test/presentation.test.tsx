@@ -547,7 +547,7 @@ describe('the plan SchemaField builds', () => {
     });
 
     it.each([
-      ['required marker', ['pet'], 'span.required'],
+      ['required marker', ['pet'], 'span.rjsf-required'],
       ['optional data control', [], 'button'],
     ])("names their selector by the heading's text alone, without its %s", (_, required, extra) => {
       const { node } = createFormComponent({
@@ -875,7 +875,7 @@ describe('a fallback field with no control for a label to name', () => {
     const title = node.querySelector(`#${titleId('root_foo')}`);
     expect(title).toHaveTextContent(/^Foo$/);
     const description = screen.getByText('Desc foo');
-    const unsupported = node.querySelector('.unsupported-field')!;
+    const unsupported = node.querySelector('.rjsf-unsupported-field')!;
     expect(title!.compareDocumentPosition(description)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
     expect(description.compareDocumentPosition(unsupported)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
     expect(node.querySelector('label[for="root_foo"]')).toBeNull();
@@ -889,7 +889,7 @@ describe('a fallback field with no control for a label to name', () => {
     const title = node.querySelector(`#${titleId('root_arr')}`);
     expect(title).toHaveTextContent(/^Arr$/);
     const description = screen.getByText('Desc arr');
-    const unsupported = node.querySelector('.unsupported-field')!;
+    const unsupported = node.querySelector('.rjsf-unsupported-field')!;
     expect(title!.compareDocumentPosition(description)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
     expect(description.compareDocumentPosition(unsupported)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
   });
@@ -908,7 +908,7 @@ describe('a fallback field with no control for a label to name', () => {
       const title = node.querySelector(`#${titleId('root_arr')}`);
       expect(title).toHaveTextContent(/^Arr$/);
       const description = screen.getByText('Desc arr');
-      const unsupported = node.querySelector('.unsupported-field')!;
+      const unsupported = node.querySelector('.rjsf-unsupported-field')!;
       expect(title!.compareDocumentPosition(description)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
       expect(description.compareDocumentPosition(unsupported)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
     },

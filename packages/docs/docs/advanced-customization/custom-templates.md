@@ -906,6 +906,7 @@ The following props are passed to the `GridTemplate`:
 
 - `children`: The contents of the grid template
 - `column`: Optional flag indicating whether the grid element represents a column, necessary for themes which have components for Rows vs Column
+- `span`: Optional number of the 12 tracks a column spans in the `core` theme's grid; a column without one is full width
 
 ## MarkdownTemplate
 

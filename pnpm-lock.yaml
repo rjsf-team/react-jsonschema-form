@@ -571,6 +571,9 @@ importers:
       '@rjsf/antd':
         specifier: workspace:^
         version: link:../antd
+      '@rjsf/bootstrap3':
+        specifier: workspace:^
+        version: link:../bootstrap3
       '@rjsf/chakra-ui':
         specifier: workspace:^
         version: link:../chakra-ui

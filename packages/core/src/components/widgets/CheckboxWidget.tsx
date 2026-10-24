@@ -68,7 +68,7 @@ function CheckboxWidget<
   const description =
     presentation || getUiOptions(uiSchema).widget !== 'checkbox' ? getWidgetDescription<T, S, F>(props) : undefined;
   return (
-    <div className={clsx(classMap.checkboxWrapper, (disabled || readonly) && classMap.disabled)}>
+    <div className={clsx('rjsf-checkbox', classMap.checkboxWrapper, (disabled || readonly) && classMap.disabled)}>
       {description && (
         <DescriptionFieldTemplate
           id={description.id}
@@ -78,10 +78,10 @@ function CheckboxWidget<
           registry={registry}
         />
       )}
-      <label className={classMap.checkboxLabel || undefined}>
+      <label className={classMap.checkboxLabel}>
         <input
           type='checkbox'
-          className={classMap.checkboxInput || undefined}
+          className={classMap.checkboxInput}
           id={id}
           name={htmlName || id}
           checked={typeof value === 'undefined' ? false : value}
@@ -96,7 +96,7 @@ function CheckboxWidget<
         {labelValue(
           <span>
             {label}
-            {trueValueRequired && <span className='required'>*</span>}
+            {trueValueRequired && <span className='rjsf-required'>*</span>}
           </span>,
           !showsLabel,
         )}

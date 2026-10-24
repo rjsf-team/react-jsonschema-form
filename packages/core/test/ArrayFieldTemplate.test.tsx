@@ -328,14 +328,21 @@ describe('ArrayFieldTemplate', () => {
 describe('IconButton', () => {
   const registry = getTestRegistry({});
 
-  it('renders a string icon as a glyphicon', () => {
+  it('renders a string icon as an inline SVG hidden from assistive technology', () => {
     const { container } = render(<IconButton icon='plus' registry={registry} />);
-    expect(container.querySelector('button > i')).toHaveClass('glyphicon', 'glyphicon-plus');
+    const svg = container.querySelector('button > svg.rjsf-button-icon');
+    expect(svg).toHaveAttribute('aria-hidden', 'true');
+    expect(svg?.querySelector('path')).toHaveAttribute('d');
+  });
+
+  it('renders no icon for a name it does not know', () => {
+    const { container } = render(<IconButton icon='unknown' registry={registry} />);
+    expect(container.querySelector('button')).toBeEmptyDOMElement();
   });
 
   it('renders a React element icon as-is', () => {
     const { container } = render(<IconButton icon={<svg data-testid='custom-icon' />} registry={registry} />);
     expect(container.querySelector('button > svg[data-testid="custom-icon"]')).toBeInTheDocument();
-    expect(container.querySelector('i')).not.toBeInTheDocument();
+    expect(container.querySelectorAll('svg')).toHaveLength(1);
   });
 });

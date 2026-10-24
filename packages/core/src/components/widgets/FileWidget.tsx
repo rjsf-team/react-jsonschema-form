@@ -28,7 +28,7 @@ function FileInfoPreview<
   // Originally, any type of image was supported, but this was changed into a whitelist
   // since SVGs and animated GIFs are also images, which are generally considered a security risk.
   if (['image/jpeg', 'image/png'].includes(type)) {
-    return <img src={dataURL} alt={previewLabel} style={{ maxWidth: '100%' }} className='file-preview' />;
+    return <img src={dataURL} alt={previewLabel} style={{ maxWidth: '100%' }} className='rjsf-file-preview' />;
   }
 
   // otherwise, let users download file
@@ -36,7 +36,7 @@ function FileInfoPreview<
   return (
     <>
       {' '}
-      <a download={`preview-${name}`} href={dataURL} className='file-download'>
+      <a download={`preview-${name}`} href={dataURL} className='rjsf-file-download'>
         {previewLabel}
       </a>
     </>
@@ -64,7 +64,7 @@ function FilesInfo<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exten
   const { RemoveButton } = registry.templates.ButtonTemplates;
 
   return (
-    <ul className='file-info'>
+    <ul className='rjsf-file-info'>
       {filesInfo.map((fileInfo, key) => {
         const { name, size, type } = fileInfo;
         const handleRemove = () => onRemove(key);

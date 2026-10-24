@@ -93,7 +93,7 @@ describe('ObjectField', () => {
           'ui:widget': 'hidden',
         },
       });
-      expect(node.querySelector('div.hidden > fieldset')).toBeInTheDocument();
+      expect(node.querySelector('div[hidden] > fieldset')).toBeInTheDocument();
     });
 
     it('should render a customized title', () => {
@@ -424,7 +424,7 @@ describe('ObjectField', () => {
 
       const errorMessages = node.querySelectorAll('#root_foo__error');
       expect(errorMessages).toHaveLength(1);
-      const errorMessageContent = node.querySelector('#root_foo__error .text-danger');
+      const errorMessageContent = node.querySelector('#root_foo__error .rjsf-error');
       expect(errorMessageContent).toHaveTextContent('must be string');
 
       act(() => handleOf(ref).setFieldValue('', { foo: 'test' }));
@@ -445,7 +445,7 @@ describe('ObjectField', () => {
 
       const errorMessages = node.querySelectorAll('#root_foo__error');
       expect(errorMessages).toHaveLength(1);
-      const errorMessageContent = node.querySelector('#root_foo__error .text-danger');
+      const errorMessageContent = node.querySelector('#root_foo__error .rjsf-error');
       expect(errorMessageContent).toHaveTextContent('Value must be "test"');
     });
 
@@ -484,7 +484,7 @@ describe('ObjectField', () => {
 
       let errorMessages = node.querySelectorAll('#root_foo__error');
       expect(errorMessages).toHaveLength(1);
-      const errorMessageContent = node.querySelector('#root_foo__error .text-danger');
+      const errorMessageContent = node.querySelector('#root_foo__error .rjsf-error');
       expect(errorMessageContent).toHaveTextContent('Value must be "test"');
 
       await user.type(inputs[0], 'test', {
@@ -509,7 +509,7 @@ describe('ObjectField', () => {
 
       const errorMessages = node.querySelectorAll('#root_foo__error');
       expect(errorMessages).toHaveLength(1);
-      const errorMessageContent = node.querySelector('#root_foo__error .text-danger');
+      const errorMessageContent = node.querySelector('#root_foo__error .rjsf-error');
       expect(errorMessageContent).toHaveTextContent('Value must be "test"');
     });
 
@@ -548,7 +548,7 @@ describe('ObjectField', () => {
 
       let errorMessages = node.querySelectorAll('#root_foo__error');
       expect(errorMessages).toHaveLength(1);
-      const errorMessageContent = node.querySelector('#root_foo__error .text-danger');
+      const errorMessageContent = node.querySelector('#root_foo__error .rjsf-error');
       expect(errorMessageContent).toHaveTextContent('Value must be "test"');
 
       await user.type(inputs[0], 'test', {
@@ -873,7 +873,7 @@ describe('ObjectField', () => {
           property1: 'test',
         },
       });
-      const labels = node.querySelectorAll('label.control-label');
+      const labels = node.querySelectorAll('label.rjsf-field-label');
       expect(labels[0]).toHaveTextContent('property1 Key');
       expect(labels[1]).toHaveTextContent('property1');
     });
@@ -916,9 +916,9 @@ describe('ObjectField', () => {
           },
         },
       });
-      const labels = [...node.querySelectorAll('label.control-label')].map((n) => n.textContent);
+      const labels = [...node.querySelectorAll('label.rjsf-field-label')].map((n) => n.textContent);
       expect(labels).toContain('property1 Key');
-      const objectTitle = node.querySelector('.form-additional > fieldset > legend');
+      const objectTitle = node.querySelector('.rjsf-additional-property-value legend');
       expect(objectTitle).toHaveTextContent('CustomName');
     });
 
@@ -931,7 +931,7 @@ describe('ObjectField', () => {
         initialFormData: { property1: { name: 'hello' } },
       });
 
-      expect(node.querySelector('.form-additional > fieldset > legend')).toHaveTextContent('Entry');
+      expect(node.querySelector('.rjsf-additional-property-value legend')).toHaveTextContent('Entry');
     });
 
     it('should not throw validation errors if additionalProperties is undefined', async () => {
@@ -1234,7 +1234,7 @@ describe('ObjectField', () => {
         schema: { type: 'object', patternProperties: { '^[a-z]+$': { type: 'number' } } },
       });
 
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
       expectToHaveBeenCalledWithFormData(onChange, { newKey: 'New Value' }, 'root');
 
       const keyInput = node.querySelector('#root_newKey-key')!;
@@ -1279,7 +1279,7 @@ describe('ObjectField', () => {
       }
       const { container } = render(<Parent />);
 
-      await user.click(elementOf(container, '.rjsf-object-property-expand button'));
+      await user.click(elementOf(container, '.rjsf-object-property-expand'));
       const keyInput = elementOf(container, '#root_newKey-key');
       await user.clear(keyInput);
       await user.type(keyInput, 'abc');
@@ -1295,7 +1295,7 @@ describe('ObjectField', () => {
         schema: { type: 'object', patternProperties: { '^[a-z]+$': { type: 'number' } } },
       });
 
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
       const valueInput = node.querySelector('#root_newKey')!;
       await user.clear(valueInput);
       await user.type(valueInput, 'typed');
@@ -1339,7 +1339,7 @@ describe('ObjectField', () => {
         },
       });
 
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
       const valueInput = node.querySelector('#root_newKey')!;
       await user.clear(valueInput);
       await user.type(valueInput, '7');
@@ -1390,7 +1390,7 @@ describe('ObjectField', () => {
             : undefined,
       );
 
-      await user.click(elementOf(node, '.rjsf-object-property-expand button'));
+      await user.click(elementOf(node, '.rjsf-object-property-expand'));
       expect(readData()).toEqual({ newKey: 'the parent wrote this' });
 
       const keyInput = elementOf(node, '#root_newKey-key');
@@ -1410,7 +1410,7 @@ describe('ObjectField', () => {
         (edit) => ('abc' in edit ? { newKey: 'New Value' } : undefined),
       );
 
-      await user.click(elementOf(node, '.rjsf-object-property-expand button'));
+      await user.click(elementOf(node, '.rjsf-object-property-expand'));
       expect(readData()).toEqual({ newKey: 'New Value' });
 
       const renameTo = async (from: string, to: string) => {
@@ -1440,7 +1440,7 @@ describe('ObjectField', () => {
           edit.newKey !== undefined && edit.newKey !== 'New Value' ? { ...edit, newKey: 'New Value' } : undefined,
       );
 
-      await user.click(elementOf(node, '.rjsf-object-property-expand button'));
+      await user.click(elementOf(node, '.rjsf-object-property-expand'));
       expect(readData()).toEqual({ newKey: 'New Value' });
 
       await user.type(input(node, 'root_newKey'), 'typed');
@@ -1474,7 +1474,7 @@ describe('ObjectField', () => {
             : next,
       });
 
-      await user.click(elementOf(node, '.rjsf-object-property-expand button'));
+      await user.click(elementOf(node, '.rjsf-object-property-expand'));
       await user.type(input(node, 'root_newKey'), 'typed');
       expect(handleOf(ref).getFormData()).toEqual({ newKey: 'New Value' });
 
@@ -1549,7 +1549,7 @@ describe('ObjectField', () => {
       await user.tab();
       const valueFoo = elementOf(node, '#root_foo');
 
-      await user.click(elementOf(node, '.rjsf-object-property-expand button'));
+      await user.click(elementOf(node, '.rjsf-object-property-expand'));
 
       expect(handleOf(ref).getFormData()).toEqual({ foo: 'a' });
       // The same element: the refused add did not take the React key the rename gave the property
@@ -1663,7 +1663,7 @@ describe('ObjectField', () => {
         schema: { type: 'object', additionalProperties: { type: 'string' } },
         uiSchema: { 'ui:field': DeferringField },
       });
-      const addButton = () => elementOf(node, '.rjsf-object-property-expand button');
+      const addButton = () => elementOf(node, '.rjsf-object-property-expand');
       await user.click(addButton());
       await user.click(addButton());
 
@@ -1689,7 +1689,7 @@ describe('ObjectField', () => {
         uiSchema: { additionalProperties: { 'ui:initialValue': 'AP' } },
       });
 
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
       expectToHaveBeenCalledWithFormData(onChange, { newKey: 'AP' }, 'root');
 
       const keyInput = node.querySelector('#root_newKey-key')!;
@@ -1719,7 +1719,7 @@ describe('ObjectField', () => {
         uiSchema: { note: { 'ui:initialValue': 'from note' }, additionalProperties: { 'ui:initialValue': 'AP' } },
       });
 
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
       expectToHaveBeenCalledWithFormData(onChange, { newKey: 'AP' }, 'root');
 
       const keyInput = node.querySelector('#root_newKey-key')!;
@@ -1743,7 +1743,7 @@ describe('ObjectField', () => {
         },
       });
 
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
       expectToHaveBeenCalledWithFormData(onChange, { newKey: 'New Value' }, 'root');
 
       const keyInput = node.querySelector('#root_newKey-key')!;
@@ -1872,7 +1872,7 @@ describe('ObjectField', () => {
 
       expect(node.querySelector('#root_b')).toHaveValue('2');
 
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
 
       expectToHaveBeenCalledWithFormData(onChange, { a: 'q', b: 2, newKey: 0 }, 'root');
     });
@@ -1949,7 +1949,7 @@ describe('ObjectField', () => {
         initialFormData: {},
       });
 
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
       await user.selectOptions(node.querySelector('select#root_abc-key')!, 'xyz');
 
       expectToHaveBeenCalledWithFormData(onChange, { xyz: 'New Value' }, 'root');
@@ -1967,7 +1967,7 @@ describe('ObjectField', () => {
         initialFormData: {},
       });
 
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
 
       expectToHaveBeenCalledWithFormData(onChange, { num: 5 }, 'root');
       expect(node.querySelector('#root_num')).toHaveDisplayValue('5');
@@ -2018,7 +2018,7 @@ describe('ObjectField', () => {
         initialFormData: {},
       });
 
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
 
       expectToHaveBeenCalledWithFormData(onChange, { zzz: 0 }, 'root');
     });
@@ -2036,7 +2036,7 @@ describe('ObjectField', () => {
         initialFormData: {},
       });
 
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
 
       expectToHaveBeenCalledWithFormData(onChange, { num: 1 }, 'root');
       expect(node.querySelector('.rjsf-field-number')).not.toBeNull();
@@ -2151,7 +2151,7 @@ describe('ObjectField', () => {
         uiSchema: { 'ui:definitions': { '#/$defs/text': { 'ui:widget': 'textarea' } } },
       });
 
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
       expectToHaveBeenCalledWithFormData(onChange, { newKey: 0 }, 'root');
 
       const keyInput = node.querySelector('#root_newKey-key')!;
@@ -2174,7 +2174,7 @@ describe('ObjectField', () => {
         initialFormData: {},
       });
 
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
 
       expectToHaveBeenCalledWithFormData(onChange, { abc: 'New Value' }, 'root');
       expect(node.querySelectorAll('.rjsf-field-object')).toHaveLength(1);
@@ -2194,7 +2194,7 @@ describe('ObjectField', () => {
         initialFormData: {},
       });
 
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
 
       expectToHaveBeenCalledWithFormData(onChange, { zzz: 0 }, 'root');
       expect(node.querySelector('.rjsf-field-number')).not.toBeNull();
@@ -2461,7 +2461,7 @@ describe('ObjectField', () => {
       await user.tab();
 
       // Add a new property
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
 
       // Rename the new property to "first" (the old name)
       const newKeyInput = node.querySelector('#root_newKey-key');
@@ -2488,7 +2488,7 @@ describe('ObjectField', () => {
 
       // Blur triggers rename, then click Add
       await user.tab();
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
 
       // The last onChange call should have both renamed + new property, no value duplication
       expectToHaveBeenCalledWithFormData(
@@ -2562,7 +2562,7 @@ describe('ObjectField', () => {
       await user.click(node.querySelector('.rjsf-object-property-remove')!);
 
       // Add a new property
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
 
       // Rename the new property
       const keyInput = node.querySelector('#root_newKey-key');
@@ -2599,7 +2599,7 @@ describe('ObjectField', () => {
       });
 
       // Add a new property
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
 
       // Rename the newly added property for the first time
       const newKeyInput = node.querySelector<HTMLInputElement>('#root_newKey-key')!;
@@ -2626,7 +2626,7 @@ describe('ObjectField', () => {
       await user.tab();
 
       // Add a new property (resets previousKey so "first" won't be reused as a React key)
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
 
       // Rename new property to "first" (the old name)
       const newKeyInput = node.querySelector('#root_newKey-key');
@@ -2647,7 +2647,7 @@ describe('ObjectField', () => {
       });
 
       // Add a property
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
 
       // Rename "newKey" → "first"
       const keyInput = node.querySelector<HTMLInputElement>('#root_newKey-key')!;
@@ -2656,7 +2656,7 @@ describe('ObjectField', () => {
       await user.tab();
 
       // Add another property
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
 
       // The new property's key input should show "newKey", not "first"
       const newKeyInput = node.querySelector<HTMLInputElement>('#root_newKey-key')!;
@@ -2671,14 +2671,14 @@ describe('ObjectField', () => {
       });
 
       // Add first property and rename to "first"
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
       const keyInput1 = node.querySelector<HTMLInputElement>('#root_newKey-key')!;
       await user.clear(keyInput1);
       await user.type(keyInput1, 'first');
       await user.tab();
 
       // Add second property and rename to "second"
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
       const keyInput2 = node.querySelector<HTMLInputElement>('#root_newKey-key')!;
       await user.clear(keyInput2);
       await user.type(keyInput2, 'second');
@@ -2702,7 +2702,7 @@ describe('ObjectField', () => {
       });
 
       // Add a new property
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
 
       // Rename "newKey" to "first" (duplicate — will become "first-1")
       const keyInput = node.querySelector<HTMLInputElement>('#root_newKey-key')!;
@@ -2723,7 +2723,7 @@ describe('ObjectField', () => {
     it('should have an expand button', () => {
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelector('.rjsf-object-property-expand button')).not.toBeNull();
+      expect(node.querySelector('.rjsf-object-property-expand')).not.toBeNull();
     });
 
     it('should not have an expand button if expandable is false', () => {
@@ -2732,13 +2732,13 @@ describe('ObjectField', () => {
         uiSchema: { 'ui:options': { expandable: false } },
       });
 
-      expect(node.querySelector('.rjsf-object-property-expand button')).toBeNull();
+      expect(node.querySelector('.rjsf-object-property-expand')).toBeNull();
     });
 
     it('should add a new property when clicking the expand button', async () => {
       const { node, onChange } = createFormComponent({ schema });
 
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
 
       expectToHaveBeenCalledWithFormData(onChange, { newKey: 'New Value' }, 'root');
     });
@@ -2749,7 +2749,7 @@ describe('ObjectField', () => {
         initialFormData: { newKey: 1 },
       });
 
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
       expectToHaveBeenCalledWithFormData(onChange, { newKey: 1, 'newKey-1': 'New Value' }, 'root');
     });
 
@@ -2769,7 +2769,7 @@ describe('ObjectField', () => {
         initialFormData: {},
       });
 
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
 
       expectToHaveBeenCalledWithFormData(onChange, { newKey: [] }, 'root');
     });
@@ -2943,7 +2943,7 @@ describe('ObjectField', () => {
         initialFormData: {},
       });
 
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
 
       expectToHaveBeenCalledWithFormData(onChange, { newKey: 'New Value' }, 'root');
     });
@@ -2964,7 +2964,7 @@ describe('ObjectField', () => {
         initialFormData: {},
       });
 
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
 
       expectToHaveBeenCalledWithFormData(onChange, { newKey: ['preset'] }, 'root');
     });
@@ -2982,7 +2982,7 @@ describe('ObjectField', () => {
         initialFormData: {},
       });
 
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
 
       expectToHaveBeenCalledWithFormData(onChange, { newKey: 'default value' }, 'root');
     });
@@ -3000,7 +3000,7 @@ describe('ObjectField', () => {
         initialFormData: {},
       });
 
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
 
       expectToHaveBeenCalledWithFormData(onChange, { newKey: 1 }, 'root');
     });
@@ -3029,7 +3029,7 @@ describe('ObjectField', () => {
         initialFormData: {},
       });
 
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
 
       expectToHaveBeenCalledWithFormData(onChange, { newKey: { name: 'unnamed', active: true } }, 'root');
     });
@@ -3046,7 +3046,7 @@ describe('ObjectField', () => {
         initialFormData: {},
       });
 
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
 
       expectToHaveBeenCalledWithFormData(onChange, { newKey: 0 }, 'root');
       expect(node.querySelector('#root_newKey')).toHaveValue('0');
@@ -3065,7 +3065,7 @@ describe('ObjectField', () => {
         initialFormData: {},
       });
 
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
 
       expectToHaveBeenCalledWithFormData(onChange, { newKey: 0 }, 'root');
       expect(node.querySelector('#root_newKey')).toHaveValue('0');
@@ -3232,7 +3232,7 @@ describe('ObjectField', () => {
         initialFormData: { first: 1 },
       });
 
-      expect(node.querySelector('.rjsf-object-property-expand button')).toBeNull();
+      expect(node.querySelector('.rjsf-object-property-expand')).toBeNull();
     });
 
     it('should provide an expand button if length is less than maxProperties', () => {
@@ -3241,7 +3241,7 @@ describe('ObjectField', () => {
         initialFormData: { first: 1 },
       });
 
-      expect(node.querySelector('.rjsf-object-property-expand button')).not.toBeNull();
+      expect(node.querySelector('.rjsf-object-property-expand')).not.toBeNull();
     });
 
     it('should not provide an expand button if expandable is expliclty false regardless of maxProperties value', () => {
@@ -3255,7 +3255,7 @@ describe('ObjectField', () => {
         },
       });
 
-      expect(node.querySelector('.rjsf-object-property-expand button')).toBeNull();
+      expect(node.querySelector('.rjsf-object-property-expand')).toBeNull();
     });
 
     it('should ignore expandable value if maxProperties constraint is not satisfied', () => {
@@ -3269,13 +3269,13 @@ describe('ObjectField', () => {
         },
       });
 
-      expect(node.querySelector('.rjsf-object-property-expand button')).toBeNull();
+      expect(node.querySelector('.rjsf-object-property-expand')).toBeNull();
     });
 
     it('should not have delete button if expand button has not been clicked', () => {
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelector('.form-group > .btn-danger')).toBeNull();
+      expect(node.querySelector('.rjsf-object-property-remove')).toBeNull();
     });
 
     it('should have delete button if expand button has been clicked', async () => {
@@ -3283,13 +3283,11 @@ describe('ObjectField', () => {
         schema,
       });
 
-      expect(
-        node.querySelector('.form-group > .form-additional > .form-additional + .col-xs-2 .btn-danger'),
-      ).toBeNull();
+      expect(node.querySelector('.rjsf-object-property-remove')).toBeNull();
 
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
 
-      expect(node.querySelector('.form-group > .row > .form-additional + .col-xs-2 > .btn-danger')).not.toBeNull();
+      expect(node.querySelector('.rjsf-object-property-remove')).not.toBeNull();
     });
 
     it('delete button should delete key-value pair', async () => {
@@ -3298,7 +3296,7 @@ describe('ObjectField', () => {
         initialFormData: { first: 1 },
       });
       expect(node.querySelector('#root_first-key')).toHaveValue('first');
-      await user.click(node.querySelector('.form-group > .row > .form-additional + .col-xs-2 > .btn-danger')!);
+      await user.click(node.querySelector('.rjsf-object-property-remove')!);
       expect(node.querySelector('#root_first-key')).not.toBeInTheDocument();
     });
 
@@ -3307,7 +3305,7 @@ describe('ObjectField', () => {
         schema,
         initialFormData: { first: 1, second: 2, third: 3 },
       });
-      const selector = '.form-group > .row > .form-additional + .col-xs-2 > .btn-danger';
+      const selector = '.rjsf-object-property-remove';
       expect(node.querySelectorAll(selector)).toHaveLength(3);
       await user.click(node.querySelectorAll(selector)[1]);
       expect(node.querySelector('#root_second-key')).not.toBeInTheDocument();
@@ -3446,7 +3444,7 @@ describe('ObjectField', () => {
   });
 
   describe('additionalPropertiesWhenAbsent', () => {
-    const addButtonOf = (node: Element) => node.querySelector('.rjsf-object-property-expand button');
+    const addButtonOf = (node: Element) => node.querySelector('.rjsf-object-property-expand');
 
     it('offers no add button for an object naming no additionalProperties by default (#2137)', () => {
       const { node } = createFormComponent({ schema: { type: 'object' } });
@@ -3460,7 +3458,7 @@ describe('ObjectField', () => {
         additionalPropertiesWhenAbsent: 'allow',
       });
 
-      await user.click(elementOf(node, '.rjsf-object-property-expand button'));
+      await user.click(elementOf(node, '.rjsf-object-property-expand'));
 
       expectToHaveBeenCalledWithFormData(onChange, { newKey: 'New Value' }, 'root');
       expect(node.querySelector('#root_newKey-key')).toHaveValue('newKey');
@@ -3487,7 +3485,7 @@ describe('ObjectField', () => {
         liveOmit: 'onChange',
       });
 
-      await user.click(elementOf(node, '.rjsf-object-property-expand button'));
+      await user.click(elementOf(node, '.rjsf-object-property-expand'));
       await user.clear(elementOf(node, '#root_newKey'));
       await user.type(elementOf(node, '#root_newKey'), 'v');
 
@@ -3519,10 +3517,10 @@ describe('ObjectField', () => {
 
         // The object, A and A1 each render a field at the root's path; A's takes the extra keys of all three, and knows
         // A1 declares `x`, where the object's read `x` and `extra` as its own beside A's
-        expect(node.querySelectorAll('.rjsf-object-property-expand button')).toHaveLength(1);
+        expect(node.querySelectorAll('.rjsf-object-property-expand')).toHaveLength(1);
         expect(node.querySelectorAll('#root_x')).toHaveLength(1);
         expect(node.querySelectorAll('#root_extra-key')).toHaveLength(1);
-        await user.click(elementOf(node, '.rjsf-object-property-expand button'));
+        await user.click(elementOf(node, '.rjsf-object-property-expand'));
 
         expectToHaveBeenCalledWithFormData(onChange, { x: 'a', extra: 'e', newKey: 'New Value' }, 'root');
       },
@@ -3554,7 +3552,7 @@ describe('ObjectField', () => {
           expect(node.querySelectorAll(`#${id}`)).toHaveLength(1);
         }
         expect(node.querySelector('#root_p-key')).toBeNull();
-        expect(node.querySelectorAll('.rjsf-object-property-expand button')).toHaveLength(1);
+        expect(node.querySelectorAll('.rjsf-object-property-expand')).toHaveLength(1);
       },
     );
 
@@ -3576,7 +3574,7 @@ describe('ObjectField', () => {
         expect(node.querySelectorAll(`#${id}`)).toHaveLength(1);
       }
       expect(node.querySelector('#root_p-key')).toBeNull();
-      expect(node.querySelectorAll('.rjsf-object-property-expand button')).toHaveLength(1);
+      expect(node.querySelectorAll('.rjsf-object-property-expand')).toHaveLength(1);
     });
 
     it('renders a property the object declares once, beside an option taking its extra keys in its place', () => {
@@ -3626,7 +3624,7 @@ describe('ObjectField', () => {
       for (const id of ['root_p', 'root_q', 'root_x', 'root_extra-key']) {
         expect(node.querySelectorAll(`#${id}`)).toHaveLength(1);
       }
-      expect(node.querySelectorAll('.rjsf-object-property-expand button')).toHaveLength(1);
+      expect(node.querySelectorAll('.rjsf-object-property-expand')).toHaveLength(1);
     });
 
     describe('lays out an object union that can neither add an extra key nor holds one as a pure union', () => {
@@ -3724,7 +3722,7 @@ describe('ObjectField', () => {
           initialFormData: { x: 'a', p: '1' },
         });
 
-        await user.click(elementOf(node, '.rjsf-object-property-expand button'));
+        await user.click(elementOf(node, '.rjsf-object-property-expand'));
 
         expect(Object.keys(onChange.mock.lastCall?.[0].formData)).toEqual(['x', 'p', 'q']);
       });
@@ -3823,7 +3821,7 @@ describe('ObjectField', () => {
     it('should add a new property under the first allowed name that is still free', async () => {
       const { node, onChange } = createFormComponent({ schema, initialFormData: { a: 'first' } });
 
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
 
       expectToHaveBeenCalledWithFormData(onChange, { a: 'first', b: 'New Value' }, 'root');
     });
@@ -3834,7 +3832,7 @@ describe('ObjectField', () => {
         initialFormData: {},
       });
 
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
 
       expectToHaveBeenCalledWithFormData(onChange, { b: 'New Value' }, 'root');
     });
@@ -3851,7 +3849,7 @@ describe('ObjectField', () => {
         initialFormData: { xyz: 'first' },
       });
 
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
 
       // The only free name matches a pattern, so the new property is seeded from that pattern's schema
       expectToHaveBeenCalledWithFormData(onChange, { xyz: 'first', abc: 'New Value' }, 'root');
@@ -3869,7 +3867,7 @@ describe('ObjectField', () => {
         initialFormData: {},
       });
 
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
 
       expectToHaveBeenCalledWithFormData(onChange, { abc: 'New Value' }, 'root');
       expect(node.querySelector('#root_abc')).toHaveValue('New Value');
@@ -3889,7 +3887,7 @@ describe('ObjectField', () => {
         liveOmit: 'onChange',
       });
 
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
 
       expectToHaveBeenCalledWithFormData(onChange, { abc: 'New Value' }, 'root');
       expect(node.querySelector('#root_abc')).toHaveValue('New Value');
@@ -3906,7 +3904,7 @@ describe('ObjectField', () => {
         initialFormData: {},
       });
 
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
 
       // `abc` is the only free name a pattern matches, and so the only one with a schema to seed from
       expectToHaveBeenCalledWithFormData(onChange, { abc: 'New Value' }, 'root');
@@ -3926,7 +3924,7 @@ describe('ObjectField', () => {
         initialFormData: {},
       });
 
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
 
       expectToHaveBeenCalledWithFormData(onChange, { xyz: null }, 'root');
     });
@@ -3944,7 +3942,7 @@ describe('ObjectField', () => {
         initialFormData: {},
       });
 
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
 
       expectToHaveBeenCalledWithFormData(onChange, { xyz: null }, 'root');
     });
@@ -3966,7 +3964,7 @@ describe('ObjectField', () => {
         },
       });
 
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
 
       expectToHaveBeenCalledWithFormData(onChange, { newKey: { kind: 'b', y: 'by' } }, 'root');
     });
@@ -3983,7 +3981,7 @@ describe('ObjectField', () => {
         initialFormData: {},
       });
 
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
 
       expectToHaveBeenCalledWithFormData(onChange, { zzz: 'New Value' }, 'root');
     });
@@ -4002,7 +4000,7 @@ describe('ObjectField', () => {
         initialFormData: {},
       });
 
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
 
       expectToHaveBeenCalledWithFormData(onChange, { zzz: 0 }, 'root');
     });
@@ -4021,7 +4019,7 @@ describe('ObjectField', () => {
         initialFormData: {},
       });
 
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
 
       expectToHaveBeenCalledWithFormData(onChange, { abc: 'New Value' }, 'root');
     });
@@ -4037,7 +4035,7 @@ describe('ObjectField', () => {
         initialFormData: {},
       });
 
-      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
 
       expectToHaveBeenCalledWithFormData(onChange, { xyz: 'New Value' }, 'root');
     });
@@ -4069,7 +4067,7 @@ describe('ObjectField', () => {
         initialFormData: { a: '1', b: '2', c: '3', d: '4' },
       });
 
-      expect(node.querySelector('.rjsf-object-property-expand button')).toBeNull();
+      expect(node.querySelector('.rjsf-object-property-expand')).toBeNull();
     });
 
     it('should offer no add button when the enum allows no name at all', () => {
@@ -4079,7 +4077,7 @@ describe('ObjectField', () => {
         initialFormData: {},
       });
 
-      expect(node.querySelector('.rjsf-object-property-expand button')).toBeNull();
+      expect(node.querySelector('.rjsf-object-property-expand')).toBeNull();
     });
 
     it('should offer no add button once every allowed name is taken by a declared property', () => {
@@ -4088,7 +4086,7 @@ describe('ObjectField', () => {
         initialFormData: {},
       });
 
-      expect(node.querySelector('.rjsf-object-property-expand button')).toBeNull();
+      expect(node.querySelector('.rjsf-object-property-expand')).toBeNull();
     });
 
     it('should offer no add button once every name a $ref propertyNames allows is taken', () => {
@@ -4102,7 +4100,7 @@ describe('ObjectField', () => {
         initialFormData: { a: '1', b: '2' },
       });
 
-      expect(node.querySelector('.rjsf-object-property-expand button')).toBeNull();
+      expect(node.querySelector('.rjsf-object-property-expand')).toBeNull();
     });
 
     it('should keep the text input for a property with no name left to offer', () => {
@@ -4227,25 +4225,25 @@ describe('ObjectField', () => {
         templates: { MarkdownTemplate },
       });
 
-      const field = node.querySelector('form .form-group .form-group .field-description');
+      const field = node.querySelector('form .rjsf-field .rjsf-field .rjsf-field-description');
       expect(field).toContainHTML('New <em>description</em>, with some Markdown.');
 
-      const details = node.querySelector('form .form-group .form-group .rjsf-field-string .field-description');
+      const details = node.querySelector('form .rjsf-field .rjsf-field .rjsf-field-string .rjsf-field-description');
       expect(details).toContainHTML('Description to renders Markdown <strong>correctly</strong>.');
 
-      const checkbox = node.querySelector('form .form-group .form-group .rjsf-field-boolean .field-description');
+      const checkbox = node.querySelector('form .rjsf-field .rjsf-field .rjsf-field-boolean .rjsf-field-description');
       expect(checkbox).toContainHTML('Checkbox with some <code>markdown</code>!');
     });
     it('should render descriptions as plain text without a MarkdownTemplate', () => {
       const { node } = createFormComponent({ schema, uiSchema });
 
-      const field = node.querySelector('form .form-group .form-group .field-description');
+      const field = node.querySelector('form .rjsf-field .rjsf-field .rjsf-field-description');
       expect(field).toContainHTML('New *description*, with some Markdown.');
 
-      const details = node.querySelector('form .form-group .form-group .rjsf-field-string .field-description');
+      const details = node.querySelector('form .rjsf-field .rjsf-field .rjsf-field-string .rjsf-field-description');
       expect(details).toContainHTML('Description to renders Markdown **correctly**.');
 
-      const checkbox = node.querySelector('form .form-group .form-group .rjsf-field-boolean .field-description');
+      const checkbox = node.querySelector('form .rjsf-field .rjsf-field .rjsf-field-boolean .rjsf-field-description');
       expect(checkbox).toContainHTML('Checkbox with some `markdown`!');
     });
   });

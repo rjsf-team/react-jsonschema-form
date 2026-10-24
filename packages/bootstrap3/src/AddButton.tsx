@@ -26,7 +26,7 @@ export default function AddButton<
           id={id}
           iconType='info'
           icon='plus'
-          className='btn-add col-xs-12'
+          className='rjsf-btn-add col-xs-12'
           title={translateString(TranslatableString.AddButton)}
           onClick={onClick}
           disabled={disabled}

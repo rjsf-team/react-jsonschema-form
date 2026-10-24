@@ -25,10 +25,10 @@ describe('Bootstrap 3 markup', () => {
     expect(container.querySelector('label.control-label[for="root_name"]')).toHaveTextContent('Name');
     expect(container.querySelector('#root_name')).toHaveClass('form-control');
     expect(container.querySelector('.help-block')).toHaveTextContent('Your name');
-    expect(container.querySelector('.error-detail.bs-callout.bs-callout-info .text-danger')).toHaveTextContent(
+    expect(container.querySelector('.rjsf-error-detail.bs-callout.bs-callout-info .text-danger')).toHaveTextContent(
       "must have required property 'Name'",
     );
-    expect(container.querySelector('.panel.panel-danger.errors .panel-heading .panel-title')).toHaveTextContent(
+    expect(container.querySelector('.panel.panel-danger.rjsf-errors .panel-heading .panel-title')).toHaveTextContent(
       'Errors',
     );
     expect(container.querySelector('.panel-danger .list-group .list-group-item.text-danger')).toHaveTextContent(
@@ -67,23 +67,23 @@ describe('Bootstrap 3 markup', () => {
     const { container } = render(<Form schema={schema} uiSchema={{ 'ui:widget': 'alt-date' }} validator={validator} />);
 
     expect(container.querySelector('ul.list-inline li.list-inline-item select')).toHaveClass('form-control');
-    expect(container.querySelector('.btn-now')).toHaveClass('btn', 'btn-info');
-    expect(container.querySelector('.btn-clear')).toHaveClass('btn', 'btn-warning');
+    expect(container.querySelector('.rjsf-btn-now')).toHaveClass('btn', 'btn-info');
+    expect(container.querySelector('.rjsf-btn-clear')).toHaveClass('btn', 'btn-warning');
   });
 
   it('lays an array out on the grid with glyphicon buttons', () => {
     const schema: RJSFSchema = { type: 'array', items: { type: 'string' } };
     const { container } = render(<Form schema={schema} initialFormData={['a', 'b']} validator={validator} />);
 
-    expect(container.querySelector('.array-item-list')).toHaveClass('row');
+    expect(container.querySelector('.rjsf-array-item-list')).toHaveClass('row');
     const item = container.querySelector('.rjsf-array-item')!;
     expect(item.querySelector('.col-xs-9.col-md-10.col-xl-11')).toContainElement(item.querySelector('input'));
-    expect(item.querySelector('.col-xs-3.col-md-2.col-xl-1.array-item-toolbox .btn-group')).toBeInTheDocument();
+    expect(item.querySelector('.col-xs-3.col-md-2.col-xl-1.rjsf-array-item-toolbox .btn-group')).toBeInTheDocument();
     expect(item.querySelector('button.btn.btn-default .glyphicon.glyphicon-arrow-down')).toBeInTheDocument();
     expect(item.querySelector('button.btn.btn-danger .glyphicon.glyphicon-remove')).toBeInTheDocument();
     expect(
       container.querySelector(
-        '.row > .col-xs-4.col-xs-offset-8.text-right > .btn.btn-info.btn-add.col-xs-12 .glyphicon-plus',
+        '.row > .col-xs-4.col-xs-offset-8.text-right > .btn.btn-info.rjsf-btn-add.col-xs-12 .glyphicon-plus',
       ),
     ).toBeInTheDocument();
   });

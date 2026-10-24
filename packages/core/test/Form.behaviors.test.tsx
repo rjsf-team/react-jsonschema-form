@@ -185,11 +185,11 @@ describe('Live validation onBlur', () => {
 
     await user.type(container.querySelector<HTMLInputElement>('input[type=text]')!, 'short');
 
-    expect(container.querySelectorAll('.error-detail li')).toHaveLength(0);
+    expect(container.querySelectorAll('.rjsf-error-detail li')).toHaveLength(0);
 
     await user.tab();
 
-    expect(container.querySelector('.error-detail li')).toHaveTextContent('must NOT have fewer than 8 characters');
+    expect(container.querySelector('.rjsf-error-detail li')).toHaveTextContent('must NOT have fewer than 8 characters');
   });
 
   describe('when the data is replaced through setFieldValue', () => {
@@ -228,12 +228,14 @@ describe('Live validation onBlur', () => {
 
       await user.click(elementOf(container, 'button'));
 
-      expect(container.querySelectorAll('.error-detail li')).toHaveLength(0);
+      expect(container.querySelectorAll('.rjsf-error-detail li')).toHaveLength(0);
 
       await user.click(container.querySelector<HTMLInputElement>('#root_name')!);
       await user.tab();
 
-      expect(container.querySelector('.error-detail li')).toHaveTextContent('must NOT have fewer than 8 characters');
+      expect(container.querySelector('.rjsf-error-detail li')).toHaveTextContent(
+        'must NOT have fewer than 8 characters',
+      );
     });
 
     it('carries each extraError over exactly once', async () => {
@@ -672,7 +674,7 @@ describe('Form omitExtraData and liveOmit', () => {
     // currently focused field and firing onChange which may mutate formData before
     // the submit handler runs. fireEvent.submit bypasses that side-effect chain.
     await submitForm(node, user, true);
-    expect(node.querySelectorAll('.error-detail li')).toHaveLength(1);
+    expect(node.querySelectorAll('.rjsf-error-detail li')).toHaveLength(1);
 
     rerender({
       ...props,
@@ -681,7 +683,7 @@ describe('Form omitExtraData and liveOmit', () => {
     // We use delayPromist of 0ms to allow all asynchronous operations to complete in the React component.
     // Despite this being a workaround, it turned out to be the only effective method to handle this test case.
     await delayPromise(0);
-    expect(node.querySelectorAll('.error-detail li')).toHaveLength(2);
+    expect(node.querySelectorAll('.rjsf-error-detail li')).toHaveLength(2);
   });
 });
 
@@ -847,7 +849,7 @@ describe('Async errors', () => {
 
     const { node } = createFormComponent({ schema, extraErrors });
 
-    expect(node.querySelectorAll('.error-detail li')).toHaveLength(2);
+    expect(node.querySelectorAll('.rjsf-error-detail li')).toHaveLength(2);
   });
 
   it('should not block form submission when extraErrorsAreWarnings is set', async () => {
@@ -1052,7 +1054,7 @@ describe('Async errors', () => {
     const form = container.firstElementChild!;
 
     // Add an array item and fill it with a valid number
-    const addBtn = form.querySelector('.btn-add');
+    const addBtn = form.querySelector('.rjsf-btn-add');
     await user.click(addBtn!);
     const input = form.querySelector<HTMLInputElement>('input[inputmode="decimal"]')!;
     await user.clear(input);
@@ -1116,7 +1118,7 @@ describe('Calling onChange right after updating a Form with props formData', () 
   it("doesn't cause a race condition", async () => {
     const { node } = createComponent(Container, { ...props });
 
-    await user.click(node.querySelector('.rjsf-array-item-add button')!);
+    await user.click(node.querySelector('.rjsf-array-item-add')!);
 
     expect(node.querySelector('#root_0')).toBeInTheDocument();
     expect(node.querySelector('#root_1')).toHaveAttribute('value', 'test');
@@ -1167,7 +1169,7 @@ describe('Deriving state from changed props', () => {
 
     await user.click(elementOf(container, 'button'));
 
-    expect(container.querySelectorAll('.error-detail li')).toHaveLength(0);
+    expect(container.querySelectorAll('.rjsf-error-detail li')).toHaveLength(0);
   });
 
   it('re-validates unchanged data when a prop that takes part in validation changes', async () => {
@@ -1175,7 +1177,7 @@ describe('Deriving state from changed props', () => {
 
     await user.click(elementOf(container, 'button'));
 
-    expect(container.querySelector('.error-detail li')).toHaveTextContent('must NOT have fewer than 8 characters');
+    expect(container.querySelector('.rjsf-error-detail li')).toHaveTextContent('must NOT have fewer than 8 characters');
   });
 
   it('does not validate a form that was never handed data when a prop that takes part in validation changes', async () => {
@@ -1201,7 +1203,7 @@ describe('Deriving state from changed props', () => {
     await user.click(elementOf(container, 'button'));
 
     expect(container.querySelector('output')).toHaveTextContent('1');
-    expect(container.querySelectorAll('.error-detail li')).toHaveLength(0);
+    expect(container.querySelectorAll('.rjsf-error-detail li')).toHaveLength(0);
   });
 
   it('clears extraErrors the parent drops after a re-validation of unchanged data', async () => {
@@ -1215,13 +1217,13 @@ describe('Deriving state from changed props', () => {
         ]}
       />,
     );
-    expect(container.querySelector('.error-detail li')).toHaveTextContent('from the server');
+    expect(container.querySelector('.rjsf-error-detail li')).toHaveTextContent('from the server');
 
     await user.click(elementOf(container, 'button'));
-    expect(container.querySelectorAll('.error-detail li')).toHaveLength(2);
+    expect(container.querySelectorAll('.rjsf-error-detail li')).toHaveLength(2);
     await user.click(elementOf(container, 'button'));
 
-    const messages = [...container.querySelectorAll('.error-detail li')].map((li) => li.textContent);
+    const messages = [...container.querySelectorAll('.rjsf-error-detail li')].map((li) => li.textContent);
     expect(messages).toEqual(['must NOT have fewer than 8 characters']);
   });
 
@@ -1231,7 +1233,7 @@ describe('Deriving state from changed props', () => {
 
     await user.click(elementOf(container, 'button'));
 
-    const messages = [...container.querySelectorAll('.error-detail li')].map((li) => li.textContent);
+    const messages = [...container.querySelectorAll('.rjsf-error-detail li')].map((li) => li.textContent);
     expect(messages).toEqual(['from the server']);
   });
 
@@ -1316,7 +1318,7 @@ describe('a form whose customMergeAllOf changes', () => {
     await user.click(container.querySelector('#root_a')!);
     await user.tab();
 
-    expect(container.querySelector('.error-detail')).toBeNull();
+    expect(container.querySelector('.rjsf-error-detail')).toBeNull();
   });
 });
 
@@ -1642,7 +1644,7 @@ describe('validateForm()', () => {
       expect(ref.current!.validateForm()).toBe(false);
     });
 
-    let errors = node.querySelectorAll('.error-detail');
+    let errors = node.querySelectorAll('.rjsf-error-detail');
     expect(errors).toHaveLength(1);
     expect(errors[0]).toHaveTextContent("must have required property 'input'");
 
@@ -1651,7 +1653,7 @@ describe('validateForm()', () => {
     await user.type(textNode, 'populated value');
     rerender({ ...props, initialFormData: { input: 'populated value' } });
     // // error should still be present.
-    errors = node.querySelectorAll('.error-detail');
+    errors = node.querySelectorAll('.rjsf-error-detail');
     // screen.debug();
     // change formData and make sure the error disappears.
     expect(errors).toHaveLength(0);
@@ -1660,7 +1662,7 @@ describe('validateForm()', () => {
     act(() => {
       expect(ref.current!.validateForm()).toEqual(true);
     });
-    errors = node.querySelectorAll('.error-detail');
+    errors = node.querySelectorAll('.rjsf-error-detail');
     expect(errors).toHaveLength(0);
   });
 
@@ -1925,7 +1927,7 @@ describe('setFieldValue()', () => {
       expect(ref.current!.validateForm()).toBe(false);
     });
 
-    let errors = node.querySelectorAll('.error-detail');
+    let errors = node.querySelectorAll('.rjsf-error-detail');
     expect(errors).toHaveLength(1);
     expect(errors[0]).toHaveTextContent("must have required property 'input'");
 
@@ -1946,7 +1948,7 @@ describe('setFieldValue()', () => {
     );
 
     // error should still be present.
-    errors = node.querySelectorAll('.error-detail');
+    errors = node.querySelectorAll('.rjsf-error-detail');
     // screen.debug();
     // change formData and make sure the error disappears.
     expect(errors).toHaveLength(0);
@@ -1979,7 +1981,7 @@ describe('setFieldValue()', () => {
       expect(ref.current!.validateForm()).toBe(false);
     });
 
-    let errors = node.querySelectorAll('.error-detail');
+    let errors = node.querySelectorAll('.rjsf-error-detail');
     expect(errors).toHaveLength(1);
     expect(errors[0]).toHaveTextContent("must have required property 'input'");
 
@@ -2000,7 +2002,7 @@ describe('setFieldValue()', () => {
     );
 
     // error should still be present.
-    errors = node.querySelectorAll('.error-detail');
+    errors = node.querySelectorAll('.rjsf-error-detail');
     // screen.debug();
     // change formData and make sure the error disappears.
     expect(errors).toHaveLength(0);
@@ -2835,7 +2837,7 @@ describe('extraErrors set after submit (#4965)', () => {
 
     await actWrappedDelayPromise();
 
-    expect(container.querySelectorAll('.error-detail li')).toHaveLength(1);
+    expect(container.querySelectorAll('.rjsf-error-detail li')).toHaveLength(1);
   });
 
   it('should show extraErrors when set for the first time via async onSubmit callback', async () => {
@@ -2877,7 +2879,7 @@ describe('extraErrors set after submit (#4965)', () => {
 
     await actWrappedDelayPromise(200);
 
-    const errorItems = container.querySelectorAll('.error-detail li');
+    const errorItems = container.querySelectorAll('.rjsf-error-detail li');
     expect(errorItems.length).toBeGreaterThan(0);
   });
 
@@ -2946,7 +2948,7 @@ describe('extraErrors not duplicated when sibling array field mutated (#5041)', 
     const form = container.firstElementChild!;
 
     // Add an item to the sibling array field
-    const addBtn = form.querySelector('.btn-add');
+    const addBtn = form.querySelector('.rjsf-btn-add');
     await user.click(addBtn!);
 
     // The name field's extraErrors should still contain exactly one error

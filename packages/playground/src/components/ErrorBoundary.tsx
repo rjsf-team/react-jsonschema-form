@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react';
 import { Component } from 'react';
+import Alert from '@mui/material/Alert';
+import Button from '@mui/material/Button';
 
 interface Props {
   children: ReactNode;
@@ -40,13 +42,17 @@ class ErrorBoundary extends Component<Props, State> {
 
     if (hasError) {
       return (
-        <div className='alert alert-danger'>
+        <Alert
+          severity='error'
+          action={
+            <Button color='inherit' size='small' onClick={this.resetErrorBoundary}>
+              Refresh Form
+            </Button>
+          }
+        >
           <p>The following error was encountered:</p>
           <pre>{error.message}</pre>
-          <button type='button' className='btn' onClick={this.resetErrorBoundary}>
-            Refresh Form
-          </button>
-        </div>
+        </Alert>
       );
     }
 

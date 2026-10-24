@@ -1,4 +1,5 @@
 import { Theme as AntdTheme } from '@rjsf/antd';
+import { Theme as Bootstrap3Theme } from '@rjsf/bootstrap3';
 import { Theme as ChakraUITheme } from '@rjsf/chakra-ui';
 import { Theme as DaisyUITheme } from '@rjsf/daisyui';
 import { Theme as FluentUIRCTheme } from '@rjsf/fluentui-rc';
@@ -26,6 +27,7 @@ import shadcnPastelDreams from './themes/shadcn/pastel-dreams.css?url';
 import shadcnSoftPop from './themes/shadcn/soft-pop.css?url';
 import shadcnTwitter from './themes/shadcn/twitter.css?url';
 import shadcnVercel from './themes/shadcn/vercel.css?url';
+import rjsfStylesheet from '@rjsf/core/rjsf.css?url';
 
 const esV8Validator = customizeValidator({}, localize_es);
 const AJV8_2019 = customizeValidator({ AjvClass: Ajv2019 });
@@ -52,8 +54,13 @@ const validators: PlaygroundProps['validators'] = {
 
 const themes: PlaygroundProps['themes'] = {
   default: {
-    stylesheet: '//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css',
+    stylesheet: rjsfStylesheet,
     theme: {},
+  },
+  bootstrap3: {
+    stylesheet: '//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css',
+    // oxlint-disable-next-line typescript/no-deprecated -- the playground demos the deprecated theme until v8 removes it
+    theme: Bootstrap3Theme,
     subthemes: {
       cerulean: {
         stylesheet: '//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/cerulean/bootstrap.min.css',

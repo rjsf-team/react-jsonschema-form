@@ -538,6 +538,8 @@ export interface GridTemplateProps extends GenericObjectType {
    * for Rows vs Columns. NOTE: This is falsy by default when not specified
    */
   column?: boolean;
+  /** How many of a row's 12 tracks a column spans; a column without one is full width */
+  span?: number;
 }
 
 /** The set of `Fields` stored in the `Registry` */
@@ -977,7 +979,7 @@ export type MergedThemePresentation = Required<ThemePresentation>;
  * named after a state, such as `disabled`, are added to an element in that state beside its own key's
  */
 export interface ClassMap {
-  /** The `<input>` of `BaseInputTemplate` */
+  /** The `<input>` of `BaseInputTemplate`, other than a file or range input, which `fileInput` and `rangeInput` style */
   input?: string;
   /** The `<select>` of `SelectWidget` */
   select?: string;
@@ -1067,12 +1069,16 @@ export interface ClassMap {
   optionalDataRemoveButton?: string;
   /** The `<button>` of `SubmitButton` */
   submitButton?: string;
+  /** The `<button>` of `IconButton`, which the array item, add, remove and clear buttons render */
+  iconButton?: string;
+  /** The inline `<svg>` icon of `IconButton` */
+  buttonIcon?: string;
 }
 
-/** A form's `ClassMap` once `buildRegistry()` layered the `Form`'s over the theme's over `@rjsf/core`'s: every key has
- * a value
+/** A form's `ClassMap` once `buildRegistry()` layered the `Form`'s over the theme's over `@rjsf/core`'s: every key is
+ * present, `undefined` where no layer gives the element a class, so an element reading it renders no `class` attribute
  */
-export type MergedClassMap = Readonly<Required<ClassMap>>;
+export type MergedClassMap = Readonly<Record<keyof ClassMap, string | undefined>>;
 
 /** Where one part of a field is drawn: by its template, by its field or widget component, by a field above it
  * rendering the same id, or not at all

@@ -82,7 +82,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
           },
         } as RJSFSchema,
       });
-      expect(node.querySelector('.unsupported-field')).toHaveTextContent('Unknown field type undefined');
+      expect(node.querySelector('.rjsf-unsupported-field')).toHaveTextContent('Unknown field type undefined');
     });
 
     it('will render fallback ui when useFallbackUiForUnsupportedType is true', async () => {
@@ -114,7 +114,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         expect(option.selected).toBe(true);
       };
 
-      expect(node.querySelectorAll('.unsupported-field')).toHaveLength(0);
+      expect(node.querySelectorAll('.rjsf-unsupported-field')).toHaveLength(0);
       expect(node.querySelector('select')).toBeInTheDocument();
       const options = node.querySelectorAll<HTMLOptionElement>('select option');
       expect(Array.from(options).map((option) => option.textContent)).toEqual([
@@ -150,7 +150,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       expectToHaveBeenCalledWithFormData(onChange, { unknownProperty: true }, 'root_unknownProperty');
 
       await selectType('object');
-      let addButton = node.querySelector<HTMLButtonElement>('.rjsf-object-property-expand button');
+      let addButton = node.querySelector<HTMLButtonElement>('.rjsf-object-property-expand');
       expect(addButton).toBeInTheDocument();
       // click the add button
       await user.click(addButton!);
@@ -163,7 +163,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       );
 
       await selectType('array');
-      addButton = node.querySelector<HTMLButtonElement>('.rjsf-array-item-add button');
+      addButton = node.querySelector<HTMLButtonElement>('.rjsf-array-item-add');
       expect(addButton).toBeInTheDocument();
       // click the add button
       await user.click(addButton!);
@@ -534,7 +534,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       // ...under a key input and a remove button that would rename or delete a property the schema describes
       expect(node.querySelector('#root_multi_a-key')).not.toBeInTheDocument();
       expect(node.querySelector('#root_multi_a__remove')).not.toBeInTheDocument();
-      expect(node.querySelector('.rjsf-object-property-expand button')).not.toBeInTheDocument();
+      expect(node.querySelector('.rjsf-object-property-expand')).not.toBeInTheDocument();
     });
 
     it('leaves an unevaluatedProperties of its own in place of the one it would write', () => {
@@ -546,7 +546,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
 
       // The keyword says what the object takes as much as `additionalProperties` would, and the `true` written in for
       // a schema that says nothing would take precedence over it, offering an add button for keys it forbids
-      expect(node.querySelector('.rjsf-object-property-expand button')).not.toBeInTheDocument();
+      expect(node.querySelector('.rjsf-object-property-expand')).not.toBeInTheDocument();
       expect(node.querySelector('#root_a-key')).not.toBeInTheDocument();
     });
 
@@ -1252,7 +1252,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       // The outer field already renders them, so the value field repeating them would also repeat the description's
       // DOM id that `aria-describedby` points at
       expect(node.querySelectorAll('[id="root_multi__description"]')).toHaveLength(1);
-      expect(node.querySelectorAll('.field-description')).toHaveLength(1);
+      expect(node.querySelectorAll('.rjsf-field-description')).toHaveLength(1);
     });
 
     it('offers only the recognized types of a list that also names an unrecognized one', () => {
@@ -1814,7 +1814,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         expect(node.querySelectorAll('[id$="___internal_type_selector"]')).toHaveLength(0);
         expect(node.querySelector('#root__anyof_select')).toBeInTheDocument();
         expect(node.querySelector('#root')).toBeInTheDocument();
-        expect(node.querySelectorAll('.unsupported-field')).toHaveLength(0);
+        expect(node.querySelectorAll('.rjsf-unsupported-field')).toHaveLength(0);
       },
     );
 
@@ -2088,7 +2088,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
 
         // Without the opt-in the field renders the unsupported-field template, which renders nothing of the options, so
         // it is not a field they can give way to whichever way it was named
-        expect(node.querySelector('.unsupported-field')).toBeNull();
+        expect(node.querySelector('.rjsf-unsupported-field')).toBeNull();
         expect(node.querySelector('#root_val__anyof_select')).toBeInTheDocument();
         expect(node.querySelector('#root_val_a')).toBeInTheDocument();
       },
@@ -2123,8 +2123,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       // With no selector to lay out, the template contributes only its wrapper, which every theme gives padding or a
       // card of its own, and the empty row the selector would have filled
       expect(node.querySelector('#root_val')).toBeInTheDocument();
-      expect(node.querySelector('.panel')).toBeNull();
-      expect([...node.querySelectorAll('.form-group')].filter((group) => group.children.length === 0)).toHaveLength(0);
+      expect(node.querySelector('.rjsf-multi-schema-selector')).toBeNull();
     });
   });
 
@@ -2399,11 +2398,11 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
 
     it('should pass errors as the provided React component', async () => {
       // live validate does not run on initial render anymore
-      expect(node.querySelectorAll('.error-detail li')).toHaveLength(0);
+      expect(node.querySelectorAll('.rjsf-error-detail li')).toHaveLength(0);
       const input = node.querySelector<HTMLInputElement>('input')!;
       await user.clear(input);
       await user.type(input, 'stillinvalid');
-      expect(node.querySelectorAll('.error-detail li')).toHaveLength(1);
+      expect(node.querySelectorAll('.rjsf-error-detail li')).toHaveLength(1);
     });
 
     it('should pass rawErrors as an array of strings', async () => {
@@ -2416,7 +2415,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
     });
 
     it('should pass help as a the provided React element', () => {
-      expect(node.querySelector('.help-block')).toHaveTextContent('this is help');
+      expect(node.querySelector('.rjsf-field-help')).toHaveTextContent('this is help');
     });
 
     it('should pass rawHelp as a string', () => {

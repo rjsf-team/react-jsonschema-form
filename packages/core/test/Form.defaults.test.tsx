@@ -216,7 +216,7 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
 
       const { node } = createFormComponent({ schema });
 
-      await user.click(node.querySelector('.rjsf-array-item-add button')!);
+      await user.click(node.querySelector('.rjsf-array-item-add')!);
 
       expect(node.querySelector<HTMLInputElement>('input[type=text]')!).toHaveValue('hello');
     });
@@ -234,7 +234,7 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
 
       const { node } = createFormComponent({ schema });
 
-      await user.click(node.querySelector('.btn-add')!);
+      await user.click(node.querySelector('.rjsf-btn-add')!);
 
       expect(node.querySelector<HTMLInputElement>('input[type=text]')!).toHaveValue('newKey');
     });
@@ -256,7 +256,7 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
 
       const { node } = createFormComponent({ schema });
 
-      await user.click(node.querySelector('.btn-add')!);
+      await user.click(node.querySelector('.rjsf-btn-add')!);
 
       expect(node.querySelector<HTMLInputElement>('input[inputmode=decimal]')).toBeNull();
       expect(node.querySelectorAll<HTMLInputElement>('input[type=text]')[1]).toHaveValue('New Value');
@@ -285,7 +285,7 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
 
       expect(node.querySelector('#root_children_0_name')).not.toBeInTheDocument();
 
-      await user.click(node.querySelector('.rjsf-array-item-add button')!);
+      await user.click(node.querySelector('.rjsf-array-item-add')!);
 
       expect(node.querySelector('#root_children_0_name')).toBeInTheDocument();
     });
@@ -439,7 +439,7 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
     it('should propagate deeply nested defaults to submit handler', async () => {
       const { node, onSubmit } = createFormComponent({ schema });
 
-      await user.click(node.querySelector('.rjsf-array-item-add button')!);
+      await user.click(node.querySelector('.rjsf-array-item-add')!);
       await submitForm(node, user);
 
       expectToHaveBeenCalledWithFormData(onSubmit, { object: { array: [{ bool: true }] } }, true);

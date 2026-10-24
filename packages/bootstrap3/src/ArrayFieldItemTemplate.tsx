@@ -29,7 +29,7 @@ export default function ArrayFieldItemTemplate<
     <div className={className} style={containerStyle}>
       <div className={hasToolbar ? 'col-xs-9 col-md-10 col-xl-11' : 'col-xs-12'}>{children}</div>
       {hasToolbar && (
-        <div className='col-xs-3 col-md-2 col-xl-1 array-item-toolbox'>
+        <div className='col-xs-3 col-md-2 col-xl-1 rjsf-array-item-toolbox'>
           <div className='btn-group' style={toolbarStyle}>
             <ArrayFieldItemButtonsTemplate {...buttonsProps} style={btnStyle} />
           </div>

@@ -189,7 +189,7 @@ describe('NullField', () => {
         initialFormData: [{}],
       });
 
-      await user.click(elementOf(node, '.rjsf-array-item-add button'));
+      await user.click(elementOf(node, '.rjsf-array-item-add'));
 
       expect(getFormData()).toEqual([{}, {}]);
       expect(node.querySelector('#root_1_opt__optionalAdd')).toBeInTheDocument();
@@ -202,7 +202,7 @@ describe('NullField', () => {
         initialFormData: {},
       });
 
-      await user.click(elementOf(node, '.rjsf-object-property-expand button'));
+      await user.click(elementOf(node, '.rjsf-object-property-expand'));
 
       expect(getFormData()).toEqual({ newKey: {} });
     });

@@ -51,7 +51,7 @@ function CheckboxesWidget<
   );
   const autofocusIndex = enumOptionsAutofocusIndex<S>(enumOptions, enumDisabled, autofocus);
   return (
-    <div className='checkboxes' id={id} {...groupAttributes}>
+    <div className='rjsf-checkboxes' id={id} {...groupAttributes}>
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, index) => {
           const checked = enumOptionsIsSelected<S>(option.value, checkboxesValues);
@@ -70,7 +70,7 @@ function CheckboxesWidget<
             <span>
               <input
                 type='checkbox'
-                className={classMap.checkboxInput || undefined}
+                className={classMap.checkboxInput}
                 id={optionId(id, index)}
                 name={htmlName || id}
                 checked={checked}
@@ -87,13 +87,13 @@ function CheckboxesWidget<
           );
           return inline ? (
             // oxlint-disable-next-line react/no-array-index-key
-            <label key={index} className={clsx(classMap.checkboxInlineLabel, disabledCls)}>
+            <label key={index} className={clsx('rjsf-checkbox-inline', classMap.checkboxInlineLabel, disabledCls)}>
               {checkbox}
             </label>
           ) : (
             // oxlint-disable-next-line react/no-array-index-key
-            <div key={index} className={clsx(classMap.checkboxWrapper, disabledCls)}>
-              <label className={classMap.checkboxLabel || undefined}>{checkbox}</label>
+            <div key={index} className={clsx('rjsf-checkbox', classMap.checkboxWrapper, disabledCls)}>
+              <label className={classMap.checkboxLabel}>{checkbox}</label>
             </div>
           );
         })}
