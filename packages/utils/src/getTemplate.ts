@@ -4,7 +4,7 @@ import type { FormContextType, TemplatesType, Registry, UIOptionsType, StrictRJS
 
 /** The field a template-override warning should name, passed by the one caller that renders every field
  * (`SchemaField`) so each warning is logged once, labelled, from there rather than once per `getTemplate()` caller.
- * Both parts are read only when an override is actually invalid, so a form without one never pays for them.
+ * The label is read only when an override is actually invalid, so a form without one never pays for it.
  */
 export interface TemplateWarnSource<
   T = unknown,
@@ -14,8 +14,7 @@ export interface TemplateWarnSource<
   /** Builds the label of the uiSchema entry the field is rendered from, such as `"root_tasks_[]_title"
    * (tasks[].title)`, so one entry warns once however many rows render it */
   entryLabel: () => string;
-  /** The field's own UI options before `ui:globalOptions` is merged in, so an own mistake is told apart from one the
-   * field inherits */
+  /** The field's own UI options. Retained for callers; template overrides are now per-field only. */
   ownUiOptions: UIOptionsType<T, S, F>;
 }
 
@@ -28,15 +27,15 @@ function lookupTemplate(customTemplates: Record<string, unknown>, name: string):
  * otherwise. NOTE, since `ButtonTemplates` are not overridden in `uiSchema` only those in the `registry` are returned.
  *
  * An override that is not a component is ignored, warning when a `warnSource` is given: a string naming no registered
- * template, a React element, or any other non-component value falls back to a valid `ui:globalOptions` template before
- * the registry's own, as `resolveUiField()` does for `ui:field`. An explicit own `null` is not a mistake: it opts the
- * field out of any override, `ui:globalOptions` included, so the registry's own template renders without a warning.
+ * template, a React element, or any other non-component value falls back to the registry's own template.
+ * Templates are per-field options, not `ui:globalOptions`. An explicit own `null` renders the registry's own
+ * template without a warning.
  *
  * @param name - The name of the template to fetch, restricted to the keys of `TemplatesType`
  * @param registry - The `Registry` from which to read the template
  * @param [uiOptions={}] - The `UIOptionsType` from which to read an alternate template
- * @param [warnSource] - Names the field for the override warnings and tells an own option apart from an inherited
- * one; omitted by callers that only resolve, which stay silent
+ * @param [warnSource] - Names the field for the override warnings; omitted by callers that only resolve, which
+ * stay silent
  * @returns - The template from either the `uiSchema` or `registry` for the `name`
  */
 export default function getTemplate<
@@ -50,15 +49,15 @@ export default function getTemplate<
   uiOptions: UIOptionsType<T, S, F> = {},
   warnSource?: TemplateWarnSource<T, S, F>,
 ): TemplatesType<T, S, F>[Name] {
-  const { templates, globalUiOptions } = registry;
+  const { templates } = registry;
   if (name === 'ButtonTemplates') {
     return templates[name];
   }
   const customTemplates: Record<string, unknown> = templates;
   const uiOverrides: Record<string, unknown> = uiOptions;
   const override = uiOverrides[name] ?? undefined;
-  // No override, or an explicit own `null` that opts out of any override (including `ui:globalOptions`, as an own
-  // `null` `ui:field` does, though here `''`, `0` and `false` still warn): the registry's own template renders
+  // No override, or an explicit own `null`: the registry's own template renders silently.
+  // Other falsy values (`''`, `0` and `false`) still warn.
   if (override === undefined) {
     return templates[name];
   }
@@ -76,18 +75,7 @@ export default function getTemplate<
   }
   // Only the declared templates warn: a custom template can share its name with an ordinary option such as `help`
   if (warnSource && isTemplateName(name)) {
-    warnOnInvalidOverride(name, override, template, registry, warnSource);
-  }
-  // An invalid own override falls back to a valid `ui:globalOptions` template before the registry's own
-  const globalOverride: unknown = globalUiOptions?.[name];
-  if (globalOverride !== undefined && globalOverride !== override) {
-    let globalTemplate: unknown = globalOverride;
-    if (typeof globalOverride === 'string') {
-      globalTemplate = lookupTemplate(customTemplates, globalOverride);
-    }
-    if (isComponentType(globalTemplate)) {
-      return globalTemplate as TemplatesType<T, S, F>[Name];
-    }
+    warnOnInvalidOverride(name, override, template, warnSource);
   }
   return templates[name];
 }

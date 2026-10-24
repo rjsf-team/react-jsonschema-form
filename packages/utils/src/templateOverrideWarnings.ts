@@ -1,7 +1,7 @@
 import describeUnresolvedComponent from './describeUnresolvedComponent.ts';
 import type { TemplateWarnSource } from './getTemplate.ts';
 import logOnce from './logOnce.ts';
-import type { FormContextType, TemplatesType, Registry, StrictRJSFSchema, RJSFSchema } from './types.ts';
+import type { FormContextType, TemplatesType, StrictRJSFSchema, RJSFSchema } from './types.ts';
 
 /** The names `getTemplate()` warns about: the templates `TemplatesType` declares. The registry may also hold templates
  * of a custom name, and `uiOptions` holds ordinary options such as `help`, so a value under a name outside this list
@@ -45,25 +45,13 @@ export function isTemplateName(name: string): boolean {
   return Object.hasOwn(TEMPLATE_NAMES, name);
 }
 
-/** Logs the invalid-override warning once per message, naming the field's entry for an own `ui:` option and
- * `ui:globalOptions` for an inherited one, so a changed value logs again */
+/** Logs the invalid-override warning once per message, naming the field's entry, so a changed value logs again */
 export function warnOnInvalidOverride<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(
-  name: string,
-  override: unknown,
-  template: unknown,
-  registry: Registry<T, S, F>,
-  warnSource: TemplateWarnSource<T, S, F>,
-): void {
-  const globalOverrides: Record<string, unknown> = registry.globalUiOptions ?? {};
-  // The merged options spread the field's own entries last, so a key the field set itself is its own mistake even
-  // when it repeats the global value
-  const fromGlobal = !Object.hasOwn(warnSource.ownUiOptions, name) && Object.hasOwn(globalOverrides, name);
-  // `entryLabel()` runs only for an own override, so the label of a field without one is never built
-  const target = fromGlobal ? `ui:globalOptions.${name}` : `ui:${name} for ${warnSource.entryLabel()}`;
+>(name: string, override: unknown, template: unknown, warnSource: TemplateWarnSource<T, S, F>): void {
+  const target = `ui:${name} for ${warnSource.entryLabel()}`;
   const description = describeUnresolvedComponent(override, template, 'registered template', 'MyTemplate');
   logOnce(`${target} ${description}, so it is ignored.`);
 }
