@@ -107,6 +107,33 @@ describe('a native submit', () => {
     }
   });
 
+  it('gets what core posts for a select with nothing selected under ui:emptyValue', () => {
+    const emptyValueUiSchema: UiSchema = { ...uiSchema, sel: { 'ui:emptyValue': 'none' } };
+    const { container: core } = render(
+      <CoreForm schema={schema} uiSchema={emptyValueUiSchema} validator={validator} />,
+    );
+    const { container: antd } = render(<Form schema={schema} uiSchema={emptyValueUiSchema} validator={validator} />);
+
+    expect(entriesOf(antd.querySelector('form'), 'root_sel')).toEqual(
+      entriesOf(core.querySelector('form'), 'root_sel'),
+    );
+  });
+
+  it('gets the value the slider is drawn at for an empty range', () => {
+    const { container } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+    expect(container.querySelector('.ant-slider-handle')).toHaveAttribute('aria-valuenow', '0');
+    expect(entriesOf(container.querySelector('form'), 'root_range')).toEqual(['0']);
+  });
+
+  it('gets a value the form data holds twice once, as a native multi-select posts it', () => {
+    const { container } = render(
+      <Form schema={schema} uiSchema={uiSchema} initialFormData={{ multi: ['a', 'a'] }} validator={validator} />,
+    );
+
+    expect(entriesOf(container.querySelector('form'), 'root_multi')).toEqual(['0']);
+  });
+
   it('gets nothing for a disabled select or range, as for a disabled native control', () => {
     const { container } = render(
       <Form schema={schema} uiSchema={uiSchema} initialFormData={formData} disabled validator={validator} />,
@@ -116,6 +143,29 @@ describe('a native submit', () => {
     expect(entriesOf(form, 'root_sel')).toEqual([]);
     expect(entriesOf(form, 'root_multi')).toEqual([]);
     expect(entriesOf(form, 'root_range')).toEqual([]);
+  });
+});
+
+describe('a read-only CheckboxesWidget the form leaves enabled', () => {
+  it('marks each checkbox read-only (#5597)', () => {
+    render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: { c: { type: 'array', uniqueItems: true, items: { type: 'string', enum: ['a', 'b'] } } },
+        }}
+        uiSchema={{ c: { 'ui:widget': 'checkboxes', 'ui:readonly': true } }}
+        formContext={{ readonlyAsDisabled: false }}
+        validator={validator}
+      />,
+    );
+
+    const checkboxes = screen.getAllByRole('checkbox');
+    expect(checkboxes).toHaveLength(2);
+    for (const checkbox of checkboxes) {
+      expect(checkbox).toBeEnabled();
+      expect(checkbox).toHaveAttribute('aria-readonly', 'true');
+    }
   });
 });
 

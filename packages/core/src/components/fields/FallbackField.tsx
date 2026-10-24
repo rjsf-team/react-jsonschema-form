@@ -496,9 +496,8 @@ export default function FallbackField<
   const { UnsupportedFieldTemplate } = getTemplates<T, S, F>(registry, getUiOptions<T, S, F>(uiSchema));
 
   return (
-    <>
-      <OwnTitleAndDescription<T, S, F> {...props} />
+    <OwnTitleAndDescription<T, S, F> {...props}>
       <UnsupportedFieldTemplate schema={schema} uiSchema={uiSchema} id={id} reason={reason} registry={registry} />
-    </>
+    </OwnTitleAndDescription>
   );
 }

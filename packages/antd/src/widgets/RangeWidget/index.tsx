@@ -1,6 +1,6 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { getControlAttributes, rangeSpec } from '@rjsf/utils';
-import { Slider } from 'antd';
+import { ConfigProvider, Slider } from 'antd';
 
 import getControlState from '../../controlState.ts';
 
@@ -32,6 +32,8 @@ export default function RangeWidget<
   const control = getControlState<T, S, F>({ disabled, readonly, registry });
 
   const { min, max, step } = rangeSpec(schema);
+  const { componentDisabled } = ConfigProvider.useConfig();
+  const postedDisabled = control.disabled ?? (componentDisabled || undefined);
 
   const { 'aria-labelledby': ariaLabelledBy, 'aria-label': ariaLabel } = getControlAttributes<T, S, F>({
     id,
@@ -73,8 +75,9 @@ export default function RangeWidget<
         ariaLabelForHandle={ariaLabel}
       />
       {/* antd's `Slider` renders no native control, so the value a native submit or `FormData` reads is carried by a
-      hidden input, as the native range input of the other themes carries it */}
-      <input type='hidden' name={htmlName || id} value={value ?? ''} disabled={control.disabled} />
+      hidden input. With no value it posts the `min` the slider's handle is drawn at, as a native range input posts the
+      value its thumb is drawn at, and it posts nothing when the slider is drawn disabled */}
+      <input type='hidden' name={htmlName || id} value={value ?? min ?? 0} disabled={postedDisabled} />
     </>
   );
 }

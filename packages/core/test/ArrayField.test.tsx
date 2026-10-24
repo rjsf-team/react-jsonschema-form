@@ -247,6 +247,15 @@ describe('ArrayField', () => {
       );
     });
 
+    it('should draw a titled missing-items box inside the fieldset its title is the legend of, with no browser border (#5562)', () => {
+      const { node } = createFormComponent({ schema: { type: 'array', title: 'List' } });
+
+      const fieldset = node.querySelector('.rjsf-field-array > fieldset');
+      expect(fieldset?.firstElementChild?.tagName).toBe('LEGEND');
+      expect(fieldset).toContainElement(node.querySelector('.unsupported-field'));
+      expect(fieldset).toHaveStyle({ borderStyle: 'none', margin: '0px', padding: '0px' });
+    });
+
     it('should be able to be overwritten with a custom UnsupportedField component', () => {
       const CustomUnsupportedField = function CustomUnsupportedField() {
         return <span id='custom'>Custom UnsupportedField</span>;

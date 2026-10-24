@@ -22,7 +22,7 @@ export default function IconButton<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: AntdIconButtonProps<T, S, F>) {
-  const { iconType = 'default', icon, onClick, uiSchema, registry, color, ...otherProps } = props;
+  const { iconType = 'default', icon, onClick, uiSchema, registry, color, disabled, ...otherProps } = props;
   return (
     <Button
       onClick={onClick}
@@ -32,6 +32,8 @@ export default function IconButton<
       color={color as ButtonProps['color']}
       style={{ paddingTop: '4px' /* Center the button */ }}
       {...otherProps}
+      // antd's `Button` reads its `DisabledContext` only when `disabled` is unset, so an enabled button leaves it unset
+      disabled={disabled || undefined}
     />
   );
 }

@@ -14,7 +14,7 @@ import {
   widgetDrawsLabel,
 } from '@rjsf/utils';
 import type { SelectProps } from 'antd';
-import { Select } from 'antd';
+import { ConfigProvider, Select } from 'antd';
 import type { DefaultOptionType } from 'antd/es/select/index.js';
 
 import getControlState from '../../controlState.ts';
@@ -85,12 +85,17 @@ export default function SelectWidget<
 
   const selectValue = enumOptionSelectedValue(value, enumOptions, !!multiple, optionValueFormat, emptyValue);
 
-  let postedValues: string[] = [typeof selectValue === 'string' ? selectValue : ''];
-  if (multiple) {
-    postedValues = Array.isArray(selectValue)
-      ? selectValue.filter((domValue): domValue is string => typeof domValue === 'string')
-      : [];
-  }
+  const postedValues = [
+    ...new Set(
+      ([] as string[]).concat(
+        enumOptionSelectedValue(value, enumOptions, !!multiple, optionValueFormat, multiple ? [] : ''),
+      ),
+    ),
+  ];
+  // The hidden inputs don't read antd's `componentDisabled` as the `Select` does, so they take it here, to post nothing
+  // when the select is drawn disabled, as a disabled native `<select>` posts nothing
+  const { componentDisabled } = ConfigProvider.useConfig();
+  const postedDisabled = control.disabled ?? (componentDisabled || undefined);
 
   const showPlaceholderOption = !multiple && schema.default === undefined;
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
@@ -143,7 +148,7 @@ export default function SelectWidget<
       {/* antd's `Select` renders no native control, so the value a native submit or `FormData` reads is carried by
       hidden inputs, as a native `<select>` posts one entry per selected option, or its empty placeholder */}
       {postedValues.map((domValue) => (
-        <input key={domValue} type='hidden' name={htmlName || id} value={domValue} disabled={control.disabled} />
+        <input key={domValue} type='hidden' name={htmlName || id} value={domValue} disabled={postedDisabled} />
       ))}
       <SelectedOptionDescription
         id={id}

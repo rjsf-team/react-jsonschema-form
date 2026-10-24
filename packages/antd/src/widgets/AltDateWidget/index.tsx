@@ -50,14 +50,27 @@ export default function AltDateWidget<
       })}
       {!options.hideNowButton && (
         <Col flex='88px'>
-          <Button block className='btn-now' onClick={handleSetNow} type='primary' disabled={buttonsDisabled}>
+          <Button
+            block
+            className='btn-now'
+            onClick={handleSetNow}
+            type='primary'
+            disabled={buttonsDisabled || undefined}
+          >
             {translateString(TranslatableString.NowLabel)}
           </Button>
         </Col>
       )}
       {!options.hideClearButton && (
         <Col flex='88px'>
-          <Button block className='btn-clear' danger onClick={handleClear} type='primary' disabled={buttonsDisabled}>
+          <Button
+            block
+            className='btn-clear'
+            danger
+            onClick={handleClear}
+            type='primary'
+            disabled={buttonsDisabled || undefined}
+          >
             {translateString(TranslatableString.ClearLabel)}
           </Button>
         </Col>

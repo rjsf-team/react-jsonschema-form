@@ -1419,8 +1419,7 @@ export default function ArrayField<
     const { UnsupportedFieldTemplate } = getTemplates<T[], S, F>(registry, uiOptions);
 
     return (
-      <>
-        <OwnTitleAndDescription<T[], S, F> {...props} />
+      <OwnTitleAndDescription<T[], S, F> {...props}>
         <UnsupportedFieldTemplate
           schema={schema}
           uiSchema={uiSchema}
@@ -1428,7 +1427,7 @@ export default function ArrayField<
           reason={translateString(TranslatableString.MissingItems)}
           registry={registry}
         />
-      </>
+      </OwnTitleAndDescription>
     );
   }
   const arraySchema = withFallbackItems<S>(schema);
