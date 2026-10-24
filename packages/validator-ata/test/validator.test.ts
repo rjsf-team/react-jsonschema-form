@@ -319,6 +319,45 @@ describe('customFormats option (extra spec shapes)', () => {
   });
 });
 
+describe('ataOptionsOverrides.schemas next to the root', () => {
+  it('keeps the caller schemas for sub-schemas, and a record entry under the empty key does not break them', () => {
+    const log = vi.spyOn(console, 'error').mockImplementation(() => {});
+    try {
+      const v = customizeValidator({
+        ataOptionsOverrides: { schemas: { '': { type: 'string' }, 'urn:x': { type: 'integer' } } },
+      });
+      const root = { [ID_KEY]: 'root', type: 'object' } as unknown as RJSFSchema;
+      const sub = { $ref: 'urn:x' } as RJSFSchema;
+      expect(v.isValid(sub, 5 as any, root)).toBe(true);
+      expect(v.isValid(sub, 'five' as any, root)).toBe(false);
+      expect(log).not.toHaveBeenCalled();
+    } finally {
+      log.mockRestore();
+    }
+  });
+
+  it('keeps a boolean record entry what it is for the root and every sub-schema', () => {
+    const v = customizeValidator({ ataOptionsOverrides: { schemas: { 'urn:never': false } } } as any);
+    const root = {
+      [ID_KEY]: 'root',
+      type: 'object',
+      properties: { x: { not: { $ref: 'urn:never' } } },
+    } as unknown as RJSFSchema;
+    const sub = { not: { $ref: 'urn:never' } } as RJSFSchema;
+    expect(v.isValid(root, { x: 1 } as any, root)).toBe(true);
+    expect(v.isValid(sub, 1 as any, root)).toBe(true);
+  });
+
+  it('lets the root win over a caller entry with the same $id', () => {
+    const stale = { [ID_KEY]: 'root', $defs: { n: { type: 'string' } } };
+    const v = customizeValidator({ ataOptionsOverrides: { schemas: [stale] } });
+    const root = { [ID_KEY]: 'root', $defs: { n: { type: 'integer' } } } as unknown as RJSFSchema;
+    const sub = { $ref: 'root#/$defs/n' } as RJSFSchema;
+    expect(v.isValid(sub, 5 as any, root)).toBe(true);
+    expect(v.isValid(sub, 'five' as any, root)).toBe(false);
+  });
+});
+
 describe('handleSchemaUpdate', () => {
   it('reuses the existing rootSchema entry when $id matches the prefix', () => {
     const v = customizeValidator();
