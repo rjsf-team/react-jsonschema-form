@@ -68,6 +68,7 @@ uiSchema:
 - `textarea`: a `textarea` element is used;
 - `password`: an `input[type=password]` element is used;
 - `color`: an `input[type=color]` element is used;
+- `checkbox`: only for a string with a `const`; checking the box sets the value to the `const` and unchecking it clears the value (with the default `constAsDefaults: 'always'` [form state behavior](../api-reference/form-props.md#constasdefaults), the `const` is populated as a default, so the box starts checked);
 - by default, a regular `input[type=text]` element is used.
 
 ### String formats

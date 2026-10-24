@@ -747,6 +747,103 @@ describe('StringField', () => {
     });
   });
 
+  describe('CheckboxWidget with const', () => {
+    const constSchema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        confirm: { title: 'Confirmation', type: 'string', const: 'foo' },
+      },
+    };
+    const constUiSchema: UiSchema = { confirm: { 'ui:widget': 'checkbox' } };
+
+    it('should render a checkbox for a string with a const', () => {
+      const { node } = createFormComponent({
+        schema: constSchema,
+        uiSchema: constUiSchema,
+        experimental_defaultFormStateBehavior: { constAsDefaults: 'never' },
+      });
+
+      expect(node.querySelectorAll('input[type=checkbox]')).toHaveLength(1);
+      expect(node.querySelector('input[type=checkbox]')).not.toBeChecked();
+    });
+
+    it('should be checked when the value equals the const', () => {
+      const { node } = createFormComponent({
+        schema: constSchema,
+        uiSchema: constUiSchema,
+        formData: { confirm: 'foo' },
+      });
+
+      expect(node.querySelector('input[type=checkbox]')).toBeChecked();
+    });
+
+    it('should not be checked when the value differs from the const', () => {
+      const { node } = createFormComponent({
+        schema: constSchema,
+        uiSchema: constUiSchema,
+        formData: { confirm: 'bar' },
+      });
+
+      expect(node.querySelector('input[type=checkbox]')).not.toBeChecked();
+    });
+
+    it('should start checked when the const is populated as a default', () => {
+      const { node } = createFormComponent({ schema: constSchema, uiSchema: constUiSchema });
+
+      expect(node.querySelector('input[type=checkbox]')).toBeChecked();
+    });
+
+    it('should set the const when checked and clear the value when unchecked', () => {
+      const { node, onChange } = createFormComponent({
+        schema: constSchema,
+        uiSchema: constUiSchema,
+        experimental_defaultFormStateBehavior: { constAsDefaults: 'never' },
+      });
+
+      fireEvent.click(node.querySelector('input[type=checkbox]')!);
+      expectToHaveBeenCalledWithFormData(onChange, { confirm: 'foo' }, 'root_confirm');
+      expect(node.querySelector('input[type=checkbox]')).toBeChecked();
+
+      fireEvent.click(node.querySelector('input[type=checkbox]')!);
+      expectToHaveBeenCalledWithFormData(onChange, { confirm: undefined }, 'root_confirm');
+      expect(node.querySelector('input[type=checkbox]')).not.toBeChecked();
+    });
+
+    it('should pass the const to onBlur and onFocus', () => {
+      const onBlur = vi.fn();
+      const onFocus = vi.fn();
+      const { node } = createFormComponent({
+        schema: constSchema,
+        uiSchema: constUiSchema,
+        formData: { confirm: 'foo' },
+        onBlur,
+        onFocus,
+      });
+      const input = node.querySelector('input[type=checkbox]')!;
+
+      fireEvent.focus(input);
+      fireEvent.blur(input);
+
+      expect(onFocus).toHaveBeenLastCalledWith('root_confirm', 'foo');
+      expect(onBlur).toHaveBeenLastCalledWith('root_confirm', 'foo');
+    });
+
+    it('should report a required const as missing until it is checked', async () => {
+      const { node, onError } = createFormComponent({
+        schema: { ...constSchema, required: ['confirm'] },
+        uiSchema: constUiSchema,
+        experimental_defaultFormStateBehavior: { constAsDefaults: 'never' },
+        noHtml5Validate: true,
+      });
+
+      expect(node.querySelector('input[type=checkbox]')).toBeRequired();
+
+      await submitForm(node, user);
+
+      expect(onError).toHaveBeenLastCalledWith([expect.objectContaining({ name: 'required', property: 'confirm' })]);
+    });
+  });
+
   describe('DateTimeWidget', () => {
     it('should render an datetime-local field', () => {
       const { node } = createFormComponent({
