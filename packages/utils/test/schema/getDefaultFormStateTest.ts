@@ -7449,6 +7449,81 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ),
         ).toEqual({ o: { a: 1, b: 2 }, s: 'child' });
       });
+      it.each<[string, RJSFSchema, GenericObjectType]>([
+        ['true', { type: 'object', properties: { x: true } }, { x: { a: 1 } }],
+        ['false', { type: 'object', properties: { x: false } }, { x: { a: 1 } }],
+        [
+          'true, nested',
+          { type: 'object', properties: { x: { type: 'object', properties: { y: true } } } },
+          { x: { y: { a: 1 } } },
+        ],
+      ])('keeps object data under a property whose schema is %s as it is', (_, schema, formData) => {
+        expect(getDefaultFormState({ validator: testValidator }, { schema, formData })).toEqual(formData);
+      });
+      it.each<[string, RJSFSchema, GenericObjectType]>([
+        [
+          'an untyped property with an object default',
+          { type: 'object', properties: { x: { default: { a: 1 } } } },
+          { x: { a: 5 } },
+        ],
+        [
+          'an untyped property under an object parent default',
+          { type: 'object', default: { x: { a: 1 } }, properties: { x: {} } },
+          { x: { a: 5 } },
+        ],
+        [
+          'a type list property with an object default',
+          { type: 'object', properties: { x: { type: ['array', 'object'], default: { a: 1 } } } },
+          { x: { a: 5 } },
+        ],
+        [
+          'an untyped property nested in an object',
+          { type: 'object', properties: { x: { type: 'object', properties: { y: { default: { a: 1 } } } } } },
+          { x: { y: { a: 5 } } },
+        ],
+      ])('keeps object data over the defaults of %s', (_, schema, formData) => {
+        expect(getDefaultFormState({ validator: testValidator }, { schema, formData })).toEqual(formData);
+      });
+      it.each<[string, RJSFSchema, GenericObjectType]>([
+        [
+          'an integer',
+          { type: 'object', default: { v: null }, properties: { v: { type: 'integer', default: 1 } } },
+          { v: 1 },
+        ],
+        [
+          'a boolean',
+          { type: 'object', default: { b: null }, properties: { b: { type: 'boolean', default: true } } },
+          { b: true },
+        ],
+        [
+          'a tuple',
+          {
+            type: 'object',
+            default: { t: null },
+            properties: { t: { type: 'array', items: [{ type: 'integer', default: 1 }] } },
+          },
+          { t: [1] },
+        ],
+        [
+          'an object, under a false ancestor default',
+          {
+            type: 'object',
+            default: { o: false },
+            properties: { o: { type: 'object', properties: { a: { type: 'number' } }, default: { a: 2 } } },
+          },
+          { o: { a: 2 } },
+        ],
+      ])(
+        "gives a property's own default over an empty ancestor default its type can't hold, for %s, when ancestorWins",
+        (_, schema, expected) => {
+          expect(
+            getDefaultFormState(
+              { validator: testValidator, defaultFormStateBehavior: { nestedDefaultsPrecedence: 'ancestorWins' } },
+              { schema },
+            ),
+          ).toEqual(expected);
+        },
+      );
       it('stops following a selected option written as a $ref once it leads back to a $ref already followed', () => {
         const schema: RJSFSchema = {
           definitions: {

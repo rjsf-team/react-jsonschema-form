@@ -28,6 +28,7 @@ import getUiOptions from '../getUiOptions.ts';
 import { getFieldTypeForUiSchema } from '../getWidget.tsx';
 import getXxxOfOptions from '../getXxxOfOptions.ts';
 import type { XxxOfOptions } from '../getXxxOfOptions.ts';
+import guessType from '../guessType.ts';
 import isConstant from '../isConstant.ts';
 import isConstantOptionList from '../isConstantOptionList.ts';
 import isConstantSelect from '../isConstantSelect.ts';
@@ -999,8 +1000,12 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const props = uiSchema === localUiSchema ? inputProps : { ...inputProps, uiSchema };
   // Compute the defaults recursively: give highest priority to deepest nodes unless nestedDefaultsPrecedence is ancestorWins.
   let defaults: unknown = parentDefaults;
+  // An ancestor default wins only where the field's type can hold it, so a `null` or `false` one gives way to the own
+  // default of a field whose type allows neither
   const preferParentDefaults =
-    defaults !== undefined && defaultFormStateBehavior?.nestedDefaultsPrecedence === 'ancestorWins';
+    defaults !== undefined &&
+    takesValueOf<S>(schema, defaults) &&
+    defaultFormStateBehavior?.nestedDefaultsPrecedence === 'ancestorWins';
   // Worked out by the `oneOf`/`anyOf` branch, so it isn't worked out again for this node's type-based default
   let isWholeValue: boolean | undefined;
   // A collapsed field keeps its own keywords, but selecting an option would plan it again past the collapse. A list the
@@ -1085,7 +1090,8 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
   }
 
   const wholeValue = isWholeValue ?? isWholeValueSelect<S>(resolveDeclaredConstantOptions<S>(schema, () => view));
-  const defaultBasedOnSchemaType = typeDefaults<T, S, F>(context, view, props, defaults, wholeValue);
+  const foldedType = foldedTypeOf<T, S, F>(view, props, defaults, wholeValue);
+  const defaultBasedOnSchemaType = typeDefaults<T, S, F>(context, view, props, defaults, foldedType);
 
   let defaultsWithFormData = defaultBasedOnSchemaType ?? defaults;
   if ((defaultsWithFormData === undefined || defaultsWithFormData === null) && rendersNull(context, view, props)) {
@@ -1105,8 +1111,7 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
       (!view.field.retrieves &&
         view.keywords.has(ALL_OF_KEY) &&
         !(defaultFormStateBehavior?.allOf === 'populateDefaults' && getSchemaType<S>(schema) !== 'object'));
-    const foldedType = isObject(rawFormData) ? foldedTypeOf<T, S, F>(view, props, defaults, wholeValue) : undefined;
-    if (foldedType !== undefined && foldedType !== 'object') {
+    if (isObject(rawFormData) && foldedType !== undefined && foldedType !== 'object') {
       // Object data of a field whose defaults are a whole value or one of another type is the field's value as a whole,
       // so it is kept as it is where the field takes it and its defaults stand otherwise, rather than blended with them
       // key by key
@@ -1116,18 +1121,20 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
       } else if (wholeValue) {
         defaultsWithFormData = defaults;
       }
-    } else if (!isObject(rawFormData) || mergedAllOf) {
+    } else if (!isObject(rawFormData) || mergedAllOf || foldedType === undefined) {
       // If the formData is not an object which means it's a primitive field, then we need to merge the defaults into the formData.
       // Or if the schema has allOf, we need to merge the defaults into the formData because we don't compute the defaults for allOf.
       // Where the `allOf` was merged, the properties of object data were computed from it with their data already, so
       // what they were computed as wins over the data here, as an `if`/`then` `const` does. An `allOf` left unmerged
-      // computed none of the properties it declares, so the data wins over its defaults
+      // computed none of the properties it declares, so the data wins over its defaults. Object data of a field whose
+      // type takes no object contents of its own to fill in, as an untyped field's or a `type` list's other type, is
+      // the user's, so it wins over the field's defaults too
       defaultsWithFormData = mergeDefaultsWithFormData(
         defaultsWithFormData,
         viewFormDataMatching<unknown, S, F>(context, view, rawFormData),
         mergeExtraDefaults,
         true,
-        isObject(rawFormData) && !unmergedAllOf,
+        isObject(rawFormData) && !unmergedAllOf && (mergedAllOf || foldedType !== undefined),
       );
     }
   }
@@ -2050,7 +2057,7 @@ function foldedTypeOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
  * @param view - The field's view
  * @param props - The props of the field
  * @param defaults - The defaults computed for the field so far
- * @param isWholeValue - Whether the field is a select over whole object or array values
+ * @param type - The type the field's defaults are folded as, from `foldedTypeOf()`
  * @returns - The default value based on the schema type if they are defined for object or array schemas.
  */
 function typeDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>(
@@ -2058,9 +2065,8 @@ function typeDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>(
   view: DefaultsView<S>,
   props: FoldProps<T, S, F>,
   defaults: unknown,
-  isWholeValue: boolean,
+  type: string | undefined,
 ): unknown {
-  const type = foldedTypeOf<T, S, F>(view, props, defaults, isWholeValue);
   // A value already picked is kept as it is, since the form data is merged over the defaults key by key, which would
   // blend it with the default constant
   if (type === 'whole') {
@@ -2216,7 +2222,12 @@ export function getDefaultBasedOnSchemaType<
       view,
       computeDefaultsProps,
       defaults,
-      isWholeValue ?? isWholeValueSelect<S>(resolveDeclaredConstantOptions<S>(view.schema, () => view)),
+      foldedTypeOf<T, S, F>(
+        view,
+        computeDefaultsProps,
+        defaults,
+        isWholeValue ?? isWholeValueSelect<S>(resolveDeclaredConstantOptions<S>(view.schema, () => view)),
+      ),
     ),
   );
 }
@@ -2300,6 +2311,19 @@ function takesObject<S extends StrictRJSFSchema>(schema: S): boolean {
   return types === undefined || types.includes('object');
 }
 
+/** Whether `schema` takes a value of the type `value` has: it names that type among the types it says its value has,
+ * or `integer` for a whole number, or says nothing about them
+ */
+function takesValueOf<S extends StrictRJSFSchema>(schema: S, value: unknown): boolean {
+  const types = getSchemaOwnTypes<S>(schema);
+  const type = guessType(value);
+  return (
+    types === undefined ||
+    types.includes(type) ||
+    (type === 'number' && types.includes('integer') && Number.isInteger(value))
+  );
+}
+
 /** Returns `formData` matched to `matched.schema` as `ensureFormDataMatchingSchema()` matches it */
 function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
@@ -2367,8 +2391,10 @@ function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextTy
         readProperty = resolveMergedOwnRef<S>(graph, seeds, propertySchema, context.customMergeAllOf);
       }
       const retrievesProperty = shouldRetrieveAllOf || (isObject(readProperty) && ALL_OF_KEY in readProperty);
-      // Object data is matched at every depth, so a value nested in it that its schema can't take is found too
-      if (Object.hasOwn(matched, key) && (retrievesProperty || isObjectData(matched[key]))) {
+      // Object data is matched at every depth, so a value nested in it that its schema can't take is found too. A
+      // boolean schema has nothing to match the data against
+      const matchesNested = isSchemaObject<S>(readProperty) && isObjectData(matched[key]);
+      if (Object.hasOwn(matched, key) && (retrievesProperty || matchesNested)) {
         const chainsOfProperty = () => {
           const { graph, seeds } = propertyField();
           return buildPlan<S, F>({ context, graph, seeds, policy: { allOf: false, conditions: false } }).chains;

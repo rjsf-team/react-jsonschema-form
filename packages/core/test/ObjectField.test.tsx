@@ -1289,6 +1289,26 @@ describe('ObjectField', () => {
       expect(reported.at(-1)).toEqual({ abc: 0 });
     });
 
+    it('should seed a new property whose options lead back to each other through $refs, without recursing forever', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: {
+          definitions: {
+            e: { anyOf: [{ $ref: '#/definitions/t' }, { type: 'null' }] },
+            t: { anyOf: [{ $ref: '#/definitions/e' }, { type: 'string' }] },
+          },
+          type: 'object',
+          additionalProperties: { $ref: '#/definitions/e' },
+        },
+      });
+
+      await user.click(elementOf(node, '.rjsf-object-property-expand button'));
+
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({ formData: { newKey: expect.anything() } }),
+        expect.anything(),
+      );
+    });
+
     it('should keep a value the user entered when the renamed key is described by another schema', async () => {
       // The seed is the form's to replace until the user enters something; what they entered is theirs to keep, even
       // where the schema describing the new name would have seeded something else

@@ -19,6 +19,7 @@ import {
   setByPath,
   setOwn,
   ADDITIONAL_PROPERTIES_KEY,
+  REF_KEY,
   deepEquals,
   getAdditionalPropertySchema,
   getAdditionalPropertyType,
@@ -573,11 +574,12 @@ export default function ObjectField<
    * of any other option, or the zero value of a type the options disagree about, is one that field can't show or
    * that fails the option it shows, as a `'New Value'` does a `{ enum: ['a', 'b'] } | null`. The options are read
    * resolved, as `retrieveSchema()` reads them when it stubs the property, so an option written as a `$ref` is followed
-   * as the definition it names. `seen` holds the options already followed, so an option leading back to one of them
-   * ends the descent.
+   * as the definition it names. `seen` holds the options already followed, each by the `$ref` it is written as where it
+   * is one, since resolving an option gives a new schema each time, so an option leading back to one of them ends the
+   * descent.
    */
   const seedFrom = useCallback(
-    function seed(keySchema: S, keyUiSchema: UiSchema<T, S, F> | undefined, seen: ReadonlySet<S>): unknown {
+    function seed(keySchema: S, keyUiSchema: UiSchema<T, S, F> | undefined, seen: ReadonlySet<S | string>): unknown {
       // Resolved the way `retrieveSchema()` resolves it before stubbing, so a `$ref` and an `allOf` of matching
       // patterns are seeded from what they describe. A resolution against no data at all would answer an `if` inside
       // the subschema with an empty object, which satisfies any condition vacuously, so the schema is resolved again
@@ -636,17 +638,19 @@ export default function ObjectField<
       }
       const xxxOf = getXxxOfOptions<S>(optionsResolvedKeySchema);
       const [openedOption] = xxxOf?.options ?? [];
-      if (
-        xxxOf &&
-        !isConstantSelect<S>(resolvedKeySchema) &&
-        isSchemaObject<S>(openedOption) &&
-        !seen.has(openedOption)
-      ) {
-        return seed(
-          getRenderedOptionSchema<S>(optionsResolvedKeySchema, openedOption),
-          getOptionUiSchema<T, S, F>(resolvedKeyUiSchema, xxxOf.key, 0),
-          new Set([...seen, openedOption]),
-        );
+      if (xxxOf && !isConstantSelect<S>(resolvedKeySchema) && isSchemaObject<S>(openedOption)) {
+        const [writtenOption] = getXxxOfOptions<S>(resolvedKeySchema)?.options ?? [];
+        const followed =
+          isSchemaObject<S>(writtenOption) && typeof writtenOption[REF_KEY] === 'string'
+            ? writtenOption[REF_KEY]
+            : openedOption;
+        if (!seen.has(followed)) {
+          return seed(
+            getRenderedOptionSchema<S>(optionsResolvedKeySchema, openedOption),
+            getOptionUiSchema<T, S, F>(resolvedKeyUiSchema, xxxOf.key, 0),
+            new Set([...seen, followed]),
+          );
+        }
       }
       return firstOption ? firstOption.value : getDefaultValue<T, S, F>(translateString, type);
     },
