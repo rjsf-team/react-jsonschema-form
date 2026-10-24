@@ -7577,22 +7577,52 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
       });
     });
     describe('with dependencies', () => {
-      it.each<[string, NonNullable<RJSFSchema['dependencies']>, GenericObjectType]>([
-        ['a property list', { a: ['b'] }, { a: 1 }],
-        ['a schema it satisfies', { a: { properties: { c: { type: 'number' } } } }, { a: 1 }],
-        ['a schema keyed by a property it lacks', { b: { const: { a: 2 } } }, { a: 1 }],
-        ['a schema pinning another constant', { a: { const: { a: 2 } } }, { a: 2 }],
+      const objectConstantSelect = (dependencies: NonNullable<RJSFSchema['dependencies']>): RJSFSchema => ({
+        type: 'object',
+        default: { x: { a: 1 } },
+        properties: { x: { type: 'object', enum: [{ a: 1 }, { a: 2 }], dependencies } },
+      });
+      const pinningA2 = objectConstantSelect({ a: { const: { a: 2 } } });
+      it.each<[string, NonNullable<RJSFSchema['dependencies']>]>([
+        ['a property list', { a: ['b'] }],
+        ['a schema it satisfies', { a: { properties: { c: { type: 'number' } } } }],
+        ['a schema keyed by a property it lacks', { b: { const: { a: 2 } } }],
+        ['a oneOf whose one option pins another constant', { a: { oneOf: [{ const: { a: 2 } }] } }],
       ])(
         'keeps the default a select over object constants inherits, under dependencies naming %s (#5407)',
-        (_, dependencies, expected) => {
-          const schema: RJSFSchema = {
-            type: 'object',
-            default: { x: { a: 1 } },
-            properties: { x: { type: 'object', enum: [{ a: 1 }, { a: 2 }], dependencies } },
-          };
-          expect(getDefaultFormState({ validator: testValidator }, { schema })).toEqual({ x: expected });
+        (_, dependencies) => {
+          expect(
+            getDefaultFormState({ validator: testValidator }, { schema: objectConstantSelect(dependencies) }),
+          ).toEqual({ x: { a: 1 } });
         },
       );
+      it.each<[string, NonNullable<RJSFSchema['dependencies']>, GenericObjectType]>([
+        ['another of its options', { a: { const: { a: 2 } } }, { a: 2 }],
+        ['a constant none of its options holds', { a: { const: { a: 3 } } }, { a: 3 }],
+      ])(
+        'replaces the default a select over object constants inherits with the const of a dependency on it, pinning %s (#5407)',
+        (_, dependencies, expected) => {
+          expect(
+            getDefaultFormState({ validator: testValidator }, { schema: objectConstantSelect(dependencies) }),
+          ).toEqual({ x: expected });
+        },
+      );
+      it("keeps the inherited default over a dependency's const when constAsDefaults is never (#5407)", () => {
+        expect(
+          getDefaultFormState(
+            { validator: testValidator, defaultFormStateBehavior: { constAsDefaults: 'never' } },
+            { schema: pinningA2 },
+          ),
+        ).toEqual({ x: { a: 1 } });
+      });
+      it.each<[string, GenericObjectType, GenericObjectType]>([
+        ['empty form data', {}, { a: 2 }],
+        ['form data holding the inherited constant', { x: { a: 1 } }, { a: 1 }],
+      ])("gives a dependency's const over object constants with %s (#5407)", (_, formData, expected) => {
+        expect(getDefaultFormState({ validator: testValidator }, { schema: pinningA2, formData })).toEqual({
+          x: expected,
+        });
+      });
       it.each([
         'inline',
         'allOf',
