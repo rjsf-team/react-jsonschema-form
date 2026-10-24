@@ -14,6 +14,7 @@ import type { ValidationError, Validator } from 'ata-validator';
 import createAtaInstance from './createAtaInstance.ts';
 import type { RawValidationErrorsType } from './processRawValidationErrors.ts';
 import processRawValidationErrors from './processRawValidationErrors.ts';
+import { isDraft04, schemaList } from './schemaList.ts';
 import type { CustomValidatorOptionsType, Localizer, SuppressDuplicateFilteringType } from './types.ts';
 
 /** `ValidatorType` implementation backed by `ata-validator`.
@@ -85,6 +86,12 @@ export default class ATAValidator<
    */
   private cachedRootSchema?: object;
 
+  /** The extra schemas given to the validators of one root (see `extrasFor`). */
+  private extras?: { base: object; own: object[]; withRoot: object[]; metas?: object[] };
+
+  /** The caller's `ataOptionsOverrides.schemas` as a list, by whether the root is draft-04. */
+  private ownLists: object[][] = [];
+
   /** Returns a structural copy of `formData` so ata's default-applier
    * (which writes `default` values into the input object during validation)
    * doesn't leak a mutation back to the caller. RJSF probes the same data
@@ -97,6 +104,30 @@ export default class ATAValidator<
       return data;
     }
     return structuredClone(data);
+  }
+
+  /** The extra schemas for the validators of a form whose root is `base`, all of them built from
+   * one list, so the root and every sub-schema read the caller's documents by the same rules, the
+   * module's too (see `schemaList`): `own`, the caller's `ataOptionsOverrides.schemas` as a list,
+   * for the root's validator; `withRoot`, the same and then the root, for a sub-schema's, so the
+   * root wins over an entry with its `$id`; and `metas`, the caller's `additionalMetaSchemas`
+   * without one that has the root's `$id`, since a sub-schema's validator adds those after the root
+   * and one would replace it. The list depends on the root (whether it is draft-04), so it is
+   * built once per root and reused, which also lets ata reuse its caches, kept per object. A record
+   * entry under the empty key is left out: in a list it would need an empty `$id`, which ata
+   * rejects.
+   */
+  private extrasFor(base: object) {
+    if (this.extras?.base !== base) {
+      const draft04 = isDraft04(base, false);
+      const own = (this.ownLists[Number(draft04)] ??= schemaList(this.options.ataOptionsOverrides?.schemas, draft04));
+      const baseId = (base as { $id?: unknown }).$id;
+      const metas = this.options.additionalMetaSchemas?.filter(
+        (meta) => (meta as { $id?: unknown } | null)?.$id !== baseId,
+      );
+      this.extras = { base, own, withRoot: [...own, base], metas };
+    }
+    return this.extras;
   }
 
   /** Returns the cached ata `Validator` for the given id, or builds and
@@ -112,15 +143,25 @@ export default class ATAValidator<
     // Pass the rootSchema as a sibling so `$ref` to its definitions resolves.
     // Skip when the schema itself is the root, otherwise ata sees a
     // self-referential addition.
-    const siblingRoots = this.cachedRootSchema && this.cachedRootSchema !== schema ? [this.cachedRootSchema] : [];
+    const root = this.cachedRootSchema && this.cachedRootSchema !== schema ? this.cachedRootSchema : undefined;
+    const extras = this.extrasFor(root ?? schema);
+    let schemas: object[] | undefined;
+    if (root) {
+      schemas = extras.withRoot;
+    } else if (this.options.ataOptionsOverrides?.schemas !== undefined) {
+      schemas = extras.own;
+    }
     const optionsWithSchemas = {
       ...this.options,
-      ataOptionsOverrides: {
-        ...(this.options.ataOptionsOverrides || {}),
-        ...(siblingRoots.length ? { schemas: siblingRoots } : {}),
-      },
+      ...(root ? { additionalMetaSchemas: extras.metas } : {}),
+      ataOptionsOverrides: { ...this.options.ataOptionsOverrides, ...(schemas ? { schemas } : {}) },
     };
-    const validator = createAtaInstance(schema, optionsWithSchemas);
+    const dialect = (root as { $schema?: unknown } | undefined)?.$schema;
+    const read =
+      typeof dialect === 'string' && (schema as { $schema?: unknown }).$schema === undefined
+        ? { $schema: dialect, ...schema }
+        : schema;
+    const validator = createAtaInstance(read, optionsWithSchemas);
     this.validators.set(id, { validator, schema });
     return validator;
   }

@@ -3,25 +3,22 @@ import { schemaParser } from '@rjsf/utils';
 import { Validator } from 'ata-validator';
 
 import { ATA_CONFIG, COLOR_FORMAT_REGEX, DATA_URL_FORMAT_REGEX } from './createAtaInstance.ts';
+import { isDraft04, ownId, schemaList } from './schemaList.ts';
 import type { CustomValidatorOptionsType } from './types.ts';
 
 const warned = new Set<string>();
 
 /** Logs each distinct warning once per process, so compiling on every request does not
- * repeat it.
+ * repeat it. A message given as a function is built only when it is shown, under `key`.
  */
-function warnOnce(message: string) {
-  if (!warned.has(message)) {
-    warned.add(message);
+function warnOnce(message: string): void;
+function warnOnce(message: () => string, key: string): void;
+function warnOnce(message: string | (() => string), key = message as string) {
+  if (!warned.has(key)) {
+    warned.add(key);
     // oxlint-disable-next-line no-console
-    console.warn(message);
+    console.warn(typeof message === 'function' ? message() : message);
   }
-}
-
-/** The `$id` ata registers a schema under: a non-empty string that is not just a fragment. */
-function declaredId(schema: object) {
-  const id = (schema as { $id?: unknown }).$id;
-  return typeof id === 'string' && id !== '' && !id.startsWith('#') ? id : undefined;
 }
 
 /** Compiles a schema into a precompiled validator module. ata's
@@ -32,9 +29,11 @@ function declaredId(schema: object) {
  * the schemas so the precompiled validator can look each one up.
  *
  * `customFormats` (as RegExps or pattern strings) and `ataOptionsOverrides` are passed to
- * ata. `additionalMetaSchemas` and `ataOptionsOverrides.schemas` that have an `$id` are
- * compiled into the module, so a custom meta-schema named in `$schema` applies there too;
- * the official json-schema.org meta-schemas are left out, since ata already knows them.
+ * ata. `additionalMetaSchemas` and `ataOptionsOverrides.schemas` are compiled into the module
+ * under the `$id` ata registers each by, as the runtime validator ends up with them (a later one
+ * replacing an earlier one with the same `$id`), so a custom meta-schema named in `$schema`
+ * applies there too. A json-schema.org meta-schema passed in is compiled in as well, with a
+ * `console.warn` giving its size, since ata ships the official draft-04 to 2020-12 ones.
  * Extra schemas without an `$id` are left out with a `console.warn`, as ata requires one.
  * A few options cannot be carried into a standalone module: `extenderFn` and the
  * `ataOptionsOverrides` keys `coerceTypes`, `removeAdditional` and `keywords`. Those are left
@@ -61,28 +60,46 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
     coerceTypes,
     removeAdditional,
     keywords,
-    schemas: extraSchemas = {},
+    schemas: extraSchemas,
     engine: _engine,
     ...carried
   } = ataOptionsOverrides;
-  // Extra schemas with an `$id` go into the bundle after the form's own schemas, so a custom
-  // meta-schema or a `$ref` between them resolves there too. They get no entry in the exported map.
-  // ata registers a record entry under its key and under its own `$id`, so both are compiled.
-  const extras = [
-    ...additionalMetaSchemas,
-    ...(Array.isArray(extraSchemas)
-      ? extraSchemas
-      : Object.entries(extraSchemas).flatMap(([id, extra]) => {
-          const ownId = declaredId(extra);
-          return ownId && ownId !== id ? [{ ...extra, $id: id }, extra] : [{ ...extra, $id: id }];
-        })),
-  ];
-  const withId = extras.filter((extra) => declaredId(extra) !== undefined);
-  // ata already knows the official meta-schemas, so bundling one only adds dead code (about 90 KB for draft-07's).
-  const bundled = withId.filter((extra) => !/^https?:\/\/json-schema\.org\//.test((extra as { $id: string }).$id));
-  if (withId.length < extras.length) {
+  // Extra schemas go into the bundle after the form's own schemas, so a custom meta-schema or a
+  // `$ref` between them resolves there too. They get no entry in the exported map. Every document
+  // the runtime validator ends up with goes in, so the two resolve the same documents by
+  // construction: `ataOptionsOverrides.schemas`, as the list the runtime validators get (see
+  // `schemaList`), and then `additionalMetaSchemas` (through `addSchema`, which needs a plain
+  // `$id`), each under the `$id` a `$ref` reaches it by, a later one replacing an earlier one with
+  // the same `$id`. One with the `$id` of one of the form's own schemas is left out: at runtime the
+  // form's schema wins. A record entry under the empty key is left out, as at runtime.
+  const formIds = new Set(schemas.map((s) => (s as { $id?: unknown }).$id).filter((id) => typeof id === 'string'));
+  const extras = [...schemaList(extraSchemas, isDraft04(schema, false)), ...additionalMetaSchemas].map(
+    (extra) => [extra !== null && typeof extra === 'object' ? ownId(extra) : undefined, extra] as const,
+  );
+  const winners = new Map<string, object>();
+  for (const [id, extra] of extras) {
+    if (id !== undefined && !formIds.has(id)) {
+      winners.set(id, extra);
+    }
+  }
+  const bundled = [...winners.values()];
+  for (const [id, extra] of winners) {
+    if (/^https?:\/\/json-schema\.org\//.test(id)) {
+      warnOnce(() => {
+        const bytes = new TextEncoder().encode(JSON.stringify(extra)).length;
+        const size = bytes < 1024 ? `${bytes} bytes` : `about ${Math.round(bytes / 1024)} KB`;
+        return `@rjsf/validator-ata: ${id} is compiled into the precompiled module (${size} of JSON). ata ships its own copies of the draft-04, draft-06, draft-07, 2019-09 and 2020-12 meta-schemas, so an unchanged copy of one of those does not need to be passed`;
+      }, `size:${id}`);
+    }
+  }
+  // One with only a fragment `$id` is left out without a warning: no `$ref` reaches it at runtime.
+  const unnamed = (extra: unknown) => {
+    const id = extra !== null && typeof extra === 'object' ? (extra as { $id?: unknown }).$id : undefined;
+    return typeof id !== 'string' || id === '';
+  };
+  if (extras.some(([id, extra]) => id === undefined && unnamed(extra))) {
     warnOnce(
-      '@rjsf/validator-ata: additionalMetaSchemas and ataOptionsOverrides.schemas entries without an $id are ignored; ata requires an $id, so customizeValidator() throws for them',
+      '@rjsf/validator-ata: additionalMetaSchemas and ataOptionsOverrides.schemas entries without an $id are left out of the precompiled module; ata needs an $id to register one, so the runtime validator rejects them too',
     );
   }
   const dropped = [

@@ -1,7 +1,9 @@
 import type { RJSFSchema } from '@rjsf/utils';
+import { createRequire } from 'node:module';
+import { dirname, join } from 'node:path';
 
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
-import { createPrecompiledValidator } from '../src/index.ts';
+import { createPrecompiledValidator, customizeValidator } from '../src/index.ts';
 
 // Evaluate generated CJS module source into an exports object.
 function loadModule(code: string) {
@@ -154,7 +156,7 @@ describe('compileSchemaValidatorsCode', () => {
       expect(typeof loadModule(code).root).toBe('function');
       expect(warn).toHaveBeenCalledTimes(2);
       expect(warn.mock.calls[0][0]).toMatch(
-        /entries without an \$id are ignored; ata requires an \$id, so customizeValidator\(\) throws for them/,
+        /entries without an \$id are left out of the precompiled module; ata needs an \$id to register one, so the runtime validator rejects them too/,
       );
       expect(warn.mock.calls[1][0]).toMatch(
         /extenderFn, ataOptionsOverrides\.coerceTypes, ataOptionsOverrides\.removeAdditional cannot be carried into a precompiled validator and are ignored; the precompiled and runtime validators may disagree/,
@@ -245,15 +247,355 @@ describe('compileSchemaValidatorsCode', () => {
     }
   });
 
-  test('leaves official meta-schemas out of the module, since ata already knows them', () => {
-    const draft07 = {
-      $id: 'http://json-schema.org/draft-07/schema#',
-      $schema: 'http://json-schema.org/draft-07/schema#',
-      type: ['object', 'boolean'],
+  describe('extra schemas and meta-schemas', () => {
+    // These compile official meta-schemas, which warns; the warnings are expected and kept out of
+    // the test output.
+    let warn: ReturnType<typeof vi.spyOn>;
+    beforeEach(() => {
+      warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    });
+    afterEach(() => {
+      warn.mockRestore();
+    });
+
+    // ata's own copies of the official meta-schemas, read from its file by path since ata does not
+    // export them, so these tests follow whatever the installed ata ships. lib/metaschemas.js is not
+    // public API (ata-validator 1.56.0 has it): it is read in a `try`, so a later ata that moves it
+    // fails the test right below, not every test in this file.
+    let METASCHEMAS = new Map<string, Record<string, unknown>>();
+    let metaSchemasError: unknown;
+    try {
+      const requireHere = createRequire(import.meta.url);
+      ({ METASCHEMAS } = requireHere(
+        join(dirname(requireHere.resolve('ata-validator/package.json')), 'lib', 'metaschemas.js'),
+      ) as { METASCHEMAS: Map<string, Record<string, unknown>> });
+    } catch (error) {
+      metaSchemasError = error;
+    }
+    const shipped = [...METASCHEMAS];
+    // draft-04's copy names itself with `id`, not `$id`, so it is not a document a caller can pass in.
+    const withDollarId = shipped.filter(([, doc]) => typeof doc.$id === 'string');
+    // Each id under http and https, with and without a trailing `#`.
+    const forms = (id: string) => {
+      const bare = id.replace(/#$/, '').replace(/^https?:/, '');
+      return ['http:', 'https:'].flatMap((scheme) => [`${scheme}${bare}`, `${scheme}${bare}#`]);
     };
-    expect(compileSchemaValidatorsCode(schema, { additionalMetaSchemas: [draft07] })).toBe(
-      compileSchemaValidatorsCode(schema),
+
+    // The runtime validator and the module, on the same form, data and options.
+    const agree = (form: RJSFSchema, data: unknown, options: Parameters<typeof compileSchemaValidatorsCode>[1]) => {
+      const runtime = customizeValidator(options).isValid(form, data as any, form);
+      const module = loadModule(compileSchemaValidatorsCode(form, options))[form.$id as string](data);
+      expect(module).toBe(runtime);
+      return module;
+    };
+    // A form that reaches the document under `id` through `not`, where `schemaParser` leaves the
+    // `$ref` for the validator to resolve.
+    const refersTo = (id: string): RJSFSchema => ({
+      $id: 'refers',
+      type: 'object',
+      properties: { x: { type: 'string', not: { $ref: id } } },
+    });
+
+    test("reads ata's own meta-schemas from lib/metaschemas.js", () => {
+      expect(metaSchemasError).toBeUndefined();
+      expect(METASCHEMAS.size).toBeGreaterThan(0);
+    });
+
+    test.each(withDollarId.map(([id]) => id))("compiles ata's own copy of %s in, with a warning", async (id) => {
+      // A fresh copy of the module, so a warning an earlier test logged is not already marked as shown.
+      vi.resetModules();
+      const { compileSchemaValidatorsCode: compileFresh } = await import('../src/compileSchemaValidatorsCode.ts');
+      expect(compileFresh(schema, { additionalMetaSchemas: [METASCHEMAS.get(id)!] })).not.toBe(compileFresh(schema));
+      expect(warn.mock.calls.flat().join('\n')).toContain(id);
+    });
+
+    test('registers a draft-04 id in ataOptionsOverrides.schemas, as the runtime validator does', () => {
+      const d4 = { $schema: 'http://json-schema.org/draft-04/schema#', id: 'https://e.com/d4', maxLength: 2 };
+      const options = { ataOptionsOverrides: { schemas: [d4] } };
+      expect(agree(refersTo('https://e.com/d4'), { x: 'abc' }, options)).toBe(true);
+      expect(agree(refersTo('https://e.com/d4'), { x: 'ab' }, options)).toBe(false);
+    });
+
+    test('leaves out an extra with only a fragment $id, which no $ref reaches at runtime', () => {
+      // ata keeps it under `#frag`, but `$ref: '#frag'` is read as a fragment of the referring
+      // document, so the runtime validator never applies it, from the root or a sub-schema.
+      const frag = { $id: '#frag', maxLength: 2 };
+      const form = { type: 'object', properties: { x: { type: 'string', not: { $ref: '#frag' } } } } as RJSFSchema;
+      const sub = { type: 'string', not: { $ref: '#frag' } } as RJSFSchema;
+      for (const options of [
+        { additionalMetaSchemas: [frag] },
+        { ataOptionsOverrides: { schemas: [frag] } },
+        { ataOptionsOverrides: { schemas: { 'urn:k': frag } } },
+      ]) {
+        const runtime = customizeValidator(options);
+        expect(runtime.isValid(form, { x: 'ab' }, form)).toBe(true);
+        expect(runtime.isValid(sub, 'ab' as any, form)).toBe(true);
+      }
+      expect(compileSchemaValidatorsCode(schema, { additionalMetaSchemas: [frag] })).toBe(
+        compileSchemaValidatorsCode(schema),
+      );
+      expect(compileSchemaValidatorsCode(schema, { ataOptionsOverrides: { schemas: [frag] } })).toBe(
+        compileSchemaValidatorsCode(schema),
+      );
+    });
+
+    test('leaves out a list entry that is not an object, with a warning', async () => {
+      // ata cannot give a boolean an $id in a list, so the runtime validator rejects it too.
+      vi.resetModules();
+      const { compileSchemaValidatorsCode: compileFresh } = await import('../src/compileSchemaValidatorsCode.ts');
+      const options = { additionalMetaSchemas: [false], ataOptionsOverrides: { schemas: [true] } } as any;
+      expect(compileFresh(schema, options)).toBe(compileFresh(schema));
+      expect(warn.mock.calls.flat().join('\n')).toMatch(/entries without an \$id are left out/);
+    });
+
+    // The runtime validator for the root, the runtime validator for a sub-schema of it, and the
+    // module: all three answer the same.
+    const threeWay = (form: RJSFSchema, sub: RJSFSchema, formData: unknown, subData: unknown, options: any) => {
+      const runtime = customizeValidator(options);
+      const root = runtime.isValid(form, formData as any, form);
+      const subAnswer = customizeValidator(options).isValid(sub, subData as any, form);
+      const module = loadModule(compileSchemaValidatorsCode(form, options))[form.$id as string](formData);
+      expect([subAnswer, module]).toEqual([root, root]);
+      return root;
+    };
+    const notRef = (ref: string) => ({ type: 'string', not: { $ref: ref } }) as RJSFSchema;
+    const formWith = (id: string, ref: string, extra: object = {}) =>
+      ({ $id: id, type: 'object', properties: { x: notRef(ref) }, ...extra }) as RJSFSchema;
+
+    // Where a reference is registered nowhere, the runtime validators agree with each other and the
+    // module declines to answer for that schema rather than give an answer of its own.
+    const unresolved = (form: RJSFSchema, sub: RJSFSchema, formData: unknown, subData: unknown, options: any) => {
+      const root = customizeValidator(options).isValid(form, formData as any, form);
+      expect(customizeValidator(options).isValid(sub, subData as any, form)).toBe(root);
+      const fns = loadModule(compileSchemaValidatorsCode(form, options));
+      expect(() => fns[form.$id as string](formData)).toThrow(/was not compiled to a standalone validator/);
+    };
+
+    test('reads draft-04 by the spellings ata does, http only', () => {
+      const options = { ataOptionsOverrides: { schemas: { k: { id: 'urn:x', maxLength: 2 } } } };
+      // Under the https spelling ata does not read the entry as draft-04, so `urn:x` is not registered.
+      unresolved(
+        formWith('f2', 'urn:x', { $schema: 'https://json-schema.org/draft-04/schema#' }),
+        notRef('urn:x'),
+        { x: 'a' },
+        'a',
+        options,
+      );
+      expect(
+        threeWay(
+          formWith('f2', 'urn:x', { $schema: 'http://json-schema.org/draft-04/schema#' }),
+          notRef('urn:x'),
+          { x: 'a' },
+          'a',
+          options,
+        ),
+      ).toBe(false);
+    });
+
+    test('does not take a draft-04 id next to a $ref, as ata does not', () => {
+      const options = {
+        ataOptionsOverrides: { schemas: { k: { id: 'urn:y', $ref: 'urn:z' }, 'urn:z': { maxLength: 2 } } },
+      };
+      unresolved(
+        formWith('f3', 'urn:y', { $schema: 'http://json-schema.org/draft-04/schema#' }),
+        notRef('urn:y'),
+        { x: 'a' },
+        'a',
+        options,
+      );
+    });
+
+    test('leaves out a record entry that is not a schema', () => {
+      const options = { ataOptionsOverrides: { schemas: { k: null, 'urn:m': { maxLength: 2 } } } } as any;
+      expect(() => compileSchemaValidatorsCode(schema, options)).not.toThrow();
+      threeWay(formWith('f4', 'urn:m'), notRef('urn:m'), { x: 'abc' }, 'abc', options);
+    });
+
+    test("lets the form's schema win over an additionalMetaSchemas entry with its $id, in every validator", () => {
+      const form = {
+        $id: 'http://e/f',
+        definitions: { n: { type: 'integer' } },
+        type: 'object',
+        properties: { x: { not: { $ref: 'http://e/f#/definitions/n' } } },
+      } as unknown as RJSFSchema;
+      const options = { additionalMetaSchemas: [{ $id: 'http://e/f', definitions: { n: { type: 'string' } } }] };
+      expect(
+        threeWay(form, { not: { $ref: 'http://e/f#/definitions/n' } } as RJSFSchema, { x: 'a' }, 'a', options),
+      ).toBe(true);
+    });
+
+    test('compiles a record entry under the empty key by its own $id, without the missing-$id warning', async () => {
+      vi.resetModules();
+      const { compileSchemaValidatorsCode: compileFresh } = await import('../src/compileSchemaValidatorsCode.ts');
+      const options = { ataOptionsOverrides: { schemas: { '': { $id: 'http://x', maxLength: 2 } } } };
+      expect(compileFresh(schema, options)).not.toBe(compileFresh(schema));
+      expect(warn.mock.calls.flat().join('\n')).not.toMatch(/entries without an \$id/);
+      threeWay(formWith('f5', 'http://x'), notRef('http://x'), { x: 'abc' }, 'abc', options);
+    });
+
+    test('gives the size in bytes, not characters', async () => {
+      vi.resetModules();
+      const { compileSchemaValidatorsCode: compileFresh } = await import('../src/compileSchemaValidatorsCode.ts');
+      const doc = { $id: 'https://json-schema.org/draft/next/schema', description: 'çok güzel' };
+      compileFresh(schema, { additionalMetaSchemas: [doc] });
+      const bytes = new TextEncoder().encode(JSON.stringify(doc)).length;
+      expect(bytes).toBeGreaterThan(JSON.stringify(doc).length);
+      expect(warn.mock.calls.flat().join('\n')).toContain(`(${bytes} bytes of JSON)`);
+    });
+
+    test('registers a draft-04 id only where the entry is read as draft-04', () => {
+      // Under a draft-04 form an entry without a $schema of its own is read as draft-04 too.
+      const d4Form = { ...refersTo('urn:x'), $schema: 'http://json-schema.org/draft-04/schema#' } as RJSFSchema;
+      const inherited = { ataOptionsOverrides: { schemas: [{ id: 'urn:x', maxLength: 2 }] } };
+      expect(agree(d4Form, { x: 'abc' }, inherited)).toBe(true);
+      expect(agree(d4Form, { x: 'ab' }, inherited)).toBe(false);
+      // Elsewhere ata cannot register it: the module leaves it out with a warning instead of throwing.
+      expect(() => compileSchemaValidatorsCode(schema, inherited)).not.toThrow();
+    });
+
+    test('keeps a boolean record entry what it is', () => {
+      // rjsf's types take only objects in `schemas`; ata takes boolean schemas too.
+      const options = { ataOptionsOverrides: { schemas: { 'urn:never': false, 'urn:any': true } } } as any;
+      expect(agree(refersTo('urn:never'), { x: 'a' }, options)).toBe(true);
+      expect(agree(refersTo('urn:any'), { x: 'a' }, options)).toBe(false);
+    });
+
+    test("leaves out an extra with the $id of one of the form's schemas, which wins at runtime", () => {
+      const form = { $id: 'root', type: 'object', properties: { n: { type: 'integer' } } } as RJSFSchema;
+      const stale = { $id: 'root', type: 'object', properties: { n: { type: 'string' } } };
+      expect(compileSchemaValidatorsCode(form, { ataOptionsOverrides: { schemas: [stale] } })).toBe(
+        compileSchemaValidatorsCode(form),
+      );
+      expect(agree(form, { n: 1 }, { ataOptionsOverrides: { schemas: [stale] } })).toBe(true);
+    });
+
+    test('gives the size of a small json-schema.org document in its warning', async () => {
+      vi.resetModules();
+      const { compileSchemaValidatorsCode: compileFresh } = await import('../src/compileSchemaValidatorsCode.ts');
+      const next = { $id: 'https://json-schema.org/draft/next/schema', $vocabulary: {} };
+      compileFresh(schema, { additionalMetaSchemas: [next] });
+      const message = warn.mock.calls.flat().join('\n');
+      expect(message).toMatch(/draft\/next\/schema is compiled into the precompiled module \(\d+ bytes of JSON\)/);
+      expect(message).not.toMatch(/92 KB/);
+    });
+
+    test.each(shipped.flatMap(([id]) => forms(id)))(
+      'answers as the runtime validator for a different document under %s',
+      (id) => {
+        // Under `not`, the caller's document makes 'abc' valid and 'ab' invalid.
+        const options = { additionalMetaSchemas: [{ $id: id, maxLength: 2 }] };
+        expect(agree(refersTo(id), { x: 'abc' }, options)).toBe(true);
+        expect(agree(refersTo(id), { x: 'ab' }, options)).toBe(false);
+      },
     );
+
+    test.each(withDollarId.flatMap(([id]) => forms(id)))(
+      "answers as the runtime validator for ata's copy under %s",
+      (id) => {
+        const doc = METASCHEMAS.get(shipped.find(([shippedId]) => forms(shippedId).includes(id))![0])!;
+        const options = { additionalMetaSchemas: [{ ...doc, $id: id }] };
+        agree(refersTo(id), { x: 'abc' }, options);
+      },
+    );
+
+    test('answers as the runtime validator when two extras share a shipped $id', () => {
+      // At runtime `additionalMetaSchemas` is added last, so ata's copy there replaces the other one.
+      const draft07Id = 'http://json-schema.org/draft-07/schema#';
+      const draft07 = METASCHEMAS.get(draft07Id)!;
+      const other = { $id: draft07Id, maxLength: 2 };
+      const form = refersTo(draft07Id);
+      for (const options of [
+        { additionalMetaSchemas: [draft07], ataOptionsOverrides: { schemas: [other] } },
+        { additionalMetaSchemas: [other, draft07] },
+        { additionalMetaSchemas: [draft07, other] },
+      ]) {
+        agree(form, { x: 'ab' }, options);
+        agree(form, { x: 'abc' }, options);
+      }
+    });
+
+    test('answers as the runtime validator when another extra refers to a shipped document', () => {
+      // ata loads its own copy only for a form that refers to it itself, so a copy reached through
+      // another document must stay in the module.
+      const draft07 = METASCHEMAS.get('http://json-schema.org/draft-07/schema#')!;
+      const a = { $id: 'https://example.com/a', not: { $ref: 'http://json-schema.org/draft-07/schema#' } };
+      const form: RJSFSchema = {
+        $id: 'f',
+        type: 'object',
+        properties: { x: { not: { $ref: 'https://example.com/a' } } },
+      };
+      const options = { additionalMetaSchemas: [draft07, a] };
+      expect(agree(form, { x: { type: 42 } }, options)).toBe(false);
+      expect(agree(form, { x: { type: 'string' } }, options)).toBe(true);
+    });
+
+    test('answers as the runtime validator for a copy reached only through $schema', () => {
+      // 2019-09 has no prefixItems, so its $vocabulary strips the keyword at runtime.
+      const id = 'https://json-schema.org/draft/2019-09/schema';
+      // `prefixItems` is not in rjsf's draft-07 schema type.
+      const form = {
+        $id: 'f',
+        $schema: id,
+        type: 'object',
+        properties: { a: { type: 'array', prefixItems: [{ type: 'string' }] } },
+      } as RJSFSchema;
+      agree(form, { a: [1] }, { additionalMetaSchemas: [METASCHEMAS.get(id)!] });
+    });
+
+    test('answers as the runtime validator for a reference under a nested $id', () => {
+      const a = {
+        $id: 'https://example.com/a',
+        $defs: { d: { $id: 'http://json-schema.org/draft-07/', not: { $ref: 'schema#' } } },
+      };
+      const form: RJSFSchema = {
+        $id: 'f',
+        type: 'object',
+        // Under `not`, which schemaParser leaves for the validator to resolve.
+        properties: { x: { not: { $ref: 'https://example.com/a#/$defs/d' } } },
+      };
+      const options = { additionalMetaSchemas: [METASCHEMAS.get('http://json-schema.org/draft-07/schema#')!, a] };
+      agree(form, { x: { type: 42 } }, options);
+      agree(form, { x: { type: 'string' } }, options);
+    });
+
+    test('answers as the runtime validator for a meta-schema in ataOptionsOverrides.schemas and a form without an $id', () => {
+      const meta = {
+        $id: 'https://example.com/loose',
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        $vocabulary: { 'https://json-schema.org/draft/2020-12/vocab/applicator': true },
+      };
+      const form: RJSFSchema = {
+        $schema: 'https://example.com/loose',
+        type: 'object',
+        properties: { n: { type: 'number', minimum: 5 } },
+      };
+      const options = { ataOptionsOverrides: { schemas: [meta] } };
+      const runtime = customizeValidator(options).isValid(form, { n: 1 }, form);
+      const fns = loadModule(compileSchemaValidatorsCode(form, options));
+      const validator = createPrecompiledValidator(fns, form);
+      expect(validator.isValid(form, { n: 1 }, form)).toBe(runtime);
+      expect(runtime).toBe(true);
+    });
+
+    test.each([
+      'https://json-schema.org/draft/next/schema',
+      'https://json-schema.org/draft/2020-12/schema',
+      'http://json-schema.org/draft/2020-12/schema#',
+    ])('answers as the runtime validator for a meta-schema at %s with its own $vocabulary', (id) => {
+      // Without the validation vocabulary `minimum` is not checked, so { n: 1 } is valid at runtime.
+      const meta = {
+        $id: id,
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        $vocabulary: { 'https://json-schema.org/draft/2020-12/vocab/applicator': true },
+      };
+      const loose: RJSFSchema = {
+        $id: 'loose',
+        $schema: id,
+        type: 'object',
+        properties: { n: { type: 'number', minimum: 5 } },
+      };
+      expect(agree(loose, { n: 1 }, { additionalMetaSchemas: [meta] })).toBe(true);
+    });
   });
 
   test('does not fill in defaults, unlike the runtime validator', () => {
