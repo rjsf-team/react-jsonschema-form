@@ -134,7 +134,7 @@ describe('anyOf', () => {
 
     expect(node.querySelectorAll('select')).toHaveLength(1);
     expect(node.querySelector('select')).toHaveAttribute('id', 'root__anyof_select');
-    expect(node.querySelectorAll('span.required')).toHaveLength(1);
+    expect(node.querySelectorAll('span.rjsf-required')).toHaveLength(1);
     expect(node.querySelectorAll('#root__XxxOf__description')).toHaveLength(1);
     // The object renders beside the selected option under an id of its own, so nothing else claims the field's
     expect(node.querySelectorAll('#root__description')).toHaveLength(0);
@@ -169,7 +169,7 @@ describe('anyOf', () => {
 
     expect(node.querySelectorAll('select')).toHaveLength(1);
     expect(node.querySelector('select')).toHaveAttribute('id', 'root__anyof_select');
-    expect(node.querySelectorAll('span.required')).toHaveLength(2);
+    expect(node.querySelectorAll('span.rjsf-required')).toHaveLength(2);
   });
 
   it('should render a root select element with default value', () => {
@@ -1378,9 +1378,9 @@ describe('anyOf', () => {
         schema,
       });
 
-      expect(node.querySelector('.rjsf-array-item-add button')).not.toBeNull();
+      expect(node.querySelector('.rjsf-array-item-add')).not.toBeNull();
 
-      await user.click(node.querySelector('.rjsf-array-item-add button')!);
+      await user.click(node.querySelector('.rjsf-array-item-add')!);
 
       expect(node.querySelectorAll('select')).toHaveLength(1);
 
@@ -1518,9 +1518,9 @@ describe('anyOf', () => {
         schema,
       });
 
-      expect(node.querySelector('.rjsf-array-item-add button')).not.toBeNull();
+      expect(node.querySelector('.rjsf-array-item-add')).not.toBeNull();
 
-      await user.click(node.querySelector('.rjsf-array-item-add button')!);
+      await user.click(node.querySelector('.rjsf-array-item-add')!);
 
       const $select = node.querySelector('select');
       expect($select).not.toBeNull();
@@ -1883,7 +1883,7 @@ describe('anyOf', () => {
       await user.type(userIdInput, '12345');
       await submitForm(node, user);
 
-      let inputs = node.querySelectorAll('.form-group.rjsf-field-error input[inputmode=decimal]');
+      let inputs = node.querySelectorAll('.rjsf-field.rjsf-field-error input[inputmode=decimal]');
       expect(inputs[0]).toHaveAttribute('id', 'root_userId');
 
       const $select = node.querySelector('select');
@@ -1895,7 +1895,7 @@ describe('anyOf', () => {
       await user.type(userIdInput2, 'Lorem ipsum dolor sit amet');
       await submitForm(node, user);
 
-      inputs = node.querySelectorAll('.form-group.rjsf-field-error input[type=text]');
+      inputs = node.querySelectorAll('.rjsf-field.rjsf-field-error input[type=text]');
       expect(inputs[0]).toHaveAttribute('id', 'root_userId');
     });
 
@@ -1914,7 +1914,7 @@ describe('anyOf', () => {
 
       await submitForm(node, user);
 
-      let inputs = node.querySelectorAll('.form-group.rjsf-field-error input[inputmode=decimal]');
+      let inputs = node.querySelectorAll('.rjsf-field.rjsf-field-error input[inputmode=decimal]');
       expect(inputs).toHaveLength(0);
 
       const $select = node.querySelector('select');
@@ -1926,7 +1926,7 @@ describe('anyOf', () => {
       await user.type(userIdInput2, 'Lorem ipsum dolor sit amet');
       await submitForm(node, user);
 
-      inputs = node.querySelectorAll('.form-group.rjsf-field-error input[type=text]');
+      inputs = node.querySelectorAll('.rjsf-field.rjsf-field-error input[type=text]');
       expect(inputs).toHaveLength(0);
     });
   });

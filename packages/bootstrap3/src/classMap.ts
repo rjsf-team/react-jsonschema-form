@@ -43,6 +43,8 @@ const BOOTSTRAP3_CLASS_MAP: MergedClassMap = {
   optionalDataAddButton: 'btn-sm',
   optionalDataRemoveButton: 'btn-sm',
   submitButton: 'btn btn-info',
+  iconButton: '',
+  buttonIcon: '',
 };
 
 /** The theme's class map, a fresh copy on every call, for a `Form` put together from `generateTemplates()` rather than

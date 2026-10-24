@@ -31,7 +31,14 @@ import type {
   CustomMergeAllOf,
   NameGeneratorFunction,
 } from '@rjsf/utils';
-import { getTemplates, getUiOptions, SUBMIT_BTN_OPTIONS_KEY, ROOT_FIELD_PATH, UI_OPTIONS_KEY } from '@rjsf/utils';
+import {
+  getTemplates,
+  getUiOptions,
+  joinClassNames,
+  ROOT_FIELD_PATH,
+  SUBMIT_BTN_OPTIONS_KEY,
+  UI_OPTIONS_KEY,
+} from '@rjsf/utils';
 import { useFormStatus } from 'react-dom';
 
 import isDevelopment from '../isDevelopment.ts';
@@ -586,7 +593,7 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   return (
     <FormDataContext value={model}>
       <FormTag
-        className={className || 'rjsf'}
+        className={joinClassNames('rjsf', className)}
         id={id}
         name={name}
         method={method}

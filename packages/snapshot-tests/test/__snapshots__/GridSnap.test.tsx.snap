@@ -6,17 +6,20 @@ exports[`Complex grid > renders person and address and employment in a complex g
     class="rjsf"
   >
     <div
-      class="form-group rjsf-field rjsf-field-object"
+      class="rjsf-field rjsf-field-object"
     >
-      <div>
+      <div
+        class="rjsf-grid-row"
+      >
         <div
-          class="row"
+          class="rjsf-grid-row"
         >
           <div
-            class="col-xs-12"
+            class="rjsf-grid-column"
+            style="--rjsf-span: 12;"
           >
             <div
-              class="form-group rjsf-field rjsf-field-object"
+              class="rjsf-field rjsf-field-object"
             >
               <legend>
                 <span
@@ -29,16 +32,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
           </div>
         </div>
         <div
-          class="row"
+          class="rjsf-grid-row"
         >
           <div
-            class="col-xs-4"
+            class="rjsf-grid-column"
+            style="--rjsf-span: 4;"
           >
             <div
-              class="form-group rjsf-field rjsf-field-string"
+              class="rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label"
                 for="root_person_name_first"
               >
                 <span
@@ -47,13 +51,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   First Name
                 </span>
                 <span
-                  class="required"
+                  class="rjsf-required"
                 >
                   *
                 </span>
               </label>
               <input
-                class="form-control"
                 id="root_person_name_first"
                 name="root_person_name_first"
                 placeholder=""
@@ -64,13 +67,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="col-xs-4"
+            class="rjsf-grid-column"
+            style="--rjsf-span: 4;"
           >
             <div
-              class="form-group rjsf-field rjsf-field-string"
+              class="rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label"
                 for="root_person_name_middle"
               >
                 <span
@@ -80,7 +84,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 </span>
               </label>
               <input
-                class="form-control"
                 id="root_person_name_middle"
                 name="root_person_name_middle"
                 placeholder=""
@@ -90,13 +93,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="col-xs-4"
+            class="rjsf-grid-column"
+            style="--rjsf-span: 4;"
           >
             <div
-              class="form-group rjsf-field rjsf-field-string"
+              class="rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label"
                 for="root_person_name_last"
               >
                 <span
@@ -105,13 +109,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   Last Name
                 </span>
                 <span
-                  class="required"
+                  class="rjsf-required"
                 >
                   *
                 </span>
               </label>
               <input
-                class="form-control"
                 id="root_person_name_last"
                 name="root_person_name_last"
                 placeholder=""
@@ -123,16 +126,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
           </div>
         </div>
         <div
-          class="row"
+          class="rjsf-grid-row"
         >
           <div
-            class="col-xs-3"
+            class="rjsf-grid-column"
+            style="--rjsf-span: 3;"
           >
             <div
-              class="form-group rjsf-field rjsf-field-string"
+              class="rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label"
                 for="root_person_birth_date"
               >
                 <span
@@ -141,13 +145,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   Date of Birth
                 </span>
                 <span
-                  class="required"
+                  class="rjsf-required"
                 >
                   *
                 </span>
               </label>
               <input
-                class="form-control"
                 id="root_person_birth_date"
                 name="root_person_birth_date"
                 placeholder="DOB"
@@ -158,13 +161,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="col-xs-6"
+            class="rjsf-grid-column"
+            style="--rjsf-span: 6;"
           >
             <div
-              class="form-group rjsf-field rjsf-field-array"
+              class="rjsf-field rjsf-field-array"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label"
               >
                 <span
                   id="root_person_race__label"
@@ -172,25 +176,25 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   Race
                 </span>
                 <span
-                  class="required"
+                  class="rjsf-required"
                 >
                   *
                 </span>
               </label>
               <div
-                class="field-description"
+                class="rjsf-field-description"
                 id="root_person_race__description"
               >
                 (Check all that apply)
               </div>
               <div
                 aria-labelledby="root_person_race__label"
-                class="checkboxes"
+                class="rjsf-checkboxes"
                 id="root_person_race"
                 role="group"
               >
                 <div
-                  class="checkbox"
+                  class="rjsf-checkbox"
                 >
                   <label>
                     <span>
@@ -208,7 +212,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </label>
                 </div>
                 <div
-                  class="checkbox"
+                  class="rjsf-checkbox"
                 >
                   <label>
                     <span>
@@ -226,7 +230,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </label>
                 </div>
                 <div
-                  class="checkbox"
+                  class="rjsf-checkbox"
                 >
                   <label>
                     <span>
@@ -244,7 +248,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </label>
                 </div>
                 <div
-                  class="checkbox"
+                  class="rjsf-checkbox"
                 >
                   <label>
                     <span>
@@ -262,7 +266,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </label>
                 </div>
                 <div
-                  class="checkbox"
+                  class="rjsf-checkbox"
                 >
                   <label>
                     <span>
@@ -284,25 +288,27 @@ exports[`Complex grid > renders person and address and employment in a complex g
           </div>
         </div>
         <div
-          class="row"
+          class="rjsf-grid-row"
         >
           <div
-            class="col-xs-6"
+            class="rjsf-grid-column"
+            style="--rjsf-span: 6;"
           >
             <div
-              class="form-group rjsf-field rjsf-field-object"
+              class="rjsf-field rjsf-field-object"
             >
               <div
-                class="row"
+                class="rjsf-grid-row"
               >
                 <div
-                  class="col-xs-12"
+                  class="rjsf-grid-column"
+                  style="--rjsf-span: 12;"
                 >
                   <div
-                    class="form-group rjsf-field rjsf-field-string"
+                    class="rjsf-field rjsf-field-string"
                   >
                     <label
-                      class="control-label"
+                      class="rjsf-field-label"
                       for="root_person_address_line_1"
                     >
                       <span
@@ -311,13 +317,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         Address
                       </span>
                       <span
-                        class="required"
+                        class="rjsf-required"
                       >
                         *
                       </span>
                     </label>
                     <input
-                      class="form-control"
                       id="root_person_address_line_1"
                       name="root_person_address_line_1"
                       placeholder=""
@@ -328,13 +333,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </div>
                 </div>
                 <div
-                  class="col-xs-12"
+                  class="rjsf-grid-column"
+                  style="--rjsf-span: 12;"
                 >
                   <div
-                    class="form-group rjsf-field rjsf-field-string"
+                    class="rjsf-field rjsf-field-string"
                   >
                     <label
-                      class="control-label"
+                      class="rjsf-field-label"
                       for="root_person_address_line_2"
                     >
                       <span
@@ -344,7 +350,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </span>
                     </label>
                     <input
-                      class="form-control"
                       id="root_person_address_line_2"
                       name="root_person_address_line_2"
                       placeholder=""
@@ -354,13 +359,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </div>
                 </div>
                 <div
-                  class="col-xs-12"
+                  class="rjsf-grid-column"
+                  style="--rjsf-span: 12;"
                 >
                   <div
-                    class="form-group rjsf-field rjsf-field-string"
+                    class="rjsf-field rjsf-field-string"
                   >
                     <label
-                      class="control-label"
+                      class="rjsf-field-label"
                       for="root_person_address_city"
                     >
                       <span
@@ -369,13 +375,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         City
                       </span>
                       <span
-                        class="required"
+                        class="rjsf-required"
                       >
                         *
                       </span>
                     </label>
                     <input
-                      class="form-control"
                       id="root_person_address_city"
                       name="root_person_address_city"
                       placeholder=""
@@ -385,15 +390,18 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     />
                   </div>
                 </div>
-                <div>
+                <div
+                  class="rjsf-grid-row"
+                >
                   <div
-                    class="col-xs-6"
+                    class="rjsf-grid-column"
+                    style="--rjsf-span: 6;"
                   >
                     <div
-                      class="form-group rjsf-field rjsf-field-string"
+                      class="rjsf-field rjsf-field-string"
                     >
                       <label
-                        class="control-label"
+                        class="rjsf-field-label"
                         for="root_person_address_state"
                       >
                         <span
@@ -402,13 +410,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           State
                         </span>
                         <span
-                          class="required"
+                          class="rjsf-required"
                         >
                           *
                         </span>
                       </label>
                       <select
-                        class="form-control"
                         id="root_person_address_state"
                         name="root_person_address_state"
                         required=""
@@ -700,13 +707,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     </div>
                   </div>
                   <div
-                    class="col-xs-6"
+                    class="rjsf-grid-column"
+                    style="--rjsf-span: 6;"
                   >
                     <div
-                      class="form-group rjsf-field rjsf-field-string"
+                      class="rjsf-field rjsf-field-string"
                     >
                       <label
-                        class="control-label"
+                        class="rjsf-field-label"
                         for="root_person_address_postal_code"
                       >
                         <span
@@ -715,13 +723,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           ZIP Code
                         </span>
                         <span
-                          class="required"
+                          class="rjsf-required"
                         >
                           *
                         </span>
                       </label>
                       <input
-                        class="form-control"
                         id="root_person_address_postal_code"
                         name="root_person_address_postal_code"
                         placeholder=""
@@ -736,14 +743,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="col-xs-6"
-            style="margin: 26px 0px;"
+            class="rjsf-grid-column"
+            style="margin: 26px 0px; --rjsf-span: 6;"
           >
             <div
-              class="form-group rjsf-field rjsf-field-undefined"
+              class="rjsf-field rjsf-field-undefined"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label"
               >
                 <span
                   id="root_employment__label"
@@ -753,12 +760,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
               </label>
               <div
                 aria-labelledby="root_employment__label"
-                class="field-radio-group"
+                class="rjsf-field-radio-group"
                 id="root_employment"
                 role="radiogroup"
               >
                 <label
-                  class="radio-inline"
+                  class="rjsf-radio-inline"
                 >
                   <span>
                     <input
@@ -774,7 +781,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </span>
                 </label>
                 <label
-                  class="radio-inline"
+                  class="rjsf-radio-inline"
                 >
                   <span>
                     <input
@@ -789,7 +796,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </span>
                 </label>
                 <label
-                  class="radio-inline"
+                  class="rjsf-radio-inline"
                 >
                   <span>
                     <input
@@ -807,13 +814,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="col-xs-6"
+            class="rjsf-grid-column"
+            style="--rjsf-span: 6;"
           >
             <div
-              class="form-group rjsf-field rjsf-field-string"
+              class="rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label"
                 for="root_employment_business"
               >
                 <span
@@ -822,13 +830,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   Company Name
                 </span>
                 <span
-                  class="required"
+                  class="rjsf-required"
                 >
                   *
                 </span>
               </label>
               <input
-                class="form-control"
                 id="root_employment_business"
                 name="root_employment_business"
                 placeholder=""
@@ -839,13 +846,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="col-xs-6"
+            class="rjsf-grid-column"
+            style="--rjsf-span: 6;"
           >
             <div
-              class="form-group rjsf-field rjsf-field-string"
+              class="rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label"
                 for="root_employment_title"
               >
                 <span
@@ -855,7 +863,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 </span>
               </label>
               <input
-                class="form-control"
                 id="root_employment_title"
                 name="root_employment_title"
                 placeholder=""
@@ -865,13 +872,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="col-xs-4"
+            class="rjsf-grid-column"
+            style="--rjsf-span: 4;"
           >
             <div
-              class="form-group rjsf-field rjsf-field-string"
+              class="rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label"
                 for="root_employment_location_city"
               >
                 <span
@@ -880,13 +888,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   City
                 </span>
                 <span
-                  class="required"
+                  class="rjsf-required"
                 >
                   *
                 </span>
               </label>
               <input
-                class="form-control"
                 id="root_employment_location_city"
                 name="root_employment_location_city"
                 placeholder=""
@@ -897,13 +904,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="col-xs-2"
+            class="rjsf-grid-column"
+            style="--rjsf-span: 2;"
           >
             <div
-              class="form-group rjsf-field rjsf-field-string"
+              class="rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label"
                 for="root_employment_location_state"
               >
                 <span
@@ -912,13 +920,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   State
                 </span>
                 <span
-                  class="required"
+                  class="rjsf-required"
                 >
                   *
                 </span>
               </label>
               <select
-                class="form-control"
                 id="root_employment_location_state"
                 name="root_employment_location_state"
                 required=""
@@ -1214,7 +1221,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button"
         type="submit"
       >
         Submit
@@ -1230,17 +1237,20 @@ exports[`Complex grid > renders person and address and employment in a complex g
     class="rjsf"
   >
     <div
-      class="form-group rjsf-field rjsf-field-object"
+      class="rjsf-field rjsf-field-object"
     >
-      <div>
+      <div
+        class="rjsf-grid-row"
+      >
         <div
-          class="row"
+          class="rjsf-grid-row"
         >
           <div
-            class="col-xs-12"
+            class="rjsf-grid-column"
+            style="--rjsf-span: 12;"
           >
             <div
-              class="form-group rjsf-field rjsf-field-object"
+              class="rjsf-field rjsf-field-object"
             >
               <legend>
                 <span
@@ -1253,16 +1263,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
           </div>
         </div>
         <div
-          class="row"
+          class="rjsf-grid-row"
         >
           <div
-            class="col-xs-4"
+            class="rjsf-grid-column"
+            style="--rjsf-span: 4;"
           >
             <div
-              class="form-group rjsf-field rjsf-field-string"
+              class="rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label"
                 for="root_person_name_first"
               >
                 <span
@@ -1271,13 +1282,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   First Name
                 </span>
                 <span
-                  class="required"
+                  class="rjsf-required"
                 >
                   *
                 </span>
               </label>
               <input
-                class="form-control"
                 id="root_person_name_first"
                 name="root_person_name_first"
                 placeholder=""
@@ -1288,13 +1298,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="col-xs-4"
+            class="rjsf-grid-column"
+            style="--rjsf-span: 4;"
           >
             <div
-              class="form-group rjsf-field rjsf-field-string"
+              class="rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label"
                 for="root_person_name_middle"
               >
                 <span
@@ -1304,7 +1315,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 </span>
               </label>
               <input
-                class="form-control"
                 id="root_person_name_middle"
                 name="root_person_name_middle"
                 placeholder=""
@@ -1314,13 +1324,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="col-xs-4"
+            class="rjsf-grid-column"
+            style="--rjsf-span: 4;"
           >
             <div
-              class="form-group rjsf-field rjsf-field-string"
+              class="rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label"
                 for="root_person_name_last"
               >
                 <span
@@ -1329,13 +1340,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   Last Name
                 </span>
                 <span
-                  class="required"
+                  class="rjsf-required"
                 >
                   *
                 </span>
               </label>
               <input
-                class="form-control"
                 id="root_person_name_last"
                 name="root_person_name_last"
                 placeholder=""
@@ -1347,16 +1357,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
           </div>
         </div>
         <div
-          class="row"
+          class="rjsf-grid-row"
         >
           <div
-            class="col-xs-3"
+            class="rjsf-grid-column"
+            style="--rjsf-span: 3;"
           >
             <div
-              class="form-group rjsf-field rjsf-field-string"
+              class="rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label"
                 for="root_person_birth_date"
               >
                 <span
@@ -1365,13 +1376,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   Date of Birth
                 </span>
                 <span
-                  class="required"
+                  class="rjsf-required"
                 >
                   *
                 </span>
               </label>
               <input
-                class="form-control"
                 id="root_person_birth_date"
                 name="root_person_birth_date"
                 placeholder="DOB"
@@ -1382,13 +1392,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="col-xs-6"
+            class="rjsf-grid-column"
+            style="--rjsf-span: 6;"
           >
             <div
-              class="form-group rjsf-field rjsf-field-array"
+              class="rjsf-field rjsf-field-array"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label"
               >
                 <span
                   id="root_person_race__label"
@@ -1396,25 +1407,25 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   Race
                 </span>
                 <span
-                  class="required"
+                  class="rjsf-required"
                 >
                   *
                 </span>
               </label>
               <div
-                class="field-description"
+                class="rjsf-field-description"
                 id="root_person_race__description"
               >
                 (Check all that apply)
               </div>
               <div
                 aria-labelledby="root_person_race__label"
-                class="checkboxes"
+                class="rjsf-checkboxes"
                 id="root_person_race"
                 role="group"
               >
                 <div
-                  class="checkbox"
+                  class="rjsf-checkbox"
                 >
                   <label>
                     <span>
@@ -1432,7 +1443,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </label>
                 </div>
                 <div
-                  class="checkbox"
+                  class="rjsf-checkbox"
                 >
                   <label>
                     <span>
@@ -1450,7 +1461,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </label>
                 </div>
                 <div
-                  class="checkbox"
+                  class="rjsf-checkbox"
                 >
                   <label>
                     <span>
@@ -1468,7 +1479,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </label>
                 </div>
                 <div
-                  class="checkbox"
+                  class="rjsf-checkbox"
                 >
                   <label>
                     <span>
@@ -1486,7 +1497,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </label>
                 </div>
                 <div
-                  class="checkbox"
+                  class="rjsf-checkbox"
                 >
                   <label>
                     <span>
@@ -1508,25 +1519,27 @@ exports[`Complex grid > renders person and address and employment in a complex g
           </div>
         </div>
         <div
-          class="row"
+          class="rjsf-grid-row"
         >
           <div
-            class="col-xs-6"
+            class="rjsf-grid-column"
+            style="--rjsf-span: 6;"
           >
             <div
-              class="form-group rjsf-field rjsf-field-object"
+              class="rjsf-field rjsf-field-object"
             >
               <div
-                class="row"
+                class="rjsf-grid-row"
               >
                 <div
-                  class="col-xs-12"
+                  class="rjsf-grid-column"
+                  style="--rjsf-span: 12;"
                 >
                   <div
-                    class="form-group rjsf-field rjsf-field-string"
+                    class="rjsf-field rjsf-field-string"
                   >
                     <label
-                      class="control-label"
+                      class="rjsf-field-label"
                       for="root_person_address_line_1"
                     >
                       <span
@@ -1535,13 +1548,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         Address
                       </span>
                       <span
-                        class="required"
+                        class="rjsf-required"
                       >
                         *
                       </span>
                     </label>
                     <input
-                      class="form-control"
                       id="root_person_address_line_1"
                       name="root_person_address_line_1"
                       placeholder=""
@@ -1552,13 +1564,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </div>
                 </div>
                 <div
-                  class="col-xs-12"
+                  class="rjsf-grid-column"
+                  style="--rjsf-span: 12;"
                 >
                   <div
-                    class="form-group rjsf-field rjsf-field-string"
+                    class="rjsf-field rjsf-field-string"
                   >
                     <label
-                      class="control-label"
+                      class="rjsf-field-label"
                       for="root_person_address_line_2"
                     >
                       <span
@@ -1568,7 +1581,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </span>
                     </label>
                     <input
-                      class="form-control"
                       id="root_person_address_line_2"
                       name="root_person_address_line_2"
                       placeholder=""
@@ -1578,13 +1590,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </div>
                 </div>
                 <div
-                  class="col-xs-12"
+                  class="rjsf-grid-column"
+                  style="--rjsf-span: 12;"
                 >
                   <div
-                    class="form-group rjsf-field rjsf-field-string"
+                    class="rjsf-field rjsf-field-string"
                   >
                     <label
-                      class="control-label"
+                      class="rjsf-field-label"
                       for="root_person_address_city"
                     >
                       <span
@@ -1593,13 +1606,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         City
                       </span>
                       <span
-                        class="required"
+                        class="rjsf-required"
                       >
                         *
                       </span>
                     </label>
                     <input
-                      class="form-control"
                       id="root_person_address_city"
                       name="root_person_address_city"
                       placeholder=""
@@ -1609,15 +1621,18 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     />
                   </div>
                 </div>
-                <div>
+                <div
+                  class="rjsf-grid-row"
+                >
                   <div
-                    class="col-xs-6"
+                    class="rjsf-grid-column"
+                    style="--rjsf-span: 6;"
                   >
                     <div
-                      class="form-group rjsf-field rjsf-field-string"
+                      class="rjsf-field rjsf-field-string"
                     >
                       <label
-                        class="control-label"
+                        class="rjsf-field-label"
                         for="root_person_address_state"
                       >
                         <span
@@ -1626,13 +1641,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           State
                         </span>
                         <span
-                          class="required"
+                          class="rjsf-required"
                         >
                           *
                         </span>
                       </label>
                       <select
-                        class="form-control"
                         id="root_person_address_state"
                         name="root_person_address_state"
                         required=""
@@ -1924,13 +1938,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     </div>
                   </div>
                   <div
-                    class="col-xs-6"
+                    class="rjsf-grid-column"
+                    style="--rjsf-span: 6;"
                   >
                     <div
-                      class="form-group rjsf-field rjsf-field-string"
+                      class="rjsf-field rjsf-field-string"
                     >
                       <label
-                        class="control-label"
+                        class="rjsf-field-label"
                         for="root_person_address_postal_code"
                       >
                         <span
@@ -1939,13 +1954,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           ZIP Code
                         </span>
                         <span
-                          class="required"
+                          class="rjsf-required"
                         >
                           *
                         </span>
                       </label>
                       <input
-                        class="form-control"
                         id="root_person_address_postal_code"
                         name="root_person_address_postal_code"
                         placeholder=""
@@ -1960,14 +1974,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="col-xs-6"
-            style="margin: 26px 0px;"
+            class="rjsf-grid-column"
+            style="margin: 26px 0px; --rjsf-span: 6;"
           >
             <div
-              class="form-group rjsf-field rjsf-field-undefined"
+              class="rjsf-field rjsf-field-undefined"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label"
               >
                 <span
                   id="root_employment__label"
@@ -1977,12 +1991,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
               </label>
               <div
                 aria-labelledby="root_employment__label"
-                class="field-radio-group"
+                class="rjsf-field-radio-group"
                 id="root_employment"
                 role="radiogroup"
               >
                 <label
-                  class="radio-inline"
+                  class="rjsf-radio-inline"
                 >
                   <span>
                     <input
@@ -1997,7 +2011,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </span>
                 </label>
                 <label
-                  class="radio-inline"
+                  class="rjsf-radio-inline"
                 >
                   <span>
                     <input
@@ -2013,7 +2027,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </span>
                 </label>
                 <label
-                  class="radio-inline"
+                  class="rjsf-radio-inline"
                 >
                   <span>
                     <input
@@ -2031,13 +2045,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="col-xs-6"
+            class="rjsf-grid-column"
+            style="--rjsf-span: 6;"
           >
             <div
-              class="form-group rjsf-field rjsf-field-string"
+              class="rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label"
                 for="root_employment_district"
               >
                 <span
@@ -2047,7 +2062,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 </span>
               </label>
               <input
-                class="form-control"
                 id="root_employment_district"
                 name="root_employment_district"
                 placeholder=""
@@ -2057,13 +2071,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="col-xs-6"
+            class="rjsf-grid-column"
+            style="--rjsf-span: 6;"
           >
             <div
-              class="form-group rjsf-field rjsf-field-string"
+              class="rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label"
                 for="root_employment_school"
               >
                 <span
@@ -2072,13 +2087,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   School Name
                 </span>
                 <span
-                  class="required"
+                  class="rjsf-required"
                 >
                   *
                 </span>
               </label>
               <input
-                class="form-control"
                 id="root_employment_school"
                 name="root_employment_school"
                 placeholder=""
@@ -2089,13 +2103,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="col-xs-6"
+            class="rjsf-grid-column"
+            style="--rjsf-span: 6;"
           >
             <div
-              class="form-group rjsf-field rjsf-field-string"
+              class="rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label"
                 for="root_employment_title"
               >
                 <span
@@ -2105,7 +2120,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 </span>
               </label>
               <input
-                class="form-control"
                 id="root_employment_title"
                 name="root_employment_title"
                 placeholder=""
@@ -2115,13 +2129,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="col-xs-4"
+            class="rjsf-grid-column"
+            style="--rjsf-span: 4;"
           >
             <div
-              class="form-group rjsf-field rjsf-field-string"
+              class="rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label"
                 for="root_employment_location_city"
               >
                 <span
@@ -2130,13 +2145,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   City
                 </span>
                 <span
-                  class="required"
+                  class="rjsf-required"
                 >
                   *
                 </span>
               </label>
               <input
-                class="form-control"
                 id="root_employment_location_city"
                 name="root_employment_location_city"
                 placeholder=""
@@ -2147,13 +2161,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="col-xs-2"
+            class="rjsf-grid-column"
+            style="--rjsf-span: 2;"
           >
             <div
-              class="form-group rjsf-field rjsf-field-string"
+              class="rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label"
                 for="root_employment_location_state"
               >
                 <span
@@ -2162,13 +2177,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   State
                 </span>
                 <span
-                  class="required"
+                  class="rjsf-required"
                 >
                   *
                 </span>
               </label>
               <select
-                class="form-control"
                 id="root_employment_location_state"
                 name="root_employment_location_state"
                 required=""
@@ -2464,7 +2478,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button"
         type="submit"
       >
         Submit
@@ -2480,17 +2494,20 @@ exports[`Complex grid > renders person and address and employment in a complex g
     class="rjsf"
   >
     <div
-      class="form-group rjsf-field rjsf-field-object"
+      class="rjsf-field rjsf-field-object"
     >
-      <div>
+      <div
+        class="rjsf-grid-row"
+      >
         <div
-          class="row"
+          class="rjsf-grid-row"
         >
           <div
-            class="col-xs-12"
+            class="rjsf-grid-column"
+            style="--rjsf-span: 12;"
           >
             <div
-              class="form-group rjsf-field rjsf-field-object"
+              class="rjsf-field rjsf-field-object"
             >
               <legend>
                 <span
@@ -2503,16 +2520,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
           </div>
         </div>
         <div
-          class="row"
+          class="rjsf-grid-row"
         >
           <div
-            class="col-xs-4"
+            class="rjsf-grid-column"
+            style="--rjsf-span: 4;"
           >
             <div
-              class="form-group rjsf-field rjsf-field-string"
+              class="rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label"
                 for="root_person_name_first"
               >
                 <span
@@ -2521,13 +2539,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   First Name
                 </span>
                 <span
-                  class="required"
+                  class="rjsf-required"
                 >
                   *
                 </span>
               </label>
               <input
-                class="form-control"
                 id="root_person_name_first"
                 name="root_person_name_first"
                 placeholder=""
@@ -2538,13 +2555,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="col-xs-4"
+            class="rjsf-grid-column"
+            style="--rjsf-span: 4;"
           >
             <div
-              class="form-group rjsf-field rjsf-field-string"
+              class="rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label"
                 for="root_person_name_middle"
               >
                 <span
@@ -2554,7 +2572,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 </span>
               </label>
               <input
-                class="form-control"
                 id="root_person_name_middle"
                 name="root_person_name_middle"
                 placeholder=""
@@ -2564,13 +2581,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="col-xs-4"
+            class="rjsf-grid-column"
+            style="--rjsf-span: 4;"
           >
             <div
-              class="form-group rjsf-field rjsf-field-string"
+              class="rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label"
                 for="root_person_name_last"
               >
                 <span
@@ -2579,13 +2597,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   Last Name
                 </span>
                 <span
-                  class="required"
+                  class="rjsf-required"
                 >
                   *
                 </span>
               </label>
               <input
-                class="form-control"
                 id="root_person_name_last"
                 name="root_person_name_last"
                 placeholder=""
@@ -2597,16 +2614,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
           </div>
         </div>
         <div
-          class="row"
+          class="rjsf-grid-row"
         >
           <div
-            class="col-xs-3"
+            class="rjsf-grid-column"
+            style="--rjsf-span: 3;"
           >
             <div
-              class="form-group rjsf-field rjsf-field-string"
+              class="rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label"
                 for="root_person_birth_date"
               >
                 <span
@@ -2615,13 +2633,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   Date of Birth
                 </span>
                 <span
-                  class="required"
+                  class="rjsf-required"
                 >
                   *
                 </span>
               </label>
               <input
-                class="form-control"
                 id="root_person_birth_date"
                 name="root_person_birth_date"
                 placeholder="DOB"
@@ -2632,13 +2649,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="col-xs-6"
+            class="rjsf-grid-column"
+            style="--rjsf-span: 6;"
           >
             <div
-              class="form-group rjsf-field rjsf-field-array"
+              class="rjsf-field rjsf-field-array"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label"
               >
                 <span
                   id="root_person_race__label"
@@ -2646,25 +2664,25 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   Race
                 </span>
                 <span
-                  class="required"
+                  class="rjsf-required"
                 >
                   *
                 </span>
               </label>
               <div
-                class="field-description"
+                class="rjsf-field-description"
                 id="root_person_race__description"
               >
                 (Check all that apply)
               </div>
               <div
                 aria-labelledby="root_person_race__label"
-                class="checkboxes"
+                class="rjsf-checkboxes"
                 id="root_person_race"
                 role="group"
               >
                 <div
-                  class="checkbox"
+                  class="rjsf-checkbox"
                 >
                   <label>
                     <span>
@@ -2682,7 +2700,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </label>
                 </div>
                 <div
-                  class="checkbox"
+                  class="rjsf-checkbox"
                 >
                   <label>
                     <span>
@@ -2700,7 +2718,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </label>
                 </div>
                 <div
-                  class="checkbox"
+                  class="rjsf-checkbox"
                 >
                   <label>
                     <span>
@@ -2718,7 +2736,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </label>
                 </div>
                 <div
-                  class="checkbox"
+                  class="rjsf-checkbox"
                 >
                   <label>
                     <span>
@@ -2736,7 +2754,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </label>
                 </div>
                 <div
-                  class="checkbox"
+                  class="rjsf-checkbox"
                 >
                   <label>
                     <span>
@@ -2758,25 +2776,27 @@ exports[`Complex grid > renders person and address and employment in a complex g
           </div>
         </div>
         <div
-          class="row"
+          class="rjsf-grid-row"
         >
           <div
-            class="col-xs-6"
+            class="rjsf-grid-column"
+            style="--rjsf-span: 6;"
           >
             <div
-              class="form-group rjsf-field rjsf-field-object"
+              class="rjsf-field rjsf-field-object"
             >
               <div
-                class="row"
+                class="rjsf-grid-row"
               >
                 <div
-                  class="col-xs-12"
+                  class="rjsf-grid-column"
+                  style="--rjsf-span: 12;"
                 >
                   <div
-                    class="form-group rjsf-field rjsf-field-string"
+                    class="rjsf-field rjsf-field-string"
                   >
                     <label
-                      class="control-label"
+                      class="rjsf-field-label"
                       for="root_person_address_line_1"
                     >
                       <span
@@ -2785,13 +2805,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         Address
                       </span>
                       <span
-                        class="required"
+                        class="rjsf-required"
                       >
                         *
                       </span>
                     </label>
                     <input
-                      class="form-control"
                       id="root_person_address_line_1"
                       name="root_person_address_line_1"
                       placeholder=""
@@ -2802,13 +2821,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </div>
                 </div>
                 <div
-                  class="col-xs-12"
+                  class="rjsf-grid-column"
+                  style="--rjsf-span: 12;"
                 >
                   <div
-                    class="form-group rjsf-field rjsf-field-string"
+                    class="rjsf-field rjsf-field-string"
                   >
                     <label
-                      class="control-label"
+                      class="rjsf-field-label"
                       for="root_person_address_line_2"
                     >
                       <span
@@ -2818,7 +2838,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </span>
                     </label>
                     <input
-                      class="form-control"
                       id="root_person_address_line_2"
                       name="root_person_address_line_2"
                       placeholder=""
@@ -2828,13 +2847,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </div>
                 </div>
                 <div
-                  class="col-xs-12"
+                  class="rjsf-grid-column"
+                  style="--rjsf-span: 12;"
                 >
                   <div
-                    class="form-group rjsf-field rjsf-field-string"
+                    class="rjsf-field rjsf-field-string"
                   >
                     <label
-                      class="control-label"
+                      class="rjsf-field-label"
                       for="root_person_address_city"
                     >
                       <span
@@ -2843,13 +2863,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         City
                       </span>
                       <span
-                        class="required"
+                        class="rjsf-required"
                       >
                         *
                       </span>
                     </label>
                     <input
-                      class="form-control"
                       id="root_person_address_city"
                       name="root_person_address_city"
                       placeholder=""
@@ -2859,15 +2878,18 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     />
                   </div>
                 </div>
-                <div>
+                <div
+                  class="rjsf-grid-row"
+                >
                   <div
-                    class="col-xs-6"
+                    class="rjsf-grid-column"
+                    style="--rjsf-span: 6;"
                   >
                     <div
-                      class="form-group rjsf-field rjsf-field-string"
+                      class="rjsf-field rjsf-field-string"
                     >
                       <label
-                        class="control-label"
+                        class="rjsf-field-label"
                         for="root_person_address_state"
                       >
                         <span
@@ -2876,13 +2898,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           State
                         </span>
                         <span
-                          class="required"
+                          class="rjsf-required"
                         >
                           *
                         </span>
                       </label>
                       <select
-                        class="form-control"
                         id="root_person_address_state"
                         name="root_person_address_state"
                         required=""
@@ -3174,13 +3195,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     </div>
                   </div>
                   <div
-                    class="col-xs-6"
+                    class="rjsf-grid-column"
+                    style="--rjsf-span: 6;"
                   >
                     <div
-                      class="form-group rjsf-field rjsf-field-string"
+                      class="rjsf-field rjsf-field-string"
                     >
                       <label
-                        class="control-label"
+                        class="rjsf-field-label"
                         for="root_person_address_postal_code"
                       >
                         <span
@@ -3189,13 +3211,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           ZIP Code
                         </span>
                         <span
-                          class="required"
+                          class="rjsf-required"
                         >
                           *
                         </span>
                       </label>
                       <input
-                        class="form-control"
                         id="root_person_address_postal_code"
                         name="root_person_address_postal_code"
                         placeholder=""
@@ -3210,14 +3231,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="col-xs-6"
-            style="margin: 26px 0px;"
+            class="rjsf-grid-column"
+            style="margin: 26px 0px; --rjsf-span: 6;"
           >
             <div
-              class="form-group rjsf-field rjsf-field-undefined"
+              class="rjsf-field rjsf-field-undefined"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label"
               >
                 <span
                   id="root_employment__label"
@@ -3227,12 +3248,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
               </label>
               <div
                 aria-labelledby="root_employment__label"
-                class="field-radio-group"
+                class="rjsf-field-radio-group"
                 id="root_employment"
                 role="radiogroup"
               >
                 <label
-                  class="radio-inline"
+                  class="rjsf-radio-inline"
                 >
                   <span>
                     <input
@@ -3247,7 +3268,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </span>
                 </label>
                 <label
-                  class="radio-inline"
+                  class="rjsf-radio-inline"
                 >
                   <span>
                     <input
@@ -3262,7 +3283,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </span>
                 </label>
                 <label
-                  class="radio-inline"
+                  class="rjsf-radio-inline"
                 >
                   <span>
                     <input
@@ -3281,13 +3302,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="col-xs-6"
+            class="rjsf-grid-column"
+            style="--rjsf-span: 6;"
           >
             <div
-              class="form-group rjsf-field rjsf-field-string"
+              class="rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label"
                 for="root_employment_description"
               >
                 <span
@@ -3296,13 +3318,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   Describe your job
                 </span>
                 <span
-                  class="required"
+                  class="rjsf-required"
                 >
                   *
                 </span>
               </label>
               <textarea
-                class="form-control"
                 id="root_employment_description"
                 name="root_employment_description"
                 placeholder=""
@@ -3316,7 +3337,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button"
         type="submit"
       >
         Submit
@@ -3332,17 +3353,20 @@ exports[`Complex grid > renders person and address and employment in a complex g
     class="rjsf"
   >
     <div
-      class="form-group rjsf-field rjsf-field-object"
+      class="rjsf-field rjsf-field-object"
     >
-      <div>
+      <div
+        class="rjsf-grid-row"
+      >
         <div
-          class="row"
+          class="rjsf-grid-row"
         >
           <div
-            class="col-xs-12"
+            class="rjsf-grid-column"
+            style="--rjsf-span: 12;"
           >
             <div
-              class="form-group rjsf-field rjsf-field-object"
+              class="rjsf-field rjsf-field-object"
             >
               <legend>
                 <span
@@ -3355,16 +3379,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
           </div>
         </div>
         <div
-          class="row"
+          class="rjsf-grid-row"
         >
           <div
-            class="col-xs-4"
+            class="rjsf-grid-column"
+            style="--rjsf-span: 4;"
           >
             <div
-              class="form-group rjsf-field rjsf-field-string"
+              class="rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label"
                 for="root_person_name_first"
               >
                 <span
@@ -3373,13 +3398,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   First Name
                 </span>
                 <span
-                  class="required"
+                  class="rjsf-required"
                 >
                   *
                 </span>
               </label>
               <input
-                class="form-control"
                 id="root_person_name_first"
                 name="root_person_name_first"
                 placeholder=""
@@ -3390,13 +3414,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="col-xs-4"
+            class="rjsf-grid-column"
+            style="--rjsf-span: 4;"
           >
             <div
-              class="form-group rjsf-field rjsf-field-string"
+              class="rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label"
                 for="root_person_name_middle"
               >
                 <span
@@ -3406,7 +3431,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 </span>
               </label>
               <input
-                class="form-control"
                 id="root_person_name_middle"
                 name="root_person_name_middle"
                 placeholder=""
@@ -3416,13 +3440,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="col-xs-4"
+            class="rjsf-grid-column"
+            style="--rjsf-span: 4;"
           >
             <div
-              class="form-group rjsf-field rjsf-field-string"
+              class="rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label"
                 for="root_person_name_last"
               >
                 <span
@@ -3431,13 +3456,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   Last Name
                 </span>
                 <span
-                  class="required"
+                  class="rjsf-required"
                 >
                   *
                 </span>
               </label>
               <input
-                class="form-control"
                 id="root_person_name_last"
                 name="root_person_name_last"
                 placeholder=""
@@ -3449,16 +3473,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
           </div>
         </div>
         <div
-          class="row"
+          class="rjsf-grid-row"
         >
           <div
-            class="col-xs-3"
+            class="rjsf-grid-column"
+            style="--rjsf-span: 3;"
           >
             <div
-              class="form-group rjsf-field rjsf-field-string"
+              class="rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label"
                 for="root_person_birth_date"
               >
                 <span
@@ -3467,13 +3492,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   Date of Birth
                 </span>
                 <span
-                  class="required"
+                  class="rjsf-required"
                 >
                   *
                 </span>
               </label>
               <input
-                class="form-control"
                 id="root_person_birth_date"
                 name="root_person_birth_date"
                 placeholder="DOB"
@@ -3484,13 +3508,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="col-xs-6"
+            class="rjsf-grid-column"
+            style="--rjsf-span: 6;"
           >
             <div
-              class="form-group rjsf-field rjsf-field-array"
+              class="rjsf-field rjsf-field-array"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label"
               >
                 <span
                   id="root_person_race__label"
@@ -3498,25 +3523,25 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   Race
                 </span>
                 <span
-                  class="required"
+                  class="rjsf-required"
                 >
                   *
                 </span>
               </label>
               <div
-                class="field-description"
+                class="rjsf-field-description"
                 id="root_person_race__description"
               >
                 (Check all that apply)
               </div>
               <div
                 aria-labelledby="root_person_race__label"
-                class="checkboxes"
+                class="rjsf-checkboxes"
                 id="root_person_race"
                 role="group"
               >
                 <div
-                  class="checkbox"
+                  class="rjsf-checkbox"
                 >
                   <label>
                     <span>
@@ -3534,7 +3559,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </label>
                 </div>
                 <div
-                  class="checkbox"
+                  class="rjsf-checkbox"
                 >
                   <label>
                     <span>
@@ -3552,7 +3577,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </label>
                 </div>
                 <div
-                  class="checkbox"
+                  class="rjsf-checkbox"
                 >
                   <label>
                     <span>
@@ -3570,7 +3595,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </label>
                 </div>
                 <div
-                  class="checkbox"
+                  class="rjsf-checkbox"
                 >
                   <label>
                     <span>
@@ -3588,7 +3613,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </label>
                 </div>
                 <div
-                  class="checkbox"
+                  class="rjsf-checkbox"
                 >
                   <label>
                     <span>
@@ -3610,25 +3635,27 @@ exports[`Complex grid > renders person and address and employment in a complex g
           </div>
         </div>
         <div
-          class="row"
+          class="rjsf-grid-row"
         >
           <div
-            class="col-xs-6"
+            class="rjsf-grid-column"
+            style="--rjsf-span: 6;"
           >
             <div
-              class="form-group rjsf-field rjsf-field-object"
+              class="rjsf-field rjsf-field-object"
             >
               <div
-                class="row"
+                class="rjsf-grid-row"
               >
                 <div
-                  class="col-xs-12"
+                  class="rjsf-grid-column"
+                  style="--rjsf-span: 12;"
                 >
                   <div
-                    class="form-group rjsf-field rjsf-field-string"
+                    class="rjsf-field rjsf-field-string"
                   >
                     <label
-                      class="control-label"
+                      class="rjsf-field-label"
                       for="root_person_address_line_1"
                     >
                       <span
@@ -3637,13 +3664,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         Address
                       </span>
                       <span
-                        class="required"
+                        class="rjsf-required"
                       >
                         *
                       </span>
                     </label>
                     <input
-                      class="form-control"
                       id="root_person_address_line_1"
                       name="root_person_address_line_1"
                       placeholder=""
@@ -3654,13 +3680,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </div>
                 </div>
                 <div
-                  class="col-xs-12"
+                  class="rjsf-grid-column"
+                  style="--rjsf-span: 12;"
                 >
                   <div
-                    class="form-group rjsf-field rjsf-field-string"
+                    class="rjsf-field rjsf-field-string"
                   >
                     <label
-                      class="control-label"
+                      class="rjsf-field-label"
                       for="root_person_address_line_2"
                     >
                       <span
@@ -3670,7 +3697,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </span>
                     </label>
                     <input
-                      class="form-control"
                       id="root_person_address_line_2"
                       name="root_person_address_line_2"
                       placeholder=""
@@ -3680,13 +3706,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </div>
                 </div>
                 <div
-                  class="col-xs-12"
+                  class="rjsf-grid-column"
+                  style="--rjsf-span: 12;"
                 >
                   <div
-                    class="form-group rjsf-field rjsf-field-string"
+                    class="rjsf-field rjsf-field-string"
                   >
                     <label
-                      class="control-label"
+                      class="rjsf-field-label"
                       for="root_person_address_city"
                     >
                       <span
@@ -3695,13 +3722,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         City
                       </span>
                       <span
-                        class="required"
+                        class="rjsf-required"
                       >
                         *
                       </span>
                     </label>
                     <input
-                      class="form-control"
                       id="root_person_address_city"
                       name="root_person_address_city"
                       placeholder=""
@@ -3711,15 +3737,18 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     />
                   </div>
                 </div>
-                <div>
+                <div
+                  class="rjsf-grid-row"
+                >
                   <div
-                    class="col-xs-6"
+                    class="rjsf-grid-column"
+                    style="--rjsf-span: 6;"
                   >
                     <div
-                      class="form-group rjsf-field rjsf-field-string"
+                      class="rjsf-field rjsf-field-string"
                     >
                       <label
-                        class="control-label"
+                        class="rjsf-field-label"
                         for="root_person_address_state"
                       >
                         <span
@@ -3728,13 +3757,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           State
                         </span>
                         <span
-                          class="required"
+                          class="rjsf-required"
                         >
                           *
                         </span>
                       </label>
                       <select
-                        class="form-control"
                         id="root_person_address_state"
                         name="root_person_address_state"
                         required=""
@@ -4026,13 +4054,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     </div>
                   </div>
                   <div
-                    class="col-xs-6"
+                    class="rjsf-grid-column"
+                    style="--rjsf-span: 6;"
                   >
                     <div
-                      class="form-group rjsf-field rjsf-field-string"
+                      class="rjsf-field rjsf-field-string"
                     >
                       <label
-                        class="control-label"
+                        class="rjsf-field-label"
                         for="root_person_address_postal_code"
                       >
                         <span
@@ -4041,13 +4070,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           ZIP Code
                         </span>
                         <span
-                          class="required"
+                          class="rjsf-required"
                         >
                           *
                         </span>
                       </label>
                       <input
-                        class="form-control"
                         id="root_person_address_postal_code"
                         name="root_person_address_postal_code"
                         placeholder=""
@@ -4062,14 +4090,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="col-xs-6"
-            style="margin: 26px 0px;"
+            class="rjsf-grid-column"
+            style="margin: 26px 0px; --rjsf-span: 6;"
           >
             <div
-              class="form-group rjsf-field rjsf-field-undefined"
+              class="rjsf-field rjsf-field-undefined"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label"
               >
                 <span
                   id="root_employment__label"
@@ -4079,12 +4107,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
               </label>
               <div
                 aria-labelledby="root_employment__label"
-                class="field-radio-group"
+                class="rjsf-field-radio-group"
                 id="root_employment"
                 role="radiogroup"
               >
                 <label
-                  class="radio-inline"
+                  class="rjsf-radio-inline"
                 >
                   <span>
                     <input
@@ -4100,7 +4128,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </span>
                 </label>
                 <label
-                  class="radio-inline"
+                  class="rjsf-radio-inline"
                 >
                   <span>
                     <input
@@ -4115,7 +4143,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </span>
                 </label>
                 <label
-                  class="radio-inline"
+                  class="rjsf-radio-inline"
                 >
                   <span>
                     <input
@@ -4133,13 +4161,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="col-xs-6"
+            class="rjsf-grid-column"
+            style="--rjsf-span: 6;"
           >
             <div
-              class="form-group rjsf-field rjsf-field-string"
+              class="rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label"
                 for="root_employment_business"
               >
                 <span
@@ -4148,13 +4177,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   Company Name
                 </span>
                 <span
-                  class="required"
+                  class="rjsf-required"
                 >
                   *
                 </span>
               </label>
               <input
-                class="form-control"
                 id="root_employment_business"
                 name="root_employment_business"
                 placeholder=""
@@ -4165,13 +4193,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="col-xs-6"
+            class="rjsf-grid-column"
+            style="--rjsf-span: 6;"
           >
             <div
-              class="form-group rjsf-field rjsf-field-string"
+              class="rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label"
                 for="root_employment_title"
               >
                 <span
@@ -4181,7 +4210,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 </span>
               </label>
               <input
-                class="form-control"
                 id="root_employment_title"
                 name="root_employment_title"
                 placeholder=""
@@ -4191,13 +4219,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="col-xs-4"
+            class="rjsf-grid-column"
+            style="--rjsf-span: 4;"
           >
             <div
-              class="form-group rjsf-field rjsf-field-string"
+              class="rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label"
                 for="root_employment_location_city"
               >
                 <span
@@ -4206,13 +4235,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   City
                 </span>
                 <span
-                  class="required"
+                  class="rjsf-required"
                 >
                   *
                 </span>
               </label>
               <input
-                class="form-control"
                 id="root_employment_location_city"
                 name="root_employment_location_city"
                 placeholder=""
@@ -4223,13 +4251,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="col-xs-2"
+            class="rjsf-grid-column"
+            style="--rjsf-span: 2;"
           >
             <div
-              class="form-group rjsf-field rjsf-field-string"
+              class="rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label"
                 for="root_employment_location_state"
               >
                 <span
@@ -4238,13 +4267,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   State
                 </span>
                 <span
-                  class="required"
+                  class="rjsf-required"
                 >
                   *
                 </span>
               </label>
               <select
-                class="form-control"
                 id="root_employment_location_state"
                 name="root_employment_location_state"
                 required=""
@@ -4540,7 +4568,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button"
         type="submit"
       >
         Submit
@@ -4556,16 +4584,17 @@ exports[`Three even column grid > renders person and address in three columns, n
     class="rjsf"
   >
     <div
-      class="form-group rjsf-field rjsf-field-object"
+      class="rjsf-field rjsf-field-object"
     >
       <div
-        class="row"
+        class="rjsf-grid-row"
       >
         <div
-          class="col-xs-12"
+          class="rjsf-grid-column"
+          style="--rjsf-span: 12;"
         >
           <div
-            class="form-group rjsf-field rjsf-field-object"
+            class="rjsf-field rjsf-field-object"
           >
             <legend>
               <span
@@ -4577,13 +4606,14 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
         </div>
         <div
-          class="col-xs-4"
+          class="rjsf-grid-column"
+          style="--rjsf-span: 4;"
         >
           <div
-            class="form-group rjsf-field rjsf-field-string"
+            class="rjsf-field rjsf-field-string"
           >
             <label
-              class="control-label"
+              class="rjsf-field-label"
               for="root_person_name_first"
             >
               <span
@@ -4592,13 +4622,12 @@ exports[`Three even column grid > renders person and address in three columns, n
                 First Name
               </span>
               <span
-                class="required"
+                class="rjsf-required"
               >
                 *
               </span>
             </label>
             <input
-              class="form-control"
               id="root_person_name_first"
               name="root_person_name_first"
               placeholder=""
@@ -4609,13 +4638,14 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
         </div>
         <div
-          class="col-xs-4"
+          class="rjsf-grid-column"
+          style="--rjsf-span: 4;"
         >
           <div
-            class="form-group rjsf-field rjsf-field-string"
+            class="rjsf-field rjsf-field-string"
           >
             <label
-              class="control-label"
+              class="rjsf-field-label"
               for="root_person_name_middle"
             >
               <span
@@ -4625,7 +4655,6 @@ exports[`Three even column grid > renders person and address in three columns, n
               </span>
             </label>
             <input
-              class="form-control"
               id="root_person_name_middle"
               name="root_person_name_middle"
               placeholder=""
@@ -4635,13 +4664,14 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
         </div>
         <div
-          class="col-xs-4"
+          class="rjsf-grid-column"
+          style="--rjsf-span: 4;"
         >
           <div
-            class="form-group rjsf-field rjsf-field-string"
+            class="rjsf-field rjsf-field-string"
           >
             <label
-              class="control-label"
+              class="rjsf-field-label"
               for="root_person_name_last"
             >
               <span
@@ -4650,13 +4680,12 @@ exports[`Three even column grid > renders person and address in three columns, n
                 Last Name
               </span>
               <span
-                class="required"
+                class="rjsf-required"
               >
                 *
               </span>
             </label>
             <input
-              class="form-control"
               id="root_person_name_last"
               name="root_person_name_last"
               placeholder=""
@@ -4667,13 +4696,14 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
         </div>
         <div
-          class="col-xs-4"
+          class="rjsf-grid-column"
+          style="--rjsf-span: 4;"
         >
           <div
-            class="form-group rjsf-field rjsf-field-string"
+            class="rjsf-field rjsf-field-string"
           >
             <label
-              class="control-label"
+              class="rjsf-field-label"
               for="root_person_birth_date"
             >
               <span
@@ -4682,13 +4712,12 @@ exports[`Three even column grid > renders person and address in three columns, n
                 Date of Birth
               </span>
               <span
-                class="required"
+                class="rjsf-required"
               >
                 *
               </span>
             </label>
             <input
-              class="form-control"
               id="root_person_birth_date"
               name="root_person_birth_date"
               placeholder="DOB"
@@ -4699,13 +4728,14 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
         </div>
         <div
-          class="col-xs-8"
+          class="rjsf-grid-column"
+          style="--rjsf-span: 8;"
         >
           <div
-            class="form-group rjsf-field rjsf-field-array"
+            class="rjsf-field rjsf-field-array"
           >
             <label
-              class="control-label"
+              class="rjsf-field-label"
             >
               <span
                 id="root_person_race__label"
@@ -4713,25 +4743,25 @@ exports[`Three even column grid > renders person and address in three columns, n
                 Race
               </span>
               <span
-                class="required"
+                class="rjsf-required"
               >
                 *
               </span>
             </label>
             <div
-              class="field-description"
+              class="rjsf-field-description"
               id="root_person_race__description"
             >
               (Check all that apply)
             </div>
             <div
               aria-labelledby="root_person_race__label"
-              class="checkboxes"
+              class="rjsf-checkboxes"
               id="root_person_race"
               role="group"
             >
               <div
-                class="checkbox"
+                class="rjsf-checkbox"
               >
                 <label>
                   <span>
@@ -4749,7 +4779,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                 </label>
               </div>
               <div
-                class="checkbox"
+                class="rjsf-checkbox"
               >
                 <label>
                   <span>
@@ -4767,7 +4797,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                 </label>
               </div>
               <div
-                class="checkbox"
+                class="rjsf-checkbox"
               >
                 <label>
                   <span>
@@ -4785,7 +4815,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                 </label>
               </div>
               <div
-                class="checkbox"
+                class="rjsf-checkbox"
               >
                 <label>
                   <span>
@@ -4803,7 +4833,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                 </label>
               </div>
               <div
-                class="checkbox"
+                class="rjsf-checkbox"
               >
                 <label>
                   <span>
@@ -4824,13 +4854,14 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
         </div>
         <div
-          class="col-xs-6"
+          class="rjsf-grid-column"
+          style="--rjsf-span: 6;"
         >
           <div
-            class="form-group rjsf-field rjsf-field-string"
+            class="rjsf-field rjsf-field-string"
           >
             <label
-              class="control-label"
+              class="rjsf-field-label"
               for="root_person_address_line_1"
             >
               <span
@@ -4839,13 +4870,12 @@ exports[`Three even column grid > renders person and address in three columns, n
                 Address
               </span>
               <span
-                class="required"
+                class="rjsf-required"
               >
                 *
               </span>
             </label>
             <input
-              class="form-control"
               id="root_person_address_line_1"
               name="root_person_address_line_1"
               placeholder=""
@@ -4856,13 +4886,14 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
         </div>
         <div
-          class="col-xs-6"
+          class="rjsf-grid-column"
+          style="--rjsf-span: 6;"
         >
           <div
-            class="form-group rjsf-field rjsf-field-string"
+            class="rjsf-field rjsf-field-string"
           >
             <label
-              class="control-label"
+              class="rjsf-field-label"
               for="root_person_address_line_2"
             >
               <span
@@ -4872,7 +4903,6 @@ exports[`Three even column grid > renders person and address in three columns, n
               </span>
             </label>
             <input
-              class="form-control"
               id="root_person_address_line_2"
               name="root_person_address_line_2"
               placeholder=""
@@ -4882,13 +4912,14 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
         </div>
         <div
-          class="col-xs-4"
+          class="rjsf-grid-column"
+          style="--rjsf-span: 4;"
         >
           <div
-            class="form-group rjsf-field rjsf-field-string"
+            class="rjsf-field rjsf-field-string"
           >
             <label
-              class="control-label"
+              class="rjsf-field-label"
               for="root_person_address_city"
             >
               <span
@@ -4897,13 +4928,12 @@ exports[`Three even column grid > renders person and address in three columns, n
                 City
               </span>
               <span
-                class="required"
+                class="rjsf-required"
               >
                 *
               </span>
             </label>
             <input
-              class="form-control"
               id="root_person_address_city"
               name="root_person_address_city"
               placeholder=""
@@ -4914,13 +4944,14 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
         </div>
         <div
-          class="col-xs-4"
+          class="rjsf-grid-column"
+          style="--rjsf-span: 4;"
         >
           <div
-            class="form-group rjsf-field rjsf-field-string"
+            class="rjsf-field rjsf-field-string"
           >
             <label
-              class="control-label"
+              class="rjsf-field-label"
               for="root_person_address_state"
             >
               <span
@@ -4929,13 +4960,12 @@ exports[`Three even column grid > renders person and address in three columns, n
                 State
               </span>
               <span
-                class="required"
+                class="rjsf-required"
               >
                 *
               </span>
             </label>
             <select
-              class="form-control"
               id="root_person_address_state"
               name="root_person_address_state"
               required=""
@@ -5227,13 +5257,14 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
         </div>
         <div
-          class="col-xs-4"
+          class="rjsf-grid-column"
+          style="--rjsf-span: 4;"
         />
       </div>
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button"
         type="submit"
       >
         Submit
@@ -5249,16 +5280,17 @@ exports[`Two even column grid > renders person and address in two columns, no em
     class="rjsf"
   >
     <div
-      class="form-group rjsf-field rjsf-field-object"
+      class="rjsf-field rjsf-field-object"
     >
       <div
-        class="row"
+        class="rjsf-grid-row"
       >
         <div
-          class="col-xs-12"
+          class="rjsf-grid-column"
+          style="--rjsf-span: 12;"
         >
           <div
-            class="form-group rjsf-field rjsf-field-object"
+            class="rjsf-field rjsf-field-object"
           >
             <legend>
               <span
@@ -5270,13 +5302,14 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
         </div>
         <div
-          class="col-xs-6"
+          class="rjsf-grid-column"
+          style="--rjsf-span: 6;"
         >
           <div
-            class="form-group rjsf-field rjsf-field-string"
+            class="rjsf-field rjsf-field-string"
           >
             <label
-              class="control-label"
+              class="rjsf-field-label"
               for="root_person_name_first"
             >
               <span
@@ -5285,13 +5318,12 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 First Name
               </span>
               <span
-                class="required"
+                class="rjsf-required"
               >
                 *
               </span>
             </label>
             <input
-              class="form-control"
               id="root_person_name_first"
               name="root_person_name_first"
               placeholder=""
@@ -5302,13 +5334,14 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
         </div>
         <div
-          class="col-xs-6"
+          class="rjsf-grid-column"
+          style="--rjsf-span: 6;"
         >
           <div
-            class="form-group rjsf-field rjsf-field-string"
+            class="rjsf-field rjsf-field-string"
           >
             <label
-              class="control-label"
+              class="rjsf-field-label"
               for="root_person_name_middle"
             >
               <span
@@ -5318,7 +5351,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
               </span>
             </label>
             <input
-              class="form-control"
               id="root_person_name_middle"
               name="root_person_name_middle"
               placeholder=""
@@ -5328,13 +5360,14 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
         </div>
         <div
-          class="col-xs-6"
+          class="rjsf-grid-column"
+          style="--rjsf-span: 6;"
         >
           <div
-            class="form-group rjsf-field rjsf-field-string"
+            class="rjsf-field rjsf-field-string"
           >
             <label
-              class="control-label"
+              class="rjsf-field-label"
               for="root_person_name_first"
             >
               <span
@@ -5343,13 +5376,12 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 First Name
               </span>
               <span
-                class="required"
+                class="rjsf-required"
               >
                 *
               </span>
             </label>
             <input
-              class="form-control"
               id="root_person_name_first"
               name="root_person_name_first"
               placeholder=""
@@ -5360,13 +5392,14 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
         </div>
         <div
-          class="col-xs-6"
+          class="rjsf-grid-column"
+          style="--rjsf-span: 6;"
         >
           <div
-            class="form-group rjsf-field rjsf-field-string"
+            class="rjsf-field rjsf-field-string"
           >
             <label
-              class="control-label"
+              class="rjsf-field-label"
               for="root_person_birth_date"
             >
               <span
@@ -5375,13 +5408,12 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 Date of Birth
               </span>
               <span
-                class="required"
+                class="rjsf-required"
               >
                 *
               </span>
             </label>
             <input
-              class="form-control"
               id="root_person_birth_date"
               name="root_person_birth_date"
               placeholder="DOB"
@@ -5392,13 +5424,14 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
         </div>
         <div
-          class="col-xs-12"
+          class="rjsf-grid-column"
+          style="--rjsf-span: 12;"
         >
           <div
-            class="form-group rjsf-field rjsf-field-array"
+            class="rjsf-field rjsf-field-array"
           >
             <label
-              class="control-label"
+              class="rjsf-field-label"
             >
               <span
                 id="root_person_race__label"
@@ -5406,25 +5439,25 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 Race
               </span>
               <span
-                class="required"
+                class="rjsf-required"
               >
                 *
               </span>
             </label>
             <div
-              class="field-description"
+              class="rjsf-field-description"
               id="root_person_race__description"
             >
               (Check all that apply)
             </div>
             <div
               aria-labelledby="root_person_race__label"
-              class="checkboxes"
+              class="rjsf-checkboxes"
               id="root_person_race"
               role="group"
             >
               <div
-                class="checkbox"
+                class="rjsf-checkbox"
               >
                 <label>
                   <span>
@@ -5442,7 +5475,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 </label>
               </div>
               <div
-                class="checkbox"
+                class="rjsf-checkbox"
               >
                 <label>
                   <span>
@@ -5460,7 +5493,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 </label>
               </div>
               <div
-                class="checkbox"
+                class="rjsf-checkbox"
               >
                 <label>
                   <span>
@@ -5478,7 +5511,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 </label>
               </div>
               <div
-                class="checkbox"
+                class="rjsf-checkbox"
               >
                 <label>
                   <span>
@@ -5496,7 +5529,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 </label>
               </div>
               <div
-                class="checkbox"
+                class="rjsf-checkbox"
               >
                 <label>
                   <span>
@@ -5517,13 +5550,14 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
         </div>
         <div
-          class="col-xs-6"
+          class="rjsf-grid-column"
+          style="--rjsf-span: 6;"
         >
           <div
-            class="form-group rjsf-field rjsf-field-string"
+            class="rjsf-field rjsf-field-string"
           >
             <label
-              class="control-label"
+              class="rjsf-field-label"
               for="root_person_address_line_1"
             >
               <span
@@ -5532,13 +5566,12 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 Address
               </span>
               <span
-                class="required"
+                class="rjsf-required"
               >
                 *
               </span>
             </label>
             <input
-              class="form-control"
               id="root_person_address_line_1"
               name="root_person_address_line_1"
               placeholder=""
@@ -5549,13 +5582,14 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
         </div>
         <div
-          class="col-xs-6"
+          class="rjsf-grid-column"
+          style="--rjsf-span: 6;"
         >
           <div
-            class="form-group rjsf-field rjsf-field-string"
+            class="rjsf-field rjsf-field-string"
           >
             <label
-              class="control-label"
+              class="rjsf-field-label"
               for="root_person_address_line_2"
             >
               <span
@@ -5565,7 +5599,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
               </span>
             </label>
             <input
-              class="form-control"
               id="root_person_address_line_2"
               name="root_person_address_line_2"
               placeholder=""
@@ -5575,13 +5608,14 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
         </div>
         <div
-          class="col-xs-6"
+          class="rjsf-grid-column"
+          style="--rjsf-span: 6;"
         >
           <div
-            class="form-group rjsf-field rjsf-field-string"
+            class="rjsf-field rjsf-field-string"
           >
             <label
-              class="control-label"
+              class="rjsf-field-label"
               for="root_person_address_city"
             >
               <span
@@ -5590,13 +5624,12 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 City
               </span>
               <span
-                class="required"
+                class="rjsf-required"
               >
                 *
               </span>
             </label>
             <input
-              class="form-control"
               id="root_person_address_city"
               name="root_person_address_city"
               placeholder=""
@@ -5607,13 +5640,14 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
         </div>
         <div
-          class="col-xs-6"
+          class="rjsf-grid-column"
+          style="--rjsf-span: 6;"
         >
           <div
-            class="form-group rjsf-field rjsf-field-string"
+            class="rjsf-field rjsf-field-string"
           >
             <label
-              class="control-label"
+              class="rjsf-field-label"
               for="root_person_address_state"
             >
               <span
@@ -5622,13 +5656,12 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 State
               </span>
               <span
-                class="required"
+                class="rjsf-required"
               >
                 *
               </span>
             </label>
             <select
-              class="form-control"
               id="root_person_address_state"
               name="root_person_address_state"
               required=""
@@ -5920,13 +5953,14 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
         </div>
         <div
-          class="col-xs-12"
+          class="rjsf-grid-column"
+          style="--rjsf-span: 12;"
         />
       </div>
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button"
         type="submit"
       >
         Submit

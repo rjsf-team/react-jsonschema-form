@@ -263,7 +263,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
   const [theme, setTheme] = useState<string>(initial.theme);
   const [sampleName, setSampleName] = useState<string>(initial.sampleName ?? 'Simple');
   const [subtheme, setSubtheme] = useState<string | null>(null);
-  const [stylesheet, setStylesheet] = useState<string | null>(initial.stylesheet ?? null);
+  const [stylesheet, setStylesheet] = useState<string | string[] | null>(initial.stylesheet ?? null);
   const [validator, setValidator] = useState<string>(initial.validator ?? DEFAULT_VALIDATOR);
   // A load remounts every form the playground seeds, the selectors and the options drawer's included. The form owns
   // its data once it has mounted, so data edited in the formData editor reaches it by remounting the main form alone
@@ -392,7 +392,9 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
         <Divider variant='fullWidth' sx={{ my: 1 }} />
         <ErrorBoundary>
           <DemoFrame
-            head={<link rel='stylesheet' id='theme' href={stylesheet || ''} />}
+            head={[stylesheet ?? []].flat().map((href) => (
+              <link key={href} rel='stylesheet' href={href} />
+            ))}
             style={{
               width: '100%',
               height: 1000,

@@ -13,7 +13,8 @@ import {
 import Label from './FieldTemplate/Label.tsx';
 
 /** The `WrapIfAdditional` component is used by the `FieldTemplate` to rename, or remove properties that are
- * part of an `additionalProperties` part of a schema.
+ * part of an `additionalProperties` part of a schema. The key, the value and the remove button sit in a row that
+ * `rjsf.css` lays out as a grid.
  *
  * @param props - The `WrapIfAdditionalProps` for this component
  */
@@ -34,7 +35,6 @@ export default function WrapIfAdditionalTemplate<
     onKeyRenameBlur,
     onRemoveProperty,
     propertyNamesEnum,
-    rawDescription,
     readonly,
     required,
     schema,
@@ -51,66 +51,63 @@ export default function WrapIfAdditionalTemplate<
   const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
   const keyId = additionalKeyId(id);
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
-  const hasDescription = !!rawDescription;
-
-  const uiClassNames = joinClassNames('form-group', classNames, hasErrors && 'has-error has-danger');
 
   if (!additional) {
     return (
-      <div className={uiClassNames} style={style}>
+      <div className={classNames} style={style} data-invalid={hasErrors || undefined}>
         {children}
       </div>
     );
   }
-  const margin = hasDescription ? 46 : 26;
   return (
-    <div className={uiClassNames} style={style}>
-      <div className='row'>
-        <div className='col-xs-5 form-additional'>
-          <div className='form-group'>
-            {hasKeyLabel && <Label label={keyLabel} required={required} id={keyId} className={classMap.fieldLabel} />}
-            {hasKeyLabel && rawDescription && <div>&nbsp;</div>}
-            {propertyNamesEnum ? (
-              <AdditionalPropertyKeySelect<T, S, F>
-                errorAttributes={keyAttributes}
-                id={keyId}
-                label={keyLabel}
-                hideLabel
-                labelledByTemplate={hasKeyLabel}
-                value={keyName}
-                propertyNamesEnum={propertyNamesEnum}
-                onKeyRename={onKeyRename}
-                disabled={disabled}
-                readonly={readonly}
-                required={required}
-                registry={registry}
-              />
-            ) : (
-              <input
-                key={keyName}
-                className='form-control'
-                type='text'
-                id={keyId}
-                aria-label={hasKeyLabel ? undefined : keyLabel}
-                {...keyAttributes}
-                onBlur={onKeyRenameBlur}
-                defaultValue={keyName}
-              />
-            )}
-          </div>
+    <div className={classNames} style={style} data-invalid={hasErrors || undefined}>
+      <div className='rjsf-additional-property'>
+        <div className='rjsf-additional-property-key'>
+          {hasKeyLabel && (
+            <Label
+              label={keyLabel}
+              required={required}
+              id={keyId}
+              className={joinClassNames('rjsf-field-label', classMap.fieldLabel)}
+            />
+          )}
+          {propertyNamesEnum ? (
+            <AdditionalPropertyKeySelect<T, S, F>
+              errorAttributes={keyAttributes}
+              id={keyId}
+              label={keyLabel}
+              hideLabel
+              labelledByTemplate={hasKeyLabel}
+              value={keyName}
+              propertyNamesEnum={propertyNamesEnum}
+              onKeyRename={onKeyRename}
+              disabled={disabled}
+              readonly={readonly}
+              required={required}
+              registry={registry}
+            />
+          ) : (
+            <input
+              key={keyName}
+              className={classMap.input}
+              type='text'
+              id={keyId}
+              aria-label={hasKeyLabel ? undefined : keyLabel}
+              {...keyAttributes}
+              onBlur={onKeyRenameBlur}
+              defaultValue={keyName}
+            />
+          )}
         </div>
-        <div className='form-additional form-group col-xs-5'>{children}</div>
-        <div className='col-xs-2' style={{ marginTop: hasKeyLabel ? `${margin}px` : undefined }}>
-          <RemoveButton
-            id={buttonId(id, 'remove')}
-            className='rjsf-object-property-remove btn-block'
-            style={{ border: '0' }}
-            disabled={disabled || readonly}
-            onClick={onRemoveProperty}
-            uiSchema={uiSchema}
-            registry={registry}
-          />
-        </div>
+        <div className='rjsf-additional-property-value'>{children}</div>
+        <RemoveButton
+          id={buttonId(id, 'remove')}
+          className='rjsf-object-property-remove'
+          disabled={disabled || readonly}
+          onClick={onRemoveProperty}
+          uiSchema={uiSchema}
+          registry={registry}
+        />
       </div>
     </div>
   );

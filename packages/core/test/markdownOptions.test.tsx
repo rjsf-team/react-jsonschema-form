@@ -59,6 +59,6 @@ describe('markdown options', () => {
       translateString: () => '**unsupported**',
     });
 
-    expect(node.querySelector('.unsupported-field strong')).toHaveTextContent('unsupported');
+    expect(node.querySelector('.rjsf-unsupported-field strong')).toHaveTextContent('unsupported');
   });
 });

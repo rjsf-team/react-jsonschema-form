@@ -8,6 +8,7 @@ import {
   schemaRequiresTrueValue,
   getUiOptions,
   getWidgetDescription,
+  hasWidgetErrors,
   joinClassNames,
   widgetDrawsLabel,
 } from '@rjsf/utils';
@@ -68,20 +69,24 @@ function CheckboxWidget<
   const description =
     presentation || getUiOptions(uiSchema).widget !== 'checkbox' ? getWidgetDescription<T, S, F>(props) : undefined;
   return (
-    <div className={joinClassNames(classMap.checkboxWrapper, (disabled || readonly) && classMap.disabled)}>
+    <div
+      className={joinClassNames('rjsf-checkbox', classMap.checkboxWrapper, (disabled || readonly) && classMap.disabled)}
+      data-disabled={disabled || readonly || undefined}
+    >
       {description && (
         <DescriptionFieldTemplate
           id={description.id}
           description={description.text}
+          hasErrors={hasWidgetErrors<T, S, F>(props)}
           schema={schema}
           uiSchema={uiSchema}
           registry={registry}
         />
       )}
-      <label className={classMap.checkboxLabel || undefined}>
+      <label className={classMap.checkboxLabel}>
         <input
           type='checkbox'
-          className={classMap.checkboxInput || undefined}
+          className={classMap.checkboxInput}
           id={id}
           name={htmlName || id}
           checked={typeof value === 'undefined' ? false : value}
@@ -96,7 +101,7 @@ function CheckboxWidget<
         {labelValue(
           <span>
             {label}
-            {trueValueRequired && <span className='required'>*</span>}
+            {trueValueRequired && <span className='rjsf-required'>*</span>}
           </span>,
           !showsLabel,
         )}

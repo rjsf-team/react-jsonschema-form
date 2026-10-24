@@ -797,7 +797,7 @@ describe('Error state consistency when deriving from new props', () => {
     });
 
     it.each([
-      ['adds an item that has a default', '.rjsf-array-item-add button'],
+      ['adds an item that has a default', '.rjsf-array-item-add'],
       ['copies an item', '.rjsf-array-item-copy'],
       ['removes an item', '.rjsf-array-item-remove'],
     ])("keeps the array's own errors when it %s", async (_, button) => {

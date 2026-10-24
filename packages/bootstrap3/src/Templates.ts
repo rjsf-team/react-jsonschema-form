@@ -3,12 +3,15 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, TemplatesType } fro
 
 import AddButton from './AddButton.tsx';
 import ArrayFieldItemTemplate from './ArrayFieldItemTemplate.tsx';
+import CyclicSchemaExpandTemplate from './CyclicSchemaExpandTemplate.tsx';
 import { ClearButton, CopyButton, MoveDownButton, MoveUpButton, RemoveButton } from './IconButton.tsx';
+import OptionalDataControlsTemplate from './OptionalDataControlsTemplate.tsx';
 import TitleField from './TitleField.tsx';
 import WrapIfAdditionalTemplate from './WrapIfAdditionalTemplate.tsx';
 
-/** The templates whose markup is Bootstrap 3's rather than a class name on `@rjsf/core`'s: the glyphicon buttons and
- * the `col-xs-*` layouts
+/** The templates whose markup is Bootstrap 3's rather than a class name on `@rjsf/core`'s: the glyphicon buttons, the
+ * templates rendering them directly, the `col-xs-*` layouts, and the cyclic-schema box's margin, which core leaves to
+ * `rjsf.css`
  *
  * @deprecated `@rjsf/bootstrap3` is removed in v8; move to another theme
  */
@@ -22,6 +25,8 @@ export function generateTemplates<
     // `buildRegistry()` would fill in core's `SubmitButton` anyway; it is listed so `ButtonTemplates` is complete, as
     // `Partial<TemplatesType>` requires, and `ThemeProps['templates']` can't type a partial one's entries for JSX
     ButtonTemplates: { AddButton, ClearButton, CopyButton, MoveDownButton, MoveUpButton, RemoveButton, SubmitButton },
+    CyclicSchemaExpandTemplate,
+    OptionalDataControlsTemplate,
     TitleFieldTemplate: TitleField,
     WrapIfAdditionalTemplate,
   };

@@ -487,7 +487,7 @@ describe('transformChange', () => {
         (next, previous) =>
           next && previous && next.length > previous.length ? [...next.slice(-1), ...previous] : next,
         ['b', 'c'],
-        '.rjsf-array-item-add button',
+        '.rjsf-array-item-add',
         ['new', 'b', 'c'],
       ],
       [

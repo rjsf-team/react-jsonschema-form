@@ -13,6 +13,8 @@ export interface LabelProps {
   labelId?: string;
   /** The class names of the `<label>` */
   className?: string;
+  /** Whether the field shows its own errors, marked on the label as `data-invalid` */
+  invalid?: boolean;
 }
 
 /** Renders a label for a field. Its `labelId` goes on the label's text alone, as a group or an option selector is
@@ -22,14 +24,14 @@ export interface LabelProps {
  * @param props - The `LabelProps` for this component
  */
 function Label(props: LabelProps) {
-  const { label, required, id, labelId, className } = props;
+  const { label, required, id, labelId, className, invalid } = props;
   if (!label) {
     return null;
   }
   return (
-    <label className={className} htmlFor={id}>
+    <label className={className} htmlFor={id} data-invalid={invalid || undefined}>
       {labelId ? <span id={labelId}>{label}</span> : label}
-      {required && <span className='required'>{REQUIRED_FIELD_SYMBOL}</span>}
+      {required && <span className='rjsf-required'>{REQUIRED_FIELD_SYMBOL}</span>}
     </label>
   );
 }

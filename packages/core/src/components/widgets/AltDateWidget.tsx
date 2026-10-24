@@ -36,7 +36,7 @@ function AltDateWidget<
 
   return (
     <div id={id} {...group}>
-      <ul className={classMap.altDateList}>
+      <ul className={joinClassNames('rjsf-alt-date-list', classMap.altDateList)}>
         {elements.map((elemProps, i) => (
           // oxlint-disable-next-line react/no-array-index-key
           <li className={classMap.altDateListItem} key={i}>
@@ -59,7 +59,7 @@ function AltDateWidget<
           <li className={classMap.altDateListItem}>
             <button
               type='button'
-              className={joinClassNames(classMap.altDateNowButton, 'btn-now')}
+              className={joinClassNames('rjsf-btn-now', classMap.altDateNowButton)}
               onClick={handleSetNow}
               disabled={buttonsDisabled}
             >
@@ -71,7 +71,7 @@ function AltDateWidget<
           <li className={classMap.altDateListItem}>
             <button
               type='button'
-              className={joinClassNames(classMap.altDateClearButton, 'btn-clear')}
+              className={joinClassNames('rjsf-btn-clear', classMap.altDateClearButton)}
               onClick={handleClear}
               disabled={buttonsDisabled}
             >

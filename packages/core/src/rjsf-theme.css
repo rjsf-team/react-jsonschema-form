@@ -1,0 +1,119 @@
+/* A default look for `@rjsf/core`'s markup, on top of `rjsf.css`'s layout: colours, borders, fonts and the error and
+   disabled states. A starting point, not a design system; its colours follow the page's `color-scheme` */
+@layer rjsf {
+  :where(.rjsf) {
+    --rjsf-radius: 0.25rem;
+    --rjsf-border: light-dark(#ccc, #555);
+    --rjsf-muted: light-dark(#666, #aaa);
+    --rjsf-danger: light-dark(#b02a37, #f1aeb5);
+    --rjsf-accent: light-dark(#0d6efd, #6ea8fe);
+    --rjsf-surface: light-dark(#fff, #1e1e1e);
+  }
+
+  :where(.rjsf legend) {
+    font-size: 1.25rem;
+  }
+
+  :where(.rjsf .rjsf-field-label) {
+    font-weight: 600;
+  }
+
+  :where(.rjsf .rjsf-required) {
+    color: var(--rjsf-danger);
+    margin-inline-start: 0.125rem;
+  }
+
+  :where(
+    .rjsf input:not([type='checkbox'], [type='radio'], [type='range'], [type='file']),
+    .rjsf select,
+    .rjsf textarea
+  ) {
+    padding: 0.375rem 0.5rem;
+    border: 1px solid var(--rjsf-border);
+    border-radius: var(--rjsf-radius);
+    background: var(--rjsf-surface);
+    color: inherit;
+    font: inherit;
+  }
+
+  /* The control's own `aria-invalid`, so a container's errors don't paint the controls of every field inside it */
+  :where(.rjsf :is(input, select, textarea)[aria-invalid='true']) {
+    border-color: var(--rjsf-danger);
+  }
+
+  :where(.rjsf .rjsf-field-label[data-invalid], .rjsf .rjsf-field-help[data-invalid]) {
+    color: var(--rjsf-danger);
+  }
+
+  :where(.rjsf .rjsf-field-description, .rjsf .rjsf-field-help) {
+    color: var(--rjsf-muted);
+    font-size: 0.875rem;
+    margin-block: 0.25rem;
+  }
+
+  :where(.rjsf .rjsf-error-detail) {
+    color: var(--rjsf-danger);
+    font-size: 0.875rem;
+    margin: 0.25rem 0 0;
+    padding-inline-start: 1.25rem;
+  }
+
+  :where(.rjsf .rjsf-errors) {
+    color: var(--rjsf-danger);
+    border: 1px solid var(--rjsf-danger);
+    border-radius: var(--rjsf-radius);
+    margin-block-end: var(--rjsf-gap, 0.75rem);
+  }
+
+  :where(.rjsf .rjsf-errors h3) {
+    margin: 0;
+    padding: 0.5rem 0.75rem;
+    border-block-end: 1px solid var(--rjsf-danger);
+    font-size: 1rem;
+  }
+
+  :where(.rjsf .rjsf-errors ul) {
+    margin: 0;
+    padding: 0.5rem 0.75rem 0.5rem 2rem;
+  }
+
+  :where(
+    .rjsf .rjsf-button,
+    .rjsf .rjsf-submit-button,
+    .rjsf .rjsf-btn-now,
+    .rjsf .rjsf-btn-clear,
+    .rjsf .rjsf-cyclic-schema-expand
+  ) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.75rem;
+    border: 1px solid var(--rjsf-border);
+    border-radius: var(--rjsf-radius);
+    background: var(--rjsf-surface);
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+  }
+
+  /* `rjsf.css` right-aligns the add button with an auto margin, which an inline-level box drops */
+  :where(.rjsf .rjsf-btn-add) {
+    display: flex;
+  }
+
+  :where(.rjsf button:disabled, .rjsf [data-disabled]) {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  :where(.rjsf .rjsf-button-info, .rjsf .rjsf-submit-button, .rjsf .rjsf-btn-now) {
+    border-color: var(--rjsf-accent);
+    color: var(--rjsf-accent);
+  }
+
+  :where(.rjsf .rjsf-button-danger) {
+    border-color: var(--rjsf-danger);
+    color: var(--rjsf-danger);
+  }
+}

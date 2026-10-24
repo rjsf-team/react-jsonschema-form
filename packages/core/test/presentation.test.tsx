@@ -516,13 +516,13 @@ describe('the plan SchemaField builds', () => {
     },
   );
 
-  // Core's `WrapIfAdditionalTemplate` takes its `has-error` from `hasErrors` alone, in both its branches: an option
+  // Core's `WrapIfAdditionalTemplate` takes its `data-invalid` from `hasErrors` alone, in both its branches: an option
   // following its own `ui:hideError` rather than the field above's, and an extra key's row
   it.each([
     ['shows', true, false],
     ['hides', false, true],
   ])(
-    "marks an anyOf option's and an extra key's wrapper has-error by whether each %s the errors",
+    "marks an anyOf option's and an extra key's wrapper data-invalid by whether each %s the errors",
     (_, aboveHides, optionHides) => {
       const { node } = createFormComponent({
         schema: {
@@ -540,9 +540,9 @@ describe('the plan SchemaField builds', () => {
       });
 
       const optionWrapper = node.querySelector('#root_foo')?.closest('.rjsf-field');
-      expect(optionWrapper?.classList.contains('has-error')).toBe(!optionHides);
+      expect(optionWrapper?.hasAttribute('data-invalid')).toBe(!optionHides);
       const extraWrapper = node.querySelector('#root_extra')?.closest('.rjsf-field');
-      expect(extraWrapper?.classList.contains('has-error')).toBe(!optionHides);
+      expect(extraWrapper?.hasAttribute('data-invalid')).toBe(!optionHides);
     },
   );
 
@@ -685,7 +685,7 @@ describe('the plan SchemaField builds', () => {
     });
 
     it.each([
-      ['required marker', ['pet'], 'span.required'],
+      ['required marker', ['pet'], 'span.rjsf-required'],
       ['optional data control', [], 'button'],
     ])("names their selector by the heading's text alone, without its %s", (_, required, extra) => {
       const { node } = createFormComponent({
@@ -1013,7 +1013,7 @@ describe('a fallback field with no control for a label to name', () => {
     const title = node.querySelector(`#${titleId('root_foo')}`);
     expect(title).toHaveTextContent(/^Foo$/);
     const description = screen.getByText('Desc foo');
-    const unsupported = node.querySelector('.unsupported-field')!;
+    const unsupported = node.querySelector('.rjsf-unsupported-field')!;
     expect(title!.compareDocumentPosition(description)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
     expect(description.compareDocumentPosition(unsupported)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
     expect(node.querySelector('label[for="root_foo"]')).toBeNull();
@@ -1027,7 +1027,7 @@ describe('a fallback field with no control for a label to name', () => {
     const title = node.querySelector(`#${titleId('root_arr')}`);
     expect(title).toHaveTextContent(/^Arr$/);
     const description = screen.getByText('Desc arr');
-    const unsupported = node.querySelector('.unsupported-field')!;
+    const unsupported = node.querySelector('.rjsf-unsupported-field')!;
     expect(title!.compareDocumentPosition(description)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
     expect(description.compareDocumentPosition(unsupported)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
   });
@@ -1046,7 +1046,7 @@ describe('a fallback field with no control for a label to name', () => {
       const title = node.querySelector(`#${titleId('root_arr')}`);
       expect(title).toHaveTextContent(/^Arr$/);
       const description = screen.getByText('Desc arr');
-      const unsupported = node.querySelector('.unsupported-field')!;
+      const unsupported = node.querySelector('.rjsf-unsupported-field')!;
       expect(title!.compareDocumentPosition(description)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
       expect(description.compareDocumentPosition(unsupported)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
     },

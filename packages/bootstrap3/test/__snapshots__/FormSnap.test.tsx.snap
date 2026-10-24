@@ -19,7 +19,7 @@ exports[`format iso-date-time 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -48,7 +48,7 @@ exports[`format iso-time 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -84,7 +84,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
               </span>
             </legend>
             <div
-              class="row array-item-list"
+              class="rjsf-array-item-list row"
             >
               <div
                 class="rjsf-array-item"
@@ -106,7 +106,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                           tasks-1
                         </span>
                         <span
-                          class="required"
+                          class="rjsf-required"
                         >
                           *
                         </span>
@@ -115,7 +115,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                         class="form-group rjsf-field rjsf-field-string"
                       >
                         <label
-                          class="control-label"
+                          class="rjsf-field-label control-label"
                           for="root_tasks_0_title"
                         >
                           <span
@@ -137,7 +137,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                         class="form-group rjsf-field rjsf-field-boolean"
                       >
                         <div
-                          class="checkbox"
+                          class="rjsf-checkbox checkbox"
                         >
                           <label>
                             <input
@@ -155,7 +155,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                   </div>
                 </div>
                 <div
-                  class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
+                  class="col-xs-3 col-md-2 col-xl-1 rjsf-array-item-toolbox"
                 >
                   <div
                     class="btn-group"
@@ -215,7 +215,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                           tasks-2
                         </span>
                         <span
-                          class="required"
+                          class="rjsf-required"
                         >
                           *
                         </span>
@@ -224,7 +224,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                         class="form-group rjsf-field rjsf-field-string"
                       >
                         <label
-                          class="control-label"
+                          class="rjsf-field-label control-label"
                           for="root_tasks_1_title"
                         >
                           <span
@@ -246,7 +246,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                         class="form-group rjsf-field rjsf-field-boolean"
                       >
                         <div
-                          class="checkbox"
+                          class="rjsf-checkbox checkbox"
                         >
                           <label>
                             <input
@@ -265,7 +265,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                   </div>
                 </div>
                 <div
-                  class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
+                  class="col-xs-3 col-md-2 col-xl-1 rjsf-array-item-toolbox"
                 >
                   <div
                     class="btn-group"
@@ -313,7 +313,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                 class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
               >
                 <button
-                  class="btn btn-info btn-add col-xs-12"
+                  class="btn btn-info rjsf-btn-add col-xs-12"
                   id="root_tasks__add"
                   title="Add"
                   type="button"
@@ -330,7 +330,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -366,7 +366,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
               </span>
             </legend>
             <div
-              class="row array-item-list"
+              class="rjsf-array-item-list row"
             >
               <div
                 class="rjsf-array-item"
@@ -379,7 +379,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                     class="form-group rjsf-field rjsf-field-string"
                   >
                     <label
-                      class="control-label"
+                      class="rjsf-field-label control-label"
                       for="root_tags_0"
                     >
                       <span
@@ -388,7 +388,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                         tags-1
                       </span>
                       <span
-                        class="required"
+                        class="rjsf-required"
                       >
                         *
                       </span>
@@ -405,7 +405,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                   </div>
                 </div>
                 <div
-                  class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
+                  class="col-xs-3 col-md-2 col-xl-1 rjsf-array-item-toolbox"
                 >
                   <div
                     class="btn-group"
@@ -456,7 +456,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                     class="form-group rjsf-field rjsf-field-string"
                   >
                     <label
-                      class="control-label"
+                      class="rjsf-field-label control-label"
                       for="root_tags_1"
                     >
                       <span
@@ -465,7 +465,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                         tags-2
                       </span>
                       <span
-                        class="required"
+                        class="rjsf-required"
                       >
                         *
                       </span>
@@ -482,7 +482,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                   </div>
                 </div>
                 <div
-                  class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
+                  class="col-xs-3 col-md-2 col-xl-1 rjsf-array-item-toolbox"
                 >
                   <div
                     class="btn-group"
@@ -530,7 +530,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                 class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
               >
                 <button
-                  class="btn btn-info btn-add col-xs-12"
+                  class="btn btn-info rjsf-btn-add col-xs-12"
                   id="root_tags__add"
                   title="Add"
                   type="button"
@@ -547,7 +547,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -572,7 +572,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
           class="form-group rjsf-field rjsf-field-array"
         >
           <label
-            class="control-label"
+            class="rjsf-field-label control-label"
           >
             <span
               id="root_choices__label"
@@ -582,12 +582,12 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
           </label>
           <div
             aria-labelledby="root_choices__label"
-            class="checkboxes"
+            class="rjsf-checkboxes"
             id="root_choices"
             role="group"
           >
             <div
-              class="checkbox"
+              class="rjsf-checkbox checkbox"
             >
               <label>
                 <span>
@@ -604,7 +604,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
               </label>
             </div>
             <div
-              class="checkbox"
+              class="rjsf-checkbox checkbox"
             >
               <label>
                 <span>
@@ -621,7 +621,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
               </label>
             </div>
             <div
-              class="checkbox"
+              class="rjsf-checkbox checkbox"
             >
               <label>
                 <span>
@@ -643,7 +643,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -681,7 +681,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
               class="form-group rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label control-label"
                 for="root_person_firstName"
               >
                 <span
@@ -703,7 +703,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
               class="form-group rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label control-label"
                 for="root_person_lastName"
               >
                 <span
@@ -738,7 +738,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                   class="form-group rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="control-label"
+                    class="rjsf-field-label control-label"
                     for="root_person_address_street"
                   >
                     <span
@@ -760,7 +760,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                   class="form-group rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="control-label"
+                    class="rjsf-field-label control-label"
                     for="root_person_address_city"
                   >
                     <span
@@ -786,7 +786,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -811,7 +811,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
           class="form-group rjsf-field rjsf-field-string"
         >
           <label
-            class="control-label"
+            class="rjsf-field-label control-label"
           >
             <span
               id="root_option__label"
@@ -821,12 +821,12 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
           </label>
           <div
             aria-labelledby="root_option__label"
-            class="field-radio-group"
+            class="rjsf-field-radio-group"
             id="root_option"
             role="radiogroup"
           >
             <div
-              class="radio"
+              class="rjsf-radio radio"
             >
               <label>
                 <span>
@@ -843,7 +843,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
               </label>
             </div>
             <div
-              class="radio"
+              class="rjsf-radio radio"
             >
               <label>
                 <span>
@@ -865,7 +865,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -890,7 +890,7 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
           class="form-group rjsf-field rjsf-field-string"
         >
           <label
-            class="control-label"
+            class="rjsf-field-label control-label"
             for="root_color"
           >
             <span
@@ -928,7 +928,7 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -953,7 +953,7 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
           class="form-group rjsf-field rjsf-field-string"
         >
           <label
-            class="control-label"
+            class="rjsf-field-label control-label"
             for="root_firstName"
           >
             <span
@@ -975,7 +975,7 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
           class="form-group rjsf-field rjsf-field-number"
         >
           <label
-            class="control-label"
+            class="rjsf-field-label control-label"
             for="root_age"
           >
             <span
@@ -1000,7 +1000,7 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
           class="form-group rjsf-field rjsf-field-boolean"
         >
           <div
-            class="checkbox"
+            class="rjsf-checkbox checkbox"
           >
             <label>
               <input
@@ -1018,7 +1018,7 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -1043,7 +1043,7 @@ exports[`nameGenerator > bracketNameGenerator > textarea field 1`] = `
           class="form-group rjsf-field rjsf-field-string"
         >
           <label
-            class="control-label"
+            class="rjsf-field-label control-label"
             for="root_description"
           >
             <span
@@ -1063,7 +1063,7 @@ exports[`nameGenerator > bracketNameGenerator > textarea field 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -1099,7 +1099,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
               </span>
             </legend>
             <div
-              class="row array-item-list"
+              class="rjsf-array-item-list row"
             >
               <div
                 class="rjsf-array-item"
@@ -1121,7 +1121,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                           tasks-1
                         </span>
                         <span
-                          class="required"
+                          class="rjsf-required"
                         >
                           *
                         </span>
@@ -1130,7 +1130,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                         class="form-group rjsf-field rjsf-field-string"
                       >
                         <label
-                          class="control-label"
+                          class="rjsf-field-label control-label"
                           for="root_tasks_0_title"
                         >
                           <span
@@ -1152,7 +1152,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                         class="form-group rjsf-field rjsf-field-boolean"
                       >
                         <div
-                          class="checkbox"
+                          class="rjsf-checkbox checkbox"
                         >
                           <label>
                             <input
@@ -1170,7 +1170,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                   </div>
                 </div>
                 <div
-                  class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
+                  class="col-xs-3 col-md-2 col-xl-1 rjsf-array-item-toolbox"
                 >
                   <div
                     class="btn-group"
@@ -1230,7 +1230,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                           tasks-2
                         </span>
                         <span
-                          class="required"
+                          class="rjsf-required"
                         >
                           *
                         </span>
@@ -1239,7 +1239,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                         class="form-group rjsf-field rjsf-field-string"
                       >
                         <label
-                          class="control-label"
+                          class="rjsf-field-label control-label"
                           for="root_tasks_1_title"
                         >
                           <span
@@ -1261,7 +1261,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                         class="form-group rjsf-field rjsf-field-boolean"
                       >
                         <div
-                          class="checkbox"
+                          class="rjsf-checkbox checkbox"
                         >
                           <label>
                             <input
@@ -1280,7 +1280,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                   </div>
                 </div>
                 <div
-                  class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
+                  class="col-xs-3 col-md-2 col-xl-1 rjsf-array-item-toolbox"
                 >
                   <div
                     class="btn-group"
@@ -1328,7 +1328,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                 class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
               >
                 <button
-                  class="btn btn-info btn-add col-xs-12"
+                  class="btn btn-info rjsf-btn-add col-xs-12"
                   id="root_tasks__add"
                   title="Add"
                   type="button"
@@ -1345,7 +1345,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -1381,7 +1381,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
               </span>
             </legend>
             <div
-              class="row array-item-list"
+              class="rjsf-array-item-list row"
             >
               <div
                 class="rjsf-array-item"
@@ -1394,7 +1394,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                     class="form-group rjsf-field rjsf-field-string"
                   >
                     <label
-                      class="control-label"
+                      class="rjsf-field-label control-label"
                       for="root_tags_0"
                     >
                       <span
@@ -1403,7 +1403,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                         tags-1
                       </span>
                       <span
-                        class="required"
+                        class="rjsf-required"
                       >
                         *
                       </span>
@@ -1420,7 +1420,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                   </div>
                 </div>
                 <div
-                  class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
+                  class="col-xs-3 col-md-2 col-xl-1 rjsf-array-item-toolbox"
                 >
                   <div
                     class="btn-group"
@@ -1471,7 +1471,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                     class="form-group rjsf-field rjsf-field-string"
                   >
                     <label
-                      class="control-label"
+                      class="rjsf-field-label control-label"
                       for="root_tags_1"
                     >
                       <span
@@ -1480,7 +1480,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                         tags-2
                       </span>
                       <span
-                        class="required"
+                        class="rjsf-required"
                       >
                         *
                       </span>
@@ -1497,7 +1497,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                   </div>
                 </div>
                 <div
-                  class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
+                  class="col-xs-3 col-md-2 col-xl-1 rjsf-array-item-toolbox"
                 >
                   <div
                     class="btn-group"
@@ -1545,7 +1545,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                 class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
               >
                 <button
-                  class="btn btn-info btn-add col-xs-12"
+                  class="btn btn-info rjsf-btn-add col-xs-12"
                   id="root_tags__add"
                   title="Add"
                   type="button"
@@ -1562,7 +1562,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -1600,7 +1600,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
               class="form-group rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label control-label"
                 for="root_person_firstName"
               >
                 <span
@@ -1622,7 +1622,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
               class="form-group rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label control-label"
                 for="root_person_lastName"
               >
                 <span
@@ -1657,7 +1657,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                   class="form-group rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="control-label"
+                    class="rjsf-field-label control-label"
                     for="root_person_address_street"
                   >
                     <span
@@ -1679,7 +1679,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                   class="form-group rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="control-label"
+                    class="rjsf-field-label control-label"
                     for="root_person_address_city"
                   >
                     <span
@@ -1705,7 +1705,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -1730,7 +1730,7 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
           class="form-group rjsf-field rjsf-field-string"
         >
           <label
-            class="control-label"
+            class="rjsf-field-label control-label"
             for="root_color"
           >
             <span
@@ -1768,7 +1768,7 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -1793,7 +1793,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
           class="form-group rjsf-field rjsf-field-string"
         >
           <label
-            class="control-label"
+            class="rjsf-field-label control-label"
             for="root_firstName"
           >
             <span
@@ -1815,7 +1815,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
           class="form-group rjsf-field rjsf-field-number"
         >
           <label
-            class="control-label"
+            class="rjsf-field-label control-label"
             for="root_age"
           >
             <span
@@ -1840,7 +1840,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
           class="form-group rjsf-field rjsf-field-boolean"
         >
           <div
-            class="checkbox"
+            class="rjsf-checkbox checkbox"
           >
             <label>
               <input
@@ -1858,7 +1858,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -1877,12 +1877,12 @@ exports[`radio widget with options sharing a String() in the realValue format (#
       class="form-group rjsf-field rjsf-field-string"
     >
       <div
-        class="field-radio-group"
+        class="rjsf-field-radio-group"
         id="root"
         role="radiogroup"
       >
         <div
-          class="radio"
+          class="rjsf-radio radio"
         >
           <label>
             <span>
@@ -1899,7 +1899,7 @@ exports[`radio widget with options sharing a String() in the realValue format (#
           </label>
         </div>
         <div
-          class="radio"
+          class="rjsf-radio radio"
         >
           <label>
             <span>
@@ -1920,7 +1920,7 @@ exports[`radio widget with options sharing a String() in the realValue format (#
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -1945,7 +1945,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
           class="form-group rjsf-field rjsf-field-undefined"
         >
           <label
-            class="control-label"
+            class="rjsf-field-label control-label"
             for="root_region"
           >
             <span
@@ -1955,10 +1955,10 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
             </span>
           </label>
           <div
-            class="panel panel-default panel-body"
+            class="rjsf-multi-schema panel panel-default panel-body"
           >
             <div
-              class="form-group"
+              class="rjsf-multi-schema-selector form-group"
             >
               <select
                 aria-labelledby="root_region__label"
@@ -2007,7 +2007,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -2042,7 +2042,7 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -2087,7 +2087,7 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -2132,7 +2132,7 @@ exports[`select widget from oneOf boolean constants with a null option without a
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -2172,7 +2172,7 @@ exports[`select widget from oneOf constants without a type 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -2212,7 +2212,7 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -2252,7 +2252,7 @@ exports[`select widget with options sharing a String() in the realValue format (
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -2281,7 +2281,7 @@ exports[`single fields > Cyclic schema 1`] = `
           </span>
         </legend>
         <div
-          class="field-description"
+          class="rjsf-field-description"
           id="root__description"
         >
           A simple form example.
@@ -2300,22 +2300,23 @@ exports[`single fields > Cyclic schema 1`] = `
               </span>
             </legend>
             <div
-              class="field-description"
+              class="rjsf-field-description"
               id="root_child__description"
             >
               A simple form example.
             </div>
             <div
+              class="rjsf-cyclic-schema"
               style="margin-top: 1rem;"
             >
               <div
-                class="text-danger"
+                class="rjsf-cyclic-schema-message text-danger"
               >
                 Circular reference ($ref cycle) detected for field "child". You may choose to expand to the next cycle break
               </div>
               <div>
                 <button
-                  class="btn btn-sm btn-warning"
+                  class="rjsf-cyclic-schema-expand btn btn-sm btn-warning"
                   id="root_child_child__expand"
                   type="button"
                 >
@@ -2330,7 +2331,7 @@ exports[`single fields > Cyclic schema 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -2349,7 +2350,7 @@ exports[`single fields > checkbox field 1`] = `
       class="form-group rjsf-field rjsf-field-boolean"
     >
       <div
-        class="checkbox"
+        class="rjsf-checkbox checkbox"
       >
         <label>
           <input
@@ -2362,7 +2363,7 @@ exports[`single fields > checkbox field 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -2381,10 +2382,10 @@ exports[`single fields > checkbox field with description in schema and FieldTemp
       class="form-group rjsf-field rjsf-field-boolean"
     >
       <div
-        class="checkbox"
+        class="rjsf-checkbox checkbox"
       >
         <div
-          class="field-description"
+          class="rjsf-field-description"
           id="root__description"
         >
           This is a checkbox description
@@ -2404,7 +2405,7 @@ exports[`single fields > checkbox field with description in schema and FieldTemp
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -2423,7 +2424,7 @@ exports[`single fields > checkbox field with label 1`] = `
       class="form-group rjsf-field rjsf-field-boolean"
     >
       <div
-        class="checkbox"
+        class="rjsf-checkbox checkbox"
       >
         <label>
           <input
@@ -2439,7 +2440,7 @@ exports[`single fields > checkbox field with label 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -2458,10 +2459,10 @@ exports[`single fields > checkbox field with label and description 1`] = `
       class="form-group rjsf-field rjsf-field-boolean"
     >
       <div
-        class="checkbox"
+        class="rjsf-checkbox checkbox"
       >
         <div
-          class="field-description"
+          class="rjsf-field-description"
           id="root__description"
         >
           test description
@@ -2481,7 +2482,7 @@ exports[`single fields > checkbox field with label and description 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -2500,10 +2501,10 @@ exports[`single fields > checkbox field with label and rich text description 1`]
       class="form-group rjsf-field rjsf-field-boolean"
     >
       <div
-        class="checkbox"
+        class="rjsf-checkbox checkbox"
       >
         <div
-          class="field-description"
+          class="rjsf-field-description"
           id="root__description"
         >
           <span>
@@ -2531,7 +2532,7 @@ exports[`single fields > checkbox field with label and rich text description 1`]
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -2550,7 +2551,7 @@ exports[`single fields > checkboxes field 1`] = `
       class="form-group rjsf-field rjsf-field-array"
     >
       <label
-        class="control-label"
+        class="rjsf-field-label control-label"
       >
         <span
           id="root__label"
@@ -2560,12 +2561,12 @@ exports[`single fields > checkboxes field 1`] = `
       </label>
       <div
         aria-labelledby="root__label"
-        class="checkboxes"
+        class="rjsf-checkboxes"
         id="root"
         role="group"
       >
         <div
-          class="checkbox"
+          class="rjsf-checkbox checkbox"
         >
           <label>
             <span>
@@ -2582,7 +2583,7 @@ exports[`single fields > checkboxes field 1`] = `
           </label>
         </div>
         <div
-          class="checkbox"
+          class="rjsf-checkbox checkbox"
         >
           <label>
             <span>
@@ -2599,7 +2600,7 @@ exports[`single fields > checkboxes field 1`] = `
           </label>
         </div>
         <div
-          class="checkbox"
+          class="rjsf-checkbox checkbox"
         >
           <label>
             <span>
@@ -2616,7 +2617,7 @@ exports[`single fields > checkboxes field 1`] = `
           </label>
         </div>
         <div
-          class="checkbox"
+          class="rjsf-checkbox checkbox"
         >
           <label>
             <span>
@@ -2636,7 +2637,7 @@ exports[`single fields > checkboxes field 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -2655,7 +2656,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
       class="form-group rjsf-field rjsf-field-array"
     >
       <label
-        class="control-label"
+        class="rjsf-field-label control-label"
       >
         <span
           id="root__label"
@@ -2664,19 +2665,19 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
         </span>
       </label>
       <div
-        class="field-description"
+        class="rjsf-field-description"
         id="root__description"
       >
         A group of checkboxes
       </div>
       <div
         aria-labelledby="root__label"
-        class="checkboxes"
+        class="rjsf-checkboxes"
         id="root"
         role="group"
       >
         <label
-          class="checkbox-inline"
+          class="rjsf-checkbox-inline checkbox-inline"
         >
           <span>
             <input
@@ -2693,7 +2694,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
           </span>
         </label>
         <label
-          class="checkbox-inline"
+          class="rjsf-checkbox-inline checkbox-inline"
         >
           <span>
             <input
@@ -2709,7 +2710,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
           </span>
         </label>
         <label
-          class="checkbox-inline"
+          class="rjsf-checkbox-inline checkbox-inline"
         >
           <span>
             <input
@@ -2726,7 +2727,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
         </label>
       </div>
       <div
-        class="help-block"
+        class="rjsf-field-help help-block"
         id="root__help"
       >
         Select all that apply
@@ -2734,7 +2735,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -2753,7 +2754,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
       class="form-group rjsf-field rjsf-field-array"
     >
       <label
-        class="control-label"
+        class="rjsf-field-label control-label"
       >
         <span
           id="root__label"
@@ -2762,19 +2763,19 @@ exports[`single fields > checkboxes widget with required field 1`] = `
         </span>
       </label>
       <div
-        class="field-description"
+        class="rjsf-field-description"
         id="root__description"
       >
         At least one option must be selected
       </div>
       <div
         aria-labelledby="root__label"
-        class="checkboxes"
+        class="rjsf-checkboxes"
         id="root"
         role="group"
       >
         <div
-          class="checkbox"
+          class="rjsf-checkbox checkbox"
         >
           <label>
             <span>
@@ -2792,7 +2793,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
           </label>
         </div>
         <div
-          class="checkbox"
+          class="rjsf-checkbox checkbox"
         >
           <label>
             <span>
@@ -2810,7 +2811,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
           </label>
         </div>
         <div
-          class="checkbox"
+          class="rjsf-checkbox checkbox"
         >
           <label>
             <span>
@@ -2831,7 +2832,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -2856,7 +2857,7 @@ exports[`single fields > field with description 1`] = `
           class="form-group rjsf-field rjsf-field-string"
         >
           <label
-            class="control-label"
+            class="rjsf-field-label control-label"
             for="root_my-field"
           >
             <span
@@ -2866,7 +2867,7 @@ exports[`single fields > field with description 1`] = `
             </span>
           </label>
           <div
-            class="field-description"
+            class="rjsf-field-description"
             id="root_my-field__description"
           >
             some description
@@ -2885,7 +2886,7 @@ exports[`single fields > field with description 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -2910,7 +2911,7 @@ exports[`single fields > field with description in uiSchema 1`] = `
           class="form-group rjsf-field rjsf-field-string"
         >
           <label
-            class="control-label"
+            class="rjsf-field-label control-label"
             for="root_my-field"
           >
             <span
@@ -2920,7 +2921,7 @@ exports[`single fields > field with description in uiSchema 1`] = `
             </span>
           </label>
           <div
-            class="field-description"
+            class="rjsf-field-description"
             id="root_my-field__description"
           >
             some other description
@@ -2939,7 +2940,7 @@ exports[`single fields > field with description in uiSchema 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -2964,7 +2965,7 @@ exports[`single fields > field with markdown description 1`] = `
           class="form-group rjsf-field rjsf-field-string"
         >
           <label
-            class="control-label"
+            class="rjsf-field-label control-label"
             for="root_my-field"
           >
             <span
@@ -2974,7 +2975,7 @@ exports[`single fields > field with markdown description 1`] = `
             </span>
           </label>
           <div
-            class="field-description"
+            class="rjsf-field-description"
             id="root_my-field__description"
           >
             <span>
@@ -2999,7 +3000,7 @@ exports[`single fields > field with markdown description 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -3024,7 +3025,7 @@ exports[`single fields > field with markdown description in uiSchema 1`] = `
           class="form-group rjsf-field rjsf-field-string"
         >
           <label
-            class="control-label"
+            class="rjsf-field-label control-label"
             for="root_my-field"
           >
             <span
@@ -3034,7 +3035,7 @@ exports[`single fields > field with markdown description in uiSchema 1`] = `
             </span>
           </label>
           <div
-            class="field-description"
+            class="rjsf-field-description"
             id="root_my-field__description"
           >
             some other description
@@ -3053,7 +3054,7 @@ exports[`single fields > field with markdown description in uiSchema 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -3082,7 +3083,7 @@ exports[`single fields > format color 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -3111,7 +3112,7 @@ exports[`single fields > format date 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -3140,7 +3141,7 @@ exports[`single fields > format datetime 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -3169,7 +3170,7 @@ exports[`single fields > format time 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -3185,7 +3186,7 @@ exports[`single fields > help and error display 1`] = `
     class="rjsf"
   >
     <div
-      class="panel panel-danger errors"
+      class="rjsf-errors panel panel-danger"
     >
       <div
         class="panel-heading"
@@ -3221,18 +3222,19 @@ exports[`single fields > help and error display 1`] = `
       />
       <div>
         <ul
-          class="error-detail bs-callout bs-callout-info"
+          class="rjsf-error-detail bs-callout bs-callout-info"
           id="root__error"
         >
           <li
-            class="text-danger"
+            class="rjsf-error text-danger"
           >
             an error
           </li>
         </ul>
       </div>
       <div
-        class="help-block"
+        class="rjsf-field-help help-block"
+        data-invalid="true"
         id="root__help"
       >
         help me!
@@ -3240,7 +3242,7 @@ exports[`single fields > help and error display 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -3262,7 +3264,7 @@ exports[`single fields > hidden field 1`] = `
         id="root"
       >
         <div
-          class="hidden"
+          hidden=""
         >
           <input
             id="root_my-field"
@@ -3275,7 +3277,7 @@ exports[`single fields > hidden field 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -3304,7 +3306,7 @@ exports[`single fields > hidden label 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -3324,7 +3326,7 @@ exports[`single fields > null field 1`] = `
     />
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -3356,7 +3358,7 @@ exports[`single fields > number field 0 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -3388,7 +3390,7 @@ exports[`single fields > number field 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -3433,7 +3435,7 @@ exports[`single fields > optional data controls > does not show optional control
               class="form-group rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label control-label"
                 for="root_nestedObjectOptional_test"
               >
                 <span
@@ -3468,7 +3470,7 @@ exports[`single fields > optional data controls > does not show optional control
                   class="form-group rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="control-label"
+                    class="rjsf-field-label control-label"
                     for="root_nestedObjectOptional_deepObjectOptional_deepTest"
                   >
                     <span
@@ -3501,7 +3503,7 @@ exports[`single fields > optional data controls > does not show optional control
                     deepObject
                   </span>
                   <span
-                    class="required"
+                    class="rjsf-required"
                   >
                     *
                   </span>
@@ -3510,7 +3512,7 @@ exports[`single fields > optional data controls > does not show optional control
                   class="form-group rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="control-label"
+                    class="rjsf-field-label control-label"
                     for="root_nestedObjectOptional_deepObject_deepTest"
                   >
                     <span
@@ -3545,7 +3547,7 @@ exports[`single fields > optional data controls > does not show optional control
                   </span>
                 </legend>
                 <div
-                  class="row array-item-list"
+                  class="rjsf-array-item-list row"
                 />
                 <div
                   class="row"
@@ -3554,7 +3556,7 @@ exports[`single fields > optional data controls > does not show optional control
                     class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
                   >
                     <button
-                      class="btn btn-info btn-add col-xs-12"
+                      class="btn btn-info rjsf-btn-add col-xs-12"
                       id="root_nestedObjectOptional_deepArrayOptional__add"
                       title="Add"
                       type="button"
@@ -3582,7 +3584,7 @@ exports[`single fields > optional data controls > does not show optional control
                   </span>
                 </legend>
                 <div
-                  class="row array-item-list"
+                  class="rjsf-array-item-list row"
                 />
                 <div
                   class="row"
@@ -3591,7 +3593,7 @@ exports[`single fields > optional data controls > does not show optional control
                     class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
                   >
                     <button
-                      class="btn btn-info btn-add col-xs-12"
+                      class="btn btn-info rjsf-btn-add col-xs-12"
                       id="root_nestedObjectOptional_deepArrayOptional2__add"
                       title="Add"
                       type="button"
@@ -3618,13 +3620,13 @@ exports[`single fields > optional data controls > does not show optional control
                     deepArray
                   </span>
                   <span
-                    class="required"
+                    class="rjsf-required"
                   >
                     *
                   </span>
                 </legend>
                 <div
-                  class="row array-item-list"
+                  class="rjsf-array-item-list row"
                 />
                 <div
                   class="row"
@@ -3633,7 +3635,7 @@ exports[`single fields > optional data controls > does not show optional control
                     class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
                   >
                     <button
-                      class="btn btn-info btn-add col-xs-12"
+                      class="btn btn-info rjsf-btn-add col-xs-12"
                       id="root_nestedObjectOptional_deepArray__add"
                       title="Add"
                       type="button"
@@ -3663,7 +3665,7 @@ exports[`single fields > optional data controls > does not show optional control
               </span>
             </legend>
             <div
-              class="row array-item-list"
+              class="rjsf-array-item-list row"
             />
             <div
               class="row"
@@ -3672,7 +3674,7 @@ exports[`single fields > optional data controls > does not show optional control
                 class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
               >
                 <button
-                  class="btn btn-info btn-add col-xs-12"
+                  class="btn btn-info rjsf-btn-add col-xs-12"
                   id="root_nestedArrayOptional__add"
                   title="Add"
                   type="button"
@@ -3698,7 +3700,7 @@ exports[`single fields > optional data controls > does not show optional control
                 nestedObject
               </span>
               <span
-                class="required"
+                class="rjsf-required"
               >
                 *
               </span>
@@ -3707,7 +3709,7 @@ exports[`single fields > optional data controls > does not show optional control
               class="form-group rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label control-label"
                 for="root_nestedObject_test"
               >
                 <span
@@ -3741,13 +3743,13 @@ exports[`single fields > optional data controls > does not show optional control
                 nestedArray
               </span>
               <span
-                class="required"
+                class="rjsf-required"
               >
                 *
               </span>
             </legend>
             <div
-              class="row array-item-list"
+              class="rjsf-array-item-list row"
             />
             <div
               class="row"
@@ -3756,7 +3758,7 @@ exports[`single fields > optional data controls > does not show optional control
                 class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
               >
                 <button
-                  class="btn btn-info btn-add col-xs-12"
+                  class="btn btn-info rjsf-btn-add col-xs-12"
                   id="root_nestedArray__add"
                   title="Add"
                   type="button"
@@ -3773,7 +3775,7 @@ exports[`single fields > optional data controls > does not show optional control
           class="form-group rjsf-field rjsf-field-undefined"
         >
           <label
-            class="control-label"
+            class="rjsf-field-label control-label"
           >
             <span
               id="root_optionalObjectWithOneofs__label"
@@ -3782,10 +3784,10 @@ exports[`single fields > optional data controls > does not show optional control
             </span>
           </label>
           <div
-            class="panel panel-default panel-body"
+            class="rjsf-multi-schema panel panel-default panel-body"
           >
             <div
-              class="form-group"
+              class="rjsf-multi-schema-selector form-group"
             >
               <select
                 aria-labelledby="root_optionalObjectWithOneofs__label"
@@ -3820,7 +3822,7 @@ exports[`single fields > optional data controls > does not show optional control
                   class="form-group rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="control-label"
+                    class="rjsf-field-label control-label"
                     for="root_optionalObjectWithOneofs_name"
                   >
                     <span
@@ -3847,7 +3849,7 @@ exports[`single fields > optional data controls > does not show optional control
           class="form-group rjsf-field rjsf-field-undefined"
         >
           <label
-            class="control-label"
+            class="rjsf-field-label control-label"
           >
             <span
               id="root_optionalArrayWithAnyofs__label"
@@ -3856,10 +3858,10 @@ exports[`single fields > optional data controls > does not show optional control
             </span>
           </label>
           <div
-            class="panel panel-default panel-body"
+            class="rjsf-multi-schema panel panel-default panel-body"
           >
             <div
-              class="form-group"
+              class="rjsf-multi-schema-selector form-group"
             >
               <select
                 aria-labelledby="root_optionalArrayWithAnyofs__label"
@@ -3892,7 +3894,7 @@ exports[`single fields > optional data controls > does not show optional control
                 id="root_optionalArrayWithAnyofs"
               >
                 <div
-                  class="row array-item-list"
+                  class="rjsf-array-item-list row"
                 />
                 <div
                   class="row"
@@ -3901,7 +3903,7 @@ exports[`single fields > optional data controls > does not show optional control
                     class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
                   >
                     <button
-                      class="btn btn-info btn-add col-xs-12"
+                      class="btn btn-info rjsf-btn-add col-xs-12"
                       id="root_optionalArrayWithAnyofs__add"
                       title="Add"
                       type="button"
@@ -3920,7 +3922,7 @@ exports[`single fields > optional data controls > does not show optional control
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -3965,7 +3967,7 @@ exports[`single fields > optional data controls > does not show optional control
               class="form-group rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label control-label"
                 for="root_nestedObjectOptional_test"
               >
                 <span
@@ -4001,7 +4003,7 @@ exports[`single fields > optional data controls > does not show optional control
                   class="form-group rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="control-label"
+                    class="rjsf-field-label control-label"
                     for="root_nestedObjectOptional_deepObjectOptional_deepTest"
                   >
                     <span
@@ -4035,7 +4037,7 @@ exports[`single fields > optional data controls > does not show optional control
                     deepObject
                   </span>
                   <span
-                    class="required"
+                    class="rjsf-required"
                   >
                     *
                   </span>
@@ -4044,7 +4046,7 @@ exports[`single fields > optional data controls > does not show optional control
                   class="form-group rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="control-label"
+                    class="rjsf-field-label control-label"
                     for="root_nestedObjectOptional_deepObject_deepTest"
                   >
                     <span
@@ -4080,7 +4082,7 @@ exports[`single fields > optional data controls > does not show optional control
                   </span>
                 </legend>
                 <div
-                  class="row array-item-list"
+                  class="rjsf-array-item-list row"
                 />
                 <div
                   class="row"
@@ -4089,7 +4091,7 @@ exports[`single fields > optional data controls > does not show optional control
                     class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
                   >
                     <button
-                      class="btn btn-info btn-add col-xs-12"
+                      class="btn btn-info rjsf-btn-add col-xs-12"
                       disabled=""
                       id="root_nestedObjectOptional_deepArrayOptional__add"
                       title="Add"
@@ -4118,7 +4120,7 @@ exports[`single fields > optional data controls > does not show optional control
                   </span>
                 </legend>
                 <div
-                  class="row array-item-list"
+                  class="rjsf-array-item-list row"
                 />
                 <div
                   class="row"
@@ -4127,7 +4129,7 @@ exports[`single fields > optional data controls > does not show optional control
                     class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
                   >
                     <button
-                      class="btn btn-info btn-add col-xs-12"
+                      class="btn btn-info rjsf-btn-add col-xs-12"
                       disabled=""
                       id="root_nestedObjectOptional_deepArrayOptional2__add"
                       title="Add"
@@ -4155,13 +4157,13 @@ exports[`single fields > optional data controls > does not show optional control
                     deepArray
                   </span>
                   <span
-                    class="required"
+                    class="rjsf-required"
                   >
                     *
                   </span>
                 </legend>
                 <div
-                  class="row array-item-list"
+                  class="rjsf-array-item-list row"
                 />
                 <div
                   class="row"
@@ -4170,7 +4172,7 @@ exports[`single fields > optional data controls > does not show optional control
                     class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
                   >
                     <button
-                      class="btn btn-info btn-add col-xs-12"
+                      class="btn btn-info rjsf-btn-add col-xs-12"
                       disabled=""
                       id="root_nestedObjectOptional_deepArray__add"
                       title="Add"
@@ -4201,7 +4203,7 @@ exports[`single fields > optional data controls > does not show optional control
               </span>
             </legend>
             <div
-              class="row array-item-list"
+              class="rjsf-array-item-list row"
             />
             <div
               class="row"
@@ -4210,7 +4212,7 @@ exports[`single fields > optional data controls > does not show optional control
                 class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
               >
                 <button
-                  class="btn btn-info btn-add col-xs-12"
+                  class="btn btn-info rjsf-btn-add col-xs-12"
                   disabled=""
                   id="root_nestedArrayOptional__add"
                   title="Add"
@@ -4237,7 +4239,7 @@ exports[`single fields > optional data controls > does not show optional control
                 nestedObject
               </span>
               <span
-                class="required"
+                class="rjsf-required"
               >
                 *
               </span>
@@ -4246,7 +4248,7 @@ exports[`single fields > optional data controls > does not show optional control
               class="form-group rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label control-label"
                 for="root_nestedObject_test"
               >
                 <span
@@ -4281,13 +4283,13 @@ exports[`single fields > optional data controls > does not show optional control
                 nestedArray
               </span>
               <span
-                class="required"
+                class="rjsf-required"
               >
                 *
               </span>
             </legend>
             <div
-              class="row array-item-list"
+              class="rjsf-array-item-list row"
             />
             <div
               class="row"
@@ -4296,7 +4298,7 @@ exports[`single fields > optional data controls > does not show optional control
                 class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
               >
                 <button
-                  class="btn btn-info btn-add col-xs-12"
+                  class="btn btn-info rjsf-btn-add col-xs-12"
                   disabled=""
                   id="root_nestedArray__add"
                   title="Add"
@@ -4314,7 +4316,7 @@ exports[`single fields > optional data controls > does not show optional control
           class="form-group rjsf-field rjsf-field-undefined"
         >
           <label
-            class="control-label"
+            class="rjsf-field-label control-label"
           >
             <span
               id="root_optionalObjectWithOneofs__label"
@@ -4323,10 +4325,10 @@ exports[`single fields > optional data controls > does not show optional control
             </span>
           </label>
           <div
-            class="panel panel-default panel-body"
+            class="rjsf-multi-schema panel panel-default panel-body"
           >
             <div
-              class="form-group"
+              class="rjsf-multi-schema-selector form-group"
             >
               <select
                 aria-labelledby="root_optionalObjectWithOneofs__label"
@@ -4362,7 +4364,7 @@ exports[`single fields > optional data controls > does not show optional control
                   class="form-group rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="control-label"
+                    class="rjsf-field-label control-label"
                     for="root_optionalObjectWithOneofs_name"
                   >
                     <span
@@ -4389,7 +4391,7 @@ exports[`single fields > optional data controls > does not show optional control
           class="form-group rjsf-field rjsf-field-undefined"
         >
           <label
-            class="control-label"
+            class="rjsf-field-label control-label"
           >
             <span
               id="root_optionalArrayWithAnyofs__label"
@@ -4398,10 +4400,10 @@ exports[`single fields > optional data controls > does not show optional control
             </span>
           </label>
           <div
-            class="panel panel-default panel-body"
+            class="rjsf-multi-schema panel panel-default panel-body"
           >
             <div
-              class="form-group"
+              class="rjsf-multi-schema-selector form-group"
             >
               <select
                 aria-labelledby="root_optionalArrayWithAnyofs__label"
@@ -4435,7 +4437,7 @@ exports[`single fields > optional data controls > does not show optional control
                 id="root_optionalArrayWithAnyofs"
               >
                 <div
-                  class="row array-item-list"
+                  class="rjsf-array-item-list row"
                 />
                 <div
                   class="row"
@@ -4444,7 +4446,7 @@ exports[`single fields > optional data controls > does not show optional control
                     class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
                   >
                     <button
-                      class="btn btn-info btn-add col-xs-12"
+                      class="btn btn-info rjsf-btn-add col-xs-12"
                       disabled=""
                       id="root_optionalArrayWithAnyofs__add"
                       title="Add"
@@ -4464,7 +4466,7 @@ exports[`single fields > optional data controls > does not show optional control
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -4525,7 +4527,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="form-group rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label control-label"
                 for="root_nestedObjectOptional_test"
               >
                 <span
@@ -4587,7 +4589,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     deepObject
                   </span>
                   <span
-                    class="required"
+                    class="rjsf-required"
                   >
                     *
                   </span>
@@ -4596,7 +4598,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   class="form-group rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="control-label"
+                    class="rjsf-field-label control-label"
                     for="root_nestedObjectOptional_deepObject_deepTest"
                   >
                     <span
@@ -4631,7 +4633,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   </span>
                 </legend>
                 <div
-                  class="row array-item-list"
+                  class="rjsf-array-item-list row"
                 />
                 <div
                   class="row"
@@ -4640,7 +4642,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
                   >
                     <button
-                      class="btn btn-info btn-add col-xs-12"
+                      class="btn btn-info rjsf-btn-add col-xs-12"
                       id="root_nestedObjectOptional_deepArrayOptional__add"
                       title="Add"
                       type="button"
@@ -4683,7 +4685,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   </span>
                 </legend>
                 <div
-                  class="row array-item-list"
+                  class="rjsf-array-item-list row"
                 />
               </fieldset>
             </div>
@@ -4701,13 +4703,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     deepArray
                   </span>
                   <span
-                    class="required"
+                    class="rjsf-required"
                   >
                     *
                   </span>
                 </legend>
                 <div
-                  class="row array-item-list"
+                  class="rjsf-array-item-list row"
                 />
                 <div
                   class="row"
@@ -4716,7 +4718,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
                   >
                     <button
-                      class="btn btn-info btn-add col-xs-12"
+                      class="btn btn-info rjsf-btn-add col-xs-12"
                       id="root_nestedObjectOptional_deepArray__add"
                       title="Add"
                       type="button"
@@ -4761,7 +4763,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               </span>
             </legend>
             <div
-              class="row array-item-list"
+              class="rjsf-array-item-list row"
             >
               <div
                 class="rjsf-array-item"
@@ -4774,7 +4776,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     class="form-group rjsf-field rjsf-field-string"
                   >
                     <label
-                      class="control-label"
+                      class="rjsf-field-label control-label"
                       for="root_nestedArrayOptional_0"
                     >
                       <span
@@ -4783,7 +4785,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                         nestedArrayOptional-1
                       </span>
                       <span
-                        class="required"
+                        class="rjsf-required"
                       >
                         *
                       </span>
@@ -4800,7 +4802,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   </div>
                 </div>
                 <div
-                  class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
+                  class="col-xs-3 col-md-2 col-xl-1 rjsf-array-item-toolbox"
                 >
                   <div
                     class="btn-group"
@@ -4827,7 +4829,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                 class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
               >
                 <button
-                  class="btn btn-info btn-add col-xs-12"
+                  class="btn btn-info rjsf-btn-add col-xs-12"
                   id="root_nestedArrayOptional__add"
                   title="Add"
                   type="button"
@@ -4853,7 +4855,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                 nestedObject
               </span>
               <span
-                class="required"
+                class="rjsf-required"
               >
                 *
               </span>
@@ -4862,7 +4864,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="form-group rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label control-label"
                 for="root_nestedObject_test"
               >
                 <span
@@ -4896,13 +4898,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                 nestedArray
               </span>
               <span
-                class="required"
+                class="rjsf-required"
               >
                 *
               </span>
             </legend>
             <div
-              class="row array-item-list"
+              class="rjsf-array-item-list row"
             />
             <div
               class="row"
@@ -4911,7 +4913,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                 class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
               >
                 <button
-                  class="btn btn-info btn-add col-xs-12"
+                  class="btn btn-info rjsf-btn-add col-xs-12"
                   id="root_nestedArray__add"
                   title="Add"
                   type="button"
@@ -4928,7 +4930,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
           class="form-group rjsf-field rjsf-field-undefined"
         >
           <div
-            class="panel panel-default panel-body"
+            class="rjsf-multi-schema panel panel-default panel-body"
           >
             <div
               class="form-group rjsf-field rjsf-field-object"
@@ -4967,7 +4969,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
           class="form-group rjsf-field rjsf-field-undefined"
         >
           <div
-            class="panel panel-default panel-body"
+            class="rjsf-multi-schema panel panel-default panel-body"
           >
             <div
               class="form-group rjsf-field rjsf-field-array"
@@ -4999,7 +5001,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   </span>
                 </legend>
                 <div
-                  class="row array-item-list"
+                  class="rjsf-array-item-list row"
                 />
               </fieldset>
             </div>
@@ -5009,7 +5011,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -5055,7 +5057,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="form-group rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label control-label"
                 for="root_nestedObjectOptional_test"
               >
                 <span
@@ -5108,7 +5110,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     deepObject
                   </span>
                   <span
-                    class="required"
+                    class="rjsf-required"
                   >
                     *
                   </span>
@@ -5117,7 +5119,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   class="form-group rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="control-label"
+                    class="rjsf-field-label control-label"
                     for="root_nestedObjectOptional_deepObject_deepTest"
                   >
                     <span
@@ -5153,7 +5155,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   </span>
                 </legend>
                 <div
-                  class="row array-item-list"
+                  class="rjsf-array-item-list row"
                 />
                 <div
                   class="row"
@@ -5162,7 +5164,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
                   >
                     <button
-                      class="btn btn-info btn-add col-xs-12"
+                      class="btn btn-info rjsf-btn-add col-xs-12"
                       disabled=""
                       id="root_nestedObjectOptional_deepArrayOptional__add"
                       title="Add"
@@ -5196,7 +5198,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   No data for optional field
                 </em>
                 <div
-                  class="row array-item-list"
+                  class="rjsf-array-item-list row"
                 />
               </fieldset>
             </div>
@@ -5214,13 +5216,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     deepArray
                   </span>
                   <span
-                    class="required"
+                    class="rjsf-required"
                   >
                     *
                   </span>
                 </legend>
                 <div
-                  class="row array-item-list"
+                  class="rjsf-array-item-list row"
                 />
                 <div
                   class="row"
@@ -5229,7 +5231,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
                   >
                     <button
-                      class="btn btn-info btn-add col-xs-12"
+                      class="btn btn-info rjsf-btn-add col-xs-12"
                       disabled=""
                       id="root_nestedObjectOptional_deepArray__add"
                       title="Add"
@@ -5260,7 +5262,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               </span>
             </legend>
             <div
-              class="row array-item-list"
+              class="rjsf-array-item-list row"
             >
               <div
                 class="rjsf-array-item"
@@ -5273,7 +5275,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     class="form-group rjsf-field rjsf-field-string"
                   >
                     <label
-                      class="control-label"
+                      class="rjsf-field-label control-label"
                       for="root_nestedArrayOptional_0"
                     >
                       <span
@@ -5282,7 +5284,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                         nestedArrayOptional-1
                       </span>
                       <span
-                        class="required"
+                        class="rjsf-required"
                       >
                         *
                       </span>
@@ -5300,7 +5302,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   </div>
                 </div>
                 <div
-                  class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
+                  class="col-xs-3 col-md-2 col-xl-1 rjsf-array-item-toolbox"
                 >
                   <div
                     class="btn-group"
@@ -5328,7 +5330,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                 class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
               >
                 <button
-                  class="btn btn-info btn-add col-xs-12"
+                  class="btn btn-info rjsf-btn-add col-xs-12"
                   disabled=""
                   id="root_nestedArrayOptional__add"
                   title="Add"
@@ -5355,7 +5357,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                 nestedObject
               </span>
               <span
-                class="required"
+                class="rjsf-required"
               >
                 *
               </span>
@@ -5364,7 +5366,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="form-group rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label control-label"
                 for="root_nestedObject_test"
               >
                 <span
@@ -5399,13 +5401,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                 nestedArray
               </span>
               <span
-                class="required"
+                class="rjsf-required"
               >
                 *
               </span>
             </legend>
             <div
-              class="row array-item-list"
+              class="rjsf-array-item-list row"
             />
             <div
               class="row"
@@ -5414,7 +5416,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                 class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
               >
                 <button
-                  class="btn btn-info btn-add col-xs-12"
+                  class="btn btn-info rjsf-btn-add col-xs-12"
                   disabled=""
                   id="root_nestedArray__add"
                   title="Add"
@@ -5432,7 +5434,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
           class="form-group rjsf-field rjsf-field-undefined"
         >
           <div
-            class="panel panel-default panel-body"
+            class="rjsf-multi-schema panel panel-default panel-body"
           >
             <div
               class="form-group rjsf-field rjsf-field-object"
@@ -5461,7 +5463,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
           class="form-group rjsf-field rjsf-field-undefined"
         >
           <div
-            class="panel panel-default panel-body"
+            class="rjsf-multi-schema panel panel-default panel-body"
           >
             <div
               class="form-group rjsf-field rjsf-field-array"
@@ -5483,7 +5485,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   No data for optional field
                 </em>
                 <div
-                  class="row array-item-list"
+                  class="rjsf-array-item-list row"
                 />
               </fieldset>
             </div>
@@ -5493,7 +5495,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -5582,7 +5584,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
               </span>
             </legend>
             <div
-              class="row array-item-list"
+              class="rjsf-array-item-list row"
             />
           </fieldset>
         </div>
@@ -5599,7 +5601,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                 nestedObject
               </span>
               <span
-                class="required"
+                class="rjsf-required"
               >
                 *
               </span>
@@ -5608,7 +5610,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
               class="form-group rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label control-label"
                 for="root_nestedObject_test"
               >
                 <span
@@ -5642,13 +5644,13 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                 nestedArray
               </span>
               <span
-                class="required"
+                class="rjsf-required"
               >
                 *
               </span>
             </legend>
             <div
-              class="row array-item-list"
+              class="rjsf-array-item-list row"
             />
             <div
               class="row"
@@ -5657,7 +5659,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                 class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
               >
                 <button
-                  class="btn btn-info btn-add col-xs-12"
+                  class="btn btn-info rjsf-btn-add col-xs-12"
                   id="root_nestedArray__add"
                   title="Add"
                   type="button"
@@ -5674,7 +5676,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
           class="form-group rjsf-field rjsf-field-undefined"
         >
           <div
-            class="panel panel-default panel-body"
+            class="rjsf-multi-schema panel panel-default panel-body"
           >
             <div
               class="form-group rjsf-field rjsf-field-object"
@@ -5713,7 +5715,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
           class="form-group rjsf-field rjsf-field-undefined"
         >
           <div
-            class="panel panel-default panel-body"
+            class="rjsf-multi-schema panel panel-default panel-body"
           >
             <div
               class="form-group rjsf-field rjsf-field-array"
@@ -5745,7 +5747,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                   </span>
                 </legend>
                 <div
-                  class="row array-item-list"
+                  class="rjsf-array-item-list row"
                 />
               </fieldset>
             </div>
@@ -5755,7 +5757,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -5824,7 +5826,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
               No data for optional field
             </em>
             <div
-              class="row array-item-list"
+              class="rjsf-array-item-list row"
             />
           </fieldset>
         </div>
@@ -5841,7 +5843,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                 nestedObject
               </span>
               <span
-                class="required"
+                class="rjsf-required"
               >
                 *
               </span>
@@ -5850,7 +5852,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
               class="form-group rjsf-field rjsf-field-string"
             >
               <label
-                class="control-label"
+                class="rjsf-field-label control-label"
                 for="root_nestedObject_test"
               >
                 <span
@@ -5885,13 +5887,13 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                 nestedArray
               </span>
               <span
-                class="required"
+                class="rjsf-required"
               >
                 *
               </span>
             </legend>
             <div
-              class="row array-item-list"
+              class="rjsf-array-item-list row"
             />
             <div
               class="row"
@@ -5900,7 +5902,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                 class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
               >
                 <button
-                  class="btn btn-info btn-add col-xs-12"
+                  class="btn btn-info rjsf-btn-add col-xs-12"
                   disabled=""
                   id="root_nestedArray__add"
                   title="Add"
@@ -5918,7 +5920,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
           class="form-group rjsf-field rjsf-field-undefined"
         >
           <div
-            class="panel panel-default panel-body"
+            class="rjsf-multi-schema panel panel-default panel-body"
           >
             <div
               class="form-group rjsf-field rjsf-field-object"
@@ -5947,7 +5949,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
           class="form-group rjsf-field rjsf-field-undefined"
         >
           <div
-            class="panel panel-default panel-body"
+            class="rjsf-multi-schema panel panel-default panel-body"
           >
             <div
               class="form-group rjsf-field rjsf-field-array"
@@ -5969,7 +5971,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                   No data for optional field
                 </em>
                 <div
-                  class="row array-item-list"
+                  class="rjsf-array-item-list row"
                 />
               </fieldset>
             </div>
@@ -5979,7 +5981,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         disabled=""
         type="submit"
       >
@@ -6009,7 +6011,7 @@ exports[`single fields > password field 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -6028,12 +6030,12 @@ exports[`single fields > radio field 1`] = `
       class="form-group rjsf-field rjsf-field-boolean"
     >
       <div
-        class="field-radio-group"
+        class="rjsf-field-radio-group"
         id="root"
         role="radiogroup"
       >
         <div
-          class="radio"
+          class="rjsf-radio radio"
         >
           <label>
             <span>
@@ -6050,7 +6052,7 @@ exports[`single fields > radio field 1`] = `
           </label>
         </div>
         <div
-          class="radio"
+          class="rjsf-radio radio"
         >
           <label>
             <span>
@@ -6070,7 +6072,7 @@ exports[`single fields > radio field 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -6089,7 +6091,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
       class="form-group rjsf-field rjsf-field-boolean"
     >
       <label
-        class="control-label"
+        class="rjsf-field-label control-label"
       >
         <span
           id="root__label"
@@ -6098,19 +6100,19 @@ exports[`single fields > radio widget with description in schema and FieldTempla
         </span>
       </label>
       <div
-        class="field-description"
+        class="rjsf-field-description"
         id="root__description"
       >
         This is a radio description
       </div>
       <div
         aria-labelledby="root__label"
-        class="field-radio-group"
+        class="rjsf-field-radio-group"
         id="root"
         role="radiogroup"
       >
         <div
-          class="radio"
+          class="rjsf-radio radio"
         >
           <label>
             <span>
@@ -6128,7 +6130,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
           </label>
         </div>
         <div
-          class="radio"
+          class="rjsf-radio radio"
         >
           <label>
             <span>
@@ -6149,7 +6151,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -6174,7 +6176,7 @@ exports[`single fields > required checkbox field 1`] = `
           class="form-group rjsf-field rjsf-field-boolean"
         >
           <div
-            class="checkbox"
+            class="rjsf-checkbox checkbox"
           >
             <label>
               <input
@@ -6192,7 +6194,7 @@ exports[`single fields > required checkbox field 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -6217,7 +6219,7 @@ exports[`single fields > required checkbox field, default true 1`] = `
           class="form-group rjsf-field rjsf-field-boolean"
         >
           <div
-            class="checkbox"
+            class="rjsf-checkbox checkbox"
           >
             <label>
               <input
@@ -6236,7 +6238,7 @@ exports[`single fields > required checkbox field, default true 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -6286,7 +6288,7 @@ exports[`single fields > schema examples 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -6333,7 +6335,7 @@ exports[`single fields > schema examples with mixed types (string examples and n
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -6373,7 +6375,7 @@ exports[`single fields > select field 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -6421,7 +6423,7 @@ exports[`single fields > select field multiple choice 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -6470,7 +6472,7 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -6489,12 +6491,12 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
       class="form-group rjsf-field rjsf-field-array"
     >
       <div
-        class="checkboxes"
+        class="rjsf-checkboxes"
         id="root"
         role="group"
       >
         <div
-          class="checkbox"
+          class="rjsf-checkbox checkbox"
         >
           <label>
             <span>
@@ -6511,7 +6513,8 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
           </label>
         </div>
         <div
-          class="checkbox disabled"
+          class="rjsf-checkbox checkbox disabled"
+          data-disabled="true"
         >
           <label>
             <span>
@@ -6529,7 +6532,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
           </label>
         </div>
         <div
-          class="checkbox"
+          class="rjsf-checkbox checkbox"
         >
           <label>
             <span>
@@ -6546,7 +6549,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
           </label>
         </div>
         <div
-          class="checkbox"
+          class="rjsf-checkbox checkbox"
         >
           <label>
             <span>
@@ -6566,7 +6569,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -6614,7 +6617,7 @@ exports[`single fields > select field multiple choice formData 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -6657,7 +6660,7 @@ exports[`single fields > select field multiple choice with labels 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -6698,7 +6701,7 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -6717,12 +6720,12 @@ exports[`single fields > select field single choice enumDisabled using radio wid
       class="form-group rjsf-field rjsf-field-string"
     >
       <div
-        class="field-radio-group"
+        class="rjsf-field-radio-group"
         id="root"
         role="radiogroup"
       >
         <div
-          class="radio"
+          class="rjsf-radio radio"
         >
           <label>
             <span>
@@ -6739,7 +6742,8 @@ exports[`single fields > select field single choice enumDisabled using radio wid
           </label>
         </div>
         <div
-          class="radio disabled"
+          class="rjsf-radio radio disabled"
+          data-disabled="true"
         >
           <label>
             <span>
@@ -6760,7 +6764,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -6779,12 +6783,13 @@ exports[`single fields > select field single choice form disabled using radio wi
       class="form-group rjsf-field rjsf-field-string"
     >
       <div
-        class="field-radio-group"
+        class="rjsf-field-radio-group"
         id="root"
         role="radiogroup"
       >
         <div
-          class="radio disabled"
+          class="rjsf-radio radio disabled"
+          data-disabled="true"
         >
           <label>
             <span>
@@ -6802,7 +6807,8 @@ exports[`single fields > select field single choice form disabled using radio wi
           </label>
         </div>
         <div
-          class="radio disabled"
+          class="rjsf-radio radio disabled"
+          data-disabled="true"
         >
           <label>
             <span>
@@ -6823,7 +6829,7 @@ exports[`single fields > select field single choice form disabled using radio wi
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         disabled=""
         type="submit"
       >
@@ -6864,7 +6870,7 @@ exports[`single fields > select field single choice formData 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -6922,7 +6928,7 @@ exports[`single fields > select field single choice optgroups 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -6981,7 +6987,7 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -7000,12 +7006,13 @@ exports[`single fields > select field single choice uiSchema disabled using radi
       class="form-group rjsf-field rjsf-field-string"
     >
       <div
-        class="field-radio-group"
+        class="rjsf-field-radio-group"
         id="root"
         role="radiogroup"
       >
         <div
-          class="radio disabled"
+          class="rjsf-radio radio disabled"
+          data-disabled="true"
         >
           <label>
             <span>
@@ -7023,7 +7030,8 @@ exports[`single fields > select field single choice uiSchema disabled using radi
           </label>
         </div>
         <div
-          class="radio disabled"
+          class="rjsf-radio radio disabled"
+          data-disabled="true"
         >
           <label>
             <span>
@@ -7044,7 +7052,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -7063,7 +7071,7 @@ exports[`single fields > select widget with description in schema and FieldTempl
       class="form-group rjsf-field rjsf-field-boolean"
     >
       <label
-        class="control-label"
+        class="rjsf-field-label control-label"
         for="root"
       >
         <span
@@ -7073,7 +7081,7 @@ exports[`single fields > select widget with description in schema and FieldTempl
         </span>
       </label>
       <div
-        class="field-description"
+        class="rjsf-field-description"
         id="root__description"
       >
         This is a select description
@@ -7101,7 +7109,7 @@ exports[`single fields > select widget with description in schema and FieldTempl
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -7120,7 +7128,7 @@ exports[`single fields > select widget with selected oneOf option description 1`
       class="form-group rjsf-field rjsf-field-string"
     >
       <div
-        class="field-description"
+        class="rjsf-field-description"
         id="root__selectedOptionDescription"
       >
         Foo description
@@ -7148,7 +7156,7 @@ exports[`single fields > select widget with selected oneOf option description 1`
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -7188,7 +7196,7 @@ exports[`single fields > select widget with selected oneOf option description an
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -7207,13 +7215,13 @@ exports[`single fields > select widget with selected oneOf option description be
       class="form-group rjsf-field rjsf-field-string"
     >
       <div
-        class="field-description"
+        class="rjsf-field-description"
         id="root__description"
       >
         Pick a plan
       </div>
       <div
-        class="field-description"
+        class="rjsf-field-description"
         id="root__selectedOptionDescription"
       >
         Foo description
@@ -7241,7 +7249,7 @@ exports[`single fields > select widget with selected oneOf option description be
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -7260,7 +7268,7 @@ exports[`single fields > slider field 1`] = `
       class="form-group rjsf-field rjsf-field-integer"
     >
       <div
-        class="field-range-wrapper"
+        class="rjsf-field-range-wrapper"
       >
         <input
           class="form-control"
@@ -7273,7 +7281,7 @@ exports[`single fields > slider field 1`] = `
           value="75"
         />
         <span
-          class="range-view"
+          class="rjsf-range-view"
         >
           75
         </span>
@@ -7281,7 +7289,7 @@ exports[`single fields > slider field 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -7300,7 +7308,7 @@ exports[`single fields > string field > field with markdown help and description
       class="form-group rjsf-field rjsf-field-string"
     >
       <label
-        class="control-label"
+        class="rjsf-field-label control-label"
         for="root"
       >
         <span
@@ -7310,7 +7318,7 @@ exports[`single fields > string field > field with markdown help and description
         </span>
       </label>
       <div
-        class="field-description"
+        class="rjsf-field-description"
         id="root__description"
       >
         <span>
@@ -7334,7 +7342,7 @@ exports[`single fields > string field > field with markdown help and description
         value=""
       />
       <div
-        class="help-block"
+        class="rjsf-field-help help-block"
         id="root__help"
       >
         <span>
@@ -7353,7 +7361,7 @@ exports[`single fields > string field > field with markdown help and description
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -7372,7 +7380,7 @@ exports[`single fields > string field > field with markdown help text 1`] = `
       class="form-group rjsf-field rjsf-field-string"
     >
       <label
-        class="control-label"
+        class="rjsf-field-label control-label"
         for="root"
       >
         <span
@@ -7382,7 +7390,7 @@ exports[`single fields > string field > field with markdown help text 1`] = `
         </span>
       </label>
       <div
-        class="field-description"
+        class="rjsf-field-description"
         id="root__description"
       >
         A field with markdown help text
@@ -7397,7 +7405,7 @@ exports[`single fields > string field > field with markdown help text 1`] = `
         value=""
       />
       <div
-        class="help-block"
+        class="rjsf-field-help help-block"
         id="root__help"
       >
         <span>
@@ -7416,7 +7424,7 @@ exports[`single fields > string field > field with markdown help text 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -7435,7 +7443,7 @@ exports[`single fields > string field > field with markdown help text without a 
       class="form-group rjsf-field rjsf-field-string"
     >
       <label
-        class="control-label"
+        class="rjsf-field-label control-label"
         for="root"
       >
         <span
@@ -7445,7 +7453,7 @@ exports[`single fields > string field > field with markdown help text without a 
         </span>
       </label>
       <div
-        class="field-description"
+        class="rjsf-field-description"
         id="root__description"
       >
         A field with raw help text
@@ -7460,7 +7468,7 @@ exports[`single fields > string field > field with markdown help text without a 
         value=""
       />
       <div
-        class="help-block"
+        class="rjsf-field-help help-block"
         id="root__help"
       >
         This is **markdown** help text with [a link](https://example.com)
@@ -7468,7 +7476,7 @@ exports[`single fields > string field > field with markdown help text without a 
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -7499,7 +7507,7 @@ exports[`single fields > string field > format data-url 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -7528,7 +7536,7 @@ exports[`single fields > string field > format email 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -7557,7 +7565,7 @@ exports[`single fields > string field > format uri 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -7586,7 +7594,7 @@ exports[`single fields > string field > regular 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -7605,7 +7613,7 @@ exports[`single fields > string field > required field with markdown help 1`] = 
       class="form-group rjsf-field rjsf-field-string"
     >
       <label
-        class="control-label"
+        class="rjsf-field-label control-label"
         for="root"
       >
         <span
@@ -7615,7 +7623,7 @@ exports[`single fields > string field > required field with markdown help 1`] = 
         </span>
       </label>
       <div
-        class="field-description"
+        class="rjsf-field-description"
         id="root__description"
       >
         A required field with markdown help
@@ -7630,7 +7638,7 @@ exports[`single fields > string field > required field with markdown help 1`] = 
         value=""
       />
       <div
-        class="help-block"
+        class="rjsf-field-help help-block"
         id="root__help"
       >
         <span>
@@ -7644,7 +7652,7 @@ exports[`single fields > string field > required field with markdown help 1`] = 
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -7674,7 +7682,7 @@ exports[`single fields > string field > string field with allowClearTextInputs a
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -7701,7 +7709,7 @@ exports[`single fields > string field > string field with allowClearTextInputs a
         value="foo"
       />
       <button
-        class="btn btn-default btn-clear col-xs-12"
+        class="btn btn-default rjsf-btn-clear col-xs-12"
         title="clear input"
         type="button"
       >
@@ -7712,7 +7720,7 @@ exports[`single fields > string field > string field with allowClearTextInputs a
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -7741,7 +7749,7 @@ exports[`single fields > string field > string field with placeholder 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -7768,7 +7776,7 @@ exports[`single fields > textarea field 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -7800,7 +7808,7 @@ exports[`single fields > title field 1`] = `
           class="form-group rjsf-field rjsf-field-string"
         >
           <label
-            class="control-label"
+            class="rjsf-field-label control-label"
             for="root_title"
           >
             <span
@@ -7822,7 +7830,7 @@ exports[`single fields > title field 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -7841,7 +7849,7 @@ exports[`single fields > unsupported field 1`] = `
       class="form-group rjsf-field rjsf-field-undefined"
     >
       <div
-        class="unsupported-field"
+        class="rjsf-unsupported-field"
       >
         <p>
           Unsupported field schema for field root: Unknown field type undefined.
@@ -7853,7 +7861,7 @@ exports[`single fields > unsupported field 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -7883,7 +7891,7 @@ exports[`single fields > up/down field 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -7912,7 +7920,7 @@ exports[`single fields > using custom tagName 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -7942,7 +7950,7 @@ exports[`string field with autocapitalize 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit
@@ -7967,7 +7975,7 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
           class="form-group rjsf-field rjsf-field-boolean"
         >
           <label
-            class="control-label"
+            class="rjsf-field-label control-label"
             for="root_answer"
           >
             <span
@@ -8000,7 +8008,7 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
     </div>
     <div>
       <button
-        class="btn btn-info"
+        class="rjsf-submit-button btn btn-info"
         type="submit"
       >
         Submit

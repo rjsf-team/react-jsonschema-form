@@ -376,7 +376,7 @@ describe('liveErrors', () => {
       });
       await user.type(input(added.container, 'root_other'), 'yz');
       expect(Object.keys(fieldErrorsById(added.node))).toEqual([]);
-      await user.click(elementOf(added.container, '.rjsf-array-item-add button'));
+      await user.click(elementOf(added.container, '.rjsf-array-item-add'));
       expect(Object.keys(fieldErrorsById(added.node))).toEqual(['root_tags']);
       added.unmount();
 
@@ -720,7 +720,7 @@ describe('a change transformChange rewrites', () => {
         isPlainObject(next) ? { ...next, count: Array.isArray(next.tags) ? next.tags.length : 0 } : next,
     });
 
-    await user.click(elementOf(container, '.rjsf-array-item-add button'));
+    await user.click(elementOf(container, '.rjsf-array-item-add'));
 
     expect(Object.keys(fieldErrorsById(node))).toEqual(['root_tags']);
   });
@@ -740,7 +740,7 @@ describe('an added property', () => {
       initialFormData: { name: 'x' },
     });
 
-    await user.click(elementOf(container, '.rjsf-object-property-expand button'));
+    await user.click(elementOf(container, '.rjsf-object-property-expand'));
 
     expect(Object.keys(fieldErrorsById(node))).toEqual(['root']);
   });

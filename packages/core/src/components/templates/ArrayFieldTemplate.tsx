@@ -21,6 +21,7 @@ export default function ArrayFieldTemplate<
     canAdd,
     className,
     disabled,
+    hasErrors,
     id,
     uiSchema,
     items,
@@ -56,13 +57,14 @@ export default function ArrayFieldTemplate<
       <ArrayFieldDescriptionTemplate
         id={id}
         description={shownDescription}
+        hasErrors={hasErrors}
         schema={schema}
         uiSchema={uiSchema}
         registry={registry}
         presentation={presentation}
       />
       {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
-      <div className={joinClassNames(classMap.arrayItemList, 'array-item-list')}>{items}</div>
+      <div className={joinClassNames('rjsf-array-item-list', classMap.arrayItemList)}>{items}</div>
       {canAdd && (
         <AddButton
           id={buttonId(id, 'add')}

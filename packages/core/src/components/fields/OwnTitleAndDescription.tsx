@@ -38,6 +38,7 @@ export default function OwnTitleAndDescription<
         <DescriptionFieldTemplate
           id={description.id}
           description={description.text}
+          hasErrors={presentation.errors.messages.length > 0}
           schema={schema}
           uiSchema={uiSchema}
           registry={registry}

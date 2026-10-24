@@ -59,53 +59,57 @@ function generatePresentation(): ThemePresentation {
   };
 }
 
-/** The class names `@rjsf/core`'s components render by default: Bootstrap 3's, which core's markup is written for */
+/** The class names `@rjsf/core`'s components render by default: none, since core's markup is toolkit-independent and
+ * carries only its `rjsf-` markers. A theme's `classMap` adds its framework's classes beside them
+ */
 const CLASS_MAP: MergedClassMap = {
-  input: 'form-control',
-  select: 'form-control',
-  textarea: 'form-control',
-  fileInput: 'form-control',
-  rangeInput: 'form-control',
+  input: '',
+  select: '',
+  textarea: '',
+  fileInput: '',
+  rangeInput: '',
   rangeWrapper: '',
-  checkboxWrapper: 'checkbox',
+  checkboxWrapper: '',
   checkboxLabel: '',
   checkboxInput: '',
-  checkboxInlineLabel: 'checkbox-inline',
-  radioWrapper: 'radio',
+  checkboxInlineLabel: '',
+  radioWrapper: '',
   radioLabel: '',
   radioInput: '',
-  radioInlineLabel: 'radio-inline',
-  disabled: 'disabled',
-  altDateList: 'list-inline',
-  altDateListItem: 'list-inline-item',
-  altDateNowButton: 'btn btn-info',
-  altDateClearButton: 'btn btn-warning',
-  fieldLabel: 'control-label',
-  fieldErrors: 'bs-callout bs-callout-info',
-  fieldError: 'text-danger',
-  fieldHelp: 'help-block',
+  radioInlineLabel: '',
+  disabled: '',
+  altDateList: '',
+  altDateListItem: '',
+  altDateNowButton: '',
+  altDateClearButton: '',
+  fieldLabel: '',
+  fieldErrors: '',
+  fieldError: '',
+  fieldHelp: '',
   fieldDescription: '',
-  errorList: 'panel panel-danger',
-  errorListHeading: 'panel-heading',
-  errorListTitle: 'panel-title',
-  errorListItems: 'list-group',
-  errorListItem: 'list-group-item text-danger',
+  errorList: '',
+  errorListHeading: '',
+  errorListTitle: '',
+  errorListItems: '',
+  errorListItem: '',
   arrayFieldset: '',
-  arrayItemList: 'row',
+  arrayItemList: '',
   arrayItem: '',
   arrayItemToolbox: '',
   objectFieldset: '',
-  multiSchema: 'panel panel-default panel-body',
-  multiSchemaSelector: 'form-group',
-  cyclicSchemaMessage: 'text-danger',
-  cyclicSchemaExpandButton: 'btn btn-sm btn-warning',
-  optionalDataAddButton: 'btn-sm',
-  optionalDataRemoveButton: 'btn-sm',
-  submitButton: 'btn btn-info',
+  multiSchema: '',
+  multiSchemaSelector: '',
+  cyclicSchemaMessage: '',
+  cyclicSchemaExpandButton: '',
+  optionalDataAddButton: '',
+  optionalDataRemoveButton: '',
+  submitButton: '',
+  iconButton: '',
+  buttonIcon: '',
 };
 
 /** The core theme: every field, widget and template `@rjsf/core` implements, which parts of a field they draw, and the
- * class names they render
+ * class names they render, which are none
  */
 export function generateTheme<
   T = unknown,
@@ -173,8 +177,10 @@ export function buildRegistry<
     },
     widgets: { ...widgets, ...props.widgets },
     presentation: mergeThemePresentation(presentation, props.presentation),
+    // A Form `''` entry survives `mergeClassMaps()` so that it drops the theme's class beneath it; it becomes
+    // `undefined` here, so an element reading it bare renders no `class` attribute
     classMap: Object.fromEntries(
-      Object.keys(classMap).map((key) => [key, mergedClassMap[key as keyof ClassMap]]),
+      Object.keys(classMap).map((key) => [key, mergedClassMap[key as keyof ClassMap] || undefined]),
     ) as MergedClassMap,
     rootSchema: schema,
     // `F` may be narrower than `{}`, but an omitted formContext is an empty object

@@ -25,7 +25,7 @@ function Label(props: LabelProps) {
   return (
     <label className={className} htmlFor={id}>
       {label}
-      {required && <span className='required'>{REQUIRED_FIELD_SYMBOL}</span>}
+      {required && <span className='rjsf-required'>{REQUIRED_FIELD_SYMBOL}</span>}
     </label>
   );
 }

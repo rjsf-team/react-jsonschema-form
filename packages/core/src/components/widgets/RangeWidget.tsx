@@ -17,14 +17,14 @@ export default function RangeWidget<
   // A browser ignores `readonly` on a range input, so a read-only range is disabled to keep it from being dragged, and a
   // range input can't show an empty value, so it has no clear button, which would leave the slider at its midpoint
   return (
-    <div className={joinClassNames('field-range-wrapper', classMap.rangeWrapper)}>
+    <div className={joinClassNames('rjsf-field-range-wrapper', classMap.rangeWrapper)}>
       <BaseInputTemplate
         type='range'
         {...props}
         disabled={disabled || readonly}
         options={{ ...options, allowClearTextInputs: false }}
       />
-      <span className='range-view'>{value}</span>
+      <span className='rjsf-range-view'>{value}</span>
     </div>
   );
 }

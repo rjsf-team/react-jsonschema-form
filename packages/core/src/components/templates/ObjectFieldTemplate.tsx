@@ -30,6 +30,7 @@ export default function ObjectFieldTemplate<
     className,
     description,
     disabled,
+    hasErrors,
     formData,
     id,
     onAddProperty,
@@ -69,6 +70,7 @@ export default function ObjectFieldTemplate<
         <DescriptionFieldTemplate
           id={presentation?.description.id ?? descriptionId(id)}
           description={description}
+          hasErrors={hasErrors}
           schema={schema}
           uiSchema={uiSchema}
           registry={registry}
