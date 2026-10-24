@@ -669,7 +669,7 @@ describe('DateWidget', () => {
       expect(topAtDayFocus).toBe('5px');
     });
 
-    test('follows the trigger when an element around the field scrolls', async () => {
+    test('follows the trigger when an element around the field scrolls, measuring it once a frame', async () => {
       render(
         <div data-testid='panel'>
           <DateWidget {...makeWidgetMockProps({ value: '2020-05-03', schema, autofocus: false })} />
@@ -677,17 +677,23 @@ describe('DateWidget', () => {
       );
       const trigger = screen.getByRole('combobox');
       let bottom = 50;
-      vi.spyOn(trigger, 'getBoundingClientRect').mockImplementation(() => triggerRect(bottom));
+      const measure = vi.spyOn(trigger, 'getBoundingClientRect').mockImplementation(() => triggerRect(bottom));
       await user.click(trigger);
       const popup = screen.getByText('Done').closest<HTMLElement>('.date-picker-popup');
       expect(popup).toHaveStyle({ top: '55px' });
+      measure.mockClear();
 
       bottom = 10;
       // user-event has no scrolling. A browser dispatches a scroll at the element that scrolled, without bubbling, as
-      // `fireEvent.scroll` does
-      fireEvent.scroll(screen.getByTestId('panel'));
+      // `fireEvent.scroll` does, and a trackpad dispatches several of them a frame
+      const panel = screen.getByTestId('panel');
+      fireEvent.scroll(panel);
+      fireEvent.scroll(panel);
+      fireEvent.scroll(panel);
+      await new Promise(requestAnimationFrame);
 
       expect(popup).toHaveStyle({ top: '15px' });
+      expect(measure).toHaveBeenCalledTimes(1);
     });
   });
 
