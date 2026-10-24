@@ -1,5 +1,6 @@
 import type { ErrorListProps, FormContextType, RJSFValidationError, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { TranslatableString } from '@rjsf/utils';
+import { clsx } from 'clsx';
 
 /** The `ErrorList` component is the template that renders the all the errors associated with the fields in the `Form`
  *
@@ -10,16 +11,16 @@ export default function ErrorList<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >({ errors, registry }: ErrorListProps<T, S, F>) {
-  const { translateString } = registry;
+  const { translateString, classMap } = registry;
   return (
-    <div className='panel panel-danger errors'>
-      <div className='panel-heading'>
-        <h3 className='panel-title'>{translateString(TranslatableString.ErrorsLabel)}</h3>
+    <div className={clsx(classMap.errorList, 'errors')}>
+      <div className={classMap.errorListHeading}>
+        <h3 className={classMap.errorListTitle}>{translateString(TranslatableString.ErrorsLabel)}</h3>
       </div>
-      <ul className='list-group'>
+      <ul className={classMap.errorListItems}>
         {errors.map((error: RJSFValidationError, i: number) => (
           // oxlint-disable-next-line react/no-array-index-key
-          <li key={i} className='list-group-item text-danger'>
+          <li key={i} className={classMap.errorListItem}>
             {error.stack}
           </li>
         ))}

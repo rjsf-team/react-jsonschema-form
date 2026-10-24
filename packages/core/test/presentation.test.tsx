@@ -430,6 +430,7 @@ describe('the plan SchemaField builds', () => {
         templates: { FieldTemplate, FieldHelpTemplate },
       });
       const option = optionTemplates.at(-1)!;
+      expect(option.hasErrors).toBe(!optionHides);
       expect(option.id).toBe('root_foo');
       expect(option.classNames?.split(' ').includes('rjsf-field-error')).toBe(!optionHides);
       expect(optionHelps.at(-1)?.hasErrors).toBe(!optionHides);

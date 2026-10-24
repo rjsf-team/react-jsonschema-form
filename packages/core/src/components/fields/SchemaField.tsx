@@ -1024,6 +1024,7 @@ function SchemaFieldRender<
       <DescriptionFieldTemplate
         id={templateDescription.id}
         description={templateDescription.text}
+        hasErrors={hasErrors}
         schema={schema}
         uiSchema={uiSchema}
         registry={registry}
@@ -1049,6 +1050,7 @@ function SchemaFieldRender<
     disabled,
     readonly,
     hideError,
+    hasErrors,
     presentation,
     classNames: getFieldClassNames<S>(schema, hasErrors, uiOptions.classNames),
     style: uiOptions.style,

@@ -39,6 +39,7 @@ export function getTestRegistry(
     }
   }
   Object.freeze(registry.widgets);
+  Object.freeze(registry.classMap);
   // `mergeThemePresentation()` builds every object it returns, so freezing them reaches nothing the caller owns
   const { presentation: merged } = registry;
   for (const declaration of [...Object.values(merged.widgets), ...Object.values(merged.fields)]) {

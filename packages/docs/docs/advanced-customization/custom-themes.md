@@ -127,6 +127,29 @@ A declaration states what the theme's templates and widgets do.
 
 The theme's declarations are layered part by part over `@rjsf/core`'s, and the `Form`'s [`presentation`](../api-reference/form-props.md#presentation) prop over the theme's, by [`mergeThemePresentation()`](../api-reference/utility-functions.md#mergethemepresentation), so each layer declares only the parts it changes.
 
+### Class map
+
+A theme's **classMap** is a `ClassMap` of the class names its CSS framework needs on the elements `@rjsf/core` renders, so a theme built on a CSS framework styles core's components rather than copying them.
+It has one key per element rather than per concept, since frameworks put a concept's class on different elements: Bootstrap 3 puts `checkbox` on the `<div>` around a checkbox and its label, `checkboxWrapper`, while daisyUI puts it on the `<input>`.
+The keys named after a state, such as `disabled`, are added to an element in that state beside its own key's.
+`ClassMap` in `@rjsf/utils` lists the keys and the element each one reaches.
+
+```tsx
+import type { ThemeProps } from '@rjsf/core';
+
+const ThemeObject: ThemeProps = {
+  classMap: {
+    input: 'input input-bordered',
+    select: 'select select-bordered',
+    checkboxWrapper: 'form-control',
+    submitButton: 'btn btn-primary',
+  },
+};
+```
+
+A key's value replaces the class `@rjsf/core` gives that element, so a theme that wants none of core's Bootstrap 3 classes on an element maps it to `''`.
+`buildRegistry()` layers the theme's map over `@rjsf/core`'s and the `Form`'s [`classMap`](../api-reference/form-props.md#classmap) prop over the theme's, key by key, and the merged `MergedClassMap`, with every key filled in, is `registry.classMap`, which a custom component reads its classes from.
+
 ### Global UI options
 
 A theme whose widgets or templates read an option of their own from [`ui:globalOptions`](../api-reference/uiSchema.md#uiglobaloptions), as `@rjsf/mui` reads `mui`, declares its key as `globalUiOptionsKeys`.

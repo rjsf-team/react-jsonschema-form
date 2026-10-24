@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import type { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { TranslatableString } from '@rjsf/utils';
+import { clsx } from 'clsx';
 
 function IconButtonFn<
   T = unknown,
@@ -9,7 +10,7 @@ function IconButtonFn<
 >(props: IconButtonProps<T, S, F>) {
   const { iconType = 'default', icon, className, uiSchema, registry, ...otherProps } = props;
   return (
-    <button type='button' className={`btn btn-${iconType} ${className}`} {...otherProps}>
+    <button type='button' className={clsx('btn', `btn-${iconType}`, className)} {...otherProps}>
       {typeof icon === 'object' ? icon : <i className={`glyphicon glyphicon-${icon}`} />}
     </button>
   );

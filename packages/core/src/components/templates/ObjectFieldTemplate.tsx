@@ -13,6 +13,7 @@ import {
   buttonId,
   titleDrawsOptionalDataControl,
 } from '@rjsf/utils';
+import { clsx } from 'clsx';
 
 /** The `ObjectFieldTemplate` is the template to use to render all the inner properties of an object along with the
  * title and description if available. If the object is expandable, then an `AddButton` is also rendered after all
@@ -50,9 +51,9 @@ export default function ObjectFieldTemplate<
   const {
     ButtonTemplates: { AddButton },
   } = registry.templates;
-  const { schemaUtils } = registry;
+  const { schemaUtils, classMap } = registry;
   return (
-    <fieldset className={className} id={id}>
+    <fieldset className={clsx(className, classMap.objectFieldset) || undefined} id={id}>
       {title && (
         <TitleFieldTemplate
           id={titleId(id)}

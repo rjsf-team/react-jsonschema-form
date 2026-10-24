@@ -194,7 +194,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 role="group"
               >
                 <div
-                  class="checkbox "
+                  class="checkbox"
                 >
                   <label>
                     <span>
@@ -212,7 +212,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </label>
                 </div>
                 <div
-                  class="checkbox "
+                  class="checkbox"
                 >
                   <label>
                     <span>
@@ -230,7 +230,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </label>
                 </div>
                 <div
-                  class="checkbox "
+                  class="checkbox"
                 >
                   <label>
                     <span>
@@ -248,7 +248,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </label>
                 </div>
                 <div
-                  class="checkbox "
+                  class="checkbox"
                 >
                   <label>
                     <span>
@@ -266,7 +266,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </label>
                 </div>
                 <div
-                  class="checkbox "
+                  class="checkbox"
                 >
                   <label>
                     <span>
@@ -766,7 +766,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 role="radiogroup"
               >
                 <label
-                  class="radio-inline "
+                  class="radio-inline"
                 >
                   <span>
                     <input
@@ -782,7 +782,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </span>
                 </label>
                 <label
-                  class="radio-inline "
+                  class="radio-inline"
                 >
                   <span>
                     <input
@@ -797,7 +797,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </span>
                 </label>
                 <label
-                  class="radio-inline "
+                  class="radio-inline"
                 >
                   <span>
                     <input
@@ -1225,7 +1225,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
     </div>
     <div>
       <button
-        class="btn btn-info "
+        class="btn btn-info"
         type="submit"
       >
         Submit
@@ -1429,7 +1429,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 role="group"
               >
                 <div
-                  class="checkbox "
+                  class="checkbox"
                 >
                   <label>
                     <span>
@@ -1447,7 +1447,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </label>
                 </div>
                 <div
-                  class="checkbox "
+                  class="checkbox"
                 >
                   <label>
                     <span>
@@ -1465,7 +1465,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </label>
                 </div>
                 <div
-                  class="checkbox "
+                  class="checkbox"
                 >
                   <label>
                     <span>
@@ -1483,7 +1483,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </label>
                 </div>
                 <div
-                  class="checkbox "
+                  class="checkbox"
                 >
                   <label>
                     <span>
@@ -1501,7 +1501,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </label>
                 </div>
                 <div
-                  class="checkbox "
+                  class="checkbox"
                 >
                   <label>
                     <span>
@@ -2001,7 +2001,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 role="radiogroup"
               >
                 <label
-                  class="radio-inline "
+                  class="radio-inline"
                 >
                   <span>
                     <input
@@ -2016,7 +2016,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </span>
                 </label>
                 <label
-                  class="radio-inline "
+                  class="radio-inline"
                 >
                   <span>
                     <input
@@ -2032,7 +2032,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </span>
                 </label>
                 <label
-                  class="radio-inline "
+                  class="radio-inline"
                 >
                   <span>
                     <input
@@ -2487,7 +2487,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
     </div>
     <div>
       <button
-        class="btn btn-info "
+        class="btn btn-info"
         type="submit"
       >
         Submit
@@ -2691,7 +2691,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 role="group"
               >
                 <div
-                  class="checkbox "
+                  class="checkbox"
                 >
                   <label>
                     <span>
@@ -2709,7 +2709,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </label>
                 </div>
                 <div
-                  class="checkbox "
+                  class="checkbox"
                 >
                   <label>
                     <span>
@@ -2727,7 +2727,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </label>
                 </div>
                 <div
-                  class="checkbox "
+                  class="checkbox"
                 >
                   <label>
                     <span>
@@ -2745,7 +2745,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </label>
                 </div>
                 <div
-                  class="checkbox "
+                  class="checkbox"
                 >
                   <label>
                     <span>
@@ -2763,7 +2763,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </label>
                 </div>
                 <div
-                  class="checkbox "
+                  class="checkbox"
                 >
                   <label>
                     <span>
@@ -3263,7 +3263,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 role="radiogroup"
               >
                 <label
-                  class="radio-inline "
+                  class="radio-inline"
                 >
                   <span>
                     <input
@@ -3278,7 +3278,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </span>
                 </label>
                 <label
-                  class="radio-inline "
+                  class="radio-inline"
                 >
                   <span>
                     <input
@@ -3293,7 +3293,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </span>
                 </label>
                 <label
-                  class="radio-inline "
+                  class="radio-inline"
                 >
                   <span>
                     <input
@@ -3347,7 +3347,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
     </div>
     <div>
       <button
-        class="btn btn-info "
+        class="btn btn-info"
         type="submit"
       >
         Submit
@@ -3551,7 +3551,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 role="group"
               >
                 <div
-                  class="checkbox "
+                  class="checkbox"
                 >
                   <label>
                     <span>
@@ -3569,7 +3569,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </label>
                 </div>
                 <div
-                  class="checkbox "
+                  class="checkbox"
                 >
                   <label>
                     <span>
@@ -3587,7 +3587,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </label>
                 </div>
                 <div
-                  class="checkbox "
+                  class="checkbox"
                 >
                   <label>
                     <span>
@@ -3605,7 +3605,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </label>
                 </div>
                 <div
-                  class="checkbox "
+                  class="checkbox"
                 >
                   <label>
                     <span>
@@ -3623,7 +3623,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </label>
                 </div>
                 <div
-                  class="checkbox "
+                  class="checkbox"
                 >
                   <label>
                     <span>
@@ -4123,7 +4123,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 role="radiogroup"
               >
                 <label
-                  class="radio-inline "
+                  class="radio-inline"
                 >
                   <span>
                     <input
@@ -4139,7 +4139,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </span>
                 </label>
                 <label
-                  class="radio-inline "
+                  class="radio-inline"
                 >
                   <span>
                     <input
@@ -4154,7 +4154,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </span>
                 </label>
                 <label
-                  class="radio-inline "
+                  class="radio-inline"
                 >
                   <span>
                     <input
@@ -4582,7 +4582,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
     </div>
     <div>
       <button
-        class="btn btn-info "
+        class="btn btn-info"
         type="submit"
       >
         Submit
@@ -4777,7 +4777,7 @@ exports[`Three even column grid > renders person and address in three columns, n
               role="group"
             >
               <div
-                class="checkbox "
+                class="checkbox"
               >
                 <label>
                   <span>
@@ -4795,7 +4795,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                 </label>
               </div>
               <div
-                class="checkbox "
+                class="checkbox"
               >
                 <label>
                   <span>
@@ -4813,7 +4813,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                 </label>
               </div>
               <div
-                class="checkbox "
+                class="checkbox"
               >
                 <label>
                   <span>
@@ -4831,7 +4831,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                 </label>
               </div>
               <div
-                class="checkbox "
+                class="checkbox"
               >
                 <label>
                   <span>
@@ -4849,7 +4849,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                 </label>
               </div>
               <div
-                class="checkbox "
+                class="checkbox"
               >
                 <label>
                   <span>
@@ -5282,7 +5282,7 @@ exports[`Three even column grid > renders person and address in three columns, n
     </div>
     <div>
       <button
-        class="btn btn-info "
+        class="btn btn-info"
         type="submit"
       >
         Submit
@@ -5477,7 +5477,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
               role="group"
             >
               <div
-                class="checkbox "
+                class="checkbox"
               >
                 <label>
                   <span>
@@ -5495,7 +5495,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 </label>
               </div>
               <div
-                class="checkbox "
+                class="checkbox"
               >
                 <label>
                   <span>
@@ -5513,7 +5513,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 </label>
               </div>
               <div
-                class="checkbox "
+                class="checkbox"
               >
                 <label>
                   <span>
@@ -5531,7 +5531,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 </label>
               </div>
               <div
-                class="checkbox "
+                class="checkbox"
               >
                 <label>
                   <span>
@@ -5549,7 +5549,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 </label>
               </div>
               <div
-                class="checkbox "
+                class="checkbox"
               >
                 <label>
                   <span>
@@ -5982,7 +5982,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
     </div>
     <div>
       <button
-        class="btn btn-info "
+        class="btn btn-info"
         type="submit"
       >
         Submit

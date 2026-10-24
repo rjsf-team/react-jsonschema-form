@@ -83,7 +83,7 @@ export function DateElement<
   F extends FormContextType = FormContextType,
 >(props: DateElementProps<T, S, F>) {
   const {
-    className = 'form-control',
+    className,
     type,
     range,
     value,

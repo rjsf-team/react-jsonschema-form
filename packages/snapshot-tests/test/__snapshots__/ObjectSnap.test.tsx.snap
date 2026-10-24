@@ -137,7 +137,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info "
+        class="btn btn-info"
         type="submit"
       >
         Submit
@@ -270,7 +270,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
     </div>
     <div>
       <button
-        class="btn btn-info "
+        class="btn btn-info"
         type="submit"
       >
         Submit
@@ -344,7 +344,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
           class="form-group rjsf-field rjsf-field-boolean"
         >
           <div
-            class="checkbox "
+            class="checkbox"
           >
             <label>
               <input
@@ -557,7 +557,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info "
+        class="btn btn-info"
         type="submit"
       >
         Submit
@@ -654,7 +654,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info "
+        class="btn btn-info"
         type="submit"
       >
         Submit
@@ -778,7 +778,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info "
+        class="btn btn-info"
         type="submit"
       >
         Submit
@@ -1046,7 +1046,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
     </div>
     <div>
       <button
-        class="btn btn-info "
+        class="btn btn-info"
         type="submit"
       >
         Submit
@@ -1143,7 +1143,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info "
+        class="btn btn-info"
         type="submit"
       >
         Submit
@@ -1253,7 +1253,7 @@ exports[`object fields > additionalProperties 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info "
+        class="btn btn-info"
         type="submit"
       >
         Submit
@@ -1388,7 +1388,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
     </div>
     <div>
       <button
-        class="btn btn-info "
+        class="btn btn-info"
         type="submit"
       >
         Submit
@@ -1512,7 +1512,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info "
+        class="btn btn-info"
         type="submit"
       >
         Submit
@@ -1632,7 +1632,7 @@ exports[`object fields > additionalProperties, description 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info "
+        class="btn btn-info"
         type="submit"
       >
         Submit
@@ -1742,7 +1742,7 @@ exports[`object fields > additionalProperties, label off 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info "
+        class="btn btn-info"
         type="submit"
       >
         Submit
@@ -1867,7 +1867,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info "
+        class="btn btn-info"
         type="submit"
       >
         Submit
@@ -1992,7 +1992,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info "
+        class="btn btn-info"
         type="submit"
       >
         Submit
@@ -2117,7 +2117,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
     </div>
     <div>
       <button
-        class="btn btn-info "
+        class="btn btn-info"
         type="submit"
       >
         Submit
@@ -2191,7 +2191,7 @@ exports[`object fields > object 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info "
+        class="btn btn-info"
         type="submit"
       >
         Submit
@@ -2284,7 +2284,7 @@ exports[`object fields > pure anyOf union, with no frame of its own beside the o
     </div>
     <div>
       <button
-        class="btn btn-info "
+        class="btn btn-info"
         type="submit"
       >
         Submit
@@ -2394,7 +2394,7 @@ exports[`object fields > show add button and fields if additionalProperties is t
     </div>
     <div>
       <button
-        class="btn btn-info "
+        class="btn btn-info"
         type="submit"
       >
         Submit
@@ -2517,7 +2517,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
     </div>
     <div>
       <button
-        class="btn btn-info "
+        class="btn btn-info"
         type="submit"
       >
         Submit
@@ -2618,7 +2618,7 @@ exports[`object fields > with title and description > object 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info "
+        class="btn btn-info"
         type="submit"
       >
         Submit
@@ -2741,7 +2741,7 @@ exports[`object fields > with title and description > show add button and fields
     </div>
     <div>
       <button
-        class="btn btn-info "
+        class="btn btn-info"
         type="submit"
       >
         Submit
@@ -2864,7 +2864,7 @@ exports[`object fields > with title and description from both > additionalProper
     </div>
     <div>
       <button
-        class="btn btn-info "
+        class="btn btn-info"
         type="submit"
       >
         Submit
@@ -2965,7 +2965,7 @@ exports[`object fields > with title and description from both > object 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-info "
+        class="btn btn-info"
         type="submit"
       >
         Submit
@@ -3088,7 +3088,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
     </div>
     <div>
       <button
-        class="btn btn-info "
+        class="btn btn-info"
         type="submit"
       >
         Submit
@@ -3189,7 +3189,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
     </div>
     <div>
       <button
-        class="btn btn-info "
+        class="btn btn-info"
         type="submit"
       >
         Submit
@@ -3312,7 +3312,7 @@ exports[`object fields > with title and description from uiSchema > show add but
     </div>
     <div>
       <button
-        class="btn btn-info "
+        class="btn btn-info"
         type="submit"
       >
         Submit
@@ -3407,7 +3407,7 @@ exports[`object fields > with title and description with global label off > addi
     </div>
     <div>
       <button
-        class="btn btn-info "
+        class="btn btn-info"
         type="submit"
       >
         Submit
@@ -3463,7 +3463,7 @@ exports[`object fields > with title and description with global label off > obje
     </div>
     <div>
       <button
-        class="btn btn-info "
+        class="btn btn-info"
         type="submit"
       >
         Submit
@@ -3558,7 +3558,7 @@ exports[`object fields > with title and description with global label off > show
     </div>
     <div>
       <button
-        class="btn btn-info "
+        class="btn btn-info"
         type="submit"
       >
         Submit

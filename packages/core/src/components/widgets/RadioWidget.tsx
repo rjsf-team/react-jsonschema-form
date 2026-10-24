@@ -11,6 +11,7 @@ import {
   getOptionValueFormat,
   optionId,
 } from '@rjsf/utils';
+import { clsx } from 'clsx';
 
 /** The `RadioWidget` is a widget for rendering a radio group.
  *  It is typically used with a string property constrained with enum options.
@@ -33,9 +34,11 @@ function RadioWidget<
   onChange,
   id,
   htmlName,
+  registry,
   presentation,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, inline, emptyValue } = options;
+  const { classMap } = registry;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
 
@@ -62,7 +65,7 @@ function RadioWidget<
         enumOptions.map((option, i) => {
           const checked = enumOptionsIsSelected<S>(option.value, value, false);
           const itemDisabled = enumOptionsIsDisabled(option.value, enumDisabled);
-          const disabledCls = disabled || itemDisabled || readonly ? 'disabled' : '';
+          const disabledCls = (disabled || itemDisabled || readonly) && classMap.disabled;
 
           const handleChange = () => onChange(option.value);
 
@@ -70,6 +73,7 @@ function RadioWidget<
             <span>
               <input
                 type='radio'
+                className={classMap.radioInput || undefined}
                 id={optionId(id, i)}
                 checked={checked}
                 name={htmlName || id}
@@ -88,13 +92,13 @@ function RadioWidget<
 
           return inline ? (
             // oxlint-disable-next-line react/no-array-index-key
-            <label key={i} className={`radio-inline ${disabledCls}`}>
+            <label key={i} className={clsx(classMap.radioInlineLabel, disabledCls)}>
               {radio}
             </label>
           ) : (
             // oxlint-disable-next-line react/no-array-index-key
-            <div key={i} className={`radio ${disabledCls}`}>
-              <label>{radio}</label>
+            <div key={i} className={clsx(classMap.radioWrapper, disabledCls)}>
+              <label className={classMap.radioLabel || undefined}>{radio}</label>
             </div>
           );
         })}

@@ -1,4 +1,5 @@
 import type { FormContextType, OptionalDataControlsTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { clsx } from 'clsx';
 
 import IconButton from './ButtonTemplates/IconButton.tsx';
 
@@ -16,13 +17,14 @@ export default function OptionalDataControlsTemplate<
   F extends FormContextType = FormContextType,
 >(props: OptionalDataControlsTemplateProps<T, S, F>) {
   const { id, registry, label, onAddClick, onRemoveClick } = props;
+  const { classMap } = registry;
   if (onAddClick) {
     return (
       <IconButton
         id={id}
         registry={registry}
         icon='plus'
-        className='rjsf-add-optional-data btn-sm'
+        className={clsx('rjsf-add-optional-data', classMap.optionalDataAddButton)}
         onClick={onAddClick}
         title={label}
       />
@@ -34,7 +36,7 @@ export default function OptionalDataControlsTemplate<
         id={id}
         registry={registry}
         icon='remove'
-        className='rjsf-remove-optional-data btn-sm'
+        className={clsx('rjsf-remove-optional-data', classMap.optionalDataRemoveButton)}
         onClick={onRemoveClick}
         title={label}
       />

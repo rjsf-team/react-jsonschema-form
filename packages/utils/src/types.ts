@@ -798,6 +798,10 @@ export interface Registry<
    * theme and the `Form`'s `presentation` prop by `mergeThemePresentation()`
    */
   readonly presentation: MergedThemePresentation;
+  /** The class names the elements `@rjsf/core` renders carry, by element, merged from `core`'s defaults, the theme's
+   * `classMap` and the `Form`'s `classMap` prop by `buildRegistry()`
+   */
+  readonly classMap: MergedClassMap;
   /** The `formContext` object that was passed to `Form` */
   readonly formContext: F;
   /** The root schema, as passed to the `Form`, which can contain referenced definitions */
@@ -967,6 +971,109 @@ export interface ThemePresentation {
  */
 export type MergedThemePresentation = Required<ThemePresentation>;
 
+/** The class names a theme or a form adds to the elements `@rjsf/core` renders, one key per element rather than per
+ * concept, since CSS frameworks put a concept's class on different elements: Bootstrap 3 puts `checkbox` on the
+ * wrapper, daisyUI on the `<input>`. A key's value replaces the class the layer beneath gives its element. The keys
+ * named after a state, such as `disabled`, are added to an element in that state beside its own key's
+ */
+export interface ClassMap {
+  /** The `<input>` of `BaseInputTemplate` */
+  input?: string;
+  /** The `<select>` of `SelectWidget` */
+  select?: string;
+  /** The `<textarea>` of `TextareaWidget` */
+  textarea?: string;
+  /** The `<input type="file">` of `BaseInputTemplate`, which `FileWidget` renders */
+  fileInput?: string;
+  /** The `<input type="range">` of `BaseInputTemplate`, which `RangeWidget` renders */
+  rangeInput?: string;
+  /** The `<div>` of `RangeWidget`, around its input and the value beside it */
+  rangeWrapper?: string;
+  /** The `<div>` around a checkbox and its label, in `CheckboxWidget` and `CheckboxesWidget`'s stacked options */
+  checkboxWrapper?: string;
+  /** The `<label>` inside a `checkboxWrapper` */
+  checkboxLabel?: string;
+  /** The `<input type="checkbox">` of `CheckboxWidget` and of each of `CheckboxesWidget`'s options */
+  checkboxInput?: string;
+  /** The `<label>` of one of `CheckboxesWidget`'s inline options, which has no wrapper */
+  checkboxInlineLabel?: string;
+  /** The `<div>` around one of `RadioWidget`'s stacked options and its label */
+  radioWrapper?: string;
+  /** The `<label>` inside a `radioWrapper` */
+  radioLabel?: string;
+  /** The `<input type="radio">` of each of `RadioWidget`'s options */
+  radioInput?: string;
+  /** The `<label>` of one of `RadioWidget`'s inline options, which has no wrapper */
+  radioInlineLabel?: string;
+  /** Added to a `checkboxWrapper`, `checkboxInlineLabel`, `radioWrapper` or `radioInlineLabel` whose option is disabled
+   * or read-only
+   */
+  disabled?: string;
+  /** The `<ul>` of `AltDateWidget`'s date parts and buttons */
+  altDateList?: string;
+  /** Each `<li>` of `altDateList` */
+  altDateListItem?: string;
+  /** `AltDateWidget`'s Now `<button>` */
+  altDateNowButton?: string;
+  /** `AltDateWidget`'s Clear `<button>` */
+  altDateClearButton?: string;
+  /** The `<label>` `FieldTemplate` draws for a field, and `WrapIfAdditionalTemplate` for an extra key */
+  fieldLabel?: string;
+  /** Added to `FieldTemplate`'s `fieldLabel` while the field shows its own errors, as `ui:hideError` leaves them */
+  labelError?: string;
+  /** The `<ul>` of `FieldErrorTemplate` */
+  fieldErrors?: string;
+  /** Each `<li>` of `fieldErrors` */
+  fieldError?: string;
+  /** The `<div>` of `FieldHelpTemplate` */
+  fieldHelp?: string;
+  /** Added to `fieldHelp` while the field shows its own errors, as `ui:hideError` leaves them */
+  helpError?: string;
+  /** The `<div>` of `DescriptionField` */
+  fieldDescription?: string;
+  /** Added to `fieldDescription` while the field it describes shows its own errors, as `ui:hideError` leaves them */
+  descriptionError?: string;
+  /** The outer `<div>` of `ErrorList` */
+  errorList?: string;
+  /** The `<div>` around `ErrorList`'s heading */
+  errorListHeading?: string;
+  /** The `<h3>` heading of `ErrorList` */
+  errorListTitle?: string;
+  /** The `<ul>` of `ErrorList` */
+  errorListItems?: string;
+  /** Each `<li>` of `errorListItems` */
+  errorListItem?: string;
+  /** The `<fieldset>` of `ArrayFieldTemplate` */
+  arrayFieldset?: string;
+  /** The `<div>` around `ArrayFieldTemplate`'s items */
+  arrayItemList?: string;
+  /** The `<div>` of `ArrayFieldItemTemplate`, around an item and its toolbox */
+  arrayItem?: string;
+  /** The `<div>` around `ArrayFieldItemTemplate`'s buttons */
+  arrayItemToolbox?: string;
+  /** The `<fieldset>` of `ObjectFieldTemplate` */
+  objectFieldset?: string;
+  /** The `<div>` of `MultiSchemaFieldTemplate` */
+  multiSchema?: string;
+  /** The `<div>` around `MultiSchemaFieldTemplate`'s option selector */
+  multiSchemaSelector?: string;
+  /** The `<div>` of `CyclicSchemaExpandTemplate`'s message */
+  cyclicSchemaMessage?: string;
+  /** The Expand `<button>` of `CyclicSchemaExpandTemplate` */
+  cyclicSchemaExpandButton?: string;
+  /** The class `OptionalDataControlsTemplate` hands its add `IconButton` */
+  optionalDataAddButton?: string;
+  /** The class `OptionalDataControlsTemplate` hands its remove `IconButton` */
+  optionalDataRemoveButton?: string;
+  /** The `<button>` of `SubmitButton` */
+  submitButton?: string;
+}
+
+/** A form's `ClassMap` once `buildRegistry()` layered the `Form`'s over the theme's over `@rjsf/core`'s: every key has
+ * a value
+ */
+export type MergedClassMap = Readonly<Required<ClassMap>>;
+
 /** Where one part of a field is drawn: by its template, by its field or widget component, by a field above it
  * rendering the same id, or not at all
  */
@@ -1102,6 +1209,11 @@ export type FieldTemplateProps<
   readonly: boolean;
   /** A boolean value stating if the field is hiding its errors */
   hideError?: boolean;
+  /** Whether the field shows its own errors, as `ui:hideError` leaves them: the state its wrapper's `rjsf-field-error`
+   * class, its label, its help and its description take. Beneath an `anyOf`/`oneOf` field it can differ from the
+   * plan's errors, which are the ones the field above shows
+   */
+  hasErrors?: boolean;
   /** A boolean value stating if the field is disabled */
   disabled: boolean;
   /** A boolean value stating if the template renders the label: true only where the field's `presentation` says the
@@ -1195,6 +1307,8 @@ export type DescriptionFieldProps<
   id: string;
   /** The description of the field being rendered */
   description: string | ReactElement;
+  /** Whether the field it describes shows errors */
+  hasErrors?: boolean;
 };
 
 /** The properties that are passed to a `ArrayFieldTitleTemplate` implementation */
@@ -1450,6 +1564,7 @@ export type WrapIfAdditionalTemplateProps<
     | 'id'
     | 'classNames'
     | 'hideError'
+    | 'hasErrors'
     | 'rawDescription'
     | 'rawErrors'
     | 'style'

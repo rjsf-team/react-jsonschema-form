@@ -10,6 +10,7 @@ import {
   getWidgetDescription,
   widgetDrawsLabel,
 } from '@rjsf/utils';
+import { clsx } from 'clsx';
 
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.
  *  It is typically used to represent a boolean.
@@ -40,6 +41,7 @@ function CheckboxWidget<
     presentation,
   } = props;
   const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
+  const { classMap } = registry;
   // Because an unchecked checkbox will cause html5 validation to fail, only add
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords
@@ -66,7 +68,7 @@ function CheckboxWidget<
   const description =
     presentation || getUiOptions(uiSchema).widget !== 'checkbox' ? getWidgetDescription<T, S, F>(props) : undefined;
   return (
-    <div className={`checkbox ${disabled || readonly ? 'disabled' : ''}`}>
+    <div className={clsx(classMap.checkboxWrapper, (disabled || readonly) && classMap.disabled)}>
       {description && (
         <DescriptionFieldTemplate
           id={description.id}
@@ -76,9 +78,10 @@ function CheckboxWidget<
           registry={registry}
         />
       )}
-      <label>
+      <label className={classMap.checkboxLabel || undefined}>
         <input
           type='checkbox'
+          className={classMap.checkboxInput || undefined}
           id={id}
           name={htmlName || id}
           checked={typeof value === 'undefined' ? false : value}

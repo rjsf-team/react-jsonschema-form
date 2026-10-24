@@ -1,4 +1,5 @@
 import type {
+  MergedClassMap,
   Registry,
   RJSFSchema,
   TemplatesType,
@@ -32,6 +33,7 @@ const baseRegistry: Registry = {
   fields: {},
   widgets: {},
   presentation: mergeThemePresentation(),
+  classMap: {} as MergedClassMap,
   templates: {} as TemplatesType,
   globalFormOptions: { idPrefix: 'root', idSeparator: '_', useFallbackUiForUnsupportedType: false },
 };

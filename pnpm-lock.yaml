@@ -327,6 +327,9 @@ importers:
 
   packages/core:
     dependencies:
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
       react:
         specifier: '>=19.2'
         version: 19.3.0

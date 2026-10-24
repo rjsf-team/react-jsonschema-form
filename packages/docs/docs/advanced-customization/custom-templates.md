@@ -608,6 +608,7 @@ The following props are passed to the `DescriptionFieldTemplate`:
 
 - `description`: The description of the field being rendered.
 - `id`: The id of the field in the hierarchy.
+- `hasErrors`: Whether the field shows its own errors
 - `schema`: The schema object for the field.
 - `uiSchema`: The uiSchema object for the field.
 - `registry`: The `registry` object.
@@ -859,6 +860,7 @@ The following props are passed to a custom field template component:
 - `required`: A boolean value stating if the field is required. Mark the label you draw from [`templateMarksRequired()`](../api-reference/utility-functions.md#templatemarksrequired), which follows the field's plan, so a checkbox the schema lets be `false` isn't marked.
 - `readonly`: A boolean value stating if the field is read-only.
 - `hideError`: A boolean value stating if the field is hiding its errors
+- `hasErrors`: Whether the field shows its own errors, as `ui:hideError` leaves them, the state its label, description and help take. Beneath an `anyOf`/`oneOf` field it can differ from `presentation.errors`, which are the errors the field above shows.
 - `disabled`: A boolean value stating if the field is disabled.
 - `displayLabel`: A boolean value stating if the template renders the label: true only where the field's plan says the template draws it, so it is false where the widget draws its own label, and where `ui:label: false` turns it off. Deprecated, and kept through v7 for a template rendered without a plan: read `presentation.label.by === 'template'` instead, or [`templateDrawsLabel()`](../api-reference/utility-functions.md#templatedrawslabel), which falls back to `displayLabel` without a plan.
 - `presentation`: The field's plan, built by `SchemaField`: who draws its label, description, help and errors, under which ids, and the attributes its control carries. See [`resolveFieldPresentation()`](../api-reference/utility-functions.md#resolvefieldpresentation).

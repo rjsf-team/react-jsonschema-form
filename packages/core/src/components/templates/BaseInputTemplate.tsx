@@ -49,6 +49,7 @@ export default function BaseInputTemplate<
     ...rest
   } = props;
   const { ClearButton } = registry.templates.ButtonTemplates;
+  const { classMap } = registry;
 
   // Note: since React 15.2.0 we can't forward unknown element attributes, so we
   // exclude the "options" and "schema" ones here.
@@ -98,12 +99,18 @@ export default function BaseInputTemplate<
 
   const exampleSuggestions = getExampleSuggestions<S>(schema);
   const hasExamples = exampleSuggestions.length > 0;
+  let className = classMap.input;
+  if (inputProps.type === 'file') {
+    className = classMap.fileInput;
+  } else if (inputProps.type === 'range') {
+    className = classMap.rangeInput;
+  }
   return (
     <>
       <input
         id={id}
         name={htmlName || id}
-        className='form-control'
+        className={className}
         readOnly={readonly}
         disabled={disabled}
         autoFocus={autofocus}

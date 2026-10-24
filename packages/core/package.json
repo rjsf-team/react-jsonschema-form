@@ -47,6 +47,9 @@
   "engines": {
     "node": "^22.18.0 || ^24.11.0 || >=26.0.0"
   },
+  "dependencies": {
+    "clsx": "^2.1.1"
+  },
   "peerDependencies": {
     "@rjsf/utils": "workspace:^",
     "@rjsf/validator-ajv8": "workspace:^",

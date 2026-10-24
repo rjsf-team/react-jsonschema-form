@@ -7,6 +7,7 @@ import {
   templateLabelFor,
   templateMarksRequired,
 } from '@rjsf/utils';
+import { clsx } from 'clsx';
 
 import Label from './Label.tsx';
 
@@ -20,7 +21,8 @@ export default function FieldTemplate<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: FieldTemplateProps<T, S, F>) {
-  const { label, children, errors, help, description, hidden, registry, uiSchema, presentation } = props;
+  const { label, children, errors, help, description, hidden, hasErrors, registry, uiSchema, presentation } = props;
+  const { classMap } = registry;
   const uiOptions = getUiOptions(uiSchema);
   const { WrapIfAdditionalTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   if (hidden) {
@@ -37,6 +39,7 @@ export default function FieldTemplate<
           required={templateMarksRequired<T, S, F>(props)}
           id={templateLabelFor<T, S, F>(props)}
           labelId={presentation?.label.id}
+          className={clsx(classMap.fieldLabel, hasErrors && classMap.labelError)}
         />
       )}
       {templateDrawsDescription<T, S, F>(props) && description}

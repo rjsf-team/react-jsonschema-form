@@ -1,4 +1,4 @@
-import type { GlobalUISchemaOptions, Registry, RJSFSchema, TemplatesType } from '../src/index.ts';
+import type { GlobalUISchemaOptions, MergedClassMap, Registry, RJSFSchema, TemplatesType } from '../src/index.ts';
 import {
   createSchemaUtils,
   englishStringTranslator,
@@ -71,6 +71,7 @@ const registry: Registry = {
   fields: {},
   widgets: {},
   presentation: mergeThemePresentation(),
+  classMap: {} as MergedClassMap,
   templates: {} as TemplatesType,
   globalFormOptions: GLOBAL_FORM_OPTIONS,
 };
