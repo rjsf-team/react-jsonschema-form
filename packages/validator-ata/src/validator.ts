@@ -119,7 +119,8 @@ export default class ATAValidator<
    */
   private extrasFor(base: object) {
     if (this.extras?.base !== base) {
-      const own = schemaList(this.options.ataOptionsOverrides?.schemas, isDraft04(base, false));
+      const draft04 = isDraft04(base, false);
+      const own = (this.ownLists[Number(draft04)] ??= schemaList(this.options.ataOptionsOverrides?.schemas, draft04));
       const baseId = (base as { $id?: unknown }).$id;
       const metas = this.options.additionalMetaSchemas?.filter(
         (meta) => (meta as { $id?: unknown } | null)?.$id !== baseId,
