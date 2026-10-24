@@ -4,6 +4,8 @@ import type { RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { callWithDeferredThrow } from '@rjsf/utils';
 import { format, isSameMonth, isValid, parseISO } from 'date-fns';
 
+import { CALENDAR_MIN_WIDTH } from './DatePickerCalendar.tsx';
+
 /** The document the form is rendered into, which is a document away from the one this module runs in wherever that is
  * an iframe — as the playground's frame renders it. A press, a key and a viewport width all belong to that document
  * rather than to ours, and reading it off an element the form rendered needs no setup from the consumer, where a
@@ -30,7 +32,7 @@ function hasFocus(element: Element | null) {
  * @param element - An element of the form
  * @returns - That element's window, falling back to this one for a document with no browsing context of its own
  */
-export function windowOf(element: Element | null) {
+function windowOf(element: Element | null) {
   return documentOf(element).defaultView ?? window;
 }
 
@@ -186,9 +188,9 @@ interface UseDatePickerProps<V> {
   onBlur?: (id: string, value: unknown) => void;
 }
 
-/** Runs the popup behind both picker widgets: the state it holds while it is open, every way out of it, and which of
- * those ways stores what it holds. Shared so the one that gains a behavior does not leave the other behind — the two
- * differ only in what their popup renders and how they format what it holds.
+/** Runs the popup behind both picker widgets: the state it holds while it is open, where it is placed, every way out of
+ * it, and which of those ways stores what it holds. Shared so the one that gains a behavior does not leave the other
+ * behind — the two differ only in what their popup renders and how they format what it holds.
  *
  * Closing stores the date only where the user chose one. Merely opening the popup and dismissing it is not an edit,
  * and a field whose stored value is a date-time this widget reads as a day would otherwise have that day written back
@@ -377,6 +379,45 @@ export function useDatePicker<V>({
       doc.removeEventListener('mousedown', handlePressOutside);
     };
   }, [isOpen, latestCancel, latestClose]);
+
+  // Place the popup just below its trigger, moved left where the calendar would run off the right of the viewport. It
+  // is fixed, so a scrolling panel or dialog around the field doesn't clip it, which leaves it to follow the trigger
+  // itself. A layout Effect, so the popup each opening mounts is in place before the browser first paints it; it then
+  // follows the trigger on resize and scroll, once a frame however many events the frame brings, since measuring the
+  // trigger forces a layout. A scroll of an element around the field doesn't bubble, so it reaches the window only in
+  // the capture phase
+  useLayoutEffect(() => {
+    const popup = containerRef.current;
+    const trigger = triggerRef.current;
+    if (!isOpen || !popup || !trigger) {
+      return () => {};
+    }
+    // The trigger is measured against the viewport of the window the form is in, so that is the one to keep inside of
+    const win = windowOf(trigger);
+    const place = () => {
+      const { bottom, left } = trigger.getBoundingClientRect();
+      const rightmost = win.innerWidth - 20 - CALENDAR_MIN_WIDTH;
+      popup.style.top = `${bottom + 5}px`;
+      popup.style.left = `${left > rightmost ? Math.max(20, rightmost) : left}px`;
+    };
+    place();
+    let frame = 0;
+    const follow = () => {
+      if (!frame) {
+        frame = win.requestAnimationFrame(() => {
+          frame = 0;
+          place();
+        });
+      }
+    };
+    win.addEventListener('resize', follow);
+    win.addEventListener('scroll', follow, { capture: true, passive: true });
+    return () => {
+      win.cancelAnimationFrame(frame);
+      win.removeEventListener('resize', follow);
+      win.removeEventListener('scroll', follow, { capture: true });
+    };
+  }, [isOpen]);
 
   /** Take a date the user chose in the popup, which is what makes closing it store one
    *

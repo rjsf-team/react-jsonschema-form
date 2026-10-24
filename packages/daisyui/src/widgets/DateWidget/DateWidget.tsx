@@ -1,11 +1,11 @@
-import { useCallback, useLayoutEffect, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { isNamedByTemplateLabel, TranslatableString } from '@rjsf/utils';
+import { isNamedByTemplateLabel } from '@rjsf/utils';
 import { format, startOfDay } from 'date-fns';
 
 import DatePickerCalendar, { CALENDAR_MIN_WIDTH } from '../DatePickerCalendar.tsx';
-import { readDateOnly, readInstant, useDateFormatter, useDatePicker, windowOf } from '../datePickerHooks.ts';
-import DatePickerTrigger, { DatePickerDialog, getDatePickerName } from '../DatePickerTrigger.tsx';
+import { readDateOnly, readInstant, useDateFormatter, useDatePicker } from '../datePickerHooks.ts';
+import DatePickerTrigger, { DatePickerPopup, getDatePickerName } from '../DatePickerTrigger.tsx';
 
 /** The calendar day at the front of a date-time, whatever separator, time and zone follow it */
 const LEADING_DAY = /^\d{4}-\d{2}-\d{2}/;
@@ -120,59 +120,6 @@ export default function DateWidget<
     [chooseDate],
   );
 
-  // Render the calendar at a specific position
-  const renderCalendar = useCallback(() => {
-    if (!containerRef.current || !triggerRef.current) {
-      return;
-    }
-
-    // The rect below is measured against the viewport of the window the form is in, so that is the width to keep the
-    // popup inside of
-    const win = windowOf(triggerRef.current);
-
-    const inputRect = triggerRef.current.getBoundingClientRect();
-
-    // Position the calendar relative to the input but with fixed positioning
-    containerRef.current.style.position = 'fixed';
-    containerRef.current.style.top = `${inputRect.bottom + 5}px`;
-
-    // Prevent it from going off-screen on the right
-    const rightEdge = inputRect.left + CALENDAR_MIN_WIDTH;
-    const windowWidth = win.innerWidth;
-
-    if (rightEdge > windowWidth - 20) {
-      // Align to the right edge if it would overflow
-      containerRef.current.style.left = `${Math.max(20, windowWidth - 20 - CALENDAR_MIN_WIDTH)}px`;
-    } else {
-      // Otherwise align to the left edge of the input
-      containerRef.current.style.left = `${inputRect.left}px`;
-    }
-
-    // Ensure the calendar is visible
-    containerRef.current.style.zIndex = '99999';
-  }, [containerRef, triggerRef]);
-
-  // A layout Effect, so the popup each opening mounts is in place before the browser first paints it; it then follows
-  // the trigger on resize and scroll. A scroll of an element around the field, such as a scrolling panel or dialog,
-  // doesn't bubble, so it reaches the window only in the capture phase
-  useLayoutEffect(() => {
-    if (!isOpen) {
-      return () => {};
-    }
-
-    // Position initially
-    renderCalendar();
-
-    const win = windowOf(triggerRef.current);
-    win.addEventListener('resize', renderCalendar);
-    win.addEventListener('scroll', renderCalendar, { capture: true });
-
-    return () => {
-      win.removeEventListener('resize', renderCalendar);
-      win.removeEventListener('scroll', renderCalendar, { capture: true });
-    };
-  }, [isOpen, renderCalendar, triggerRef]);
-
   const formattedValue = displayedDate ? format(displayedDate, 'PP') : undefined;
 
   return (
@@ -197,32 +144,22 @@ export default function DateWidget<
           onBlur={handleBlur}
         />
         {isOpen && (
-          <div
-            ref={containerRef}
-            role='presentation'
-            className='date-picker-popup fixed z-[99999] w-full max-w-xs bg-base-100 border border-base-300 shadow-lg rounded-box'
-            style={{
-              maxHeight: 'none',
-              overflow: 'visible',
-            }}
-            onClick={(e) => e.stopPropagation()}
+          <DatePickerPopup
+            id={popupId}
+            name={pickerName}
+            containerRef={containerRef}
+            translateString={registry.translateString}
+            onDone={handleDone}
           >
-            <DatePickerDialog id={popupId} name={pickerName}>
-              <div className='p-3' style={{ minWidth: CALENDAR_MIN_WIDTH, minHeight: 350 }}>
-                <DatePickerCalendar
-                  selectedDate={displayedDate}
-                  month={month}
-                  onMonthChange={handleMonthChange}
-                  onSelect={handleSelect}
-                />
-              </div>
-              <div className='p-3 flex justify-end border-t border-base-300'>
-                <button type='button' className='btn btn-sm btn-primary' onClick={handleDone}>
-                  {registry.translateString(TranslatableString.DoneLabel)}
-                </button>
-              </div>
-            </DatePickerDialog>
-          </div>
+            <div className='p-3' style={{ minWidth: CALENDAR_MIN_WIDTH, minHeight: 350 }}>
+              <DatePickerCalendar
+                selectedDate={displayedDate}
+                month={month}
+                onMonthChange={handleMonthChange}
+                onSelect={handleSelect}
+              />
+            </div>
+          </DatePickerPopup>
         )}
       </div>
     </div>
