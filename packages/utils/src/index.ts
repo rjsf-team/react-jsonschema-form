@@ -142,6 +142,7 @@ import isConstantOptionList from './isConstantOptionList.ts';
 import isConstantSelect from './isConstantSelect.ts';
 import isCustomWidget from './isCustomWidget.ts';
 import isEnumOptionsGroup from './isEnumOptionsGroup.ts';
+import isFieldHidden from './isFieldHidden.ts';
 import isFixedItems from './isFixedItems.ts';
 import isFormDataAvailable from './isFormDataAvailable.ts';
 import isLabelledByTemplate from './isLabelledByTemplate.ts';
@@ -376,6 +377,7 @@ export {
   isConstantSelect,
   isCustomWidget,
   isEnumOptionsGroup,
+  isFieldHidden,
   isFixedItems,
   isFormDataAvailable,
   isLabelledByTemplate,

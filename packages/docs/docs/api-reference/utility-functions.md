@@ -2235,6 +2235,20 @@ It checks both that `options` is an array and that no numeric `index` is present
 
 - boolean: True if `item` is an `EnumOptionsGroupType`, false otherwise
 
+### isFieldHidden&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+
+Tells whether a field renders hidden: through `ui:widget: 'hidden'`, or as a `deprecated` schema under `deprecatedHandling: 'hide'` (see [getDeprecatedHandling()](#getdeprecatedhandling)).
+`SchemaField` hides the field by it and `ObjectField` marks the property `hidden` in the `ObjectFieldTemplate` props by it, so a custom field that renders its own `FieldTemplate` or lays out properties should call it too.
+
+#### Parameters
+
+- schema: S - The retrieved schema of the field
+- uiOptions: UIOptionsType&lt;T, S, F> - The resolved UI options of the field, including the global ones
+
+#### Returns
+
+- boolean: True when the field renders hidden
+
 ### isFixedItems&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Detects whether the given `schema` contains fixed items.

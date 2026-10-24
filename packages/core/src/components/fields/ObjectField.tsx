@@ -8,6 +8,7 @@ import type {
   FormContextType,
   GenericObjectType,
   Registry,
+  RJSFMarkedSchema,
   RJSFSchema,
   StrictRJSFSchema,
   UiSchema,
@@ -15,7 +16,6 @@ import type {
 import {
   enumOptionsIsDisabled,
   getByPath,
-  getDeprecatedHandling,
   hasByPath,
   setByPath,
   setOwn,
@@ -24,6 +24,7 @@ import {
   ELSE_KEY,
   ERRORS_KEY,
   REF_KEY,
+  RJSF_REF_CYCLE_KEY,
   THEN_KEY,
   deepEquals,
   getAdditionalPropertySchema,
@@ -40,6 +41,7 @@ import {
   getXxxOfKey,
   getXxxOfOptions,
   isConstantSelect,
+  isFieldHidden,
   isFormDataAvailable,
   isSchemaObject,
   optionsList,
@@ -939,15 +941,18 @@ export default function ObjectField<
       );
       const propertySchema = getPropertySchema<S>(schema, propertyName);
       const propertyFormData = getByPath<T>(formData, propertyName);
-      // Resolved the way `SchemaField` resolves the property's own `hidden`, so the template and the property agree
       const fieldUiOptions = getUiOptions<T, S, F>(
         resolveUiSchema<T, S, F>(propertySchema, fieldUiSchema, registry),
         globalUiOptions,
       );
-      const hidden =
-        fieldUiOptions.widget === 'hidden' ||
-        getDeprecatedHandling<T, S, F>(schemaUtils.retrieveSchema(propertySchema, propertyFormData), fieldUiOptions) ===
-          'hide';
+      // Only `deprecatedHandling: 'hide'` reads the retrieved schema, and a `$ref` cycle is left unretrieved, as
+      // `SchemaField` leaves it
+      const retrievesSchema =
+        fieldUiOptions.deprecatedHandling === 'hide' && !(propertySchema as RJSFMarkedSchema)[RJSF_REF_CYCLE_KEY];
+      const hidden = isFieldHidden<T, S, F>(
+        retrievesSchema ? schemaUtils.retrieveSchema(propertySchema, propertyFormData) : propertySchema,
+        fieldUiOptions,
+      );
       const content = (
         <ObjectFieldProperty<T, S, F>
           key={getStableKey(propertyName)}
