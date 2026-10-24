@@ -2044,7 +2044,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ).toEqual({
             animal: 'Fish',
             food: 'worms',
-            water: 'sea',
+            water: null,
           });
         });
 
@@ -2057,6 +2057,8 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             }),
           ).toEqual({
             animal: 'Fish',
+            food: 'meat',
+            water: null,
           });
         });
 
@@ -2069,6 +2071,8 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             }),
           ).toEqual({
             animal: 'Fish',
+            food: 'meat',
+            water: null,
           });
         });
 
@@ -2110,6 +2114,8 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               }),
             ).toEqual({
               animal: 'Fish',
+              food: 'meat',
+              water: null,
             });
           });
 
@@ -2122,6 +2128,8 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               }),
             ).toEqual({
               animal: 'Fish',
+              food: 'meat',
+              water: null,
             });
           });
         });
@@ -3464,6 +3472,34 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(
           ensureFormDataMatchingSchema({ validator: testValidator }, holder, holder, { s: { b: 2 }, t: 1 }),
         ).toEqual({ t: 1 });
+      });
+      it('drops object data a property written as a $ref to a schema of no object type holds', () => {
+        const rootSchema: RJSFSchema = {
+          definitions: { S: { type: 'string' } },
+          type: 'object',
+          properties: { s: { $ref: '#/definitions/S' }, t: { type: 'number' } },
+        };
+        expect(
+          ensureFormDataMatchingSchema({ validator: testValidator }, rootSchema, rootSchema, { s: { b: 2 }, t: 1 }),
+        ).toEqual({ t: 1 });
+      });
+      it('drops object data none of the constants a nested select reads through $refs is', () => {
+        const rootSchema: RJSFSchema = {
+          definitions: { A: { const: { a: 1 } }, B: { const: { a: 2 } } },
+          type: 'object',
+          properties: {
+            o: {
+              type: 'object',
+              properties: { p: { type: 'object', oneOf: [{ $ref: '#/definitions/A' }, { $ref: '#/definitions/B' }] } },
+            },
+          },
+        };
+        expect(
+          ensureFormDataMatchingSchema({ validator: testValidator }, rootSchema, rootSchema, { o: { p: { a: 3 } } }),
+        ).toEqual({ o: {} });
+        expect(
+          ensureFormDataMatchingSchema({ validator: testValidator }, rootSchema, rootSchema, { o: { p: { a: 2 } } }),
+        ).toEqual({ o: { p: { a: 2 } } });
       });
       it('keeps an option of constants written as $refs and drops a value none of them holds', () => {
         const color: RJSFSchema = {
@@ -7448,6 +7484,55 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             { schema, rootSchema: schema, formData: { o: { b: 2 } } },
           ),
         ).toEqual({ o: { a: 1, b: 2 }, s: 'child' });
+      });
+      it('keeps object data of a schema whose options, read through $refs, take none of it (#5522)', () => {
+        const schema: RJSFSchema = {
+          definitions: { A: { const: 'a' }, N: { type: 'number' } },
+          anyOf: [{ $ref: '#/definitions/A' }, { $ref: '#/definitions/N' }],
+        };
+        expect(getDefaultFormState({ validator: testValidator }, { schema, formData: { b: 2 } })).toEqual({ b: 2 });
+      });
+      it.each<[string, RJSFSchema, GenericObjectType]>([
+        ['at the root', { type: 'object', additionalProperties: { type: 'string', enum: ['a'] } }, { extra: 'zz' }],
+        [
+          'nested in an object',
+          {
+            type: 'object',
+            properties: { o: { type: 'object', additionalProperties: { type: 'string', enum: ['a'] } } },
+          },
+          { o: { extra: 'zz' } },
+        ],
+      ])('keeps an additional property its field takes none of as the user left it, %s', (_, schema, formData) => {
+        expect(getDefaultFormState({ validator: testValidator }, { schema, formData })).toEqual(formData);
+      });
+      it('gives the defaults of a field none of whose options, nor the field itself, takes its object data', () => {
+        const schema: RJSFSchema = { type: 'string', default: 'd', anyOf: [{ minLength: 1 }, { maxLength: 5 }] };
+        expect(getDefaultFormState({ validator: testValidator }, { schema, formData: { b: 2 } })).toEqual('d');
+      });
+      it.each<[string, unknown, GenericObjectType]>([
+        ['the constant one option holds', { answer: '2' }, { p: { answer: '2' } }],
+        ['a constant no option holds', { answer: '3' }, {}],
+        ['an object naming no selector value', { other: 1 }, {}],
+        ['a value of another type', 'x', { p: 'x' }],
+      ])('matches data of a discriminated select over object constants by its selector, for %s', (_, p, expected) => {
+        const option = (answer: string): RJSFSchema => ({
+          type: 'object',
+          properties: { answer: { type: 'string', default: answer } },
+          const: { answer },
+        });
+        const select: RJSFSchema = {
+          type: 'object',
+          discriminator: { propertyName: 'answer' },
+          oneOf: [option('1'), option('2')],
+        };
+        const schema: RJSFSchema = { type: 'object', properties: { p: select } };
+        expect(getDefaultFormState({ validator: testValidator }, { schema, formData: { p } })).toEqual(expected);
+      });
+      it('keeps a value its select no longer offers where no default replaces it', () => {
+        const schema: RJSFSchema = { type: 'object', properties: { country: { type: 'string', enum: ['US', 'CA'] } } };
+        expect(getDefaultFormState({ validator: testValidator }, { schema, formData: { country: 'FR' } })).toEqual({
+          country: 'FR',
+        });
       });
       it.each<[string, RJSFSchema, GenericObjectType]>([
         ['true', { type: 'object', properties: { x: true } }, { x: { a: 1 } }],
