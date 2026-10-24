@@ -1,6 +1,8 @@
 import type {
+  FormClassMap,
   FormContextType,
   GlobalFormOptions,
+  MergedClassMap,
   Registry,
   RJSFSchema,
   SchemaUtilsType,
@@ -56,18 +58,86 @@ function generatePresentation(): ThemePresentation {
   };
 }
 
-/** The core theme: every field, widget and template `@rjsf/core` implements, and which parts of a field they draw */
+/** The class names `@rjsf/core`'s components render by default: Bootstrap 3's, which core's markup is written for */
+const CLASS_MAP: MergedClassMap = {
+  input: 'form-control',
+  select: 'form-control',
+  textarea: 'form-control',
+  fileInput: 'form-control',
+  rangeInput: 'form-control',
+  rangeWrapper: '',
+  checkboxWrapper: 'checkbox',
+  checkboxLabel: '',
+  checkboxInput: '',
+  checkboxInlineLabel: 'checkbox-inline',
+  radioWrapper: 'radio',
+  radioLabel: '',
+  radioInput: '',
+  radioInlineLabel: 'radio-inline',
+  disabled: 'disabled',
+  altDateList: 'list-inline',
+  altDateListItem: 'list-inline-item',
+  altDateNowButton: 'btn btn-info',
+  altDateClearButton: 'btn btn-warning',
+  fieldLabel: 'control-label',
+  fieldErrors: 'bs-callout bs-callout-info',
+  fieldError: 'text-danger',
+  fieldHelp: 'help-block',
+  fieldDescription: '',
+  errorList: 'panel panel-danger',
+  errorListHeading: 'panel-heading',
+  errorListTitle: 'panel-title',
+  errorListItems: 'list-group',
+  errorListItem: 'list-group-item text-danger',
+  arrayFieldset: '',
+  arrayItemList: 'row',
+  arrayItem: '',
+  arrayItemToolbox: '',
+  objectFieldset: '',
+  multiSchema: 'panel panel-default panel-body',
+  multiSchemaSelector: 'form-group',
+  cyclicSchemaMessage: 'text-danger',
+  cyclicSchemaExpandButton: 'btn btn-sm btn-warning',
+  optionalDataAddButton: 'btn-sm',
+  optionalDataRemoveButton: 'btn-sm',
+  submitButton: 'btn btn-info',
+};
+
+/** The core theme: every field, widget and template `@rjsf/core` implements, which parts of a field they draw, and the
+ * class names they render
+ */
 export function generateTheme<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(): Pick<Registry<T, S, F>, 'fields' | 'widgets' | 'templates'> & { presentation: ThemePresentation } {
+>(): Pick<Registry<T, S, F>, 'fields' | 'widgets' | 'templates' | 'classMap'> & { presentation: ThemePresentation } {
   return {
     fields: generateFields<T, S, F>(),
     widgets: generateWidgets<T, S, F>(),
     templates: generateTemplates<T, S, F>(),
     presentation: generatePresentation(),
+    classMap: { ...CLASS_MAP },
   };
+}
+
+/** Layers class maps key by key, the last on top. An entry left `undefined`, as a conditional one is, keeps the class
+ * beneath it rather than rendering "undefined", and a function entry is called with the class beneath it, or composed
+ * with the function beneath it until a class is there to call them with
+ */
+export function mergeClassMaps(...layers: readonly (FormClassMap | undefined)[]): FormClassMap {
+  const merged: Record<string, string | ((themeClass: string) => string)> = {};
+  const entries = layers.flatMap((layer) => Object.entries(layer ?? {})).filter(([, value]) => value !== undefined);
+  for (const [key, value] of entries) {
+    const beneath = merged[key];
+    if (typeof value === 'string' || beneath === undefined) {
+      merged[key] = value;
+    } else if (typeof beneath === 'string') {
+      merged[key] = value(beneath);
+    } else {
+      merged[key] = (base) => value(beneath(base));
+    }
+  }
+  return merged;
 }
 
 /** Extracts the `GlobalFormOptions` from the given Form `props`
@@ -107,7 +177,7 @@ export function buildRegistry<
   F extends FormContextType = FormContextType,
 >(props: FormProps<T, S, F>, schema: S, schemaUtils: SchemaUtilsType<T, S, F>): Registry<T, S, F> {
   const { translateString = englishStringTranslator, uiSchema } = props;
-  const { fields, templates, widgets, presentation } = generateTheme<T, S, F>();
+  const { fields, templates, widgets, presentation, classMap } = generateTheme<T, S, F>();
   return {
     fields: { ...fields, ...props.fields },
     templates: {
@@ -120,6 +190,7 @@ export function buildRegistry<
     },
     widgets: { ...widgets, ...props.widgets },
     presentation: mergeThemePresentation(presentation, props.presentation),
+    classMap: mergeClassMaps(classMap, props.classMap) as MergedClassMap,
     rootSchema: schema,
     // `F` may be narrower than `{}`, but an omitted formContext is an empty object
     formContext: props.formContext ?? ({} as F),

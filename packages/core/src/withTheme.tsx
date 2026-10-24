@@ -5,6 +5,7 @@ import { mergeThemePresentation } from '@rjsf/utils';
 
 import type { FormProps } from './components/Form.tsx';
 import Form from './components/Form.tsx';
+import { mergeClassMaps } from './Theme.ts';
 
 /** The properties for the `withTheme` function, essentially a subset of properties from the `FormProps` that can be
  * overridden while creating a theme
@@ -13,7 +14,7 @@ export type ThemeProps<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
-> = Pick<FormProps<T, S, F>, 'fields' | 'templates' | 'widgets' | 'presentation' | 'globalUiOptionsKeys'>;
+> = Pick<FormProps<T, S, F>, 'fields' | 'templates' | 'widgets' | 'presentation' | 'classMap' | 'globalUiOptionsKeys'>;
 
 /** The `Form` returned by `withTheme()`. It stays generic over the form data like `Form` itself, so `T` is inferred
  * from `formData` or named per use (`<ThemedForm<MyData> />`) instead of being fixed when the theme is applied; a theme
@@ -42,6 +43,7 @@ export default function withTheme<
     widgets: propWidgets,
     templates: propTemplates,
     presentation: propPresentation,
+    classMap: propClassMap,
     globalUiOptionsKeys: propGlobalUiOptionsKeys,
     ref,
     ...directProps
@@ -64,7 +66,8 @@ export default function withTheme<
       () => mergeThemePresentation(theme?.presentation, propPresentation),
       [theme, propPresentation],
     );
-    // Memoised for the reason `presentation` is
+    // Both memoised for the reason `presentation` is
+    const classMap = useMemo(() => mergeClassMaps(theme?.classMap, propClassMap), [theme, propClassMap]);
     const globalUiOptionsKeys = useMemo(
       () => [...(theme?.globalUiOptionsKeys ?? []), ...(propGlobalUiOptionsKeys ?? [])],
       [theme, propGlobalUiOptionsKeys],
@@ -77,6 +80,7 @@ export default function withTheme<
         widgets={widgets}
         templates={templates}
         presentation={presentation}
+        classMap={classMap}
         globalUiOptionsKeys={globalUiOptionsKeys}
         ref={ref}
       />

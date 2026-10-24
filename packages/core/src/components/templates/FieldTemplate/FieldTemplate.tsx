@@ -21,6 +21,7 @@ export default function FieldTemplate<
   F extends FormContextType = FormContextType,
 >(props: FieldTemplateProps<T, S, F>) {
   const { label, children, errors, help, description, hidden, registry, uiSchema, presentation } = props;
+  const { classMap } = registry;
   const uiOptions = getUiOptions(uiSchema);
   const { WrapIfAdditionalTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   if (hidden) {
@@ -37,6 +38,7 @@ export default function FieldTemplate<
           required={templateMarksRequired<T, S, F>(props)}
           id={templateLabelFor<T, S, F>(props)}
           labelId={presentation?.label.id}
+          className={classMap.fieldLabel}
         />
       )}
       {templateDrawsDescription<T, S, F>(props) && description}

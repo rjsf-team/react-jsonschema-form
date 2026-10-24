@@ -1,4 +1,5 @@
 import type { DescriptionFieldProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { joinClassNames } from '@rjsf/utils';
 
 import RichDescription from '../RichDescription.tsx';
 
@@ -12,11 +13,12 @@ export default function DescriptionField<
   F extends FormContextType = FormContextType,
 >(props: DescriptionFieldProps<T, S, F>) {
   const { id, description, registry, uiSchema } = props;
+  const { classMap } = registry;
   if (!description) {
     return null;
   }
   return (
-    <div id={id} className='field-description'>
+    <div id={id} className={joinClassNames('field-description', classMap.fieldDescription)}>
       <RichDescription description={description} registry={registry} uiSchema={uiSchema} />
     </div>
   );

@@ -463,6 +463,7 @@ The `registry` is an object containing the registered core, theme and custom fie
 - `fields`: The set of all fields used by the `Form`. Includes fields from `core`, theme-specific fields and any [custom registered fields](#custom-field-components);
 - `widgets`: The set of all widgets used by the `Form`. Includes widgets from `core`, theme-specific widgets and any [custom registered widgets](#custom-component-registration), if any;
 - `templates`: The set of templates used by the `Form`. Includes templates from `core`, theme-specific templates and any custom registered templates
+- `classMap`: The class names the elements `@rjsf/core` renders carry, by element, merged from `core`'s, the theme's and the `Form`'s [`classMap`](../api-reference/form-props.md#classmap)
 - `rootSchema`: The root schema, as passed to the `Form`, which can contain referenced [definitions](../json-schema/definitions.md);
 - `schemaUtils`: The current implementation of the `SchemaUtilsType` (from `@rjsf/utils`) in use by the `Form`. Used to call any of the validation-schema-based utility functions.
 - `translateString`: The string translation function to use when displaying any of the RJSF strings in templates, fields or widgets

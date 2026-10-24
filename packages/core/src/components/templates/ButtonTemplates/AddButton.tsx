@@ -1,5 +1,5 @@
 import type { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { TranslatableString } from '@rjsf/utils';
+import { joinClassNames, TranslatableString } from '@rjsf/utils';
 
 import IconButton from './IconButton.tsx';
 
@@ -14,7 +14,10 @@ export default function AddButton<
   return (
     <div className='row'>
       <p
-        className={`col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right ${className}`}
+        className={joinClassNames(
+          'col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right',
+          className,
+        )}
       >
         <IconButton
           id={id}

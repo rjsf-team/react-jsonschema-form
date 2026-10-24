@@ -60,6 +60,7 @@ function SelectWidget<
     uiSchema,
     presentation,
   } = props;
+  const { classMap } = registry;
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal, optgroups } = options;
   const emptyValue = multiple ? [] : '';
   const optionValueFormat = getOptionValueFormat(options);
@@ -126,7 +127,7 @@ function SelectWidget<
         id={id}
         name={htmlName || id}
         multiple={multiple}
-        className='form-control'
+        className={classMap.select}
         value={selectValue}
         required={required}
         disabled={disabled || readonly}

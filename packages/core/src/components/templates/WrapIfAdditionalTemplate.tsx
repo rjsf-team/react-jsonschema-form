@@ -6,6 +6,7 @@ import {
   buttonId,
   getAdditionalKeyAttributes,
   hasAdditionalKeyLabel,
+  joinClassNames,
   TranslatableString,
 } from '@rjsf/utils';
 
@@ -44,7 +45,7 @@ export default function WrapIfAdditionalTemplate<
   // The key is labelled wherever the value's label is drawn, by the template or the value's own component
   const hasKeyLabel = hasAdditionalKeyLabel<T, S, F>(props);
   const keyAttributes = getAdditionalKeyAttributes<T, S, F>(props);
-  const { templates, translateString } = registry;
+  const { templates, translateString, classMap } = registry;
   // Button templates are not overridden in the uiSchema
   const { RemoveButton } = templates.ButtonTemplates;
   const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
@@ -52,11 +53,7 @@ export default function WrapIfAdditionalTemplate<
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
   const hasDescription = !!rawDescription;
 
-  const classNamesList = ['form-group', classNames];
-  if (hasErrors) {
-    classNamesList.push('has-error has-danger');
-  }
-  const uiClassNames = classNamesList.join(' ').trim();
+  const uiClassNames = joinClassNames('form-group', classNames, hasErrors && 'has-error has-danger');
 
   if (!additional) {
     return (
@@ -71,7 +68,7 @@ export default function WrapIfAdditionalTemplate<
       <div className='row'>
         <div className='col-xs-5 form-additional'>
           <div className='form-group'>
-            {hasKeyLabel && <Label label={keyLabel} required={required} id={keyId} />}
+            {hasKeyLabel && <Label label={keyLabel} required={required} id={keyId} className={classMap.fieldLabel} />}
             {hasKeyLabel && rawDescription && <div>&nbsp;</div>}
             {propertyNamesEnum ? (
               <AdditionalPropertyKeySelect<T, S, F>

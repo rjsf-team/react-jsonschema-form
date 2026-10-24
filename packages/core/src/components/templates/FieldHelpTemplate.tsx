@@ -13,12 +13,13 @@ export default function FieldHelpTemplate<
   F extends FormContextType = FormContextType,
 >(props: FieldHelpProps<T, S, F>) {
   const { id, help, uiSchema, registry, presentation } = props;
+  const { classMap } = registry;
   if (!help) {
     return null;
   }
 
   return (
-    <div id={presentation?.help.id ?? helpId(id)} className='help-block'>
+    <div id={presentation?.help.id ?? helpId(id)} className={classMap.fieldHelp}>
       <RichHelp help={help} registry={registry} uiSchema={uiSchema} />
     </div>
   );
