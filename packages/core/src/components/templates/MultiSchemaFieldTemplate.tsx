@@ -10,11 +10,12 @@ export default function MultiSchemaFieldTemplate<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: MultiSchemaFieldTemplateProps<T, S, F>) {
-  const { selector, optionSchemaField } = props;
+  const { selector, optionSchemaField, registry } = props;
+  const { classMap } = registry;
   return (
-    <div className='panel panel-default panel-body'>
+    <div className={classMap.multiSchema}>
       {/* No row is laid out for a selector the field doesn't render, as while an optional field has no data (#5401) */}
-      {selector ? <div className='form-group'>{selector}</div> : null}
+      {selector ? <div className={classMap.multiSchemaSelector}>{selector}</div> : null}
       {optionSchemaField}
     </div>
   );

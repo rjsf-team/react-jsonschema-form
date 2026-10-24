@@ -19,6 +19,9 @@ describe('getTestRegistry()', () => {
     expect(() => {
       registry.templates.ButtonTemplates.SubmitButton = () => null;
     }).toThrow(TypeError);
+    expect(() => {
+      (registry.classMap as { input: string }).input = 'mutated';
+    }).toThrow(TypeError);
   });
 
   it('leaves caller-owned objects unfrozen', () => {

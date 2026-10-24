@@ -148,6 +148,7 @@ import isNamedByTemplateLabel from './isNamedByTemplateLabel.ts';
 import isObject, { isSchemaObject } from './isObject.ts';
 import isPlainObject from './isPlainObject.ts';
 import isWholeValueSelect from './isWholeValueSelect.ts';
+import joinClassNames from './joinClassNames.ts';
 import labelValue from './labelValue.ts';
 import localTimeToOffsetTime from './localTimeToOffsetTime.ts';
 import localToUTC from './localToUTC.ts';
@@ -380,6 +381,7 @@ export {
   isPlainObject,
   isSchemaObject,
   isWholeValueSelect,
+  joinClassNames,
   labelValue,
   localTimeToOffsetTime,
   localToUTC,

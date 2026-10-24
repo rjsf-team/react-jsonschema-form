@@ -24,6 +24,7 @@ import type {
   SubmitButtonProps,
   TemplatesType,
   ThemePresentation,
+  FormClassMap,
   UiSchema,
   ValidatorType,
   DefaultFormStateBehavior,
@@ -119,6 +120,11 @@ export interface FormProps<
    * which are layered over `core`'s
    */
   presentation?: ThemePresentation;
+  /** The class names to add to the elements `@rjsf/core` renders, by element, layered over the theme's `classMap`,
+   * which is layered over `@rjsf/core`'s. A class given here replaces the theme's class for that element, and a
+   * function is called with the theme's class to extend it
+   */
+  classMap?: FormClassMap;
   /** The keys of the extensions to `ui:globalOptions` the form's own widgets, fields and templates read, beyond the
    * ones RJSF reads there, added to the ones the theme declares. The registry's `globalUiOptions` hold only those, so
    * every field hands them to its widget and templates along with RJSF's own. A key that is an option name RJSF reads

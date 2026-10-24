@@ -2341,6 +2341,19 @@ array constant, since `SchemaField` renders a typeless select over such values a
 
 - boolean: True if `schema` is a select whose value is an object or array picked as a whole
 
+### joinClassNames()
+
+Joins the class names of one element into its `className`, leaving out the conditional ones that are `false`, `null`, `undefined` or empty, as in `joinClassNames(classMap.checkboxWrapper, disabled && classMap.disabled)`.
+`@rjsf/core`'s components join their marker classes and their [class map](../advanced-customization/custom-themes.md#class-map) entries with it, and a custom component reading `registry.classMap` can do the same.
+
+#### Parameters
+
+- ...classNames: (string | false | null | undefined)[] - The class names, each a string or a falsy conditional to leave out
+
+#### Returns
+
+- string: The class names present, space separated, `''` where there are none
+
 ### keywordShape()
 
 Classifies one of a schema's own entries by the shape of the subschemas its keyword's value holds: `'map'` for a map of names, which are data, to subschemas, such as `properties`, `'array'` for an array of them, such as `allOf`, `'single'` for one, such as `not`, and `undefined` for a keyword holding data or annotations, such as `const`, `default` or `title`.

@@ -48,6 +48,24 @@ The value of this prop will be passed to the `autocomplete` [HTML attribute on t
 
 The value of this prop will be passed to the `class` [HTML attribute on the form](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form).
 
+## classMap
+
+A `ClassMap` of class names to add to the elements `@rjsf/core` renders, one key per element: the `<input>` of `BaseInputTemplate` under `input`, the `<label>` the `FieldTemplate` draws under `fieldLabel`, the `<div>` around a checkbox under `checkboxWrapper`, and so on; `ClassMap` in `@rjsf/utils` lists them.
+A class given here replaces the class the theme gives that element, and the theme's replaces `@rjsf/core`'s, which are Bootstrap 3's.
+A function is called with the theme's class instead, so a form can add a class to it without repeating it: ``classMap={{ fieldLabel: (themeClass) => `${themeClass} uppercase` }}``.
+The merged result, with every entry a class, is `registry.classMap`.
+See [Custom Themes](../advanced-customization/custom-themes.md#class-map) for more information.
+
+```tsx
+import Form from '@rjsf/core';
+import validator from '@rjsf/validator-ajv8';
+
+render(
+  <Form schema={schema} validator={validator} classMap={{ input: 'my-input', submitButton: 'my-button' }} />,
+  document.getElementById('app'),
+);
+```
+
 ## children
 
 You can provide custom buttons to your form via the `Form` component's `children`. If no children are provided, by default a `Submit` button will be rendered.
