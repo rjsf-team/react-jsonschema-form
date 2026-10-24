@@ -4,7 +4,7 @@ const DRAFT_04 = /^http:\/\/json-schema\.org\/draft-04\/schema#?$/;
 /** Whether a schema is read as draft-04: by its own `$schema`, or, without one, by `inherited`. */
 export function isDraft04(schema: unknown, inherited: boolean) {
   const declared = (schema as { $schema?: unknown } | null)?.$schema;
-  return typeof declared === 'string' ? DRAFT_04.test(declared) : inherited;
+  return declared !== undefined ? typeof declared === 'string' && DRAFT_04.test(declared) : inherited;
 }
 
 /** A schema's own `$id`, the one a `$ref` can reach it by: non-empty and not just a fragment.
@@ -32,7 +32,7 @@ function asObjectSchema(schema: boolean): object {
  *   `$id` gets its `id` as `$id`, as ata does for draft-04.
  */
 export function schemaList(schemas: object | object[] | undefined, draft04 = false): object[] {
-  if (schemas === undefined) {
+  if (!schemas) {
     return [];
   }
   // As ata's draft-04 reading does (lib/draft7.js): `id` becomes `$id` when there is no `$id`, and no
@@ -56,6 +56,9 @@ export function schemaList(schemas: object | object[] | undefined, draft04 = fal
     }
     const doc = typeof entry === 'boolean' ? asObjectSchema(entry) : withDraft04Id(entry);
     const own = ownId(doc);
-    return own && own !== key ? [{ ...doc, $id: key }, doc] : [{ ...doc, $id: key }];
+    // In a list, the empty key would be an empty `$id`, which ata rejects, so such an entry goes
+    // in only by its own `$id`.
+    const keyed = key === '' ? [] : [{ ...doc, $id: key }];
+    return own && own !== key ? [...keyed, doc] : keyed;
   });
 }

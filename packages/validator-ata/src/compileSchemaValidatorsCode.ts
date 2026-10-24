@@ -11,6 +11,8 @@ const warned = new Set<string>();
 /** Logs each distinct warning once per process, so compiling on every request does not
  * repeat it. A message given as a function is built only when it is shown, under `key`.
  */
+function warnOnce(message: string): void;
+function warnOnce(message: () => string, key: string): void;
 function warnOnce(message: string | (() => string), key = message as string) {
   if (!warned.has(key)) {
     warned.add(key);
@@ -71,10 +73,9 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
   // the same `$id`. One with the `$id` of one of the form's own schemas is left out: at runtime the
   // form's schema wins. A record entry under the empty key is left out, as at runtime.
   const formIds = new Set(schemas.map((s) => (s as { $id?: unknown }).$id).filter((id) => typeof id === 'string'));
-  const extras = [
-    ...schemaList(extraSchemas, isDraft04(schema, false)).filter((extra) => (extra as { $id?: unknown }).$id !== ''),
-    ...additionalMetaSchemas,
-  ].map((extra) => [extra !== null && typeof extra === 'object' ? ownId(extra) : undefined, extra] as const);
+  const extras = [...schemaList(extraSchemas, isDraft04(schema, false)), ...additionalMetaSchemas].map(
+    (extra) => [extra !== null && typeof extra === 'object' ? ownId(extra) : undefined, extra] as const,
+  );
   const winners = new Map<string, object>();
   for (const [id, extra] of extras) {
     if (id !== undefined && !formIds.has(id)) {

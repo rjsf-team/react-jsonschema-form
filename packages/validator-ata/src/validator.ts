@@ -89,6 +89,9 @@ export default class ATAValidator<
   /** The extra schemas given to the validators of one root (see `extrasFor`). */
   private extras?: { base: object; own: object[]; withRoot: object[]; metas?: object[] };
 
+  /** The caller's `ataOptionsOverrides.schemas` as a list, by whether the root is draft-04. */
+  private ownLists: object[][] = [];
+
   /** Returns a structural copy of `formData` so ata's default-applier
    * (which writes `default` values into the input object during validation)
    * doesn't leak a mutation back to the caller. RJSF probes the same data
@@ -116,9 +119,7 @@ export default class ATAValidator<
    */
   private extrasFor(base: object) {
     if (this.extras?.base !== base) {
-      const own = schemaList(this.options.ataOptionsOverrides?.schemas, isDraft04(base, false)).filter(
-        (extra) => (extra as { $id?: unknown } | null)?.$id !== '',
-      );
+      const own = schemaList(this.options.ataOptionsOverrides?.schemas, isDraft04(base, false));
       const baseId = (base as { $id?: unknown }).$id;
       const metas = this.options.additionalMetaSchemas?.filter(
         (meta) => (meta as { $id?: unknown } | null)?.$id !== baseId,
@@ -154,7 +155,12 @@ export default class ATAValidator<
       ...(root ? { additionalMetaSchemas: extras.metas } : {}),
       ataOptionsOverrides: { ...this.options.ataOptionsOverrides, ...(schemas ? { schemas } : {}) },
     };
-    const validator = createAtaInstance(schema, optionsWithSchemas);
+    const dialect = (root as { $schema?: unknown } | undefined)?.$schema;
+    const read =
+      typeof dialect === 'string' && (schema as { $schema?: unknown }).$schema === undefined
+        ? { $schema: dialect, ...schema }
+        : schema;
+    const validator = createAtaInstance(read, optionsWithSchemas);
     this.validators.set(id, { validator, schema });
     return validator;
   }
