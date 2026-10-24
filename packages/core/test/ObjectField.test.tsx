@@ -9,6 +9,7 @@ import type {
   DescriptionFieldProps,
   GenericObjectType,
   FormValidation,
+  FieldTemplateProps,
   ObjectFieldTemplateProps,
   PartPlacement,
   UiSchema,
@@ -95,6 +96,78 @@ describe('ObjectField', () => {
       });
       expect(node.querySelector('div.hidden > fieldset')).toBeInTheDocument();
     });
+
+    it('should mark properties hidden by ui:widget or deprecatedHandling as hidden in the template props', () => {
+      const ObjectFieldTemplate = ({ properties }: ObjectFieldTemplateProps) => (
+        <>
+          {properties.map(({ name, hidden }) => (
+            <span key={name} data-property={name} data-hidden={String(hidden)} />
+          ))}
+        </>
+      );
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          definitions: { old: { type: 'string', deprecated: true } },
+          properties: {
+            a: { type: 'string' },
+            b: { type: 'string', deprecated: true },
+            c: { $ref: '#/definitions/old' },
+            d: { type: 'string' },
+          },
+        },
+        uiSchema: { [UI_GLOBAL_OPTIONS_KEY]: { deprecatedHandling: 'hide' }, d: { 'ui:widget': 'hidden' } },
+        templates: { ObjectFieldTemplate },
+      });
+      const hiddenFlags = Array.from(node.querySelectorAll('[data-property]'), (el) => [
+        el.getAttribute('data-property'),
+        el.getAttribute('data-hidden'),
+      ]);
+      expect(hiddenFlags).toEqual([
+        ['a', 'false'],
+        ['b', 'true'],
+        ['c', 'true'],
+        ['d', 'true'],
+      ]);
+    });
+
+    it.each([
+      ['ui:definitions hides a property', undefined, 'hide', 'true'],
+      ['ui:definitions overrides a global hide with label', 'hide', 'label', 'false'],
+      ['ui:definitions overrides a global hide with disable', 'hide', 'disable', 'false'],
+    ] as const)(
+      'should agree with FieldTemplate on hidden when %s',
+      (_, globalHandling, definitionHandling, expected) => {
+        const ObjectFieldTemplate = ({ properties }: ObjectFieldTemplateProps) => (
+          <>
+            {properties.map(({ name, hidden, content }) => (
+              <div key={name} data-property={name} data-hidden={String(hidden)}>
+                {content}
+              </div>
+            ))}
+          </>
+        );
+        const FieldTemplate = ({ id, hidden, children }: FieldTemplateProps) => (
+          <div data-field={id} data-hidden={String(Boolean(hidden))}>
+            {children}
+          </div>
+        );
+        const { node } = createFormComponent({
+          schema: {
+            type: 'object',
+            definitions: { old: { type: 'string', deprecated: true } },
+            properties: { a: { $ref: '#/definitions/old' } },
+          },
+          uiSchema: {
+            ...(globalHandling && { [UI_GLOBAL_OPTIONS_KEY]: { deprecatedHandling: globalHandling } }),
+            'ui:definitions': { '#/definitions/old': { 'ui:deprecatedHandling': definitionHandling } },
+          },
+          templates: { ObjectFieldTemplate, FieldTemplate },
+        });
+        expect(node.querySelector('[data-property="a"]')).toHaveAttribute('data-hidden', expected);
+        expect(node.querySelector('[data-field="root_a"]')).toHaveAttribute('data-hidden', expected);
+      },
+    );
 
     it('should render a customized title', () => {
       const CustomTitleField = ({ title }: TitleFieldProps) => <div id='custom'>{title}</div>;
