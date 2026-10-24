@@ -8,7 +8,7 @@ import type {
   RJSFValidationError,
   WidgetProps,
 } from '@rjsf/utils';
-import { noop } from '@rjsf/utils';
+import { noop, toFieldPath } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import { act, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -2092,7 +2092,7 @@ describe('the errors a field raises for the items of an array', () => {
     ]);
   });
 
-  it('report no error for a property named __proto__ once renaming a sibling leaves the data without it', async () => {
+  it('keep the validation error of a property named __proto__, and its value, when a sibling is renamed', async () => {
     const { node, onChange } = createFormComponent({
       schema: {
         type: 'object',
@@ -2108,7 +2108,53 @@ describe('the errors a field raises for the items of an array', () => {
     await user.tab();
 
     const [event] = onChange.mock.lastCall ?? [];
-    expect(Object.keys(event?.formData.obj)).toEqual(['c']);
-    expect(event?.errors).toEqual([]);
+    expect(Object.keys(event?.formData.obj)).toEqual(['__proto__', 'c']);
+    expect(Object.getOwnPropertyDescriptor(event?.formData.obj, '__proto__')?.value).toBe('x');
+    expect(Object.getPrototypeOf(event?.errorSchema.obj)).toBe(Object.prototype);
+    expect(event?.errors).toEqual([expect.objectContaining({ property: '.obj.__proto__', name: 'minLength' })]);
+  });
+
+  it('keep the errors raised under a property named __proto__ as that property of an object that already holds errors', async () => {
+    function RaisingTwiceField(props: FieldProps) {
+      const objPath = toFieldPath('obj', props.fieldPath);
+      return (
+        <>
+          <button type='button' onClick={() => props.onChange(props.formData, objPath, { __errors: ['whole'] })}>
+            Raise
+          </button>
+          <button
+            type='button'
+            onClick={() =>
+              props.onChange('y', toFieldPath('a', toFieldPath('__proto__', objPath)), { __errors: ['taken'] })
+            }
+          >
+            Raise nested
+          </button>
+        </>
+      );
+    }
+    const { onChange } = createFormComponent({
+      schema: {
+        type: 'object',
+        properties: {
+          obj: { type: 'object', additionalProperties: { type: 'object', properties: { a: { type: 'string' } } } },
+        },
+      },
+      initialFormData: JSON.parse('{"obj": {"__proto__": {"a": "x"}}}'),
+      uiSchema: { 'ui:field': RaisingTwiceField },
+    });
+
+    await user.click(screen.getByRole('button', { name: 'Raise' }));
+    await user.click(screen.getByRole('button', { name: 'Raise nested' }));
+
+    const [event] = onChange.mock.lastCall ?? [];
+    expect(Object.getPrototypeOf(event?.errorSchema.obj)).toBe(Object.prototype);
+    expect(Object.getOwnPropertyDescriptor(event?.errorSchema.obj, '__proto__')?.value).toEqual({
+      a: { __errors: ['taken'] },
+    });
+    expect(event?.errors).toEqual([
+      { property: '.obj', message: 'whole', stack: '.obj whole' },
+      { property: '.obj.__proto__.a', message: 'taken', stack: '.obj.__proto__.a taken' },
+    ]);
   });
 });

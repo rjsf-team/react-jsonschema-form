@@ -3947,6 +3947,174 @@ exports[`object fields > object 1`] = `
 </DocumentFragment>
 `;
 
+exports[`object fields > pure anyOf union, with no frame of its own beside the option 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="flex flex-col gap-2"
+      >
+        <label
+          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        >
+          <span
+            id="root__label"
+          >
+            Pet
+          </span>
+        </label>
+        <div
+          class="p-4 border rounded-md bg-background shadow-sm"
+        >
+          <div
+            class="mb-4"
+          >
+            <div
+              class="p-0.5"
+            >
+              <div
+                aria-disabled="false"
+                class="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
+                cmdk-root=""
+                data-slot="command"
+                tabindex="-1"
+              >
+                <label
+                  cmdk-label=""
+                  for="radix-_r_g_"
+                  id="radix-_r_f_"
+                  style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
+                />
+                <button
+                  aria-controls="_r_d_"
+                  aria-expanded="false"
+                  aria-haspopup="listbox"
+                  aria-labelledby="root__label"
+                  class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                  id="root__anyof_select"
+                  role="combobox"
+                  type="button"
+                >
+                  <span
+                    class="flex-1 line-clamp-1"
+                  >
+                    Dog
+                  </span>
+                  <svg
+                    aria-hidden="true"
+                    class="lucide lucide-chevron-down h-4 w-4 opacity-50"
+                    fill="none"
+                    height="24"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="m6 9 6 6 6-6"
+                    />
+                  </svg>
+                </button>
+                <div
+                  class="relative"
+                  id="_r_d_"
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            class="rjsf-field rjsf-field-object"
+          >
+            <div
+              class="flex flex-col gap-2"
+            >
+              <div
+                class="my-1 flex flex-col gap-0.5"
+              >
+                <h5>
+                  <span
+                    id="root__title"
+                  >
+                    Dog
+                  </span>
+                </h5>
+                <div
+                  class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
+                  data-orientation="horizontal"
+                  data-slot="separator"
+                  dir="horizontal"
+                  role="none"
+                  style="height: 1px;"
+                />
+              </div>
+              <div
+                class="flex flex-col gap-2"
+              >
+                <div
+                  class=" flex"
+                >
+                  <div
+                    class="w-full"
+                  >
+                    <div
+                      class="rjsf-field rjsf-field-string"
+                    >
+                      <div
+                        class="flex flex-col gap-2"
+                      >
+                        <label
+                          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                          for="root_bark"
+                        >
+                          <span
+                            id="root_bark__label"
+                          >
+                            bark
+                          </span>
+                        </label>
+                        <div
+                          class="p-0.5"
+                        >
+                          <input
+                            class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
+                            data-slot="input"
+                            id="root_bark"
+                            name="root_bark"
+                            placeholder=""
+                            type="text"
+                            value=""
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[>svg]:px-3 my-2"
+        data-slot="button"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`object fields > show add button and fields if additionalProperties is true and not an object 1`] = `
 <DocumentFragment>
   <form

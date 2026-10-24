@@ -14,6 +14,32 @@ The value of this prop will be passed to the `action` [HTML attribute on the for
 
 Note that this just renders the `action` attribute in the HTML markup. There is no real network request being sent to this `action` on submit. Instead, react-jsonschema-form catches the submit event with `event.preventDefault()` and then calls the [`onSubmit`](#onSubmit) function, where you could send a request programmatically with `fetch` or similar.
 
+## additionalPropertiesWhenAbsent
+
+What an object schema naming neither `additionalProperties` nor `unevaluatedProperties` says about the keys its `properties` and `patternProperties` leave over: `'forbid'`, the default, or `'allow'`.
+
+JSON Schema reads such an object as taking any extra key, as `additionalProperties: true` does, and `'allow'` has the form follow it ([#2137](https://github.com/rjsf-team/react-jsonschema-form/issues/2137)):
+
+- the object gets an add button, and the extra keys of its data render with their key input and remove button, each as a field for the value it holds
+- `omitExtraData` keeps those keys rather than dropping them
+- an object `anyOf`/`oneOf` union, such as `{ type: 'object', oneOf: [...] }`, renders its own field beside the option it shows, with its title and add button, unless the option it shows names `additionalProperties: false`
+
+A keyword the schema names is read as it stands either way, so an `additionalProperties: false` or an `unevaluatedProperties: false` still closes the object.
+To keep a union closed under `'allow'`, give it `additionalProperties: false`, or hide its add button with the [`expandable` option](../json-schema/objects.md#expandable-option).
+A schema that is no object, an untyped `{}` included, gets no add button, nor does one whose `const` or `enum` pins the whole value.
+
+```tsx
+import Form from '@rjsf/core';
+import validator from '@rjsf/validator-ajv8';
+
+render(
+  <Form schema={{ type: 'object' }} validator={validator} additionalPropertiesWhenAbsent='allow' />,
+  document.getElementById('app'),
+);
+```
+
+See [Objects naming no `additionalProperties`](../json-schema/objects.md#objects-naming-no-additionalproperties) for more.
+
 ## autoComplete
 
 The value of this prop will be passed to the `autocomplete` [HTML attribute on the form](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form#attr-autocomplete).
@@ -29,7 +55,7 @@ You can provide custom buttons to your form via the `Form` component's `children
 For other ways to modify the default `Submit` button, see both the [Submit Button Options](./uiSchema.md#submitbuttonoptions) and the [SubmitButton Template](../advanced-customization/custom-templates.md#submitbutton) documentation.
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -171,7 +197,7 @@ Optional enumerated flag controlling how empty object fields are populated, defa
 A required boolean these flags leave unset, under `skipDefaults`, or under `populateRequiredDefaults` where the object holding it is optional, is reported missing by validation once the object holding it has a value, as the form's root always does. An optional object left empty is left out of the data, so until then nothing reports it. Either way its checkbox, like that of any required boolean whose schema doesn't demand `true`, isn't marked required, as [`requiredBooleanDefault`](#requiredbooleandefault) explains.
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -224,7 +250,7 @@ This is specific to `allOf`:
 - A `dependencies` entry in a nested object schema is resolved once its property has a value, its `allOf` and `if-then-else` included, even when `emptyObjectFields` is `skipEmptyDefaults`. A default counts as that value, and the entry's `if` is checked against it, so an `if` that lists the property in `required` passes with no form data, while one that does not match the default fails. For example, under `skipDefaults`, `items: { type: 'object', properties: { animal: { default: 'Cat' } }, dependencies: { animal: { allOf: [{ if, then }] } } }` fills in the `then` default. A root `dependencies` entry counts a default too, whatever else the form data holds.
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -314,7 +340,7 @@ Optional enumerated flag controlling how defaults defined on multiple levels are
 In the following example, the `animal` property is a descendant of the root schema and both define a default value for `animal`. By default, the `animal`'s default value `Cat` would take precedence over its ancestor's `Fish`. However, since `nestedDefaultsPrecedence` is set to `ancestorWins`, the root schema's default value takes precedence and `animal` is set to `Fish` by default.
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -361,7 +387,7 @@ A checkbox isn't marked required, by its `*` or a native `required`, unless its 
 The same holds wherever [`emptyObjectFields`](#emptyobjectfields) leaves a required boolean unset: under `skipDefaults`, and under `populateRequiredDefaults` where the object holding it is optional.
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -399,7 +425,7 @@ If you're looking for alternative `allOf` merging implementations, you might con
 **Warning:** This is an experimental feature. Only use this if you fully understand the implications of custom `allOf` merging and are prepared to handle potential edge cases. Incorrect implementations may lead to unexpected behavior or validation errors.
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import validator from '@rjsf/validator-ajv8';
 
 const customMergeAllOf = (schema: RJSFSchema): RJSFSchema => {
@@ -417,7 +443,7 @@ render(
 It's possible to disable the whole form by setting the `disabled` prop. The `disabled` prop is then forwarded down to each field of the form.
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -435,7 +461,7 @@ If you just want to disable some fields, see the `ui:disabled` parameter in `uiS
 It's possible to make the whole form read-only by setting the `readonly` prop. The `readonly` prop is then forwarded down to each field of the form.
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -473,7 +499,7 @@ If set to true, then the first field with an error will receive the focus when t
 You can also provide a custom callback function to handle what happens when this function is called.
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema, RJSFValidationError } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -517,6 +543,27 @@ To change the data in place, keeping the errors and the fields' own state, call 
 
 Only `undefined` means "not passed". `null` seeds the schema's defaults the way `undefined` does. `false`, `0` and `''` are values.
 
+## globalUiOptionsKeys
+
+The keys of the extensions to [`ui:globalOptions`](uiSchema.md#uiglobaloptions) that your own widgets, fields and templates read, beyond the ones RJSF reads there.
+They are added to the ones the theme declares, and the registry's `globalUiOptions` hold only those and RJSF's own, so every field hands them to its widget in its `options`, beneath the field's own, and a template reads them with `getUiOptions(uiSchema, registry.globalUiOptions)`.
+A key that is an option name RJSF reads per field, such as `widget` or `placeholder`, is not read from `ui:globalOptions`, and a warning says so.
+
+```tsx
+import { Form } from '@rjsf/core';
+import { GlobalUISchemaOptions, UiSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const globalOptions: GlobalUISchemaOptions<{ density?: 'compact' | 'comfortable' }> = { density: 'compact' };
+const uiSchema: UiSchema = { 'ui:globalOptions': globalOptions };
+
+// Each widget's `options.density` is 'compact', unless its own uiSchema sets another
+render(
+  <Form schema={schema} uiSchema={uiSchema} validator={validator} globalUiOptionsKeys={['density']} />,
+  document.getElementById('app'),
+);
+```
+
 ## id
 
 The value of this prop will be passed to the `id` [HTML attribute on the form](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form).
@@ -526,7 +573,7 @@ The value of this prop will be passed to the `id` [HTML attribute on the form](h
 To avoid collisions with existing ids in the DOM, it is possible to change the prefix used for ids (the default is `root`).
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -544,7 +591,7 @@ This will render `<input id="rjsf_prefix_key">` instead of `<input id="root_key"
 To avoid using a path separator that is present in field names, it is possible to change the separator used for ids (the default is `_`).
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -582,7 +629,7 @@ RJSF provides two built-in generators:
 **`dotNotationNameGenerator`** - Generates dot notation for other frameworks (e.g., `root.tasks.0.title`).
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { bracketNameGenerator, RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -672,7 +719,7 @@ Each event carries the complete value, earlier edits of the same event included.
 To react when submitted form data are invalid, pass an `onError` handler. It will be passed the list of encountered errors:
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -695,7 +742,7 @@ It will be passed a result object having a `formData` attribute, which is the va
 The original event will also be passed as a second parameter:
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -716,7 +763,7 @@ It is layered part by part over the theme's declarations, which are layered over
 See [Custom Themes](../advanced-customization/custom-themes.md#presentation) for more information.
 
 ```tsx
-import { Form } from '@rjsf/core';
+import Form from '@rjsf/core';
 import { ThemePresentation } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 

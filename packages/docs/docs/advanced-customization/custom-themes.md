@@ -8,7 +8,7 @@ This theme-defining object is passed as the only parameter to the HOC (`withThem
 ```tsx
 import React, { Component } from 'react';
 import validator from '@rjsf/validator-ajv8';
-import { withTheme, ThemeProps } from '@rjsf/core';
+import { withTheme, type ThemeProps } from '@rjsf/core';
 
 const theme: ThemeProps = { widgets: { test: () => <div>test</div> } };
 
@@ -34,7 +34,7 @@ Example theme with custom widget:
 
 ```tsx
 import { WidgetProps, RegistryWidgetsType } from '@rjsf/utils';
-import { ThemeProps } from '@rjsf/core';
+import type { ThemeProps } from '@rjsf/core';
 
 const MyCustomWidget = (props: WidgetProps) => {
   return (
@@ -64,7 +64,7 @@ Each template should be passed into the theme object via the **templates** objec
 
 ```tsx
 import { ArrayFieldTemplateProps, ErrorListProps } from '@rjsf/utils';
-import { ThemeProps } from '@rjsf/core';
+import type { ThemeProps } from '@rjsf/core';
 
 function MyArrayFieldTemplate(props: ArrayFieldTemplateProps) {
   return (
@@ -106,7 +106,7 @@ Declarations are keyed by the name a field or widget is registered under, so a w
 A `default` covers every part the theme's own entry for a widget leaves out, for every widget, custom ones included, so it also overrides what `@rjsf/core` declares for those parts; a `fieldDefault` covers every part a field's merged entry leaves out.
 
 ```tsx
-import { ThemeProps } from '@rjsf/core';
+import type { ThemeProps } from '@rjsf/core';
 
 const ThemeObject: ThemeProps = {
   widgets: myWidgets,
@@ -127,12 +127,35 @@ A declaration states what the theme's templates and widgets do.
 
 The theme's declarations are layered part by part over `@rjsf/core`'s, and the `Form`'s [`presentation`](../api-reference/form-props.md#presentation) prop over the theme's, by [`mergeThemePresentation()`](../api-reference/utility-functions.md#mergethemepresentation), so each layer declares only the parts it changes.
 
+### Global UI options
+
+A theme whose widgets or templates read an option of their own from [`ui:globalOptions`](../api-reference/uiSchema.md#uiglobaloptions), as `@rjsf/mui` reads `mui`, declares its key as `globalUiOptionsKeys`.
+RJSF reads only its own options from `ui:globalOptions` and the keys the theme and the `Form`'s [`globalUiOptionsKeys`](../api-reference/form-props.md#globaluioptionskeys) prop declare, so every field hands the theme's to its widget in its `options`, beneath the field's own, and a template reads them with `getUiOptions(uiSchema, registry.globalUiOptions)`.
+A key may not be an option name RJSF reads per field, which `ReservedUiOptionName` lists.
+Every field hands a user's declared keys to its widget too, so a theme whose widgets read an option `ReservedUiOptionName` doesn't list, as `@rjsf/mantine`'s `RangeWidget` reads `thumbLabel`, adds it to the names its type rejects as a user's key, through the second parameter of `GlobalUISchemaOptionsExtensions`, as `@rjsf/daisyui` and `@rjsf/mantine` do.
+Type the keys with `ThemeGlobalUISchemaOptions`, which takes the user's own extensions too:
+
+```tsx
+import { ThemeProps } from '@rjsf/core';
+import { ThemeGlobalUISchemaOptions } from '@rjsf/utils';
+
+interface MyThemeGlobalUiOptionsKeys {
+  density?: 'compact' | 'comfortable';
+}
+export type MyThemeGlobalUISchemaOptions = ThemeGlobalUISchemaOptions<MyThemeGlobalUiOptionsKeys>;
+
+const ThemeObject: ThemeProps = {
+  widgets: myWidgets,
+  globalUiOptionsKeys: ['density'],
+};
+```
+
 ## Overriding other Form props
 
 Just as the theme can override **widgets**, **fields**, any of the **templates**, and set default values to properties like **showErrorList**, you can do the same with the instance of the withTheme() Form component.
 
 ```tsx
-import { ThemeProps } from '@rjsf/core';
+import type { ThemeProps } from '@rjsf/core';
 
 const ThemeObject: ThemeProps = {
   templates: {

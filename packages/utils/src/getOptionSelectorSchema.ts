@@ -1,5 +1,6 @@
 import { PROPERTIES_KEY, REF_KEY } from './constants.ts';
 import { isSchemaObject } from './isObject.ts';
+import { getByPath } from './pathUtils.ts';
 import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
 
 /** Returns the schema of the selector property of an `anyOf`/`oneOf` option, the one the options are told apart by, as
@@ -18,7 +19,8 @@ export default function getOptionSelectorSchema<S extends StrictRJSFSchema = RJS
   selectorField: string,
   retrieve: (selector: S) => S,
 ): S | undefined {
-  const selector: unknown = option[PROPERTIES_KEY]?.[selectorField];
+  // By own key, so an undeclared `__proto__` selector isn't read as `Object.prototype`, which passes as a schema
+  const selector: unknown = getByPath(option[PROPERTIES_KEY], selectorField);
   if (!isSchemaObject<S>(selector)) {
     return undefined;
   }

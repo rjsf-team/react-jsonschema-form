@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import type { FieldProps, RJSFSchema, UiSchema } from '@rjsf/utils';
-import { ROOT_FIELD_PATH } from '@rjsf/utils';
+import type { CustomValidator, FieldProps, RJSFSchema, UiSchema } from '@rjsf/utils';
+import { isPlainObject, ROOT_FIELD_PATH } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import { act, render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -47,7 +47,7 @@ function FirstOrSecond({ fieldPath, formData, options, registry, onChange }: Fie
 }
 
 describe('option selection as form state', () => {
-  it('renders a key the selected option declares once, and one only another option declares as an extra key (#5461)', async () => {
+  it('renders a key the selected option declares once, and nothing for it once a switch discards its value (#5461)', async () => {
     const schema: RJSFSchema = {
       type: 'object',
       unevaluatedProperties: { type: 'string' },
@@ -56,7 +56,7 @@ describe('option selection as form state', () => {
         { title: 'B', properties: { a: { type: 'string' }, b: { type: 'number' } } },
       ],
     };
-    const { node } = createFormComponent({ schema, initialFormData: { a: 'x', b: 2 } });
+    const { node, onChange } = createFormComponent({ schema, initialFormData: { a: 'x', b: 2 } });
 
     expect(selectOf(node, 'root__anyof_select')).toHaveValue('1');
     expect(ids(node, '#root_b')).toHaveLength(1);
@@ -64,9 +64,342 @@ describe('option selection as form state', () => {
 
     await user.selectOptions(selectOf(node, 'root__anyof_select'), 'A');
 
+    // The switch deletes `b`, which only B declares, so the extra-key keyword has no entry to render a row for
+    expect(onChange.mock.lastCall?.[0].formData).not.toHaveProperty('b');
+    expect(node.querySelector('#root_b-key')).toBeNull();
+    expect(ids(node, '#root_b')).toHaveLength(0);
+  });
+
+  it('renders a key only another option declares as an extra key (#5461)', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      unevaluatedProperties: { type: 'string' },
+      anyOf: [
+        { title: 'A', properties: { a: { type: 'string' } } },
+        { title: 'B', properties: { a: { type: 'string' }, b: { type: 'number' } } },
+      ],
+    };
+    // `b` holds a string, which B's number rejects, so A is the option on screen
+    const { node } = createFormComponent({ schema, initialFormData: { a: 'x', b: 'y' } });
+
+    expect(selectOf(node, 'root__anyof_select')).toHaveValue('0');
     // Under A nothing evaluates `b`, so the keyword describing the extra keys renders it, with its key and remove button
     expect(node.querySelector('#root_b-key')).toHaveValue('b');
     expect(ids(node, '#root_b')).toHaveLength(1);
+  });
+
+  it('hands customValidate the defaults of the option on screen', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      oneOf: [
+        { title: 'A', properties: { a: { type: 'string', default: 'x' } } },
+        { title: 'B', properties: { b: { type: 'string', default: 'y' } } },
+      ],
+    };
+    const customValidate = vi.fn<CustomValidator>((_formData, errors) => errors);
+    const { node } = createFormComponent({ schema, liveValidate: 'onChange', customValidate });
+
+    await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
+    await user.clear(elementOf(node, '#root_b'));
+
+    // The cleared field reaches customValidate holding its default, as it does outside options, and that default is
+    // B's: `{}` fits A as well, whose `a` would come back with A's
+    expect(customValidate.mock.lastCall?.[0]).toEqual({ b: 'y' });
+  });
+
+  it('hands customValidate the defaults of the option on screen on submit', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      oneOf: [
+        { title: 'A', properties: { a: { type: 'string', default: 'x' } } },
+        { title: 'B', properties: { b: { type: 'string', default: 'y' } }, required: ['b'] },
+      ],
+    };
+    const customValidate = vi.fn<CustomValidator>((_formData, errors) => errors);
+    // The browser's own check of the required `b` would block the submit
+    const { node } = createFormComponent({ schema, customValidate, noHtml5Validate: true });
+
+    await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
+    await user.clear(elementOf(node, '#root_b'));
+    await submitForm(node, user);
+
+    // The validator is handed `{}`, which only A validates, yet B, which the form shows for `{ b: undefined }`, is the
+    // option the defaults come from
+    expect(getSelectedOptionValue(selectOf(node, 'root__oneof_select'))).toBe('B');
+    expect(customValidate.mock.lastCall?.[0]).toEqual({ b: 'y' });
+  });
+
+  it('matches the root data setFieldValue sets again for customValidate and liveOmit, as the render does', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      oneOf: [
+        { title: 'A', properties: { a: { type: 'string', default: 'x' } } },
+        { title: 'B', properties: { b: { type: 'string', default: 'y' } } },
+      ],
+    };
+    const ref = createFormRef();
+    const customValidate = vi.fn<CustomValidator>((_formData, errors) => errors);
+    const { node, onChange } = createFormComponent({
+      ref,
+      schema,
+      liveValidate: 'onChange',
+      customValidate,
+      omitExtraData: true,
+      liveOmit: 'onChange',
+    });
+
+    await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
+    act(() => handleOf(ref).setFieldValue('', { a: 'q' }));
+
+    // `{ a: 'q' }` fits only A, which the form now shows: holding B would prune `a` and hand customValidate B's `b`
+    expect(getSelectedOptionValue(selectOf(node, 'root__oneof_select'))).toBe('A');
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ a: 'q' });
+    expect(customValidate.mock.lastCall?.[0]).toEqual({ a: 'q' });
+  });
+
+  it('matches the root data setFieldValue sets again when transformChange rewrites it', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      oneOf: [
+        { title: 'A', properties: { a: { type: 'string', default: 'x' } } },
+        { title: 'B', properties: { b: { type: 'string', default: 'y' } } },
+      ],
+    };
+    const ref = createFormRef();
+    const customValidate = vi.fn<CustomValidator>((_formData, errors) => errors);
+    const { node, onChange } = createFormComponent({
+      ref,
+      schema,
+      liveValidate: 'onChange',
+      customValidate,
+      omitExtraData: true,
+      liveOmit: 'onChange',
+      transformChange: (next) =>
+        isPlainObject(next) && typeof next.a === 'string' ? { ...next, a: next.a.toUpperCase() } : next,
+    });
+
+    await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
+    act(() => handleOf(ref).setFieldValue('', { a: 'q' }));
+
+    // The rewrite is still data set from outside, so it is matched again rather than holding B and pruning `a`
+    expect(getSelectedOptionValue(selectOf(node, 'root__oneof_select'))).toBe('A');
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ a: 'Q' });
+    expect(customValidate.mock.lastCall?.[0]).toEqual({ a: 'Q' });
+  });
+
+  it('matches the data setFieldValue sets below the root again for customValidate, as the render does', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      oneOf: [
+        {
+          title: 'A',
+          properties: { kind: { const: 'a' }, a: { type: 'string', default: 'x' } },
+          required: ['kind'],
+        },
+        {
+          title: 'B',
+          properties: { kind: { const: 'b' }, b: { type: 'string', default: 'y' } },
+          required: ['kind'],
+        },
+      ],
+    };
+    const ref = createFormRef();
+    const customValidate = vi.fn<CustomValidator>((_formData, errors) => errors);
+    const { node, onChange } = createFormComponent({ ref, schema, liveValidate: 'onChange', customValidate });
+
+    await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
+    act(() => handleOf(ref).setFieldValue('kind', 'a'));
+
+    // `kind: 'a'` fits only A, which the form shows, so the form and customValidate get A's `a` rather than holding B's
+    // defaults
+    expect(getSelectedOptionValue(selectOf(node, 'root__oneof_select'))).toBe('A');
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ kind: 'a', a: 'x', b: 'y' });
+    expect(customValidate.mock.lastCall?.[0]).toEqual({ kind: 'a', a: 'x', b: 'y' });
+  });
+
+  it('counts no key a switch of options discards against maxProperties', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      additionalProperties: { type: 'string' },
+      maxProperties: 2,
+      anyOf: [
+        { title: 'A', properties: { a: { type: 'string' } } },
+        { title: 'B', properties: { b: { type: 'string' } } },
+      ],
+    };
+    const { node } = createFormComponent({ schema });
+
+    await user.type(elementOf(node, '#root_a'), 'x');
+    await user.selectOptions(selectOf(node, 'root__anyof_select'), 'B');
+
+    expect(node.querySelector('#root_a-key')).toBeNull();
+    expect(node.querySelector('.rjsf-object-property-expand button')).not.toBeNull();
+  });
+
+  it('renders no field for a key a switch of options discards from an object allowing any extra key', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      additionalProperties: true,
+      oneOf: [
+        { title: 'A', properties: { a: { type: 'string' } } },
+        { title: 'B', properties: { b: { type: 'string' } } },
+      ],
+    };
+    const { node, onChange } = createFormComponent({ schema });
+
+    await user.type(elementOf(node, '#root_a'), 'x');
+    await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
+
+    expect(node.querySelector('#root_a-key')).toBeNull();
+    expect(ids(node, '#root_a')).toHaveLength(0);
+    const { formData } = onChange.mock.lastCall?.[0] ?? {};
+    expect(formData).not.toHaveProperty('a');
+    // The defaults are B's, the option on screen: under A, which `b` fits as well, `b` is an extra key whose `null`
+    // fills it. `toEqual()` reads a key holding `undefined` as missing, so that `null` fails it
+    expect(formData).toEqual({ b: undefined });
+  });
+
+  it('computes the defaults of a root switch from the option switched to, where the old one takes the new key as an extra one', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      additionalProperties: true,
+      oneOf: [
+        { title: 'A', properties: { a: { type: 'string' } }, additionalProperties: true },
+        { title: 'B', properties: { b: { type: 'string' } }, additionalProperties: true },
+      ],
+    };
+    const { node, onChange } = createFormComponent({ schema });
+
+    await user.type(elementOf(node, '#root_a'), 'x');
+    await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
+
+    // `{ b: undefined }` fits A too, as an extra key of A whose `null` fills it, so matching the data again would pick
+    // A. `toEqual()` reads a key holding `undefined` as missing, so that `null` fails it
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ b: undefined });
+  });
+
+  it("gives an object union one heading and one add button of its own under additionalPropertiesWhenAbsent 'allow'", async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      title: 'Outer',
+      oneOf: [
+        { title: 'A', type: 'object', properties: { a: { type: 'string' } } },
+        { title: 'B', type: 'object', properties: { b: { type: 'string' } } },
+      ],
+    };
+    const forbidding = createFormComponent({ schema });
+    expect(forbidding.node.querySelectorAll('.rjsf-object-property-expand')).toHaveLength(0);
+    forbidding.unmount();
+
+    const { node, onChange } = createFormComponent({ schema, additionalPropertiesWhenAbsent: 'allow' });
+    // The union's own `ObjectField` takes the extra keys, so the option it shows, an object naming no
+    // `additionalProperties` either, offers none of its own
+    expect(node.querySelectorAll('.rjsf-object-property-expand')).toHaveLength(1);
+    expect(elementOf(node, '#root_XxxOf__title')).toHaveTextContent('Outer');
+
+    await user.type(node.querySelector('#root_a')!, 'x');
+    await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
+
+    expect(node.querySelector('#root_a-key')).toBeNull();
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ b: undefined });
+  });
+
+  it.each([
+    ['allow', { type: 'string' }],
+    ['forbid', { type: 'string' }],
+    ['allow', undefined],
+  ] as const)(
+    "keeps the old option's value as an extra key of a new option that takes extra keys (%s, additionalProperties %o)",
+    async (additionalPropertiesWhenAbsent, additionalProperties) => {
+      const schema: RJSFSchema = {
+        oneOf: [
+          { title: 'A', type: 'object', properties: { a: { type: 'string' } } },
+          { title: 'B', type: 'object', properties: { b: { type: 'string' } }, additionalProperties },
+        ],
+      };
+      const { node, onChange } = createFormComponent({ schema, additionalPropertiesWhenAbsent });
+
+      await user.type(elementOf(node, '#root_a'), 'x');
+      await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
+
+      // An untyped union renders no field of its own beside the option, so B itself takes the extra keys
+      expect(onChange.mock.lastCall?.[0].formData).toEqual({ a: 'x' });
+      expect(node.querySelector('#root_a-key')).toHaveValue('a');
+    },
+  );
+
+  it("lays out an object union whose shown option is closed as it does under 'forbid', under additionalPropertiesWhenAbsent 'allow'", () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      title: 'Outer',
+      oneOf: [
+        { title: 'A', type: 'object', properties: { a: { type: 'string' } }, additionalProperties: false },
+        { title: 'B', type: 'object', properties: { b: { type: 'string' } }, additionalProperties: false },
+      ],
+    };
+    const forbidding = createFormComponent({ schema });
+    const forbiddingMarkup = forbidding.node.innerHTML;
+    forbidding.unmount();
+
+    // The object itself names no `additionalProperties`, but joined with the option it shows it takes no extra key, as
+    // its add button reads it, so it renders no heading of its own beside the option
+    const { node } = createFormComponent({ schema, additionalPropertiesWhenAbsent: 'allow' });
+
+    expect(node.querySelector('#root_XxxOf__title')).toBeNull();
+    expect(node.innerHTML).toBe(forbiddingMarkup);
+  });
+
+  it("omits the extra keys an object union's closed shown option renders no field for, under additionalPropertiesWhenAbsent 'allow'", async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      oneOf: [{ properties: { b: { type: 'string' } }, additionalProperties: false }],
+    };
+    const { node, onChange, onSubmit } = createFormComponent({
+      schema,
+      additionalPropertiesWhenAbsent: 'allow',
+      initialFormData: { b: 'x', e: 'y' },
+      omitExtraData: true,
+      liveOmit: 'onChange',
+    });
+    expect(node.querySelector('#root_e')).toBeNull();
+
+    await user.type(elementOf(node, '#root_b'), 'z');
+
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ b: 'xz' });
+    await submitForm(node, user);
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+  });
+
+  it.each<[string, RJSFSchema]>([
+    [
+      'an option closing through its if/then, as the field merges it in',
+      {
+        type: 'object',
+        oneOf: [
+          {
+            properties: { b: { type: 'string' } },
+            if: { required: ['b'] },
+            then: { additionalProperties: false },
+          },
+        ],
+      },
+    ],
+    [
+      "an option declaring a property beside the object's additionalProperties: false",
+      { type: 'object', additionalProperties: false, oneOf: [{ properties: { b: { type: 'string' } } }] },
+    ],
+  ])('keeps the property the field renders and omits the extra key it renders none for, for %s', async (_, schema) => {
+    const { node, onChange } = createFormComponent({
+      schema,
+      initialFormData: { b: 'x', e: 'y' },
+      omitExtraData: true,
+      liveOmit: 'onChange',
+    });
+    expect(node.querySelector('#root_e')).toBeNull();
+
+    await user.type(elementOf(node, '#root_b'), 'z');
+
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ b: 'xz' });
   });
 
   it('renders a key the selected option declares once outside a Form, where the outermost field keeps the selection (#5461)', async () => {

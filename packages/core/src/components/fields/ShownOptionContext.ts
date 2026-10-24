@@ -4,7 +4,7 @@ import type { FieldPath } from '@rjsf/utils';
 /** The `anyOf`/`oneOf` options `SchemaField` renders for the field at `fieldPath`, and the one it shows, see
  * `useOptionSelection()`
  */
-interface ShownOption {
+export interface ShownOption {
   fieldPath: FieldPath;
   /** The options, each retrieved for the field's data */
   options: readonly unknown[];

@@ -30,6 +30,8 @@ import {
   uiBooleanOption,
 } from '@rjsf/utils';
 
+import { getFirstOption, getSelectorField, resolveSelectorWidget } from './layoutMultiSchemaFieldSelector.ts';
+
 /** How `ArrayField` renders an array: as one widget (`multiSelect`, `customWidget`, `files`), as a list of items
  * (`fixed`, `normal`), or as the unsupported-field template when the schema declares no `items`
  */
@@ -115,10 +117,9 @@ export function resolveStringFieldWidget<
   return { widget, enumOptions };
 }
 
-/** Gets the widget `BooleanField` renders with: its `ui:widget`, `ui:globalOptions` included, or a checkbox for none
- * or a `null` one
+/** Gets the widget `BooleanField` renders with: its `ui:widget`, or a checkbox for none or a `null` one
  *
- * @param uiOptions - The field's ui options, read with the registry's `globalUiOptions`
+ * @param uiOptions - The field's ui options
  * @returns - The widget
  */
 export function getBooleanFieldWidget<
@@ -152,9 +153,31 @@ function getArrayFieldWidget<
   }
   const { widget = mode === 'customWidget' ? undefined : ARRAY_MODE_DEFAULT_WIDGETS[mode] } = getUiOptions<T, S, F>(
     uiSchema,
-    registry.globalUiOptions,
   );
   return widget;
+}
+
+/** Gets the widget `LayoutMultiSchemaField` renders its option selector with, from the schema's own `anyOf`/`oneOf`,
+ * which the field renders the options of too, or `undefined` where it has no selector property, which the field throws
+ * for
+ *
+ * @param schema - The schema of the field
+ * @param uiSchema - The uiSchema of the field
+ * @param registry - The registry
+ * @returns - The widget, if the field has a selector property
+ */
+function getLayoutSelectorWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(schema: S, uiSchema: UiSchema<T, S, F> | undefined, registry: Registry<T, S, F>): Widget<T, S, F> | undefined {
+  const uiOptions = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);
+  const selectorField = getSelectorField<T, S, F>(schema, uiOptions);
+  if (!selectorField) {
+    return undefined;
+  }
+  const firstOption = getFirstOption<T, S, F>(schema, registry.schemaUtils, selectorField);
+  return resolveSelectorWidget<T, S, F>(schema, firstOption, selectorField, uiOptions, registry.widgets).Widget;
 }
 
 /** Whether a widget is told to hide its label: unless its plan has it draw the label. A field with no label text has
@@ -171,9 +194,9 @@ function hidesWidgetLabel({ label, description }: FieldPresentation): boolean {
   return label.by !== 'self';
 }
 
-/** Whether a field rendered without a plan shows its label, as the deprecated `getDisplayLabel()` decides. The one
- * place core asks it, for the deprecated props a field without a plan hands on, the fallback UI's labelling and the
- * `displayLabel` an `ArrayFieldItemTemplate` lays its toolbar out by
+/** Whether a field shows its label, as the deprecated `getDisplayLabel()` decides. The one place core asks it, for the
+ * deprecated props a field without a plan hands on and, while planning, whether the fallback UI labels its value from
+ * outside (#5581)
  *
  * @param registry - The registry's `schemaUtils` and `globalUiOptions`
  * @param schema - The field's schema
@@ -286,6 +309,37 @@ export function getTemplateParts(presentation: FieldPresentation | undefined) {
  */
 export function isAdditionalPropertySchema(schema: unknown) {
   return Boolean((schema as RJSFMarkedSchema)?.[ADDITIONAL_PROPERTY_FLAG]);
+}
+
+/** Returns whether the object declares `key` in its own `properties`, rather than holding it as an extra key
+ * `retrieveSchema()` stubbed in among them for the form data. A stub is told from a declared property by the flag it
+ * carries. The name is read as an own property, since a key called `constructor` or `toString` would otherwise be
+ * answered for by `Object.prototype`.
+ *
+ * @param schemaProperties - The `properties` of the resolved object schema
+ * @param key - The property name to check
+ * @returns - True when the object declares the name itself, rather than taking it as an additional property
+ */
+export function declaresProperty<S extends StrictRJSFSchema = RJSFSchema>(
+  schemaProperties: NonNullable<S['properties']>,
+  key: string,
+) {
+  return Object.hasOwn(schemaProperties, key) && !isAdditionalPropertySchema(schemaProperties[key]);
+}
+
+/** Returns `schema` without the `ADDITIONAL_PROPERTY_FLAG` that has its template draw the input and remove button of
+ * an extra key, for a field whose key is edited elsewhere or not at all
+ *
+ * @param schema - The field's schema
+ * @returns - The schema without `ADDITIONAL_PROPERTY_FLAG`, or `schema` itself where it has none
+ */
+export function withoutAdditionalFlag<S extends StrictRJSFSchema = RJSFSchema>(schema: S): S {
+  if (!(ADDITIONAL_PROPERTY_FLAG in schema)) {
+    return schema;
+  }
+  const unflagged = { ...schema };
+  Reflect.deleteProperty(unflagged, ADDITIONAL_PROPERTY_FLAG);
+  return unflagged;
 }
 
 /** The value a container field stores for what its child at `fieldPath` sends. A cleared child sends `undefined`,
@@ -410,10 +464,13 @@ export default function getFieldWidget<
     return resolveStringFieldWidget<T, S, F>(schema, uiSchema, registry).widget;
   }
   if (field === fields.BooleanField) {
-    return getBooleanFieldWidget<T, S, F>(getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions));
+    return getBooleanFieldWidget<T, S, F>(getUiOptions<T, S, F>(uiSchema));
   }
   if (field === fields.ArrayField) {
     return getArrayFieldWidget<T, S, F>(schema, uiSchema, registry);
+  }
+  if (field === fields.LayoutMultiSchemaField) {
+    return getLayoutSelectorWidget<T, S, F>(schema, uiSchema, registry);
   }
   return undefined;
 }

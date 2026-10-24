@@ -1,10 +1,13 @@
 import type { RJSFSchema } from '../src/index.ts';
 import {
   ADDITIONAL_PROPERTY_FLAG,
+  EXTRA_KEYS_ELSEWHERE_FLAG,
   getRenderedOptionSchema,
   rendersOwnFieldBesideOption,
   RJSF_REF_KEY,
 } from '../src/index.ts';
+import { rendersOwnFieldBesideOwnOptions } from '../src/rendersOwnFieldBesideOption.ts';
+import { DECLARED_ABOVE_KEY } from '../src/schemaMarkers.ts';
 
 describe('getRenderedOptionSchema()', () => {
   describe('a non-object parent', () => {
@@ -369,20 +372,26 @@ describe('getRenderedOptionSchema()', () => {
 
   describe('an object parent', () => {
     const properties: RJSFSchema['properties'] = { a: { type: 'string' }, b: { type: 'string' } };
-    test('passes on only its required list and its type, since its own ObjectField renders the rest', () => {
+    test('passes on only its required list and its type, marking the option to take no extra keys of its own, since its own ObjectField renders the rest', () => {
       const parent: RJSFSchema = { type: 'object', properties, required: ['a'], minProperties: 1 };
-      expect(getRenderedOptionSchema(parent, { required: ['b'] })).toEqual({ type: 'object', required: ['a', 'b'] });
+      expect(getRenderedOptionSchema(parent, { required: ['b'] })).toEqual({
+        type: 'object',
+        required: ['a', 'b'],
+        [EXTRA_KEYS_ELSEWHERE_FLAG]: true,
+      });
     });
     test('passes on the object type it was read as when it names no type of its own', () => {
       expect(getRenderedOptionSchema({ properties }, { required: ['a'] })).toEqual({
         type: 'object',
         required: ['a'],
+        [EXTRA_KEYS_ELSEWHERE_FLAG]: true,
       });
     });
     test("leaves an option naming its own type with that type, over the parent's", () => {
       expect(getRenderedOptionSchema({ properties }, { type: 'object', required: ['a'] })).toEqual({
         type: 'object',
         required: ['a'],
+        [EXTRA_KEYS_ELSEWHERE_FLAG]: true,
       });
     });
     test("reads an option's type or required list holding undefined as declaring nothing, passing on the parent's", () => {
@@ -391,25 +400,87 @@ describe('getRenderedOptionSchema()', () => {
       expect(getRenderedOptionSchema(parent, option)).toStrictEqual({
         type: 'object',
         required: ['a'],
+        [EXTRA_KEYS_ELSEWHERE_FLAG]: true,
         properties: { b: { minLength: 1 } },
       });
     });
-    test("leaves the extra keys to the parent's field, which stubs them with the selected option", () => {
+    test("leaves the extra keys to the parent's field, which stubs them with the selected option, and takes none itself", () => {
       const option: RJSFSchema = {
         properties: { b: { type: 'string' } },
         additionalProperties: { type: 'number' },
         patternProperties: { '^x': { type: 'string' } },
         unevaluatedProperties: false,
       };
+      // Marked rather than left as it is: a form reading an absent keyword as taking any key would otherwise give the
+      // option's field an add button beside the parent's
       expect(getRenderedOptionSchema({ type: 'object', properties }, option)).toEqual({
         type: 'object',
         properties: { b: { type: 'string' } },
+        [EXTRA_KEYS_ELSEWHERE_FLAG]: true,
       });
+    });
+    test("leaves an option offering options of its own its extra-key keywords, joined with the parent's, for its own field to take", () => {
+      const parent: RJSFSchema = {
+        type: 'object',
+        properties,
+        additionalProperties: { type: 'string' },
+        patternProperties: { '^p': { type: 'number' } },
+      };
+      const oneOf: RJSFSchema[] = [{ properties: { x: { type: 'string' } } }];
+      const rendered = getRenderedOptionSchema(parent, { oneOf, patternProperties: { '^q': { type: 'boolean' } } });
+      expect(rendered).toMatchObject({
+        type: 'object',
+        oneOf,
+        additionalProperties: { type: 'string' },
+        patternProperties: { '^p': { type: 'number' }, '^q': { type: 'boolean' } },
+      });
+      expect(Reflect.get(rendered, EXTRA_KEYS_ELSEWHERE_FLAG)).toBeUndefined();
+    });
+    test('hands an option offering options of its own the properties its parent declares, a boolean one included', () => {
+      const oneOf: RJSFSchema[] = [{ properties: { x: { type: 'string' } } }];
+      const declared = (parent: RJSFSchema) =>
+        Reflect.get(getRenderedOptionSchema(parent, { oneOf }), DECLARED_ABOVE_KEY) as string[];
+      expect(declared({ type: 'object', additionalProperties: true })).toEqual([]);
+      expect(declared({ type: 'object', properties: { b: true }, additionalProperties: true })).toEqual(['b']);
+    });
+    test("hands an option offering options of its own the parent's bounds on the object's keys, beside its own", () => {
+      const oneOf: RJSFSchema[] = [{ properties: { x: { type: 'string' } } }];
+      const parent: RJSFSchema = {
+        type: 'object',
+        additionalProperties: true,
+        maxProperties: 3,
+        propertyNames: { enum: ['p', 'q'] },
+      };
+      expect(getRenderedOptionSchema(parent, { oneOf })).toMatchObject({
+        maxProperties: 3,
+        propertyNames: { enum: ['p', 'q'] },
+      });
+      expect(
+        getRenderedOptionSchema(parent, { oneOf, maxProperties: 2, propertyNames: { maxLength: 1 } }),
+      ).toMatchObject({ maxProperties: 2, propertyNames: { allOf: [{ enum: ['p', 'q'] }, { maxLength: 1 }] } });
+      expect(getRenderedOptionSchema(parent, { oneOf, maxProperties: 5 }).maxProperties).toBe(3);
+    });
+    test('renders an option offering options of its own anew, where the parent names no extra-key keyword', () => {
+      // The option's field stubs the extra keys in the parent's field's place, so it carries the names the parent
+      // declares, which it would otherwise stub as extra keys of its own
+      const option: RJSFSchema = { type: 'object', oneOf: [{ properties: { x: { type: 'string' } } }] };
+      const rendered = getRenderedOptionSchema({ type: 'object', properties }, option);
+      expect(rendered).not.toBe(option);
+      expect(rendered).toMatchObject(option);
+      expect(Reflect.get(rendered, DECLARED_ABOVE_KEY)).toEqual(['a', 'b']);
+    });
+    test('returns the same object for the same parent and option, rather than a copy on every call', () => {
+      const parent: RJSFSchema = { type: 'object', properties };
+      const option: RJSFSchema = { type: 'object', properties: { b: { type: 'string' } } };
+      const rendered = getRenderedOptionSchema(parent, option);
+      expect(getRenderedOptionSchema(parent, option)).toBe(rendered);
+      expect(getRenderedOptionSchema({ ...parent }, option)).not.toBe(rendered);
     });
     test('passes on the type list of a nullable object', () => {
       expect(getRenderedOptionSchema({ type: ['object', 'null'], properties }, { required: ['a'] })).toEqual({
         type: ['object', 'null'],
         required: ['a'],
+        [EXTRA_KEYS_ELSEWHERE_FLAG]: true,
       });
     });
   });
@@ -423,5 +494,19 @@ describe('rendersOwnFieldBesideOption()', () => {
     ['a typeless schema', {}, false],
   ])('reads %s as rendering its own field: %s', (_, schema, expected) => {
     expect(rendersOwnFieldBesideOption(schema)).toBe(expected);
+  });
+});
+
+describe('rendersOwnFieldBesideOwnOptions()', () => {
+  const offered: RJSFSchema[] = [{ properties: { x: { type: 'string' } } }];
+  test.each<[string, RJSFSchema, boolean]>([
+    ['an option naming no type', { oneOf: offered }, true],
+    ['an object option', { type: 'object', anyOf: offered }, true],
+    ['an option offering nothing', { properties: { x: { type: 'string' } } }, false],
+    ['an option of constants, a select', { oneOf: [{ const: 'a' }, { const: 'b' }] }, false],
+    ['an option with an enum beside its options, a select', { enum: ['a'], oneOf: offered }, false],
+    ['an option of another type', { type: 'string', oneOf: [{ minLength: 1 }] }, false],
+  ])('reads %s as rendering its own field beside its options: %s', (_, option, expected) => {
+    expect(rendersOwnFieldBesideOwnOptions(option)).toBe(expected);
   });
 });

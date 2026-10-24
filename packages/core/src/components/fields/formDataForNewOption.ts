@@ -20,7 +20,7 @@ import {
 } from '@rjsf/utils';
 
 import { asFieldValue } from '../uiState.ts';
-import { withGlobalUiOptions } from './fieldWidgetUtils.ts';
+import { declaresProperty, withGlobalUiOptions } from './fieldWidgetUtils.ts';
 
 /** Returns `option` carrying the `required` that `parentSchema` declares, which is what decides whether the form
  * populates a key at all under a `defaultFormStateBehavior` keyed off `required`. A schema's defaults
@@ -94,6 +94,44 @@ function optionDeclaresValueFor<
   // `Object.hasOwn()`, so a property named `constructor` or `toString` is not answered for by the member every object
   // inherits under that name
   return isPlainObject(optionDefault) && Object.hasOwn(optionDefault, key);
+}
+
+/** Returns `data` without each key the switch discarded: one the old option declares and neither the new option nor
+ * the schema holding the options declares, which `sanitizeDataForNewSchema()` leaves holding `undefined`. Left in
+ * place, such a key is an extra key of the object holding the options, which renders it as an additional property
+ * holding nothing and counts it against its `maxProperties` and its `propertyNames`.
+ *
+ * @param data - The data `sanitizeDataForNewSchema()` returned
+ * @param [oldOption] - The option switched away from, as it is rendered
+ * @param [newOption] - The option switched to, as it is rendered
+ * @param [parentSchema] - The schema holding the `oneOf`/`anyOf`
+ * @returns - `data`, or a copy of it without the discarded keys
+ */
+function withoutDiscardedKeys<D extends GenericObjectType, S extends StrictRJSFSchema = RJSFSchema>(
+  data: D,
+  oldOption?: S,
+  newOption?: S,
+  parentSchema?: S,
+): D {
+  const oldProperties: object = oldOption?.properties ?? {};
+  const newProperties: object = newOption?.properties ?? {};
+  // The schema holding the options arrives with the extra keys of its data stubbed among its `properties`, a key the
+  // old option declares among them, and a stub declares nothing
+  const parentProperties = parentSchema?.properties ?? {};
+  const discardedKeys = Object.keys(data).filter(
+    (key) =>
+      data[key] === undefined &&
+      Object.hasOwn(oldProperties, key) &&
+      !Object.hasOwn(newProperties, key) &&
+      !declaresProperty<S>(parentProperties, key),
+  );
+  if (discardedKeys.length === 0) {
+    return data;
+  }
+  // Copy rather than delete from what `sanitizeDataForNewSchema()` returned, as below
+  const kept = { ...data };
+  discardedKeys.forEach((key) => delete kept[key]);
+  return kept;
 }
 
 /** The field holding the options with `option` as its only one, and the field's uiSchema with the option's as its
@@ -201,11 +239,12 @@ export default function formDataForNewOption<
   // The defaults leave out an optional object the Optional Data Controls show without its fields, as the form's own do
   const newOptionUiSchema = withGlobalUiOptions<T, S, F>(uiSchemas.newOptionUiSchema, globalUiOptions);
   const oldOptionUiSchema = withGlobalUiOptions<T, S, F>(uiSchemas.oldOptionUiSchema, globalUiOptions);
-  let newFormData: T | undefined = schemaUtils.sanitizeDataForNewSchema(
-    renderedOption<S>(parentSchema, newOption),
-    renderedOption<S>(parentSchema, oldOption),
-    formData,
-  );
+  const renderedNewOption = renderedOption<S>(parentSchema, newOption);
+  const renderedOldOption = renderedOption<S>(parentSchema, oldOption);
+  let newFormData: T | undefined = schemaUtils.sanitizeDataForNewSchema(renderedNewOption, renderedOldOption, formData);
+  if (isPlainObject(newFormData)) {
+    newFormData = withoutDiscardedKeys(newFormData, renderedOldOption, renderedNewOption, parentSchema);
+  }
   // A `null` option renders no field, so the switch leaves the data as the sanitize did, rather than the `null` the
   // option's defaults fill in for a field that renders one
   if (newOption?.type === 'null') {

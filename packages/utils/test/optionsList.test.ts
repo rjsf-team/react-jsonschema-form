@@ -809,6 +809,17 @@ describe('optionsList()', () => {
       };
       expect(optionsList(schema)?.map(({ value }) => value)).toEqual(['cat', 'none']);
     });
+    it('should read a constant option that does not declare a discriminator named like an Object.prototype member by its constant', () => {
+      // `as const` keeps the literals, which the values of a `toString` key lose otherwise
+      const schema: RJSFSchema = {
+        discriminator: { propertyName: 'toString' },
+        oneOf: [
+          { type: 'object' as const, properties: { toString: { const: 'cat' as const } }, enum: [{ toString: 'cat' }] },
+          { type: 'object', properties: { other: { const: 'x' } }, enum: [{ other: 'x' }] },
+        ],
+      };
+      expect(optionsList(schema)?.map(({ value }) => value)).toEqual(['cat', { other: 'x' }]);
+    });
     it('should read constant options by their constants under ui:optionsSchemaSelector', () => {
       const schema: RJSFSchema = { anyOf: [{ const: true }, { const: false }] };
       const uiSchema: UiSchema = { 'ui:options': { optionsSchemaSelector: 'kind' } };

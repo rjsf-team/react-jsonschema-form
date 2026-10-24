@@ -49,7 +49,7 @@ export default function BaseInputTemplate<
   const { ClearButton } = registry.templates.ButtonTemplates;
 
   const inputProps = getInputProps<T, S, F>(schema, type, options, false);
-  const themeProps = cleanupOptions(options);
+  const themeProps = cleanupOptions(options, props);
   const descriptionProps = getDescriptionProps(props);
 
   const handleNumberChange = useCallback((newValue: number | string) => onChange(newValue), [onChange]);

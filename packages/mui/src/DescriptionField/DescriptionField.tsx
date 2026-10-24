@@ -32,7 +32,7 @@ export default function DescriptionField<
 >(props: DescriptionFieldProps<T, S, F>) {
   const { id, description, registry, uiSchema } = props;
 
-  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const uiOptions = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);
   const { rjsfSlotProps: { descTypography } = {} } = getMuiProps<T, S, F, DescriptionFieldMuiProps>(uiOptions);
 
   if (description) {

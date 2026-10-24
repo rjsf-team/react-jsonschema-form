@@ -14,7 +14,8 @@ function asSelectorPart<P extends PartPresentation>(part: P): P {
  * declares, and is named and described by the parts drawn above it: named through `aria-labelledby`, since the `for` of
  * a template's label names the field's own control rather than the selector, or by the `aria-label` the field's control
  * takes where `ui:label: false` hides its label, and described by the parts that render, marked invalid while the
- * field shows errors. It is neither required nor marked so, since it always holds an option. The plan is that of the
+ * field shows errors. It is neither required nor marked so, since it picks an option index rather than form data and
+ * holds one unless its widget offers an empty choice, which clears the field's data with it. The plan is that of the
  * field rendering the options, so a component rendered beside them, such as a custom field or an object with
  * properties, hands it none of the parts it draws itself
  *

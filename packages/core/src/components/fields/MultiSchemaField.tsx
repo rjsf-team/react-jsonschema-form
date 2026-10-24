@@ -6,6 +6,7 @@ import {
   ERRORS_KEY,
   getDiscriminatorFieldFromSchema,
   getRenderedOptionSchema,
+  getRenderedOptionUiSchema,
   getSelectorPresentation,
   getTemplates,
   getUiOptions,
@@ -152,10 +153,12 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     }
   }
   // Memoized, since the option's `SchemaField` keys its own memos on the uiSchema it is handed
-  const optionFieldUiSchema = useMemo(
-    () => (uiSchema && optionUiSchema === uiSchema ? withoutFieldText<T, S, F>(uiSchema) : optionUiSchema),
-    [optionUiSchema, uiSchema],
-  );
+  const optionFieldUiSchema = useMemo(() => {
+    if (uiSchema && optionUiSchema === uiSchema) {
+      return withoutFieldText<T, S, F>(uiSchema);
+    }
+    return option ? getRenderedOptionUiSchema<T, S, F>(schema, option, uiSchema, optionUiSchema) : optionUiSchema;
+  }, [optionUiSchema, uiSchema, schema, option]);
 
   /** Callback handler to remember what the currently selected option is. In addition to that the `formData` is updated
    * to remove properties that are not part of the newly selected option schema, and then the updated data is passed to
@@ -247,7 +250,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   );
 
   const { SchemaField: SchemaFieldComponent } = fields;
-  const { MultiSchemaFieldTemplate } = getTemplates<T, S, F>(registry, globalUiOptions);
+  const { MultiSchemaFieldTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   const isOptionalRender = shouldRenderOptionalField<T, S, F>(registry, schema, required, uiSchema, fieldPath);
   const hasFormData = isFormDataAvailable<T>(formData);
 
@@ -292,6 +295,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
         errorSchema={fieldErrorSchema}
         value={selectedOption >= 0 ? selectedOption : undefined}
         options={{ enumOptions, ...uiOptions }}
+        uiSchema={uiSchema}
         registry={registry}
         placeholder={placeholder}
         autocomplete={autocomplete}

@@ -1,7 +1,7 @@
 import Switch from '@mui/material/Switch';
 import { withTheme } from '@rjsf/core';
 import { getTestRegistry } from '@rjsf/core/testing';
-import { formTests, themeTests } from '@rjsf/snapshot-tests';
+import { checkboxLabelTests, fallbackDescriptionTests, formTests, themeTests } from '@rjsf/snapshot-tests';
 import type { FieldProps, FormValidation, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { errorId, fieldLabelId, helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
@@ -137,6 +137,35 @@ describe("a titled anyOf field's option selector", () => {
     expect(radioGroup).toHaveAccessibleName('Pick');
     expect(radioGroup).toHaveAttribute('aria-labelledby', fieldLabelId('root_pick'));
     expectReferencesResolve(container);
+  });
+});
+
+describe('an anyOf/oneOf field', () => {
+  // The selector draws the field's label but, picking an option index, which isn't form data, is neither required nor
+  // marked so; the selected option's control is required and its own label carries the field's only marker (#5527)
+  test("marks a required field on its selected option's label rather than its selector's", () => {
+    const { container } = render(
+      <Form
+        validator={validator}
+        schema={{
+          type: 'object',
+          required: ['pet'],
+          properties: {
+            pet: {
+              oneOf: [
+                { title: 'Cat', type: 'string' },
+                { title: 'Dog', type: 'number' },
+              ],
+            },
+          },
+        }}
+      />,
+    );
+
+    expect(screen.getByRole('combobox', { name: 'pet' })).not.toBeRequired();
+    expect(screen.getByRole('textbox', { name: 'Cat' })).toBeRequired();
+    expect(container.querySelectorAll('.MuiFormLabel-asterisk')).toHaveLength(1);
+    expect(container.querySelector('label[for="root_pet"] .MuiFormLabel-asterisk')).toBeInTheDocument();
   });
 });
 
@@ -920,3 +949,6 @@ describe('mui CheckboxWidget required attribute', () => {
     expect(container.querySelector('input[type=checkbox]')).not.toHaveAttribute('required');
   });
 });
+
+checkboxLabelTests(Form, { generateTemplates, generateWidgets, descriptionBy: 'self' });
+fallbackDescriptionTests(Form, false);

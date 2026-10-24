@@ -1,7 +1,7 @@
 import type { EnumOptionsType, RJSFSchema, UiSchema } from '@rjsf/utils';
 
-/** Declared apart from the schemas that hold it so a test needing the option schemas themselves -- which is what a
- * discriminated field is handed as its `options` prop -- has them already typed as `RJSFSchema[]`
+/** Declared apart from the schemas that hold it so a test needing the option schemas themselves has them already
+ * typed as `RJSFSchema[]`
  */
 export const SIMPLE_ONEOF_SCHEMAS: RJSFSchema[] = [
   {
@@ -28,6 +28,17 @@ export const SIMPLE_ONEOF_SCHEMAS: RJSFSchema[] = [
     },
   },
 ];
+/** Returns the `options` with an `answer` selector property that keeps only its `default`, so it has no type of its own
+ *
+ * @param options - Options shaped like `SIMPLE_ONEOF_SCHEMAS`
+ * @returns - The options, each with a selector property that has no type
+ */
+export function withTypelessSelector(options: RJSFSchema[]): RJSFSchema[] {
+  return options.map((option) => ({
+    ...option,
+    properties: { answer: { default: (option.properties!.answer as RJSFSchema).default } },
+  }));
+}
 export const SIMPLE_ONEOF: RJSFSchema = {
   title: 'Simple',
   type: 'object',

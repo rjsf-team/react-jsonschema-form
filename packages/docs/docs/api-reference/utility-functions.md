@@ -9,7 +9,7 @@ There is also a helper [function](#schema-utils-creation-function) used to creat
 ## Constants
 
 The `@rjsf/utils` package exports a set of constants that represent all the keys into various elements of a RJSFSchema or UiSchema that are used by the various utility functions.
-In addition to those keys, there are the special `ADDITIONAL_PROPERTY_FLAG` and `GUESSED_TYPE_FLAG` flags that are added to a schema under certain conditions by the `retrieveSchema()` utility.
+In addition to those keys, there are the special `ADDITIONAL_PROPERTY_FLAG` and `GUESSED_TYPE_FLAG` flags that are added to a schema under certain conditions by the `retrieveSchema()` utility, and the `EXTRA_KEYS_ELSEWHERE_FLAG` flag that [`getRenderedOptionSchema()`](#getrenderedoptionschemas-extends-strictrjsfschema--rjsfschema) adds.
 `GUESSED_TYPE_FLAG` marks the stub schema built for an `additionalProperties` entry the schema puts no constraint on at all — `true`, or a schema with no keyword that asserts something about the value, such as `enum`, `const`, `format`, a length, a range, `properties`, `items` or a subschema keyword like `allOf` or `not`: its `type` was guessed from the data the property holds rather than declared by the schema, so `sanitizeDataForNewSchema()` treats it as no type at all when the schema it is compared against is equally unconstrained, and the [fallback UI](./form-props.md#usefallbackuiforunsupportedtype) offers every type for it.
 An `additionalProperties` schema that constrains the value some other way without naming a type is not marked.
 There is also `JSON_SCHEMA_TYPES`, the list of every type name JSON Schema defines, in the order that fallback UI offers them.
@@ -29,7 +29,7 @@ These types can be found on GitHub [here](https://github.com/rjsf-team/react-jso
 
 **`FieldPath`** — The identity of a field in a form: a canonical string path such as `friends[0].firstName`, with the root form as the empty string (`ROOT_FIELD_PATH`). Property names are separated by `.`, array indexes are bracketed, and `\ . [ ]` inside a property name are backslash-escaped, so the grammar is unambiguous even when property names contain dots or brackets. It is a branded `string`, so a plain string (such as a DOM id) cannot be passed where a `FieldPath` is expected; build one with [toFieldPath()](#tofieldpath) and derive the HTML id, HTML name or segment list from it with [fieldPathToId()](#fieldpathtoid), [fieldPathToName()](#fieldpathtoname) and [fieldPathToList()](#fieldpathtolist).
 
-**`SchemaContext`** — The settings every [validator-based utility function](#validator-based-utility-functions) resolves schemas with: the `validator`, and the optional `customMergeAllOf` and `defaultFormStateBehavior` (see the `Form` documentation for the [customMergeAllOf](./form-props.md#custommergeallof) and [defaultFormStateBehavior](./form-props.md#defaultFormStateBehavior) props). Each of those functions takes it as its first parameter and passes it along whole to every schema function it calls.
+**`SchemaContext`** — The settings every [validator-based utility function](#validator-based-utility-functions) resolves schemas with: the `validator`, and the optional `customMergeAllOf`, `defaultFormStateBehavior` and `additionalPropertiesWhenAbsent` (see the `Form` documentation for the [customMergeAllOf](./form-props.md#custommergeallof), [defaultFormStateBehavior](./form-props.md#defaultFormStateBehavior) and [additionalPropertiesWhenAbsent](./form-props.md#additionalpropertieswhenabsent) props). Each of those functions takes it as its first parameter and passes it along whole to every schema function it calls.
 
 **`SchemaFieldPath`** — Used when navigating a JSON Schema subtree (for example with `getFromSchema` and `findFieldInSchema` on `SchemaUtilsType`, documented under [Validator-based utility functions](#validator-based-utility-functions)). It is `string | FieldPathList`: either a dotted path or an array of segments with the same rules as `FieldPathList` (`(string | number)[]`). A numeric segment denotes an array index or an object key that is numeric. Navigation skips only `undefined` or empty-string segments, so segment **`0`** is always honored (this avoids the bug from treating `0` as a falsy path unit).
 
@@ -133,16 +133,19 @@ The user is warned in the console if `schema.additionalItems` has the value `tru
 
 - boolean: True if additional items is allowed, otherwise false
 
-### allowsAdditionalProperties&lt;S extends StrictRJSFSchema = RJSFSchema>()
+### allowsAdditionalProperties&lt;S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Returns whether an object takes keys its own `properties` don't name, which is what makes asking [`getAdditionalPropertySchema()`](#getadditionalpropertyschemas-extends-strictrjsfschema--rjsfschema) about such a key worth it at all: `retrieveSchema()` stubs the extra keys the form data holds only for an object that takes them, `canExpand()` offers the add button only for one, and `ObjectField` adds a property only to one.
+A form's components ask `registry.schemaUtils.allowsAdditionalProperties(schema)`, which passes the form's own `context`.
 
 A `patternProperties` naming a pattern says the object takes them, whatever an `additionalProperties: false` beside it says about the names no pattern matches, since the names a pattern matches are the object's to take all the same.
-Otherwise the keyword that describes those names answers, as long as it neither rejects them nor is missing: an object naming none of the three keywords takes any key as far as a validator is concerned, but the form has no schema to render one with and no name to add one under, so it offers none.
+Otherwise the keyword that describes those names answers, as long as it does not reject them.
+An object naming none of the three keywords takes any key as far as a validator is concerned, which the form follows only where the `context`'s `additionalPropertiesWhenAbsent` is `'allow'`; a schema that is no object, an untyped `{}` included, takes none either way, nor does one whose `const` or `enum` pins the whole value.
 An empty `patternProperties` names no pattern, so it matches no name and describes no key the object could take, the way an empty `properties` declares none.
 
 #### Parameters
 
+- context: SchemaContext&lt;S, F> - The `SchemaContext` whose `additionalPropertiesWhenAbsent` says what an absent keyword means
 - schema: S - The object schema to check
 
 #### Returns
@@ -221,11 +224,13 @@ Tests that expect such a throw need to catch the timer's error themselves; this 
 ### canExpand&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Checks whether the field described by `schema`, having the `uiSchema` and `formData` supports expanding.
-The UI for the field can expand if it has additional properties, is not forced as non-expandable by the `uiSchema` and the `formData` object doesn't already have `schema.maxProperties` elements.
+The UI for the field can expand if it has additional properties, as [`allowsAdditionalProperties()`](#allowsadditionalpropertiess-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--formcontexttype) reads them for the `context`, is not forced as non-expandable by the `uiSchema` and the `formData` object doesn't already have `schema.maxProperties` elements.
 A `schema.propertyNames.enum` caps the object in the same way: once every name it allows is held by a property, there is no name left for a new one to be added under, so the field can no longer expand.
+An `ObjectFieldTemplate` asks `registry.schemaUtils.canExpand(schema, uiSchema, formData)`, which passes the form's own `context`.
 
 #### Parameters
 
+- context: SchemaContext&lt;S, F> - The `SchemaContext` whose `additionalPropertiesWhenAbsent` says whether an object naming no `additionalProperties` takes extra keys
 - schema: S - The schema for the field that is being checked
 - [uiSchema=\{}]: UiSchema&lt;T, S, F> - The uiSchema for the field
 - [formData]: T | undefined - The formData for the field
@@ -973,7 +978,7 @@ console.log(separator); // Output: ','
 Resolves how a field has to render a schema marked `deprecated`: `label` appends a deprecation marker to the label it hands its `FieldTemplate`, `disable` disables the field, and `hide` tells the `FieldTemplate` the field is hidden.
 Returns `undefined` for a schema that is not deprecated, so a `ui:deprecatedHandling` on an undeprecated schema cannot hide or disable a field on its own, and a caller can treat the three modes as the only cases.
 Under `label`, the decorated label is the field's own: under a plan, which a `Form` always builds, the `FieldTemplate` and the widget below it are both handed it. A field rendered without a plan, as by a custom field, hands its widget the undecorated label.
-`SchemaField` and `LayoutMultiSchemaField` both call this, and a custom field rendering its own `FieldTemplate` should too, rather than read `uiOptions.deprecatedHandling` directly — which is how the `label` default gets missed, leaving a deprecated field undecorated.
+`SchemaField` calls this for every field, and a custom field rendering its own `FieldTemplate` should too, rather than read `uiOptions.deprecatedHandling` directly — which is how the `label` default gets missed, leaving a deprecated field undecorated.
 
 #### Parameters
 
@@ -1152,7 +1157,7 @@ The suggestions are read once per schema object, so `examples` or a `default` ed
 Builds the `classNames` string a `FieldTemplate` receives for a field: the `rjsf-field` marker every field carries, the `rjsf-field-<type>` class naming what the schema holds, `rjsf-field-error` while the field has errors to show, and finally whatever `ui:classNames` the field declares, appended last so it can override the rest.
 The type class comes from [`getSchemaType()`](#getschematype), so a schema with no derivable type — a discriminated `oneOf`/`anyOf` of `$ref`s, say — is spelled `rjsf-field-undefined` rather than left without a type class, as it has been since 6.x.
 That spelling is this function's to change, in one place for every field that calls it, so it is not one to key a CSS rule off; key off `rjsf-field`, which every field carries whatever its schema says.
-`SchemaField` and `LayoutMultiSchemaField` both call this, and a custom field rendering its own `FieldTemplate` should too: a field that spells the list itself is the one field a `rjsf-field*` CSS rule stops reaching the next time the contract gains a class.
+`SchemaField` calls this for every field, and a custom field rendering its own `FieldTemplate` should too: a field that spells the list itself is the one field a `rjsf-field*` CSS rule stops reaching the next time the contract gains a class.
 
 #### Parameters
 
@@ -1186,7 +1191,6 @@ A deprecated field's label is decorated with the `DeprecatedLabel` marker under 
 ### getFieldTypeForUiSchema&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getfieldtypeforuischema}
 
 Gets the type of the field `SchemaField` renders a schema by, as [getFieldTypeForWidget()](#getfieldtypeforwidget) does for the field's own `ui:widget` in its `uiSchema`.
-Only that one picks the field, so `ui:globalOptions` is not read.
 
 #### Parameters
 
@@ -1229,6 +1233,19 @@ A `propertyNames` written as a `$ref` reads as the former, since resolving one n
 #### Returns
 
 - string[] | undefined: The allowed names nothing has taken, or undefined when the schema enumerates none
+
+### getGlobalUiOptions&lt;UserExtensions extends GlobalUISchemaOptionsExtensions&lt;UserExtensions> = Record&lt;never, never>>() {#getglobaluioptions}
+
+Returns the registry's `globalUiOptions` typed with the `UserExtensions` a theme or custom component reads from them.
+The `Registry` only knows the options RJSF reads, so this is an unchecked cast: it is the caller's word that the root uiSchema's `ui:globalOptions` was written against the same extensions.
+
+#### Parameters
+
+- registry: Pick&lt;Registry, 'globalUiOptions'> - The `Registry` holding the `globalUiOptions`
+
+#### Returns
+
+- GlobalUISchemaOptions&lt;UserExtensions> | undefined: The registry's `globalUiOptions`, typed with `UserExtensions`, if the root uiSchema has any
 
 ### getGroupAttributes&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getgroupattributes}
 
@@ -1402,6 +1419,7 @@ The type of an `anyOf`/`oneOf` schema whose options name no type of their own is
 
 Returns the schema of the selector property of an `anyOf`/`oneOf` option, the one the options are told apart by, as it is read for the value, title and type that tell them apart.
 An option hands its properties out as written, so a selector written as a `$ref` is retrieved by `retrieve`; one written in place is read as it stands.
+Only an own property counts, so a selector named `__proto__` that the option doesn't declare gives `undefined` rather than `Object.prototype`.
 `findSelectedOptionInXxxOf()` and `LayoutMultiSchemaField` both read a selector this way, so the option one selects is the one the other lists.
 
 #### Parameters
@@ -1470,7 +1488,8 @@ A part nothing declares is drawn by the template. A widget `getWidget()` rejects
 
 ### getPropertySchema&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
-Returns the sub-schema declared for `property` in the `properties` of `schema`, falling back to an empty schema when the schema has no such property.
+Returns the sub-schema declared for `property` in the `properties` of `schema`, falling back to an empty schema when the schema has no such property, or declares it as `null`.
+Only an own property counts, so a property named like an `Object.prototype` member, such as `toString`, that the schema doesn't declare isn't read as the inherited function.
 Callers treat the properties of a schema as schemas of the same type `S`, which the `JSONSchema7` typing of `properties` cannot express, so this function owns that single assertion rather than repeating it at every lookup.
 
 #### Parameters
@@ -1486,7 +1505,8 @@ Callers treat the properties of a schema as schemas of the same type `S`, which 
 
 Returns the schema an `anyOf`/`oneOf` option of `parent` is rendered with. It is the one place that decides what an option inherits from the schema holding it, so `MultiSchemaField`, `getUiRequiredErrorSchema()` and the defaults `getDefaultFormState()` computes for a field that is not an object read the same option ([#5359](https://github.com/rjsf-team/react-jsonschema-form/issues/5359)).
 An object parent renders its own `ObjectField` beside the option, which shows the parent's properties and other keywords, so the option takes only the parent's `required` list and its type.
-That field also stubs the extra keys of the data, for the parent and the selected option together (see [`retrieveSchema()`](#retrieveschema)), so the option is rendered without its own `additionalProperties`, `patternProperties` and `unevaluatedProperties`.
+That field also stubs the extra keys of the data, for the parent and the selected option together (see [`retrieveSchema()`](#retrieveschema)), so the option is rendered without its own `additionalProperties`, `patternProperties` and `unevaluatedProperties`, and marked with `EXTRA_KEYS_ELSEWHERE_FLAG`, so its own field offers no extra key beside the parent's, even in a form that reads an absent `additionalProperties` as taking any key. The marker says nothing to a validator, and an option offering options of its own still takes the extra keys one of them names.
+An option that offers options of its own renders a field of its own beside them, which takes the extra keys in the parent's field's place, so that they render once: it keeps its own extra-key keywords, joined with the parent's as the parent's field would join them, so that a key is still judged by each of them apart, and is not marked. It also carries the names of the properties the parent and the fields above it declare, which its field leaves to them rather than rendering them as extra keys, and the parent's bounds on the object's keys, which its add button now answers to: the stricter `maxProperties` of the two, and both `propertyNames`. Its uiSchema takes the parent's say over the extra keys likewise, see [`getRenderedOptionUiSchema()`](#getrenderedoptionuischema). A `ui:field` the option's uiSchema names renders it all the same, handed the extra keys in its `schema` and `formData`, so the field renders them where it renders the option's schema.
 Every other parent renders nothing of its own and leaves the whole field to the option, so the option takes each of the parent's keywords that describes the value, such as an array's `items` and `uniqueItems` or a string's `format`.
 It leaves the parent's `anyOf`, `oneOf`, `discriminator`, `title`, `description`, `deprecated`, `default`, the identifiers `$id`, `$anchor`, `$dynamicAnchor`, `$schema` and `$vocabulary`, `$comment`, `$defs` and `definitions` on the parent, along with any Symbol-keyed marker.
 The two are met keyword by keyword, so an option's `items` adds to the parent's rather than replacing them.
@@ -1509,6 +1529,24 @@ An option naming no `type` takes the parent's, every type of a type list include
 #### Returns
 
 - S: The option as it is rendered, or `option` itself when the parent has nothing to pass on
+
+### getRenderedOptionUiSchema&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getrenderedoptionuischema}
+
+Returns the uiSchema an `anyOf`/`oneOf` option of `parent` is rendered with, given the one [`getOptionUiSchema()`](#getoptionuischemat--unknown-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--formcontexttype) picked for it.
+An option that offers options of its own takes the extra keys of an object parent's field in that field's place (see [`getRenderedOptionSchema()`](#getrenderedoptionschemas-extends-strictrjsfschema--rjsfschema)), so where it has a uiSchema of its own, under `uiSchema.anyOf`/`uiSchema.oneOf`, it takes the parent's say over those keys too: the parent's `expandable` option and its `additionalProperties` entry, beneath the option's own.
+`MultiSchemaField`, the defaults `getDefaultFormState()` computes and `getUiRequiredErrorSchema()` all read the option's uiSchema through it, so a key rendered with the parent's `additionalProperties` entry is seeded and required by that entry as well.
+Any other option's uiSchema is returned as it is.
+
+#### Parameters
+
+- parent: S - The schema holding the `anyOf`/`oneOf`
+- option: S - The option, with its own `$ref` resolved
+- uiSchema: UiSchema&lt;T, S, F> | undefined - The parent's uiSchema
+- optionUiSchema: UiSchema&lt;T, S, F> | undefined - The uiSchema `getOptionUiSchema()` picked for the option
+
+#### Returns
+
+- UiSchema&lt;T, S, F> | undefined: `optionUiSchema`, with the parent's say over the extra keys beneath it where the option takes them
 
 ### getSchemaOwnTypes()
 
@@ -1584,7 +1622,7 @@ Mixed types can't share a typed field (`NumberField` would cast a string option 
 
 Derives the plan of the selector an `anyOf`/`oneOf` field renders to pick its option from the field's own plan.
 The selector draws the parts the field's plan has the field draw itself, as a theme whose template draws no label declares, and the parts drawn elsewhere are `'above'` it. It is derived from the plan of the field rendering the options, which `SchemaField` hands none of the parts a component rendered beside the options draws itself, such as a custom field's label or an object's heading.
-It is named through `aria-labelledby` by a label a `FieldTemplate` draws, since that label's `for` names the field's own control rather than the selector, or by the `aria-label` the field's control takes where `ui:label: false` hides its label, described by the field's parts that render, marked `aria-invalid` while the field shows errors, and never `required`, since it always holds an option.
+It is named through `aria-labelledby` by a label a `FieldTemplate` draws, since that label's `for` names the field's own control rather than the selector, or by the `aria-label` the field's control takes where `ui:label: false` hides its label, described by the field's parts that render, marked `aria-invalid` while the field shows errors, and never `required`, since it picks an option index rather than form data and holds one unless its widget offers an empty choice, which clears the field's data with it.
 `MultiSchemaField` passes it to the selector as `presentation`.
 
 #### Parameters
@@ -1682,12 +1720,13 @@ This will allow you to use `TEST_IDS.examplePropertyName` within your tests, whi
 
 - TestIdShape: An object that auto-generates test ids upon request the first time and then returns the same value on subsequent calls
 
-### getUiOptions&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+### getUiOptions&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getuioptions}
 
 Get all passed options from ui:options, and ui:&lt;optionName>, returning them in an object with the `ui:` stripped off.
 Any `globalOptions` will always be returned, unless they are overridden by options in the `uiSchema`.
 A global `required` is left out: `ui:required` is a field's own, since validation reads it from the field's own uiSchema alone, so a form-wide one would mark fields required that validation doesn't require.
 `ui:definitions` and `ui:globalOptions` aren't options either.
+Pass the registry's `globalUiOptions`, which hold only the options RJSF reads there and the extension keys the theme and the `Form` declare, as [`pickGlobalUiOptions()`](#pickglobaluioptions) leaves them. A root uiSchema's `ui:globalOptions` read some other way goes through `pickGlobalUiOptions()` with those keys first, or it keeps only RJSF's own.
 
 #### Parameters
 
@@ -2088,7 +2127,6 @@ otherwise leaves the `anyOf`/`oneOf` to decide. Unlike `isSelect()`, `schema` is
 ### isCustomWidget&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Checks to see if the `uiSchema` names a `widget` and that the widget is not `hidden`.
-A `widget` set to `undefined` names none: it is how a `uiSchema` shadows a `widget` in `ui:globalOptions`
 
 #### Parameters
 
@@ -2503,7 +2541,7 @@ Strips a trailing timezone offset (`Z` or `+HH:MM`/`-HH:MM`) from a `time` strin
 Returns the `uiSchema` to hand a field's children with the class names and style the field's own `FieldTemplate` has already consumed removed from it, in all four spellings: `ui:classNames`, a bare `classNames`, `ui:style` and the `ui:options.classNames`/`ui:options.style` equivalents.
 A child reading these off the `uiSchema` it receives would apply the same classes and style a second time, inside the wrapper already carrying them ([#439](https://github.com/rjsf-team/react-jsonschema-form/issues/439)).
 The original object is returned whenever there is nothing to strip, so a field memoizing the result keeps the identity it had for the forms — the overwhelming majority — that declare no styling on the field at all.
-`SchemaField` and `LayoutMultiSchemaField` both call this for the `uiSchema` they pass down; a custom field that renders its own `FieldTemplate` and reads `ui:classNames`/`ui:style` off its `uiSchema` should do the same.
+`SchemaField` calls this for the `uiSchema` it passes down; a custom field that renders its own `FieldTemplate` and reads `ui:classNames`/`ui:style` off its `uiSchema` should do the same.
 
 #### Parameters
 
@@ -2599,6 +2637,23 @@ Parses the `dateString` into a `DateObject`, including the time information when
 #### Throws
 
 - Error when the date cannot be parsed from the string
+
+### pickGlobalUiOptions() {#pickglobaluioptions}
+
+Picks the options a form reads from its root uiSchema's `ui:globalOptions`: the ones RJSF reads, which `GLOBAL_UI_OPTIONS_KEYS` lists, and the extension keys the form's theme and the `Form` itself declare.
+Every other key is left out, so a global option RJSF reads only per field, such as `widget` or `placeholder`, reaches no field.
+Such an option is warned about once, since a form that set one, such as a global `readonly`, would otherwise change with no sign of why.
+An extension key that is one of those per-field names, which `RESERVED_UI_OPTION_NAMES` lists, is left out too, with a warning: every field would otherwise read it as its own option.
+`Form` builds its registry's `globalUiOptions` with it.
+
+#### Parameters
+
+- [globalOptions]: GlobalUISchemaOptions | undefined - The root uiSchema's `ui:globalOptions`
+- [extensionKeys=[]]: readonly string[] - The extension keys the form's theme and the `Form` declare
+
+#### Returns
+
+- GlobalUISchemaOptions | undefined: The options picked, or undefined when `globalOptions` is not an object
 
 ### propertyToPath()
 
@@ -2884,7 +2939,7 @@ This is the lookup half of `getOptionUiSchema()`, split out for a caller that ha
 Sets `value` at `path` of `obj`, mutating and returning `obj`.
 A bare string `path` is a single literal key, not a dotted path; use [toPath()](#topath) to split a dotted path string into segments first.
 Missing intermediate containers are created: arrays when the next segment is a valid array index, plain objects otherwise, or always plain objects when `createIntermediateObjects` is true.
-A path containing a `__proto__` segment is refused and `obj` is returned unmodified, preventing prototype pollution. `constructor` and `prototype` are legal JSON Schema property names and are written normally: intermediate containers are read as own properties only, so `['constructor', 'prototype', 'x']` shadows `constructor` with a fresh object instead of reaching `Object.prototype`.
+Every key of a plain object is written as an own property, a `__proto__` segment in any position included, which is defined through [setOwn()](#setown) rather than assigned, so no write reaches the prototype setter. `constructor` and `prototype` are legal JSON Schema property names and are written normally: intermediate containers are read as own properties only, so `['constructor', 'prototype', 'x']` shadows `constructor` with a fresh object instead of reaching `Object.prototype`.
 
 #### Parameters
 
@@ -2904,6 +2959,24 @@ setByPath({}, ['a', 'b'], 1); // { a: { b: 1 } }
 setByPath({}, ['a', 0], 1); // { a: [1] }, a numeric next segment creates an array
 setByPath({}, ['a', 0], 1, true); // { a: { 0: 1 } }, createIntermediateObjects forces an object
 setByPath({}, 'a.b', 1); // { 'a.b': 1 }, a bare string is one literal key
+```
+
+### setOwn()
+
+Writes `value` at `key` of a plain object `obj` as an own, enumerable data property, mutating `obj`.
+A plain assignment to a `__proto__` key, which JSON-sourced data can hold, would reach the prototype setter and re-point `obj`'s prototype instead of adding the key, so that key is written through `Object.defineProperty`; every other key is assigned, so on an object whose prototype has a setter for the key, or that already holds the key as a non-enumerable property, it runs that setter or keeps those attributes.
+
+#### Parameters
+
+- obj: GenericObjectType - The object to write to
+- key: string | number - The key to write, a path segment's array index included
+- value: unknown - The value to store at `key`
+
+#### Example
+
+```typescript
+const data = {};
+setOwn(data, '__proto__', { x: 1 }); // data has an own __proto__ key, and its prototype is still Object.prototype
 ```
 
 ### shouldRenderOptionalField&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
@@ -3388,7 +3461,7 @@ A `$ref` that a subschema of `rootSchema` holds below an `$id` of its own, the s
 
 ## Validator-based utility functions
 
-Every function in this group takes a [`SchemaContext`](#types) as its first parameter, holding the `validator` along with the `customMergeAllOf` and `defaultFormStateBehavior` settings of the form.
+Every function in this group takes a [`SchemaContext`](#types) as its first parameter, holding the `validator` along with the `customMergeAllOf`, `defaultFormStateBehavior` and `additionalPropertiesWhenAbsent` settings of the form.
 The function passes that `SchemaContext` along whole to every other schema function it calls, so those settings reach every schema it resolves.
 
 ```ts
@@ -3449,6 +3522,7 @@ Returns the superset of `formData` that includes the given set updated to includ
   - [initialDefaultsGenerated]: boolean - Optional flag, indicates whether or not initial defaults have been generated
   - [uiSchema]: UiSchema&lt;T, S, F> - Optional uiSchema, used to apply `ui:emptyValue` and `ui:initialValue` as defaults
   - [uiSchemaDefinitions]: UiSchemaDefinitions&lt;S, F> - Optional `ui:definitions`, defaulting to `uiSchema['ui:definitions']`; pass it explicitly when `uiSchema` is a sub-uiSchema that doesn't carry the root's own `ui:definitions`
+  - [fieldState]: FormFieldState&lt;S> - The option each field shows, by its path from `schema`, so a field offering `anyOf`/`oneOf` options that holds data computes its defaults from its shown option. Without it, or for a field holding no data yet, the option the data, or the field's `default`, matches best
 
 #### Returns
 
@@ -3494,7 +3568,7 @@ An `object` or `array` schema whose `anyOf`/`oneOf` is a list of constants rende
 - schema: S - The schema for which the display label flag is desired
 - [uiSchema={}]: UiSchema&lt;T, S, F> - The UI schema from which to derive potentially displayable information
 - [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
-- [globalOptions]: GlobalUISchemaOptions | undefined - The optional Global UI Schema from which to get any fallback `xxx` options
+- [globalOptions]: GlobalUISchemaOptions | undefined - The optional Global UI Schema from which to get any fallback `xxx` options, as `pickGlobalUiOptions()` leaves them
 
 #### Returns
 
@@ -3619,6 +3693,7 @@ A key the option declares is left to the option, which renders it.
 The field takes the option's extra-key keywords beside its own: `additionalProperties` and `unevaluatedProperties` become the `allOf` of the two, one side's where the other declares none or allows any key, and `false` where either is, and the option's `patternProperties` join the field's, a pattern both declare becoming the `allOf` of its two subschemas.
 Every other key is stubbed as the field's keywords and the option's describe it, each side read on its own and the two `allOf`ed, so a key either side forbids is stubbed as `{ type: 'null' }` whatever the other allows.
 The options of an object field are handed out without stubs; a field of any other type renders no field of its own beside the option, so it leaves the option to stub its own extra keys.
+A selected option that offers options of its own renders a field of its own beside them, which takes the extra keys of the field, the option and the option it selects in turn (see [`getRenderedOptionSchema()`](#getrenderedoptionschemas-extends-strictrjsfschema--rjsfschema)), so the field stubs none and is handed out without its `additionalProperties`, `patternProperties` and `unevaluatedProperties`, marked with `EXTRA_KEYS_ELSEWHERE_FLAG`.
 Without a `selectedOption`, the extra keys are stubbed for the field alone, a key an option declares included.
 
 #### Parameters
@@ -3644,6 +3719,8 @@ Any keyword that asserts nothing, such as an annotation, an identifier, `$defs`,
 Takes a schema and formData and returns a copy of the formData with any fields not defined in the schema removed.
 This is useful for ensuring that only data that is relevant to the schema is preserved.
 Objects with `additionalProperties` keyword set to `true` will not have their extra fields removed.
+An object's shown `anyOf`/`oneOf` option is read as its field renders it, retrieved for the data with its `allOf`, `if`/`then` and `dependencies` merged in, and the object's extra keys are judged once, as the one field taking them renders them: by the object's and the option's extra-key keywords joined, or, where the option offers options of its own, by that option's field, which takes them in the object's place.
+So a key the shown option forbids is removed whatever the object's own keyword allows, and a property the option declares is kept beside an object's `additionalProperties: false`.
 
 Known limitation: a property declared both beside a `$ref` and in the definition it names, or an option an `allOf` merge rebuilds, is a schema no `$id` resource holds, so a `$ref` inside it that a resource of its own wrote is resolved against the root.
 Filtering through it throws `Could not find a definition for …`, or reads the root's definition of the same name.
@@ -3736,7 +3813,7 @@ A value outside the new `enum` or constant options is replaced with the new `def
 ### createSchemaUtils&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Creates a `SchemaUtilsType` interface that is based around the given `context` and `rootSchema` parameters.
-The resulting interface implementation will forward the `context` and `rootSchema` to all the wrapped APIs.
+The resulting interface implementation will forward the `context` and `rootSchema` to all the wrapped APIs, [`allowsAdditionalProperties()`](#allowsadditionalpropertiess-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--formcontexttype) and [`canExpand()`](#canexpandt--unknown-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--formcontexttype) among them, which it offers as `allowsAdditionalProperties(schema)` and `canExpand(schema, uiSchema, formData)`.
 The `rootSchema` is parsed once per object and treated as immutable: a change made to it in place is not seen, even by a new `createSchemaUtils()`, so pass a new object to change it.
 
 #### Parameters

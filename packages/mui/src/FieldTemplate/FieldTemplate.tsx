@@ -63,7 +63,7 @@ export default function FieldTemplate<
     registry,
   } = props;
   const displayLabel = templateDrawsLabel<T, S, F>(props);
-  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const uiOptions = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);
   const hasError = hasTemplateErrors<T, S, F>(props);
   const { WrapIfAdditionalTemplate } = getTemplates<T, S, F>(registry, uiOptions);
 

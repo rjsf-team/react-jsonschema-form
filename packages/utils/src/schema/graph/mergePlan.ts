@@ -349,11 +349,12 @@ function isPolicy<S extends StrictRJSFSchema>(value: unknown): value is PlanPoli
 
 /** Returns the policy `create` makes for `key`, made once per validator and graph: a plan is memoized under its policy
  * object, so a view asking for the same policy again must be handed the same object. A policy reads nothing of the
- * context but its validator, which is what lets views called with a new context object each time share one.
+ * context but its validator and what the key names, which is what lets views called with a new context object each
+ * time share one.
  *
  * @param validator - The validator the policy's option choice validates with
  * @param graph - The graph the policy plans in, whose node ids a key may name
- * @param key - Names the policy among the validator's
+ * @param key - Names the policy among the validator's, and the rest of the context it reads
  * @param create - Makes the policy the first time it is asked for
  * @returns - The policy
  */

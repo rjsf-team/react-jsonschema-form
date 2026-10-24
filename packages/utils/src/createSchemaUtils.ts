@@ -1,3 +1,5 @@
+import { allowsAdditionalProperties, readsAbsentAsAllowed } from './additionalPropertiesUtils.ts';
+import canExpand from './canExpand.ts';
 import deepEquals from './deepEquals.ts';
 import logOnce from './logOnce.ts';
 import replaceEqualDeep from './replaceEqualDeep.ts';
@@ -112,8 +114,32 @@ class SchemaUtils<
       this.context.validator !== context.validator ||
       !deepEquals(this.rootSchema, rootSchema) ||
       !deepEquals(this.context.defaultFormStateBehavior ?? {}, context.defaultFormStateBehavior ?? {}) ||
-      this.context.customMergeAllOf !== context.customMergeAllOf
+      this.context.customMergeAllOf !== context.customMergeAllOf ||
+      readsAbsentAsAllowed<S, F>(this.context) !== readsAbsentAsAllowed<S, F>(context)
     );
+  }
+
+  /** Returns whether the object `schema` takes keys its own `properties` don't name, an absent `additionalProperties`
+   * read as the `context`'s `additionalPropertiesWhenAbsent` says
+   *
+   * @param schema - The object schema to check
+   * @returns - True when the object takes keys beyond the ones its `properties` name
+   */
+  allowsAdditionalProperties(schema: S): boolean {
+    return allowsAdditionalProperties<S, F>(this.context, schema);
+  }
+
+  /** Checks whether the field described by `schema`, having the `uiSchema` and `formData`, supports expanding, an
+   * absent `additionalProperties` read as the `context`'s `additionalPropertiesWhenAbsent` says
+   *
+   * @param schema - The schema for the field that is being checked
+   * @param [uiSchema] - The uiSchema for the field
+   * @param [formData] - The formData for the field
+   * @returns - True if the schema element has additionalProperties, is expandable, is not at the maxProperties limit
+   *          and has an allowed property name left to take
+   */
+  canExpand(schema: S, uiSchema?: UiSchema<T, S, F>, formData?: T): boolean {
+    return canExpand<T, S, F>(this.context, schema, uiSchema, formData);
   }
 
   /** Finds the field specified by the `path` within the root or recursed `schema`. If there is no field for the specified
@@ -158,6 +184,9 @@ class SchemaUtils<
    *          `SchemaField` applies them. Defaults to `uiSchema['ui:definitions']`; pass it explicitly when `uiSchema`
    *          is itself a sub-uiSchema (an array item, a `oneOf`/`anyOf` option, `additionalProperties`, ...) that
    *          doesn't carry the root's own `ui:definitions`.
+   * @param [fieldState] - The option each field shows, by its path from `schema`, so a field offering `anyOf`/`oneOf`
+   *        options that holds data computes its defaults from its shown option. Without it, or for a field holding no
+   *        data yet, the option the data, or the field's `default`, matches best
    * @returns - The resulting `formData` with all the defaults provided
    */
   getDefaultFormState(
@@ -167,6 +196,7 @@ class SchemaUtils<
     initialDefaultsGenerated?: boolean,
     uiSchema?: UiSchema<T, S, F>,
     uiSchemaDefinitions?: UiSchemaDefinitions<S, F>,
+    fieldState?: FormFieldState<S>,
   ): T | T[] | null | undefined {
     return getDefaultFormState<T, S, F>(this.context, {
       schema,
@@ -176,6 +206,7 @@ class SchemaUtils<
       initialDefaultsGenerated,
       uiSchema,
       uiSchemaDefinitions,
+      fieldState,
     });
   }
 
@@ -184,7 +215,7 @@ class SchemaUtils<
    *
    * @param schema - The schema for which the display label flag is desired
    * @param [uiSchema] - The UI schema from which to derive potentially displayable information
-   * @param [globalOptions={}] - The optional Global UI Schema from which to get any fallback `xxx` options
+   * @param [globalOptions={}] - The optional Global UI Schema from which to get any fallback `xxx` options, as `pickGlobalUiOptions()` leaves them
    * @returns - True if the label should be displayed or false if it should not
    */
   getDisplayLabel(schema: S, uiSchema?: UiSchema<T, S, F>, globalOptions?: GlobalUISchemaOptions) {

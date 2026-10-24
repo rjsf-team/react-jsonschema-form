@@ -116,7 +116,6 @@ function BooleanField<
     // because nothing labels them, which these names were meant to do. A single option keeps its checkbox however it is
     // labelled, so naming it could never show
     if (showsOptions || (!widget && altSchemas.length > 1)) {
-      // Read without `globalUiOptions`, as `optionsList()` reads them
       const { enumNames, enumOrder } = getUiOptions<T, S, F>(uiSchema);
       // No order shows on a checkbox, and an order that would leave the options as they are has nothing to ignore
       const uiOptionsIgnored =

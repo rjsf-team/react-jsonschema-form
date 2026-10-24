@@ -18,7 +18,7 @@ function MuiIconButtonFn<
 >(props: IconButtonProps<T, S, F>) {
   const { icon, color, uiSchema, registry, ...otherProps } = props;
 
-  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const uiOptions = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);
   const muiProps = getMuiProps<T, S, F, MuiIconButtonProps>(uiOptions, [
     'color',
     'disableFocusRipple',

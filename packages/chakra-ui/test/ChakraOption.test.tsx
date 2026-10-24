@@ -2,12 +2,14 @@ import type { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render } from '@testing-library/react';
 
+import type { ChakraGlobalUISchemaOptions } from '../src/index.ts';
 import Form from './WrappedForm.tsx';
 
 const checkboxesSchema: RJSFSchema = { type: 'array', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true };
 const checkboxes = { 'ui:widget': 'checkboxes' };
 // The widget's own fieldset, the one inside the `FieldTemplate`'s
 const widgetFieldset = 'fieldset fieldset';
+const globalChakra: ChakraGlobalUISchemaOptions = { chakra: { mb: 8 } };
 
 const cases: [name: string, schema: RJSFSchema, uiSchema: UiSchema, root: string][] = [
   [
@@ -25,7 +27,7 @@ const cases: [name: string, schema: RJSFSchema, uiSchema: UiSchema, root: string
   [
     'a FieldsetRoot widget through ui:globalOptions',
     checkboxesSchema,
-    { ...checkboxes, 'ui:globalOptions': { chakra: { mb: 8 } } },
+    { ...checkboxes, 'ui:globalOptions': globalChakra },
     widgetFieldset,
   ],
   [

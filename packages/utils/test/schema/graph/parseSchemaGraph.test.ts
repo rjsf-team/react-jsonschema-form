@@ -7,6 +7,7 @@ import {
 import type { GenericObjectType, RJSFSchema } from '../../../src/index.ts';
 import parseSchemaGraph, { EXTERNAL_POINTER } from '../../../src/schema/graph/parseSchemaGraph.ts';
 import type { NodeId, ObjectNode, SchemaGraph, SchemaNode } from '../../../src/schema/graph/parseSchemaGraph.ts';
+import { DECLARED_ABOVE_KEY, JOINED_SCHEMAS_KEY } from '../../../src/schemaMarkers.ts';
 import looseSchema from './looseSchema.ts';
 
 function objectNode(graph: SchemaGraph, id: NodeId | undefined): ObjectNode {
@@ -662,6 +663,11 @@ describe('parseSchemaGraph()', () => {
       ['a marker and none', () => ({ type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true }), () => ({ type: 'string' })],
       ['two markers', () => ({ [GUESSED_TYPE_FLAG]: true }), () => ({ [ADDITIONAL_PROPERTY_FLAG]: true })],
       ['a marker and a key named by its place', () => ({ [ADDITIONAL_PROPERTY_FLAG]: true }), () => ({ 0: true })],
+      [
+        'the names declared above and the schemas joined',
+        () => ({ [DECLARED_ABOVE_KEY]: ['a'] }),
+        () => ({ [JOINED_SCHEMAS_KEY]: { own: {}, option: {} } }),
+      ],
       ['a number and the string of it', () => ({ const: 1 }), () => ({ const: '1' })],
       ['true and the string of it', () => ({ const: true }), () => ({ const: 'true' })],
       ['zero and negative zero', () => ({ const: 0 }), () => ({ const: -0 })],

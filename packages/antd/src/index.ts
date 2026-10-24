@@ -2,6 +2,7 @@ import type { ThemedForm, ThemeProps } from '@rjsf/core';
 import { withTheme } from '@rjsf/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, ThemePresentation } from '@rjsf/utils';
 
+import { ANTD_GLOBAL_UI_OPTIONS_KEYS } from './globalUiOptions.ts';
 import Templates, { createTemplates, generateTemplates } from './templates/index.ts';
 import Widgets, { createWidgets, generateWidgets } from './widgets/index.ts';
 
@@ -20,7 +21,12 @@ function createPresentation(): ThemePresentation {
 }
 
 function createTheme() {
-  return { templates: createTemplates(), widgets: createWidgets(), presentation: createPresentation() };
+  return {
+    templates: createTemplates(),
+    widgets: createWidgets(),
+    presentation: createPresentation(),
+    globalUiOptionsKeys: [...ANTD_GLOBAL_UI_OPTIONS_KEYS],
+  };
 }
 
 export function generateTheme<
@@ -43,5 +49,10 @@ const Theme = createTheme();
 const Form = generateForm();
 
 export { Form, Templates, Theme, Widgets, generateTemplates, generateWidgets };
+export type {
+  AntdGlobalUiOptionsKeys,
+  AntdGlobalUISchemaOptions,
+  AntdUiSchema as UiSchema,
+} from './globalUiOptions.ts';
 
 export default Form;

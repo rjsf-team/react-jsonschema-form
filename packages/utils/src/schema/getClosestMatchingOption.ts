@@ -15,7 +15,7 @@ import type { MergePlan, Seed, Seeding } from './graph/mergePlan.ts';
 import parseSchemaGraph from './graph/parseSchemaGraph.ts';
 import type { NodeId, SchemaGraph } from './graph/parseSchemaGraph.ts';
 import { readProvenance } from './graph/provenance.ts';
-import { fieldOf, optionNode } from './retrieveSchema.ts';
+import { fieldOf, optionMatchKey, optionNode } from './retrieveSchema.ts';
 
 /** Where a schema scoring reads is declared: the graph and the seeds of the field it is the schema of */
 interface Where<S extends StrictRJSFSchema> {
@@ -449,6 +449,8 @@ function bestOption<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   const keys = [
     context.validator,
     context.customMergeAllOf,
+    // Decides whether an option whose `properties` name nothing matches the extra keys of the data
+    optionMatchKey(context),
     rootSchema,
     relax,
     discriminatorField,

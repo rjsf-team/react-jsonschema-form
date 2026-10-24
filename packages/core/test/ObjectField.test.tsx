@@ -1091,6 +1091,38 @@ describe('ObjectField', () => {
       expect(screen.getByRole('combobox', { name: 'end, year' })).toBeInTheDocument();
     });
 
+    // A `JSON.parse()`d `__proto__` key is a property like any other, which a rename must neither drop nor turn into
+    // the renamed object's prototype
+    it('should keep a sibling named __proto__ as that property when a key is renamed', async () => {
+      const { node, onChange } = createFormComponent({
+        schema,
+        initialFormData: JSON.parse('{"__proto__": "kept", "first": "renamed"}'),
+      });
+
+      const textNode = node.querySelector('#root_first-key')!;
+      await user.clear(textNode);
+      await user.type(textNode, 'newFirst');
+      await user.tab();
+
+      const { formData } = onChange.mock.lastCall![0];
+      expect(Object.getPrototypeOf(formData)).toBe(Object.prototype);
+      expect(Object.getOwnPropertyDescriptor(formData, '__proto__')?.value).toBe('kept');
+      expect(formData.newFirst).toBe('renamed');
+    });
+
+    it('should keep the value of a key renamed to __proto__ under that property', async () => {
+      const { node, onChange } = createFormComponent({ schema, initialFormData: { first: 'kept' } });
+
+      const textNode = node.querySelector('#root_first-key')!;
+      await user.clear(textNode);
+      await user.type(textNode, '__proto__');
+      await user.tab();
+
+      const { formData } = onChange.mock.lastCall![0];
+      expect(Object.getPrototypeOf(formData)).toBe(Object.prototype);
+      expect(Object.getOwnPropertyDescriptor(formData, '__proto__')?.value).toBe('kept');
+    });
+
     it('should retain and display user-input data if key-value pair has a title present in the schema when renaming key', async () => {
       const { node, onChange } = createFormComponent({
         schema: {
@@ -3410,6 +3442,345 @@ describe('ObjectField', () => {
 
       expectToHaveBeenCalledWithFormData(onChange, { Example: { name: undefined } }, 'root_Example_name');
       expect(node.querySelector('#root_Example-key')).toHaveValue('Example');
+    });
+  });
+
+  describe('additionalPropertiesWhenAbsent', () => {
+    const addButtonOf = (node: Element) => node.querySelector('.rjsf-object-property-expand button');
+
+    it('offers no add button for an object naming no additionalProperties by default (#2137)', () => {
+      const { node } = createFormComponent({ schema: { type: 'object' } });
+
+      expect(addButtonOf(node)).toBeNull();
+    });
+
+    it("adds a property to an object naming no additionalProperties under 'allow' (#2137)", async () => {
+      const { node, onChange } = createFormComponent({
+        schema: { type: 'object' },
+        additionalPropertiesWhenAbsent: 'allow',
+      });
+
+      await user.click(elementOf(node, '.rjsf-object-property-expand button'));
+
+      expectToHaveBeenCalledWithFormData(onChange, { newKey: 'New Value' }, 'root');
+      expect(node.querySelector('#root_newKey-key')).toHaveValue('newKey');
+    });
+
+    it("renders the extra keys of the data with key inputs under 'allow', and none under 'forbid'", () => {
+      const schema: RJSFSchema = { type: 'object', properties: { a: { type: 'string' } } };
+      const initialFormData = { a: 'x', extra: 'y' };
+      const forbidding = createFormComponent({ schema, initialFormData, additionalPropertiesWhenAbsent: 'forbid' });
+      expect(forbidding.node.querySelector('#root_extra')).toBeNull();
+      forbidding.unmount();
+
+      const { node } = createFormComponent({ schema, initialFormData, additionalPropertiesWhenAbsent: 'allow' });
+
+      expect(node.querySelector('#root_extra-key')).toHaveValue('extra');
+      expect(node.querySelector('#root_extra')).toHaveValue('y');
+    });
+
+    it("keeps a property added under 'allow' through a live omit", async () => {
+      const { node, onChange } = createFormComponent({
+        schema: { type: 'object', properties: { a: { type: 'string' } } },
+        additionalPropertiesWhenAbsent: 'allow',
+        omitExtraData: true,
+        liveOmit: 'onChange',
+      });
+
+      await user.click(elementOf(node, '.rjsf-object-property-expand button'));
+      await user.clear(elementOf(node, '#root_newKey'));
+      await user.type(elementOf(node, '#root_newKey'), 'v');
+
+      expectToHaveBeenCalledWithFormData(onChange, { newKey: 'v' }, 'root_newKey');
+    });
+
+    it.each([
+      ['names nothing, by default', {}, 'forbid'],
+      ["names nothing, under 'allow'", {}, 'allow'],
+      ['names additionalProperties: true', { additionalProperties: true }, 'forbid'],
+    ] as const)(
+      'renders the extra keys of an option offering options in turn once, in its own field, where the object %s',
+      async (_, parentKeywords, additionalPropertiesWhenAbsent) => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          ...parentKeywords,
+          oneOf: [
+            {
+              title: 'A',
+              oneOf: [{ title: 'A1', properties: { x: { type: 'string' } }, additionalProperties: { type: 'string' } }],
+            },
+          ],
+        };
+        const { node, onChange } = createFormComponent({
+          schema,
+          initialFormData: { x: 'a', extra: 'e' },
+          additionalPropertiesWhenAbsent,
+        });
+
+        // The object, A and A1 each render a field at the root's path; A's takes the extra keys of all three, and knows
+        // A1 declares `x`, where the object's read `x` and `extra` as its own beside A's
+        expect(node.querySelectorAll('.rjsf-object-property-expand button')).toHaveLength(1);
+        expect(node.querySelectorAll('#root_x')).toHaveLength(1);
+        expect(node.querySelectorAll('#root_extra-key')).toHaveLength(1);
+        await user.click(elementOf(node, '.rjsf-object-property-expand button'));
+
+        expectToHaveBeenCalledWithFormData(onChange, { x: 'a', extra: 'e', newKey: 'New Value' }, 'root');
+      },
+    );
+
+    it.each(['forbid', 'allow'] as const)(
+      'renders the extra keys of an option naming its own type and offering options in turn once, where the object names nothing (%s)',
+      (additionalPropertiesWhenAbsent) => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { p: { type: 'string' } },
+          oneOf: [
+            {
+              title: 'A',
+              type: 'object',
+              oneOf: [{ title: 'A1', properties: { x: { type: 'string' } }, additionalProperties: { type: 'string' } }],
+            },
+          ],
+        };
+        const { node } = createFormComponent({
+          schema,
+          initialFormData: { p: '1', x: 'a', extra: 'e' },
+          additionalPropertiesWhenAbsent,
+        });
+
+        // The object names no extra-key keyword, and A's field takes the extra keys all the same, leaving `p` to the
+        // object's
+        for (const id of ['root_p', 'root_x', 'root_extra-key']) {
+          expect(node.querySelectorAll(`#${id}`)).toHaveLength(1);
+        }
+        expect(node.querySelector('#root_p-key')).toBeNull();
+        expect(node.querySelectorAll('.rjsf-object-property-expand button')).toHaveLength(1);
+      },
+    );
+
+    it('renders a property the object declares once, beside an option naming no type that offers options in turn, where the object names nothing', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { p: { type: 'string' } },
+        oneOf: [
+          {
+            title: 'A',
+            oneOf: [{ title: 'A1', properties: { x: { type: 'string' } }, additionalProperties: { type: 'string' } }],
+          },
+        ],
+      };
+      const { node } = createFormComponent({ schema, initialFormData: { p: '1', x: 'a', extra: 'e' } });
+
+      // A takes the object's type, so its field renders beside A1's and takes A1's extra keys
+      for (const id of ['root_p', 'root_x', 'root_extra-key']) {
+        expect(node.querySelectorAll(`#${id}`)).toHaveLength(1);
+      }
+      expect(node.querySelector('#root_p-key')).toBeNull();
+      expect(node.querySelectorAll('.rjsf-object-property-expand button')).toHaveLength(1);
+    });
+
+    it('renders a property the object declares once, beside an option taking its extra keys in its place', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { p: { type: 'string' } },
+        additionalProperties: true,
+        oneOf: [{ title: 'A', oneOf: [{ title: 'A1', properties: { x: { type: 'string' } } }] }],
+      };
+      const { node } = createFormComponent({ schema, initialFormData: { p: '1', x: 'a', extra: 'e' } });
+
+      expect(node.querySelectorAll('#root_p')).toHaveLength(1);
+      expect(node.querySelector('#root_p-key')).toBeNull();
+      expect(node.querySelectorAll('#root_extra-key')).toHaveLength(1);
+    });
+
+    it('forbids an extra key an option forbids, though the object above it describes the key, where the option takes them', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        patternProperties: { '^p': { type: 'number' } },
+        oneOf: [
+          { title: 'A', additionalProperties: false, oneOf: [{ title: 'A1', properties: { x: { type: 'string' } } }] },
+        ],
+      };
+      const { node } = createFormComponent({ schema, initialFormData: { x: 'a', p1: 1 } });
+
+      // Judged by the object's keywords and the option's apart, as validation judges it: A rejects the key
+      expect(node.querySelector('input#root_p1')).toBeNull();
+      expect(node.querySelector('#root_p1-key')).toHaveValue('p1');
+    });
+
+    it('renders the extra keys once, in the innermost field, through options offering options two levels down', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { p: { type: 'string' } },
+        additionalProperties: true,
+        oneOf: [
+          {
+            title: 'A',
+            properties: { q: { type: 'string' } },
+            oneOf: [{ title: 'A1', oneOf: [{ title: 'A2', properties: { x: { type: 'string' } } }] }],
+          },
+        ],
+      };
+      const { node } = createFormComponent({ schema, initialFormData: { p: '1', q: '2', x: 'a', extra: 'e' } });
+
+      for (const id of ['root_p', 'root_q', 'root_x', 'root_extra-key']) {
+        expect(node.querySelectorAll(`#${id}`)).toHaveLength(1);
+      }
+      expect(node.querySelectorAll('.rjsf-object-property-expand button')).toHaveLength(1);
+    });
+
+    describe('lays out an object union that can neither add an extra key nor holds one as a pure union', () => {
+      const union = (keyword: RJSFSchema): RJSFSchema => ({
+        type: 'object',
+        title: 'Thing',
+        ...keyword,
+        oneOf: [
+          { title: 'A', properties: { a: { type: 'string' } } },
+          { title: 'B', properties: { b: { type: 'string' } } },
+        ],
+      });
+      const expandableOff = { 'ui:options': { expandable: false } };
+
+      it.each([
+        ["under 'allow', naming no keyword", union({}), 'allow'],
+        ["under 'forbid', beside an additionalProperties: true", union({ additionalProperties: true }), 'forbid'],
+      ] as const)('with its expandable off, %s', (_, schema, additionalPropertiesWhenAbsent) => {
+        const { node } = createFormComponent({
+          schema,
+          uiSchema: expandableOff,
+          additionalPropertiesWhenAbsent,
+          initialFormData: { a: 'x' },
+        });
+
+        expect(node.querySelector('#root_XxxOf')).not.toBeInTheDocument();
+        expect(screen.getAllByText('Thing')).toHaveLength(1);
+      });
+      it('renders its own field beside the option while the data holds an extra key', () => {
+        const { node } = createFormComponent({
+          schema: union({}),
+          uiSchema: expandableOff,
+          additionalPropertiesWhenAbsent: 'allow',
+          initialFormData: { a: 'x', extra: 'e' },
+        });
+
+        expect(node.querySelector('#root_XxxOf')).toBeInTheDocument();
+        expect(node.querySelector('#root_extra-key')).toBeInTheDocument();
+      });
+      it("drops its own field once the data reaches the object's maxProperties", async () => {
+        const { node } = createFormComponent({
+          schema: union({ maxProperties: 1 }),
+          additionalPropertiesWhenAbsent: 'allow',
+        });
+        expect(node.querySelector('#root_XxxOf')).toBeInTheDocument();
+
+        await user.type(node.querySelector('#root_a')!, 'x');
+
+        expect(node.querySelector('#root_XxxOf')).not.toBeInTheDocument();
+        expect(node.querySelector('#root_a')).toHaveFocus();
+      });
+    });
+
+    it("hands a named field given to an option offering options of its own the object's extra keys", () => {
+      const Named = vi.fn((_props: FieldProps) => null);
+      createFormComponent({
+        schema: {
+          type: 'object',
+          additionalProperties: { type: 'string' },
+          oneOf: [{ title: 'A', oneOf: [{ title: 'A1', properties: { x: { type: 'string' } } }] }],
+        },
+        uiSchema: { oneOf: [{ 'ui:field': Named }] },
+        initialFormData: { extra: 'e' },
+      });
+
+      expect(Named).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          schema: expect.objectContaining({
+            additionalProperties: { type: 'string' },
+            properties: { extra: expect.objectContaining({ type: 'string' }) },
+          }),
+          formData: { extra: 'e' },
+        }),
+        undefined,
+      );
+    });
+
+    describe("an option taking the extra keys in its object's place keeps the object's bounds on them", () => {
+      const nested = (bounds: RJSFSchema): RJSFSchema => ({
+        type: 'object',
+        additionalProperties: true,
+        ...bounds,
+        oneOf: [{ title: 'A', oneOf: [{ properties: { x: { type: 'string' } } }] }],
+      });
+
+      it('offers no add button once the maxProperties of the object is reached', () => {
+        const schema = nested({ maxProperties: 2 });
+        expect(addButtonOf(createFormComponent({ schema, initialFormData: { x: 'a' } }).node)).not.toBeNull();
+        expect(addButtonOf(createFormComponent({ schema, initialFormData: { x: 'a', p: '1' } }).node)).toBeNull();
+      });
+
+      it("adds a key under a name the object's propertyNames allows", async () => {
+        const { node, onChange } = createFormComponent({
+          schema: nested({ propertyNames: { enum: ['p', 'q'] } }),
+          initialFormData: { x: 'a', p: '1' },
+        });
+
+        await user.click(elementOf(node, '.rjsf-object-property-expand button'));
+
+        expect(Object.keys(onChange.mock.lastCall?.[0].formData)).toEqual(['x', 'p', 'q']);
+      });
+
+      it("reads the object's expandable and additionalProperties entry where the option has a uiSchema of its own", () => {
+        const schema = nested({});
+        const closed = createFormComponent({
+          schema,
+          initialFormData: { x: 'a' },
+          uiSchema: { 'ui:options': { expandable: false }, oneOf: [{}] },
+        });
+        expect(addButtonOf(closed.node)).toBeNull();
+
+        const { node } = createFormComponent({
+          schema,
+          initialFormData: { x: 'a', p: 'v' },
+          uiSchema: { additionalProperties: { 'ui:widget': 'textarea' }, oneOf: [{}] },
+        });
+        expect(elementOf(node, '#root_p').tagName).toBe('TEXTAREA');
+      });
+
+      it("requires an extra key the object's additionalProperties entry requires where the option has a uiSchema of its own", async () => {
+        const { node, onSubmit, onError } = createFormComponent({
+          // A key holding nothing renders a field only where the keyword describes it
+          schema: nested({ additionalProperties: { type: 'string' } }),
+          initialFormData: { x: 'a', p: undefined },
+          uiSchema: { additionalProperties: { 'ui:required': true }, oneOf: [{}] },
+          noHtml5Validate: true,
+        });
+
+        await submitForm(node, user);
+
+        expect(onSubmit).not.toHaveBeenCalled();
+        expect(onError.mock.lastCall?.[0]).toEqual([expect.objectContaining({ property: '.p' })]);
+      });
+    });
+
+    it("offers no add button for an object whose unevaluatedProperties forbids extra keys, even under 'allow'", () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { a: { type: 'string' } },
+        unevaluatedProperties: false,
+      };
+      const { node } = createFormComponent({ schema, additionalPropertiesWhenAbsent: 'allow' });
+
+      expect(addButtonOf(node)).toBeNull();
+    });
+
+    it('offers the add button once the setting changes to allow', () => {
+      const schema: RJSFSchema = { type: 'object' };
+      const { node, rerender } = createFormComponent({ schema });
+      expect(addButtonOf(node)).toBeNull();
+
+      rerender({ schema, additionalPropertiesWhenAbsent: 'allow' });
+
+      expect(addButtonOf(node)).not.toBeNull();
     });
   });
 

@@ -131,13 +131,32 @@ describe('setByPath()', () => {
     expect(obj.fn).toBe(inner);
     expect(inner.flag).toBe(true);
   });
-  it('refuses a __proto__ segment in any position to prevent prototype pollution', () => {
-    const target = {};
+  it('writes a __proto__ segment in any position as an own key without reaching the prototype chain', () => {
+    const target: Record<string, unknown> = {};
     expect(setByPath(target, ['__proto__', 'polluted'], 'x')).toBe(target);
     expect(({} as { polluted?: string }).polluted).toBeUndefined();
-    setByPath(target, '__proto__', { polluted2: 'x' });
+    expect(Object.getPrototypeOf(target)).toBe(Object.prototype);
+    expect(Object.getOwnPropertyDescriptor(target, '__proto__')?.value).toEqual({ polluted: 'x' });
+
+    const single: Record<string, unknown> = {};
+    setByPath(single, '__proto__', { polluted2: 'x' });
     expect(({} as { polluted2?: string }).polluted2).toBeUndefined();
-    expect(target).toEqual({});
+    expect(Object.getPrototypeOf(single)).toBe(Object.prototype);
+    expect(Object.getOwnPropertyDescriptor(single, '__proto__')?.value).toEqual({ polluted2: 'x' });
+
+    const nested: { a?: object } = {};
+    setByPath(nested, ['a', '__proto__', 'b'], 'x');
+    expect(Object.getPrototypeOf(nested.a)).toBe(Object.prototype);
+    expect(Object.getOwnPropertyDescriptor(nested.a, '__proto__')?.value).toEqual({ b: 'x' });
+    setByPath(nested, ['a', '__proto__'], 'leaf');
+    expect(Object.getPrototypeOf(nested.a)).toBe(Object.prototype);
+    expect(Object.getOwnPropertyDescriptor(nested.a, '__proto__')?.value).toBe('leaf');
+  });
+  it('writes into an own __proto__ container it already holds', () => {
+    const target = JSON.parse('{"__proto__": {"kept": 1}}') as Record<string, unknown>;
+    setByPath(target, ['__proto__', 'added'], 2);
+    expect(Object.getOwnPropertyDescriptor(target, '__proto__')?.value).toEqual({ kept: 1, added: 2 });
+    expect(Object.getPrototypeOf(target)).toBe(Object.prototype);
   });
   it('writes constructor and prototype as own properties without reaching the prototype chain', () => {
     const target: Record<string, unknown> = {};

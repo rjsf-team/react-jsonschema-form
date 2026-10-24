@@ -2,6 +2,7 @@ import DaisyUIForm from './DaisyUIForm.tsx';
 import { ThemeProvider, useTheme } from './theme/index.ts';
 
 export type { DaisyProps } from './types/DaisyProps.ts';
+export type { DaisyGlobalUiOptionsKeys, DaisyGlobalUISchemaOptions, DaisyUiSchema as UiSchema } from './utils.ts';
 export { default as Form, generateForm } from './DaisyUIForm.tsx';
 export { __createDaisyUIFrameProvider } from './DaisyUIFrameProvider.tsx';
 export { default as GridTemplate } from './templates/GridTemplate/GridTemplate.tsx';

@@ -203,6 +203,7 @@ export function loadedState(
       {
         validator: validators[knownValidator],
         defaultFormStateBehavior: liveSettings.defaultFormStateBehavior,
+        additionalPropertiesWhenAbsent: liveSettings.additionalPropertiesWhenAbsent,
       },
       schema,
     );

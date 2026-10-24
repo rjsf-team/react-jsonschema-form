@@ -9,7 +9,6 @@ import type {
 } from '@rjsf/utils';
 import {
   buttonId,
-  canExpand,
   descriptionId,
   getErrorsToDraw,
   getTemplates,
@@ -47,13 +46,14 @@ export default function ObjectFieldTemplate<
     formData,
     registry,
   } = props;
-  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const uiOptions = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);
   const { TitleFieldTemplate, DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   const showOptionalDataControlInTitle = titleDrawsOptionalDataControl<T, S, F>(props);
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
   } = registry.templates;
+  const { schemaUtils } = registry;
   const gridCols = (typeof uiOptions?.gridCols === 'number' && uiOptions?.gridCols) || undefined;
   const gridSpacing = uiOptions?.gridSpacing;
   const gridVerticalSpacing = uiOptions?.gridVerticalSpacing;
@@ -94,7 +94,7 @@ export default function ObjectFieldTemplate<
             <Box key={element.name}>{element.content}</Box>
           ))}
       </SimpleGrid>
-      {canExpand(schema, uiSchema, formData) && (
+      {schemaUtils.canExpand(schema, uiSchema, formData) && (
         <Group mt='xs' justify='flex-end'>
           <AddButton
             id={buttonId(id, 'add')}

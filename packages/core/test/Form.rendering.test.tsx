@@ -32,7 +32,6 @@ setupConsoleErrorSuppression();
 const FALLBACK_FIELD_ROUTES: [string, UiSchema, RJSFSchema][] = [
   ['a $id', {}, { $id: 'FallbackField' }],
   ['a ui:field', { val: { 'ui:field': 'FallbackField' } }, {}],
-  ['a ui:globalOptions field', { 'ui:globalOptions': { field: 'FallbackField' } }, {}],
 ];
 
 describeRepeated('Form common: rendering', (createFormComponent) => {
@@ -776,6 +775,20 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       },
     );
 
+    it("labels the type selector where the field's own ui:label beats a ui:globalOptions one", () => {
+      const { node } = createFormComponent({
+        schema: multiTypeSchema,
+        uiSchema: { 'ui:globalOptions': { label: false }, multi: { 'ui:label': true } },
+        useFallbackUiForUnsupportedType: true,
+        initialFormData: { multi: 'a string' },
+      });
+
+      expect(node.querySelector('#root_multi___internal_type_selector')).toBeInTheDocument();
+      // The selector's label follows the field's, which its own `ui:label` shows past the global one
+      expect(node.querySelector('label[for="root_multi___internal_type_selector"]')).toBeInTheDocument();
+      expect(node.querySelector('label[for="root_multi"]')).toBeInTheDocument();
+    });
+
     it('offers no type selector for an additional property constrained without a type', () => {
       const { node } = createFormComponent({
         schema: { type: 'object', additionalProperties: { enum: ['a', 'b'] } },
@@ -914,34 +927,6 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       }
     });
 
-    // Only a field's own `ui:widget` picks a type list's field, as the defaults never see `ui:globalOptions`, and the
-    // global widget the selected type has none of is dropped from the value field rather than throwing `No widget`
-    it('starts a union with no data on its first type whatever widget ui:globalOptions names', () => {
-      const { node } = createFormComponent({
-        schema: { type: 'object', properties: { val: { type: ['null', 'boolean', 'string'] } } },
-        uiSchema: { 'ui:globalOptions': { widget: 'textarea' } },
-        useFallbackUiForUnsupportedType: true,
-      });
-
-      const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
-      expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('boolean');
-      expect(node.querySelector('#root_val')).toHaveAttribute('type', 'checkbox');
-    });
-
-    // `getWidget()` throws for a widget the selected type has none of, which would take the whole form down
-    it('drops a widget in ui:globalOptions that the type the data selects has none of', () => {
-      const { node } = createFormComponent({
-        schema: { type: 'object', properties: { val: { type: ['null', 'boolean', 'string'] } } },
-        uiSchema: { 'ui:globalOptions': { widget: 'textarea' } },
-        initialFormData: { val: true },
-        useFallbackUiForUnsupportedType: true,
-      });
-
-      const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
-      expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('boolean');
-      expect(node.querySelector('#root_val')).toBeChecked();
-    });
-
     it('starts a union holding data of a type it does not list on the type its ui:widget renders', () => {
       const { node } = createFormComponent({
         schema: { type: 'object', properties: { val: { type: ['null', 'boolean', 'string'] } } },
@@ -989,17 +974,14 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
     });
 
     // `ArrayField` renders a custom widget for a `uiSchema` naming one, so the widget the value field drops has to
-    // name none rather than an `undefined` one, whether it was the field's own or the one in `ui:globalOptions`
-    it.each<[string, UiSchema]>([
-      ['its own', { val: { 'ui:widget': 'textarea' } }],
-      ['a ui:globalOptions', { 'ui:globalOptions': { widget: 'textarea' } }],
-    ])('renders the array field for a union whose array type has none of %s widget', async (_, uiSchema) => {
+    // name none rather than an `undefined` one
+    it('renders the array field for a union whose array type has none of its widget', async () => {
       const { node } = createFormComponent({
         schema: {
           type: 'object',
           properties: { val: { type: ['string', 'array'], items: { type: 'string' } } },
         },
-        uiSchema,
+        uiSchema: { val: { 'ui:widget': 'textarea' } },
         useFallbackUiForUnsupportedType: true,
       });
 
@@ -1691,8 +1673,8 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
 
       const { node } = createFormComponent({ schema, uiSchema, useFallbackUiForUnsupportedType: true });
 
-      // The option selector the label names is withheld until there is data, and the value field around it is already
-      // labelled `false`, so this is the one field either label could come from
+      // The option selector the label names is withheld until there is data, and the value field around it draws no
+      // label of its own under the plan it inherits, so this is the one field either label could come from
       expect(Array.from(node.querySelectorAll('label')).map((label) => label.textContent)).not.toContain('TITLE');
     });
 
@@ -1788,47 +1770,6 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       expect(node.querySelector('#root_val')).toBeInTheDocument();
     });
 
-    it('renders the help of a ui:globalOptions once for a union the fallback UI renders', () => {
-      const { node } = createFormComponent({
-        schema: {
-          type: 'object',
-          properties: { val: { type: ['string', 'number'], title: 'VAL' } },
-        },
-        uiSchema: { 'ui:globalOptions': { help: 'HELPTEXT' } },
-        useFallbackUiForUnsupportedType: true,
-      });
-
-      // A global entry reaches every field in the form, so the field around the value shadows it on both uiSchemas it
-      // hands down: the value field renders for the same `id`, which would put a second copy of the help under the DOM
-      // id the first one's `aria-describedby` names, and the selector is a control within the field rather than a field
-      // whose own help this is
-      const fieldHelp = node.querySelectorAll('[id="root_val__help"]');
-      expect(fieldHelp).toHaveLength(1);
-      expect(fieldHelp[0]).toHaveTextContent('HELPTEXT');
-      expect(node.querySelector('#root_val___internal_type_selector__help')).not.toBeInTheDocument();
-    });
-
-    it('renders one of each selector for a ui:globalOptions field naming the fallback field itself', () => {
-      const { node } = createFormComponent({
-        schema: {
-          type: 'object',
-          properties: { val: { type: ['string', 'number'], anyOf: [{ minLength: 2 }, { maximum: 5 }] } },
-        },
-        uiSchema: { 'ui:globalOptions': { field: 'FallbackField' } },
-        useFallbackUiForUnsupportedType: true,
-      });
-
-      // A global option reaches every field in the form, so the `field` has to be shadowed on both of the uiSchemas
-      // this field hands down rather than dropped from the one the caller wrote: the value field routes straight back
-      // here without it, and so does the type selector, which is a `SchemaField` like any other.
-      // The global entry reaches the root as well, but the one type that schema names is nothing to choose between, so
-      // the only selector is the union's: nothing offers to cast the whole form's data to another type
-      expect(node.querySelectorAll('[id$="___internal_type_selector"]')).toHaveLength(1);
-      expect(node.querySelector('#root___internal_type_selector')).not.toBeInTheDocument();
-      expect(node.querySelectorAll('[id$="__anyof_select"]')).toHaveLength(1);
-      expect(node.querySelector('#root_val')).toBeInTheDocument();
-    });
-
     it('offers a type selector within an option of an unrecognized type that names none of its own', () => {
       const { node } = createFormComponent({
         schema: {
@@ -1920,7 +1861,6 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
 
     const describedTypeList: RJSFSchema = { type: ['string', 'number'], title: 'Val', description: 'Desc' };
 
-    // A `ui:globalOptions.field` names the fallback field for the root object too, whose field is otherwise ObjectField
     it.each(FALLBACK_FIELD_ROUTES.slice(0, 2))(
       'renders a type list the fallback field is named for through %s exactly as one its types send there',
       (_, uiSchema, schemaKeys) => {
@@ -1956,7 +1896,6 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       },
     );
 
-    // For the reason above, a `ui:globalOptions.field` replaces the root's field and everything below it
     it.each(FALLBACK_FIELD_ROUTES.slice(0, 2))(
       'keeps the focused input of a type list mounted as %s names the fallback field for it',
       async (_, uiSchema, schemaKeys) => {
@@ -2030,20 +1969,6 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       },
     );
 
-    it('keeps the type selector out of a ui:globalOptions title', () => {
-      const { node } = createFormComponent({
-        schema: { type: 'object', properties: { val: { type: ['string', 'number'] } } },
-        uiSchema: { 'ui:globalOptions': { title: 'GLOBAL' } },
-        useFallbackUiForUnsupportedType: true,
-      });
-
-      // The selector is a control within the field rather than a field of its own, so nothing a caller writes about
-      // the field describes it. A global entry reaches every `SchemaField`, this one included, so all of them are
-      // shadowed rather than the ones found to misbehave one at a time
-      expect(node.querySelector('label[for="root_val___internal_type_selector"]')).toHaveTextContent('Type');
-      expect(node.querySelector('label[for="root_val"]')).toHaveTextContent('GLOBAL');
-    });
-
     // A schema that only implies its type is rendered by the field for the implied one everywhere else, so the fallback
     // UI says the same about it however it was reached
     it.each(FALLBACK_FIELD_ROUTES)(
@@ -2086,23 +2011,6 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
 
       expect(node.querySelector('#root_val___internal_type_selector')).toBeNull();
       expect(node.querySelector('#root_val_own')).toBeInTheDocument();
-    });
-
-    it('lays the type selector out with a ui:globalOptions template', () => {
-      const ids: string[] = [];
-      function RecordingFieldTemplate(props: FieldTemplateProps) {
-        ids.push(props.id);
-        return <div>{props.children}</div>;
-      }
-      createFormComponent({
-        schema: { type: 'object', properties: { val: { type: ['string', 'number'] } } },
-        uiSchema: { 'ui:globalOptions': { FieldTemplate: RecordingFieldTemplate } },
-        useFallbackUiForUnsupportedType: true,
-      });
-
-      // A template says how any field renders rather than what one holds, so it reaches the selector as it reaches
-      // every other field, unlike the entries that describe the caller's own field
-      expect(ids).toContain('root_val___internal_type_selector');
     });
 
     describe('the TranslatableString.Value title of the value field', () => {
@@ -2528,21 +2436,6 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       });
 
       expect(seeRawHelp.mock.lastCall?.[0]).toStrictEqual(<strong>element help</strong>);
-    });
-
-    it('should pass rawHelp for a ui:help inherited from ui:globalOptions', () => {
-      const seeRawHelp = vi.fn<(rawHelp: FieldTemplateProps['rawHelp']) => void>();
-      function RawHelpProbe(props: FieldTemplateProps) {
-        seeRawHelp(props.rawHelp);
-        return <div>{props.children}</div>;
-      }
-      createFormComponent({
-        schema,
-        uiSchema: { 'ui:globalOptions': { help: 'global help' } },
-        templates: { FieldTemplate: RawHelpProbe },
-      });
-
-      expect(seeRawHelp.mock.lastCall?.[0]).toBe('global help');
     });
   });
 

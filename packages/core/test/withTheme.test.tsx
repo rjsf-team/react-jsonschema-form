@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import type { FieldProps, Registry, RJSFSchema, ThemePresentation } from '@rjsf/utils';
+import type { FieldProps, GenericObjectType, Registry, RJSFSchema, ThemePresentation } from '@rjsf/utils';
 import { WIDGET_FIELD_PRESENTATION } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render } from '@testing-library/react';
@@ -341,6 +341,28 @@ describe('withTheme', () => {
       });
       expect(registry?.presentation.fields.StringField).toEqual(WIDGET_FIELD_PRESENTATION);
       expect(registry?.presentation.default).toEqual({ label: 'self', errors: 'self' });
+    });
+  });
+
+  describe('With globalUiOptionsKeys', () => {
+    it("reads the theme's keys and the props' from ui:globalOptions, and no other", () => {
+      let registry: Registry | undefined;
+      const fields = {
+        StringField(props: FieldProps) {
+          registry = props.registry;
+          return null;
+        },
+      };
+      const theme: ThemeProps = { fields, globalUiOptionsKeys: ['themeKey', 'shared'] };
+      // Untyped, as a JSON uiSchema is, so it can hold a key that neither declares
+      const globalOptions: GenericObjectType = { label: false, themeKey: 1, propKey: 2, shared: 3, undeclared: 4 };
+      createComponent(WrapperClassComponent(theme), {
+        schema: { type: 'string' },
+        uiSchema: { 'ui:globalOptions': globalOptions },
+        globalUiOptionsKeys: ['propKey', 'shared'],
+        validator,
+      });
+      expect(registry?.globalUiOptions).toEqual({ label: false, themeKey: 1, propKey: 2, shared: 3 });
     });
   });
 

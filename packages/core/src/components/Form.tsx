@@ -116,6 +116,12 @@ export interface FormProps<
    * which are layered over `core`'s
    */
   presentation?: ThemePresentation;
+  /** The keys of the extensions to `ui:globalOptions` the form's own widgets, fields and templates read, beyond the
+   * ones RJSF reads there, added to the ones the theme declares. The registry's `globalUiOptions` hold only those, so
+   * every field hands them to its widget and templates along with RJSF's own. A key that is an option name RJSF reads
+   * per field, such as `widget`, is not read from `ui:globalOptions`
+   */
+  globalUiOptionsKeys?: readonly string[];
   // Callbacks
   /** If you plan on being notified every time the form data are updated, you can pass an `onChange` handler, which will
    * receive the same args as `onSubmit` any time a value is updated in the form. Can also return the `id` of the field
@@ -250,6 +256,13 @@ export interface FormProps<
   /** Optional function that allows for custom merging of `allOf` schemas
    */
   customMergeAllOf?: CustomMergeAllOf<S>;
+  /** What an object schema naming neither `additionalProperties` nor `unevaluatedProperties` says about the keys its
+   * `properties` and `patternProperties` leave over. `'allow'` follows the JSON Schema spec, which takes any such key:
+   * the form renders, adds and keeps them as it does for `additionalProperties: true`, and an object `anyOf`/`oneOf`
+   * union gets its own heading and add button. `'forbid'`, the default, offers no add button for such an object and
+   * prunes those keys when omitting extra data.
+   */
+  additionalPropertiesWhenAbsent?: 'forbid' | 'allow';
   /** Receives the supported imperative FormRef. */
   ref?: Ref<FormRef<T>>;
 }
@@ -308,6 +321,10 @@ export interface FormState<
    * counting as unset, so a rebuilt object holding the same settings is not read as a change
    */
   defaultsBehavior?: DefaultFormStateBehavior;
+  /** Whether `additionalPropertiesWhenAbsent` was `'allow'` when the derivation ran, so a later one can tell the
+   * defaults it decides changed
+   */
+  allowsAbsentAdditionalProperties: boolean;
 }
 
 /** The validation callbacks, the only validation inputs the schema utilities are not built from */

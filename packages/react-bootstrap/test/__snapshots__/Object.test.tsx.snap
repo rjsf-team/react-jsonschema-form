@@ -3120,6 +3120,127 @@ exports[`object fields > object 1`] = `
 </DocumentFragment>
 `;
 
+exports[`object fields > pure anyOf union, with no frame of its own beside the option 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div>
+        <label
+          class="form-label"
+        >
+          <span
+            id="root__label"
+          >
+            Pet
+          </span>
+        </label>
+        <div
+          class="card"
+          style="margin-bottom: 1rem;"
+        >
+          <div
+            class="card-body"
+          >
+            <select
+              aria-labelledby="root__label"
+              class="form-select"
+              id="root__anyof_select"
+              name="root__anyof_select"
+            >
+              <option
+                value="0"
+              >
+                Dog
+              </option>
+              <option
+                value="1"
+              >
+                Cat
+              </option>
+            </select>
+          </div>
+          <div
+            class="card-body"
+          >
+            <div
+              class="rjsf-field rjsf-field-object"
+            >
+              <div>
+                <div
+                  class="my-1"
+                >
+                  <h5>
+                    <span
+                      id="root__title"
+                    >
+                      Dog
+                    </span>
+                  </h5>
+                  <hr
+                    class="border-0 bg-secondary mt-0"
+                    style="height: 1px;"
+                  />
+                </div>
+                <div
+                  class="p-0 container-fluid"
+                >
+                  <div
+                    class="row"
+                    style="margin-bottom: 10px;"
+                  >
+                    <div
+                      class="col-12"
+                    >
+                       
+                      <div
+                        class="rjsf-field rjsf-field-string"
+                      >
+                        <div>
+                          <label
+                            class="form-label"
+                            for="root_bark"
+                          >
+                            <span
+                              id="root_bark__label"
+                            >
+                              bark
+                            </span>
+                          </label>
+                          <input
+                            class="form-control"
+                            id="root_bark"
+                            name="root_bark"
+                            placeholder=""
+                            type="text"
+                            value=""
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`object fields > show add button and fields if additionalProperties is true and not an object 1`] = `
 <DocumentFragment>
   <form

@@ -29,7 +29,7 @@ export default function CheckboxesWidget<
   const { enumOptions, enumDisabled, inline, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
-  const themeProps = cleanupOptions(options);
+  const themeProps = cleanupOptions(options, props);
   const fieldDisabled = disabled || readonly;
 
   const handleChange = useCallback(

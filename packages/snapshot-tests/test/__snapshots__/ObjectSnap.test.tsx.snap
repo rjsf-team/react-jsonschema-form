@@ -2201,6 +2201,99 @@ exports[`object fields > object 1`] = `
 </DocumentFragment>
 `;
 
+exports[`object fields > pure anyOf union, with no frame of its own beside the option 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="form-group rjsf-field rjsf-field-object"
+    >
+      <label
+        class="control-label"
+      >
+        <span
+          id="root__label"
+        >
+          Pet
+        </span>
+      </label>
+      <div
+        class="panel panel-default panel-body"
+      >
+        <div
+          class="form-group"
+        >
+          <select
+            aria-labelledby="root__label"
+            class="form-control"
+            id="root__anyof_select"
+            name="root__anyof_select"
+          >
+            <option
+              value="0"
+            >
+              Dog
+            </option>
+            <option
+              value="1"
+            >
+              Cat
+            </option>
+          </select>
+        </div>
+        <div
+          class="form-group rjsf-field rjsf-field-object"
+        >
+          <fieldset
+            id="root"
+          >
+            <legend>
+              <span
+                id="root__title"
+              >
+                Dog
+              </span>
+            </legend>
+            <div
+              class="form-group rjsf-field rjsf-field-string"
+            >
+              <label
+                class="control-label"
+                for="root_bark"
+              >
+                <span
+                  id="root_bark__label"
+                >
+                  bark
+                </span>
+              </label>
+              <input
+                class="form-control"
+                id="root_bark"
+                label="bark"
+                name="root_bark"
+                placeholder=""
+                type="text"
+                value=""
+              />
+            </div>
+          </fieldset>
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-info "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`object fields > show add button and fields if additionalProperties is true and not an object 1`] = `
 <DocumentFragment>
   <form

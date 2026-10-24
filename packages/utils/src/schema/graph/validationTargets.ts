@@ -1,4 +1,4 @@
-import { allowsAdditionalProperties, patternRegExp } from '../../additionalPropertiesUtils.ts';
+import { allowsAdditionalProperties, patternRegExp, readsAbsentAsAllowed } from '../../additionalPropertiesUtils.ts';
 import {
   ADDITIONAL_PROPERTIES_KEY,
   ALL_OF_KEY,
@@ -19,7 +19,7 @@ import hashForSchema from '../../hashForSchema.ts';
 import isObject, { isSchemaObject } from '../../isObject.ts';
 import { getByPath } from '../../pathUtils.ts';
 import { keywordShape } from '../../schemaUri.ts';
-import type { GenericObjectType, RJSFSchema, StrictRJSFSchema } from '../../types.ts';
+import type { FormContextType, GenericObjectType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../../types.ts';
 import KeyedMemo from './keyedMemo.ts';
 import { booleanSchema, schemaFrom } from './mergePlan.ts';
 import { childPointer, isRootPointer } from './parseSchemaGraph.ts';
@@ -613,11 +613,17 @@ const scoringTargets = new KeyedMemo<object>();
  */
 type DeclaredKeys = boolean | { readonly names: ReadonlySet<string>; readonly patterns: readonly RegExp[] };
 
-/** The `DeclaredKeys` of each option, per graph and node */
+/** The `DeclaredKeys` of each option, per graph, node and whether an absent `additionalProperties` takes extra keys */
 const declaredKeysMemo = new KeyedMemo<DeclaredKeys>();
 
-function declaredKeys<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId): DeclaredKeys {
-  return declaredKeysMemo.get([graph, id], () => readDeclaredKeys(graph, id));
+function declaredKeys<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  graph: SchemaGraph<S>,
+  id: NodeId,
+): DeclaredKeys {
+  return declaredKeysMemo.get([graph, id, readsAbsentAsAllowed<S, F>(context)], () =>
+    readDeclaredKeys(context, graph, id),
+  );
 }
 
 /** Returns `pattern` compiled, or nothing for one no flag compiles. Matching asks of each option whether it fits the
@@ -632,7 +638,11 @@ function compiledPattern(pattern: string): RegExp[] {
   }
 }
 
-function readDeclaredKeys<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId): DeclaredKeys {
+function readDeclaredKeys<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  graph: SchemaGraph<S>,
+  id: NodeId,
+): DeclaredKeys {
   const scope = scopeOf(graph, id);
   const declaring = scope.flatMap((node) => (isObject(node.raw.properties) ? [Object.keys(node.raw.properties)] : []));
   if (declaring.length === 0) {
@@ -640,7 +650,7 @@ function readDeclaredKeys<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id:
   }
   const names = new Set(declaring.flat());
   if (names.size === 0) {
-    return scope.some((node) => allowsAdditionalProperties(node.raw));
+    return scope.some((node) => allowsAdditionalProperties<S, F>(context, node.raw));
   }
   const patterns = scope
     .flatMap((node) => graph.subschemas(node.id, PATTERN_PROPERTIES_KEY))
@@ -654,17 +664,20 @@ function readDeclaredKeys<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id:
  * option's scope names it and it holds a value. An option declaring no `properties` is not asked; one whose
  * `properties` name nothing matches only where it takes extra keys, and then whatever the data holds.
  *
+ * @param context - The `SchemaContext` whose `additionalPropertiesWhenAbsent` says whether an option naming no
+ *        `additionalProperties` takes extra keys
  * @param graph - The graph of the root
  * @param id - The option's node
  * @param data - The data being matched
  * @returns - Whether the option can match the data
  */
-export function holdsDeclaredKey<S extends StrictRJSFSchema = RJSFSchema>(
+export function holdsDeclaredKey<S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
+  context: SchemaContext<S, F>,
   graph: SchemaGraph<S>,
   id: NodeId,
   data: unknown,
 ): boolean {
-  const declared = declaredKeys(graph, id);
+  const declared = declaredKeys(context, graph, id);
   if (typeof declared === 'boolean') {
     return declared;
   }

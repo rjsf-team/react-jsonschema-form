@@ -58,7 +58,7 @@ export default function SelectWidget<
     () => enumOptionsDomValues<S>(enumOptions, optionValueFormat),
     [enumOptions, optionValueFormat],
   );
-  const themeProps = cleanupOptions(options);
+  const themeProps = cleanupOptions(options, props);
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
 
   const handleChange = useCallback(
@@ -129,7 +129,14 @@ export default function SelectWidget<
           value={enumOptionSelectedValue(value, enumOptions, true, optionValueFormat, [])}
         />
       ) : (
-        <Select {...sharedProps} value={enumOptionSelectedValue(value, enumOptions, false, optionValueFormat, null)} />
+        <Select
+          // A select whose schema has a default offers no empty choice, as the other themes' leave out their placeholder
+          // option, so the option selector of an `anyOf`/`oneOf` field holds an option unless the field's `ui:options`
+          // set `allowDeselect` or `clearable`
+          allowDeselect={schema.default === undefined}
+          {...sharedProps}
+          value={enumOptionSelectedValue(value, enumOptions, false, optionValueFormat, null)}
+        />
       )}
     </>
   );

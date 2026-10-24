@@ -4,6 +4,7 @@ import type { ThemeProps } from '@rjsf/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, ThemePresentation } from '@rjsf/utils';
 
 import { createTemplates } from '../templates/Templates.tsx';
+import { DAISY_GLOBAL_UI_OPTIONS_KEYS } from '../utils.ts';
 import { createWidgets } from '../widgets/Widgets.tsx';
 import { FrameThemeContext } from './frameTheme.ts';
 import { DEFAULT_THEME, readStoredTheme, storeTheme, subscribeToStoredTheme } from './storedTheme.ts';
@@ -25,6 +26,7 @@ function createTheme() {
     templates: createTemplates(),
     widgets: { ...widgets, boolean: widgets.toggle },
     presentation: createPresentation(),
+    globalUiOptionsKeys: [...DAISY_GLOBAL_UI_OPTIONS_KEYS],
   };
 }
 
