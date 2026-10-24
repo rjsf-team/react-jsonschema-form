@@ -545,6 +545,25 @@ describe('StringField', () => {
       expectToHaveBeenCalledWithFormData(onChange, { color: 'blue' }, 'root_color');
     });
 
+    it('should order constant anyOf options by ui:enumOrder and select the value of the option picked (#4298)', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'string',
+          anyOf: [
+            { const: 'OPTION1', title: 'op1' },
+            { const: 'OPTION2', title: 'op2' },
+            { const: 'OPTION3', title: 'op3' },
+          ],
+        },
+        uiSchema: { 'ui:enumOrder': ['OPTION3', 'OPTION1', 'OPTION2'] },
+      });
+      const select = node.querySelector<HTMLSelectElement>('select#root')!;
+      expect(Array.from(select.options, (option) => option.textContent)).toEqual(['', 'op3', 'op1', 'op2']);
+      await user.selectOptions(select, 'op1');
+      expectToHaveBeenCalledWithFormData(onChange, 'OPTION1', 'root');
+      expect(getSelectedOptionValue(select)).toEqual('op1');
+    });
+
     it('should render a typeless anyOf of a constant and a constant written as a $ref as a select', () => {
       const { node } = createFormComponent({
         schema: {

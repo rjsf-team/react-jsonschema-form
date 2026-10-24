@@ -661,6 +661,25 @@ const uiSchema: UiSchema = {
 };
 ```
 
+It orders the options of an `anyOf` or `oneOf` made entirely of constants the same way, naming each option by its constant.
+Options read through a discriminator or `ui:optionsSchemaSelector` keep their schema order.
+A `ui:title` in `uiSchema.anyOf`/`uiSchema.oneOf` still names the option at its position in the schema, wherever the order shows it.
+
+```tsx
+const schema: RJSFSchema = {
+  type: 'string',
+  anyOf: [
+    { const: 'OPTION1', title: 'op1' },
+    { const: 'OPTION2', title: 'op2' },
+    { const: 'OPTION3', title: 'op3' },
+  ],
+};
+
+const uiSchema: UiSchema = {
+  'ui:enumOrder': ['OPTION3', '*'],
+};
+```
+
 ### filePreview
 
 The `FileWidget` can be configured to show a preview of an image or a download link for non-images using this flag.

@@ -826,6 +826,47 @@ describe('optionsList()', () => {
       expect(optionsList(schema, uiSchema)?.map(({ value }) => value)).toEqual([true, false]);
     });
   });
+  describe('ui:enumOrder on constant anyOf and oneOf options (#4298)', () => {
+    it('should reorder constant anyOf options, keeping the ui:title each takes from its schema position', () => {
+      const schema: RJSFSchema = {
+        type: 'string',
+        anyOf: [
+          { const: 'OPTION1', title: 'op1' },
+          { const: 'OPTION2', title: 'op2' },
+          { const: 'OPTION3', title: 'op3' },
+        ],
+      };
+      const uiSchema: UiSchema = {
+        'ui:enumOrder': ['OPTION3', 'OPTION1', 'OPTION2'],
+        anyOf: [{ 'ui:title': 'First' }],
+      };
+      expect(optionsList(schema, uiSchema)?.map(({ label, value }) => ({ label, value }))).toEqual([
+        { label: 'op3', value: 'OPTION3' },
+        { label: 'First', value: 'OPTION1' },
+        { label: 'op2', value: 'OPTION2' },
+      ]);
+    });
+    it('should reorder constant oneOf options with a wildcard, and drop the unlisted ones without one', () => {
+      const schema: RJSFSchema = { oneOf: [{ const: 1 }, { const: 2 }, { const: 3 }] };
+      const values = (enumOrder: UiSchema['ui:enumOrder']) =>
+        optionsList(schema, { 'ui:enumOrder': enumOrder })?.map(({ value }) => value);
+      expect(values([3, '*'])).toEqual([3, 1, 2]);
+      expect(values(['2', 1])).toEqual([2, 1]);
+    });
+    it('should keep the schema order of constants under a selector, where LayoutMultiSchemaField reads each position', () => {
+      const schema: RJSFSchema = {
+        discriminator: { propertyName: 'kind' },
+        oneOf: [
+          { type: 'object', title: 'Cat', properties: { kind: { const: 'cat' } }, enum: [{ kind: 'cat' }] },
+          { type: 'object', title: 'Dog', properties: { kind: { const: 'dog' } }, enum: [{ kind: 'dog' }] },
+        ],
+      };
+      expect(optionsList(schema, { 'ui:enumOrder': ['dog', 'cat'] })?.map(({ label }) => label)).toEqual([
+        'Cat',
+        'Dog',
+      ]);
+    });
+  });
   describe('fallbackLabel', () => {
     const fallbackLabel = (value: unknown) => (value === true ? 'Yes' : undefined);
 
