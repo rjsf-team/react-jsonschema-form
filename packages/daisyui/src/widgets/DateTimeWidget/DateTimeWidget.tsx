@@ -7,7 +7,7 @@ import { format, isValid } from 'date-fns';
 import DatePickerCalendar from '../DatePickerCalendar.tsx';
 import type { DatePickerCalendarProps } from '../DatePickerCalendar.tsx';
 import { readDateOnly, readInstant, useDateFormatter, useDatePicker } from '../datePickerHooks.ts';
-import DatePickerTrigger, { DatePickerDialog, getDatePickerName } from '../DatePickerTrigger.tsx';
+import DatePickerTrigger, { DatePickerPopup, getDatePickerName } from '../DatePickerTrigger.tsx';
 
 /** Props for the DateTimePicker popup component, which is the calendar's own plus the time input's
  */
@@ -149,11 +149,6 @@ export default function DateTimeWidget<
     [chooseDate, displayedDate],
   );
 
-  // Prevent event propagation for popup container
-  const handleContainerClick = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation();
-  }, []);
-
   const formattedValue = displayedDate ? format(displayedDate, 'PP p') : undefined;
 
   return (
@@ -178,29 +173,23 @@ export default function DateTimeWidget<
           onBlur={handleBlur}
         />
         {isOpen && (
-          <div
-            role='presentation'
-            ref={containerRef}
-            className='absolute z-[100] mt-2 w-full max-w-xs bg-base-100 border border-base-300 shadow-lg rounded-box'
-            onClick={handleContainerClick}
+          <DatePickerPopup
+            id={popupId}
+            name={pickerName}
+            containerRef={containerRef}
+            translateString={registry.translateString}
+            onDone={handleDone}
           >
-            <DatePickerDialog id={popupId} name={pickerName}>
-              <MemoizedDateTimePickerPopup
-                id={`${id}-picker`}
-                selectedDate={displayedDate}
-                month={month}
-                timeLabel={registry.translateString(TranslatableString.TimeLabel)}
-                onMonthChange={handleMonthChange}
-                onSelect={handleSelect}
-                onTimeChange={handleTimeChange}
-              />
-              <div className='p-3 flex justify-end border-t border-base-300'>
-                <button type='button' className='btn btn-sm btn-primary' onClick={handleDone}>
-                  {registry.translateString(TranslatableString.DoneLabel)}
-                </button>
-              </div>
-            </DatePickerDialog>
-          </div>
+            <MemoizedDateTimePickerPopup
+              id={`${id}-picker`}
+              selectedDate={displayedDate}
+              month={month}
+              timeLabel={registry.translateString(TranslatableString.TimeLabel)}
+              onMonthChange={handleMonthChange}
+              onSelect={handleSelect}
+              onTimeChange={handleTimeChange}
+            />
+          </DatePickerPopup>
         )}
       </div>
     </div>

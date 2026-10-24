@@ -330,6 +330,36 @@ describe('DateTimeWidget', () => {
     expect(document.activeElement).toHaveTextContent(/^3$/);
   });
 
+  test('places its calendar below its trigger, inside the right edge of the viewport', async () => {
+    const { container } = render(
+      <DateTimeWidget
+        {...makeWidgetMockProps({ value: '2016-04-05T14:01:30', schema: { type: 'string', format: 'date-time' } })}
+      />,
+    );
+    const trigger = container.querySelector('button[aria-haspopup]')!;
+    // jsdom lays nothing out, so the trigger is put by hand 40px short of the right edge of its 1024px-wide viewport
+    vi.spyOn(trigger, 'getBoundingClientRect').mockReturnValue({
+      x: 984,
+      y: 30,
+      width: 40,
+      height: 20,
+      top: 30,
+      right: 1024,
+      bottom: 50,
+      left: 984,
+      toJSON() {},
+    });
+
+    await user.click(trigger);
+
+    // Moved left until the calendar's 320px end 20px inside that edge
+    expect(screen.getByText('Done').closest('.date-picker-popup')).toHaveStyle({
+      position: 'fixed',
+      top: '55px',
+      left: '684px',
+    });
+  });
+
   test("translates the Done button and the time input's label", async () => {
     const { container } = render(
       <Form

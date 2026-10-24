@@ -2,7 +2,7 @@ import type { KeyboardEvent, ReactNode, RefObject, SyntheticEvent } from 'react'
 import { useCallback, useEffect, useRef } from 'react';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import type { FieldPresentation, FormContextType, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import type { FieldPresentation, FormContextType, Registry, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { getControlAttributes, getControlFallbackName, TranslatableString } from '@rjsf/utils';
 
 /** The name a picker's trigger falls back to where no label names it, which the dialog it opens takes too: the field's
@@ -156,22 +156,47 @@ export default function DatePickerTrigger({
   );
 }
 
-interface DatePickerDialogProps {
+interface DatePickerPopupProps {
   /** The popup's id, which the trigger's `aria-controls` points at while it is open */
   id: string;
   /** The name from `getDatePickerName()`, which the trigger falls back to as well */
   name: string;
+  /** The ref `useDatePicker()` positions the popup through and tells a press inside it from one outside by */
+  containerRef: RefObject<HTMLDivElement | null>;
+  /** The registry's `translateString`, for the Done button's label */
+  translateString: Registry['translateString'];
+  /** Closes the popup from its Done button */
+  onDone: () => void;
+  /** What the widget picks a date with */
   children: ReactNode;
 }
 
-/** The dialog both picker widgets open their calendar in, which their trigger controls, named as the trigger is
+/** The popup both picker widgets open from their trigger: the dialog the trigger controls, named as the trigger is, and
+ * the Done button under the widget's own contents. Shared so a change to the frame around a picker reaches both.
  *
- * @param props - The popup's id, the name it shares with the trigger, and its contents
+ * Its `position` and `z-index` are inline rather than classes: the `top` and `left` `useDatePicker()` writes are
+ * viewport coordinates, which place only a fixed popup, and a consumer whose Tailwind build doesn't scan this package
+ * gets none of its classes
+ *
+ * @param props - The popup's id and name, the ref to attach, the Done handler and its label, and its contents
  */
-export function DatePickerDialog({ id, name, children }: DatePickerDialogProps) {
+export function DatePickerPopup({ id, name, containerRef, translateString, onDone, children }: DatePickerPopupProps) {
   return (
-    <div id={id} role='dialog' aria-label={name}>
-      {children}
+    <div
+      ref={containerRef}
+      role='presentation'
+      className='date-picker-popup w-full max-w-xs bg-base-100 border border-base-300 shadow-lg rounded-box'
+      style={{ position: 'fixed', zIndex: 99999 }}
+      onClick={(e) => e.stopPropagation()}
+    >
+      <div id={id} role='dialog' aria-label={name}>
+        {children}
+        <div className='p-3 flex justify-end border-t border-base-300'>
+          <button type='button' className='btn btn-sm btn-primary' onClick={onDone}>
+            {translateString(TranslatableString.DoneLabel)}
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
