@@ -14,10 +14,10 @@ import {
   widgetDrawsLabel,
 } from '@rjsf/utils';
 import type { SelectProps } from 'antd';
-import { ConfigProvider, Select } from 'antd';
+import { Select } from 'antd';
 import type { DefaultOptionType } from 'antd/es/select/index.js';
 
-import getControlState from '../../controlState.ts';
+import useControlState from '../../controlState.ts';
 
 const SELECT_STYLE = {
   width: '100%',
@@ -54,7 +54,7 @@ export default function SelectWidget<
   } = props;
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const [open, setOpen] = useState(false);
-  const control = getControlState<T, S, F>({ disabled, readonly, registry });
+  const control = useControlState<T, S, F>({ disabled, readonly, registry });
 
   const { enumOptions, enumDisabled, emptyValue, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
@@ -92,10 +92,6 @@ export default function SelectWidget<
       ),
     ),
   ];
-  // The hidden inputs don't read antd's `componentDisabled` as the `Select` does, so they take it here, to post nothing
-  // when the select is drawn disabled, as a disabled native `<select>` posts nothing
-  const { componentDisabled } = ConfigProvider.useConfig();
-  const postedDisabled = control.disabled ?? (componentDisabled || undefined);
 
   const showPlaceholderOption = !multiple && schema.default === undefined;
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
@@ -148,7 +144,7 @@ export default function SelectWidget<
       {/* antd's `Select` renders no native control, so the value a native submit or `FormData` reads is carried by
       hidden inputs, as a native `<select>` posts one entry per selected option, or its empty placeholder */}
       {postedValues.map((domValue) => (
-        <input key={domValue} type='hidden' name={htmlName || id} value={domValue} disabled={postedDisabled} />
+        <input key={domValue} type='hidden' name={htmlName || id} value={domValue} disabled={control.disabled} />
       ))}
       <SelectedOptionDescription
         id={id}

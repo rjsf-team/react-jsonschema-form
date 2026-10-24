@@ -4,7 +4,7 @@ import { DatePicker } from 'antd';
 import dayjs from 'dayjs';
 import type { Dayjs } from 'dayjs';
 
-import getControlState from '../../controlState.ts';
+import useControlState from '../../controlState.ts';
 
 const DATE_PICKER_STYLE = {
   width: '100%',
@@ -44,7 +44,7 @@ export default function DateWidget<
   schema,
   presentation,
 }: DateWidgetProps<T, S, F>) {
-  const control = getControlState<T, S, F>({ disabled, readonly, registry });
+  const control = useControlState<T, S, F>({ disabled, readonly, registry });
   const { isIsoDateTime, localValue } = getDateTimeLocalValue(schema, value);
 
   const handleChange = (nextValue: Dayjs | null) => {

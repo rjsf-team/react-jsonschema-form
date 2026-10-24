@@ -4,7 +4,7 @@ import { getControlAttributes, schemaRequiresTrueValue, widgetDrawsLabel } from 
 import type { CheckboxProps } from 'antd';
 import { Checkbox, theme } from 'antd';
 
-import getControlState from '../../controlState.ts';
+import useControlState from '../../controlState.ts';
 
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.
  *  It is typically used to represent a boolean.
@@ -35,7 +35,7 @@ export default function CheckboxWidget<
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const { token } = theme.useToken();
   const trueValueRequired = schemaRequiresTrueValue(schema) && required;
-  const control = getControlState<T, S, F>({ disabled, readonly, required: trueValueRequired, registry });
+  const control = useControlState<T, S, F>({ disabled, readonly, required: trueValueRequired, registry });
 
   const handleChange: NonNullable<CheckboxProps['onChange']> = ({ target }) => onChange(target.checked);
 

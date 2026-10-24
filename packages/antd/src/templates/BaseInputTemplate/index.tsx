@@ -5,7 +5,7 @@ import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSch
 import { examplesId, getControlAttributes, getExampleSuggestions, getInputProps } from '@rjsf/utils';
 import { Input, InputNumber } from 'antd';
 
-import getControlState from '../../controlState.ts';
+import useControlState from '../../controlState.ts';
 
 const INPUT_STYLE = {
   width: '100%',
@@ -44,7 +44,7 @@ export default function BaseInputTemplate<
   // InputNumber doesn't use a native <input type="number"> directly - it wraps it and controls the stepping behavior
   // through its own props. The step prop in Ant Design expects a number, not the string "any"
   const inputProps = getInputProps<T, S, F>(schema, type, options, false);
-  const control = getControlState<T, S, F>({ disabled, readonly, registry });
+  const control = useControlState<T, S, F>({ disabled, readonly, registry });
   const { ClearButton } = registry.templates.ButtonTemplates;
 
   const handleNumberChange = (nextValue: number | null) => onChange(nextValue ?? options.emptyValue);

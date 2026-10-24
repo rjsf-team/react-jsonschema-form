@@ -13,7 +13,7 @@ import {
 import type { RadioChangeEvent } from 'antd';
 import { Radio } from 'antd';
 
-import getControlState from '../../controlState.ts';
+import useControlState from '../../controlState.ts';
 
 /** The `RadioWidget` is a widget for rendering a radio group.
  *  It is typically used with a string property constrained with enum options.
@@ -39,7 +39,7 @@ export default function RadioWidget<
   value,
   presentation,
 }: WidgetProps<T, S, F>) {
-  const control = getControlState<T, S, F>({ disabled, readonly, required, registry });
+  const control = useControlState<T, S, F>({ disabled, readonly, required, registry });
 
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);

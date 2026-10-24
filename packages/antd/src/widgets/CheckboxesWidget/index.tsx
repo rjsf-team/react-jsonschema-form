@@ -12,7 +12,7 @@ import {
 } from '@rjsf/utils';
 import { Checkbox } from 'antd';
 
-import getControlState from '../../controlState.ts';
+import useControlState from '../../controlState.ts';
 
 /** The `CheckboxesWidget` is a widget for rendering checkbox groups.
  *  It is typically used to represent an array of enums.
@@ -37,7 +37,7 @@ export default function CheckboxesWidget<
   value,
   presentation,
 }: WidgetProps<T, S, F>) {
-  const control = getControlState<T, S, F>({ disabled, readonly, registry });
+  const control = useControlState<T, S, F>({ disabled, readonly, registry });
 
   const { enumOptions, enumDisabled, inline, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);

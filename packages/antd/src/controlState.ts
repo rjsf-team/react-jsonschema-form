@@ -1,4 +1,5 @@
 import type { FormContextType, Registry, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { ConfigProvider } from 'antd';
 
 /** The `formContext` option this theme reads to decide whether a read-only field is drawn disabled */
 interface ReadonlyAsDisabledContext {
@@ -8,8 +9,10 @@ interface ReadonlyAsDisabledContext {
 
 /** The state an antd control takes from its field, worked out once for every widget and template */
 export interface ControlState {
-  /** `true` for a field that is disabled, or read-only under `readonlyAsDisabled`. `undefined` rather than `false`
-   * otherwise, since antd reads its `DisabledContext` only when a control leaves `disabled` unset
+  /** `true` for a field that is disabled, read-only under `readonlyAsDisabled`, or rendered under a `<ConfigProvider
+   * componentDisabled>`, so a control that doesn't read antd's context, such as a hidden input, is disabled with the
+   * ones that do. `undefined` rather than `false` otherwise, since antd reads its `DisabledContext` only when a control
+   * leaves `disabled` unset
    */
   disabled: true | undefined;
   /** For a control with no read-only state of its own, such as a checkbox or a radio: `true` for a required field that
@@ -23,13 +26,14 @@ export interface ControlState {
   ariaReadonly: true | undefined;
 }
 
-/** Works out the state an antd control takes from its field's `disabled`, `readonly` and `required` and the form's
- * `readonlyAsDisabled`, so that every widget and template agrees on it
+/** Works out the state an antd control takes from its field's `disabled`, `readonly` and `required`, the form's
+ * `readonlyAsDisabled` and the `componentDisabled` of the `ConfigProvider` it renders under, so that every widget and
+ * template agrees on it
  *
  * @param props - The field's `disabled`, `readonly`, `required` and `registry`
  * @returns - The control's `ControlState`
  */
-export default function getControlState<
+export default function useControlState<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
@@ -45,7 +49,8 @@ export default function getControlState<
   registry: Registry<T, S, F>;
 }): ControlState {
   const { readonlyAsDisabled = true }: ReadonlyAsDisabledContext = registry.formContext;
-  const fieldDisabled = Boolean(disabled || (readonlyAsDisabled && readonly));
+  const { componentDisabled } = ConfigProvider.useConfig();
+  const fieldDisabled = disabled || (readonlyAsDisabled && readonly) || componentDisabled;
   return {
     disabled: fieldDisabled || undefined,
     toggleRequired: (required && !readonly) || undefined,

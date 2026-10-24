@@ -3,7 +3,7 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from 
 import { getControlAttributes } from '@rjsf/utils';
 import { Input } from 'antd';
 
-import getControlState from '../../controlState.ts';
+import useControlState from '../../controlState.ts';
 
 /** The `PasswordWidget` component uses the `BaseInputTemplate` changing the type to `password`.
  *
@@ -30,7 +30,7 @@ export default function PasswordWidget<
     value,
     presentation,
   } = props;
-  const control = getControlState<T, S, F>({ disabled, readonly, registry });
+  const control = useControlState<T, S, F>({ disabled, readonly, registry });
 
   const emptyValue = options.emptyValue || '';
 
