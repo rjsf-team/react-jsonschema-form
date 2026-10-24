@@ -37,6 +37,7 @@ import {
   fieldPathToId,
   fieldPathToList,
   fieldPathToName,
+  idSegment,
   toFieldPath,
 } from './fieldPath.ts';
 import findSchemaDefinition from './findSchemaDefinition.ts';
@@ -436,6 +437,7 @@ export {
   toFieldPath,
   fieldPathFromList,
   fieldPathToId,
+  idSegment,
   fieldPathEndsWithIndex,
   fieldPathToList,
   fieldPathToName,

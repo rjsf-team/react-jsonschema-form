@@ -270,7 +270,21 @@ describe('MUI Theme-Specific Props', () => {
     expect(screen.getByRole(role)).toHaveAccessibleDescription('About foo A hint');
   });
 
-  // MUI builds the helper text's id from the `TextField`'s id, which an `id` in `ui:options.mui` replaces
+  it.each<[string, RJSFSchema, string]>([
+    ['text input', { type: 'string' }, 'textbox'],
+    ['select', { type: 'string', enum: ['a', 'b'] }, 'combobox'],
+  ])("should give MUI's helper text of a %s an id no sibling field's id can spell", (_, foo, role) => {
+    const schema: RJSFSchema = { type: 'object', properties: { foo, 'foo-helper-text': { type: 'string' } } };
+    const uiSchema: UiSchema = { foo: { 'ui:options': { mui: { helperText: 'A hint' } } } };
+
+    const { container } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+    const ids = [...container.querySelectorAll('[id]')].map((element) => element.id);
+    expect(new Set(ids).size).toBe(ids.length);
+    expect(screen.getAllByRole(role)[0]).toHaveAccessibleDescription('A hint');
+  });
+
+  // The helper text's id is built from the `TextField`'s id, which an `id` in `ui:options.mui` replaces
   it.each<[string, RJSFSchema, string]>([
     ['text input', { type: 'string' }, 'textbox'],
     ['select', { type: 'string', enum: ['a', 'b'] }, 'combobox'],

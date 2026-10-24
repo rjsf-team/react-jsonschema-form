@@ -149,7 +149,10 @@ describe('fieldPathToId()', () => {
     const id = fieldPathToId(toFieldPath('Do you have any pets?', toFieldPath('petOwner')), GLOBAL_FORM_OPTIONS);
     expect(id).toBe('root_petOwner_Do-_20you-_20have-_20any-_20pets-_3F');
     expect(fieldPathToId(toFieldPath('a\tb\nc\fd\re'), GLOBAL_FORM_OPTIONS)).toBe('root_a-_09b-_0Ac-_0Cd-_0De');
-    expect(fieldPathToId(toFieldPath('a\u00a0b\u3000c'), GLOBAL_FORM_OPTIONS)).toBe('root_a-_U00A0b-_U3000c');
+  });
+  test('keeps whitespace past ASCII as it is, which a CSS identifier holds and an id list is not split on', () => {
+    expect(fieldPathToId(toFieldPath('a\u00a0b\u3000c'), GLOBAL_FORM_OPTIONS)).toBe('root_a\u00a0b\u3000c');
+    expect(fieldPathToId(toFieldPath('a\u00a0b c'), GLOBAL_FORM_OPTIONS)).toBe('root_a\u00a0b-_20c');
   });
   test('writes every character a CSS identifier holds escaped as an escape, and the rest as it is', () => {
     const ids = ['a.b', 'a:b', 'a/b', 'a#b', 'a[0]', '100%', 'café', '名前', 'emoji😀'].map((name) =>

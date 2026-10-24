@@ -19,6 +19,7 @@ import type {
   UiSchema,
   GenericObjectType,
 } from '@rjsf/utils';
+import { partId } from '@rjsf/utils';
 
 type SxArray = Extract<SxProps<Theme>, readonly unknown[]>;
 
@@ -167,13 +168,22 @@ export function resolveSlotProps<P extends object, O>(slotProps: MuiSlotProps<P,
   return typeof slotProps === 'function' ? slotProps(ownerState) : slotProps;
 }
 
-/** Adds the id of the helper text MUI's `TextField` renders for its `helperText` to the `aria-describedby` a widget
- * gives the `TextField`'s control. That attribute replaces the one MUI links its helper text by, and the field's plan
- * knows only the parts RJSF draws, not this one MUI draws
+/** The id a widget gives the helper text MUI's `TextField` renders for its `helperText`, through the `formHelperText`
+ * slot, in place of the `-helper-text` id MUI derives, which another field's id can spell
+ *
+ * @param id - The `TextField`'s id: an `id` in `ui:options.mui`, which replaces the field's, else the field's
+ * @returns - The helper text's id, a part of `id`
+ */
+export function helperTextId(id: string) {
+  return partId(id, 'helperText');
+}
+
+/** Adds the id `helperTextId()` gives the helper text MUI's `TextField` renders for its `helperText` to the
+ * `aria-describedby` a widget gives the `TextField`'s control. That attribute replaces the one MUI links its helper
+ * text by, and the field's plan knows only the parts RJSF draws, not this one MUI draws
  *
  * @param attributes - The attributes the widget gives its control
- * @param id - The `TextField`'s id, from which MUI builds its helper text's id: an `id` in `ui:options.mui`, which
- *   replaces the field's, else the field's
+ * @param id - The `TextField`'s id: an `id` in `ui:options.mui`, which replaces the field's, else the field's
  * @param helperText - The `helperText` the `TextField` is given
  * @returns - The attributes, described by the helper text too where one renders
  */
@@ -185,6 +195,6 @@ export function describeByHelperText<A extends { 'aria-describedby'?: string }>(
   if (!helperText) {
     return attributes;
   }
-  const describedBy = [attributes['aria-describedby'], `${id}-helper-text`].filter(Boolean).join(' ');
+  const describedBy = [attributes['aria-describedby'], helperTextId(id)].filter(Boolean).join(' ');
   return { ...attributes, 'aria-describedby': describedBy };
 }

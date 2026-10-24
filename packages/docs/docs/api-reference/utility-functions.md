@@ -779,11 +779,30 @@ Folds a `FieldPathList` into the `FieldPath` addressing the same field, the inve
 
 - FieldPath: The `FieldPath` for `fieldPathList`
 
+### idSegment()
+
+Writes one property name as it appears in an id, as [fieldPathToId()](#fieldpathtoid) writes each name of a path, for code naming a field by its id without building the whole path, such as a log message.
+
+#### Parameters
+
+- name: string - The property name
+
+#### Returns
+
+- string: The name as it appears in an id
+
+#### Example
+
+```typescript
+idSegment('first name'); // 'first-_20name'
+idSegment('snake_case'); // 'snake_case'
+```
+
 ### fieldPathToId()
 
 Derives the HTML `id` for `fieldPath` from the `idPrefix` and `idSeparator` in `globalFormOptions`, joining the prefix and every segment of the path with the separator.
 
-Each property name is written so that the id is a CSS identifier as it stands, so `#${id}` selects the element with no escaping, holds no whitespace, holds no `__`, which [partId()](#partid) joins a field's id and the name of one of its parts with, and is no other name's id. A character is written as an escape, `-_` followed by the two uppercase hex digits of its code, when it is an ASCII character other than a letter, a digit, `-` or `_`, such as a space, `.`, `:`, `/`, `#`, `[` or `%`; when it is an `_` that begins or ends the name, stands next to another `_` or follows a `-`; or when it is a `-` that ends the name. Whitespace past ASCII, such as a no-break space, is written `-_U` and four hex digits, and an empty name `-_FF`. Every other character, an `_` or `-` inside a name such as `snake_case` or `kebab-case` and any non-ASCII letter included, is written as it is. The encoder writes `-_` nowhere else, so every `-_` starts an escape and two names never write the same id. The `idPrefix` and `idSeparator` are written as given, so each should hold only letters, digits, `-` and `_`, with no `__` in either or where they meet.
+Each property name is written so that the id is a CSS identifier as it stands, so `#${id}` selects the element with no escaping, holds no ASCII whitespace, holds no `__`, which [partId()](#partid) joins a field's id and the name of one of its parts with, and is no other name's id. A character is written as an escape, `-_` followed by the two uppercase hex digits of its code, when it is an ASCII character other than a letter, a digit, `-` or `_`, such as a space, `.`, `:`, `/`, `#`, `[` or `%`; when it is an `_` that begins or ends the name, stands next to another `_` or follows a `-`; or when it is a `-` that ends the name. An empty name is written `-_FF`. Every other character, an `_` or `-` inside a name such as `snake_case` or `kebab-case` and any non-ASCII letter included, is written as it is. The encoder writes `-_` nowhere else, so every `-_` starts an escape and two names never write the same id. The `idPrefix` and `idSeparator` are written as given, so each should hold only letters, digits, `-` and `_`, with no `__` in either or where they meet.
 
 A property name holding the `idSeparator` still writes the id a path of several names would, as `a_b` and `a.b` both write `root_a_b`; choose an `idSeparator` no property name holds to tell those apart.
 

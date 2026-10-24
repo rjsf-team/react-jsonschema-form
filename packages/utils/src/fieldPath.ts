@@ -104,9 +104,7 @@ export function fieldPathFromList(fieldPathList: FieldPathList): FieldPath {
 /** The ASCII characters a property name carries into an id as they are, which a CSS identifier holds unescaped */
 const ID_SAFE = /^[A-Za-z0-9_-]$/;
 
-/** The token that starts an escape: followed by the two uppercase hex digits of an ASCII character, or by `U` and the
- * four of a whitespace character past ASCII, which a CSS identifier can't hold either
- */
+/** The token that starts an escape, followed by the two uppercase hex digits of an ASCII character */
 const ID_ESCAPE = '-_';
 
 /** The escape an empty name is written as: no ASCII character has the code `FF`, so no character is written so */
@@ -118,12 +116,13 @@ const EMPTY_NAME = `${ID_ESCAPE}FF`;
  *   the `__` that joins a field's id to the name of one of its parts;
  * - a `_` after a `-`, and a `-` that ends the name, since either would write the `-_` that starts an escape, the
  *   second with the `_` separator after it.
- * A character past ASCII is written as it is, as a CSS identifier holds it, unless it is whitespace
+ * A character past ASCII is written as it is: a CSS identifier holds every one, and an id list such as
+ * `aria-describedby` is split on ASCII whitespace only
  */
 function isEscaped(name: string, i: number) {
   const char = name[i];
   if (char.charCodeAt(0) > 0x7f) {
-    return /\s/.test(char);
+    return false;
   }
   if (!ID_SAFE.test(char)) {
     return true;
@@ -135,29 +134,35 @@ function isEscaped(name: string, i: number) {
   return char === '-' && i === last;
 }
 
-/** Writes a character as an escape: `-_` and the two uppercase hex digits of an ASCII code, such as `-_20` for a space,
- * or `-_U` and the four of any other, such as `-_U00A0` for a no-break space
+/** Writes an ASCII character as an escape: `-_` and the two uppercase hex digits of its code, such as `-_20` for a
+ * space
  *
  * @param char - The character
  * @returns - Its escape
  */
 function escapeIdChar(char: string) {
-  const code = char.charCodeAt(0);
-  const hex = code.toString(16).toUpperCase();
-  return code > 0x7f ? `${ID_ESCAPE}U${hex.padStart(4, '0')}` : `${ID_ESCAPE}${hex.padStart(2, '0')}`;
+  return `${ID_ESCAPE}${char.charCodeAt(0).toString(16).toUpperCase().padStart(2, '0')}`;
 }
+
+/** Matches a name holding any character, or pair of characters, that `isEscaped()` might pick out, so that a name
+ * with none, as nearly every one is, is written as it is without being walked character by character
+ */
+const MAY_ESCAPE = /[^A-Za-z0-9_\-\u0080-\uFFFF]|__|-_|^_|[_-]$/;
 
 /** Writes a property name as it appears in an id: a CSS identifier as it stands, so `#${id}` finds the element with no
  * escaping, that holds no `__`, and that no other name writes. A character `isEscaped()` picks out is written as
  * `escapeIdChar()` writes it, and an empty name as `-_FF`. The encoder writes `-_` nowhere else, so every `-_` starts
- * an escape whose length its first character gives, and the name can be read back from the id
+ * a three-character escape, and the name can be read back from the id
  *
  * @param name - The property name
  * @returns - The name as it appears in an id
  */
-function idSegment(name: string) {
+export function idSegment(name: string) {
   if (name === '') {
     return EMPTY_NAME;
+  }
+  if (!MAY_ESCAPE.test(name)) {
+    return name;
   }
   let segment = '';
   for (let i = 0; i < name.length; i += 1) {

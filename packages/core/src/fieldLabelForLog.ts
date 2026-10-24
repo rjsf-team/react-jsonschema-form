@@ -1,4 +1,4 @@
-import { ROOT_FIELD_PATH, fieldPathToList, toFieldPath } from '@rjsf/utils';
+import { ROOT_FIELD_PATH, fieldPathToList, idSegment, toFieldPath } from '@rjsf/utils';
 import type { FieldPath, GlobalFormOptions } from '@rjsf/utils';
 
 /** Names a field for a warning logged through `logOnce()`, which dedupes on the message text, so a message naming one
@@ -38,7 +38,9 @@ function formatLabel(id: string, path: string): string {
 export function entryLabelForLog(fieldPath: FieldPath, globalFormOptions: GlobalFormOptions): string {
   const segments = fieldPathToList(fieldPath);
   const { idPrefix, idSeparator } = globalFormOptions;
-  const id = [idPrefix, ...segments.map((segment) => (typeof segment === 'number' ? '[]' : segment))].join(idSeparator);
+  const id = [idPrefix, ...segments.map((segment) => (typeof segment === 'number' ? '[]' : idSegment(segment)))].join(
+    idSeparator,
+  );
   const path = segments.reduce<string>(
     (entryPath, segment) =>
       typeof segment === 'number' ? `${entryPath}[]` : toFieldPath(segment, entryPath as FieldPath),

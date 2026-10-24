@@ -229,8 +229,8 @@ export function besideOptionsId(id: string) {
   return partId(id, 'XxxOf');
 }
 
-/** Return a consistent `id` for the type selector the fallback UI renders for a field of an unsupported type, which
- * is the id it rendered under as the child `__internal_type_selector` of the field with the default `idSeparator`
+/** Return a consistent `id` for the type selector the fallback UI renders for a field of an unsupported type, as a part
+ * of the field
  *
  * @param id - The id of the field
  * @returns - The consistent id for the type selector from the given `id`

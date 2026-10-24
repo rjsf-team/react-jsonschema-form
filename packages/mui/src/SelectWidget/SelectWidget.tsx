@@ -31,7 +31,7 @@ import {
   widgetDrawsLabelText,
 } from '@rjsf/utils';
 
-import { describeByHelperText, getMuiProps, withSlotProps } from '../util.ts';
+import { describeByHelperText, getMuiProps, helperTextId, withSlotProps } from '../util.ts';
 
 /** Properties available for the `rjsfSlotProps` target of the SelectWidget. */
 export interface SelectWidgetMuiProps extends GenericObjectType {
@@ -159,6 +159,7 @@ export default function SelectWidget<
             multiple,
           },
           htmlInput: withSlotProps({ ...ariaProps, 'aria-label': ariaLabel }, muiSlotProps?.htmlInput),
+          formHelperText: { id: helperTextId(textFieldOverrides.id ?? id) },
         }}
       >
         {showPlaceholderOption && <MenuItem value=''>{placeholder}</MenuItem>}
