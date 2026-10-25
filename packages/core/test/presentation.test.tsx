@@ -303,6 +303,29 @@ describe('the plan SchemaField builds', () => {
     expect(screen.getAllByText('is wrong')).toHaveLength(1);
   });
 
+  // A framed field rendering the options itself, as below a named field the options give way to, hands the selected
+  // option the errors it took from the context, so the option follows its own `ui:hideError` as it does unnamed
+  it('hands the selected option of a framed field rendering the options the errors it took from the context', () => {
+    function FramingField(props: FieldProps) {
+      const { SchemaField } = props.registry.fields;
+      return <SchemaField {...props} />;
+    }
+    const { node } = createFormComponent({
+      schema: { anyOf: [{ type: 'string', title: 'Text' }, { type: 'number' }] },
+      uiSchema: {
+        'ui:field': FramingField,
+        'ui:fieldReplacesAnyOrOneOf': true,
+        'ui:hideError': true,
+        anyOf: [{ 'ui:hideError': false }, {}],
+      },
+      extraErrors: { __errors: ['is wrong'] },
+      showErrorList: false,
+    });
+
+    expect(screen.getAllByText('is wrong')).toHaveLength(1);
+    expect(node.querySelectorAll('.rjsf-field-error')).toHaveLength(1);
+  });
+
   describe("an anyOf field's option selector", () => {
     const schema: RJSFSchema = {
       type: 'object',

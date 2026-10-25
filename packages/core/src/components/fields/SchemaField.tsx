@@ -904,6 +904,13 @@ function SchemaFieldRender<
     [presentationBelow, optionsPresentation, isContainer, presentation],
   );
 
+  // A field a named one frames takes its own errors from the context, as its `errorSchema` is handed on without them, so
+  // they are put back for the options, which hand them to the selected option
+  const optionsErrorSchema = useMemo(
+    () => (framedAbove && ownErrors ? { ...errorSchema, __errors: ownErrors } : errorSchema),
+    [framedAbove, ownErrors, errorSchema],
+  );
+
   // Stop $ref cycles: `retrieveSchema()` hands out a property whose $ref leads back round a recursion with this flag,
   // which is when the field is left unresolved above. The check must come after all hook calls to satisfy React's
   // rules of hooks.
@@ -1081,7 +1088,7 @@ function SchemaFieldRender<
                   disabled={disabled}
                   readonly={readonly}
                   hideError={hideError}
-                  errorSchema={errorSchema}
+                  errorSchema={optionsErrorSchema}
                   formData={formData}
                   fieldPath={fieldPath}
                   id={fieldId}

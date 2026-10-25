@@ -1241,7 +1241,7 @@ describe("antd's FieldTemplate rendered by hand", () => {
     expect(screen.queryByText('bad name')).toBeNull();
   });
 
-  test('hides the messages of rawErrors under hideError, as hasVisibleErrors() did', () => {
+  test('hides the messages of rawErrors under hideError, as hasVisibleErrors() does', () => {
     renderByHand({ rawErrors: ['bad name'], hideError: true });
 
     expect(screen.queryByText('bad name')).toBeNull();
