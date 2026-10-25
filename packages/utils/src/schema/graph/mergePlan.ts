@@ -913,7 +913,8 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
   /** Applies the one option of a dependency's `oneOf` whose `properties[key]` the data satisfies, less that property;
    * with no such option or several, none is applied. The list is chosen from rather than offered, so it is dropped
    * before the option is merged in, which keeps an `anyOf` or `oneOf` the option offers itself. A list no option of
-   * which declares `key` has nothing to choose by, so it is offered as the field's own `oneOf`, as the validator reads it
+   * which declares `key` has nothing to choose by, so it is applied as a `oneOf` beside `dependencies` is, as the
+   * validator reads it: the option the data matches is merged in rather than offered
    */
   private applyExactlyOne(part: Part<S>, key: string, provider: Provider<S> | undefined): Part<S> {
     if (provider === undefined) {
@@ -923,7 +924,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       .subschemas(provider.node.id, ONE_OF_KEY)
       .map(([, option]) => ({ option, condition: dependencyCondition(this.graph, option, key) }));
     if (conditions.length > 0 && conditions.every(({ condition }) => condition === undefined)) {
-      return this.applyOption(part, ONE_OF_KEY, provider, false);
+      return this.applyOption(part, ONE_OF_KEY, provider, true);
     }
     const withoutList = { ...part, schema: withoutKeys(part.schema, ONE_OF_KEY) };
     const valid = conditions

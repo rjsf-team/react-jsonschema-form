@@ -1595,18 +1595,53 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       });
 
       describe('dynamic', () => {
-        it('keeps a oneOf none of whose options declares the key on the field as an ordinary oneOf (#5407)', () => {
-          const schema: RJSFSchema = {
+        it('merges the option the data matches of a oneOf none of whose options declares the key, as it merges a oneOf beside dependencies (#5407)', () => {
+          const dependent: RJSFSchema = {
             type: 'object',
             properties: { a: { type: 'string' } },
             dependencies: {
               a: { oneOf: [{ properties: { b: { type: 'string' } } }, { properties: { c: { type: 'number' } } }] },
             },
           };
-          expect(retrieveSchema({ validator: testValidator }, schema, schema, { a: 'x' })).toEqual({
+          const beside: RJSFSchema = {
             type: 'object',
             properties: { a: { type: 'string' } },
             oneOf: [{ properties: { b: { type: 'string' } } }, { properties: { c: { type: 'number' } } }],
+            dependencies: { a: ['a'] },
+          };
+          const expected = { type: 'object', properties: { a: { type: 'string' }, b: { type: 'string' } } };
+          expect(retrieveSchema({ validator: testValidator }, dependent, dependent, { a: 'x' })).toEqual(expected);
+          expect(retrieveSchema({ validator: testValidator }, beside, beside, { a: 'x' })).toEqual({
+            ...expected,
+            required: ['a'],
+          });
+        });
+
+        it('merges an option of each of two oneOf lists none of whose options declares its key', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: { a: { type: 'string' }, c: { type: 'string' } },
+            dependencies: {
+              a: { oneOf: [{ properties: { b: { type: 'string' } } }] },
+              c: { oneOf: [{ properties: { d: { type: 'string' } } }, { properties: { e: { type: 'string' } } }] },
+            },
+          };
+          expect(retrieveSchema({ validator: testValidator }, schema, schema, { a: 'x', c: 'y' })).toEqual({
+            type: 'object',
+            properties: { a: { type: 'string' }, c: { type: 'string' }, b: { type: 'string' }, d: { type: 'string' } },
+          });
+        });
+
+        it("merges an option of the field's own oneOf and of a dependency oneOf none of whose options declares the key", () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: { a: { type: 'string' } },
+            oneOf: [{ properties: { p: { type: 'string' } } }, { properties: { q: { type: 'string' } } }],
+            dependencies: { a: { oneOf: [{ properties: { b: { type: 'string' } } }] } },
+          };
+          expect(retrieveSchema({ validator: testValidator }, schema, schema, { a: 'x' })).toEqual({
+            type: 'object',
+            properties: { a: { type: 'string' }, p: { type: 'string' }, b: { type: 'string' } },
           });
         });
 
@@ -2479,14 +2514,16 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
     });
     describe('prototype-named dependency keys', () => {
       it('retrieveSchema() matches no dependency oneOf branch on an inherited member of its properties', () => {
+        // The keyed option keeps the list a dynamic dependency, so an inherited `toString` read as a condition would
+        // make two options hold and apply neither
         const schema: RJSFSchema = JSON.parse(
-          '{"type":"object","dependencies":{"toString":{"oneOf":[{"properties":{"foo":{"type":"string"}}}]}}}',
+          '{"type":"object","dependencies":{"toString":{"oneOf":[{"properties":{"foo":{"type":"string"}}},{"properties":{"toString":{"type":"string"},"bar":{"type":"string"}}}]}}}',
         );
         const isValid = vi.fn(() => true);
         const validator = { ...testValidator, isValid };
         const result = retrieveSchema({ validator }, schema, schema, { toString: 't' });
-        expect(Object.keys(result.properties ?? {})).toEqual([]);
-        expect(isValid).not.toHaveBeenCalled();
+        expect(Object.keys(result.properties ?? {})).toEqual(['bar']);
+        expect(isValid).toHaveBeenCalledTimes(1);
       });
 
       it('retrieveSchema() does not apply a dependency named after an inherited member', () => {
@@ -2529,12 +2566,13 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
 
       it('retrieveSchema() matches no dependency oneOf option written as a $ref on an inherited member', () => {
         const schema: RJSFSchema = JSON.parse(
-          '{"type":"object","definitions":{"b":{"properties":{"b":{"type":"number"}}}},"properties":{"toString":{"type":"string"}},"dependencies":{"toString":{"oneOf":[{"$ref":"#/definitions/b"}]}}}',
+          '{"type":"object","definitions":{"b":{"properties":{"b":{"type":"number"}}}},"properties":{"toString":{"type":"string"}},"dependencies":{"toString":{"oneOf":[{"$ref":"#/definitions/b"},{"properties":{"toString":{"type":"string"},"c":{"type":"number"}}}]}}}',
         );
-        // Every condition holds, so the option would be merged in were the inherited `toString` read as its condition
+        // Every condition holds, so were the inherited `toString` read as the `$ref` option's condition, two options
+        // would hold and neither be applied
         const validator = { ...testValidator, isValid: () => true };
         const result = retrieveSchema({ validator }, schema, schema, { toString: 't' });
-        expect(Object.keys(result.properties ?? {})).toEqual(['toString']);
+        expect(Object.keys(result.properties ?? {})).toEqual(['toString', 'c']);
       });
     });
     describe('withPatternProperties()', () => {

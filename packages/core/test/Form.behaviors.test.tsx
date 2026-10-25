@@ -3401,15 +3401,46 @@ describe('a dependency oneOf none of whose options declares the dependency key (
     expect(elementOf(node, '#root_x')).toHaveDisplayValue('{"a":2}');
   });
 
-  it('renders the list as an ordinary oneOf, with its selector and the option it selects', () => {
-    const schema: RJSFSchema = {
+  it('renders the option the data matches, with no selector, as it renders a oneOf beside dependencies', () => {
+    const option: RJSFSchema = { properties: { b: { type: 'string', title: 'B' } } };
+    const dependent: RJSFSchema = {
       type: 'object',
       properties: { a: { type: 'string', title: 'A' } },
-      dependencies: { a: { oneOf: [{ properties: { b: { type: 'string', title: 'B' } } }] } },
+      dependencies: { a: { oneOf: [option] } },
     };
-    const { node } = createFormComponent({ schema, initialFormData: { a: 'x' } });
+    const beside: RJSFSchema = {
+      type: 'object',
+      properties: { a: { type: 'string', title: 'A' } },
+      oneOf: [option],
+      dependencies: { a: ['a'] },
+    };
+    for (const schema of [dependent, beside]) {
+      const { node } = createFormComponent({ schema, initialFormData: { a: 'x' } });
 
-    expect(elementOf(node, '#root__oneof_select')).toHaveDisplayValue('Option 1');
+      expect(node.querySelector('#root__oneof_select')).not.toBeInTheDocument();
+      expect(node.querySelector('#root_a')).toBeInTheDocument();
+      expect(node.querySelector('#root_b')).toBeInTheDocument();
+    }
+  });
+
+  it('renders an option of each of two such lists', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { a: { type: 'string', title: 'A' }, c: { type: 'string', title: 'C' } },
+      dependencies: {
+        a: { oneOf: [{ properties: { b: { type: 'string', title: 'B' } } }] },
+        c: {
+          oneOf: [
+            { properties: { d: { type: 'string', title: 'D' } } },
+            { properties: { e: { type: 'string', title: 'E' } } },
+          ],
+        },
+      },
+    };
+    const { node } = createFormComponent({ schema, initialFormData: { a: 'x', c: 'y' } });
+
     expect(node.querySelector('#root_b')).toBeInTheDocument();
+    expect(node.querySelector('#root_d')).toBeInTheDocument();
+    expect(node.querySelector('#root__oneof_select')).not.toBeInTheDocument();
   });
 });

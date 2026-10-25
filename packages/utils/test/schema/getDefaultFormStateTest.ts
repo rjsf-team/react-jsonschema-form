@@ -7609,13 +7609,15 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           {},
           { a: 2 },
         ],
+        // The option the data matches is merged in, as it is for a `oneOf` beside `dependencies`, so its `const` is the
+        // field's own rather than an option's
         [
-          "keeps the inherited default over a dependency oneOf option's const under skipOneOf",
+          "gives a dependency oneOf option's const over the inherited default under skipOneOf",
           unkeyedOneOf,
           'parent',
           { constAsDefaults: 'skipOneOf' },
           {},
-          { a: 1 },
+          { a: 2 },
         ],
         [
           "keeps the inherited default over a dependency oneOf option's const when constAsDefaults is never",
@@ -7676,6 +7678,27 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               { schema: objectConstantSelect(dependencies, defaultOn), formData },
             ),
           ).toEqual({ x: expected });
+        },
+      );
+      it.each<DefaultFormStateBehavior['constAsDefaults']>(['always', 'skipOneOf', 'never'])(
+        'gives a dependency oneOf none of whose options declares the key the default a oneOf beside dependencies gets, under constAsDefaults %s',
+        (constAsDefaults) => {
+          const beside: RJSFSchema = {
+            type: 'object',
+            default: { x: { a: 1 } },
+            properties: {
+              x: {
+                type: 'object',
+                enum: [{ a: 1 }, { a: 2 }],
+                oneOf: [{ const: { a: 2 } }],
+                dependencies: { a: ['a'] },
+              },
+            },
+          };
+          const context = { validator: testValidator, defaultFormStateBehavior: { constAsDefaults } };
+          expect(getDefaultFormState(context, { schema: objectConstantSelect(unkeyedOneOf) })).toEqual(
+            getDefaultFormState(context, { schema: beside }),
+          );
         },
       );
       // Form data wins over a dependency's const

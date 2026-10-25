@@ -1319,7 +1319,8 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   );
   if (choice === undefined) {
     // The options are not a list the plan met as it stands, such as the cross product a merge makes of two lists, one
-    // a `customMergeAllOf` copied or one a `dependencies` entry brings, which the plan merges without offering. So the
+    // a `customMergeAllOf` copied or the dynamic dependency `oneOf` a `dependencies` entry brings, which the plan merges
+    // without offering. So the
     // option is read as written and the field computed from it. It is still the same field, reached the same way: it
     // keeps its edge, and the longest ref path a node of its plan holding such a list was entered with, or a recursion
     // through the option would start afresh at every level
