@@ -3,7 +3,7 @@ import { forwardRef, lazy, memo, Suspense } from 'react';
 import type { GenericObjectType, GlobalUISchemaOptions, RJSFSchema, UiSchema, Widget, WidgetProps } from '@rjsf/utils';
 import { errorId, noop } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { render, fireEvent, act, waitFor } from '@testing-library/react';
+import { render, fireEvent, act, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import type { MockInstance } from 'vitest';
 
@@ -534,6 +534,45 @@ describe('uiSchema', () => {
           // Two options, one disabled, plus the placeholder
           2 - disabledOptionsLen,
         );
+      });
+    });
+
+    describe('oneOf constant options disabled (#2776)', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        definitions: {
+          Group: {
+            oneOf: [
+              { const: 'A', title: 'Group Alfa' },
+              { const: 'B', title: 'Group Beta' },
+              { const: 'C', title: 'Group Celsius' },
+            ],
+          },
+        },
+        properties: {
+          multi: { type: 'array', title: 'Multi', items: { $ref: '#/definitions/Group' }, uniqueItems: true },
+          single: { $ref: '#/definitions/Group' },
+        },
+      };
+      const uiSchema: UiSchema = {
+        multi: { 'ui:widget': 'checkboxes', 'ui:enumDisabled': ['B'] },
+        single: { 'ui:enumDisabled': ['B'] },
+      };
+
+      it('should disable the listed constant in a checkboxes array whose items are a $ref to a oneOf', () => {
+        createFormComponent({ schema, uiSchema });
+
+        expect(screen.getByRole('checkbox', { name: 'Group Beta' })).toBeDisabled();
+        expect(screen.getByRole('checkbox', { name: 'Group Alfa' })).toBeEnabled();
+        expect(screen.getByRole('checkbox', { name: 'Group Celsius' })).toBeEnabled();
+      });
+
+      it('should disable the listed constant in a select over the same oneOf', () => {
+        createFormComponent({ schema, uiSchema });
+
+        expect(screen.getByRole('option', { name: 'Group Beta' })).toBeDisabled();
+        expect(screen.getByRole('option', { name: 'Group Alfa' })).toBeEnabled();
+        expect(screen.getByRole('option', { name: 'Group Celsius' })).toBeEnabled();
       });
     });
   });

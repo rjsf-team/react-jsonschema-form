@@ -1,6 +1,6 @@
-import { Component, useEffect, useLayoutEffect, useState } from 'react';
+import { Component, createContext, use, useEffect, useLayoutEffect, useState } from 'react';
 import type { ErrorSchema, FieldProps, RJSFSchema, RJSFValidationError, UiSchema, WidgetProps } from '@rjsf/utils';
-import { getTemplates, getUiOptions } from '@rjsf/utils';
+import { getTemplates, getUiOptions, noop } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -649,5 +649,86 @@ describe('typing in a custom widget under a parent that renders for every change
     expect(container.querySelector('#root_name')).toBe(textarea);
     expect(textarea).toHaveFocus();
     expect(textarea).toHaveValue('helXlo');
+  });
+});
+
+describe("a custom widget that sets its parent's state before calling onChange (#3914)", () => {
+  const SetParentState = createContext<(value: string) => void>(noop);
+
+  function ParentStateWidget({ id, value, onChange }: WidgetProps<Data['name']>) {
+    const setParentState = use(SetParentState);
+    return (
+      <input
+        id={id}
+        value={value ?? ''}
+        onChange={(event) => {
+          setParentState(event.target.value);
+          onChange(event.target.value);
+        }}
+      />
+    );
+  }
+
+  it('keeps the value in the form and in the parent that passes formData and stores what onChange reports', async () => {
+    const onSubmit = vi.fn();
+    function Parent() {
+      const [data, setData] = useState<Data | undefined>({});
+      const [file, setFile] = useState('');
+      return (
+        <SetParentState value={setFile}>
+          <output aria-label='file'>{file}</output>
+          <output aria-label='stored'>{data?.name}</output>
+          <Form<Data>
+            schema={schema}
+            validator={validator}
+            // oxlint-disable-next-line typescript/no-deprecated -- pins the v5 controlled pattern, passing back what onChange reported as `formData`
+            formData={data}
+            uiSchema={{ name: { 'ui:widget': ParentStateWidget } }}
+            onChange={(event) => setData(event.formData)}
+            onSubmit={onSubmit}
+          />
+        </SetParentState>
+      );
+    }
+    const { container } = render(<Parent />);
+
+    await user.type(screen.getByRole('textbox', { name: 'name' }), 'ab');
+    await submitForm(container, user);
+
+    expect(screen.getByRole('status', { name: 'file' })).toHaveTextContent('ab');
+    expect(screen.getByRole('status', { name: 'stored' })).toHaveTextContent('ab');
+    expect(screen.getByRole('textbox', { name: 'name' })).toHaveValue('ab');
+    expect(onSubmit).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { name: 'ab' } }), expect.anything());
+  });
+
+  it('keeps every value of a form that is passed no formData when the parent re-renders', async () => {
+    const onSubmit = vi.fn();
+    function Parent() {
+      const [file, setFile] = useState('');
+      return (
+        <SetParentState value={setFile}>
+          <output aria-label='file'>{file}</output>
+          <Form<Data>
+            schema={schema}
+            validator={validator}
+            uiSchema={{ name: { 'ui:widget': ParentStateWidget } }}
+            onSubmit={onSubmit}
+          />
+        </SetParentState>
+      );
+    }
+    const { container } = render(<Parent />);
+
+    await user.type(screen.getByRole('textbox', { name: 'other' }), 'x');
+    await user.type(screen.getByRole('textbox', { name: 'name' }), 'ab');
+    await submitForm(container, user);
+
+    expect(screen.getByRole('status', { name: 'file' })).toHaveTextContent('ab');
+    expect(screen.getByRole('textbox', { name: 'name' })).toHaveValue('ab');
+    expect(screen.getByRole('textbox', { name: 'other' })).toHaveValue('x');
+    expect(onSubmit).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { name: 'ab', other: 'x' } }),
+      expect.anything(),
+    );
   });
 });

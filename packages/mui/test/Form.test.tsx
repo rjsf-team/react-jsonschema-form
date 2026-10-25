@@ -5,8 +5,10 @@ import { checkboxLabelTests, fallbackDescriptionTests, formTests, themeTests } f
 import type { FieldProps, FormValidation, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { errorId, fieldLabelId, helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
+import { hydrateRoot } from 'react-dom/client';
+import { renderToString } from 'react-dom/server';
 
 import CheckboxWidget from '../src/CheckboxWidget/index.ts';
 import Form, { Theme, generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
@@ -947,6 +949,48 @@ describe('mui CheckboxWidget required attribute', () => {
     );
 
     expect(container.querySelector('input[type=checkbox]')).not.toHaveAttribute('required');
+  });
+});
+
+describe('mui server rendering (#4083)', () => {
+  it('renders the dependency a default selects on the server, and hydrates without a mismatch', async () => {
+    const schema: RJSFSchema = {
+      definitions: {
+        guest: {
+          type: 'object',
+          properties: { a: { type: 'string', title: 'a', enum: ['yes', 'no'] } },
+          dependencies: {
+            a: {
+              oneOf: [
+                { properties: { a: { enum: ['no'] } } },
+                { properties: { a: { enum: ['yes'] }, b: { type: 'boolean', title: 'B', default: false } } },
+              ],
+            },
+          },
+        },
+      },
+      type: 'array',
+      minItems: 1,
+      maxItems: 2,
+      items: { $ref: '#/definitions/guest' },
+      default: [{ a: 'yes' }, { a: 'no' }],
+    };
+    const form = <Form schema={schema} validator={validator} />;
+    const container = document.createElement('div');
+    document.body.append(container);
+    container.innerHTML = renderToString(form);
+    // The dependency is resolved for the server render, so the first item's `b` is in its markup
+    expect(container.querySelector('input#root_0_b[type="checkbox"]')).toBeInTheDocument();
+    expect(container.querySelector('#root_1_b')).not.toBeInTheDocument();
+    const recoverableErrors: unknown[] = [];
+
+    const root = await act(async () =>
+      hydrateRoot(container, form, { onRecoverableError: (error) => recoverableErrors.push(error) }),
+    );
+
+    expect(recoverableErrors).toEqual([]);
+    act(() => root.unmount());
+    container.remove();
   });
 });
 

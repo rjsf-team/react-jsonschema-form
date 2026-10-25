@@ -6,7 +6,7 @@ import { userEvent } from '@testing-library/user-event';
 
 import Form from '../src/index.ts';
 import { buildRegistry } from '../src/Theme.ts';
-import { AcceptingParent, createFormRef, handleOf, ListeningParent, input } from './testUtils.tsx';
+import { AcceptingParent, createFormRef, elementOf, handleOf, ListeningParent, input } from './testUtils.tsx';
 
 // Spied rather than replaced, so the form builds its real registry and every call is counted
 vi.mock('../src/Theme.ts', { spy: true });
@@ -153,5 +153,63 @@ describe('render cost of one update', () => {
     // once for the render of that; each change reports through `onChange`
     expect(onChange).toHaveBeenCalledTimes(2);
     expect(vi.mocked(buildRegistry).mock.calls.length).toBeLessThanOrEqual(4);
+  });
+});
+
+describe('render cost of an edit in a long list (#3183)', () => {
+  const rows: RJSFSchema = { type: 'array', items: { type: 'object', properties: { a: { type: 'string' } } } };
+  const initialFormData = Array.from({ length: 20 }, (_, index) => ({ a: `item ${index}` }));
+  const renders = new Map<string, number>();
+  function CountingTextWidget({ id, value, onChange }: WidgetProps) {
+    renders.set(id, (renders.get(id) ?? 0) + 1);
+    return (
+      <input
+        id={id}
+        value={typeof value === 'string' ? value : ''}
+        onChange={(event) => onChange(event.target.value)}
+      />
+    );
+  }
+  function renderList() {
+    const result = render(
+      <Form
+        schema={rows}
+        validator={validator}
+        initialFormData={initialFormData}
+        widgets={{ TextWidget: CountingTextWidget }}
+      />,
+    );
+    renders.clear();
+    return result;
+  }
+
+  it("re-renders only the edited row's widget for a keystroke", async () => {
+    const { container } = renderList();
+
+    await user.type(input(container, 'root_0_a'), 'z');
+
+    expect(input(container, 'root_0_a')).toHaveValue('item 0z');
+    expect([...renders.keys()]).toEqual(['root_0_a']);
+  });
+
+  it('re-renders only the two rows that trade places for a move down', async () => {
+    const { container } = renderList();
+
+    await user.click(elementOf(container, '#root_0__moveDown'));
+
+    expect(input(container, 'root_0_a')).toHaveValue('item 1');
+    expect(input(container, 'root_1_a')).toHaveValue('item 0');
+    expect([...renders.keys()].sort()).toEqual(['root_0_a', 'root_1_a']);
+  });
+
+  it('re-renders none of the rows before a removed one', async () => {
+    const { container } = renderList();
+
+    await user.click(elementOf(container, '#root_10__remove'));
+
+    expect(input(container, 'root_10_a')).toHaveValue('item 11');
+    expect(container.querySelector('#root_19_a')).toBeNull();
+    const rendered = [...renders.keys()];
+    expect(rendered.filter((id) => Number(id.split('_')[1]) < 10)).toEqual([]);
   });
 });
