@@ -232,6 +232,41 @@ describe('ObjectField', () => {
       expect(node.querySelector('[data-field="root_child"]')).toHaveAttribute('data-hidden', 'true');
     });
 
+    it('should agree with FieldTemplate on hidden once a $ref cycle property is expanded outside a Form', async () => {
+      const rootSchema: RJSFSchema = {
+        definitions: {
+          node: { type: 'object', deprecated: true, properties: { child: { $ref: '#/definitions/node' } } },
+        },
+        $ref: '#/definitions/node',
+      };
+      const registry = {
+        ...getTestRegistry(rootSchema, {}, hiddenFlagTemplates),
+        globalUiOptions: { deprecatedHandling: 'hide' as const },
+      };
+      const { ObjectField: RegistryObjectField } = registry.fields;
+      const { container } = render(
+        <RegistryObjectField
+          schema={registry.schemaUtils.retrieveSchema(rootSchema)}
+          uiSchema={{ 'ui:deprecatedHandling': 'label' }}
+          id='root'
+          name=''
+          fieldPath={ROOT_FIELD_PATH}
+          formData={{}}
+          errorSchema={{}}
+          registry={registry}
+          onChange={noop}
+          onBlur={noop}
+          onFocus={noop}
+          disabled={false}
+          readonly={false}
+        />,
+      );
+      expect(elementOf(container, '[data-property="child"]')).toHaveAttribute('data-hidden', 'false');
+      await user.click(screen.getByRole('button', { name: 'Expand Cycle' }));
+      expect(elementOf(container, '[data-property="child"]')).toHaveAttribute('data-hidden', 'true');
+      expect(elementOf(container, '[data-field="root_child"]')).toHaveAttribute('data-hidden', 'true');
+    });
+
     it.each([
       [
         'a deprecated sibling of its $ref under a global hide',

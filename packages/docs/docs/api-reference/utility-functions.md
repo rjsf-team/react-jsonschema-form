@@ -2235,20 +2235,6 @@ It checks both that `options` is an array and that no numeric `index` is present
 
 - boolean: True if `item` is an `EnumOptionsGroupType`, false otherwise
 
-### isFieldHidden&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
-
-Tells whether a field renders hidden: through its own `ui:widget: 'hidden'`, or under a resolved `deprecatedHandling` of `'hide'` (see [getDeprecatedHandling()](#getdeprecatedhandling)).
-`SchemaField` hides the field by it, so a custom field that renders its own `FieldTemplate` should call it too. A container laying out a field it has not rendered yet calls [isSchemaFieldHidden()](#isschemafieldhidden) instead.
-
-#### Parameters
-
-- ownUiOptions: UIOptionsType&lt;T, S, F> - The field's own UI options, without the global ones, so that no global `widget` hides every field
-- deprecatedHandling: 'hide' | 'disable' | 'label' | undefined - The field's handling of a `deprecated` schema, as `getDeprecatedHandling()` resolves it
-
-#### Returns
-
-- boolean: True when the field renders hidden
-
 ### isFixedItems&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Detects whether the given `schema` contains fixed items.
@@ -2331,14 +2317,15 @@ Unlike [isObject()](#isobject), class instances such as `Error` are not plain ob
 
 ### isSchemaFieldHidden&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
-Tells whether the `SchemaField` rendered with `schema`, `uiSchema` and `formData` hides its field, resolving them as `SchemaField` does: the `ui:definitions` entry of a `$ref`, the global UI options, and the retrieved schema where `deprecatedHandling` is `'hide'`, before deciding by [isFieldHidden()](#isfieldhidden).
-`ObjectField` marks each property `hidden` in the `ObjectFieldTemplate` props by it, so the flag agrees with the property's `FieldTemplate`.
+Tells whether the `SchemaField` rendered with `schema`, `uiSchema` and `formData` hides its field: through its own `ui:widget: 'hidden'`, as its `ui:definitions` entry resolves it, or a `deprecatedHandling` of `'hide'` (see [getDeprecatedHandling()](#getdeprecatedhandling)), read with the global UI options over the retrieved schema's `deprecated`.
+`SchemaField` hides its field by it, and `ObjectField` marks each property `hidden` in the `ObjectFieldTemplate` props by it, with the props it hands the property's `SchemaField`, so the two agree.
 A `$ref` cycle renders an Expand button, which hides nothing, until it is expanded, and then the field one level further.
+The answer is kept per schema object for the uiSchema, data and registry it was given, so a field whose own inputs are unchanged is not resolved again.
 
 #### Parameters
 
-- schema: S - The field's schema, as the container hands it to `SchemaField`
-- uiSchema: UiSchema&lt;T, S, F> | undefined - The field's uiSchema, as the container hands it to `SchemaField`
+- schema: S - The field's schema, as handed to `SchemaField`
+- uiSchema: UiSchema&lt;T, S, F> | undefined - The field's uiSchema, as handed to `SchemaField`
 - formData: T | undefined - The field's data
 - registry: Registry&lt;T, S, F> - The registry
 - [expanded=false]: boolean - Whether the field is a `$ref` cycle the user has expanded

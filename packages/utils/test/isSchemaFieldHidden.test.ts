@@ -70,4 +70,21 @@ describe('isSchemaFieldHidden()', () => {
   it('resolves an expanded $ref cycle one level further', () => {
     expect(isSchemaFieldHidden(OLD_CYCLE, undefined, undefined, HIDE, true)).toBe(true);
   });
+
+  it('returns false for a boolean schema', () => {
+    expect(isSchemaFieldHidden(true as unknown as RJSFSchema, undefined, undefined, HIDE)).toBe(false);
+  });
+
+  it('resolves a schema again only once its uiSchema or data changes', () => {
+    const registry = makeRegistry({ deprecatedHandling: 'hide' });
+    const retrieveSchema = vi.spyOn(registry.schemaUtils, 'retrieveSchema');
+    const schema: RJSFSchema = { $ref: '#/definitions/old' };
+    const uiSchema = {};
+    expect(isSchemaFieldHidden(schema, uiSchema, 'a', registry)).toBe(true);
+    expect(isSchemaFieldHidden(schema, uiSchema, 'a', registry)).toBe(true);
+    expect(retrieveSchema).toHaveBeenCalledTimes(1);
+    expect(isSchemaFieldHidden(schema, uiSchema, 'b', registry)).toBe(true);
+    expect(isSchemaFieldHidden(schema, { 'ui:deprecatedHandling': 'label' }, 'b', registry)).toBe(false);
+    expect(retrieveSchema).toHaveBeenCalledTimes(2);
+  });
 });

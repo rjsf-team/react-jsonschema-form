@@ -8,6 +8,7 @@ import type {
   FormContextType,
   GenericObjectType,
   Registry,
+  RJSFMarkedSchema,
   RJSFSchema,
   StrictRJSFSchema,
   UiSchema,
@@ -50,6 +51,7 @@ import {
   fieldPathToId,
   resolveUiSchema,
   isObject,
+  RJSF_REF_CYCLE_KEY,
   TranslatableString,
   uiBooleanOption,
 } from '@rjsf/utils';
@@ -60,6 +62,7 @@ import useUiState from '../../hooks/useUiState.ts';
 import useWarnIfFormDataNotPassedThrough from '../../hooks/useWarnIfFormDataNotPassedThrough.ts';
 import { additionalPropertyRemoval, EMPTY_UI_SCHEMA } from '../constants.ts';
 import RichDescription from '../RichDescription.tsx';
+import UiStateContext from '../UiStateContext.ts';
 import {
   declaresProperty,
   getContainerErrorProps,
@@ -69,6 +72,9 @@ import {
   withGlobalUiOptions,
 } from './fieldWidgetUtils.ts';
 import { useShownOptionBeside } from './ShownOptionContext.ts';
+
+/** The subscription of an object with no `$ref` cycle among its properties, whose expansions it has nothing to read */
+const subscribeToNothing = () => () => {};
 
 /** Returns a flag indicating whether the `name` field is required in the object schema
  *
@@ -470,31 +476,6 @@ export default function ObjectField<
     const additionalPropertySet = new Set(schemaAdditionalProperties);
     return Object.keys(schemaProperties).filter((property) => !additionalPropertySet.has(property));
   }, [schemaProperties, schemaAdditionalProperties]);
-  // `CyclicSchemaField` keeps a cycle's expansion to the form's ui state, so it is read here as well: an expanded cycle
-  // renders the field one level further, which can be hidden
-  const { uiState } = useUiState();
-  const readExpandedCycles = () =>
-    JSON.stringify(
-      Object.keys(schemaProperties).filter((property) => uiState.isExpanded(toFieldPath(property, fieldPath))),
-    );
-  const expandedCycles = useSyncExternalStore(uiState.subscribe, readExpandedCycles, readExpandedCycles);
-  const hiddenProperties = useMemo(() => {
-    const expanded = new Set(JSON.parse(expandedCycles) as string[]);
-    return new Set(
-      Object.keys(schemaProperties).filter((property) =>
-        isSchemaFieldHidden<T, S, F>(
-          getPropertySchema<S>(schema, property),
-          getByPath<UiSchema<T, S, F> | undefined>(
-            uiSchema,
-            declaresProperty<S>(schemaProperties, property) ? property : ADDITIONAL_PROPERTIES_KEY,
-          ),
-          getByPath<T>(formData, property),
-          registry,
-          expanded.has(property),
-        ),
-      ),
-    );
-  }, [schema, schemaProperties, uiSchema, formData, registry, expandedCycles]);
   // Depended on directly rather than through `schema`, which is a fresh object for every `formData` change, so the
   // resolution below runs once per schema rather than once per keystroke anywhere in the object
   const { propertyNames } = schema;
@@ -545,6 +526,45 @@ export default function ObjectField<
   const description = uiOptions.description ?? schema.description;
   const renderOptionalField = shouldRenderOptionalField<T, S, F>(registry, schema, required, uiSchema, fieldPath);
   const hasFormData = isFormDataAvailable<T>(formData);
+  const rendersProperties = !renderOptionalField || hasFormData;
+  // `CyclicSchemaField` keeps a cycle's expansion to the form's ui state, so it is read here as well: an expanded cycle
+  // renders the field one level further, which can be hidden. Only a property `retrieveSchema()` flagged as a cycle can
+  // be expanded, so an object with none subscribes to nothing
+  const { uiState, isOwn: ownsUiState } = useUiState();
+  const cycleProperties = useMemo(
+    () =>
+      rendersProperties
+        ? Object.keys(schemaProperties).filter(
+            (property) => getByPath<RJSFMarkedSchema | null>(schemaProperties, property)?.[RJSF_REF_CYCLE_KEY],
+          )
+        : [],
+    [rendersProperties, schemaProperties],
+  );
+  // One `'1'` or `'0'` per cycle property, in order
+  const readExpandedCycles = () =>
+    cycleProperties.map((property) => (uiState.isExpanded(toFieldPath(property, fieldPath)) ? '1' : '0')).join('');
+  const expandedCycles = useSyncExternalStore(
+    cycleProperties.length > 0 ? uiState.subscribe : subscribeToNothing,
+    readExpandedCycles,
+    readExpandedCycles,
+  );
+  const hiddenProperties = useMemo(() => {
+    const expanded = new Set(cycleProperties.filter((_, index) => expandedCycles[index] === '1'));
+    return new Set(
+      (rendersProperties ? Object.keys(schemaProperties) : []).filter((property) =>
+        isSchemaFieldHidden<T, S, F>(
+          getPropertySchema<S>(schema, property),
+          getByPath<UiSchema<T, S, F> | undefined>(
+            uiSchema,
+            declaresProperty<S>(schemaProperties, property) ? property : ADDITIONAL_PROPERTIES_KEY,
+          ),
+          getByPath<T>(formData, property),
+          registry,
+          expanded.has(property),
+        ),
+      ),
+    );
+  }, [rendersProperties, schema, schemaProperties, uiSchema, formData, registry, cycleProperties, expandedCycles]);
   let orderedProperties: string[] = [];
 
   /** Computes the next available key name from the `preferredKey`, indexing through the already existing keys until one
@@ -903,7 +923,7 @@ export default function ObjectField<
     [lastRenamedProperty],
   );
 
-  if (!renderOptionalField || hasFormData) {
+  if (rendersProperties) {
     try {
       const definedPropertySet = new Set(definedPropertyOrder);
       // A set, since an add that never reaches the data, as under a custom field that keeps the change to itself, leaves
@@ -1012,5 +1032,7 @@ export default function ObjectField<
     optionalDataControl,
     className: renderOptionalField ? 'rjsf-optional-object-field' : undefined,
   };
-  return <Template {...templateProps} onAddProperty={onAddProperty} />;
+  const template = <Template {...templateProps} onAddProperty={onAddProperty} />;
+  // Outside a `Form` and any `SchemaField`, the properties share the store the expansions are read from above
+  return ownsUiState ? <UiStateContext value={uiState}>{template}</UiStateContext> : template;
 }
