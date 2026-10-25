@@ -1268,6 +1268,18 @@ describe('ObjectField', () => {
       expect(elementOf(node, '#root_a__error')).toHaveTextContent('The key "a" is not allowed here');
     });
 
+    it('should leave the key input of an allowed key unmarked while its row shows errors about its value', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', additionalProperties: { type: 'string' } },
+        initialFormData: { foo: 'a' },
+        extraErrors: { foo: { __errors: ['Too short'] } },
+      });
+      expect(fieldErrorsById(node)).toEqual({ root_foo: ['Too short'] });
+      const keyInput = elementOf(node, '#root_foo-key');
+      expect(keyInput).not.toHaveAttribute('aria-invalid');
+      expect(keyInput).not.toHaveAttribute('aria-describedby');
+    });
+
     // The add button can only pick a name the patterns match from a `propertyNames.enum`, so the `newKey` it falls back
     // to is forbidden, and saying so straight away is what tells the user to rename it before submitting
     it('should say on its row that the key the add button picks is forbidden, before it is renamed', async () => {

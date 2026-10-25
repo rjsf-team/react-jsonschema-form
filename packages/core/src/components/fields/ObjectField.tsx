@@ -336,6 +336,7 @@ function ObjectFieldPropertyFn<
       onKeyRenameBlur={onKeyRenameBlur}
       onRemoveProperty={onRemoveProperty}
       propertyNamesEnum={propertyNamesEnum}
+      keyNotAllowed={keyNotAllowed}
       onChange={onPropertyChange}
       onBlur={onBlur}
       onFocus={onFocus}

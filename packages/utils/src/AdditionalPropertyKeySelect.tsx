@@ -84,14 +84,18 @@ export default function AdditionalPropertyKeySelect<
    * names the select by the key's label where neither the select nor its template draws that label
    */
   const { 'aria-describedby': errorsId, 'aria-invalid': invalid } = errorAttributes ?? {};
-  const presentation = useMemo(() => {
-    const plan = getNestedControlPresentation({ id, label, showLabel: !hideLabel, labelledByTemplate, required });
-    if (!errorsId) {
-      return plan;
-    }
-    const attributes = { ...plan.control?.attributes, 'aria-describedby': errorsId, 'aria-invalid': invalid };
-    return { ...plan, control: { id, attributes } };
-  }, [id, label, hideLabel, labelledByTemplate, required, errorsId, invalid]);
+  const presentation = useMemo(
+    () =>
+      getNestedControlPresentation({
+        id,
+        label,
+        showLabel: !hideLabel,
+        labelledByTemplate,
+        required,
+        attributes: { 'aria-describedby': errorsId, 'aria-invalid': invalid },
+      }),
+    [id, label, hideLabel, labelledByTemplate, required, errorsId, invalid],
+  );
   const { Widget: SelectWidget } = resolveWidget<T, S, F>(schema, 'SelectWidget', registry.widgets);
 
   return (

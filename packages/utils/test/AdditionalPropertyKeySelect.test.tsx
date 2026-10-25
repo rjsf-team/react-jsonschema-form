@@ -75,6 +75,14 @@ describe('AdditionalPropertyKeySelect', () => {
     expect(select).toHaveAttribute('aria-invalid', 'true');
   });
 
+  it('marks the select invalid when its errors have no id to describe it by', () => {
+    const { container } = render(
+      <AdditionalPropertyKeySelect {...baseProps} errorAttributes={{ 'aria-invalid': true }} />,
+    );
+
+    expect(container.querySelector('#root_a-key')).toHaveAttribute('aria-invalid', 'true');
+  });
+
   it("names the select by the key's label where neither it nor its template draws that label", () => {
     const { container } = render(<AdditionalPropertyKeySelect {...baseProps} hideLabel />);
 

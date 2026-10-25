@@ -1138,6 +1138,10 @@ export type FieldTemplateProps<
    * schema does not constrain its property names
    */
   propertyNamesEnum?: string[];
+  /** Whether the parent schema forbids the key of this `additionalProperties` property, which its row's errors then say
+   * and its key input is marked invalid for
+   */
+  keyNotAllowed?: boolean;
 };
 
 /**
@@ -1478,6 +1482,7 @@ export type WrapIfAdditionalTemplateProps<
     | 'onKeyRenameBlur'
     | 'onRemoveProperty'
     | 'propertyNamesEnum'
+    | 'keyNotAllowed'
     | 'registry'
     | 'presentation'
   >;

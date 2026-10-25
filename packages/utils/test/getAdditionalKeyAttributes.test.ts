@@ -15,20 +15,33 @@ const planShowing = (errors: string[]) =>
   });
 
 describe('getAdditionalKeyAttributes()', () => {
-  it('marks the key invalid and describes it by the errors its row shows', () => {
+  it('marks a forbidden key invalid and describes it by the errors its row shows', () => {
     expect(
-      getAdditionalKeyAttributes({ id: 'root_a', hasErrors: true, presentation: planShowing(['not allowed']) }),
+      getAdditionalKeyAttributes({
+        id: 'root_a',
+        keyNotAllowed: true,
+        hasErrors: true,
+        presentation: planShowing(['not allowed']),
+      }),
     ).toEqual({ 'aria-describedby': 'root_a__error', 'aria-invalid': true });
   });
 
   it('names the errors by the field id without a plan', () => {
-    expect(getAdditionalKeyAttributes({ id: 'root_a', hasErrors: true })).toEqual({
+    expect(getAdditionalKeyAttributes({ id: 'root_a', keyNotAllowed: true, hasErrors: true })).toEqual({
       'aria-describedby': 'root_a__error',
       'aria-invalid': true,
     });
   });
 
   it('says nothing while the row shows no errors', () => {
-    expect(getAdditionalKeyAttributes({ id: 'root_a', hasErrors: false, presentation: planShowing([]) })).toEqual({});
+    expect(
+      getAdditionalKeyAttributes({ id: 'root_a', keyNotAllowed: true, hasErrors: false, presentation: planShowing([]) }),
+    ).toEqual({});
+  });
+
+  it('leaves an allowed key unmarked while its row shows errors about its value', () => {
+    expect(
+      getAdditionalKeyAttributes({ id: 'root_a', hasErrors: true, presentation: planShowing(['too short']) }),
+    ).toEqual({});
   });
 });

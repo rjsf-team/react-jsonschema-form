@@ -42,6 +42,7 @@ export default function WrapIfAdditionalTemplate<
     onKeyRenameBlur,
     onRemoveProperty,
     propertyNamesEnum,
+    keyNotAllowed,
     rawDescription,
     registry,
     ...rest
