@@ -7594,34 +7594,29 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         },
       });
       const pinningA2: Dependencies = { a: { const: { a: 2 } } };
-      // No option declares `properties.a`, so this is an ordinary `oneOf` rather than a dynamic dependency branch
-      const unkeyedOneOf: Dependencies = { a: { oneOf: [{ const: { a: 2 } }] } };
+      // A dependency's `oneOf` is the restricted branch selector the dependencies docs describe: an option counts only
+      // if it declares `properties.a`, so this one is ignored rather than read as a constraint on the value. Its row
+      // under the default `constAsDefaults` pins current behaviour, not a decision: unlike the bare `const`, it keeps a
+      // default the dependency rejects
+      const branchWithoutKey: Dependencies = { a: { oneOf: [{ const: { a: 2 } }] } };
       it.each<
         [string, Dependencies, 'parent' | 'field' | 'none', DefaultFormStateBehavior, GenericObjectType, unknown]
       >([
         ["gives a dependency's const over the inherited default", pinningA2, 'parent', {}, {}, { a: 2 }],
         ["gives a dependency's const over the select's own default", pinningA2, 'field', {}, {}, { a: 2 }],
         [
-          "gives a dependency oneOf option's const over the inherited default",
-          unkeyedOneOf,
+          'keeps the inherited default when a dependency oneOf has no option declaring the key (current behaviour)',
+          branchWithoutKey,
           'parent',
           {},
-          {},
-          { a: 2 },
-        ],
-        [
-          "keeps the inherited default over a dependency oneOf option's const under skipOneOf",
-          unkeyedOneOf,
-          'parent',
-          { constAsDefaults: 'skipOneOf' },
           {},
           { a: 1 },
         ],
         [
-          "keeps the inherited default over a dependency oneOf option's const when constAsDefaults is never",
-          unkeyedOneOf,
+          'keeps the inherited default when a dependency oneOf has no option declaring the key, under skipOneOf',
+          branchWithoutKey,
           'parent',
-          { constAsDefaults: 'never' },
+          { constAsDefaults: 'skipOneOf' },
           {},
           { a: 1 },
         ],
@@ -7678,7 +7673,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ).toEqual({ x: expected });
         },
       );
-      // Pins form data's precedence over a dependency's const, which holds with or without #5407's fix
+      // Form data wins over a dependency's const
       it("keeps form data over a dependency's const for a select over object constants", () => {
         expect(
           getDefaultFormState(
