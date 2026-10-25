@@ -9,10 +9,13 @@ import type {
   FieldProps,
   FieldTemplateProps,
   FormContextType,
+  GlobalFormOptions,
+  GlobalUISchemaOptions,
   ONE_OF_KEY,
   Registry,
   RJSFMarkedSchema,
   RJSFSchema,
+  SchemaUtilsType,
   StrictRJSFSchema,
   UIOptionsType,
   UiSchema,
@@ -210,83 +213,171 @@ function withInferredWidget<
   return { ...resolvedUiSchema, [UI_WIDGET_KEY]: callerWidget ?? inferredWidget };
 }
 
-/** The last answer of `isSchemaFieldHidden()` per registry and schema object, with the uiSchema and data it was for */
-const lastHiddenAnswers = new WeakMap<
-  object,
-  WeakMap<object, { uiSchema: unknown; formData: unknown; hidden: boolean }>
->();
-
-/** Tells whether the `SchemaField` rendered with `schema`, `uiSchema` and `formData` hides its field, for a container
- * laying out a field it has not rendered yet, as `ObjectField` does for its `ObjectFieldTemplate`. It runs the steps
- * `useSchemaFieldPlan()` resolves the field's widget and `deprecatedHandling` by, for a field nothing above it names,
- * so the container agrees with the field's `FieldTemplate`. A `$ref` cycle renders an Expand button, which hides
- * nothing, until it is expanded, and then the field one level further. The answer is kept per schema object for the
- * uiSchema, data and registry it was given, so a field whose own inputs are unchanged is not resolved again
+/** Wraps `compute` so that, as a `useMemo()` would, it computes again only once an argument differs, by `Object.is()`,
+ * from those of its last call, and otherwise hands back that call's result
  *
- * @param schema - The field's schema, as handed to its `SchemaField`
- * @param uiSchema - The field's uiSchema, as handed to its `SchemaField`
- * @param formData - The field's data
- * @param fieldPath - The field's path
- * @param registry - The registry
- * @param [expanded=false] - Whether the field is a `$ref` cycle the user has expanded
- * @returns - True when the field renders hidden
+ * @param compute - The function to wrap
+ * @returns - The wrapped function
  */
-export function isSchemaFieldHidden<
+function memoizeLast<A extends unknown[], R>(compute: (...args: A) => R): (...args: A) => R {
+  let last: { args: A; result: R } | undefined;
+  return (...args) => {
+    const previous = last;
+    if (previous && args.every((arg, index) => Object.is(arg, previous.args[index]))) {
+      return previous.result;
+    }
+    const result = compute(...args);
+    last = { args, result };
+    return result;
+  };
+}
+
+/** What a field's widget and `deprecatedHandling` resolve to, and what they are resolved from */
+interface FieldWidgetPlan<T, S extends StrictRJSFSchema, F extends FormContextType> {
+  /** The `SelectSchemaInfo` of the retrieved schema */
+  selectSchemaInfo: SelectSchemaInfo<S>;
+  /** The field the `uiSchema` or the schema's `$id` names, as `resolveNamedField()` resolved it, unless the schema is a
+   * `$ref` cycle, which `CyclicSchemaField` renders before any field is read */
+  uiField: NamedFieldResolution<T, S, F> | undefined;
+  /** The `uiSchema` the field is rendered with */
+  uiSchema: UiSchema<T, S, F>;
+  /** The field's own UI options */
+  ownUiOptions: UIOptionsType<T, S, F>;
+  /** The field's own UI options over the global ones */
+  uiOptions: UIOptionsType<T, S, F>;
+  /** How the field handles its schema being `deprecated` */
+  deprecatedHandling: ReturnType<typeof getDeprecatedHandling>;
+  /** Whether the field renders hidden */
+  hidden: boolean;
+}
+
+/** Creates the function a field's widget and `deprecatedHandling` are resolved by, from the props its `SchemaField` is
+ * handed. `useSchemaFieldPlan()` resolves its field through one, and `createIsSchemaFieldHidden()` through another for
+ * a container laying out a field it has not rendered yet, so the two cannot take different steps. As `useMemo()`s would,
+ * each step runs again only once its own inputs change, so the `uiSchema` keeps its identity as the form data changes,
+ * and a `uiSchema` rebuilt on every render neither retrieves the schema again nor hands a typeless select a new `schema`
+ *
+ * @returns - The resolver, which keeps each step's last result, so each field is resolved through one of its own
+ */
+function createFieldWidgetResolver<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(
-  schema: S,
-  uiSchema: UiSchema<T, S, F> | undefined,
-  formData: T | undefined,
-  fieldPath: FieldPath,
-  registry: Registry<T, S, F>,
-  expanded = false,
-): boolean {
-  const isRefCycle = Boolean((schema as RJSFMarkedSchema)[RJSF_REF_CYCLE_KEY]);
-  if (isRefCycle && !expanded) {
-    return false;
-  }
-  // A boolean schema a cast got here is no key a `WeakMap` takes, so it is resolved uncached
-  const cacheable = typeof schema === 'object' && schema !== null;
-  let answers = cacheable ? lastHiddenAnswers.get(registry) : undefined;
-  const last = answers?.get(schema);
-  if (last && last.uiSchema === uiSchema && last.formData === formData) {
-    return last.hidden;
-  }
-  const { schemaUtils, globalUiOptions, globalFormOptions, fields } = registry;
-  const fieldSchema = isRefCycle ? expandRefCycle<S>(schema, schemaUtils.getRootSchema()) : schema;
-  const ownUiSchema = resolveUiSchema<T, S, F>(fieldSchema, uiSchema, registry);
-  let hidden = false;
-  // The field's widget is one its uiSchema names or a select's inferred default, never `'hidden'`, and only a `'hide'`
-  // handling reads `deprecated`, so a field neither can hide is answered without retrieving its schema
-  if (
-    ownUiSchema[UI_WIDGET_KEY] === 'hidden' ||
-    ownUiSchema[UI_OPTIONS_KEY]?.widget === 'hidden' ||
-    getUiOptions<T, S, F>(ownUiSchema, globalUiOptions).deprecatedHandling === 'hide'
-  ) {
-    const selectSchemaInfo = getSelectSchemaInfo<S>(schemaUtils.retrieveSchema(fieldSchema, formData));
-    const { uiSchema: resolvedUiSchema } = resolveNamedField<T, S, F>(
+>() {
+  const resolveOwnUiSchema = memoizeLast(resolveUiSchema<T, S, F>);
+  // Kept apart from inferring the select type so that a `uiSchema` rebuilt on every render doesn't retrieve again
+  const retrieveSchema = memoizeLast(
+    (isRefCycle: boolean, schema: S, formData: T | undefined, schemaUtils: SchemaUtilsType<T, S, F>) =>
+      isRefCycle ? schema : schemaUtils.retrieveSchema(schema, formData),
+  );
+  // Kept apart from the widget below, which alone reads the `uiSchema`, so a `uiSchema` rebuilt on every render doesn't
+  // hand a typeless select a new `schema` each time
+  const selectSchemaInfoOf = memoizeLast(getSelectSchemaInfo<S>);
+  // Below a field named for this same path, nothing names one again. Keyed on the `$id` rather than the schema, which is
+  // retrieved afresh as the data changes, so the `uiSchema` it hands back keeps its identity
+  const resolveUiField = memoizeLast(
+    (
+      isRefCycle: boolean,
+      namedAbove: boolean,
+      ownUiSchema: UiSchema<T, S, F>,
+      schemaId: string | undefined,
+      fields: Registry<T, S, F>['fields'],
+      fieldPath: FieldPath,
+      globalFormOptions: GlobalFormOptions,
+    ): NamedFieldResolution<T, S, F> | undefined => {
+      if (isRefCycle) {
+        return undefined;
+      }
+      return namedAbove
+        ? { ignored: [], uiSchema: withoutNamedField<T, S, F>(ownUiSchema) }
+        : resolveNamedField<T, S, F>(ownUiSchema, schemaId, fields, fieldPath, globalFormOptions);
+    },
+  );
+  const inferWidget = memoizeLast(inferSelectWidget<T, S, F>);
+  // Kept apart from the schema above so that the resolved `uiSchema` keeps its identity as the form data changes
+  const writeBackWidget = memoizeLast(withInferredWidget<T, S, F>);
+  const readOwnUiOptions = memoizeLast((uiSchema: UiSchema<T, S, F>) => getUiOptions<T, S, F>(uiSchema));
+  // What `getUiOptions(uiSchema, globalUiOptions)` returns, without reading the `uiSchema`'s keys a second time
+  const overGlobalUiOptions = memoizeLast(
+    (
+      globalUiOptions: GlobalUISchemaOptions | undefined,
+      ownUiOptions: UIOptionsType<T, S, F>,
+    ): UIOptionsType<T, S, F> => ({
+      ...globalUiOptions,
+      ...ownUiOptions,
+    }),
+  );
+  return (
+    schema: S,
+    rawUiSchema: UiSchema<T, S, F> | undefined,
+    formData: T | undefined,
+    fieldPath: FieldPath,
+    registry: Registry<T, S, F>,
+    namedAbove: boolean,
+  ): FieldWidgetPlan<T, S, F> => {
+    const { schemaUtils, globalFormOptions, globalUiOptions, fields } = registry;
+    const isRefCycle = Boolean((schema as RJSFMarkedSchema)[RJSF_REF_CYCLE_KEY]);
+    const ownUiSchema = resolveOwnUiSchema(schema, rawUiSchema, registry);
+    const selectSchemaInfo = selectSchemaInfoOf(retrieveSchema(isRefCycle, schema, formData, schemaUtils));
+    const uiField = resolveUiField(
+      isRefCycle,
+      namedAbove,
       ownUiSchema,
       selectSchemaInfo.schema.$id,
       fields,
       fieldPath,
       globalFormOptions,
     );
-    const inferredWidget = inferSelectWidget<T, S, F>(selectSchemaInfo, resolvedUiSchema);
-    const ownUiOptions = getUiOptions<T, S, F>(withInferredWidget<T, S, F>(resolvedUiSchema, inferredWidget, fields));
-    const uiOptions = { ...globalUiOptions, ...ownUiOptions };
-    hidden =
-      ownUiOptions.widget === 'hidden' || getDeprecatedHandling<T, S, F>(selectSchemaInfo.schema, uiOptions) === 'hide';
-  }
-  if (cacheable) {
-    if (!answers) {
-      answers = new WeakMap();
-      lastHiddenAnswers.set(registry, answers);
+    const resolvedUiSchema = uiField?.uiSchema ?? ownUiSchema;
+    const uiSchema = writeBackWidget(resolvedUiSchema, inferWidget(selectSchemaInfo, resolvedUiSchema), fields);
+    const ownUiOptions = readOwnUiOptions(uiSchema);
+    const uiOptions = overGlobalUiOptions(globalUiOptions, ownUiOptions);
+    const deprecatedHandling = getDeprecatedHandling<T, S, F>(selectSchemaInfo.schema, uiOptions);
+    const hidden = ownUiOptions.widget === 'hidden' || deprecatedHandling === 'hide';
+    return { selectSchemaInfo, uiField, uiSchema, ownUiOptions, uiOptions, deprecatedHandling, hidden };
+  };
+}
+
+/** Creates the function a container tells by whether the `SchemaField` it hands `schema`, `uiSchema` and `formData`
+ * renders hidden, for a field it lays out before rendering it, as `ObjectField` does for its `ObjectFieldTemplate`. The
+ * field is resolved through `createFieldWidgetResolver()`, as `useSchemaFieldPlan()` resolves it, for a field nothing
+ * above it names. A `$ref` cycle renders an Expand button, which hides nothing, until it is expanded, and then, as
+ * `CyclicSchemaField` does, the field one level further
+ *
+ * @returns - The function, which keeps each step's last result, so a container keeps one per field it lays out
+ */
+export function createIsSchemaFieldHidden<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>() {
+  const expandCycle = memoizeLast(expandRefCycle<S>);
+  const resolveFieldWidget = createFieldWidgetResolver<T, S, F>();
+  /** Tells whether the field renders hidden
+   *
+   * @param schema - The field's schema, as handed to its `SchemaField`
+   * @param uiSchema - The field's uiSchema, as handed to its `SchemaField`
+   * @param formData - The field's data
+   * @param fieldPath - The field's path
+   * @param registry - The registry
+   * @param [expanded=false] - Whether the field is a `$ref` cycle the user has expanded
+   * @returns - True when the field renders hidden
+   */
+  return (
+    schema: S,
+    uiSchema: UiSchema<T, S, F> | undefined,
+    formData: T | undefined,
+    fieldPath: FieldPath,
+    registry: Registry<T, S, F>,
+    expanded = false,
+  ): boolean => {
+    const isRefCycle = Boolean((schema as RJSFMarkedSchema)[RJSF_REF_CYCLE_KEY]);
+    if (isRefCycle && !expanded) {
+      return false;
     }
-    answers.set(schema, { uiSchema, formData, hidden });
-  }
-  return hidden;
+    const fieldSchema = isRefCycle ? expandCycle(schema, registry.schemaUtils.getRootSchema()) : schema;
+    return resolveFieldWidget(fieldSchema, uiSchema, formData, fieldPath, registry, false).hidden;
+  };
 }
 
 const RenderNothing = () => null;
@@ -597,60 +688,22 @@ export function useSchemaFieldPlan<
   const framedAbove = namedHere?.framedAbove === true;
   const optionsRenderedAbove = namedHere?.optionsRendered === true;
 
-  const ownUiSchema = useMemo(
-    () => resolveUiSchema<T, S, F>(_schema, _uiSchema, registry),
-    [_schema, _uiSchema, registry],
+  // A `$ref` cycle returns below without rendering a field of its own, so the resolver neither retrieves its schema nor
+  // resolves the field it names. Those are resolved up here, ahead of that return, because the options memo depends on
+  // them. The resolver is the field's own, since it keeps each step's last result as a `useMemo()` would, and its
+  // result is memoized as well because the React Compiler (`react/preserve-manual-memoization`) takes what a call
+  // returns for a value that may still be mutated, and so refuses the memos below that depend on it
+  const resolveFieldWidget = useMemo(() => createFieldWidgetResolver<T, S, F>(), []);
+  const { selectSchemaInfo, uiField, uiSchema, ownUiOptions, uiOptions, deprecatedHandling, hidden } = useMemo(
+    () => resolveFieldWidget(_schema, _uiSchema, formData, fieldPath, registry, namedAbove),
+    [resolveFieldWidget, _schema, _uiSchema, formData, fieldPath, registry, namedAbove],
   );
-  // A schema tagged as a `$ref` cycle returns below before either value is read, so it is left unretrieved. Retrieving
-  // is kept apart from inferring the select type so that a `uiSchema` rebuilt on every render doesn't retrieve again
-  const isRefCycle = Boolean((_schema as RJSFMarkedSchema)[RJSF_REF_CYCLE_KEY]);
-  const retrievedSchema = useMemo(
-    () => (isRefCycle ? _schema : schemaUtils.retrieveSchema(_schema, formData)),
-    [isRefCycle, _schema, formData, schemaUtils],
-  );
-  // Kept apart from the widget below, which alone reads the `uiSchema`, so a `uiSchema` rebuilt on every render doesn't
-  // hand a typeless select a new `schema` each time
-  const selectSchemaInfo = useMemo(() => getSelectSchemaInfo<S>(retrievedSchema), [retrievedSchema]);
   const { schema, xxxOfKey, isSelectSchema, hasConstantOptions } = selectSchemaInfo;
-  // A `$ref` cycle returns below without rendering a field of its own, so neither the field nor the options are
-  // resolved for it. They are resolved up here, ahead of that return, because the options memo depends on them.
-  // Below a field named for this same path, nothing names one again. Memoized so the warnings it carries are logged
-  // from a value React Compiler knows is no longer mutated, as the options memo below depends on it, and keyed on the
-  // `$id` rather than the schema, which is retrieved afresh as the data changes, so the `uiSchema` it hands back keeps
-  // its identity
-  const schemaId = schema.$id;
-  const uiField = useMemo<NamedFieldResolution<T, S, F> | undefined>(() => {
-    if (isRefCycle) {
-      return undefined;
-    }
-    return namedAbove
-      ? { ignored: [], uiSchema: withoutNamedField<T, S, F>(ownUiSchema) }
-      : resolveNamedField<T, S, F>(ownUiSchema, schemaId, fields, fieldPath, globalFormOptions);
-  }, [isRefCycle, namedAbove, ownUiSchema, schemaId, fields, fieldPath, globalFormOptions]);
   // `SchemaField` named for its own data is the field that renders it with no field named, so it is rendered that way.
   // `FallbackField` still renders, as it does for a schema whose type sends it there, within this field's template
   const namedField = uiField?.namedField === fields.SchemaField ? undefined : uiField?.namedField;
-  const resolvedUiSchema = uiField?.uiSchema ?? ownUiSchema;
-  const inferredWidget = useMemo(
-    () => inferSelectWidget<T, S, F>(selectSchemaInfo, resolvedUiSchema),
-    [selectSchemaInfo, resolvedUiSchema],
-  );
-  // Kept apart from the schema above so that the resolved `uiSchema` keeps its identity as the form data changes
-  const uiSchema = useMemo(
-    () => withInferredWidget<T, S, F>(resolvedUiSchema, inferredWidget, fields),
-    [inferredWidget, resolvedUiSchema, fields],
-  );
   // Memoized so a child reading it past a `memo` boundary isn't re-rendered by a new object each render
   const fieldUiSchema = useMemo<UiSchema<T, S, F>>(() => omitConsumedStyling<T, S, F>(uiSchema), [uiSchema]);
-  const ownUiOptions = useMemo(() => getUiOptions<T, S, F>(uiSchema), [uiSchema]);
-  // What `getUiOptions(uiSchema, globalUiOptions)` returns, without reading the `uiSchema`'s keys a second time.
-  // Nothing compares either object by identity; both are memoized because the React Compiler
-  // (`react/preserve-manual-memoization`) refuses the options memo below when the flags it depends on derive from an
-  // object rebuilt each render, which it takes for one that may still be mutated
-  const uiOptions = useMemo<UIOptionsType<T, S, F>>(
-    () => ({ ...globalUiOptions, ...ownUiOptions }),
-    [globalUiOptions, ownUiOptions],
-  );
   // The field's own options pick the field, since `getDisplayLabel()` and the defaults read only its own `ui:widget`
   const fieldToRender =
     uiField &&
@@ -674,7 +727,6 @@ export function useSchemaFieldPlan<
     fieldToRender.rendersOptionSelector &&
     !fieldToRender.rendersOptionsItself;
 
-  const deprecatedHandling = getDeprecatedHandling<T, S, F>(schema, uiOptions);
   // ui:required is deliberately resolved from this field's own uiSchema only (no globalUiOptions fallback): unlike
   // most ui:options, it has to be seen by getUiRequiredErrorSchema() too, which resolves a field's own uiSchema
   // uiSchema, so a form-wide default here would make the required indicator and schema validation disagree
@@ -683,8 +735,6 @@ export function useSchemaFieldPlan<
   // `ui:hideError` is resolved as the field's own, then the one the field above resolved to, so a parent's reaches its
   // children (#5490)
   const hideError = uiBooleanOption(ownUiOptions.hideError) ?? props.hideError;
-  // `isSchemaFieldHidden()` runs these same steps for a container laying the field out, so keep the two in step
-  const hidden = ownUiOptions.widget === 'hidden' || deprecatedHandling === 'hide';
   const inheritedPresentation = useInheritedPresentation(fieldId);
   // The property name and the title a parent hands down label the field above, which a selected option or the fallback
   // UI's value renders the value of, so a field below with no title of its own isn't labelled by them a second time

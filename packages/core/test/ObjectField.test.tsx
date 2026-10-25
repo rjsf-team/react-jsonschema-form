@@ -12,6 +12,7 @@ import type {
   FieldTemplateProps,
   ObjectFieldTemplateProps,
   PartPlacement,
+  Registry,
   UiSchema,
 } from '@rjsf/utils';
 import { fieldLabelId, isObject, isPlainObject, noop, ROOT_FIELD_PATH, UI_GLOBAL_OPTIONS_KEY } from '@rjsf/utils';
@@ -298,6 +299,32 @@ describe('ObjectField', () => {
       expect(node.querySelector('[data-property="a"]')).toHaveAttribute('data-hidden', 'true');
       expect(node.querySelector('[data-field="root_a"]')).toHaveAttribute('data-hidden', 'true');
       expect(node.querySelector('input#root_a')).toHaveAttribute('type', 'hidden');
+    });
+
+    it('should not resolve a property again for an edit to its sibling', async () => {
+      const registries: Registry[] = [];
+      const RegistryReadingTemplate = (props: ObjectFieldTemplateProps) => {
+        registries.push(props.registry);
+        return <HiddenFlagObjectFieldTemplate {...props} />;
+      };
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { a: { type: 'string', title: 'A' }, b: { type: 'string', title: 'B', deprecated: true } },
+        },
+        uiSchema: { [UI_GLOBAL_OPTIONS_KEY]: { deprecatedHandling: 'hide' } },
+        templates: { ObjectFieldTemplate: RegistryReadingTemplate },
+      });
+      const [registry] = registries;
+      if (!registry) {
+        throw new Error('ObjectFieldTemplate was not rendered');
+      }
+      const retrieveSchema = vi.spyOn(registry.schemaUtils, 'retrieveSchema');
+      await user.type(screen.getByRole('textbox', { name: 'A' }), 'x');
+      const retrievedTitles = retrieveSchema.mock.calls.map(([schema]) => schema.title);
+      expect(retrievedTitles).toContain('A');
+      expect(retrievedTitles).not.toContain('B');
+      expect(node.querySelector('[data-property="b"]')).toHaveAttribute('data-hidden', 'true');
     });
 
     it('should render a customized title', () => {

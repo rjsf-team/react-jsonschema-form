@@ -70,11 +70,34 @@ import {
   storedValue,
   withGlobalUiOptions,
 } from './fieldWidgetUtils.ts';
-import { isSchemaFieldHidden } from './SchemaField.tsx';
+import { createIsSchemaFieldHidden } from './SchemaField.tsx';
 import { useShownOptionBeside } from './ShownOptionContext.ts';
 
 /** The subscription of an object with no `$ref` cycle among its properties, whose expansions it has nothing to read */
 const subscribeToNothing = () => () => {};
+
+/** Creates what keeps an object's `createIsSchemaFieldHidden()` checks, one per property name, as each property's
+ * `SchemaField` keeps its own plan, so a property whose own schema, uiSchema and data are unchanged is not resolved
+ * again. A property no longer laid out loses its check
+ *
+ * @returns - The function handing back the check of each of the properties it is given, in order
+ */
+function createPropertyHiddenChecks<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>() {
+  let checks = new Map<string, ReturnType<typeof createIsSchemaFieldHidden<T, S, F>>>();
+  return (properties: readonly string[]) => {
+    const kept = checks;
+    checks = new Map();
+    return properties.map((property) => {
+      const check = kept.get(property) ?? createIsSchemaFieldHidden<T, S, F>();
+      checks.set(property, check);
+      return check;
+    });
+  };
+}
 
 /** Returns a flag indicating whether the `name` field is required in the object schema
  *
@@ -548,11 +571,14 @@ export default function ObjectField<
     readExpandedCycles,
     readExpandedCycles,
   );
+  const propertyHiddenChecks = useMemo(() => createPropertyHiddenChecks<T, S, F>(), []);
   const hiddenProperties = useMemo(() => {
     const expanded = new Set(cycleProperties.filter((_, index) => expandedCycles[index] === '1'));
+    const properties = rendersProperties ? Object.keys(schemaProperties) : [];
+    const checks = propertyHiddenChecks(properties);
     return new Set(
-      (rendersProperties ? Object.keys(schemaProperties) : []).filter((property) =>
-        isSchemaFieldHidden<T, S, F>(
+      properties.filter((property, index) =>
+        checks[index](
           getPropertySchema<S>(schema, property),
           getByPath<UiSchema<T, S, F> | undefined>(
             uiSchema,
@@ -575,6 +601,7 @@ export default function ObjectField<
     registry,
     cycleProperties,
     expandedCycles,
+    propertyHiddenChecks,
   ]);
   let orderedProperties: string[] = [];
 

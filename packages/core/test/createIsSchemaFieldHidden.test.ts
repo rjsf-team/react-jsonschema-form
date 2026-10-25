@@ -1,7 +1,7 @@
 import type { GlobalUISchemaOptions, Registry, RJSFSchema } from '@rjsf/utils';
 import { RJSF_REF_CYCLE_KEY, ROOT_FIELD_PATH } from '@rjsf/utils';
 
-import { isSchemaFieldHidden } from '../src/components/fields/SchemaField.tsx';
+import { createIsSchemaFieldHidden } from '../src/components/fields/SchemaField.tsx';
 import { getTestRegistry } from '../src/testing.ts';
 
 const ROOT_SCHEMA: RJSFSchema = {
@@ -25,7 +25,12 @@ const BOOLEAN_SELECT: RJSFSchema = { oneOf: [{ const: true }, { const: false }] 
 // inferred select is the caller's `ui:options.widget`
 const HIDDEN_OPTION_UNDER_UNDEFINED_WIDGET = { 'ui:options': { widget: 'hidden' }, 'ui:widget': undefined };
 
-describe('isSchemaFieldHidden()', () => {
+describe('createIsSchemaFieldHidden()', () => {
+  let isSchemaFieldHidden: ReturnType<typeof createIsSchemaFieldHidden>;
+  beforeEach(() => {
+    isSchemaFieldHidden = createIsSchemaFieldHidden();
+  });
+
   it('returns false for a field nothing hides', () => {
     expect(isSchemaFieldHidden({ type: 'string' }, undefined, undefined, ROOT_FIELD_PATH, makeRegistry())).toBe(false);
   });
@@ -83,14 +88,7 @@ describe('isSchemaFieldHidden()', () => {
     expect(isSchemaFieldHidden({ type: 'string' }, uiSchema, undefined, ROOT_FIELD_PATH, registry)).toBe(false);
   });
 
-  it('retrieves no schema for a field neither a hidden widget nor a hide handling can hide', () => {
-    const registry = makeRegistry({ deprecatedHandling: 'label' });
-    const retrieveSchema = vi.spyOn(registry.schemaUtils, 'retrieveSchema');
-    expect(isSchemaFieldHidden(OLD_REF, { 'ui:widget': 'textarea' }, undefined, ROOT_FIELD_PATH, registry)).toBe(false);
-    expect(retrieveSchema).not.toHaveBeenCalled();
-  });
-
-  it('resolves a schema again only once its uiSchema or data changes', () => {
+  it('retrieves the schema again only once its data changes', () => {
     const registry = makeRegistry({ deprecatedHandling: 'hide' });
     const retrieveSchema = vi.spyOn(registry.schemaUtils, 'retrieveSchema');
     const schema: RJSFSchema = { $ref: '#/definitions/old' };
