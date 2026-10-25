@@ -201,7 +201,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     </span>
                   </label>
                   <div
-                    class="form-control my-4 w-full relative"
+                    class="form-control my-4 w-full"
                   >
                     <div
                       class="w-full"
@@ -1762,7 +1762,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     </span>
                   </label>
                   <div
-                    class="form-control my-4 w-full relative"
+                    class="form-control my-4 w-full"
                   >
                     <div
                       class="w-full"
@@ -3323,7 +3323,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     </span>
                   </label>
                   <div
-                    class="form-control my-4 w-full relative"
+                    class="form-control my-4 w-full"
                   >
                     <div
                       class="w-full"
@@ -4884,7 +4884,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     </span>
                   </label>
                   <div
-                    class="form-control my-4 w-full relative"
+                    class="form-control my-4 w-full"
                   >
                     <div
                       class="w-full"
@@ -6434,7 +6434,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                   </span>
                 </label>
                 <div
-                  class="form-control my-4 w-full relative"
+                  class="form-control my-4 w-full"
                 >
                   <div
                     class="w-full"
@@ -7847,7 +7847,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                   </span>
                 </label>
                 <div
-                  class="form-control my-4 w-full relative"
+                  class="form-control my-4 w-full"
                 >
                   <div
                     class="w-full"

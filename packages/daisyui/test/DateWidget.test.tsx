@@ -7,6 +7,7 @@ import Form from '../src/index.ts';
 import DateWidget from '../src/widgets/DateWidget/DateWidget.tsx';
 import { makeWidgetMockProps } from './helpers/createMocks.ts';
 import pinTimeZone from './helpers/pinTimeZone.ts';
+import stubViewport from './helpers/stubViewport.ts';
 
 const user = userEvent.setup();
 
@@ -636,6 +637,8 @@ describe('DateWidget', () => {
   });
 
   describe('the calendar it places', () => {
+    stubViewport();
+
     /** A trigger 20px high whose bottom edge is `bottom` pixels down the viewport */
     function triggerRect(bottom: number): DOMRect {
       return {

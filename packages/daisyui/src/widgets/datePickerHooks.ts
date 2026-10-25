@@ -4,8 +4,6 @@ import type { RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { callWithDeferredThrow } from '@rjsf/utils';
 import { format, isSameMonth, isValid, parseISO } from 'date-fns';
 
-import { CALENDAR_MIN_WIDTH } from './DatePickerCalendar.tsx';
-
 /** The document the form is rendered into, which is a document away from the one this module runs in wherever that is
  * an iframe — as the playground's frame renders it. A press, a key and a viewport width all belong to that document
  * rather than to ours, and reading it off an element the form rendered needs no setup from the consumer, where a
@@ -381,27 +379,41 @@ export function useDatePicker<V>({
   }, [isOpen, latestCancel, latestClose]);
 
   // Place the popup just below its trigger, or above it where it would run off the bottom of the viewport and fits
-  // there, and moved left where the calendar would run off the right of it. It is fixed, so a scrolling panel or dialog
-  // around the field doesn't clip it, which leaves it to follow the trigger itself, and a scroll of the page can't
-  // bring into view a part of it that runs off the bottom. A layout Effect, so the popup each opening mounts is in place before the browser first paints it; it then
-  // follows the trigger on resize and scroll, once a frame however many events the frame brings, since measuring the
-  // trigger forces a layout. A scroll of an element around the field doesn't bubble, so it reaches the window only in
-  // the capture phase
+  // there, or else as low as it fits whole, and moved left where it would run off the right of the viewport. It is
+  // fixed, so a scrolling panel or dialog around the field doesn't clip it, which leaves it to follow the trigger
+  // itself, and a scroll of the page can't bring into view a part of it that runs off the bottom. A layout Effect, so
+  // the popup each opening mounts is in place before the browser first paints it; it then follows the trigger on
+  // resize and scroll, once a frame however many events the frame brings, since measuring the trigger forces a
+  // layout, and is placed again when its own size changes, as a month with another number of weeks changes it. A
+  // scroll of an element around the field doesn't bubble, so it reaches the window only in the capture phase
   useLayoutEffect(() => {
     const popup = containerRef.current;
     const trigger = triggerRef.current;
     if (!isOpen || !popup || !trigger) {
       return () => {};
     }
-    // The trigger is measured against the viewport of the window the form is in, so that is the one to keep inside of
+    // The trigger is measured against the viewport of the window the form is in, so that is the one to keep inside
+    // of. The root element's client box is that viewport less its scrollbars
+    const viewport = documentOf(trigger).documentElement;
     const win = windowOf(trigger);
     const place = () => {
       const { top, bottom, left } = trigger.getBoundingClientRect();
-      const height = popup.offsetHeight;
+      const { offsetWidth: width, offsetHeight: height } = popup;
+      const below = bottom + 5;
       const above = top - 5 - height;
-      const rightmost = win.innerWidth - 20 - CALENDAR_MIN_WIDTH;
-      popup.style.top = `${bottom + 5 + height > win.innerHeight && above >= 0 ? above : bottom + 5}px`;
-      popup.style.left = `${left > rightmost ? Math.max(20, rightmost) : left}px`;
+      const rightmost = viewport.clientWidth - 20 - width;
+      let y = below;
+      if (below + height > viewport.clientHeight) {
+        y = above >= 0 ? above : Math.max(0, viewport.clientHeight - height);
+      }
+      const x = left > rightmost ? Math.max(20, rightmost) : left;
+      // A transformed, filtered or contained ancestor, as daisyUI's modal box is, places a fixed element against
+      // itself rather than against the viewport, so the popup is offset by wherever its origin lands
+      popup.style.top = '0px';
+      popup.style.left = '0px';
+      const origin = popup.getBoundingClientRect();
+      popup.style.top = `${y - origin.top}px`;
+      popup.style.left = `${x - origin.left}px`;
     };
     place();
     let frame = 0;
@@ -415,8 +427,22 @@ export function useDatePicker<V>({
     };
     win.addEventListener('resize', follow);
     win.addEventListener('scroll', follow, { capture: true, passive: true });
+    // Neither observer exists outside a browser, such as in a consumer's jsdom tests
+    const resizes = 'ResizeObserver' in win ? new win.ResizeObserver(place) : undefined;
+    resizes?.observe(popup);
+    // A scrolling panel clips the trigger but not the fixed popup, which is hidden while none of the trigger shows
+    // rather than left floating over whatever is at its place
+    const sight =
+      'IntersectionObserver' in win
+        ? new win.IntersectionObserver((entries) => {
+            popup.style.visibility = entries[entries.length - 1].isIntersecting ? '' : 'hidden';
+          })
+        : undefined;
+    sight?.observe(trigger);
     return () => {
       win.cancelAnimationFrame(frame);
+      resizes?.disconnect();
+      sight?.disconnect();
       win.removeEventListener('resize', follow);
       win.removeEventListener('scroll', follow, { capture: true });
     };

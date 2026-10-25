@@ -12,7 +12,7 @@ exports[`format iso-date-time 1`] = `
         class="field-template mb-3"
       >
         <div
-          class="form-control my-4 w-full relative"
+          class="form-control my-4 w-full"
         >
           <div
             class="w-full"
@@ -4887,7 +4887,7 @@ exports[`single fields > format date 1`] = `
         class="field-template mb-3"
       >
         <div
-          class="form-control my-4 w-full relative"
+          class="form-control my-4 w-full"
         >
           <div
             class="w-full"
@@ -4949,7 +4949,7 @@ exports[`single fields > format datetime 1`] = `
         class="field-template mb-3"
       >
         <div
-          class="form-control my-4 w-full relative"
+          class="form-control my-4 w-full"
         >
           <div
             class="w-full"

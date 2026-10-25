@@ -152,7 +152,7 @@ export default function DateTimeWidget<
   const formattedValue = displayedDate ? format(displayedDate, 'PP p') : undefined;
 
   return (
-    <div className='form-control my-4 w-full relative'>
+    <div className='form-control my-4 w-full'>
       <div className='w-full'>
         <DatePickerTrigger
           id={id}

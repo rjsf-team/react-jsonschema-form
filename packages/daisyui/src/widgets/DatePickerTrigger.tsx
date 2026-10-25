@@ -176,7 +176,8 @@ interface DatePickerPopupProps {
  *
  * Its `position` and `z-index` are inline rather than classes: the `top` and `left` `useDatePicker()` writes are
  * viewport coordinates, which place only a fixed popup, and a consumer whose Tailwind build doesn't scan this package
- * gets none of its classes
+ * gets none of its classes. It scrolls within the height of the viewport, where it is placed whole, so a viewport
+ * shorter than the popup still reaches its Done button
  *
  * @param props - The popup's id and name, the ref to attach, the Done handler and its label, and its contents
  */
@@ -186,7 +187,7 @@ export function DatePickerPopup({ id, name, containerRef, translateString, onDon
       ref={containerRef}
       role='presentation'
       className='date-picker-popup w-full max-w-xs bg-base-100 border border-base-300 shadow-lg rounded-box'
-      style={{ position: 'fixed', zIndex: 99999 }}
+      style={{ position: 'fixed', zIndex: 99999, maxHeight: '100vh', overflowY: 'auto' }}
       onClick={(e) => e.stopPropagation()}
     >
       <div id={id} role='dialog' aria-label={name}>

@@ -1,13 +1,17 @@
 import validator from '@rjsf/validator-ajv8';
 import { render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
+import { mockIntersectionObserver, mockResizeObserver } from 'jsdom-testing-mocks';
 
 import Form from '../src/index.ts';
 import DateTimeWidget from '../src/widgets/DateTimeWidget/DateTimeWidget.tsx';
 import { makeWidgetMockProps } from './helpers/createMocks.ts';
 import pinTimeZone from './helpers/pinTimeZone.ts';
+import stubViewport from './helpers/stubViewport.ts';
 
 const user = userEvent.setup();
+const intersectionObserver = mockIntersectionObserver();
+const resizeObserver = mockResizeObserver();
 
 /** Opens the picker from its trigger, the one button that opens a popup — the calendar renders more */
 async function openPicker(container: HTMLElement) {
@@ -330,63 +334,127 @@ describe('DateTimeWidget', () => {
     expect(document.activeElement).toHaveTextContent(/^3$/);
   });
 
-  test('places its calendar below its trigger, inside the right edge of the viewport', async () => {
-    const { container } = render(
-      <DateTimeWidget
-        {...makeWidgetMockProps({ value: '2016-04-05T14:01:30', schema: { type: 'string', format: 'date-time' } })}
-      />,
-    );
-    const trigger = container.querySelector('button[aria-haspopup]')!;
-    // jsdom lays nothing out, so the trigger is put by hand 40px short of the right edge of its 1024px-wide viewport
-    vi.spyOn(trigger, 'getBoundingClientRect').mockReturnValue({
-      x: 984,
-      y: 30,
-      width: 40,
-      height: 20,
-      top: 30,
-      right: 1024,
-      bottom: 50,
-      left: 984,
-      toJSON() {},
+  describe('the calendar it places', () => {
+    stubViewport();
+
+    /** Renders the widget with its trigger put by hand where jsdom, laying nothing out, leaves it an empty box
+     *
+     * @param rect - Where the trigger is in the viewport
+     * @returns - The trigger
+     */
+    function renderAt(rect: { top: number; left: number }) {
+      const { container } = render(
+        <DateTimeWidget
+          {...makeWidgetMockProps({ value: '2016-04-05T14:01:30', schema: { type: 'string', format: 'date-time' } })}
+        />,
+      );
+      const trigger = container.querySelector<HTMLElement>('button[aria-haspopup]')!;
+      const { top, left } = rect;
+      vi.spyOn(trigger, 'getBoundingClientRect').mockReturnValue({
+        x: left,
+        y: top,
+        width: 40,
+        height: 20,
+        top,
+        right: left + 40,
+        bottom: top + 20,
+        left,
+        toJSON() {},
+      });
+      return trigger;
+    }
+
+    /** Gives every element a size, which jsdom, laying nothing out, leaves at zero, until the test ends */
+    function sizeElements(width: number, height: number) {
+      const widthSpy = vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockReturnValue(width);
+      const heightSpy = vi.spyOn(HTMLElement.prototype, 'offsetHeight', 'get').mockReturnValue(height);
+      onTestFinished(() => {
+        widthSpy.mockRestore();
+        heightSpy.mockRestore();
+      });
+      return heightSpy;
+    }
+
+    const popup = () => screen.getByText('Done').closest<HTMLElement>('.date-picker-popup')!;
+
+    test('below its trigger, inside the right edge of the viewport by its own width', async () => {
+      // 40px short of the right edge of the 1024px-wide viewport, with the popup 400px wide, as `max-w-xs` makes it
+      // under a 20px root font
+      const trigger = renderAt({ top: 30, left: 984 });
+      sizeElements(400, 0);
+
+      await user.click(trigger);
+
+      // Moved left until its 400px end 20px inside that edge
+      expect(popup()).toHaveStyle({ position: 'fixed', top: '55px', left: '604px' });
     });
 
-    await user.click(trigger);
+    test('above its trigger where it would run off the bottom of the viewport', async () => {
+      const trigger = renderAt({ top: 680, left: 10 });
+      sizeElements(320, 500);
 
-    // Moved left until the calendar's 320px end 20px inside that edge
-    expect(screen.getByText('Done').closest('.date-picker-popup')).toHaveStyle({
-      position: 'fixed',
-      top: '55px',
-      left: '684px',
+      await user.click(trigger);
+
+      // Its 500px end 5px above the trigger's top, where below it they would end 437px past the viewport's bottom
+      expect(popup()).toHaveStyle({ top: '175px', left: '10px' });
     });
-  });
 
-  test('places its calendar above its trigger where it would run off the bottom of the viewport', async () => {
-    const { container } = render(
-      <DateTimeWidget
-        {...makeWidgetMockProps({ value: '2016-04-05T14:01:30', schema: { type: 'string', format: 'date-time' } })}
-      />,
-    );
-    const trigger = container.querySelector('button[aria-haspopup]')!;
-    // jsdom lays nothing out, so the trigger is put by hand near the bottom of its 768px-high viewport, and the popup
-    // given a height
-    vi.spyOn(trigger, 'getBoundingClientRect').mockReturnValue({
-      x: 10,
-      y: 680,
-      width: 90,
-      height: 20,
-      top: 680,
-      right: 100,
-      bottom: 700,
-      left: 10,
-      toJSON() {},
+    test('as low as it fits whole where it fits neither below nor above its trigger', async () => {
+      const trigger = renderAt({ top: 380, left: 10 });
+      sizeElements(320, 760);
+
+      await user.click(trigger);
+
+      // Its 760px end at the 768px viewport's bottom, Done included
+      expect(popup()).toHaveStyle({ top: '8px' });
     });
-    const height = vi.spyOn(HTMLElement.prototype, 'offsetHeight', 'get').mockReturnValue(500);
-    onTestFinished(() => height.mockRestore());
 
-    await user.click(trigger);
+    test('again when its own height changes', async () => {
+      const trigger = renderAt({ top: 680, left: 10 });
+      const height = sizeElements(320, 500);
+      await user.click(trigger);
+      expect(popup()).toHaveStyle({ top: '175px' });
 
-    // Its 500px end 5px above the trigger's top, where below it they would end 437px past the viewport's bottom
-    expect(screen.getByText('Done').closest('.date-picker-popup')).toHaveStyle({ top: '175px', left: '10px' });
+      // A month with one more week grows it a row, which moves no trigger and fires no scroll
+      height.mockReturnValue(532);
+      resizeObserver.mockElementSize(popup(), { borderBoxSize: { inlineSize: 320, blockSize: 532 } });
+      resizeObserver.resize(popup());
+
+      expect(popup()).toHaveStyle({ top: '143px' });
+    });
+
+    test('against a transformed ancestor, which a fixed element is placed against instead of the viewport', async () => {
+      const trigger = renderAt({ top: 30, left: 10 });
+      // A daisyUI modal box 100px down and 40px across, which is where the popup lands at a `top` and `left` of 0
+      const origin = vi.spyOn(HTMLDivElement.prototype, 'getBoundingClientRect').mockReturnValue({
+        x: 40,
+        y: 100,
+        width: 0,
+        height: 0,
+        top: 100,
+        right: 40,
+        bottom: 100,
+        left: 40,
+        toJSON() {},
+      });
+      onTestFinished(() => origin.mockRestore());
+
+      await user.click(trigger);
+
+      // Still 5px below the trigger in the viewport
+      expect(popup()).toHaveStyle({ top: '-45px', left: '-30px' });
+    });
+
+    test('hidden while a scrolling panel around the field hides all of its trigger', async () => {
+      const trigger = renderAt({ top: 30, left: 10 });
+      await user.click(trigger);
+
+      intersectionObserver.leaveNode(trigger);
+      expect(popup()).toHaveStyle({ visibility: 'hidden' });
+
+      intersectionObserver.enterNode(trigger);
+      expect(popup()).not.toHaveStyle({ visibility: 'hidden' });
+    });
   });
 
   test("translates the Done button and the time input's label", async () => {
