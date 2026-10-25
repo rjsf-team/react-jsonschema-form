@@ -5,11 +5,6 @@ import { DayPicker, UI } from 'react-day-picker';
 
 import 'react-day-picker/dist/style.css';
 
-/** The width the calendar needs to lay a week out, which the popup reserves for it and the positioner keeps inside the
- * viewport, so the footprint is declared once by the component that determines it
- */
-export const CALENDAR_MIN_WIDTH = 320;
-
 // Module scope because react/purity rejects `new Date()` during render, so the year range is fixed when the module loads
 const END_MONTH = new Date(new Date().getFullYear() + 10, 11);
 

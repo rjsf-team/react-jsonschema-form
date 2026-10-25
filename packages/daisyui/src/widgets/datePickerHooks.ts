@@ -380,22 +380,29 @@ export function useDatePicker<V>({
 
   // Place the popup just below its trigger, or above it where it would run off the bottom of the viewport and fits
   // there, or else as low as it fits whole, and moved left where it would run off the right of the viewport. It is
-  // in the top layer, or fixed where the browser has no popovers, so a scrolling panel or dialog around the field
-  // doesn't clip it, which leaves it to follow the trigger itself, and a scroll of the page can't bring into view a
-  // part of it that runs off the bottom. A layout Effect, so the popup each opening mounts is shown and in place
-  // before the browser first paints it; it then follows the trigger on resize and scroll, once a frame however many
-  // events the frame brings, since measuring the trigger forces a layout, and is placed again when its own size
-  // changes, as a month with another number of weeks changes it. A scroll of an element around the field doesn't
-  // bubble, so it reaches the window only in the capture phase
+  // in the top layer, so a scrolling panel or dialog around the field doesn't clip it, which leaves it to follow the
+  // trigger itself, and a scroll of the page can't bring into view a part of it that runs off the bottom. A layout
+  // Effect, so the popup each opening mounts is shown and in place before the browser first paints it; it then follows
+  // the trigger on resize and scroll, once a frame however many events the frame brings, since measuring the trigger
+  // forces a layout, and is placed again when its own size changes, as a month with another number of weeks changes
+  // it. A scroll of an element around the field doesn't bubble, so it reaches the window only in the capture phase
   useLayoutEffect(() => {
     const popup = containerRef.current;
     const trigger = triggerRef.current;
     if (!isOpen || !popup || !trigger) {
       return () => {};
     }
-    // A popover only where the browser can show one: jsdom, as a consumer's tests run in, hides one it can't show, and
-    // an older browser has none. A Strict Mode remount runs this again on a popup still showing
-    if ('showPopover' in popup && !popup.matches(':popover-open')) {
+    // Without popovers, as before Safari 17 and Chrome 114, and in jsdom, which hides a popover it can't show, the popup
+    // stays in the field's flow just below its trigger, scrolling with it and clipped by what clips it. Fixed there, a
+    // transformed ancestor such as daisyUI's modal box would still be what places, scales and clips it, and a part of
+    // it the box clips would be out of reach of the box's scroll
+    if (typeof popup.showPopover !== 'function') {
+      popup.style.position = 'absolute';
+      popup.style.marginTop = '5px';
+      return () => {};
+    }
+    // A Strict Mode remount runs this again on a popup still showing
+    if (!popup.matches(':popover-open')) {
       popup.setAttribute('popover', 'manual');
       popup.showPopover();
     }
@@ -410,21 +417,14 @@ export function useDatePicker<V>({
       const { offsetWidth: width, offsetHeight: height } = popup;
       const below = bottom + 5;
       const above = top - 5 - height;
-      const rightmost = viewport.clientWidth - 20 - width;
       let y = below;
       if (below + height > viewport.clientHeight) {
         y = above >= 0 ? above : Math.max(0, viewport.clientHeight - height);
       }
-      const x = left > rightmost ? Math.max(20, rightmost) : left;
-      // Outside the top layer, a transformed, filtered or contained ancestor, as daisyUI's modal box is, places a fixed
-      // element against itself rather than against the viewport, so the popup is offset by wherever its origin lands.
-      // shortcut: that undoes the ancestor's translation, not a scale; measure the popup's rendered size against its
-      // offset size if a browser without popovers inside a scaled ancestor matters
-      popup.style.top = '0px';
-      popup.style.left = '0px';
-      const origin = popup.getBoundingClientRect();
-      popup.style.top = `${y - origin.top}px`;
-      popup.style.left = `${x - origin.left}px`;
+      // A 20px gutter at the right edge, narrowed to whatever room is left by a popup about as wide as the viewport
+      const x = Math.max(0, Math.min(left, viewport.clientWidth - 20 - width));
+      popup.style.top = `${y}px`;
+      popup.style.left = `${x}px`;
     };
     place();
     let frame = 0;

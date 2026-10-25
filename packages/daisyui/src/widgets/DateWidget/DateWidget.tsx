@@ -3,7 +3,7 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from 
 import { isNamedByTemplateLabel } from '@rjsf/utils';
 import { format, startOfDay } from 'date-fns';
 
-import DatePickerCalendar, { CALENDAR_MIN_WIDTH } from '../DatePickerCalendar.tsx';
+import DatePickerCalendar from '../DatePickerCalendar.tsx';
 import { readDateOnly, readInstant, useDateFormatter, useDatePicker } from '../datePickerHooks.ts';
 import DatePickerTrigger, { DatePickerPopup, getDatePickerName } from '../DatePickerTrigger.tsx';
 
@@ -151,7 +151,7 @@ export default function DateWidget<
             translateString={registry.translateString}
             onDone={handleDone}
           >
-            <div className='p-3' style={{ minWidth: CALENDAR_MIN_WIDTH, minHeight: 350 }}>
+            <div className='p-3' style={{ minHeight: 350 }}>
               <DatePickerCalendar
                 selectedDate={displayedDate}
                 month={month}

@@ -435,41 +435,42 @@ describe('DateTimeWidget', () => {
       expect(popup()).toHaveStyle({ top: '143px' });
     });
 
-    test('against a transformed ancestor, which a fixed element is placed against instead of the viewport', async () => {
-      const trigger = renderAt({ top: 30, left: 10 });
-      // A daisyUI modal box 100px down and 40px across, which is where the popup lands at a `top` and `left` of 0
-      const origin = vi.spyOn(HTMLDivElement.prototype, 'getBoundingClientRect').mockReturnValue({
-        x: 40,
-        y: 100,
-        width: 0,
-        height: 0,
-        top: 100,
-        right: 40,
-        bottom: 100,
-        left: 40,
-        toJSON() {},
-      });
-      onTestFinished(() => origin.mockRestore());
+    test.each([
+      ['as wide as the viewport', 320, '0px'],
+      ['too wide for the gutter', 310, '0px'],
+      ['narrow enough for the gutter', 280, '20px'],
+    ])('inside the right edge of a narrow viewport where it is %s', async (_, width, left) => {
+      vi.spyOn(document.documentElement, 'clientWidth', 'get').mockReturnValue(320);
+      const trigger = renderAt({ top: 30, left: 100 });
+      sizeElements(width, 0);
 
       await user.click(trigger);
 
-      // Still 5px below the trigger in the viewport
-      expect(popup()).toHaveStyle({ top: '-45px', left: '-30px' });
+      // Never past that edge, giving up as much of the 20px gutter as it must and none of the viewport's left edge
+      expect(popup()).toHaveStyle({ left });
     });
 
     test('in the top layer, which no modal dialog, clipping or transformed ancestor reaches, where there is one', async () => {
-      // jsdom has no popovers
-      const showPopover = vi.fn();
-      Object.defineProperty(HTMLElement.prototype, 'showPopover', { value: showPopover, configurable: true });
-      onTestFinished(() => {
-        Reflect.deleteProperty(HTMLElement.prototype, 'showPopover');
-      });
       const trigger = renderAt({ top: 30, left: 10 });
 
       await user.click(trigger);
 
       expect(popup()).toHaveAttribute('popover', 'manual');
-      expect(showPopover.mock.contexts).toEqual([popup()]);
+      expect(vi.mocked(HTMLElement.prototype.showPopover).mock.contexts).toEqual([popup()]);
+    });
+
+    test("in the field's flow just below its trigger, unplaced, where the browser has no popovers", async () => {
+      Reflect.deleteProperty(HTMLElement.prototype, 'showPopover');
+      const trigger = renderAt({ top: 30, left: 10 });
+
+      await user.click(trigger);
+
+      // Where a transformed ancestor, as daisyUI's modal box is, lays it out and its scroll reaches it, rather than
+      // fixed against that ancestor at viewport coordinates it would scale, and clip out of the scroll's reach
+      expect(popup()).toHaveStyle({ position: 'absolute', marginTop: '5px' });
+      expect(popup().style.top).toBe('');
+      expect(popup()).not.toHaveAttribute('popover');
+      expect(trigger.getBoundingClientRect).not.toHaveBeenCalled();
     });
 
     test('hidden while a scrolling panel around the field hides all of its trigger', async () => {
