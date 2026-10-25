@@ -98,7 +98,7 @@ describe('getTemplate', () => {
     getTemplate('FieldTemplate', registry, invalidOptions, warnSource);
     getTemplate('FieldTemplate', registry, invalidOptions, warnSource);
     expect(warnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
-      'ui:FieldTemplate for "root" is a React element rather than a component (pass MyTemplate, not <MyTemplate />), so it is ignored.',
+      'FieldTemplate (ui:FieldTemplate or ui:options) for "root" is a React element rather than a component (pass MyTemplate, not <MyTemplate />), so it is ignored.',
     );
   });
 
@@ -146,7 +146,7 @@ describe('getTemplate', () => {
     const warnSource = { entryLabel: () => '"root"' };
     expect(getTemplate('FieldTemplate', invalidRegistry, options, warnSource)).toBe(FakeTemplate);
     expect(warnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
-      'ui:FieldTemplate for "root" names a registered template (\'Invalid\') that is a React element rather than a component (pass MyTemplate, not <MyTemplate />), so it is ignored.',
+      'FieldTemplate (ui:FieldTemplate or ui:options) for "root" names a registered template (\'Invalid\') that is a React element rather than a component (pass MyTemplate, not <MyTemplate />), so it is ignored.',
     );
   });
 
@@ -164,8 +164,12 @@ describe('getTemplate', () => {
       entryLabel: () => '"root_b" (b)',
     });
     expect(warnSuppression.consoleSpy.mock.calls).toEqual([
-      ['ui:FieldTemplate for "root_a" (a) names no registered template (\'Typo\'), so it is ignored.'],
-      ['ui:ObjectFieldTemplate for "root_b" (b) names no registered template (\'Typo\'), so it is ignored.'],
+      [
+        'FieldTemplate (ui:FieldTemplate or ui:options) for "root_a" (a) names no registered template (\'Typo\'), so it is ignored.',
+      ],
+      [
+        'ObjectFieldTemplate (ui:ObjectFieldTemplate or ui:options) for "root_b" (b) names no registered template (\'Typo\'), so it is ignored.',
+      ],
     ]);
   });
 
@@ -243,8 +247,12 @@ describe('getTemplate', () => {
       getTemplate('FieldTemplate', registry, options, { entryLabel: () => '"root"' });
     });
     expect(warnSuppression.consoleSpy.mock.calls).toEqual([
-      ['ui:FieldTemplate for "root" names no registered template (\'Typo1\'), so it is ignored.'],
-      ['ui:FieldTemplate for "root" names no registered template (\'Typo2\'), so it is ignored.'],
+      [
+        'FieldTemplate (ui:FieldTemplate or ui:options) for "root" names no registered template (\'Typo1\'), so it is ignored.',
+      ],
+      [
+        'FieldTemplate (ui:FieldTemplate or ui:options) for "root" names no registered template (\'Typo2\'), so it is ignored.',
+      ],
     ]);
   });
 
@@ -288,7 +296,7 @@ describe('getTemplate', () => {
       const options: UIOptionsType = { [name]: 'NotRegistered' };
       expect(getTemplate<typeof name>(name, registry, options, { entryLabel: () => '"root"' })).toBe(FakeTemplate);
       expect(warnSuppression.consoleSpy).toHaveBeenCalledWith(
-        `ui:${name} for "root" names no registered template ('NotRegistered'), so it is ignored.`,
+        `${name} (ui:${name} or ui:options) for "root" names no registered template ('NotRegistered'), so it is ignored.`,
       );
     });
   });

@@ -160,6 +160,16 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     return option ? getRenderedOptionUiSchema<T, S, F>(schema, option, uiSchema, optionUiSchema) : optionUiSchema;
   }, [optionUiSchema, uiSchema, schema, option]);
 
+  // The option's `SchemaField` renders at this field's own `fieldPath`, so its template-override warnings name the
+  // same entry as this field's and two entries' mistakes read as one under `logOnce()`. Warn about the option entry's
+  // own invalid overrides here, naming it, the way the `ui:field` warning above does
+  if (rendersOption && optionUiSchema !== uiSchema) {
+    getTemplates<T, S, F>(registry, getUiOptions<T, S, F>(optionFieldUiSchema, globalUiOptions), {
+      entryLabel: () =>
+        `the uiSchema.${xxxOfKey}[${selectedOption}] entry of ${entryLabelForLog(fieldPath, globalFormOptions)}`,
+    });
+  }
+
   /** Callback handler to remember what the currently selected option is. In addition to that the `formData` is updated
    * to remove properties that are not part of the newly selected option schema, and then the updated data is passed to
    * the `onChange` handler.

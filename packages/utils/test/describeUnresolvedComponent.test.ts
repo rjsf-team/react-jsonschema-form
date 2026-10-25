@@ -12,9 +12,9 @@ describe('describeUnresolvedComponent()', () => {
     );
   });
   it('calls out a React element and names what to pass instead', () => {
-    expect(
-      describeUnresolvedComponent(createElement('div'), createElement('div'), 'registered field', 'MyField'),
-    ).toContain('MyField');
+    expect(describeUnresolvedComponent(createElement('div'), createElement('div'), 'registered field', 'MyField')).toBe(
+      'is a React element rather than a component (pass MyField, not <MyField />)',
+    );
   });
   it('reports a name that matches nothing', () => {
     expect(describeUnresolvedComponent('Typo', undefined, 'registered field', 'MyField')).toBe(

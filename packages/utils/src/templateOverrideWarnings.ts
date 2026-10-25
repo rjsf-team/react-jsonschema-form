@@ -59,7 +59,9 @@ export function warnOnInvalidOverride(
   template: unknown,
   warnSource: TemplateWarnSource,
 ): void {
-  const target = `ui:${name} for ${warnSource.entryLabel()}`;
+  // The value may sit under `ui:${name}` or under `ui:options`, so the warning names both rather than send the
+  // user looking for a key that isn't there
+  const target = `${name} (ui:${name} or ui:options) for ${warnSource.entryLabel()}`;
   const description = describeUnresolvedComponent(override, template, 'registered template', 'MyTemplate');
   logOnce(`${target} ${description}, so it is ignored.`);
 }

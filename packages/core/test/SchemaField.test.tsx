@@ -2355,9 +2355,69 @@ describe('SchemaField', () => {
 
         expect(node.querySelector('#root_child_child-button')).toHaveTextContent('Expand Cycle');
         expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
-          'ui:CyclicSchemaExpandTemplate for "root_child_child" (child.child) is a React element rather than a ' +
+          'CyclicSchemaExpandTemplate (ui:CyclicSchemaExpandTemplate or ui:options) for "root_child_child" ' +
+            '(child.child) is a React element rather than a component (pass MyTemplate, not <MyTemplate />), so ' +
+            'it is ignored.',
+        );
+      });
+    });
+
+    describe('template-override warnings from SchemaField', () => {
+      const consoleWarnSuppression = setupConsoleWarnSuppression();
+
+      it('warns once for an invalid ui:FieldTemplate, naming the field, and renders the default', () => {
+        createFormComponent({
+          schema: { type: 'object', properties: { val: { type: 'string' } } },
+          uiSchema: { val: { 'ui:FieldTemplate': <div /> } },
+        });
+
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          'FieldTemplate (ui:FieldTemplate or ui:options) for "root_val" (val) is a React element rather than a ' +
             'component (pass MyTemplate, not <MyTemplate />), so it is ignored.',
         );
+      });
+
+      it('warns once for an invalid override in an items entry, not once per item', () => {
+        createFormComponent({
+          schema: { type: 'object', properties: { arr: { type: 'array', items: { type: 'string' } } } },
+          uiSchema: { arr: { items: { 'ui:FieldTemplate': <div /> } } },
+          initialFormData: { arr: ['one', 'two', 'three'] },
+        });
+
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          'FieldTemplate (ui:FieldTemplate or ui:options) for "root_arr_[]" (arr[]) is a React element rather than ' +
+            'a component (pass MyTemplate, not <MyTemplate />), so it is ignored.',
+        );
+      });
+
+      it('warns for an object entry and its shown anyOf option entry apart, naming the option entry', () => {
+        createFormComponent({
+          schema: {
+            type: 'object',
+            properties: { a: { type: 'string' } },
+            anyOf: [
+              { type: 'object', properties: { b: { type: 'string' } } },
+              { type: 'object', properties: { c: { type: 'string' } } },
+            ],
+          },
+          uiSchema: {
+            'ui:FieldTemplate': 'Typo' as unknown as UiSchema['ui:FieldTemplate'],
+            anyOf: [{ 'ui:FieldTemplate': 'Typo' as unknown as UiSchema['ui:FieldTemplate'] }],
+          },
+          initialFormData: { b: 'x' },
+        });
+
+        // The two entries render at the one fieldPath, so their warnings would read alike - and `logOnce()` would
+        // drop the option entry's - if the option's entry were not named
+        expect(consoleWarnSuppression.consoleSpy.mock.calls).toEqual([
+          [
+            'FieldTemplate (ui:FieldTemplate or ui:options) for "root" names no registered template (\'Typo\'), so it is ignored.',
+          ],
+          [
+            'FieldTemplate (ui:FieldTemplate or ui:options) for the uiSchema.anyOf[0] entry of "root" names no ' +
+              "registered template ('Typo'), so it is ignored.",
+          ],
+        ]);
       });
     });
 

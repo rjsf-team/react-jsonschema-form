@@ -1,7 +1,8 @@
 import { useMemo, useSyncExternalStore } from 'react';
-import type { FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema, TemplateWarnSource } from '@rjsf/utils';
+import type { FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { expandRefCycle, getTemplates, getUiOptions } from '@rjsf/utils';
 
+import { entryLabelForLog } from '../../fieldLabelForLog.ts';
 import useUiState from '../../hooks/useUiState.ts';
 
 /** The `CyclicSchemaField` component renders a field `retrieveSchema()` collapsed as a `$ref` cycle (marked with
@@ -9,16 +10,15 @@ import useUiState from '../../hooks/useUiState.ts';
  * Which fields are expanded is the form's state, by path, so an expansion outlives the field's components and follows
  * the moves the form is told of, of array items and of additional properties renamed or removed; outside a `Form` it is the outermost `SchemaField`'s, see `useUiState()`.
  *
- * @param props - The `FieldProps` for this template, plus the `warnSource` `SchemaField` hands down so an invalid
- * `ui:CyclicSchemaExpandTemplate` override warns naming the field's entry
+ * @param props - The `FieldProps` for this template
  */
 export default function CyclicSchemaField<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(props: FieldProps<T, S, F> & { warnSource?: TemplateWarnSource }) {
+>(props: FieldProps<T, S, F>) {
   const { uiState } = useUiState();
-  const { name, registry, schema, uiSchema, id, fieldPath, warnSource } = props;
+  const { name, registry, schema, uiSchema, id, fieldPath } = props;
   const readExpanded = () => uiState.isExpanded(fieldPath);
   const expanded = useSyncExternalStore(uiState.subscribe, readExpanded, readExpanded);
   const { globalUiOptions, fields, schemaUtils } = registry;
@@ -29,7 +29,12 @@ export default function CyclicSchemaField<
   );
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
-  const { CyclicSchemaExpandTemplate } = getTemplates<T, S, F>(registry, uiOptions, warnSource);
+  // The warn source is built here rather than handed down by `SchemaField`: a prop would leak through to the expanded
+  // field's own `SchemaField` (and from it onto the field it renders), and a fresh object each parent render would
+  // defeat that `SchemaField`'s memo
+  const { CyclicSchemaExpandTemplate } = getTemplates<T, S, F>(registry, uiOptions, {
+    entryLabel: () => entryLabelForLog(fieldPath, registry.globalFormOptions),
+  });
   if (expandedSchema === undefined) {
     return (
       <CyclicSchemaExpandTemplate

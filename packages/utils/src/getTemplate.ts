@@ -20,8 +20,8 @@ export interface TemplateWarnSource {
  * given: a string naming no registered template, a React element, or any other non-component value falls back to the
  * registry's own template. Templates are per-field options, not `ui:globalOptions`. An explicit own `null` renders
  * the registry's own template without a warning. An override under a custom name can't be told apart from an
- * ordinary option, so it is returned the way it always has been, with no warning: a truthy value (a component or a
- * `Record` of them) as-is, a string looked up among the registry's templates, a falsy one falling back.
+ * ordinary option, so it is returned unchecked and without a warning: a truthy value (a component or a `Record` of
+ * them) as-is, a string looked up among the registry's templates, a falsy one falling back.
  *
  * @param name - The name of the template to fetch, restricted to the keys of `TemplatesType`
  * @param registry - The `Registry` from which to read the template
@@ -53,26 +53,19 @@ export default function getTemplate<
   if (override === undefined) {
     return templates[name];
   }
-  // A custom name can't be told apart from an ordinary option such as `help`, so an override under one keeps the
-  // behavior it had before the override check: a truthy value (a component or a group of them) is returned as-is, a
-  // string is looked up among the registry's templates, a falsy one falls back, and nothing warns
-  if (!isTemplateName(name)) {
-    let customTemplate: unknown = override;
-    if (typeof override === 'string') {
-      customTemplate = Object.hasOwn(customTemplates, override) ? customTemplates[override] : undefined;
-    }
-    if (!customTemplate) {
-      return templates[name];
-    }
-    // Read through the same string-keyed views as the declared templates below, against TS2590
-    return customTemplate as TemplatesType<T, S, F>[Name];
-  }
-  // Allow templates to be customized per-field by using string keys from the registry; a string naming no registered
-  // template is not a component, so it falls through to the fallback below
+  // A string names a template in the registry; a name nothing is registered under resolves to undefined. Resolved
+  // once here so the custom-name and declared-name branches below read the same resolved value
   let template: unknown = override;
   if (typeof override === 'string') {
     template = Object.hasOwn(customTemplates, override) ? customTemplates[override] : undefined;
   }
+  // A custom name can't be told apart from an ordinary option such as `help`, so an override under one is returned
+  // unchecked and without a warning: a truthy value (a component or a group of them) as-is, a falsy one falling
+  // back to the registry's own template
+  if (!isTemplateName(name)) {
+    return (template || templates[name]) as TemplatesType<T, S, F>[Name];
+  }
+  // A string naming no registered template is not a component, so it falls through to the fallback below
   if (isComponentType(template)) {
     // Indexing templates or uiOptions by a generic key results in TS2590: Expression produces a union type that is too
     // complex to represent, so both are read through string-keyed views. Nothing checks the props a `ui:options` or

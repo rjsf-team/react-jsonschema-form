@@ -1683,9 +1683,9 @@ otherwise. NOTE, since `ButtonTemplates` are not overridden in `uiSchema` only t
 - TemplatesType&lt;T, S, F>[Name] - The template from either the `uiSchema` or `registry` for the `name`. An override
   that is not a component is ignored, warning once per uiSchema entry when a `warnSource` is given, and falls back to
   the registry's own template. Template overrides are per-field only, not `ui:globalOptions`. An explicit own `null`
-  renders the registry's own template without a warning. An override under a custom template name is returned as
-  given, the way it always has been: a truthy value (a component or a `Record` of them) as-is, a string looked up
-  among the registry's templates, a falsy one falling back silently
+  renders the registry's own template without a warning. An override under a custom template name can't be told apart
+  from an ordinary option, so it is returned unchecked and without a warning: a truthy value (a component or a
+  `Record` of them) as-is, a string looked up among the registry's templates, a falsy one falling back
 
 ### getTemplates&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
