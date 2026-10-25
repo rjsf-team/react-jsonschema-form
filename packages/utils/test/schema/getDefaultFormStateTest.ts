@@ -7612,6 +7612,13 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         ["gives a dependency's const over the inherited default", pinningA2, {}, undefined, { a: 2 }],
         ["gives a dependency's const over the inherited default for empty form data", pinningA2, {}, {}, { a: 2 }],
         [
+          "gives a dependency's const over the inherited default when constAsDefaults is skipOneOf",
+          pinningA2,
+          { constAsDefaults: 'skipOneOf' },
+          {},
+          { a: 2 },
+        ],
+        [
           "keeps the inherited default over a dependency's const when constAsDefaults is never",
           pinningA2,
           { constAsDefaults: 'never' },
