@@ -5,10 +5,7 @@ This page covers what happens while that submission is in flight, and how `Form`
 
 ## A pending submission
 
-When `onSubmit` returns a promise, the form is pending in React's own form status until that promise settles:
-
-- The submit button gets the `pending` prop, and the submit button of `@rjsf/core` and of every theme disables itself while it is set, so the form can't be submitted a second time meanwhile. A button that is disabled also keeps the browser from submitting the form when Enter is pressed in a field.
-- `useFormStatus().pending` is `true` in any component rendered inside the form.
+When `onSubmit` returns a promise, the submit button gets the `pending` prop until that promise settles. The submit button of `@rjsf/core` and of every theme disables itself while it is set, so the form can't be submitted a second time meanwhile. A button that is disabled also keeps the browser from submitting the form when Enter is pressed in a field.
 
 ```tsx
 import Form from '@rjsf/core';
@@ -26,7 +23,9 @@ render(<Form schema={schema} validator={validator} onSubmit={save} />, document.
 
 The form does not handle a rejection for you. A promise that rejects is reported as an unhandled rejection, as an error thrown by any other event handler is, and it never reaches an Error Boundary. Catch the error inside `onSubmit` to show it, for example as [`extraErrors`](#errors-from-the-server).
 
-A promise that never settles keeps the form pending, and its submit button disabled, until the form unmounts. React also counts every ongoing async transition as one: until the promise settles, other transitions in your app stay pending too.
+A promise that never settles keeps the submit button disabled until the form unmounts.
+
+The form keeps this pending state itself rather than running the promise in a React transition, so the rest of your app's transitions don't wait for it. That also means `useFormStatus().pending` stays `false` for a plain promise. To have React's form status report the submission, start the transition yourself, as the next section does.
 
 An `onSubmit` that returns nothing works as before, and the form is never pending.
 
@@ -76,9 +75,10 @@ The action's state is a good place for errors the server reports. Return them as
 ## Reading the pending state yourself
 
 - **A custom `SubmitButton` template** gets `pending` as a prop. See [SubmitButton](../advanced-customization/custom-templates.md#submitbutton).
-- **Buttons you pass to `Form` as `children`** replace the submit button, so the form doesn't render one to give `pending` to. Call `useFormStatus()` in them:
+- **Buttons you pass to `Form` as `children`** replace the submit button, so the form doesn't render one to give `pending` to. Call `useFormStatus()` in them, and start the submission in a transition, by dispatching a `useActionState` action as above or with `startTransition`. While an async transition runs, React holds every other transition in your app until it settles.
 
   ```tsx
+  import { startTransition } from 'react';
   import { useFormStatus } from 'react-dom';
 
   function SaveButton() {
@@ -91,7 +91,15 @@ The action's state is a good place for errors the server reports. Return them as
   }
 
   render(
-    <Form schema={schema} validator={validator} onSubmit={save}>
+    <Form
+      schema={schema}
+      validator={validator}
+      onSubmit={(data) =>
+        startTransition(async () => {
+          await save(data);
+        })
+      }
+    >
       <SaveButton />
     </Form>,
     document.getElementById('app'),

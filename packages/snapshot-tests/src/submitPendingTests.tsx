@@ -13,23 +13,9 @@ const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string
  */
 export function submitPendingTests(Form: ComponentType<FormProps>) {
   describe('the submit button while a promise onSubmit returned is pending', () => {
-    // React entangles every ongoing async transition, so a promise a failed test left unsettled would keep the next
-    // test's form pending too
-    const unsettled: PromiseWithResolvers<undefined>[] = [];
-    afterEach(() => {
-      for (const save of unsettled.splice(0)) {
-        save.resolve(undefined);
-      }
-    });
-    function deferred() {
-      const save = Promise.withResolvers<undefined>();
-      unsettled.push(save);
-      return save;
-    }
-
     // Clicked through the DOM rather than user-event, which isn't among this package's peer dependencies
     test('is disabled until the promise settles', async () => {
-      const save = deferred();
+      const save = Promise.withResolvers<undefined>();
       render(<Form schema={schema} validator={validator} onSubmit={async () => save.promise} />);
       const button = screen.getByRole('button', { name: 'Submit' });
       expect(button).toBeEnabled();
@@ -47,7 +33,7 @@ export function submitPendingTests(Form: ComponentType<FormProps>) {
           schema={schema}
           uiSchema={{ 'ui:submitButtonOptions': { props: { disabled: true } } }}
           validator={validator}
-          onSubmit={async () => deferred().promise}
+          onSubmit={async () => {}}
         />,
       );
 

@@ -756,7 +756,7 @@ render(<Form schema={schema} validator={validator} onSubmit={onSubmit} />, docum
 
 > Note: If there are fields in the `formData` that are not represented in the schema, they will be retained by default. If you would like to remove those extra values on form submission, you may need to set the `omitExtraData` and/or `liveOmit` props.
 
-When `onSubmit` returns a promise, the form is pending until that promise settles: the submit button gets `pending` and disables itself, and `useFormStatus().pending` is `true` inside the form.
+When `onSubmit` returns a promise, the submit button gets `pending` and disables itself until that promise settles.
 A rejected promise is reported as an unhandled rejection, so catch errors inside `onSubmit`.
 See [Submitting](../usage/submitting.md), which also shows how to dispatch a `useActionState` action from `onSubmit`.
 

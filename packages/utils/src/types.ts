@@ -1599,9 +1599,9 @@ export interface SubmitButtonProps<
   readonly uiSchema?: UiSchema<T, S, F>;
   /** The `registry` object */
   readonly registry: Registry<T, S, F>;
-  /** Whether the form is pending in React's form status, such as while a promise `onSubmit` returned has yet to
-   * settle. The `Form` reads it with `useFormStatus()`, so a button that disables itself while it is set can't submit the
-   * form a second time meanwhile
+  /** Whether a submission is in flight: a promise `onSubmit` returned has yet to settle, or the form is pending in
+   * React's form status, as it is while a transition `onSubmit` started runs. A button that disables itself while it is
+   * set can't submit the form a second time meanwhile
    */
   readonly pending?: boolean;
 }

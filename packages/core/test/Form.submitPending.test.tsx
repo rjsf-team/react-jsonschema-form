@@ -1,4 +1,4 @@
-import { Component, startTransition, useActionState } from 'react';
+import { Component, startTransition, useActionState, useState, useTransition } from 'react';
 import type { ReactNode } from 'react';
 import type { RJSFSchema, SubmitButtonProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
@@ -13,8 +13,8 @@ const user = userEvent.setup();
 
 const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string', title: 'Name' } } };
 
-// React entangles every ongoing async transition, so one a failed test left unsettled would keep the next test's form
-// pending too
+// React entangles every ongoing async transition, so one a failed test left unsettled would hold the next test's
+// transitions too
 const unsettled: PromiseWithResolvers<undefined>[] = [];
 function deferred() {
   const save = Promise.withResolvers<undefined>();
@@ -73,8 +73,52 @@ describe('a promise onSubmit returns', () => {
     expect(button).toBeEnabled();
   });
 
-  it('keeps a button the form is passed as children enabled by the form, and pending through useFormStatus()', async () => {
+  it('holds no transition elsewhere in the app while the promise is pending', async () => {
     const save = deferred();
+    function Parent() {
+      const [tab, setTab] = useState('details');
+      const [isSwitching, startSwitch] = useTransition();
+      return (
+        <>
+          <button type='button' onClick={() => startSwitch(() => setTab('history'))}>
+            History
+          </button>
+          <output aria-label='tab'>{`${tab}${isSwitching ? ' switching' : ''}`}</output>
+          <Form schema={schema} validator={validator} initialFormData={{ name: 'a' }} onSubmit={() => save.promise} />
+        </>
+      );
+    }
+    render(<Parent />);
+    await user.click(screen.getByRole('button', { name: 'Submit' }));
+
+    await user.click(screen.getByRole('button', { name: 'History' }));
+
+    expect(screen.getByRole('status', { name: 'tab' })).toHaveTextContent(/^history$/);
+    expect(screen.getByRole('button', { name: 'Submit' })).toBeDisabled();
+  });
+
+  it('stays pending until every promise from a second submit settles too', async () => {
+    const first = deferred();
+    const second = deferred();
+    const onSubmit = vi.fn().mockReturnValueOnce(first.promise).mockReturnValueOnce(second.promise);
+    const ref = createFormRef();
+    createFormComponent({ ref, schema, initialFormData: { name: 'a' }, onSubmit });
+    const button = screen.getByRole('button', { name: 'Submit' });
+
+    act(() => handleOf(ref).submit());
+    act(() => handleOf(ref).submit());
+    first.resolve(undefined);
+    await act(() => first.promise);
+
+    expect(onSubmit).toHaveBeenCalledTimes(2);
+    expect(button).toBeDisabled();
+    second.resolve(undefined);
+    await waitFor(() => expect(button).toBeEnabled());
+  });
+
+  it('leaves useFormStatus() idle in buttons the form is passed as children, which a transition onSubmit starts makes pending', async () => {
+    const save = deferred();
+    const plain = deferred();
     function StatusButton() {
       const { pending } = useFormStatus();
       return (
@@ -83,14 +127,30 @@ describe('a promise onSubmit returns', () => {
         </button>
       );
     }
-    createFormComponent({
-      schema,
-      initialFormData: { name: 'a' },
-      onSubmit: () => save.promise,
-      children: <StatusButton />,
-    });
+    const { rerender } = render(
+      <Form schema={schema} validator={validator} initialFormData={{ name: 'a' }} onSubmit={() => plain.promise}>
+        <StatusButton />
+      </Form>,
+    );
     const button = screen.getByRole('button', { name: 'Send' });
+    await user.click(button);
+    expect(button).toHaveAttribute('data-pending', 'false');
+    plain.resolve(undefined);
 
+    rerender(
+      <Form
+        schema={schema}
+        validator={validator}
+        initialFormData={{ name: 'a' }}
+        onSubmit={() =>
+          startTransition(async () => {
+            await save.promise;
+          })
+        }
+      >
+        <StatusButton />
+      </Form>,
+    );
     await user.click(button);
 
     expect(button).toHaveAttribute('data-pending', 'true');
