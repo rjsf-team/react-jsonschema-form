@@ -48,6 +48,7 @@ describe('NullField', () => {
       expect(legend?.parentElement?.tagName).toBe('FIELDSET');
       expect(legend?.parentElement?.firstElementChild).toBe(legend);
       expect(legend?.parentElement).toContainElement(node.querySelector('#root_n__description'));
+      expect(legend?.parentElement).toHaveAccessibleName('Nothing');
     });
 
     it('should draw no fieldset for a null field that draws only a description', () => {

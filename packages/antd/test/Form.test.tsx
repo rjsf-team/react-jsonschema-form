@@ -1175,5 +1175,16 @@ describe("antd marks a deprecated field's label, as core does", () => {
   });
 });
 
+describe('a titled field with no control for its title to name', () => {
+  it.each<[string, RJSFSchema]>([
+    ['a null field', { type: 'null', title: 'Nothing' }],
+    ['an array with no items', { type: 'array', title: 'Nothing' }],
+  ])('is a group named by its title for %s, which antd draws as no legend (#5562)', (_, field) => {
+    render(<Form schema={{ type: 'object', properties: { field } }} validator={validator} />);
+
+    expect(screen.getByRole('group', { name: 'Nothing' })).toBeInTheDocument();
+  });
+});
+
 checkboxLabelTests(Form, { generateTemplates, generateWidgets, descriptionBy: 'template' });
 fallbackDescriptionTests(Form, false);

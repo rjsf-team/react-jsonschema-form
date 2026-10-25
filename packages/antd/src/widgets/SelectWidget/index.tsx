@@ -4,6 +4,7 @@ import {
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionsDomValues,
+  flattenGroupedOptions,
   getOptionValueFormat,
   groupEnumOptions,
   isEnumOptionsGroup,
@@ -85,16 +86,27 @@ export default function SelectWidget<
 
   const selectValue = enumOptionSelectedValue(value, enumOptions, !!multiple, optionValueFormat, emptyValue);
 
-  const postedValues = [
-    ...new Set(
-      ([] as string[]).concat(
-        enumOptionSelectedValue(value, enumOptions, !!multiple, optionValueFormat, multiple ? [] : ''),
-      ),
-    ),
-  ];
-
   const showPlaceholderOption = !multiple && schema.default === undefined;
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
+
+  const groupedOptions = useMemo(
+    () => groupEnumOptions<S>(enumOptions, optgroups, enumDisabled),
+    [enumOptions, optgroups, enumDisabled],
+  );
+
+  const postedValues = useMemo(() => {
+    const selected = enumOptionSelectedValue(value, enumOptions, !!multiple, optionValueFormat, multiple ? [] : '');
+    if (Array.isArray(selected)) {
+      return [...new Set(selected)];
+    }
+    if (selected !== '' || showPlaceholderOption) {
+      return [selected];
+    }
+    // With no empty placeholder to fall back on, a native `<select>` that holds no option selects its first enabled
+    // one in the order they are drawn, or none at all
+    const firstEnabled = flattenGroupedOptions<S>(groupedOptions).find((option) => !option.disabled);
+    return firstEnabled ? [domValues[firstEnabled.index]] : [];
+  }, [value, enumOptions, multiple, optionValueFormat, showPlaceholderOption, groupedOptions, domValues]);
 
   const selectOptions: DefaultOptionType[] | undefined = useMemo(() => {
     if (Array.isArray(enumOptions)) {
@@ -104,11 +116,10 @@ export default function SelectWidget<
         value: domValues[option.index],
         label: option.label,
       });
-      const enumOptionsList: DefaultOptionType[] = groupEnumOptions<S>(enumOptions, optgroups, enumDisabled).map(
-        (item) =>
-          isEnumOptionsGroup<S>(item)
-            ? { label: item.label, options: item.options.map(toOptionType) }
-            : toOptionType(item),
+      const enumOptionsList: DefaultOptionType[] = groupedOptions.map((item) =>
+        isEnumOptionsGroup<S>(item)
+          ? { label: item.label, options: item.options.map(toOptionType) }
+          : toOptionType(item),
       );
 
       if (showPlaceholderOption) {
@@ -117,7 +128,7 @@ export default function SelectWidget<
       return enumOptionsList;
     }
     return undefined;
-  }, [enumDisabled, enumOptions, optgroups, placeholder, showPlaceholderOption, domValues]);
+  }, [enumOptions, groupedOptions, placeholder, showPlaceholderOption, domValues]);
 
   return (
     <>

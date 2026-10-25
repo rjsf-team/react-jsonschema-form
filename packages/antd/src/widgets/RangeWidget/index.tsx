@@ -4,6 +4,21 @@ import { Slider } from 'antd';
 
 import useControlState from '../../controlState.ts';
 
+const decimalsOf = (n: number) => (String(n).split('.')[1] ?? '').length;
+
+/** The value a native range input holds for `value`: clamped to its `min` and `max`, then snapped to the nearest
+ * `step` from `min`, the higher one on a tie and the one below when that passes `max`, as the HTML spec sanitizes it
+ * (https://html.spec.whatwg.org/multipage/input.html#range-state-(type=range)). The defaults are the native ones
+ */
+function nativeRangeValue(value: number, min = 0, max = 100, step = 1) {
+  const top = Math.max(min, max);
+  const steps = Math.round((Math.min(Math.max(value, min), top) - min) / step);
+  const snapped = min + steps * step;
+  const inRange = snapped > top ? snapped - step : snapped;
+  // A decimal step leaves float noise such as 0.30000000000000004, which a browser's decimal arithmetic doesn't
+  return Number(inRange.toFixed(Math.max(decimalsOf(min), decimalsOf(step))));
+}
+
 /** The `RangeWidget` component uses the `BaseInputTemplate` changing the type to `range` and wrapping the result
  * in a div, with the value along side it.
  *
@@ -32,6 +47,9 @@ export default function RangeWidget<
   const control = useControlState<T, S, F>({ disabled, readonly, registry });
 
   const { min, max, step } = rangeSpec(schema);
+  // An empty value is drawn at `min`, where antd's `Slider` draws an empty one, rather than at a native input's midpoint
+  const drawnValue =
+    typeof value === 'number' && Number.isFinite(value) ? nativeRangeValue(value, min, max, step) : (min ?? 0);
 
   const { 'aria-labelledby': ariaLabelledBy, 'aria-label': ariaLabel } = getControlAttributes<T, S, F>({
     id,
@@ -63,7 +81,7 @@ export default function RangeWidget<
         onChange={!readonly ? handleChange : undefined}
         range={false}
         step={step}
-        value={value}
+        value={drawnValue}
         {...extraProps}
         // The slider's handle is what takes focus, and it takes no `aria-describedby` or `aria-invalid`, nor a
         // `handleRender` to add them, so it is only named, by the label a `for` can't reach or by the text of one
@@ -73,9 +91,9 @@ export default function RangeWidget<
         ariaLabelForHandle={ariaLabel}
       />
       {/* antd's `Slider` renders no native control, so the value a native submit or `FormData` reads is carried by a
-      hidden input. With no value it posts the `min` the slider's handle is drawn at, as a native range input posts the
-      value its thumb is drawn at, and it posts nothing when the slider is drawn disabled */}
-      <input type='hidden' name={htmlName || id} value={value ?? min ?? 0} disabled={control.disabled} />
+      hidden input. It posts the value the slider is drawn at, as a native range input posts the value its thumb is drawn
+      at, and it posts nothing when the slider is drawn disabled */}
+      <input type='hidden' name={htmlName || id} value={drawnValue} disabled={control.disabled} />
     </>
   );
 }

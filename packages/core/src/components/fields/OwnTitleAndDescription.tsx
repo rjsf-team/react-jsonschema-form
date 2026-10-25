@@ -25,28 +25,8 @@ export default function OwnTitleAndDescription<
     return <>{children}</>;
   }
   const { TitleFieldTemplate, DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, getUiOptions(uiSchema));
-  // A `TitleFieldTemplate` may draw a `<legend>`, as core's does, which is valid only as the first child of a
-  // `<fieldset>` it names, so a title is drawn inside one with the content it heads, as an object's heading and
-  // properties are. The fieldset is only there for the group, so it draws none of the border and spacing a browser
-  // gives one, which not every theme resets
-  if (!drawsLabel) {
-    return (
-      <>
-        {drawsDescription && (
-          <DescriptionFieldTemplate
-            id={description.id}
-            description={description.text}
-            schema={schema}
-            uiSchema={uiSchema}
-            registry={registry}
-          />
-        )}
-        {children}
-      </>
-    );
-  }
-  return (
-    <fieldset style={GROUP_ONLY_FIELDSET_STYLE}>
+  const content = (
+    <>
       {drawsLabel && (
         <TitleFieldTemplate
           id={label.id}
@@ -67,6 +47,19 @@ export default function OwnTitleAndDescription<
         />
       )}
       {children}
+    </>
+  );
+  if (!drawsLabel) {
+    return content;
+  }
+  // A `TitleFieldTemplate` may draw a `<legend>`, as core's does, which is valid only as the first child of a
+  // `<fieldset>` it names, so a title is drawn inside one with the content it heads, as an object's heading and
+  // properties are. A theme's title is often a heading rather than a legend, so the group is named by the title's id
+  // whatever element draws it. The fieldset is only there for the group, so it draws none of the border and spacing a
+  // browser gives one, which not every theme resets
+  return (
+    <fieldset aria-labelledby={label.id} style={GROUP_ONLY_FIELDSET_STYLE}>
+      {content}
     </fieldset>
   );
 }

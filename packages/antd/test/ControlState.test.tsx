@@ -3,6 +3,7 @@ import type { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 
+import { setupConsoleErrorSuppression } from '../../../testing/consoleSuppression.ts';
 import Form from '../src/index.ts';
 
 describe('a read-only CheckboxWidget the form leaves enabled', () => {
@@ -118,6 +119,52 @@ describe('a native submit', () => {
       entriesOf(core.querySelector('form'), 'root_sel'),
     );
   });
+
+  describe('for a select with a default no option holds, so it draws no empty placeholder', () => {
+    setupConsoleErrorSuppression();
+    const sel: RJSFSchema = { type: 'string', enum: ['a', 'b', 'c'], default: 'z' };
+
+    it.each<[string, UiSchema, string[]]>([
+      ['its first option', {}, ['0']],
+      ['its first enabled option', { 'ui:enumDisabled': ['a'] }, ['1']],
+      ['its first option in the order the groups draw them', { 'ui:optgroups': { G: ['c'] } }, ['2']],
+      ['nothing when every option is disabled', { 'ui:enumDisabled': ['a', 'b', 'c'] }, []],
+    ])('gets %s, as core does', (_, selUiSchema, expected) => {
+      const selectSchema: RJSFSchema = { type: 'object', properties: { sel } };
+      const props = { schema: selectSchema, uiSchema: { sel: selUiSchema }, validator };
+      const { container: core } = render(<CoreForm {...props} />);
+      const { container: antd } = render(<Form {...props} />);
+
+      expect(entriesOf(core.querySelector('form'), 'root_sel')).toEqual(expected);
+      expect(entriesOf(antd.querySelector('form'), 'root_sel')).toEqual(expected);
+    });
+  });
+
+  it.each<[string, RJSFSchema, number, string]>([
+    ['above its maximum', { type: 'number', minimum: 0, maximum: 10, multipleOf: 5 }, 50, '10'],
+    ['below its minimum', { type: 'number', minimum: 0, maximum: 10, multipleOf: 5 }, -3, '0'],
+    ['off its step', { type: 'number', minimum: 0, maximum: 10, multipleOf: 5 }, 7, '5'],
+    ['halfway between two steps', { type: 'number', minimum: 0, maximum: 10, multipleOf: 5 }, 7.5, '10'],
+    ['nearest a maximum off its step', { type: 'number', minimum: 0, maximum: 10, multipleOf: 3 }, 10, '9'],
+    ['off a decimal step', { type: 'number', minimum: 0, maximum: 1, multipleOf: 0.1 }, 0.33, '0.3'],
+  ])(
+    'gets the value a native range input holds for a value %s, where the slider is drawn',
+    (_, range, value, posted) => {
+      // The expected values are the HTML spec's range sanitization, which a browser applies to core's range input. jsdom
+      // clamps the value but doesn't snap it to the step, so core's input can't be the reference here
+      const { container } = render(
+        <Form
+          schema={{ type: 'object', properties: { range } }}
+          uiSchema={uiSchema}
+          initialFormData={{ range: value }}
+          validator={validator}
+        />,
+      );
+
+      expect(entriesOf(container.querySelector('form'), 'root_range')).toEqual([posted]);
+      expect(container.querySelector('.ant-slider-handle')).toHaveAttribute('aria-valuenow', posted);
+    },
+  );
 
   it('gets the value the slider is drawn at for an empty range', () => {
     const { container } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
