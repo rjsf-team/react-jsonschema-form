@@ -37,6 +37,7 @@
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
 - [Usage](#usage)
+  - [Custom fields](#custom-fields)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [Contact](#contact)
@@ -92,6 +93,19 @@ import { Theme as AntDTheme } from '@rjsf/antd';
 // Make modifications to the theme with your own fields and widgets
 
 const Form = withTheme(AntDTheme);
+```
+
+### Custom fields
+
+A custom field that renders the theme's `FieldTemplate` itself, rather than through `SchemaField`, passes `hasErrors` along with the `errors` it hands over.
+The template gives the form item its error status only from `hasErrors`; a field passing the deprecated `rawErrors` alone still has its messages shown through v7, but without that status.
+
+```tsx
+const { FieldTemplate } = registry.templates;
+
+<FieldTemplate {...fieldTemplateProps} errors={errorsElement} hasErrors={errors.length > 0}>
+  {children}
+</FieldTemplate>;
 ```
 
 <!-- ROADMAP -->

@@ -2,7 +2,6 @@ import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema 
 import {
   getTemplates,
   getUiOptions,
-  hasTemplateErrors,
   templateDrawsDescription,
   templateDrawsLabel,
   templateLabelFor,
@@ -38,10 +37,10 @@ export default function FieldTemplate<
     schema,
     uiSchema,
     registry,
+    hasErrors: hasError,
   } = props;
   const displayLabel = templateDrawsLabel<T, S, F>(props);
   const uiOptions = getUiOptions(uiSchema);
-  const hasError = hasTemplateErrors<T, S, F>(props);
   const { WrapIfAdditionalTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   if (hidden) {
     return <div className='hidden'>{children}</div>;

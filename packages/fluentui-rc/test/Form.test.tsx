@@ -749,3 +749,23 @@ describe('fluentui-rc CheckboxWidget required attribute', () => {
 
 checkboxLabelTests(Form, { generateTemplates, generateWidgets, descriptionBy: 'self' });
 fallbackDescriptionTests(Form, false);
+
+// An option showing its own errors puts its `Field` in the error state, whatever the field above does with its
+// `ui:hideError`. Fluent's `Field` sets `aria-invalid` on a control that sets none itself, so the control is announced
+// invalid even where the plan, which marks the control in every other theme, leaves it valid while the field above hides
+// the messages. An option hiding its errors can't be told apart here, since the plan marks its control invalid whenever
+// the field above shows errors
+describe("fluentui-rc's anyOf option error state", () => {
+  test('puts the option in the error state while it shows the errors the field above hides', () => {
+    render(
+      <Form
+        schema={{ anyOf: [{ type: 'string', title: 'Text' }, { type: 'number' }] }}
+        uiSchema={{ 'ui:hideError': true, anyOf: [{ 'ui:hideError': false }, {}] }}
+        extraErrors={{ __errors: ['wrong'] }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('textbox', { name: 'Text' })).toHaveAttribute('aria-invalid', 'true');
+  });
+});

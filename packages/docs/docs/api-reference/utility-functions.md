@@ -1110,7 +1110,7 @@ A finite epoch number or a valid `Date` is an exact instant. It is converted to 
 
 Gets the error messages a widget, or an `ArrayFieldTemplate` or `ObjectFieldTemplate`, draws itself: the messages its field's plan shows, with `ui:hideError` applied, where the plan's `presentation.errors.by` is `'self'`, and none where they are drawn elsewhere, as by the `FieldTemplate` under `'template'` or, below an `anyOf`/`oneOf` option, by the field above.
 For a component rendered without a plan, as one rendered outside `SchemaField` is, it falls back to the deprecated `rawErrors` while `hideError` is off.
-Read it rather than `rawErrors` or the deprecated [getVisibleErrors()](#getvisibleerrors), and [hasWidgetErrors()](#haswidgeterrors) or [hasTemplateErrors()](#hastemplateerrors) for an error state.
+Read it rather than `rawErrors` or the deprecated [getVisibleErrors()](#getvisibleerrors), and [hasWidgetErrors()](#haswidgeterrors) or a template's `hasErrors` prop for an error state.
 
 #### Parameters
 
@@ -1770,7 +1770,7 @@ A schema [`retrieveSchema()`](#retrieveschematunknownsextendsstrictrjsfschemarjs
 ### getVisibleErrors()
 
 Returns the list of errors that a widget or template should surface in its own UI, which is empty whenever `ui:hideError` is in effect: `rawErrors` is deliberately still provided while errors are hidden, so that custom widgets can render them their own way.
-Deprecated, and kept through v7 for a component rendered without a plan: read [getErrorsToDraw()](#geterrorstodraw) instead, which gives the messages its field's plan shows, with `ui:hideError` applied, only where `presentation.errors.by` is `'self'`, since the template draws them under `'template'`, and falls back to this without a plan, and [hasWidgetErrors()](#haswidgeterrors) or [hasTemplateErrors()](#hastemplateerrors) for an error state.
+Deprecated, and kept through v7 for a component rendered without a plan: read [getErrorsToDraw()](#geterrorstodraw) instead, which gives the messages its field's plan shows, with `ui:hideError` applied, only where `presentation.errors.by` is `'self'`, since the template draws them under `'template'`, and falls back to this without a plan, and [hasWidgetErrors()](#haswidgeterrors) or a template's `hasErrors` prop for an error state.
 
 #### Parameters
 
@@ -1971,24 +1971,11 @@ Without a plan, as for a template rendered outside `SchemaField`, it follows `di
 
 - boolean: True when the key input is labelled
 
-### hasTemplateErrors&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#hastemplateerrors}
-
-Whether the field a template renders has errors to show, for the template's error state, such as a red outline or an invalid status: the messages its field's plan shows, with `ui:hideError` applied, or, for a template rendered without a plan, as one rendered outside `SchemaField` is, the deprecated `rawErrors` while `hideError` is off.
-Read it rather than `rawErrors`, which stays through v7 only for a template rendered without a plan.
-
-#### Parameters
-
-- props: Pick&lt;FieldTemplateProps&lt;T, S, F>, 'rawErrors' | 'hideError' | 'presentation'> - The template's `rawErrors`, `hideError` and `presentation`
-
-#### Returns
-
-- boolean: True when the field has errors to show
-
 ### hasVisibleErrors()
 
 Determines whether a widget or template has any errors to surface in its own UI, which is never the case while `ui:hideError` is in effect.
 It is the boolean form of [getVisibleErrors()](#getvisibleerrors), for the components that only need to decide whether to render an error state rather than render the errors themselves.
-Deprecated, and kept through v7 for a component rendered without a plan: read [hasWidgetErrors()](#haswidgeterrors) or [hasTemplateErrors()](#hastemplateerrors) instead, which read the plan and fall back to this only without one. A component drawing the messages itself reads [getErrorsToDraw()](#geterrorstodraw).
+Deprecated, and kept through v7 for a component rendered without a plan: read [hasWidgetErrors()](#haswidgeterrors) instead, which reads the plan and falls back to this only without one, or a template's `hasErrors` prop. A component drawing the messages itself reads [getErrorsToDraw()](#geterrorstodraw).
 
 #### Parameters
 

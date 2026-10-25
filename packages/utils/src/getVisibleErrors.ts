@@ -1,7 +1,7 @@
 /** The subset of props a widget or template needs in order to decide which of its errors to surface
  * @deprecated Kept through v7 with `getVisibleErrors()` and `hasVisibleErrors()`, which take it: type the props as
  *   `Pick<WidgetProps, 'rawErrors' | 'hideError' | 'presentation'>`, which `getErrorsToDraw()` and `hasWidgetErrors()`
- *   take, or a `FieldTemplate`'s as `Pick<FieldTemplateProps, …>`, which `hasTemplateErrors()` takes
+ *   take, while a `FieldTemplate` reads its error state from its `hasErrors` prop
  */
 export interface VisibleErrorsProps {
   /** The error messages, carried whatever `hideError` says */

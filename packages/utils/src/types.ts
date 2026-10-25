@@ -1191,8 +1191,8 @@ export type FieldTemplateProps<
   /** An array of strings listing the generated error messages this field is displaying, `undefined` while
    * `ui:hideError` is in effect, so that a template styling itself from it alone stays out of the error state.
    * To render the withheld errors yourself, read them from `errorSchema`
-   * @deprecated Kept through v7 for a template rendered without a plan: read `presentation.errors.messages`, or
-   *   `hasTemplateErrors()`, which falls back to this
+   * @deprecated Kept through v7 for a template rendered without a plan: read `presentation.errors.messages` for the
+   *   messages, or `hasErrors` for the field's error state
    */
   rawErrors?: string[];
   /** The tree of errors for this field and its children, carrying every error whatever `hideError` says, for a
@@ -1462,8 +1462,8 @@ export type ContainerFieldTemplateProps<
    * `FieldTemplateProps.rawErrors`, it carries them whatever `hideError` says, as a widget's does
    * @deprecated Kept through v7 for a template rendered without a plan: read `getErrorsToDraw()` for the messages the
    *   template draws itself, the plan's `presentation.errors.messages`, with `ui:hideError` applied, where
-   *   `presentation.errors.by` is `'self'`, since the `FieldTemplate` draws them under `'template'`, and
-   *   `hasTemplateErrors()` for an error state, each falling back to this without a plan
+   *   `presentation.errors.by` is `'self'`, since the `FieldTemplate` draws them under `'template'`, and whether
+   *   `presentation.errors.messages` has any for an error state. `getErrorsToDraw()` falls back to this without a plan
    */
   rawErrors?: string[];
   /** A string value containing the title for the array */
