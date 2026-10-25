@@ -59,6 +59,7 @@ import {
 import fieldLabelForLog from '../../fieldLabelForLog.ts';
 import hasOptionLabels from '../../hasOptionLabels.ts';
 import { useShownOption } from '../../hooks/useOptionSelection.ts';
+import useSendBlur from '../../hooks/useSendBlur.ts';
 import useUiState from '../../hooks/useUiState.ts';
 import { retrievedOptionsOf } from '../uiState.ts';
 import UiStateContext from '../UiStateContext.ts';
@@ -784,6 +785,7 @@ function SchemaFieldRender<
   } = props;
   const { fields } = registry;
   const { AnyOfField: _AnyOfField, OneOfField: _OneOfField, CyclicSchemaField } = fields;
+  const handleBlur = useSendBlur(fieldPath, props.onBlur);
   const {
     namedFieldAbove,
     namedAbove,
@@ -964,6 +966,7 @@ function SchemaFieldRender<
     <FieldComponent
       {...props}
       onChange={handleFieldComponentChange}
+      onBlur={handleBlur}
       id={fieldComponentId}
       schema={fieldSchema}
       uiSchema={fieldUiSchema}
@@ -1079,7 +1082,7 @@ function SchemaFieldRender<
                   formData={formData}
                   fieldPath={fieldPath}
                   id={fieldId}
-                  onBlur={props.onBlur}
+                  onBlur={handleBlur}
                   onChange={handleOptionFieldChange}
                   onFocus={props.onFocus}
                   options={xxxOfOptions}

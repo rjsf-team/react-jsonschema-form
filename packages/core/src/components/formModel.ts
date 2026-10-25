@@ -21,10 +21,9 @@ import {
 } from '@rjsf/utils';
 
 import isDevelopment from '../isDevelopment.ts';
-import { ADDITIONAL_PROPERTY_KEY_REMOVE } from './constants.ts';
 import type { FormProps, FormState } from './Form.tsx';
 import type { FormRef } from './FormRef.ts';
-import type { AnnouncedMove, FieldChange, KeyMove, MoveOutcome } from './formState.ts';
+import type { AnnouncedMove, FieldChange, MoveOutcome } from './formState.ts';
 import {
   applyBlur,
   applyChangeToData,
@@ -38,6 +37,7 @@ import {
   freezeFormData,
   isBlurValidated,
   isLiveValidated,
+  keyMoveOf,
   seedOf,
   shareState,
   toEventFormData,
@@ -119,30 +119,6 @@ function focusableForId(
   );
 }
 
-/** Where the change at `path` moves the selections and expansions `uiState` holds: under the keys of the container the
- * move announced for it moved, where the errors raised there go, or out from under a property the change removes
- *
- * @param move - The key move announced for the change, if any
- * @param newValue - The value the change sets
- * @param path - The path of the change
- * @returns - The container whose keys move and where each goes, or undefined for a change that moves none
- */
-function uiStateMoveOf<T>(
-  move: AnnouncedMove | undefined,
-  newValue: T | undefined,
-  path: FieldPathList,
-): { container: FieldPath; newKeyOf: KeyMove } | undefined {
-  const newKeyOf = move?.newOwnKeyOf ?? move?.newKeyOf;
-  if (move && newKeyOf) {
-    return { container: move.fieldPath, newKeyOf };
-  }
-  if (newValue === ADDITIONAL_PROPERTY_KEY_REMOVE && path.length > 0) {
-    const removed = String(path[path.length - 1]);
-    return { container: fieldPathFromList(path.slice(0, -1)), newKeyOf: (key) => (key === removed ? undefined : key) };
-  }
-  return undefined;
-}
-
 /** The model holds the form's state between renders and performs every operation on it. An operation starts from the
  * current state and reads the props once, as it starts, so that everything it computes and reports belongs to one
  * moment.
@@ -172,6 +148,8 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   // that carried one
   let announced: AnnouncedMove | undefined;
   let moved: { move: AnnouncedMove; outcome: MoveOutcome } | undefined;
+  // The path of the field whose blur is on its way to the form, see `FormDataAccess.sendBlur()`
+  let blurredPath: FieldPath | undefined;
   // The form's option selections and cycle expansions, which live as long as the form, see `createUiState()`
   const { uiState } = initial;
   // A form an `<Activity>` hides is detached as an unmounted one is, the way React asks of hidden content, and drops
@@ -348,11 +326,11 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
    * @returns - True if the form is valid, false otherwise.
    */
   const runValidation = (props: FormProps<T, S, F>, readFormData: () => T | undefined): boolean => {
-    const { hasError, next } = settled((base) => applyValidation(base, props, readFormData()));
+    const { hasError, allErrors: errors, next } = settled((base) => applyValidation(base, props, readFormData()));
     if (isDetached) {
       return !hasError;
     }
-    const { errors } = commit(next);
+    commit(next);
     if (!hasError) {
       return true;
     }
@@ -479,7 +457,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     const path = fieldPathToList(fieldPath);
     // The selections and expansions under keys the change moves, or under a property it removes, move before it is
     // applied, so the sanitize reads them where the change puts the data; a change the form refuses puts them back
-    const uiMove = uiStateMoveOf(move, newValue, path);
+    const uiMove = keyMoveOf({ fieldPath, newValue, newKeyOf: move?.newKeyOf, newOwnKeyOf: move?.newOwnKeyOf });
     const containerPath = uiMove && fieldPathToList(uiMove.container);
     deliver(() => {
       const before = containerPath && getAt<unknown>(current().formData, containerPath);
@@ -547,22 +525,29 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     });
   };
 
-  /** What a blurred field does to the form, after the `Form`'s `onBlur`: any live validation and live omit that the
-   * flags ask for on blur, reported through `onChange` when they changed what an `IChangeEvent` carries. Run through
-   * `callWithDeferredThrow()` as a field's change is, since a field may report the blur from an Effect, where a throw
-   * from a validation callback or `onChange` would unmount the form.
+  /** What a blurred field does to the form, after the `Form`'s `onBlur`: the field is touched, and any live validation
+   * and live omit that the flags ask for on blur run, reported through `onChange` when they changed the data or the
+   * errors an `IChangeEvent` carries. A touch alone is not reported, so `onChange` fires no more often than before;
+   * the next event and `getStatus()` carry it. Run through `callWithDeferredThrow()` as a field's change is, since a
+   * field may report the blur from an Effect, where a throw from a validation callback or `onChange` would unmount the
+   * form.
    *
    * @param id - The unique `id` of the field that was blurred
+   * @param [fieldPath] - The path of the field that was blurred, when a `SchemaField` reported it
    */
-  const blur = (id: string) => {
+  const blur = (id: string, fieldPath: FieldPath | undefined) => {
     const props = committedProps;
     const { omitExtraData, liveOmit } = props;
-    if (isDetached || !((omitExtraData === true && liveOmit === 'onBlur') || isBlurValidated(props))) {
+    if (isDetached) {
       return;
     }
     const start = current();
-    const committed = commit(settled((base) => applyBlur(base, props)));
-    // Only the `IChangeEvent` members count; the validator's own results are not among them
+    const isTouch = fieldPath !== undefined && !start.touchedPaths.has(fieldPath);
+    if (!(isTouch || (omitExtraData === true && liveOmit === 'onBlur') || isBlurValidated(props))) {
+      return;
+    }
+    const committed = commit(settled((base) => applyBlur(base, props, fieldPath)));
+    // Only the `IChangeEvent` members count; the validator's own results and the status are not among them
     if ((['formData', 'errors', 'errorSchema'] as const).some((key) => start[key] !== committed[key])) {
       props.onChange?.(toIChangeEvent(committed), id);
     }
@@ -718,6 +703,21 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     setFormElement: (element: HTMLElement | null) => {
       formElement = element;
     },
+    /** Calls `send` with `fieldPath` as the path of the blur it sends, unless a field below has named its own already,
+     * see `FormDataAccess.sendBlur()`
+     */
+    sendBlur: (fieldPath: FieldPath, send: () => void) => {
+      if (blurredPath !== undefined) {
+        send();
+        return;
+      }
+      blurredPath = fieldPath;
+      try {
+        send();
+      } finally {
+        blurredPath = undefined;
+      }
+    },
     sendMove: (move: AnnouncedMove, send: () => void) => {
       announced = move;
       try {
@@ -818,9 +818,10 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
         return;
       }
       const props = committedProps;
+      const fieldPath = blurredPath;
       // Before the blur reads the state, so it validates an edit `onBlur` makes instead of reverting it
       callWithDeferredThrow(() => props.onBlur?.(id, data));
-      callWithDeferredThrow(() => blur(id));
+      callWithDeferredThrow(() => blur(id, fieldPath));
     },
     handleFocus: (id: string, data: unknown) => {
       if (isDetached) {

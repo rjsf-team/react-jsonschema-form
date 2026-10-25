@@ -1,7 +1,7 @@
 # Submitting
 
 When the form is submitted and its data are valid, `Form` calls your [`onSubmit`](../api-reference/form-props.md#onsubmit) with the validated data.
-This page covers what happens while that submission is in flight, how `Form` fits React's form APIs, `useActionState` and `useFormStatus`, and how to tell whether the form holds changes that haven't been saved.
+This page covers what happens while that submission is in flight, how `Form` fits React's form APIs, `useActionState` and `useFormStatus`, how to tell whether the form holds changes that haven't been saved, and which fields the user has touched.
 
 ## A pending submission
 
@@ -129,7 +129,7 @@ Changes the user didn't make leave the form clean. When a new `schema` prop fill
 
 ### Making the saved data the baseline
 
-After a save, call `reset(saved)` on the form's ref with the data you saved. That data becomes the baseline and the form's data, and the form clears its errors and its submit count, without remounting. `reset()` with no argument goes back to the data the last `reset(saved)` passed, or to the props' seed if there was none.
+After a save, call `reset(saved)` on the form's ref with the data you saved. That data becomes the baseline and the form's data, and the form clears its errors, its touched fields and its submit count, without remounting. `reset()` with no argument goes back to the data the last `reset(saved)` passed, or to the props' seed if there was none.
 
 Call it in the handler or action that saves, once the save succeeds, as the [`useActionState` example](#with-useactionstate) does, rather than in an Effect that watches for the save to finish. The save is what causes the reset, so it belongs where the save happens; see [You Might Not Need an Effect](https://react.dev/learn/you-might-not-need-an-effect).
 
@@ -196,3 +196,14 @@ function PersonForm({ person }: { person: Person }) {
   );
 }
 ```
+
+## Touched fields
+
+A field is touched once its widget reports a blur, the same blur [`liveValidate="onBlur"`](../api-reference/form-props.md#livevalidate) validates on. Every `onChange` and `onSubmit` event, and `getStatus()`, report:
+
+- `touched`: whether any field has been touched since the form mounted or was last reset.
+- `touchedFields`: which, nested like the data, with `true` at each touched field, for example `{ address: { street: true } }`. For an array it holds an entry for each item, `undefined` where the item holds no touched field. A touched field stays with its array item when the item is moved, and goes when the item is removed.
+
+A submit doesn't touch any field; read `submitCount` to tell whether one was attempted. A blur that only touches a field fires no `onChange`, so `onChange` isn't called more often than before: the next event carries it, and `getStatus()` reads it right away. `reset()` clears the touched fields.
+
+To show a field's errors only once the user has reached it, use [`liveErrors="field"`](../api-reference/form-props.md#liveerrors) rather than filtering errors by `touchedFields` yourself.

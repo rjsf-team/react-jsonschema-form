@@ -121,7 +121,7 @@ Inside `onChange`, use `event.formData` to read the edit being reported. Treat d
 
 ## Read the form status
 
-Call `getStatus()` to read whether the form's data differs from its baseline (`dirty`), where (`dirtyFields`), and how many submits have been attempted (`submitCount`). It returns what the last `onChange` or `onSubmit` event carried, or the initial status before any event. Call `reset(saved)` with the data a save stored to make it the new baseline. See [Unsaved changes](../usage/submitting.md#unsaved-changes).
+Call `getStatus()` to read whether the form's data differs from its baseline (`dirty`), where (`dirtyFields`), whether the user has touched any field (`touched`), which (`touchedFields`), and how many submits have been attempted (`submitCount`). It returns what the last `onChange` or `onSubmit` event carried, or the initial status before any event, with any field touched since included: a blur that only touches a field fires no `onChange`. Call `reset(saved)` with the data a save stored to make it the new baseline; `reset()` also clears the touched fields. See [Unsaved changes](../usage/submitting.md#unsaved-changes) and [Touched fields](../usage/submitting.md#touched-fields).
 
 ## Submit form programmatically
 

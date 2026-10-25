@@ -18,6 +18,12 @@ interface FormDataAccess {
    * reached the form at that path.
    */
   sendMove(move: AnnouncedMove, send: () => void): MoveOutcome | undefined;
+  /** Calls `send`, which sends the blur a widget reported, with `fieldPath` as the path of the field it touches. The
+   * innermost field names it: a blur passes up through every `SchemaField` above the widget, and only the first to
+   * send it knows the path the widget renders. A widget's `onBlur` names an id, which a custom `idPrefix` or
+   * `idSeparator` can make ambiguous, so the path travels this way instead
+   */
+  sendBlur(fieldPath: FieldPath, send: () => void): void;
   /** The form's current data at `path` */
   readField<D>(path: FieldPath): D;
   /** The form's data at `path` as its last commit rendered it, which a field rendered in that commit was handed */

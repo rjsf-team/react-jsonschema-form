@@ -657,6 +657,23 @@ render(
 
 You can also create a custom generator by implementing the `NameGeneratorFunction` type, which receives `path` (array of path segments), `idPrefix` (typically `'root'`), and optional `isMultiValue` (boolean for multi-value fields).
 
+## liveErrors
+
+Use this prop with [`liveValidate`](#livevalidate) to choose which errors live validation shows. Without `liveValidate` it changes nothing: errors only appear after a submit.
+
+- Omit this prop, or use `liveErrors="all"`, to show every error, as live validation always has.
+- Use `liveErrors="field"` to show a field's errors only once the user has reached it: once it changed, under `liveValidate="onChange"`, or once it lost focus, under `liveValidate="onBlur"`. A submit attempt shows every error from then on, until [`reset()`](../advanced-customization/internals.md#read-the-form-status).
+
+With `liveErrors="field"`:
+
+- An array's or object's own errors, such as a `minItems` or `minProperties` error, show once the user reached it or any field inside it. Adding, removing or moving an array's items counts as reaching the array.
+- [`extraErrors`](#extraerrors) always show, and so do the errors a custom field or widget raises itself. [`customValidate`](#customvalidate)'s errors show the way the schema's do.
+- The error list, each field's errors and the `errors` and `errorSchema` of the [`onChange`](#onchange) event hold only the errors shown. [`onError`](#onerror) and [`validateForm()`](../usage/validation.md#validate-form-programmatically) still see every error, so an error that isn't shown still blocks the submit.
+
+```tsx
+<Form schema={schema} validator={validator} liveValidate='onChange' liveErrors='field' />
+```
+
 ## liveOmit
 
 Use this prop with `omitExtraData={true}` to remove extra data while editing, rather than waiting for submission.
@@ -676,6 +693,8 @@ Choose when to validate while editing:
 - Omit this prop to validate on submission only.
 - Use `liveValidate="onChange"` to validate after each edit.
 - Use `liveValidate="onBlur"` to validate when an edited field loses focus.
+
+Live validation shows every error in the form, including those of fields the user hasn't reached yet. Use [`liveErrors="field"`](#liveerrors) to show a field's errors only once the user has reached it.
 
 ## method
 
@@ -706,7 +725,7 @@ Sometimes you may want to trigger events or modify external state when a field h
 ## onChange
 
 Called with the same first argument as `onSubmit` for every edit: user input, `setFieldValue()`, `reset()`, and blur validation or omission. It is not called for what the form derives on mount or when a prop changes, such as the schema's defaults: read those with `getFormData()`. The edit has been applied by the time it is called, so not storing it does not undo it; refuse or rewrite edits in [`transformChange`](#transformchange).
-The event also carries the form's status: `dirty`, `dirtyFields` and `submitCount`, see [Unsaved changes](../usage/submitting.md#unsaved-changes). A change to the status alone fires no `onChange`.
+The event also carries the form's status: `dirty`, `dirtyFields`, `touched`, `touchedFields` and `submitCount`, see [Unsaved changes](../usage/submitting.md#unsaved-changes) and [Touched fields](../usage/submitting.md#touched-fields). A change to the status alone fires no `onChange`, so a blur that only touches a field fires none: the next event carries it.
 It will also receive, as the second argument, the `id` of the field which experienced the change.
 Generally, this will be the `id` of the field for which input data is modified.
 In the case of adding/removing of new fields in arrays or objects with `additionalProperties` or `patternProperties` and the rearranging of items in arrays, the `id` will be that of the array or object itself, rather than the item/field being added, removed or moved.

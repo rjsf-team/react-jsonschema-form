@@ -211,7 +211,7 @@ export function fieldStateOf<T, S extends StrictRJSFSchema, F extends FormContex
 /** The new path of `path` once the keys of the array or object at `container` moved as `newKeyOf` says, undefined for
  * one under a key that went, and `path` itself for one outside `container`
  */
-function movedPath(path: FieldPath, container: FieldPathList, newKeyOf: KeyMove): FieldPath | undefined {
+export function movedPath(path: FieldPath, container: FieldPathList, newKeyOf: KeyMove): FieldPath | undefined {
   const segments = fieldPathToList(path);
   if (segments.length === container.length || !isPathPrefix(container, segments)) {
     return path;

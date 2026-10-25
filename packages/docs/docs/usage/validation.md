@@ -297,6 +297,8 @@ You can enable live form data validation by passing a `liveValidate` prop to the
 
 Be warned that this is an expensive strategy, with possibly strong impact on performances.
 
+Live validation shows every error in the form, including those of fields the user hasn't reached yet. Pass [`liveErrors='field'`](../api-reference/form-props.md#liveerrors) to show a field's errors only once the user has changed it, or, with `liveValidate='onBlur'`, left it, and every error once a submit was attempted.
+
 ```tsx
 import Form from '@rjsf/core';
 import { RJSFSchema } from '@rjsf/utils';
