@@ -1595,6 +1595,42 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       });
 
       describe('dynamic', () => {
+        it('keeps a oneOf none of whose options declares the key on the field as an ordinary oneOf (#5407)', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: { a: { type: 'string' } },
+            dependencies: {
+              a: { oneOf: [{ properties: { b: { type: 'string' } } }, { properties: { c: { type: 'number' } } }] },
+            },
+          };
+          expect(retrieveSchema({ validator: testValidator }, schema, schema, { a: 'x' })).toEqual({
+            type: 'object',
+            properties: { a: { type: 'string' } },
+            oneOf: [{ properties: { b: { type: 'string' } } }, { properties: { c: { type: 'number' } } }],
+          });
+        });
+
+        it('applies the keyed option of a oneOf where only some options declare the key', () => {
+          // Mock isValid so that the one keyed option's condition holds
+          testValidator.setReturnValues({ isValid: [true] });
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: { a: { type: 'string' } },
+            dependencies: {
+              a: {
+                oneOf: [
+                  { properties: { a: { enum: ['x'] }, b: { type: 'string' } } },
+                  { properties: { c: { type: 'number' } } },
+                ],
+              },
+            },
+          };
+          expect(retrieveSchema({ validator: testValidator }, schema, schema, { a: 'x' })).toEqual({
+            type: 'object',
+            properties: { a: { type: 'string' }, b: { type: 'string' } },
+          });
+        });
+
         describe('false condition', () => {
           it('should not modify properties', () => {
             const schema: RJSFSchema = {

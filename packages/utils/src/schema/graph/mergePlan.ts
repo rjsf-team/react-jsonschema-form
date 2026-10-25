@@ -912,20 +912,26 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
 
   /** Applies the one option of a dependency's `oneOf` whose `properties[key]` the data satisfies, less that property;
    * with no such option or several, none is applied. The list is chosen from rather than offered, so it is dropped
-   * before the option is merged in, which keeps an `anyOf` or `oneOf` the option offers itself
+   * before the option is merged in, which keeps an `anyOf` or `oneOf` the option offers itself. A list no option of
+   * which declares `key` has nothing to choose by, so it is offered as the field's own `oneOf`, as the validator reads it
    */
   private applyExactlyOne(part: Part<S>, key: string, provider: Provider<S> | undefined): Part<S> {
     if (provider === undefined) {
       return part;
     }
-    const withoutList = { ...part, schema: withoutKeys(part.schema, ONE_OF_KEY) };
-    const valid = this.graph
+    const conditions = this.graph
       .subschemas(provider.node.id, ONE_OF_KEY)
-      .map(([, option]) => option)
-      .filter((option) => {
-        const condition = dependencyCondition(this.graph, option, key);
-        return condition !== undefined && this.holds(`dependency:${option}:${key}`, condition, this.depData);
-      });
+      .map(([, option]) => ({ option, condition: dependencyCondition(this.graph, option, key) }));
+    if (conditions.length > 0 && conditions.every(({ condition }) => condition === undefined)) {
+      return this.applyOption(part, ONE_OF_KEY, provider, false);
+    }
+    const withoutList = { ...part, schema: withoutKeys(part.schema, ONE_OF_KEY) };
+    const valid = conditions
+      .filter(
+        ({ option, condition }) =>
+          condition !== undefined && this.holds(`dependency:${option}:${key}`, condition, this.depData),
+      )
+      .map(({ option }) => option);
     if (valid.length !== 1) {
       logOnce(`ignoring oneOf in dependencies of "${key}" because there isn't exactly one subschema that is valid`);
       return withoutList;
