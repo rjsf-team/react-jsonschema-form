@@ -1099,8 +1099,7 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
     }
   }
 
-  const wholeValue = isWholeValue ?? isWholeValueSelect<S>(resolveDeclaredConstantOptions<S>(schema, () => view));
-  const foldedType = foldedTypeOf<T, S, F>(view, props, defaults, wholeValue);
+  const foldedType = foldedTypeOf<T, S, F>(view, props, defaults, isWholeValue);
   const defaultBasedOnSchemaType = typeDefaults<T, S, F>(context, view, props, defaults, foldedType);
 
   let defaultsWithFormData = defaultBasedOnSchemaType ?? defaults;
@@ -1127,7 +1126,7 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
       const matching = viewFormDataMatching<unknown, S, F>(context, view, rawFormData);
       if (matching !== undefined) {
         defaultsWithFormData = matching;
-      } else if (wholeValue) {
+      } else if (foldedType === 'whole') {
         defaultsWithFormData = defaults;
       }
     } else if (!isObject(rawFormData) || foldedType === undefined) {
@@ -1140,9 +1139,10 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
         defaultsWithFormData,
         viewFormDataMatching<unknown, S, F>(context, view, rawFormData),
         mergeExtraDefaults,
-        // A value missing, `null` or `NaN` takes the defaults; a key of object data the user left `undefined` keeps it
-        // unless `mergeDefaultsIntoFormData` says a default replaces it
-        !isObject(rawFormData) ||
+        // A value missing or `NaN` takes the defaults, as does a `null` the whole form data is; a `null` the user left in
+        // an object or array, and a key of object data the user left `undefined`, keep it unless
+        // `mergeDefaultsIntoFormData` says a default replaces it
+        (!isObject(rawFormData) && (rawFormData !== null || props.requiredAsRoot === true)) ||
           defaultFormStateBehavior?.mergeDefaultsIntoFormData === 'useDefaultIfFormDataUndefined',
         isObject(rawFormData) && mergedAllOf,
       );
@@ -1276,9 +1276,10 @@ function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const optionContext: SchemaContext<S, F> = skipsOneOfConstants
     ? { ...context, defaultFormStateBehavior: { ...defaultFormStateBehavior, constAsDefaults: 'never' } }
     : context;
-  // A whole value is picked as it stands, so an inherited default naming one of the options is the one to pick
+  // A whole value is picked as it stands, so an inherited default naming one of the options is the one to pick. An
+  // ancestor default that wins picks the option too, so the option it is checked against is one that can hold it
   const inheritedDefault = preferParentDefaults ? defaults : (schema.default ?? defaults);
-  const valueToMatch = rawFormData ?? (picksWholeOption ? inheritedDefault : schema.default);
+  const valueToMatch = rawFormData ?? (picksWholeOption || preferParentDefaults ? inheritedDefault : schema.default);
   // A constant option equal to the value is the one it picked, whatever the validator makes of the others
   const equalOptionIndex = picksWholeOption
     ? wholeOptions.findIndex((option) => deepEquals(toConstant<S>(option), valueToMatch))
@@ -1785,12 +1786,19 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
         }
       });
   }
-  // The data is the user's: a key it holds as `undefined` or `null` stays so unless `mergeDefaultsIntoFormData` says a
-  // default replaces that and one does, and one no property names and no additional property was computed for is kept
-  // as it is
+  // The data is the user's: a key it holds as `undefined` stays so unless `mergeDefaultsIntoFormData` says a default
+  // replaces that and one does, and one no property names and no additional property was computed for is kept as it
+  // is. A `null` it holds was kept or replaced by the field of the key, as in any other container. Under
+  // `constAsDefaults: 'always'` an object `const` takes precedence over the data, so a key it doesn't name is dropped
+  const pinnedKeys =
+    defaultFormStateBehavior?.constAsDefaults === 'always' &&
+    isObjectData(parentConst) &&
+    !constIsAjvDataReference(schema)
+      ? parentConst
+      : undefined;
   if (shouldMergeDefaultsIntoFormData) {
-    for (const key of Object.keys(formData)) {
-      if (formData[key] == null && !defaultReplacesUndefined) {
+    for (const key of Object.keys(formData).filter((dataKey) => !pinnedKeys || Object.hasOwn(pinnedKeys, dataKey))) {
+      if (formData[key] === undefined && !defaultReplacesUndefined) {
         setOwn(computed, key, formData[key]);
       } else if (
         !Object.hasOwn(computed, key) &&
@@ -2060,14 +2068,15 @@ function arrayDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>
  * @param view - The field's view
  * @param props - The props of the field
  * @param defaults - The defaults computed for the field so far
- * @param isWholeValue - Whether the field is a select over whole object or array values
+ * @param [isWholeValue] - Whether the field is a select over whole object or array values, worked out from its
+ *        schema where the caller hasn't already
  * @returns - The kind of value the field's defaults are computed as
  */
 function foldedTypeOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
   view: DefaultsView<S>,
   { uiSchema, rawFormData }: FoldProps<T, S, F>,
   defaults: unknown,
-  isWholeValue: boolean,
+  isWholeValue = isWholeValueSelect<S>(resolveDeclaredConstantOptions<S>(view.schema, () => view)),
 ): string | undefined {
   // A select over object or array constants picks one of them as a whole, so it has no contents of its own to fill in,
   // and an empty object or array would be a value none of its options allow
@@ -2265,12 +2274,7 @@ export function getDefaultBasedOnSchemaType<
       view,
       computeDefaultsProps,
       defaults,
-      foldedTypeOf<T, S, F>(
-        view,
-        computeDefaultsProps,
-        defaults,
-        isWholeValue ?? isWholeValueSelect<S>(resolveDeclaredConstantOptions<S>(view.schema, () => view)),
-      ),
+      foldedTypeOf<T, S, F>(view, computeDefaultsProps, defaults, isWholeValue),
     ),
   );
 }

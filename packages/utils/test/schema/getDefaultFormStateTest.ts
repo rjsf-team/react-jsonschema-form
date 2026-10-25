@@ -2256,6 +2256,31 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         ).toEqual({ field: 1 });
       });
 
+      it.each<[string, RJSFSchema, GenericObjectType, GenericObjectType]>([
+        [
+          'at the root',
+          { type: 'object', const: { a: 1 }, properties: { a: { type: 'number' } } },
+          { a: 2, b: 5 },
+          { a: 2 },
+        ],
+        [
+          'inside an object',
+          {
+            type: 'object',
+            properties: { o: { type: 'object', const: { a: 1 }, properties: { a: { type: 'number' } } } },
+          },
+          { o: { a: 2, b: 5 } },
+          { o: { a: 2 } },
+        ],
+      ])('keeps only the data keys an object const names %s', (_name, schema, formData, expected) => {
+        expect(
+          getDefaultFormState(
+            { validator: testValidator, defaultFormStateBehavior: { constAsDefaults: 'always' } },
+            { schema, formData },
+          ),
+        ).toEqual(expected);
+      });
+
       describe('oneOf with const values', () => {
         const schema: RJSFSchema = {
           type: 'object',
@@ -6612,6 +6637,19 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             });
           },
         );
+        it.each<[string, RJSFSchema, Exclude<RJSFSchema['default'], undefined>, unknown]>([
+          ['an anyOf option', { anyOf: [{ type: 'number' }, { type: 'string' }], default: 'x' }, 5, 5],
+          ['a oneOf option', { oneOf: [{ type: 'number' }, { type: 'string' }], default: 'x' }, 5, 5],
+          ['no option', { anyOf: [{ type: 'number' }, { type: 'string' }], default: 'x' }, true, 'x'],
+        ])(
+          'gives an ancestor default over the property default where %s holds it',
+          (_name, property, ancestor, expected) => {
+            const schema: RJSFSchema = { type: 'object', default: { v: ancestor }, properties: { v: property } };
+            expect(getDefaultFormState({ validator: testValidator, defaultFormStateBehavior }, { schema })).toEqual({
+              v: expected,
+            });
+          },
+        );
         it('keeps a falsy default two levels up over the property default (#5624)', () => {
           const schema: RJSFSchema = {
             type: 'object',
@@ -9298,6 +9336,70 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             },
           ),
         ).toEqual({ o: { k: undefined } });
+      });
+    });
+
+    describe('a null the user left in the data', () => {
+      const nullableItems: RJSFSchema = { type: 'array', items: { type: ['string', 'null'], default: 'd' } };
+      it.each<[string, RJSFSchema, unknown, unknown]>([
+        ['an item of a type list', nullableItems, [null], [null]],
+        [
+          'an item offering anyOf options',
+          { type: 'array', items: { anyOf: [{ type: 'string' }, { type: 'null' }], default: 'd' } },
+          [null],
+          [null],
+        ],
+        [
+          'an array inside an object',
+          { type: 'object', properties: { a: nullableItems } },
+          { a: [null, 'x'] },
+          { a: [null, 'x'] },
+        ],
+        ['a tuple entry', { type: 'array', items: [{ type: ['string', 'null'], default: 'd' }] }, [null], [null]],
+      ])('is kept for %s', (_name, schema, formData, expected) => {
+        expect(getDefaultFormState({ validator: testValidator }, { schema, formData })).toEqual(expected);
+        expect(
+          getDefaultFormState({ validator: testValidator }, { schema, formData, initialDefaultsGenerated: true }),
+        ).toEqual(expected);
+      });
+      it.each<NonNullable<DefaultFormStateBehavior['emptyObjectFields']>>([
+        'populateAllDefaults',
+        'populateRequiredDefaults',
+        'skipEmptyDefaults',
+        'skipDefaults',
+      ])('is kept for the keys of an object under emptyObjectFields %s', (emptyObjectFields) => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            a: { type: ['string', 'null'], default: 'd' },
+            o: { type: ['object', 'null'], properties: { x: { type: 'string', default: 'd' } } },
+          },
+        };
+        expect(
+          getDefaultFormState(
+            { validator: testValidator, defaultFormStateBehavior: { emptyObjectFields } },
+            { schema, formData: { a: null, o: null } },
+          ),
+        ).toEqual({ a: null, o: null });
+      });
+      it('takes the default under useDefaultIfFormDataUndefined', () => {
+        expect(
+          getDefaultFormState(
+            {
+              validator: testValidator,
+              defaultFormStateBehavior: { mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined' },
+            },
+            { schema: nullableItems, formData: [null] },
+          ),
+        ).toEqual(['d']);
+      });
+      it('takes the default as the whole form data', () => {
+        expect(
+          getDefaultFormState(
+            { validator: testValidator },
+            { schema: { type: ['string', 'null'], default: 'd' }, formData: null },
+          ),
+        ).toBe('d');
       });
     });
 
