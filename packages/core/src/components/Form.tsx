@@ -140,9 +140,7 @@ export interface FormProps<
    * data you're usually after. The original event will also be passed as a second parameter.
    *
    * When it returns a promise, the submit button gets `pending` until that promise settles. A rejected promise is
-   * reported as an unhandled rejection, as one returned from any other event handler is. The return type stays `void`,
-   * which already takes a function returning a promise, where `void | Promise<void>` would reject a handler returning
-   * any other value
+   * reported as an unhandled rejection, as one returned from any other event handler is
    */
   onSubmit?: (data: IChangeEvent<Uninferred<T>, S, F>, event: SubmitEvent<HTMLFormElement>) => void;
   /** Sometimes you may want to trigger events or modify external state when a field has been touched, so you can pass
@@ -367,12 +365,12 @@ function Attachment({ attach }: { attach: () => () => void }) {
   return null;
 }
 
-/** Whether `value` is a promise, or any other thenable, that `onSubmit` returned */
 function isPromiseLike(value: unknown): value is PromiseLike<unknown> {
   return (
     (typeof value === 'object' || typeof value === 'function') &&
     value !== null &&
-    typeof Reflect.get(value, 'then') === 'function'
+    'then' in value &&
+    typeof value.then === 'function'
   );
 }
 
@@ -429,8 +427,8 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   useImperativeHandle(ref, () => model.handle, [model]);
   // The form counts the promises `onSubmit` returned in its own state rather than awaiting them in a transition, since
   // React holds every transition in the app until all its async ones settle. The rejection stays the caller's: the copy
-  // `finally()` returns rejects with it and no one handles it, so it is reported as an unhandled rejection, as it was
-  // when the form ignored what `onSubmit` returned, and never reaches an Error Boundary
+  // `finally()` returns rejects with it and no one handles it, so it is reported as an unhandled rejection and never
+  // reaches an Error Boundary
   const [submissions, setSubmissions] = useState(0);
   const handleSubmit = useCallback(
     (event: SubmitEvent<HTMLFormElement>) => {
