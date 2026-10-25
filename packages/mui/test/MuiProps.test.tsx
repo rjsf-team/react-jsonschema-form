@@ -284,6 +284,22 @@ describe('MUI Theme-Specific Props', () => {
     expect(screen.getAllByRole(role)[0]).toHaveAccessibleDescription('A hint');
   });
 
+  it.each<[string, RJSFSchema, string]>([
+    ['text input', { type: 'string' }, 'textbox'],
+    ['select', { type: 'string', enum: ['a', 'b'] }, 'combobox'],
+  ])("should give MUI's label of a %s an id no sibling field's id can spell", (_, foo, role) => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { foo: { ...foo, title: 'Foo' }, 'foo-label': { type: 'string' } },
+    };
+
+    const { container } = render(<Form schema={schema} validator={validator} />);
+
+    const ids = [...container.querySelectorAll('[id]')].map((element) => element.id);
+    expect(new Set(ids).size).toBe(ids.length);
+    expect(screen.getAllByRole(role)[0]).toHaveAccessibleName('Foo');
+  });
+
   // A select takes its slots from `rjsfSlotProps`, a text input from `slotProps`
   it.each<[string, RJSFSchema, string, string]>([
     ['text input', { type: 'string' }, 'textbox', 'slotProps'],

@@ -1945,7 +1945,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
                                               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-22"
                                               data-shrink="true"
                                               for="root_tasks_0_title"
-                                              id="root_tasks_0_title-label"
+                                              id="root_tasks_0_title__inputLabel"
                                             >
                                               title
                                             </label>
@@ -2153,7 +2153,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
                                               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-22"
                                               data-shrink="true"
                                               for="root_tasks_1_title"
-                                              id="root_tasks_1_title-label"
+                                              id="root_tasks_1_title__inputLabel"
                                             >
                                               title
                                             </label>
@@ -3369,7 +3369,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-19:focus::-ms-input-
                                       class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled Mui-required MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-16"
                                       data-shrink="true"
                                       for="root_tags_0"
-                                      id="root_tags_0-label"
+                                      id="root_tags_0__inputLabel"
                                     >
                                       tags-1
                                       <span
@@ -3504,7 +3504,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-19:focus::-ms-input-
                                       class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled Mui-required MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-16"
                                       data-shrink="true"
                                       for="root_tags_1"
-                                      id="root_tags_1-label"
+                                      id="root_tags_1__inputLabel"
                                     >
                                       tags-2
                                       <span
@@ -4696,7 +4696,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
                             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-11"
                             data-shrink="false"
                             for="root_person_firstName"
-                            id="root_person_firstName-label"
+                            id="root_person_firstName__inputLabel"
                           >
                             firstName
                           </label>
@@ -4745,7 +4745,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
                             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-11"
                             data-shrink="false"
                             for="root_person_lastName"
-                            id="root_person_lastName-label"
+                            id="root_person_lastName__inputLabel"
                           >
                             lastName
                           </label>
@@ -4822,7 +4822,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
                                     class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-11"
                                     data-shrink="false"
                                     for="root_person_address_street"
-                                    id="root_person_address_street-label"
+                                    id="root_person_address_street__inputLabel"
                                   >
                                     street
                                   </label>
@@ -4871,7 +4871,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
                                     class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-11"
                                     data-shrink="false"
                                     for="root_person_address_city"
-                                    id="root_person_address_city-label"
+                                    id="root_person_address_city__inputLabel"
                                   >
                                     city
                                   </label>
@@ -6041,7 +6041,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                   <div
                     class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-5"
                     data-shrink="false"
-                    id="root_color-label"
+                    id="root_color__inputLabel"
                   >
                     color
                   </div>
@@ -6051,7 +6051,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                     <div
                       aria-expanded="false"
                       aria-haspopup="listbox"
-                      aria-labelledby="root_color-label"
+                      aria-labelledby="root_color__inputLabel"
                       class="MuiSelect-select MuiSelect-outlined MuiInputBase-input MuiOutlinedInput-input emotion-7"
                       id="root_color"
                       role="combobox"
@@ -6722,7 +6722,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                     class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-5"
                     data-shrink="false"
                     for="root_firstName"
-                    id="root_firstName-label"
+                    id="root_firstName__inputLabel"
                   >
                     firstName
                   </label>
@@ -6771,7 +6771,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                     class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-5"
                     data-shrink="false"
                     for="root_age"
-                    id="root_age-label"
+                    id="root_age__inputLabel"
                   >
                     age
                   </label>
@@ -7341,7 +7341,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                     class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-5"
                     data-shrink="false"
                     for="root_description"
-                    id="root_description-label"
+                    id="root_description__inputLabel"
                   >
                     description
                   </label>
@@ -8562,7 +8562,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
                                               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-22"
                                               data-shrink="true"
                                               for="root_tasks_0_title"
-                                              id="root_tasks_0_title-label"
+                                              id="root_tasks_0_title__inputLabel"
                                             >
                                               title
                                             </label>
@@ -8770,7 +8770,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
                                               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-22"
                                               data-shrink="true"
                                               for="root_tasks_1_title"
-                                              id="root_tasks_1_title-label"
+                                              id="root_tasks_1_title__inputLabel"
                                             >
                                               title
                                             </label>
@@ -9986,7 +9986,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-19:focus::-ms-input-
                                       class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled Mui-required MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-16"
                                       data-shrink="true"
                                       for="root_tags_0"
-                                      id="root_tags_0-label"
+                                      id="root_tags_0__inputLabel"
                                     >
                                       tags-1
                                       <span
@@ -10121,7 +10121,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-19:focus::-ms-input-
                                       class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled Mui-required MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-16"
                                       data-shrink="true"
                                       for="root_tags_1"
-                                      id="root_tags_1-label"
+                                      id="root_tags_1__inputLabel"
                                     >
                                       tags-2
                                       <span
@@ -10800,7 +10800,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
                             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-11"
                             data-shrink="false"
                             for="root_person_firstName"
-                            id="root_person_firstName-label"
+                            id="root_person_firstName__inputLabel"
                           >
                             firstName
                           </label>
@@ -10849,7 +10849,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
                             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-11"
                             data-shrink="false"
                             for="root_person_lastName"
-                            id="root_person_lastName-label"
+                            id="root_person_lastName__inputLabel"
                           >
                             lastName
                           </label>
@@ -10926,7 +10926,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
                                     class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-11"
                                     data-shrink="false"
                                     for="root_person_address_street"
-                                    id="root_person_address_street-label"
+                                    id="root_person_address_street__inputLabel"
                                   >
                                     street
                                   </label>
@@ -10975,7 +10975,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
                                     class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-11"
                                     data-shrink="false"
                                     for="root_person_address_city"
-                                    id="root_person_address_city-label"
+                                    id="root_person_address_city__inputLabel"
                                   >
                                     city
                                   </label>
@@ -11600,7 +11600,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                   <div
                     class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-5"
                     data-shrink="false"
-                    id="root_color-label"
+                    id="root_color__inputLabel"
                   >
                     color
                   </div>
@@ -11610,7 +11610,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                     <div
                       aria-expanded="false"
                       aria-haspopup="listbox"
-                      aria-labelledby="root_color-label"
+                      aria-labelledby="root_color__inputLabel"
                       class="MuiSelect-select MuiSelect-outlined MuiInputBase-input MuiOutlinedInput-input emotion-7"
                       id="root_color"
                       role="combobox"
@@ -12281,7 +12281,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                     class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-5"
                     data-shrink="false"
                     for="root_firstName"
-                    id="root_firstName-label"
+                    id="root_firstName__inputLabel"
                   >
                     firstName
                   </label>
@@ -12330,7 +12330,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                     class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-5"
                     data-shrink="false"
                     for="root_age"
-                    id="root_age-label"
+                    id="root_age__inputLabel"
                   >
                     age
                   </label>
@@ -13524,7 +13524,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-9:focus::-ms-input-p
                       <div
                         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-7"
                         data-shrink="true"
-                        id="root_region__oneof_select-label"
+                        id="root_region__oneof_select__inputLabel"
                       >
                         region
                       </div>
@@ -13534,7 +13534,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-9:focus::-ms-input-p
                         <div
                           aria-expanded="false"
                           aria-haspopup="listbox"
-                          aria-labelledby="root_region__oneof_select-label"
+                          aria-labelledby="root_region__oneof_select__inputLabel"
                           class="MuiSelect-select MuiSelect-outlined MuiInputBase-input MuiOutlinedInput-input emotion-9"
                           id="root_region__oneof_select"
                           role="combobox"
@@ -13589,7 +13589,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-9:focus::-ms-input-p
                         <div
                           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-7"
                           data-shrink="true"
-                          id="root_region-label"
+                          id="root_region__inputLabel"
                         >
                           Europe
                         </div>
@@ -13599,7 +13599,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-9:focus::-ms-input-p
                           <div
                             aria-expanded="false"
                             aria-haspopup="listbox"
-                            aria-labelledby="root_region-label"
+                            aria-labelledby="root_region__inputLabel"
                             class="MuiSelect-select MuiSelect-outlined MuiInputBase-input MuiOutlinedInput-input emotion-9"
                             id="root_region"
                             role="combobox"
@@ -20907,7 +20907,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                     class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-5"
                     data-shrink="false"
                     for="root_my-field"
-                    id="root_my-field-label"
+                    id="root_my-field__inputLabel"
                   >
                     my-field
                   </label>
@@ -21455,7 +21455,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                     class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-5"
                     data-shrink="false"
                     for="root_my-field"
-                    id="root_my-field-label"
+                    id="root_my-field__inputLabel"
                   >
                     my-field
                   </label>
@@ -22003,7 +22003,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                     class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-5"
                     data-shrink="false"
                     for="root_my-field"
-                    id="root_my-field-label"
+                    id="root_my-field__inputLabel"
                   >
                     my-field
                   </label>
@@ -22557,7 +22557,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                     class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-5"
                     data-shrink="false"
                     for="root_my-field"
-                    id="root_my-field-label"
+                    id="root_my-field__inputLabel"
                   >
                     my-field
                   </label>
@@ -27397,7 +27397,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-128:focus::-ms-input
                             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-14"
                             data-shrink="false"
                             for="root_nestedObjectOptional_test"
-                            id="root_nestedObjectOptional_test-label"
+                            id="root_nestedObjectOptional_test__inputLabel"
                           >
                             test
                           </label>
@@ -27474,7 +27474,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-128:focus::-ms-input
                                     class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-14"
                                     data-shrink="false"
                                     for="root_nestedObjectOptional_deepObjectOptional_deepTest"
-                                    id="root_nestedObjectOptional_deepObjectOptional_deepTest-label"
+                                    id="root_nestedObjectOptional_deepObjectOptional_deepTest__inputLabel"
                                   >
                                     deepTest
                                   </label>
@@ -27560,7 +27560,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-128:focus::-ms-input
                                     class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-14"
                                     data-shrink="false"
                                     for="root_nestedObjectOptional_deepObject_deepTest"
-                                    id="root_nestedObjectOptional_deepObject_deepTest-label"
+                                    id="root_nestedObjectOptional_deepObject_deepTest__inputLabel"
                                   >
                                     deepTest
                                   </label>
@@ -27927,7 +27927,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-128:focus::-ms-input
                             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-14"
                             data-shrink="false"
                             for="root_nestedObject_test"
-                            id="root_nestedObject_test-label"
+                            id="root_nestedObject_test__inputLabel"
                           >
                             test
                           </label>
@@ -28058,7 +28058,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-128:focus::-ms-input
                       <div
                         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-126"
                         data-shrink="true"
-                        id="root_optionalObjectWithOneofs__oneof_select-label"
+                        id="root_optionalObjectWithOneofs__oneof_select__inputLabel"
                       >
                         optionalObjectWithOneofs
                       </div>
@@ -28068,7 +28068,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-128:focus::-ms-input
                         <div
                           aria-expanded="false"
                           aria-haspopup="listbox"
-                          aria-labelledby="root_optionalObjectWithOneofs__oneof_select-label"
+                          aria-labelledby="root_optionalObjectWithOneofs__oneof_select__inputLabel"
                           class="MuiSelect-select MuiSelect-outlined MuiInputBase-input MuiOutlinedInput-input emotion-128"
                           id="root_optionalObjectWithOneofs__oneof_select"
                           role="combobox"
@@ -28136,7 +28136,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-128:focus::-ms-input
                                   class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary Mui-disabled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-14"
                                   data-shrink="false"
                                   for="root_optionalObjectWithOneofs_name"
-                                  id="root_optionalObjectWithOneofs_name-label"
+                                  id="root_optionalObjectWithOneofs_name__inputLabel"
                                 >
                                   name
                                 </label>
@@ -28198,7 +28198,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-128:focus::-ms-input
                       <div
                         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-126"
                         data-shrink="true"
-                        id="root_optionalArrayWithAnyofs__anyof_select-label"
+                        id="root_optionalArrayWithAnyofs__anyof_select__inputLabel"
                       >
                         optionalArrayWithAnyofs
                       </div>
@@ -28208,7 +28208,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-128:focus::-ms-input
                         <div
                           aria-expanded="false"
                           aria-haspopup="listbox"
-                          aria-labelledby="root_optionalArrayWithAnyofs__anyof_select-label"
+                          aria-labelledby="root_optionalArrayWithAnyofs__anyof_select__inputLabel"
                           class="MuiSelect-select MuiSelect-outlined MuiInputBase-input MuiOutlinedInput-input emotion-128"
                           id="root_optionalArrayWithAnyofs__anyof_select"
                           role="combobox"
@@ -29319,7 +29319,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-128:focus::-ms-input
                             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary Mui-disabled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-14"
                             data-shrink="false"
                             for="root_nestedObjectOptional_test"
-                            id="root_nestedObjectOptional_test-label"
+                            id="root_nestedObjectOptional_test__inputLabel"
                           >
                             test
                           </label>
@@ -29397,7 +29397,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-128:focus::-ms-input
                                     class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary Mui-disabled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-14"
                                     data-shrink="false"
                                     for="root_nestedObjectOptional_deepObjectOptional_deepTest"
-                                    id="root_nestedObjectOptional_deepObjectOptional_deepTest-label"
+                                    id="root_nestedObjectOptional_deepObjectOptional_deepTest__inputLabel"
                                   >
                                     deepTest
                                   </label>
@@ -29484,7 +29484,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-128:focus::-ms-input
                                     class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary Mui-disabled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-14"
                                     data-shrink="false"
                                     for="root_nestedObjectOptional_deepObject_deepTest"
-                                    id="root_nestedObjectOptional_deepObject_deepTest-label"
+                                    id="root_nestedObjectOptional_deepObject_deepTest__inputLabel"
                                   >
                                     deepTest
                                   </label>
@@ -29856,7 +29856,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-128:focus::-ms-input
                             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary Mui-disabled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-14"
                             data-shrink="false"
                             for="root_nestedObject_test"
-                            id="root_nestedObject_test-label"
+                            id="root_nestedObject_test__inputLabel"
                           >
                             test
                           </label>
@@ -29989,7 +29989,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-128:focus::-ms-input
                       <div
                         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary Mui-disabled MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-126"
                         data-shrink="true"
-                        id="root_optionalObjectWithOneofs__oneof_select-label"
+                        id="root_optionalObjectWithOneofs__oneof_select__inputLabel"
                       >
                         optionalObjectWithOneofs
                       </div>
@@ -30000,7 +30000,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-128:focus::-ms-input
                           aria-disabled="true"
                           aria-expanded="false"
                           aria-haspopup="listbox"
-                          aria-labelledby="root_optionalObjectWithOneofs__oneof_select-label"
+                          aria-labelledby="root_optionalObjectWithOneofs__oneof_select__inputLabel"
                           class="MuiSelect-select MuiSelect-outlined Mui-disabled MuiInputBase-input MuiOutlinedInput-input Mui-disabled emotion-128"
                           id="root_optionalObjectWithOneofs__oneof_select"
                           role="combobox"
@@ -30068,7 +30068,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-128:focus::-ms-input
                                   class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary Mui-disabled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-14"
                                   data-shrink="false"
                                   for="root_optionalObjectWithOneofs_name"
-                                  id="root_optionalObjectWithOneofs_name-label"
+                                  id="root_optionalObjectWithOneofs_name__inputLabel"
                                 >
                                   name
                                 </label>
@@ -30130,7 +30130,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-128:focus::-ms-input
                       <div
                         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary Mui-disabled MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-126"
                         data-shrink="true"
-                        id="root_optionalArrayWithAnyofs__anyof_select-label"
+                        id="root_optionalArrayWithAnyofs__anyof_select__inputLabel"
                       >
                         optionalArrayWithAnyofs
                       </div>
@@ -30141,7 +30141,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-128:focus::-ms-input
                           aria-disabled="true"
                           aria-expanded="false"
                           aria-haspopup="listbox"
-                          aria-labelledby="root_optionalArrayWithAnyofs__anyof_select-label"
+                          aria-labelledby="root_optionalArrayWithAnyofs__anyof_select__inputLabel"
                           class="MuiSelect-select MuiSelect-outlined Mui-disabled MuiInputBase-input MuiOutlinedInput-input Mui-disabled emotion-128"
                           id="root_optionalArrayWithAnyofs__anyof_select"
                           role="combobox"
@@ -31422,7 +31422,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-21:focus::-ms-input-
                             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-19"
                             data-shrink="true"
                             for="root_nestedObjectOptional_test"
-                            id="root_nestedObjectOptional_test-label"
+                            id="root_nestedObjectOptional_test__inputLabel"
                           >
                             test
                           </label>
@@ -31566,7 +31566,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-21:focus::-ms-input-
                                     class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-44"
                                     data-shrink="false"
                                     for="root_nestedObjectOptional_deepObject_deepTest"
-                                    id="root_nestedObjectOptional_deepObject_deepTest-label"
+                                    id="root_nestedObjectOptional_deepObject_deepTest__inputLabel"
                                   >
                                     deepTest
                                   </label>
@@ -31908,7 +31908,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-21:focus::-ms-input-
                                       class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled Mui-required MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-19"
                                       data-shrink="true"
                                       for="root_nestedArrayOptional_0"
-                                      id="root_nestedArrayOptional_0-label"
+                                      id="root_nestedArrayOptional_0__inputLabel"
                                     >
                                       nestedArrayOptional-1
                                       <span
@@ -32060,7 +32060,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-21:focus::-ms-input-
                             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-44"
                             data-shrink="false"
                             for="root_nestedObject_test"
-                            id="root_nestedObject_test-label"
+                            id="root_nestedObject_test__inputLabel"
                           >
                             test
                           </label>
@@ -33341,7 +33341,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
                             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary Mui-disabled MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-14"
                             data-shrink="true"
                             for="root_nestedObjectOptional_test"
-                            id="root_nestedObjectOptional_test-label"
+                            id="root_nestedObjectOptional_test__inputLabel"
                           >
                             test
                           </label>
@@ -33461,7 +33461,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
                                     class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary Mui-disabled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-34"
                                     data-shrink="false"
                                     for="root_nestedObjectOptional_deepObject_deepTest"
-                                    id="root_nestedObjectOptional_deepObject_deepTest-label"
+                                    id="root_nestedObjectOptional_deepObject_deepTest__inputLabel"
                                   >
                                     deepTest
                                   </label>
@@ -33749,7 +33749,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
                                       class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary Mui-disabled MuiFormLabel-filled Mui-required MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-14"
                                       data-shrink="true"
                                       for="root_nestedArrayOptional_0"
-                                      id="root_nestedArrayOptional_0-label"
+                                      id="root_nestedArrayOptional_0__inputLabel"
                                     >
                                       nestedArrayOptional-1
                                       <span
@@ -33904,7 +33904,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
                             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary Mui-disabled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-34"
                             data-shrink="false"
                             for="root_nestedObject_test"
-                            id="root_nestedObject_test-label"
+                            id="root_nestedObject_test__inputLabel"
                           >
                             test
                           </label>
@@ -35124,7 +35124,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-39:focus::-ms-input-
                             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-37"
                             data-shrink="false"
                             for="root_nestedObject_test"
-                            id="root_nestedObject_test-label"
+                            id="root_nestedObject_test__inputLabel"
                           >
                             test
                           </label>
@@ -36188,7 +36188,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-29:focus::-ms-input-
                             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary Mui-disabled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-27"
                             data-shrink="false"
                             for="root_nestedObject_test"
-                            id="root_nestedObject_test-label"
+                            id="root_nestedObject_test__inputLabel"
                           >
                             test
                           </label>
@@ -46453,7 +46453,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
           <div
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-2"
             data-shrink="false"
-            id="root-label"
+            id="root__inputLabel"
           >
             test
           </div>
@@ -46464,7 +46464,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
               aria-describedby="root__description"
               aria-expanded="false"
               aria-haspopup="listbox"
-              aria-labelledby="root-label"
+              aria-labelledby="root__inputLabel"
               class="MuiSelect-select MuiSelect-outlined MuiInputBase-input MuiOutlinedInput-input emotion-4"
               id="root"
               role="combobox"
@@ -49022,7 +49022,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-2"
             data-shrink="false"
             for="root"
-            id="root-label"
+            id="root__inputLabel"
           >
             Markdown Help and Description
           </label>
@@ -49558,7 +49558,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-2"
             data-shrink="false"
             for="root"
-            id="root-label"
+            id="root__inputLabel"
           >
             Markdown Help Test
           </label>
@@ -50085,7 +50085,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-2"
             data-shrink="false"
             for="root"
-            id="root-label"
+            id="root__inputLabel"
           >
             Raw Help Test
           </label>
@@ -52186,7 +52186,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-2"
             data-shrink="true"
             for="root"
-            id="root-label"
+            id="root__inputLabel"
           >
             Required Field with Markdown Help
           </label>
@@ -54486,7 +54486,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-10:focus::-ms-input-
                     class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-8"
                     data-shrink="false"
                     for="root_title"
-                    id="root_title-label"
+                    id="root_title__inputLabel"
                   >
                     Titre 2
                   </label>
@@ -56475,7 +56475,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                   <div
                     class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-5"
                     data-shrink="true"
-                    id="root_answer-label"
+                    id="root_answer__inputLabel"
                   >
                     My Answer
                   </div>
@@ -56485,7 +56485,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                     <div
                       aria-expanded="false"
                       aria-haspopup="listbox"
-                      aria-labelledby="root_answer-label"
+                      aria-labelledby="root_answer__inputLabel"
                       class="MuiSelect-select MuiSelect-outlined MuiInputBase-input MuiOutlinedInput-input emotion-7"
                       id="root_answer"
                       role="combobox"

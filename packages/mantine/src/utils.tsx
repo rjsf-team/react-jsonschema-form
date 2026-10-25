@@ -256,10 +256,18 @@ export function getDescriptionProps<
 }
 
 /** Renders a Mantine description as a `div`, since the description template renders block content, keeping the other
- * `descriptionProps` Mantine would otherwise apply
+ * `descriptionProps` Mantine would otherwise apply. It is given a part of the field's id, in place of the
+ * `-description` id Mantine derives, which another field's id can spell
  */
-function withDescriptionDiv(descriptionProps: unknown) {
-  return { ...asObject(descriptionProps), component: 'div' as const };
+function withDescriptionDiv(descriptionProps: unknown, id: string) {
+  return { ...asObject(descriptionProps), component: 'div' as const, id: partId(id, 'wrapperDescription') };
+}
+
+/** The `labelProps` of a Mantine input: those Mantine would otherwise apply, with a part of the field's id in place of
+ * the `-label` id Mantine derives, which another field's id can spell
+ */
+function withLabelId(labelProps: unknown, id: string) {
+  return { ...asObject(labelProps), id: partId(id, 'wrapperLabel') };
 }
 
 type InputContainer = (children: ReactNode) => ReactNode;
@@ -372,6 +380,8 @@ interface AriaContainerOptions {
   successId: string;
   describedBy?: string;
   labelId?: string;
+  idsLabel?: boolean;
+  ownLabelProps?: unknown;
   ownErrorProps?: GenericObjectType;
   ownSuccessProps?: GenericObjectType;
   ownContainer?: unknown;
@@ -385,7 +395,7 @@ interface AriaContainerOptions {
  * `ownContainer`, the container Mantine would otherwise render, between anything in `before` and `after`. The error
  * element Mantine renders is given the field's `errorId(id)`, the id the input is described by, the success message the
  * known `successId`, since Mantine's components derive it differently, and the description is rendered as a `div`.
- * These are set top-level and in `wrapperProps`, since an explicit prop replaces the theme's default and Mantine gives
+ * Where `idsLabel` is set, the label is given an id too, from `ownLabelProps`. These are set top-level and in `wrapperProps`, since an explicit prop replaces the theme's default and Mantine gives
  * the two a different precedence for inputs and groups.
  */
 function useAriaContainerProps({
@@ -394,6 +404,8 @@ function useAriaContainerProps({
   successId,
   describedBy,
   labelId,
+  idsLabel = false,
+  ownLabelProps,
   ownErrorProps,
   ownSuccessProps,
   ownContainer,
@@ -418,17 +430,37 @@ function useAriaContainerProps({
     [describedBy, labelId, successId, successOnOptions, before, after, ownContainer],
   );
   return useMemo(() => {
-    const descriptionProps = withDescriptionDiv(ownDescriptionProps);
+    const descriptionProps = withDescriptionDiv(ownDescriptionProps, id);
     const errorProps = { ...ownErrorProps, id: errorId(id) };
     const successProps = { ...ownSuccessProps, id: successId };
+    // A group's label is given the field's title id by the group instead
+    const labelProps = idsLabel ? { labelProps: withLabelId(ownLabelProps, id) } : undefined;
     return {
       inputContainer: container,
+      ...labelProps,
       descriptionProps,
       errorProps,
       successProps,
-      wrapperProps: { ...wrapperObject, inputContainer: container, descriptionProps, errorProps, successProps },
+      wrapperProps: {
+        ...wrapperObject,
+        inputContainer: container,
+        ...labelProps,
+        descriptionProps,
+        errorProps,
+        successProps,
+      },
     };
-  }, [container, id, ownDescriptionProps, ownErrorProps, ownSuccessProps, successId, wrapperObject]);
+  }, [
+    container,
+    id,
+    ownDescriptionProps,
+    idsLabel,
+    ownErrorProps,
+    ownLabelProps,
+    ownSuccessProps,
+    successId,
+    wrapperObject,
+  ]);
 }
 
 function pickOptions(options: GenericObjectType, names: readonly string[]) {
@@ -548,18 +580,17 @@ const fieldWrapperOptionKeyRecord: Record<FieldWrapperOptionKey, true> = {
 };
 const fieldWrapperOptionKeys = Object.keys(fieldWrapperOptionKeyRecord) as FieldWrapperOptionKey[];
 const fieldWrapperPickedKeys = [...fieldWrapperOptionKeys, 'wrapperProps'];
-// The options an input's aria props override, and those a group's also do, as subsets of the field wrapper options
+// The options the aria props of an input or a group override, as a subset of the field wrapper options
 const ariaOptionKeys = [
   'descriptionProps',
   'errorProps',
   'inputContainer',
+  'labelProps',
   'successProps',
 ] as const satisfies readonly FieldWrapperOptionKey[];
-// An input's also resolve its `inputWrapperOrder`, to tell whether it renders the error slot
+// Each also resolves its `inputWrapperOrder`, to tell whether it renders the error slot
 const inputOptionKeys = [...ariaOptionKeys, 'inputWrapperOrder'] as const;
 const inputPickedKeys = [...inputOptionKeys, 'wrapperProps'];
-const groupOptionKeys = [...inputOptionKeys, 'labelProps'] as const satisfies readonly FieldWrapperOptionKey[];
-const groupPickedKeys = [...groupOptionKeys, 'wrapperProps'];
 
 // Mantine's own default container, given explicitly, since an `undefined` one falls back to the theme's
 function renderChildren(children: ReactNode): ReactNode {
@@ -621,7 +652,7 @@ export function useFieldWrapperProps<
       labelProps: { ...asObject(resolved.labelProps), id: titleId(id), htmlFor: undefined },
       required,
       description,
-      descriptionProps: withDescriptionDiv(resolved.descriptionProps),
+      descriptionProps: withDescriptionDiv(resolved.descriptionProps, id),
       error,
       errorProps: { ...asObject(resolved.errorProps), id: errorId(id) },
       successProps: { ...ownSuccessProps, id: successId },
@@ -638,16 +669,18 @@ export function useFieldWrapperProps<
  * Mantine's `Input` sets `aria-describedby` from the `InputWrapper` context after spreading the caller's props, so an
  * `aria-describedby` prop never reaches the DOM, and that context only knows about Mantine's own description and error
  * elements. Overriding the context from `inputContainer` is the one place the value Mantine applies can be replaced.
- * The container, `successProps`, `errorProps` and `descriptionProps` Mantine would otherwise apply are resolved as
- * Mantine's inputs resolve them, from the widget's options and the theme's `defaultProps`, and the error element is
- * given the field's `errorId(id)`, whatever `errorProps.id` says.
+ * The container, `labelProps`, `successProps`, `errorProps` and `descriptionProps` Mantine would otherwise apply are
+ * resolved as Mantine's inputs resolve them, from the widget's options and the theme's `defaultProps`, and the error
+ * element is given the field's `errorId(id)`, whatever `errorProps.id` says.
  *
  * @param component - The Mantine input the props are spread on, whose theme `defaultProps` supply any `inputContainer`
  * @param id - The id of the field the input belongs to
  * @param options - The widget's options, whose own `inputContainer`, if any, is still applied inside the override
  * @param settings - `describedBy`, the ids to describe the input by, `alsoDescribedBy`, further ids to describe it by,
- *   `wrapperOverrides`, set over the `wrapperProps` the input would otherwise take, rather than replacing them, and
- *   `slotlessErrors`, which gets what to render after the input from the `inputWrapperOrder` it resolves to
+ *   `wrapperOverrides`, set over the `wrapperProps` the input would otherwise take, rather than replacing them,
+ *   `slotlessErrors`, which gets what to render after the input from the `inputWrapperOrder` it resolves to, and
+ *   `idsLabel`, false to leave the label the id Mantine derives from the input's own id, for an input whose id is
+ *   already a part of the field's
  * @returns - An object to spread on the props of the Mantine input, after the theme props
  */
 export function useAriaDescribedByProps(
@@ -659,11 +692,13 @@ export function useAriaDescribedByProps(
     alsoDescribedBy,
     wrapperOverrides,
     slotlessErrors,
+    idsLabel = true,
   }: {
     describedBy?: string;
     alsoDescribedBy?: string;
     wrapperOverrides?: GenericObjectType;
     slotlessErrors?: (inputWrapperOrder: unknown) => ReactNode;
+    idsLabel?: boolean;
   },
 ) {
   const props = useProps<GenericObjectType>(themeComponentNames[component], {}, pickOptions(options, inputPickedKeys));
@@ -686,6 +721,8 @@ export function useAriaDescribedByProps(
     successId: successIdOf(id, ownSuccessProps),
     describedBy: [describedBy, alsoDescribedBy].filter(Boolean).join(' '),
     ownDescriptionProps: resolved.descriptionProps,
+    idsLabel,
+    ownLabelProps: resolved.labelProps,
     ownErrorProps: asObject(resolved.errorProps),
     ownSuccessProps,
     ownContainer: resolved.inputContainer,
@@ -725,6 +762,8 @@ export function useInputAriaProps<
   const ariaProps = useAriaDescribedByProps(component, id, options, {
     describedBy,
     slotlessErrors: (inputWrapperOrder) => getSlotlessErrors<T, S, F>(widgetProps, inputWrapperOrder),
+    // Mantine's `Select` and `MultiSelect` name their listbox by the `-label` id they derive, whatever the label's id
+    idsLabel: component !== 'Select' && component !== 'MultiSelect',
   });
   // Each left out rather than `undefined` where none is given, so one in the options still applies
   return {
@@ -764,7 +803,7 @@ export function useGroupAriaProps<
   const { id, required, options } = widgetProps;
   const hideLabel = !widgetDrawsLabel<T, S, F>(widgetProps);
   const label = getOwnLabel<T, S, F>(widgetProps);
-  const props = useProps<GenericObjectType>(component, {}, pickOptions(options, groupPickedKeys));
+  const props = useProps<GenericObjectType>(component, {}, pickOptions(options, inputPickedKeys));
   const wrapperObject = asObject(props.wrapperProps);
   // A group spreads its own props after `wrapperProps`, the reverse of an input, then `Input.Wrapper` falls back to
   // `InputWrapper`'s theme `defaultProps`
@@ -772,7 +811,7 @@ export function useGroupAriaProps<
     'InputWrapper',
     {},
     Object.fromEntries(
-      groupOptionKeys.map((name) => [name, props[name] !== undefined ? props[name] : wrapperObject?.[name]]),
+      inputOptionKeys.map((name) => [name, props[name] !== undefined ? props[name] : wrapperObject?.[name]]),
     ),
   );
   const shownLabel = labelValue(label, hideLabel, false);

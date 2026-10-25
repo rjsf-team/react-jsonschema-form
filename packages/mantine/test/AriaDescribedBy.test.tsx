@@ -308,7 +308,7 @@ describe('aria-describedby', () => {
     },
   );
 
-  test('an input leaves the label id Mantine puts in the InputWrapper context unchanged', () => {
+  test('an input puts its label part id in the InputWrapper context', () => {
     function LabelIdProbe({ children }: { children: ReactNode }) {
       return <div data-label-id={use(InputWrapperContext)?.labelId}>{children}</div>;
     }
@@ -317,7 +317,28 @@ describe('aria-describedby', () => {
       { 'ui:options': { inputContainer: (children: ReactNode) => <LabelIdProbe>{children}</LabelIdProbe> } },
     );
 
-    expect(container.querySelector('[data-label-id]')).toHaveAttribute('data-label-id', 'root-label');
+    expect(container.querySelector('[data-label-id]')).toHaveAttribute('data-label-id', 'root__wrapperLabel');
+  });
+
+  test('gives an input its label and description ids as parts, so a sibling property named after them is not doubled', () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          properties: {
+            x: { type: 'string', title: 'X', description: 'About x' },
+            'x-label': { type: 'string' },
+            'x-description': { type: 'string' },
+          },
+        }}
+        validator={validator}
+      />,
+    );
+
+    const ids = Array.from(container.querySelectorAll('[id]'), (el) => el.id);
+    expect(new Set(ids).size).toBe(ids.length);
+    expect(container.querySelector('[id="root_x__wrapperLabel"]')).toHaveTextContent('X');
+    expect(container.querySelector('[id="root_x__wrapperDescription"]')).toHaveTextContent('About x');
   });
 
   test.each([

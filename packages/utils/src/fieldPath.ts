@@ -109,8 +109,8 @@ const EMPTY_NAME = `${ID_ESCAPE}FF`;
 
 /** Matches each ASCII character a CSS identifier can't hold unescaped, each `_`, which `writesUnderscore()` decides
  * on, and a `-` that ends the name, since it would write the `-_` that starts an escape with the `_` separator after
- * it. A character past ASCII is written as it is: a CSS identifier holds every one, and an id list such as
- * `aria-describedby` is split on ASCII whitespace only
+ * it. A character past ASCII is written as it is: a CSS identifier holds every one by the CSS Syntax 3 rules browsers
+ * ship, and an id list such as `aria-describedby` is split on ASCII whitespace only
  */
 const ID_ESCAPED = /[^A-Za-z0-9\-\u0080-\uFFFF]|-$/g;
 
@@ -141,7 +141,8 @@ function escapeIdChar(char: string) {
 /** Writes a property name as it appears in an id: a CSS identifier as it stands, so `#${id}` finds the element with no
  * escaping, that holds no `__`, and that no other name writes. A character `ID_ESCAPED` matches, other than a `_`
  * `writesUnderscore()` keeps, is written as `escapeIdChar()` writes it, and an empty name as `-_FF`. The encoder
- * writes `-_` nowhere else, so every `-_` starts a three-character escape, and the name can be read back from the id
+ * writes `-_` nowhere else, so every `-_` starts a four-character escape, `-_` and two hex digits, and the name can be
+ * read back from the id
  *
  * @param name - The property name
  * @returns - The name as it appears in an id

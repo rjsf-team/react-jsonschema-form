@@ -178,6 +178,16 @@ export function helperTextId(id: string) {
   return partId(id, 'helperText');
 }
 
+/** The id a widget gives the label MUI's `TextField` renders for its `label`, through the `inputLabel` slot, in place of
+ * the `-label` id MUI derives, which another field's id can spell
+ *
+ * @param id - The `TextField`'s id: an `id` in `ui:options.mui`, which replaces the field's, else the field's
+ * @returns - The label's id, a part of `id`
+ */
+export function inputLabelId(id: string) {
+  return partId(id, 'inputLabel');
+}
+
 /** The `formHelperText` slot of a widget's `TextField`: the props form authors give the helper text, with the id
  * `helperTextId()` gives it applied last, since the control's `aria-describedby` names the helper text by that id
  *

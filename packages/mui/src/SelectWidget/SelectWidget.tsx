@@ -31,7 +31,7 @@ import {
   widgetDrawsLabelText,
 } from '@rjsf/utils';
 
-import { describeByHelperText, getMuiProps, helperTextSlot, withSlotProps } from '../util.ts';
+import { describeByHelperText, getMuiProps, helperTextSlot, inputLabelId, withSlotProps } from '../util.ts';
 
 /** Properties available for the `rjsfSlotProps` target of the SelectWidget. */
 export interface SelectWidgetMuiProps extends GenericObjectType {
@@ -118,6 +118,9 @@ export default function SelectWidget<
   // The combobox shows its value, not a name, so where no label names it, it is named by the field's label, its
   // placeholder or the translated prompt
   const ariaLabel = getControlAriaLabel<T, S, F>(props, ariaProps['aria-label'], widgetDrawsLabelText<T, S, F>(props));
+  const ownLabel = labelValue(label || undefined, hideLabel, undefined);
+  const textFieldLabel = 'label' in textFieldOverrides ? textFieldOverrides.label : ownLabel;
+  const labelId = inputLabelId(textFieldOverrides.id ?? id);
   const showPlaceholderOption = !isMultiple && schema.default === undefined;
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, isMultiple);
 
@@ -134,7 +137,7 @@ export default function SelectWidget<
       <TextField
         id={id}
         name={htmlName || id}
-        label={labelValue(label || undefined, hideLabel, undefined)}
+        label={ownLabel}
         value={enumOptionSelectedValue(value, enumOptions, isMultiple, optionValueFormat, emptyValue)}
         required={required}
         disabled={disabled || readonly}
@@ -152,11 +155,14 @@ export default function SelectWidget<
           inputLabel: {
             ...muiSlotProps?.inputLabel,
             shrink: !isEmpty,
+            id: labelId,
           },
           select: {
             // MUI names the combobox by the `labelId` of its select, and gives an `aria-labelledby` among its
             // `inputProps` to the hidden native input instead, so a label the plan names it by goes there
-            ...(ariaProps['aria-labelledby'] && { labelId: ariaProps['aria-labelledby'] }),
+            ...((ariaProps['aria-labelledby'] || textFieldLabel) && {
+              labelId: ariaProps['aria-labelledby'] ?? labelId,
+            }),
             ...muiSlotProps?.select,
             multiple,
           },

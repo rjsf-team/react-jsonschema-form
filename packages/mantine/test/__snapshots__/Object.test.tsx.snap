@@ -85,7 +85,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                           class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                           data-size="sm"
                           for="root_person_name"
-                          id="root_person_name-label"
+                          id="root_person_name__wrapperLabel"
                           style="--input-label-size: var(--mantine-font-size-sm);"
                         >
                           name
@@ -156,7 +156,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                   class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                                   data-size="sm"
                                   for="root_person_address_street"
-                                  id="root_person_address_street-label"
+                                  id="root_person_address_street__wrapperLabel"
                                   style="--input-label-size: var(--mantine-font-size-sm);"
                                 >
                                   street
@@ -194,7 +194,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                   class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                                   data-size="sm"
                                   for="root_person_address_city"
-                                  id="root_person_address_city-label"
+                                  id="root_person_address_city__wrapperLabel"
                                   style="--input-label-size: var(--mantine-font-size-sm);"
                                 >
                                   city
@@ -232,7 +232,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                   class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                                   data-size="sm"
                                   for="root_person_address_country"
-                                  id="root_person_address_country-label"
+                                  id="root_person_address_country__wrapperLabel"
                                   style="--input-label-size: var(--mantine-font-size-sm);"
                                 >
                                   country
@@ -339,7 +339,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                   class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                   data-size="sm"
                   for="root_name"
-                  id="root_name-label"
+                  id="root_name__wrapperLabel"
                   style="--input-label-size: var(--mantine-font-size-sm);"
                 >
                   name
@@ -438,7 +438,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                           class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                           data-size="sm"
                           for="root_customField"
-                          id="root_customField-label"
+                          id="root_customField__wrapperLabel"
                           style="--input-label-size: var(--mantine-font-size-sm);"
                         >
                           customField
@@ -624,7 +624,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                   class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                   data-size="sm"
                   for="root_name"
-                  id="root_name-label"
+                  id="root_name__wrapperLabel"
                   style="--input-label-size: var(--mantine-font-size-sm);"
                 >
                   name
@@ -662,7 +662,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                   class="m_8fdc1311 mantine-InputWrapper-label mantine-NumberInput-label"
                   data-size="sm"
                   for="root_age"
-                  id="root_age-label"
+                  id="root_age__wrapperLabel"
                   style="--input-label-size: var(--mantine-font-size-sm);"
                 >
                   age
@@ -850,7 +850,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                               data-required="true"
                               data-size="sm"
                               for="root_tags_0"
-                              id="root_tags_0-label"
+                              id="root_tags_0__wrapperLabel"
                               style="--input-label-size: var(--mantine-font-size-sm);"
                             >
                               tags-1
@@ -1022,7 +1022,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                               data-required="true"
                               data-size="sm"
                               for="root_tags_1"
-                              id="root_tags_1-label"
+                              id="root_tags_1__wrapperLabel"
                               style="--input-label-size: var(--mantine-font-size-sm);"
                             >
                               tags-2
@@ -1292,7 +1292,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                   class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                   data-size="sm"
                   for="root_firstName"
-                  id="root_firstName-label"
+                  id="root_firstName__wrapperLabel"
                   style="--input-label-size: var(--mantine-font-size-sm);"
                 >
                   firstName
@@ -1330,7 +1330,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                   class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                   data-size="sm"
                   for="root_lastName"
-                  id="root_lastName-label"
+                  id="root_lastName__wrapperLabel"
                   style="--input-label-size: var(--mantine-font-size-sm);"
                 >
                   lastName
@@ -1368,7 +1368,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                   class="m_8fdc1311 mantine-InputWrapper-label mantine-NumberInput-label"
                   data-size="sm"
                   for="root_age"
-                  id="root_age-label"
+                  id="root_age__wrapperLabel"
                   style="--input-label-size: var(--mantine-font-size-sm);"
                 >
                   age
@@ -1554,7 +1554,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                           class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                           data-size="sm"
                           for="root_person_name"
-                          id="root_person_name-label"
+                          id="root_person_name__wrapperLabel"
                           style="--input-label-size: var(--mantine-font-size-sm);"
                         >
                           name
@@ -1625,7 +1625,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                   class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                                   data-size="sm"
                                   for="root_person_address_street"
-                                  id="root_person_address_street-label"
+                                  id="root_person_address_street__wrapperLabel"
                                   style="--input-label-size: var(--mantine-font-size-sm);"
                                 >
                                   street
@@ -1663,7 +1663,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                   class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                                   data-size="sm"
                                   for="root_person_address_city"
-                                  id="root_person_address_city-label"
+                                  id="root_person_address_city__wrapperLabel"
                                   style="--input-label-size: var(--mantine-font-size-sm);"
                                 >
                                   city
@@ -1770,7 +1770,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                   class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                   data-size="sm"
                   for="root_name"
-                  id="root_name-label"
+                  id="root_name__wrapperLabel"
                   style="--input-label-size: var(--mantine-font-size-sm);"
                 >
                   name
@@ -1808,7 +1808,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                   class="m_8fdc1311 mantine-InputWrapper-label mantine-NumberInput-label"
                   data-size="sm"
                   for="root_count"
-                  id="root_count-label"
+                  id="root_count__wrapperLabel"
                   style="--input-label-size: var(--mantine-font-size-sm);"
                 >
                   count
@@ -1939,7 +1939,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                               data-required="true"
                               data-size="sm"
                               for="root_items_0"
-                              id="root_items_0-label"
+                              id="root_items_0__wrapperLabel"
                               style="--input-label-size: var(--mantine-font-size-sm);"
                             >
                               items-1
@@ -2111,7 +2111,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                               data-required="true"
                               data-size="sm"
                               for="root_items_1"
-                              id="root_items_1-label"
+                              id="root_items_1__wrapperLabel"
                               style="--input-label-size: var(--mantine-font-size-sm);"
                             >
                               items-2
@@ -2381,7 +2381,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                   class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                   data-size="sm"
                   for="root_firstName"
-                  id="root_firstName-label"
+                  id="root_firstName__wrapperLabel"
                   style="--input-label-size: var(--mantine-font-size-sm);"
                 >
                   firstName
@@ -2419,7 +2419,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                   class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                   data-size="sm"
                   for="root_lastName"
-                  id="root_lastName-label"
+                  id="root_lastName__wrapperLabel"
                   style="--input-label-size: var(--mantine-font-size-sm);"
                 >
                   lastName
@@ -2457,7 +2457,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                   class="m_8fdc1311 mantine-InputWrapper-label mantine-NumberInput-label"
                   data-size="sm"
                   for="root_age"
-                  id="root_age-label"
+                  id="root_age__wrapperLabel"
                   style="--input-label-size: var(--mantine-font-size-sm);"
                 >
                   age
@@ -2671,7 +2671,7 @@ exports[`object fields > additionalProperties 1`] = `
                           class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                           data-size="sm"
                           for="root_foo"
-                          id="root_foo-label"
+                          id="root_foo__wrapperLabel"
                           style="--input-label-size: var(--mantine-font-size-sm);"
                         >
                           foo
@@ -3063,7 +3063,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                           class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                           data-size="sm"
                           for="root_foo"
-                          id="root_foo-label"
+                          id="root_foo__wrapperLabel"
                           style="--input-label-size: var(--mantine-font-size-sm);"
                         >
                           foo
@@ -3071,7 +3071,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                         <div
                           class="m_fe47ce59 mantine-InputWrapper-description mantine-TextInput-description"
                           data-size="sm"
-                          id="root_foo-description"
+                          id="root_foo__wrapperDescription"
                           style="--input-description-size: calc(var(--mantine-font-size-sm) - calc(0.125rem * var(--mantine-scale)));"
                         >
                           <p
@@ -3619,7 +3619,7 @@ exports[`object fields > additionalProperties, description 1`] = `
                           class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                           data-size="sm"
                           for="root_foo"
-                          id="root_foo-label"
+                          id="root_foo__wrapperLabel"
                           style="--input-label-size: var(--mantine-font-size-sm);"
                         >
                           foo
@@ -3627,7 +3627,7 @@ exports[`object fields > additionalProperties, description 1`] = `
                         <div
                           class="m_fe47ce59 mantine-InputWrapper-description mantine-TextInput-description"
                           data-size="sm"
-                          id="root_foo-description"
+                          id="root_foo__wrapperDescription"
                           style="--input-description-size: calc(var(--mantine-font-size-sm) - calc(0.125rem * var(--mantine-scale)));"
                         >
                           <p
@@ -3882,7 +3882,7 @@ exports[`object fields > additionalProperties, label off 1`] = `
                           class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                           data-size="sm"
                           for="root_foo"
-                          id="root_foo-label"
+                          id="root_foo__wrapperLabel"
                           style="--input-label-size: var(--mantine-font-size-sm);"
                         >
                           foo
@@ -4162,7 +4162,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
                                   class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                                   data-size="sm"
                                   for="root_foo_foo"
-                                  id="root_foo_foo-label"
+                                  id="root_foo_foo__wrapperLabel"
                                   style="--input-label-size: var(--mantine-font-size-sm);"
                                 >
                                   foo
@@ -4553,7 +4553,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                           class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                           data-size="sm"
                           for="root_foo"
-                          id="root_foo-label"
+                          id="root_foo__wrapperLabel"
                           style="--input-label-size: var(--mantine-font-size-sm);"
                         >
                           foo
@@ -4940,7 +4940,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                           class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                           data-size="sm"
                           for="root_foo"
-                          id="root_foo-label"
+                          id="root_foo__wrapperLabel"
                           style="--input-label-size: var(--mantine-font-size-sm);"
                         >
                           foo (deprecated)
@@ -5126,7 +5126,7 @@ exports[`object fields > object 1`] = `
                   class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                   data-size="sm"
                   for="root_a"
-                  id="root_a-label"
+                  id="root_a__wrapperLabel"
                   style="--input-label-size: var(--mantine-font-size-sm);"
                 >
                   A
@@ -5164,7 +5164,7 @@ exports[`object fields > object 1`] = `
                   class="m_8fdc1311 mantine-InputWrapper-label mantine-NumberInput-label"
                   data-size="sm"
                   for="root_b"
-                  id="root_b-label"
+                  id="root_b__wrapperLabel"
                   style="--input-label-size: var(--mantine-font-size-sm);"
                 >
                   B
@@ -5491,7 +5491,7 @@ exports[`object fields > pure anyOf union, with no frame of its own beside the o
                       class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                       data-size="sm"
                       for="root_bark"
-                      id="root_bark-label"
+                      id="root_bark__wrapperLabel"
                       style="--input-label-size: var(--mantine-font-size-sm);"
                     >
                       bark
@@ -5653,7 +5653,7 @@ exports[`object fields > show add button and fields if additionalProperties is t
                           class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                           data-size="sm"
                           for="root_additionalProperty"
-                          id="root_additionalProperty-label"
+                          id="root_additionalProperty__wrapperLabel"
                           style="--input-label-size: var(--mantine-font-size-sm);"
                         >
                           additionalProperty
@@ -5919,7 +5919,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                           class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                           data-size="sm"
                           for="root_foo"
-                          id="root_foo-label"
+                          id="root_foo__wrapperLabel"
                           style="--input-label-size: var(--mantine-font-size-sm);"
                         >
                           foo
@@ -6124,7 +6124,7 @@ exports[`object fields > with title and description > object 1`] = `
                   class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                   data-size="sm"
                   for="root_a"
-                  id="root_a-label"
+                  id="root_a__wrapperLabel"
                   style="--input-label-size: var(--mantine-font-size-sm);"
                 >
                   A
@@ -6132,7 +6132,7 @@ exports[`object fields > with title and description > object 1`] = `
                 <div
                   class="m_fe47ce59 mantine-InputWrapper-description mantine-TextInput-description"
                   data-size="sm"
-                  id="root_a-description"
+                  id="root_a__wrapperDescription"
                   style="--input-description-size: calc(var(--mantine-font-size-sm) - calc(0.125rem * var(--mantine-scale)));"
                 >
                   <p
@@ -6178,7 +6178,7 @@ exports[`object fields > with title and description > object 1`] = `
                   class="m_8fdc1311 mantine-InputWrapper-label mantine-NumberInput-label"
                   data-size="sm"
                   for="root_b"
-                  id="root_b-label"
+                  id="root_b__wrapperLabel"
                   style="--input-label-size: var(--mantine-font-size-sm);"
                 >
                   B
@@ -6186,7 +6186,7 @@ exports[`object fields > with title and description > object 1`] = `
                 <div
                   class="m_fe47ce59 mantine-InputWrapper-description mantine-NumberInput-description"
                   data-size="sm"
-                  id="root_b-description"
+                  id="root_b__wrapperDescription"
                   style="--input-description-size: calc(var(--mantine-font-size-sm) - calc(0.125rem * var(--mantine-scale)));"
                 >
                   <p
@@ -6427,7 +6427,7 @@ exports[`object fields > with title and description > show add button and fields
                           class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                           data-size="sm"
                           for="root_additionalProperty"
-                          id="root_additionalProperty-label"
+                          id="root_additionalProperty__wrapperLabel"
                           style="--input-label-size: var(--mantine-font-size-sm);"
                         >
                           additionalProperty
@@ -6693,7 +6693,7 @@ exports[`object fields > with title and description from both > additionalProper
                           class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                           data-size="sm"
                           for="root_foo"
-                          id="root_foo-label"
+                          id="root_foo__wrapperLabel"
                           style="--input-label-size: var(--mantine-font-size-sm);"
                         >
                           foo
@@ -6898,7 +6898,7 @@ exports[`object fields > with title and description from both > object 1`] = `
                   class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                   data-size="sm"
                   for="root_a"
-                  id="root_a-label"
+                  id="root_a__wrapperLabel"
                   style="--input-label-size: var(--mantine-font-size-sm);"
                 >
                   My Item A
@@ -6906,7 +6906,7 @@ exports[`object fields > with title and description from both > object 1`] = `
                 <div
                   class="m_fe47ce59 mantine-InputWrapper-description mantine-TextInput-description"
                   data-size="sm"
-                  id="root_a-description"
+                  id="root_a__wrapperDescription"
                   style="--input-description-size: calc(var(--mantine-font-size-sm) - calc(0.125rem * var(--mantine-scale)));"
                 >
                   <p
@@ -6952,7 +6952,7 @@ exports[`object fields > with title and description from both > object 1`] = `
                   class="m_8fdc1311 mantine-InputWrapper-label mantine-NumberInput-label"
                   data-size="sm"
                   for="root_b"
-                  id="root_b-label"
+                  id="root_b__wrapperLabel"
                   style="--input-label-size: var(--mantine-font-size-sm);"
                 >
                   My Item B
@@ -6960,7 +6960,7 @@ exports[`object fields > with title and description from both > object 1`] = `
                 <div
                   class="m_fe47ce59 mantine-InputWrapper-description mantine-NumberInput-description"
                   data-size="sm"
-                  id="root_b-description"
+                  id="root_b__wrapperDescription"
                   style="--input-description-size: calc(var(--mantine-font-size-sm) - calc(0.125rem * var(--mantine-scale)));"
                 >
                   <p
@@ -7201,7 +7201,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                           class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                           data-size="sm"
                           for="root_foo"
-                          id="root_foo-label"
+                          id="root_foo__wrapperLabel"
                           style="--input-label-size: var(--mantine-font-size-sm);"
                         >
                           foo
@@ -7406,7 +7406,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                   class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                   data-size="sm"
                   for="root_a"
-                  id="root_a-label"
+                  id="root_a__wrapperLabel"
                   style="--input-label-size: var(--mantine-font-size-sm);"
                 >
                   My Item A
@@ -7414,7 +7414,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                 <div
                   class="m_fe47ce59 mantine-InputWrapper-description mantine-TextInput-description"
                   data-size="sm"
-                  id="root_a-description"
+                  id="root_a__wrapperDescription"
                   style="--input-description-size: calc(var(--mantine-font-size-sm) - calc(0.125rem * var(--mantine-scale)));"
                 >
                   <p
@@ -7460,7 +7460,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                   class="m_8fdc1311 mantine-InputWrapper-label mantine-NumberInput-label"
                   data-size="sm"
                   for="root_b"
-                  id="root_b-label"
+                  id="root_b__wrapperLabel"
                   style="--input-label-size: var(--mantine-font-size-sm);"
                 >
                   My Item B
@@ -7468,7 +7468,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                 <div
                   class="m_fe47ce59 mantine-InputWrapper-description mantine-NumberInput-description"
                   data-size="sm"
-                  id="root_b-description"
+                  id="root_b__wrapperDescription"
                   style="--input-description-size: calc(var(--mantine-font-size-sm) - calc(0.125rem * var(--mantine-scale)));"
                 >
                   <p
@@ -7709,7 +7709,7 @@ exports[`object fields > with title and description from uiSchema > show add but
                           class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                           data-size="sm"
                           for="root_additionalProperty"
-                          id="root_additionalProperty-label"
+                          id="root_additionalProperty__wrapperLabel"
                           style="--input-label-size: var(--mantine-font-size-sm);"
                         >
                           additionalProperty

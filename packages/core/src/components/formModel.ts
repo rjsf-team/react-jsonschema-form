@@ -18,6 +18,7 @@ import {
   fieldPathToId,
   fieldPathToList,
   getByPath,
+  partId,
 } from '@rjsf/utils';
 
 import isDevelopment from '../isDevelopment.ts';
@@ -90,7 +91,8 @@ function findElement<E extends Element>(elements: NodeListOf<E>, matches: (eleme
  * after the field takes focus: the first focusable element inside a widget's wrapper carrying the id, such as a slider's
  * root around its thumb, but none inside a container's `<fieldset>`, since an object's or an array's own error is about
  * none of the controls in it; and where no element carries the id, the first native input or button standing in for
- * one whose id starts with the field's, as radio buttons' and checkboxes' do
+ * one whose id is a part of the field's, as radio buttons' and checkboxes' are. A part's id, unlike any id that merely
+ * starts with the field's, can't be a sibling field's, such as `root_when_year` beside `root_when`
  *
  * @param formElement - The form searched
  * @param exact - The element carrying the field's id, if any
@@ -112,7 +114,7 @@ function focusableForId(
   }
   return findElement(
     formElement.querySelectorAll('input[id], button[id]'),
-    (element) => element.id.startsWith(elementId) && isFocusable(element, view),
+    (element) => element.id.startsWith(partId(elementId, '')) && isFocusable(element, view),
   );
 }
 

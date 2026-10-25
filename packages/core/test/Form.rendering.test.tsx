@@ -4,13 +4,13 @@ import { englishStringTranslator, JSON_SCHEMA_TYPES, templateDrawsLabel, Transla
 import { act, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
-import { elementOf } from '../../../testing/elementOf.ts';
 import FallbackField from '../src/components/fields/FallbackField.tsx';
 import Form from '../src/index.ts';
 import type { NoValFormProps } from './testUtils.tsx';
 import {
   createComponent,
   createFormRef,
+  elementOf,
   handleOf,
   createFormComponent as createDirectFormComponent,
   expectToHaveBeenCalledWithFormData,

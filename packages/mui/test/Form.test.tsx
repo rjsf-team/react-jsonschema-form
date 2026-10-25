@@ -71,7 +71,7 @@ describe('a pure anyOf union', () => {
     };
     const { container } = render(<Form schema={schema} validator={validator} />);
 
-    expect(container.querySelector('#root__anyof_select-label')).toHaveTextContent('Pet');
+    expect(container.querySelector('#root__anyof_select__inputLabel')).toHaveTextContent('Pet');
     expect(container.querySelector('#root__XxxOf__title')).not.toBeInTheDocument();
     expect(container.querySelector('#root__title')).toHaveTextContent('Dog');
   });
@@ -89,7 +89,7 @@ describe('a pure anyOf union', () => {
     const { container } = render(<Form schema={schema} validator={validator} />);
 
     expect(screen.getAllByText('Pet')).toHaveLength(1);
-    expect(container.querySelector('#root__anyof_select-label')).not.toBeInTheDocument();
+    expect(container.querySelector('#root__anyof_select__inputLabel')).not.toBeInTheDocument();
     expect(screen.getByRole('combobox')).toHaveAccessibleName('Pet');
   });
 
@@ -112,7 +112,7 @@ describe('a pure anyOf union', () => {
     );
 
     expect(screen.getAllByText('Foo')).toHaveLength(1);
-    expect(container.querySelector('#root_foo__anyof_select-label')).not.toBeInTheDocument();
+    expect(container.querySelector('#root_foo__anyof_select__inputLabel')).not.toBeInTheDocument();
   });
 });
 
