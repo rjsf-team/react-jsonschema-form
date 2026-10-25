@@ -3733,6 +3733,8 @@ exports[`object fields > patternProperties, a key additionalProperties false for
                       </span>
                     </label>
                     <input
+                      aria-describedby="root_a__error"
+                      aria-invalid="true"
                       class="input input-bordered"
                       id="root_a-key"
                       type="text"

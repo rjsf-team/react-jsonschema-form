@@ -55,6 +55,9 @@ export default function FieldTemplate<
       uiSchema={uiSchema}
       registry={registry}
       presentation={presentation}
+      // oxlint-disable-next-line typescript/no-deprecated -- handed on to a `WrapIfAdditionalTemplate` rendered without a plan, which marks the key invalid by it
+      rawErrors={props.rawErrors}
+      hideError={props.hideError}
       {...otherProps}
     >
       {drawsLabel && (

@@ -3236,7 +3236,9 @@ exports[`object fields > patternProperties, a key additionalProperties false for
                       a Key
                     </label>
                     <input
-                      class="form-control"
+                      aria-describedby="root_a__error"
+                      aria-invalid="true"
+                      class="form-control is-invalid"
                       id="root_a-key"
                       name="root_a-key"
                       type="text"

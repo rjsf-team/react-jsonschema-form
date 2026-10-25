@@ -3440,9 +3440,11 @@ exports[`object fields > patternProperties, a key additionalProperties false for
                     a Key
                   </label>
                   <span
-                    class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                    class="fui-Input r1oeeo9n ___3k9dro0_uo2dlw0 fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm fs4k3qj fcee079 f1fgmyf4 fmyw78r"
                   >
                     <input
+                      aria-describedby="root_a__error"
+                      aria-invalid="true"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_a-key"
                       name="root_a-key"

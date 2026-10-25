@@ -11644,6 +11644,8 @@ exports[`object fields > patternProperties, a key additionalProperties false for
                       a Key
                     </label>
                     <input
+                      aria-describedby="root_a__error"
+                      aria-invalid="true"
                       class="chakra-input emotion-7"
                       data-part="input"
                       data-scope="field"

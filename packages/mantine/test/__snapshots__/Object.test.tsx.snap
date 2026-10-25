@@ -3578,14 +3578,14 @@ exports[`object fields > additionalProperties, description 1`] = `
                         >
                           foo Key
                         </label>
-                        <p
+                        <div
                           class="m_fe47ce59 mantine-InputWrapper-description mantine-TextInput-description"
                           data-size="sm"
                           id="root_foo-key-description"
                           style="--input-description-size: calc(var(--mantine-font-size-sm) - calc(0.125rem * var(--mantine-scale)));"
                         >
                            
-                        </p>
+                        </div>
                         <div
                           class="m_6c018570 mantine-Input-wrapper mantine-TextInput-wrapper"
                           data-size="sm"
@@ -3593,7 +3593,6 @@ exports[`object fields > additionalProperties, description 1`] = `
                           style="--input-margin-top: calc(var(--mantine-spacing-xs) / 2); --input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                         >
                           <input
-                            aria-describedby="root_foo-key-description"
                             class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                             data-variant="default"
                             id="root_foo-key"
@@ -5478,6 +5477,7 @@ exports[`object fields > patternProperties, a key additionalProperties false for
                     >
                       <div
                         class="form-group m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
+                        data-error="true"
                         data-size="sm"
                       >
                         <label
@@ -5491,12 +5491,16 @@ exports[`object fields > patternProperties, a key additionalProperties false for
                         </label>
                         <div
                           class="m_6c018570 mantine-Input-wrapper mantine-TextInput-wrapper"
+                          data-error="true"
                           data-size="sm"
                           data-variant="default"
                           style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                         >
                           <input
+                            aria-describedby="root_a__error"
+                            aria-invalid="true"
                             class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
+                            data-error="true"
                             data-variant="default"
                             id="root_a-key"
                             name="root_a-key"

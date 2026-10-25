@@ -1260,6 +1260,24 @@ describe('ObjectField', () => {
       },
     );
 
+    it('should mark the key input of a forbidden key invalid and describe it by the message', () => {
+      const { node } = createFormComponent({ schema: forbidsUnmatched, initialFormData: { a: 'forbidden' } });
+      const keyInput = elementOf(node, '#root_a-key');
+      expect(keyInput).toHaveAttribute('aria-invalid', 'true');
+      expect(keyInput).toHaveAttribute('aria-describedby', 'root_a__error');
+      expect(elementOf(node, '#root_a__error')).toHaveTextContent('The key "a" is not allowed here');
+    });
+
+    // The add button can only pick a name the patterns match from a `propertyNames.enum`, so the `newKey` it falls back
+    // to is forbidden, and saying so straight away is what tells the user to rename it before submitting
+    it('should say on its row that the key the add button picks is forbidden, before it is renamed', async () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', patternProperties: { '^x_': { type: 'string' } }, additionalProperties: false },
+      });
+      await user.click(elementOf(node, '.rjsf-object-property-expand button'));
+      expect(fieldErrorsById(node)).toEqual({ root_newKey: ['The key "newKey" is not allowed here'] });
+    });
+
     it('should say on its row that a key a false pattern matches is forbidden, whatever the other patterns allow', () => {
       const { node } = createFormComponent({
         schema: { type: 'object', patternProperties: { ...namedByPattern.patternProperties, '^x': false } },
@@ -1283,11 +1301,27 @@ describe('ObjectField', () => {
     });
 
     // An object whose only extra-key keyword is a `false` takes no extra keys, so the key has no row to say it on
-    it('should render neither a row nor the message for an extra key of an object closed by unevaluatedProperties false', () => {
-      const { node } = createFormComponent({
-        schema: { type: 'object', properties: { abc: { type: 'string' } }, unevaluatedProperties: false },
-        initialFormData: { abc: 'hello', a: 'forbidden' },
-      });
+    it.each<[string, RJSFSchema]>([
+      [
+        'unevaluatedProperties false',
+        { type: 'object', properties: { abc: { type: 'string' } }, unevaluatedProperties: false },
+      ],
+      [
+        'the selected oneOf option, beside options of its own',
+        {
+          type: 'object',
+          additionalProperties: true,
+          oneOf: [
+            {
+              properties: { abc: { type: 'string' } },
+              additionalProperties: false,
+              oneOf: [{ properties: { y: { type: 'string' } } }, { properties: { z: { type: 'number' } } }],
+            },
+          ],
+        },
+      ],
+    ])('should render neither a row nor the message for an extra key of an object closed by %s', (_, schema) => {
+      const { node } = createFormComponent({ schema, initialFormData: { abc: 'hello', a: 'forbidden' } });
       expect(node.querySelector('#root_a-key')).toBeNull();
       expect(fieldErrorsById(node)).toEqual({});
     });
