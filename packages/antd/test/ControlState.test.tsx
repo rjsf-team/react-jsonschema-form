@@ -120,6 +120,36 @@ describe('a native submit', () => {
     );
   });
 
+  describe('under ui:optionValueFormat realValue, for form data no option holds', () => {
+    setupConsoleErrorSuppression();
+    const realValueUiSchema: UiSchema = {
+      sel: { 'ui:optionValueFormat': 'realValue' },
+      multi: { 'ui:widget': 'select', 'ui:optionValueFormat': 'realValue' },
+    };
+    const staleData = { sel: 'zzz', multi: ['a', 'zzz'] };
+
+    it.each<[string, RJSFSchema]>([
+      ['with an empty placeholder', {}],
+      ['under a default, with no empty placeholder', { default: 'b' }],
+    ])('gets what core posts, %s', (_, selDefault) => {
+      const props = {
+        schema: {
+          ...schema,
+          properties: { ...schema.properties, sel: { type: 'string', enum: ['a', 'b'], ...selDefault } },
+        },
+        uiSchema: realValueUiSchema,
+        initialFormData: staleData,
+        validator,
+      } satisfies Partial<Parameters<typeof Form>[0]>;
+      const { container: core } = render(<CoreForm {...props} />);
+      const { container: antd } = render(<Form {...props} />);
+
+      for (const name of ['root_sel', 'root_multi']) {
+        expect(entriesOf(antd.querySelector('form'), name)).toEqual(entriesOf(core.querySelector('form'), name));
+      }
+    });
+  });
+
   describe('for a select with a default no option holds, so it draws no empty placeholder', () => {
     setupConsoleErrorSuppression();
     const sel: RJSFSchema = { type: 'string', enum: ['a', 'b', 'c'], default: 'z' };

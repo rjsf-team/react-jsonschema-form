@@ -24,22 +24,6 @@ const SELECT_STYLE = {
   width: '100%',
 };
 
-/** The entries a native `<select>` posts: one per selected option, but none for a selected option that is disabled */
-function postedDomValues(
-  selected: string | string[],
-  showPlaceholderOption: boolean,
-  fallbackDomValue: string | undefined,
-  disabledDomValues: ReadonlySet<string>,
-): string[] {
-  if (Array.isArray(selected)) {
-    return [...new Set(selected)].filter((domValue) => !disabledDomValues.has(domValue));
-  }
-  if (selected === '' && !showPlaceholderOption) {
-    return fallbackDomValue === undefined ? [] : [fallbackDomValue];
-  }
-  return disabledDomValues.has(selected) ? [] : [selected];
-}
-
 /** The `SelectWidget` is a widget for rendering dropdowns.
  *  It is typically used with string properties constrained with enum options.
  *
@@ -108,23 +92,33 @@ export default function SelectWidget<
     [enumOptions, optgroups, enumDisabled],
   );
 
-  const { disabledDomValues, firstEnabledDomValue } = useMemo(() => {
+  const { drawnDomValues, disabledDomValues, firstEnabledDomValue } = useMemo(() => {
     const drawnOptions = flattenGroupedOptions<S>(groupedOptions);
     const firstEnabled = drawnOptions.find((option) => !option.disabled);
     return {
+      drawnDomValues: new Set(drawnOptions.map(({ index }) => domValues[index])),
       disabledDomValues: new Set(drawnOptions.filter((option) => option.disabled).map(({ index }) => domValues[index])),
       firstEnabledDomValue: firstEnabled && domValues[firstEnabled.index],
     };
   }, [groupedOptions, domValues]);
 
-  const selected = enumOptionSelectedValue(value, enumOptions, !!multiple, optionValueFormat, multiple ? [] : '');
+  // `realValue` encodes form data no option holds as itself, which selects nothing in a native `<select>`
+  const selectedValue = enumOptionSelectedValue(value, enumOptions, !!multiple, optionValueFormat, multiple ? [] : '');
+  const isDrawn = (domValue: string) => drawnDomValues.has(domValue);
+  const selected = Array.isArray(selectedValue) ? selectedValue.filter(isDrawn) : ([selectedValue].find(isDrawn) ?? '');
   // With no empty placeholder to fall back on, a native `<select>` that holds no option selects its first enabled one in
   // the order they are drawn, or none at all, so the `Select` draws that one too
-  const fallbackDomValue = selected === '' && !showPlaceholderOption ? firstEnabledDomValue : undefined;
+  const holdsNoOption = selected === '' && !showPlaceholderOption;
+  const fallbackDomValue = holdsNoOption ? firstEnabledDomValue : undefined;
   const selectValue =
     fallbackDomValue ?? enumOptionSelectedValue(value, enumOptions, !!multiple, optionValueFormat, emptyValue);
 
-  const postedValues = postedDomValues(selected, showPlaceholderOption, fallbackDomValue, disabledDomValues);
+  // A native `<select>` posts one entry per selected option, but none for a selected option that is disabled
+  const postedValues = (
+    Array.isArray(selected) ? [...new Set(selected)] : [holdsNoOption ? fallbackDomValue : selected]
+  )
+    .filter((domValue) => domValue !== undefined)
+    .filter((domValue) => !disabledDomValues.has(domValue));
 
   const selectOptions: DefaultOptionType[] | undefined = useMemo(() => {
     if (Array.isArray(enumOptions)) {
